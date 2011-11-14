@@ -206,6 +206,7 @@ class users(osv.osv):
         return dict.fromkeys(ids, '')
 
     _columns = {
+        'id': fields.integer('ID'),
         'name': fields.char('User Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
                                  " and most listings"),
@@ -754,6 +755,28 @@ class users_view(osv.osv):
                         record[f] = group_obj.get_maximal(cr, uid, selected, context)
             return res
         return super(users_view, self).read(cr, uid, ids, fields, context, load)
+
+    def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
+        res = super(users_view, self).fields_get(cr, user, allfields, context, write_access)
+        apps, others = self.pool.get('res.groups').get_classified(cr, user, context)
+        for app, groups in apps:
+            ids = [g.id for name, g in groups]
+            app_name = name_boolean_groups(ids)
+            sel_name = name_selection_groups(ids)
+            selection = [(g.id, name) for name, g in groups]
+            res[app_name] = {'type': 'boolean', 'string': app}
+            tips = [name + ': ' + (g.comment or '') for name, g in groups]
+            if tips:
+                res[app_name].update(help='\n'.join(tips))
+            res[sel_name] = {'type': 'selection', 'string': 'Group', 'selection': selection}
+
+        for sec, groups in others:
+            for gname, g in groups:
+                name = name_boolean_group(g.id)
+                res[name] = {'type': 'boolean', 'string': gname}
+                if g.comment:
+                    res[name].update(help=g.comment)
+        return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                 context=None, toolbar=False, submenu=False):

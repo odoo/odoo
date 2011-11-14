@@ -302,7 +302,7 @@ class YamlInterpreter(object):
 
     def create_osv_memory_record(self, record, fields):
         model = self.get_model(record.model)
-        record_dict = self._create_record(model, fields)
+        record_dict = self._create_record(model, fields, False)
         id_new=model.create(self.cr, self.uid, record_dict, context=self.context)
         self.id_map[record.id] = int(id_new)
         return record_dict
@@ -313,13 +313,19 @@ class YamlInterpreter(object):
         model = self.get_model(record.model)
 
         view_id = record.view
-        if record.view:
+        if view_id and (view_id is not True):
             view_id = self.pool.get('ir.model.data')._get_id(self.cr, 1, self.module, record.view)
 
         if model.is_transient():
             record_dict=self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)
+            try:
+                self.pool.get('ir.model.data')._get_id(self.cr, 1, self.module, record.id)
+                default = False
+            except ValueError:
+                default = True
+
             if self.isnoupdate(record) and self.mode != 'init':
                 id = self.pool.get('ir.model.data')._update_dummy(self.cr, 1, record.model, self.module, record.id)
                 # check if the resource already existed at the last update
@@ -332,26 +338,29 @@ class YamlInterpreter(object):
 
 
             #context = self.get_context(record, self.eval_context)
-            context = record.context #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
-            if view_id is not None:
-                view = model.fields_view_get(self.cr, 1, view_id, 'form', context)
+            #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
+            context = record.context
+            if view_id:
+                varg = view_id
+                if view_id is True: varg = False
+                view = model.fields_view_get(self.cr, 1, varg, 'form', context)
                 view_id = etree.fromstring(view['arch'].encode('utf-8'))
 
-            record_dict = self._create_record(model, fields, view_id)
+            record_dict = self._create_record(model, fields, view_id, default=default)
             self.logger.debug("RECORD_DICT %s" % record_dict)
             id = self.pool.get('ir.model.data')._update(self.cr, 1, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
-            if record.test:
+            if record.test: # TODO: remove this
                 model.read(cr, 1, [id], context=self.context)
                 model.name_search(cr, 1, [('id','=',id)], context=self.context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
                 self.cr.commit()
 
-    def _create_record(self, model, fields, view=None, parent={}):
+    def _create_record(self, model, fields, view=False, parent={}, default=True):
         allfields = model.fields_get(self.cr, 1, context=self.context)
-        if view is not None:
-            defaults = model.default_get(self.cr, 1, allfields, context=self.context)
+        if view is not False:
+            defaults = default and model.default_get(self.cr, 1, allfields, context=self.context) or {}
             fg = model.fields_get(self.cr, 1, context=self.context)
         else:
             default = {}
@@ -359,25 +368,37 @@ class YamlInterpreter(object):
         record_dict = {}
         fields = fields or {}
 
+        def process_val(key, val):
+            if fg[key]['type']=='many2one':
+                if type(val) in (tuple,list):
+                    val = val[0]
+            elif (fg[key]['type']=='one2many') and len(val):
+                if type(val[0]) == dict:
+                    val = map(lambda x: (0,0,x), val)
+            return val
+
         # Process all on_change calls
-        nodes = view and [view] or []
+        nodes = (view is not False) and [view] or []
         while nodes:
             el = nodes.pop(0)
             if el.tag=='field':
                 field_name = el.attrib['name']
+                assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
                 if field_name in fields:
                     view2 = None
                     # if the form view is not inline, we call fields_view_get
-                    if view and (fg[field_name]['type']=='one2many'):
+                    if (view is not False) and (fg[field_name]['type']=='one2many'):
                         view2 = view.find("field[@name='%s']/form"%(field_name,))
                         if not view2:
                             view2 = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, 1, False, 'form', self.context)
                             view2 = etree.fromstring(view2['arch'].encode('utf-8'))
 
-                    field_value = self._eval_field(model, field_name, fields[field_name], view2, parent=record_dict)
+                    field_value = self._eval_field(model, field_name, fields[field_name], view2, parent=record_dict, default=default)
+                    #if (field_name in record_dict) and record_dict[field_name] == field_value:
+                    #    print 'WARNING ***', field_name, 
                     record_dict[field_name] = field_value
                 elif (field_name in defaults) and (field_name not in record_dict):
-                    record_dict[field_name] = defaults[field_name]
+                    record_dict[field_name] = process_val(field_name, defaults[field_name])
                 else:
                     continue
 
@@ -404,16 +425,17 @@ class YamlInterpreter(object):
                 # Evaluation args
                 args = map(lambda x: eval(x, ctx), match.group(2).split(','))
                 result = getattr(model, match.group(1))(self.cr, 1, [], *args)
-                for key, val in result.get('value', {}).items():
+                for key, val in (result or {}).get('value', {}).items():
                     if key not in fields:
-                        record_dict[key] = val
+                        assert key in fg, "The returning field '%s' from your on_change call '%s' does not exist on the object '%s'" % (key, match.group(1), model._name)
+                        record_dict[key] = process_val(key, val)
             else:
                 nodes = list(el) + nodes
 
         for field_name, expression in fields.items():
             if field_name in record_dict:
                 continue
-            field_value = self._eval_field(model, field_name, expression)
+            field_value = self._eval_field(model, field_name, expression, default=False)
             record_dict[field_name] = field_value
 
         return record_dict
@@ -444,7 +466,7 @@ class YamlInterpreter(object):
     def process_eval(self, node):
         return eval(node.expression, self.eval_context)
 
-    def _eval_field(self, model, field_name, expression, view=None, parent={}):
+    def _eval_field(self, model, field_name, expression, view=False, parent={}, default=True):
         # TODO this should be refactored as something like model.get_field() in bin/osv
         if field_name in model._columns:
             column = model._columns[field_name]
@@ -465,7 +487,7 @@ class YamlInterpreter(object):
             value = self.get_id(expression)
         elif column._type == "one2many":
             other_model = self.get_model(column._obj)
-            value = [(0, 0, self._create_record(other_model, fields, view, parent)) for fields in expression]
+            value = [(0, 0, self._create_record(other_model, fields, view, parent, default=default)) for fields in expression]
         elif column._type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]
