@@ -1,0 +1,10 @@
+-
+  I call onchange event to change costing of registration base on event.
+-
+  !python {model: event.registration}: |
+    self.onchange_event(cr, uid, ref('reg_1_1'), ref("event_1"), [])
+-
+  I call onchange event to change the partner of event registration.
+-
+  !python {model: event.registration}: |
+    self.onchange_partner_id(cr, uid, ref('reg_1_1'), ref("base.res_partner_asus"), ref("event_1"), email=False)
