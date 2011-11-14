@@ -1326,7 +1326,7 @@ class account_move_line(osv.osv):
                 base_sign = 'base_sign'
                 tax_sign = 'tax_sign'
             tmp_cnt = 0
-            for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00).get('taxes'):
+            for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00, force_excluded=True).get('taxes'):
                 #create the base movement
                 if tmp_cnt == 0:
                     if tax[base_code]:
@@ -1338,8 +1338,6 @@ class account_move_line(osv.osv):
                 else:
                     data = {
                         'move_id': vals['move_id'],
-                        'journal_id': vals['journal_id'],
-                        'period_id': vals['period_id'],
                         'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
                         'date': vals['date'],
                         'partner_id': vals.get('partner_id',False),
@@ -1356,8 +1354,6 @@ class account_move_line(osv.osv):
                 #create the VAT movement
                 data = {
                     'move_id': vals['move_id'],
-                    'journal_id': vals['journal_id'],
-                    'period_id': vals['period_id'],
                     'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
                     'date': vals['date'],
                     'partner_id': vals.get('partner_id',False),
