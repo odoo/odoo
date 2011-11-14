@@ -1286,24 +1286,24 @@
             </table>
         </td>
         <td align="left" class="oe_view_editor_colum"  width="15%">
-            <table  width="100%">
+            <table width="100%">
                 <tr>
-                    <td>
+                    <td width="20%">
                         <img t-if="rec.att_list.length"
                             id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
                     </td>
-                    <td>
+                    <td width="20%">
                         <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
                     </td>
-                    <td>
+                    <td width="20%">
                         <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
                             id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
                     </td>
-                    <td>
+                    <td width="20%">
                         <img t-if="rec.att_list.length"
                             id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
                     </td>
-                    <td>
+                    <td width="20%">
                         <img t-if="rec.att_list.length"
                             id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
                     </td>
