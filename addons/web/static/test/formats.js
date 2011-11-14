@@ -95,4 +95,15 @@ $(document).ready(function () {
         equal(g("12345678", [2, 0, 0], '.'), '12.34.56.78');
         equal(g("12345678", [2, 0, -1], '.'), '12.34.56.78');
     });
+    test('format_integer', function () {
+        openerp.web._t.database.parameters.grouping = [3, 3, 3, 3];
+        equal(openerp.web.format_value(1000000, {type: 'integer'}),
+              '1,000,000');
+        openerp.web._t.database.parameters.grouping = [3, 2, -1];
+        equal(openerp.web.format_value(106500, {type: 'integer'}),
+              '1,06,500');
+        openerp.web._t.database.parameters.grouping = [1, 2, -1];
+        equal(openerp.web.format_value(106500, {type: 'integer'}),
+              '106,50,0');
+    });
 });

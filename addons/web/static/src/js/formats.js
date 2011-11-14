@@ -69,13 +69,15 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
         case -Infinity:
             return value_if_empty === undefined ?  '' : value_if_empty;
     }
+    var l10n = _t.database.parameters;
     switch (descriptor.widget || descriptor.type) {
         case 'integer':
-            return _.sprintf('%d', value);
+            return openerp.web.intersperse(
+                _.sprintf('%d', value), l10n.grouping, l10n.thousands_sep);
         case 'float':
             var precision = descriptor.digits ? descriptor.digits[1] : 2;
             return _.sprintf('%.' + precision + 'f', value)
-                .replace('.', openerp.web._t.database.parameters.decimal_point);
+                .replace('.', l10n.decimal_point);
         case 'float_time':
             return _.sprintf("%02d:%02d",
                     Math.floor(value),
@@ -91,16 +93,16 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
 
-            return value.format(_t.database.parameters.date_format
-                        + ' ' + _t.database.parameters.time_format);
+            return value.format(l10n.date_format
+                        + ' ' + l10n.time_format);
         case 'date':
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
-            return value.format(_t.database.parameters.date_format);
+            return value.format(l10n.date_format);
         case 'time':
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
-            return value.format(_t.database.parameters.time_format);
+            return value.format(l10n.time_format);
         case 'selection':
             // Each choice is [value, label]
             var result = _(descriptor.selection).detect(function (choice) {
