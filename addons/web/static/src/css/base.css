@@ -713,7 +713,26 @@ label.error {
 .openerp .oe-listview th {
     vertical-align: middle;
     text-align: left;
+    padding: 1px 2px;
 }
+.openerp .oe-listview th.oe-record-selector,
+.openerp .oe-listview td.oe-button,
+.openerp .oe-listview td.oe-record-delete {
+    padding: 0 1px;
+}
+
+/* Could use :not selectors if they were supported by MSIE8... */
+.openerp .oe-listview tbody td {
+    border-left: 1px solid #dadada;
+}
+.openerp .oe-listview tbody td:first-child,
+.openerp .oe-listview tbody td.oe-button,
+.openerp .oe-listview tbody td.oe-button+td,
+.openerp .oe-listview tbody th.oe-record-selector+td,
+.openerp .oe-listview tbody td.oe-record-delete {
+    border-left: none;
+}
+
 .openerp .oe-listview td.oe-record-delete {
     text-align: right;
 }

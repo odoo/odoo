@@ -638,7 +638,8 @@
     <t t-foreach="columns" t-as="column">
         <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
-            t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')"
+            t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')
+                         + (column.tag === 'button' ? ' oe-button' : '')"
             t-att-data-field="column.id">
             <t t-raw="render_cell(record, column)"/>
         </td>
