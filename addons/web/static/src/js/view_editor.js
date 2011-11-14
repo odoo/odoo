@@ -70,7 +70,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
     },
     add_node_name : function(node) {
-        console.log("node",node);
         if(node.tagName.toLowerCase() == "button" || node.tagName.toLowerCase() == "field"){
             return (node.getAttribute('name'))?
                 _.sprintf( "<%s name='%s'>",node.tagName.toLowerCase(), node.getAttribute('name')):
@@ -493,25 +492,30 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         }else{
                             $(arch1).attr(val[0],val[1]);
                         }
-                        console.log("typeof",typeof arch1,arch1);
                     });
                     var new_obj = self.create_View_Node(arch1);
                     new_obj.id = obj.id,new_obj.child_id = obj.child_id;
                     self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']").find('a').text(new_obj.name);
                     child_list.splice(index, 1, new_obj);
                 }else if(move_direct == "add_node"){
-                    console.log(arch1,obj, update_values);
                     $(arch1).add(update_values[0]);
-                    //self.create_View_Node(arch1); object not created here
+                    var temp_xml = QWeb.load_xml(update_values[0]);
+                    var object_xml = self.create_View_Node(temp_xml.childNodes[0]);
                      switch (update_values[1]) {
                         case "After":
+                            object_xml.level = obj.level;
                             $(arch1).after(update_values[0]);
+                            child_list.splice(index + 1, 0, object_xml);
                             break;
                         case "Before":
+                            object_xml.level = obj.level;
                             $(arch1).before(update_values[0]);
+                            child_list.splice(index - 1, 0, object_xml);
                             break;
                         case "Inside":
+                            object_xml.level = obj.level + 1;
                             $(arch1).append(update_values[0]);
+                            obj.child_id.push(object_xml);
                             break;
                     }
                 }
@@ -520,8 +524,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
                 convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
                 arch.arch = convert_to_utf;
-                /*this.dataset.write(parseInt(view_id),{"arch":convert_to_utf}, function(r) {
-                });*/
+                this.dataset.write(parseInt(view_id),{"arch":convert_to_utf}, function(r) {
+                });
             }
             if (obj.level <= level) {
                 _.each(list_obj_xml, function(child_node) {
@@ -636,7 +640,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     },
     on_add_node: function(properties,fields,clicked_tr_id, one_object, view_id, view_xml_id, clicked_tr_level){
         var self = this;
-        console.log()
         var  positions = ['After','Before','Inside'];
         var  render_list = [];
         render_list.push(["node_type",(_.keys(_CHILDREN)).sort()]);
@@ -665,8 +668,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         }
                         if(check_add_node){
                             var tag = (node_type == "field")?
-                                _.sprintf("<%s name='%s'> ",node_type,field_value,node_type):
-                                    _.sprintf("<%s>",node_type,node_type);
+                                _.sprintf("<%s name='%s'> </%s>",node_type,field_value,node_type):
+                                    _.sprintf("<%s> </%s>",node_type,node_type);
                             self.do_save_update_arch(one_object, view_id, view_xml_id, 
                                 clicked_tr_id, clicked_tr_level, "add_node", [tag, position]);
                         }else{alert("Can't Update View");}
