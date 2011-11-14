@@ -2120,6 +2120,7 @@ class orm_memory(orm_template):
 class orm(orm_template):
     _sql_constraints = []
     _table = None
+    _all_columns = {}
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
     __logger = logging.getLogger('orm')
     __schema = logging.getLogger('orm.schema')
@@ -2242,20 +2243,20 @@ class orm(orm_template):
             del d['id']
         return data
 
-    def _inherits_join_add(self, parent_model_name, query):
+    def _inherits_join_add(self, current_table, parent_model_name, query):
         """
         Add missing table SELECT and JOIN clause to ``query`` for reaching the parent table (no duplicates)
 
         :param parent_model_name: name of the parent model for which the clauses should be added
         :param query: query object on which the JOIN should be added
         """
-        inherits_field = self._inherits[parent_model_name]
+        inherits_field = current_table._inherits[parent_model_name]
         parent_model = self.pool.get(parent_model_name)
         parent_table_name = parent_model._table
         quoted_parent_table_name = '"%s"' % parent_table_name
         if quoted_parent_table_name not in query.tables:
             query.tables.append(quoted_parent_table_name)
-            query.where_clause.append('("%s".%s = %s.id)' % (self._table, inherits_field, parent_table_name))
+            query.where_clause.append('(%s.%s = %s.id)' % (current_table._table, inherits_field, parent_table_name))
 
     def _inherits_join_calc(self, field, query):
         """
@@ -2270,7 +2271,7 @@ class orm(orm_template):
         while field in current_table._inherit_fields and not field in current_table._columns:
             parent_model_name = current_table._inherit_fields[field][0]
             parent_table = self.pool.get(parent_model_name)
-            self._inherits_join_add(parent_model_name, query)
+            self._inherits_join_add(current_table, parent_model_name, query)
             current_table = parent_table
         return '"%s".%s' % (current_table._table, field)
 
@@ -2872,11 +2873,23 @@ class orm(orm_template):
         for table in self._inherits:
             res.update(self.pool.get(table)._inherit_fields)
             for col in self.pool.get(table)._columns.keys():
-                res[col] = (table, self._inherits[table], self.pool.get(table)._columns[col])
+                res[col] = (table, self._inherits[table], self.pool.get(table)._columns[col], table)
             for col in self.pool.get(table)._inherit_fields.keys():
-                res[col] = (table, self._inherits[table], self.pool.get(table)._inherit_fields[col][2])
+                res[col] = (table, self._inherits[table], self.pool.get(table)._inherit_fields[col][2], self.pool.get(table)._inherit_fields[col][3])
         self._inherit_fields = res
+        self._all_columns = self._get_column_infos()
         self._inherits_reload_src()
+
+    def _get_column_infos(self):
+        """Returns a dict mapping all fields names (direct fields and
+           inherited field via _inherits) to a ``column_info`` struct
+           giving detailed columns """
+        result = {}
+        for k, (parent, m2o, col, original_parent) in self._inherit_fields.iteritems():
+            result[k] = fields.column_info(k, col, parent, m2o, original_parent)
+        for k, col in self._columns.iteritems():
+            result[k] = fields.column_info(k, col)
+        return result
 
     def _inherits_check(self):
         for table, field_name in self._inherits.items():
@@ -3569,7 +3582,7 @@ class orm(orm_template):
         upd_todo = []
         for v in vals.keys():
             if v in self._inherit_fields:
-                (table, col, col_detail) = self._inherit_fields[v]
+                (table, col, col_detail, original_parent) = self._inherit_fields[v]
                 tocreate[table][v] = vals[v]
                 del vals[v]
             else:
@@ -3891,7 +3904,7 @@ class orm(orm_template):
                 if parent_model and child_object:
                     # as inherited rules are being applied, we need to add the missing JOIN
                     # to reach the parent table (if it was not JOINed yet in the query)
-                    child_object._inherits_join_add(parent_model, query)
+                    child_object._inherits_join_add(child_object, parent_model, query)
                 query.where_clause += added_clause
                 query.where_clause_params += added_params
                 for table in added_tables:
@@ -3980,7 +3993,7 @@ class orm(orm_template):
                     else:
                         continue # ignore non-readable or "non-joinable" fields
                 elif order_field in self._inherit_fields:
-                    parent_obj = self.pool.get(self._inherit_fields[order_field][0])
+                    parent_obj = self.pool.get(self._inherit_fields[order_field][3])
                     order_column = parent_obj._columns[order_field]
                     if order_column._classic_read:
                         inner_clause = self._inherits_join_calc(order_field, query)
@@ -4124,8 +4137,13 @@ class orm(orm_template):
         for parent_column in ['parent_left', 'parent_right']:
             data.pop(parent_column, None)
 
-        for v in self._inherits:
-            del data[self._inherits[v]]
+        # remove _inherits field's from data recursively, missing parents will
+        # be created by create() (so that copy() copy everything).
+        def remove_ids(inherits_dict):
+            for parent_table in inherits_dict:
+                del data[inherits_dict[parent_table]]
+                remove_ids(self.pool.get(parent_table)._inherits)
+        remove_ids(self._inherits)
         return data
 
     def copy_translations(self, cr, uid, old_id, new_id, context=None):
