@@ -1,0 +1,23 @@
+-
+  I want to organize one conference event, First I registered partner for event 
+  with 5 tickets, so I confirm this registration.
+-
+  !python {model: event.registration}: |
+    self.check_confirm(cr, uid, [ref("reg_1_1")])
+-
+  I Check that Registration is confirm.
+- 
+  !assert {model: event.registration, id: reg_1_1}: 
+     - state == 'open', "Registration should be open here."
+-
+  After confirmation of partner, I create invoice base on costing of event. 
+-
+  !python {model: event.registration}: |
+    self.action_invoice_create(cr, uid, [ref("reg_1_1")])
+-
+  Now I Check for Invoice is created and Registration should be closed after invoice generated.
+- 
+  !python {model: event.registration}: |
+    record = self.browse(cr, uid, [ref("reg_1_1")])[0]
+    assert record.invoice_id, "Invoice should be generated"
+    assert record.state == "done", "Registration should be closed after invoice generated"
