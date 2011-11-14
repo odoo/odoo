@@ -662,7 +662,7 @@ class stock_picking(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
     _sql_constraints = [
-        ('name_uniq', 'unique(name,company_id)', 'Order Reference must be unique per Company!'),
+        ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
     ]
 
     def action_process(self, cr, uid, ids, context=None):
