@@ -201,7 +201,8 @@ class mail_thread(osv.osv):
 
         for thread in threads:
             to_attach = []
-            for fname, fcontent in attachments.items():
+            for attachment in attachments:
+                fname, fcontent = attachment
                 if isinstance(fcontent, unicode):
                     fcontent = fcontent.encode('utf-8')
                 data_attach = {

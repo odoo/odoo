@@ -1210,6 +1210,24 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="1" name="wait"/>
         </record>
     </data>
+    
+    <data noupdate="1">
+        <record id="hr.employee" model="hr.employee">
+            <field name="evaluation_plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
+        </record>
+        
+        <record id="hr.employee1" model="hr.employee">
+            <field name="evaluation_plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
+        </record>
+
+        <record id="hr.employee2" model="hr.employee">
+            <field name="evaluation_plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
+        </record>
+
+        <record id="hr.employee3" model="hr.employee">
+            <field name="evaluation_plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
+        </record>
+    </data>
 
     <data>
         <record forcecreate="True" id="ir_cron_scheduler_evaluation" model="ir.cron">

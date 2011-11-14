@@ -23,6 +23,7 @@ from osv import osv, fields
 from tools.translate import _
 import netsvc
 import time
+import decimal_precision as dp
 
 # Procurement
 # ------------------------------------------------------------------
@@ -91,7 +92,7 @@ class procurement_order(osv.osv):
         'date_planned': fields.datetime('Scheduled date', required=True),
         'date_close': fields.datetime('Date Closed'),
         'product_id': fields.many2one('product.product', 'Product', required=True, states={'draft':[('readonly',False)]}, readonly=True),
-        'product_qty': fields.float('Quantity', required=True, states={'draft':[('readonly',False)]}, readonly=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uom': fields.many2one('product.uom', 'Product UoM', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos_qty': fields.float('UoS Quantity', states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
@@ -468,14 +469,6 @@ class procurement_order(osv.osv):
         for id in ids:
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
         return res
-
-    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
-        ''' Runs through scheduler.
-        @param use_new_cursor: False or the dbname
-        '''
-        self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, context=context)
-        self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
-                use_new_cursor=use_new_cursor, context=context)
 
 procurement_order()
 

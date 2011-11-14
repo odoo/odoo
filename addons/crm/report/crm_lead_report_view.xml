@@ -87,7 +87,7 @@
                             domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                             help="Leads/Opportunities created in current year"/>
                         <separator orientation="vertical" />
-                        <filter string="   Month   " icon="terp-go-month" name="this_month"
+                        <filter string="Month" icon="terp-go-month" name="this_month"
                             domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Leads/Opportunities created in current month"/>
                         <filter icon="terp-go-month" string="    Month-1    " 
@@ -267,7 +267,6 @@
             parent="base.next_id_64" action="action_report_crm_lead" sequence="3"/>
 
        <menuitem name="Opportunities Analysis" id="menu_report_crm_opportunities_tree"
-            groups="base.group_extended"
             parent="base.next_id_64" action="action_report_crm_opportunity" sequence="4"/>
 
     </data>

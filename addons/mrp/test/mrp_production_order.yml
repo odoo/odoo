@@ -76,10 +76,10 @@
     for order in order_ids:
         wf_service.trg_validate(uid, 'mrp.production', order, 'button_produce', cr)
 -
-  I create record for producing products with quantity 6.00.
+  I create record for producing products with quantity 1.00.
 -
   !record {model: mrp.product.produce, id: mrp_product_produce0}:
-    product_qty: 6.00
+    product_qty: 1.00
     mode: 'consume_produce'
 -
   I produce the product.

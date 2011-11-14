@@ -446,15 +446,11 @@ the rule to mark CC(mail to any other person defined in actions)."),
             scrit = []
 
         for action in self.browse(cr, uid, ids, context=context):
-            model_obj = self.pool.get(action.model_id.model)
             for obj in objects:
-                ok = self.do_check(cr, uid, action, obj, context=context)
-                if not ok:
-                    continue
+                if self.do_check(cr, uid, action, obj, context=context):
+                    model_obj = self.pool.get(action.model_id.model)
+                    self.do_action(cr, uid, action, model_obj, obj, context=context)
 
-                if ok:
-                    self.do_action(cr, uid, action, model_obj, obj, context)
-                    break
         context.update({'action': False})
         return True
 
