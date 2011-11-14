@@ -5,7 +5,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this._super(parent);
         this.element_id = element_id
         this.parent = parent
-        this.dataset = new openerp.web.DataSetSearch(this, 'ir.ui.view', null, null);
+        this.dataset = new openerp.web.DataSetSearch(this, 'ir.ui.view', null, null),
         this.model = dataset.model;
         this.xml_element_id = 0;
         this.property = openerp.web.ViewEditor.property_widget;
@@ -689,24 +689,27 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         table_selector.append('<tr><td align="right"> <button id="new_field">New Field</button></td></tr>');
         self.add_node_dialog.$element.find("select[id=node_type] option[value=field]").attr("selected",1);
         self.add_node_dialog.$element.find('#new_field').click(function() {
-            var action = {
-                context: self.session.user_context,
-                res_model: "ir.model.fields",
-                views: [[false, 'form']],
-                type: 'ir.actions.act_window',
-                target: "new",
-                flags: {
-                    sidebar: false,
-                    views_switcher: false,
-                    action_buttons: false,
-                    search_view: false,
-                    pager: false,
-                },
-            };
-            var action_manager = new openerp.web.ActionManager(self);
-            action_manager.do_action(action);
-
+            model_data = new openerp.web.DataSetSearch(self,'ir.model', null, null);
+            model_data.read_slice([], {domain: [['model','=', self.model]]}, function(result) {
+                self.render_new_field(result[0].id);
+                    });
         });
+    },
+    render_new_field :function(id){
+        var action = {
+            context: {'default_model_id':id, 'manual':true},//self.session.user_context,
+            res_model: "ir.model.fields",
+            views: [[false, 'form']],
+            type: 'ir.actions.act_window',
+            target: "new",
+            flags: {
+                action_buttons: true,
+            },
+        };
+        var action_manager = new openerp.web.ActionManager(self);
+        action_manager.do_action(action);
+        });
+
     }
 });
 openerp.web.ViewEditor.Field = openerp.web.Class.extend({
