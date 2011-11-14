@@ -1,4 +1,5 @@
 openerp.web.view_editor = function(openerp) {
+var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
 openerp.web.ViewEditor =   openerp.web.Widget.extend({
     init: function(parent, element_id, dataset, view, options) {
@@ -49,16 +50,19 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     self.xml_element_id = 0;
                     self.get_arch();
                 },
+                "Remove": function(){
+                    self.do_delete_view();
+                },
                 "Close": function(){
                     self.view_edit_dialog.close();
                 }
             },
         }).start().open();
         this.main_view_id = this.parent.fields_view.view_id;
-        var action_manager = new openerp.web.ActionManager(this);
-        action_manager.appendTo(this.view_edit_dialog);
-        $.when(action_manager.do_action(action)).then(function() {
-            var viewmanager = action_manager.inner_viewmanager,
+        this.action_manager = new openerp.web.ActionManager(this);
+        this.action_manager.appendTo(this.view_edit_dialog);
+        $.when(this.action_manager.do_action(action)).then(function() {
+            var viewmanager = self.action_manager.inner_viewmanager,
                 controller = viewmanager.views[viewmanager.active_view].controller;
             controller.on_loaded.add_last(function(){
                 $(controller.groups).bind({
@@ -84,7 +88,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 _.sprintf( "<%s>",node.tagName.toLowerCase());
         }
     },
-
+    do_delete_view: function() {
+        if (confirm(_t("Do you really want to remove this view?"))) {
+	        var controller = this.action_manager.inner_viewmanager.views[this.action_manager.inner_viewmanager.active_view].controller;
+            this.dataset.unlink([this.main_view_id]).then(function() {
+                controller.reload_content();
+            });
+        }
+    },
     create_View_Node: function(node){
         var self = this;
         ViewNode = {
@@ -100,7 +111,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
        });
         return ViewNode;
     },
-
     append_child_object: function(main_object, parent_id, child_obj_list) {
         var self = this;
             if(main_object.id == parent_id){
@@ -113,7 +123,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 });
             }
     },
-
     convert_arch_to_obj: function(xml_Node, main_object, parent_id){
         var self = this;
         var child_obj_list = [];
@@ -131,7 +140,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         return main_object;
     },
-
     parse_xml: function(arch, view_id) {
         main_object = {
             'level': 0,
@@ -143,7 +151,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var xml_arch = QWeb.load_xml(arch);
         return [this.convert_arch_to_obj(xml_arch.childNodes, main_object, this.xml_element_id)];
     },
-
     get_arch: function() {
         var self = this;
         var view_arch_list = [];
@@ -172,7 +179,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         return parent_list;
     },
-
     inherit_view : function(arch_object, result) {
         var self = this;
         var xml_list = [];
