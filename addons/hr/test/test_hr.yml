@@ -1,13 +1,13 @@
 -
   In order to test hr module in OpenERP, I will create new Employee, Department and Job Position.
 -
-  I create "R&D Department" in Department form.
+  I create "RD Department" in Department form.
 -
   !record {model: hr.department, id: hr_department_rd0}:
     manager_id: base.user_root
     name: 'R & D'
 -
-  Now, I create a new employee “Mark Johnson”, and select department as “R&D Department”.
+  Now, I create a new employee “Mark Johnson”, and select department as “RD Department”.
 -
   !record {model: hr.employee, id: hr_employee_mark}:
     address_home_id: base.res_partner_address_1
