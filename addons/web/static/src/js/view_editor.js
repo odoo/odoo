@@ -498,24 +498,15 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']").find('a').text(new_obj.name);
                     child_list.splice(index, 1, new_obj);
                 }else if(move_direct == "add_node"){
-                    $(arch1).add(update_values[0]);
-                    var temp_xml = QWeb.load_xml(update_values[0]);
-                    var object_xml = self.create_View_Node(temp_xml.childNodes[0]);
                      switch (update_values[1]) {
                         case "After":
-                            object_xml.level = obj.level;
                             $(arch1).after(update_values[0]);
-                            child_list.splice(index + 1, 0, object_xml);
                             break;
                         case "Before":
-                            object_xml.level = obj.level;
                             $(arch1).before(update_values[0]);
-                            child_list.splice(index - 1, 0, object_xml);
                             break;
                         case "Inside":
-                            object_xml.level = obj.level + 1;
                             $(arch1).append(update_values[0]);
-                            obj.child_id.push(object_xml);
                             break;
                     }
                 }
@@ -526,6 +517,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 arch.arch = convert_to_utf;
                 this.dataset.write(parseInt(view_id),{"arch":convert_to_utf}, function(r) {
                 });
+                if(move_direct == "add_node"){
+                    self.add_node_dialog.close();
+                    self.edit_xml_dialog.close();
+                    self.xml_element_id = 0;
+                    self.get_arch();}
             }
             if (obj.level <= level) {
                 _.each(list_obj_xml, function(child_node) {
@@ -693,7 +689,23 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         table_selector.append('<tr><td align="right"> <button id="new_field">New Field</button></td></tr>');
         self.add_node_dialog.$element.find("select[id=node_type] option[value=field]").attr("selected",1);
         self.add_node_dialog.$element.find('#new_field').click(function() {
-            //to do
+            var action = {
+                context: self.session.user_context,
+                res_model: "ir.model.fields",
+                views: [[false, 'form']],
+                type: 'ir.actions.act_window',
+                target: "new",
+                flags: {
+                    sidebar: false,
+                    views_switcher: false,
+                    action_buttons: false,
+                    search_view: false,
+                    pager: false,
+                },
+            };
+            var action_manager = new openerp.web.ActionManager(self);
+            action_manager.do_action(action);
+
         });
     }
 });
