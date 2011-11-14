@@ -307,7 +307,7 @@ class Database(openerpweb.Controller):
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
         try:
-            data = base64.b64encode(db_file.file.read())
+            data = base64.b64encode(db_file.read())
             req.session.proxy("db").restore(restore_pwd, new_db, data)
             return ''
         except xmlrpclib.Fault, e:
