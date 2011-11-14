@@ -123,7 +123,7 @@
             <field name="res_model">project.issue</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','not in',('cancel','done')),'|',('assigned_to','=',uid),('user_id','=',uid)]</field>
+            <field name="domain">[('state','not in',('cancel','done')),('user_id','=',uid)]</field>
            <field name="view_id" ref="project_issue_board_tree_view"/>
         </record>
          <record id="view_my_open_project_issue_graph" model="ir.ui.view">
@@ -142,7 +142,7 @@
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form,</field>
-            <field name="domain">[('state','=','open'),'|',('assigned_to','=',uid),('user_id','=',uid)]</field>
+            <field name="domain">[('state','=','open'),('user_id','=',uid)]</field>
            <field name="view_id" ref="view_my_open_project_issue_graph"/>
         </record>
        <record id="board_my_project_issue_form" model="ir.ui.view">

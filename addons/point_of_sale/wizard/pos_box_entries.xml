@@ -3,31 +3,31 @@
     <data>
         <!--  Box Entries -->
 
-		<record id="view_box_entries" model="ir.ui.view">
+        <record id="view_box_entries" model="ir.ui.view">
             <field name="name">Box Entries</field>
             <field name="model">pos.box.entries</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Box Entries">
-				    <separator string="Please fill these fields for entries to the box:" colspan="4"/>
-			    	<field name="name"/>
-			    	<field name="journal_id"/>
-			    	<field name="product_id"/>
-			    	<field name="amount"/>
-			    	<separator colspan="4"/>
-			    	<group colspan="4" col="4">
-			    	    <group col="2" colspan="2"/>
-				 		<button icon="gtk-stop" special="cancel"
-                			string="Cancel" />
-                		<button name="get_in" string="Put Money"
-                			colspan="1" type="object" icon="terp-dolar_ok!" />
-          			</group>
+                <form string="Put Money">
+                    <separator string="Fill in this form if you put money in the cash register:" colspan="4"/>
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="journal_id"/>
+                    <field name="amount"/>
+                    <separator colspan="4"/>
+                    <group colspan="4" col="4">
+                        <group col="2" colspan="2"/>
+                         <button icon="gtk-stop" special="cancel"
+                            string="Cancel" />
+                        <button name="get_in" string="Put Money"
+                            colspan="1" type="object" icon="gtk-apply" />
+                      </group>
                 </form>
             </field>
         </record>
 
         <record id="action_box_entries" model="ir.actions.act_window">
-         	<field name="name">Box Entries</field>
+             <field name="name">Put Money In</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.box.entries</field>
             <field name="view_type">form</field>
@@ -35,5 +35,5 @@
             <field name="target">new</field>
         </record>
 
-	</data>
+    </data>
 </openerp>

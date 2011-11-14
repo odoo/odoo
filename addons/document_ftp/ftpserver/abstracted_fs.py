@@ -11,6 +11,7 @@ import fnmatch
 
 import pooler
 import netsvc
+import sql_db
 
 from service import security
 from osv import osv
@@ -68,7 +69,7 @@ class abstracted_fs(object):
             db, cr = None, None
             try:
                 try:
-                    db = pooler.get_db(db_name)
+                    db = sql_db.db_connect(db_name)
                     cr = db.cursor()
                     cr.execute("SELECT 1 FROM pg_class WHERE relkind = 'r' AND relname = 'ir_module_module'")
                     if not cr.fetchone():

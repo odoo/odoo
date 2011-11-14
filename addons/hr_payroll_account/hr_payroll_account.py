@@ -39,6 +39,13 @@ class hr_payslip(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Expense Journal',states={'draft': [('readonly', False)]}, readonly=True, required=True),
         'move_id': fields.many2one('account.move', 'Accounting Entry', readonly=True),
     }
+    
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if 'journal_id' in context:
+            vals.update({'journal_id': context.get('journal_id')})
+        return super(hr_payslip, self).create(cr, uid, vals, context=context)
 
     def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
         contract_obj = self.pool.get('hr.contract')
@@ -52,9 +59,10 @@ class hr_payslip(osv.osv):
         move_ids = []
         move_to_cancel = []
         for slip in self.browse(cr, uid, ids, context=context):
-            move_ids.append(slip.move_id.id)
-            if slip.move_id.state == 'posted':
-                move_to_cancel.append(slip.move_id.id)
+            if slip.move_id:
+                move_ids.append(slip.move_id.id)
+                if slip.move_id.state == 'posted':
+                    move_to_cancel.append(slip.move_id.id)
         move_pool.button_cancel(cr, uid, move_to_cancel, context=context)
         move_pool.unlink(cr, uid, move_ids, context=context)
         return super(hr_payslip, self).cancel_sheet(cr, uid, ids, context=context)
@@ -87,7 +95,10 @@ class hr_payslip(osv.osv):
                 partner_id = False
                 debit_account_id = line.salary_rule_id.account_debit.id
                 credit_account_id = line.salary_rule_id.account_credit.id
-                debit_line = (0, 0, {
+                
+                if debit_account_id:
+                    
+                    debit_line = (0, 0, {
                     'name': line.name,
                     'date': timenow,
                     'partner_id': partner_id,
@@ -100,7 +111,12 @@ class hr_payslip(osv.osv):
                     'tax_code_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
                     'tax_amount': line.salary_rule_id.account_tax_id and amt or 0.0,
                 })
-                credit_line = (0, 0, {
+                    line_ids.append(debit_line)
+                    debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
+                
+                if credit_account_id:
+                    
+                    credit_line = (0, 0, {
                     'name': line.name,
                     'date': timenow,
                     'partner_id': partner_id,
@@ -113,38 +129,40 @@ class hr_payslip(osv.osv):
                     'tax_code_id': line.salary_rule_id.account_tax_id and line.salary_rule_id.account_tax_id.id or False,
                     'tax_amount': line.salary_rule_id.account_tax_id and amt or 0.0,
                 })
-                if debit_account_id:
-                    line_ids.append(debit_line)
-                    debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
-                if credit_account_id:
                     line_ids.append(credit_line)
-                    credit_sum += credit_line[2]['credit'] - credit_line['debit']
+                    credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
 
             if debit_sum > credit_sum:
+                acc_id = slip.journal_id.default_credit_account_id.id
+                if not acc_id:
+                    raise osv.except_osv(_('Configuration Error!'),_('The Expense Journal "%s" has not properly configured the Credit Account!')%(slip.journal_id.name))
                 adjust_credit = (0, 0, {
                     'name': _('Adjustment Entry'),
                     'date': timenow,
                     'partner_id': partner_id,
-                    'account_id': slip.journal_id.default_credit_account_id.id,
+                    'account_id': acc_id,
                     'journal_id': slip.journal_id.id,
                     'period_id': period_id,
                     'debit': 0.0,
                     'credit': debit_sum - credit_sum,
                 })
                 line_ids.append(adjust_credit)
+                
             elif debit_sum < credit_sum:
+                acc_id = slip.journal_id.default_debit_account_id.id
+                if not acc_id:
+                    raise osv.except_osv(_('Configuration Error!'),_('The Expense Journal "%s" has not properly configured the Debit Account!')%(slip.journal_id.name))
                 adjust_debit = (0, 0, {
                     'name': _('Adjustment Entry'),
                     'date': timenow,
                     'partner_id': partner_id,
-                    'account_id': slip.journal_id.default_debit_account_id.id,
+                    'account_id': acc_id,
                     'journal_id': slip.journal_id.id,
                     'period_id': period_id,
                     'debit': credit_sum - debit_sum,
                     'credit': 0.0,
                 })
                 line_ids.append(adjust_debit)
-
             move.update({'line_id': line_ids})
             move_id = move_pool.create(cr, uid, move, context=context)
             self.write(cr, uid, [slip.id], {'move_id': move_id}, context=context)
@@ -174,5 +192,14 @@ class hr_contract(osv.osv):
     }
 hr_contract()
 
+class hr_payslip_run(osv.osv):
+
+    _inherit = 'hr.payslip.run'
+    _description = 'Payslip Run'
+    _columns = {
+        'journal_id': fields.many2one('account.journal', 'Expense Journal', states={'draft': [('readonly', False)]}, readonly=True, required=True),
+    }
+
+hr_payslip_run()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

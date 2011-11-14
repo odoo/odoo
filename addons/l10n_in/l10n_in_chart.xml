@@ -37,11 +37,13 @@
         <record model="account.account.type" id="account_type_asset1">
             <field name="name">Asset</field>
             <field name="code">asset</field>
+            <field name="close_method">unreconciled</field>
             <field name="report_type">asset</field>
         </record>
         <record model="account.account.type" id="account_type_liability1">
             <field name="name">Liability</field>
             <field name="code">liability</field>
+            <field name="close_method">unreconciled</field>
             <field name="report_type">liability</field>
         </record>
         <record model="account.account.type" id="account_type_expense1">

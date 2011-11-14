@@ -101,12 +101,9 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_8">[[ (user.address_id and user.address_id.partner_id and user.address_id.partner_id.title and user.address_id.partner_id.title.name) or '' ]] [[ (user.address_id and user.address_id.partner_id and user.address_id.partner_id.name) or '' ]]</para>
-          <para style="terp_default_8">[[ (user.address_id and user.address_id.street) or '' ]]</para>
-          <para style="terp_default_8">[[ (user.address_id and user.address_id.street2) or removeParentNode('para') ]]</para>
-          <para style="terp_default_8">[[ (user.address_id and user.address_id.zip) or '' ]] [[ (user.address_id and user.address_id.city) or '' ]]</para>
-          <para style="terp_default_8">[[ (user.address_id and user.address_id.state_id and user.address_id.state_id.name) or removeParentNode('para')]]</para>
-          <para style="terp_default_8">[[ (user.address_id and user.address_id.country_id and user.address_id.country_id.name) or '' ]]</para>
+          <para style="terp_default_8">[[ user.name ]] </para>
+          <para style="terp_default_8">[[ user.login  ]]</para>
+          <para style="terp_default_8">[[ user.user_email ]]</para>
         </td>
       </tr>
     </blockTable>

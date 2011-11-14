@@ -170,7 +170,7 @@ class base_synchro(osv.osv_memory):
             #
             # If not synchronized, try to find it with name_get/name_search
             #
-            names = pool_src.get(object).name_get(cr, uid, [id], context)[0][1]
+            names = pool_src.get(object).name_get(cr, uid, [id])[0][1]
             res = pool_dest.get(object).name_search(cr, uid, names, [], 'like')
             if res:
                 result = res[0][0]
@@ -189,7 +189,7 @@ class base_synchro(osv.osv_memory):
     def data_transform(self, cr, uid, pool_src, pool_dest, object, data, action='u', context=None):
         self.meta.setdefault(pool_src, {})
         if not object in self.meta[pool_src]:
-            self.meta[pool_src][object] = pool_src.get(object).fields_get(cr, uid, context)
+            self.meta[pool_src][object] = pool_src.get(object).fields_get(cr, uid)
         fields = self.meta[pool_src][object]
 
         for f in fields:

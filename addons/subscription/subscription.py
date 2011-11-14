@@ -38,12 +38,6 @@ class subscription_document(osv.osv):
     _defaults = {
         'active' : lambda *a: True,
     }
-    
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'model' in vals:
-            raise osv.except_osv(_('Error !'),_('You cannot modify the Object linked to the Document Type!\nCreate another Document instead !'))
-        return super(subscription_document, self).write(cr, uid, ids, vals, context=context)
-    
 subscription_document()
 
 class subscription_document_fields(osv.osv):
@@ -135,6 +129,12 @@ class subscription_subscription(osv.osv):
             self.pool.get('subscription.subscription.history').create(cr, uid, {'subscription_id': row['id'], 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'document_id': model_name+','+str(id)})
             self.write(cr, uid, [row['id']], {'state':state})
         return True
+
+    def unlink(self, cr, uid, ids, context=None):
+        for record in self.browse(cr, uid, ids, context or {}):
+            if record.state=="running":
+                raise osv.except_osv(_('Error !'),_('You cannot delete an active subscription !'))
+        return super(subscription_subscription, self).unlink(cr, uid, ids, context)
 
     def set_done(self, cr, uid, ids, context=None):
         res = self.read(cr,uid, ids, ['cron_id'])

@@ -1,0 +1,56 @@
+-
+  In order to test mrp_operations module in OpenERP,
+  I create a production order.
+-
+  !record {model: mrp.production, id: mrp_production_mo1}:
+    company_id: base.main_company
+    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+    location_dest_id: stock.stock_location_stock
+    location_src_id: stock.stock_location_stock
+    name: MO/01234567
+    product_id: product.product_product_pc1
+    product_qty: 5.0
+    product_uom: product.product_uom_unit
+    product_uos_qty: 5.0
+-
+  Now I confirm the production order.
+-
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo1}
+-
+  I check that there is one Work order generated related to the production order.
+-
+  !python {model: mrp.production.workcenter.line}: |
+    from tools.translate import _
+    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo1')),('state','=','draft')])
+    assert order_id, _('No work order defined for this production order!')
+-
+  The scheduler runs.
+-
+  !function {model: procurement.order, name: run_scheduler}:
+    - model: procurement.order
+      search: "[('state','=','confirmed')]"
+-
+  I am checking Internal picking.
+-
+  !python {model: mrp.production}: |
+    from tools.translate import _
+    pick_ids = self.browse(cr, uid, ref("mrp_production_mo1"))
+    assert pick_ids.picking_id.id, _('No Internal Picking generated!')
+-
+  In order to cancel the MO, first cancel its picking
+-
+  !python {model: stock.picking}: |
+    mrp_obj = self.pool.get('mrp.production')
+    mo = mrp_obj.browse(cr, uid, ref("mrp_production_mo1"))
+    self.action_cancel(cr, uid, [mo.picking_id.id], context=None)
+-
+  Then cancel The Manufacturing order.
+-
+  !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_mo1}
+-
+  I check that there is one Work order generated related to the production order that is cancelled or not.
+-
+  !python {model: mrp.production.workcenter.line}: |
+    from tools.translate import _
+    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo1')),('state','=','cancel')])
+    assert order_id, _('Work order is not cancelled for this production order!')

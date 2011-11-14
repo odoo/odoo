@@ -186,7 +186,6 @@ def check():
         win32ui.MessageBox("No server running on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
         return False
     if str(NewConn.getitem('_login')) == 'False':
-        win32ui.MessageBox("Please login to the database first", "OpenERP Connection", flag_excl)
         return False
     return True
 

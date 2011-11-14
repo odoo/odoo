@@ -30,9 +30,10 @@ from report.interface import toxml
 
 from report import report_sxw
 from tools import ustr
+from tools.translate import _
 
 one_day = relativedelta(days=1)
-month2name = [0, 'January', 'February', 'March', 'April', 'May', 'Jun', 'July', 'August', 'September', 'October', 'November', 'December']
+month2name = [0, 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 def hour2str(h):
     hours = int(h)
@@ -52,7 +53,7 @@ class report_custom(report_rml):
             context = {}
         month = datetime(datas['form']['year'], datas['form']['month'], 1)
         emp_ids = context.get('active_ids', [])
-        user_xml = ['<month>%s</month>' % month2name[month.month], '<year>%s</year>' % month.year]
+        user_xml = ['<month>%s</month>' % _(month2name[month.month]), '<year>%s</year>' % month.year]
         if emp_ids:
             for emp in obj_emp.read(cr, uid, emp_ids, ['name']):
                 stop, days_xml = False, []
@@ -95,7 +96,7 @@ class report_custom(report_rml):
                     days_xml.append(today_xml)
                     today, tomor = tomor, tomor + one_day
                 user_xml.append(user_repr % '\n'.join(days_xml))
-
+                
         rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
         rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         header_xml = '''
@@ -104,7 +105,7 @@ class report_custom(report_rml):
         <company>%s</company>
         </header>
         ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
-
+       
         first_date = str(month)
         som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')
         eom = som + timedelta(int(dy)-1)
@@ -113,12 +114,12 @@ class report_custom(report_rml):
         cell=1
         date_xml.append('<days>')
         if day_diff.days>=30:
-            date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som.replace(day=x).strftime('%a'),x-som.day+1) for x in range(som.day, lengthmonth(som.year, som.month)+1)]
+            date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, _(som.replace(day=x).strftime('%a')),x-som.day+1) for x in range(som.day, lengthmonth(som.year, som.month)+1)]
         else:
             if day_diff.days>=(lengthmonth(som.year, som.month)-som.day):
-                date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som.replace(day=x).strftime('%a'),x-som.day+1) for x in range(som.day, lengthmonth(som.year, som.month)+1)]
+                date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, _(som.replace(day=x).strftime('%a')),x-som.day+1) for x in range(som.day, lengthmonth(som.year, som.month)+1)]
             else:
-                date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som.replace(day=x).strftime('%a'),x-som.day+1) for x in range(som.day, eom.day+1)]
+                date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, _(som.replace(day=x).strftime('%a')),x-som.day+1) for x in range(som.day, eom.day+1)]
         cell=x-som.day+1
         day_diff1=day_diff.days-cell+1
         width_dict={}
@@ -129,12 +130,12 @@ class report_custom(report_rml):
         month=som.month
         month_dict[j]=som.strftime('%B')
         width_dict[j]=cell
-
+        
         while day_diff1>0:
             if month+i<=12:
                 if day_diff1 > lengthmonth(year,i+month): # Not on 30 else you have problems when entering 01-01-2009 for example
                     som1=datetime.date(year,month+i,1)
-                    date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som1.replace(day=x).strftime('%a'),cell+x) for x in range(1, lengthmonth(year,i+month)+1)]
+                    date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, _(som1.replace(day=x).strftime('%a')),cell+x) for x in range(1, lengthmonth(year,i+month)+1)]
                     i=i+1
                     j=j+1
                     month_dict[j]=som1.strftime('%B')
@@ -142,7 +143,7 @@ class report_custom(report_rml):
                     width_dict[j]=x
                 else:
                     som1=datetime.date(year,month+i,1)
-                    date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som1.replace(day=x).strftime('%a'),cell+x) for x in range(1, eom.day+1)]
+                    date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, _(som1.replace(day=x).strftime('%a')),cell+x) for x in range(1, eom.day+1)]
                     i=i+1
                     j=j+1
                     month_dict[j]=som1.strftime('%B')
@@ -156,7 +157,7 @@ class report_custom(report_rml):
                 i=1
                 if day_diff1>=30:
                     som1=datetime.date(years,i,1)
-                    date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som1.replace(day=x).strftime('%a'),cell+x) for x in range(1, lengthmonth(years,i)+1)]
+                    date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, _(som1.replace(day=x).strftime('%a')),cell+x) for x in range(1, lengthmonth(years,i)+1)]
                     i=i+1
                     j=j+1
                     month_dict[j]=som1.strftime('%B')
@@ -167,7 +168,7 @@ class report_custom(report_rml):
                     i=i+1
                     j=j+1
                     month_dict[j]=som1.strftime('%B')
-                    date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som1.replace(day=x).strftime('%a'),cell+x) for x in range(1, eom.day+1)]
+                    date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, _(som1.replace(day=x).strftime('%a')),cell+x) for x in range(1, eom.day+1)]
                     cell=cell+x
                     width_dict[j]=x
                 day_diff1=day_diff1-x
@@ -176,10 +177,11 @@ class report_custom(report_rml):
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s
+        <title>%s</title>
         %s
         %s
         </report>
-        ''' % (header_xml,'\n'.join(user_xml),date_xml)
+        ''' % (header_xml,_('Attendances By Month'),'\n'.join(user_xml),date_xml)
         return xml
 
 report_custom('report.hr.attendance.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')

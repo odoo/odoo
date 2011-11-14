@@ -1,10 +1,9 @@
 from crm import crm
 from osv import fields, osv
 from tools.translate import _
-import base64
+from mail.mail_message import truncate_text
 
 AVAILABLE_STATES = crm.AVAILABLE_STATES + [('unchanged', 'Unchanged')]
-
 
 class crm_add_note(osv.osv_memory):
     """Adds a new note to the case."""
@@ -14,8 +13,11 @@ class crm_add_note(osv.osv_memory):
     _columns = {
         'body': fields.text('Note Body', required=True),
         'state': fields.selection(AVAILABLE_STATES, string='Set New State To',
-                                  required=True), 
-        'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id'),
+                                  required=True),
+    }
+
+    _defaults = {
+        'state': 'unchanged'
     }
 
     def action_add(self, cr, uid, ids, context=None):
@@ -32,14 +34,8 @@ class crm_add_note(osv.osv_memory):
             case_list = case_pool.browse(cr, uid, context['active_ids'],
                                          context=context)
             case = case_list[0]
-            user_obj = self.pool.get('res.users')
-            user_name = user_obj.browse(cr, uid, [uid], context=context)[0].name
-            attach = [
-                (x.name, base64.decodestring(x.binary)) for x in obj.attachment_ids
-            ]
-            case_pool.history(cr, uid, [case], self.pool.get('mailgate.message').truncate_data(cr, uid, obj.body, context=context), history=False,
-                              details=obj.body, email_from=user_name, attach=attach)
-
+            case_pool.message_append(cr, uid, [case], truncate_text(obj.body),
+                                     body_text=obj.body)
             if obj.state == 'unchanged':
                 pass
             elif obj.state == 'done':
@@ -51,12 +47,5 @@ class crm_add_note(osv.osv_memory):
                 getattr(case_pool, act)(cr, uid, [case.id])
 
         return {'type': 'ir.actions.act_window_close'}
-
-    def default_get(self, cr, uid, fields, context=None):
-        """
-        This function gets default values
-        """
-        return {'state': u'unchanged'}
-
 
 crm_add_note()

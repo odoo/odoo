@@ -143,6 +143,17 @@ class res_partner_address(osv.osv):
                 res.append((r['id'], addr.strip() or '/'))
         return res
 
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args=[]
+        ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
+        jobs = self.pool.get('res.partner.job')
+        if name:
+            job_ids = jobs.search(cr, user, [('contact_id', operator, name)] + args, limit=limit, context=context)
+            for job in jobs.browse(cr, user, job_ids):
+                ids += [job.address_id.id]
+        return self.name_get(cr, user, ids, context)
+
     _name = 'res.partner.address'
     _inherit = 'res.partner.address'
     _description ='Partner Address'

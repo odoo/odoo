@@ -37,16 +37,16 @@
         <field name="arch" type="xml">
             <search string="Auction Summary">
                 <group>
-                    <filter icon="terp-go-year" string="Year"
+                    <filter icon="terp-go-year" string="Year" name="year"
                         domain="[('year','=',time.strftime('%%Y'))]"
                         help="Auction during current year."/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-go-month" string="Month"
                         name="month"
                         domain="[('month','=',time.strftime('%%m'))]"
                         help="Auction during current month."/>
                     <filter icon="terp-go-week"
                          string="Month -1"
-                         separator="1"
                          domain="[('month','=',(datetime.date.today() - datetime.timedelta(365/12)).strftime('%%m'))]"
                          help="Auction during last month."/>
                     <separator orientation="vertical"/>
@@ -70,7 +70,7 @@
                     <field name="lot_type"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
+                <group expand="1" string="Group By...">
                     <filter string="User" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                     <filter string="Buyer" icon="terp-personal" name="buyer" context="{'group_by':'buyer'}"/>
                     <filter string="Seller" icon="terp-personal" name="seller" context="{'group_by':'seller'}"/>
@@ -114,7 +114,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_report_auction_search"/>
-        <field name="context">{'search_default_month':1,'search_default_sold':1,'search_default_auction_date':1, 'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_sold':1,'search_default_auction_date':1, 'group_by':[], 'group_by_no_leaf':1}</field>
     </record>
 
     <menuitem name="Auction Analysis" action="action_report_auction" id="menu_report_auction" parent="auction.auction_report_menu"/>

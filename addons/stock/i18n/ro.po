@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-03-24 20:19+0000\n"
+"PO-Revision-Date: 2011-11-07 12:45+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:47+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-11-12 04:50+0000\n"
+"X-Generator: Launchpad (build 14277)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -2111,9 +2111,9 @@ msgid "Future Qty"
 msgstr "Cant. viitoare"
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
-msgstr "Cont variații de stoc"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
+msgstr ""
 
 #. module: stock
 #: field:stock.move,note:0
@@ -2169,7 +2169,7 @@ msgid "Location where the system will stock the finished products."
 msgstr "Locația în care sistemul va stoca produsele finite."
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -2888,7 +2888,7 @@ msgstr "Produse după categorie"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
-msgid "Products Categories"
+msgid "Product Categories"
 msgstr "Categorii Produse"
 
 #. module: stock
@@ -3941,6 +3941,11 @@ msgstr "Mișcare parțială"
 msgid "Optional localization details, for information purpose only"
 msgstr ""
 
+#. module: stock
+#: view:product.product:0
+msgid "Expected Stock Variations"
+msgstr ""
+
 #~ msgid "Dest. Address"
 #~ msgstr "Adresa de destinatie"
 
@@ -3957,6 +3962,12 @@ msgstr ""
 #, python-format
 #~ msgid "is consumed with"
 #~ msgstr "este consumat cu"
+
+#~ msgid "Stock Variation Account"
+#~ msgstr "Cont variații de stoc"
+
+#~ msgid "Products Categories"
+#~ msgstr "Categorii Produse"
 
 #, python-format
 #~ msgid "INV: "

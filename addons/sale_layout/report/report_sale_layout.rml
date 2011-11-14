@@ -133,31 +133,6 @@
     <images/>
   </stylesheet>
   <story>
-  <pto>
-  <pto_header>
-    <blockTable colWidths="198.0,85.0,71.0,57.0,57.0,71.0" style="Table7">
-      <tr>
-        <td>
-          <para style="terp_tblheader_Details">Description</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Centre">VAT</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Quantity</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Unit Price</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Disc.(%)</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Price</para>
-        </td>
-      </tr>
-    </blockTable>
-  </pto_header>
     <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
     <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
     <blockTable colWidths="260.0,64.0,215.0" style="Tableau2">
@@ -275,9 +250,7 @@
       <blockTable colWidths="6.0,193.0,85.0,71.0,57.0,57.0,71.0" style="Table1">
         <tr>
           <td>
-            <para style="terp_default_8">
-              <font face="Helvetica" size="9.0">[[ a['layout_type']=='text' and removeParentNode('blockTable')]]</font>
-            </para>
+            <para style="terp_default_9">[[ a['layout_type']=='text' and removeParentNode('blockTable')]]</para>
           </td>
           <td>
             <para style="terp_default_9"><font face="Helvetica" size="8.0">[[ (a['layout_type']=='title' or a['layout_type']=='subtotal') and ( setTag('para','para',{'fontName':'Helvetica-bold'})) or removeParentNode('font') ]] </font>[[ a['name'] ]]</para>
@@ -295,7 +268,7 @@
             <para style="terp_default_Centre_9"><font face="Helvetica" size="8.0">[[ a['layout_type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font> [[ formatLang(a['discount']) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ a['layout_type']=='break' and removeParentNode('blockTable')]]<font face="Helvetica" size="8.0">[[ a['layout_type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font> [[ formatLang(a['price_subtotal'], digits=get_digits(dp='Sale Price')) ]] [[ o.pricelist_id.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9"><font face="Helvetica" size="8.0">[[ a['layout_type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font> [[ formatLang(a['price_subtotal'], digits=get_digits(dp='Sale Price')) ]] [[ a['currency'] ]]</para>
           </td>
         </tr>
         <tr>
@@ -396,6 +369,5 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-  </pto>
   </story>
 </document>

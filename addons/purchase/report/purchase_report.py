@@ -92,26 +92,23 @@ class purchase_report(osv.osv):
                     s.company_id as company_id,
                     l.product_id,
                     t.categ_id as category_id,
-                    (case when u.uom_type not in ('reference') then
-                            (select id from product_uom where uom_type='reference' and category_id = 1)
-                    else
-                        u.id
-                    end) as product_uom,
+                    t.uom_id as product_uom,
                     s.location_id as location_id,
-                    sum(l.product_qty/u.factor) as quantity,
+                    sum(l.product_qty/u.factor*u2.factor) as quantity,
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
-                    (l.price_unit*l.product_qty*u.factor)::decimal(16,2) as price_total,
-                    avg(100.0 * (l.price_unit*l.product_qty*u.factor) / NULLIF(t.standard_price*l.product_qty*u.factor, 0.0))::decimal(16,2) as negociation,
+                    (l.price_unit*l.product_qty)::decimal(16,2) as price_total,
+                    avg(100.0 * (l.price_unit*l.product_qty) / NULLIF(t.standard_price*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
 
-                    sum(t.standard_price*l.product_qty*u.factor)::decimal(16,2) as price_standard,
-                    (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty*u.factor),0.0))::decimal(16,2) as price_average
+                    sum(t.standard_price*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
+                    (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average
                 from purchase_order s
                     left join purchase_order_line l on (s.id=l.order_id)
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
+                    left join product_uom u2 on (u2.id=t.uom_id)
                 where l.product_id is not null
                 group by
                     s.company_id,
@@ -139,7 +136,9 @@ class purchase_report(osv.osv):
                     s.warehouse_id,
                     u.uom_type, 
                     u.category_id,
-                    u.id
+                    t.uom_id,
+                    u.id,
+                    u2.factor
             )
         """)
 purchase_report()

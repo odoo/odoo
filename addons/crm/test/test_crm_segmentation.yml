@@ -1,0 +1,38 @@
+- |
+  I will test segmentation which create specific partner categories criteria.
+-
+  I create a new segmentation record.
+-
+  !record {model: crm.segmentation, id: crm_segmentation_id_0}:
+    categ_id: base.res_partner_category_5
+    exclusif: true
+    name: segment
+    som_interval: 0.0
+    sales_purchase_active : True
+-
+  I start the process.
+-
+  !python {model: crm.segmentation}: |
+    self.process_start(cr, uid, [ref("crm_segmentation_id_0")],context)
+-
+  I continue the segmentation process.
+-
+  !python {model: crm.segmentation}: |
+    context.update({'start': True})
+    self.process_continue(cr, uid, [ref("crm_segmentation_id_0")], context)
+-
+  I create the segmentation line.
+-
+  !record {model: crm.segmentation.line, id: crm_segmentation_line_id_0}:
+    expr_name: sale
+    expr_operator: '>'
+    expr_value: 1000.0
+    name: Rule1
+    operator: or
+    segmentation_id: crm_segmentation_id_0
+
+-
+  I check the Segmentation line record.
+-
+  !python {model: crm.segmentation.line}: |
+    self.test(cr, uid, [ref("crm_segmentation_line_id_0")],partner_id=0)

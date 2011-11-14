@@ -1,75 +1,17 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-        <record id="pos_visa_journal" model="account.journal">
-            <field name="name">Visa Journal</field>
-            <field name="code">VIJ</field>
-            <field name="type">cash</field>
-            <field eval="1" name="check_dtls"/>
-            <field name="view_id" ref="account.account_journal_view"/>
-            <field name="sequence_id" ref="account.sequence_journal"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
-        </record>
-
-        <!-- <record id="pos_cash_journal" model="account.journal">
-            <field name="name">Cash Journal</field>
-            <field name="code">CAJ</field>
-            <field name="type">cash</field>
-            <field name="view_id" ref="account.account_journal_view"/>
-            <field name="sequence_id" ref="account.sequence_journal"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
-        </record>
-        -->
-
-        <record id="pos_bankcard_journal" model="account.journal">
-            <field name="name">Bancontact Journal</field>
-            <field name="code">BACJ</field>
-            <field name="type">cash</field>
-            <field eval="1" name="check_dtls"/>
-            <field name="view_id" ref="account.account_journal_view"/>
-            <field name="sequence_id" ref="account.sequence_journal"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
-        </record>
-
-        <record id="account.sales_journal" model="account.journal">
-            <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
-        </record>
-
-        <record id="account.refund_sales_journal" model="account.journal">
-            <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
-        </record>
-
-        <record id="account.expenses_journal" model="account.journal">
-            <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
-        </record>
-
-        <record id="account.refund_expenses_journal" model="account.journal">
-            <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
-        </record>
 
         <record id="account.bank_journal" model="account.journal">
-            <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
+            <field eval="True" name="journal_user"/>
         </record>
 
         <record id="account.check_journal" model="account.journal">
-            <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
-        </record>
-
-        <record id="stock.stock_journal" model="account.journal">
-            <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
+            <field eval="True" name="journal_user"/>
         </record>
 
         <record id="account.cash_journal" model="account.journal">
-            <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
+            <field eval="True" name="journal_user"/>
             <field eval="1" name="check_dtls"/>
         </record>
 

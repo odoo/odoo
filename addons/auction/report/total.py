@@ -32,10 +32,8 @@ class report_custom(report_rml):
         report_rml.__init__(self, name, table, tmpl, xsl)
 
     def create_xml(self, cr, uid, ids, datas, context=None):
-        service = netsvc.LocalService("object_proxy")
-
-        lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', ids, ['obj_price','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])
-        auction = service.execute(cr.dbname, uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
+        lots = self.pool.get('auction.lots').read(cr, uid , ids, ['obj_price','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])
+        auction = self.pool.get('auction.dates').read(cr, uid, [lots[0]['auction_id'][0]])[0]
 
         unsold = comm = emp = paid = unpaid = 0
         est1 = est2 = adj = 0
@@ -75,7 +73,7 @@ class report_custom(report_rml):
 
 
         debit = adj
-        costs = service.execute(cr.dbname, uid, 'auction.lots', 'compute_seller_costs', ids)
+        costs = self.pool.get('auction.lots').compute_seller_costs(cr, uid, ids)
         for cost in costs:
             debit += cost['amount']
 

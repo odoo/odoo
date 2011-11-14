@@ -1,8 +1,27 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-        <record model="res.groups" id="group_project_getting">
-            <field name="name">Project / Methodology / Getting Things Done</field>
+        <record model="project.gtd.context" id="context_office">
+            <field name="name">Office</field>
+            <field name="sequence">0</field>
         </record>
+        <record model="project.gtd.context" id="context_travel">
+            <field name="name">Travel</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record model="project.gtd.timebox" id="timebox_daily">
+            <field name="name">Today</field>
+            <field name="icon">terp-go-today</field>
+        </record>
+        <record model="project.gtd.timebox" id="timebox_weekly">
+            <field name="name">This Week</field>
+            <field name="icon">terp-go-week</field>
+        </record>
+        <record model="project.gtd.timebox" id="timebox_lt">
+            <field name="name">Long Term</field>
+            <field name="icon">terp-project</field>
+        </record>
+
     </data>
 </openerp>

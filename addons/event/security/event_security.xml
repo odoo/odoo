@@ -2,12 +2,13 @@
 <openerp>
   <data>
 
-    <record id="marketing.group_marketing_manager" model="res.groups">
-        <field name="name">Marketing / Manager</field>
-    </record>
-
     <record id="marketing.group_marketing_user" model="res.groups">
         <field name="name">Marketing / User</field>
+    </record>
+
+    <record id="marketing.group_marketing_manager" model="res.groups">
+        <field name="name">Marketing / Manager</field>
+        <field name="implied_ids" eval="[(4, ref('marketing.group_marketing_user'))]"/>
     </record>
 
     <record id="base.group_sale_manager" model="res.groups">

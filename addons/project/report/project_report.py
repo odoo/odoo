@@ -128,6 +128,7 @@ class project_vs_hours(osv.osv):
     _columns = {
         'project': fields.char('Project', size=128, required=True),
         'remaining_hours': fields.float('Remaining Hours', readonly=True),
+        'user_id': fields.many2one('res.users', 'Assigned To', readonly=True),
         'planned_hours': fields.float('Planned Hours', readonly=True),
         'total_hours': fields.float('Total Hours', readonly=True),
         'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Close'),('template', 'Template')], 'State', required=True, readonly=True)
@@ -140,7 +141,7 @@ class project_vs_hours(osv.osv):
             CREATE or REPLACE view project_vs_hours as (
                 select
                       min(pt.id) as id,
-                      aaa.user_id as uid,
+                      aaa.user_id as user_id,
                       aaa.name as project,
                       aaa.state,
                       sum(pt.remaining_hours) as remaining_hours,
@@ -154,7 +155,7 @@ class project_vs_hours(osv.osv):
                  UNION All
                  SELECT
                       min(pt.id) as id,
-                      pur.uid as uid,
+                      pur.uid as user_id,
                       aaa.name as project,
                       aaa.state,
                       sum(pt.remaining_hours) as remaining_hours,

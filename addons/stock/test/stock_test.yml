@@ -2,224 +2,103 @@
 -
   In order to test the stock module, I will create product,
   create physical inventory ,fill inventory lines from location,split inventory line into production lot
+-
+  I create Stock Production Lot for product PC3
+-
+  !record {model: stock.production.lot, id: stock_production_lot0}:
+    product_id: product.product_product_pc3
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    name: 0000001
+-
+  I trace the Stock Production Lot for product PC3.
+-
+  !python {model: stock.production.lot }: |
+    self.action_traceability(cr,uid,[ref('stock_production_lot0')], {'lang': 'en_US', 'tz': False, 'active_model': 'ir.ui.menu', 'field': '', 'type': ''})
 
 -
-  I create Asset Account Type.
+  I create change product quantity for product PC3.
 -
-  !record {model: account.account.type, id: account_account_type_asset0}:
-    close_method: balance
-    code: asset
-    name: Asset
-    sign: 1
+  !record {model: stock.change.product.qty, id: stock_change_product_qty0}:
+    product_id: product.product_product_pc3
+    new_quantity: 100
+    location_id: stock.stock_location_stock
+    prodlot_id: stock.stock_production_lot0
 
 -
-   I create Income Account Type.
+  I apply the new quantity on product PC3.
 -
-  !record {model: account.account.type, id: account_account_type_income0}:
-    close_method: unreconciled
-    code: income
-    name: Income
-    sign: 1
-
-
--
-  I create Expense Account Type.
--
-  !record {model: account.account.type, id: account_account_type_expense0}:
-    close_method: unreconciled
-    code: expense
-    name: Expense
-    sign: 1
--
-  I create Cash Account Type.
--
-  !record {model: account.account.type, id: account_account_type_cash0}:
-    close_method: balance
-    code: cash
-    name: Cash
-    sign: 1
-
+  !python {model: stock.change.product.qty }: |
+    context = {"lang": 'en_US', "active_model":
+      "product.product", "active_ids": [ref("product.product_product_pc3")], "tz": False, "active_id":ref('product.product_product_pc3')}
+    self.default_get(cr, uid, ["prodlot_id", "location_id", "new_quantity", "product_id"], context)
+    self.fields_view_get(cr, uid, ref("stock.view_change_product_quantity"),"form", context)
+    self.change_product_qty(cr, uid, [ref("stock_change_product_qty0")], {"lang": 'en_US', "active_model":
+      "stock.change.product.qty", "active_ids": ref("product.product_product_pc3"), "tz": False, "active_id":ref('product.product_product_pc3')})
 
 -
-  I create Receivable Account Type.
+  I check that the quantity on product PC3 is updated.
 -
-  !record {model: account.account.type, id: account_account_type_receivable0}:
-    close_method: balance
-    code: receivable
-    name: Receivable
-    sign: 1
--
-
-  I create Receivable Account .
--
-  !record {model: account.account, id: account_account_receivable0}:
-    code: '40000-stock-test'
-    company_id: base.main_company
-    currency_mode: current
-    name: Receivable
-    parent_left: 1
-    parent_right: 2
-    type: receivable
-    user_type: account_account_type_receivable0
--
-  I create Payable Account.
--
-  !record {model: account.account, id: account_account_payable0}:
-    code: '440000-stock-test'
-    company_id: base.main_company
-    currency_mode: current
-    name: Payable
-    parent_left: 3
-    parent_right: 4
-    type: payable
-    user_type: account_account_type_expense0
--
-  I create Purchase Journal - (test).
--
-  !record {model: account.journal, id: account_journal_purchasejournal0}:
-    code: pur
-    company_id: base.main_company
-    name: Purchase Journal - (test)
-    sequence_id:  account.sequence_purchase_journal
-    type: purchase
-    view_id: account.account_journal_bank_view
+  !python {model: product.product }: |
+    pro_obj = self.browse(cr, uid, ref("product.product_product_pc3"))
+    assert (pro_obj.qty_available >= 100) , "The quantity of PC3 is not updated!"
 
 -
-  I create Sale Journal.
+  I Read quantity on product PC3.
 -
-  !record {model: account.journal, id: account_journal_salejouran0}:
-    code: sal
-    company_id: base.main_company
-    name: Sale Journal
-    sequence_id: account.sequence_sale_journal
-    type: sale
-    view_id: account.account_journal_view
+  !python {model: stock.location }: |
+    self.read(cr, uid, [ref("stock.stock_location_stock")],['stock_real_value','stock_virtual'], {'lang': 'en_GB', 'tz': False, 'active_model': 'product.product', 'bin_size': True, 'active_ids': [ref("product.product_product_pc3")], 'product_id':ref("product.product_product_pc3"), 'active_id': ref("product.product_product_pc3")})
+
+- 
+  I Creating a chained stock.location record
+- 
+  !record {model: stock.location, id: stock_location_loc0}:
+    chained_auto_packing: auto
+    chained_delay: 0.0
+    chained_location_id: stock.stock_location_customers
+    chained_location_type: fixed
+    location_id: stock.stock_location_company
+    name: chain location
+    parent_left: 2
+    parent_right: 3
+    usage: internal
 
 -
-  I create Expense Account.
+  I create Product By location chart for stock.location.product Object.
 -
-  !record {model: account.account, id: account_account_expenseaccount0}:
-    code: Expe
-    company_id: base.main_company
-    currency_mode: current
-    name: Expense Account
-    parent_left: 5
-    parent_right: 6
-    type: consolidation
-    user_type: account_account_type_asset0
--
-  I create Product Sale Account.
--
-  !record {model: account.account, id: account_account_productsale0}:
-    code: '001-stock-test'
-    company_id: base.main_company
-    currency_mode: current
-    name: Product Sale
-    type: other
-    user_type: stock.account_account_type_income0
-
+  !record {model: stock.location.product, id: stock_location_product0}:
+    from_date: '2011-07-01 00:00:00'
+    to_date: '2011-07-31 23:59:00'
 
 -
-  I create Product Purchase Account.
+  I open product chart.
 -
-  !record {model: account.account, id: account_account_productpurchase0}:
-    code: '0002-stock-test'
-    company_id: base.main_company
-    currency_mode: current
-    name: Product Purchase
-    type: other
-    user_type: account_account_type_expense0
+  !python {model: stock.location.product }: |
+    self.action_open_window(cr, uid, [ref("stock_location_product0")], {'lang': 'en_US', 'full': 1, 'tz': False, 'active_model': 'stock.location', 'search_default_in_location': 1, 'active_ids': [ref("stock.stock_location_stock")], 'active_id': ref("stock.stock_location_stock")})
 
 -
-  I create partner.
+  I open product form from stock.location object .
 -
-  !record {model: res.partner, id: res_partner_shawtrust0}:
-    address:
-      - country_id: base.in
-      - street: St James House, Vicar Lane, Sheffield
-    lang: en_US
-    name: 'Shaw Trust '
-    property_account_payable: account_account_payable0
-    property_account_receivable: account_account_receivable0
--
-  I create partner.
--
-  !record {model: res.partner, id: res_partner_diasorinltd0}:
-    address:
-      - country_id: base.in
-        street: Ash House, Ash Road
-    name: DiaSorin Ltd
-    supplier: true
-
+  !python {model: product.product }: |
+    self.fields_view_get(cr, uid, False, "tree", {'lang': 'en_US', 'full': 1, 'tz': False, 'active_model': 'stock.location', 'location': ref('stock.stock_location_stock'), 'search_default_in_location': 1, 'active_ids': [ref("stock.stock_location_stock")], 'active_id': ref("stock.stock_location_stock")})
 
 -
-  I create partner.
+  I create change product standard price for product PC3.
 -
-  !record {model: res.partner, id: res_partner_microlinktechnologies0}:
-    address:
-      - street: Kailash Vaibhav, Parksite
-    name: Micro Link Technologies
-    property_account_payable: account_account_payable0
-    property_account_receivable: account_account_receivable0
-    supplier: true
+  !record {model: stock.change.standard.price, id: stock_change_standard_price0}:
+    new_price: 1515
+    stock_account_input: account.a_recv
+    stock_account_output: account.a_pay
+    stock_journal: account.expenses_journal
+    enable_stock_in_out_acc: True
 
 -
-  I create partner address.
+  I apply the new product standard price on product PC3.
 -
-  !record {model: res.partner.address, id: res_partner_address_0}:
-    country_id: base.in
-    partner_id: stock.res_partner_diasorinltd0
-    street: Ash House, Ash Road
-    title: base.res_partner_title_miss
-
-
--
-  I create  product.category .
--
-  !record {model: product.category, id: product_category_computer0}:
-    name: Computer
-
--
-   I create  product HP Pavilion Desktop PCs .
--
-  !record {model: product.product, id: product_product_hppaviliondesktoppcs0}:
-    categ_id: stock.product_category_computer0
-    cost_method: standard
-    mes_type: fixed
-    list_price: 1000.0
-    name: HP Pavilion Desktop PCs
-    procure_method: make_to_stock
-    seller_ids:
-      - delay: 1
-        name: stock.res_partner_shawtrust0
-        min_qty: 5.0
-    supply_method: buy
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
-    property_account_expense: account_account_productsale0
-    property_account_income: account_account_productsale0
-
--
-  I create  product HP CD writers.
--
-  !record {model: product.product, id: product_product_hpcdwriters0}:
-    categ_id: stock.product_category_computer0
-    cost_method: standard
-    list_price: 1000.0
-    mes_type: fixed
-    name: HP CD writers
-    procure_method: make_to_stock
-    seller_ids:
-      - delay: 1
-        name: res_partner_shawtrust0
-        min_qty: 5.0
-    supply_method: buy
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
-    property_account_expense: account_account_productpurchase0
-    property_account_income: account_account_productsale0
+  !python {model: stock.change.standard.price }: |
+    context = {"lang": 'en_US', "active_model":
+      "product.product", "active_ids": [ref("product.product_product_pc3")], "tz": False, "active_id":ref('product.product_product_pc3')}
+    self.default_get(cr, uid, ["new_price"], context)
+    self.change_price(cr, uid, [ref("stock_change_product_qty0")], context)
 
 -
   I create Physical Inventory for the products.
@@ -227,64 +106,123 @@
    !record {model: stock.inventory, id: stock_inventory_physicalinventoy0}:
     company_id: base.main_company
     date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-    date_done: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     inventory_line_id:
       - company_id: base.main_company
         location_id: stock.stock_location_stock
-        product_id: stock.product_product_hpcdwriters0
+        product_id: product.product_product_pc3
         product_qty: 10.0
         product_uom: product.product_uom_unit
       - company_id: base.main_company
         location_id: stock.stock_location_stock
-        product_id: stock.product_product_hppaviliondesktoppcs0
+        product_id: product.product_product_pc1
         product_qty: 10.0
         product_uom: product.product_uom_unit
     name: Physical inventory
     state: draft
 
+-
+  I create merge Inventory for the products.
+-
+   !record {model: stock.inventory, id: stock_inventory_mergeinventoy0}:
+    company_id: base.main_company
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    inventory_line_id:
+      - company_id: base.main_company
+        location_id: stock.stock_location_stock
+        product_id: product.product_product_pc3
+        product_qty: 20.0
+        product_uom: product.product_uom_unit
+      - company_id: base.main_company
+        location_id: stock.stock_location_stock
+        product_id: product.product_product_pc1
+        product_qty: 20.0
+        product_uom: product.product_uom_unit
+    name: Physical inventory
+    state: draft
 
 -
-  I confirm the Inventory for HP CD writers.
+  I merge inventory .
 -
-  !python {model: stock.inventory}: |
-   self.action_confirm(cr,uid,[ref('stock_inventory_physicalinventoy0')])
-   self.action_done(cr,uid,[ref('stock_inventory_physicalinventoy0')])
+  !python {model: stock.inventory.merge}: |
+    context = {"lang": 'en_US',
+      "full": "1", "tz": False, "active_model": "stock.inventory", "active_ids":
+      [ref("stock_inventory_physicalinventoy0"), ref("stock_inventory_mergeinventoy0")], "active_id": ref("stock_inventory_physicalinventoy0"), }
+    self.fields_view_get(cr, uid, False, "form", context)
+    self.do_merge(cr, uid, [ref("stock_inventory_mergeinventoy0")], context)
+
+-
+  I create stock.inventory.line record.
+-
+  !record {model: stock.inventory.line, id: stock_inventory_line}:
+    product_id: product.product_product_pc1
+    product_uom: product.product_uom_unit
+    product_qty: 10
+    inventory_id: stock_inventory_mergeinventoy0
+    location_id: stock.stock_location_stock
+
+-
+  I Change a Product oF stock.inventory.line record.
+-
+  !python {model: stock.inventory.line}: |
+    self.on_change_product_id(cr, uid, [ref("stock_inventory_line")], ref('stock.stock_location_stock'), ref('product.product_product_pc3'), False, False)
+
 -
   I create stock.fill.inventory .
 -
   !record {model: stock.fill.inventory, id: stock_fill_inventory_0}:
     location_id: stock.stock_location_stock
+    recursive: False
+    set_stock_zero: False
 
 -
-  I fill inventory for HP CD writers.
+  I fill inventory for PC3.
 -
   !python {model: stock.fill.inventory}: |
-    self.fill_inventory(cr, uid, [ref("stock_fill_inventory_0")], {"lang": 'en_US',
-      "full": "1", "tz": False, "active_model": "stock.inventory", "active_ids":
-      [ref("stock_inventory_physicalinventoy0")], "active_id": ref("stock_inventory_physicalinventoy0"), })
+    context = {"lang": 'en_US',"full": "1", "tz": False, "active_model": "stock.inventory", "active_ids":
+      [ref("stock_inventory_physicalinventoy0")], "active_id": ref("stock_inventory_physicalinventoy0")}
+    self.view_init(cr, uid, ["set_stock_zero", "location_id", "recursive"], context)
+    self.fill_inventory(cr, uid, [ref("stock_fill_inventory_0")], context)
 
 -
-  I create stock.move.split record.
+  I split the PC3 inventory line to create 5 PC3 with production lot 00002-stock-test
 -
-  !record {model: stock.move.split, id: stock_move_split_0}:
+  !record {model: stock.inventory.line.split, id: stock_inventory_line_0}:
     line_ids:
-      - name: '00001-stock-test'
+      - name: '00002-stock-test'
         quantity: 5
-    product_id: stock.product_product_hpcdwriters0
+    product_id: product.product_product_pc1
+    product_uom: product.product_uom_unit
+    use_exist: False
+    qty: 10
+-
+  I confirm the split operation
+-
+  !python {model: stock.inventory.line}: |
+    line_ids = self.search(cr, uid, [('inventory_id','=',ref('stock_inventory_physicalinventoy0')),
+                                     ('product_id','=',ref('product.product_product_pc1'))])
+    assert line_ids, 'Inventory lines are missing'
+    self.pool.get('stock.inventory.line.split').split_lot(cr, uid, [ref("stock_inventory_line_0")],
+                                                            {'active_model': 'stock.inventory.line',
+                                                             'active_ids': [line_ids[0]]})
+-
+  I confirm the Inventory for PC3.
+-
+  !python {model: stock.inventory}: |
+   self.action_confirm(cr,uid,[ref('stock_inventory_physicalinventoy0')])
+   self.action_done(cr,uid,[ref('stock_inventory_physicalinventoy0')])
+-
+  I cancel the Inventory for PC3.
+-
+  !python {model: stock.inventory}: |
+   self.action_cancel_inventary(cr,uid,[ref('stock_inventory_physicalinventoy0')])
 
 -
-  I Split into production line.
+  I change inventory state to draft for PC3.
 -
-  !python {model: stock.move.split}: |
-    move_obj=self.pool.get('stock.move')
-    product_obj=self.pool.get('product.product')
-    product_id=product_obj.search(cr,uid,[('name','=','HP CD writers')])
-    move_ids=move_obj.search(cr,uid,[('product_id','in',product_id)])
-    self.split_lot(cr, uid, [ref("stock_move_split_0")], {"lang": 'en_US', "active_model":
-      "stock.move", "active_ids": move_ids, "tz": False, "active_id":move_ids[0]
-      })
--
+  !python {model: stock.inventory}: |
+   self.action_cancel_draft(cr,uid,[ref('stock_inventory_physicalinventoy0')])
 
+-
   In Order to test the picking I create picking with move lines.
 -
   !record {model: stock.picking, id: stock_picking_0}:
@@ -292,21 +230,36 @@
     address_id: base.res_partner_address_4
     company_id: base.main_company
     date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-    invoice_state: none
+    invoice_state: 2binvoiced
     move_lines:
       - company_id: base.main_company
         date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-        location_dest_id: stock.stock_location_customers
+        location_dest_id: stock.stock_location_loc0
         location_id: stock.stock_location_stock
-        name: HP CD writers
-        product_id: product.product_product_pc1
-        product_qty: 3.0
+        name: PC3
+        product_id: product.product_product_pc3
+        product_qty: 100.0
         product_uom: product.product_uom_unit
         date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-        product_uos_qty: 3.0
+        product_uos_qty: 100.0
     move_type: direct
-    type: internal
+    type: out
 
+-
+  I split the picking with a first batch of 20 PCs
+-
+  !python {model: stock.picking }: |
+    pick=self.browse(cr,uid,ref('stock_picking_0'))
+    split_obj=self.pool.get('stock.split.into')
+    partial_datas={}
+    move=pick.move_lines[0]
+    partial_datas= {
+          'quantity': 20,
+      }
+    split_id = self.pool.get('stock.split.into').create(cr, uid, partial_datas)
+    split_obj.split(cr, uid, [split_id], {"lang": "en_US", "tz":
+    False, "active_model": "stock.move", "active_ids": [move.id],
+    "active_id": move.id, })
 
 -
   I click on draft_force_assign on picking.
@@ -317,31 +270,156 @@
       "partner", "active_ids": [ref("stock.menu_action_picking_tree6")], "active_id":
       ref("stock.menu_action_picking_tree6"), })
 
-
 -
-  I click on force_assign on picking.
+  I click on action_assign on picking.
 -
   !python {model: stock.picking}: |
-    self.force_assign(cr, uid, [ref("stock_picking_0")], {"lang": "en_US", "active_model":
+    self.action_assign(cr, uid, [ref("stock_picking_0")], {"lang": "en_US", "active_model":
       "ir.ui.menu", "tz": False, "search_default_confirmed": 1, "contact_display":
       "partner", "active_ids": [ref("stock.menu_action_picking_tree6")], "active_id":
       ref("stock.menu_action_picking_tree6"), })
 
 -
-  I confirm the picking.
+  I process the partial picking with 20 PCE
 -
   !python {model: stock.picking }: |
-   import time
-   pick=self.browse(cr,uid,ref('stock_picking_0'))
-   move =pick.move_lines[0]
-   partial_datas = {
-          'partner_id':pick.address_id.partner_id.id,
-           'address_id': pick.address_id.id,
-           'delivery_date' : time.strftime('%Y-%m-%d')
-            }
-   partial_datas['move%s'%(move.id)]= {
-          'product_id': move.product_id,
-          'product_qty': move.product_qty,
+   pick = self.browse(cr,uid,ref('stock_picking_0'))
+   stock_partial_move = self.pool.get('stock.partial.move')
+   partial_id = stock_partial_move.create(cr, uid, {},
+           context={'active_model': 'stock.move',
+                    'active_ids': [x.id for x in pick.move_lines]})
+   stock_partial_move.do_partial(cr, uid, [partial_id])
+-
+  I Performing an osv_memory action split_lot on module stock.move.split
+-
+
+  !python {model: stock.picking }: |
+    split_obj=self.pool.get('stock.move.split')
+    split_move_lines=self.pool.get('stock.move.split.lines')
+    pick=self.browse(cr,uid,ref('stock_picking_0'))
+    partial_datas={}
+    move=pick.move_lines[0]
+    partial_datas= {
+          'product_id': move.product_id.id,
+          'qty': 80,
+          'product_uom': move.product_uom.id,
+          'use_exist': move.picking_id and move.picking_id.type=='out' and True or False
+      }
+    split_id = self.pool.get('stock.move.split').create(cr, uid, partial_datas, context={})
+    split_move_data= {
+          'lot_id': split_id,
+          'quantity': 10,
+          'name': 'lot',
+    }
+    split_move_id = split_move_lines.create(cr, uid, split_move_data, context={})
+    split_obj.default_get(cr, uid, ["product_id", "product_uom", "line_exist_ids", "qty",
+     "line_ids", "use_exist"], {'lang': 'en_US', 'default_location_dest_id': ref('stock.stock_location_stock'), 'tz': False, 'active_model': 'stock.move', 'search_default_receive': 1, 'product_receive': True, 'active_ids': [move.id], 'default_location_id': ref('stock.stock_location_locations'), 'active_id': move.id})
+    split_obj.split_lot(cr, uid, [split_id], context={"lang": "en_US", "tz":
+    False, "active_model": "stock.move", "scrap": True, "active_ids": [move.id],
+    "active_id": move.id, })
+
+-
+  I Performed an osv_memory action move_scrap on module stock.move.scrap
+-
+  !python {model: stock.picking }: |
+    location_obj = self.pool.get('stock.location')
+    scrpaed_location_ids = location_obj.search(cr, uid, [('scrap_location','=',True)])
+    pick=self.browse(cr,uid,ref('stock_picking_0'))
+    scrap_obj=self.pool.get('stock.move.scrap')
+    partial_datas={}
+    move=pick.move_lines[0]
+    partial_datas= {
+          'product_id': move.product_id.id,
+          'location_id': scrpaed_location_ids[0],
+          'product_qty': 1,
           'product_uom': move.product_uom.id,
       }
-   self.do_partial(cr, uid, [ref('stock_picking_0')],partial_datas)
+    scrap_id = scrap_obj.create(cr, uid, partial_datas)
+    context = {"lang": "en_US", "tz": False, "active_model": "stock.move", 
+    "scrap": True, "active_ids": [move.id], "active_id": move.id, }
+    scrap_obj.default_get(cr, uid, ["location_id", "product_id", "product_uom", "product_qty"], context)
+    scrap_obj.move_scrap(cr, uid, [scrap_id], context)
+
+-
+  I Performed an osv_memory do move consume  on module stock.move.consume
+-
+  !python {model: stock.picking }: |
+    location_obj = self.pool.get('stock.location')
+    scrpaed_location_ids = location_obj.search(cr, uid, [('scrap_location','=',True)])
+    pick=self.browse(cr,uid,ref('stock_picking_0'))
+    consume_obj=self.pool.get('stock.move.consume')
+    partial_datas={}
+    move=pick.move_lines[0]
+    partial_datas= {
+          'product_id': move.product_id.id,
+          'location_id': scrpaed_location_ids[0],
+          'product_qty': 1,
+          'product_uom': move.product_uom.id,
+      }
+    context = {"lang": "en_US", "tz": False, "active_model": "stock.move", 
+    "scrap": True, "active_ids": [move.id], "active_id": move.id, }
+    consume_id = consume_obj.create(cr, uid, partial_datas)
+    consume_obj.default_get(cr, uid, ["location_id", "product_id", "product_uom", "product_qty"], context)
+    consume_obj.do_move_consume(cr, uid, [consume_id], context)
+
+-
+  I process the picking with the 80 remaining PCs
+-
+  !python {model: stock.picking}: |
+     stock_partial_picking = self.pool.get('stock.partial.picking')
+     partial_id = stock_partial_picking.create(cr, uid, {},
+             context={'active_model': 'stock.picking',
+                      'active_ids': [ref('stock_picking_0')]})
+     stock_partial_picking.do_partial(cr, uid, [partial_id])
+-
+  I Performing an osv_memory action create_invoice on module stock.invoice.onshipping
+-
+  !python {model: stock.invoice.onshipping}: |
+    invoice_line_id = self.create(cr, uid,{}, {"lang": 'en_US', "active_model":
+      "stock.picking", "active_ids": [ref("stock_picking_0")], "tz": False, "active_id":ref("stock_picking_0")})
+    self.open_invoice(cr, uid, [invoice_line_id], {"lang": "en_US",
+      "search_default_available": 1, "inv_type": "in_invoice" , "tz": False, "active_model": "stock.picking",
+      "contact_display": "partner_address", "active_ids": [ref("stock_picking_0")],
+      "active_id": ref("stock_picking_0")})
+    self._get_journal_id(cr, uid, {"lang": "en_US", "search_default_available": 1, "tz": False, "active_model": "stock.picking",
+      "contact_display": "partner_address", "active_ids": [ref("stock_picking_0")],
+      "active_id": ref("stock_picking_0"), })
+
+-
+  I create a record of stock.picking and unlink a record
+-
+  !python {model: stock.picking}: |
+    copy_id = self.copy(cr, uid, (ref("stock_picking_0")))
+    ctx = {"lang": "en_US", "active_model":
+      "ir.ui.menu", "tz": False, "search_default_confirmed": 1, "contact_display":
+      "partner", "active_ids": [ref("stock.menu_action_picking_tree6")], "active_id":
+      ref("stock.menu_action_picking_tree6"), }
+    self.draft_force_assign(cr, uid, [copy_id], ctx)
+    self.unlink(cr, uid, [copy_id], ctx)
+
+-
+  I create a record of stock.picking and cancel a record
+-
+  !python {model: stock.picking}: |
+    copy_id = self.copy(cr, uid, (ref("stock_picking_0")))
+    self.draft_validate(cr, uid, [copy_id], {"lang": "en_US", "search_default_available":
+      1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner_address",
+      "active_ids": [ref("stock.menu_action_picking_tree4")], "active_id": ref("stock.menu_action_picking_tree4"),
+      })
+    self.allow_cancel(cr, uid, [copy_id], context= None)
+
+-
+  I process a copy of the picking and I return it
+-
+  !python {model: stock.picking}: |
+    copy_id = self.copy(cr, uid, (ref("stock_picking_0")))
+    self.draft_force_assign(cr, uid, [copy_id])
+    self.force_assign(cr, uid, [copy_id])
+    stock_partial_picking = self.pool.get('stock.partial.picking')
+    context = {'active_model': 'stock.picking',
+               'active_ids': [copy_id],
+               'active_id': copy_id}
+    partial_id = stock_partial_picking.create(cr, uid, {}, context=context)
+    stock_partial_picking.do_partial(cr, uid, [partial_id], context)
+    return_pick_id = self.pool.get('stock.return.picking').create(cr, uid,{}, context)
+    self.pool.get('stock.return.picking').create_returns(cr, uid, [return_pick_id], context)

@@ -20,6 +20,7 @@
 ##############################################################################
 
 import threading
+import pooler
 
 from osv import osv, fields
 
@@ -44,9 +45,13 @@ class procurement_compute_all(osv.osv_memory):
         @param context: A standard dictionary
         """
         proc_obj = self.pool.get('procurement.order')
-        for proc in self.browse(cr, uid, ids, context=context):
-            proc_obj.run_scheduler(cr, uid, automatic=proc.automatic, use_new_cursor=cr.dbname,\
+        #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
+        new_cr = pooler.get_db(cr.dbname).cursor()
+        for proc in self.browse(new_cr, uid, ids, context=context):
+            proc_obj.run_scheduler(new_cr, uid, automatic=proc.automatic, use_new_cursor=new_cr.dbname,\
                     context=context)
+        #close the new cursor
+        new_cr.close()
         return {}
 
     def procure_calculation(self, cr, uid, ids, context=None):

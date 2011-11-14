@@ -64,7 +64,7 @@ class idea_category(osv.osv):
     _order = 'parent_id,name asc'
 
     _constraints = [
-        (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
     ]
 
 idea_category()
@@ -185,7 +185,7 @@ class idea_idea(osv.osv):
         'count_votes': fields.function(_vote_count, string="Count of votes", type="integer"),
         'count_comments': fields.function(_comment_count, string="Count of comments", type="integer"),
         'category_id': fields.many2one('idea.category', 'Category', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'state': fields.selection([('draft', 'Draft'),
+        'state': fields.selection([('draft', 'New'),
             ('open', 'Opened'),
             ('close', 'Accepted'),
             ('cancel', 'Refused')],

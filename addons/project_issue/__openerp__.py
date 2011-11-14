@@ -21,7 +21,7 @@
 ##############################################################################
 
 {
-    'name': 'Issue Management in Project Management',
+    'name': 'Issues Tracker',
     'version': '1.0',
     'category': 'Project Management',
     'complexity': "easy",

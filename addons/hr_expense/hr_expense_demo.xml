@@ -26,18 +26,6 @@
             <field name="hr_expense_ok" eval="True" />
         </record>
 
-        <record id="product_product_expense_car" model="product.product">
-            <field name="list_price">0.30</field>
-            <field name="standard_price">0.30</field>
-            <field name="uom_id" ref="product.product_uom_km"/>
-            <field name="uom_po_id" ref="product.product_uom_km"/>
-            <field name="type">consu</field>
-            <field name="name">Car Travel</field>
-            <field name="default_code">CAR</field>
-            <field name="categ_id" ref="product.cat2"/>
-            <field name="hr_expense_ok" eval="True" />
-        </record>
-
         <record id="hr_expense_expense_septemberexpenses0" model="hr.expense.expense">
             <field name="currency_id" ref="base.EUR"/>
             <field name="employee_id" ref="hr.employee1"/>

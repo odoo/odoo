@@ -21,7 +21,7 @@
   !record {model: sale.order, id: sale_order_so0}:
     date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
-    name: SO006
+    name: TESTSO006
     order_policy: manual
     partner_id: base.res_partner_asus
     partner_invoice_id: base.res_partner_address_tang
@@ -67,4 +67,4 @@
     order = order_obj.browse(cr, uid, ref('sale_order_so0')) 
     task_id = self.search(cr, uid, [('name','like', order.name)]) 
     assert task_id, 'No Task is created!'
-    
+

@@ -49,11 +49,10 @@ class pos_box_out(osv.osv_memory):
         return res
 
     _columns = {
-        'name': fields.char('Description', size=32, required=True),
+        'name': fields.char('Description / Reason', size=32, required=True),
         'journal_id': fields.selection(pos_box_entries.get_journal, "Cash Register", required=True),
         'product_id': fields.selection(_get_expense_product, "Operation", required=True),
-        'amount': fields.float('Amount', digits=(16, 2)),
-        'ref': fields.char('Ref', size=32),
+        'amount': fields.float('Amount', digits=(16, 2), required=True),
     }
     _defaults = {
          'journal_id': 1,
@@ -81,18 +80,8 @@ class pos_box_out(osv.osv_memory):
             sunday = (datetime.today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')
             done_statmt = statement_obj.search(cr, uid, [('date', '>=', monday+' 00:00:00'), ('date', '<=', sunday+' 23:59:59'), ('journal_id', '=', data['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid)], context=context)
             stat_done = statement_obj.browse(cr, uid, done_statmt, context=context)
-            address_u = res_obj.browse(cr, uid, uid, context=context).address_id
             am = 0.0
             product = product_obj.browse(cr, uid, data['product_id'], context=context)
-            amount_check = product.am_out or False
-            for st in stat_done:
-                for s in st.line_ids:
-                    if address_u and s.partner_id == address_u.partner_id and s.am_out:
-                        am += s.amount
-            if (-data['amount'] or 0.0) + am < -(res_obj.browse(cr, uid, uid, context=context).company_id.max_diff or 0.0) and amount_check:
-                val = (res_obj.browse(cr, uid, uid).company_id.max_diff or 0.0) + am
-                raise osv.except_osv(_('Error !'), _('The maximum value you can still withdraw is exceeded. \n Remaining value is equal to %d ')%(val))
-
             acc_id = product.property_account_income
             if not acc_id:
                 raise osv.except_osv(_('Error !'), _('please check that account is set to %s')%(product.name))
@@ -115,13 +104,7 @@ class pos_box_out(osv.osv_memory):
             if data['amount'] > 0:
                 amount = -data['amount']
             vals['amount'] = amount
-            if product.am_out:
-                vals['am_out'] = True
-            vals['ref'] = data['ref'] or ''
             vals['name'] = "%s: %s " % (product.name, data['name'])
-            address_u = res_obj.browse(cr, uid, uid, context=context).address_id
-            if address_u:
-                vals['partner_id'] = address_u.partner_id and address_u.partner_id.id or None
             statement_line_obj.create(cr, uid, vals, context=context)
         return {}
 

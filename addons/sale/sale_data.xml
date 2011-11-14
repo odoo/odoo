@@ -13,11 +13,15 @@
     Resource: sale.shop
     -->
         <record id="shop" model="sale.shop">
-            <field model="res.company" name="name" search="[]" use="name"/>
-            <field model="stock.warehouse" name="warehouse_id" search="[]"/>
-            <field model="account.payment.term" name="payment_default_id" search="[]"/>
-            <field model="res.company" name="company_id" search="[]"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="warehouse_id" ref="stock.warehouse0"/>
+            <field name="payment_default_id" ref="account.account_payment_term"/>
             <field name="pricelist_id" ref="product.list0"/>
+
+            <!--  Copy the name of any company. Without demo data this will yield
+                  the main company name, which is correct. With demo data it will
+                  be random, but it does not matter much -->
+            <field model="res.company" name="name" search="[]" use="name"/>
         </record>
 
         <function eval="('default',False,'shop_id', [('sale.order', False)], shop, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>

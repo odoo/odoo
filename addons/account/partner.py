@@ -28,10 +28,15 @@ class account_fiscal_position(osv.osv):
     _description = 'Fiscal Position'
     _columns = {
         'name': fields.char('Fiscal Position', size=64, required=True),
+        'active': fields.boolean('Active', help="By unchecking the active field, you may hide a fiscal position without deleting it."),
         'company_id': fields.many2one('res.company', 'Company'),
         'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Tax Mapping'),
         'note': fields.text('Notes', translate=True),
+    }
+
+    _defaults = {
+        'active': True,
     }
 
     def map_tax(self, cr, uid, fposition_id, taxes, context=None):

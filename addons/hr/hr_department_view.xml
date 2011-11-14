@@ -71,9 +71,9 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook" position="before">
+                <group name="default_filters" position="inside">
                     <field name="context_department_id" completion="1" widget="selection" string="Department"/>
-                </xpath>
+                </group>
             </field>
         </record>
         <record model="ir.ui.view" id="view_department_form_simple_modif_inherited1">
@@ -82,9 +82,9 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <page string="Current Activity" position="inside">
+                <group name="default_filters" position="inside">
                     <field name="context_department_id" widget="selection" readonly="0"/>
-                </page>
+                </group>
             </field>
         </record>
         </data>

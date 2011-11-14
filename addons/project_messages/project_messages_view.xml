@@ -70,7 +70,7 @@
            <field name="arch" type="xml">
                <search string="Project Messages">
                		<group>
-                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','&gt;=',time.strftime('%%Y-%%m-%%d')),('create_date','&lt;', (datetime.date.today() + datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d'))]"/>
+                        <filter icon="terp-go-today" string="Today"  domain="[('create_date','&gt;=',time.strftime('%%Y-%%m-%%d')),('create_date','&lt;', (datetime.date.today() + datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
                			<field name="project_id"/>
                         <field name="from_id"/>
@@ -78,7 +78,7 @@
                         <field name="message"/>
                		</group>
                		<newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="Message To" icon="terp-personal" domain="[]" context="{'group_by':'to_id'}"/>
                         <filter string="Message From" icon="terp-personal" domain="[]" context="{'group_by':'from_id'}"/>
                         <separator orientation="vertical"/>

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-  <data>
+    <data>
 
-    <record id="view_partner_form" model="ir.ui.view">
-      <field name="name">res.partner.vat.inherit</field>
-      <field name="model">res.partner</field>
-      <field name="inherit_id" ref="account.view_partner_property_form"/>
-      <field name="arch" type="xml">
-        <field name="property_account_payable" position="after">
-            <group colspan="2" col="6">
-              <field name="vat" on_change="vat_change(vat)" colspan="4" />
-              <field groups="base.group_extended" name="vat_subjected" colspan="1"/>
-            </group>
-        </field>
-      </field>
-    </record>
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.vat.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+            <field name="property_account_payable" position="after">
+                <group colspan="2" col="6">
+                    <field name="vat" on_change="vat_change(vat)" colspan="4" />
+                    <field name="vat_subjected" colspan="1" groups="base.group_extended" />
+                </group>
+            </field>
+            </field>
+        </record>
 
-  </data>
+    </data>
 </openerp>
 

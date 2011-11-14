@@ -30,7 +30,7 @@
     "version" : "1.0",
     "author" : "OpenERP SA",
     "website": "http://www.openerp.com",
-    "category" : "Finance",
+    "category" : "Localization/Account Charts",
     "description": """
 This is the module to manage the accounting chart for France in OpenERP.
 ========================================================================

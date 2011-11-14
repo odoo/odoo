@@ -12,6 +12,7 @@
 
 
 	<xsl:template name="stylesheet">
+                <paraStyle name="title" fontName="Helvetica-Bold" fontSize="15.0" leading="17" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
 				<paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="14.0" leading="17" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
 				<paraStyle name="name" fontName="Helvetica" textColor="green" fontSize="7"/>
 				<paraStyle name="normal" fontName="Helvetica" fontSize="6"/>
@@ -29,7 +30,7 @@
 
     <xsl:template name="story">
 		<spacer length="1cm" />
-		<para style="terp_header_Centre" t="1">Attendances By Month</para>
+		<xsl:apply-templates select="report/title"/>
 		<spacer length="1cm" />
         <blockTable>
 			<xsl:attribute name="style">week</xsl:attribute>
@@ -53,7 +54,14 @@
 			<xsl:apply-templates select="report/user"/>
       </blockTable>
     </xsl:template>
-
+    
+    <xsl:template match="title">
+        <para style="title">
+            <xsl:value-of select="."/>
+        </para>
+        <spacer length="1cm"/>
+    </xsl:template>
+    
     <xsl:template match="user">
 <!--		<tr></tr>-->
 		<tr>

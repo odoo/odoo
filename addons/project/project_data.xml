@@ -15,16 +15,39 @@
             <field name="object">project.task</field>
         </record>
         
-
         <!--
-		Resource: project.project
-		-->
+        Resource: project.project
+        -->
 
         <record id="all_projects_account" model="account.analytic.account">
             <field name="name">Projects</field>
             <field name="code">3</field>
         </record>
         <function eval="('default',False,'parent_id', [('project.project', False)], all_projects_account, True, False, False, False, True)" id="parent_project_default_set" model="ir.values" name="set"/>
+
+
+        <!-- Task Stages -->
+        <record id="project_tt_specification" model="project.task.type">
+            <field name="sequence">1</field>
+            <field name="name">Design</field>
+            <field name="project_default" eval="1"/>
+        </record>
+        <record id="project_tt_development" model="project.task.type">
+            <field name="sequence">2</field>
+            <field name="name">Development</field>
+            <field name="project_default" eval="1"/>
+        </record>
+        <record id="project_tt_testing" model="project.task.type">
+            <field name="sequence">3</field>
+            <field name="name">Testing</field>
+            <field name="project_default" eval="1"/>
+        </record>
+        <record id="project_tt_merge" model="project.task.type">
+            <field name="sequence">4</field>
+            <field name="name">Deployment</field>
+            <field name="project_default" eval="1"/>
+        </record>
+
 
     </data>
 </openerp>

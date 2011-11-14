@@ -23,7 +23,7 @@
 {
     'name': 'Invoice on analytic lines',
     'version': '1.0',
-    'category': 'Human Resources',
+    'category': 'Hidden/Link',
     'description': """Generate your Invoices from Expenses, Timesheet Entries, ...
 Module to generate invoices based on costs (human resources, expenses, ...).
 ============================================================================
@@ -47,7 +47,6 @@ reports, etc.""",
         'wizard/hr_timesheet_invoice_create_view.xml',
         'wizard/hr_timesheet_invoice_create_final_view.xml',
         'board_hr_timesheet_invoice.xml',
-        'hr_timesheet_invoice_installer_view.xml'
     ],
     'demo': [
         'hr_timesheet_invoice_demo.xml',

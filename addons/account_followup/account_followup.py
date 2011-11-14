@@ -45,7 +45,7 @@ class followup(osv.osv):
                 company.append(l.company_id.id)
         return True
     _constraints = [
-        (check_company_uniq, 'Only One Folllowup by Company.',['company_id'] )
+        (check_company_uniq, 'Only One Followup by Company.',['company_id'] )
         ]
 
 followup()
@@ -63,7 +63,20 @@ class followup_line(osv.osv):
     }
     _defaults = {
         'start': 'days',
+
     }
+    def _check_description(self, cr, uid, ids, context=None):
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.description:
+                try:
+                    line.description % {'partner_name': '', 'date':'', 'user_signature': '', 'company_name': ''}
+                except:
+                    return False
+        return True
+
+    _constraints = [
+        (_check_description, 'Your description is invalid, use the right legend or %% if you want to use the percent character.', ['description']),
+    ]
 
 followup_line()
 
@@ -72,7 +85,7 @@ class account_move_line(osv.osv):
     _columns = {
         'followup_line_id': fields.many2one('account_followup.followup.line', 'Follow-up Level'),
         'followup_date': fields.date('Latest Follow-up', select=True),
-                }
+    }
 
 account_move_line()
 

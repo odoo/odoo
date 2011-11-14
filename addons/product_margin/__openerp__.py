@@ -23,7 +23,7 @@
 {
     'name': 'Margins in Product',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Hidden',
     'description': """
 Adds a reporting menu in products that computes sales, purchases, margins and other interesting indicators based on invoices.
 =============================================================================================================================
@@ -37,6 +37,7 @@ The wizard to launch the report has several options to help you get the data you
                    'wizard/product_margin_view.xml',
                    'product_margin_view.xml'
     ],
+    'test':['test/product_margin.yml'],
     'demo_xml': [],
     'installable': True,
     'active': False,

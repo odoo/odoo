@@ -1,0 +1,47 @@
+-
+  I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PC2 at 300 EUR. (Tax Excl)
+-
+  !record {model: pos.order, id: pos_order_pos1}:
+    company_id: base.main_company
+    partner_id: base.res_partner_asus
+    lines:
+      - name: OL/0001
+        product_id: product.product_product_pc1
+        price_unit: 450
+        discount: 5.0
+        qty: 2.0
+      - name: OL/0002
+        product_id: product.product_product_pc2
+        price_unit: 300
+        discount: 5.0
+        qty: 3.0
+-
+  I click on the "Make Payment" wizard to pay the PoS order
+- 
+  !record {model: pos.make.payment, id: pos_make_payment_2, context: {'active_id': ref('pos_order_pos1'), 'active_ids': [ref('pos_order_pos1')]} }:
+    amount: !eval >
+        (450*2 + 300*3*1.05)*0.95
+-
+  I click on the validate button to register the payment.
+-
+  !python {model: pos.make.payment}: |
+    self.check(cr, uid, [ref('pos_make_payment_2')], context={'active_id': ref('pos_order_pos1')} )
+- |
+  I check that the order is marked as paid and there is no invoice attached to it
+-
+  !python {model: pos.order}: |
+    order = self.browse(cr,uid,ref('pos_order_pos1'))
+-
+  !assert {model: pos.order, id: pos_order_pos1, string: State not correct}:
+     - state == 'paid'
+     - not invoice_id
+- 
+  I generate the invoice by pressing the Invoice button that calls the workflow
+-
+  !workflow {model: pos.order, action: invoice, ref: pos_order_pos1}
+-
+  I test that the total of the attached invoice is correct
+-
+  !assert {model: pos.order, id: pos_order_pos1, string: Invoice not correct}:
+     - bool(invoice_id)
+     - invoice_id.amount_total == (450*2 + 300*3*1.05)*0.95

@@ -113,7 +113,7 @@ this campaign to be run"),
 Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.
 With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.
 Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"""),
-        'state': fields.selection([('draft', 'Draft'),
+        'state': fields.selection([('draft', 'New'),
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled'),],
@@ -143,13 +143,6 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                 has_start = True
             if activity.signal and len(activity.from_ids) == 0:
                 has_signal_without_from = True
-
-            if activity.type != 'email':
-                continue
-            if not activity.email_template_id.from_account:
-                raise osv.except_osv(_("Error"), _("The campaign cannot be started: the email account is missing in email activity '%s'")%activity.name)
-            if activity.email_template_id.from_account.state != 'approved':
-                raise osv.except_osv(_("Error"), _("The campaign cannot be started: the email account is not approved in email activity '%s'")%activity.name)
 
         if not has_start and not has_signal_without_from:
             raise osv.except_osv(_("Error"), _("The campaign cannot be started: it doesn't have any starting activity (or any activity with a signal and no previous activity)"))
@@ -274,7 +267,7 @@ class marketing_campaign_segment(osv.osv):
                                            '"No duplicates" prevents selecting records which have already entered the campaign previously.'\
                                            'If the campaign has a "unique field" set, "no duplicates" will also prevent selecting records which have '\
                                            'the same value for the unique field as other records that already entered the campaign.'),
-        'state': fields.selection([('draft', 'Draft'),
+        'state': fields.selection([('draft', 'New'),
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled')],
@@ -484,9 +477,9 @@ class marketing_campaign_activity(osv.osv):
         return True
 
     def _process_wi_email(self, cr, uid, activity, workitem, context=None):
-        return self.pool.get('email.template').generate_mail(cr, uid,
+        return self.pool.get('email.template').send_mail(cr, uid,
                                             activity.email_template_id.id,
-                                            [workitem.res_id], context=context)
+                                            workitem.res_id, context=context)
 
     def _process_wi_action(self, cr, uid, activity, workitem, context=None):
         if context is None:
@@ -807,7 +800,7 @@ class marketing_campaign_workitem(osv.osv):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy':True,
-                'context': "{'template_id':%d,'default_rel_model_ref':%d}"%
+                'context': "{'template_id':%d,'default_res_id':%d}"%
                                 (wi_obj.activity_id.email_template_id.id,
                                  wi_obj.res_id)
             }
@@ -831,7 +824,7 @@ marketing_campaign_workitem()
 class email_template(osv.osv):
     _inherit = "email.template"
     _defaults = {
-        'object_name': lambda obj, cr, uid, context: context.get('object_id',False),
+        'model_id': lambda obj, cr, uid, context: context.get('object_id',False),
     }
 
     # TODO: add constraint to prevent disabling / disapproving an email account used in a running campaign
