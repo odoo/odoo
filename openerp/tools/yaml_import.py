@@ -422,7 +422,7 @@ class YamlInterpreter(object):
                 ctx['parent'] = parent2(parent)
                 for a in fg:
                     if a not in ctx:
-                        ctx[a]=process_val(a, False)
+                        ctx[a]=process_val(a, defaults.get(a, False))
 
                 # Evaluation args
                 args = map(lambda x: eval(x, ctx), match.group(2).split(','))
