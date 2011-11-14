@@ -666,6 +666,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
                     return _.include(res, id);
                 });
+                value = value instanceof Array ? value[1] : value;
                 if (id == 'groups') type_widget.selection = self.groups;
                 self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">'+id+':</td><td>'+type_widget.render()+'</td></tr>');
                 type_widget.start();
@@ -749,7 +750,7 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
     },
     set_value: function(value) {
         if (value) {
-            this.$element.find("input[id=" + this.name+ "]").attr('checked', value[1]);
+            this.$element.find("input[id=" + this.name+ "]").attr('checked', true);
         }
     },
     get_value: function() {
@@ -767,7 +768,7 @@ openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
         this._super();
     },
     set_value: function(value) {
-        value ? this.$element.find("input[id=" + this.name + "]").val(value[1]): this.$element.find("tr[id=" + this.name + "] input").val();
+        value ? this.$element.find("input[id=" + this.name + "]").val(value): this.$element.find("tr[id=" + this.name + "] input").val();
     },
     get_value: function() {
         var value= this.$element.find("input[id=" + this.name + "]").val();
@@ -789,7 +790,6 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
     },
     set_value: function(value) {
         value = value === null ? false : value;
-        value = value instanceof Array ? value[1] : value;
         var index = 0;
         for (var i = 0, ii = this.selection.length; i < ii; i++) {
             if ((this.selection[i] instanceof Array && this.selection[i][1] === value) || this.selection[i] === value) index = i;
@@ -814,7 +814,7 @@ openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.exten
 openerp.web.ViewEditor.IconProperty = openerp.web.ViewEditor.FieldSelect.extend({
     init: function(view, id) {
         this._super(view, id);
-        this.selection = icons;
+        this.selection = _ICONS;
     },
 });
 openerp.web.ViewEditor.ButtonTargetProperty = openerp.web.ViewEditor.FieldSelect.extend({
@@ -848,12 +848,7 @@ openerp.web.ViewEditor.PositionProperty = openerp.web.ViewEditor.FieldSelect.ext
     },
 });
 openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, id) {
-        this._super(view, id);
-        this.multiple = true;
-    },
     start: function () {
-        this._super();
         this.$element.find("select[id=" + this.name + "]").css('height', '100px').attr("multiple",true);
         this._super();
     },
@@ -862,7 +857,7 @@ openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.exten
         self.$element.find("#groups option").attr("selected",false);
         if (!value) return false;
         _.each(this.selection, function(item) {
-            if (_.include(value[1].split(','), item[0])) {
+            if (_.include(value.split(','), item[0])) {
                 self.$element.find("select[id="+self.name+"] option[value='" + item[0] +"']").attr("selected",1)
             }
          });
@@ -887,7 +882,7 @@ var _PROPERTIES = {
     'graph' : ['string', 'type'],
     'calendar' : ['string', 'date_start', 'date_stop', 'date_delay', 'day_length', 'color', 'mode'],
 };
-var icons = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
+var _ICONS = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
             'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
             'STOCK_CONNECT', 'STOCK_CONVERT', 'STOCK_COPY', 'STOCK_CUT', 'STOCK_DELETE',
             'STOCK_DIALOG_AUTHENTICATION', 'STOCK_DIALOG_ERROR', 'STOCK_DIALOG_INFO',
