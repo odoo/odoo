@@ -49,6 +49,19 @@ openerp.web.intersperse = function (str, indices, separator) {
     return result.reverse().join(separator);
 };
 /**
+ * Insert "thousands" separators in the provided number (which is actually
+ * a string)
+ *
+ * @param {String} num
+ * @returns {String}
+ */
+openerp.web.insert_thousand_seps = function (num) {
+    var negative = num[0] === '-';
+    num = (negative ? num.slice(1) : num);
+    return (negative ? '-' : '') + openerp.web.intersperse(
+        num, _t.database.parameters.grouping, _t.database.parameters.thousands_sep);
+};
+/**
  * Formats a single atomic value based on a field descriptor
  *
  * @param {Object} value read from OpenERP
@@ -72,12 +85,13 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
     var l10n = _t.database.parameters;
     switch (descriptor.widget || descriptor.type) {
         case 'integer':
-            return openerp.web.intersperse(
-                _.sprintf('%d', value), l10n.grouping, l10n.thousands_sep);
+            return openerp.web.insert_thousand_seps(
+                _.sprintf('%d', value));
         case 'float':
             var precision = descriptor.digits ? descriptor.digits[1] : 2;
-            return _.sprintf('%.' + precision + 'f', value)
-                .replace('.', l10n.decimal_point);
+            var formatted = _.sprintf('%.' + precision + 'f', value).split('.');
+            formatted[0] = openerp.web.insert_thousand_seps(formatted[0]);
+            return formatted.join(l10n.decimal_point);
         case 'float_time':
             return _.sprintf("%02d:%02d",
                     Math.floor(value),

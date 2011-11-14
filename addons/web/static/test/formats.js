@@ -41,6 +41,12 @@ $(document).ready(function () {
               '1.00');
         equal(openerp.web.format_value(-11.25, {type: 'float'}),
               "-11.25");
+        openerp.web._t.database.parameters.grouping = [1, 2, -1];
+        equal(openerp.web.format_value(1111111.25, {type: 'float'}),
+              "1111,11,1.25");
+        openerp.web._t.database.parameters.grouping = [1, 0];
+        equal(openerp.web.format_value(-11.25, {type: 'float'}),
+              "-1,1.25");
     });
 //    test("parse_datetime", function () {
 //        var val = openerp.web.str_to_datetime("2009-05-04 12:34:23");
