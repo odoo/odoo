@@ -1084,8 +1084,6 @@ class account_move_line(osv.osv):
                 f.set("invisible", "context.get('journal_id', False)")
             elif field in ('period_id',):
                 f.set("invisible", "context.get('period_id', False)")
-            else:
-                f.set('invisible', "context.get('visible_id') not in %s" % (fields.get(field)))
 
             orm.setup_modifiers(f, fields_get[field], context=context,
                                 in_tree_view=True)
@@ -1245,6 +1243,12 @@ class account_move_line(osv.osv):
             m = move_obj.browse(cr, uid, vals['move_id'])
             context['journal_id'] = m.journal_id.id
             context['period_id'] = m.period_id.id
+        #we need to treat the case where a value is given in the context for period_id as a string
+        if 'period_id' not in context or not isinstance(context.get('period_id', ''), (int, long)):
+            period_candidate_ids = self.pool.get('account.period').name_search(cr, uid, name=context.get('period_id',''))
+            if len(period_candidate_ids) != 1:
+                raise osv.except_osv(_('Encoding error'), _('No period found or period given is ambigous.'))
+            context['period_id'] = period_candidate_ids[0][0]
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
         move_id = vals.get('move_id', False)
         journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
