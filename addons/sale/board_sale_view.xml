@@ -32,8 +32,8 @@
 
         <menuitem id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
         <menuitem action="open_board_sales_manager" icon="terp-graph" id="menu_board_sales_manager" parent="board.menu_dasboard" sequence="0" groups="base.group_sale_manager"/>
-    
-    
+
+
     <record id="action_quotation_for_sale" model="ir.actions.act_window">
         <field name="name">My Quotations</field>
         <field name="res_model">sale.order</field>
@@ -42,7 +42,7 @@
         <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
         <field name="view_id" ref="sale.view_order_tree"/>
         </record>
-    
+
     <record id="view_turnover_by_month_tree" model="ir.ui.view">
         <field name="name">turnover.by.month.tree</field>
         <field name="model">account.invoice.report</field>
@@ -56,7 +56,7 @@
             </tree>
         </field>
     </record>
-    
+
     <record id="view_turnover_by_month_graph" model="ir.ui.view">
         <field name="name">turnover.by.month.graph</field>
         <field name="model">account.invoice.report</field>
@@ -70,7 +70,7 @@
         </graph>
         </field>
     </record>
-    
+
         <record model="ir.actions.act_window" id="action_turnover_by_month">
             <field name="name">Monthly Turnover</field>
             <field name="res_model">account.invoice.report</field>
@@ -93,7 +93,7 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_turnover_by_month_tree"/>
         </record>
-    
+
         <record id="board_sales_form" model="ir.ui.view">
             <field name="name">board.sales.form</field>
             <field name="model">board.board</field>
@@ -120,7 +120,7 @@
                 </form>
             </field>
         </record>
-    
+
         <record id="open_board_sales" model="ir.actions.act_window">
             <field name="name">Sales Dashboard</field>
             <field name="res_model">board.board</field>
@@ -130,7 +130,8 @@
         </record>
 
         <menuitem
-            id="base.menu_base_partner" action="open_board_sales"/>
+            id="base.menu_base_partner" action="open_board_sales"
+            name="Sales"/>
 
     </data>
 </openerp>
