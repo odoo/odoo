@@ -776,6 +776,25 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         var template = this.template;
         return QWeb.render(template, { "widget": this });
     },
+    do_attach_tooltip: function(widget, trigger, options) {
+        widget = widget || this;
+        trigger = trigger || this.$element;
+        options = _.extend({
+                delay: 1000,
+                maxWidth: openerp.connection.debug ? '300px' : '200px',
+                content: function() {
+                    var template = widget.template + '.tooltip';
+                    if (!QWeb.has_template(template)) {
+                        template = 'WidgetLabel.tooltip';
+                    }
+                    return QWeb.render(template, {
+                        debug: openerp.connection.debug,
+                        widget: widget
+                    });
+                }
+            }, options || {});
+        trigger.tipTip(options);
+    },
     _build_view_fields_values: function() {
         var a_dataset = this.view.dataset;
         var fields_values = this.view.get_fields_values();
@@ -948,6 +967,11 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
         });
         this.$element.tabs();
         this.view.on_button_new.add_first(this.do_select_first_visible_tab);
+        if (openerp.connection.debug) {
+            this.do_attach_tooltip(this, this.$element.find('ul:first'), {
+                defaultPosition: 'top'
+            });
+        }
     },
     do_select_first_visible_tab: function() {
         for (var i = 0; i < this.pages.length; i++) {
@@ -1011,6 +1035,9 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find("button").click(this.on_click);
+        if (this.help || openerp.connection.debug) {
+            this.do_attach_tooltip();
+        }
     },
     on_click: function() {
         var self = this;
@@ -1110,6 +1137,9 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
     start: function() {
         this._super();
         var self = this;
+        if (this['for'] && (this['for'].help || openerp.connection.debug)) {
+            this.do_attach_tooltip(self['for']);
+        }
         this.$element.find("label").dblclick(function() {
             var widget = self['for'] || self;
             openerp.log(widget.element_class , widget);
@@ -1154,6 +1184,11 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         if (this.field.translate) {
             this.view.translatable_fields.push(this);
             this.$element.find('.oe_field_translate').click(this.on_translate);
+        }
+        if (this.nolabel && openerp.connection.debug) {
+            this.do_attach_tooltip(this, this.$element, {
+                defaultPosition: 'top'
+            });
         }
     },
     set_value: function(value) {
