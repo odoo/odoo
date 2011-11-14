@@ -135,6 +135,12 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         }
     },
     on_loaded: function(data) {
+        if (data.fields_view.type !== 'search' ||
+            data.fields_view.arch.tag !== 'search') {
+                throw new Error(_.sprintf(
+                    "Got non-search view after asking for a search view: type %s, arch root %s",
+                    data.fields_view.type, data.fields_view.arch.tag));
+        }
         var self = this,
            lines = this.make_widgets(
                 data.fields_view['arch'].children,
