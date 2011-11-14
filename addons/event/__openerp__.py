@@ -55,7 +55,7 @@ Note that:
     ],
     'demo_xml': ['event_demo.xml'],
     'test': ['test/process/event_confirm2done.yml',
-             'test/process/register2invoice.yml'],
+             'test/process/partner_register2invoice.yml'],
     'installable': True,
     'active': False,
     'certificate': '0083059161581',
