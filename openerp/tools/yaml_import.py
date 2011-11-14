@@ -314,7 +314,7 @@ class YamlInterpreter(object):
 
         view_id = record.view
         if view_id and (view_id is not True):
-            view_id = self.pool.get('ir.model.data')._get_id(self.cr, 1, self.module, record.view)
+            view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, 1, self.module, record.view)[1]
 
         if model.is_transient():
             record_dict=self.create_osv_memory_record(record, fields)
@@ -399,8 +399,9 @@ class YamlInterpreter(object):
                     record_dict[field_name] = field_value
                     if (field_name in defaults) and defaults[field_name] == field_value:
                         print '*** WARNING', field_name, field_value
-                elif (field_name in defaults) and (field_name not in record_dict):
-                    record_dict[field_name] = process_val(field_name, defaults[field_name])
+                elif (field_name in defaults):
+                    if (field_name not in record_dict):
+                        record_dict[field_name] = process_val(field_name, defaults[field_name])
                 else:
                     continue
 
@@ -426,7 +427,6 @@ class YamlInterpreter(object):
 
                 # Evaluation args
                 args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                print 'Debug', match.group(1), args, match.group(2)
                 result = getattr(model, match.group(1))(self.cr, 1, [], *args)
                 for key, val in (result or {}).get('value', {}).items():
                     if key not in fields:
