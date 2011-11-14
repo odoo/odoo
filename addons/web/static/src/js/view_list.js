@@ -365,6 +365,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                     return {};
                 }
                 var aggregation_func = column['group_operator'] || 'sum';
+                if (!(aggregation_func in column)) {
+                    return {};
+                }
 
                 return _.extend({}, column, {
                     'function': aggregation_func,
