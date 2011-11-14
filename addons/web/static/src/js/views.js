@@ -568,35 +568,26 @@ session.web.Sidebar = session.web.Widget.extend({
             self.do_toggle();
         });
     },
-
-    call_default_on_sidebar: function(item) {
-        var func_name = 'on_sidebar_' + _.underscored(item.label);
-        var fn = this.widget_parent[func_name];
-        if(typeof fn === 'function') {
-            fn(item);
-        }
-    },
-
     add_default_sections: function() {
         if (this.session.uid === 1) {
             this.add_section(_t('Customize'), 'customize');
             this.add_items('customize', [
                 {
                     label: _t("Manage Views"),
-                    callback: this.call_default_on_sidebar,
+                    callback: this.widget_parent.on_sidebar_manage_views,
                     title: _t("Manage views of the current object")
                 }, {
                     label: _t("Edit Workflow"),
-                    callback: this.call_default_on_sidebar,
+                    callback: this.widget_parent.on_sidebar_edit_workflow,
                     title: _t("Manage views of the current object"),
                     classname: 'oe_hide oe_sidebar_edit_workflow'
                 }, {
                     label: _t("Customize Object"),
-                    callback: this.call_default_on_sidebar,
+                    callback: this.widget_parent.on_sidebar_customize_object,
                     title: _t("Manage views of the current object")
                 }, {
                     label: _t("Translate"),
-                    callback: this.call_default_on_sidebar,
+                    callback: this.widget_parent.on_sidebar_translate,
                     title: _t("Technical translation")
                 }
             ]);
@@ -606,13 +597,13 @@ session.web.Sidebar = session.web.Widget.extend({
         this.add_items('other', [
             {
                 label: _t("Import"),
-                callback: this.call_default_on_sidebar
+                callback: this.widget_parent.on_sidebar_import
             }, {
                 label: _t("Export"),
-                callback: this.call_default_on_sidebar
+                callback: this.widget_parent.on_sidebar_export
             }, {
                 label: _t("View Log"),
-                callback: this.call_default_on_sidebar,
+                callback: this.widget_parent.on_sidebar_view_log,
                 classname: 'oe_hide oe_sidebar_view_log'
             }
         ]);
