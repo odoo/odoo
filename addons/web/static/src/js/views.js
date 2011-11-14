@@ -673,40 +673,50 @@ session.web.Sidebar = session.web.Widget.extend({
                     item.callback.apply(self, [item]);
                 }
                 if (item.action) {
-                    var ids = self.widget_parent.get_selected_ids();
-                    if (ids.length == 0) {
-                        //TODO: make prettier warning?
-                        $("<div />").text(_t("You must choose at least one record.")).dialog({
-                            title: _t("Warning"),
-                            modal: true
+                    if (self.widget_parent instanceof session.web.FormView) {
+                        self.widget_parent.do_save(function() {
+                            self.on_item_action_clicked(item);
                         });
-                        return false;
+                    } else {
+                        self.on_item_action_clicked(item);
                     }
-                    var additional_context = {
-                        active_id: ids[0],
-                        active_ids: ids,
-                        active_model: self.widget_parent.dataset.model
-                    };
-                    self.rpc("/web/action/load", {
-                        action_id: item.action.id,
-                        context: additional_context
-                    }, function(result) {
-                        result.result.context = _.extend(result.result.context || {},
-                            additional_context);
-                        result.result.flags = result.result.flags || {};
-                        result.result.flags.new_window = true;
-                        self.do_action(result.result);
-                    });
                 }
                 return false;
             });
-        
+
             var $ul = $section.find('ul');
             if(!$ul.length) {
                 $ul = $('<ul/>').appendTo($section);
             }
             $items.appendTo($ul);
         }
+    },
+    on_item_action_clicked: function(item) {
+        var self = this;
+        var ids = self.widget_parent.get_selected_ids();
+        if (ids.length == 0) {
+            //TODO: make prettier warning?
+            $("<div />").text(_t("You must choose at least one record.")).dialog({
+                title: _t("Warning"),
+                modal: true
+            });
+            return false;
+        }
+        var additional_context = {
+            active_id: ids[0],
+            active_ids: ids,
+            active_model: self.widget_parent.dataset.model
+        };
+        self.rpc("/web/action/load", {
+            action_id: item.action.id,
+            context: additional_context
+        }, function(result) {
+            result.result.context = _.extend(result.result.context || {},
+                additional_context);
+            result.result.flags = result.result.flags || {};
+            result.result.flags.new_window = true;
+            self.do_action(result.result);
+        });
     },
     do_fold: function() {
         this.$element.addClass('closed-sidebar').removeClass('open-sidebar');
