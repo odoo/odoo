@@ -7,7 +7,7 @@
     try:
         self.unlink(cr, uid, [ref("order7")])
     except Exception,e:
-        print e
+        pass
 -
   I delete draft order.
 -
@@ -24,4 +24,4 @@
     try:
       self.unlink(cr, uid, [id])
     except Exception,e:
-        print e    
+      pass
