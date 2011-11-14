@@ -1,6 +1,6 @@
 
 openerp.web.formats = function(openerp) {
-
+var _t = openerp.web._t;
 /**
  * Formats a single atomic value based on a field descriptor
  *
@@ -43,29 +43,17 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
         case 'datetime':
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
-            try {
-                return value.toString(_.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate,
-                    Date.CultureInfo.formatPatterns.longTime));
-            } catch (e) {
-                return value.format("%m/%d/%Y %H:%M:%S");
-            }
-            return value;
+
+            return value.format(_t.database.parameters.date_format
+                        + ' ' + _t.database.parameters.time_format);
         case 'date':
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
-            try {
-                return value.toString(Date.CultureInfo.formatPatterns.shortDate);
-            } catch (e) {
-                return value.format("%m/%d/%Y");
-            }
+            return value.format(_t.database.parameters.date_format);
         case 'time':
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
-            try {
-                return value.toString(Date.CultureInfo.formatPatterns.longTime);
-            } catch (e) {
-                return value.format("%H:%M:%S");
-            }
+            return value.format(_t.database.parameters.time_format);
         case 'selection':
             // Each choice is [value, label]
             var result = _(descriptor.selection).detect(function (choice) {
@@ -79,6 +67,8 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
 };
 
 openerp.web.parse_value = function (value, descriptor, value_if_empty) {
+    var date_pattern = Date.normalizeFormat(_t.database.parameters.date_format),
+        time_pattern = Date.normalizeFormat(_t.database.parameters.time_format);
     switch (value) {
         case false:
         case "":
@@ -119,8 +109,8 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
         case 'progressbar':
             return openerp.web.parse_value(value, {type: "float"});
         case 'datetime':
-            var datetime = Date.parseExact(value, _.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate,
-                                                                     Date.CultureInfo.formatPatterns.longTime));
+            var datetime = Date.parseExact(
+                    value, (date_pattern + ' ' + time_pattern));
             if (datetime !== null)
                 return openerp.web.datetime_to_str(datetime);
             datetime = Date.parse(value);
@@ -128,7 +118,7 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
                 return openerp.web.datetime_to_str(datetime);
             throw new Error(value + " is not a valid datetime");
         case 'date':
-            var date = Date.parseExact(value, Date.CultureInfo.formatPatterns.shortDate);
+            var date = Date.parseExact(value, date_pattern);
             if (date !== null)
                 return openerp.web.date_to_str(date);
             date = Date.parse(value);
@@ -136,7 +126,7 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
                 return openerp.web.date_to_str(date);
             throw new Error(value + " is not a valid date");
         case 'time':
-            var time = Date.parseExact(value, Date.CultureInfo.formatPatterns.longTime);
+            var time = Date.parseExact(value, time_pattern);
             if (time !== null)
                 return openerp.web.time_to_str(time);
             time = Date.parse(value);
