@@ -22,29 +22,6 @@ var __lc_buttons = [];
 
 openerp.web_livechat = function (openerp) {
 
-var QWeb = openerp.web.qweb;
-QWeb.add_template('/web_livechat/static/src/xml/web_livechat.xml');
-
-        
-// tracking code from LiveChat
-var license = '1035052',
-    params = '',
-    lang = 'en',
-    skill = '0';
-__lc_load = function (p) { if (typeof __lc_loaded != 'function')
-  if (p) { var d = document, l = d.createElement('script'), s =
-    d.getElementsByTagName('script')[0], a = unescape('%26'),
-    h = ('https:' == d.location.protocol ? 'https://' : 'http://'); l.type = 'text/javascript'; l.async = true;
-    l.src = h + 'gis' + p +'.livechatinc.com/gis.cgi?serverType=control'+a+'licenseID='+license+a+'jsonp=__lc_load';
-    if (!(typeof p['server'] !== 'string' || typeof __lc_serv === 'string')) {
-      l.src = h + (__lc_serv = p['server']) + '/licence/'+license+'/script.cgi?lang='+lang+a+'groups='+skill;
-      l.src += (params == '') ? '' : a+'params='+encodeURIComponent(encodeURIComponent(params)); s.parentNode.insertBefore(l, s);
-    } else setTimeout(__lc_load, 1000); if(typeof __lc_serv != 'string'){ s.parentNode.insertBefore(l, s);}
-  } else __lc_load(Math.ceil(Math.random()*5)); }
-__lc_load();
-
-
-
 openerp.web_livechat.Livechat = openerp.web.Widget.extend({
     template: 'Header-LiveChat',
 
@@ -94,7 +71,27 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
     }
 });
 
-openerp.webclient.livechat = new openerp.web_livechat.Livechat(openerp.webclient);
-openerp.webclient.livechat.prependTo('div.header_corner');
+if (openerp.webclient) {
+    // tracking code from LiveChat
+    var license = '1035052',
+        params = '',
+        lang = 'en',
+        skill = '0';
+    __lc_load = function (p) { if (typeof __lc_loaded != 'function')
+      if (p) { var d = document, l = d.createElement('script'), s =
+        d.getElementsByTagName('script')[0], a = unescape('%26'),
+        h = ('https:' == d.location.protocol ? 'https://' : 'http://'); l.type = 'text/javascript'; l.async = true;
+        l.src = h + 'gis' + p +'.livechatinc.com/gis.cgi?serverType=control'+a+'licenseID='+license+a+'jsonp=__lc_load';
+        if (!(typeof p['server'] !== 'string' || typeof __lc_serv === 'string')) {
+          l.src = h + (__lc_serv = p['server']) + '/licence/'+license+'/script.cgi?lang='+lang+a+'groups='+skill;
+          l.src += (params == '') ? '' : a+'params='+encodeURIComponent(encodeURIComponent(params)); s.parentNode.insertBefore(l, s);
+        } else setTimeout(__lc_load, 1000); if(typeof __lc_serv != 'string'){ s.parentNode.insertBefore(l, s);}
+      } else __lc_load(Math.ceil(Math.random()*5)); }
+    __lc_load();
+
+    // and add widget to webclient
+    openerp.webclient.livechat = new openerp.web_livechat.Livechat(openerp.webclient);
+    openerp.webclient.livechat.prependTo('div.header_corner');
+}
 
 };

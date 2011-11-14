@@ -144,7 +144,7 @@ class account_account_type(osv.osv):
             ('none','/'),
             ('income','Profit & Loss (Income Accounts)'),
             ('expense','Profit & Loss (Expense Accounts)'),
-            ('asset','Balance Sheet (Assets Accounts)'),
+            ('asset','Balance Sheet (Asset Accounts)'),
             ('liability','Balance Sheet (Liability Accounts)')
         ],'P&L / BS Category', select=True, readonly=False, help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
         'note': fields.text('Description'),
@@ -2803,7 +2803,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         res['value']["sale_tax"] = False
         res['value']["purchase_tax"] = False
         if chart_template_id:
-            # default tax is given by the lowesst sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
+            # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while installing the generic chart of accounts
             sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
                                           , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence, id desc")
             purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
@@ -3120,7 +3120,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             tmp = line.acc_name
             dig = obj_multi.code_digits
             if not ref_acc_bank.code:
-                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of account hasn\'t a code.'))
+                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of accounts hasn\'t a code.'))
             while True:
                 new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
                 ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company_id)])

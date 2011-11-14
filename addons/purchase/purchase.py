@@ -165,7 +165,7 @@ class purchase_order(osv.osv):
             help="Reference of the document that generated this purchase order request."
         ),
         'partner_ref': fields.char('Supplier Reference', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, size=64),
-        'date_order':fields.date('Date Ordered', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, select=True, help="Date on which this document has been created."),
+        'date_order':fields.date('Order Date', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, select=True, help="Date on which this document has been created."),
         'date_approve':fields.date('Date Approved', readonly=1, select=True, help="Date on which purchase order has been approved"),
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, change_default=True),
         'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True,
@@ -188,11 +188,10 @@ class purchase_order(osv.osv):
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
-        'invoice_method': fields.selection([('manual','Based on purchase order lines'),('order','Draft invoices pre-generated'),('picking','Based on receptions')], 'Invoicing Control', required=True,
-            help="Based on orders: a draft invoice will be generated based on the purchase order. The accountant " \
-                "will just have to validate this invoice for control.\n" \
-                "Based on receptions: a draft invoice will be generated based on validated receptions.\n" \
-                "Pre-generate Invoice: allows you to generate draft suppliers invoices on validation of the PO."
+        'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated invoice'),('picking','Based on receptions')], 'Invoicing Control', required=True,
+            help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' frow where you can selectively create an invoice.\n" \
+                "Based on generated invoice: create a draft invoice you can validate later.\n" \
+                "Based on receptions: let you create an invoice when receptions are validated."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
@@ -254,31 +253,32 @@ class purchase_order(osv.osv):
     def button_dummy(self, cr, uid, ids, context=None):
         return True
 
-    def onchange_dest_address_id(self, cr, uid, ids, adr_id):
-        if not adr_id:
+    def onchange_dest_address_id(self, cr, uid, ids, address_id):
+        if not address_id:
             return {}
+        address = self.pool.get('res.partner.address')
         values = {'warehouse_id': False}
-        part_id = self.pool.get('res.partner.address').browse(cr, uid, adr_id).partner_id
-        if part_id:
-            loc_id = part_id.property_stock_customer.id
-            values.update({'location_id': loc_id})
+        supplier = address.browse(cr, uid, address_id).partner_id
+        if supplier:
+            location_id = supplier.property_stock_customer.id
+            values.update({'location_id': location_id})
         return {'value':values}
 
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id):
         if not warehouse_id:
             return {}
-        res = self.pool.get('stock.warehouse').read(cr, uid, [warehouse_id], ['lot_input_id'])[0]['lot_input_id'][0]
-        return {'value':{'location_id': res, 'dest_address_id': False}}
+        warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id)
+        return {'value':{'location_id': warehouse.lot_input_id.id, 'dest_address_id': False}}
 
-    def onchange_partner_id(self, cr, uid, ids, part):
-
-        if not part:
+    def onchange_partner_id(self, cr, uid, ids, partner_id):
+        partner = self.pool.get('res.partner')
+        if not partner_id:
             return {'value':{'partner_address_id': False, 'fiscal_position': False}}
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['default'])
-        part = self.pool.get('res.partner').browse(cr, uid, part)
-        pricelist = part.property_product_pricelist_purchase.id
-        fiscal_position = part.property_account_position and part.property_account_position.id or False
-        return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
+        supplier_address = partner.address_get(cr, uid, [partner_id], ['default'])
+        supplier = partner.browse(cr, uid, partner_id)
+        pricelist = supplier.property_product_pricelist_purchase.id
+        fiscal_position = supplier.property_account_position and supplier.property_account_position.id or False
+        return {'value':{'partner_address_id': supplier_address['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
 
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
@@ -300,7 +300,7 @@ class purchase_order(osv.osv):
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
         return True
-
+    # Dead code:
     def wkf_warn_buyer(self, cr, uid, ids):
         self.write(cr, uid, ids, {'state' : 'wait', 'validator' : uid})
         request = pooler.get_pool(cr.dbname).get('res.request')
@@ -345,6 +345,9 @@ class purchase_order(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
+    #TOFIX
+    # - implement hook method on create invoice and invoice line
+    # - doc string
     def action_invoice_create(self, cr, uid, ids, *args):
         res = False
 
@@ -402,6 +405,7 @@ class purchase_order(osv.osv):
         return False
 
     def action_cancel(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
         for purchase in self.browse(cr, uid, ids, context=context):
             for pick in purchase.picking_ids:
                 if pick.state not in ('draft','cancel'):
@@ -409,7 +413,6 @@ class purchase_order(osv.osv):
                         _('Unable to cancel this purchase order!'),
                         _('You must first cancel all receptions related to this purchase order.'))
             for pick in purchase.picking_ids:
-                wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel','draft'):
@@ -417,65 +420,96 @@ class purchase_order(osv.osv):
                         _('Unable to cancel this purchase order!'),
                         _('You must first cancel all invoices related to this purchase order.'))
                 if inv:
-                    wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
         self.write(cr,uid,ids,{'state':'cancel'})
-        for (id,name) in self.name_get(cr, uid, ids):
+        
+        for (id, name) in self.name_get(cr, uid, ids):
+            wf_service.trg_validate(uid, 'purchase.order', id, 'purchase_cancel', cr)
             message = _("Purchase order '%s' is cancelled.") % name
             self.log(cr, uid, id, message)
         return True
 
+    def _prepare_order_picking(self, cr, uid, order, *args):
+        return {
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
+            'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
+            'date': order.date_order,
+            'type': 'in',
+            'address_id': order.dest_address_id.id or order.partner_address_id.id,
+            'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
+            'purchase_id': order.id,
+            'company_id': order.company_id.id,
+            'move_lines' : [],
+        }
+         
+    def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, *args):
+        return {
+            'name': order.name + ': ' + (order_line.name or ''),
+            'product_id': order_line.product_id.id,
+            'product_qty': order_line.product_qty,
+            'product_uos_qty': order_line.product_qty,
+            'product_uom': order_line.product_uom.id,
+            'product_uos': order_line.product_uom.id,
+            'date': order_line.date_planned,
+            'date_expected': order_line.date_planned,
+            'location_id': order.partner_id.property_stock_supplier.id,
+            'location_dest_id': order.location_id.id,
+            'picking_id': picking_id,
+            'address_id': order.dest_address_id.id or order.partner_address_id.id,
+            'move_dest_id': order_line.move_dest_id.id,
+            'state': 'draft',
+            'purchase_line_id': order_line.id,
+            'company_id': order.company_id.id,
+            'price_unit': order_line.price_unit
+        }
+
+    def _create_pickings(self, cr, uid, order, order_lines, picking_id=False, *args):
+        """Creates pickings and appropriate stock moves for given order lines, then
+        confirms the moves, makes them available, and confirms the picking.
+
+        If ``picking_id`` is provided, the stock moves will be added to it, otherwise
+        a standard outgoing picking will be created to wrap the stock moves, as returned
+        by :meth:`~._prepare_order_picking`.
+
+        Modules that wish to customize the procurements or partition the stock moves over
+        multiple stock pickings may override this method and call ``super()`` with
+        different subsets of ``order_lines`` and/or preset ``picking_id`` values.
+
+        :param browse_record order: purchase order to which the order lines belong
+        :param list(browse_record) order_lines: purchase order line records for which picking
+                                                and moves should be created.
+        :param int picking_id: optional ID of a stock picking to which the created stock moves
+                               will be added. A new picking will be created if omitted.
+        :return: list of IDs of pickings used/created for the given order lines (usually just one)
+        """
+        if not picking_id: 
+            picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, *args))
+        todo_moves = []
+        stock_move = self.pool.get('stock.move')
+        wf_service = netsvc.LocalService("workflow")
+        for order_line in order_lines:
+            if not order_line.product_id:
+                continue
+            if order_line.product_id.type in ('product', 'consu'):
+                move = stock_move.create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, *args))
+                if order_line.move_dest_id:
+                    order_line.move_dest_id.write({'location_id': order.location_id.id})
+                todo_moves.append(move)
+        stock_move.action_confirm(cr, uid, todo_moves)
+        stock_move.force_assign(cr, uid, todo_moves)
+        wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+        return [picking_id]
+
     def action_picking_create(self,cr, uid, ids, *args):
-        picking_id = False
+        picking_ids = []
         for order in self.browse(cr, uid, ids):
-            loc_id = order.partner_id.property_stock_supplier.id
-            istate = 'none'
-            if order.invoice_method=='picking':
-                istate = '2binvoiced'
-            pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in')
-            picking_id = self.pool.get('stock.picking').create(cr, uid, {
-                'name': pick_name,
-                'origin': order.name+((order.origin and (':'+order.origin)) or ''),
-                'type': 'in',
-                'address_id': order.dest_address_id.id or order.partner_address_id.id,
-                'invoice_state': istate,
-                'purchase_id': order.id,
-                'company_id': order.company_id.id,
-                'move_lines' : [],
-            })
-            todo_moves = []
-            for order_line in order.order_line:
-                if not order_line.product_id:
-                    continue
-                if order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
-                    dest = order.location_id.id
-                    move = self.pool.get('stock.move').create(cr, uid, {
-                        'name': order.name + ': ' +(order_line.name or ''),
-                        'product_id': order_line.product_id.id,
-                        'product_qty': order_line.product_qty,
-                        'product_uos_qty': order_line.product_qty,
-                        'product_uom': order_line.product_uom.id,
-                        'product_uos': order_line.product_uom.id,
-                        'date': order_line.date_planned,
-                        'date_expected': order_line.date_planned,
-                        'location_id': loc_id,
-                        'location_dest_id': dest,
-                        'picking_id': picking_id,
-                        'address_id': order.dest_address_id.id or order.partner_address_id.id,
-                        'move_dest_id': order_line.move_dest_id.id,
-                        'state': 'draft',
-                        'purchase_line_id': order_line.id,
-                        'company_id': order.company_id.id,
-                        'price_unit': order_line.price_unit
-                    })
-                    if order_line.move_dest_id:
-                        self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
-                    todo_moves.append(move)
-            self.pool.get('stock.move').action_confirm(cr, uid, todo_moves)
-            self.pool.get('stock.move').force_assign(cr, uid, todo_moves)
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-        return picking_id
+            picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, *args))
+
+        # Must return one unique picking ID: the one to connect in the subflow of the purchase order.
+        # In case of multiple (split) pickings, we should return the ID of the critical one, i.e. the
+        # one that should trigger the advancement of the purchase workflow.
+        # By default we will consider the first one as most important, but this behavior can be overridden.
+        return picking_ids[0] if picking_ids else False
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -489,7 +523,6 @@ class purchase_order(osv.osv):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
         })
         return super(purchase_order, self).copy(cr, uid, id, default, context)
-
 
     def do_merge(self, cr, uid, ids, context=None):
         """
@@ -510,6 +543,7 @@ class purchase_order(osv.osv):
          @return: new purchase order id
 
         """
+        #TOFIX: merged order line should be unlink
         wf_service = netsvc.LocalService("workflow")
         def make_key(br, fields):
             list_key = []
@@ -622,10 +656,10 @@ class purchase_order_line(osv.osv):
             return result[1]
         except Exception, ex:
             return False
-    
+
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True),
         'date_planned': fields.date('Scheduled Date', required=True, select=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
@@ -665,6 +699,11 @@ class purchase_order_line(osv.osv):
         default.update({'state':'draft', 'move_ids':[],'invoiced':0,'invoice_lines':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
+    #TOFIX:
+    # - name of method should "onchange_product_id"
+    # - docstring
+    # - merge 'product_uom_change' method
+    # - split into small internal methods for clearity 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
             name=False, price_unit=False, notes=False, context={}):
@@ -738,6 +777,8 @@ class purchase_order_line(osv.osv):
         res['domain'] = domain
         return res
 
+    #TOFIX:
+    # - merge into 'product_id_change' method
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
             name=False, price_unit=False, notes=False, context={}):
@@ -862,23 +903,4 @@ class procurement_order(osv.osv):
         return res
 
 procurement_order()
-
-class stock_invoice_onshipping(osv.osv_memory):
-    _inherit = "stock.invoice.onshipping"
-
-    def create_invoice(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        res = super(stock_invoice_onshipping,self).create_invoice(cr, uid, ids, context=context)
-        purchase_obj = self.pool.get('purchase.order')
-        picking_obj = self.pool.get('stock.picking')
-        for pick_id in res:
-            pick = picking_obj.browse(cr, uid, pick_id, context=context)
-            if pick.purchase_id:
-                purchase_obj.write(cr, uid, [pick.purchase_id.id], {
-                    'invoice_ids': [(4, res[pick_id])]}, context=context)
-        return res
-
-stock_invoice_onshipping()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

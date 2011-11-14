@@ -25,6 +25,7 @@ from datetime import datetime, date
 
 from tools.translate import _
 from osv import fields, osv
+from resource.faces import task as Task
 
 # I think we can remove this in v6.1 since VMT's improvements in the framework ?
 #class project_project(osv.osv):
@@ -45,6 +46,7 @@ class project_task_type(osv.osv):
     _defaults = {
         'sequence': 1
     }
+    _order = 'sequence'
 project_task_type()
 
 class project(osv.osv):
@@ -138,6 +140,7 @@ class project(osv.osv):
                 'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
         'effective_hours': fields.function(_progress_rate, multi="progress", string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects."),
+        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
         'total_hours': fields.function(_progress_rate, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
             store = {
                 'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks'], 10),
@@ -304,6 +307,105 @@ class project(osv.osv):
                 self.setActive(cr, uid, child_ids, value, context=None)
         return True
 
+    def _schedule_header(self, cr, uid, ids, force_members=True, context=None):
+        context = context or {}
+        if type(ids) in (long, int,):
+            ids = [ids]
+        projects = self.browse(cr, uid, ids, context=context)
+
+        for project in projects:
+            if (not project.members) and force_members:
+                raise osv.except_osv(_('Warning !'),_("You must assign members on the project '%s' !") % (project.name,))
+
+        resource_pool = self.pool.get('resource.resource')
+
+        result = "from resource.faces import *\n"
+        result += "import datetime\n"
+        for project in self.browse(cr, uid, ids, context=context):
+            u_ids = [i.id for i in project.members]
+            if project.user_id and (project.user_id.id not in u_ids):
+                u_ids.append(project.user_id.id)
+            for task in project.tasks:
+                if task.state in ('done','cancelled'):
+                    continue
+                if task.user_id and (task.user_id.id not in u_ids):
+                    u_ids.append(task.user_id.id)
+            calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
+            resource_objs = resource_pool.generate_resources(cr, uid, u_ids, calendar_id, context=context)
+            for key, vals in resource_objs.items():
+                result +='''
+class User_%s(Resource):
+    efficiency = %s
+''' % (key,  vals.get('efficiency', False))
+
+        result += '''
+def Project():
+        '''
+        return result
+
+    def _schedule_project(self, cr, uid, project, context=None):
+        resource_pool = self.pool.get('resource.resource')
+        calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
+        working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
+        # TODO: check if we need working_..., default values are ok.
+        puids = [x.id for x in project.members]
+        if project.user_id:
+            puids.append(project.user_id.id)
+        result = """
+  def Project_%d():
+    start = \'%s\'
+    working_days = %s
+    resource = %s
+"""       % (
+            project.id, 
+            project.date_start, working_days,
+            '|'.join(['User_'+str(x) for x in puids])
+        )
+        vacation = calendar_id and tuple(resource_pool.compute_vacation(cr, uid, calendar_id, context=context)) or False
+        if vacation:
+            result+= """
+    vacation = %s
+""" %   ( vacation, )
+        return result
+
+    #TODO: DO Resource allocation and compute availability
+    def compute_allocation(self, rc, uid, ids, start_date, end_date, context=None):
+        if context ==  None:
+            context = {}
+        allocation = {}
+        return allocation
+
+    def schedule_tasks(self, cr, uid, ids, context=None):
+        context = context or {}
+        if type(ids) in (long, int,):
+            ids = [ids]
+        projects = self.browse(cr, uid, ids, context=context)
+        result = self._schedule_header(cr, uid, ids, False, context=context)
+        for project in projects:
+            result += self._schedule_project(cr, uid, project, context=context)
+            result += self.pool.get('project.task')._generate_task(cr, uid, project.tasks, ident=4, context=context)
+
+        local_dict = {}
+        exec result in local_dict
+        projects_gantt = Task.BalancedProject(local_dict['Project'])
+
+        for project in projects:
+            project_gantt = getattr(projects_gantt, 'Project_%d' % (project.id,))
+            for task in project.tasks:
+                if task.state in ('done','cancelled'):
+                    continue
+
+                p = getattr(project_gantt, 'Task_%d' % (task.id,))
+
+                self.pool.get('project.task').write(cr, uid, [task.id], {
+                    'date_start': p.start.strftime('%Y-%m-%d %H:%M:%S'),
+                    'date_end': p.end.strftime('%Y-%m-%d %H:%M:%S')
+                }, context=context)
+                if (not task.user_id) and (p.booked_resource):
+                    self.pool.get('project.task').write(cr, uid, [task.id], {
+                        'user_id': int(p.booked_resource[0].name[5:]),
+                    }, context=context)
+        return True
 project()
 
 class users(osv.osv):
@@ -318,6 +420,28 @@ class task(osv.osv):
     _description = "Task"
     _log_create = True
     _date_name = "date_start"
+
+    def _read_group_type_id(self, cr, uid, ids, domain, context=None):
+        context = context or {}
+        stage_obj = self.pool.get('project.task.type')
+        stage_ids = stage_obj.search(cr, uid, ['|',('id','in',ids)] + [('project_default','=',1)], context=context)
+        return stage_obj.name_get(cr, uid, stage_ids, context=context)
+
+    def _read_group_user_id(self, cr, uid, ids, domain, context={}):
+        context = context or {}
+        if type(context.get('project_id', None)) not in (int, long):
+            return None
+        proj = self.pool.get('project.project').browse(cr, uid, context['project_id'], context=context)
+        ids += map(lambda x: x.id, proj.members)
+        stage_obj = self.pool.get('res.users')
+        stage_ids = stage_obj.search(cr, uid, [('id','in',ids)], context=context)
+        return stage_obj.name_get(cr, uid, ids, context=context)
+
+    _group_by_full = {
+        'type_id': _read_group_type_id,
+        'user_id': _read_group_user_id
+    }
+
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         obj_project = self.pool.get('project.project')
@@ -430,9 +554,10 @@ class task(osv.osv):
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
         'type_id': fields.many2one('project.task.type', 'Stage'),
-        'state': fields.selection([('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
+        'state': fields.selection([('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done'), ('cancelled', 'Cancelled')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
+        'kanban_state': fields.selection([('blocked', 'Blocked'),('normal', 'Normal'),('done', 'Done')], 'Kanban State', readonly=True, required=False),
         'create_date': fields.datetime('Create Date', readonly=True,select=True),
         'date_start': fields.datetime('Starting Date',select=True),
         'date_end': fields.datetime('Ending Date',select=True),
@@ -476,6 +601,7 @@ class task(osv.osv):
 
     _defaults = {
         'state': 'draft',
+        'kanban_state': 'normal',
         'priority': '2',
         'progress': 0,
         'sequence': 10,
@@ -621,6 +747,7 @@ class task(osv.osv):
         Close Task
         """
         request = self.pool.get('res.request')
+        if not isinstance(ids,list): ids = [ids]
         for task in self.browse(cr, uid, ids, context=context):
             vals = {}
             project = task.project_id
@@ -695,6 +822,7 @@ class task(osv.osv):
         return True
 
     def do_open(self, cr, uid, ids, context={}):
+        if not isinstance(ids,list): ids = [ids]
         tasks= self.browse(cr, uid, ids, context=context)
         for t in tasks:
             data = {'state': 'open'}
@@ -748,6 +876,31 @@ class task(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
+    def set_remaining_time_1(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 1.0}, context=context)
+        return True
+
+    def set_remaining_time_2(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 2.0}, context=context)
+        return True
+
+    def set_remaining_time_5(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 5.0}, context=context)
+        return True
+
+    def set_remaining_time_10(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 10.0}, context=context)
+        return True
+
+    def set_kanban_state_blocked(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
+
+    def set_kanban_state_normal(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
+
+    def set_kanban_state_done(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
+
     def _change_type(self, cr, uid, ids, next, *args):
         """
             go to the next stage
@@ -783,6 +936,33 @@ class task(osv.osv):
         self._check_child_task(cr, uid, ids, context=context)
         res = super(task, self).unlink(cr, uid, ids, context)
         return res
+
+    def _generate_task(self, cr, uid, tasks, ident=4, context=None):
+        context = context or {}
+        result = ""
+        ident = ' '*ident
+        for task in tasks:
+            if task.state in ('done','cancelled'):
+                continue
+            result += '''
+%sdef Task_%s():
+%s  todo = \"%.2fH\"
+%s  effort = \"%.2fH\"''' % (ident,task.id, ident,task.remaining_hours, ident,task.total_hours)
+            start = []
+            for t2 in task.parent_ids:
+                start.append("up.Task_%s.end" % (t2.id,))
+            if start:
+                result += '''
+%s  start = max(%s)
+''' % (ident,','.join(start))
+
+            if task.user_id:
+                result += '''
+%s  resource = %s
+''' % (ident, 'User_'+str(task.user_id.id))
+
+        result += "\n"
+        return result
 
 task()
 

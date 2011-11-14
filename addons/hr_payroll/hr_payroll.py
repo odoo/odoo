@@ -211,7 +211,7 @@ class one2many_mod2(fields.one2many):
 class hr_payslip_run(osv.osv):
 
     _name = 'hr.payslip.run'
-    _description = 'Payslip Run'
+    _description = 'Payslip Batches'
     _columns = {
         'name': fields.char('Name', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'slip_ids': fields.one2many('hr.payslip', 'payslip_run_id', 'Payslips', required=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -286,7 +286,7 @@ class hr_payslip(osv.osv):
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'details_by_salary_rule_category': fields.function(_get_lines_salary_rule_category, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Rule Category'),
         'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another", readonly=True, states={'draft': [('readonly', False)]}),
-        'payslip_run_id': fields.many2one('hr.payslip.run', 'Payslip Run', readonly=True, states={'draft': [('readonly', False)]}),
+        'payslip_run_id': fields.many2one('hr.payslip.run', 'Payslip Batches', readonly=True, states={'draft': [('readonly', False)]}),
     }
     _defaults = {
         'date_from': lambda *a: time.strftime('%Y-%m-01'),
@@ -712,7 +712,7 @@ class hr_payslip_worked_days(osv.osv):
     _description = 'Payslip Worked Days'
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True),
+        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade'),
         'sequence': fields.integer('Sequence', required=True,),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
         'number_of_days': fields.float('Number of Days'),
@@ -734,7 +734,7 @@ class hr_payslip_input(osv.osv):
     _description = 'Payslip Input'
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True),
+        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade'),
         'sequence': fields.integer('Sequence', required=True,),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
         'amount': fields.float('Amount', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs.SALEURO.amount * contract.wage*0.01."),
@@ -823,7 +823,7 @@ result = rules.NET > categories.NET * 0.10''',
         'amount_percentage': 0.0,
         'quantity': '1.0',
      }
-    
+
     def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
         """
         @param rule_ids: list of browse record
@@ -919,7 +919,7 @@ class hr_payslip_line(osv.osv):
         return res
 
     _columns = {
-        'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=True),
+        'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade'),
         'salary_rule_id':fields.many2one('hr.salary.rule', 'Rule', required=True),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
         'contract_id':fields.many2one('hr.contract', 'Contract', required=True),
