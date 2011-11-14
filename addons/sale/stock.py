@@ -43,6 +43,19 @@ class stock_picking(osv.osv):
         'sale_id': False
     }
 
+    def action_cancel(self, cr, uid, ids, context=None):
+        """ Changes picking state to cancel.
+        @return: True
+        """
+        for pick in self.browse(cr, uid, ids, context=context):
+            ids2 = [move.id for move in pick.move_lines]
+            self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
+        self.write(cr, uid, ids, {'state': 'cancel', 'invoice_state': 'none'})
+        self.log_picking(cr, uid, ids, context=context)
+        sale_id = self.browse(cr, uid, ids)[0].sale_id.id
+        self.pool.get('sale.order').write(cr, uid, sale_id, {'state':'shipping_except'})
+        return True
+    
     def get_currency_id(self, cursor, user, picking):
         if picking.sale_id:
             return picking.sale_id.pricelist_id.currency_id.id

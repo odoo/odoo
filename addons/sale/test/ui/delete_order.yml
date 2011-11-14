@@ -14,7 +14,10 @@
   !python {model: sale.order}: |
     context.update({'active_id':ref('order')})
     id = self.copy(cr, uid, ref('order'), context)
-    self.unlink(cr, uid, [id])
+    try:
+      self.unlink(cr, uid, [id])
+    except:
+      pass
 -
   I delete cancelled order.
 -
