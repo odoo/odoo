@@ -1210,11 +1210,13 @@ def _float_check_precision(precision_digits=None, precision_rounding=None):
 
 def float_round(amount, precision_digits=None, precision_rounding=None):
     """Return ``amount`` rounded to ``precision_digits``
-       decimal digits, minimizing IEEE-754 floating point representation
+       decimal digits, minimizing IEEE-854 floating point representation
        errors.
        Precision must be given by ``precision_digits`` or ``precision_rounding``,
        not both!
-       Example on Python 2.7.2::
+
+       To illustrate how this is different from the default round() builtin,
+       here is an example (depends on Python version, here is for v2.7.2 x64)::
 
           >>> round_float(2.675)
           2.68
@@ -1241,6 +1243,11 @@ def float_is_zero(amount, precision_digits=None, precision_rounding=None):
        Precision must be given by ``precision_digits`` or ``precision_rounding``,
        not both!
 
+       Warning: ``float_is_zero(amount1-amount2)`` is not always equivalent to 
+       ``float_compare(amount1,amount2) == 0``, as the former will round after
+       computing the difference, while the latter will round before, giving
+       different results for e.g. 0.006 and 0.002 at 2 digits precision. 
+
        :param int precision_digits: number of decimal digits to round to.
        :param float precision_rounding: decimal number representing the minimum
            non-zero value at the desired precision (for example, 0.01 for a 
@@ -1253,13 +1260,20 @@ def float_is_zero(amount, precision_digits=None, precision_rounding=None):
     return abs(float_round(amount, precision_rounding=rounding_factor)) < rounding_factor
 
 def float_compare(amount1, amount2, precision_digits=None, precision_rounding=None):
-    """Compare ``amount1`` and ``amount2`` according
-       to the given precision.
-       Precision must be given by ``precision_digits`` or ``precision_rounding``,
-       not both!
+    """Compare ``amount1`` and ``amount2`` after rounding them according to the
+       given precision. An amount is considered lower/greater than another amount
+       if their rounded value is different. This is not the same as having a
+       non-zero difference!
 
        For example 1.432 and 1.431 are equal at 2 digits precision,
        so this method would return 0
+       However 0.006 and 0.002 are considered different (returns 1) because
+       they respectively round to 0.01 and 0.0, even though
+       0.006-0.002 = 0.004 which would be considered zero at 2 digits precision.
+
+
+       Precision must be given by ``precision_digits`` or ``precision_rounding``,
+       not both!
 
        :param int precision_digits: number of decimal digits to round to.
        :param float precision_rounding: decimal number representing the minimum
@@ -1272,9 +1286,10 @@ def float_compare(amount1, amount2, precision_digits=None, precision_rounding=No
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
                                              precision_rounding=precision_rounding)
+    amount1 = float_round(amount1, precision_rounding=rounding_factor)
+    amount2 = float_round(amount2, precision_rounding=rounding_factor)
     delta = amount1 - amount2
     if float_is_zero(delta, precision_rounding=rounding_factor): return 0
-    delta = float_round(delta, precision_rounding=rounding_factor)
-    return -1 if delta < 0 else 1
+    return -1 if delta < 0.0 else 1
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

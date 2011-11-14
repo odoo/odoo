@@ -128,8 +128,7 @@ class res_currency(osv.osv):
 
     def round(self, cr, uid, currency, amount):
         """Return ``amount`` rounded  according to ``currency``'s
-           rounding rules, also minimizing IEEE-754 floating point
-           representation errors.
+           rounding rules.
 
            :param browse_record currency: currency for which we are rounding
            :param float amount: the amount to round
@@ -138,12 +137,16 @@ class res_currency(osv.osv):
         return float_round(amount, precision_rounding=currency.rounding)
 
     def compare_amounts(self, cr, uid, currency, amount1, amount2):
-        """Compare ``amount1`` and ``amount2`` according to ``currency``'s
-           rounding rules, and return (resp.) -1, 0 or 1, if ``amount1``
-           is (resp.) lower than, equal to, or greater than ``amount2``.
+        """Compare ``amount1`` and ``amount2`` after rounding them according to the
+           given currency's precision..
+           An amount is considered lower/greater than another amount if their rounded
+           value is different. This is not the same as having a non-zero difference!
 
-           For example 1.432 and 1.431 are equal if currency is rounded to
-           2 digits, so this method would return 0
+           For example 1.432 and 1.431 are equal at 2 digits precision,
+           so this method would return 0.
+           However 0.006 and 0.002 are considered different (returns 1) because
+           they respectively round to 0.01 and 0.0, even though
+           0.006-0.002 = 0.004 which would be considered zero at 2 digits precision.
 
            :param browse_record currency: currency for which we are rounding
            :param float amount1: first amount to compare
@@ -157,6 +160,12 @@ class res_currency(osv.osv):
     def is_zero(self, cr, uid, currency, amount):
         """Returns true if ``amount`` is small enough to be treated as
            zero according to ``currency``'s rounding rules.
+
+           Warning: ``is_zero(amount1-amount2)`` is not always equivalent to 
+           ``compare_amounts(amount1,amount2) == 0``, as the former will round after
+           computing the difference, while the latter will round before, giving
+           different results for e.g. 0.006 and 0.002 at 2 digits precision.
+
            :param browse_record currency: currency for which we are rounding
            :param float amount: amount to compare with currency's zero
         """
