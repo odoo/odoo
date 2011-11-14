@@ -94,14 +94,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             }
                         });
                         if (warn) {
-                            var msg = "<ul>";
-                            _.each(self.create_view_widget, function(widget) {
-                                if (widget.invalid) {
-                                    msg += "<li>" + widget.name + "</li>";
-                                }
-                            });
-                            msg += "</ul>";
-                            self.do_warn("The following fields are invalid :", msg);
+                            self.on_valid_create_view();
                         } else {
                             $.when(self.do_save_view(view_values)).then(function() {
                                 self.create_view_dialog.close();
@@ -130,7 +123,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             self.create_view_dialog.$element.find('table[id=create_view]').append('<tr><td align="right">' + widget.string + ':</td><td  id="' +widget.name+ '">' + type_widget.render()+'</td></tr>');
             var value = null;
             if (widget.value) {
-                value = [widget.name, widget.value];
+                value = widget.value;
                 type_widget.dirty = true;
             }
             type_widget.start();
@@ -162,6 +155,16 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
         });
         return def.promise();
+    },
+    on_valid_create_view: function() {
+        var msg = "<ul>";
+        _.each(self.create_view_widget, function(widget) {
+            if (widget.invalid) {
+                msg += "<li>" + widget.name + "</li>";
+            }
+        });
+        msg += "</ul>";
+        self.do_warn("The following fields are invalid :", msg);
     },
     add_node_name : function(node) {
         if(node.tagName.toLowerCase() == "button" || node.tagName.toLowerCase() == "field"){
@@ -751,8 +754,7 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
         }
     },
     get_value: function() {
-        var value = this.$element.find("input[id=" + this.name + "]").is(':checked');
-        return value ? value: null;
+        return this.$element.find("input[id=" + this.name + "]").is(':checked') || null;
     }
 });
 openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
@@ -768,8 +770,7 @@ openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
         value ? this.$element.find("input[id=" + this.name + "]").val(value): this.$element.find("tr[id=" + this.name + "] input").val();
     },
     get_value: function() {
-        var value= this.$element.find("input[id=" + this.name + "]").val();
-        return value ? value: "";
+        return this.$element.find("input[id=" + this.name + "]").val();
     }
 });
 openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
@@ -794,8 +795,7 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         this.$element.find("select[id=" + this.name + "]")[0].selectedIndex = index;
     },
     get_value: function() {
-        var value = this.$element.find("select[id=" + this.name + "]").val();
-        return  value ? value: "";
+        return this.$element.find("select[id=" + this.name + "]").val();
     }
 });
 openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.extend({
