@@ -54,7 +54,7 @@ Note that:
         'res_partner_view.xml',
     ],
     'demo_xml': ['event_demo.xml'],
-    'test': ['test/test_event.yml',
+    'test': ['test/process/event_confirm2done.yml',
              'test/process/register2invoice.yml'],
     'installable': True,
     'active': False,
