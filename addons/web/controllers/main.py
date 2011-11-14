@@ -935,10 +935,12 @@ class View(openerpweb.Controller):
             domain = elem.get(el, '').strip()
             if domain:
                 elem.set(el, parse_domain(domain, session))
+                elem.set(el + '_string', domain)
         for el in ['context', 'default_get']:
             context_string = elem.get(el, '').strip()
             if context_string:
                 elem.set(el, parse_context(context_string, session))
+                elem.set(el + '_string', context_string)
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, view_type, toolbar=False):
