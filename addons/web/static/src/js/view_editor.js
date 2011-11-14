@@ -75,7 +75,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     },
     on_create_view: function() {
         var self = this;
-        this.create_view_dialog = new openerp.web.Dialog(this,{
+        this.create_view_dialog = new openerp.web.Dialog(this, {
             modal: true,
             title: _.sprintf("Create a view (%s)", self.model),
             width: 500,
@@ -86,7 +86,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         var warn = false;
                         _.each(self.create_view_widget, function(widget) {
                             if (widget.invalid) {
-                                warn = true
+                                warn = true;
                                 return false;
                             };
                             if (widget.dirty && !widget.invalid) {
@@ -179,10 +179,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         }
     },
     do_delete_view: function() {
+        var self = this;
         if (confirm(_t("Do you really want to remove this view?"))) {
-	        var controller = this.action_manager.inner_viewmanager.views[this.action_manager.inner_viewmanager.active_view].controller;
-            this.dataset.unlink([this.main_view_id]).then(function() {
+            var controller = this.action_manager.inner_viewmanager.views[this.action_manager.inner_viewmanager.active_view].controller;
+            self.dataset.unlink([this.main_view_id]).then(function() {
                 controller.reload_content();
+                self.main_view_id = self.parent.fields_view.view_id;
             });
         }
     },
@@ -245,18 +247,22 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         var view_arch_list = [];
         this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function(arch) {
-            var arch_object = self.parse_xml(arch[0].arch, self.main_view_id);
-            self.main_view_type = arch[0].type
-            view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch});
-            self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}, function(result) {
-                _.each(result, function(res) {
-                    view_arch_list.push({"view_id": res.id, "arch": res.arch});
-                    self.inherit_view(arch_object, res);
+            if (arch.length) {
+                var arch_object = self.parse_xml(arch[0].arch, self.main_view_id);
+                self.main_view_type = arch[0].type
+                view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch});
+                self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}, function(result) {
+                    _.each(result, function(res) {
+                        view_arch_list.push({"view_id": res.id, "arch": res.arch});
+                        self.inherit_view(arch_object, res);
+                    });
+                    return self.edit_view({"main_object": arch_object,
+                        "parent_child_id": self.parent_child_list(arch_object, []),
+                        "arch": view_arch_list});
                 });
-                return self.edit_view({"main_object": arch_object,
-                    "parent_child_id": self.parent_child_list(arch_object, []),
-                    "arch": view_arch_list});
-            });
+            } else {
+                self.do_warn("Please select view in list :");
+            }
         });
     },
     parent_child_list : function(one_object, parent_list) {
