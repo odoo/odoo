@@ -876,15 +876,20 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
         }
         var cells = [];
         if (this.options.selectable) {
-            cells.push('<td title="selection"></td>');
+            cells.push('<th class="oe-record-selector"></td>');
         }
         _(this.columns).each(function(column) {
-            if (column.invisible !== '1') {
+            if (column.invisible === '1') {
+                return;
+            }
+            if (column.tag === 'button') {
+                cells.push('<td class="oe-button" title="' + column.string + '">&nbsp;</td>');
+            } else {
                 cells.push('<td title="' + column.string + '">&nbsp;</td>');
             }
         });
         if (this.options.deletable) {
-            cells.push('<td><button type="button" style="visibility: hidden"> </button></td>');
+            cells.push('<td class="oe-record-delete"><button type="button" style="visibility: hidden"> </button></td>');
         }
         cells.unshift('<tr>');
         cells.push('</tr>');
