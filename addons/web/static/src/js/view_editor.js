@@ -83,16 +83,32 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             buttons: {
                     "Save": function(){
                         var view_values = {};
+                        var warn = false;
                         _.each(self.create_view_widget, function(widget) {
+                            if (widget.invalid) {
+                                warn = true
+                                return false;
+                            };
                             if (widget.dirty && !widget.invalid) {
                                 view_values[widget.name] = widget.get_value();
                             }
                         });
-                        $.when(self.do_save_view(view_values)).then(function() {
-                            self.create_view_dialog.close();
-                            var controller = self.action_manager.inner_viewmanager.views[self.action_manager.inner_viewmanager.active_view].controller;
-                            controller.reload_content();
-                        });
+                        if (warn) {
+                            var msg = "<ul>";
+                            _.each(self.create_view_widget, function(widget) {
+                                if (widget.invalid) {
+                                    msg += "<li>" + widget.name + "</li>";
+                                }
+                            });
+                            msg += "</ul>";
+                            self.do_warn("The following fields are invalid :", msg);
+                        } else {
+                            $.when(self.do_save_view(view_values)).then(function() {
+                                self.create_view_dialog.close();
+                                var controller = self.action_manager.inner_viewmanager.views[self.action_manager.inner_viewmanager.active_view].controller;
+                                controller.reload_content();
+                            });
+                        }
                     },
                     "Cancel": function(){
                         self.create_view_dialog.close();
@@ -100,9 +116,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }
         });
         this.create_view_dialog.start().open();
-        var view_widget = [{'name': 'view_name', 'type': 'char', 'required': true, 'value' : this.model + '.custom_' + Math.round(Math.random() * 1000)},
-                           {'name': 'view_type', 'type': 'selection', 'required': true, 'value': 'Form', 'selection': [['',''],['tree', 'Tree'],['form', 'Form'],['graph', 'Graph'],['calendar', 'Calender']]},
-                           {'name': 'pririty', 'type': 'char', 'required': true, 'value':'16'}];
+        var view_widget = [{'name': 'view_name', 'string':'View Name', 'type': 'char', 'required': true, 'value' : this.model + '.custom_' + Math.round(Math.random() * 1000)},
+                           {'name': 'view_type', 'string': 'View Type', 'type': 'selection', 'required': true, 'value': 'Form', 'selection': [['',''],['tree', 'Tree'],['form', 'Form'],['graph', 'Graph'],['calendar', 'Calender']]},
+                           {'name': 'proirity', 'string': 'Priority', 'type': 'char', 'required': true, 'value':'16'}];
         this.create_view_dialog.$element.append('<table id="create_view"  style="width:400px" class="oe_forms"></table>');
         this.create_view_widget = [];
         _.each(view_widget, function(widget) {
@@ -111,7 +127,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 type_widget.selection = widget.selection;
             }
             type_widget.required = widget.required;
-            self.create_view_dialog.$element.find('table[id=create_view]').append('<tr><td align="right">' + widget.name + ':</td><td  id="' +widget.name+ '">' + type_widget.render()+'</td></tr>');
+            self.create_view_dialog.$element.find('table[id=create_view]').append('<tr><td align="right">' + widget.string + ':</td><td  id="' +widget.name+ '">' + type_widget.render()+'</td></tr>');
             var value = null;
             if (widget.value) {
                 value = [widget.name, widget.value];
