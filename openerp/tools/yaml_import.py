@@ -372,8 +372,10 @@ class YamlInterpreter(object):
             if fg[key]['type']=='many2one':
                 if type(val) in (tuple,list):
                     val = val[0]
-            elif (fg[key]['type']=='one2many') and len(val):
-                if type(val[0]) == dict:
+            elif (fg[key]['type']=='one2many'):
+                if val is False:
+                    val = []
+                if len(val) and type(val[0]) == dict:
                     val = map(lambda x: (0,0,x), val)
             return val
 
@@ -394,9 +396,9 @@ class YamlInterpreter(object):
                             view2 = etree.fromstring(view2['arch'].encode('utf-8'))
 
                     field_value = self._eval_field(model, field_name, fields[field_name], view2, parent=record_dict, default=default)
-                    #if (field_name in record_dict) and record_dict[field_name] == field_value:
-                    #    print 'WARNING ***', field_name, 
                     record_dict[field_name] = field_value
+                    if (field_name in defaults) and defaults[field_name] == field_value:
+                        print '*** WARNING', field_name, field_value
                 elif (field_name in defaults) and (field_name not in record_dict):
                     record_dict[field_name] = process_val(field_name, defaults[field_name])
                 else:
@@ -420,15 +422,18 @@ class YamlInterpreter(object):
                 ctx['parent'] = parent2(parent)
                 for a in fg:
                     if a not in ctx:
-                        ctx[a]=False
+                        ctx[a]=process_val(a, False)
 
                 # Evaluation args
                 args = map(lambda x: eval(x, ctx), match.group(2).split(','))
+                print 'Debug', match.group(1), args, match.group(2)
                 result = getattr(model, match.group(1))(self.cr, 1, [], *args)
                 for key, val in (result or {}).get('value', {}).items():
                     if key not in fields:
                         assert key in fg, "The returning field '%s' from your on_change call '%s' does not exist on the object '%s'" % (key, match.group(1), model._name)
                         record_dict[key] = process_val(key, val)
+                        if (key in fields) and record_dict[key] == process_val(key, val):
+                            print '*** WARNING', key, val
             else:
                 nodes = list(el) + nodes
 
