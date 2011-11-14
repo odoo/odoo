@@ -189,7 +189,14 @@ class ir_sequence(openerp.osv.osv.osv):
     def _next(self, cr, uid, seq_ids, context=None):
         if not seq_ids:
             return False
-        seq = self.read(cr, uid, seq_ids[:1], ['implementation','number_next','prefix','suffix','padding'])[0]
+        if context is None:
+            context = {}
+        force_company = context.get('force_company')
+        if force_company is None:
+            force_company = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+        sequences = self.read(cr, uid, seq_ids, ['company_id', 'implementation','number_next','prefix','suffix','padding'])
+        preferred_sequences = [s for s in sequences if s['company_id'] and s['company_id'][0] == force_company ]
+        seq = preferred_sequences[0] if preferred_sequences else sequences[0]
         if seq['implementation'] == 'standard':
             cr.execute("SELECT nextval('ir_sequence_%03d')" % seq['id'])
             seq['number_next'] = cr.fetchone()
