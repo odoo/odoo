@@ -94,7 +94,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             }
                         });
                         if (warn) {
-                            self.on_valid_create_view();
+                            self.on_valid_create_view(self.create_view_widget);
                         } else {
                             $.when(self.do_save_view(view_values)).then(function() {
                                 self.create_view_dialog.close();
@@ -157,9 +157,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         return def.promise();
     },
-    on_valid_create_view: function() {
+    on_valid_create_view: function(widgets) {
         var msg = "<ul>";
-        _.each(self.create_view_widget, function(widget) {
+        _.each(widgets, function(widget) {
             if (widget.is_invalid) {
                 msg += "<li>" + widget.name + "</li>";
             }
@@ -649,7 +649,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             }
                         });
                         if (warn) {
-                            self.on_valid_create_view();
+                            self.on_valid_create_view(self.edit_widget);
                         } else {
                             self.do_save_update_arch(obj, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "update_node", update_values);
                             self.edit_node_dialog.close();
