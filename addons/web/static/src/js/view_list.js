@@ -1127,7 +1127,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             child.datagroup = group;
 
             var $row = child.$row = $('<tr>');
-            if (group.openable) {
+            if (group.openable && group.length) {
                 $row.click(function (e) {
                     if (!$row.data('open')) {
                         $row.data('open', true)
@@ -1159,7 +1159,13 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 } catch (e) {
                     $group_column.html(row_data[group_column.id].value);
                 }
-                if (group.openable) {
+                if (!group.length) {
+                    // Kinda-ugly hack: jquery-ui has no "empty" icon, so set
+                    // wonky background position to ensure nothing is displayed
+                    // there but the rest of the behavior is ui-icon's
+                    $group_column.prepend(
+                        '<span class="ui-icon" style="float: left; background-position: 150px 150px">');
+                } else if (group.openable) {
                     // Make openable if not terminal group & group_by_no_leaf
                     $group_column
                         .prepend('<span class="ui-icon ui-icon-triangle-1-e" style="float: left;">');
