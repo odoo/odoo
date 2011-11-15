@@ -14,12 +14,12 @@
   !python {model: sale.order}: |
     order = self.browse(cr, uid, ref("order"))
     self.pool.get('stock.picking').action_cancel(cr, uid, [picking.id for picking in  order.picking_ids])
+    assert order.picking_ids[0].state == "cancel","order's related picking should be cancelled"
 -
   I check order status in "Shipping Exception" and related picking is in cancel state.
 -
   !python {model: sale.order}: |
     order = self.browse(cr, uid, ref("order"))
-    assert order.picking_ids[0].state == "cancel","order's related picking should be cancelled"
     assert order.state == "shipping_except", "order should be in Ship Exception state after cancel shipment"
 -
   I try to cancel the invoice.

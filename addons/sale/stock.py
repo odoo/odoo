@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+import netsvc
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -47,14 +48,10 @@ class stock_picking(osv.osv):
         """ Changes picking state to cancel.
         @return: True
         """
-        for pick in self.browse(cr, uid, ids, context=context):
-            ids2 = [move.id for move in pick.move_lines]
-            self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
-        self.write(cr, uid, ids, {'state': 'cancel', 'invoice_state': 'none'})
-        self.log_picking(cr, uid, ids, context=context)
         sale_id = self.browse(cr, uid, ids)[0].sale_id.id
-        self.pool.get('sale.order').write(cr, uid, sale_id, {'state':'shipping_except'})
-        return True
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'sale.order', sale_id, 'ship_exception', cr)
+        return super(stock_picking, self).action_cancel(cr, uid, ids)
     
     def get_currency_id(self, cursor, user, picking):
         if picking.sale_id:
