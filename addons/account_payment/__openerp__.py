@@ -54,6 +54,7 @@ This module provides :
              'test/process/draft2cancel_payment_order.yml',
              'test/process/draft2done_payment_order.yml',
              'test/process/draft2valid_bank_statement.yml',
+             'test/ui/payment_order_form.yml',
              'test/account_payment_report.yml'
     ],
     'installable': True,
