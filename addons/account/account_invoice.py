@@ -1323,9 +1323,9 @@ class account_invoice_line(osv.osv):
             raise osv.except_osv(_('No Partner Defined !'),_("You must first select a partner !") )
         if not product:
             if type in ('in_invoice', 'in_refund'):
-                return {'value': {'categ_id': False}, 'domain':{'product_uom':[]}}
+                return {'value': {}, 'domain':{'product_uom':[]}}
             else:
-                return {'value': {'price_unit': 0.0, 'categ_id': False}, 'domain':{'product_uom':[]}}
+                return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         fpos_obj = self.pool.get('account.fiscal.position')
         fpos = fposition_id and fpos_obj.browse(cr, uid, fposition_id, context=context) or False
@@ -1378,7 +1378,6 @@ class account_invoice_line(osv.osv):
             if res2:
                 domain = {'uos_id':[('category_id','=',res2 )]}
 
-        result['categ_id'] = res.categ_id.id
         res_final = {'value':result, 'domain':domain}
 
         if not company_id or not currency_id:

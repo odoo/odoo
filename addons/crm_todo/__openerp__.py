@@ -21,9 +21,10 @@
 
 
 {
-    'name': 'To Do List for CRM',
+    'name': 'To Do List',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Customer Relationship Management',
+    'complexity': "easy",
     'description': """
 Todo list for CRM leads and opportunities.
     """,
@@ -35,4 +36,6 @@ Todo list for CRM leads and opportunities.
     'demo': [
         'crm_todo_demo.xml',
     ],
+    'installable': True,
+    'active': False,
 }

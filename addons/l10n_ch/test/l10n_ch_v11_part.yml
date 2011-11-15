@@ -5,7 +5,7 @@
 -  
   I create an invoice ref 2000999 of EUR 250.00
 -
-  !record {model: account.invoice, id: v11_part_test_invoice}:
+  !record {model: account.invoice, id: v11_part_test_invoice, view: False}:
     name: V11 YAML invoice
     number: 2000999
     company_id: base.main_company
@@ -27,7 +27,7 @@
 -
   I create an invoice line
 -
-  !record {model: account.invoice.line, id: v11_part_test_invoice_line}:
+  !record {model: account.invoice.line, id: v11_part_test_invoice_line, view: False}:
     account_id: account.a_expense
     name: '[PC1] Basic PC'
     price_unit: 250.00
@@ -55,7 +55,7 @@
  #      Creating 1st bank statement      #
 #########################################
 -
-  !record {model: account.bank.statement, id: v11_part_test_bank_statement_1}:
+  !record {model: account.bank.statement, id: v11_part_test_bank_statement_1, view: False}:
     #account_id:
     #balance_end:
     #balance_end_cash:
@@ -176,7 +176,7 @@
  #      Creating 2nd bank statement      #
 #########################################
 -
-  !record {model: account.bank.statement, id: v11_part_test_bank_statement_2}:
+  !record {model: account.bank.statement, id: v11_part_test_bank_statement_2, view: False}:
     #account_id:
     #balance_end:
     #balance_end_cash:

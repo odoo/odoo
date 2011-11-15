@@ -150,7 +150,7 @@
     assert (move_line.debit - move_line.credit == 80), "Invoice move is incorrect for debtors account"
 -
   I create the first voucher of payment
-  <create with values 200 EUR (€), journal EUR, and fills amount 130€ for the invoice of 200$ and 70€ for the invoice of 100$>
+  <create with values 200 EUR, journal EUR, and fills amount 130 EUR for the invoice of 200 USD and 70 EUR for the invoice of 100 USD>
 -
   !python {model: account.voucher}: |
     import netsvc, time
@@ -220,7 +220,6 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    print move_line.amount_residual, move_line.amount_residual_currency
     assert (move_line.amount_residual_currency == 55.56 and move_line.amount_residual == 20) , "Residual amount is not correct for first Invoice"
 -
   I check the residual amuont of Invoice2, should be 22.22 in residual currency and 10 in amount_residual
