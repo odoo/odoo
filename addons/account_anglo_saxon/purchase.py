@@ -26,8 +26,8 @@ class purchase_order(osv.osv):
     _inherit = "purchase.order"
     _description = "Purchase Order"
 
-    def inv_line_create(self, cr, uid, a, ol):
-        line = super(purchase_order, self).inv_line_create(cr, uid, a, ol)
+    def inv_line_create(self, cr, uid, account_id, order_line, context=None):
+        line = super(purchase_order, self).inv_line_create(cr, uid, account_id, order_line, context=context)
         if ol.product_id and not ol.product_id.type == 'service':
             oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
             if not oa:
@@ -35,6 +35,6 @@ class purchase_order(osv.osv):
             if oa:
                 fpos = ol.order_id.fiscal_position or False
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
-                line[2].update({'account_id': a})
+                line.update({'account_id': a})
         return line
 purchase_order()
