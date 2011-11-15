@@ -2486,7 +2486,7 @@ class BaseModel(object):
                 if (pos<len(data)) and (data[pos][groupby][0] == stages[pos][0]):
                     pos+=1
                     continue
-                val = dict(map(lambda x: (x, False), fields))
+                val = dict.fromkeys(float_int_fields, False)
                 val.update({
                     groupby: stages[pos],
                     '__domain': [(groupby, '=', stages[pos][0])]+domain,
