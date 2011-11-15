@@ -651,24 +651,61 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }
         });
         this.edit_node_dialog.start().open();
+        var _PROPERTIES_ATTRIBUTES = {
+            'name' : {'string': 'Name', 'type': 'char'},
+            'string' : {'string': 'String', 'type': 'char'},
+            'required' : {'string': 'Required', 'type': 'boolean'},
+            'readonly' : {'string': 'Readonly', 'type': 'boolean'},
+            'domain' : {'string': 'Domain', 'type': 'char'},
+            'context' : {'string': 'Context', 'type': 'char'},
+            'limit' : {'string': 'Limit', 'type': 'char'},
+            'min_rows' : {'string': 'Minimum rows', 'type': 'char'},
+            'date_start' : {'string': 'Start date', 'type': 'char'},
+            'date_delay' : {'string': 'Delay date', 'type': 'char'},
+            'day_length' : {'string': 'Day length', 'type': 'char'},
+            'mode' : {'string': 'Mode', 'type': 'char'},
+            'align' : {'string': 'Alignment ', 'type': 'selection', 'selection': [['', ''], ['0.0', 'Left'], ['0.5', 'Center'], ['1.0', 'Right']]},
+            'icon' : {'string': 'Icon', 'type': 'selection', 'selection': _ICONS},
+            'type' : {'string': 'Type', 'type': 'selection', 'selection': [['', ''], ['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']]},
+            'special' : {'string': 'Special', 'type': 'selection', 'selection': [['',''],['save', 'Save Button'], ['cancel', 'Cancel Button'], ['open', 'Open Button']]},
+            'target' : {'string': 'Target', 'type': 'selection', 'selection': [['', ''], ['new', 'New Window']]},
+            'confirm' : {'string': 'Confirm', 'type': 'char'},
+            'style' : {'string': 'Style', 'type': 'selection', 'selection':[["",""],["1", "1"],["1-1", "1-1"],["1-2", "1-2"],["2-1", "2-1"],["1-1-1", "1-1-1"]]},
+            'filename' : {'string': 'File Name', 'type': 'char'},
+            'width' : {'string': 'Width', 'type': 'char'},
+            'height' : {'string': 'Height', 'type': 'char'},
+            'attrs' : {'string': 'Attrs', 'type': 'char'},
+            'col' : {'string': 'col', 'type': 'char'},
+            'link' : {'string': 'Link', 'type': 'char'},
+            'position' : {'string': 'Position', 'type': 'selection', 'selection': [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']]},
+            'states' : {'string': 'states', 'type': 'char'},
+            'eval' : {'string': 'Eval', 'type': 'char'},
+            'ref' : {'string': 'Ref', 'type': 'char'},
+            'on_change' : {'string': 'On change', 'type': 'char'},
+            'nolabel' : {'string': 'No label', 'type': 'boolean'},
+            'completion' : {'string': 'Completion', 'type': 'boolean'},
+            'colspan' : {'string': 'Colspan', 'type': 'char'},
+            'widget' : {'string': 'widget', 'type': 'selection'},
+            'groups' : {'string': 'Groups', 'type': 'seleciton_multi'},
+        };
         var widget = _.keys(self.property.map);
         var arch_val = self.get_object_by_id(clicked_tr_id,obj['main_object'], []);
         this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
         this.edit_widget = [];
-        _.each(properties, function(property) {
-            type_widget = false;
-            self.ready  = $.when(self.on_groups(property)).then(function () {
-                if (_.include(widget, property)){
-                    type_widget =  new (self.property.get_any([property])) (self.edit_node_dialog, property);
-                } else {
-                    type_widget = new openerp.web.ViewEditor.FieldChar (self.edit_node_dialog, property);
-                }
+        self.ready  = $.when(self.on_groups(properties)).then(function () {
+            _PROPERTIES_ATTRIBUTES['groups']['selection'] = self.groups;
+            var values = _.keys( openerp.web.form.widgets.map);
+            values.push('');
+            values.sort();
+            _PROPERTIES_ATTRIBUTES['widget']['selection'] = values;
+            _.each(properties, function(property) {
+                var type_widget =  new (self.property.get_any([_PROPERTIES_ATTRIBUTES[property].type])) (self.edit_node_dialog, property);
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
                     return _.include(res, property);
                 });
+                type_widget.selection = _PROPERTIES_ATTRIBUTES[property].selection
                 value = value instanceof Array ? value[1] : value;
-                if (property == 'groups') type_widget.selection = self.groups;
-                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + property + ':</td>' + type_widget.render() + '</tr>');
+                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + _PROPERTIES_ATTRIBUTES[property].string + ':</td>' + type_widget.render() + '</tr>');
                 type_widget.start();
                 type_widget.set_value(value)
                 self.edit_widget.push(type_widget);
@@ -676,12 +713,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
     },
      //for getting groups
-    on_groups: function(property){
+    on_groups: function(properties){
         var self = this,
         def = $.Deferred();
-        if (property != 'groups') {
+        if (!_.include(properties, 'groups')) {
             self.groups = false;
-            return false;
+            def.resolve();
         }
         var group_ids = [],
         group_names = {},
@@ -800,53 +837,7 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         return this.$element.find("select").val();
     }
 });
-openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.registry = openerp.web.form.widgets;
-        var values = _.keys(this.registry.map);
-        values.push('');
-        values.sort();
-        this.selection = values;
-    },
-});
-openerp.web.ViewEditor.IconProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = _ICONS;
-    },
-});
-openerp.web.ViewEditor.ButtonTargetProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = [['', ''], ['new', 'New Window']];
-    },
-});
-openerp.web.ViewEditor.ButtonTypeProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = [['', ''], ['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']];
-    },
-});
-openerp.web.ViewEditor.AlignProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = [['', ''], ['0.0', 'Left'], ['0.5', 'Center'], ['1.0', 'Right']];
-    },
-});
-openerp.web.ViewEditor.ButtonSpecialProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = [['',''],['save', 'Save Button'], ['cancel', 'Cancel Button'], ['open', 'Open Button']];
-    },
-});
-openerp.web.ViewEditor.PositionProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']];
-    },
-});
-openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.extend({
+openerp.web.ViewEditor.FieldSelectMulti = openerp.web.ViewEditor.FieldSelect.extend({
     start: function () {
         this._super();
         this.$element.find("select[id=" + this.name + "]").css('height', '100px').attr("multiple",true);
@@ -864,7 +855,7 @@ openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.exten
 });
 var _PROPERTIES = {
     'field' : ['name', 'string', 'required', 'readonly', 'domain', 'context', 'nolabel', 'completion',
-               'colspan', 'widget', 'eval', 'ref', 'on_change', 'groups', 'attrs'],
+               'colspan', 'widget', 'eval', 'ref', 'on_change', 'attrs', 'groups'],
     'form' : ['string', 'col', 'link'],
     'notebook' : ['colspan', 'position', 'groups'],
     'page' : ['string', 'states', 'attrs', 'groups'],
@@ -880,43 +871,6 @@ var _PROPERTIES = {
     'tree' : ['string', 'colors', 'editable', 'link', 'limit', 'min_rows'],
     'graph' : ['string', 'type'],
     'calendar' : ['string', 'date_start', 'date_stop', 'date_delay', 'day_length', 'color', 'mode'],
-};
-var _PROPERTIES_ATTRIBUTES = {
-    'name' : {'string': 'Name', 'type': 'char'},
-    'string' : {'string': 'String', 'type': 'char'},
-    'required' : {'string': 'Required', 'type': 'boolean'},
-    'readonly' : {'string': 'Readonly', 'type': 'boolean'},
-    'domain' : {'string': 'Domain', 'type': 'char'},
-    'context' : {'string': 'Context', 'type': 'char'},
-    'limit' : {'string': 'Limit', 'type': 'selection'},
-    'min_rows' : {'string': 'Minimum rows', 'type': 'char'},
-    'date_start' : {'string': 'Start date', 'type': 'char'},
-    'date_delay' : {'string': 'Delay date', 'type': 'char'},
-    'day_length' : {'string': 'Day length', 'type': 'char'},
-    'mode' : {'string': 'Mode', 'type': 'char'},
-    'align' : {'string': 'Alignment ', 'type': 'selection'},
-    'icon' : {'string': 'Icon', 'type': 'selection'},
-    'type' : {'string': 'Type', 'type': 'selection'},
-    'special' : {'string': 'Special', 'type': 'selection'},
-    'target' : {'string': 'Target', 'type': 'selection'},
-    'confirm' : {'string': 'Confirm', 'type': 'char'},
-    'style' : {'string': 'Style', 'type': 'selection'},
-    'filename' : {'string': 'File Name', 'type': 'char'},
-    'width' : {'string': 'Width', 'type': 'char'},
-    'height' : {'string': 'Height', 'type': 'char'},
-    'groups' : {'string': 'Groups', 'type': 'seleciton_multi'},
-    'attrs' : {'string': 'Attrs', 'type': 'char'},
-    'col' : {'string': 'col', 'type': 'char'},
-    'link' : {'string': 'Link', 'type': 'char'},
-    'position' : {'string': 'Position', 'type': 'selection'},
-    'states' : {'string': 'states', 'type': 'char'},
-    'eval' : {'string': 'Eval', 'type': 'char'},
-    'ref' : {'string': 'Ref', 'type': 'char'},
-    'on_change' : {'string': 'On change', 'type': 'char'},
-    'nolabel' : {'string': 'No label', 'type': 'boolean'},
-    'completion' : {'string': 'Completion', 'type': 'boolean'},
-    'colspan' : {'string': 'Colspan', 'type': 'char'},
-    'widget' : {'string': 'widget', 'type': 'selection'},
 };
 var _ICONS = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
             'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
@@ -946,18 +900,8 @@ var _ICONS = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
             'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph'
 ];
 openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
-    'required' : 'openerp.web.ViewEditor.FieldBoolean',
-    'readonly' : 'openerp.web.ViewEditor.FieldBoolean',
-    'nolabel' : 'openerp.web.ViewEditor.FieldBoolean',
-    'completion' : 'openerp.web.ViewEditor.FieldBoolean',
-    'widget' : 'openerp.web.ViewEditor.WidgetProperty',
-    'groups' : 'openerp.web.ViewEditor.GroupsProperty',
-    'position' : 'openerp.web.ViewEditor.PositionProperty',
-    'icon' : 'openerp.web.ViewEditor.IconProperty',
-    'align' : 'openerp.web.ViewEditor.AlignProperty',
-    'special' : 'openerp.web.ViewEditor.ButtonSpecialProperty',
-    'type' : 'openerp.web.ViewEditor.ButtonTypeProperty',
-    'target' : 'openerp.web.ViewEditor.ButtonTargetProperty',
+    'boolean' : 'openerp.web.ViewEditor.FieldBoolean',
+    'seleciton_multi' : 'openerp.web.ViewEditor.FieldSelectMulti',
     'selection' : 'openerp.web.ViewEditor.FieldSelect',
     'char' : 'openerp.web.ViewEditor.FieldChar',
 });
