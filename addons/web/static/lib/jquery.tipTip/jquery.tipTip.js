@@ -174,7 +174,12 @@
 					tiptip_holder.css({"margin-left": marg_left+"px", "margin-top": marg_top+"px"}).attr("class","tip"+t_class);
 					
 					if (timeout){ clearTimeout(timeout); }
-					timeout = setTimeout(function(){ tiptip_holder.stop(true,true).fadeIn(opts.fadeIn); }, opts.delay);	
+					timeout = setTimeout(function() {
+						tiptip_holder.stop(true,true);
+						if ($.contains(document.documentElement, org_elem[0])) {
+							tiptip_holder.fadeIn(opts.fadeIn);
+						}
+					}, opts.delay);
 				}
 				
 				function deactive_tiptip(){
