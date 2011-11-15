@@ -1,0 +1,39 @@
+-
+  In Order to test process of Job Position,
+- 
+  I open Job Postion of "Jr. Application Engineer" Profile.
+-
+  !python {model: hr.job}: |
+    self.job_open(cr, uid, [ref('hr_job_jea0')])
+-
+  I check state of Job Position after opened it.
+-
+  !assert {model: hr.job, id: hr_job_jea0}:
+    - state == 'open'
+-
+  Now, Recruitement is started so I start recruitement of Job Postion of "Jr. Application Engineer" Profile.
+-    
+  !python {model: hr.job}: |
+    self.job_recruitement(cr, uid, [ref('hr_job_jea0')])
+-
+  I check state and number of Expected in Recruitment in Job Position of  "Jr. Application Engineer" Profile.
+-
+  !assert {model: hr.job, id: hr_job_jea0}:
+    - state == 'recruit'
+    - no_of_recruitment == 1.0
+-  
+  I hired new employee for the job position so I set Job Position of  "Jr. Application Engineer" Profile to new employee.
+-
+  !python {model: hr.employee}: |
+    self.write(cr, uid, [ref('hr_employee001')], {'job_id':ref('hr_job_jea0')})
+-
+  Now I don't want to recruit new employee on this position. so I mark it as Old.
+-
+  !python {model: hr.job}: |
+    self.job_old(cr, uid, [ref('hr_job_jea0')])
+-
+  I check state of Job position and  number of Expected in Recruitment after closed Job position.
+-
+  !assert {model: hr.job, id: hr_job_jea0}:
+    - state == 'old'
+    - no_of_recruitment == 0

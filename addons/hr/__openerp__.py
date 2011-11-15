@@ -54,7 +54,10 @@ You can manage:
         'hr_demo.xml',
         'hr_department_demo.xml',
     ],
-    'test': ['test/test_hr.yml'],
+    'test': [
+             'test/hr_employee_demo.yml',
+             'test/process/open2recruit2close_job.yml',
+             ],
     'installable': True,
     'active': False,
     'certificate': '0086710558965',
