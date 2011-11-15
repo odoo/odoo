@@ -266,6 +266,10 @@ class configmanager(object):
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
+        group.add_option("--run-tests", dest="run_tests", my_default=False, action="store_true",
+                         help="Run a test suite.")
+        group.add_option("--run-tests-no-db", dest="run_tests_no_db", my_default=False, action="store_true",
+                         help="Run a test suite (which does'nt assume an existing database).")
 
         parser.add_option_group(group)
 
@@ -370,6 +374,7 @@ class configmanager(object):
             'list_db', 'xmlrpcs',
             'test_file', 'test_disable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
+            'run_tests', 'run_tests_no_db',
         ]
 
         for arg in keys:

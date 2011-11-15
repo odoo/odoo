@@ -221,6 +221,20 @@ if __name__ == "__main__":
 
     setup_signal_handlers()
 
+    if config["run_tests_no_db"]:
+        import unittest2
+        import openerp.tests
+        # This test suite creates a database.
+        unittest2.TextTestRunner(verbosity=2).run(openerp.tests.make_suite_no_db())
+        sys.exit(0)
+
+    if config["run_tests"]:
+        import unittest2
+        import openerp.tests
+        # This test suite assumes a database.
+        unittest2.TextTestRunner(verbosity=2).run(openerp.tests.make_suite())
+        sys.exit(0)
+
     if config["test_file"]:
         run_test_file(config['db_name'], config['test_file'])
         sys.exit(0)

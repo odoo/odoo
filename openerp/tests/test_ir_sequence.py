@@ -19,7 +19,9 @@ import common
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
-setUpModule = common.setUpModule
+def setUpModule():
+    common.create_xmlrpc_proxies()
+
 tearDownModule = common.tearDownModule
 
 def registry(model):
