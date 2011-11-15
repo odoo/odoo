@@ -14,6 +14,7 @@ function launch_wizard(self, view) {
             name: action.name,
             domain: domain,
             action_id: action.id,
+            view_type: view.fields_view.type,
         }, function(result) {
             var share_id = result.result;
             var step1 = Share.call('go_step_1', [[share_id],], function(result) {

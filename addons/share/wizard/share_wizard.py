@@ -136,6 +136,7 @@ class share_wizard(osv.osv_memory):
     _columns = {
         'action_id': fields.many2one('ir.actions.act_window', 'Action to share', required=True,
                 help="The action that opens the screen containing the data you wish to share."),
+        'view_type': fields.char('Current View Type', size=32, required=True),
         'domain': fields.char('Domain', size=256, help="Optional domain for further data filtering"),
         'user_type': fields.selection(lambda s, *a, **k: s._user_type_selection(*a, **k),'Users to share with', required=True,
                      help="Select the type of user(s) you would like to share data with."),
@@ -149,6 +150,7 @@ class share_wizard(osv.osv_memory):
         'message': fields.text("Personal Message", help="An optional personal message, to be included in the e-mail notification."),
     }
     _defaults = {
+        'view_type': 'tree',
         'user_type' : 'emails',
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
@@ -273,21 +275,33 @@ class share_wizard(osv.osv_memory):
 
     def _shared_action_def(self, cr, uid, wizard_data, context=None):
         copied_action = wizard_data.action_id
+
+        if wizard_data.access_mode == 'readonly':
+            view_mode = wizard_data.view_type
+            view_id = copied_action.view_id.id if copied_action.view_id.type == wizard_data.view_type else False
+        else:
+            view_mode = copied_action.view_mode
+            view_id = copied_action.view_id.id
+
+
         action_def = {
             'name': wizard_data.name,
             'domain': copied_action.domain,
             'context': self._cleanup_action_context(wizard_data.action_id.context, uid),
             'res_model': copied_action.res_model,
-            'view_mode': copied_action.view_mode,
+            'view_mode': view_mode,
             'view_type': copied_action.view_type,
-            'search_view_id': copied_action.search_view_id.id,
-            'view_id': copied_action.view_id.id,
+            'search_view_id': copied_action.search_view_id.id if wizard_data.access_mode != 'readonly' else False,
+            'view_id': view_id,
+            'auto_search': True,
         }
         if copied_action.view_ids:
             action_def['view_ids'] = [(0,0,{'sequence': x.sequence,
                                             'view_mode': x.view_mode,
                                             'view_id': x.view_id.id })
-                                      for x in copied_action.view_ids]
+                                      for x in copied_action.view_ids
+                                      if (wizard_data.access_mode != 'readonly' or x.view_mode == wizard_data.view_type)
+                                     ]
         return action_def
 
     def _setup_action_and_shortcut(self, cr, uid, wizard_data, user_ids, make_home, context=None):
