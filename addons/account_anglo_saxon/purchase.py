@@ -26,8 +26,8 @@ class purchase_order(osv.osv):
     _inherit = "purchase.order"
     _description = "Purchase Order"
 
-    def inv_line_create(self, cr, uid, account_id, order_line, context=None):
-        line = super(purchase_order, self).inv_line_create(cr, uid, account_id, order_line, context=context)
+    def prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
+        line = super(purchase_order, self).prepare_inv_line(cr, uid, account_id, order_line, context=context)
         if ol.product_id and not ol.product_id.type == 'service':
             oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
             if not oa:

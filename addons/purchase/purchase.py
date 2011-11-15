@@ -320,7 +320,7 @@ class purchase_order(osv.osv):
                        'ref_doc1': 'purchase.order,%d' % (po.id,),
                 })
 
-    def inv_line_create(self, cr, uid, account_id, order_line, context=None):
+    def prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
         """Collects require data from purchase order line that is used to create invoice line 
         for that purchase order line
         :param account_id: Expense account of the product of PO line if any.
@@ -373,7 +373,7 @@ class purchase_order(osv.osv):
             if not journal_ids:
                 raise osv.except_osv(_('Error !'),
                     _('There is no purchase journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
-            
+
             # generate invoice line correspond to PO line and link that to created invoice (inv_id) and PO line
             inv_lines = []
             for po_line in order.order_line:
@@ -388,7 +388,7 @@ class purchase_order(osv.osv):
                 fpos = order.fiscal_position or False
                 acc_id = fiscal_obj.map_account(cr, uid, fpos, acc_id)
 
-                inv_line_data = self.inv_line_create(cr, uid, acc_id, po_line, context=context)
+                inv_line_data = self.prepare_inv_line(cr, uid, acc_id, po_line, context=context)
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
                 inv_lines.append(inv_line_id)
 
