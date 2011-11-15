@@ -350,9 +350,6 @@ class YamlInterpreter(object):
             self.logger.debug("RECORD_DICT %s" % record_dict)
             id = self.pool.get('ir.model.data')._update(self.cr, 1, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
-            if record.test: # TODO: remove this
-                model.read(cr, 1, [id], context=self.context)
-                model.name_search(cr, 1, [('id','=',id)], context=self.context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
                 self.cr.commit()
