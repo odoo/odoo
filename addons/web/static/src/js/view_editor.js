@@ -120,7 +120,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 type_widget.selection = widget.selection;
             }
             type_widget.required = widget.required;
-            self.create_view_dialog.$element.find('table[id=create_view]').append('<tr><td align="right">' + widget.string + ':</td><td  id="' +widget.name+ '">' + type_widget.render()+'</td></tr>');
+            self.create_view_dialog.$element.find('table[id=create_view]').append('<tr><td width="100px" align="right">' + widget.string + ':</td>' + type_widget.render()+'</tr>');
             var value = null;
             if (widget.value) {
                 value = widget.value;
@@ -668,7 +668,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 });
                 value = value instanceof Array ? value[1] : value;
                 if (property == 'groups') type_widget.selection = self.groups;
-                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + property + ':</td><td>' + type_widget.render() + '</td></tr>');
+                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + property + ':</td>' + type_widget.render() + '</tr>');
                 type_widget.start();
                 type_widget.set_value(value)
                 self.edit_widget.push(type_widget);
@@ -718,11 +718,12 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
         this.invalid = false;
     },
     start: function () {
+        this.$element = this.$element.find("td[id="+ this.name+"]");
         this.update_dom();
     },
     update_dom: function() {
-        this.$element.find("td[id="+ this.name+"]").toggleClass('invalid', this.invalid);
-        this.$element.find("td[id="+ this.name+"]").toggleClass('required', this.required);
+        this.$element.toggleClass('invalid', this.invalid);
+        this.$element.toggleClass('required', this.required);
     },
     on_ui_change: function() {
         var value = this.get_value();
@@ -736,41 +737,42 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
         this.update_dom();
     },
     render: function() {
-        return QWeb.render(this.template, {widget: this});
+        return _.sprintf("<td id = %s>%s</td>", this.name, QWeb.render(this.template, {widget: this}))
     },
 });
 openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
     template : "vieweditor_boolean",
     start: function() {
         var self = this;
-        this.$element.find("input[id="+ self.name+"]").change(function() {
+        this._super();
+        this.$element.find("input").change(function() {
             self.on_ui_change();
         });
-        this._super();
+
     },
     set_value: function(value) {
         if (value) {
-            this.$element.find("input[id=" + this.name+ "]").attr('checked', true);
+            this.$element.find("input").attr('checked', true);
         }
     },
     get_value: function() {
-        return this.$element.find("input[id=" + this.name + "]").is(':checked') || null;
+        return this.$element.find("input").is(':checked') || null;
     }
 });
 openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
     template : "vieweditor_char",
     start: function () {
         var self = this;
-        this.$element.find("input[id="+ this.name+"]").css('width','100%').change(function() {
+        this._super();
+        this.$element.find("input").css('width','100%').change(function() {
             self.on_ui_change();
         });
-        this._super();
     },
     set_value: function(value) {
-        value ? this.$element.find("input[id=" + this.name + "]").val(value): this.$element.find("tr[id=" + this.name + "] input").val();
+        this.$element.find("input").val(value);
     },
     get_value: function() {
-        return this.$element.find("input[id=" + this.name + "]").val();
+        return this.$element.find("input").val();
     }
 });
 openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
@@ -781,10 +783,10 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
     },
     start: function () {
         var self = this;
-        this.$element.find("select[id=" + this.name + "]").css('width', '100%').change(function() {
+        this._super();
+        this.$element.find("select").css('width', '100%').change(function() {
             self.on_ui_change();
         });
-        this._super();
     },
     set_value: function(value) {
         value = value === null ? false : value;
@@ -792,10 +794,10 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         for (var i = 0, ii = this.selection.length; i < ii; i++) {
             if ((this.selection[i] instanceof Array && this.selection[i][1] === value) || this.selection[i] === value) index = i;
         }
-        this.$element.find("select[id=" + this.name + "]")[0].selectedIndex = index;
+        this.$element.find("select")[0].selectedIndex = index;
     },
     get_value: function() {
-        return this.$element.find("select[id=" + this.name + "]").val();
+        return this.$element.find("select").val();
     }
 });
 openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.extend({
@@ -846,8 +848,8 @@ openerp.web.ViewEditor.PositionProperty = openerp.web.ViewEditor.FieldSelect.ext
 });
 openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.extend({
     start: function () {
-        this.$element.find("select[id=" + this.name + "]").css('height', '100px').attr("multiple",true);
         this._super();
+        this.$element.find("select[id=" + this.name + "]").css('height', '100px').attr("multiple",true);
     },
     set_value: function(value) {
         var self = this;
@@ -855,7 +857,7 @@ openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.exten
         if (!value) return false;
         _.each(this.selection, function(item) {
             if (_.include(value.split(','), item[0])) {
-                self.$element.find("select[id="+self.name+"] option[value='" + item[0] +"']").attr("selected",1)
+                self.$element.find("select option[value='" + item[0] +"']").attr("selected",1)
             }
          });
     }
