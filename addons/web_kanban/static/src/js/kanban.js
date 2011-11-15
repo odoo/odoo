@@ -502,8 +502,10 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     },
     kanban_gravatar: function(email, size) {
         size = size || 22;
+        email = _.str.trim(email || '').toLowerCase();
+        var default_ = _.str.isBlank(email) ? 'mm' : 'identicon';
         var email_md5 = $.md5(email);
-        return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size;
+        return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size + '&d=' + default_;
     },
     kanban_image: function(model, field, id) {
         id = id || '';
