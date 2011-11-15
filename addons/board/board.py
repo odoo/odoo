@@ -134,10 +134,10 @@ class board_board(osv.osv):
         res['arch'] = self._arch_preprocessing(cr, user, res['arch'], context=context)
         res['toolbar'] = {'print': [], 'action': [], 'relate': []}
         return res
-    
-    
-    def _arch_preprocessing(self, cr, user, arch, context=None): 
-        from lxml import etree                               
+
+
+    def _arch_preprocessing(self, cr, user, arch, context=None):
+        from lxml import etree
         def remove_unauthorized_children(node):
             for child in node.iterchildren():
                 if child.tag=='action' and child.get('invisible'):
@@ -145,17 +145,17 @@ class board_board(osv.osv):
                 else:
                     child=remove_unauthorized_children(child)
             return node
-        
+
         def encode(s):
             if isinstance(s, unicode):
                 return s.encode('utf8')
             return s
-            
-        archnode = etree.fromstring(encode(arch))        
+
+        archnode = etree.fromstring(encode(arch))
         return etree.tostring(remove_unauthorized_children(archnode),pretty_print=True)
-        
-        
-    
+
+
+
 
     _columns = {
         'name': fields.char('Dashboard', size=64, required=True),
