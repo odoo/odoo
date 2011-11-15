@@ -332,7 +332,7 @@
                     <field name="project_id"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <t t-set="pad_url">http://pad.openerp.com/<t t-raw="_.underscored(_.trim(record.name.raw_value))"/></t>
+                            <t t-set="pad_url">http://pad.openerp.com/<t t-raw="_.str.underscored(_.str.trim(record.name.raw_value))"/></t>
                             <t t-if="record.kanban_state.raw_value === 'blocked'" t-set="border">oe_kanban_color_red</t>
                             <t t-if="record.kanban_state.raw_value === 'done'" t-set="border">oe_kanban_color_green</t>
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
