@@ -307,7 +307,7 @@ class Database(openerpweb.Controller):
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
         try:
-            data = base64.b64encode(db_file.file.read())
+            data = base64.b64encode(db_file.read())
             req.session.proxy("db").restore(restore_pwd, new_db, data)
             return ''
         except xmlrpclib.Fault, e:
@@ -935,10 +935,12 @@ class View(openerpweb.Controller):
             domain = elem.get(el, '').strip()
             if domain:
                 elem.set(el, parse_domain(domain, session))
+                elem.set(el + '_string', domain)
         for el in ['context', 'default_get']:
             context_string = elem.get(el, '').strip()
             if context_string:
                 elem.set(el, parse_context(context_string, session))
+                elem.set(el + '_string', context_string)
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, view_type, toolbar=False):

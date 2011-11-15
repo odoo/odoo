@@ -568,35 +568,26 @@ session.web.Sidebar = session.web.Widget.extend({
             self.do_toggle();
         });
     },
-
-    call_default_on_sidebar: function(item) {
-        var func_name = 'on_sidebar_' + _.underscored(item.label);
-        var fn = this.widget_parent[func_name];
-        if(typeof fn === 'function') {
-            fn(item);
-        }
-    },
-
     add_default_sections: function() {
         if (this.session.uid === 1) {
             this.add_section(_t('Customize'), 'customize');
             this.add_items('customize', [
                 {
                     label: _t("Manage Views"),
-                    callback: this.call_default_on_sidebar,
+                    callback: this.widget_parent.on_sidebar_manage_views,
                     title: _t("Manage views of the current object")
                 }, {
                     label: _t("Edit Workflow"),
-                    callback: this.call_default_on_sidebar,
+                    callback: this.widget_parent.on_sidebar_edit_workflow,
                     title: _t("Manage views of the current object"),
                     classname: 'oe_hide oe_sidebar_edit_workflow'
                 }, {
                     label: _t("Customize Object"),
-                    callback: this.call_default_on_sidebar,
+                    callback: this.widget_parent.on_sidebar_customize_object,
                     title: _t("Manage views of the current object")
                 }, {
                     label: _t("Translate"),
-                    callback: this.call_default_on_sidebar,
+                    callback: this.widget_parent.on_sidebar_translate,
                     title: _t("Technical translation")
                 }
             ]);
@@ -606,13 +597,13 @@ session.web.Sidebar = session.web.Widget.extend({
         this.add_items('other', [
             {
                 label: _t("Import"),
-                callback: this.call_default_on_sidebar
+                callback: this.widget_parent.on_sidebar_import
             }, {
                 label: _t("Export"),
-                callback: this.call_default_on_sidebar
+                callback: this.widget_parent.on_sidebar_export
             }, {
                 label: _t("View Log"),
-                callback: this.call_default_on_sidebar,
+                callback: this.widget_parent.on_sidebar_view_log,
                 classname: 'oe_hide oe_sidebar_view_log'
             }
         ]);
@@ -682,40 +673,50 @@ session.web.Sidebar = session.web.Widget.extend({
                     item.callback.apply(self, [item]);
                 }
                 if (item.action) {
-                    var ids = self.widget_parent.get_selected_ids();
-                    if (ids.length == 0) {
-                        //TODO: make prettier warning?
-                        $("<div />").text(_t("You must choose at least one record.")).dialog({
-                            title: _t("Warning"),
-                            modal: true
+                    if (self.widget_parent instanceof session.web.FormView) {
+                        self.widget_parent.do_save(function() {
+                            self.on_item_action_clicked(item);
                         });
-                        return false;
+                    } else {
+                        self.on_item_action_clicked(item);
                     }
-                    var additional_context = {
-                        active_id: ids[0],
-                        active_ids: ids,
-                        active_model: self.widget_parent.dataset.model
-                    };
-                    self.rpc("/web/action/load", {
-                        action_id: item.action.id,
-                        context: additional_context
-                    }, function(result) {
-                        result.result.context = _.extend(result.result.context || {},
-                            additional_context);
-                        result.result.flags = result.result.flags || {};
-                        result.result.flags.new_window = true;
-                        self.do_action(result.result);
-                    });
                 }
                 return false;
             });
-        
+
             var $ul = $section.find('ul');
             if(!$ul.length) {
                 $ul = $('<ul/>').appendTo($section);
             }
             $items.appendTo($ul);
         }
+    },
+    on_item_action_clicked: function(item) {
+        var self = this;
+        var ids = self.widget_parent.get_selected_ids();
+        if (ids.length == 0) {
+            //TODO: make prettier warning?
+            $("<div />").text(_t("You must choose at least one record.")).dialog({
+                title: _t("Warning"),
+                modal: true
+            });
+            return false;
+        }
+        var additional_context = {
+            active_id: ids[0],
+            active_ids: ids,
+            active_model: self.widget_parent.dataset.model
+        };
+        self.rpc("/web/action/load", {
+            action_id: item.action.id,
+            context: additional_context
+        }, function(result) {
+            result.result.context = _.extend(result.result.context || {},
+                additional_context);
+            result.result.flags = result.result.flags || {};
+            result.result.flags.new_window = true;
+            self.do_action(result.result);
+        });
     },
     do_fold: function() {
         this.$element.addClass('closed-sidebar').removeClass('open-sidebar');
