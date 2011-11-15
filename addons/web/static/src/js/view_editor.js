@@ -776,12 +776,6 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
     },
     on_ui_change: function() {
         this.validate();
-        var value = this.get_value();
-        if (this.is_invalid) {
-            this.is_invalid = true;
-        } else {
-            this.is_invalid = false;
-        }
         this.dirty = true;
         this.update_dom();
     },
