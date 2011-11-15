@@ -977,12 +977,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this._super(null, element_id);
         openerp.webclient = this;
 
-        var params = {};
-        if(jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
-            this.$element.addClass("kitten-mode-activated");
-        }
-        this.$element.html(QWeb.render("Interface", params));
-
         this.notification = new openerp.web.Notification(this);
         this.loading = new openerp.web.Loading(this);
         this.crashmanager =  new openerp.web.CrashManager();
@@ -997,8 +991,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.session.on_session_invalid.add_last(this.header.do_update);
         this.session.on_session_valid.add_last(this.on_logged);
 
-        this.menu = new openerp.web.Menu(this, "oe_menu", "oe_secondary_menu");
-        this.menu.on_action.add(this.on_menu_action);
 
         this.url_internal_hashchange = false;
         this.url_external_hashchange = false;
@@ -1007,12 +999,28 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.notification.prependTo(this.$element);
-        this.loading.appendTo($('#oe_loading'));
-        this.header.appendTo($("#oe_header"));
-        this.session.start();
-        this.login.appendTo($('#oe_login'));
-        this.menu.start();
+        var self = this;
+        openerp.connection.bind(function() {
+       
+            var params = {};
+            if(jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
+                self.$element.addClass("kitten-mode-activated");
+            }
+            self.$element.html(QWeb.render("Interface", params));
+            openerp.connection.session_restore();
+
+
+            // TODO nivification of menu Widget !!!
+            self.menu = new openerp.web.Menu(self, "oe_menu", "oe_secondary_menu");
+            self.menu.on_action.add(self.on_menu_action);
+
+
+            self.notification.prependTo(self.$element);
+            self.loading.appendTo($('#oe_loading'));
+            self.header.appendTo($("#oe_header"));
+            self.login.appendTo($('#oe_login'));
+            self.menu.start();
+        });
     },
     do_reload: function() {
         this.session.session_restore();

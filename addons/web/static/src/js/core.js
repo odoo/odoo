@@ -346,29 +346,43 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      * @param {String} [server] JSON-RPC endpoint hostname
      * @param {String} [port] JSON-RPC endpoint port
      */
-    init: function(server) {
+    init: function() {
+
+        // FIXME need to be a real singleton.
+        //       create more than one Connection on the same instance will not works
+
         this._super();
-        var hostname = _('%s//%s').sprintf(location.protocol, location.host);
-        this.server = _.rtrim((server == undefined) ? hostname : server, '/');
-        this.rpc_mode = (this.server == hostname) ? "oe-json" : "oe-jsonp";
+        this.server = null;
         this.debug = ($.deparam($.param.querystring()).debug != undefined);
+        // TODO: session should have an optional name indicating that they'll
+        //       be saved to (and revived from) cookies
+        this.name = 'session';
+    },
+
+    bind: function(server, continuation) {
+
+        if(_.isFunction(server)) {
+            continuation = server;
+            server = null;
+        }
+
+        if (this.server) {
+            throw new Error("Connection already bind to " + this.server);
+        } 
+        var hostname = _.str.sprintf('%s//%s', location.protocol, location.host);
+        this.server = _.str.rtrim((!server) ? hostname : server, '/');
+        this.rpc_mode = (this.server == hostname) ? "oe-json" : "oe-jsonp";
         this.session_id = false;
         this.uid = false;
         this.user_context= {};
         this.db = false;
+        this.module_loading = $.Deferred();
         this.module_list = [];
         this.module_loaded = {"web": true};
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
-        // TODO: session should have an optional name indicating that they'll
-        //       be saved to (and revived from) cookies
-        this.name = 'session';
-        this.do_load_qweb(['/web/webclient/qweb']);
-    },
-
-    start: function() {
-        this.session_restore();
+        this.do_load_qweb(['/web/webclient/qweb'], continuation);
     },
 
     get_absolute_url: function(path) {
@@ -377,7 +391,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
 
         
         if (r_has_protocol.test(path)) {
-            if (!_(path).startsWith(this.server + '/')) {
+            if (!_.str.startsWith(path, this.server + '/')) {
                 $.error('can only contact openerp.server');
             }
             absolute_url = path;
@@ -426,6 +440,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             });
         }).then(success_callback, error_callback).promise();
     },
+
     /**
      * Raw JSON-RPC call
      *
@@ -491,9 +506,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     /**
      * The session is validated either by login or by restoration of a previous session
      */
-    on_session_valid: function() {
-        if(!openerp._modules_loaded)
-            this.load_modules();
+    on_session_valid: function(continuation) {
+        this.load_modules(continuation);
     },
     on_session_invalid: function(contination) {
     },
@@ -509,15 +523,17 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             self.user_context = result.context;
             self.db = result.db;
             self.session_save();
-            self.on_session_valid();
+
+            self.on_session_valid(success_callback);
             return true;
-        }).then(success_callback);
+        //}).done(success_callback);
+        });
     },
     login: function() { this.session_login.apply(this, arguments); },
     /**
      * Reloads uid and session_id from local storage, if they exist
      */
-    session_restore: function () {
+    session_restore: function (continuation) {
         var self = this;
         this.session_id = this.get_cookie('session_id');
         return this.rpc("/web/session/get_session_info", {}).then(function(result) {
@@ -525,11 +541,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             self.user_context = result.context;
             self.db = result.db;
             if (self.uid)
-                self.on_session_valid();
+                self.on_session_valid(continuation);
             else
-                self.on_session_invalid();
+                self.on_session_invalid(continuation);
         }, function() {
-            self.on_session_invalid();
+            self.on_session_invalid(continuation);
         });
     },
     /**
@@ -583,9 +599,17 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
     /**
      * Load additional web addons of that instance and init them
+     * FIXME do all actions in sync...
      */
-    load_modules: function() {
+    load_modules: function(continuation) {
         var self = this;
+        
+        this.module_loading.done(continuation);
+        //if (this.module_loading.state() !== "pending") {
+        if (this.module_loading.isResolved() || this.module_loading.isRejected()) {
+            return;
+        }
+
         this.rpc('/web/session/modules', {}, function(result) {
             self.module_list = result;
             var lang = self.user_context.lang;
@@ -597,16 +621,36 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     self.user_context.lang.replace("_", "-") + ".js"
                 ];
 
-                self.rpc('/web/webclient/qweblist', {"mods": modules}, self.do_load_qweb);
-                self.rpc('/web/webclient/csslist', {"mods": modules}, self.do_load_css);
-                self.rpc('/web/webclient/jslist', {"mods": modules}, function(files) {
+                /*
+                self.rpc('/web/webclient/qweblist', {mods: modules}, self.do_load_qweb);
+                self.rpc('/web/webclient/csslist', {mods: modules}, self.do_load_css);
+                self.rpc('/web/webclient/jslist', {mods: modules}, function(files) {
                     self.do_load_js(file_list.concat(files));
                 });
                 openerp._modules_loaded = true;
+                // */
+                
+                self.rpc('/web/webclient/qweblist', {mods: modules}, function(files) {
+                    self.do_load_qweb(files, function() {
+                        // once qweb files are loaded...
+                        self.rpc('/web/webclient/csslist', {mods: modules}, function(files) {
+                            self.do_load_css(files, function() {
+                                // once css files are loaded
+                                self.rpc('/web/webclient/jslist', {mods: modules}, function(files) {
+                                    self.do_load_js(file_list.concat(files), function() {
+                                        self.on_modules_loaded();
+                                        self.module_loading.resolve();
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            
             });
         });
     },
-    do_load_css: function (files) {
+    do_load_css: function (files, callback) {
         var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
@@ -615,8 +659,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 'type': 'text/css'
             }));
         });
+        if (callback) { callback(); }
     },
-    do_load_js: function(files) {
+    do_load_js: function(files, callback) {
         var self = this;
         if(files.length != 0) {
             var file = files.shift();
@@ -627,35 +672,26 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
                 tag.onload_done = true;
-                self.do_load_js(files);
+                self.do_load_js(files, callback);
             };
             var head = document.head || document.getElementsByTagName('head')[0];
             head.appendChild(tag);
         } else {
-            this.on_modules_loaded();
+            if (callback) { callback(); }
         }
     },
-    do_load_qweb: function(files) {
+    do_load_qweb: function(files, callback) {
         var self = this;
-        _.each(files, function(file) {
-            self.rpc({
-                //url: self.get_absolute_url(file),
-                url: '/web/jsonp/static_proxy',
-                async: false,
-                //dataType: 'text',
-
-            },
-            {
-                path: file,
-            }, 
-            function(xml) {
-            //function(result) {
-            //    console.log('do_load_qweb', result);
-            //    var xml = result.result;
-            //}).then(function(xml) {
-                openerp.web.qweb.add_template(_(xml).trim());
+        
+        if (files.length != 0) {
+            var file = files.shift();
+            self.rpc('/web/jsonp/static_proxy', {path: file}, function(xml) {
+                openerp.web.qweb.add_template(_.str.trim(xml));
+                self.do_load_qweb(files, callback);
             });
-        });
+        } else {
+            if (callback) { callback(); }
+        }
     },
     on_modules_loaded: function() {
         for(var j=0; j<this.module_list.length; j++) {
