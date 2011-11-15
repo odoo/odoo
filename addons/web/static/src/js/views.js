@@ -441,6 +441,16 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             }
         }
 
+        var $res_logs = this.$element.find('.oe-view-manager-logs:first');
+        $res_logs.delegate('a.oe-more-logs', 'click', function () {
+            $res_logs.removeClass('oe-folded');
+            return false;
+        }).delegate('a.oe-remove-everything', 'click', function () {
+            $res_logs.removeClass('oe-has-more')
+                     .find('ul').empty();
+            return false;
+        });
+
         return manager_ready;
     },
     on_mode_switch: function (view_type) {
@@ -458,10 +468,10 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                 }
 
                 var $title = self.$element.find('.oe_view_title'),
-                    $search_prefix = $title.find('span');
+                    $search_prefix = $title.find('span.oe_searchable_view');
                 if (controller.searchable !== false) {
                     if (!$search_prefix.length) {
-                        $title.prepend('<span>' + _t("Search:") + '</span>');
+                        $title.prepend('<span class="oe_searchable_view">' + _t("Search: ") + '</span>');
                     }
                 } else {
                     $search_prefix.remove();
@@ -518,10 +528,14 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
      */
     do_display_log: function (log_records) {
         var self = this,
-            $logs = this.$element.find('ul.oe-view-manager-logs:first').empty();
-        _(log_records).each(function (record) {
-            $(_.sprintf('<li><a href="#">%s</a></li>', record.name))
-                .appendTo($logs)
+            cutoff = 3,
+            $logs = this.$element.find('.oe-view-manager-logs:first')
+                    .addClass('oe-folded'),
+            $logs_list = $logs.find('ul').empty();
+        $logs.toggleClass('oe-has-more', log_records.length > cutoff);
+        _(log_records.reverse()).each(function (record) {
+            $(_.str.sprintf('<li><a href="#">%s</a></li>', record.name))
+                .appendTo($logs_list)
                 .delegate('a', 'click', function (e) {
                     self.do_action({
                         type: 'ir.actions.act_window',
@@ -554,49 +568,42 @@ session.web.Sidebar = session.web.Widget.extend({
             self.do_toggle();
         });
     },
-
-    call_default_on_sidebar: function(item) {
-        var func_name = 'on_sidebar_' + _.underscored(item.label);
-        var fn = this.widget_parent[func_name];
-        if(typeof fn === 'function') {
-            fn(item);
-        }
-    },
-
     add_default_sections: function() {
-        this.add_section(_t('Customize'), 'customize');
-        this.add_items('customize', [
-            {
-                label: _t("Manage Views"),
-                callback: this.call_default_on_sidebar,
-                title: _t("Manage views of the current object")
-            }, {
-                label: _t("Edit Workflow"),
-                callback: this.call_default_on_sidebar,
-                title: _t("Manage views of the current object"),
-                classname: 'oe_hide oe_sidebar_edit_workflow'
-            }, {
-                label: _t("Customize Object"),
-                callback: this.call_default_on_sidebar,
-                title: _t("Manage views of the current object")
-            }
-        ]);
+        if (this.session.uid === 1) {
+            this.add_section(_t('Customize'), 'customize');
+            this.add_items('customize', [
+                {
+                    label: _t("Manage Views"),
+                    callback: this.widget_parent.on_sidebar_manage_views,
+                    title: _t("Manage views of the current object")
+                }, {
+                    label: _t("Edit Workflow"),
+                    callback: this.widget_parent.on_sidebar_edit_workflow,
+                    title: _t("Manage views of the current object"),
+                    classname: 'oe_hide oe_sidebar_edit_workflow'
+                }, {
+                    label: _t("Customize Object"),
+                    callback: this.widget_parent.on_sidebar_customize_object,
+                    title: _t("Manage views of the current object")
+                }, {
+                    label: _t("Translate"),
+                    callback: this.widget_parent.on_sidebar_translate,
+                    title: _t("Technical translation")
+                }
+            ]);
+        }
 
         this.add_section(_t('Other Options'), 'other');
-        this.add_items('other', [ 
+        this.add_items('other', [
             {
                 label: _t("Import"),
-                callback: this.call_default_on_sidebar
+                callback: this.widget_parent.on_sidebar_import
             }, {
                 label: _t("Export"),
-                callback: this.call_default_on_sidebar
-            }, {
-                label: _t("Translate"),
-                callback: this.call_default_on_sidebar,
-                classname: 'oe_sidebar_translate oe_hide'
+                callback: this.widget_parent.on_sidebar_export
             }, {
                 label: _t("View Log"),
-                callback: this.call_default_on_sidebar,
+                callback: this.widget_parent.on_sidebar_view_log,
                 classname: 'oe_hide oe_sidebar_view_log'
             }
         ]);
@@ -619,14 +626,14 @@ session.web.Sidebar = session.web.Widget.extend({
             }
         });
     },
-    
+
     add_section: function(name, code) {
-        if(!code) code = _.underscored(name);
+        if(!code) code = _.str.underscored(name);
         var $section = this.sections[code];
 
         if(!$section) {
-            section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
-            var $section = $(session.web.qweb.render("Sidebar.section", {
+            var section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
+            $section = $(session.web.qweb.render("Sidebar.section", {
                 section_id: section_id,
                 name: name,
                 classname: 'oe_sidebar_' + code
@@ -649,7 +656,7 @@ session.web.Sidebar = session.web.Widget.extend({
         //
 
         var self = this,
-            $section = this.add_section(_.titleize(section_code.replace('_', ' ')), section_code),
+            $section = this.add_section(_.str.titleize(section_code.replace('_', ' ')), section_code),
             section_id = $section.attr('id');
 
         if (items) {
@@ -666,40 +673,50 @@ session.web.Sidebar = session.web.Widget.extend({
                     item.callback.apply(self, [item]);
                 }
                 if (item.action) {
-                    var ids = self.widget_parent.get_selected_ids();
-                    if (ids.length == 0) {
-                        //TODO: make prettier warning?
-                        $("<div />").text(_t("You must choose at least one record.")).dialog({
-                            title: _t("Warning"),
-                            modal: true
+                    if (self.widget_parent instanceof session.web.FormView) {
+                        self.widget_parent.do_save(function() {
+                            self.on_item_action_clicked(item);
                         });
-                        return false;
+                    } else {
+                        self.on_item_action_clicked(item);
                     }
-                    var additional_context = {
-                        active_id: ids[0],
-                        active_ids: ids,
-                        active_model: self.widget_parent.dataset.model
-                    };
-                    self.rpc("/web/action/load", {
-                        action_id: item.action.id,
-                        context: additional_context
-                    }, function(result) {
-                        result.result.context = _.extend(result.result.context || {},
-                            additional_context);
-                        result.result.flags = result.result.flags || {};
-                        result.result.flags.new_window = true;
-                        self.do_action(result.result);
-                    });
                 }
                 return false;
             });
-        
+
             var $ul = $section.find('ul');
             if(!$ul.length) {
                 $ul = $('<ul/>').appendTo($section);
             }
             $items.appendTo($ul);
         }
+    },
+    on_item_action_clicked: function(item) {
+        var self = this;
+        var ids = self.widget_parent.get_selected_ids();
+        if (ids.length == 0) {
+            //TODO: make prettier warning?
+            $("<div />").text(_t("You must choose at least one record.")).dialog({
+                title: _t("Warning"),
+                modal: true
+            });
+            return false;
+        }
+        var additional_context = {
+            active_id: ids[0],
+            active_ids: ids,
+            active_model: self.widget_parent.dataset.model
+        };
+        self.rpc("/web/action/load", {
+            action_id: item.action.id,
+            context: additional_context
+        }, function(result) {
+            result.result.context = _.extend(result.result.context || {},
+                additional_context);
+            result.result.flags = result.result.flags || {};
+            result.result.flags.new_window = true;
+            self.do_action(result.result);
+        });
     },
     do_fold: function() {
         this.$element.addClass('closed-sidebar').removeClass('open-sidebar');
@@ -740,11 +757,6 @@ session.web.TranslateDialog = session.web.Dialog.extend({
         this._super();
         $.when(this.languages_loaded).then(function() {
             self.$element.html(session.web.qweb.render('TranslateDialog', { widget: self }));
-            self.$element.tabs();
-            if (!(self.view.translatable_fields && self.view.translatable_fields.length)) {
-                self.hide_tabs('fields');
-                self.select_tab('view');
-            }
             self.$fields_form = self.$element.find('.oe_translation_form');
             self.$fields_form.find('.oe_trad_field').change(function() {
                 $(this).toggleClass('touched', ($(this).val() != $(this).attr('data-value')));
@@ -787,21 +799,6 @@ session.web.TranslateDialog = session.web.Dialog.extend({
         });
         $.when.apply(null, deffered).then(callback);
     },
-    show_tabs: function() {
-        for (var i = 0; i < arguments.length; i++) {
-            this.$element.find('ul.oe_translate_tabs li a[href$="' + arguments[i] + '"]').parent().show();
-        }
-    },
-    hide_tabs: function() {
-        for (var i = 0; i < arguments.length; i++) {
-            this.$element.find('ul.oe_translate_tabs li a[href$="' + arguments[i] + '"]').parent().hide();
-        }
-    },
-    select_tab: function(name) {
-        this.show_tabs(name);
-        var index = this.$element.find('ul.oe_translate_tabs li a[href$="' + arguments[i] + '"]').parent().index() - 1;
-        this.$element.tabs('select', index);
-    },
     open: function(field) {
         var self = this,
             sup = this._super;
@@ -810,7 +807,9 @@ session.web.TranslateDialog = session.web.Dialog.extend({
                 self.do_load_fields_values(function() {
                     sup.call(self);
                     if (field) {
-                        // TODO: focus and scroll to field
+                        var $field_input = self.$element.find('tr[data-field="' + field.name + '"] td:nth-child(2) *:first-child');
+                        self.$element.scrollTo($field_input);
+                        $field_input.focus();
                     }
                 });
             } else {
@@ -963,7 +962,15 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         export_view.start();
     },
     on_sidebar_translate: function() {
-        this.open_translate_dialog();
+        return this.do_action({
+            res_model : 'ir.translation',
+            domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
+            views: [[false, 'list'], [false, 'form']],
+            type : 'ir.actions.act_window',
+            auto_search : true,
+            view_type : "list",
+            view_mode : "list"
+        });
     },
     on_sidebar_view_log: function() {
     }

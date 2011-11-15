@@ -119,17 +119,18 @@ openerp.web.ContainerDataGroup = openerp.web.DataGroup.extend( /** @lends opener
             aggregates[key] = value || 0;
         });
 
+        var group_size = fixed_group[field_name + '_count'] || fixed_group.__count || 0;
+        var leaf_group = fixed_group.__context.group_by.length === 0;
         return {
             __context: fixed_group.__context,
             __domain: fixed_group.__domain,
 
             grouped_on: field_name,
             // if terminal group (or no group) and group_by_no_leaf => use group.__count
-            length: fixed_group[field_name + '_count'] || fixed_group.__count,
+            length: group_size,
             value: fixed_group[field_name],
-
-            openable: !(this.context['group_by_no_leaf']
-                       && fixed_group.__context.group_by.length === 0),
+            // A group is openable if it's not a leaf in group_by_no_leaf mode
+            openable: !(leaf_group && this.context['group_by_no_leaf']),
 
             aggregates: aggregates
         };

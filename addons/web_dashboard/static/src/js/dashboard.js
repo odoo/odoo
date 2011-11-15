@@ -103,7 +103,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             }, function(result) {
                 self.actions_attrs[aid] = {
                     name: aid,
-                    string: _.trim(result.result.name)
+                    string: _.str.trim(result.result.name)
                 };
                 qdict.action = {
                     attrs : self.actions_attrs[aid]
@@ -420,7 +420,7 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
         var Installer = new openerp.web.DataSet(this, 'base.setup.installer');
         Installer.call('default_get', [], function (installed_modules) {
             var installed = _(installed_modules).any(function (active, name) {
-                return _.startsWith(name, 'cat') && active; });
+                return _.str.startsWith(name, 'cat') && active; });
 
             if(installed) {
                 self.do_display_root_menu();
@@ -521,7 +521,7 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
     },
     on_widget_loaded: function (widgets) {
         var widget = widgets[0];
-        var url = _.sprintf(
+        var url = _.str.sprintf(
             '/web_dashboard/widgets/content?session_id=%s&widget_id=%d',
             this.session.session_id, widget.id);
         this.$element.html(QWeb.render('HomeWidget.content', {
