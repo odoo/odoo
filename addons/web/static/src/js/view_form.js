@@ -240,7 +240,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             try {
             processed = processed || [];
             if (widget.node.attrs.on_change) {
-                var onchange = _.trim(widget.node.attrs.on_change);
+                var onchange = _.str.trim(widget.node.attrs.on_change);
                 var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
                 if (call) {
                     var method = call[1], args = [];
@@ -257,7 +257,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     };
                     var parent_fields = null;
                     _.each(call[2].split(','), function(a, i) {
-                        var field = _.trim(a);
+                        var field = _.str.trim(a);
                         if (field in argument_replacement) {
                             args.push(argument_replacement[field](i));
                             return;
@@ -267,11 +267,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                             return;
                         } else {
                             var splitted = field.split('.');
-                            if (splitted.length > 1 && _.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
+                            if (splitted.length > 1 && _.str.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
                                 if (parent_fields === null) {
                                     parent_fields = self.dataset.parent_view.get_fields_values();
                                 }
-                                var p_val = parent_fields[_.trim(splitted[1])];
+                                var p_val = parent_fields[_.str.trim(splitted[1])];
                                 if (p_val !== undefined) {
                                     args.push(p_val == null ? false : p_val);
                                     return;
@@ -638,7 +638,7 @@ openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
     },
     on_attachment_delete: function(e) {
         var self = this, $e = $(e.currentTarget);
-        var name = _.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
+        var name = _.str.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
         if (confirm("Do you really want to delete the attachment " + name + " ?")) {
             this.rpc('/web/dataset/unlink', {
                 model: 'ir.attachment',
@@ -798,13 +798,8 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
     _build_view_fields_values: function() {
         var a_dataset = this.view.dataset;
         var fields_values = this.view.get_fields_values();
-        var active_id = a_dataset.ids[a_dataset.index];
-        _.extend(fields_values, {
-            active_id: active_id || false,
-            active_ids: active_id ? [active_id] : [],
-            active_model: a_dataset.model,
-            parent: a_dataset.parent_view ? a_dataset.parent_view.get_fields_values() : {}
-        });
+        var parent_values = a_dataset.parent_view ? a_dataset.parent_view.get_fields_values() : {};
+        fields_values.parent = parent_values;
         return fields_values;
     },
     _build_eval_context: function() {
@@ -1830,7 +1825,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             if (search_val.length > 0 &&
                 !_.include(raw_result, search_val) &&
                 (!self.value || search_val !== self.value[1])) {
-                values.push({label: _.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
+                values.push({label: _.str.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
                         $('<span />').text(search_val).html()), action: function() {
                     self._quick_create(search_val);
                 }});
@@ -2960,7 +2955,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     render_list: function() {
         var self = this;
         var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
-            function(x) { return _.trim(x); });
+            function(x) { return _.str.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
 
         if (shown.length == 0) {

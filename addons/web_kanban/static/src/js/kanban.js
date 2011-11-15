@@ -87,13 +87,13 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                     });
                     if (node.attrs['data-states']) {
                         var states = _.map(node.attrs['data-states'].split(','), function(state) {
-                            return "record.state.raw_value == '" + _.trim(state) + "'";
+                            return "record.state.raw_value == '" + _.str.trim(state) + "'";
                         });
                         node.attrs[qweb_prefix + '-if'] = states.join(' or ');
                     }
                     if (node.attrs['data-kanban_states']) {
                         var states = _.map(node.attrs['data-kanban_states'].split(','), function(state) {
-                            return "record.kanban_state.raw_value == '" + _.trim(state) + "'";
+                            return "record.kanban_state.raw_value == '" + _.str.trim(state) + "'";
                         });
                         node.attrs[qweb_prefix + '-if'] = states.join(' or ');
                     }
@@ -372,7 +372,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
         var self = this,
             new_record = {};
         _.each(record, function(value, name) {
-            var r = _.clone(self.view.fields_view.fields[name]);
+            var r = _.clone(self.view.fields_view.fields[name] || {});
             r.raw_value = value;
             r.value = openerp.web.format_value(value, r);
             new_record[name] = r;
@@ -385,7 +385,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             widget: this
         }
         for (var p in this) {
-            if (_.startsWith(p, 'kanban_')) {
+            if (_.str.startsWith(p, 'kanban_')) {
                 ctx[p] = _.bind(this[p], this);
             }
         }

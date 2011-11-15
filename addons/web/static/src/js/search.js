@@ -137,7 +137,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
     on_loaded: function(data) {
         if (data.fields_view.type !== 'search' ||
             data.fields_view.arch.tag !== 'search') {
-                throw new Error(_.sprintf(
+                throw new Error(_.str.sprintf(
                     "Got non-search view after asking for a search view: type %s, arch root %s",
                     data.fields_view.type, data.fields_view.arch.tag));
         }
@@ -425,7 +425,7 @@ openerp.web.search.Invalid = openerp.web.Class.extend( /** @lends openerp.web.se
         this.message = message;
     },
     toString: function () {
-        return _.sprintf(
+        return _.str.sprintf(
             _t("Incorrect value for field %(fieldname)s: [%(value)s] is %(message)s"),
             {fieldname: this.field, value: this.value, message: this.message}
         );
