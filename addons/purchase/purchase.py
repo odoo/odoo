@@ -373,26 +373,9 @@ class purchase_order(osv.osv):
             if not journal_ids:
                 raise osv.except_osv(_('Error !'),
                     _('There is no purchase journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
-
-            # get invoice data and create invoice
-            inv_data = {
-                'name': order.partner_ref or order.name,
-                'reference': order.partner_ref or order.name,
-                'account_id': pay_acc_id,
-                'type': 'in_invoice',
-                'partner_id': order.partner_id.id,
-                'currency_id': order.pricelist_id.currency_id.id,
-                'address_invoice_id': order.partner_address_id.id,
-                'address_contact_id': order.partner_address_id.id,
-                'journal_id': len(journal_ids) and journal_ids[0] or False,
-                'origin': order.name,
-                'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
-                'payment_term': order.partner_id.property_payment_term and order.partner_id.property_payment_term.id or False,
-                'company_id': order.company_id.id,
-            }
-            inv_id = inv_obj.create(cr, uid, inv_data, context=context)
-
+            
             # generate invoice line correspond to PO line and link that to created invoice (inv_id) and PO line
+            inv_lines = []
             for po_line in order.order_line:
                 if po_line.product_id:
                     acc_id = po_line.product_id.product_tmpl_id.property_account_expense.id
@@ -406,10 +389,29 @@ class purchase_order(osv.osv):
                 acc_id = fiscal_obj.map_account(cr, uid, fpos, acc_id)
 
                 inv_line_data = self.inv_line_create(cr, uid, acc_id, po_line, context=context)
-                inv_line_data.update({'invoice_id': inv_id})
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
+                inv_lines.append(inv_line_id)
 
                 po_line.write({'invoiced':True, 'invoice_lines': [(4, inv_line_id)]}, context=context)
+
+            # get invoice data and create invoice
+            inv_data = {
+                'name': order.partner_ref or order.name,
+                'reference': order.partner_ref or order.name,
+                'account_id': pay_acc_id,
+                'type': 'in_invoice',
+                'partner_id': order.partner_id.id,
+                'currency_id': order.pricelist_id.currency_id.id,
+                'address_invoice_id': order.partner_address_id.id,
+                'address_contact_id': order.partner_address_id.id,
+                'journal_id': len(journal_ids) and journal_ids[0] or False,
+                'invoice_line': [(6, 0, inv_lines)], 
+                'origin': order.name,
+                'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
+                'payment_term': order.partner_id.property_payment_term and order.partner_id.property_payment_term.id or False,
+                'company_id': order.company_id.id,
+            }
+            inv_id = inv_obj.create(cr, uid, inv_data, context=context)
 
             # compute the invoice
             inv_obj.button_compute(cr, uid, [inv_id], context=context, set_total=True)
@@ -926,5 +928,3 @@ class procurement_order(osv.osv):
 
 procurement_order()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-
