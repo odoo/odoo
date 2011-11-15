@@ -718,12 +718,11 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
         this.invalid = false;
     },
     start: function () {
-        this.$element = this.$element.find("td[id="+ this.name+"]");
         this.update_dom();
     },
     update_dom: function() {
-        this.$element.toggleClass('invalid', this.invalid);
-        this.$element.toggleClass('required', this.required);
+        this.$element.find("td[id="+ this.name+"]").toggleClass('invalid', this.invalid);
+        this.$element.find("td[id="+ this.name+"]").toggleClass('required', this.required);
     },
     on_ui_change: function() {
         var value = this.get_value();
@@ -745,18 +744,18 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
     start: function() {
         var self = this;
         this._super();
-        this.$element.find("input").change(function() {
+        this.$element.find("input[id="+ self.name+"]").change(function() {
             self.on_ui_change();
         });
 
     },
     set_value: function(value) {
         if (value) {
-            this.$element.find("input").attr('checked', true);
+            this.$element.find("input[id=" + this.name+ "]").attr('checked', true);
         }
     },
     get_value: function() {
-        return this.$element.find("input").is(':checked') || null;
+        return this.$element.find("input[id=" + this.name + "]").is(':checked') || null;
     }
 });
 openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
@@ -764,15 +763,15 @@ openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
     start: function () {
         var self = this;
         this._super();
-        this.$element.find("input").css('width','100%').change(function() {
+        this.$element.find("input[id="+ this.name+"]").css('width','100%').change(function() {
             self.on_ui_change();
         });
     },
     set_value: function(value) {
-        this.$element.find("input").val(value);
+        this.$element.find("input[id=" + this.name + "]").val(value);
     },
     get_value: function() {
-        return this.$element.find("input").val();
+        return this.$element.find("input[id=" + this.name + "]").val();
     }
 });
 openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
@@ -784,7 +783,7 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
     start: function () {
         var self = this;
         this._super();
-        this.$element.find("select").css('width', '100%').change(function() {
+        this.$element.find("select[id=" + this.name + "]").css('width', '100%').change(function() {
             self.on_ui_change();
         });
     },
@@ -794,10 +793,10 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         for (var i = 0, ii = this.selection.length; i < ii; i++) {
             if ((this.selection[i] instanceof Array && this.selection[i][1] === value) || this.selection[i] === value) index = i;
         }
-        this.$element.find("select")[0].selectedIndex = index;
+        this.$element.find("select[id=" + this.name + "]")[0].selectedIndex = index;
     },
     get_value: function() {
-        return this.$element.find("select").val();
+        return this.$element.find("select[id=" + this.name + "]").val();
     }
 });
 openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.extend({
@@ -857,7 +856,7 @@ openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.exten
         if (!value) return false;
         _.each(this.selection, function(item) {
             if (_.include(value.split(','), item[0])) {
-                self.$element.find("select option[value='" + item[0] +"']").attr("selected",1)
+                self.$element.find("select[id="+self.name+"] option[value='" + item[0] +"']").attr("selected",1)
             }
          });
     }
