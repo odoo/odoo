@@ -2478,12 +2478,12 @@ class BaseModel(object):
             del d['id']
 
         if groupby and groupby in self._group_by_full:
-            gids = map(lambda x: x[groupby][0], data)
+            gids = [x[groupby][0] for x in data if x[groupby]]
             stages = self._group_by_full[groupby](self, cr, uid, gids, domain, context)
             # as both lists are sorted in the same way, we can merge in one pass
             pos = 0
             while stages and ((pos<len(data)) or (pos<len(stages))):
-                if (pos<len(data)) and (data[pos][groupby][0] == stages[pos][0]):
+                if (pos<len(data)) and (not data[pos][groupby] or (data[pos][groupby][0] == stages[pos][0])):
                     pos+=1
                     continue
                 val = dict.fromkeys(float_int_fields, False)
