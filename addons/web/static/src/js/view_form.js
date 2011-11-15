@@ -1437,7 +1437,7 @@ openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
         var self = this;
         this._super.apply(this, arguments);
         this.datewidget = this.build_widget();
-        this.datewidget.on_change.add(this.on_ui_change);
+        this.datewidget.on_change.add_last(this.on_ui_change);
         this.datewidget.appendTo(this.$element);
     },
     set_value: function(value) {
