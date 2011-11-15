@@ -68,6 +68,7 @@ class payment_order(osv.osv):
     _rec_name = 'reference'
     _order = 'id desc'
 
+#TODO:REMOVE this function is not used 
     def get_wizard(self, type):
         logger = netsvc.Logger()
         logger.notifyChannel("warning", netsvc.LOG_WARNING,
@@ -174,7 +175,7 @@ payment_order()
 
 class payment_line(osv.osv):
     _name = 'payment.line'
-    _description = 'Payment Line'
+    _description = 'Payment Line' 
 
     def translate(self, orig):
         return {
@@ -235,6 +236,7 @@ class payment_line(osv.osv):
                         break
         return result
 
+    #TODO:REMOVE this function is not used 
     def select_by_name(self, cr, uid, ids, name, args, context=None):
         if not ids: return {}
         partner_obj = self.pool.get('res.partner')
