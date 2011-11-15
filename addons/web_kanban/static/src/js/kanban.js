@@ -23,6 +23,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
         this.form_dialog.on_form_dialog_saved.add_last(this.do_reload);
         this.aggregates = {};
+        this.group_operators = ['avg', 'max', 'min', 'sum', 'count'];
         this.qweb = new QWeb2.Engine();
         this.qweb.debug = openerp.connection.debug;
         this.qweb.default_dict = {
@@ -58,22 +59,26 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 this.transform_qweb_template(child);
                 this.qweb.add_template(openerp.web.json_node_to_xml(child));
                 break;
+            } else if (child.tag === 'field') {
+                this.extract_aggregates(child);
+            }
+        }
+    },
+    extract_aggregates: function(node) {
+        for (var j = 0, jj = this.group_operators.length; j < jj;  j++) {
+            if (node.attrs[this.group_operators[j]]) {
+                this.aggregates[node.attrs.name] = node.attrs[this.group_operators[j]];
+                break;
             }
         }
     },
     transform_qweb_template: function(node) {
-        var qweb_prefix = QWeb.prefix,
-            group_operator = ['avg', 'max', 'min', 'sum', 'count'];
+        var qweb_prefix = QWeb.prefix;
         switch (node.tag) {
             case 'field':
                 node.tag = qweb_prefix;
                 node.attrs[qweb_prefix + '-esc'] = 'record.' + node.attrs['name'] + '.value';
-                for (var j = 0, jj = group_operator.length; j < jj;  j++) {
-                    if (node.attrs[group_operator[j]]) {
-                        this.aggregates[node.attrs.name] = node.attrs[group_operator[j]];
-                        break;
-                    }
-                }
+                this.extract_aggregates(node);
                 break
             case 'button':
             case 'a':
