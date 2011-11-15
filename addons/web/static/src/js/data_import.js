@@ -70,8 +70,8 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             height: 'auto',
             position: 'top',
             buttons: [
-                {text: "Close", click: function() { self.stop(); }},
-                {text: "Import File", click: function() { self.do_import(); }, 'class': 'oe-dialog-import-button'}
+                {text: _t("Close"), click: function() { self.stop(); }},
+                {text: _t("Import File"), click: function() { self.do_import(); }, 'class': 'oe-dialog-import-button'}
             ],
             close: function(event, ui) {
                 self.stop();

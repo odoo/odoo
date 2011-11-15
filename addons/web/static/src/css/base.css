@@ -26,7 +26,7 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
     margin: 0;
 }
 
-.openerp .oe-number {
+.openerp .oe-listview .oe-number {
     text-align: right !important;
 }
 .openerp .oe_hide {
@@ -713,7 +713,26 @@ label.error {
 .openerp .oe-listview th {
     vertical-align: middle;
     text-align: left;
+    padding: 1px 2px;
 }
+.openerp .oe-listview th.oe-record-selector,
+.openerp .oe-listview td.oe-button,
+.openerp .oe-listview td.oe-record-delete {
+    padding: 0 1px;
+}
+
+/* Could use :not selectors if they were supported by MSIE8... */
+.openerp .oe-listview tbody td {
+    border-left: 1px solid #dadada;
+}
+.openerp .oe-listview tbody td:first-child,
+.openerp .oe-listview tbody td.oe-button,
+.openerp .oe-listview tbody td.oe-button+td,
+.openerp .oe-listview tbody th.oe-record-selector+td,
+.openerp .oe-listview tbody td.oe-record-delete {
+    border-left: none;
+}
+
 .openerp .oe-listview td.oe-record-delete {
     text-align: right;
 }
@@ -825,6 +844,9 @@ label.error {
     background: none;
     border-width: 0;
 }
+.openerp .oe_form_notebook .ui-tabs-panel {
+    padding: 4px;
+}
 .openerp .oe_form_notebook ul.ui-tabs-nav {
     padding-left: 0;
     background: transparent;
@@ -852,6 +874,17 @@ label.error {
 .openerp table.oe_frame {
     color: #4c4c4c;
 }
+.openerp fieldset.oe_group_box {
+    border: 1px solid #AAAAAA;
+    moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background: #F9F9F9;
+    padding: 4px;
+}
+.openerp fieldset.oe_group_box legend {
+    font-weight: bold;
+}
 .openerp td.oe_form_frame_cell {
     padding: 2px;
     position: relative;
@@ -874,6 +907,22 @@ label.error {
 }
 .openerp label.oe_label_help {
     cursor: help;
+}
+.openerp #tiptip_content {
+    font-size: 12px;
+}
+.openerp .oe_tooltip_string {
+    color: #FD5;
+    font-weight: bold;
+    font-size: 13px;
+}
+.openerp .oe_tooltip_technical {
+    padding: 0 0 4px 0;
+    margin: 5px 0 0 15px;
+    list-style: circle;
+}
+.openerp .oe_tooltip_technical_title {
+    font-weight: bold;
 }
 
 .openerp .oe_forms label.oe_label, .openerp .oe_forms label.oe_label_help {

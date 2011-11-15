@@ -1,4 +1,5 @@
 openerp.web.view_editor = function(openerp) {
+var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
 openerp.web.ViewEditor =   openerp.web.Widget.extend({
     init: function(parent, element_id, dataset, view, options) {
@@ -43,11 +44,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             height: 500,
             buttons: {
                 "Create": function(){
-                    //to do
+                    self.on_create_view();
                 },
                 "Edit": function(){
                     self.xml_element_id = 0;
                     self.get_arch();
+                },
+                "Remove": function(){
+                    self.do_delete_view();
                 },
                 "Close": function(){
                     self.view_edit_dialog.close();
@@ -55,10 +59,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             },
         }).start().open();
         this.main_view_id = this.parent.fields_view.view_id;
-        var action_manager = new openerp.web.ActionManager(this);
-        action_manager.appendTo(this.view_edit_dialog);
-        $.when(action_manager.do_action(action)).then(function() {
-            var viewmanager = action_manager.inner_viewmanager,
+        this.action_manager = new openerp.web.ActionManager(this);
+        this.action_manager.appendTo(this.view_edit_dialog);
+        $.when(this.action_manager.do_action(action)).then(function() {
+            var viewmanager = self.action_manager.inner_viewmanager,
                 controller = viewmanager.views[viewmanager.active_view].controller;
             controller.on_loaded.add_last(function(){
                 $(controller.groups).bind({
@@ -68,6 +72,99 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 })
             });
         });
+    },
+    on_create_view: function() {
+        var self = this;
+        this.create_view_dialog = new openerp.web.Dialog(this, {
+            modal: true,
+            title: _.sprintf("Create a view (%s)", self.model),
+            width: 500,
+            height: 400,
+            buttons: {
+                    "Save": function(){
+                        var view_values = {};
+                        var warn = false;
+                        _.each(self.create_view_widget, function(widget) {
+                            if (widget.invalid) {
+                                warn = true;
+                                return false;
+                            };
+                            if (widget.dirty && !widget.invalid) {
+                                view_values[widget.name] = widget.get_value();
+                            }
+                        });
+                        if (warn) {
+                            self.on_valid_create_view();
+                        } else {
+                            $.when(self.do_save_view(view_values)).then(function() {
+                                self.create_view_dialog.close();
+                                var controller = self.action_manager.inner_viewmanager.views[self.action_manager.inner_viewmanager.active_view].controller;
+                                controller.reload_content();
+                            });
+                        }
+                    },
+                    "Cancel": function(){
+                        self.create_view_dialog.close();
+                    }
+                }
+        });
+        this.create_view_dialog.start().open();
+        var view_widget = [{'name': 'view_name', 'string':'View Name', 'type': 'char', 'required': true, 'value' : this.model + '.custom_' + Math.round(Math.random() * 1000)},
+                           {'name': 'view_type', 'string': 'View Type', 'type': 'selection', 'required': true, 'value': 'Form', 'selection': [['',''],['tree', 'Tree'],['form', 'Form'],['graph', 'Graph'],['calendar', 'Calender']]},
+                           {'name': 'proirity', 'string': 'Priority', 'type': 'char', 'required': true, 'value':'16'}];
+        this.create_view_dialog.$element.append('<table id="create_view"  style="width:400px" class="oe_forms"></table>');
+        this.create_view_widget = [];
+        _.each(view_widget, function(widget) {
+            var type_widget =  new (self.property.get_any([widget.type])) (self.create_view_dialog, widget.name);
+            if (widget.selection) {
+                type_widget.selection = widget.selection;
+            }
+            type_widget.required = widget.required;
+            self.create_view_dialog.$element.find('table[id=create_view]').append('<tr><td width="100px" align="right">' + widget.string + ':</td>' + type_widget.render()+'</tr>');
+            var value = null;
+            if (widget.value) {
+                value = widget.value;
+                type_widget.dirty = true;
+            }
+            type_widget.start();
+            type_widget.set_value(value)
+            self.create_view_widget.push(type_widget);
+        });
+    },
+    do_save_view: function(values) {
+        def = $.Deferred();
+        var field_dataset = new openerp.web.DataSetSearch(this, this.model, null, null);
+        var model_dataset = new openerp.web.DataSetSearch(this, 'ir.model', null, null);
+        var view_string = "", field_name = false, self = this;
+        field_dataset.call( 'fields_get', [],  function(fields) {
+            _.each(['name', 'x_name'], function(value) {
+                if (_.include(_.keys(fields), value)) {
+                    field_name = value;
+                    return false;
+                }
+            });
+            if (field_name) {
+                model_dataset.read_slice(['name','field_id'], {"domain": [['model','=',self.model]]}, function(records) {
+                    if (records) {view_string = records[0].name;}
+                    var arch = _.sprintf("<?xml version='1.0'?>\n<%s string='%s'>\n\t<field name='%s'/>\n</%s>", values.view_type, view_string, field_name, values.view_type);
+                    var vals = {'model': self.model, 'name': values.view_name, 'priority': values.priority, 'type': values.view_type, 'arch': arch};
+                    self.dataset.create(vals, function(suc) {
+                        def.resolve();
+                    });
+                });
+            }
+        });
+        return def.promise();
+    },
+    on_valid_create_view: function() {
+        var msg = "<ul>";
+        _.each(self.create_view_widget, function(widget) {
+            if (widget.invalid) {
+                msg += "<li>" + widget.name + "</li>";
+            }
+        });
+        msg += "</ul>";
+        self.do_warn("The following fields are invalid :", msg);
     },
     add_node_name : function(node) {
         if(node.tagName.toLowerCase() == "button" || node.tagName.toLowerCase() == "field"){
@@ -80,7 +177,16 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 _.sprintf( "<%s>",node.tagName.toLowerCase());
         }
     },
-
+    do_delete_view: function() {
+        var self = this;
+        if (confirm(_t("Do you really want to remove this view?"))) {
+               var controller = this.action_manager.inner_viewmanager.views[this.action_manager.inner_viewmanager.active_view].controller;
+            this.dataset.unlink([this.main_view_id]).then(function() {
+                controller.reload_content();
+                self.main_view_id = self.parent.fields_view.view_id;
+            });
+        }
+    },
     create_View_Node: function(node){
         var self = this;
         ViewNode = {
@@ -96,7 +202,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
        });
         return ViewNode;
     },
-
     append_child_object: function(main_object, parent_id, child_obj_list) {
         var self = this;
             if(main_object.id == parent_id){
@@ -109,7 +214,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 });
             }
     },
-
     convert_arch_to_obj: function(xml_Node, main_object, parent_id){
         var self = this;
         var child_obj_list = [];
@@ -127,7 +231,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         return main_object;
     },
-
     parse_xml: function(arch, view_id) {
         main_object = {
             'level': 0,
@@ -139,23 +242,26 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var xml_arch = QWeb.load_xml(arch);
         return [this.convert_arch_to_obj(xml_arch.childNodes, main_object, this.xml_element_id)];
     },
-
     get_arch: function() {
         var self = this;
         var view_arch_list = [];
         this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function(arch) {
-            var arch_object = self.parse_xml(arch[0].arch, self.main_view_id);
-            self.main_view_type = arch[0].type
-            view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch});
-            self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}, function(result) {
-                _.each(result, function(res) {
-                    view_arch_list.push({"view_id": res.id, "arch": res.arch});
-                    self.inherit_view(arch_object, res);
+            if (arch.length) {
+                var arch_object = self.parse_xml(arch[0].arch, self.main_view_id);
+                self.main_view_type = arch[0].type
+                view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch});
+                self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}, function(result) {
+                    _.each(result, function(res) {
+                        view_arch_list.push({"view_id": res.id, "arch": res.arch});
+                        self.inherit_view(arch_object, res);
+                    });
+                    return self.edit_view({"main_object": arch_object,
+                        "parent_child_id": self.parent_child_list(arch_object, []),
+                        "arch": view_arch_list});
                 });
-                return self.edit_view({"main_object": arch_object,
-                    "parent_child_id": self.parent_child_list(arch_object, []),
-                    "arch": view_arch_list});
-            });
+            } else {
+                self.do_warn("Please select view in list :");
+            }
         });
     },
     parent_child_list : function(one_object, parent_list) {
@@ -168,7 +274,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         return parent_list;
     },
-
     inherit_view : function(arch_object, result) {
         var self = this;
         var xml_list = [];
@@ -279,8 +384,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             sidebar: false,
                             views_switcher: false,
                             action_buttons: false,
-                            search_view: false,
-                            pager: false,
                         },
                     };
                     var action_manager = new openerp.web.ActionManager(self);
@@ -291,7 +394,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }
             }
         }).start().open();
-        this.edit_xml_dialog.$element.html(QWeb.render('view_editor', {'data': one_object['main_object']}));
+        var no_property_att = [];
+        _.each(_PROPERTIES, function(val, key) {
+            if (! val.length) no_property_att.push(key);
+        });
+        this.edit_xml_dialog.$element.html(QWeb.render('view_editor', {'data': one_object['main_object'], 'no_properties': no_property_att}));
         this.edit_xml_dialog.$element.find("tr[id^='viewedit-']").click(function() {
             self.edit_xml_dialog.$element.find("tr[id^='viewedit-']").removeClass('ui-selected');
             $(this).addClass('ui-selected');
@@ -451,8 +558,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 if (insert.length == check_list.length ) {return xml_child;}
             });
         }
-        return self.do_save_xml(arch.arch, obj[0].child_id[0], parseInt(clicked_tr_id), [], parseInt(clicked_tr_level),
-                        parseInt(view_id), arch, move_direct, update_values);
+        arch_to_pass = _.filter($(arch.arch), function (child) {
+                return child.nodeType == 1;
+            });
+        return self.do_save_xml(arch_to_pass[0], obj[0].child_id[0], 
+                    parseInt(clicked_tr_id), [], parseInt(clicked_tr_level),
+                            parseInt(view_id), arch, move_direct, update_values);
     },
     get_object_by_id: function(view_xml_id, one_object, result) {
         var self = this;
@@ -511,7 +622,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     }
                 }
                 var parent = $(arch1).parents();
-                var convert_to_utf = QWeb.tools.xml_node_to_string(parent[parent.length-1]);
+                var convert_to_utf = (parent.length != 0)?parent[parent.length-1]:arch1;
+                convert_to_utf = QWeb.tools.xml_node_to_string(convert_to_utf);
                 convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
                 convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
                 arch.arch = convert_to_utf;
@@ -564,8 +676,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     "Update": function(){
                         var update_values = [];
                         _.each(self.edit_widget, function(widget) {
-                            if (widget.dirty) {
-                                update_values.push(widget.get_value());
+                            if (widget.dirty && !widget.invalid) {
+                                update_values.push([widget.name, widget.get_value()]);
                             }
                         });
                         self.do_save_update_arch(obj, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "update_node", update_values);
@@ -581,20 +693,20 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var arch_val = self.get_object_by_id(clicked_tr_id,obj['main_object'], []);
         this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
         this.edit_widget = [];
-        _.each(properties, function(record) {
-            var id = record, 
-            type_widget;
-            self.ready  = $.when(self.on_groups(id)).then(function () {
-                if (_.include(widget,id)){
-                    type_widget =  new (self.property.get_any(['undefined' , id, arch_val[0]['att_list'][0]])) (self.edit_node_dialog, id);
+        _.each(properties, function(property) {
+            type_widget = false;
+            self.ready  = $.when(self.on_groups(property)).then(function () {
+                if (_.include(widget, property)){
+                    type_widget =  new (self.property.get_any([property])) (self.edit_node_dialog, property);
                 } else {
-                    type_widget = new openerp.web.ViewEditor.FieldChar (self.edit_node_dialog, id);
+                    type_widget = new openerp.web.ViewEditor.FieldChar (self.edit_node_dialog, property);
                 }
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
-                    return _.include(res, id);
+                    return _.include(res, property);
                 });
-                if (id == 'groups') type_widget.selection = self.groups;
-                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">'+id+':</td><td>'+type_widget.render()+'</td></tr>');
+                value = value instanceof Array ? value[1] : value;
+                if (property == 'groups') type_widget.selection = self.groups;
+                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + property + ':</td>' + type_widget.render() + '</tr>');
                 type_widget.start();
                 type_widget.set_value(value);
                 self.edit_widget.push(type_widget);
@@ -602,10 +714,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
     },
      //for getting groups
-    on_groups: function(id){
+    on_groups: function(property){
         var self = this,
         def = $.Deferred();
-        if (id != 'groups') {
+        if (property != 'groups') {
             self.groups = false;
             return false;
         }
@@ -638,10 +750,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         var  positions = ['After','Before','Inside'];
         var  render_list = [];
-        render_list.push(["node_type",(_.keys(_CHILDREN)).sort()]);
-        render_list.push(["position",positions]);
-        render_list.push(["Fields",fields]);
-        this.edit_widget = [];
+        var  render_list =[{'name': 'node_type','selection': _.keys(_CHILDREN).sort(), 
+                            'value': 'field', 'string': 'Node Type'},
+                {'name': 'position','selection': positions, 'value': false, 'string': 'Position'},
+                {'name': 'field_value','selection': fields, 'value': false, 'string': ''}];
+        this.add_widget = [];
         this.add_node_dialog = new openerp.web.Dialog(this,{
             modal: true,
             title: 'Properties',
@@ -649,25 +762,23 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             height: 300,
             buttons: {
                     "Update": function(){
-                        var node_type,position,field_value;
                         var check_add_node = true;
-                        _.each(self.edit_widget, function(widget) {
-                            (widget.name == "node_type")?node_type = widget.get_value()[1]:false;
-                            (widget.name == "position")?position = widget.get_value()[1]:false;
-                            (widget.name == "Fields")?field_value = widget.get_value()[1]:false;
+                        var values = {};
+                        _.each(self.add_widget, function(widget) {
+                            values[widget.name] = widget.get_value() || false;
                         });
-                       (position == "Inside")?
-                        check_add_node =(_.include(_CHILDREN[properties[0]],node_type))?true:false:
-                        check_add_node =(_.include(_CHILDREN[properties[1]],node_type))?true:false;
-                        if(node_type == "field" &&  check_add_node )
-                            {check_add_node = (field_value != " ")?true:false;
+                       (values.position == "Inside")?
+                        check_add_node =(_.include(_CHILDREN[properties[0]],values.node_type))?true:false:
+                        check_add_node =(_.include(_CHILDREN[properties[1]],values.node_type))?true:false;
+                        if(values.node_type == "field" &&  check_add_node )
+                            {check_add_node = (values.field_value != " ")?true:false;
                         }
                         if(check_add_node){
-                            var tag = (node_type == "field")?
-                                _.sprintf("<%s name='%s'> </%s>",node_type,field_value,node_type):
-                                    _.sprintf("<%s> </%s>",node_type,node_type);
+                            var tag = (values.node_type == "field")?
+                                _.sprintf("<%s name='%s'> </%s>",values.node_type,values.field_value,values.node_type):
+                                    _.sprintf("<%s> </%s>",values.node_type,values.node_type);
                             self.do_save_update_arch(one_object, view_id, view_xml_id, 
-                                clicked_tr_id, clicked_tr_level, "add_node", [tag, position]);
+                                clicked_tr_id, clicked_tr_level, "add_node", [tag, values.position]);
                         }else{alert("Can't Update View");}
                     },
                     "Cancel": function(){
@@ -679,15 +790,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
         var table_selector = self.add_node_dialog.$element.find('table[id=rec_table]');
         _.each(render_list,function(node){
-            type_widget = new openerp.web.ViewEditor.FieldSelect (self.add_node_dialog, node[0]);
-            type_widget.selection = node[1];
-            if(node[0]=="Fields"){ node[0] = "";}
-            table_selector.append('<tr><td align="right">'+node[0]+'</td><td>'+type_widget.render()+'</td></tr>');
+            type_widget = new openerp.web.ViewEditor.FieldSelect (self.add_node_dialog, node.name);
+            type_widget.selection = node.selection;
+            table_selector.append('<tr><td align="right">' + node.string + ':</td>' + type_widget.render() + '</tr>');
             type_widget.start();
-            self.edit_widget.push(type_widget);
+            type_widget.set_value(node.value);
+            self.add_widget.push(type_widget);
         });
         table_selector.append('<tr><td align="right"> <button id="new_field">New Field</button></td></tr>');
-        self.add_node_dialog.$element.find("select[id=node_type] option[value=field]").attr("selected",1);
         self.add_node_dialog.$element.find('#new_field').click(function() {
             model_data = new openerp.web.DataSetSearch(self,'ir.model', null, null);
             model_data.read_slice([], {domain: [['model','=', self.model]]}, function(result) {
@@ -704,77 +814,98 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             target: "new",
             flags: {
                 action_buttons: true,
-            },
-        };
+            }
+        }
         var action_manager = new openerp.web.ActionManager(self);
         action_manager.do_action(action);
-        });
-
     }
 });
 openerp.web.ViewEditor.Field = openerp.web.Class.extend({
-    init: function(view, id) {
+    init: function(view, name) {
         this.$element = view.$element;
         this.dirty = false;
-        this.name = id;
+        this.name = name;
+        this.required = false;
+        this.invalid = false;
+    },
+    start: function () {
+        this.update_dom();
+    },
+    update_dom: function() {
+        this.$element.find("td[id="+ this.name+"]").toggleClass('invalid', this.invalid);
+        this.$element.find("td[id="+ this.name+"]").toggleClass('required', this.required);
     },
     on_ui_change: function() {
+        var value = this.get_value();
+        value = value instanceof Array ? value[1] : value;
+        if (this.required && !value) {
+            this.invalid = true;
+        } else {
+            this.invalid = false;
+        }
         this.dirty = true;
+        this.update_dom();
     },
     render: function() {
-        return QWeb.render(this.template, {widget: this});
+        return _.sprintf("<td id = %s>%s</td>", this.name, QWeb.render(this.template, {widget: this}))
     },
 });
 openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
     template : "vieweditor_boolean",
     start: function() {
         var self = this;
+        this._super();
         this.$element.find("input[id="+ self.name+"]").change(function() {
             self.on_ui_change();
         });
+
     },
     set_value: function(value) {
         if (value) {
-            this.$element.find("input[id=" + this.name+ "]").attr('checked', value[1]);
+            this.$element.find("input[id=" + this.name+ "]").attr('checked', true);
         }
     },
     get_value: function() {
-        var value = this.$element.find("input[id=" + this.name + "]").is(':checked');
-        return value ? [this.name, value] : [this.name, null];
+        return this.$element.find("input[id=" + this.name + "]").is(':checked') || null;
     }
 });
 openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
     template : "vieweditor_char",
     start: function () {
         var self = this;
+        this._super();
         this.$element.find("input[id="+ this.name+"]").css('width','100%').change(function() {
             self.on_ui_change();
         });
     },
     set_value: function(value) {
-        value ? this.$element.find("input[id=" + this.name + "]").val(value[1]): this.$element.find("tr[id=" + this.name + "] input").val();
+        this.$element.find("input[id=" + this.name + "]").val(value);
     },
     get_value: function() {
-        var value= this.$element.find("input[id=" + this.name + "]").val();
-        return value ? [this.name, value] : [this.name, ""];
+        return this.$element.find("input[id=" + this.name + "]").val();
     }
 });
 openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
     template : "vieweditor_selection",
+    init: function(view, name) {
+        this._super(view, name);
+        this.selection = false;
+    },
     start: function () {
         var self = this;
+        this._super();
         this.$element.find("select[id=" + this.name + "]").css('width', '100%').change(function() {
             self.on_ui_change();
-            add_node = self.get_value();
-            if(add_node[0] == "node_type"){
-                if(add_node[1] == "field"){self.$element.find("select[id=Fields]").show();}
-                else{self.$element.find("select[id=Fields]").hide();}
+            if(self.name == "node_type"){
+                (self.get_value() == "field")?
+                    self.$element.find("select[id=field_value]").show():
+                        self.$element.find("select[id=field_value]").hide();
             }
         });
+      
     },
     set_value: function(value) {
         value = value === null ? false : value;
-        value = value instanceof Array ? value[1] : value;
         var index = 0;
         for (var i = 0, ii = this.selection.length; i < ii; i++) {
             if ((this.selection[i] instanceof Array && this.selection[i][1] === value) || this.selection[i] === value) index = i;
@@ -782,13 +913,12 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         this.$element.find("select[id=" + this.name + "]")[0].selectedIndex = index;
     },
     get_value: function() {
-        var value = this.$element.find("select[id=" + this.name + "]").val();
-        return  value ? [this.name, value] : [this.name, ""];
+        return this.$element.find("select[id=" + this.name + "]").val();
     }
 });
 openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, id) {
-        this._super(view, id);
+    init: function(view, name) {
+        this._super(view, name);
         this.registry = openerp.web.form.widgets;
         var values = _.keys(this.registry.map);
         values.push('');
@@ -797,46 +927,42 @@ openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.exten
     },
 });
 openerp.web.ViewEditor.IconProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, id) {
-        this._super(view, id);
-        this.selection = icons;
+    init: function(view, name) {
+        this._super(view, name);
+        this.selection = _ICONS;
     },
 });
 openerp.web.ViewEditor.ButtonTargetProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, id) {
-        this._super(view, id);
+    init: function(view, name) {
+        this._super(view, name);
         this.selection = [['', ''], ['new', 'New Window']];
     },
 });
 openerp.web.ViewEditor.ButtonTypeProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, id) {
-        this._super(view, id);
+    init: function(view, name) {
+        this._super(view, name);
         this.selection = [['', ''], ['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']];
     },
 });
 openerp.web.ViewEditor.AlignProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, id) {
-        this._super(view, id);
+    init: function(view, name) {
+        this._super(view, name);
         this.selection = [['', ''], ['0.0', 'Left'], ['0.5', 'Center'], ['1.0', 'Right']];
     },
 });
 openerp.web.ViewEditor.ButtonSpecialProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, id) {
-        this._super(view, id);
+    init: function(view, name) {
+        this._super(view, name);
         this.selection = [['',''],['save', 'Save Button'], ['cancel', 'Cancel Button'], ['open', 'Open Button']];
     },
 });
 openerp.web.ViewEditor.PositionProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, id) {
-        this._super(view, id);
+    init: function(view, name) {
+        this._super(view, name);
         this.selection = [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']];
     },
 });
 openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, id) {
-        this._super(view, id);
-        this.multiple = true;
-    },
     start: function () {
         this._super();
         this.$element.find("select[id=" + this.name + "]").css('height', '100px').attr("multiple",true);
@@ -846,7 +972,7 @@ openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.exten
         self.$element.find("#groups option").attr("selected",false);
         if (!value) return false;
         _.each(this.selection, function(item) {
-            if (_.include(value[1].split(','), item[0])) {
+            if (_.include(value.split(','), item[0])) {
                 self.$element.find("select[id="+self.name+"] option[value='" + item[0] +"']").attr("selected",1)
             }
          });
@@ -871,7 +997,7 @@ var _PROPERTIES = {
     'graph' : ['string', 'type'],
     'calendar' : ['string', 'date_start', 'date_stop', 'date_delay', 'day_length', 'color', 'mode'],
 };
-_CHILDREN = {
+var _CHILDREN = {
     'form': ['notebook', 'group', 'field', 'label', 'button','board', 'newline', 'separator'],
     'tree': ['field'],
     'graph': ['field'],
@@ -922,11 +1048,13 @@ openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
     'completion' : 'openerp.web.ViewEditor.FieldBoolean',
     'widget' : 'openerp.web.ViewEditor.WidgetProperty',
     'groups' : 'openerp.web.ViewEditor.GroupsProperty',
-    'position': 'openerp.web.ViewEditor.PositionProperty',
-    'icon': 'openerp.web.ViewEditor.IconProperty',
-    'align': 'openerp.web.ViewEditor.AlignProperty',
-    'special': 'openerp.web.ViewEditor.ButtonSpecialProperty',
-    'type': 'openerp.web.ViewEditor.ButtonTypeProperty',
-    'target': 'openerp.web.ViewEditor.ButtonTargetProperty'
+    'position' : 'openerp.web.ViewEditor.PositionProperty',
+    'icon' : 'openerp.web.ViewEditor.IconProperty',
+    'align' : 'openerp.web.ViewEditor.AlignProperty',
+    'special' : 'openerp.web.ViewEditor.ButtonSpecialProperty',
+    'type' : 'openerp.web.ViewEditor.ButtonTypeProperty',
+    'target' : 'openerp.web.ViewEditor.ButtonTargetProperty',
+    'selection' : 'openerp.web.ViewEditor.FieldSelect',
+    'char' : 'openerp.web.ViewEditor.FieldChar',
 });
 };

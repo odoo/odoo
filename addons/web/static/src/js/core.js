@@ -993,7 +993,7 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
         this.parameters = {"direction": 'ltr',
                         "date_format": '%m/%d/%Y',
                         "time_format": '%H:%M:%S',
-                        "grouping": "[]",
+                        "grouping": [],
                         "decimal_point": ".",
                         "thousands_sep": ","};
     },
@@ -1009,6 +1009,8 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
         });
         if (translation_bundle.lang_parameters) {
             this.parameters = translation_bundle.lang_parameters;
+            this.parameters.grouping = py.eval(
+                    this.parameters.grouping).toJSON();
         }
     },
     add_module_translation: function(mod) {
