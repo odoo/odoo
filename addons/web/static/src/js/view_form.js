@@ -798,8 +798,13 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
     _build_view_fields_values: function() {
         var a_dataset = this.view.dataset;
         var fields_values = this.view.get_fields_values();
-        var parent_values = a_dataset.parent_view ? a_dataset.parent_view.get_fields_values() : {};
-        fields_values.parent = parent_values;
+        var active_id = a_dataset.ids[a_dataset.index];
+        _.extend(fields_values, {
+            active_id: active_id || false,
+            active_ids: active_id ? [active_id] : [],
+            active_model: a_dataset.model,
+            parent: a_dataset.parent_view ? a_dataset.parent_view.get_fields_values() : {}
+        });
         return fields_values;
     },
     _build_eval_context: function() {
