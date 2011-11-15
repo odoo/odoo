@@ -321,6 +321,13 @@ class purchase_order(osv.osv):
                 })
 
     def inv_line_create(self, cr, uid, account_id, order_line, context=None):
+        """Collects require data from purchase order line that is used to create invoice line 
+        for that purchase order line
+        :param account_id: Expense account of the product of PO line if any.
+        :param browse_record order_line: Purchase order line browse record
+        :return: Value for fields of invoice lines.
+        :rtype: dict
+        """
         return {
             'name': order_line.name,
             'account_id': account_id,
@@ -346,10 +353,12 @@ class purchase_order(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
-    #TOFIX
-    # - implement hook method on create invoice and invoice line
-    # - doc string
     def action_invoice_create(self, cr, uid, ids, context=None):
+        """Generates invoice for given ids of purchase orders and links that invoice ID to purchase order.
+        :param ids: list of ids of purchase orders.
+        :return: ID of created invoice.
+        :rtype: int
+        """
         res = False
 
         journal_obj = self.pool.get('account.journal')
