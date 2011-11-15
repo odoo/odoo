@@ -2407,7 +2407,6 @@ class BaseModel(object):
 
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fget = self.fields_get(cr, uid, fields)
-        float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
         flist = ''
         group_count = group_by = groupby
         if groupby:
@@ -2423,17 +2422,18 @@ class BaseModel(object):
                 raise except_orm(_('Invalid group_by'),
                                  _('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.')%(groupby,))
 
-
-        fields_pre = [f for f in float_int_fields if
-                   f == self.CONCURRENCY_CHECK_FIELD
-                or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
-        for f in fields_pre:
-            if f not in ['id', 'sequence']:
-                group_operator = fget[f].get('group_operator', 'sum')
-                if flist:
-                    flist += ', '
-                qualified_field = '"%s"."%s"' % (self._table, f)
-                flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
+        aggregated_fields = [
+            f for f in fields
+            if f not in ('id', 'sequence')
+            if fget[f]['type'] in ('integer', 'float')
+            if f == self.CONCURRENCY_CHECK_FIELD
+               or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
+        for f in aggregated_fields:
+            group_operator = fget[f].get('group_operator', 'sum')
+            if flist:
+                flist += ', '
+            qualified_field = '"%s"."%s"' % (self._table, f)
+            flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
 
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
@@ -2486,7 +2486,7 @@ class BaseModel(object):
                 if (pos<len(data)) and (data[pos][groupby][0] == stages[pos][0]):
                     pos+=1
                     continue
-                val = dict.fromkeys(float_int_fields, False)
+                val = dict.fromkeys(aggregated_fields, False)
                 val.update({
                     groupby: stages[pos],
                     '__domain': [(groupby, '=', stages[pos][0])]+domain,
