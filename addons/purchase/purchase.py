@@ -348,52 +348,59 @@ class purchase_order(osv.osv):
     #TOFIX
     # - implement hook method on create invoice and invoice line
     # - doc string
-    def action_invoice_create(self, cr, uid, ids, *args):
+    def action_invoice_create(self, cr, uid, ids, context=None):
         res = False
 
         journal_obj = self.pool.get('account.journal')
-        for o in self.browse(cr, uid, ids):
-            il = []
-            todo = []
-            for ol in o.order_line:
-                todo.append(ol.id)
-                if ol.product_id:
-                    a = ol.product_id.product_tmpl_id.property_account_expense.id
-                    if not a:
-                        a = ol.product_id.categ_id.property_account_expense_categ.id
-                    if not a:
-                        raise osv.except_osv(_('Error !'), _('There is no expense account defined for this product: "%s" (id:%d)') % (ol.product_id.name, ol.product_id.id,))
-                else:
-                    a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category').id
-                fpos = o.fiscal_position or False
-                a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
-                il.append(self.inv_line_create(cr, uid, a, ol))
+        inv_obj = self.pool.get('account.invoice')
+        fiscal_obj = self.pool.get('account.fiscal.position')
+        property_obj = self.pool.get('ir.property')
 
-            a = o.partner_id.property_account_payable.id
-            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase'),('company_id', '=', o.company_id.id)], limit=1)
+        for order in self.browse(cr, uid, ids, context=context):
+            inv_line = []
+            todo = [] #TODO
+            for po_line in order.order_line:
+                todo.append(po_line.id) #TODO
+                if po_line.product_id:
+                    acc_id = po_line.product_id.product_tmpl_id.property_account_expense.id
+                    if not acc_id:
+                        acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
+                    if not acc_id:
+                        raise osv.except_osv(_('Error !'), _('There is no expense account defined for this product: "%s" (id:%d)') % (po_line.product_id.name, po_line.product_id.id,))
+                else:
+                    acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category').id
+                fpos = order.fiscal_position or False
+                acc_id = fiscal_obj.map_account(cr, uid, fpos, acc_id)
+
+                inv_line.append(self.inv_line_create(cr, uid, acc_id, po_line))
+
+            pay_acc_id = order.partner_id.property_account_payable.id
+            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase'),('company_id', '=', order.company_id.id)], limit=1)
             if not journal_ids:
                 raise osv.except_osv(_('Error !'),
-                    _('There is no purchase journal defined for this company: "%s" (id:%d)') % (o.company_id.name, o.company_id.id))
-            inv = {
-                'name': o.partner_ref or o.name,
-                'reference': o.partner_ref or o.name,
-                'account_id': a,
+                    _('There is no purchase journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
+
+            inv_data = {
+                'name': order.partner_ref or order.name,
+                'reference': order.partner_ref or order.name,
+                'account_id': pay_acc_id,
                 'type': 'in_invoice',
-                'partner_id': o.partner_id.id,
-                'currency_id': o.pricelist_id.currency_id.id,
-                'address_invoice_id': o.partner_address_id.id,
-                'address_contact_id': o.partner_address_id.id,
+                'partner_id': order.partner_id.id,
+                'currency_id': order.pricelist_id.currency_id.id,
+                'address_invoice_id': order.partner_address_id.id,
+                'address_contact_id': order.partner_address_id.id,
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
-                'origin': o.name,
-                'invoice_line': il,
-                'fiscal_position': o.fiscal_position.id or o.partner_id.property_account_position.id,
-                'payment_term': o.partner_id.property_payment_term and o.partner_id.property_payment_term.id or False,
-                'company_id': o.company_id.id,
+                'origin': order.name,
+                'invoice_line': inv_line,
+                'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
+                'payment_term': order.partner_id.property_payment_term and order.partner_id.property_payment_term.id or False,
+                'company_id': order.company_id.id,
             }
-            inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
-            self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)
+            inv_id = inv_obj.create(cr, uid, inv_data, context=context)
+            inv_obj.button_compute(cr, uid, [inv_id], context=context, set_total=True)
+            #TODO: change this
             self.pool.get('purchase.order.line').write(cr, uid, todo, {'invoiced':True})
-            self.write(cr, uid, [o.id], {'invoice_ids': [(4, inv_id)]})
+            self.write(cr, uid, [order.id], {'invoice_ids': [(4, inv_id)]})
             res = inv_id
         return res
 
