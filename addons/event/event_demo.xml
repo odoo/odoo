@@ -128,5 +128,16 @@
 
 	 <function model="event.registration" name="check_confirm" eval="[ref('reg_0_1')]"/> 
 
+    <record id="reg_0_2" model="event.registration">
+        <field name="event_id" ref="event_2"/>
+        <field name="partner_id" ref="base.res_partner_c2c"/>
+        <field name="partner_invoice_id" ref="base.res_partner_c2c"/>
+        <field name="nb_register">5</field>
+        <field name="event_product">Ticket for Conference</field>
+        <field name="unit_price">20</field>
+    </record>
+    
+    <function model="event.registration" name="check_confirm" eval="[ref('reg_0_2')]"/>
+    
 	</data>
 </openerp>
