@@ -131,25 +131,25 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="My Board">
-                    <hpaned>
-                        <child1>
+                    <board style="1-1">
+                        <column>
                         <!--
-                            <action colspan="4" height="220" name="%(purchase.action_current_purchases)d" string="Current purchases"  width="510"/>
-                            <action colspan="4" height="220" name="%(purchase.action_po_per_month_tree)d" string="Purchase order per month"  width="510"/>
+                            <action name="%(purchase.action_current_purchases)d" string="Current purchases"/>
+                            <action name="%(purchase.action_po_per_month_tree)d" string="Purchase order per month"/>
                         -->
-                        	<action colspan="4" height="220" name="%(purchase_draft)d" string="Request for Quotations"  width="510"/>
-                        	<action colspan="4" height="220" name="%(purchase_waiting)d" string="Purchase Order Waiting Approval"  width="510"/>
-                        </child1>
-                        <child2>
-                        	<action colspan="4" height="220" name="%(action_purchase_order_monthly_categ_graph)d" string="Monthly Purchase by Category"  />
+                        	<action name="%(purchase_draft)d" string="Request for Quotations"/>
+                        	<action name="%(purchase_waiting)d" string="Purchase Order Waiting Approval"/>
+                        </column>
+                        <column>
+                        	<action name="%(action_purchase_order_monthly_categ_graph)d" string="Monthly Purchase by Category"/>
                         <!--
-                            <action colspan="4" height="220" name="%(purchase.action_purchase_by_supplier)d" string="Purchase by supplier"  />
-                            <action colspan="4" height="220" name="%(purchase.action_total_price_by_product_by_state)d" string="Total price by product by state"  />
-                            <action colspan="4" height="220" name="%(purchase.action_qty_per_product)d" string="Total Quantity per product"  />
+                            <action name="%(purchase.action_purchase_by_supplier)d" string="Purchase by supplier"/>
+                            <action name="%(purchase.action_total_price_by_product_by_state)d" string="Total price by product by state"/>
+                            <action name="%(purchase.action_qty_per_product)d" string="Total Quantity per product"/>
                         -->
 
-                        </child2>
-                    </hpaned>
+                        </column>
+                    </board>
                 </form>
             </field>
         </record>
