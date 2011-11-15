@@ -85,16 +85,16 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         var view_values = {};
                         var warn = false;
                         _.each(self.create_view_widget, function(widget) {
-                            if (widget.invalid) {
+                            if (widget.is_invalid) {
                                 warn = true;
                                 return false;
                             };
-                            if (widget.dirty && !widget.invalid) {
+                            if (widget.dirty && !widget.is_invalid) {
                                 view_values[widget.name] = widget.get_value();
                             }
                         });
                         if (warn) {
-                            self.on_valid_create_view();
+                            self.on_valid_create_view(self.create_view_widget);
                         } else {
                             $.when(self.do_save_view(view_values)).then(function() {
                                 self.create_view_dialog.close();
@@ -111,7 +111,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.create_view_dialog.start().open();
         var view_widget = [{'name': 'view_name', 'string':'View Name', 'type': 'char', 'required': true, 'value' : this.model + '.custom_' + Math.round(Math.random() * 1000)},
                            {'name': 'view_type', 'string': 'View Type', 'type': 'selection', 'required': true, 'value': 'Form', 'selection': [['',''],['tree', 'Tree'],['form', 'Form'],['graph', 'Graph'],['calendar', 'Calender']]},
-                           {'name': 'proirity', 'string': 'Priority', 'type': 'char', 'required': true, 'value':'16'}];
+                           {'name': 'proirity', 'string': 'Priority', 'type': 'float', 'required': true, 'value':'16'}];
         this.create_view_dialog.$element.append('<table id="create_view"  style="width:400px" class="oe_forms"></table>');
         this.create_view_widget = [];
         _.each(view_widget, function(widget) {
@@ -120,6 +120,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 type_widget.selection = widget.selection;
             }
             type_widget.required = widget.required;
+            type_widget.type = widget.type;
             self.create_view_dialog.$element.find('table[id=create_view]').append('<tr><td width="100px" align="right">' + widget.string + ':</td>' + type_widget.render()+'</tr>');
             var value = null;
             if (widget.value) {
@@ -156,15 +157,15 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         return def.promise();
     },
-    on_valid_create_view: function() {
+    on_valid_create_view: function(widgets) {
         var msg = "<ul>";
-        _.each(self.create_view_widget, function(widget) {
-            if (widget.invalid) {
+        _.each(widgets, function(widget) {
+            if (widget.is_invalid) {
                 msg += "<li>" + widget.name + "</li>";
             }
         });
         msg += "</ul>";
-        self.do_warn("The following fields are invalid :", msg);
+        this.do_warn("The following fields are invalid :", msg);
     },
     add_node_name : function(node) {
         if(node.tagName.toLowerCase() == "button" || node.tagName.toLowerCase() == "field"){
@@ -636,14 +637,23 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             height: 400,
             buttons: {
                     "Update": function(){
+                        var warn = false;
                         var update_values = [];
                         _.each(self.edit_widget, function(widget) {
-                            if (widget.dirty && !widget.invalid) {
+                            if (widget.is_invalid) {
+                                warn = true;
+                                return false;
+                            };
+                            if (widget.dirty && !widget.is_invalid) {
                                 update_values.push([widget.name, widget.get_value()]);
                             }
                         });
-                        self.do_save_update_arch(obj, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "update_node", update_values);
-                        self.edit_node_dialog.close();
+                        if (warn) {
+                            self.on_valid_create_view(self.edit_widget);
+                        } else {
+                            self.do_save_update_arch(obj, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "update_node", update_values);
+                            self.edit_node_dialog.close();
+                        }
                     },
                     "Cancel": function(){
                         self.edit_node_dialog.close();
@@ -651,24 +661,64 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }
         });
         this.edit_node_dialog.start().open();
+        var _PROPERTIES_ATTRIBUTES = {
+            'name' : {'string': 'Name', 'type': 'char'},
+            'string' : {'string': 'String', 'type': 'char'},
+            'required' : {'string': 'Required', 'type': 'boolean'},
+            'readonly' : {'string': 'Readonly', 'type': 'boolean'},
+            'domain' : {'string': 'Domain', 'type': 'char'},
+            'context' : {'string': 'Context', 'type': 'char'},
+            'limit' : {'string': 'Limit', 'type': 'float'},
+            'min_rows' : {'string': 'Minimum rows', 'type': 'float'},
+            'date_start' : {'string': 'Start date', 'type': 'char'},
+            'date_delay' : {'string': 'Delay date', 'type': 'char'},
+            'day_length' : {'string': 'Day length', 'type': 'char'},
+            'mode' : {'string': 'Mode', 'type': 'char'},
+            'align' : {'string': 'Alignment ', 'type': 'selection', 'selection': [['', ''], ['0.0', 'Left'], ['0.5', 'Center'], ['1.0', 'Right']]},
+            'icon' : {'string': 'Icon', 'type': 'selection', 'selection': _ICONS},
+            'type' : {'string': 'Type', 'type': 'selection', 'selection': [['', ''], ['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']]},
+            'special' : {'string': 'Special', 'type': 'selection', 'selection': [['',''],['save', 'Save Button'], ['cancel', 'Cancel Button'], ['open', 'Open Button']]},
+            'target' : {'string': 'Target', 'type': 'selection', 'selection': [['', ''], ['new', 'New Window']]},
+            'confirm' : {'string': 'Confirm', 'type': 'char'},
+            'style' : {'string': 'Style', 'type': 'selection', 'selection':[["",""],["1", "1"],["1-1", "1-1"],["1-2", "1-2"],["2-1", "2-1"],["1-1-1", "1-1-1"]]},
+            'filename' : {'string': 'File Name', 'type': 'char'},
+            'width' : {'string': 'Width', 'type': 'float'},
+            'height' : {'string': 'Height', 'type': 'float'},
+            'attrs' : {'string': 'Attrs', 'type': 'char'},
+            'col' : {'string': 'col', 'type': 'float'},
+            'link' : {'string': 'Link', 'type': 'char'},
+            'position' : {'string': 'Position', 'type': 'selection', 'selection': [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']]},
+            'states' : {'string': 'states', 'type': 'char'},
+            'eval' : {'string': 'Eval', 'type': 'char'},
+            'ref' : {'string': 'Ref', 'type': 'char'},
+            'on_change' : {'string': 'On change', 'type': 'char'},
+            'nolabel' : {'string': 'No label', 'type': 'boolean'},
+            'completion' : {'string': 'Completion', 'type': 'boolean'},
+            'colspan' : {'string': 'Colspan', 'type': 'float'},
+            'widget' : {'string': 'widget', 'type': 'selection'},
+            'colors' : {'string': 'Colors', 'type': 'char'},
+            'editable' : {'string': 'Editable', 'type': 'selection', 'selection': [["",""],["top","Top"],["bottom", "Bottom"]]},
+            'groups' : {'string': 'Groups', 'type': 'seleciton_multi'},
+        };
         var widget = _.keys(self.property.map);
         var arch_val = self.get_object_by_id(clicked_tr_id,obj['main_object'], []);
         this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
         this.edit_widget = [];
-        _.each(properties, function(property) {
-            type_widget = false;
-            self.ready  = $.when(self.on_groups(property)).then(function () {
-                if (_.include(widget, property)){
-                    type_widget =  new (self.property.get_any([property])) (self.edit_node_dialog, property);
-                } else {
-                    type_widget = new openerp.web.ViewEditor.FieldChar (self.edit_node_dialog, property);
-                }
+        self.ready  = $.when(self.on_groups(properties)).then(function () {
+            _PROPERTIES_ATTRIBUTES['groups']['selection'] = self.groups;
+            var values = _.keys( openerp.web.form.widgets.map);
+            values.push('');
+            values.sort();
+            _PROPERTIES_ATTRIBUTES['widget']['selection'] = values;
+            _.each(properties, function(property) {
+                var type_widget =  new (self.property.get_any([_PROPERTIES_ATTRIBUTES[property].type])) (self.edit_node_dialog, property);
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
                     return _.include(res, property);
                 });
+                type_widget.selection = _PROPERTIES_ATTRIBUTES[property].selection
+                type_widget.type = _PROPERTIES_ATTRIBUTES[property].type
                 value = value instanceof Array ? value[1] : value;
-                if (property == 'groups') type_widget.selection = self.groups;
-                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + property + ':</td>' + type_widget.render() + '</tr>');
+                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + _PROPERTIES_ATTRIBUTES[property].string + ':</td>' + type_widget.render() + '</tr>');
                 type_widget.start();
                 type_widget.set_value(value)
                 self.edit_widget.push(type_widget);
@@ -676,12 +726,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
     },
      //for getting groups
-    on_groups: function(property){
+    on_groups: function(properties){
         var self = this,
         def = $.Deferred();
-        if (property != 'groups') {
+        if (!_.include(properties, 'groups')) {
             self.groups = false;
-            return false;
+            def.resolve();
         }
         var group_ids = [],
         group_names = {},
@@ -715,25 +765,34 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
         this.dirty = false;
         this.name = name;
         this.required = false;
-        this.invalid = false;
+        this.is_invalid = false;
     },
     start: function () {
         this.update_dom();
     },
     update_dom: function() {
-        this.$element.find("td[id="+ this.name+"]").toggleClass('invalid', this.invalid);
+        this.$element.find("td[id="+ this.name+"]").toggleClass('invalid', this.is_invalid);
         this.$element.find("td[id="+ this.name+"]").toggleClass('required', this.required);
     },
     on_ui_change: function() {
+        this.validate();
         var value = this.get_value();
-        value = value instanceof Array ? value[1] : value;
-        if (this.required && !value) {
-            this.invalid = true;
+        if (this.is_invalid) {
+            this.is_invalid = true;
         } else {
-            this.invalid = false;
+            this.is_invalid = false;
         }
         this.dirty = true;
         this.update_dom();
+    },
+    validate: function() {
+        this.is_invalid = false;
+        try {
+            var value = openerp.web.parse_value(this.get_value(), this, '');
+            this.is_invalid = this.required && value === '';
+        } catch(e) {
+            this.is_invalid = true;
+        }
     },
     render: function() {
         return _.sprintf("<td id = %s>%s</td>", this.name, QWeb.render(this.template, {widget: this}))
@@ -747,7 +806,6 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
         this.$element.find("input[id="+ self.name+"]").change(function() {
             self.on_ui_change();
         });
-
     },
     set_value: function(value) {
         if (value) {
@@ -799,53 +857,7 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         return this.$element.find("select[id=" + this.name + "]").val();
     }
 });
-openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.registry = openerp.web.form.widgets;
-        var values = _.keys(this.registry.map);
-        values.push('');
-        values.sort();
-        this.selection = values;
-    },
-});
-openerp.web.ViewEditor.IconProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = _ICONS;
-    },
-});
-openerp.web.ViewEditor.ButtonTargetProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = [['', ''], ['new', 'New Window']];
-    },
-});
-openerp.web.ViewEditor.ButtonTypeProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = [['', ''], ['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']];
-    },
-});
-openerp.web.ViewEditor.AlignProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = [['', ''], ['0.0', 'Left'], ['0.5', 'Center'], ['1.0', 'Right']];
-    },
-});
-openerp.web.ViewEditor.ButtonSpecialProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = [['',''],['save', 'Save Button'], ['cancel', 'Cancel Button'], ['open', 'Open Button']];
-    },
-});
-openerp.web.ViewEditor.PositionProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']];
-    },
-});
-openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.extend({
+openerp.web.ViewEditor.FieldSelectMulti = openerp.web.ViewEditor.FieldSelect.extend({
     start: function () {
         this._super();
         this.$element.find("select[id=" + this.name + "]").css('height', '100px').attr("multiple",true);
@@ -861,9 +873,13 @@ openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.exten
          });
     }
 });
+openerp.web.ViewEditor.FieldFloat = openerp.web.ViewEditor.FieldChar.extend({
+
+});
+
 var _PROPERTIES = {
     'field' : ['name', 'string', 'required', 'readonly', 'domain', 'context', 'nolabel', 'completion',
-               'colspan', 'widget', 'eval', 'ref', 'on_change', 'groups', 'attrs'],
+               'colspan', 'widget', 'eval', 'ref', 'on_change', 'attrs', 'groups'],
     'form' : ['string', 'col', 'link'],
     'notebook' : ['colspan', 'position', 'groups'],
     'page' : ['string', 'states', 'attrs', 'groups'],
@@ -908,19 +924,10 @@ var _ICONS = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
             'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph'
 ];
 openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
-    'required' : 'openerp.web.ViewEditor.FieldBoolean',
-    'readonly' : 'openerp.web.ViewEditor.FieldBoolean',
-    'nolabel' : 'openerp.web.ViewEditor.FieldBoolean',
-    'completion' : 'openerp.web.ViewEditor.FieldBoolean',
-    'widget' : 'openerp.web.ViewEditor.WidgetProperty',
-    'groups' : 'openerp.web.ViewEditor.GroupsProperty',
-    'position' : 'openerp.web.ViewEditor.PositionProperty',
-    'icon' : 'openerp.web.ViewEditor.IconProperty',
-    'align' : 'openerp.web.ViewEditor.AlignProperty',
-    'special' : 'openerp.web.ViewEditor.ButtonSpecialProperty',
-    'type' : 'openerp.web.ViewEditor.ButtonTypeProperty',
-    'target' : 'openerp.web.ViewEditor.ButtonTargetProperty',
+    'boolean' : 'openerp.web.ViewEditor.FieldBoolean',
+    'seleciton_multi' : 'openerp.web.ViewEditor.FieldSelectMulti',
     'selection' : 'openerp.web.ViewEditor.FieldSelect',
     'char' : 'openerp.web.ViewEditor.FieldChar',
+    'float' : 'openerp.web.ViewEditor.FieldFloat',
 });
 };
