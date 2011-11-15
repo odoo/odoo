@@ -397,8 +397,8 @@ class YamlInterpreter(object):
 
                     field_value = self._eval_field(model, field_name, fields[field_name], view2, parent=record_dict, default=default)
                     record_dict[field_name] = field_value
-                    if (field_name in defaults) and defaults[field_name] == field_value:
-                        print '*** WARNING', field_name, field_value
+                    #if (field_name in defaults) and defaults[field_name] == field_value:
+                    #    print '*** You can remove these lines:', field_name, field_value
                 elif (field_name in defaults):
                     if (field_name not in record_dict):
                         record_dict[field_name] = process_val(field_name, defaults[field_name])
@@ -432,8 +432,8 @@ class YamlInterpreter(object):
                     if key not in fields:
                         assert key in fg, "The returning field '%s' from your on_change call '%s' does not exist on the object '%s'" % (key, match.group(1), model._name)
                         record_dict[key] = process_val(key, val)
-                        if (key in fields) and record_dict[key] == process_val(key, val):
-                            print '*** WARNING', key, val
+                        #if (key in fields) and record_dict[key] == process_val(key, val):
+                        #    print '*** You can remove these lines:', key, val
             else:
                 nodes = list(el) + nodes
 
