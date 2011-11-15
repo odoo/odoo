@@ -9,8 +9,9 @@ import logging
 import urllib
 import os
 import pprint
-import re
+#import re
 import sys
+import threading
 import traceback
 import uuid
 import xmlrpclib
@@ -176,7 +177,7 @@ class JsonRequest(WebRequest):
             try:
                 self.jsonrequest = simplejson.loads(direct_json_request, object_hook=nonliterals.non_literal_decoder)
             except Exception, e:
-                _logger.error(e)
+                _logger.exception(e)
                 return werkzeug.exceptions.BadRequest(e)
         else:
             # no direct json request, try to get it from jsonp POST request
@@ -352,17 +353,19 @@ STORES = {}
 
 @contextlib.contextmanager
 def session_context(request, storage_path, session_cookie='sessionid'):
-    session_store = STORES.get(storage_path)
+    session_store, session_lock = STORES.get(storage_path, (None, None))
     if not session_store:
         session_store = werkzeug.contrib.sessions.FilesystemSessionStore(
             storage_path)
-        STORES[storage_path] = session_store
+        session_lock = threading.Lock()
+        STORES[storage_path] = session_store, session_lock
 
     sid = request.cookies.get(session_cookie)
-    if sid:
-        request.session = session_store.get(sid)
-    else:
-        request.session = session_store.new()
+    with session_lock:
+        if sid:
+            request.session = session_store.get(sid)
+        else:
+            request.session = session_store.new()
 
     try:
         yield request.session
@@ -375,29 +378,31 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                 _logger.info('remove session %s: %r', key, value.jsonp_requests)
                 del request.session[key]
 
-        # FIXME: remove this when non-literals disappear
-        if sid:
-            # Re-load sessions from storage and merge non-literal
-            # contexts and domains (they're indexed by hash of the
-            # content so conflicts should auto-resolve), otherwise if
-            # two requests alter those concurrently the last to finish
-            # will overwrite the previous one, leading to loss of data
-            # (a non-literal is lost even though it was sent to the
-            # client and client errors)
-            #
-            # note that domains_store and contexts_store are append-only (we
-            # only ever add items to them), so we can just update one with the
-            # other to get the right result, if we want to merge the
-            # ``context`` dict we'll need something smarter
-            in_store = session_store.get(sid)
-            for k, v in request.session.iteritems():
-                stored = in_store.get(k)
-                if stored and isinstance(v, session.OpenERPSession)\
-                        and v != stored:
-                    v.contexts_store.update(stored.contexts_store)
-                    v.domains_store.update(stored.domains_store)
+        with session_lock:
+            # FIXME: remove this when non-literals disappear
+            if sid:
+                # Re-load sessions from storage and merge non-literal
+                # contexts and domains (they're indexed by hash of the
+                # content so conflicts should auto-resolve), otherwise if
+                # two requests alter those concurrently the last to finish
+                # will overwrite the previous one, leading to loss of data
+                # (a non-literal is lost even though it was sent to the
+                # client and client errors)
+                #
+                # note that domains_store and contexts_store are append-only (we
+                # only ever add items to them), so we can just update one with the
+                # other to get the right result, if we want to merge the
+                # ``context`` dict we'll need something smarter    
+                in_store = session_store.get(sid)
+                for k, v in request.session.iteritems():
+                    stored = in_store.get(k)
+                    if stored and isinstance(v, session.OpenERPSession)\
+                            and v != stored:
+                        v.contexts_store.update(stored.contexts_store)
+                        v.domains_store.update(stored.domains_store)
+                        v.jsonp_requests.update(stored.jsonp_requests)
 
-        session_store.save(request.session)
+            session_store.save(request.session)
 
 #----------------------------------------------------------
 # OpenERP Web Module/Controller Loading and URL Routing
