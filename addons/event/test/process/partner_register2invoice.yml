@@ -11,7 +11,7 @@
 -
   !python {model: event.registration}: |
     ids = self.search(cr, uid, [('partner_id','=',ref("base.res_partner_ericdubois0")), ('event_id', '=', ref('event_1'))])
-    assert ids, "Registratin should be create here."
+    assert ids, "Registration should be create here."
 -
   I confirm registration process.
 -

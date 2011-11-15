@@ -13,3 +13,16 @@
 -
   !python {model: event.event}: |
     self.onchange_product(cr, uid, ref("event_1"), ref("event_product_0"))
+-
+  I call onchange event to change the team of event.
+-
+  !python {model: event.event}: |
+    self.do_team_change(cr, uid, ref("event_1"), ref("crm.section_sales_department"))
+-
+  Copy of event.
+-
+  !python {model: event.event}: |
+    try:
+      self.copy(cr, uid, ref("event_2"))
+    except:
+      pass
