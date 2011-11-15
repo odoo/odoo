@@ -75,11 +75,14 @@ class project(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         partner_obj = self.pool.get('res.partner')
         if not part:
-            return {'value':{'contact_id': False, 'pricelist_id': False}}
+            return {'value':{'contact_id': False}}
         addr = partner_obj.address_get(cr, uid, [part], ['contact'])
-        pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
-        pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
-        return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist_id}}
+        val = {'contact_id': addr['contact']}
+        if pricelist_id in self._columns:
+            pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
+            pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
+            val['pricelist_id'] = pricelist_id
+        return {'value': val}
 
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
