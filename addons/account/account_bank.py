@@ -44,6 +44,10 @@ class bank(osv.osv):
     def post_write(self, cr, uid, ids, context={}):
         obj_acc = self.pool.get('account.account')
         obj_data = self.pool.get('ir.model.data')
+
+        if isinstance(ids, (int, long)):
+          ids = [ids]
+
         for bank in self.browse(cr, uid, ids, context):
             if bank.company_id and not bank.journal_id:
                 # Find the code and parent of the bank account to create
