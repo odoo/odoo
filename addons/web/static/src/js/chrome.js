@@ -184,7 +184,8 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
     }
 });
 
-openerp.web.Loading =  openerp.web.Widget.extend(/** @lends openerp.web.Loading# */{
+openerp.web.Loading = openerp.web.Widget.extend(/** @lends openerp.web.Loading# */{
+    template: 'Loading',
     /**
      * @constructs openerp.web.Loading
      * @extends openerp.web.Widget
@@ -192,8 +193,8 @@ openerp.web.Loading =  openerp.web.Widget.extend(/** @lends openerp.web.Loading#
      * @param parent
      * @param element_id
      */
-    init: function(parent, element_id) {
-        this._super(parent, element_id);
+    init: function(parent) {
+        this._super(parent);
         this.count = 0;
         this.blocked_ui = false;
         this.session.on_rpc_request.add_first(this.on_rpc_event, 1);
@@ -210,12 +211,13 @@ openerp.web.Loading =  openerp.web.Widget.extend(/** @lends openerp.web.Loading#
         }
 
         this.count += increment;
-        if (this.count) {
+        if (this.count > 0) {
             //this.$element.html(QWeb.render("Loading", {}));
             this.$element.html("Loading ("+this.count+")");
             this.$element.show();
             this.widget_parent.$element.addClass('loading');
         } else {
+            this.count = 0;
             clearTimeout(this.long_running_timer);
             // Don't unblock if blocked by somebody else
             if (self.blocked_ui) {
@@ -982,7 +984,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.$element.html(QWeb.render("Interface", params));
 
         this.notification = new openerp.web.Notification(this);
-        this.loading = new openerp.web.Loading(this,"oe_loading");
+        this.loading = new openerp.web.Loading(this);
         this.crashmanager =  new openerp.web.CrashManager();
 
         this.header = new openerp.web.Header(this);
@@ -1006,6 +1008,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     start: function() {
         this._super.apply(this, arguments);
         this.notification.prependTo(this.$element);
+        this.loading.appendTo($('#oe_loading'));
         this.header.appendTo($("#oe_header"));
         this.session.start();
         this.login.appendTo($('#oe_login'));
