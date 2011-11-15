@@ -35,7 +35,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.fields = {};
         this.datarecord = {};
         this.show_invalid = true;
-        this.dirty_for_user = false;
         this.default_focus_field = null;
         this.default_focus_button = null;
         this.registry = this.readonly ? openerp.web.form.readonly : openerp.web.form.widgets;
@@ -172,7 +171,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
         this.$form_header.find('.oe_form_on_readonly').toggle(this.readonly);
         this.$form_header.find('.oe_form_on_editable').toggle(!this.readonly);
-        this.dirty_for_user = false;
         this.datarecord = record;
         for (var f in this.fields) {
             var field = this.fields[f];
@@ -317,7 +315,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     processed.push(field.name);
                     if (field.get_value() != value) {
                         field.set_value(value);
-                        field.dirty = this.dirty_for_user = true;
+                        field.dirty = true;
                         if (_.indexOf(processed, field.name) < 0) {
                             this.do_onchange(field, processed);
                         }
@@ -402,7 +400,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         return def.promise();
     },
     can_be_discarded: function() {
-        return !this.dirty_for_user || confirm(_t("Warning, the record has been modified, your changes will be discarded."));
+        return !this.is_dirty() || confirm(_t("Warning, the record has been modified, your changes will be discarded."));
     },
     /**
      * Triggers saving the form's record. Chooses between creating a new
@@ -418,8 +416,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             try {
             if (!self.initial_mutating_lock.isResolved() && !self.initial_mutating_lock.isRejected())
                 return;
-            var form_dirty = false,
-                form_invalid = false,
+            var form_invalid = false,
                 values = {},
                 first_invalid_field = null;
             for (var f in self.fields) {
@@ -431,7 +428,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                         first_invalid_field = f;
                     }
                 } else if (f.is_dirty()) {
-                    form_dirty = true;
                     values[f.name] = f.get_value();
                 }
             }
@@ -552,6 +548,14 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (self.dataset.parent_view)
                 return self.dataset.parent_view.recursive_save();
         });
+    },
+    is_dirty: function() {
+        for (var f in this.fields) {
+            if (this.fields[f].is_dirty()) {
+                return true;
+            }
+        }
+        return false;
     },
     is_interactible_record: function() {
         var id = this.datarecord.id;
@@ -1236,7 +1240,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         }
     },
     on_ui_change: function() {
-        this.dirty = this.view.dirty_for_user = true;
+        this.dirty = true;
         this.validate();
         if (this.is_valid()) {
             this.set_value_from_ui();
