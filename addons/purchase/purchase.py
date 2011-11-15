@@ -320,7 +320,7 @@ class purchase_order(osv.osv):
                        'ref_doc1': 'purchase.order,%d' % (po.id,),
                 })
 
-    def prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
+    def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
         """Collects require data from purchase order line that is used to create invoice line 
         for that purchase order line
         :param account_id: Expense account of the product of PO line if any.
@@ -388,7 +388,7 @@ class purchase_order(osv.osv):
                 fpos = order.fiscal_position or False
                 acc_id = fiscal_obj.map_account(cr, uid, fpos, acc_id)
 
-                inv_line_data = self.prepare_inv_line(cr, uid, acc_id, po_line, context=context)
+                inv_line_data = self._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
                 inv_lines.append(inv_line_id)
 
