@@ -85,11 +85,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         var view_values = {};
                         var warn = false;
                         _.each(self.create_view_widget, function(widget) {
-                            if (widget.invalid) {
+                            if (widget.is_invalid) {
                                 warn = true;
                                 return false;
                             };
-                            if (widget.dirty && !widget.invalid) {
+                            if (widget.dirty && !widget.is_invalid) {
                                 view_values[widget.name] = widget.get_value();
                             }
                         });
@@ -111,7 +111,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.create_view_dialog.start().open();
         var view_widget = [{'name': 'view_name', 'string':'View Name', 'type': 'char', 'required': true, 'value' : this.model + '.custom_' + Math.round(Math.random() * 1000)},
                            {'name': 'view_type', 'string': 'View Type', 'type': 'selection', 'required': true, 'value': 'Form', 'selection': [['',''],['tree', 'Tree'],['form', 'Form'],['graph', 'Graph'],['calendar', 'Calender']]},
-                           {'name': 'proirity', 'string': 'Priority', 'type': 'char', 'required': true, 'value':'16'}];
+                           {'name': 'proirity', 'string': 'Priority', 'type': 'float', 'required': true, 'value':'16'}];
         this.create_view_dialog.$element.append('<table id="create_view"  style="width:400px" class="oe_forms"></table>');
         this.create_view_widget = [];
         _.each(view_widget, function(widget) {
@@ -120,6 +120,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 type_widget.selection = widget.selection;
             }
             type_widget.required = widget.required;
+            type_widget.type = widget.type;
             self.create_view_dialog.$element.find('table[id=create_view]').append('<tr><td width="100px" align="right">' + widget.string + ':</td>' + type_widget.render()+'</tr>');
             var value = null;
             if (widget.value) {
@@ -159,12 +160,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     on_valid_create_view: function() {
         var msg = "<ul>";
         _.each(self.create_view_widget, function(widget) {
-            if (widget.invalid) {
+            if (widget.is_invalid) {
                 msg += "<li>" + widget.name + "</li>";
             }
         });
         msg += "</ul>";
-        self.do_warn("The following fields are invalid :", msg);
+        this.do_warn("The following fields are invalid :", msg);
     },
     add_node_name : function(node) {
         if(node.tagName.toLowerCase() == "button" || node.tagName.toLowerCase() == "field"){
@@ -636,14 +637,23 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             height: 400,
             buttons: {
                     "Update": function(){
+                        var warn = false;
                         var update_values = [];
                         _.each(self.edit_widget, function(widget) {
-                            if (widget.dirty && !widget.invalid) {
+                            if (widget.is_invalid) {
+                                warn = true;
+                                return false;
+                            };
+                            if (widget.dirty && !widget.is_invalid) {
                                 update_values.push([widget.name, widget.get_value()]);
                             }
                         });
-                        self.do_save_update_arch(obj, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "update_node", update_values);
-                        self.edit_node_dialog.close();
+                        if (warn) {
+                            self.on_valid_create_view();
+                        } else {
+                            self.do_save_update_arch(obj, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "update_node", update_values);
+                            self.edit_node_dialog.close();
+                        }
                     },
                     "Cancel": function(){
                         self.edit_node_dialog.close();
@@ -658,8 +668,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             'readonly' : {'string': 'Readonly', 'type': 'boolean'},
             'domain' : {'string': 'Domain', 'type': 'char'},
             'context' : {'string': 'Context', 'type': 'char'},
-            'limit' : {'string': 'Limit', 'type': 'char'},
-            'min_rows' : {'string': 'Minimum rows', 'type': 'char'},
+            'limit' : {'string': 'Limit', 'type': 'float'},
+            'min_rows' : {'string': 'Minimum rows', 'type': 'float'},
             'date_start' : {'string': 'Start date', 'type': 'char'},
             'date_delay' : {'string': 'Delay date', 'type': 'char'},
             'day_length' : {'string': 'Day length', 'type': 'char'},
@@ -672,10 +682,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             'confirm' : {'string': 'Confirm', 'type': 'char'},
             'style' : {'string': 'Style', 'type': 'selection', 'selection':[["",""],["1", "1"],["1-1", "1-1"],["1-2", "1-2"],["2-1", "2-1"],["1-1-1", "1-1-1"]]},
             'filename' : {'string': 'File Name', 'type': 'char'},
-            'width' : {'string': 'Width', 'type': 'char'},
-            'height' : {'string': 'Height', 'type': 'char'},
+            'width' : {'string': 'Width', 'type': 'float'},
+            'height' : {'string': 'Height', 'type': 'float'},
             'attrs' : {'string': 'Attrs', 'type': 'char'},
-            'col' : {'string': 'col', 'type': 'char'},
+            'col' : {'string': 'col', 'type': 'float'},
             'link' : {'string': 'Link', 'type': 'char'},
             'position' : {'string': 'Position', 'type': 'selection', 'selection': [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']]},
             'states' : {'string': 'states', 'type': 'char'},
@@ -684,8 +694,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             'on_change' : {'string': 'On change', 'type': 'char'},
             'nolabel' : {'string': 'No label', 'type': 'boolean'},
             'completion' : {'string': 'Completion', 'type': 'boolean'},
-            'colspan' : {'string': 'Colspan', 'type': 'char'},
+            'colspan' : {'string': 'Colspan', 'type': 'float'},
             'widget' : {'string': 'widget', 'type': 'selection'},
+            'colors' : {'string': 'Colors', 'type': 'char'},
+            'editable' : {'string': 'Editable', 'type': 'selection', 'selection': [["",""],["top","Top"],["bottom", "Bottom"]]},
             'groups' : {'string': 'Groups', 'type': 'seleciton_multi'},
         };
         var widget = _.keys(self.property.map);
@@ -704,6 +716,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     return _.include(res, property);
                 });
                 type_widget.selection = _PROPERTIES_ATTRIBUTES[property].selection
+                type_widget.type = _PROPERTIES_ATTRIBUTES[property].type
                 value = value instanceof Array ? value[1] : value;
                 self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + _PROPERTIES_ATTRIBUTES[property].string + ':</td>' + type_widget.render() + '</tr>');
                 type_widget.start();
@@ -752,26 +765,35 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
         this.dirty = false;
         this.name = name;
         this.required = false;
-        this.invalid = false;
+        this.is_invalid = false;
     },
     start: function () {
         this.$element = this.$element.find("td[id="+ this.name+"]");
         this.update_dom();
     },
     update_dom: function() {
-        this.$element.toggleClass('invalid', this.invalid);
+        this.$element.toggleClass('invalid', this.is_invalid);
         this.$element.toggleClass('required', this.required);
     },
     on_ui_change: function() {
+        this.validate();
         var value = this.get_value();
-        value = value instanceof Array ? value[1] : value;
-        if (this.required && !value) {
-            this.invalid = true;
+        if (this.is_invalid) {
+            this.is_invalid = true;
         } else {
-            this.invalid = false;
+            this.is_invalid = false;
         }
         this.dirty = true;
         this.update_dom();
+    },
+    validate: function() {
+        this.is_invalid = false;
+        try {
+            var value = openerp.web.parse_value(this.get_value(), this, '');
+            this.is_invalid = this.required && value === '';
+        } catch(e) {
+            this.is_invalid = true;
+        }
     },
     render: function() {
         return _.sprintf("<td id = %s>%s</td>", this.name, QWeb.render(this.template, {widget: this}))
@@ -785,7 +807,6 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
         this.$element.find("input").change(function() {
             self.on_ui_change();
         });
-
     },
     set_value: function(value) {
         if (value) {
@@ -853,6 +874,10 @@ openerp.web.ViewEditor.FieldSelectMulti = openerp.web.ViewEditor.FieldSelect.ext
          });
     }
 });
+openerp.web.ViewEditor.FieldFloat = openerp.web.ViewEditor.FieldChar.extend({
+
+});
+
 var _PROPERTIES = {
     'field' : ['name', 'string', 'required', 'readonly', 'domain', 'context', 'nolabel', 'completion',
                'colspan', 'widget', 'eval', 'ref', 'on_change', 'attrs', 'groups'],
@@ -904,5 +929,6 @@ openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
     'seleciton_multi' : 'openerp.web.ViewEditor.FieldSelectMulti',
     'selection' : 'openerp.web.ViewEditor.FieldSelect',
     'char' : 'openerp.web.ViewEditor.FieldChar',
+    'float' : 'openerp.web.ViewEditor.FieldFloat',
 });
 };
