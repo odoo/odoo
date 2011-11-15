@@ -736,7 +736,22 @@ class sale_order(osv.osv):
             'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
             'company_id': order.company_id.id,
         }
-
+    
+    def ship_exception(self, cr, uid, order, move_obj, line, move_id, proc_id):
+# FIXME: deals with potentially cancelled shipments, seems broken, see below
+# FIXME: was introduced by revid: mtr@mtr-20101125100355-0a1b7m792t63mssv
+        if order.state == 'shipping_except':
+            for pick in order.picking_ids:
+                for move in pick.move_lines:
+                    if move.state == 'cancel':
+                        mov_ids = move_obj.search(cr, uid, [('state', '=', 'cancel'),('sale_line_id', '=', line.id),('picking_id', '=', pick.id)])
+                        if mov_ids:
+                            for mov in move_obj.browse(cr, uid, mov_ids):
+                                # FIXME: the following seems broken: what if move_id doesn't exist? What if there are several mov_ids? Shouldn't that be a sum?
+                                move_obj.write(cr, uid, [move_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
+                                self.pool.get('procurement.order').write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
+        return True    
+    
     def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, *args):
         """Create the required procurements to supply sale order lines, also connecting
         the procurements to appropriate stock moves in order to bring the goods to the
@@ -778,19 +793,9 @@ class sale_order(osv.osv):
                 proc_ids.append(proc_id)
                 line.write({'procurement_id': proc_id})
 
-                # FIXME: deals with potentially cancelled shipments, seems broken, see below
-                # FIXME: was introduced by revid: mtr@mtr-20101125100355-0a1b7m792t63mssv
-                if order.state == 'shipping_except':
-                    for pick in order.picking_ids:
-                        for move in pick.move_lines:
-                            if move.state == 'cancel':
-                                mov_ids = move_obj.search(cr, uid, [('state', '=', 'cancel'),('sale_line_id', '=', line.id),('picking_id', '=', pick.id)])
-                                if mov_ids:
-                                    for mov in move_obj.browse(cr, uid, mov_ids):
-                                        # FIXME: the following seems broken: what if move_id doesn't exist? What if there are several mov_ids? Shouldn't that be a sum?
-                                        move_obj.write(cr, uid, [move_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
-                                        self.pool.get('procurement.order').write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
-
+                self.ship_exception(cr, uid, order, move_obj, line, move_id, proc_id)
+                #self._create_pickings_and_procurements(cr, uid, order, order.order_line, None, *args)
+                
         wf_service = netsvc.LocalService("workflow")
         if picking_id:
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
