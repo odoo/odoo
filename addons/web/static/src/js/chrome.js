@@ -242,10 +242,8 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
         this.$option_id = $('#' + option_id);
     },
     start: function() {
+        this._super();
         this.$element.html(QWeb.render("Database", this));
-        this.$element.closest(".openerp")
-                .removeClass("login-mode")
-                .addClass("database_block");
 
         var self = this;
         var fetch_db = this.rpc("/web/database/get_list", {}, function(result) {
@@ -266,22 +264,29 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
         this.$element.find('#db-restore').click(this.do_restore);
         this.$element.find('#db-change-password').click(this.do_change_password);
        	this.$element.find('#back-to-login').click(function() {
-            self.stop();
+            self.hide();
         });
     },
     stop: function () {
+        this.hide();
         this.$option_id.empty();
 
         this.$element
             .find('#db-create, #db-drop, #db-backup, #db-restore, #db-change-password, #back-to-login')
                 .unbind('click')
             .end()
-            .closest(".openerp")
-                .addClass("login-mode")
-                .removeClass("database_block")
-            .end()
             .empty();
         this._super();
+    },
+    show: function () {
+        this.$element.closest(".openerp")
+                .removeClass("login-mode")
+                .addClass("database_block");
+    },
+    hide: function () {
+        this.$element.closest(".openerp")
+                .addClass("login-mode")
+                .removeClass("database_block")
     },
     /**
      * Converts a .serializeArray() result into a dict. Does not bother folding
@@ -368,6 +373,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                     }
                     self.db_list.push(self.to_object(fields)['db_name']);
                     self.db_list.sort();
+                    self.widget_parent.set_db_list(self.db_list);
                     var form_obj = self.to_object(fields);
                     self.wait_for_newdb(result, {
                         password: form_obj['super_admin_pwd'],
@@ -397,6 +403,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                     }
                     $db_list.find(':selected').remove();
                     self.db_list.splice(_.indexOf(self.db_list, db, true), 1);
+                    self.widget_parent.set_db_list(self.db_list);
                     self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
                 });
             }
@@ -529,16 +536,16 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         var self = this;
         this.database = new openerp.web.Database(
                 this, "oe_database", "oe_db_options");
+        this.database.start();
 
         this.$element.find('#oe-db-config').click(function() {
-            self.database.start();
+            self.database.show();
         });
 
         this.$element.find("form").submit(this.on_submit);
 
         this.rpc("/web/database/get_list", {}, function(result) {
-            var tpl = openerp.web.qweb.render('Login_dblist', {db_list: result.db_list, selected_db: self.selected_db});
-            self.$element.find("input[name=db]").replaceWith(tpl)
+            self.set_db_list(result.db_list);
         }, 
         function(error, event) {
             if (error.data.fault_code === 'AccessDenied') {
@@ -546,6 +553,15 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
             }
         });
 
+    },
+    stop: function () {
+        this.database.stop();
+        this._super();
+    },
+    set_db_list: function (list) {
+        this.$element.find("[name=db]").replaceWith(
+            openerp.web.qweb.render('Login_dblist', {
+                db_list: list, selected_db: this.selected_db}))
     },
     on_login_invalid: function() {
         this.$element.closest(".openerp").addClass("login-mode");
