@@ -459,6 +459,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             });
                     break;
                 case "side-remove":
+                    self.do_save_update_arch
+                        (one_object, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "remove_node");
                     break;
                 case "side-edit":
                     var tr = $(this).closest("tr[id^='viewedit-']").find('a').text();
@@ -591,11 +593,13 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     $(next).after(arch1);
                     var re_insert_obj = child_list.splice(index, 1);
                     child_list.splice(index+1, 0, re_insert_obj[0]);
+                    var parent = $(arch1).parents();
                 } else if (move_direct == "up") {
                     var prev = $(arch1).prev();
                     $(prev).before(arch1);
                     var re_insert_obj = child_list.splice(index, 1);
                     child_list.splice(index-1, 0, re_insert_obj[0]);
+                    var parent = $(arch1).parents();
                 } else if (move_direct == "update_node") {
                     _.each(update_values, function(val){
                         if(val[0] == "required"){
@@ -608,6 +612,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     new_obj.id = obj.id,new_obj.child_id = obj.child_id;
                     self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']").find('a').text(new_obj.name);
                     child_list.splice(index, 1, new_obj);
+                    var parent = $(arch1).parents();
                 }else if(move_direct == "add_node"){
                      switch (update_values[1]) {
                         case "After":
@@ -620,8 +625,17 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             $(arch1).append(update_values[0]);
                             break;
                     }
+                    var parent = $(arch1).parents();
+                }else if(move_direct == "remove_node"){
+                    var parent = $(arch1).parents();
+                    $(arch1).remove();
+                    child_list.splice(index,1);
+                    var cur_tr = self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']");
+                    _.each(self.get_list_tr(cur_tr,obj.level), function(tr_element){
+                        tr_element.remove();
+                    });
+                    cur_tr.remove();
                 }
-                var parent = $(arch1).parents();
                 var convert_to_utf = (parent.length != 0)?parent[parent.length-1]:arch1;
                 convert_to_utf = QWeb.tools.xml_node_to_string(convert_to_utf);
                 convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
@@ -645,12 +659,18 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     on_expand: function(expand_img){
         var level = parseInt($(expand_img).closest("tr[id^='viewedit-']").attr('level'));
         var cur_tr = $(expand_img).closest("tr[id^='viewedit-']");
+        _.each(this.get_list_tr(cur_tr,level), function(tr_element){
+            tr_element.hide();
+        });
+    },
+    get_list_tr: function(cur_tr,level){
+        tr_list = [];
         while (1) {
             var nxt_tr = cur_tr.next();
             if (parseInt(nxt_tr.attr('level')) > level) {
                 cur_tr = nxt_tr;
-                nxt_tr.hide();
-            } else return nxt_tr;
+                tr_list.push(nxt_tr);
+            } else return tr_list;
         }
     },
     on_collapse: function(collapse_img, parent_child_id, id, main_object) {
@@ -807,7 +827,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     },
     render_new_field :function(id){
         var action = {
-            context: {'default_model_id':id, 'manual':true},//self.session.user_context,
+            context: {'default_model_id':id, 'manual':true},
             res_model: "ir.model.fields",
             views: [[false, 'form']],
             type: 'ir.actions.act_window',
@@ -818,6 +838,13 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         }
         var action_manager = new openerp.web.ActionManager(self);
         action_manager.do_action(action);
+        $.when(action_manager.do_action(action)).then(function() {
+            var add_controller = action_manager.dialog_viewmanager.views['form'].controller;
+            add_controller.do_set_readonly.add_last(function(){
+                var aa = controller;
+            });
+        });
+
     }
 });
 openerp.web.ViewEditor.Field = openerp.web.Class.extend({
