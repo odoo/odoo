@@ -251,7 +251,7 @@ class account_invoice(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'check_total': fields.float('Total', digits_compute=dp.get_precision('Account'), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
+        'check_total': fields.float('Verification Total', digits_compute=dp.get_precision('Account'), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
         'reconciled': fields.function(_reconciled, string='Paid/Reconciled', type='boolean',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50), # Check if we can remove ?
