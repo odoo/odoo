@@ -129,7 +129,8 @@
                         };
 
 
-                        $iframe = $(_("<iframe src='javascript:false;' name='%s' id='%s' style='display:block'></iframe>").sprintf(ifid, ifid));
+                        var display = options.openerp.debug ? 'block' : 'none';
+                        $iframe = $(_.str.sprintf("<iframe src='javascript:false;' name='%s' id='%s' style='display:%s'></iframe>", ifid, ifid, display));
 
 
                         // the first bind is fired up when the iframe is added to the DOM
