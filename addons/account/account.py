@@ -2186,6 +2186,7 @@ class account_model(osv.osv):
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         pt_obj = self.pool.get('account.payment.term')
+        period_obj = self.pool.get('account.period')
 
         if context is None:
             context = {}
@@ -2193,14 +2194,14 @@ class account_model(osv.osv):
         if datas.get('date', False):
             context.update({'date': datas['date']})
 
-        period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date', False))
-        if not period_id:
-            raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
-        period_id = period_id[0]
-
         move_date = context.get('date', time.strftime('%Y-%m-%d'))
         move_date = datetime.strptime(move_date,"%Y-%m-%d")
         for model in self.browse(cr, uid, ids, context=context):
+            ctx = context.copy()
+            ctx.update({'company_id': model.company_id.id})
+            period_ids = period_obj.find(cr, uid, dt=context.get('date', False), context=ctx)
+            period_id = period_ids and period_ids[0] or False
+            ctx.update({'journal_id': model.journal_id.id,'period_id': period_id})
             try:
                 entry['name'] = model.name%{'year': move_date.strftime('%Y'), 'month': move_date.strftime('%m'), 'date': move_date.strftime('%Y-%m')}
             except:
@@ -2249,9 +2250,7 @@ class account_model(osv.osv):
                     'date': context.get('date',time.strftime('%Y-%m-%d')),
                     'date_maturity': date_maturity
                 })
-                c = context.copy()
-                c.update({'journal_id': model.journal_id.id,'period_id': period_id})
-                account_move_line_obj.create(cr, uid, val, context=c)
+                account_move_line_obj.create(cr, uid, val, context=ctx)
 
         return move_ids
 

@@ -1625,7 +1625,7 @@
                 <tree string="Journal Entry Model Line" editable="bottom">
                     <field name="sequence"/>
                     <field name="name"/>
-                    <field name="account_id"/>
+                    <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation'), ('company_id', '=', parent.company_id)]"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="partner_id"/>
                     <field name="debit"/>
@@ -1644,12 +1644,12 @@
                 <form string="Journal Entry Model Line">
                     <field colspan="4" name="name" select="1"/>
                     <field name="sequence"/>
-                    <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                    <field name="account_id" domain="[('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation'), ('company_id', '=', parent.company_id)]"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="partner_id"/>
                     <field name="debit" select="1"/>
                     <field name="credit" select="1"/>
-                     <field name="quantity"/>
+                    <field name="quantity"/>
                     <field name="date_maturity"/>
                 </form>
             </field>
