@@ -110,6 +110,14 @@ def _child_get(node, self=None, tagname=None):
             yield n
 
 def _process_text(self, txt):
+        """Translate ``txt`` according to the language in the local context,
+           replace dynamic ``[[expr]]`` with their real value, then escape
+           the result for XML.
+
+           :param str txt: original text to translate (must NOT be XML-escaped)
+           :return: translated text, with dynamic expressions evaluated and
+                    with special XML characters escaped (``&,<,>``).
+        """
         if not self.localcontext:
             return str2xml(txt)
         if not txt:
@@ -130,10 +138,10 @@ def _process_text(self, txt):
                 except Exception:
                     pass
                 if isinstance(txt, basestring):
-                    result += str2xml(txt)
+                    result += txt
                 elif txt and (txt is not None) and (txt is not False):
                     result += ustr(txt)
-        return result
+        return str2xml(result)
 
 def text_get(node):
     return ''.join([ustr(n.text) for n in node])

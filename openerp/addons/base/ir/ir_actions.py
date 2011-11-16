@@ -117,7 +117,7 @@ class report_xml(osv.osv):
         'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
         'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
-        'auto': fields.boolean('Custom python parser', required=True),
+        'auto': fields.boolean('Custom python parser'),
 
         'header': fields.boolean('Add RML header', help="Add or not the coporate RML header"),
 
@@ -265,12 +265,13 @@ class act_window(osv.osv):
             help="Model name of the object to open in the view window"),
         'src_model': fields.char('Source Object', size=64,
             help="Optional model name of the objects on which this action should be visible"),
-        'target': fields.selection([('current','Current Window'),('new','New Window')], 'Target Window'),
+        'target': fields.selection([('current','Current Window'),('new','New Window'),('inline','Inline')], 'Target Window'),
         'view_type': fields.selection((('tree','Tree'),('form','Form')), string='View Type', required=True,
             help="View type: set to 'tree' for a hierarchical tree view, or 'form' for other views"),
         'view_mode': fields.char('View Mode', size=250, required=True,
             help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)"),
-        'usage': fields.char('Action Usage', size=32),
+        'usage': fields.char('Action Usage', size=32,
+            help="Used to filter menu and home actions from the user form."),
         'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
         'views': fields.function(_views_get_fnc, method=True, type='binary', string='Views',
                help="This function field computes the ordered list of views that should be enabled " \

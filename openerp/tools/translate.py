@@ -363,7 +363,7 @@ class TinyPoFile(object):
                           "msgid \"\"\n" \
                           "msgstr \"\"\n" \
                           '''"Project-Id-Version: %(project)s %(version)s\\n"\n''' \
-                          '''"Report-Msgid-Bugs-To: %(bugmail)s\\n"\n''' \
+                          '''"Report-Msgid-Bugs-To: \\n"\n''' \
                           '''"POT-Creation-Date: %(now)s\\n"\n'''        \
                           '''"PO-Revision-Date: %(now)s\\n"\n'''         \
                           '''"Last-Translator: <>\\n"\n''' \
@@ -377,7 +377,6 @@ class TinyPoFile(object):
                           % { 'project': release.description,
                               'version': release.version,
                               'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
-                              'bugmail': release.support_email,
                               'now': datetime.utcnow().strftime('%Y-%m-%d %H:%M')+"+0000",
                             }
                           )

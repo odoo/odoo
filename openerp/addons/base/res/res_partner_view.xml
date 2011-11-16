@@ -105,13 +105,16 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="contacts_kanban_view">
         <field name="name">res.partner.address.kanban</field>
         <field name="model">res.partner.address</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
-            <kanban >
+            <kanban>
+                <field name="color"/>
+                <field name="name"/>
+                <field name="email"/>
                 <templates>
                     <t t-name="kanban-box">
                         <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
@@ -133,22 +136,22 @@
                                     <table class="oe_kanban_table">
                                         <tr>
                                             <td valign="top" width="22" align="left">
-                                                <img src="/web/static/src/img/persons.png"/>
+                                                <img src="/base/static/src/img/kanban_partner.png" width="64" height="64"/>
                                             </td>
                                             <td valign="top" align="left">
                                                 <div class="oe_kanban_title2">
                                                     <field name="title"/>
-                                                    <t t-if="record.title.raw_value &amp;&amp; record.function.raw_value">,</t>
+                                                    <t t-if="record.title.raw_value and record.function.raw_value">,</t>
                                                     <field name="function"/>
                                                 </div>
                                                 <div class="oe_kanban_title3">
                                                     <field name="partner_id"/>
-                                                    <t t-if="record.partner_id.raw_value &amp;&amp; record.country_id.raw_value">,</t>
+                                                    <t t-if="record.partner_id.raw_value and record.country_id.raw_value">,</t>
                                                     <field name="country_id"/>
                                                 </div>
                                                 <div class="oe_kanban_title3">
                                                     <i><field name="email"/>
-                                                    <t t-if="record.phone.raw_value &amp;&amp; record.email.raw_value">,</t>
+                                                    <t t-if="record.phone.raw_value and record.email.raw_value">,</t>
                                                     <field name="phone"/></i>
                                                 </div>
                                             </td>
@@ -157,7 +160,7 @@
                                 </div>
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left">
-                                        <a string="Edit" icon="gtk-edit" type="edit"/>                                    
+                                        <a string="Edit" icon="gtk-edit" type="edit"/>
                                         <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         <a title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
                                             <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
@@ -422,7 +425,7 @@
                </search>
             </field>
         </record>
-        
+
         <!-- Partner Kanban View -->
         <record model="ir.ui.view" id="res_partner_kanban_view">
             <field name="name">RES - PARTNER KANBAN</field>
@@ -430,6 +433,9 @@
             <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban>
+                    <field name="color"/>
+                    <field name="name"/>
+                    <field name="email"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
@@ -450,23 +456,23 @@
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
                                         <table class="oe_kanban_table">
                                             <tr>
-                                                <td valign="top" width="22" align="left">
-                                                    <img src="/web/static/src/img/partner.png"/>
+                                                <td valign="top" width="64" align="left">
+                                                    <img src="/base/static/src/img/kanban_partner.png" width="64" height="64"/>
                                                 </td>
                                                 <td valign="top" align="left">
                                                     <div class="oe_kanban_title2">
                                                         <field name="title"/>
-                                                        <t t-if="record.title.raw_value &amp;&amp; record.country.raw_value">,</t>
+                                                        <t t-if="record.title.raw_value and record.country.raw_value">,</t>
                                                         <field name="country"/>
                                                     </div>
                                                     <div class="oe_kanban_title3">
                                                         <field name="subname"/>
-                                                        <t t-if="record.subname.raw_value &amp;&amp; record.function.raw_value">,</t>
+                                                        <t t-if="record.subname.raw_value and record.function.raw_value">,</t>
                                                         <field name="function"/>
                                                     </div>
                                                     <div class="oe_kanban_title3">
                                                         <i><field name="email"/>
-                                                        <t t-if="record.phone.raw_value &amp;&amp; record.email.raw_value">,</t>
+                                                        <t t-if="record.phone.raw_value and record.email.raw_value">,</t>
                                                         <field name="phone"/></i>
                                                     </div>
                                                 </td>
@@ -475,7 +481,7 @@
                                     </div>
                                     <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                         <div class="oe_kanban_left">
-                                            <a string="Edit" icon="gtk-edit" type="edit"/>                                    
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>
                                             <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                             <a title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
                                                 <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <record id="parameter_web_base_url" model="ir.config_parameter">
-            <field name="key">web.base.url</field>
-            <field name="value">http://localhost:8069</field>
-        </record>
         <record id="view_menu" model="ir.ui.view">
             <field name="name">ir.ui.menu.tree</field>
             <field name="model">ir.ui.menu</field>
@@ -1669,6 +1665,20 @@
         <record id="rateHNL" model="res.currency.rate">
             <field name="rate">25</field>
             <field name="currency_id" ref="HNL"/>
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+        </record>
+
+        <!-- Chilean peso -->
+        <record id="CLP" model="res.currency">
+            <field name="name">CLP</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateCLP" model="res.currency.rate">
+            <field name="rate">710</field>
+            <field name="currency_id" ref="CLP"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
     </data>

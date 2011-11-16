@@ -759,8 +759,8 @@ if __name__=='__main__':
     g.process(starting_node)
     g.scale(radius*3,radius*3, radius, radius)
 
-    import Image
-    import ImageDraw
+    from PIL import Image
+    from PIL import ImageDraw
     img = Image.new("RGB", (800, 600), "#ffffff")
     draw = ImageDraw.Draw(img)
 

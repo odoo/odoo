@@ -179,9 +179,12 @@ def dumpstacks(sig, frame):
 def setup_signal_handlers():
     """ Register the signal handler defined above. """
     SIGNALS = map(lambda x: getattr(signal, "SIG%s" % x), "INT TERM".split())
-    map(lambda sig: signal.signal(sig, signal_handler), SIGNALS)
     if os.name == 'posix':
+        map(lambda sig: signal.signal(sig, signal_handler), SIGNALS)
         signal.signal(signal.SIGQUIT, dumpstacks)
+    elif os.name == 'nt':
+        import win32api
+        win32api.SetConsoleCtrlHandler(lambda sig: signal_handler(sig, None), 1)
 
 def quit_on_signals():
     """ Wait for one or two signals then shutdown the server.
@@ -191,9 +194,12 @@ def quit_on_signals():
 
     """
     # Wait for a first signal to be handled. (time.sleep will be interrupted
-    # by the signal handler.)
-    while quit_signals_received == 0:
-        time.sleep(60)
+    # by the signal handler.) The try/except is for the win32 case.
+    try:
+        while quit_signals_received == 0:
+            time.sleep(60)
+    except KeyboardInterrupt, e:
+        pass
 
     if config['pidfile']:
         os.unlink(config['pidfile'])

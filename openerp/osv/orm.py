@@ -229,11 +229,6 @@ POSTGRES_CONFDELTYPES = {
     'SET DEFAULT': 'd',
 }
 
-def last_day_of_current_month():
-    today = datetime.date.today()
-    last_day = str(calendar.monthrange(today.year, today.month)[1])
-    return time.strftime('%Y-%m-' + last_day)
-
 def intersect(la, lb):
     return filter(lambda x: x in lb, la)
 
@@ -663,6 +658,10 @@ class BaseModel(object):
     _order = 'id'
     _sequence = None
     _description = None
+
+    # dict of {field:method}, with method returning the name_get of records
+    # to include in the _read_group, if grouped on this field
+    _group_by_full = {}
 
     # Transience
     _transient = False # True in a TransientModel
@@ -1261,7 +1260,7 @@ class BaseModel(object):
             nbrmax = position+1
 
             done = {}
-            for i in range(len(fields)):
+            for i, field in enumerate(fields):
                 res = False
                 if i >= len(line):
                     raise Exception(_('Please check that all your lines have %d columns.'
@@ -1270,11 +1269,11 @@ class BaseModel(object):
                 if not line[i]:
                     continue
 
-                field = fields[i]
                 if field[:len(prefix)] <> prefix:
                     if line[i] and skip:
                         return False
                     continue
+                field_name = field[len(prefix)]
 
                 #set the mode for m2o, o2m, m2m : xml_id/id/name
                 if len(field) == len(prefix)+1:
@@ -1290,7 +1289,7 @@ class BaseModel(object):
                     return [(6,0,res)]
 
                 # ID of the record using a XML ID
-                if field[len(prefix)]=='id':
+                if field_name == 'id':
                     try:
                         data_res_id = _get_id(model_name, line[i], current_module, 'id')
                     except ValueError:
@@ -1299,16 +1298,17 @@ class BaseModel(object):
                     continue
 
                 # ID of the record using a database ID
-                elif field[len(prefix)]=='.id':
+                elif field_name == '.id':
                     data_res_id = _get_id(model_name, line[i], current_module, '.id')
                     continue
 
+                field_type = fields_def[field_name]['type']
                 # recursive call for getting children and returning [(0,0,{})] or [(1,ID,{})]
-                if fields_def[field[len(prefix)]]['type']=='one2many':
-                    if field[len(prefix)] in done:
+                if field_type == 'one2many':
+                    if field_name in done:
                         continue
-                    done[field[len(prefix)]] = True
-                    relation = fields_def[field[len(prefix)]]['relation']
+                    done[field_name] = True
+                    relation = fields_def[field_name]['relation']
                     relation_obj = self.pool.get(relation)
                     newfd = relation_obj.fields_get( cr, uid, context=context )
                     pos = position
@@ -1317,7 +1317,7 @@ class BaseModel(object):
 
                     first = 0
                     while pos < len(datas):
-                        res2 = process_liness(self, datas, prefix + [field[len(prefix)]], current_module, relation_obj._name, newfd, pos, first)
+                        res2 = process_liness(self, datas, prefix + [field_name], current_module, relation_obj._name, newfd, pos, first)
                         if not res2:
                             break
                         (newrow, pos, w2, data_res_id2, xml_id2) = res2
@@ -1333,36 +1333,36 @@ class BaseModel(object):
 
                         res.append( (data_res_id2 and 1 or 0, data_res_id2 or 0, newrow) )
 
-
-                elif fields_def[field[len(prefix)]]['type']=='many2one':
-                    relation = fields_def[field[len(prefix)]]['relation']
+                elif field_type == 'many2one':
+                    relation = fields_def[field_name]['relation']
                     res = _get_id(relation, line[i], current_module, mode)
 
-                elif fields_def[field[len(prefix)]]['type']=='many2many':
-                    relation = fields_def[field[len(prefix)]]['relation']
+                elif field_type == 'many2many':
+                    relation = fields_def[field_name]['relation']
                     res = many_ids(line[i], relation, current_module, mode)
 
-                elif fields_def[field[len(prefix)]]['type'] == 'integer':
+                elif field_type == 'integer':
                     res = line[i] and int(line[i]) or 0
-                elif fields_def[field[len(prefix)]]['type'] == 'boolean':
+                elif field_type == 'boolean':
                     res = line[i].lower() not in ('0', 'false', 'off')
-                elif fields_def[field[len(prefix)]]['type'] == 'float':
+                elif field_type == 'float':
                     res = line[i] and float(line[i]) or 0.0
-                elif fields_def[field[len(prefix)]]['type'] == 'selection':
-                    for key, val in fields_def[field[len(prefix)]]['selection']:
+                elif field_type == 'selection':
+                    for key, val in fields_def[field_name]['selection']:
                         if tools.ustr(line[i]) in [tools.ustr(key), tools.ustr(val)]:
                             res = key
                             break
                     if line[i] and not res:
-                        logger.notifyChannel("import", netsvc.LOG_WARNING,
-                                _("key '%s' not found in selection field '%s'") % \
-                                        (tools.ustr(line[i]), tools.ustr(field[len(prefix)])))
-                        warning += [_("Key/value '%s' not found in selection field '%s'") % (tools.ustr(line[i]), tools.ustr(field[len(prefix)]))]
+                        logging.getLogger('orm.import').warn(
+                            _("key '%s' not found in selection field '%s'"),
+                            tools.ustr(line[i]), tools.ustr(field_name))
+                        warning.append(_("Key/value '%s' not found in selection field '%s'") % (
+                            tools.ustr(line[i]), tools.ustr(field_name)))
 
                 else:
                     res = line[i]
 
-                row[field[len(prefix)]] = res or False
+                row[field_name] = res or False
 
             result = (row, nbrmax, warning, data_res_id, xml_id)
             return result
@@ -1807,7 +1807,7 @@ class BaseModel(object):
         """
         _rec_name = self._rec_name
         if _rec_name not in self._columns:
-            _rec_name = self._columns.keys()[0]
+            _rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
 
         view = etree.Element('tree', string=self._description)
         etree.SubElement(view, 'field', name=_rec_name)
@@ -2476,6 +2476,24 @@ class BaseModel(object):
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
+
+        if groupby and groupby in self._group_by_full:
+            gids = [x[groupby][0] for x in data if x[groupby]]
+            stages = self._group_by_full[groupby](self, cr, uid, gids, domain, context)
+            # as both lists are sorted in the same way, we can merge in one pass
+            pos = 0
+            while stages and ((pos<len(data)) or (pos<len(stages))):
+                if (pos<len(data)) and (not data[pos][groupby] or (data[pos][groupby][0] == stages[pos][0])):
+                    pos+=1
+                    continue
+                val = dict.fromkeys(float_int_fields, False)
+                val.update({
+                    groupby: stages[pos],
+                    '__domain': [(groupby, '=', stages[pos][0])]+domain,
+                    groupby+'_count': 0L,
+                    '__context': {'group_by': groupby_list[1:]}
+                })
+                data.insert(pos, val)
         return data
 
     def _inherits_join_add(self, current_table, parent_model_name, query):
@@ -4598,7 +4616,7 @@ class BaseModel(object):
         :type default: dictionary
         :param context: context arguments, like lang, time zone
         :type context: dictionary
-        :return: True
+        :return: id of the newly created record
 
         """
         if context is None:

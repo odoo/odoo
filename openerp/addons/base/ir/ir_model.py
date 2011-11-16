@@ -124,12 +124,13 @@ class ir_model(osv.osv):
 
     # overridden to allow searching both on model name (model field)
     # and model description (name field)
-    def name_search(self, cr, uid, name='', args=None, operator='ilike',  context=None, limit=None):
+    def _name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
         if args is None:
             args = []
         domain = args + ['|', ('model', operator, name), ('name', operator, name)]
-        return super(ir_model, self).name_search(cr, uid, None, domain,
-                        operator=operator, limit=limit, context=context)
+        return self.name_get(cr, name_get_uid or uid,
+                             super(ir_model, self).search(cr, uid, domain, limit=limit, context=context),
+                             context=context)
 
 
     def unlink(self, cr, user, ids, context=None):
@@ -671,18 +672,20 @@ class ir_model_data(osv.osv):
         action_id = False
 
         if xml_id:
-            cr.execute('''SELECT imd.id, imd.res_id, md.id
+            cr.execute('''SELECT imd.id, imd.res_id, md.id, imd.model
                           FROM ir_model_data imd LEFT JOIN %s md ON (imd.res_id = md.id)
                           WHERE imd.module=%%s AND imd.name=%%s''' % model_obj._table,
                           (module, xml_id))
             results = cr.fetchall()
-            for imd_id2,res_id2,real_id2 in results:
+            for imd_id2,res_id2,real_id2,real_model in results:
                 if not real_id2:
                     self._get_id.clear_cache(self, uid, module, xml_id)
                     self.get_object_reference.clear_cache(self, uid, module, xml_id)
                     cr.execute('delete from ir_model_data where id=%s', (imd_id2,))
                     res_id = False
                 else:
+                    assert model == real_model, "External ID conflict, %s already refers to a `%s` record,"\
+                        " you can't define a `%s` record with this ID." % (xml_id, real_model, model)
                     res_id,action_id = res_id2,imd_id2
 
         if action_id and res_id:
