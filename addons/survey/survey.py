@@ -50,6 +50,7 @@ class survey(osv.osv):
         return data
 
     _columns = {
+        'id': fields.integer('ID'),
         'title': fields.char('Survey Title', size=128, required=1),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
         'date_open': fields.datetime('Survey Open Date', readonly=1),

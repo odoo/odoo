@@ -334,7 +334,7 @@ class product_template(osv.osv):
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
         if uom_id:
             return {'value': {'uom_po_id': uom_id}}
-        return False
+        return {}
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'uom_po_id' in vals:

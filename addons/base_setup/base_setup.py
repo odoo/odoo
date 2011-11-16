@@ -310,10 +310,7 @@ class base_setup_installer(osv.osv_memory):
                 cr.commit()
                 self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
 
-        if 'html' in context:
-            return {'type' : 'ir.actions.reload'}
-        else:
-            return {'type' : 'ir.actions.act_window_close'}
+        return self.pool.get('res.config').next(cr, uid, [], context=context)
 
 #Migrate data from another application Conf wiz
 

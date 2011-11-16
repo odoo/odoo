@@ -646,7 +646,7 @@ class hr_payslip(osv.osv):
                       'struct_id': False,
                       }
             }
-        if not employee_id:
+        if (not employee_id) or (not date_from) or (not date_to):
             return res
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
@@ -926,6 +926,10 @@ class hr_payslip_line(osv.osv):
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Payroll')),
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Payroll')),
         'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Payroll'),store=True ),
+    }
+
+    _defaults = {
+        'quantity': 1.0,
     }
 
 hr_payslip_line()

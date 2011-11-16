@@ -2001,8 +2001,11 @@ class account_tax(osv.osv):
                 cur_price_unit+=amount2
         return res
 
-    def compute_all(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
+    def compute_all(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None, force_excluded=False):
         """
+        :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of 
+            tax. It's used in encoding by line where you don't matter if you encoded a tax with that boolean to True or
+            False
         RETURN: {
                 'total': 0.0,                # Total without taxes
                 'total_included: 0.0,        # Total with taxes
@@ -2014,10 +2017,10 @@ class account_tax(osv.osv):
         tin = []
         tex = []
         for tax in taxes:
-            if tax.price_include:
-                tin.append(tax)
-            else:
+            if not tax.price_include or force_excluded:
                 tex.append(tax)
+            else:
+                tin.append(tax)
         tin = self.compute_inv(cr, uid, tin, price_unit, quantity, address_id=address_id, product=product, partner=partner)
         for r in tin:
             totalex -= r.get('amount', 0.0)

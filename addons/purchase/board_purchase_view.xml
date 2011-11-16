@@ -14,7 +14,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('date_order','&gt;',time.strftime('%Y-01-01 00:00:00')),('date_order','&lt;',time.strftime('%Y-12-31 23:59:59')), ('state','=','draft')]</field>
-            <field name="search_view_id" ref="purchase.purchase_order_tree"/>
         </record>
         <record id="purchase_waiting" model="ir.actions.act_window">
             <field name="name">Purchase Order Waiting Approval</field>
@@ -23,7 +22,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('date_order','&gt;',time.strftime('%Y-01-01 00:00:00')),('date_order','&lt;',time.strftime('%Y-12-31 23:59:59')), ('state','in',('wait','confirmed'))]</field>
-            <field name="search_view_id" ref="purchase.purchase_order_tree"/>
         </record>
 
 		<record model="ir.ui.view" id="view_purchase_order_monthly_categ_tree">
