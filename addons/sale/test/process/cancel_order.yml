@@ -1,7 +1,7 @@
 -
   In order to test the cancel sale order.
 -
-  I try to cancel Manual sale order.
+  I try to cancel sale order and It's order policy is Manual.
 -
   !python {model: sale.order}: |
     try:
@@ -9,7 +9,7 @@
     except Exception,e:
       pass
 -
-  I cancel the invoice of Manual order.
+  For cancel the sale order I have to cancel the invoice of sale order.
 -
   !python {model: sale.order}: |
     import netsvc
@@ -25,7 +25,7 @@
     assert order.invoice_ids[0].state == "cancel","order's related invoice should be cancelled"
     assert order.state == "invoice_except", "order should be in Invoice Exception state after cancel Invoice"
 -
-  I cancel the picking of Manual sale order.
+  Now need to cancel the rekated picking of sale order.
 -
   !python {model: sale.order}: |
     import netsvc
@@ -42,7 +42,7 @@
     assert order.picking_ids[0].state == "cancel","order's related invoice should be cancelled"
     assert order.state == "shipping_except", "order should be in Invoice Exception state after cancel Invoice"
 -
-  Now I am able to cancel sale order.
+  Now I am able to cancel this sale order.
 -
   !python {model: sale.order}: |
     self.action_cancel(cr, uid, [ref("order4")])
