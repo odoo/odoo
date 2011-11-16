@@ -376,7 +376,15 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             height: 500,
             buttons: {
                 "Inherited View": function() {
-                    //todo
+                    var selected_row = self.edit_xml_dialog.$element.find('.ui-selected');
+                    if (selected_row.length) {
+                        var xml_arch = QWeb.load_xml(selected_row.find('a').text());
+                        var tag_name = xml_arch.childNodes? xml_arch.childNodes[0].tagName: "";
+                        console.log(" xml_arch.childNodes[0]::::", xml_arch.childNodes[0].getAttribute());
+                        if (tag_name == 'field') {
+                            return true;
+                        }
+                    }
                 },
                 "Preview": function() {
                     var action = {
@@ -700,7 +708,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             'editable' : {'string': 'Editable', 'type': 'selection', 'selection': [["",""],["top","Top"],["bottom", "Bottom"]]},
             'groups' : {'string': 'Groups', 'type': 'seleciton_multi'},
         };
-        var widget = _.keys(self.property.map);
         var arch_val = self.get_object_by_id(clicked_tr_id,obj['main_object'], []);
         this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
         this.edit_widget = [];
@@ -746,7 +753,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     group_names[key]=res.name;
                     group_ids.push(res.id);
                 });
-            model_data
+                model_data
                 .read_slice([],{domain:[['res_id', 'in', group_ids],['model','=','res.groups']]})
                 .done(function(model_grp) {
                     _.each(model_grp,function(res_group){
@@ -807,7 +814,8 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
         }
     },
     get_value: function() {
-        return this.$element.find("input[id=" + this.name + "]").is(':checked') || null;
+        var value = this.$element.find("input[id=" + this.name + "]").is(':checked')
+        return  value? "1" : null;
     }
 });
 openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
