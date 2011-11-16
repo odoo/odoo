@@ -610,11 +610,10 @@ class _rml_flowable(object):
             for key in txt_n.attrib.keys():
                 if key in ('rml_except', 'rml_loop', 'rml_tag'):
                     del txt_n.attrib[key]
-            if True or not self._textual(n).isspace():
-                if not n.tag == 'bullet':
-                    txt_n.text = utils.xml2str(self._textual(n))
-                txt_n.tail = n.tail and utils._process_text(self, n.tail.replace('\n','')) or ''
-                rc1 += etree.tostring(txt_n)
+            if not n.tag == 'bullet':
+                txt_n.text = utils.xml2str(self._textual(n))
+            txt_n.tail = n.tail and utils.xml2str(utils._process_text(self, n.tail.replace('\n',''))) or ''
+            rc1 += etree.tostring(txt_n)
         return rc1
 
     def _table(self, node):

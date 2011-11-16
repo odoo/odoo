@@ -24,13 +24,14 @@ class Assert(YamlTag):
         super(Assert, self).__init__(**kwargs)
     
 class Record(YamlTag):
-    def __init__(self, model, id, use='id', **kwargs):
+    def __init__(self, model, id, use='id', view=True, **kwargs):
         self.model = model
         self.id = id
+        self.view = view
         super(Record, self).__init__(**kwargs)
     def __str__(self):
         return '!record {model: %s, id: %s}:' % (str(self.model,), str(self.id,))
-    
+
 class Python(YamlTag):
     def __init__(self, model, severity=logging.ERROR, name="", **kwargs):
         self.model= model

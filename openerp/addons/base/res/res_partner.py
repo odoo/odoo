@@ -150,7 +150,6 @@ class res_partner(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
         'customer': lambda *a: 1,
-        'address': [{'type': 'default'}],
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
         'color': 0,

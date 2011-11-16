@@ -229,11 +229,6 @@ POSTGRES_CONFDELTYPES = {
     'SET DEFAULT': 'd',
 }
 
-def last_day_of_current_month():
-    today = datetime.date.today()
-    last_day = str(calendar.monthrange(today.year, today.month)[1])
-    return time.strftime('%Y-%m-' + last_day)
-
 def intersect(la, lb):
     return filter(lambda x: x in lb, la)
 
@@ -663,6 +658,10 @@ class BaseModel(object):
     _order = 'id'
     _sequence = None
     _description = None
+
+    # dict of {field:method}, with method returning the name_get of records
+    # to include in the _read_group, if grouped on this field
+    _group_by_full = {}
 
     # Transience
     _transient = False # True in a TransientModel
@@ -1808,7 +1807,7 @@ class BaseModel(object):
         """
         _rec_name = self._rec_name
         if _rec_name not in self._columns:
-            _rec_name = self._columns.keys()[0]
+            _rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
 
         view = etree.Element('tree', string=self._description)
         etree.SubElement(view, 'field', name=_rec_name)
@@ -2477,6 +2476,24 @@ class BaseModel(object):
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
+
+        if groupby and groupby in self._group_by_full:
+            gids = [x[groupby][0] for x in data if x[groupby]]
+            stages = self._group_by_full[groupby](self, cr, uid, gids, domain, context)
+            # as both lists are sorted in the same way, we can merge in one pass
+            pos = 0
+            while stages and ((pos<len(data)) or (pos<len(stages))):
+                if (pos<len(data)) and (not data[pos][groupby] or (data[pos][groupby][0] == stages[pos][0])):
+                    pos+=1
+                    continue
+                val = dict.fromkeys(float_int_fields, False)
+                val.update({
+                    groupby: stages[pos],
+                    '__domain': [(groupby, '=', stages[pos][0])]+domain,
+                    groupby+'_count': 0L,
+                    '__context': {'group_by': groupby_list[1:]}
+                })
+                data.insert(pos, val)
         return data
 
     def _inherits_join_add(self, current_table, parent_model_name, query):
