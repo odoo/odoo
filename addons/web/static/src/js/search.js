@@ -41,7 +41,11 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         if (this.headless) {
             this.ready.resolve();
         } else {
-            this.rpc("/web/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+            this.rpc("/web/searchview/load", {
+                model: this.model,
+                view_id: this.view_id,
+                context: this.dataset.get_context()
+            }, this.on_loaded);
         }
         return this.ready.promise();
     },
