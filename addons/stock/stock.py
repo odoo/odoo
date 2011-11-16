@@ -1167,7 +1167,7 @@ class stock_picking(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids, context=context):
             new_picking = None
-            complete, too_few = [], []
+            complete, too_many, too_few = [], [], []
             move_product_qty, prodlot_ids, product_avail, partial_qty, product_uoms = {}, {}, {}, {}, {}
             for move in pick.move_lines:
                 if move.state in ('done', 'cancel'):
@@ -1184,8 +1184,11 @@ class stock_picking(osv.osv):
                 partial_qty[move.id] = uom_obj._compute_qty(cr, uid, product_uoms[move.id], product_qty, move.product_uom.id)
                 if move.product_qty == partial_qty[move.id]:
                     complete.append(move)
-                else:
+                elif move.product_qty > partial_qty[move.id]:
                     too_few.append(move)
+                else:
+                    too_many.append(move)
+
                 # Average price computation
                 if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
                     product = product_obj.browse(cr, uid, move.product_id.id)
@@ -1247,6 +1250,7 @@ class stock_picking(osv.osv):
                         {
                             'product_qty' : move.product_qty - partial_qty[move.id],
                             'product_uos_qty': move.product_qty - partial_qty[move.id], #TODO: put correct uos_qty
+                            
                         })
 
             if new_picking:
@@ -1255,6 +1259,19 @@ class stock_picking(osv.osv):
                 defaults = {'product_uom': product_uoms[move.id], 'product_qty': move_product_qty[move.id]}
                 if prodlot_ids.get(move.id):
                     defaults.update({'prodlot_id': prodlot_ids[move.id]})
+                move_obj.write(cr, uid, [move.id], defaults)
+            for move in too_many:
+                product_qty = move_product_qty[move.id]
+                defaults = {
+                    'product_qty' : product_qty,
+                    'product_uos_qty': product_qty, #TODO: put correct uos_qty
+                    'product_uom': product_uoms[move.id]
+                }
+                prodlot_id = prodlot_ids.get(move.id)
+                if prodlot_ids.get(move.id):
+                    defaults.update(prodlot_id=prodlot_id)
+                if new_picking:
+                    defaults.update(picking_id=new_picking)
                 move_obj.write(cr, uid, [move.id], defaults)
 
             # At first we confirm the new picking (if necessary)

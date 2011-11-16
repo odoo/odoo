@@ -129,16 +129,20 @@ class stock_partial_picking(osv.osv_memory):
             move_id = move.move_id.id
 
             #Quantiny must be Positive
-            if move.quantity <= 0:
+            if move.quantity < 0:
                 raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
-            #Pikcing move product UOM factor must be bigger with respective wizard move product uom factor
-            if move_uom.factor < process_uom.factor:
-                raise osv.except_osv(_('Warning'), _('You can not process in UOM "%s" which is smaller than UOM "%s" of the current move.') % (process_uom.name, move_uom.name))
+
             #Compute the wizard Quantity for respective move. 
             toprocess = uom_obj._compute_qty(cr, uid, process_uom.id, move.quantity, move_uom.id)
-            #Compare wizard Quantity with respective picking move quantity if wizard move quantity bigger then it's giving warning.
-            if toprocess > move.move_id.product_qty:
-                raise osv.except_osv(_('Warning'), _('You can not process "%s %s" as the qty is more than "%s %s" of respective move.') % (move.quantity, process_uom.name, move.move_id.product_qty, move_uom.name))
+
+            #Check rounding Quantity.ex.
+            #picking: 1kg, uom kg rounding = 0.01 (rounding to 10g), 
+            #partial delivery: 253g
+            #=> result= refused, as the qty left on picking would be 0.747kg and only 0.75 is accepted by the uom.
+            if process_uom.factor and process_uom.factor <> 0 and move_uom.factor:
+                without_rounding_qty = (move.quantity / process_uom.factor) * move_uom.factor
+                if toprocess <> without_rounding_qty:
+                    raise osv.except_osv(_('Warning'), _('Quantity left on picking would be "%s %s" but "%s %s" is accepted by the uom.') % (without_rounding_qty, process_uom.name, toprocess, process_uom.name))
 
             if not move_id:
                 seq_obj_name =  'stock.picking.' + picking_type
