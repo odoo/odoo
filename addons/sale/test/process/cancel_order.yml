@@ -25,12 +25,21 @@
     except:
       pass
 -
-  I try to cancel the invoice.
+  I cancel the invoice of order4.
+-
+  !python {model: sale.order}: |
+    import netsvc
+    invoice_ids = [x.id for x in self.browse(cr, uid, ref("order4")).invoice_ids]
+    wf_service = netsvc.LocalService("workflow")
+    for invoice in invoice_ids:
+      wf_service.trg_validate(uid, 'account.invoice', invoice, 'invoice_cancel', cr)
+-
+  I check order status in "Invoice Exception" and related invoice is in cancel state.
 -
   !python {model: sale.order}: |
     order = self.browse(cr, uid, ref("order4"))
-    self.action_invoice_cancel(cr, uid, [ref("order4")], context)
-    self.action_invoice_end(cr, uid, [ref('order4')], context)
+    assert order.invoice_ids[0].state == "cancel","order's related invoice should be cancelled"
+    assert order.state == "invoice_except", "order should be in Invoice Exception state after cancel Invoice"
 -
   Now I am able to cancel sale order.
 -
