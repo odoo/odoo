@@ -1,7 +1,7 @@
 -
   In order to test effect of operations on different work order for a Production Order I create a production order.
 -
-  !record {model: mrp.production, id: mrp_production_mo0}:
+  !record {model: mrp.production, id: mrp_production_op}:
     company_id: base.main_company
     date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     location_dest_id: stock.stock_location_stock
@@ -9,41 +9,33 @@
     name: MO/0123456
     product_id: product.product_product_pc1
     product_qty: 5.0
-    product_uom: product.product_uom_unit
     product_uos_qty: 5.0
     allow_reorder: True
 -
   I am computing the data.
 -
   !python {model: mrp.production}: |
-    self.action_compute(cr, uid, [ref("mrp_production_mo0")], {"lang": "en_US", "tz":
+    self.action_compute(cr, uid, [ref("mrp_production_op")], {"lang": "en_US", "tz":
       False, "search_default_current": 1, "active_model": "ir.ui.menu", "active_ids":
       [ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),
       })
 -
-  Now I confirm my production order.
+  Now I confirm the production order.
 -
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo0}
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_op}
 -
   I check that there is one Work order generated related to my production order.
 -
   !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _
-    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','draft')])
+    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_op')),('state','=','draft')])
     assert order_id, _('No Work order define for this production order!')
 -
   The scheduler runs.
 -
   !function {model: procurement.order, name: run_scheduler}:
     - model: procurement.order
-      search: "[('state','=','confirmed')]"
--
-  I am checking Internal picking.
--
-  !python {model: stock.picking}: |
-    from tools.translate import _
-    pick_ids = self.search(cr, uid, [('state','!=','done'),('type','=','internal')])
-    assert pick_ids, _('No Internal Pickings!')
+      search: "[]"
 -
   I see that there is a manufacturing order for the sub product CPU_GEN of PC1 with ready state.
 -
@@ -100,7 +92,7 @@
 -
   !python {model: mrp.production}: |
     from tools.translate import _
-    prod_ids = self.search(cr, uid, [('id','=',ref('mrp_production_mo0')),('state','=','ready')])
+    prod_ids = self.search(cr, uid, [('id','=',ref('mrp_production_op')),('state','=','ready')])
     assert prod_ids, _('Production order is not ready!')
 -
   I check that both internal pickings are done.
@@ -112,13 +104,13 @@
 -
   Now I start my first production order.
 -
-  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo0}
+  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_op}
 -
   I check that the related work order is in progress state.
 -
   !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _
-    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','startworking')])
+    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_op')),('state','=','startworking')])
     assert order_id, _('Work order not started yet!')
 -
   I am creating a mrp.product.produce record.
@@ -134,22 +126,22 @@
     prod_order_ids = prod_obj.search(cr, uid, [('state','=','in_production')])
     self.do_produce(cr, uid, [ref("mrp_product_produce_0")], {"lang": "en_US", "tz":
       False, "search_default_current": 1, "active_model": "mrp.production", "active_ids":
-      [ref("mrp_production_mo0")], "active_id": ref("mrp_production_mo0"), })
+      [ref("mrp_production_op")], "active_id": ref("mrp_production_op"), })
 -
   I check the related work order is done.
 -
   !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _
-    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','done')])
+    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_op')),('state','=','done')])
     assert order_id, _('Work order not done yet!')
 -
   Calculates start date for stock moves finding interval from resource calendar.
 -
   !python {model: mrp.production}: |
-    self._move_pass(cr, uid, [ref('mrp_production_mo0')], context=None)
+    self._move_pass(cr, uid, [ref('mrp_production_op')], context=None)
 -
   Calculates planned end date of production order.
 -
   !python {model: mrp.production}: |
-    mo = self.browse(cr, uid, ref("mrp_production_mo0"))
-    self._production_date_end(cr, uid, [ref("mrp_production_mo0")], mo.date_planned, False, context=None)
+    mo = self.browse(cr, uid, ref("mrp_production_op"))
+    self._production_date_end(cr, uid, [ref("mrp_production_op")], mo.date_planned, False, context=None)
