@@ -235,7 +235,7 @@ class account_voucher(osv.osv):
             ('pay_now','Pay Directly'),
             ('pay_later','Pay Later or Group Funds'),
         ],'Payment', select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'tax_id':fields.many2one('account.tax', 'Tax', readonly=True, states={'draft':[('readonly',False)]}),
+        'tax_id': fields.many2one('account.tax', 'Tax', readonly=True, states={'draft':[('readonly',False)]}, domain=[('price_include','=', False)], help="Only for tax excluded from price"),
         'pre_line':fields.boolean('Previous Payments ?', required=False),
         'date_due': fields.date('Due Date', readonly=True, select=True, states={'draft':[('readonly',False)]}),
         'payment_option':fields.selection([
@@ -518,7 +518,7 @@ class account_voucher(osv.osv):
             elif currency_id == company_currency:
                 #otherwise treatments is the same but with other field names
                 if line.amount_residual == price:
-                    #if the amount residual is equal the amount voucher, we assign it to that voucher 
+                    #if the amount residual is equal the amount voucher, we assign it to that voucher
                     #line, whatever the other voucher lines
                     move_line_found = line.id
                     break
@@ -696,8 +696,8 @@ class account_voucher(osv.osv):
         Select the context to use accordingly if it needs to be multicurrency or not.
 
         :param voucher_id: Id of the actual voucher
-        :return: The returned context will be the same as given in parameter if the voucher currency is the same 
-                 than the company currency, otherwise it's a copy of the parameter with an extra key 'date' containing 
+        :return: The returned context will be the same as given in parameter if the voucher currency is the same
+                 than the company currency, otherwise it's a copy of the parameter with an extra key 'date' containing
                  the date of the voucher.
         :rtype: dict
         """
@@ -726,7 +726,7 @@ class account_voucher(osv.osv):
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         debit = credit = 0.0
         # TODO: is there any other alternative then the voucher type ??
-        # ANSWER: We can have payment and receipt "In Advance". 
+        # ANSWER: We can have payment and receipt "In Advance".
         # TODO: Make this logic available.
         # -for sale, purchase we have but for the payment and receipt we do not have as based on the bank/cash journal we can not know its payment or receipt
         if voucher_brw.type in ('purchase', 'payment'):
@@ -769,7 +769,7 @@ class account_voucher(osv.osv):
         elif voucher_brw.journal_id.sequence_id:
             name = seq_obj.next_by_id(cr, uid, voucher_brw.journal_id.sequence_id.id)
         else:
-            raise osv.except_osv(_('Error !'), 
+            raise osv.except_osv(_('Error !'),
                         _('Please define a sequence on the journal !'))
         if not voucher_brw.reference:
             ref = name.replace('/','')
@@ -834,7 +834,7 @@ class account_voucher(osv.osv):
     def voucher_move_line_create(self, cr, uid, voucher_id, line_total, move_id, company_currency, current_currency, context=None):
         '''
         Create one account move line, on the given account move, per voucher line where amount is not 0.0.
-        It returns Tuple with tot_line what is total of difference between debit and credit and 
+        It returns Tuple with tot_line what is total of difference between debit and credit and
         a list of lists with ids to be reconciled with this format (total_deb_cred,list_of_lists).
 
         :param voucher_id: Voucher id what we are working with
@@ -905,7 +905,7 @@ class account_voucher(osv.osv):
             voucher_line = move_line_obj.create(cr, uid, move_line)
             rec_ids = [voucher_line, line.move_line_id.id]
 
-            if amount_residual: 
+            if amount_residual:
                 # Change difference entry
                 exch_lines = self._get_exchange_lines(cr, uid, line, move_id, amount_residual, company_currency, current_currency, context=context)
                 new_id = move_line_obj.create(cr, uid, exch_lines[0],context)
