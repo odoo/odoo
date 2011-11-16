@@ -11,43 +11,48 @@
   !assert {model: sale.order, id: order, string: The amount of the Quotation is not correctly computed}:
     - sum([l.price_subtotal for l in order_line]) == amount_untaxed
 -
-  I confirm the Quotation1.
+  For test Postpaid order policy, I confirm the Quotation1.
 -
   !workflow {model: sale.order, action: order_confirm, ref: order}
 -
-  I confirm the Quotation2.
+  After confirmed Quotation1, I check that related Packing created and it's linked with order.
+-
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("order"))
+    assert sale_order.picking_ids, "Picking is not created for this sale order"
+-
+  For test Picking order policy, I confirm the Quotation2.
 -
   !workflow {model: sale.order, action: order_confirm, ref: order2}
 -
-  I confirm the Quotation3.
+  After confirmed Quotation2, I check that related Packing created and it's linked with order.
+-
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("order2"))
+    assert sale_order.picking_ids, "Picking is not created for this sale order"
+-
+  For test Prepaid order policy, I confirm the Quotation3.
 -
   !workflow {model: sale.order, action: order_confirm, ref: order3}
 -
-  I confirm the Quotation4.
+  After confirmed Quotation3, I check that related Invoice created and it's linked with order.
+-
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("order3"))
+    assert sale_order.invoice_ids, "Invoice is not created for this sale order"
+-
+  For test the Manual order policy, I confirm the Quotation4.
 -
   !workflow {model: sale.order, action: order_confirm, ref: order4}
 -
-  After confirmed Quotation4, I create the Invoice for it because it's manual policy.
-  and check that Invoice created.
+  After confirmed Quotation4, I create the Invoice for it and check that Invoice created.
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("order4"))
     self.manual_invoice(cr, uid, [ref('order4')])
     assert so.invoice_ids, "Invoices has not been generated for this sale order"
 -
-  After confirmed Quotation, I check the Packing as well as Invoice created in related sale orders .
--
-  !python {model: sale.order}: |
-    sale_order1 = self.browse(cr, uid, ref("order"))
-    sale_order2 = self.browse(cr, uid, ref("order2"))
-    sale_order3 = self.browse(cr, uid, ref("order3"))
-    sale_order4 = self.browse(cr, uid, ref("order4"))
-    assert sale_order1.picking_ids, "Picking not created for sale order1"
-    assert sale_order4.picking_ids, "Picking not created for sale order4"
-    assert sale_order2.picking_ids, "Picking not created for sale order2"
-    assert sale_order3.invoice_ids, "Invoice not created for sale order3"
--
-  I check that Invoice details after confirmed Quotation3.
+  I check that Invoice details are correspond with Quotation3.
 -
   !python {model: sale.order}: |
     from datetime import datetime, timedelta
@@ -81,7 +86,7 @@
             assert inv.note == so.notes,"Notes is not correspond"
             assert inv.account_id.id == ac,"There is no income account defined for this product"
 -
-  I check that Packing details after confirmed Quotation1.
+  I check that Packing details after correspond with Quotation1.
 -
   !python {model: sale.order}: |
     from datetime import datetime, timedelta

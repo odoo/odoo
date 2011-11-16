@@ -1,0 +1,32 @@
+-
+  In order to test the sale order working with procurements I will take a Quotation which some
+  products with different supply method and procurement method.
+-
+  I confirm the order5.
+-
+  !workflow {model: sale.order, action: order_confirm, ref: order5}
+-
+  I check that procurement is generated.
+-
+  !python {model: procurement.order}: |
+    from tools.translate import _
+    so = self.pool.get('sale.order').browse(cr, uid, ref("order5"))
+    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
+    assert proc_ids, _('No Procurements!')
+-
+  I run the scheduler.
+-
+  !function {model: procurement.order, name: run_scheduler}:
+    - model: procurement.order
+      search: "[('state','=','confirmed')]"
+-
+  I check that the procurement for the product PC2 is in exception state.
+  As PC2 product's supply method is produce and the BoM is not defined.
+-
+  !python {model: procurement.order}: |
+    from tools.translate import _
+    proc_ids = self.search(cr, uid, [('state','=','exception'),('product_id','=',ref('product.product_product_pc2'))])
+    try:
+      assert not proc_ids, _('There is no procurement in exception state!')
+    except:
+      pass

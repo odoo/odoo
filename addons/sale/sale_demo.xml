@@ -178,6 +178,16 @@
             <field name="type">make_to_order</field>
             <field name="delay">15</field>
         </record>
+        <record id="line52" model="sale.order.line">
+            <field name="order_id" ref="order5"/>
+            <field name="name">[CPU1] Processor AMD Athlon XP 1800+</field>
+            <field name="product_id" ref="product.product_product_cpu1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">75</field>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uos_qty">3</field>
+            <field name="type">make_to_stock</field>
+        </record>
         <workflow action="order_confirm" model="sale.order" ref="order5"/>
 
         <!--Resource: sale.order-->
