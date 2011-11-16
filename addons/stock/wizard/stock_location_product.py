@@ -34,13 +34,14 @@ class stock_location_product(osv.osv_memory):
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param ids: An ID or list of IDs if we want more than one 
+         @param ids: An ID or list of IDs (but only the first ID will be processed)
          @param context: A standard dictionary 
          @return: Invoice type
         """
         if context is None:
             context = {}
-        for location_obj in self.read(cr, uid, ids, ['from_date', 'to_date'], context=context):
+        location_products = self.read(cr, uid, ids, ['from_date', 'to_date'], context=context)
+        if location_products:
             return {
                 'name': False, 
                 'view_type': 'form', 
@@ -48,8 +49,8 @@ class stock_location_product(osv.osv_memory):
                 'res_model': 'product.product', 
                 'type': 'ir.actions.act_window', 
                 'context': {'location': context.get('active_id'), 
-                       'from_date': location_obj['from_date'], 
-                       'to_date': location_obj['to_date']}, 
+                       'from_date': location_products[0]['from_date'], 
+                       'to_date': location_products[0]['to_date']}, 
                 'domain': [('type', '<>', 'service')], 
             }
 
