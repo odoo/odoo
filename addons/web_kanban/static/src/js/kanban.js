@@ -23,6 +23,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
         this.form_dialog.on_form_dialog_saved.add_last(this.do_reload);
         this.aggregates = {};
+        this.group_operators = ['avg', 'max', 'min', 'sum', 'count'];
         this.qweb = new QWeb2.Engine();
         this.qweb.debug = openerp.connection.debug;
         this.qweb.default_dict = {
@@ -38,12 +39,13 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
         this.$groups = this.$element.find('.oe_kanban_groups tr');
         var context = new openerp.web.CompoundContext(this.dataset.get_context());
-        return this.rpc('/web/view/load', {
+        this.rpc('/web/view/load', {
                 'model': this.dataset.model,
                 'view_id': this.view_id,
                 'view_type': 'kanban',
                 context: context
             }, this.on_loaded);
+        this.do_reload();
     },
     on_loaded: function(data) {
         this.fields_view = data;
@@ -58,22 +60,26 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 this.transform_qweb_template(child);
                 this.qweb.add_template(openerp.web.json_node_to_xml(child));
                 break;
+            } else if (child.tag === 'field') {
+                this.extract_aggregates(child);
+            }
+        }
+    },
+    extract_aggregates: function(node) {
+        for (var j = 0, jj = this.group_operators.length; j < jj;  j++) {
+            if (node.attrs[this.group_operators[j]]) {
+                this.aggregates[node.attrs.name] = node.attrs[this.group_operators[j]];
+                break;
             }
         }
     },
     transform_qweb_template: function(node) {
-        var qweb_prefix = QWeb.prefix,
-            group_operator = ['avg', 'max', 'min', 'sum', 'count'];
+        var qweb_prefix = QWeb.prefix;
         switch (node.tag) {
             case 'field':
                 node.tag = qweb_prefix;
                 node.attrs[qweb_prefix + '-esc'] = 'record.' + node.attrs['name'] + '.value';
-                for (var j = 0, jj = group_operator.length; j < jj;  j++) {
-                    if (node.attrs[group_operator[j]]) {
-                        this.aggregates[node.attrs.name] = node.attrs[group_operator[j]];
-                        break;
-                    }
-                }
+                this.extract_aggregates(node);
                 break
             case 'button':
             case 'a':
@@ -87,13 +93,13 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                     });
                     if (node.attrs['data-states']) {
                         var states = _.map(node.attrs['data-states'].split(','), function(state) {
-                            return "record.state.raw_value == '" + _.trim(state) + "'";
+                            return "record.state.raw_value == '" + _.str.trim(state) + "'";
                         });
                         node.attrs[qweb_prefix + '-if'] = states.join(' or ');
                     }
                     if (node.attrs['data-kanban_states']) {
                         var states = _.map(node.attrs['data-kanban_states'].split(','), function(state) {
-                            return "record.kanban_state.raw_value == '" + _.trim(state) + "'";
+                            return "record.kanban_state.raw_value == '" + _.str.trim(state) + "'";
                         });
                         node.attrs[qweb_prefix + '-if'] = states.join(' or ');
                     }
@@ -372,7 +378,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
         var self = this,
             new_record = {};
         _.each(record, function(value, name) {
-            var r = _.clone(self.view.fields_view.fields[name]);
+            var r = _.clone(self.view.fields_view.fields[name] || {});
             r.raw_value = value;
             r.value = openerp.web.format_value(value, r);
             new_record[name] = r;
@@ -385,7 +391,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             widget: this
         }
         for (var p in this) {
-            if (_.startsWith(p, 'kanban_')) {
+            if (_.str.startsWith(p, 'kanban_')) {
                 ctx[p] = _.bind(this[p], this);
             }
         }
@@ -497,8 +503,10 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     },
     kanban_gravatar: function(email, size) {
         size = size || 22;
+        email = _.str.trim(email || '').toLowerCase();
+        var default_ = _.str.isBlank(email) ? 'mm' : 'identicon';
         var email_md5 = $.md5(email);
-        return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size;
+        return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size + '&d=' + default_;
     },
     kanban_image: function(model, field, id) {
         id = id || '';

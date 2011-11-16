@@ -716,7 +716,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 if (parseInt(cookie_val, 10) !== token) { continue; }
 
                 // clear cookie
-                document.cookie = _.sprintf("%s=;expires=%s;path=/",
+                document.cookie = _.str.sprintf("%s=;expires=%s;path=/",
                     cookie_name, new Date().toGMTString());
                 if (options.success) { options.success(); }
                 complete();
@@ -887,8 +887,11 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      */
     render_element: function() {
         var rendered = this.render();
-        if (rendered || rendered === "")
-            this.$element = $(rendered);
+        if (rendered) {
+            var elem = $(rendered);
+            this.$element.replaceWith(elem);
+            this.$element = elem;
+        }
         return this;
     },
     /**
@@ -900,7 +903,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
     render: function (additional) {
         if (this.template)
             return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
-        return false;
+        return null;
     },
     /**
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
@@ -912,12 +915,6 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      * @returns {jQuery.Deferred}
      */
     start: function() {
-        /* The default implementation is only useful for retro-compatibility, it is
-        not necessary to call it using _super() when using Widget for new components. */
-        if (!this.$element) {
-            var tmp = document.getElementById(this.element_id);
-            this.$element = tmp ? $(tmp) : undefined;
-        }
         return $.Deferred().done().promise();
     },
     /**
@@ -996,7 +993,7 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
         this.parameters = {"direction": 'ltr',
                         "date_format": '%m/%d/%Y',
                         "time_format": '%H:%M:%S',
-                        "grouping": "[]",
+                        "grouping": [],
                         "decimal_point": ".",
                         "thousands_sep": ","};
     },
@@ -1012,6 +1009,8 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
         });
         if (translation_bundle.lang_parameters) {
             this.parameters = translation_bundle.lang_parameters;
+            this.parameters.grouping = py.eval(
+                    this.parameters.grouping).toJSON();
         }
     },
     add_module_translation: function(mod) {
@@ -1056,7 +1055,7 @@ openerp.web.qweb.format_text_node = function(s) {
     if (translation && translation.value === 'off') {
         return s;
     }
-    var ts = _.trim(s);
+    var ts = _.str.trim(s);
     if (ts.length === 0) {
         return s;
     }

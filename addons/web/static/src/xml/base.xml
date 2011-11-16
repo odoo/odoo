@@ -18,7 +18,7 @@
     </div>
 </t>
 <t t-name="Interface">
-    <div id="oe_loading" class="loading"></div>
+    <div id="oe_loading"></div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
         <td colspan="2" valign="top">
@@ -63,7 +63,9 @@
     </table>
 </t>
 <t t-name="Loading">
+    <div class="loading">
     Loading...
+    </div>
 </t>
 <t t-name="Database">
     <ul class="db_options" style="padding: 0px; display: inline;">
@@ -638,7 +640,8 @@
     <t t-foreach="columns" t-as="column">
         <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
-            t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')"
+            t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')
+                         + (column.tag === 'button' ? ' oe-button' : '')"
             t-att-data-field="column.id">
             <t t-raw="render_cell(record, column)"/>
         </td>
@@ -729,6 +732,17 @@
     </tr>
     </table>
 </t>
+<t t-name="WidgetGroup">
+    <t t-if="widget.string">
+    <fieldset class="oe_group_box">
+        <legend><t t-esc="widget.string"/></legend>
+        <t t-call="WidgetFrame"/>
+    </fieldset>
+    </t>
+    <t t-if="!widget.string">
+        <t t-call="WidgetFrame"/>
+    </t>
+</t>
 <t t-name="WidgetNotebook">
     <ul>
         <li t-foreach="widget.pages" t-as="page">
@@ -739,6 +753,19 @@
     </ul>
     <t t-foreach="widget.pages" t-as="page">
         <t t-raw="page.render()"/>
+    </t>
+</t>
+<t t-name="WidgetNotebook.tooltip">
+    <t t-foreach="widget.pages" t-as="page">
+        <div class="oe_tooltip_string">
+            Notebook Page "<t t-esc="page.string"/>"
+        </div>
+        <ul class="oe_tooltip_technical">
+            <li data-item="modifiers">
+                <span class="oe_tooltip_technical_title">Modifiers:</span>
+                <t t-esc="page.node.attrs.modifiers"/>
+            </li>
+        </ul>
     </t>
 </t>
 <t t-name="WidgetNotebookPage">
@@ -753,12 +780,71 @@
 </t>
 <t t-name="WidgetLabel">
     <label t-att-for="widget.element_id"
-           t-attf-class="oe_label#{widget.help ? '_help' : ''} oe_align_#{widget.align}"
-           t-att-title="widget.help">
+           t-attf-class="oe_label#{widget.help ? '_help' : ''} oe_align_#{widget.align}">
         <t t-esc="widget.string"/>
         <span t-if="widget.help">?</span>
         <t t-if="widget.string and widget.node.tag != 'label'">:</t>
     </label>
+</t>
+<t t-name="WidgetLabel.tooltip">
+    <div class="oe_tooltip_string" t-if="widget.string">
+        <t t-esc="widget.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
+    </div>
+    <p t-if="widget.help" class="oe_tooltip_help">
+        <t t-esc="widget.help"/>
+    </p>
+    <ul t-if="debug" class="oe_tooltip_technical">
+        <li data-item="field" t-if="widget.name">
+            <span class="oe_tooltip_technical_title">Field:</span>
+            <t t-esc="widget.name"/>
+        </li>
+        <li data-item="object" t-if="widget.view and widget.view.fields_view">
+            <span class="oe_tooltip_technical_title">Object:</span>
+            <t t-esc="widget.view.fields_view.model"/>
+        </li>
+        <li data-item="type" t-if="widget.field">
+            <span class="oe_tooltip_technical_title">Type:</span>
+            <t t-esc="widget.field.type"/>
+        </li>
+        <li t-if="widget.node.attrs.widget" data-item="widget">
+            <span class="oe_tooltip_technical_title">Widget:</span>
+            <t t-esc="widget.node.attrs.widget"/>
+        </li>
+        <li t-if="widget.node.attrs.size || (widget.field and widget.field.size)" data-item="size">
+            <span class="oe_tooltip_technical_title">Size:</span>
+            <t t-esc="widget.node.attrs.size || widget.field.size"/>
+        </li>
+        <li t-if="widget.node.attrs.context" data-item="context">
+            <span class="oe_tooltip_technical_title">Context:</span>
+            <t t-esc="widget.node.attrs.context_string"/>
+        </li>
+        <li t-if="widget.node.attrs.domain" data-item="domain">
+            <span class="oe_tooltip_technical_title">Domain:</span>
+            <t t-esc="widget.node.attrs.domain_string"/>
+        </li>
+        <li t-if="widget.node.attrs.modifiers and widget.node.attrs.modifiers != '{}'" data-item="modifiers">
+            <span class="oe_tooltip_technical_title">Modifiers:</span>
+            <t t-esc="widget.node.attrs.modifiers"/>
+        </li>
+        <li t-if="widget.node.attrs.on_change" data-item="on_change">
+            <span class="oe_tooltip_technical_title">On change:</span>
+            <t t-esc="widget.node.attrs.on_change"/>
+        </li>
+        <li t-if="widget.field and widget.field.relation" data-item="relation">
+            <span class="oe_tooltip_technical_title">Relation:</span>
+            <t t-esc="widget.field.relation"/>
+        </li>
+        <li t-if="widget.field and widget.field.selection" data-item="selection">
+            <span class="oe_tooltip_technical_title">Selection:</span>
+            <ul>
+                <li t-foreach="widget.field.selection" t-as="option">
+                    [<t t-esc="option[0]"/>]
+                    <t t-if="option[1]"> - </t>
+                    <t t-esc="option[1]"/>
+                </li>
+            </ul>
+        </li>
+    </ul>
 </t>
 <t t-name="WidgetParagraph">
     <p t-attf-class="oe_form_paragraph oe_align_#{widget.align}"><t t-esc="widget.string"/></p>
@@ -767,7 +853,7 @@
     <input t-att-type="widget.password ? 'password' : 'text'" size="1"
         t-att-name="widget.name"
         t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type}"
+        t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
     />
     <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
@@ -775,7 +861,7 @@
 <t t-name="FieldChar.readonly">
     <div
         t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type}"
+        t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%">
     </div>
 </t>
@@ -995,12 +1081,41 @@
     </table>
 </t>
 <t t-name="WidgetButton">
-    <button type="button"
-        t-att-title="widget.help"
-        style="width: 100%" class="button">
+    <button type="button" style="width: 100%" class="button">
         <img t-if="widget.node.attrs.icon" t-att-src="'/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
+</t>
+<t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
+    <t t-jquery="div.oe_tooltip_string" t-operation="replace">
+        <div class="oe_tooltip_string" t-if="debug || widget.string">
+            <t t-if="debug">
+                Button
+                <t t-if="widget.string">: </t>
+                <t t-if="!widget.string"> (no string)</t>
+            </t>
+            <t t-esc="widget.string"/>
+        </div>
+    </t>
+    <t t-jquery="ul.oe_tooltip_technical" t-operation="append">
+        <li t-if="widget.node.attrs.special" data-item="special">
+            <span class="oe_tooltip_technical_title">Special:</span>
+            <t t-esc="widget.node.attrs.special"/>
+        </li>
+        <t t-set="button_type" t-value="widget.node.attrs.type"/>
+        <li t-if="button_type" data-item="button_type">
+            <span class="oe_tooltip_technical_title">Button Type:</span>
+            <t t-esc="button_type"/>
+        </li>
+        <li t-if="button_type === 'object'" data-item="button_method">
+            <span class="oe_tooltip_technical_title">Method:</span>
+            <t t-esc="widget.node.attrs.name"/>
+        </li>
+        <li t-if="button_type === 'action'" data-item="button_action">
+            <span class="oe_tooltip_technical_title">Action ID:</span>
+            <t t-esc="widget.node.attrs.name"/>
+        </li>
+    </t>
 </t>
 
 <t t-name="SearchView">

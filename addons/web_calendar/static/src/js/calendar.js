@@ -119,20 +119,24 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         scheduler.attachEvent('onDblClick', this.do_edit_event);
         scheduler.attachEvent('onBeforeLightbox', this.do_edit_event);
 
-        this.mini_calendar = scheduler.renderCalendar({
-            container: this.sidebar.navigator.element_id,
-            navigation: true,
-            date: scheduler._date,
-            handler: function(date, calendar) {
-                scheduler.setCurrentView(date, 'day');
-            }
-        });
+        if (this.options.sidebar) {
+            this.mini_calendar = scheduler.renderCalendar({
+                container: this.sidebar.navigator.element_id,
+                navigation: true,
+                date: scheduler._date,
+                handler: function(date, calendar) {
+                    scheduler.setCurrentView(date, 'day');
+                }
+            });
+        }
     },
     refresh_scheduler: function() {
         scheduler.setCurrentView(scheduler._date);
     },
     refresh_minical: function() {
-        scheduler.updateCalendar(this.mini_calendar);
+        if (this.options.sidebar) {
+            scheduler.updateCalendar(this.mini_calendar);
+        }
     },
     reload_event: function(id) {
         this.dataset.read_ids([id], _.keys(this.fields), this.on_events_loaded);
@@ -192,7 +196,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         scheduler.parse(res_events, 'json');
         this.refresh_scheduler();
         this.refresh_minical();
-        if (!no_filter_reload) {
+        if (!no_filter_reload && this.options.sidebar) {
             this.sidebar.responsible.on_events_loaded(sidebar_items);
         }
     },
