@@ -404,7 +404,7 @@ class account_account(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True),
+        'name': fields.char('Name', size=256, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, required=True, select=1),
         'type': fields.selection([
@@ -431,9 +431,9 @@ class account_account(osv.osv):
         'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
         'foreign_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Foreign Balance', multi='balance',
                                            help="Total amount (in Secondary currency) for transactions held in secondary currency for this account."),
-        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance', 
+        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance',
                                             help="Total amount (in Company currency) for transactions held in secondary currency for this account."),
-        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance', 
+        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance',
                                                 help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this box if this account allows reconciliation of journal items."),
         'exchange_rate': fields.related('currency_id', 'rate', type='float', string='Exchange Rate', digits=(12,6)),
@@ -2003,7 +2003,7 @@ class account_tax(osv.osv):
 
     def compute_all(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None, force_excluded=False):
         """
-        :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of 
+        :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of
             tax. It's used in encoding by line where you don't matter if you encoded a tax with that boolean to True or
             False
         RETURN: {
@@ -2398,7 +2398,7 @@ class account_account_template(osv.osv):
     _description ='Templates for Accounts'
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True),
+        'name': fields.char('Name', size=256, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, select=1),
         'type': fields.selection([
