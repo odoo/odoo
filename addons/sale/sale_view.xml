@@ -140,7 +140,7 @@
                                             <field name="price_unit"/>
 
                                             <field groups="product.group_uos" name="product_uos_qty"/>
-                                            <field groups="product.group_uos" name="product_uos"/>
+                                            <field groups="product.group_uos" name="product_uos" nolabel="1"/>
                                             <newline/>
                                             <field name="product_packaging"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}" on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)"
