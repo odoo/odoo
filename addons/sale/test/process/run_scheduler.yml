@@ -16,9 +16,8 @@
 -
   I run the scheduler.
 -
-  !function {model: procurement.order, name: run_scheduler}:
-    - model: procurement.order
-      search: "[('state','=','confirmed')]"
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
 -
   I check that the procurement for the product PC2 is in exception state.
   As PC2 product's supply method is produce and the BoM is not defined.
@@ -26,7 +25,4 @@
   !python {model: procurement.order}: |
     from tools.translate import _
     proc_ids = self.search(cr, uid, [('state','=','exception'),('product_id','=',ref('product.product_product_pc2'))])
-    try:
-      assert not proc_ids, _('There is no procurement in exception state!')
-    except:
-      pass
+    assert proc_ids, _('There is no procurement in exception state!')
