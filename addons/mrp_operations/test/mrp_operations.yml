@@ -1,5 +1,5 @@
 -
-  In order to test effect of relation between production orders and operations I create a production order.
+  In order to test effect of relation between production orders and work orders, I create a production order.
 -
   First I will see how changing production order will effect work orders,
 -
@@ -33,7 +33,7 @@
 -
   I check that there are two work orders generated for this production order.
 -
-  !assert {model: mrp.production, id: mrp_production_op, string: Operation is started.}:
+  !assert {model: mrp.production, id: mrp_production_op, string: There are 2 work orders.}:
     - len(workcenter_lines) == 2
 -
   The production order is Waiting Goods, so I force reservation of components.
@@ -41,7 +41,7 @@
  !python {model: mrp.production}:
   self.force_production(cr, uid, [ref("mrp_production_op")])
 -
-  Now I start my production order.
+  Now I start the production order.
 -
   !workflow {model: mrp.production, action: button_produce, ref: mrp_production_op}
 -
@@ -56,14 +56,14 @@
     mode: consume_produce
     product_qty: 5.0
 -
-  I produce the products by clicking on 'Produce'
+  I produce the products by clicking on 'Produce'.
 -
   !python {model: mrp.product.produce}: |
     self.do_produce(cr, uid, [ref("mrp_product_produce_0")], {"lang": "en_US", "tz":
       False, "search_default_current": 1, "active_model": "mrp.production", "active_ids":
       [ref("mrp_production_op")], "active_id": ref("mrp_production_op"), })
 -
-  I check all the related work orders for this production order is now done.
+  I check all the related work orders for this production order are now done.
 -
   !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _
