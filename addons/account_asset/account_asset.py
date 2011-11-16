@@ -143,8 +143,12 @@ class account_asset_asset(osv.osv):
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
             
             amount_to_depr = residual_amount = asset.value_residual
-
-            depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
+            if asset.prorata:
+                depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
+            else:
+                # depreciation_date = 1st January of purchase year
+                purchase_date = datetime.strptime(asset.purchase_date, '%Y-%m-%d')
+                depreciation_date = datetime(purchase_date.year, 1, 1)
             day = depreciation_date.day
             month = depreciation_date.month
             year = depreciation_date.year
@@ -197,7 +201,7 @@ class account_asset_asset(osv.osv):
     _columns = {
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
         'name': fields.char('Asset', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'code': fields.char('Reference ', size=16, readonly=True, states={'draft':[('readonly',False)]}),
+        'code': fields.char('Reference', size=32, readonly=True, states={'draft':[('readonly',False)]}),
         'purchase_value': fields.float('Gross value ', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'currency_id': fields.many2one('res.currency','Currency',required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),

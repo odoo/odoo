@@ -8,7 +8,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')"
-             string="Evaluations Analysis">
+             string="Appraisal Analysis">
                 <field name="create_date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
                 <field name="deadline" invisible="1"/>
@@ -32,7 +32,7 @@
             <field name="model">hr.evaluation.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-            <graph string="Evaluations Analysis" type="bar">
+            <graph string="Appraisal Analysis" type="bar">
                  <field name="employee_id"/>
                  <field name="nbr" operator="+"/>
                  <field name="state" group="True"/>
@@ -45,10 +45,12 @@
         <field name="model">hr.evaluation.report</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="Evaluations Analysis">
+            <search string="Appraisal Analysis">
             	<group>
-            		<filter icon="terp-go-year" string=" Year "
+            		<filter icon="terp-go-year" string="Year"
+                        name="year"
                     	domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]" help="Evaluation done in current year"/>
+                    <separator orientation="vertical"/>						
                     <filter icon="terp-go-month" string=" Month " name="month" 
                             domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Evaluation done in current month"/>
@@ -91,16 +93,16 @@
     </record>
 
     <record id="action_evaluation_report_all" model="ir.actions.act_window">
-        <field name="name">Evaluations Analysis</field>
+        <field name="name">Appraisal Analysis</field>
         <field name="res_model">hr.evaluation.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_employee':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_employee':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_evaluation_report_search"/>
     </record>
 
     <menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="10"/>
-    <menuitem action="action_evaluation_report_all" id="menu_evaluation_report_all" parent="hr.menu_hr_reporting" sequence="3"/>
+    <menuitem action="action_evaluation_report_all" id="menu_evaluation_report_all" parent="hr.menu_hr_reporting" sequence="3" groups="base.group_hr_manager"/>
 
     </data>
 </openerp>

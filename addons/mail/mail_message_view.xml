@@ -97,8 +97,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
-                    <filter icon="terp-camera_test" string="Received" domain="[('state','=','received')]"/>
+                    <filter icon="terp-camera_test" name="received" string="Received" domain="[('state','=','received')]"/>
                     <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
+                    <filter icon="terp-check" name="sent" string="Sent" domain="[('state','=','sent')]"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-gtk-stop" string="Failed" domain="[('state','=','exception')]"/>
                     <field name="email_from"/>
                     <field name="email_to"/>
@@ -129,7 +131,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('email_from', '!=', False)]</field>
-             <field name="context">{'search_default_outgoing':1}</field>
+             <field name="context">{'search_default_received':1}</field>
             <field name="search_view_id" ref="view_email_message_search"/>
         </record>
 

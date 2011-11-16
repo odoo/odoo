@@ -421,11 +421,11 @@ openerp.point_of_sale = function(db) {
             Shop.__super__.constructor.apply(this, arguments);
         }
 
-        Shop.prototype.defaults = {
-            orders: new OrderCollection,
-            products: new ProductCollection
-        };
         Shop.prototype.initialize = function() {
+            this.set({
+                orders: new OrderCollection(),
+                products: new ProductCollection()
+            });
             this.set({
                 cashRegisters: new CashRegisterCollection(pos.store.get('account.bank.statement')),
             });
@@ -751,6 +751,10 @@ openerp.point_of_sale = function(db) {
         function CategoryView() {
             CategoryView.__super__.constructor.apply(this, arguments);
         }
+        
+        CategoryView.prototype.events = {
+            'click .oe-pos-categories-list a': 'changeCategory'
+        };
 
         CategoryView.prototype.template = qweb_template('pos-category-template');
         CategoryView.prototype.render = function(ancestors, children) {
@@ -775,6 +779,10 @@ openerp.point_of_sale = function(db) {
                     return _results;
                 })()
             }));
+        };
+        CategoryView.prototype.changeCategory = function(a) {
+            var id = $(a.target).data("category-id");
+            this.trigger("changeCategory", id);
         };
         return CategoryView;
     })();
@@ -1131,22 +1139,20 @@ openerp.point_of_sale = function(db) {
         return ShopView;
     })();
     App = (function() {
-        __extends(App, Backbone.Router);
-        function App() {
-            App.__super__.constructor.apply(this, arguments);
+        function App($element) {
+            this.initialize($element);
         }
 
-        App.prototype.routes = {
-            '': 'category',
-            'category/:id': 'category'
-        };
         App.prototype.initialize = function($element) {
             this.shop = new Shop;
             this.shopView = new ShopView({
                 shop: this.shop,
                 el: $element
             });
-            return this.categoryView = new CategoryView;
+            this.categoryView = new CategoryView;
+            this.categoryView.bind("changeCategory", this.category, this);
+            this.category();
+            return this.categoryView;
         };
         App.prototype.category = function(id) {
             var c, products;
@@ -1155,6 +1161,7 @@ openerp.point_of_sale = function(db) {
             }
             c = pos.categories[id];
             $('#products-screen').html(this.categoryView.render(c.ancestors, c.children));
+            this.categoryView.delegateEvents();
             products = pos.store.get('product.product').filter( function(p) {
                 var _ref;
                 return _ref = p.pos_categ_id[0], __indexOf.call(c.subtree, _ref) >= 0;
@@ -1188,14 +1195,13 @@ openerp.point_of_sale = function(db) {
     db.point_of_sale.PointOfSale = db.web.Widget.extend({
         template: "PointOfSale",
         start: function() {
-            // FIXME: absolutely horrible hack to avoid conflict
-            //        between backbone's history and al's action
-            //        thingie
-            window.location.hash = '';
             var self = this;
+            this.$element.find("#loggedas button").click(function() {
+                self.stop();
+            });
 
             if (pos)
-                throw "It is not possible to instantiate multiple instances"+
+                throw "It is not possible to instantiate multiple instances "+
                     "of the point of sale at the same time.";
             pos = new Pos(this.session);
 
@@ -1203,7 +1209,6 @@ openerp.point_of_sale = function(db) {
 
             return pos.ready.then( function() {
                 pos.app = new App(self.$element);
-                return Backbone.history.start();
             });
         },
         stop: function() {

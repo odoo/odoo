@@ -284,7 +284,7 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <calendar string="Leads Generation"
-                date_start="create_date" color="user_id">
+                date_start="date_action" color="user_id">
                 <field name="name" />
                 <field name="partner_name" />
                 <field name="partner_address_id" />
@@ -306,7 +306,7 @@
                 <field name="user_email"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
+                        <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
                         <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                             <div class="oe_kanban_box oe_kanban_color_border">
                                 <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
@@ -345,7 +345,7 @@
                                         <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
                                         <a string="Schedule/Log Call" name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action"/>
                                         <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
-                                        <a name="action_makeMeeting" type="object" string="Schedule Meeting" icon="gtk-redo" />
+                                        <a string="Schedule Meeting" name="action_makeMeeting" type="object" icon="stock_calendar"/>
                                     </div>
                                     <div class="oe_kanban_right">
                                         <a name="case_pending" string="Pending" states="draft,open" type="object" icon="lead-stage-pending" />
@@ -462,7 +462,7 @@
                     <field name="user_id"/>
 
                     <button string="Schedule/Log Call"
-                    name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action" groups="base.group_extended"/>
+                    name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action"/>
 
                     <field name="planned_revenue"/>
                     <field name="probability"/>
@@ -688,8 +688,7 @@
                     name="pending"
                     domain="[('state','=','pending')]"/>
                 <separator orientation="vertical"/>
-                <field name="name" string="Opportunity"/>
-                <field name="partner_id" string="Customer / Email" filter_domain="['|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]"/>
+                <field name="name" string="Opportunity / Customer" filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                 <field name="user_id">
                     <filter icon="terp-personal-"
                         domain="[('user_id','=', False)]"

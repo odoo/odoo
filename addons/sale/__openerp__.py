@@ -81,8 +81,8 @@ Dashboard for Sales Manager that includes:
         'report/sale_report_view.xml',
         'sale_report.xml',
         'stock_view.xml',
-        'board_sale_view.xml',
         'process/sale_process.xml',
+        'board_sale_view.xml',
         'edi/sale_order_action_data.xml',
     ],
     'demo_xml': ['sale_demo.xml'],
@@ -99,7 +99,6 @@ Dashboard for Sales Manager that includes:
         'test/invoice_on_ordered_qty.yml',
         'test/invoice_on_shipped_qty.yml',
         'test/sale_report.yml',
-
     ],
     'installable': True,
     'active': False,

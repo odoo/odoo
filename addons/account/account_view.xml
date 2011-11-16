@@ -1235,8 +1235,8 @@
                     </group>
                     <newline/>
                     <group>
-                        <field name="journal_id" widget="selection" context="{'journal_id':self, 'visible_id':self, 'normal_view':False}"/>
-                        <field name="period_id" context="{'period_id':self, 'search_default_period_id':self}"/>
+                        <field name="journal_id" widget="selection" context="{'journal_id':self}"/>
+                        <field name="period_id" context="{'period_id':self}"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -1306,7 +1306,6 @@
             <field name="model">account.account</field>
             <field name="name">Open Journal Items</field>
             <field eval="'ir.actions.act_window,%d'%action_move_line_select" name="value"/>
-            <field eval="True" name="object"/>
         </record>
         <!--
     Account.Entry Edition
@@ -2017,7 +2016,6 @@
             <field name="model">account.tax.code</field>
             <field name="name">Tax Details</field>
             <field eval="'ir.actions.act_window,%d'%action_tax_code_line_open" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
 

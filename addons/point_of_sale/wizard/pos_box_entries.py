@@ -96,11 +96,11 @@ class pos_box_entries(osv.osv_memory):
         for data in  self.read(cr, uid, ids, context=context):
             vals = {}
             curr_company = res_obj.browse(cr, uid, uid, context=context).company_id.id
-            statement_id = statement_obj.search(cr, uid, [('journal_id', '=', data['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid), ('state', '=', 'open')], context=context)
+            statement_id = statement_obj.search(cr, uid, [('journal_id', '=', int(data['journal_id'])), ('company_id', '=', curr_company), ('user_id', '=', uid), ('state', '=', 'open')], context=context)
             if not statement_id:
                 raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
 
-            acc_id = product_obj.browse(cr, uid, data['product_id']).property_account_income
+            acc_id = product_obj.browse(cr, uid, int(data['product_id'])).property_account_income
             if not acc_id:
                 raise osv.except_osv(_('Error !'), _('Please check that income account is set to %s')%(product_obj.browse(cr, uid, data['product_id']).name))
             if statement_id:

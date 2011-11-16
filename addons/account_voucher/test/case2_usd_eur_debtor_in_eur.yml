@@ -138,7 +138,7 @@
     assert (move_line.debit - move_line.credit == 80), "Invoice move is incorrect for debtors account"
 -
   I create the first voucher of payment
-  <create with values 200 EUR (€), journal EUR, and fills amount 130€ for the invoice of 200$ and 70€ for the invoice of 100$>
+  <create with values 200 EUR, journal EUR, and fills amount 130 EUR for the invoice of 200 USD and 70 EUR for the invoice of 100 USD>
 -
   !python {model: account.voucher}: |
     import netsvc, time

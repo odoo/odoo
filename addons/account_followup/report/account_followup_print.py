@@ -27,13 +27,13 @@ from report import report_sxw
 class report_rappel(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(report_rappel, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'ids_to_objects': self._ids_to_objects,
             'adr_get': self._adr_get,
             'getLines': self._lines_get,
             'get_text': self._get_text
-                                })
+        })
 
     def _ids_to_objects(self, partner_ids):
         pool = pooler.get_pool(self.cr.dbname)
@@ -86,6 +86,8 @@ class report_rappel(report_sxw.rml_parse):
 
 
     def _get_text(self, partner, followup_id, context=None):
+        if context is None:
+            context = {}
         fp_obj = pooler.get_pool(self.cr.dbname).get('account_followup.followup')
         fp_line = fp_obj.browse(self.cr, self.uid, followup_id).followup_line
         li_delay = []
@@ -96,7 +98,6 @@ class report_rappel(report_sxw.rml_parse):
         a = {}
         partner_line = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',partner.id),('reconcile_id','=',False)])
         partner_delay = []
-        context={}
         context.update({'lang': partner.lang})
         for i in pooler.get_pool(self.cr.dbname).get('account.move.line').browse(self.cr, self.uid, partner_line, context):
             for delay in li_delay:
@@ -110,7 +111,7 @@ class report_rappel(report_sxw.rml_parse):
                 'partner_name': partner.name,
                 'date': time.strftime('%Y-%m-%d'),
                 'company_name': fp_obj.browse(self.cr, self.uid, followup_id).company_id.name,
-                'user_signature': pooler.get_pool(self.cr.dbname).get('res.users').browse(self.cr, self.uid, self.uid, context).signature,
+                'user_signature': pooler.get_pool(self.cr.dbname).get('res.users').browse(self.cr, self.uid, self.uid, context).signature or '',
             }
 
         return text

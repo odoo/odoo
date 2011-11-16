@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <menuitem  id="menu_project_confi" name="Project Issue" parent="project.menu_definitions" sequence="2"/>
+        <menuitem  id="menu_project_confi" name="Issues" parent="project.menu_definitions" sequence="2"/>
 
         <record model="ir.ui.view" id="project_issue_version_search_view">
             <field name="name">Issue Version</field>
@@ -55,10 +55,10 @@
                         <field name="name"/>
                         <field name="project_id" required="True" on_change="on_change_project(project_id)"/>
                         <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                        <field name="user_id"/>                        
+                        <field name="user_id"/>
                         <field name="version_id" colspan="2" widget="selection"/>
                         <group colspan="2" col="4">
-                            <field name="type_id" string="Resolution" />
+                            <field name="type_id" string="Stages" />
                             <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                             <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                         </group>
@@ -66,7 +66,7 @@
                     <notebook colspan="4">
                         <page string="General">
                             <group col="2" colspan="2">
-                            <separator colspan="2" string="Communication"/>
+                            <separator colspan="2" string="Contact Information"/>
                             <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)"/>
                             <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
                             <field name="email_from"/>
@@ -85,8 +85,8 @@
                             <group col="8" colspan="4">
                             <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                             <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                            <button name="case_open" string="Solve" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                            <button name="case_close" string="Close" states="open,draft,pending" type="object" icon="terp-dialog-close"/>
+                            <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                            <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="terp-dialog-close"/>
                             <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                             <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
                             <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
@@ -183,12 +183,12 @@
                     <field name="partner_id" groups="base.group_extended"/>
                     <field name="project_id" />
                     <field name="priority" string="Priority"/>
-                    <field name="type_id" widget="selection" readonly="1" string="Resolution" />
+                    <field name="type_id" widget="selection" readonly="1" string="Stages" />
                     <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                     <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                     <field name="version_id" widget="selection"/>
                     <field name="user_id"/>
-                    <field name="progress" widget="progressbar"/>
+                    <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
                     <field name="state"/>
                     <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
@@ -197,6 +197,7 @@
                     <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
                     <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                     <field name="categ_id" invisible="1"/>
+                    <field name="task_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -209,7 +210,7 @@
                 <search string="Issue Tracker Search">
                     <group>
                         <filter string="New" icon="terp-document-new" name="draft" domain="[('state','=','draft')]" help="New Issues"/>
-                        <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
+                        <filter string="To Do" name="todo" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
                         <field name="name" string="Issue / Partner" filter_domain="['|', '|', ('partner_id','ilike',self), ('email_from','ilike',self), ('name','ilike',self)]"/>
@@ -372,7 +373,7 @@
         </record>
 
         <record id="view_project_feature_filter" model="ir.ui.view">
-            <field name="name">Project Issue- Feature Tracker Search</field>
+            <field name="name">Project Issue - Feature Tracker Search</field>
             <field name="model">project.issue</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
@@ -384,8 +385,8 @@
                         <field name="name" string="Feature description"/>
                         <field name="user_id"/>
                         <field name="state">
-                            <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
-                            <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
+                        <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
+                        <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
                         </field>
                         <field name="project_id" string="Project"/>
                     </group>
