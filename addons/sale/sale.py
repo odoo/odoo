@@ -620,7 +620,7 @@ class sale_order(osv.osv):
     def action_wait(self, cr, uid, ids, *args):
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
-                raise osv.except_osv(_('No Sale Order Lines !'), _('Please create sale order lines.'))
+                raise osv.except_osv(_('Error !'),_('You cannot confirm a sale order without any lines.'))
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime(DEFAULT_SERVER_DATE_FORMAT)})
             else:
