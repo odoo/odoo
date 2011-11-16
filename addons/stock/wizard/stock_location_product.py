@@ -38,7 +38,8 @@ class stock_location_product(osv.osv_memory):
          @param context: A standard dictionary 
          @return: Invoice type
         """
-        mod_obj = self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
         for location_obj in self.read(cr, uid, ids, ['from_date', 'to_date'], context=context):
             return {
                 'name': False, 
@@ -46,7 +47,7 @@ class stock_location_product(osv.osv_memory):
                 'view_mode': 'tree,form', 
                 'res_model': 'product.product', 
                 'type': 'ir.actions.act_window', 
-                'context': {'location': context['active_id'], 
+                'context': {'location': context.get('active_id'), 
                        'from_date': location_obj['from_date'], 
                        'to_date': location_obj['to_date']}, 
                 'domain': [('type', '<>', 'service')], 
