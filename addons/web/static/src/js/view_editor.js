@@ -467,8 +467,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             });
                     break;
                 case "side-remove":
-                    self.do_save_update_arch
-                        (one_object, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "remove_node");
+                    if (confirm(_t("Do you really want to remove this node?"))) {
+                        self.do_save_update_arch
+                            (one_object, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "remove_node");
+                    }
                     break;
                 case "side-edit":
                     var tr = $(this).closest("tr[id^='viewedit-']").find('a').text();
@@ -656,11 +658,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
                     convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
                     arch.arch = convert_to_utf;
-                    /*this.dataset.write(parseInt(view_id),{"arch":convert_to_utf}, function(r) {
-                    });*/
+                    this.dataset.write(parseInt(view_id),{"arch":convert_to_utf}, function(r) {
+                    });
                 }else{
-                    /*this.dataset.unlink([parseInt(view_id)],function(res) {
-                    });*/
+                    this.dataset.unlink([parseInt(view_id)],function(res) {
+                    });
                 }
                 if(move_direct == "add_node"){
                     self.add_node_dialog.close();
