@@ -32,7 +32,7 @@ openerp.web.DataGroup =  openerp.web.Widget.extend( /** @lends openerp.web.DataG
      * @constructs openerp.web.DataGroup
      * @extends openerp.web.Widget
      *
-     * @param {openerp.web.Session} session Current OpenERP session
+     * @param {openerp.web.Widget} parent widget
      * @param {String} model name of the model managed by this DataGroup
      * @param {Array} domain search domain for this DataGroup
      * @param {Object} context context of the DataGroup's searches
@@ -119,17 +119,18 @@ openerp.web.ContainerDataGroup = openerp.web.DataGroup.extend( /** @lends opener
             aggregates[key] = value || 0;
         });
 
+        var group_size = fixed_group[field_name + '_count'] || fixed_group.__count || 0;
+        var leaf_group = fixed_group.__context.group_by.length === 0;
         return {
             __context: fixed_group.__context,
             __domain: fixed_group.__domain,
 
             grouped_on: field_name,
             // if terminal group (or no group) and group_by_no_leaf => use group.__count
-            length: fixed_group[field_name + '_count'] || fixed_group.__count,
+            length: group_size,
             value: fixed_group[field_name],
-
-            openable: !(this.context['group_by_no_leaf']
-                       && fixed_group.__context.group_by.length === 0),
+            // A group is openable if it's not a leaf in group_by_no_leaf mode
+            openable: !(leaf_group && this.context['group_by_no_leaf']),
 
             aggregates: aggregates
         };
@@ -262,6 +263,15 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
             this.index = 0;
         }
         return this;
+    },
+    select_id: function(id) {
+        var idx = _.indexOf(this.ids, id);
+        if (idx === -1) {
+            return false;
+        } else {
+            this.index = idx;
+            return true;
+        }
     },
     /**
      * Read records.
@@ -484,7 +494,7 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
             offset = options.offset || 0,
             limit = options.limit || false,
             fields = fields || false;
-        var end_pos = limit && limit !== -1 ? offset + limit : undefined;
+        var end_pos = limit && limit !== -1 ? offset + limit : this.ids.length;
         return this.read_ids(this.ids.slice(offset, end_pos), fields, callback);
     },
     set_ids: function (ids) {
@@ -613,11 +623,11 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
     create: function(data, callback, error_callback) {
         var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data,
             defaults: this.last_default_get};
-        this.to_create.push(cached);
+        this.to_create.push(_.extend(_.clone(cached), {values: _.clone(cached.values)}));
         this.cache.push(cached);
         this.on_change();
         var prom = $.Deferred().then(callback);
-        setTimeout(function() {prom.resolve({result: cached.id});}, 0);
+        prom.resolve({result: cached.id});
         return prom.promise();
     },
     write: function (id, data, options, callback) {
@@ -639,6 +649,10 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
             self.to_write.push(record);
         }
         var cached = _.detect(this.cache, function(x) {return x.id === id;});
+        if (!cached) {
+            cached = {id: id, values: {}};
+            this.cache.push(cached);
+        }
         $.extend(cached.values, record.values);
         if (dirty)
             this.on_change();
@@ -695,7 +709,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                     throw "Record not correctly loaded";
                 }
             }
-            setTimeout(function () {completion.resolve(records);}, 0);
+            completion.resolve(records);
         };
         if(to_get.length > 0) {
             var rpc_promise = this._super(to_get, fields, function(records) {
@@ -720,27 +734,51 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
 });
 openerp.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
 
-openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
+openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
+    init: function() {
+        this._super.apply(this, arguments);
+        this.create_function = null;
+        this.write_function = null;
+        this.read_function = null;
+    },
+    read_ids: function () {
+        if (this.read_function) {
+            return this.read_function.apply(null, arguments);
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
     default_get: function(fields, callback) {
         return this._super(fields, callback).then(this.on_default_get);
     },
     on_default_get: function(result) {},
     create: function(data, callback, error_callback) {
         this.on_create(data);
-        var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
-        return to_return.promise();
+        if (this.create_function) {
+            return this.create_function(data, callback, error_callback);
+        } else {
+            console.warn("trying to create a record using default proxy dataset behavior");
+            var to_return = $.Deferred().then(callback);
+            setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
+            return to_return.promise();
+        }
     },
     on_create: function(data) {},
     write: function (id, data, options, callback) {
         this.on_write(id, data);
-        var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({"result": true});}, 0);
-        return to_return.promise();
+        if (this.write_function) {
+            return this.write_function(id, data, options, callback);
+        } else {
+            console.warn("trying to write a record using default proxy dataset behavior");
+            var to_return = $.Deferred().then(callback);
+            setTimeout(function () {to_return.resolve({"result": true});}, 0);
+            return to_return.promise();
+        }
     },
     on_write: function(id, data) {},
     unlink: function(ids, callback, error_callback) {
         this.on_unlink(ids);
+        console.warn("trying to unlink a record using default proxy dataset behavior");
         var to_return = $.Deferred().then(callback);
         setTimeout(function () {to_return.resolve({"result": true});}, 0);
         return to_return.promise();
@@ -748,10 +786,14 @@ openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
     on_unlink: function(ids) {}
 });
 
-openerp.web.Model = openerp.web.SessionAware.extend({
-    init: function(session, model_name) {
-        this._super(session);
+openerp.web.Model = openerp.web.CallbackEnabled.extend({
+    init: function(_, model_name) {
+        this._super();
         this.model_name = model_name;
+    },
+    rpc: function() {
+        var c = openerp.connection;
+        return c.rpc.apply(c, arguments);
     },
     get_func: function(method_name) {
         var self = this;

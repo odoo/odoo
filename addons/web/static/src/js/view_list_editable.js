@@ -22,6 +22,7 @@ openerp.web.list_editable = function (openerp) {
                     if (self.groups.get_selection().length) {
                         return;
                     }
+                    self.configure_pager(self.dataset);
                     self.compute_aggregates();
                 }
             })
@@ -56,11 +57,11 @@ openerp.web.list_editable = function (openerp) {
                     || this.defaults.editable);
         },
         /**
-         * Replace do_actual_search to handle editability process
+         * Replace do_search to handle editability process
          */
-        do_actual_search: function (results) {
-            this.set_editable(results.context['set_editable']);
-            this._super(results);
+        do_search: function(domain, context, group_by) {
+            this.set_editable(context['set_editable']);
+            this._super.apply(this, arguments);
         },
         /**
          * Replace do_add_record to handle editability (and adding new record
@@ -77,6 +78,17 @@ openerp.web.list_editable = function (openerp) {
             // tree/@editable takes priority on everything else if present.
             this.options.editable = data.arch.attrs.editable || this.options.editable;
             return this._super(data, grouped);
+        },
+        /**
+         * Ensures the editable list is saved (saves any pending edition if
+         * needed, or tries to)
+         *
+         * Returns a deferred to the end of the saving.
+         *
+         * @returns {$.Deferred}
+         */
+        ensure_saved: function () {
+            return this.groups.ensure_saved();
         }
     });
 
@@ -85,6 +97,18 @@ openerp.web.list_editable = function (openerp) {
         new_record: function () {
             // TODO: handle multiple children
             this.children[null].new_record();
+        },
+        /**
+         * Ensures descendant editable List instances are all saved if they have
+         * pending editions.
+         *
+         * @returns {$.Deferred}
+         */
+        ensure_saved: function () {
+            return $.when.apply(null,
+                _.invoke(
+                    _.values(this.children),
+                    'ensure_saved'));
         }
     });
 
@@ -120,6 +144,7 @@ openerp.web.list_editable = function (openerp) {
                 delete self.edition_id;
                 delete self.edition;
             });
+            this.pad_table_to(5);
             return cancelled.promise();
         },
         /**
@@ -147,7 +172,7 @@ openerp.web.list_editable = function (openerp) {
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
                         'data-id': record_id,
-                        'class': $(row).attr('class') + ' oe_forms',
+                        'class': row ? $(row).attr('class') : '' + ' oe_forms',
                         click: function (e) {e.stopPropagation();}
                     })
                     .delegate('button.oe-edit-row-save', 'click', function () {
@@ -173,14 +198,26 @@ openerp.web.list_editable = function (openerp) {
                     });
                 if (row) {
                     $new_row.replaceAll(row);
-                } else if (self.options.editable === 'top') {
-                    self.$current.prepend($new_row);
                 } else if (self.options.editable) {
-                    self.$current.append($new_row);
+                    var $last_child = self.$current.children('tr:last');
+                    if (self.records.length) {
+                        if (self.options.editable === 'top') {
+                            $new_row.insertBefore(
+                                self.$current.children('[data-id]:first'));
+                        } else {
+                            $new_row.insertAfter(
+                                self.$current.children('[data-id]:last'));
+                        }
+                    } else {
+                        $new_row.prependTo(self.$current);
+                    }
+                    if ($last_child.is(':not([data-id])')) {
+                        $last_child.remove();
+                    }
                 }
                 self.edition = true;
                 self.edition_id = record_id;
-                self.edition_form = _.extend(new openerp.web.ListEditableFormView(self, self.dataset, false), {
+                self.edition_form = _.extend(new openerp.web.ListEditableFormView(self.view, self.dataset, false), {
                     form_template: 'ListView.row.form',
                     registry: openerp.web.list.form.widgets,
                     $element: $new_row
@@ -240,9 +277,11 @@ openerp.web.list_editable = function (openerp) {
          * sibling if asked.
          *
          * @param {Boolean} [edit_next=false] should the next row become editable
+         * @returns {$.Deferred}
          */
         save_row: function (edit_next) {
-            var self = this;
+            //noinspection JSPotentiallyInvalidConstructorUsage
+            var self = this, done = $.Deferred();
             this.edition_form.do_save(function (result) {
                 if (result.created && !self.edition_id) {
                     self.records.add({id: result.result},
@@ -253,28 +292,44 @@ openerp.web.list_editable = function (openerp) {
                     next_record = self.records.at(
                             self.records.indexOf(edited_record) + 1);
 
-                self.handle_onwrite(self.edition_id);
-                self.cancel_pending_edition().then(function () {
-                    $(self).trigger('saved', [self.dataset]);
-                    if (!edit_next) {
-                        return;
-                    }
-                    if (result.created) {
-                        self.new_record();
-                        return;
-                    }
-                    var next_record_id;
-                    if (next_record) {
-                        next_record_id = next_record.get('id');
-                        self.dataset.index = _(self.dataset.ids)
-                                .indexOf(next_record_id);
-                    } else {
-                        self.dataset.index = 0;
-                        next_record_id = self.records.at(0).get('id');
-                    }
-                    self.edit_record(next_record_id);
-                });
-            }, this.options.editable === 'top');
+                $.when(
+                    self.handle_onwrite(self.edition_id),
+                    self.cancel_pending_edition().then(function () {
+                        $(self).trigger('saved', [self.dataset]);
+                        if (!edit_next) {
+                            return;
+                        }
+                        if (result.created) {
+                            self.new_record();
+                            return;
+                        }
+                        var next_record_id;
+                        if (next_record) {
+                            next_record_id = next_record.get('id');
+                            self.dataset.index = _(self.dataset.ids)
+                                    .indexOf(next_record_id);
+                        } else {
+                            self.dataset.index = 0;
+                            next_record_id = self.records.at(0).get('id');
+                        }
+                        self.edit_record(next_record_id);
+                    })).then(function () {
+                        done.resolve();
+                    });
+            }, this.options.editable === 'top').fail(function () {
+                done.reject();
+            });
+            return done.promise();
+        },
+        /**
+         * If the current list is being edited, ensures it's saved
+         */
+        ensure_saved: function () {
+            if (this.edition) {
+                return this.save_row();
+            }
+            //noinspection JSPotentiallyInvalidConstructorUsage
+            return $.Deferred().resolve().promise();
         },
         /**
          * Cancels the edition of the row for the current dataset index
@@ -325,11 +380,13 @@ openerp.web.list_editable = function (openerp) {
                 this.$element.children().css('visibility', '');
                 if (this.modifiers.tree_invisible) {
                     var old_invisible = this.invisible;
-                    this.invisible = !!this.modifiers.tree_invisible;
+                    this.invisible = true;
                     this._super();
                     this.invisible = old_invisible;
                 } else if (this.invisible) {
                     this.$element.children().css('visibility', 'hidden');
+                } else {
+                    this._super();
                 }
             }
         });

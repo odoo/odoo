@@ -10,8 +10,6 @@ if (!console.debug) {
 }
 
 openerp.web.core = function(openerp) {
-openerp.web.qweb = new QWeb2.Engine();
-openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
 /**
  * John Resig Class with factory improvement
  */
@@ -239,8 +237,8 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      * registry was created.
      *
      * An object path is simply a dotted name from the openerp root to the
-     * object pointed to (e.g. ``"openerp.web.Session"`` for an OpenERP
-     * session object).
+     * object pointed to (e.g. ``"openerp.web.Connection"`` for an OpenERP
+     * connection object).
      *
      * @constructs openerp.web.Registry
      * @param {Object} mapping a mapping of keys to object-paths
@@ -287,14 +285,12 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      */
     get_any: function (keys) {
         for (var i=0; i<keys.length; ++i) {
-            try {
-                return this.get_object(keys[i]);
-            } catch (e) {
-                if (e instanceof openerp.web.KeyNotFound) {
-                    continue;
-                }
-                throw e;
+            var key = keys[i];
+            if (key === undefined || !(key in this.map)) {
+                continue;
             }
+
+            return this.get_object(key);
         }
         throw new openerp.web.KeyNotFound(keys.join(','));
     },
@@ -342,9 +338,9 @@ openerp.web.CallbackEnabled = openerp.web.Class.extend(/** @lends openerp.web.Ca
     }
 });
 
-openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web.Session# */{
+openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.web.Connection# */{
     /**
-     * @constructs openerp.web.Session
+     * @constructs openerp.web.Connection
      * @extends openerp.web.CallbackEnabled
      *
      * @param {String} [server] JSON-RPC endpoint hostname
@@ -365,7 +361,12 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
+        // TODO: session should have an optional name indicating that they'll
+        //       be saved to (and revived from) cookies
+        this.name = 'session';
+        this.do_load_qweb(['/web/webclient/qweb']);
     },
+
     start: function() {
         this.session_restore();
     },
@@ -386,6 +387,8 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         var self = this;
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
+        if (this.debug)
+            params.debug = 1;
 
         // Call using the rpc_mode
         var deferred = $.Deferred();
@@ -480,15 +483,17 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
     session_login: function(db, login, password, success_callback) {
         var self = this;
         var params = { db: db, login: login, password: password };
-        this.rpc("/web/session/login", params, function(result) {
+        return this.rpc("/web/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
             self.user_context = result.context;
             self.db = result.db;
             self.session_save();
+            self.on_session_valid();
             return true;
         }).then(success_callback);
     },
+    login: function() { this.session_login.apply(this, arguments); },
     /**
      * Reloads uid and session_id from local storage, if they exist
      */
@@ -527,7 +532,8 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
      * @param name the cookie's name
      */
     get_cookie: function (name) {
-        var nameEQ = this.element_id + '|' + name + '=';
+        if (!this.name) { return null; }
+        var nameEQ = this.name + '|' + name + '=';
         var cookies = document.cookie.split(';');
         for(var i=0; i<cookies.length; ++i) {
             var cookie = cookies[i].replace(/^\s*/, '');
@@ -546,9 +552,11 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
      * @param ttl the cookie's time to live, 1 year by default, set to -1 to delete
      */
     set_cookie: function (name, value, ttl) {
+        if (!this.name) { return; }
         ttl = ttl || 24*60*60*365;
         document.cookie = [
-            this.element_id + '|' + name + '=' + encodeURIComponent(JSON.stringify(value)),
+            this.name + '|' + name + '=' + encodeURIComponent(JSON.stringify(value)),
+            'path=/',
             'max-age=' + ttl,
             'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
         ].join(';');
@@ -568,15 +576,12 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
                 var file_list = ["/web/static/lib/datejs/globalization/" +
                     self.user_context.lang.replace("_", "-") + ".js"
                 ];
-                if(self.debug) {
-                    self.rpc('/web/webclient/csslist', {"mods": modules}, self.do_load_css);
-                    self.rpc('/web/webclient/jslist', {"mods": modules}, function(files) {
-                        self.do_load_js(file_list.concat(files));
-                    });
-                } else {
-                    self.do_load_css(["/web/webclient/css?mods="+modules]);
-                    self.do_load_js(file_list.concat(["/web/webclient/js?mods="+modules]));
-                }
+
+                self.rpc('/web/webclient/csslist', {"mods": modules}, self.do_load_css);
+                self.rpc('/web/webclient/jslist', {"mods": modules}, function(files) {
+                    self.do_load_js(file_list.concat(files));
+                });
+                self.rpc('/web/webclient/qweblist', {"mods": modules}, self.do_load_qweb);
                 openerp._modules_loaded = true;
             });
         });
@@ -585,7 +590,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
-                'href': file + (self.debug ? '?debug=' + (new Date().getTime()) : ''),
+                'href': file,
                 'rel': 'stylesheet',
                 'type': 'text/css'
             }));
@@ -597,17 +602,24 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             var file = files.shift();
             var tag = document.createElement('script');
             tag.type = 'text/javascript';
-            tag.src = file + (this.debug ? '?debug=' + (new Date().getTime()) : '');
+            tag.src = file;
             tag.onload = tag.onreadystatechange = function() {
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
                 tag.onload_done = true;
                 self.do_load_js(files);
             };
-            document.head.appendChild(tag);
+            var head = document.head || document.getElementsByTagName('head')[0];
+            head.appendChild(tag);
         } else {
             this.on_modules_loaded();
         }
+    },
+    do_load_qweb: function(files) {
+        var self = this;
+        _.each(files, function(file) {
+            openerp.web.qweb.add_template(file);
+        });
     },
     on_modules_loaded: function() {
         for(var j=0; j<this.module_list.length; j++) {
@@ -704,7 +716,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
                 if (parseInt(cookie_val, 10) !== token) { continue; }
 
                 // clear cookie
-                document.cookie = _.sprintf("%s=;expires=%s;path=/",
+                document.cookie = _.str.sprintf("%s=;expires=%s;path=/",
                     cookie_name, new Date().toGMTString());
                 if (options.success) { options.success(); }
                 complete();
@@ -712,36 +724,6 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             }
         };
         timer = setTimeout(waitLoop, CHECK_INTERVAL);
-    }
-});
-
-openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.SessionAware# */{
-    /**
-     * Utility class that any class is allowed to extend to easy common manipulations.
-     *
-     * It provides rpc calls, callback on all methods preceded by "on_" or "do_" and a
-     * logging facility.
-     *
-     * @constructs openerp.web.SessionAware
-     * @extends openerp.web.CallbackEnabled
-     *
-     * @param {openerp.web.Session} session
-     */
-    init: function(session) {
-        this._super();
-        this.session = session;
-    },
-    /**
-     * Performs a JSON-RPC call
-     *
-     * @param {String} url endpoint url
-     * @param {Object} data RPC parameters
-     * @param {Function} success RPC call success callback
-     * @param {Function} error RPC call error callback
-     * @returns {jQuery.Deferred} deferred object for the RPC call
-     */
-    rpc: function(url, data, success, error) {
-        return this.session.rpc(url, data, success, error);
     }
 });
 
@@ -754,8 +736,6 @@ openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp
  * - Life-cycle management and parenting (when a parent is destroyed, all its children are
  *     destroyed too).
  * - Insertion in DOM.
- *
- * Widget also extends SessionAware for ease of use.
  *
  * Guide to create implementations of the Widget class:
  * ==============================================
@@ -797,7 +777,7 @@ openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widget# */{
+openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.Widget# */{
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -813,10 +793,15 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
      */
     identifier_prefix: 'generic-identifier-',
     /**
+     * Tag name when creating a default $element.
+     * @type string
+     */
+    tag_name: 'div',
+    /**
      * Construct the widget and set its parent if a parent is given.
      *
      * @constructs openerp.web.Widget
-     * @extends openerp.web.SessionAware
+     * @extends openerp.web.CallbackEnabled
      *
      * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling stop(), the current instance will be
@@ -827,13 +812,14 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
      * for new components this argument should not be provided any more.
      */
     init: function(parent, /** @deprecated */ element_id) {
-        this._super((parent || {}).session);
+        this._super();
+        this.session = openerp.connection;
         // if given an element_id, try to get the associated DOM element and save
         // a reference in this.$element. Else just generate a unique identifier.
         this.element_id = element_id;
         this.element_id = this.element_id || _.uniqueId(this.identifier_prefix);
         var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : undefined;
+        this.$element = tmp ? $(tmp) : $(document.createElement(this.tag_name));
 
         this.widget_parent = parent;
         this.widget_children = [];
@@ -888,8 +874,7 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
         }, target);
     },
     _render_and_insert: function(insertion, target) {
-        var rendered = this.render();
-        this.$element = $(rendered);
+        this.render_element();
         if (target instanceof openerp.web.Widget)
             target = target.$element;
         insertion(target);
@@ -898,13 +883,27 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
     },
     on_inserted: function(element, widget) {},
     /**
+     * Renders the element and insert the result of the render() method in this.$element.
+     */
+    render_element: function() {
+        var rendered = this.render();
+        if (rendered) {
+            var elem = $(rendered);
+            this.$element.replaceWith(elem);
+            this.$element = elem;
+        }
+        return this;
+    },
+    /**
      * Renders the widget using QWeb, `this.template` must be defined.
      * The context given to QWeb contains the "widget" key that references `this`.
      *
      * @param {Object} additional Additional context arguments to pass to the template.
      */
     render: function (additional) {
-        return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+        if (this.template)
+            return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+        return null;
     },
     /**
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
@@ -916,12 +915,6 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
      * @returns {jQuery.Deferred}
      */
     start: function() {
-        /* The default implementation is only useful for retro-compatibility, it is
-        not necessary to call it using _super() when using Widget for new components. */
-        if (!this.$element) {
-            var tmp = document.getElementById(this.element_id);
-            this.$element = tmp ? $(tmp) : undefined;
-        }
         return $.Deferred().done().promise();
     },
     /**
@@ -966,7 +959,7 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
-        this._super(url, data). then(function() {
+        openerp.connection.rpc(url, data). then(function() {
             if (!self.widget_is_stopped)
                 def.resolve.apply(def, arguments);
         }, function() {
@@ -1000,7 +993,7 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
         this.parameters = {"direction": 'ltr',
                         "date_format": '%m/%d/%Y',
                         "time_format": '%H:%M:%S',
-                        "grouping": "[]",
+                        "grouping": [],
                         "decimal_point": ".",
                         "thousands_sep": ","};
     },
@@ -1016,6 +1009,8 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
         });
         if (translation_bundle.lang_parameters) {
             this.parameters = translation_bundle.lang_parameters;
+            this.parameters.grouping = py.eval(
+                    this.parameters.grouping).toJSON();
         }
     },
     add_module_translation: function(mod) {
@@ -1042,7 +1037,34 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
     }
 });
 
+if ($.blockUI) {
+    $.blockUI.defaults.baseZ = 1100;
+    $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
+}
+
+/** Configure default qweb */
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
+openerp.web.qweb = new QWeb2.Engine();
+openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
+openerp.web.qweb.default_dict = {
+    '_' : _
+}
+openerp.web.qweb.format_text_node = function(s) {
+    // Note that 'this' is the Qweb Node of the text
+    var translation = this.node.parentNode.attributes['t-translation'];
+    if (translation && translation.value === 'off') {
+        return s;
+    }
+    var ts = _.str.trim(s);
+    if (ts.length === 0) {
+        return s;
+    }
+    var tr = openerp.web._t(ts);
+    return tr === ts ? s : tr;
+}
+
+/** Setup default connection */
+openerp.connection = new openerp.web.Connection();
 
 };
 

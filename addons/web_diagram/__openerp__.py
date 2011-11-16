@@ -1,5 +1,6 @@
 {
     "name" : "OpenERP Web Diagram",
+    "category" : "Hidden",
     "version" : "2.0",
     "depends" : ["base"],
     "js": [
@@ -11,6 +12,9 @@
     ],
     'css' : [
         "static/src/css/base_diagram.css",
+    ],
+    'qweb' : [
+        "static/src/xml/*.xml",
     ],
     'active': True,
 }

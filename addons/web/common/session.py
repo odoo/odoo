@@ -1,17 +1,16 @@
 #!/usr/bin/python
 import datetime
 import dateutil.relativedelta
+import logging
 import time
 import openerplib
 
 import nonliterals
 
-import logging
 _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # OpenERPSession RPC openerp backend access
 #----------------------------------------------------------
-
 class OpenERPSession(object):
     """
     An OpenERP RPC session, a given user can own multiple such sessions

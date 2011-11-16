@@ -1,7 +1,9 @@
 {
     "name" : "OpenERP Web web",
+    "category" : "Hidden",
     "version" : "2.0",
     "depends" : [],
+    "installable" : False,
     'active': False,
     'js' : [
         "../web/static/lib/datejs/date-en-US.js",

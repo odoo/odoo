@@ -13,12 +13,12 @@ var COLOR_PALETTE = [
     '#cc0000', '#d400a8'];
 
 var QWeb = openerp.web.qweb;
-QWeb.add_template('/web_graph/static/src/xml/web_graph.xml');
 openerp.web.views.add('graph', 'openerp.web_graph.GraphView');
 openerp.web_graph.GraphView = openerp.web.View.extend({
 
-    init: function(parent, dataset, view_id) {
+    init: function(parent, dataset, view_id, options) {
         this._super(parent);
+        this.set_default_options(options);
         this.dataset = dataset;
         this.view_id = view_id;
 
@@ -27,9 +27,17 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.ordinate = null;
         this.columns = [];
         this.group_field = null;
+        this.is_loaded = $.Deferred();
+
+        this.renderer = null;
+    },
+    stop: function () {
+        if (this.renderer) {
+            clearTimeout(this.renderer);
+        }
+        this._super();
     },
     do_show: function () {
-        // TODO: re-trigger search
         this.$element.show();
     },
     do_hide: function () {
@@ -38,17 +46,24 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
     start: function() {
         var self = this;
         this._super();
+        var loaded;
+        if (this.embedded_view) {
+            loaded = $.when([self.embedded_view]);
+        } else {
+            loaded = this.rpc('/web/view/load', {
+                    model: this.dataset.model,
+                    view_id: this.view_id,
+                    view_type: 'graph'
+            });
+        }
         return $.when(
             this.dataset.call('fields_get', []),
-            this.rpc('/web/view/load', {
-                model: this.dataset.model,
-                view_id: this.view_id,
-                view_type: 'graph'
-            })).then(function (fields_result, view_result) {
+            loaded)
+            .then(function (fields_result, view_result) {
                 self.fields = fields_result[0];
                 self.fields_view = view_result[0];
                 self.on_loaded();
-        });
+            });
     },
     /**
      * Returns all object fields involved in the graph view
@@ -79,9 +94,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             }
         }, this);
         this.ordinate = this.columns[0].name;
-
-        this.dataset.read_slice(
-            this.list_fields(), {}, $.proxy(this, 'schedule_chart'));
+        this.is_loaded.resolve();
     },
     schedule_chart: function(results) {
         var self = this;
@@ -220,7 +233,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     // second argument is coerced to a str, no good for boolean
                     r[self.abscissa] = records[0][self.abscissa];
                     _(records).each(function (record) {
-                        var key = _.sprintf('%s_%s',
+                        var key = _.str.sprintf('%s_%s',
                             self.ordinate,
                             record[self.group_field].toLowerCase().replace(/\s/g, '_'));
                         r[key] = record[self.ordinate];
@@ -250,96 +263,118 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             x_axis = abscissa_description;
             y_axis = ordinate_description;
         }
-        
-        var bar_chart = new dhtmlXChart({
-            view: view_chart,
-            container: this.element_id+"-barchart",
-            value:"#"+group_list[0].group+"#",
-            gradient: "3d",
-            border: false,
-            width: 1024,
-            tooltip:{
-                template: _.sprintf("#%s#, %s=#%s#",
-                    this.abscissa, group_list[0].text, group_list[0].group)
-            },
-            radius: 0,
-            color:group_list[0].color,
-            origin:0,
-            xAxis: x_axis,
-            yAxis: y_axis,
-            padding: {
-                left: 75
-            },
-            legend: {
-                values: group_list,
-                align:"left",
-                valign:"top",
-                layout: "x",
-                marker: {
-                    type:"round",
-                    width:12
-                }
+
+        var renderer = function () {
+            if (self.$element.is(':hidden')) {
+                self.renderer = setTimeout(renderer, 100);
+                return;
             }
-        });
-        for (var m = 1; m<group_list.length;m++){
-            var column = group_list[m];
-            if (column.group === this.group_field) { continue; }
-            bar_chart.addSeries({
-                value: "#"+column.group+"#",
+            self.renderer = null;
+            var bar_chart = new dhtmlXChart({
+                view: view_chart,
+                container: self.element_id+"-barchart",
+                value:"#"+group_list[0].group+"#",
+                gradient: "3d",
+                border: false,
+                width: 1024,
                 tooltip:{
-                    template: _.sprintf("#%s#, %s=#%s#",
-                        this.abscissa, column.text, column.group)
+                    template: _.str.sprintf("#%s#, %s=#%s#",
+                        self.abscissa, group_list[0].text, group_list[0].group)
                 },
-                color: column.color
+                radius: 0,
+                color:group_list[0].color,
+                origin:0,
+                xAxis: x_axis,
+                yAxis: y_axis,
+                padding: {
+                    left: 75
+                },
+                legend: {
+                    values: group_list,
+                    align:"left",
+                    valign:"top",
+                    layout: "x",
+                    marker: {
+                        type:"round",
+                        width:12
+                    }
+                }
             });
+            for (var m = 1; m<group_list.length;m++){
+                var column = group_list[m];
+                if (column.group === self.group_field) { continue; }
+                bar_chart.addSeries({
+                    value: "#"+column.group+"#",
+                    tooltip:{
+                        template: _.str.sprintf("#%s#, %s=#%s#",
+                            self.abscissa, column.text, column.group)
+                    },
+                    color: column.color
+                });
+            }
+            bar_chart.parse(results, "json");
+            self.$element.find("#"+self.element_id+"-barchart").height(
+                self.$element.find("#"+self.element_id+"-barchart").height()+50);
+            bar_chart.attachEvent("onItemClick", function(id) {
+                self.open_list_view(bar_chart.get(id));
+            });
+        };
+        if (this.renderer) {
+            clearTimeout(this.renderer);
         }
-        bar_chart.parse(results, "json");
-        jQuery("#"+this.element_id+"-barchart").height(jQuery("#"+this.element_id+"-barchart").height()+50);
-        bar_chart.attachEvent("onItemClick", function(id) {
-            self.open_list_view(bar_chart.get(id));
-        });
+        this.renderer = setTimeout(renderer, 0);
     },
     schedule_pie: function(result) {
         var self = this;
-        var chart =  new dhtmlXChart({
-            view:"pie3D",
-            container:self.element_id+"-piechart",
-            value:"#"+self.ordinate+"#",
-            pieInnerText:function(obj) {
-                var sum = chart.sum("#"+self.ordinate+"#");
-                var val = obj[self.ordinate] / sum * 100 ;
-                return val.toFixed(1) + "%";
-            },
-            tooltip:{
-                template:"#"+self.abscissa+"#"+"="+"#"+self.ordinate+"#"
-            },
-            gradient:"3d",
-            height: 20,
-            radius: 200,
-            legend: {
-                width: 300,
-                align:"left",
-                valign:"top",
-                layout: "x",
-                marker:{
-                    type:"round",
-                    width:12
-                },
-                template:function(obj){
-                    return obj[self.abscissa] || 'Undefined';
-                }
+        var renderer = function () {
+            if (self.$element.is(':hidden')) {
+                self.renderer = setTimeout(renderer, 100);
+                return;
             }
-        });
-        chart.parse(result,"json");
-        chart.attachEvent("onItemClick", function(id) {
-            self.open_list_view(chart.get(id));
-        });
+            self.renderer = null;
+            var chart =  new dhtmlXChart({
+                view:"pie3D",
+                container:self.element_id+"-piechart",
+                value:"#"+self.ordinate+"#",
+                pieInnerText:function(obj) {
+                    var sum = chart.sum("#"+self.ordinate+"#");
+                    var val = obj[self.ordinate] / sum * 100 ;
+                    return val.toFixed(1) + "%";
+                },
+                tooltip:{
+                    template:"#"+self.abscissa+"#"+"="+"#"+self.ordinate+"#"
+                },
+                gradient:"3d",
+                height: 20,
+                radius: 200,
+                legend: {
+                    width: 300,
+                    align:"left",
+                    valign:"top",
+                    layout: "x",
+                    marker:{
+                        type:"round",
+                        width:12
+                    },
+                    template:function(obj){
+                        return obj[self.abscissa] || 'Undefined';
+                    }
+                }
+            });
+            chart.parse(result,"json");
+            chart.attachEvent("onItemClick", function(id) {
+                self.open_list_view(chart.get(id));
+            });
+        };
+        if (this.renderer) {
+            clearTimeout(this.renderer);
+        }
+        this.renderer = setTimeout(renderer, 0);
     },
     open_list_view : function (id){
         var self = this;
-        if($(".dhx_tooltip").is(":visible")) {
-            $(".dhx_tooltip").remove('div');
-        }
+        // unconditionally nuke tooltips before switching view
+        $(".dhx_tooltip").remove('div');
         id = id[this.abscissa];
         if (typeof id == 'object'){
             id = id[0];
@@ -366,23 +401,16 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         });
     },
 
-    do_search: function(domains, contexts, groupbys) {
+    do_search: function(domain, context, group_by) {
         var self = this;
-        this.rpc('/web/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
-            group_by_seq: groupbys
-        }, function (results) {
-            // TODO: handle non-empty results.group_by with read_group?
-            if(!_(results.group_by).isEmpty()){
-                self.abscissa = results.group_by[0];
+        return $.when(this.is_loaded).pipe(function() {
+            // TODO: handle non-empty group_by with read_group?
+            if (!_(group_by).isEmpty()) {
+                self.abscissa = group_by[0];
             } else {
                 self.abscissa = self.first_field;
             }
-            self.dataset.read_slice(self.list_fields(), {
-                context: results.context,
-                domain: results.domain
-            }, $.proxy(self, 'schedule_chart'));
+            return self.dataset.read_slice(self.list_fields(), {}, $.proxy(self, 'schedule_chart'));
         });
     }
 });

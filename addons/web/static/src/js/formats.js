@@ -1,6 +1,66 @@
 
 openerp.web.formats = function(openerp) {
+var _t = openerp.web._t;
 
+/**
+ * Intersperses ``separator`` in ``str`` at the positions indicated by
+ * ``indices``.
+ *
+ * ``indices`` is an array of relative offsets (from the previous insertion
+ * position, starting from the end of the string) at which to insert
+ * ``separator``.
+ *
+ * There are two special values:
+ *
+ * ``-1``
+ *   indicates the insertion should end now
+ * ``0``
+ *   indicates that the previous section pattern should be repeated (until all
+ *   of ``str`` is consumed)
+ *
+ * @param {String} str
+ * @param {Array<Number>} indices
+ * @param {String} separator
+ * @returns {String}
+ */
+openerp.web.intersperse = function (str, indices, separator) {
+    separator = separator || '';
+    var result = [], last = str.length;
+
+    for(var i=0; i<indices.length; ++i) {
+        var section = indices[i];
+        if (section === -1 || last <= 0) {
+            // Done with string, or -1 (stops formatting string)
+            break;
+        } else if(section === 0 && i === 0) {
+            // repeats previous section, which there is none => stop
+            break;
+        } else if (section === 0) {
+            // repeat previous section forever
+            //noinspection AssignmentToForLoopParameterJS
+            section = indices[--i];
+        }
+        result.push(str.substring(last-section, last));
+        last -= section;
+    }
+
+    var s = str.substring(0, last);
+    if (s) { result.push(s); }
+    return result.reverse().join(separator);
+};
+/**
+ * Insert "thousands" separators in the provided number (which is actually
+ * a string)
+ *
+ * @param {String} num
+ * @returns {String}
+ */
+openerp.web.insert_thousand_seps = function (num) {
+    var negative = num[0] === '-';
+    num = (negative ? num.slice(1) : num);
+    return (negative ? '-' : '') + openerp.web.intersperse(
+        num, _t.database.parameters.grouping, _t.database.parameters.thousands_sep);
+};
 /**
  * Formats a single atomic value based on a field descriptor
  *
@@ -16,28 +76,34 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
     if (typeof value === 'number' && isNaN(value)) {
         value = false;
     }
+    //noinspection FallthroughInSwitchStatementJS
     switch (value) {
+        case '':
+            if (descriptor.type === 'char') {
+                return '';
+            }
+            console.warn('Field', descriptor, 'had an empty string as value, treating as false...');
         case false:
         case Infinity:
         case -Infinity:
             return value_if_empty === undefined ?  '' : value_if_empty;
     }
+    var l10n = _t.database.parameters;
     switch (descriptor.widget || descriptor.type) {
         case 'integer':
-            return _.sprintf('%d', value);
+            return openerp.web.insert_thousand_seps(
+                _.str.sprintf('%d', value));
         case 'float':
             var precision = descriptor.digits ? descriptor.digits[1] : 2;
-            var int_part = Math.floor(value);
-            var dec_part = Math.abs(Math.floor((value % 1) * Math.pow(10, precision)));
-            return _.sprintf('%d%s%d',
-                        int_part,
-                        openerp.web._t.database.parameters.decimal_point, dec_part);
+            var formatted = _.str.sprintf('%.' + precision + 'f', value).split('.');
+            formatted[0] = openerp.web.insert_thousand_seps(formatted[0]);
+            return formatted.join(l10n.decimal_point);
         case 'float_time':
-            return _.sprintf("%02d:%02d",
+            return _.str.sprintf("%02d:%02d",
                     Math.floor(value),
                     Math.round((value % 1) * 60));
         case 'progressbar':
-            return _.sprintf(
+            return _.str.sprintf(
                 '<progress value="%.2f" max="100.0">%.2f%%</progress>',
                     value, value);
         case 'many2one':
@@ -46,35 +112,32 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
         case 'datetime':
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
-            try {
-                return value.toString(_.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate,
-                    Date.CultureInfo.formatPatterns.longTime));
-            } catch (e) {
-                return value.format("%m/%d/%Y %H:%M:%S");
-            }
-            return value;
+
+            return value.format(l10n.date_format
+                        + ' ' + l10n.time_format);
         case 'date':
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
-            try {
-                return value.toString(Date.CultureInfo.formatPatterns.shortDate);
-            } catch (e) {
-                return value.format("%m/%d/%Y");
-            }
+            return value.format(l10n.date_format);
         case 'time':
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
-            try {
-                return value.toString(Date.CultureInfo.formatPatterns.longTime);
-            } catch (e) {
-                return value.format("%H:%M:%S");
-            }
+            return value.format(l10n.time_format);
+        case 'selection':
+            // Each choice is [value, label]
+            var result = _(descriptor.selection).detect(function (choice) {
+                return choice[0] === value;
+            });
+            if (result) { return result[1]; }
+            return;
         default:
             return value;
     }
 };
 
 openerp.web.parse_value = function (value, descriptor, value_if_empty) {
+    var date_pattern = Date.normalizeFormat(_t.database.parameters.date_format),
+        time_pattern = Date.normalizeFormat(_t.database.parameters.time_format);
     switch (value) {
         case false:
         case "":
@@ -89,7 +152,7 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
             } while(tmp !== value);
             tmp = Number(value);
             if (isNaN(tmp))
-                throw value + " is not a correct integer";
+                throw new Error(value + " is not a correct integer");
             return tmp;
         case 'float':
             var tmp = Number(value);
@@ -103,42 +166,42 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
             } while(tmp !== tmp2);
             tmp = Number(tmp);
             if (isNaN(tmp))
-                throw value + " is not a correct float";
+                throw new Error(value + " is not a correct float");
             return tmp;
         case 'float_time':
-            var tmp = value.split(":");
-            if (tmp.length != 2)
-                throw value + " is not a correct float_time";
-            var tmp1 = openerp.web.parse_value(tmp[0], {type: "integer"});
-            var tmp2 = openerp.web.parse_value(tmp[1], {type: "integer"});
-            return tmp1 + (tmp2 / 60);
+            var float_time_pair = value.split(":");
+            if (float_time_pair.length != 2)
+                return openerp.web.parse_value(value, {type: "float"});
+            var hours = openerp.web.parse_value(float_time_pair[0], {type: "integer"});
+            var minutes = openerp.web.parse_value(float_time_pair[1], {type: "integer"});
+            return hours + (minutes / 60);
         case 'progressbar':
             return openerp.web.parse_value(value, {type: "float"});
         case 'datetime':
-            var tmp = Date.parseExact(value, _.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate,
-                    Date.CultureInfo.formatPatterns.longTime));
-            if (tmp !== null)
-                return openerp.web.datetime_to_str(tmp);
-            tmp = Date.parse(value);
-            if (tmp !== null)
-                return openerp.web.datetime_to_str(tmp);
-            throw value + " is not a valid datetime";
+            var datetime = Date.parseExact(
+                    value, (date_pattern + ' ' + time_pattern));
+            if (datetime !== null)
+                return openerp.web.datetime_to_str(datetime);
+            datetime = Date.parse(value);
+            if (datetime !== null)
+                return openerp.web.datetime_to_str(datetime);
+            throw new Error(value + " is not a valid datetime");
         case 'date':
-            var tmp = Date.parseExact(value, Date.CultureInfo.formatPatterns.shortDate);
-            if (tmp !== null)
-                return openerp.web.date_to_str(tmp);
-            tmp = Date.parse(value);
-            if (tmp !== null)
-                return openerp.web.date_to_str(tmp);
-            throw value + " is not a valid date";
+            var date = Date.parseExact(value, date_pattern);
+            if (date !== null)
+                return openerp.web.date_to_str(date);
+            date = Date.parse(value);
+            if (date !== null)
+                return openerp.web.date_to_str(date);
+            throw new Error(value + " is not a valid date");
         case 'time':
-            var tmp = Date.parseExact(value, Date.CultureInfo.formatPatterns.longTime);
-            if (tmp !== null)
-                return openerp.web.time_to_str(tmp);
-            tmp = Date.parse(value);
-            if (tmp !== null)
-                return openerp.web.time_to_str(tmp);
-            throw value + " is not a valid time";
+            var time = Date.parseExact(value, time_pattern);
+            if (time !== null)
+                return openerp.web.time_to_str(time);
+            time = Date.parse(value);
+            if (time !== null)
+                return openerp.web.time_to_str(time);
+            throw new Error(value + " is not a valid time");
     }
     return value;
 };
@@ -153,7 +216,7 @@ openerp.web.auto_str_to_date = function(value, type) {
     try {
         return openerp.web.str_to_time(value);
     } catch(e) {}
-    throw "'" + value + "' is not a valid date, datetime nor time"
+    throw new Error("'" + value + "' is not a valid date, datetime nor time");
 };
 
 openerp.web.auto_date_to_str = function(value, type) {
@@ -165,7 +228,7 @@ openerp.web.auto_date_to_str = function(value, type) {
         case 'time':
             return openerp.web.time_to_str(value);
         default:
-            throw type + " is not convertible to date, datetime nor time"
+            throw new Error(type + " is not convertible to date, datetime nor time");
     }
 };
 
@@ -179,9 +242,13 @@ openerp.web.auto_date_to_str = function(value, type) {
  * @param {String} [column.string] button label
  * @param {String} [column.icon] button icon
  * @param {String} [value_if_empty=''] what to display if the field's value is ``false``
+ * @param {Boolean} [process_modifiers=true] should the modifiers be computed ?
  */
-openerp.web.format_cell = function (row_data, column, value_if_empty) {
-    var attrs = column.modifiers_for(row_data);
+openerp.web.format_cell = function (row_data, column, value_if_empty, process_modifiers) {
+    var attrs = {};
+    if (process_modifiers !== false) {
+        attrs = column.modifiers_for(row_data);
+    }
     if (attrs.invisible) { return ''; }
     if (column.tag === 'button') {
         return [

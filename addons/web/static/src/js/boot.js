@@ -59,10 +59,15 @@ openerp.web = function(instance) {
     openerp.web.formats(instance);
     openerp.web.chrome(instance);
     openerp.web.data(instance);
-    var files = ["views","search","list","form","list_editable","web_mobile","view_tree","data_export","data_import"];
+    var files = ["views","search","list","form","list_editable","web_mobile","view_tree","data_export","data_import","view_editor"];
     for(var i=0; i<files.length; i++) {
         if(openerp.web[files[i]]) {
             openerp.web[files[i]](instance);
+        }
+    }
+    instance.log = function() {
+        if (instance.connection.debug && window.console) {
+            console.log.apply(console, arguments);
         }
     }
 };

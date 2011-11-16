@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<!--
+/*
+ * jQuery MD5 Plugin Tests 1.1
+ * https://github.com/blueimp/jQuery-MD5
+ *
+ * Copyright 2010, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://creativecommons.org/licenses/MIT/
+ */
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>jQuery MD5 Plugin Tests</title>
+<link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css">
+</head>
+<body>
+<h1 id="qunit-header">jQuery MD5 Plugin Tests</h1>
+<h2 id="qunit-banner"></h2>
+<div id="qunit-testrunner-toolbar"></div>
+<h2 id="qunit-userAgent"></h2>
+<ol id="qunit-tests"></ol>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script>
+(function ($) {
+    'use strict';
+    var nojquery = /nojquery=true/.test(location.search);
+    $('<label><input type="checkbox">nojquery<\/label>').click(function () {
+        location.search = nojquery ? '' : '?nojquery=true';
+    }).appendTo('body').children(':first').attr('checked', nojquery);
+    if (nojquery) {
+        window.jQuery = null;
+    }
+}(window.jQuery));
+</script>
+<script src="../jquery.md5.js"></script>
+<script src="http://code.jquery.com/qunit/git/qunit.js"></script>
+<script src="tests.js"></script>
+</body> 
+</html>

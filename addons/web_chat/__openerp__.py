@@ -1,5 +1,6 @@
 {
     "name": "Web Chat",
+    "category" : "Hidden",
     "version": "2.0",
     "depends": ['web'],
     "js": [
@@ -10,6 +11,6 @@
         'static/src/js/web_chat.js'
     ],
     "css": [],
-#    'active': True,
     'active': False,
+    'installable': False,
 }

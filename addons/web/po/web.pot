@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-09-06 12:02+0200\n"
+"POT-Creation-Date: 2011-10-07 10:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,28 +17,40 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
 
-#: addons/web/static/src/js/form.js:1473
+#: addons/web/static/src/js/view_form.js:355
+msgid "Warning, the record has been modified, your changes will be discarded."
+msgstr ""
+
+#: addons/web/static/src/js/view_form.js:1659
 msgid "<em>   Search More...</em>"
 msgstr ""
 
-#: addons/web/static/src/js/form.js:1486
+#: addons/web/static/src/js/view_form.js:1672
 #, python-format
 msgid "<em>   Create \"<strong>%s</strong>\"</em>"
 msgstr ""
 
-#: addons/web/static/src/js/form.js:1492
+#: addons/web/static/src/js/view_form.js:1678
 msgid "<em>   Create and Edit...</em>"
 msgstr ""
 
-#: addons/web/static/src/js/views.js:484
+#: addons/web/static/src/js/views.js:568
+msgid "You must choose at least one record."
+msgstr ""
+
+#: addons/web/static/src/js/views.js:569
+msgid "Warning"
+msgstr ""
+
+#: addons/web/static/src/js/views.js:609
 msgid "Translations"
 msgstr ""
 
-#: addons/web/static/src/js/views.js:489 addons/web/static/src/xml/base.xml:0
+#: addons/web/static/src/js/views.js:614 addons/web/static/src/xml/base.xml:0
 msgid "Save"
 msgstr ""
 
-#: addons/web/static/src/js/views.js:490
+#: addons/web/static/src/js/views.js:615
 msgid "Close"
 msgstr ""
 
@@ -229,23 +241,31 @@ msgid "LOGOUT"
 msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
-msgid "h3"
+msgid "&laquo;"
 msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
-msgid "<"
+msgid "&raquo;"
 msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
-msgid ">"
+msgid "oe_secondary_menu_item"
 msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
-msgid "</"
+msgid "oe_secondary_submenu_item"
 msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
-msgid "h4"
+msgid "Hide this tip"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Disable all tips"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "View#"
 msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
@@ -285,15 +305,19 @@ msgid "First"
 msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
+msgid "<"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid ">"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
 msgid "Last"
 msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
 msgid "♻"
-msgstr ""
-
-#: addons/web/static/src/xml/base.xml:0
-msgid "View#"
 msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
@@ -306,6 +330,14 @@ msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
 msgid "New"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Duplicate"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Readonly/Editable"
 msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
@@ -334,6 +366,14 @@ msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
 msgid "?"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "#"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Done"
 msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
@@ -506,6 +546,69 @@ msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0
 msgid "Confirm Password:"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Import"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "1. Import a .CSV file"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid ""
+"Select a .CSV file to import. If you need a sample of file to import,\n"
+"       you should use the export tool with the \"Import Compatible\" "
+"option."
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "CSV File:"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "2. Check your file format"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Import Options"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Does your file have titles?"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Separator:"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Delimiter:"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Encoding:"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "UTF-8"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Latin 1"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Lines to skip"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "The import failed due to:"
+msgstr ""
+
+#: addons/web/static/src/xml/base.xml:0
+msgid "Here is a preview of the file we could not import:"
 msgstr ""
 
 #: addons/web/static/src/xml/base.xml:0

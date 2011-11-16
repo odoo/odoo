@@ -3,8 +3,8 @@
  *---------------------------------------------------------*/
 
 openerp.web_calendar = function(openerp) {
+var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
-QWeb.add_template('/web_calendar/static/src/xml/web_calendar.xml');
 openerp.web.views.add('calendar', 'openerp.web_calendar.CalendarView');
 openerp.web_calendar.CalendarView = openerp.web.View.extend({
 // Dhtmlx scheduler ?
@@ -13,16 +13,13 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
+        this.fields_view = {};
         this.view_id = view_id;
-        this.domain = this.dataset.domain || [];
-        this.context = this.dataset.context || {};
         this.has_been_loaded = $.Deferred();
         this.creating_event_id = null;
         this.dataset_events = [];
-        if (this.options.action_views_ids.form) {
-            this.form_dialog = new openerp.web_calendar.CalendarFormDialog(this, {}, this.options.action_views_ids.form, dataset);
-            this.form_dialog.start();
-        }
+        this.form_dialog = new openerp.web_calendar.CalendarFormDialog(this, {}, this.options.action_views_ids.form, dataset);
+        this.form_dialog.start();
         this.COLOR_PALETTE = ['#f57900', '#cc0000', '#d400a8', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
              '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
              '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
@@ -31,7 +28,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
     },
     start: function() {
         this._super();
-        this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': true}, this.on_loaded);
+        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': true}, this.on_loaded);
     },
     stop: function() {
         scheduler.clearAll();
@@ -47,6 +44,10 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.name = this.fields_view.name || this.fields_view.arch.attrs.string;
         this.view_id = this.fields_view.view_id;
 
+        // mode, one of month, week or day
+        this.mode = this.fields_view.arch.attrs.mode;
+
+        // date_start is mandatory, date_delay and date_stop are optional
         this.date_start = this.fields_view.arch.attrs.date_start;
         this.date_delay = this.fields_view.arch.attrs.date_delay;
         this.date_stop = this.fields_view.arch.attrs.date_stop;
@@ -55,6 +56,10 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.day_length = this.fields_view.arch.attrs.day_length || 8;
         this.color_field = this.fields_view.arch.attrs.color;
         this.fields =  this.fields_view.fields;
+        
+        if (!this.date_start) {
+            throw new Error("Calendar view has not defined 'date_start' attribute.");
+        }
 
         //* Calendar Fields *
         this.calendar_fields.date_start = {'name': this.date_start, 'kind': this.fields[this.date_start].type};
@@ -68,9 +73,6 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         if (this.date_stop) {
             this.calendar_fields.date_stop = {'name': this.date_stop, 'kind': this.fields[this.date_stop].type};
         }
-        if (!this.date_delay && !this.date_stop) {
-            throw new Error("Calendar view has none of the following attributes : 'date_stop', 'date_delay'");
-        }
 
         for (var fld = 0; fld < this.fields_view.arch.children.length; fld++) {
             this.info_fields.push(this.fields_view.arch.children[fld].attrs.name);
@@ -80,8 +82,8 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         if (this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
-            this.sidebar.navigator = new openerp.web_calendar.SidebarNavigator(this.sidebar, this.sidebar.add_section('navigator', "Navigator"), this);
-            this.sidebar.responsible = new openerp.web_calendar.SidebarResponsible(this.sidebar, this.sidebar.add_section('responsible', "Responsible"), this);
+            this.sidebar.navigator = new openerp.web_calendar.SidebarNavigator(this.sidebar, this);
+            this.sidebar.responsible = new openerp.web_calendar.SidebarResponsible(this.sidebar, this);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
             this.sidebar.do_unfold();
@@ -92,9 +94,6 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
 
         this.init_scheduler();
         this.has_been_loaded.resolve();
-        if (this.dataset.ids.length) {
-            this.dataset.read_ids(this.dataset.ids, _.keys(this.fields), this.on_events_loaded);
-        }
     },
     init_scheduler: function() {
         var self = this;
@@ -111,9 +110,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         scheduler.config.drag_resize = true;
         scheduler.config.drag_create = true;
 
-        // Initialize Sceduler
-        this.mode = this.mode || 'month';
-        scheduler.init('openerp_scheduler', null, this.mode);
+        scheduler.init('openerp_scheduler', null, this.mode || 'month');
 
         scheduler.detachAllEvents();
         scheduler.attachEvent('onEventAdded', this.do_create_event);
@@ -122,20 +119,24 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         scheduler.attachEvent('onDblClick', this.do_edit_event);
         scheduler.attachEvent('onBeforeLightbox', this.do_edit_event);
 
-        this.mini_calendar = scheduler.renderCalendar({
-            container: this.sidebar.navigator.element_id,
-            navigation: true,
-            date: scheduler._date,
-            handler: function(date, calendar) {
-                scheduler.setCurrentView(date, 'day');
-            }
-        });
+        if (this.options.sidebar) {
+            this.mini_calendar = scheduler.renderCalendar({
+                container: this.sidebar.navigator.element_id,
+                navigation: true,
+                date: scheduler._date,
+                handler: function(date, calendar) {
+                    scheduler.setCurrentView(date, 'day');
+                }
+            });
+        }
     },
     refresh_scheduler: function() {
         scheduler.setCurrentView(scheduler._date);
     },
     refresh_minical: function() {
-        scheduler.updateCalendar(this.mini_calendar);
+        if (this.options.sidebar) {
+            scheduler.updateCalendar(this.mini_calendar);
+        }
     },
     reload_event: function(id) {
         this.dataset.read_ids([id], _.keys(this.fields), this.on_events_loaded);
@@ -158,7 +159,9 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         for (var e = 0; e < events.length; e++) {
             var evt = events[e];
             if (!evt[this.date_start]) {
-                this.notification.warn("Start date is not defined for event :", evt['id']);
+                if (this.session.debug) {
+                    this.do_warn("Start date is not defined for event :", evt['id']);
+                }
                 break;
             }
 
@@ -183,24 +186,24 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             }
 
             if (this.fields[this.date_start]['type'] == 'date') {
-                evt[this.date_start] = openerp.web.str_to_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
+                evt[this.date_start] = openerp.web.auto_str_to_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
             }
             if (this.date_stop && evt[this.date_stop] && this.fields[this.date_stop]['type'] == 'date') {
-                evt[this.date_stop] = openerp.web.str_to_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
+                evt[this.date_stop] = openerp.web.auto_str_to_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
             }
             res_events.push(this.convert_event(evt));
         }
         scheduler.parse(res_events, 'json');
         this.refresh_scheduler();
         this.refresh_minical();
-        if (!no_filter_reload) {
+        if (!no_filter_reload && this.options.sidebar) {
             this.sidebar.responsible.on_events_loaded(sidebar_items);
         }
     },
     convert_event: function(evt) {
         var date_start = openerp.web.str_to_datetime(evt[this.date_start]),
             date_stop = this.date_stop ? openerp.web.str_to_datetime(evt[this.date_stop]) : null,
-            date_delay = evt[this.date_delay] || null,
+            date_delay = evt[this.date_delay] || 1.0,
             res_text = '',
             res_description = [];
 
@@ -269,12 +272,14 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
     },
     do_edit_event: function(event_id) {
+        var self = this;
         event_id = parseInt(event_id, 10);
         var index = _.indexOf(this.dataset.ids, event_id);
         if (index > -1) {
             this.dataset.index = index;
-            this.form_dialog.form.do_show();
-            this.form_dialog.open();
+            this.form_dialog.form.do_show().then(function() {
+                self.form_dialog.open();
+            });
             return false;
         }
         return true;
@@ -293,26 +298,17 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
         return data;
     },
-    do_search: function(domains, contexts, groupbys) {
+    do_search: function(domain, context, group_by) {
         var self = this;
         scheduler.clearAll();
         $.when(this.has_been_loaded).then(function() {
-            self.rpc('/web/session/eval_domain_and_context', {
-                domains: domains,
-                contexts: contexts,
-                group_by_seq: groupbys
-            }, function (results) {
-                // TODO: handle non-empty results.group_by with read_group
-                self.dataset.context = self.context = results.context;
-                self.dataset.domain = self.domain = results.domain;
-                self.dataset.read_slice(_.keys(self.fields), {
-                        offset:0,
-                        limit: self.limit
-                    }, function(events) {
-                        self.dataset_events = events;
-                        self.on_events_loaded(events);
-                    }
-                );
+            // TODO: handle non-empty results.group_by with read_group
+            self.dataset.read_slice(_.keys(self.fields), {
+                offset: 0,
+                limit: self.limit
+            }, function(events) {
+                self.dataset_events = events;
+                self.on_events_loaded(events);
             });
         });
     },
@@ -372,13 +368,16 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
 });
 
 openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
-    init: function(parent, element_id, view) {
-        this._super(parent, element_id);
+    init: function(parent, view) {
+        var $section = parent.add_section(_t('Responsible'), 'responsible');
+        this.$div = $('<div></div>');
+        $section.append(this.$div);
+        this._super(parent, $section.attr('id'));
         this.view = view;
         this.$element.delegate('input:checkbox', 'change', this.on_filter_click);
     },
     on_events_loaded: function(filters) {
-        this.$element.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
+        this.$div.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
     },
     on_filter_click: function(e) {
         var responsibles = [],
@@ -398,8 +397,9 @@ openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
 });
 
 openerp.web_calendar.SidebarNavigator = openerp.web.Widget.extend({
-    init: function(parent, element_id, view) {
-        this._super(parent, element_id);
+    init: function(parent, view) {
+        var $section = parent.add_section(_t('Navigator'), 'navigator');
+        this._super(parent, $section.attr('id'));
         this.view = view;
     },
     on_events_loaded: function(events) {
