@@ -907,13 +907,13 @@
 </t>
 <t t-name="web.datetimepicker">
     <div class="oe_datepicker_root">
-        <input type="text" size="1" style="width: 100%"/>
+        <input type="text" size="1" style="width: 100%"
+            t-att-name="widget.name"
+            t-attf-class="oe_datepicker_master field_#{widget.type_of_date}"
+        />
         <img class="oe_input_icon oe_datepicker_trigger" src="/web/static/src/img/ui/field_calendar.png"
              title="Select date" width="16" height="16" border="0"/>
-        <div class="oe_datepicker ui-widget-content ui-corner-all" style="display: none; position: absolute; z-index: 1;">
-            <div class="oe_datepicker_container"/>
-            <button type="button" class="oe_datepicker_close ui-state-default ui-priority-primary ui-corner-all" style="float: right;">Done</button>
-        </div>
+        <input type="text" size="1" class="oe_datepicker_container" disabled="disabled"/>
     </div>
 </t>
 <t t-name="FieldSelection">

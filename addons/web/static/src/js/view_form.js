@@ -1350,54 +1350,58 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
     template: "web.datetimepicker",
     jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
+    init: function(parent) {
+        this._super(parent);
+        this.name = parent.name;
+    },
     start: function() {
         var self = this;
-        this.$element.find('input').change(this.on_change);
+        this.$input = this.$element.find('input.oe_datepicker_master');
+        this.$input_picker = this.$element.find('input.oe_datepicker_container');
+        this.$input.change(this.on_change);
         this.picker({
             onSelect: this.on_picker_select,
             changeMonth: true,
             changeYear: true,
             showWeek: true,
-            showButtonPanel: false
+            showButtonPanel: true
         });
         this.$element.find('img.oe_datepicker_trigger').click(function() {
             if (!self.readonly) {
                 self.picker('setDate', self.value ? openerp.web.auto_str_to_date(self.value) : new Date());
-                self.$element.find('.oe_datepicker').toggle();
+                self.$input_picker.show();
+                self.picker('show');
+                self.$input_picker.hide();
             }
-        });
-        this.$element.find('.ui-datepicker-inline').removeClass('ui-widget-content ui-corner-all');
-        this.$element.find('button.oe_datepicker_close').click(function() {
-            self.$element.find('.oe_datepicker').hide();
         });
         this.set_readonly(false);
         this.value = false;
     },
     picker: function() {
-        return $.fn[this.jqueryui_object].apply(this.$element.find('.oe_datepicker_container'), arguments);
+        return $.fn[this.jqueryui_object].apply(this.$input_picker, arguments);
     },
     on_picker_select: function(text, instance) {
         var date = this.picker('getDate');
-        this.$element.find('input').val(date ? this.format_client(date) : '').change();
+        this.$input.val(date ? this.format_client(date) : '').change();
     },
     set_value: function(value) {
         this.value = value;
-        this.$element.find('input').val(value ? this.format_client(value) : '');
+        this.$input.val(value ? this.format_client(value) : '');
     },
     get_value: function() {
         return this.value;
     },
     set_value_from_ui: function() {
-        var value = this.$element.find('input').val() || false;
+        var value = this.$input.val() || false;
         this.value = this.parse_client(value);
     },
     set_readonly: function(readonly) {
         this.readonly = readonly;
-        this.$element.find('input').attr('disabled', this.readonly);
+        this.$input.attr('disabled', this.readonly);
         this.$element.find('img.oe_datepicker_trigger').toggleClass('oe_input_icon_disabled', readonly);
     },
     is_valid: function(required) {
-        var value = this.$element.find('input').val();
+        var value = this.$input.val();
         if (value === "") {
             return !required;
         } else {
@@ -1410,7 +1414,7 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
         }
     },
     focus: function() {
-        this.$element.find('input').focus();
+        this.$input.focus();
     },
     parse_client: function(v) {
         return openerp.web.parse_value(v, {"widget": this.type_of_date});
@@ -1427,11 +1431,7 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
 
 openerp.web.DateWidget = openerp.web.DateTimeWidget.extend({
     jqueryui_object: 'datepicker',
-    type_of_date: "date",
-    on_picker_select: function(text, instance) {
-        this._super(text, instance);
-        this.$element.find('.oe_datepicker').hide();
-    }
+    type_of_date: "date"
 });
 
 openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
