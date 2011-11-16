@@ -458,12 +458,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 case "side-remove":
                     break;
                 case "side-edit":
-                    var tr = $(this).closest("tr[id^='viewedit-']").find('a').text();
-                    var tag = _.detect(_.keys(_PROPERTIES),function(res){
-                        return _.includes(tr, res);
-                    });
-                    var properties = _PROPERTIES[tag];
-                    self.on_edit_node(properties, clicked_tr_id, one_object, view_id, view_xml_id, clicked_tr_level);
+                    var xml_arch = QWeb.load_xml($(this).closest("tr[id^='viewedit-']").find('a').text());
+                    var tag_name = xml_arch.childNodes? xml_arch.childNodes[0].tagName: false;
+                    if (tag_name) {
+                        var properties = _PROPERTIES[tag_name];
+                        self.on_edit_node(properties, clicked_tr_id, one_object, view_id, view_xml_id, clicked_tr_level);
+                    }
                     break;
                 case "side-up":
                     while (1) {
