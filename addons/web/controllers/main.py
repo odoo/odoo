@@ -268,13 +268,18 @@ class Database(openerpweb.Controller):
             params['db_lang'],
             params['create_admin_pwd']
         )
-
+        
+        error_message = ''
         try:
             return req.session.proxy("db").create(*create_attrs)
         except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': e.faultCode, 'title': 'Create Database'}
-        return {'error': 'Could not create database !', 'title': 'Create Database'}
+            if e.faultCode:
+                error_message = e.faultCode
+                if e.faultCode.split(':')[0] == 'AccessDenied':
+                    return {'error': error_message, 'title': 'Create Database'}
+        if not error_message:
+            error_message = 'System has encountered problems while creating the Database "' + params['db_name'] + '"'
+        return {'error': error_message , 'title': 'Could not create database!'}
 
     @openerpweb.jsonrequest
     def drop(self, req, fields):
