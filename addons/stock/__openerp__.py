@@ -79,7 +79,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "partner_view.xml",
         "report/report_stock_move_view.xml",
         "report/report_stock_view.xml",
-        "board_warehouse_view.xml"
+        "board_warehouse_view.xml",
     ],
     'test': [
         'test/stock_test.yml',
