@@ -65,7 +65,9 @@ init: function(parent, dataset, view_id) {
             var name = started_projects[0][self.parent];
             self.name = name instanceof Array? name[name.length - 1] : name;
         }
-        
+        this.$element.find('#add_task').click(function(){
+            self.editTask();
+        });
         $.when(this.project_starting_date(), this.get_project_duration(), this.calculate_difference())
             .then(function() {
                 if(self.ganttChartControl) {
@@ -83,30 +85,23 @@ init: function(parent, dataset, view_id) {
         var def = $.Deferred(),
             self = this,
             projects = this.database_projects;
-            
-        if (!this.group_by.length) return def.resolve().promise();
         
-        this.GroupProject = _.map(this.group_by, function(grp) {
-                return _.groupBy(projects, function(prj) {
-                    if(!prj[grp]) prj[grp] = 'Undefined';
-                    return prj[grp];
-                })
+        if (!this.group_by.length) return def.resolve().promise();
+        this.data_groups = _.groupBy(projects, function(project, index) {
+            return  _.map(self.group_by, function(group, index) {
+                if(!project[group]) project[group] = 'Undefined';
+                else if(project[group] instanceof Array) project[group] = project[group][1];
+                return project[group];
             });
+        });
         return def.resolve().promise();
     },
-    
     generate_projects : function() {
         var projects = this.database_projects,
             self = this;
         
         this.GanttTasks = [];
         if(this.group_by.length) {
-            _.each(this.GroupProject, function(grp, index) {
-                var name = _.keys(grp)[0];
-                name = name.split(',');
-//                index > 0 ? "" + (index - 1)
-                self.GanttTasks.push(new GanttTaskInfo(index, name[name.length - 1], self.project_start_date, self.total_duration, 100, index > 0 ? (index - 1) : ""));
-            });
         } else {
             this.GanttTasks.push(new GanttTaskInfo(0, self.name, self.project_start_date, self.total_duration, 100, ""));
         }
@@ -118,11 +113,7 @@ init: function(parent, dataset, view_id) {
         var self = this,
             tasks = this.database_projects;
         if (this.group_by.length) {
-            _.each(_.values(_.last(this.GroupProject))[0], function(task, index) {
-                var name = task[self.text];
-                _.last(self.GanttTasks)
-                    .addChildTask(new GanttTaskInfo(task.id, name, self.format_date(task[self.date_start]), self.project_duration[index], 100, ""))
-            });
+            
         }
         else {
             _.each(tasks, function(task, index){
@@ -207,9 +198,7 @@ init: function(parent, dataset, view_id) {
         var self = this;
         
         if (this.group_by.length) {
-            _.each(self.GanttTasks, function(tasks, index) {
-                self.GanttProjects.addTask(tasks);
-            });
+            
         }
         else {
             _.each(this.GanttTasks, function(tsk, index){
@@ -293,13 +282,16 @@ init: function(parent, dataset, view_id) {
     },
     
     editTask: function(task) {
-        
-        var self = this;
-        var event_id = task.getId();
-        if(!event_id || !task.parentTask)
-            return false;
+        var self = this,
+            event_id;
+        if (!task)
+            event_id = null;
+        else {
+            event_id = task.getId();
+            if(!event_id || !task.parentTask)
+                return false;
+        }
         if(event_id) event_id = parseInt(event_id, 10);
-        
         var action_manager = new openerp.web.ActionManager(this);
         
         var dialog = new openerp.web.Dialog(this, {
@@ -337,7 +329,7 @@ init: function(parent, dataset, view_id) {
     },
     
     reloadView: function() {
-       self.on_project_loaded(self.database_projects);
+       this.on_project_loaded(this.database_projects);
     },
 
     do_show: function () {
@@ -352,16 +344,13 @@ init: function(parent, dataset, view_id) {
         var self = this;
         this.group_by = groupbys;
         $.when(this.has_been_loaded).then(function() {
-            self.dataset
-                .read_slice([], {
+                self.dataset.read_slice([], {
                     domain: domains,
                     context: contexts
-                })
-                .done(function(projects) {
+                }).done(function(projects){
                     self.on_project_loaded(projects);
                 });
         })
-        
     }
 
 });
