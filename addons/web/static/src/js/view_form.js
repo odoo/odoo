@@ -550,12 +550,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
     },
     is_dirty: function() {
-        for (var f in this.fields) {
-            if (this.fields[f].is_dirty()) {
-                return true;
-            }
-        }
-        return false;
+        return _.any(this.fields, function (value) {
+            return value.is_dirty();
+        });
     },
     is_interactible_record: function() {
         var id = this.datarecord.id;
