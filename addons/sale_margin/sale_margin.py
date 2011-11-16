@@ -81,42 +81,4 @@ class sale_order(osv.osv):
 
 sale_order()
 
-class stock_picking(osv.osv):
-    _inherit = 'stock.picking'
-
-    _columns = {
-        'invoice_ids': fields.many2many('account.invoice', 'picking_invoice_rel', 'picking_id', 'invoice_id', 'Invoices', domain=[('type', '=', 'out_invoice')]),
-    }
-
-    def action_invoice_create(self, cr, uid, ids, journal_id=False,
-            group=False, type='out_invoice', context=None):
-        # need to carify with new requirement
-        invoice_ids = []
-        picking_obj = self.pool.get('stock.picking')
-        res = super(stock_picking, self).action_invoice_create(cr, uid, ids, journal_id=journal_id, group=group, type=type, context=context)
-        invoice_ids = res.values()
-        picking_obj.write(cr, uid, ids, {'invoice_ids': [[6, 0, invoice_ids]]})
-        return res
-
-stock_picking()
-
-class account_invoice_line(osv.osv):
-    _inherit = "account.invoice.line"
-    _columns = {
-        'cost_price': fields.float('Cost Price', digits=(16, 2)),
-    }
-    def write(self, cr, uid, ids, vals, context=None):
-        if vals.get('product_id', False):
-            res = self.pool.get('product.product').read(cr, uid, [vals['product_id']], ['standard_price'])
-            vals['cost_price'] = res[0]['standard_price']
-        return super(account_invoice_line, self).write(cr, uid, ids, vals, context)
-
-    def create(self, cr, uid, vals, context=None):
-        if vals.get('product_id',False):
-            res = self.pool.get('product.product').read(cr, uid, [vals['product_id']], ['standard_price'])
-            vals['cost_price'] = res[0]['standard_price']
-        return super(account_invoice_line, self).create(cr, uid, vals, context)
-
-account_invoice_line()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

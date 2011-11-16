@@ -1585,36 +1585,60 @@ class stock_move(osv.osv):
         """ Gets default address of partner for destination location
         @return: Address id or False
         """
+        mod_obj = self.pool.get('ir.model.data')
+        picking_type = context.get('picking_type')
+        location_id = False
+
         if context is None:
             context = {}
         if context.get('move_line', []):
             if context['move_line'][0]:
                 if isinstance(context['move_line'][0], (tuple, list)):
-                    return context['move_line'][0][2] and context['move_line'][0][2].get('location_dest_id',False)
+                    location_id = context['move_line'][0][2] and context['move_line'][0][2].get('location_dest_id',False)
                 else:
                     move_list = self.pool.get('stock.move').read(cr, uid, context['move_line'][0], ['location_dest_id'])
-                    return move_list and move_list['location_dest_id'][0] or False
-        if context.get('address_out_id', False):
+                    location_id = move_list and move_list['location_dest_id'][0] or False
+        elif context.get('address_out_id', False):
             property_out = self.pool.get('res.partner.address').browse(cr, uid, context['address_out_id'], context).partner_id.property_stock_customer
-            return property_out and property_out.id or False
-        return False
+            location_id = property_out and property_out.id or False
+        else:
+            location_xml_id = False
+            if picking_type == 'in':
+                location_xml_id = 'stock_location_stock'
+            elif picking_type == 'out':
+                location_xml_id = 'stock_location_customers'
+            if location_xml_id:
+                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+        return location_id
 
     def _default_location_source(self, cr, uid, context=None):
         """ Gets default address of partner for source location
         @return: Address id or False
         """
+        mod_obj = self.pool.get('ir.model.data')
+        picking_type = context.get('picking_type')
+        location_id = False
+
         if context is None:
             context = {}
         if context.get('move_line', []):
             try:
-                return context['move_line'][0][2]['location_id']
+                location_id = context['move_line'][0][2]['location_id']
             except:
                 pass
-        if context.get('address_in_id', False):
+        elif context.get('address_in_id', False):
             part_obj_add = self.pool.get('res.partner.address').browse(cr, uid, context['address_in_id'], context=context)
             if part_obj_add.partner_id:
-                return part_obj_add.partner_id.property_stock_supplier.id
-        return False
+                location_id = part_obj_add.partner_id.property_stock_supplier.id
+        else:
+            location_xml_id = False
+            if picking_type == 'in':
+                location_xml_id = 'stock_location_suppliers'
+            elif picking_type == 'out':
+                location_xml_id = 'stock_location_stock'
+            if location_xml_id:
+                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+        return location_id
 
     _defaults = {
         'location_id': _default_location_source,
@@ -1743,7 +1767,7 @@ class stock_move(osv.osv):
         """ On change of product id, if finds UoM, UoS, quantity and UoS quantity.
         @param prod_id: Changed Product id
         @param loc_id: Source location id
-        @param loc_id: Destination location id
+        @param loc_dest_id: Destination location id
         @param address_id: Address id of partner
         @return: Dictionary of values
         """
@@ -2686,7 +2710,7 @@ class stock_warehouse(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'partner_address_id': fields.many2one('res.partner.address', 'Owner Address'),
         'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True, domain=[('usage','<>','view')]),
-        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage','<>','view')]),
+        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage','=','internal')]),
         'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True, domain=[('usage','<>','view')]),
     }
     _defaults = {

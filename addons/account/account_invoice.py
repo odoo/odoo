@@ -251,7 +251,7 @@ class account_invoice(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'check_total': fields.float('Total', digits_compute=dp.get_precision('Account'), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
+        'check_total': fields.float('Verification Total', digits_compute=dp.get_precision('Account'), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
         'reconciled': fields.function(_reconciled, string='Paid/Reconciled', type='boolean',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50), # Check if we can remove ?
@@ -306,9 +306,9 @@ class account_invoice(osv.osv):
             view_id = view_id[0]
         res = super(account_invoice,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
-        type = context.get('journal_type', 'sale')
+        type = context.get('journal_type', False)
         for field in res['fields']:
-            if field == 'journal_id':
+            if field == 'journal_id' and type:
                 journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', type)], context=context, limit=None, name_get_uid=1)
                 res['fields'][field]['selection'] = journal_select
 
@@ -1323,9 +1323,9 @@ class account_invoice_line(osv.osv):
             raise osv.except_osv(_('No Partner Defined !'),_("You must first select a partner !") )
         if not product:
             if type in ('in_invoice', 'in_refund'):
-                return {'value': {'categ_id': False}, 'domain':{'product_uom':[]}}
+                return {'value': {}, 'domain':{'product_uom':[]}}
             else:
-                return {'value': {'price_unit': 0.0, 'categ_id': False}, 'domain':{'product_uom':[]}}
+                return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         fpos_obj = self.pool.get('account.fiscal.position')
         fpos = fposition_id and fpos_obj.browse(cr, uid, fposition_id, context=context) or False
@@ -1353,6 +1353,17 @@ class account_invoice_line(osv.osv):
             taxes = res.supplier_taxes_id and res.supplier_taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
         tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
 
+        if type in ('in_invoice','in_refund') and tax_id and price_unit:
+            tax_pool = self.pool.get('account.tax')
+            tax_browse = tax_pool.browse(cr, uid, tax_id)
+            if not isinstance(tax_browse, list):
+                tax_browse = [tax_browse]
+            taxes = tax_pool.compute_inv(cr, uid, tax_browse, price_unit, 1)
+            tax_amount = reduce(lambda total, tax_dict: total + tax_dict.get('amount', 0.0), taxes, 0.0)
+            price_unit = price_unit - tax_amount
+            if qty != 0:
+                price_unit = price_unit / float(qty)
+
         if type in ('in_invoice', 'in_refund'):
             result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
         else:
@@ -1367,7 +1378,6 @@ class account_invoice_line(osv.osv):
             if res2:
                 domain = {'uos_id':[('category_id','=',res2 )]}
 
-        result['categ_id'] = res.categ_id.id
         res_final = {'value':result, 'domain':domain}
 
         if not company_id or not currency_id:
@@ -1559,6 +1569,7 @@ class account_invoice_tax(osv.osv):
 
         for line in inv.invoice_line:
             for tax in tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, (line.price_unit* (1-(line.discount or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id)['taxes']:
+                tax['price_unit'] = cur_obj.round(cr, uid, cur, tax['price_unit'])
                 val={}
                 val['invoice_id'] = inv.id
                 val['name'] = tax['name']

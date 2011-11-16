@@ -2001,8 +2001,11 @@ class account_tax(osv.osv):
                 cur_price_unit+=amount2
         return res
 
-    def compute_all(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
+    def compute_all(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None, force_excluded=False):
         """
+        :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of 
+            tax. It's used in encoding by line where you don't matter if you encoded a tax with that boolean to True or
+            False
         RETURN: {
                 'total': 0.0,                # Total without taxes
                 'total_included: 0.0,        # Total with taxes
@@ -2014,10 +2017,10 @@ class account_tax(osv.osv):
         tin = []
         tex = []
         for tax in taxes:
-            if tax.price_include:
-                tin.append(tax)
-            else:
+            if not tax.price_include or force_excluded:
                 tex.append(tax)
+            else:
+                tin.append(tax)
         tin = self.compute_inv(cr, uid, tin, price_unit, quantity, address_id=address_id, product=product, partner=partner)
         for r in tin:
             totalex -= r.get('amount', 0.0)
@@ -2803,7 +2806,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         res['value']["sale_tax"] = False
         res['value']["purchase_tax"] = False
         if chart_template_id:
-            # default tax is given by the lowesst sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
+            # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while installing the generic chart of accounts
             sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
                                           , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence, id desc")
             purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
@@ -3120,7 +3123,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             tmp = line.acc_name
             dig = obj_multi.code_digits
             if not ref_acc_bank.code:
-                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of account hasn\'t a code.'))
+                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of accounts hasn\'t a code.'))
             while True:
                 new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
                 ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company_id)])

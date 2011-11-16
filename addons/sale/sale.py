@@ -110,7 +110,7 @@ class sale_order(osv.osv):
         for item in cr.dictfetchall():
             if item['move_state'] == 'cancel':
                 continue
-        
+
             if item['picking_type'] == 'in':#this is a returned picking
                 tmp[item['sale_order_id']]['total'] -= item['nbr'] or 0.0 # Deducting the return picking qty
                 if item['procurement_state'] == 'done' or item['move_state'] == 'done':
@@ -125,7 +125,7 @@ class sale_order(osv.osv):
                 res[order.id] = 100.0
             else:
                 res[order.id] = tmp[order.id]['total'] and (100.0 * tmp[order.id]['picked'] / tmp[order.id]['total']) or 0.0
-        return res        
+        return res
 
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
         res = {}
@@ -691,7 +691,6 @@ class sale_order(osv.osv):
             'move_id': move_id,
             'property_ids': [(6, 0, [x.id for x in line.property_ids])],
             'company_id': order.company_id.id,
-            'sale_line_id': line.id,
         }
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, *args):
@@ -726,6 +725,7 @@ class sale_order(osv.osv):
         return {
             'name': pick_name,
             'origin': order.name,
+            'date': order.date_order,
             'type': 'out',
             'state': 'auto',
             'move_type': order.picking_policy,
@@ -766,13 +766,13 @@ class sale_order(osv.osv):
             if line.product_id:
                 if line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     if not picking_id:
-                        picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, args))
-                    move_id = self.pool.get('stock.move').create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, args))
+                        picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, *args))
+                    move_id = self.pool.get('stock.move').create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, *args))
                 else:
                     # a service has no stock move
                     move_id = False
 
-                proc_id = self.pool.get('procurement.order').create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, args))
+                proc_id = self.pool.get('procurement.order').create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, *args))
                 proc_ids.append(proc_id)
                 line.write({'procurement_id': proc_id})
 
@@ -811,7 +811,7 @@ class sale_order(osv.osv):
 
     def action_ship_create(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids, context={}):
-            self._create_pickings_and_procurements(cr, uid, order, order.order_line, None, args)
+            self._create_pickings_and_procurements(cr, uid, order, order.order_line, None, *args)
         return True
 
     def action_ship_end(self, cr, uid, ids, context=None):
@@ -898,7 +898,7 @@ class sale_order_line(osv.osv):
             return result[1]
         except Exception, ex:
             return False
-    
+
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
     _columns = {
@@ -1266,7 +1266,7 @@ sale_order_line()
 class sale_config_picking_policy(osv.osv_memory):
     _name = 'sale.config.picking_policy'
     _inherit = 'res.config'
-    
+
     _columns = {
         'name': fields.char('Name', size=64),
         'sale_orders': fields.boolean('Based on Sales Orders',),
@@ -1307,7 +1307,7 @@ class sale_config_picking_policy(osv.osv_memory):
 
         if wizard.sale_orders:
             menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_invoicing_sales_order_lines').id
-            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]}) 
+            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]})
 
         if wizard.deli_orders:
             menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_action_picking_list_to_invoice').id
@@ -1315,6 +1315,7 @@ class sale_config_picking_policy(osv.osv_memory):
 
         if wizard.task_work:
             module_name.append('project_timesheet')
+            module_name.append('project_mrp')
             module_name.append('account_analytic_analysis')
 
         if wizard.timesheet:
@@ -1344,7 +1345,7 @@ class sale_config_picking_policy(osv.osv_memory):
             product_obj = self.pool.get('product.product')
             product_obj.write(cr, uid, prod_id, {'uom_id':wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 
-        ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], wizard.order_policy)  
+        ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], wizard.order_policy)
         if wizard.task_work and wizard.time_unit:
             company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
             self.pool.get('res.company').write(cr, uid, [company_id], {

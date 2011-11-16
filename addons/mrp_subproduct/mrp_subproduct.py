@@ -21,19 +21,23 @@
 
 from osv import fields
 from osv import osv
+import decimal_precision as dp
 
 class mrp_subproduct(osv.osv):
     _name = 'mrp.subproduct'
     _description = 'Sub Product'
     _columns={
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'product_qty': fields.float('Product Qty', required=True),
+        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product UoM'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-        'subproduct_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Quantity Type', required=True),
+        'subproduct_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Quantity Type', required=True, help="Define how the quantity of subproducts will be set on the production orders using this BoM.\
+  'Fixed' depicts a situation where the quantity of created subproduct is always equal to the quantity set on the BoM, regardless of how many are created in the production order.\
+  By opposition, 'Variable' means that the quantity will be computed as\
+    '(quantity of subproduct set on the BoM / quantity of manufactured product set on the BoM * quantity of manufactured product in the production order.)'"),
         'bom_id': fields.many2one('mrp.bom', 'BoM'),
     }
     _defaults={
-        'subproduct_type': lambda *args: 'fixed'
+        'subproduct_type': 'variable',
     }
 
     def onchange_product_id(self, cr, uid, ids, product_id, context=None):
@@ -96,6 +100,28 @@ class mrp_production(osv.osv):
                 }
                 self.pool.get('stock.move').create(cr, uid, data)
         return picking_id
+
+    def _get_subproduct_factor(self, cr, uid, production_id, move_id=None, context=None):
+        """Compute the factor to compute the qty of procucts to produce for the given production_id. By default, 
+            it's always equal to the quantity encoded in the production order or the production wizard, but with 
+            the module mrp_subproduct installed it can differ for subproducts having type 'variable'.
+        :param production_id: ID of the mrp.order
+        :param move_id: ID of the stock move that needs to be produced. Identify the product to produce.
+        :return: The factor to apply to the quantity that we should produce for the given production order and stock move.
+        """
+        sub_obj = self.pool.get('mrp.subproduct')
+        move_obj = self.pool.get('stock.move')
+        production_obj = self.pool.get('mrp.production')
+        production_browse = production_obj.browse(cr, uid, production_id, context=context)
+        move_browse = move_obj.browse(cr, uid, move_id, context=context)
+        subproduct_factor = 1
+        sub_id = sub_obj.search(cr, uid,[('product_id', '=', move_browse.product_id.id),('bom_id', '=', production_browse.bom_id.id), ('subproduct_type', '=', 'variable')], context=context)
+        if sub_id:
+            subproduct_record = sub_obj.browse(cr ,uid, sub_id[0], context=context)
+            if subproduct_record.bom_id.product_qty:
+                subproduct_factor = subproduct_record.product_qty / subproduct_record.bom_id.product_qty
+                return subproduct_factor
+        return super(mrp_production, self)._get_subproduct_factor(cr, uid, production_id, move_id, context=context)
 
 mrp_production()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

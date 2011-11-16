@@ -28,13 +28,13 @@ from tools.translate import _
 
 class hr_evaluation_plan(osv.osv):
     _name = "hr_evaluation.plan"
-    _description = "Evaluation Plan"
+    _description = "Appraisal Plan"
     _columns = {
-        'name': fields.char("Evaluation Plan", size=64, required=True),
+        'name': fields.char("Appraisal Plan", size=64, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'phase_ids': fields.one2many('hr_evaluation.plan.phase', 'plan_id', 'Evaluation Phases'),
-        'month_first': fields.integer('First Evaluation in (months)', help="This number of months will be used to schedule the first evaluation date of the employee when selecting an evaluation plan. "),
-        'month_next': fields.integer('Periodicity of Evaluations (months)', help="The number of month that depicts the delay between each evaluation of this plan (after the first one)."),
+        'phase_ids': fields.one2many('hr_evaluation.plan.phase', 'plan_id', 'Appraisal Phases'),
+        'month_first': fields.integer('First Appraisal in (months)', help="This number of months will be used to schedule the first evaluation date of the employee when selecting an evaluation plan. "),
+        'month_next': fields.integer('Periodicity of Appraisal (months)', help="The number of month that depicts the delay between each evaluation of this plan (after the first one)."),
         'active': fields.boolean('Active')
     }
     _defaults = {
@@ -47,13 +47,13 @@ hr_evaluation_plan()
 
 class hr_evaluation_plan_phase(osv.osv):
     _name = "hr_evaluation.plan.phase"
-    _description = "Evaluation Plan Phase"
+    _description = "Appraisal Plan Phase"
     _order = "sequence"
     _columns = {
         'name': fields.char("Phase", size=64, required=True),
         'sequence': fields.integer("Sequence"),
         'company_id': fields.related('plan_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        'plan_id': fields.many2one('hr_evaluation.plan','Evaluation Plan', ondelete='cascade'),
+        'plan_id': fields.many2one('hr_evaluation.plan','Appraisal Plan', ondelete='cascade'),
         'action': fields.selection([
             ('top-down','Top-Down Appraisal Requests'),
             ('bottom-up','Bottom-Up Appraisal Requests'),
@@ -101,8 +101,8 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _inherit="hr.employee"
     _columns = {
-        'evaluation_plan_id': fields.many2one('hr_evaluation.plan', 'Evaluation Plan'),
-        'evaluation_date': fields.date('Next Evaluation Date', help="The date of the next evaluation is computed by the evaluation plan's dates (first evaluation + periodicity)."),
+        'evaluation_plan_id': fields.many2one('hr_evaluation.plan', 'Appraisal Plan'),
+        'evaluation_date': fields.date('Next Appraisal Date', help="The date of the next appraisal is computed by the appraisal plan's dates (first appraisal + periodicity)."),
     }
 
     def run_employee_evaluation(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
@@ -141,12 +141,12 @@ hr_employee()
 
 class hr_evaluation(osv.osv):
     _name = "hr_evaluation.evaluation"
-    _description = "Employee Evaluation"
+    _description = "Employee Appraisal"
     _rec_name = 'employee_id'
     _columns = {
-        'date': fields.date("Evaluation Deadline", required=True, select=True),
+        'date': fields.date("Appraisal Deadline", required=True, select=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
-        'note_summary': fields.text('Evaluation Summary'),
+        'note_summary': fields.text('Appraisal Summary'),
         'note_action': fields.text('Action Plan',
             help="If the evaluation does not meet the expectations, you can propose"+
               "an action plan"),
@@ -271,7 +271,7 @@ hr_evaluation()
 class survey_request(osv.osv):
     _inherit = "survey.request"
     _columns = {
-        'is_evaluation': fields.boolean('Is Evaluation?'),
+        'is_evaluation': fields.boolean('Is Appraisal?'),
     }
     _defaults = {
         'state': 'waiting_answer',
@@ -283,11 +283,11 @@ class hr_evaluation_interview(osv.osv):
     _name = 'hr.evaluation.interview'
     _inherits = {'survey.request': 'request_id'}
     _rec_name = 'request_id'
-    _description = 'Evaluation Interview'
+    _description = 'Appraisal Interview'
     _columns = {
         'request_id': fields.many2one('survey.request','Request_id', ondelete='cascade', required=True),
         'user_to_review_id': fields.many2one('hr.employee', 'Employee to Interview'),
-        'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Evaluation Form'),
+        'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Appraisal Form'),
     }
     _defaults = {
         'is_evaluation': True,
@@ -314,7 +314,7 @@ class hr_evaluation_interview(osv.osv):
             wating_id = 0
             tot_done_req = 1
             if not id.evaluation_id.id:
-                raise osv.except_osv(_('Warning !'),_("You cannot start evaluation without Evaluation."))
+                raise osv.except_osv(_('Warning !'),_("You cannot start evaluation without Appraisal."))
             records = hr_eval_obj.browse(cr, uid, [id.evaluation_id.id], context=context)[0].survey_request_ids
             for child in records:
                 if child.state == "draft":
