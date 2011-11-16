@@ -207,6 +207,7 @@ class ir_model_fields(osv.osv):
         'view_load': fields.boolean('View Auto-Load'),
         'selectable': fields.boolean('Selectable'),
         'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the field is defined'),
+        'serialization_field_id': fields.many2one('ir.model.fields', 'Serialization Field', domain = "[('ttype','=','serialized')]", ondelete='cascade'),
     }
     _rec_name='field_description'
     _defaults = {
@@ -299,6 +300,14 @@ class ir_model_fields(osv.osv):
         if context and context.get('manual',False):
             vals['state'] = 'manual'
 
+        #For the moment renaming a sparse field or changing the storing system is not allowed. This will be done later
+        if 'serialization_field_id' in vals or 'name' in vals:
+            for field in self.browse(cr, user, ids, context=context):
+                if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
+                    raise except_orm(_('Error!'),  _('Changing the storing system for the field "%s" is not allowed.'%field.name))
+                if field.serialization_field_id and (field.name != vals['name']):
+                    raise except_orm(_('Error!'),  _('Renaming the sparse field "%s" is not allowed'%field.name))           
+                
         column_rename = None # if set, *one* column can be renamed here
         obj = None
         models_patch = {}    # structs of (obj, [(field, prop, change_to),..])
