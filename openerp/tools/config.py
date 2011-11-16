@@ -267,9 +267,9 @@ class configmanager(object):
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
         group.add_option("--run-tests", dest="run_tests", my_default=False, action="store_true",
-                         help="Run a test suite.")
+                         help="Run a test suite. This creates a database (possibly created with --run-tests-no-db).")
         group.add_option("--run-tests-no-db", dest="run_tests_no_db", my_default=False, action="store_true",
-                         help="Run a test suite (which does'nt assume an existing database).")
+                         help="Run a test suite (which doesn't assume an existing database).")
 
         parser.add_option_group(group)
 
@@ -326,6 +326,10 @@ class configmanager(object):
         die(not opt.save and opt.config and not os.path.exists(opt.config),
             "The config file '%s' selected with -c/--config doesn't exist, "\
             "use -s/--save if you want to generate it"%(opt.config))
+
+        die((opt.run_tests or opt.run_tests_no_db) and not opt.db_name,
+            "The --run-tests and --run-tests-no-db need a database name "\
+            "(using the --database or -d options).")
 
         # place/search the config file on Win32 near the server installation
         # (../etc from the server)
