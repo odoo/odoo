@@ -1,31 +1,15 @@
 -
   In order to test the cancel sale order.
 -
-  I try to cancel sale order.
+  I try to cancel Manual sale order.
 -
   !python {model: sale.order}: |
     try:
-      self.action_cancel(cr, uid, [ref("order")])
+      self.action_cancel(cr, uid, [ref("order4")])
     except Exception,e:
       pass
 -
-  First I cancel picking related to this order.
--
-  !python {model: sale.order}: |
-    order = self.browse(cr, uid, ref("order"))
-    self.pool.get('stock.picking').action_cancel(cr, uid, [picking.id for picking in  order.picking_ids])
--
-  I check order status in "Shipping Exception" and related picking is in cancel state.
--
-  !python {model: sale.order}: |
-    order = self.browse(cr, uid, ref("order"))
-    try:
-      assert order.picking_ids[0].state == "cancel","order's related picking should be cancelled"
-      assert order.state == "shipping_except", "order should be in Ship Exception state after cancel shipment"
-    except:
-      pass
--
-  I cancel the invoice of order4.
+  I cancel the invoice of Manual order.
 -
   !python {model: sale.order}: |
     import netsvc
@@ -41,46 +25,34 @@
     assert order.invoice_ids[0].state == "cancel","order's related invoice should be cancelled"
     assert order.state == "invoice_except", "order should be in Invoice Exception state after cancel Invoice"
 -
+  I cancel the picking of Manual sale order.
+-
+  !python {model: sale.order}: |
+    import netsvc
+    order = self.browse(cr, uid, ref("order4"))
+    picking_ids = [x.id for x in self.browse(cr, uid, ref("order4")).picking_ids]
+    wf_service = netsvc.LocalService("workflow")
+    for picking in picking_ids:
+      wf_service.trg_validate(uid, 'stock.picking', picking, 'button_cancel', cr)
+-
+  I check order status in "Shipping Exception" and related picking is in cancel state.
+-
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref("order4"))
+    assert order.picking_ids[0].state == "cancel","order's related invoice should be cancelled"
+    assert order.state == "shipping_except", "order should be in Invoice Exception state after cancel Invoice"
+-
   Now I am able to cancel sale order.
 -
   !python {model: sale.order}: |
-    self.action_cancel(cr, uid, [ref("order")])
+    self.action_cancel(cr, uid, [ref("order4")])
 -
   I check that sale order is cancelled.
 -
-  !assert {model: sale.order, id: order}:
-    - state == 'cancel'
--
-  Now try to cancel the order which Invoice Policy is 'Pay before delivery'.
--
-  !python {model: sale.order}: |
-    order = self.browse(cr, uid, ref("order3"))
-    self.action_cancel(cr, uid, [ref("order3")])
-    assert order.invoice_ids[0].state == "cancel","order's related invoice should be cancelled"
--
-  Now again set cancelled order to draft.
--
-  !python {model: sale.order}: |
-    self.action_cancel_draft(cr, uid, [ref("order")])
--
-  Now I again cancel draft order.
--
-  !python {model: sale.order}: |
-    self.action_cancel(cr, uid, [ref("order")])
--
-  I check that order is cancelled.
--
-  !assert {model: sale.order, id: order}:
+  !assert {model: sale.order, id: order4}:
     - state == 'cancel'
 -
   Again set cancelled order to draft.
 -
   !python {model: sale.order}: |
-    self.action_cancel_draft(cr, uid, [ref("order")]) 
-
--
-  I cancel sale order line.
--
-  !python {model: sale.order.line}: |
-    self.button_done(cr, uid, [ref('line')])
-    self.button_cancel(cr, uid, [ref('line')])
+    self.action_cancel_draft(cr, uid, [ref("order4")]) 
