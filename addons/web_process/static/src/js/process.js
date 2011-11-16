@@ -7,27 +7,28 @@ openerp.web_process = function (openerp) {
             var self = this;
             this.process_check();
             this.process_help = this.action ? this.action.help : 'Help: Not Defined';
-            this.process_model = this.model;
+            if(this.model) this.process_model = this.model;
+            else if(this.action) this.process_model = this.action.res_model;
+            else this.process_model = this.dataset.model;
         },
         process_check: function() {
             var self = this,
             grandparent = this.widget_parent && this.widget_parent.widget_parent,
             view = this.views[this.views_src[0].view_type],
             $process_view = this.$element.find('.oe-process-view');
-            
             if (!(grandparent instanceof openerp.web.WebClient) ||
                 !(view.view_type === this.views_src[0].view_type
                     && view.view_id === this.views_src[0].view_id)) {
                         $process_view.hide();
                         return;
             }
-            
+
             $process_view.click(function() {
                 self.initialize_process_view();
             });
-            
+
         },
-        
+
         initialize_process_view: function() {
             var self = this;
             $.when(this.fields_get(), this.help(), this.get_process_object()).pipe(function(fields, help, process) {
@@ -61,32 +62,31 @@ openerp.web_process = function (openerp) {
                 });
             });
         },
-        
+
         graph_get: function() {
             var self = this;
             var def = $.Deferred();
             this.process_id = parseInt(this.process_id, 10);
-            
+
             this.process_dataset
-            .call("graph_get",[this.process_id, this.model, false, [80,80,150,100]])
+            .call("graph_get",[this.process_id, this.model || this.dataset.model, false, [80,80,150,100]])
             .done(function(res) {
                 self.process_dataset
-                    .call("search_by_model",[self.model,self.session.context])
+                    .call("search_by_model",[self.model || self.dataset.model,self.session.context])
                     .done(
                     function(r) {
                         res['related'] = r;
                         def.resolve(res);
                     });
-                
+
             });
             return def.promise();
         },
-        
+
         fields_get : function() {
             var self = this,
                 def = $.Deferred(),
-                dataset = new openerp.web.DataSetStatic(this, this.model, this.session.context);
-            
+                dataset = new openerp.web.DataSetStatic(this, this.model || this.dataset.model, this.session.context);
             dataset
                 .call('fields_get',[])
                 .done(function(fields) {
@@ -94,7 +94,7 @@ openerp.web_process = function (openerp) {
                 }).fail(def.reject);
             return def.promise();
         },
-        
+
         help : function() {
             var self = this,
                 def = $.Deferred();
@@ -106,23 +106,24 @@ openerp.web_process = function (openerp) {
                     .read_slice(['help'],
                     {
                         domain: [
-                            ['res_model', '=', this.subflow_model], 
+                            ['res_model', '=', this.subflow_model],
                             ['name', 'ilike', this.subflow_name]
                         ]
                     }
                     ).done(function(res) {
-                        def.resolve(res && res.records.length ? res.records[0].help : 'Help: Not Defined');
+                        def.resolve(res.help || 'Help: Not Defined');
                     });
-                 
+
             }
             return def.promise();
         },
-        
+
         get_process_object : function() {
             var self = this,
                 def = $.Deferred();
             if(this.process_id)
                 return def.resolve().promise();
+
             this.process_dataset = new openerp.web.DataSetStatic(this, "process.process", this.session.context);
             this.process_dataset
             .call("search_by_model", [self.process_model,self.session.context])
@@ -138,14 +139,13 @@ openerp.web_process = function (openerp) {
             .fail(def.reject);
             return def.promise();
         },
-        
+
         render_process_view : function() {
             this.$element.html(QWeb.render("ProcessView", this));
             var self = this;
             this.$element.find('#edit_process').click(function() {
                 self.edit_process_view();
             });
-            
             var $parent = this.widget_parent.$element;
             $parent.find('#change_process').click(function() {
                 self.process_selection = false,
@@ -153,22 +153,22 @@ openerp.web_process = function (openerp) {
                 self.process_title = $.trim($parent.find('#select_process option:selected').text());
                 self.initialize_process_view();
             });
-            
+
             this.$element.find(".toggle_fields").click(function() {
                 $(this).children().toggle();
                 self.$element.find('.process_fields').toggle();
             });
-            
+
             this.$element.find(".process_subflow").click(function() {
                 self.process_id = this.id;
                 self.initialize_process_view();
             });
         },
-        
+
         draw_process_graph : function(res) {
             var self = this,
                 process_graph = new Graph();
-            
+
             var process_renderer = function(r, n) {
                 var process_node,
                     process_node_text,
@@ -245,7 +245,7 @@ openerp.web_process = function (openerp) {
                 });
                 return process_set;
             };
-            
+
             _.each(res['nodes'],function(node, node_id) {
                 node['res_model'] = self.model,
                 node['res_id'] = false,
@@ -264,7 +264,7 @@ openerp.web_process = function (openerp) {
             var layouter = new Graph.Layout.Ordered(process_graph);
             var render_process_graph = new Graph.Renderer.Raphael('process_canvas', process_graph, $('#process_canvas').width(), $('#process_canvas').height());
         },
-        
+
         jump_to_view: function(model, id) {
             var self = this;
             var dataset = new openerp.web.DataSetStatic(this, 'ir.values', this.session.context);
@@ -283,7 +283,7 @@ openerp.web_process = function (openerp) {
                         });
                 });
         },
-        
+
         edit_process_view: function() {
             var self = this;
             var action_manager = new openerp.web.ActionManager(this);
@@ -296,7 +296,7 @@ openerp.web_process = function (openerp) {
                     },
                     Save : function() {
                         var form_view = action_manager.inner_viewmanager.views.form.controller;
-    
+
                         form_view.do_save(function() {
                             self.initialize_process_view();
                         });
@@ -304,7 +304,7 @@ openerp.web_process = function (openerp) {
                     }
                 }
             }).start().open();
-            
+
             action_manager.appendTo(dialog.$element);
             action_manager.do_action({
                 res_model : 'process.process',
@@ -323,6 +323,4 @@ openerp.web_process = function (openerp) {
         },
     });
 };
-
-
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

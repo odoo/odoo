@@ -1,6 +1,6 @@
 <template>
     <t t-extend="ViewManager" t-name="ViewManagerAction">
-        <t t-jquery=".oe_view_title" t-operation="append">
+        <t t-jquery=".oe-view-manager-header" t-operation="append">
             <img class="oe-process-view" src="/web/static/src/img/icons/gtk-help.png" title="ProcessView"/>
         </t>
     </t>
@@ -56,9 +56,9 @@
                         <p>
                             <strong>Last modified by:</strong> N/A
                         </p>
-                        <t t-if="process_subflows">
+                        <t t-if="process_subflows.length">
                             <strong>Subflows:</strong>
-                            
+
                             <t t-foreach="process_subflows" t-as="subflow">
                                 <t t-if="subflow.subflow[0] != process_id">
                                     <p>
@@ -69,7 +69,7 @@
                                 </t>
                             </t>
                         </t>
-                        <t t-if="process_related and process_related[0][0] != process_id">
+                        <t t-if="process_related.length and process_related[0][0] != process_id">
                             <strong>Related:</strong>
                             <p>
                                 <a class="process_subflow" t-att-id="process_related[0][0]" href="javascript: void(0)">
