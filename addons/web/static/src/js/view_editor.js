@@ -415,7 +415,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         this.edit_xml_dialog.$element.find("img[id^='side-']").click(function() {
             var side = $(this).closest("tr[id^='viewedit-']");
-            var clicked_tr_id = (side.attr('id')).split('-')[1];
+            var clicked_tr_id = parseInt((side.attr('id')).split('-')[1]);
             var img = side.find("img[id='parentimg-" + clicked_tr_id + "']").attr('src');
             var clicked_tr_level = parseInt(side.attr('level'));
             var cur_tr = side;
@@ -427,16 +427,24 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             var view_xml_id;
             var view_find = side;
             var min_level = clicked_tr_level;
-            while (1) {
-                view_find = view_find.prev();
-                if ((self.edit_xml_dialog.$element.find(view_find).find('a').text()).search("view_id") != -1
-                        && parseInt(view_find.attr('level')) < min_level ) {
-                    view_id = parseInt(($(view_find).find('a').text()).replace(/[^0-9]+/g, ''));
-                    view_xml_id = (view_find.attr('id')).split('-')[1];
-                    break;
-                }
-                if(view_find.attr('level') < min_level){
-                    min_level = parseInt(view_find.attr('level'));
+            if(($(side).find('a').text()).search("view_id") != -1){
+                view_id = parseInt(($(view_find).find('a').text()).replace(/[^0-9]+/g, ''));
+                view_xml_id = (view_find.attr('id')).split('-')[1];
+                clicked_tr_id  += 1;
+                clicked_tr_level += 1;
+            }else{
+                while (1) {
+                    view_find = view_find.prev();
+                    if (view_find.length == 0 ||
+                        (self.edit_xml_dialog.$element.find(view_find).find('a').text()).search("view_id") != -1
+                            && parseInt(view_find.attr('level')) < min_level ) {
+                        view_id = parseInt(($(view_find).find('a').text()).replace(/[^0-9]+/g, ''));
+                        view_xml_id = (view_find.attr('id')).split('-')[1];
+                        break;
+                    }
+                    if(view_find.attr('level') < min_level){
+                        min_level = parseInt(view_find.attr('level'));
+                    }
                 }
             }
             switch (this.id) {
@@ -563,6 +571,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         arch_to_pass = _.filter($(arch.arch), function (child) {
                 return child.nodeType == 1;
             });
+        
         return self.do_save_xml(arch_to_pass[0], obj[0].child_id[0], 
                     parseInt(clicked_tr_id), [], parseInt(clicked_tr_level),
                             parseInt(view_id), arch, move_direct, update_values);
@@ -628,21 +637,31 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     var parent = $(arch1).parents();
                 }else if(move_direct == "remove_node"){
                     var parent = $(arch1).parents();
+                    if(parent.length == 0 || (parent[0].tagName.toLowerCase() == "data")){
+                        id = id -1;
+                        level = level - 1;
+                        (parent.length == 0)?parent.push("remove_view"):false;
+                    }
                     $(arch1).remove();
                     child_list.splice(index,1);
-                    var cur_tr = self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']");
-                    _.each(self.get_list_tr(cur_tr,obj.level), function(tr_element){
+                    var cur_tr = self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id +"']");
+                    _.each(self.get_list_tr(cur_tr,level), function(tr_element){
                         tr_element.remove();
                     });
                     cur_tr.remove();
                 }
                 var convert_to_utf = (parent.length != 0)?parent[parent.length-1]:arch1;
-                convert_to_utf = QWeb.tools.xml_node_to_string(convert_to_utf);
-                convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
-                convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
-                arch.arch = convert_to_utf;
-                this.dataset.write(parseInt(view_id),{"arch":convert_to_utf}, function(r) {
-                });
+                if(convert_to_utf != "remove_view"){
+                    convert_to_utf = QWeb.tools.xml_node_to_string(convert_to_utf);
+                    convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
+                    convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
+                    arch.arch = convert_to_utf;
+                    /*this.dataset.write(parseInt(view_id),{"arch":convert_to_utf}, function(r) {
+                    });*/
+                }else{
+                    /*this.dataset.unlink([parseInt(view_id)],function(res) {
+                    });*/
+                }
                 if(move_direct == "add_node"){
                     self.add_node_dialog.close();
                     self.edit_xml_dialog.close();
