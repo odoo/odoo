@@ -58,36 +58,28 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Auction manager ">
-                    <hpaned position="100">
-                        <child1>
-                            <action
-                                string="Latest objects"
-                                name="%(auction.action_report_latest_objects_tree)d"
-                                height="200"
-                                width="510"    />
+                    <board style="2-1">
+                        <column>
+                            <action string="Latest objects"
+                                name="%(auction.action_report_latest_objects_tree)d"/>
                             <action string="Latest deposits"
                                 name="%(auction.action_report_latest_doposit_tree)d"/>
                             <action string="Objects statistics"
-                                name="%(auction.action_report_object_encoded_tree)d"
-                                />
-                        </child1>
+                                name="%(auction.action_report_object_encoded_tree)d"/>
+                        </column>
 
-                        <child2>
-                            <action
-                                string="Total Adjudications"
+                        <column>
+                            <action string="Total Adjudications"
                                 name="%(auction.action_report_auction_adjudication_tree)d"
-                                view_mode="graph,tree"
-                                colspan="4"/>
-                            <action
-                                string="Min/Adj/Max"
+                                view_mode="graph,tree"/>
+                            <action string="Min/Adj/Max"
                                 name="%(auction.action_report_auction_lots_estimation_adj_category_tree)d"
-                                view_mode="graph,tree" colspan="4" />
-                            <action
-                                string="Objects by day"
+                                view_mode="graph,tree"/>
+                            <action string="Objects by day"
                                 name="%(auction.action_report_auction_object_date_tree)d"
-                                view_mode="graph,tree" colspan="4" />
-                        </child2>
-                    </hpaned>
+                                view_mode="graph,tree"/>
+                        </column>
+                    </board>
                 </form>
             </field>
         </record>
