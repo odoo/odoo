@@ -150,7 +150,7 @@ class account_analytic_account(osv.osv):
     _columns = {
         'name': fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
-        'code': fields.char('Account Code', size=24, select=True),
+        'code': fields.char('Code/Reference', size=24, select=True),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type', help='If you select the View Type, it means you won\'t allow to create journal entries using that account.'),
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
@@ -168,7 +168,7 @@ class account_analytic_account(osv.osv):
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('draft','New'),('open','Started'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Closed'),('template', 'Template')], 'State', required=True,
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Closed')], 'State', required=True,
                                   help='* When an account is created its in \'Draft\' state.\
                                   \n* If any associated partner is there, it can be in \'Open\' state.\
                                   \n* If any pending balance is there it can be in \'Pending\'. \
@@ -216,6 +216,12 @@ class account_analytic_account(osv.osv):
         default['code'] = False
         default['line_ids'] = []
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
+
+    def on_change_partner_id(self, cr, uid, id, partner_id, context={}):
+        if not partner_id:
+            return {'value': {'contact_id': False}}
+        addr = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['invoice'])
+        return {'value': {'contact_id': addr.get('invoice', False)}}
 
     def on_change_company(self, cr, uid, id, company_id):
         if not company_id:

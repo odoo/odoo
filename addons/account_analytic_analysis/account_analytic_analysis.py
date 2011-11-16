@@ -376,13 +376,11 @@ class account_analytic_account(osv.osv):
 
     def _is_overdue_quantity(self, cr, uid, ids, fieldnames, args, context=None):
         result = dict.fromkeys(ids, 0)
-
         for record in self.browse(cr, uid, ids, context=context):
-            if record.quantity == 0.0 and record.quantity_max == 0.0:
-                result[record.id] = 0
-            else:
+            if record.quantity_max > 0.0:
                 result[record.id] = int(record.quantity >= record.quantity_max)
-
+            else:
+                result[record.id] = 0
         return result
 
     def _get_analytic_account(self, cr, uid, ids, context=None):
