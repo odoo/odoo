@@ -133,15 +133,12 @@
     -->
 
         <record id="mrp_routing_0" model="mrp.routing">
-            <field name="workcenter_lines">[1]</field>
             <field name="name">Assembly Line 1</field>
         </record>
         <record id="mrp_routing_1" model="mrp.routing">
-            <field name="workcenter_lines">[2]</field>
             <field name="name">Custom Assembly Line</field>
         </record>
         <record id="mrp_routing_2" model="mrp.routing">
-            <field name="workcenter_lines">[3]</field>
             <field name="name">Component Manufacturing</field>
         </record>
 
@@ -167,6 +164,12 @@
             <field name="cycle_nbr">0.5</field>
             <field name="hour_nbr">3</field>
             <field name="name">assembly main + processor + fan</field>
+        </record>
+        <record id="mrp_routing_workcenter_4" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_1"/>
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="name">Packing</field>
+            <field name="hour_nbr">0.5</field>
         </record>
 
         <!--
