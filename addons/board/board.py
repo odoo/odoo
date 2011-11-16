@@ -56,14 +56,14 @@ class board_board(osv.osv):
         #End Loop
         arch = """<?xml version="1.0"?>
             <form string="My Board">
-            <hpaned>
-                <child1>
+            <board style="1-1">
+                <column>
                     %s
-                </child1>
-                <child2>
+                </column>
+                <column>
                     %s
-                </child2>
-            </hpaned>
+                </column>
+            </board>
             </form>""" % ('\n'.join(left), '\n'.join(right))
 
         return arch
