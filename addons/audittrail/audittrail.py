@@ -179,7 +179,16 @@ class audittrail_objects_proxy(object_proxy):
             If the field is a many2one, it returns the name. 
             If it's a one2many or a many2many, it returns a list of name. 
             In other cases, it just returns the value.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param pool: current db's pooler object.
+        @param resource_pool: pooler object of the model who's values are being changed.
+        @param field: for which the text value is to be returned.
+        @param value: value of the field.
+        @param recursive: True or False, True will repeat the process recursively
+        @return: string value or a list of values(for O2M/M2M)
         """
+        
         field_obj = (resource_pool._all_columns.get(field)).column
         if field_obj._type in ('one2many','many2many'):
             if recursive:
@@ -232,6 +241,18 @@ class audittrail_objects_proxy(object_proxy):
         return True
    
     def start_log_process(self, cr, user_id, model, method, resource_data, pool, resource_pool):
+        """
+         Logging function: This function performs the logging operation for create/read/unlink operation
+         :@param cr: the current row, from the database cursor,
+         :@param user_id: the current user’s ID,
+         :param model: Object which values are being changed
+         :param method: method to log: create, read, unlink
+         :param resource_data: list of data modified for the model
+         :@param pool: current db's pooler object.
+         :@param resource_pool: pooler object of the model who's values are being changed.
+         :return:True
+        
+        """
         key1 = '%s_value'%(method == 'create' and 'new' or 'old')
         key2 = '%s_value_text'%(method == 'create' and 'new' or 'old')
         uid = 1
