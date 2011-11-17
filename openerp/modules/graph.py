@@ -88,15 +88,19 @@ class Graph(dict):
             for k, v in additional_data[package.name].items():
                 setattr(package, k, v)
 
-    def add_module(self, cr, module, force=None):
-        self.add_modules(cr, [module], force)
+    def add_module(self, cr, module, force_demo=False):
+        self.add_modules(cr, [module], force_demo)
 
-    def add_modules(self, cr, module_list, force=None):
-        if force is None:
-            force = []
+    def add_modules(self, cr, module_list, force_demo=False):
         packages = []
         len_graph = len(self)
         for module in module_list:
+            if force_demo:
+                cr.execute("""
+                    UPDATE ir_module_module
+                    SET demo='t'
+                    WHERE name = %s""",
+                    (module,))
             # This will raise an exception if no/unreadable descriptor file.
             # NOTE The call to load_information_from_description_file is already
             # done by db.initialize, so it is possible to not do it again here.

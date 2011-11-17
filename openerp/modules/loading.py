@@ -281,7 +281,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps) 
         graph = openerp.modules.graph.Graph()
-        graph.add_module(cr, 'base', force)
+        graph.add_module(cr, 'base', force_demo)
         if not graph:
             logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
             raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
