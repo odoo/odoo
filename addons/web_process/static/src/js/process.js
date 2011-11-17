@@ -22,13 +22,10 @@ openerp.web_process = function (openerp) {
                         $process_view.hide();
                         return;
             }
-
             $process_view.click(function() {
                 self.initialize_process_view();
             });
-
         },
-
         initialize_process_view: function() {
             var self = this;
             $.when(this.fields_get(), this.help(), this.get_process_object()).pipe(function(fields, help, process) {
@@ -62,7 +59,6 @@ openerp.web_process = function (openerp) {
                 });
             });
         },
-
         graph_get: function() {
             var self = this;
             var def = $.Deferred();
@@ -78,11 +74,9 @@ openerp.web_process = function (openerp) {
                         res['related'] = r;
                         def.resolve(res);
                     });
-
             });
             return def.promise();
         },
-
         fields_get : function() {
             var self = this,
                 def = $.Deferred(),
@@ -94,7 +88,6 @@ openerp.web_process = function (openerp) {
                 }).fail(def.reject);
             return def.promise();
         },
-
         help : function() {
             var self = this,
                 def = $.Deferred();
@@ -113,11 +106,9 @@ openerp.web_process = function (openerp) {
                     ).done(function(res) {
                         def.resolve(res.help || 'Help: Not Defined');
                     });
-
             }
             return def.promise();
         },
-
         get_process_object : function() {
             var self = this,
                 def = $.Deferred();
@@ -139,7 +130,6 @@ openerp.web_process = function (openerp) {
             .fail(def.reject);
             return def.promise();
         },
-
         render_process_view : function() {
             this.$element.html(QWeb.render("ProcessView", this));
             var self = this;
@@ -164,11 +154,9 @@ openerp.web_process = function (openerp) {
                 self.initialize_process_view();
             });
         },
-
         draw_process_graph : function(res) {
             var self = this,
                 process_graph = new Graph();
-
             var process_renderer = function(r, n) {
                 var process_node,
                     process_node_text,
@@ -192,7 +180,6 @@ openerp.web_process = function (openerp) {
                     .mousedown(function() {
                         return false;
                 });
-
                 //Node
                 process_node = r['rect'](n.node.x, n.node.y, 150, 100).attr({stroke: "none"});
                 // Node text
@@ -207,7 +194,6 @@ openerp.web_process = function (openerp) {
                         self.initialize_process_view();
                     });
                 }
-
                 //Node Description
                 new_notes = n.node.notes;
                 if(n.node.notes.length > 25) {
@@ -264,7 +250,6 @@ openerp.web_process = function (openerp) {
             var layouter = new Graph.Layout.Ordered(process_graph);
             var render_process_graph = new Graph.Renderer.Raphael('process_canvas', process_graph, $('#process_canvas').width(), $('#process_canvas').height());
         },
-
         jump_to_view: function(model, id) {
             var self = this;
             var dataset = new openerp.web.DataSetStatic(this, 'ir.values', this.session.context);
@@ -283,7 +268,6 @@ openerp.web_process = function (openerp) {
                         });
                 });
         },
-
         edit_process_view: function() {
             var self = this;
             var action_manager = new openerp.web.ActionManager(this);
