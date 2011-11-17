@@ -385,6 +385,13 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.do_load_qweb(['/web/webclient/qweb'], continuation);
     },
 
+    connect: function(server, db, login, password, continuation) {
+        var self = this;
+        this.bind(server, function() {
+            self.login(db, login, password, continuation);
+        });
+    },
+
     get_absolute_url: function(path) {
         var r_has_protocol = /^https?:\/\//,
             r_absolute_internal = /^\/[^\/]/;   // starts with / (but not //)
