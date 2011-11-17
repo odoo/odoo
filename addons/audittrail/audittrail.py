@@ -43,22 +43,17 @@ class audittrail_rule(osv.osv):
         "log_create": fields.boolean("Log Creates",help="Select this if you want to keep track of creation on any record of the object of this rule"),
         "log_action": fields.boolean("Log Action",help="Select this if you want to keep track of actions on the object of this rule"),
         "log_workflow": fields.boolean("Log Workflow",help="Select this if you want to keep track of workflow on any record of the object of this rule"),
-        "state": fields.selection((("draft", "Draft"),
-                                   ("subscribed", "Subscribed")),
-                                   "State", required=True),
+        "state": fields.selection((("draft", "Draft"), ("subscribed", "Subscribed")), "State", required=True),
         "action_id": fields.many2one('ir.actions.act_window', "Action ID"),
-
     }
-
     _defaults = {
-        'state': lambda *a: 'draft',
-        'log_create': lambda *a: 1,
-        'log_unlink': lambda *a: 1,
-        'log_write': lambda *a: 1,
+        'state': 'draft',
+        'log_create': 1,
+        'log_unlink': 1,
+        'log_write': 1,
     }
-
     _sql_constraints = [
-        ('model_uniq', 'unique (object_id)', """There is a rule defined on this object\n You cannot define another one the same object!""")
+        ('model_uniq', 'unique (object_id)', """There is already a rule defined on this object\n You cannot define another: please edit the existing one.""")
     ]
     __functions = {}
 
@@ -178,54 +173,33 @@ class audittrail_log_line(osv.osv):
 class audittrail_objects_proxy(object_proxy):
     """ Uses Object proxy for auditing changes on object of subscribed Rules"""
 
-    def get_value_text(self, cr, uid, field_name, values, model, context=None):
+    def get_value_text(self, cr, uid, pool, resource_pool, method, field, value, recursive=True):
         """
-        Gets textual values for the fields
-        e.g.: For field of type many2one it gives its name value instead of id
-
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param field_name: List of fields for text values
-        @param values: Values for field to be converted into textual values
-        @return: values: List of textual values for given fields
+        Gets textual values for the fields. 
+            If the field is a many2one, it returns the name. 
+            If it's a one2many or a many2many, it returns a list of name. 
+            In other cases, it just returns the value.
+        :param cr: the current row, from the database cursor,
+        :param uid: the current user’s ID for security checks,
+        :param pool: current db's pooler object.
+        :param resource_pool: pooler object of the model which values are being changed.
+        :param field: for which the text value is to be returned.
+        :param value: value of the field.
+        :param recursive: True or False, True will repeat the process recursively => when?
+        :return: string value or a list of values(for O2M/M2M)
         """
-        if not context:
-            context = {}
-        if field_name in('__last_update','id'):
-            return values
-        pool = pooler.get_pool(cr.dbname)
-        field_pool = pool.get('ir.model.fields')
-        model_pool = pool.get('ir.model')
-        obj_pool = pool.get(model.model)
-        if obj_pool._inherits:
-            inherits_ids = model_pool.search(cr, uid, [('model', '=', obj_pool._inherits.keys()[0])])
-            field_ids = field_pool.search(cr, uid, [('name', '=', field_name), ('model_id', 'in', (model.id, inherits_ids[0]))])
-        else:
-            field_ids = field_pool.search(cr, uid, [('name', '=', field_name), ('model_id', '=', model.id)])
-        field_id = field_ids and field_ids[0] or False
-        assert field_id, _("'%s' field does not exist in '%s' model" %(field_name, model.model))
 
-        field = field_pool.read(cr, uid, field_id)
-        relation_model = field['relation']
-        relation_model_pool = relation_model and pool.get(relation_model) or False
-
-        if field['ttype'] == 'many2one':
-            res = False
-            relation_id = False
-            if values and type(values) == tuple:
-                relation_id = values[0]
-                if relation_id and relation_model_pool:
-                    relation_model_object = relation_model_pool.read(cr, uid, relation_id, [relation_model_pool._rec_name])
-                    res = relation_model_object[relation_model_pool._rec_name]
-            return res
-
-        elif field['ttype'] in ('many2many','one2many'):
-            res = []
-            for relation_model_object in relation_model_pool.read(cr, uid, values, [relation_model_pool._rec_name]):
-                res.append(relation_model_object[relation_model_pool._rec_name])
-            return res
-
-        return values
+        field_obj = (resource_pool._all_columns.get(field)).column
+        if field_obj._type in ('one2many','many2many'):
+            if recursive:
+                self.log_fct(cr, uid, field_obj._obj, method, None, value, 'child_relation_log')
+            data = pool.get(field_obj._obj).name_get(cr, uid, value)
+            #return the modifications on x2many fields as a list of names
+            return map(lambda x:x[1], data)
+        elif field_obj._type == 'many2one':
+            #return the modifications on a many2one field as its value returned by name_get()
+            return value and value[1] or value
+        return value
 
     def create_log_line(self, cr, uid, log_id, model, lines=[]):
         """
@@ -233,7 +207,7 @@ class audittrail_objects_proxy(object_proxy):
 
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param model: Object who's values are being changed
+        @param model: Object which values are being changed
         @param lines: List of values for line is to be created
         """
         pool = pooler.get_pool(cr.dbname)
@@ -241,51 +215,67 @@ class audittrail_objects_proxy(object_proxy):
         model_pool = pool.get('ir.model')
         field_pool = pool.get('ir.model.fields')
         log_line_pool = pool.get('audittrail.log.line')
-        #start Loop
         for line in lines:
-            if line['name'] in('__last_update','id'):
-                continue
+            field_obj = obj_pool._all_columns.get(line['name'])
+            assert field_obj, _("'%s' field does not exist in '%s' model" %(line['name'], model.model))
+            field_obj = field_obj.column
+            old_value = line.get('old_value', '')
+            new_value = line.get('new_value', '')
+            search_models = [model.id]
             if obj_pool._inherits:
-                inherits_ids = model_pool.search(cr, uid, [('model', '=', obj_pool._inherits.keys()[0])])
-                field_ids = field_pool.search(cr, uid, [('name', '=', line['name']), ('model_id', 'in', (model.id, inherits_ids[0]))])
-            else:
-                field_ids = field_pool.search(cr, uid, [('name', '=', line['name']), ('model_id', '=', model.id)])
-            field_id = field_ids and field_ids[0] or False
-            assert field_id, _("'%s' field does not exist in '%s' model" %(line['name'], model.model))
-
-            field = field_pool.read(cr, uid, field_id)
-            old_value = 'old_value' in line and  line['old_value'] or ''
-            new_value = 'new_value' in line and  line['new_value'] or ''
-            old_value_text = 'old_value_text' in line and  line['old_value_text'] or ''
-            new_value_text = 'new_value_text' in line and  line['new_value_text'] or ''
-
-            if old_value_text == new_value_text:
-                continue
-            if field['ttype'] == 'many2one':
-                if type(old_value) == tuple:
-                    old_value = old_value[0]
-                if type(new_value) == tuple:
-                    new_value = new_value[0]
+                search_models += model_pool.search(cr, uid, [('model', 'in', obj_pool._inherits.keys())])
+            field_id = field_pool.search(cr, uid, [('name', '=', line['name']), ('model_id', 'in', search_models)])
+            if field_obj._type == 'many2one':
+                old_value = old_value and old_value[0] or old_value
+                new_value = new_value and new_value[0] or new_value
             vals = {
                     "log_id": log_id,
-                    "field_id": field_id,
+                    "field_id": field_id and field_id[0] or False,
                     "old_value": old_value,
                     "new_value": new_value,
-                    "old_value_text": old_value_text,
-                    "new_value_text": new_value_text,
-                    "field_description": field['field_description']
+                    "old_value_text": line.get('old_value_text', ''),
+                    "new_value_text": line.get('new_value_text', ''),
+                    "field_description": field_obj.string
                     }
             line_id = log_line_pool.create(cr, uid, vals)
-            cr.commit()
-        #End Loop
         return True
 
+    def start_log_process(self, cr, user_id, model, method, resource_data, pool, resource_pool):
+        """
+         Logging function: This function performs the logging operation for create/read/unlink operation
+         :param cr: the current row, from the database cursor,
+         :param user_id: the current user’s ID,
+         :param model: Object whose values are being changed
+         :param method: method to log: create, read, unlink
+         :param resource_data: list of data modified for the model
+         :param pool: current db's pooler object.
+         :param resource_pool: pooler object of the model who's values are being changed.
+         :return:True
+        """
+        key1 = '%s_value'%(method == 'create' and 'new' or 'old')
+        key2 = '%s_value_text'%(method == 'create' and 'new' or 'old')
+        vals = { 'method': method, 'object_id': model.id,'user_id': user_id}
+        for resource, fields in resource_data.iteritems():
+            lines = []
+            for field_key, value in fields.iteritems():
+                if field_key in ('__last_update', 'id'):continue
+                ret_val = self.get_value_text(cr, 1, pool, resource_pool, method, field_key, value, method != 'read')
+                line = {
+                      'name': field_key,
+                      key1: value,
+                      key2: ret_val and ret_val or value
+                      }
+                lines.append(line)
+            if lines:
+                vals.update({'res_id': resource})
+                log_id = pool.get('audittrail.log').create(cr, 1, vals)
+                self.create_log_line(cr, uid, log_id, model, lines)
+        return True
+    
     def log_fct(self, cr, uid, model, method, fct_src, *args):
         """
-        Logging function: This function is performs logging oprations according to method
-        @param db: the current database
-        @param uid: the current user’s ID for security checks,
-        @param object: Object who's values are being changed
+        Logging function: This function is performing the logging operation
+        @param model: Object whose values are being changed
         @param method: method to log: create, read, write, unlink
         @param fct_src: execute method of Object proxy
 
@@ -293,164 +283,152 @@ class audittrail_objects_proxy(object_proxy):
         """
         uid_orig = uid
         uid = 1
-        res2 = args
         pool = pooler.get_pool(cr.dbname)
         resource_pool = pool.get(model)
-        log_pool = pool.get('audittrail.log')
         model_pool = pool.get('ir.model')
-
-        model_ids = model_pool.search(cr, uid, [('model', '=', model)])
+        model_ids = model_pool.search(cr, 1, [('model', '=', model)])
         model_id = model_ids and model_ids[0] or False
         assert model_id, _("'%s' Model does not exist..." %(model))
         model = model_pool.browse(cr, uid, model_id)
+        relational_table_log = True if (args and args[-1] == 'child_relation_log') else False
 
-        if method in ('create'):
-            res_id = fct_src(cr, uid_orig, model.model, method, *args)
-            resource = resource_pool.read(cr, uid, res_id, args[0].keys())
-            vals = {
-                    "method": method,
-                    "object_id": model.id,
-                    "user_id": uid_orig,
-                    "res_id": resource['id'],
-            }
-            if 'id' in resource:
-                del resource['id']
-            log_id = log_pool.create(cr, uid, vals)
-            lines = []
-            for field in resource:
-                line = {
-                      'name': field,
-                      'new_value': resource[field],
-                      'new_value_text': self.get_value_text(cr, uid, field, resource[field], model)
-                      }
-                lines.append(line)
-            self.create_log_line(cr, uid, log_id, model, lines)
-
+        if method == 'create':
+            resource_data = {}
+            fields_to_read = []
+            if relational_table_log:
+                res_id = args[0]
+            else:
+                res_id = fct_src(cr, uid_orig, model.model, method, *args)
+                fields_to_read = args[0].keys()
+            if res_id:
+                resource = resource_pool.read(cr, uid, res_id, fields_to_read)
+                if not isinstance(resource,list):
+                    resource = [resource]
+                map(lambda x: resource_data.setdefault(x['id'], x), resource)
+                self.start_log_process(cr, uid_orig, model, method, resource_data, pool, resource_pool)
             return res_id
 
-        elif method in ('read'):
+        elif method in('read', 'unlink'):
             res_ids = args[0]
             old_values = {}
-            res = fct_src(cr, uid_orig, model.model, method, *args)
-            if type(res) == list:
-                for v in res:
-                    old_values[v['id']] = v
+            if method == 'read':
+                res = fct_src(cr, uid_orig, model.model, method, *args)
+                map(lambda x: old_values.setdefault(x['id'], x), res)
             else:
-                old_values[res['id']] = res
-            for res_id in old_values:
-                vals = {
-                    "method": method,
-                    "object_id": model.id,
-                    "user_id": uid_orig,
-                    "res_id": res_id,
-
-                }
-                log_id = log_pool.create(cr, uid, vals)
-                lines = []
-                for field in old_values[res_id]:
-                    line = {
-                              'name': field,
-                              'old_value': old_values[res_id][field],
-                              'old_value_text': self.get_value_text(cr, uid, field, old_values[res_id][field], model)
-                              }
-                    lines.append(line)
-
-                self.create_log_line(cr, uid, log_id, model, lines)
+                res = resource_pool.read(cr, uid, res_ids)
+                map(lambda x:old_values.setdefault(x['id'], x), res)
+            self.start_log_process(cr, uid_orig, model, method, old_values, pool, resource_pool)
+            if not relational_table_log and method == 'unlink':
+                res = fct_src(cr, uid_orig, model.model, method, *args)
             return res
-
-        elif method in ('unlink'):
-            res_ids = args[0]
-            old_values = {}
-            for res_id in res_ids:
-                old_values[res_id] = resource_pool.read(cr, uid, res_id)
-
-            for res_id in res_ids:
-                vals = {
-                    "method": method,
-                    "object_id": model.id,
-                    "user_id": uid_orig,
-                    "res_id": res_id,
-
-                }
-                log_id = log_pool.create(cr, uid, vals)
-                lines = []
-                for field in old_values[res_id]:
-                    if field in ('id'):
-                        continue
-                    line = {
-                          'name': field,
-                          'old_value': old_values[res_id][field],
-                          'old_value_text': self.get_value_text(cr, uid, field, old_values[res_id][field], model)
-                          }
-                    lines.append(line)
-
-                self.create_log_line(cr, uid, log_id, model, lines)
-            res = fct_src(cr, uid_orig, model.model, method, *args)
-            return res
-        else:
+        else: #method is write or workflow action
             res_ids = []
             res = True
             if args:
                 res_ids = args[0]
                 old_values = {}
                 fields = []
-                if len(args)>1 and type(args[1]) == dict:
+                if len(args) > 1 and isinstance(args[1], dict):
                     fields = args[1].keys()
-                if type(res_ids) in (long, int):
+                if isinstance(res_ids, (long, int)):
                     res_ids = [res_ids]
             if res_ids:
-                for resource in resource_pool.read(cr, uid, res_ids):
-                    resource_id = resource['id']
-                    if 'id' in resource:
-                        del resource['id']
-                    old_values_text = {}
-                    old_value = {}
-                    for field in resource.keys():
-                        old_value[field] = resource[field]
-                        old_values_text[field] = self.get_value_text(cr, uid, field, resource[field], model)
-                    old_values[resource_id] = {'text':old_values_text, 'value': old_value}
-
+                #store the old values into a dictionary
+                old_values = self.process_data(cr, uid_orig, pool, res_ids, model, method, type='old')
+            #process the original function or workflow trigger
             res = fct_src(cr, uid_orig, model.model, method, *args)
-
+            if method == 'copy':
+                res_ids = [res]
             if res_ids:
-                for resource in resource_pool.read(cr, uid, res_ids):
-                    resource_id = resource['id']
-                    if 'id' in resource:
-                        del resource['id']
-                    vals = {
-                        "method": method,
-                        "object_id": model.id,
-                        "user_id": uid_orig,
-                        "res_id": resource_id,
-                    }
-
-
-                    log_id = log_pool.create(cr, uid, vals)
-                    lines = []
-                    for field in resource.keys():
-                        line = {
-                              'name': field,
-                              'new_value': resource[field],
-                              'old_value': old_values[resource_id]['value'][field],
-                              'new_value_text': self.get_value_text(cr, uid, field, resource[field], model),
-                              'old_value_text': old_values[resource_id]['text'][field]
-                              }
-                        lines.append(line)
-
-                    self.create_log_line(cr, uid, log_id, model, lines)
+                #check the new value and log the changes if any
+                self.process_data(cr, uid_orig, pool, res_ids, model, method, old_values)
             return res
         return True
 
+    def process_data(self, cr, uid_orig, pool, res_ids, model, method, original_values={}, type='new'):
+        """
+        This is specially created to log actions and workflow actions on an object recursively.
+        It processes and iterates recursively on old data (i.e before the method was executed )
+        and stores it in a dict. Then this dict is used to compare with the new data
+        (i.e after the method execution) and log the changes.
+
+        :param cr: the current row, from the database cursor,
+        :param uid_orig: the current user’s ID,
+        :param pool: current db's pooler object.
+        :param res_ids: Id's of resource to be logged/compared.
+        :param model: Object whose values are being changed
+        :param method: method to log: create, read, unlink,write,actions,workflow actions
+        :param original_values: dict of values of res_ids read before execution of the method only when type is 'new'
+        :param type: Either of 'new' or 'old' to know which data to process.
+        :return: dict of values
+        """
+        resource_pool = pool.get(model.model)
+        resource_data = resource_pool.read(cr, 1, res_ids)
+        _old_values = {}
+        for resource in resource_data:
+            _old_values_text = {}
+            _old_value = {}
+            resource_id = resource['id']
+            if type == 'new':
+                vals = {'method': method,'object_id': model.id,'user_id': uid_orig }
+                vals.update({'res_id': resource_id})
+                if resource_id not in original_values and method !='copy':
+                    # the resource was not existing so we are forcing the method to 'create'
+                    # (because it could also come with the value 'write' if we are creating 
+                    #  new record through a one2many field)
+                    vals.update({'method': 'create'})
+                lines = []
+            for field in resource:
+                if field in ('__last_update', 'id'):continue
+                field_obj = (resource_pool._all_columns.get(field)).column
+                if field_obj._type in ('one2many','many2many'):
+                    #checking if an audittrail rule apply in super admin mode
+                    if self.check_rules(cr, 1, field_obj._obj, method):
+                        #checking if the model associated to a *2m field exists, in super admin mode
+                        x2m_model_ids = pool.get('ir.model').search(cr, 1, [('model', '=', field_obj._obj)])
+                        x2m_model_id = x2m_model_ids and x2m_model_ids[0] or False
+                        assert x2m_model_id, _("'%s' Model does not exist..." %(field_obj._obj))
+                        x2m_model = pool.get('ir.model').browse(cr, 1, x2m_model_id)
+                        _old_values[field] = self.process_data(cr, 1, pool, resource[field], x2m_model, method, original_values.get(field,{}), type=type)
+                ret_val = self.get_value_text(cr, 1, pool, resource_pool, method, field, resource[field], False)
+                if type == 'new':
+                    line = {
+                              'name': field,
+                              'new_value': resource[field],
+                              'old_value': resource_id in original_values and original_values[resource_id]['value'].get(field),
+                              'new_value_text': ret_val and ret_val or resource[field],
+                              'old_value_text': resource_id in original_values and original_values[resource_id]['text'].get(field)
+                              }
+                    if line.get('new_value_text') != line.get('old_value_text'):
+                        lines.append(line)
+                else:
+                    _old_value[field] = resource[field]
+                    _old_values_text[field] = ret_val and ret_val or resource[field]
+            if type == 'new':
+                if lines:
+                    log_id = pool.get('audittrail.log').create(cr, 1, vals)
+                    self.create_log_line(cr, 1, log_id, model, lines)
+            else:
+                _old_values[resource_id] = {'text':_old_values_text, 'value': _old_value}
+        return _old_values
+
     def check_rules(self, cr, uid, model, method):
+        """
+        Checks if auditrails is installed for that db and then if one rule match
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID,
+        @param model: Object whose values are being changed
+        @param method: method to log: create, read, unlink,write,actions,workflow actions
+        @return: True or False
+        """
         pool = pooler.get_pool(cr.dbname)
-        # Check if auditrails is installed for that db and then if one rule match
         if 'audittrail.rule' in pool.models:
             model_ids = pool.get('ir.model').search(cr, 1, [('model', '=', model)])
             model_id = model_ids and model_ids[0] or False
             if model_id:
                 rule_ids = pool.get('audittrail.rule').search(cr, 1, [('object_id', '=', model_id), ('state', '=', 'subscribed')])
                 for rule in pool.get('audittrail.rule').read(cr, 1, rule_ids, ['user_id','log_read','log_write','log_create','log_unlink','log_action','log_workflow']):
-                    if len(rule['user_id'])==0 or uid in rule['user_id']:
+                    if len(rule['user_id']) == 0 or uid in rule['user_id']:
                         if rule.get('log_'+method,0):
                             return True
                         elif method not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink', 'write', 'create'):
@@ -460,18 +438,14 @@ class audittrail_objects_proxy(object_proxy):
     def execute_cr(self, cr, uid, model, method, *args, **kw):
         fct_src = super(audittrail_objects_proxy, self).execute_cr
         if self.check_rules(cr,uid,model,method):
-            res = self.log_fct(cr, uid, model, method, fct_src, *args)
-        else:
-            res = fct_src(cr, uid, model, method, *args)
-        return res
+            return self.log_fct(cr, uid, model, method, fct_src, *args)
+        return fct_src(cr, uid, model, method, *args)
 
     def exec_workflow_cr(self, cr, uid, model, method, *args, **argv):
         fct_src = super(audittrail_objects_proxy, self).exec_workflow_cr
         if self.check_rules(cr,uid,model,'workflow'):
-            res = self.log_fct(cr, uid, model, method, fct_src, *args)
-        else:
-            res = fct_src(cr, uid, model, method, *args)
-        return res
+            return self.log_fct(cr, uid, model, method, fct_src, *args)
+        return fct_src(cr, uid, model, method, *args)
 
 audittrail_objects_proxy()
 
