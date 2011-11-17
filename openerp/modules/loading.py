@@ -307,7 +307,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 modobj.update_list(cr, 1)
 
             if 'all' in tools.config['init']:
-                pass
+                ids = modobj.search(cr, 1, [])
+                tools.config['init'] = dict.fromkeys([m['name'] for m in modobj.read(cr, 1, ids, ['name'])], 1)
 
             _check_module_names(cr, itertools.chain(tools.config['init'].keys(), tools.config['update'].keys()))
 
