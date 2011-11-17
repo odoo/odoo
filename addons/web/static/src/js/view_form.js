@@ -140,7 +140,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             // null index means we should start a new record
             promise = this.on_button_new();
         } else {
-            promise = this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
+            promise = this.dataset.read_index(_.keys(this.fields_view.fields)).pipe(this.on_record_loaded);
         }
         this.$element.show();
         if (this.sidebar) {
@@ -360,12 +360,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 var keys = _.keys(self.fields_view.fields);
                 $.when(self.do_set_editable()).then(function() {
                     if (keys.length) {
-                        self.dataset.default_get(keys).then(self.on_record_loaded).then(function() {
+                        self.dataset.default_get(keys).pipe(self.on_record_loaded).then(function() {
                             def.resolve();
                         });
                     } else {
-                        self.on_record_loaded({});
-                        def.resolve();
+                        self.on_record_loaded({}).then(function() {
+                            def.resolve();
+                        });
                     }
                 });
             }
@@ -530,7 +531,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (self.dataset.index == null || self.dataset.index < 0) {
                 return $.when(self.on_button_new());
             } else {
-                return self.dataset.read_index(_.keys(self.fields_view.fields), self.on_record_loaded);
+                return self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded);
             }
         };
         this.reload_lock = this.reload_lock.pipe(act, act);
