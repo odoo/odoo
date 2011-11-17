@@ -276,6 +276,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             tools.config['update']['all'] = 1
             if not tools.config['without_demo']:
                 tools.config["demo"]['all'] = 1
+            update_module = True
 
         # This is a brand new pool, just created in pooler.get_db_and_pool()
         pool = pooler.get_pool(cr.dbname)
@@ -293,7 +294,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
-        loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
+        loaded_modules, processed_modules = load_module_graph(cr, graph, status, report=report)
 
         if tools.config['load_language']:
             for lang in tools.config['load_language'].split(','):
