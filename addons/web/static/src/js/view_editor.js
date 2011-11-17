@@ -17,7 +17,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     init_view_editor: function() {
         var self = this;
         var action = {
-            name: _.sprintf("Manage Views (%s)", this.model),
+            name: _.str.sprintf("Manage Views (%s)", this.model),
             context: this.session.user_context,
             domain: [["model", "=", this.model]],
             res_model: 'ir.ui.view',
@@ -77,7 +77,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         this.create_view_dialog = new openerp.web.Dialog(this, {
             modal: true,
-            title: _.sprintf("Create a view (%s)", self.model),
+            title: _.str.sprintf("Create a view (%s)", self.model),
             width: 500,
             height: 400,
             buttons: {
@@ -147,7 +147,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             if (field_name) {
                 model_dataset.read_slice(['name','field_id'], {"domain": [['model','=',self.model]]}, function(records) {
                     if (records) {view_string = records[0].name;}
-                    var arch = _.sprintf("<?xml version='1.0'?>\n<%s string='%s'>\n\t<field name='%s'/>\n</%s>", values.view_type, view_string, field_name, values.view_type);
+                    var arch = _.str.sprintf("<?xml version='1.0'?>\n<%s string='%s'>\n\t<field name='%s'/>\n</%s>", values.view_type, view_string, field_name, values.view_type);
                     var vals = {'model': self.model, 'name': values.view_name, 'priority': values.priority, 'type': values.view_type, 'arch': arch};
                     self.dataset.create(vals, function(suc) {
                         def.resolve();
@@ -170,16 +170,16 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     add_node_name : function(node) {
         if(node.tagName.toLowerCase() == "button" || node.tagName.toLowerCase() == "field"){
             return (node.getAttribute('name'))?
-                _.sprintf( "<%s name='%s'>",node.tagName.toLowerCase(), node.getAttribute('name')):
-                _.sprintf( "<%s>",node.tagName.toLowerCase());
+                _.str.sprintf( "<%s name='%s'>",node.tagName.toLowerCase(), node.getAttribute('name')):
+                _.str.sprintf( "<%s>",node.tagName.toLowerCase());
         }else if(node.tagName.toLowerCase() == "group"){
             return (node.getAttribute('string'))?
-                _.sprintf( "<%s>",node.getAttribute('string')):
-                _.sprintf( "<%s>",node.tagName.toLowerCase());
+                _.str.sprintf( "<%s>",node.getAttribute('string')):
+                _.str.sprintf( "<%s>",node.tagName.toLowerCase());
         }else{
             return (node.getAttribute('string'))?
-                _.sprintf( "<%s string='%s'>",node.tagName.toLowerCase(), node.getAttribute('string')):
-                _.sprintf( "<%s>",node.tagName.toLowerCase());
+                _.str.sprintf( "<%s string='%s'>",node.tagName.toLowerCase(), node.getAttribute('string')):
+                _.str.sprintf( "<%s>",node.tagName.toLowerCase());
         }
     },
     do_delete_view: function() {
@@ -241,7 +241,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             'level': 0,
             'id': this.xml_element_id +=1,
             'att_list': [],
-            'name': _.sprintf("<view view_id = %s>", view_id),
+            'name': _.str.sprintf("<view view_id = %s>", view_id),
             'child_id': []
         };
         var xml_arch = QWeb.load_xml(arch);
@@ -298,7 +298,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     expr_to_list.push(_.without($.trim(part.replace(/[^a-zA-Z 0-9 _]+/g,'!')).split("!"), ""));
                 });
             }else{
-                var temp = _.reject(xpath_arch_object[0].child_id[0].att_list, function(list) {
+                var temp = _.str.reject(xpath_arch_object[0].child_id[0].att_list, function(list) {
                     return _.include(list, "position")
                 });
                 expr_to_list = [_.flatten(temp)];
@@ -371,7 +371,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         this.edit_xml_dialog = new openerp.web.Dialog(this, {
             modal: true,
-            title: _.sprintf("View Editor %d - %s", self.main_view_id, self.model),
+            title: _.str.sprintf("View Editor %d - %s", self.main_view_id, self.model),
             width: 750,
             height: 500,
             buttons: {
@@ -450,12 +450,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 case "side-remove":
                     break;
                 case "side-edit":
-                    var tr = $(this).closest("tr[id^='viewedit-']").find('a').text();
-                    var tag = _.detect(_.keys(_PROPERTIES),function(res){
-                        return _.include(tr, res);
-                    });
-                    var properties = _PROPERTIES[tag];
-                    self.on_edit_node(properties, clicked_tr_id, one_object, view_id, view_xml_id, clicked_tr_level);
+                    var row_id = $(this).closest("tr[id^='viewedit-']").attr('id').split("-")[1];
+                    var result = self.get_object_by_id(row_id, one_object['main_object'], []);
+                    if (result.length && result[0] && result[0].att_list) {
+                        var properties = _PROPERTIES[result[0].att_list[0]];
+                        self.on_edit_node(properties, clicked_tr_id, one_object, view_id, view_xml_id, clicked_tr_level);
+                    }
                     break;
                 case "side-up":
                     while (1) {
@@ -712,7 +712,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             _.each(properties, function(property) {
                 var type_widget =  new (self.property.get_any([_PROPERTIES_ATTRIBUTES[property].type])) (self.edit_node_dialog, property);
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
-                    return _.include(res, property);
+                    if (res instanceof Array) {
+                        return _.include(res, property);
+                    }
+                    return false;
                 });
                 type_widget.selection = _PROPERTIES_ATTRIBUTES[property].selection
                 type_widget.type = _PROPERTIES_ATTRIBUTES[property].type
@@ -788,7 +791,7 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
         }
     },
     render: function() {
-        return _.sprintf("<td id = %s>%s</td>", this.name, QWeb.render(this.template, {widget: this}))
+        return _.str.sprintf("<td id = %s>%s</td>", this.name, QWeb.render(this.template, {widget: this}))
     },
 });
 openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
