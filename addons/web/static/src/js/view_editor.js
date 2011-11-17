@@ -248,7 +248,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function(arch) {
             if (arch.length) {
                 var arch_object = self.parse_xml(arch[0].arch, self.main_view_id);
-                self.main_view_type = arch[0].type
+                self.main_view_type = arch[0].type == 'tree'? 'list': arch[0].type;
                 view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch});
                 self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}, function(result) {
                     _.each(result, function(res) {
