@@ -56,7 +56,7 @@ You can manage:
     ],
     'test': [
              'test/hr_employee_demo.yml',
-             'test/process/open2recruit2close_job.yml',
+             'test/open2recruit2close_job.yml',
              ],
     'installable': True,
     'active': False,
