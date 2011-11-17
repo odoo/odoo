@@ -78,7 +78,7 @@ class project(osv.osv):
             return {'value':{'contact_id': False}}
         addr = partner_obj.address_get(cr, uid, [part], ['contact'])
         val = {'contact_id': addr['contact']}
-        if pricelist_id in self._columns:
+        if 'pricelist_id' in self.fields_get(cr, uid, context=context):
             pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
             pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
             val['pricelist_id'] = pricelist_id
