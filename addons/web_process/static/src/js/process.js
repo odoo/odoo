@@ -1,6 +1,5 @@
 openerp.web_process = function (openerp) {
     var QWeb = openerp.web.qweb;
-    QWeb.add_template('/web_process/static/src/xml/web_process.xml');
     openerp.web.ViewManager.include({
         start: function() {
             this._super();

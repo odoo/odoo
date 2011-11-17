@@ -8,5 +8,8 @@
     "css": [
         "static/src/css/process.css"
     ],
+    'qweb': [
+        "static/src/xml/web_process.css"
+    ],
     'active': True
 }
