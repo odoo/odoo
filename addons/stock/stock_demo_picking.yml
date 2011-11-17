@@ -1,8 +1,12 @@
 -
+  Created a picking
+-
   !record {model: stock.picking, id: stock_picking_1}:
     type: out
     company_id: base.main_company
     address_id: res_partner_address_fabien0
+-
+  Created a Move
 -
   !record {model: stock.move, id: stock_move_1}:
     product_id: product.product_product_cpu1
@@ -13,6 +17,8 @@
     location_id: stock.stock_location_stock
     name: CPU1, Processor AMD Athlon XP 1800
     picking_id: stock_picking_1
+-
+  Created another Move
 -
   !record {model: stock.move, id: stock_move_2}:
     product_id: product.product_product_cpu3
