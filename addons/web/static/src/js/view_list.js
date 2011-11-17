@@ -295,7 +295,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         } else {
             last = first + limit;
         }
-        this.$element.find('span.oe-pager-state').empty().text(_.sprintf(
+        this.$element.find('span.oe-pager-state').empty().text(_.str.sprintf(
             "[%d to %d] of %d", first + 1, last, total));
 
         this.$element
@@ -647,7 +647,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 return;
             }
 
-            $footer_cells.filter(_.sprintf('[data-field=%s]', column.id))
+            $footer_cells.filter(_.str.sprintf('[data-field=%s]', column.id))
                 .html(openerp.web.format_cell(aggregation, column, undefined, false));
         });
     },
@@ -1127,7 +1127,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             child.datagroup = group;
 
             var $row = child.$row = $('<tr>');
-            if (group.openable) {
+            if (group.openable && group.length) {
                 $row.click(function (e) {
                     if (!$row.data('open')) {
                         $row.data('open', true)
@@ -1159,7 +1159,13 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 } catch (e) {
                     $group_column.html(row_data[group_column.id].value);
                 }
-                if (group.openable) {
+                if (!group.length) {
+                    // Kinda-ugly hack: jquery-ui has no "empty" icon, so set
+                    // wonky background position to ensure nothing is displayed
+                    // there but the rest of the behavior is ui-icon's
+                    $group_column.prepend(
+                        '<span class="ui-icon" style="float: left; background-position: 150px 150px">');
+                } else if (group.openable) {
                     // Make openable if not terminal group & group_by_no_leaf
                     $group_column
                         .prepend('<span class="ui-icon ui-icon-triangle-1-e" style="float: left;">');
@@ -1186,7 +1192,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                             format = "%.2f";
                         }
                         $('<td>')
-                            .text(_.sprintf(format, value))
+                            .text(_.str.sprintf(format, value))
                             .appendTo($row);
                     } else {
                         $row.append('<td>');
@@ -1245,7 +1251,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 var pages = Math.ceil(dataset.ids.length / limit);
                 self.$row
                     .find('.oe-pager-state')
-                        .text(_.sprintf('%d/%d', page + 1, pages))
+                        .text(_.str.sprintf('%d/%d', page + 1, pages))
                     .end()
                     .find('button[data-pager-action=previous]')
                         .attr('disabled', page === 0)

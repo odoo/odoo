@@ -76,7 +76,13 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
     if (typeof value === 'number' && isNaN(value)) {
         value = false;
     }
+    //noinspection FallthroughInSwitchStatementJS
     switch (value) {
+        case '':
+            if (descriptor.type === 'char') {
+                return '';
+            }
+            console.warn('Field', descriptor, 'had an empty string as value, treating as false...');
         case false:
         case Infinity:
         case -Infinity:
@@ -86,18 +92,18 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
     switch (descriptor.widget || descriptor.type) {
         case 'integer':
             return openerp.web.insert_thousand_seps(
-                _.sprintf('%d', value));
+                _.str.sprintf('%d', value));
         case 'float':
             var precision = descriptor.digits ? descriptor.digits[1] : 2;
-            var formatted = _.sprintf('%.' + precision + 'f', value).split('.');
+            var formatted = _.str.sprintf('%.' + precision + 'f', value).split('.');
             formatted[0] = openerp.web.insert_thousand_seps(formatted[0]);
             return formatted.join(l10n.decimal_point);
         case 'float_time':
-            return _.sprintf("%02d:%02d",
+            return _.str.sprintf("%02d:%02d",
                     Math.floor(value),
                     Math.round((value % 1) * 60));
         case 'progressbar':
-            return _.sprintf(
+            return _.str.sprintf(
                 '<progress value="%.2f" max="100.0">%.2f%%</progress>',
                     value, value);
         case 'many2one':

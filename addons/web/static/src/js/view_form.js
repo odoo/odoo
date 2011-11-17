@@ -35,7 +35,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.fields = {};
         this.datarecord = {};
         this.show_invalid = true;
-        this.dirty_for_user = false;
         this.default_focus_field = null;
         this.default_focus_button = null;
         this.registry = this.readonly ? openerp.web.form.readonly : openerp.web.form.widgets;
@@ -172,7 +171,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
         this.$form_header.find('.oe_form_on_readonly').toggle(this.readonly);
         this.$form_header.find('.oe_form_on_editable').toggle(!this.readonly);
-        this.dirty_for_user = false;
         this.datarecord = record;
         for (var f in this.fields) {
             var field = this.fields[f];
@@ -240,7 +238,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             try {
             processed = processed || [];
             if (widget.node.attrs.on_change) {
-                var onchange = _.trim(widget.node.attrs.on_change);
+                var onchange = _.str.trim(widget.node.attrs.on_change);
                 var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
                 if (call) {
                     var method = call[1], args = [];
@@ -257,7 +255,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     };
                     var parent_fields = null;
                     _.each(call[2].split(','), function(a, i) {
-                        var field = _.trim(a);
+                        var field = _.str.trim(a);
                         if (field in argument_replacement) {
                             args.push(argument_replacement[field](i));
                             return;
@@ -267,11 +265,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                             return;
                         } else {
                             var splitted = field.split('.');
-                            if (splitted.length > 1 && _.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
+                            if (splitted.length > 1 && _.str.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
                                 if (parent_fields === null) {
                                     parent_fields = self.dataset.parent_view.get_fields_values();
                                 }
-                                var p_val = parent_fields[_.trim(splitted[1])];
+                                var p_val = parent_fields[_.str.trim(splitted[1])];
                                 if (p_val !== undefined) {
                                     args.push(p_val == null ? false : p_val);
                                     return;
@@ -317,7 +315,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     processed.push(field.name);
                     if (field.get_value() != value) {
                         field.set_value(value);
-                        field.dirty = this.dirty_for_user = true;
+                        field.dirty = true;
                         if (_.indexOf(processed, field.name) < 0) {
                             this.do_onchange(field, processed);
                         }
@@ -402,7 +400,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         return def.promise();
     },
     can_be_discarded: function() {
-        return !this.dirty_for_user || confirm(_t("Warning, the record has been modified, your changes will be discarded."));
+        return !this.is_dirty() || confirm(_t("Warning, the record has been modified, your changes will be discarded."));
     },
     /**
      * Triggers saving the form's record. Chooses between creating a new
@@ -418,8 +416,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             try {
             if (!self.initial_mutating_lock.isResolved() && !self.initial_mutating_lock.isRejected())
                 return;
-            var form_dirty = false,
-                form_invalid = false,
+            var form_invalid = false,
                 values = {},
                 first_invalid_field = null;
             for (var f in self.fields) {
@@ -431,7 +428,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                         first_invalid_field = f;
                     }
                 } else if (f.is_dirty()) {
-                    form_dirty = true;
                     values[f.name] = f.get_value();
                 }
             }
@@ -553,6 +549,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 return self.dataset.parent_view.recursive_save();
         });
     },
+    is_dirty: function() {
+        return _.any(this.fields, function (value) {
+            return value.is_dirty();
+        });
+    },
     is_interactible_record: function() {
         var id = this.datarecord.id;
         if (!id) {
@@ -638,7 +639,7 @@ openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
     },
     on_attachment_delete: function(e) {
         var self = this, $e = $(e.currentTarget);
-        var name = _.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
+        var name = _.str.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
         if (confirm("Do you really want to delete the attachment " + name + " ?")) {
             this.rpc('/web/dataset/unlink', {
                 model: 'ir.attachment',
@@ -798,8 +799,13 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
     _build_view_fields_values: function() {
         var a_dataset = this.view.dataset;
         var fields_values = this.view.get_fields_values();
-        var parent_values = a_dataset.parent_view ? a_dataset.parent_view.get_fields_values() : {};
-        fields_values.parent = parent_values;
+        var active_id = a_dataset.ids[a_dataset.index];
+        _.extend(fields_values, {
+            active_id: active_id || false,
+            active_ids: active_id ? [active_id] : [],
+            active_model: a_dataset.model,
+            parent: a_dataset.parent_view ? a_dataset.parent_view.get_fields_values() : {}
+        });
         return fields_values;
     },
     _build_eval_context: function() {
@@ -1231,7 +1237,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         }
     },
     on_ui_change: function() {
-        this.dirty = this.view.dirty_for_user = true;
+        this.dirty = true;
         this.validate();
         if (this.is_valid()) {
             this.set_value_from_ui();
@@ -1344,54 +1350,58 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
     template: "web.datetimepicker",
     jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
+    init: function(parent) {
+        this._super(parent);
+        this.name = parent.name;
+    },
     start: function() {
         var self = this;
-        this.$element.find('input').change(this.on_change);
+        this.$input = this.$element.find('input.oe_datepicker_master');
+        this.$input_picker = this.$element.find('input.oe_datepicker_container');
+        this.$input.change(this.on_change);
         this.picker({
             onSelect: this.on_picker_select,
             changeMonth: true,
             changeYear: true,
             showWeek: true,
-            showButtonPanel: false
+            showButtonPanel: true
         });
         this.$element.find('img.oe_datepicker_trigger').click(function() {
             if (!self.readonly) {
                 self.picker('setDate', self.value ? openerp.web.auto_str_to_date(self.value) : new Date());
-                self.$element.find('.oe_datepicker').toggle();
+                self.$input_picker.show();
+                self.picker('show');
+                self.$input_picker.hide();
             }
-        });
-        this.$element.find('.ui-datepicker-inline').removeClass('ui-widget-content ui-corner-all');
-        this.$element.find('button.oe_datepicker_close').click(function() {
-            self.$element.find('.oe_datepicker').hide();
         });
         this.set_readonly(false);
         this.value = false;
     },
     picker: function() {
-        return $.fn[this.jqueryui_object].apply(this.$element.find('.oe_datepicker_container'), arguments);
+        return $.fn[this.jqueryui_object].apply(this.$input_picker, arguments);
     },
     on_picker_select: function(text, instance) {
         var date = this.picker('getDate');
-        this.$element.find('input').val(date ? this.format_client(date) : '').change();
+        this.$input.val(date ? this.format_client(date) : '').change();
     },
     set_value: function(value) {
         this.value = value;
-        this.$element.find('input').val(value ? this.format_client(value) : '');
+        this.$input.val(value ? this.format_client(value) : '');
     },
     get_value: function() {
         return this.value;
     },
     set_value_from_ui: function() {
-        var value = this.$element.find('input').val() || false;
+        var value = this.$input.val() || false;
         this.value = this.parse_client(value);
     },
     set_readonly: function(readonly) {
         this.readonly = readonly;
-        this.$element.find('input').attr('disabled', this.readonly);
+        this.$input.attr('disabled', this.readonly);
         this.$element.find('img.oe_datepicker_trigger').toggleClass('oe_input_icon_disabled', readonly);
     },
     is_valid: function(required) {
-        var value = this.$element.find('input').val();
+        var value = this.$input.val();
         if (value === "") {
             return !required;
         } else {
@@ -1404,7 +1414,7 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
         }
     },
     focus: function() {
-        this.$element.find('input').focus();
+        this.$input.focus();
     },
     parse_client: function(v) {
         return openerp.web.parse_value(v, {"widget": this.type_of_date});
@@ -1421,11 +1431,7 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
 
 openerp.web.DateWidget = openerp.web.DateTimeWidget.extend({
     jqueryui_object: 'datepicker',
-    type_of_date: "date",
-    on_picker_select: function(text, instance) {
-        this._super(text, instance);
-        this.$element.find('.oe_datepicker').hide();
-    }
+    type_of_date: "date"
 });
 
 openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
@@ -1437,7 +1443,7 @@ openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
         var self = this;
         this._super.apply(this, arguments);
         this.datewidget = this.build_widget();
-        this.datewidget.on_change.add(this.on_ui_change);
+        this.datewidget.on_change.add_last(this.on_ui_change);
         this.datewidget.appendTo(this.$element);
     },
     set_value: function(value) {
@@ -1825,7 +1831,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             if (search_val.length > 0 &&
                 !_.include(raw_result, search_val) &&
                 (!self.value || search_val !== self.value[1])) {
-                values.push({label: _.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
+                values.push({label: _.str.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
                         $('<span />').text(search_val).html()), action: function() {
                     self._quick_create(search_val);
                 }});
@@ -2955,7 +2961,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     render_list: function() {
         var self = this;
         var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
-            function(x) { return _.trim(x); });
+            function(x) { return _.str.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
 
         if (shown.length == 0) {

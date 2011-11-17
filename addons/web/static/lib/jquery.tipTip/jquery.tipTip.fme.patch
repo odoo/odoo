@@ -1,5 +1,5 @@
---- jquery.tipTip_old.js	2011-11-14 14:05:53.000000000 +0100
-+++ jquery.tipTip.js	2011-11-14 14:41:34.000000000 +0100
+--- jquery.tipTip_old.js	2011-11-14 21:40:55.000000000 +0100
++++ jquery.tipTip.js	2011-11-15 10:09:35.000000000 +0100
 @@ -31,7 +31,7 @@
  			fadeIn: 200,
  			fadeOut: 200,
@@ -32,3 +32,21 @@
  					tiptip_content.html(org_title);
  					tiptip_holder.hide().removeAttr("class").css("margin","0");
  					tiptip_arrow.removeAttr("style");
+@@ -176,8 +173,15 @@
+ 					tiptip_arrow.css({"margin-left": arrow_left+"px", "margin-top": arrow_top+"px"});
+ 					tiptip_holder.css({"margin-left": marg_left+"px", "margin-top": marg_top+"px"}).attr("class","tip"+t_class);
+ 					
+-					if (timeout){ clearTimeout(timeout); }
+-					timeout = setTimeout(function(){ tiptip_holder.stop(true,true).fadeIn(opts.fadeIn); }, opts.delay);	
++					if (timeout) {
++						clearTimeout(timeout);
++					}
++					timeout = setTimeout(function() {
++						tiptip_holder.stop(true,true);
++						if ($.contains(document.documentElement, org_elem[0])) {
++							tiptip_holder.fadeIn(opts.fadeIn);
++						}
++					}, opts.delay);
+ 				}
+ 				
+ 				function deactive_tiptip(){
