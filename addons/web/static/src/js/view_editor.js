@@ -569,7 +569,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var list_obj_xml = _.zip(children_list, obj.child_id);
         if (id) {
             if (obj.id == id) {
-                var id;
+                var id = false;;
                 var index = _.indexOf(child_list, obj);
                 if (move_direct == "down") {
                     var next = $(arch1).next();
@@ -594,10 +594,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 var parent = $(arch1).parents();
                 var convert_to_utf = QWeb.tools.xml_node_to_string(parent[parent.length-1]);
                 convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
-                convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
-                arch.arch = convert_to_utf;
-                this.dataset.write(parseInt(view_id),{"arch":convert_to_utf}, function(r) {
-                });
+                arch.arch = '<?xml version="1.0"?>' + convert_to_utf;
+                this.dataset.write(parseInt(view_id), {"arch":convert_to_utf});
             }
             if (obj.level <= level) {
                 _.each(list_obj_xml, function(child_node) {
