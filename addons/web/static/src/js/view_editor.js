@@ -293,7 +293,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     expr_to_list.push(_.without($.trim(part.replace(/[^a-zA-Z 0-9 _]+/g,'!')).split("!"), ""));
                 });
             }else{
-                var temp = _.str.reject(xpath_arch_object[0].child_id[0].att_list, function(list) {
+                var temp = _.reject(xpath_arch_object[0].child_id[0].att_list, function(list) {
                     return _.include(list, "position")
                 });
                 expr_to_list = [_.flatten(temp)];
