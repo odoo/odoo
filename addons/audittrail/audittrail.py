@@ -207,7 +207,7 @@ class audittrail_objects_proxy(object_proxy):
 
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param model: Object who's values are being changed
+        @param model: Object whose values are being changed
         @param lines: List of values for line is to be created
         """
         pool = pooler.get_pool(cr.dbname)
@@ -243,14 +243,14 @@ class audittrail_objects_proxy(object_proxy):
     def start_log_process(self, cr, user_id, model, method, resource_data, pool, resource_pool):
         """
          Logging function: This function performs the logging operation for create/read/unlink operation
-         :@param cr: the current row, from the database cursor,
-         :@param user_id: the current user’s ID,
-         :param model: Object which values are being changed
-         :param method: method to log: create, read, unlink
-         :param resource_data: list of data modified for the model
-         :@param pool: current db's pooler object.
-         :@param resource_pool: pooler object of the model who's values are being changed.
-         :return:True
+         @param cr: the current row, from the database cursor,
+         @param user_id: the current user’s ID,
+         param model: Object whose values are being changed
+         param method: method to log: create, read, unlink
+         param resource_data: list of data modified for the model
+         @param pool: current db's pooler object.
+         @param resource_pool: pooler object of the model who's values are being changed.
+         return:True
         
         """
         key1 = '%s_value'%(method == 'create' and 'new' or 'old')
@@ -276,11 +276,11 @@ class audittrail_objects_proxy(object_proxy):
     def log_fct(self, cr, uid, model, method, fct_src, *args):
         """
         Logging function: This function is performing the logging operation
-        :param model: Object which values are being changed
-        :param method: method to log: create, read, write, unlink
-        :param fct_src: execute method of Object proxy
+        @param model: Object whose values are being changed
+        @param method: method to log: create, read, write, unlink
+        @param fct_src: execute method of Object proxy
 
-        :return: Returns result as per method of Object proxy
+        @return: Returns result as per method of Object proxy
         """
         uid_orig = uid
         uid = 1
@@ -344,6 +344,22 @@ class audittrail_objects_proxy(object_proxy):
         return True
     
     def process_data(self, cr, uid_orig, pool, res_ids, model, method, original_values={}, type='new'):
+        """
+        This is specially created to log actions and workflow actions on an object recursively
+        processes and iterates recursively old data (i.e before the method was executed ) 
+        and stores it in a dict then this dict is used to compare with the new data 
+        (i.e after the method execution) and log the changes.  
+         
+        @param cr: the current row, from the database cursor,
+        @param uid_orig: the current user’s ID,
+        @param pool: current db's pooler object.
+        @param res_ids: Id's of resource to be logged/compared.
+        @param model: Object whose values are being changed
+        @param method: method to log: create, read, unlink,write,actions,workflow actions
+        @param original_values: dict of values of res_ids read before execution of the method only when type is 'new'
+        @param type: Either of 'new' or 'old' to know which data to process.
+        @return: dict of values
+        """
         resource_pool = pool.get(model.model)
         resource_data = resource_pool.read(cr, 1, res_ids)
         _old_values = {}
@@ -390,15 +406,23 @@ class audittrail_objects_proxy(object_proxy):
         return _old_values
     
     def check_rules(self, cr, uid, model, method):
+        """
+        Checks if auditrails is installed for that db and then if one rule match
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID,
+        @param model: Object whose values are being changed
+        @param method: method to log: create, read, unlink,write,actions,workflow actions
+        @return: True or False
+        """
+        
         pool = pooler.get_pool(cr.dbname)
-        # Check if auditrails is installed for that db and then if one rule match
         if 'audittrail.rule' in pool.models:
             model_ids = pool.get('ir.model').search(cr, 1, [('model', '=', model)])
             model_id = model_ids and model_ids[0] or False
             if model_id:
                 rule_ids = pool.get('audittrail.rule').search(cr, 1, [('object_id', '=', model_id), ('state', '=', 'subscribed')])
                 for rule in pool.get('audittrail.rule').read(cr, 1, rule_ids, ['user_id','log_read','log_write','log_create','log_unlink','log_action','log_workflow']):
-                    if len(rule['user_id'])==0 or uid in rule['user_id']:
+                    if len(rule['user_id']) == 0 or uid in rule['user_id']:
                         if rule.get('log_'+method,0):
                             return True
                         elif method not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink', 'write', 'create'):
