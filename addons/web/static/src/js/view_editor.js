@@ -115,12 +115,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.create_view_dialog.$element.append('<table id="create_view"  style="width:400px" class="oe_forms"></table>');
         this.create_view_widget = [];
         _.each(view_widget, function(widget) {
-            var type_widget =  new (self.property.get_any([widget.type])) (self.create_view_dialog, widget.name);
-            if (widget.selection) {
-                type_widget.selection = widget.selection;
-            }
-            type_widget.required = widget.required;
-            type_widget.type = widget.type;
+            var type_widget =  new (self.property.get_any([widget.type])) (self.create_view_dialog, widget);
             self.create_view_dialog.$element.find('table[id=create_view]').append('<tr><td width="100px" align="right">' + widget.string + ':</td>' + type_widget.render()+'</tr>');
             var value = null;
             if (widget.value) {
@@ -450,8 +445,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 case "side-remove":
                     break;
                 case "side-edit":
-                    var row_id = $(this).closest("tr[id^='viewedit-']").attr('id').split("-")[1];
-                    var result = self.get_object_by_id(row_id, one_object['main_object'], []);
+                    var result = self.get_object_by_id(clicked_tr_id, one_object['main_object'], []);
                     if (result.length && result[0] && result[0].att_list) {
                         var properties = _PROPERTIES[result[0].att_list[0]];
                         self.on_edit_node(properties, clicked_tr_id, one_object, view_id, view_xml_id, clicked_tr_level);
@@ -661,43 +655,43 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         this.edit_node_dialog.start().open();
         var _PROPERTIES_ATTRIBUTES = {
-            'name' : {'string': 'Name', 'type': 'char'},
-            'string' : {'string': 'String', 'type': 'char'},
-            'required' : {'string': 'Required', 'type': 'boolean'},
-            'readonly' : {'string': 'Readonly', 'type': 'boolean'},
-            'domain' : {'string': 'Domain', 'type': 'char'},
-            'context' : {'string': 'Context', 'type': 'char'},
-            'limit' : {'string': 'Limit', 'type': 'float'},
-            'min_rows' : {'string': 'Minimum rows', 'type': 'float'},
-            'date_start' : {'string': 'Start date', 'type': 'char'},
-            'date_delay' : {'string': 'Delay date', 'type': 'char'},
-            'day_length' : {'string': 'Day length', 'type': 'char'},
-            'mode' : {'string': 'Mode', 'type': 'char'},
-            'align' : {'string': 'Alignment ', 'type': 'selection', 'selection': [['', ''], ['0.0', 'Left'], ['0.5', 'Center'], ['1.0', 'Right']]},
-            'icon' : {'string': 'Icon', 'type': 'selection', 'selection': _ICONS},
-            'type' : {'string': 'Type', 'type': 'selection', 'selection': [['', ''], ['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']]},
-            'special' : {'string': 'Special', 'type': 'selection', 'selection': [['',''],['save', 'Save Button'], ['cancel', 'Cancel Button'], ['open', 'Open Button']]},
-            'target' : {'string': 'Target', 'type': 'selection', 'selection': [['', ''], ['new', 'New Window']]},
-            'confirm' : {'string': 'Confirm', 'type': 'char'},
-            'style' : {'string': 'Style', 'type': 'selection', 'selection':[["",""],["1", "1"],["1-1", "1-1"],["1-2", "1-2"],["2-1", "2-1"],["1-1-1", "1-1-1"]]},
-            'filename' : {'string': 'File Name', 'type': 'char'},
-            'width' : {'string': 'Width', 'type': 'float'},
-            'height' : {'string': 'Height', 'type': 'float'},
-            'attrs' : {'string': 'Attrs', 'type': 'char'},
-            'col' : {'string': 'col', 'type': 'float'},
-            'link' : {'string': 'Link', 'type': 'char'},
-            'position' : {'string': 'Position', 'type': 'selection', 'selection': [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']]},
-            'states' : {'string': 'states', 'type': 'char'},
-            'eval' : {'string': 'Eval', 'type': 'char'},
-            'ref' : {'string': 'Ref', 'type': 'char'},
-            'on_change' : {'string': 'On change', 'type': 'char'},
-            'nolabel' : {'string': 'No label', 'type': 'boolean'},
-            'completion' : {'string': 'Completion', 'type': 'boolean'},
-            'colspan' : {'string': 'Colspan', 'type': 'float'},
-            'widget' : {'string': 'widget', 'type': 'selection'},
-            'colors' : {'string': 'Colors', 'type': 'char'},
-            'editable' : {'string': 'Editable', 'type': 'selection', 'selection': [["",""],["top","Top"],["bottom", "Bottom"]]},
-            'groups' : {'string': 'Groups', 'type': 'seleciton_multi'},
+            'name' : {'name':'name', 'string': 'Name', 'type': 'char'},
+            'string' : {'name':'string', 'string': 'String', 'type': 'char'},
+            'required' : {'name':'required', 'string': 'Required', 'type': 'boolean'},
+            'readonly' : {'name':'readonly', 'string': 'Readonly', 'type': 'boolean'},
+            'domain' : {'name':'domain', 'string': 'Domain', 'type': 'char'},
+            'context' : {'name':'context', 'string': 'Context', 'type': 'char'},
+            'limit' : {'name':'limit', 'string': 'Limit', 'type': 'float'},
+            'min_rows' : {'name':'min_rows', 'string': 'Minimum rows', 'type': 'float'},
+            'date_start' : {'name':'date_start', 'string': 'Start date', 'type': 'char'},
+            'date_delay' : {'name':'date_delay', 'string': 'Delay date', 'type': 'char'},
+            'day_length' : {'name':'day_length', 'string': 'Day length', 'type': 'char'},
+            'mode' : {'name':'mode', 'string': 'Mode', 'type': 'char'},
+            'align' : {'name':'align', 'string': 'Alignment ', 'type': 'selection', 'selection': [['', ''], ['0.0', 'Left'], ['0.5', 'Center'], ['1.0', 'Right']]},
+            'icon' : {'name':'icon', 'string': 'Icon', 'type': 'selection', 'selection': _ICONS},
+            'type' : {'name':'type', 'string': 'Type', 'type': 'selection', 'selection': [['', ''], ['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']]},
+            'special' : {'name':'special', 'string': 'Special', 'type': 'selection', 'selection': [['',''],['save', 'Save Button'], ['cancel', 'Cancel Button'], ['open', 'Open Button']]},
+            'target' : {'name':'target', 'string': 'Target', 'type': 'selection', 'selection': [['', ''], ['new', 'New Window']]},
+            'confirm' : {'name':'confirm', 'string': 'Confirm', 'type': 'char'},
+            'style' : {'name':'style', 'string': 'Style', 'type': 'selection', 'selection':[["",""],["1", "1"],["1-1", "1-1"],["1-2", "1-2"],["2-1", "2-1"],["1-1-1", "1-1-1"]]},
+            'filename' : {'name':'filename', 'string': 'File Name', 'type': 'char'},
+            'width' : {'name':'width', 'string': 'Width', 'type': 'float'},
+            'height' : {'name':'height', 'string': 'Height', 'type': 'float'},
+            'attrs' : {'name':'attrs', 'string': 'Attrs', 'type': 'char'},
+            'col' : {'name':'col', 'string': 'col', 'type': 'float'},
+            'link' : {'name':'link', 'string': 'Link', 'type': 'char'},
+            'position' : {'name':'position', 'string': 'Position', 'type': 'selection', 'selection': [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']]},
+            'states' : {'name':'states', 'string': 'states', 'type': 'char'},
+            'eval' : {'name':'eval', 'string': 'Eval', 'type': 'char'},
+            'ref' : {'name':'ref', 'string': 'Ref', 'type': 'char'},
+            'on_change' : {'name':'on_change', 'string': 'On change', 'type': 'char'},
+            'nolabel' : {'name':'nolabel', 'string': 'No label', 'type': 'boolean'},
+            'completion' : {'name':'completion', 'string': 'Completion', 'type': 'boolean'},
+            'colspan' : {'name':'colspan', 'string': 'Colspan', 'type': 'float'},
+            'widget' : {'name':'widget', 'string': 'widget', 'type': 'selection'},
+            'colors' : {'name':'colors', 'string': 'Colors', 'type': 'char'},
+            'editable' : {'name':'editable', 'string': 'Editable', 'type': 'selection', 'selection': [["",""],["top","Top"],["bottom", "Bottom"]]},
+            'groups' : {'name':'groups', 'string': 'Groups', 'type': 'seleciton_multi'},
         };
         var arch_val = self.get_object_by_id(clicked_tr_id,obj['main_object'], []);
         this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
@@ -709,15 +703,13 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             values.sort();
             _PROPERTIES_ATTRIBUTES['widget']['selection'] = values;
             _.each(properties, function(property) {
-                var type_widget =  new (self.property.get_any([_PROPERTIES_ATTRIBUTES[property].type])) (self.edit_node_dialog, property);
+                var type_widget =  new (self.property.get_any([_PROPERTIES_ATTRIBUTES[property].type])) (self.edit_node_dialog, _PROPERTIES_ATTRIBUTES[property]);
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
                     if (res instanceof Array) {
                         return _.include(res, property);
                     }
                     return false;
                 });
-                type_widget.selection = _PROPERTIES_ATTRIBUTES[property].selection
-                type_widget.type = _PROPERTIES_ATTRIBUTES[property].type
                 value = value instanceof Array ? value[1] : value;
                 self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + _PROPERTIES_ATTRIBUTES[property].string + ':</td>' + type_widget.render() + '</tr>');
                 type_widget.start();
@@ -761,11 +753,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     }
 });
 openerp.web.ViewEditor.Field = openerp.web.Class.extend({
-    init: function(view, name) {
+    init: function(view, widget) {
         this.$element = view.$element;
         this.dirty = false;
-        this.name = name;
-        this.required = false;
+        this.name = widget.name;
+        this.selection =  widget.selection || [];
+        this.required = widget.required || false;
+        this.string = widget.string || "";
+        this.type = widget.type;
         this.is_invalid = false;
     },
     start: function () {
@@ -830,10 +825,6 @@ openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
 });
 openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
     template : "vieweditor_selection",
-    init: function(view, name) {
-        this._super(view, name);
-        this.selection = false;
-    },
     start: function () {
         var self = this;
         this._super();
@@ -883,7 +874,7 @@ var _PROPERTIES = {
     'image' : ['filename', 'width', 'height', 'groups'],
     'separator' : ['string', 'colspan', 'groups'],
     'label': ['string', 'align', 'colspan', 'groups'],
-    'button': ['name', 'string', 'icon', 'type', 'states', 'readonly', 'special', 'target', 'confirm', 'context', 'attrs', 'groups','colspan'],
+    'button': ['name', 'string', 'icon', 'type', 'states', 'readonly', 'special', 'target', 'confirm', 'context', 'attrs', 'colspan', 'groups'],
     'newline' : [],
     'board': ['style'],
     'column' : [],
