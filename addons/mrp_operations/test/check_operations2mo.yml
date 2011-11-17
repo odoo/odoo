@@ -1,0 +1,74 @@
+-
+  Now I will see how changing work orders will effect production order,
+-
+  !record {model: mrp.production, id: mrp_production_op1}:
+    company_id: base.main_company
+    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+    location_dest_id: stock.stock_location_stock
+    location_src_id: stock.stock_location_stock
+    product_id: product.product_product_cpu3
+    product_qty: 2.0
+    product_uos_qty: 2.0
+-
+  I am computing the data.
+-
+  !python {model: mrp.production}: |
+    self.action_compute(cr, uid, [ref("mrp_production_op1")], {"lang": "en_US", "tz":
+      False, "search_default_current": 1, "active_model": "ir.ui.menu", "active_ids":
+      [ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),
+      })
+-
+  Now I confirm the production order.
+-
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_op1}
+-
+  I check that there are two work orders generated for this production order.
+-
+  !assert {model: mrp.production, id: mrp_production_op1, string: Operation is started.}:
+    - len(workcenter_lines) == 2
+-
+  I change the scheduled date of first work order and then I start it.
+-
+  !python {model: mrp.production.workcenter.line}: |
+    order_ids = self.search(cr, uid, [('production_id','=', ref('mrp_production_op1'))])
+    from datetime import datetime
+    self.write(cr, uid, [order_ids[0]], {'date_planned': datetime.today().strftime("%Y-%m-%d 10:00:00")})
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order_ids[0], 'button_start_working', cr)
+-
+  I check now the production order is in production state.
+-
+  !assert {model: mrp.production, id: mrp_production_op1, string: Production order is started.}:
+    - state == 'in_production'
+- 
+  The first work order is done, so I mark it as done.
+-
+  !python {model: mrp.production.workcenter.line}: |
+    order_ids = self.search(cr, uid, [('production_id','=', ref('mrp_production_op1'))])
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order_ids[0], 'button_done', cr)
+-
+  Now I start second work order then pause it and then resume it.
+-
+  !python {model: mrp.production.workcenter.line}: |
+    order_ids = self.search(cr, uid, [('production_id','=', ref('mrp_production_op1'))])
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order_ids[-1], 'button_start_working', cr)
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order_ids[-1], 'button_pause', cr)
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order_ids[-1], 'button_resume', cr)
+- 
+  I mark second work order as done.
+-
+  !python {model: mrp.production.workcenter.line}: |
+    order_ids = self.search(cr, uid, [('production_id','=', ref('mrp_production_op1'))])
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order_ids[-1], 'button_done', cr)
+-
+  I check that the production order is now done.
+-
+  !assert {model: mrp.production, id: mrp_production_op1}: 
+    - state == 'done'
