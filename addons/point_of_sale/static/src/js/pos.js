@@ -162,11 +162,11 @@ openerp.point_of_sale = function(db) {
     /* global variable */
     var pos;
 
-    var App, CashRegister, CashRegisterCollection, Category, CategoryCollection, CategoryView,
+    var App, CashRegister, CashRegisterCollection, Category, CategoryCollection, CategoryWidget,
     NumpadState, NumpadWidget, Order, OrderButtonView, OrderCollection, OrderWidget, Orderline,
     OrderlineCollection, OrderlineWidget, PaymentButtonWidget, PaymentView, Paymentline,
     PaymentlineCollection, PaymentlineView, PaypadWidget, Product, ProductCollection,
-    ProductListView, ProductView, ReceiptLineView, ReceiptView, Shop, ShopView, StepsWidget;
+    ProductListView, ProductWidget, ReceiptLineView, ReceiptView, Shop, ShopView, StepsWidget;
 
     /*
      ---
@@ -754,31 +754,28 @@ openerp.point_of_sale = function(db) {
         },
         on_change_category: function(id) {},
     });
-    ProductView = (function() {
-        __extends(ProductView, Backbone.View);
-        function ProductView() {
-            ProductView.__super__.constructor.apply(this, arguments);
-        }
-
-        ProductView.prototype.tagName = 'li';
-        ProductView.prototype.className = 'product';
-        ProductView.prototype.template = qweb_template('pos-product-template');
-        ProductView.prototype.events = {
-            'click a': 'addToOrder'
-        };
-        ProductView.prototype.initialize = function(options) {
-            return this.shop = options.shop;
-        };
-        ProductView.prototype.addToOrder = function(event) {
+    ProductWidget = db.web.Widget.extend({
+        tag_name:'li',
+        template_fct: qweb_template('pos-product-template'),
+        init: function(parent, element_id, options) {
+            this._super(parent, element_id);
+            this.model = options.model;
+            this.shop = options.shop;
+        },
+        start: function(options) {
+            $("a", this.$element).click(_.bind(this.addToOrder, this));
+        },
+        addToOrder: function(event) {
             /* Preserve the category URL */
             event.preventDefault();
             return (this.shop.get('selectedOrder')).addProduct(this.model);
-        };
-        ProductView.prototype.render = function() {
-            return $(this.el).html(this.template(this.model.toJSON()));
-        };
-        return ProductView;
-    })();
+        },
+        render_element: function() {
+            this.$element.addClass("product");
+            this.$element.html(this.template_fct(this.model.toJSON()));
+            return this;
+        },
+    });
     ProductListView = (function() {
         __extends(ProductListView, Backbone.View);
         function ProductListView() {
@@ -794,10 +791,11 @@ openerp.point_of_sale = function(db) {
         ProductListView.prototype.render = function() {
             $(this.el).empty();
             (this.shop.get('products')).each(__bind( function(product) {
-                return $(this.el).append((new ProductView({
+                var p = new ProductWidget(null, null, {
                         model: product,
                         shop: this.shop
-                    })).render());
+                });
+                p.appendTo($(this.el));
             }, this));
             return $('#products-screen').append(this.el);
         };
