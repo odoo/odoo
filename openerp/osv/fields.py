@@ -1210,23 +1210,23 @@ class sparse(function):
         """
 
         if self._type == 'many2many':
-            #NOTE only the option (0, 0,  { values }) is supported for many2many
-            if value[0][0] == 6:
-                return value[0][2]
-            
+            assert value[0][0] == 6, 'Unsupported m2m value for sparse field: %s' % value
+            return value[0][2]
+
         elif self._type == 'one2many':
             if not read_value:
-                read_value=[]
+                read_value = []
             relation_obj = obj.pool.get(self.relation)
             for vals in value:
+                assert vals[0] in (0,1,2), 'Unsupported o2m value for sparse field: %s' % vals
                 if vals[0] == 0:
                     read_value.append(relation_obj.create(cr, uid, vals[2], context=context))
                 elif vals[0] == 1:
                     relation_obj.write(cr, uid, vals[1], vals[2], context=context)
                 elif vals[0] == 2:
-                    relation_obj.unlink(cr, uid, vals[1])
+                    relation_obj.unlink(cr, uid, vals[1], context=context)
                     read_value.remove(vals[1])
-            return read_value        
+            return read_value
         return value
 
 
@@ -1236,37 +1236,32 @@ class sparse(function):
         records = obj.browse(cr, uid, ids, context=context)
         for record in records:
             # grab serialized value as object - already deserialized
-            serialized = record.__getattr__(self.serialization_field)
-            # we have to delete the key in the json when the value is null
+            serialized = getattr(record, self.serialization_field)
             if value is None:
-                if field_name in serialized:
-                    del serialized[field_name]
-                else:
-                    # nothing to do, we dont wan't to store the key with a null value
-                    continue
+                # simply delete the key to unset it.
+                serialized.pop(field_name, None)
             else: 
                 serialized[field_name] = self.convert_value(obj, cr, uid, record, value, serialized.get(field_name), context=context)
             obj.write(cr, uid, ids, {self.serialization_field: serialized}, context=context)
         return True
 
     def _fnct_read(self, obj, cr, uid, ids, field_names, args, context=None):
-        results={}
+        results = {}
         records = obj.browse(cr, uid, ids, context=context)
         for record in records:
             # grab serialized value as object - already deserialized
-            serialized = record.__getattr__(self.serialization_field)
-            results[record.id] ={}
+            serialized = getattr(record, self.serialization_field)
+            results[record.id] = {}
             for field_name in field_names:
                 if obj._columns[field_name]._type in ['one2many']:
-                    results[record.id].update({field_name : serialized.get(field_name, [])})
+                    value = serialized.get(field_name, [])
                 else:
-                    results[record.id].update({field_name : serialized.get(field_name)})
+                    results[record.id].update(field_name=value)
         return results
 
     def __init__(self, serialization_field, **kwargs):
         self.serialization_field = serialization_field
-        #assert serialization_field._type == 'serialized'
-        return super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='_json_multi', method=True, **kwargs)
+        return super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', method=True, **kwargs)
      
 
 

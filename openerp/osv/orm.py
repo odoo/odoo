@@ -756,16 +756,10 @@ class BaseModel(object):
             cols[rec['name']] = rec
 
         ir_model_fields_obj = self.pool.get('ir.model.fields')
-        
-        high_priority_items=[]
-        low_priority_items=[]
-        #sparse field should be created at the end, indeed this field depend of other field
-        for item in self._columns.items():
-            if item[1].__class__ == fields.sparse:
-                low_priority_items.append(item)
-            else:
-                high_priority_items.append(item)
-        for (k, f) in high_priority_items + low_priority_items:
+
+        # sparse field should be created at the end, as it depends on its serialized field already existing
+        fields = sorted(self._columns.items(), key=lambda x: 1 if x[1]._type == 'sparse' else 0)
+        for (k, f) in fields:
             vals = {
                 'model_id': model_id,
                 'model': self._name,
@@ -782,12 +776,13 @@ class BaseModel(object):
                 'relation_field': (f._type=='one2many' and isinstance(f, fields.one2many)) and f._fields_id or '',
                 'serialization_field_id': None,
             }
-            if 'serialization_field' in dir(f):
+            if getattr(f, 'serialization_field', None):
+                # resolve link to serialization_field if specified by name
                 serialization_field_id = ir_model_fields_obj.search(cr, 1, [('model','=',vals['model']), ('name', '=', f.serialization_field)])
                 if not serialization_field_id:
-                    raise except_orm(_('Error'), _("The field %s does not exist!" %f.serialization_field))
+                    raise except_orm(_('Error'), _("Serialization field `%s` not found for sparse field `%s`!") % (f.serialization_field, k))
                 vals['serialization_field_id'] = serialization_field_id[0]
-            
+
             # When its a custom field,it does not contain f.select
             if context.get('field_state', 'base') == 'manual':
                 if context.get('field_name', '') == k:
