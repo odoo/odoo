@@ -155,6 +155,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
     },
     on_record_loaded: function(record) {
+        var self = this,
+            deferred_stack = $.Deferred.queue();
         if (!record) {
             throw("Form: No record received");
         }
@@ -175,30 +177,34 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         for (var f in this.fields) {
             var field = this.fields[f];
             field.dirty = false;
-            field.set_value(this.datarecord[f] || false);
-            field.validate();
+            deferred_stack.push($.when(field.set_value(this.datarecord[f] || false)).then(function() {
+                field.validate();
+            }));
         }
-        if (!record.id) {
-            // New record: Second pass in order to trigger the onchanges
-            this.show_invalid = false;
-            for (var f in record) {
-                var field = this.fields[f];
-                if (field) {
-                    field.dirty = true;
-                    this.do_onchange(field);
+        deferred_stack.push('force resolution if no fields');
+        return deferred_stack.then(function() {
+            if (!record.id) {
+                // New record: Second pass in order to trigger the onchanges
+                self.show_invalid = false;
+                for (var f in record) {
+                    var field = self.fields[f];
+                    if (field) {
+                        field.dirty = true;
+                        self.do_onchange(field);
+                    }
                 }
             }
-        }
-        this.on_form_changed();
-        this.initial_mutating_lock.resolve();
-        this.show_invalid = true;
-        this.do_update_pager(record.id == null);
-        if (this.sidebar) {
-            this.sidebar.attachments.do_update();
-        }
-        if (this.default_focus_field && !this.embedded_view) {
-            this.default_focus_field.focus();
-        }
+            self.on_form_changed();
+            self.initial_mutating_lock.resolve();
+            self.show_invalid = true;
+            self.do_update_pager(record.id == null);
+            if (self.sidebar) {
+                self.sidebar.attachments.do_update();
+            }
+            if (self.default_focus_field && !self.embedded_view) {
+                self.default_focus_field.focus();
+            }
+        });
     },
     on_form_changed: function() {
         for (var w in this.widgets) {
