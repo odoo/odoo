@@ -583,7 +583,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     child_list.splice(index-1, 0, re_insert_obj[0]);
                 } else if (move_direct == "update_node") {
                     _.each(update_values, function(val){
-                        $(arch1).attr(val[0],val[1]);
+                        if (val[1]) $(arch1)[0].setAttribute(val[0], val[1]);
+                        else $(arch1)[0].removeAttribute(val[0]);
                     });
                     var new_obj = self.create_View_Node(arch1);
                     new_obj.id = obj.id,new_obj.child_id = obj.child_id;
