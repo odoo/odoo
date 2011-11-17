@@ -221,6 +221,20 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         var self = this;
         var action_orig = _.extend({}, result.result);
         var action = result.result;
+        var view_mode = this.actions_attrs[action.id]['view_mode'];
+        if (view_mode && view_mode != action.view_mode) {
+            var action_view_mode = action.view_mode.split(',');
+            action.views = _.map(view_mode.split(','), function(mode) {
+                if (_.indexOf(action_view_mode, mode) < 0) {
+                    return [false, mode == 'tree' ? 'list': mode];
+                } else {
+                    mode = mode === 'tree' ? 'list' : mode;
+                    return _.find(action.views, function(view) {
+                        return view[1] == mode;
+                    });
+                }
+            });
+        }
         action.flags = {
             search_view : false,
             sidebar : false,
