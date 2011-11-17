@@ -194,7 +194,7 @@ class audittrail_objects_proxy(object_proxy):
             if recursive:
                 self.log_fct(cr, uid, field_obj._obj, method, None, value, 'child_relation_log')
             data = pool.get(field_obj._obj).name_get(cr, uid, value)
-            #return the modifications on *2many fields as a list of names
+            #return the modifications on x2many fields as a list of names
             return map(lambda x:x[1], data)
         elif field_obj._type == 'many2one':
             #return the modifications on a many2one field as the name of the value
@@ -287,7 +287,6 @@ class audittrail_objects_proxy(object_proxy):
         pool = pooler.get_pool(cr.dbname)
         resource_pool = pool.get(model)
         model_pool = pool.get('ir.model')
-        log_pool = pool.get('audittrail.log')
         model_ids = model_pool.search(cr, 1, [('model', '=', model)])
         model_id = model_ids and model_ids[0] or False
         assert model_id, _("'%s' Model does not exist..." %(model))
@@ -335,74 +334,61 @@ class audittrail_objects_proxy(object_proxy):
                 if isinstance(res_ids, (long, int)):
                     res_ids = [res_ids]
             if res_ids:
-                x2m_old_values = {}
-                old_values = {}
-                def inline_process_old_data(res_ids, model, model_id=False):
-                    resource_pool = pool.get(model)
-                    resource_data = resource_pool.read(cr, uid, res_ids)
-                    _old_values = {}
-                    for resource in resource_data:
-                        _old_values_text = {}
-                        _old_value = {}
-                        resource_id = resource['id']
-                        for field in resource.keys():
-                            if field in ('__last_update', 'id'):continue
-                            field_obj = (resource_pool._all_columns.get(field)).column
-                            if field_obj._type in ('one2many','many2many'):
-                                if self.check_rules(cr, uid, field_obj._obj, method):
-                                    x2m_model_ids = model_pool.search(cr, 1, [('model', '=', field_obj._obj)])
-                                    x2m_model_id = x2m_model_ids and x2m_model_ids[0] or False
-                                    assert x2m_model_id, _("'%s' Model does not exist..." %(field_obj._obj))
-                                    x2m_model = model_pool.browse(cr, uid, x2m_model_id)
-                                    x2m_old_values.update(inline_process_old_data(resource[field], field_obj._obj, x2m_model))
-                            ret_val = self.get_value_text(cr, uid, pool, resource_pool, method, field, resource[field], False)
-                            _old_value[field] = resource[field]
-                            _old_values_text[field] = ret_val and ret_val or resource[field]
-                        _old_values[resource_id] = {'text':_old_values_text, 'value': _old_value}
-                        if model_id:
-                            _old_values[resource_id].update({'model_id':model_id})
-                    return _old_values
-                old_values.update(inline_process_old_data(res_ids, model.model))
+                old_values = self.process_data(cr, uid_orig, pool, res_ids, model, method, type='old')
             res = fct_src(cr, uid_orig, model.model, method, *args)
+            if method == 'copy':
+                res_ids = [res]
             if res_ids:
-                def inline_process_new_data(res_ids, model, dict_to_use={}):
-                    resource_pool = pool.get(model.model)
-                    resource_data = resource_pool.read(cr, uid, res_ids)
-                    vals = {'method': method,'object_id': model.id,'user_id': uid_orig }
-                    for resource in resource_data:
-                        resource_id = resource['id']
-                        vals.update({'res_id': resource_id})
-                        if resource_id not in dict_to_use:
-                            vals.update({'method': 'create'})
-                        lines = []
-                        for field in resource.keys():
-                            if field in ('__last_update', 'id'):continue
-                            field_obj = (resource_pool._all_columns.get(field)).column
-                            if field_obj._type in ('one2many','many2many'):
-                                if self.check_rules(cr, uid, field_obj._obj, method):
-                                    x2m_model_ids = model_pool.search(cr, 1, [('model', '=', field_obj._obj)])
-                                    x2m_model_id = x2m_model_ids and x2m_model_ids[0] or False
-                                    assert x2m_model_id, _("'%s' Model does not exist..." %(field_obj._obj))
-                                    x2m_model = model_pool.browse(cr, uid, x2m_model_id)
-                                    inline_process_new_data(resource[field], x2m_model, x2m_old_values)
-                            ret_val = self.get_value_text(cr, uid, pool, resource_pool, method, field, resource[field], False)
-                            line = {
-                                  'name': field,
-                                  'new_value': resource[field],
-                                  'old_value': resource_id in dict_to_use and dict_to_use[resource_id]['value'].get(field),
-                                  'new_value_text': ret_val and ret_val or resource[field],
-                                  'old_value_text': resource_id in dict_to_use and dict_to_use[resource_id]['text'].get(field)
-                                  }
-                            if line.get('new_value_text') != line.get('old_value_text'):
-                                lines.append(line)
-                        if lines:
-                            log_id = log_pool.create(cr, uid, vals)
-                            self.create_log_line(cr, uid, log_id, model, lines)
-                    return True
-                inline_process_new_data(res_ids, model, old_values)
+                self.process_data(cr, uid_orig, pool, res_ids, model, method, old_values)
             return res
         return True
-
+    
+    def process_data(self, cr, uid_orig, pool, res_ids, model, method, original_values={}, type='new'):
+        resource_pool = pool.get(model.model)
+        resource_data = resource_pool.read(cr, 1, res_ids)
+        _old_values = {}
+        for resource in resource_data:
+            _old_values_text = {}
+            _old_value = {}
+            resource_id = resource['id']
+            if type == 'new':
+                vals = {'method': method,'object_id': model.id,'user_id': uid_orig }
+                vals.update({'res_id': resource_id})
+                if resource_id not in original_values and method !='copy':
+                    vals.update({'method': 'create'})
+                lines = []
+            for field in resource:
+                if field in ('__last_update', 'id'):continue
+                field_obj = (resource_pool._all_columns.get(field)).column
+                if field_obj._type in ('one2many','many2many'):
+                    if self.check_rules(cr, 1, field_obj._obj, method):
+                        x2m_model_ids = pool.get('ir.model').search(cr, 1, [('model', '=', field_obj._obj)])
+                        x2m_model_id = x2m_model_ids and x2m_model_ids[0] or False
+                        assert x2m_model_id, _("'%s' Model does not exist..." %(field_obj._obj))
+                        x2m_model = pool.get('ir.model').browse(cr, 1, x2m_model_id)
+                        _old_values[field] = self.process_data(cr, 1, pool, resource[field], x2m_model, method, original_values.get(field,{}), type=type)
+                ret_val = self.get_value_text(cr, 1, pool, resource_pool, method, field, resource[field], False)
+                if type == 'new':
+                    line = {
+                              'name': field,
+                              'new_value': resource[field],
+                              'old_value': resource_id in original_values and original_values[resource_id]['value'].get(field),
+                              'new_value_text': ret_val and ret_val or resource[field],
+                              'old_value_text': resource_id in original_values and original_values[resource_id]['text'].get(field)
+                              }
+                    if line.get('new_value_text') != line.get('old_value_text'):
+                        lines.append(line)
+                else:
+                    _old_value[field] = resource[field]
+                    _old_values_text[field] = ret_val and ret_val or resource[field]
+            if type == 'new':
+                if lines:
+                    log_id = pool.get('audittrail.log').create(cr, 1, vals)
+                    self.create_log_line(cr, 1, log_id, model, lines)
+            else:
+                _old_values[resource_id] = {'text':_old_values_text, 'value': _old_value}
+        return _old_values
+    
     def check_rules(self, cr, uid, model, method):
         pool = pooler.get_pool(cr.dbname)
         # Check if auditrails is installed for that db and then if one rule match
