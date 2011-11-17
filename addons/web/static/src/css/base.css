@@ -967,17 +967,25 @@ label.error {
 .openerp .oe_forms textarea {
     resize:vertical;
 }
-.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms .button {
+.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms .oe_button {
     height: 22px;
 }
 .openerp .oe_forms input.field_datetime {
     min-width: 11em;
 }
-.openerp .oe_forms .button {
+.openerp .oe_forms .oe_button {
     color: #4c4c4c;
     white-space: nowrap;
+    min-width: 100%;
+    width: 100%;
 }
-.openerp .oe_forms .button span {
+@-moz-document url-prefix() {
+    /* Strange firefox behaviour on width: 100% + white-space: nowrap */
+    .openerp .oe_forms .oe_button {
+        width: auto;
+    }
+}
+.openerp .oe_forms .oe_button span {
     position: relative;
     vertical-align: top;
 }
