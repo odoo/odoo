@@ -7,9 +7,9 @@ openerp.web_process = function (openerp) {
             var self = this;
             this.process_check();
             this.process_help = this.action ? this.action.help : 'Help: Not Defined';
-            if(this.model) this.process_model = this.model;
-            else if(this.action) this.process_model = this.action.res_model;
-            else this.process_model = this.dataset.model;
+            this.model = this.dataset.model;
+            if(this.action) this.process_model = this.action.res_model;
+            else this.process_model = this.model;
         },
         process_check: function() {
             var self = this,
