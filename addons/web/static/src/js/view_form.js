@@ -174,13 +174,17 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$form_header.find('.oe_form_on_readonly').toggle(this.readonly);
         this.$form_header.find('.oe_form_on_editable').toggle(!this.readonly);
         this.datarecord = record;
-        for (var f in this.fields) {
-            var field = this.fields[f];
+
+        _(this.fields).each(function (field, f) {
             field.dirty = false;
-            deferred_stack.push($.when(field.set_value(this.datarecord[f] || false)).then(function() {
+            var result = field.set_value(self.datarecord[f] || false);
+            if (result && _.isFunction(result.promise)) {
+                deferred_stack.push(result);
+            }
+            $.when(result).then(function() {
                 field.validate();
-            }));
-        }
+            });
+        });
         deferred_stack.push('force resolution if no fields');
         return deferred_stack.then(function() {
             if (!record.id) {
