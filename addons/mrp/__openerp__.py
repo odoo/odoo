@@ -98,8 +98,6 @@ Dashboard provided by this module:
          'test/mrp_packs.yml',
          'test/mrp_production_cancel.yml',
          'test/mrp_report.yml',
-#         'test/mrp_procurement.yml',
-#         'test/mrp_phantom_bom.yml',
     ],
     'installable': True,
     'active': False,
