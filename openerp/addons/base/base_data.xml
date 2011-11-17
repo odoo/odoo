@@ -1580,7 +1580,6 @@
 
         <record id="res_bank_1" model="res.bank">
             <field name="name">Reserve</field>
-            <field name="code">RSV</field>
         </record>
 
         <record id="CRC" model="res.currency">
@@ -1600,7 +1599,7 @@
             <field name="name">localhost</field>
             <field name="smtp_host">localhost</field>
             <field eval="25" name="smtp_port"/>
-            <field eval="10" name="priority"/>
+            <field eval="10" name="sequence"/>
 	    </record>
 
         <record id="MUR" model="res.currency">

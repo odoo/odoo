@@ -2478,12 +2478,12 @@ class BaseModel(object):
             del d['id']
 
         if groupby and groupby in self._group_by_full:
-            gids = map(lambda x: x[groupby][0], data)
+            gids = [x[groupby][0] for x in data if x[groupby]]
             stages = self._group_by_full[groupby](self, cr, uid, gids, domain, context)
             # as both lists are sorted in the same way, we can merge in one pass
             pos = 0
             while stages and ((pos<len(data)) or (pos<len(stages))):
-                if (pos<len(data)) and (data[pos][groupby][0] == stages[pos][0]):
+                if (pos<len(data)) and (not data[pos][groupby] or (data[pos][groupby][0] == stages[pos][0])):
                     pos+=1
                     continue
                 val = dict.fromkeys(float_int_fields, False)
@@ -3825,6 +3825,7 @@ class BaseModel(object):
             for id in ids:
                 result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
 
+        unknown_fields = updend[:]
         for table in self._inherits:
             col = self._inherits[table]
             nids = []
@@ -3837,9 +3838,14 @@ class BaseModel(object):
             for val in updend:
                 if self._inherit_fields[val][0] == table:
                     v[val] = vals[val]
+                    unknown_fields.remove(val)
             if v:
                 self.pool.get(table).write(cr, user, nids, v, context)
 
+        if unknown_fields:
+            self.__logger.warn(
+                'No such field(s) in model %s: %s.',
+                self._name, ', '.join(unknown_fields))
         self._validate(cr, user, ids, context)
 
         # TODO: use _order to set dest at the right position and not first node of parent
@@ -3962,6 +3968,7 @@ class BaseModel(object):
                 tocreate[v] = {'id': vals[self._inherits[v]]}
         (upd0, upd1, upd2) = ('', '', [])
         upd_todo = []
+        unknown_fields = []
         for v in vals.keys():
             if v in self._inherit_fields:
                 (table, col, col_detail, original_parent) = self._inherit_fields[v]
@@ -3970,6 +3977,11 @@ class BaseModel(object):
             else:
                 if (v not in self._inherit_fields) and (v not in self._columns):
                     del vals[v]
+                    unknown_fields.append(v)
+        if unknown_fields:
+            self.__logger.warn(
+                'No such field(s) in model %s: %s.',
+                self._name, ', '.join(unknown_fields))
 
         # Try-except added to filter the creation of those records whose filds are readonly.
         # Example : any dashboard which has all the fields readonly.(due to Views(database views))

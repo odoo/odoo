@@ -71,7 +71,7 @@ class res_config_configurable(osv.osv_memory):
             res['nodestroy'] = False
             return res
         #if there is no next action and if html is in the context: reload instead of closing
-        if 'html' in context:
+        if context and 'html' in context:
             return {'type' : 'ir.actions.reload'}
         return {'type' : 'ir.actions.act_window_close'}
 
