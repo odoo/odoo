@@ -24,11 +24,3 @@
   !python {model: partner.event.registration}: |
     context.update({'active_id': ref("base.res_partner_ericdubois0")})
     self.onchange_event_id(cr, uid, 1, ref("event_1"), context=context)
--
-  Copy of event.
--
-  !python {model: event.event}: |
-    try:
-      self.copy(cr, uid, ref("event_2"))
-    except:
-      pass

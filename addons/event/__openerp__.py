@@ -57,6 +57,7 @@ Note that:
     'test': ['test/process/event_confirm2done.yml',
              'test/process/event_draft2cancel.yml',
              'test/process/partner_register2invoice.yml',
+             'test/ui/duplicate_event.yml',
              'test/ui/onchange_events.yml'],
     'installable': True,
     'active': False,
