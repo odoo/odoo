@@ -487,8 +487,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             // should not happen in the server, but may happen for internal purpose
             return $.Deferred().reject();
         } else {
-            this.reload();
-            return $.when(r).then(success);
+            return $.when(this.reload()).pipe(function () {
+                return $.when(r).then(success); }, null);
         }
     },
     /**
@@ -2120,7 +2120,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     },
     reload_current_view: function() {
         var self = this;
-        self.is_loaded = self.is_loaded.pipe(function() {
+        return self.is_loaded = self.is_loaded.pipe(function() {
             var view = self.viewmanager.views[self.viewmanager.active_view].controller;
             if(self.viewmanager.active_view === "list") {
                 return view.reload_content();
@@ -2193,8 +2193,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         if (this.dataset.index === null && this.dataset.ids.length > 0) {
             this.dataset.index = 0;
         }
-        self.reload_current_view();
-        this.is_setted.resolve();
+        self.is_setted.resolve();
+        return self.reload_current_view();
     },
     get_value: function() {
         var self = this;
