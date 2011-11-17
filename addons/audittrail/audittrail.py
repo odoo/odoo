@@ -258,8 +258,6 @@ class audittrail_objects_proxy(object_proxy):
         uid = 1
         vals = { 'method': method, 'object_id': model.id,'user_id': user_id}
         for resource, fields in resource_data.iteritems():
-            vals.update({'res_id': resource})
-            log_id = pool.get('audittrail.log').create(cr, uid, vals)
             lines = []
             for field_key, value in fields.iteritems():
                 if field_key in ('__last_update', 'id'):continue
@@ -270,7 +268,10 @@ class audittrail_objects_proxy(object_proxy):
                       key2: ret_val and ret_val or value
                       }
                 lines.append(line)
-            self.create_log_line(cr, uid, log_id, model, lines)
+            if lines:
+                vals.update({'res_id': resource})
+                log_id = pool.get('audittrail.log').create(cr, uid, vals)
+                self.create_log_line(cr, uid, log_id, model, lines)
         return True
     
     def log_fct(self, cr, uid, model, method, fct_src, *args):
