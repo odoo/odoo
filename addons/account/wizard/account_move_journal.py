@@ -188,7 +188,7 @@ class account_move_journal(osv.osv_memory):
             'view_mode': 'tree,graph,form',
             'res_model': 'account.move.line',
             'view_id': False,
-            'context': "{'search_default_posted': %d, 'visible_id':%s, 'search_default_journal_id':%d, 'search_default_period_id':%d}" % (move, journal_id, journal_id, period_id),
+            'context': "{'search_default_posted': %d, 'search_default_journal_id':%d, 'search_default_period_id':%d}" % (move, journal_id, period_id),
             'type': 'ir.actions.act_window',
             'search_view_id': res_id
         }

@@ -82,7 +82,7 @@
                 <field string="Timebox" name="timebox_id" invisible=" not context.get('gtd', False)"/>
                 <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open" invisible=" not context.get('gtd',False)"/>
                 <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open" invisible=" not context.get('gtd',False)"/>
-                <field name="context_id" invisible="not context.get('gtd', False)" widget="selection"/>
+                <field name="context_id" invisible="not context.get('context_show', False)" widget="selection" groups="base.group_extended"/>
                 <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks" invisible="not context.get('set_visible',False)"/>
             </field>
         </field>
@@ -101,11 +101,42 @@
         </field>
     </record>
 
-
+    <record id="view_task_gtd_search" model="ir.ui.view">
+        <field name="name">project.task.gtd.search</field>
+        <field name="model">project.task</field>
+        <field name="type">search</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+           <search string="My Tasks">
+                <filter name="open" string="In Progress" domain="[('state','in',('draft','open'))]" help="In Progress and draft tasks" icon="terp-camera_test"/>
+                <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
+                <separator orientation="vertical"/>
+                <filter
+                    domain="[('timebox_id','=', False)]"
+                    help="Tasks having no timebox assigned yet" string="Inbox"/>
+                <separator orientation="vertical"/>
+                <separator name="gtdsep"/>
+                <field name="name"/>
+                <field name="context_id" widget="selection" groups="base.group_extended"
+                    context="{'context_show': True}">
+                    <filter string="Show Context"
+                        name="context_show"
+                        context="{'context_show': True}"
+                        domain="[]" icon="terp-camera_test"
+                        help="Show the context field"/>
+                    <filter string="Show Deadlines" context="{'deadline_visible': False}"
+                        domain="[]" help="Show only tasks having a deadline"
+                        icon="terp-gnome-cpu-frequency-applet+"/>
+                </field>
+            </search>
+        </field>
+    </record>
     <record model="ir.actions.act_window" id="open_gtd_task">
-        <field name="name">Todo List</field>
+        <field name="name">My Tasks</field>
         <field name="res_model">project.task</field>
-        <field name="context">{'set_editable':True,'set_visible':True,'gtd':True,'user_invisible':True, 'search_default_user_id':uid, "search_default_draft": 1, "search_default_open": 1}</field>
+        <field name="search_view_id" ref="view_task_gtd_search"/>
+        <field name="context">{'set_editable':True,'set_visible':True,'gtd':True,'user_invisible':True, "search_default_open": 1}</field>
+        <field name="domain">[('user_id','=',uid)]</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,gantt,graph,kanban</field>
     </record>

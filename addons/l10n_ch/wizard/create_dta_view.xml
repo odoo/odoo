@@ -32,7 +32,6 @@
         
         <record model="ir.values" id="action_account_dtr_create_values">
             <field name="model_id" ref="model_create_dta_wizard" />
-            <field name="object" eval="1" />
             <field name="name">Create DTA</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' +str(ref('action_dta_create'))" />

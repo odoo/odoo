@@ -83,9 +83,11 @@ Dashboard for Sales Manager that includes:
         'stock_view.xml',
         'process/sale_process.xml',
         'board_sale_view.xml',
+        'edi/sale_order_action_data.xml',
     ],
     'demo_xml': ['sale_demo.xml'],
     'test': [
+        'test/edi_sale_order.yml',
         'test/data_test.yml',
         'test/manual_order_policy.yml',
         'test/prepaid_order_policy.yml',

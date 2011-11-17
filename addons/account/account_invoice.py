@@ -251,7 +251,7 @@ class account_invoice(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'check_total': fields.float('Total', digits_compute=dp.get_precision('Account'), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
+        'check_total': fields.float('Verification Total', digits_compute=dp.get_precision('Account'), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
         'reconciled': fields.function(_reconciled, string='Paid/Reconciled', type='boolean',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50), # Check if we can remove ?
@@ -795,6 +795,7 @@ class account_invoice(osv.osv):
         """Creates invoice related analytics and financial move lines"""
         ait_obj = self.pool.get('account.invoice.tax')
         cur_obj = self.pool.get('res.currency')
+        period_obj = self.pool.get('account.period')
         context = {}
         for inv in self.browse(cr, uid, ids):
             if not inv.journal_id.sequence_id:
@@ -923,10 +924,10 @@ class account_invoice(osv.osv):
                 'narration':inv.comment
             }
             period_id = inv.period_id and inv.period_id.id or False
+            ctx.update({'company_id': inv.company_id.id})
             if not period_id:
-                period_ids = self.pool.get('account.period').search(cr, uid, [('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d')), ('company_id', '=', inv.company_id.id)])
-                if period_ids:
-                    period_id = period_ids[0]
+                period_ids = period_obj.find(cr, uid, inv.date_invoice, context=ctx)
+                period_id = period_ids and period_ids[0] or False
             if period_id:
                 move['period_id'] = period_id
                 for i in line:
@@ -1323,9 +1324,9 @@ class account_invoice_line(osv.osv):
             raise osv.except_osv(_('No Partner Defined !'),_("You must first select a partner !") )
         if not product:
             if type in ('in_invoice', 'in_refund'):
-                return {'value': {'categ_id': False}, 'domain':{'product_uom':[]}}
+                return {'value': {}, 'domain':{'product_uom':[]}}
             else:
-                return {'value': {'price_unit': 0.0, 'categ_id': False}, 'domain':{'product_uom':[]}}
+                return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         fpos_obj = self.pool.get('account.fiscal.position')
         fpos = fposition_id and fpos_obj.browse(cr, uid, fposition_id, context=context) or False
@@ -1378,7 +1379,6 @@ class account_invoice_line(osv.osv):
             if res2:
                 domain = {'uos_id':[('category_id','=',res2 )]}
 
-        result['categ_id'] = res.categ_id.id
         res_final = {'value':result, 'domain':domain}
 
         if not company_id or not currency_id:
