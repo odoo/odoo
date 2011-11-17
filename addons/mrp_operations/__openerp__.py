@@ -64,7 +64,8 @@ So that we can compare the theoretic delay and real delay.
         'report/mrp_workorder_analysis_view.xml',
         'process/mrp_operation_process.xml'
     ],
-    'demo_xml': ['mrp_operation_data.xml'],
+    'demo_xml': ['mrp_operation_data.xml', 
+                 'mrp_operations_demo.yml'],
     'test': ['test/check_mo2operations.yml', 
              'test/check_operations2mo.yml',
              'test/check_mo_cancel.yml', 

@@ -1,28 +1,5 @@
 -
-  Now I will see how changing work orders will effect production order,
--
-  !record {model: mrp.production, id: mrp_production_op1}:
-    company_id: base.main_company
-    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-    location_dest_id: stock.stock_location_stock
-    location_src_id: stock.stock_location_stock
-    product_id: product.product_product_cpu3
-    product_qty: 2.0
-    product_uos_qty: 2.0
--
-  I am computing the data.
--
-  !python {model: mrp.production}: |
-    self.action_compute(cr, uid, [ref("mrp_production_op1")], {"lang": "en_US", "tz":
-      False, "search_default_current": 1, "active_model": "ir.ui.menu", "active_ids":
-      [ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),
-      })
--
-  Now I confirm the production order.
--
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_op1}
--
-  I check that there are two work orders generated for this production order.
+  I check that there are two work orders generated for the production order of 2 CPU3.
 -
   !assert {model: mrp.production, id: mrp_production_op1, string: Operation is started.}:
     - len(workcenter_lines) == 2

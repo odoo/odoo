@@ -1,17 +1,5 @@
 -
-  Now I will check how cancelling production order will affect its work orders.
--
-  !record {model: mrp.production, id: mrp_production_mo1}:
-    location_src_id: stock.stock_location_stock
-    product_id: product.product_product_cpu_gen
-    product_qty: 5.0
-    product_uos_qty: 5.0
--
-  Now I confirm the production order.
--
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo1}
--
-  I check that there is one Work order generated related to the production order.
+  I check that there is one Work order generated related to the production order of 5 CPU_GEN.
 -
   !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _

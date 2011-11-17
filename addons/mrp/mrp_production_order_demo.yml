@@ -10,7 +10,6 @@
   !function {model: mrp.production, name: action_compute, id: mrp_production_order1}:
   - model: mrp.production
     eval: "[obj(ref('mrp_production_order1')).id]"
-
 -
   !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_order1}    
 -
