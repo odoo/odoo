@@ -125,7 +125,11 @@ openerp.web.callback = function(obj, method) {
                 callback.callback_chain.splice(i, 1);
                 i -= 1;
             }
-            r = c.callback.apply(c.self, c.args.concat(args));
+            var result = c.callback.apply(c.self, c.args.concat(args));
+            if (c.callback === method) {
+                // return the result of the original method
+                r = result;
+            }
             // TODO special value to stop the chain
             // openerp.web.callback_stop
         }
