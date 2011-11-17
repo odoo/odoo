@@ -219,10 +219,20 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
     },
     on_load_action: function(result) {
         var self = this,
-            action_orig = _.extend({}, result.result),
             action = result.result,
             action_attrs = this.actions_attrs[action.id],
             view_mode = action_attrs.view_mode;
+
+        // TODO: Use xmo's python evaluator when ready
+        if (action_attrs.context) {
+            action.context = _.extend(action.context || {}, action_attrs.context);
+        }
+        if (action_attrs.domain) {
+            action.domain = action.domain || [];
+            action.domain.push.apply(action.domain, action_attrs.domain);
+        }
+        var action_orig = _.extend({}, action);
+
         if (view_mode && view_mode != action.view_mode) {
             var action_view_mode = action.view_mode.split(',');
             action.views = _.map(view_mode.split(','), function(mode) {
@@ -235,15 +245,6 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
                     });
                 }
             });
-        }
-
-        // TODO: Use xmo's python evaluator when ready
-        if (action_attrs.context) {
-            action.context = _.extend(action.context || {}, action_attrs.context);
-        }
-        if (action_attrs.domain) {
-            action.domain = action.domain || [];
-            action.domain.push.apply(action.domain, action_attrs.domain);
         }
 
         action.flags = {
