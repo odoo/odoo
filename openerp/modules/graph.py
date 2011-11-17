@@ -122,9 +122,6 @@ class Graph(dict):
                 current.remove(package)
                 node = self.add_node(package, info)
                 node.data = info
-                for kind in ('init', 'demo', 'update'):
-                    if package in tools.config[kind] or 'all' in tools.config[kind] or kind in force:
-                        setattr(node, kind, True)
             else:
                 later.add(package)
                 packages.append((package, info))
@@ -186,18 +183,11 @@ class Node(Singleton):
         node.depth = self.depth + 1
         if node not in self.children:
             self.children.append(node)
-        for attr in ('init', 'update', 'demo'):
-            if hasattr(self, attr):
-                setattr(node, attr, True)
         self.children.sort(lambda x, y: cmp(x.name, y.name))
         return node
 
     def __setattr__(self, name, value):
         super(Singleton, self).__setattr__(name, value)
-        if name in ('init', 'update', 'demo'):
-            tools.config[name][self.name] = 1
-            for child in self.children:
-                setattr(child, name, value)
         if name == 'depth':
             for child in self.children:
                 setattr(child, name, value + 1)

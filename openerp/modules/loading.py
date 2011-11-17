@@ -164,7 +164,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         register_module_classes(package.name)
         models = pool.load(cr, package)
         loaded_modules.append(package.name)
-        if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+        if package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
 
         status['progress'] = float(index) / len(graph)
@@ -178,18 +178,19 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         idref = {}
 
-        mode = 'update'
-        if hasattr(package, 'init') or package.state == 'to install':
+        if package.state == 'to install':
             mode = 'init'
+        else:
+            mode = 'update'
 
-        if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+        if package.state in ('to install', 'to upgrade'):
             if package.state=='to upgrade':
                 # upgrading the module information
                 modobj.write(cr, 1, [module_id], modobj.get_values_from_terp(package.data))
             load_init_xml(module_name, idref, mode)
             load_update_xml(module_name, idref, mode)
             load_data(module_name, idref, mode)
-            if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
+            if package.dbdemo and package.state != 'installed':
                 status['progress'] = (index + 0.75) / len(graph)
                 load_demo_xml(module_name, idref, mode)
                 load_demo(module_name, idref, mode)
@@ -212,9 +213,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             modobj.update_translations(cr, 1, [module_id], None)
 
             package.state = 'installed'
-            for kind in ('init', 'demo', 'update'):
-                if hasattr(package, kind):
-                    delattr(package, kind)
 
         cr.commit()
 
@@ -272,10 +270,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if not openerp.modules.db.is_initialized(cr):
             logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
             openerp.modules.db.initialize(cr)
-            tools.config["init"]["all"] = 1
-            tools.config['update']['all'] = 1
-            if not tools.config['without_demo']:
-                tools.config["demo"]['all'] = 1
             update_module = True
 
         # This is a brand new pool, just created in pooler.get_db_and_pool()
@@ -294,6 +288,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
+        # After load_module_graph(), 'base' has been installed or updated and its state is 'installed'.
         loaded_modules, processed_modules = load_module_graph(cr, graph, status, report=report)
 
         if tools.config['load_language']:
@@ -301,28 +296,33 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 tools.load_language(cr, lang)
 
         # STEP 2: Mark other modules to be loaded/updated
+        # This is a one-shot use of tools.config[init|update] from the command line
+        # arguments. It is directly cleared to not interfer with later create/update
+        # issued via RPC.
         if update_module:
             modobj = pool.get('ir.module.module')
-            if ('base' in tools.config['init']) or ('base' in tools.config['update']):
+            if ('base' in tools.config['init']) or ('base' in tools.config['update']) \
+                or ('all' in tools.config['init']) or ('all' in tools.config['update']):
                 logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
                 modobj.update_list(cr, 1)
 
+            if 'all' in tools.config['init']:
+                pass
+
             _check_module_names(cr, itertools.chain(tools.config['init'].keys(), tools.config['update'].keys()))
 
-            mods = [k for k in tools.config['init'] if tools.config['init'][k]]
-            if mods:
-                ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
-                if ids:
-                    modobj.button_install(cr, 1, ids)
+            mods = [k for k in tools.config['init'] if tools.config['init'][k] and k not in ('base', 'all')]
+            ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
+            if ids:
+                modobj.button_install(cr, 1, ids) # goes from 'uninstalled' to 'to install'
 
-            mods = [k for k in tools.config['update'] if tools.config['update'][k]]
-            if mods:
-                ids = modobj.search(cr, 1, ['&', ('state', '=', 'installed'), ('name', 'in', mods)])
-                if ids:
-                    modobj.button_upgrade(cr, 1, ids)
+            mods = [k for k in tools.config['update'] if tools.config['update'][k] and k not in ('base', 'all')]
+            ids = modobj.search(cr, 1, ['&', ('state', '=', 'installed'), ('name', 'in', mods)])
+            if ids:
+                modobj.button_upgrade(cr, 1, ids) # goes from 'installed' to 'to upgrade'
 
-            cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
-
+        for kind in ('init', 'demo', 'update'):
+            tools.config[kind] = {}
 
         # STEP 3: Load marked modules (skipping base which was done in STEP 1)
         # IMPORTANT: this is done in two parts, first loading all installed or
@@ -371,9 +371,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         if report.get_report():
             logger.notifyChannel('init', netsvc.LOG_INFO, report)
-
-        for kind in ('init', 'demo', 'update'):
-            tools.config[kind] = {}
 
         cr.commit()
         if update_module:
