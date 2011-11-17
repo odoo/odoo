@@ -719,25 +719,20 @@ openerp.point_of_sale = function(db) {
     /*
      "Products" step.
      */
-    CategoryView = (function() {
-        __extends(CategoryView, Backbone.View);
-        function CategoryView() {
-            CategoryView.__super__.constructor.apply(this, arguments);
-        }
-        
-        CategoryView.prototype.events = {
-            'click .oe-pos-categories-list a': 'changeCategory'
-        };
-
-        CategoryView.prototype.template = qweb_template('pos-category-template');
-        CategoryView.prototype.render = function(ancestors, children) {
+    CategoryWidget = db.web.Widget.extend({
+        start: function() {
+            this.$element.find(".oe-pos-categories-list a").click(_.bind(this.changeCategory, this));
+        },
+        template_fct: qweb_template('pos-category-template'),
+        render_element: function() {
+            var self = this;
             var c;
-            return $(this.el).html(this.template({
+            this.$element.html(this.template_fct({
                 breadcrumb: (function() {
                     var _i, _len, _results;
                     _results = [];
-                    for (_i = 0, _len = ancestors.length; _i < _len; _i++) {
-                        c = ancestors[_i];
+                    for (_i = 0, _len = self.ancestors.length; _i < _len; _i++) {
+                        c = self.ancestors[_i];
                         _results.push(pos.categories[c]);
                     }
                     return _results;
@@ -745,20 +740,20 @@ openerp.point_of_sale = function(db) {
                 categories: (function() {
                     var _i, _len, _results;
                     _results = [];
-                    for (_i = 0, _len = children.length; _i < _len; _i++) {
-                        c = children[_i];
+                    for (_i = 0, _len = self.children.length; _i < _len; _i++) {
+                        c = self.children[_i];
                         _results.push(pos.categories[c]);
                     }
                     return _results;
                 })()
             }));
-        };
-        CategoryView.prototype.changeCategory = function(a) {
+        },
+        changeCategory: function(a) {
             var id = $(a.target).data("category-id");
-            this.trigger("changeCategory", id);
-        };
-        return CategoryView;
-    })();
+            this.on_change_category(id);
+        },
+        on_change_category: function(id) {},
+    });
     ProductView = (function() {
         __extends(ProductView, Backbone.View);
         function ProductView() {
@@ -1121,10 +1116,9 @@ openerp.point_of_sale = function(db) {
                 shop: this.shop,
                 el: $element
             });
-            this.categoryView = new CategoryView;
-            this.categoryView.bind("changeCategory", this.category, this);
+            this.categoryView = new CategoryWidget(null, 'products-screen');
+            this.categoryView.on_change_category.add_last(_.bind(this.category, this));
             this.category();
-            return this.categoryView;
         };
         App.prototype.category = function(id) {
             var c, products;
@@ -1132,8 +1126,10 @@ openerp.point_of_sale = function(db) {
                 id = 0;
             }
             c = pos.categories[id];
-            $('#products-screen').html(this.categoryView.render(c.ancestors, c.children));
-            this.categoryView.delegateEvents();
+            this.categoryView.ancestors = c.ancestors;
+            this.categoryView.children = c.children;
+            this.categoryView.render_element();
+            this.categoryView.start();
             products = pos.store.get('product.product').filter( function(p) {
                 var _ref;
                 return _ref = p.pos_categ_id[0], __indexOf.call(c.subtree, _ref) >= 0;
