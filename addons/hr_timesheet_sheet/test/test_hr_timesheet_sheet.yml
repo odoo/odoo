@@ -1,29 +1,10 @@
 -
   In order to test hr_timesheet_sheet module in OpenERP, I create timesheet and check validation process done by manager.
 -
-  I will create a company and set maximum allowed difference between timesheet and attendance to 1 hour
--
-  !record {model: res.company, id: res_company_openERP}:
-    currency_id: base.ARS
-    name: OpenERP SA
-    partner_id: base.res_partner_desertic_hispafuentes
-    timesheet_max_difference: 1.0
-
--
-  I assign this company to Admin user
--
-  !record {model: res.users, id: base.user_root}:
-    company_id: res_company_openERP
-    company_ids:
-      - base.main_company
-      - res_company_openERP
-
--
-  I  create a new employee “Mark Johnson”.
+  I  create a new employee "Mark Johnson".
 -
   !record {model: hr.employee, id: hr_employee_employee0}:
     address_home_id: base.res_partner_address_1
-    company_id: res_company_openERP
     gender: male
     marital: single
     name: Mark Johnson

@@ -1,5 +1,5 @@
 - 
-  Create a task 'Develop time management module' with monthly timebox
+  Create a task 'Develop time management module' with weekly timebox
 - 
   !record {model: project.task, id: project_task_developtimemanagementmodule0}:
     name: Develop time management module
@@ -7,7 +7,7 @@
     project_id: project.project_project_22
     remaining_hours: 15.0
     state: draft
-    timebox_id: project_gtd.timebox_monthly
+    timebox_id: project_gtd.timebox_weekly
     
     
 - 
@@ -36,12 +36,12 @@
     sequence: 0.0
     
 - 
-  Planify the task from monthly timebox to tomorrow timebox
+  Planify the task from weekly timebox to tomorrow timebox
 - 
   !record {model: project.timebox.fill.plan, id: project_timebox_fill_plan_0}:
     task_ids:
       - project_task_developtimemanagementmodule0
-    timebox_id: project_gtd.timebox_monthly
+    timebox_id: project_gtd.timebox_weekly
     timebox_to_id: project_gtd_timebox_tomorrow1
     
     

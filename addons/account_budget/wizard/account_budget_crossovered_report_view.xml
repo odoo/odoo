@@ -31,7 +31,6 @@
 		</record>
 		<record model="ir.values" id="account_budget_crossvered_report_values">
 			<field name="model_id" ref="account_budget.model_crossovered_budget" />
-			<field name="object" eval="1" />
 			<field name="name">Print Budgets</field>
 			<field name="key2">client_print_multi</field>
 			<field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_budget_crossvered_report'))" />
