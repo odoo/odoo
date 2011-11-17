@@ -702,16 +702,15 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             values.push('');
             values.sort();
             _PROPERTIES_ATTRIBUTES['widget']['selection'] = values;
-            _.each(properties, function(property) {
-                var type_widget =  new (self.property.get_any([_PROPERTIES_ATTRIBUTES[property].type])) (self.edit_node_dialog, _PROPERTIES_ATTRIBUTES[property]);
+            var widgets = _.filter(_PROPERTIES_ATTRIBUTES, function(property){ return _.include(properties, property.name)})
+            _.each(widgets, function(widget) {
+                var type_widget =  new (self.property.get_any([widget.type])) (self.edit_node_dialog, widget);
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
-                    if (res instanceof Array) {
-                        return _.include(res, property);
-                    }
-                    return false;
+                    if (res instanceof Array) return _.include(res, widget.name);
+                    else return false;
                 });
                 value = value instanceof Array ? value[1] : value;
-                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + _PROPERTIES_ATTRIBUTES[property].string + ':</td>' + type_widget.render() + '</tr>');
+                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + widget.string + ':</td>' + type_widget.render() + '</tr>');
                 type_widget.start();
                 type_widget.set_value(value)
                 self.edit_widget.push(type_widget);
