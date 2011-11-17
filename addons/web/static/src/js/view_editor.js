@@ -847,6 +847,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
     },
     render_new_field :function(id){
+        var self = this;
         var action = {
             context: {'default_model_id':id, 'manual':true},
             res_model: "ir.model.fields",
@@ -858,14 +859,21 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
         }
         var action_manager = new openerp.web.ActionManager(self);
-        action_manager.do_action(action);
         $.when(action_manager.do_action(action)).then(function() {
-            var add_controller = action_manager.dialog_viewmanager.views['form'].controller;
-            add_controller.do_set_readonly.add_last(function(){
-                var aa = controller;
+            var controller = action_manager.dialog_viewmanager.views['form'].controller;
+            controller.do_set_readonly.add_last(function(){
+                action_manager.stop();
+                new_fields_name = new openerp.web.DataSetSearch(self,'ir.model.fields', null, null);
+                new_fields_name.read_ids([controller.datarecord.id], ['name'], function(result) {
+                self.add_node_dialog.$element.
+                    find('select[id=field_value]'). append($("<option></option>").
+                    attr("value",result[0].name).text(result[0].name));
+                    _.detect(self.add_widget,function(widget){
+                        (widget.name == "field_value")?widget.selection.push(result[0].name):false;
+                      });
+                });
             });
         });
-
     }
 });
 openerp.web.ViewEditor.Field = openerp.web.Class.extend({
