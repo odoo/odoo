@@ -65,7 +65,7 @@ So that we can compare the theoretic delay and real delay.
         'process/mrp_operation_process.xml'
     ],
     'demo_xml': ['mrp_operation_data.xml'],
-    'test': ['test/check_mo2operations.yml', 'test/mrp_operations_report.yml','test/mrp_operation_test.yml'],
+    'test': ['test/check_mo2operations.yml', 'test/check_mo_cancel.yml', 'test/mrp_operations_report.yml'],
     'installable': True,
     'active': False,
     'certificate': '0056233813133',
