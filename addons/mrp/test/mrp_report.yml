@@ -12,7 +12,7 @@
 -
   !python {model: mrp.production}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.mrp.production.order').create(cr, uid, [ref('mrp.mrp_production_mo1')], {}, {})
+    (data, format) = netsvc.LocalService('report.mrp.production.order').create(cr, uid, [ref('mrp.mrp_production_order1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp-production_order_report.'+format), 'wb+').write(data)
 

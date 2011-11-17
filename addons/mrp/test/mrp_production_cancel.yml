@@ -1,28 +1,28 @@
 -
   In order to test effect of cancelling Internal picking on production order, I first confirm order for PC3.
 -
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_order2}
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_order3}
 -
   I check that the related internal picking is waiting availability.
 -
-  !assert {model: mrp.production, id: mrp_production_order2}:
+  !assert {model: mrp.production, id: mrp_production_order3}:
     - picking_id.state == 'confirmed'
 -
   In order to cancel the production order, I first cancel its picking.
 -
   !function {model: stock.picking, name: action_cancel}:
     - model: mrp.production
-      eval: "[obj(ref('mrp_production_order2')).picking_id.id]"
+      eval: "[obj(ref('mrp_production_order3')).picking_id.id]"
 -
   Now I cancel the production order.
 -
-  !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_order2}
+  !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_order3}
 -
   Now I check that the production order is cancelled.
 -
-  !assert {model: mrp.production, id: mrp_production_order2}:
+  !assert {model: mrp.production, id: mrp_production_order3}:
     - state == 'cancel'
 -
   I remove this production order.
 -
-  !delete {model: mrp.production, id: mrp_production_order2}
+  !delete {model: mrp.production, id: mrp_production_order3}

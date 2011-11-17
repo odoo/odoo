@@ -90,6 +90,7 @@ Dashboard provided by this module:
     ],
     'demo_xml': [
          'mrp_demo.xml',
+         'mrp_production_order_demo.yml'
     ],
     'test': [
          'test/mrp_production_order.yml',

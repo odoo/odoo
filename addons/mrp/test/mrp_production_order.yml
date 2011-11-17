@@ -1,27 +1,9 @@
 -
-  In order to test the manufacturing order working with procurements I will create manufacturing orders of products having different configuration and check the flow.
+  In order to test the manufacturing order working with procurements I will check different manufacturing orders of different products having different configuration and check the flow.
 -
-  I am creating a manufacturing order of 5 PC1-Basic PC which has 'Assembly Basic PC' as its BOM.
+  I create record for wizard 'Change Qty' as we have to produce 6.0 PC1 instead of 5.0,
 -
-  !record {model: mrp.production, id: mrp_production_mo1}:
-    company_id: base.main_company
-    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-    location_dest_id: stock.stock_location_stock
-    location_src_id: stock.stock_location_stock
-    product_id: product.product_product_pc1
-    name: MO/0123
-    product_qty: 5.0
-    product_uom: product.product_uom_unit
-    product_uos_qty: 5.0
--
-  I click on the "Compute Data" to compute work centre and scheduled product.
--
-  !python {model: mrp.production}: |
-    self.action_compute(cr, uid, [ref("mrp_production_mo1")])
--
-  I remembered that we have to produce 6.0 PC1 instead of 5.0, so I create record for wizard 'Change Qty'.
--
-  !record {model: change.production.qty, id: mrp_production_qty, context: "{'active_id': ref('mrp_production_mo1')}"}:
+  !record {model: change.production.qty, id: mrp_production_qty, context: "{'active_id': ref('mrp_production_order1')}"}:
 -
   I change value to 6.0 
 -
@@ -31,44 +13,44 @@
   I Approve change qty wizard for 6.0 PC1.
 -
   !python {model: change.production.qty}: |
-    context = {"lang": 'en_US', "active_model":"mrp.production", "active_ids": [ref("mrp_production_mo1")], "tz": False, "active_id":ref('mrp_production_mo1')}
+    context = {"lang": 'en_US', "active_model":"mrp.production", "active_ids": [ref("mrp_production_order1")], "tz": False, "active_id":ref('mrp_production_order1')}
     self.change_prod_qty(cr, uid, [ref("mrp_production_qty")], context=context)
 -
   I confirm the manufacturing order for 5 PC1.
 -
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo1}
--
-  I check there is an internal picking for this MO to bring components in Raw Materials Location.
--
-  !python {model: mrp.production}: |
-    from tools.translate import _
-    pick_ids = self.browse(cr, uid, ref("mrp_production_mo1"))
-    assert pick_ids.picking_id.id, _('No Internal Picking created for this manufacturing order!')
--
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_order1}
+-  
   I compute the scheduler to procure the components based on their supply method.
 -
   !function {model: procurement.order, name: run_scheduler}:
     - model: procurement.order
       search: "[]"
 -
+  I check there is an internal picking for this MO to bring components in Raw Materials Location.
+-
+  !python {model: mrp.production}: |
+    from tools.translate import _
+    pick_ids = self.browse(cr, uid, ref("mrp_production_order1"))
+    assert pick_ids.picking_id.id, _('No Internal Picking created for this manufacturing order!')
+-
   I see that there is a manufacturing order for the sub product CPU_GEN with ready state and I start production of it.
 -
   !python {model: mrp.production}: |
     from tools.translate import _
-    order_ids = self.search(cr, uid, [('state','=','ready'), ('product_id', '=', ref('product.product_product_cpu_gen')), ('origin', 'ilike', '%MO/0123%')])
+    order_ids = self.search(cr, uid, [('state','=','ready'), ('product_id', '=', ref('product.product_product_cpu_gen')), ('origin', 'ilike', '%MO/00001%')])
     assert order_ids, _('No manufacturing order in Ready state for CPU_GEN!')
     import netsvc
     wf_service = netsvc.LocalService("workflow")
     for order in order_ids:
         wf_service.trg_validate(uid, 'mrp.production', order, 'button_produce', cr)
 -
-  Now to produce CPU_GEN, I create record of wizard 'Consume & Produce' with quantity 6.0.
+  Now to produce CPU_GEN, I create record of wizard 'Consume & Produce'.
 -
   !record {model: mrp.product.produce, id: mrp_product_produce0}:
-    product_qty: 6.0
     mode: 'consume_produce'
+    product_qty: 5.0
 -
-  I confirm the production of 6.0 CPU_GEN.
+  I confirm the production of CPU_GEN.
 -
   !python {model: mrp.product.produce}: |
     prod_obj = self.pool.get('mrp.production')
@@ -77,25 +59,25 @@
 -
   Component CPU_GEN is produced and now manufacturing order for PC1 is ready to produce.
 -
-  !assert {model: mrp.production, id: mrp_production_mo1}:
+  !assert {model: mrp.production, id: mrp_production_order1}:
     - state == 'ready'
 -
   I start production of PC1.
 -
-  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo1}
+  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_order1}
 -
   I create record for producing products with quantity 6.0.
 -
-  !record {model: mrp.product.produce, id: mrp_product_produce1, context: "{'active_id': ref('mrp_production_mo1')}"}:
+  !record {model: mrp.product.produce, id: mrp_product_produce1, context: "{'active_id': ref('mrp_production_order1')}"}:
     mode: 'consume_produce'
 -
   I produce the products by clicking on 'Produce'
 -
   !python {model: mrp.product.produce}: |
-    context = {"lang": 'en_US', "active_model":"mrp.production", "active_ids": [ref("mrp_production_mo1")], "tz": False, "active_id":ref('mrp_production_mo1')}
+    context = {"lang": 'en_US', "active_model":"mrp.production", "active_ids": [ref("mrp_production_order1")], "tz": False, "active_id":ref('mrp_production_order1')}
     self.do_produce(cr, uid, [ref('mrp_product_produce1')], context=context)
 -
   I check now the production order for 6.0 PC1 is done.
 -
-  !assert {model: mrp.production, id: mrp_production_mo1}:
+  !assert {model: mrp.production, id: mrp_production_order1}:
     - state == 'done'

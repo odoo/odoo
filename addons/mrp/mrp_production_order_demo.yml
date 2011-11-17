@@ -1,0 +1,25 @@
+-
+  !record {model: mrp.production, id: mrp_production_order1}:
+    location_src_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_output
+    product_id: product.product_product_pc1
+    name: MO/00001
+    product_qty: 5.0
+    product_uos_qty: 5.0
+-
+  !function {model: mrp.production, name: action_compute, id: mrp_production_order1}:
+  - model: mrp.production
+    eval: "[obj(ref('mrp_production_order1')).id]"
+
+-
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_order1}    
+-
+  !record {model: mrp.production, id: mrp_production_order2}:
+    location_src_id: stock.stock_location_stock
+    product_id: product.product_product_kitshelfofcm0
+    product_qty: 5.0
+    product_uos_qty: 5.0
+-
+  !record {model: mrp.production, id: mrp_production_order3}:
+    location_src_id: stock.stock_location_stock
+    product_id: product.product_product_pc3
