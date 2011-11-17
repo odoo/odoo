@@ -92,7 +92,7 @@ openerp.web_process = function (openerp) {
             var self = this,
                 def = $.Deferred();
             if(!this.subflow_model) {
-                def.resolve(this.action ? this.action.help : 'Help: Not Defined');
+                def.resolve(this.action ? (this.action.help!=false ? this.action.help : 'Help: Not Defined') : 'Help: Not Defined');
             } else {
                  var dataset = new openerp.web.DataSetSearch(this, "ir.actions.act_window", this.session.context, []);
                  dataset
