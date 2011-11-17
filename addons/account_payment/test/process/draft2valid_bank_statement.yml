@@ -12,7 +12,7 @@
     period_id: account.period_10
 
 -
-   In order to make entries in bank statement line I import payment order lines
+   In order to make entries in bank statement line, I import payment order lines
 -
   !python {model: account.payment.populate.statement}: |
     payment = self.pool.get('payment.order').browse(cr, uid, ref("account_payment.payment_order_1"))

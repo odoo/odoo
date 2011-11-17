@@ -10,7 +10,7 @@
   !assert {model: payment.order, id: account_payment.payment_order_1}:
     - state == 'open'
 -
-  In order to no payment line so I perform action to change the state of payment order to "cancel"
+  In order to not payment line so I perform action to change the state of payment order to "cancel"
 -
   !python {model: payment.order}: |
     self.set_to_draft(cr, uid, [ref("account_payment.payment_order_1")])

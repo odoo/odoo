@@ -1,11 +1,11 @@
 
 -
-  In order to test the process of supplier invoice I enter the amount for a total of invoice
+  In order to test the process of supplier invoice, I enter the amount for a total of invoice
 -
   !python {model: account.invoice}: |
      self.write(cr, uid, [ref('account.demo_invoice_0')], {'check_total': 14})
 -
-  In order to test account move line of journal I check that there is no move attached to the invoice at draft
+  In order to test account move line of journal, I check that there is no move attached to the invoice at draft
 -
   !python {model: account.invoice}: |
     invoice = self.browse(cr, uid, ref("account.demo_invoice_0"))
@@ -29,9 +29,7 @@
     duedate: !eval time.strftime('%Y-%m-%d')
 
 -
-  I perform a action to search the entries for create a order
--
-  Performing an osv_memory action search_entries on module payment.order.create
+  I perform a action to search the entries for create a payment line
 -
   !python {model: payment.order.create}: |
     self.search_entries(cr, uid, [ref("payment_order_create_0")], {"lang": "en_US",
@@ -39,7 +37,7 @@
       "tz": False, "active_id": ref("account_payment.payment_order_1"), })
 
 -
-  In order to make entries in payment line I create a entries
+  In order to make entries in payment line, I create a entries
 -
   !python {model: payment.order.create}: |
     invoice = self.pool.get('account.invoice').browse(cr, uid, ref("account.demo_invoice_0"))
