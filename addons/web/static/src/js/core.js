@@ -367,7 +367,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         }
 
         if (this.server) {
-            throw new Error("Connection already bind to " + this.server);
+            throw new Error("Connection already bound to " + this.server);
         } 
         var hostname = _.str.sprintf('%s//%s', location.protocol, location.host);
         this.server = _.str.rtrim((!server) ? hostname : server, '/');
