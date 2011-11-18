@@ -363,8 +363,23 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             self.increase_level(val, level + 1);
         });
     },
+    do_select_row: function(id){
+        this.edit_xml_dialog.$element.find("tr[id^='viewedit-']").removeClass('ui-selected');
+        this.edit_xml_dialog.$element.find("tr[id=viewedit-"+id+"]").addClass('ui-selected');
+    },
+    do_parent_img_hide_show: function(img){
+        var self = this;
+        if ($(img).attr('src') == '/web/static/src/img/collapse.gif') {
+            $(img).attr('src', '/web/static/src/img/expand.gif');
+            self.on_expand(img);
+        } else {
+            $(img).attr('src', '/web/static/src/img/collapse.gif');
+            this.on_collapse(img);
+        }
+    },
     edit_view: function(one_object) {
         var self = this;
+        this.one_object = one_object;
         this.edit_xml_dialog = new openerp.web.Dialog(this, {
             modal: true,
             title: _.sprintf("View Editor %d - %s", self.main_view_id, self.model),
@@ -395,175 +410,187 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }
             }
         }).start().open();
+
         var no_property_att = [];
         _.each(_PROPERTIES, function(val, key) {
             if (! val.length) no_property_att.push(key);
         });
+
         this.edit_xml_dialog.$element.html(QWeb.render('view_editor', {'data': one_object['main_object'], 'no_properties': no_property_att}));
+
         this.edit_xml_dialog.$element.find("tr[id^='viewedit-']").click(function() {
-            self.edit_xml_dialog.$element.find("tr[id^='viewedit-']").removeClass('ui-selected');
-            $(this).addClass('ui-selected');
-            console.log(self);
+            self.do_select_row(this.id.split('-')[1]);
         });
+
         this.edit_xml_dialog.$element.find("img[id^='parentimg-']").click(function() {
-            if ($(this).attr('src') == '/web/static/src/img/collapse.gif') {
-                $(this).attr('src', '/web/static/src/img/expand.gif');
-                self.on_expand(this);
-            } else {
-                $(this).attr('src', '/web/static/src/img/collapse.gif');
-                var id = this.id.split('-')[1];
-                self.on_collapse(this,one_object['parent_child_id'], one_object['main_object']);
-            }
+            self.do_parent_img_hide_show(this);
         });
         this.edit_xml_dialog.$element.find("img[id^='side-']").click(function() {
-
+            self.on_select_img(this);
         });
     },
-    what_to_do: function(){
-            var self = this;
-            var side = $(this).closest("tr[id^='viewedit-']");
-            var clicked_tr_id = parseInt((side.attr('id')).split('-')[1]);
-            var img = side.find("img[id='parentimg-" + clicked_tr_id + "']").attr('src');
-            var clicked_tr_level = parseInt(side.attr('level'));
-            var cur_tr = side;
-            var last_tr;
-            var next_tr;
-            var tr_to_move = [];
-            tr_to_move.push(side);
-            var view_id;
-            var view_xml_id;
-            var view_find = side;
-            var min_level = clicked_tr_level;
-            if(($(side).find('a').text()).search("view_id") != -1){
-                view_id = parseInt(($(view_find).find('a').text()).replace(/[^0-9]+/g, ''));
-                view_xml_id = (view_find.attr('id')).split('-')[1];
-                clicked_tr_id  += 1;
-                clicked_tr_level += 1;
-            }else{
-                while (1) {
-                    view_find = view_find.prev();
-                    if (view_find.length == 0 ||
-                        (self.edit_xml_dialog.$element.find(view_find).find('a').text()).search("view_id") != -1
-                            && parseInt(view_find.attr('level')) < min_level ) {
-                        view_id = parseInt(($(view_find).find('a').text()).replace(/[^0-9]+/g, ''));
-                        view_xml_id = (view_find.attr('id')).split('-')[1];
-                        break;
-                    }
-                    if(view_find.attr('level') < min_level){
-                        min_level = parseInt(view_find.attr('level'));
-                    }
+
+    on_select_img: function(element_img){
+        var self = this;
+        var side = $(element_img).closest("tr[id^='viewedit-']");
+        this.one_object.clicked_tr_id = parseInt((side.attr('id')).split('-')[1]);
+        this.one_object.clicked_tr_level = parseInt(side.attr('level'));
+        var img = side.find("img[id='parentimg-" + this.one_object.clicked_tr_id + "']").attr('src');
+        var view_id,view_xml_id;
+        var view_find = side;
+
+        //for view id found
+        var min_level = this.one_object.clicked_tr_id;
+        if(($(side).find('a').text()).search("view_id") != -1){
+            view_id = parseInt(($(view_find).find('a').text()).replace(/[^0-9]+/g, ''));
+            view_xml_id = (view_find.attr('id')).split('-')[1];
+            this.one_object.clicked_tr_id  += 1;
+            this.one_object.clicked_tr_level += 1;
+        }else{
+            while (1) {
+                view_find = view_find.prev();
+                if (view_find.length == 0 ||
+                    (self.edit_xml_dialog.$element.find(view_find).find('a').text()).search("view_id") != -1
+                        && parseInt(view_find.attr('level')) < min_level ) {
+                    view_id = parseInt(($(view_find).find('a').text()).replace(/[^0-9]+/g, ''));
+                    view_xml_id = (view_find.attr('id')).split('-')[1];
+                    break;
+                }
+                if(view_find.attr('level') < min_level){
+                    min_level = parseInt(view_find.attr('level'));
                 }
             }
-            switch (this.id) {
-                case "side-add":
-                    var tr = $(side).find('a').text();
-                    var parent_tr = ($(side).prevAll("tr[level="+String(clicked_tr_level - 1)+"]"))[0];
-                    parent_tr = $(parent_tr).find('a').text();
-                    self.rpc("/web/searchview/fields_get", {model:self.model}, function(result) {
-                                var fields = _.keys(result.fields);
-                                fields.push(" "),fields.sort();
-                                var property_to_check = [];
-                                _.each([tr,parent_tr],function(element){
-                                    property_to_check.push(
-                                        _.detect(_.keys(_CHILDREN),function(res){
-                                                return _.includes(element, res);
-                                            }));
-                                    });
-                                self.on_add_node(property_to_check, fields ,
-                                    clicked_tr_id, one_object, view_id, view_xml_id, clicked_tr_level);
-                            });
-                    break;
-                case "side-remove":
-                    if (confirm(_t("Do you really want to remove this node?"))) {
-            
-                        self.do_save_update_arch
-                            (one_object, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "remove_node");
-                    }
-                    break;
-                case "side-edit":
-                    var tr = $(this).closest("tr[id^='viewedit-']").find('a').text();
-                    var tag = _.detect(_.keys(_PROPERTIES),function(res){
-                        return _.includes(tr, res);
-                    });
-                    var properties = _PROPERTIES[tag];
-                    console.log("properties",properties);
-                    self.on_edit_node(properties, clicked_tr_id, one_object, view_id, view_xml_id, clicked_tr_level);
-                    break;
-                case "side-up":
-                    while (1) {
-                        var prev_tr = cur_tr.prev();
-                        if (clicked_tr_level >= parseInt(prev_tr.attr('level')) || prev_tr.length == 0) {
-                           last_tr = prev_tr;
-                           break;
-                        }
-                        cur_tr = prev_tr;
-                    }
-                    if (img) {
-                    self.edit_xml_dialog.$element.find("img[id='parentimg-" + clicked_tr_id + "']").
-                            attr('src', '/web/static/src/img/expand.gif');
-                        while (1) {
-                            next_tr = side.next();
-                            if (parseInt(next_tr.attr('level')) <= clicked_tr_level || next_tr.length == 0) {
-                                break;
-                            } else {
-                                next_tr.hide();
-                                tr_to_move.push(next_tr);
-                                side = next_tr;
-                            }
-                        }
-                    }
-                    if (last_tr.length != 0 && parseInt(last_tr.attr('level')) == clicked_tr_level &&
-                            (self.edit_xml_dialog.$element.find(last_tr).find('a').text()).search("view_id") == -1) {
-                        _.each(tr_to_move, function(rec) {
-                             $(last_tr).before(rec);
-                        });
-                        self.do_save_update_arch
-                            (one_object, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "up");
-                    }
+        }
+        this.one_object.clicked_tr_view = [view_id, view_xml_id];
+        switch (element_img.id) {
+            case "side-add":
+                self.do_node_add(side);
+                break;
+            case "side-remove":
+                if (confirm(_t("Do you really want to remove this node?"))) {
+                self.do_save_update_arch
+                (one_object, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "remove_node");
+                }
+                break;
+            case "side-edit":
+                self.do_node_edit(side);
+                break;
+            case "side-up":
+                self.do_node_up(side, img);
                 break;
             case "side-down":
-                if (img) {
-                    while (1) {
-                        next_tr = cur_tr.next();
-                        if ( parseInt(next_tr.attr('level')) <= clicked_tr_level || next_tr.length == 0) {
-                            last_tr = next_tr;
-                            break;
-                        } else {
-                            tr_to_move.push(next_tr);
-                            cur_tr = next_tr;
-                        }
-                   }
-                } else {
-                    last_tr = cur_tr.next();
-                }
-
-                if ((self.edit_xml_dialog.$element.find(last_tr).find('a').text()).search("view_id") != -1) {
-                    return;
-                }
-                if (last_tr.length != 0 &&  parseInt(last_tr.attr('level')) == clicked_tr_level) {
-                    var last_tr_id = (last_tr.attr('id')).split('-')[1];
-                    img = last_tr.find("img[id='parentimg-" + last_tr_id + "']").attr('src');
-                    if (img) {
-                        self.edit_xml_dialog.$element.find("img[id='parentimg-" + last_tr_id + "']").
-                                                        attr('src', '/web/static/src/img/expand.gif');
-                        while (1) {
-                            var next_tr = last_tr.next();
-                            if (next_tr.attr('level') <= clicked_tr_level || next_tr.length == 0) break;
-                            next_tr.hide();
-                            last_tr = next_tr;
-                        }
-                    }
-                    tr_to_move.reverse();
-                    _.each(tr_to_move, function(rec) {
-                       $(last_tr).after(rec);
-                    });
-                    self.do_save_update_arch(one_object, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "down");
-                }
+                self.do_node_down(side, img);
                 break;
+        }
+    },
+    do_node_add: function(side){
+        var self = this;
+        var tr = $(side).find('a').text();
+        var parent_tr = ($(side).prevAll("tr[level="+String(this.one_object.clicked_tr_level - 1)+"]"))[0];
+        parent_tr = $(parent_tr).find('a').text();
+        self.rpc("/web/searchview/fields_get", {model:self.model}, function(result) {
+                    var fields = _.keys(result.fields);
+                    fields.push(" "),fields.sort();
+                    var property_to_check = [];
+                    _.each([tr,parent_tr],function(element){
+                        property_to_check.push(
+                            _.detect(_.keys(_CHILDREN),function(res){
+                                    return _.includes(element, res);
+                                }));
+                        });
+                    console.log(property_to_check,fields);
+                    //self.on_add_node(property_to_check, fields ,
+                    //    clicked_tr_id, one_object, view_id, view_xml_id, clicked_tr_level);
+                });
+    },
+    do_node_edit: function(side){
+        var self = this;
+        var tr = $(side).find('a').text();
+        var tag = _.detect(_.keys(_PROPERTIES),function(res){
+            return _.includes(tr, res);
+        });
+        var properties = _PROPERTIES[tag];
+        console.log(properties);
+        //self.on_edit_node(properties, clicked_tr_id, one_object, view_id, view_xml_id, clicked_tr_level);
+    },
+    do_node_down: function(cur_tr, img){
+        var self = this;
+        var next_tr,last_tr;
+        tr_to_move=[];
+        tr_to_move.push(cur_tr);
+        if (img) {
+            while (1) {
+                next_tr = cur_tr.next();
+                if ( parseInt(next_tr.attr('level')) <= this.one_object.clicked_tr_level || next_tr.length == 0) {
+                    last_tr = next_tr;
+                    break;
+                } else {
+                    tr_to_move.push(next_tr);
+                    cur_tr = next_tr;
+                }
+           }
+        } else {
+            last_tr = cur_tr.next();
+        }
+
+        if ((self.edit_xml_dialog.$element.find(last_tr).find('a').text()).search("view_id") != -1) {
+            return;
+        }
+        if (last_tr.length != 0 &&  parseInt(last_tr.attr('level')) == this.one_object.clicked_tr_level) {
+            var last_tr_id = (last_tr.attr('id')).split('-')[1];
+            img = last_tr.find("img[id='parentimg-" + last_tr_id + "']").attr('src');
+            if (img) {
+                self.edit_xml_dialog.$element.find("img[id='parentimg-" + last_tr_id + "']").
+                                                attr('src', '/web/static/src/img/expand.gif');
+                while (1) {
+                    var next_tr = last_tr.next();
+                    if (next_tr.attr('level') <= this.one_object.clicked_tr_level || next_tr.length == 0) break;
+                    next_tr.hide();
+                    last_tr = next_tr;
+                }
             }
-    }
-
-
+            tr_to_move.reverse();
+            _.each(tr_to_move, function(rec) {
+               $(last_tr).after(rec);
+            });
+           // self.do_save_update_arch(one_object, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "down");
+        }
+    },
+    do_node_up: function(cur_tr, img){
+        var self = this;
+        var side = cur_tr;
+        tr_to_move=[];
+        tr_to_move.push(side);
+        while (1) {
+            var prev_tr = cur_tr.prev();
+            if (this.one_object.clicked_tr_level >= parseInt(prev_tr.attr('level')) || prev_tr.length == 0) {
+               last_tr = prev_tr;
+               break;
+            }
+            cur_tr = prev_tr;
+        }
+        if (img) {
+        self.edit_xml_dialog.$element.find("img[id='parentimg-" + this.one_object.clicked_tr_id + "']").
+                attr('src', '/web/static/src/img/expand.gif');
+            while (1) {
+                next_tr = side.next();
+                if (parseInt(next_tr.attr('level')) <= this.one_object.clicked_tr_level || next_tr.length == 0) {
+                    break;
+                } else {
+                    next_tr.hide();
+                    tr_to_move.push(next_tr);
+                    side = next_tr;
+                }
+            }
+        }
+        if (last_tr.length != 0 && parseInt(last_tr.attr('level')) == this.one_object.clicked_tr_level &&
+                (self.edit_xml_dialog.$element.find(last_tr).find('a').text()).search("view_id") == -1) {
+            _.each(tr_to_move, function(rec) {
+                 $(last_tr).before(rec);
+            });
+            //self.do_save_update_arch(one_object, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "up");
+        }
+    },
     do_save_update_arch: function(one_object, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, move_direct, update_values) {
         var self = this;
         var arch = _.detect(one_object['arch'], function(element) {return element.view_id == view_id;});
@@ -636,30 +663,41 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     child_list.splice(index, 1, new_obj);
                     var parent = $(arch1).parents();
                 }else if(move_direct == "add_node"){
-                //not working
-                var clone = self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']").clone();
-                self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']").after(clone);
-                clone.find("img[id^='side-']").click(function(){
-                    console.log("this",this);
-                });
-               clone.bind("click", function(){
-                    console.log("thissss",this);
-                });
-                switch (update_values[1]) {
-                        case "After":
+                    var temp_xml = QWeb.load_xml(update_values[0]);
+                    var object_xml = self.create_View_Node(temp_xml.childNodes[0]);
+                    var clone = self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']").clone();
+                    clone.find('a').text(object_xml.name);
+                    clone.attr("id","viewedit-" + object_xml.id );
+                    clone.bind("click",function(){
+                        self.do_select_row(object_xml.id);
+                    });
+                    clone.find("img[id^='side-']").click(function() {
+                        self.on_select_img(this);
+                    });
+                    clone.find("img[id^='parentimg-']").click(function() {
+                        self.do_parent_img_hide_show(this);
+                    });
+                     switch (update_values[1]) {
+                         case "After":
+                            object_xml.level = obj.level;
                             $(arch1).after(update_values[0]);
+                            child_list.splice(index + 1, 0, object_xml);
                             break;
                         case "Before":
+                            object_xml.level = obj.level;
                             $(arch1).before(update_values[0]);
+                            child_list.splice(index - 1, 0, object_xml);
                             break;
                         case "Inside":
+                            object_xml.level = obj.level + 1;
                             $(arch1).append(update_values[0]);
+                            obj.child_id.push(object_xml);
                             break;
-                    }
+                   }
+                    self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']").after(clone);
                     var parent = $(arch1).parents();
                 }else if(move_direct == "remove_node"){
                     var parent = $(arch1).parents();
-                    console.log("vidhin",obj);
                     if(parent.length == 0 || (parent[0].tagName.toLowerCase() == "data")){
                         id = id -1;
                         level = level - 1;
@@ -674,7 +712,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     cur_tr.remove();
                 }
                 var convert_to_utf = (parent.length != 0)?parent[parent.length-1]:arch1;
-                if(convert_to_utf != "remove_view"){
+                /*if(convert_to_utf != "remove_view"){
                     convert_to_utf = QWeb.tools.xml_node_to_string(convert_to_utf);
                     convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
                     convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
@@ -686,11 +724,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     });
                 }
                 if(move_direct == "add_node"){
-                    //self.add_node_dialog.close();
-                    //self.edit_xml_dialog.close();
-                    //self.xml_element_id = 0;
-                    //self.get_arch(id);
-                    }
+                    self.add_node_dialog.close();
+                    self.edit_xml_dialog.close();
+                    self.xml_element_id = 0;
+                    self.get_arch();}*/
             }
             if (obj.level <= level) {
                 _.each(list_obj_xml, function(child_node) {
@@ -716,10 +753,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             } else return tr_list;
         }
     },
-    on_collapse: function(collapse_img, parent_child_id, id, main_object) {
+    on_collapse: function(collapse_img) {
         var self = this;
         var id = collapse_img.id.split('-')[1];
-        var datas = _.detect(parent_child_id, function(res) {
+        var datas = _.detect(self.one_object['parent_child_id'] , function(res) {
             return res.key == id;
         });
         _.each(datas.value, function (rec) {
@@ -815,14 +852,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var  render_list = [];
         var  render_list =[{'name': 'node_type','selection': _.keys(_CHILDREN).sort(), 
                             'value': 'field', 'string': 'Node Type'},
-                {'name': 'field_value','selection': fields, 'value': false, 'string': ''},
-                {'name': 'position','selection': positions, 'value': false, 'string': 'Position'}];
+                {'name': 'position','selection': positions, 'value': false, 'string': 'Position'},
+                {'name': 'field_value','selection': fields, 'value': false, 'string': ''}];
         this.add_widget = [];
         this.add_node_dialog = new openerp.web.Dialog(this,{
             modal: true,
             title: 'Properties',
-            width: 430,
-            height: 190,
+            width: 500,
+            height: 300,
             buttons: {
                     "Update": function(){
                         var check_add_node = true;
@@ -850,27 +887,17 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
            }
         }).start().open();
         this.add_node_dialog.$element.
-        append('<table id="rec_table" style="width:400px" class="oe_forms"><tbody><tr></tbody></table>');
-        var table_selector = self.add_node_dialog.$element.find('table[id=rec_table] tbody');
+        append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
+        var table_selector = self.add_node_dialog.$element.find('table[id=rec_table]');
         _.each(render_list,function(node){
             type_widget = new openerp.web.ViewEditor.FieldSelect (self.add_node_dialog, node.name);
             type_widget.selection = node.selection;
-            if(node.name == "position"){
-            table_selector.append
-                ('</tr><tr><td align="right" width ="100px">' + node.string + ':</td>' + type_widget.render() + '<td></tr>');
-            }else{
-            table_selector.append
-                ('<td align="right" width = "100px">' + node.string + '</td>' + type_widget.render());
-                if(node.name == "field_value"){
-                table_selector.append
-                    ('<td align="right" width="100px"> <button id="new_field">New Field</button></td>');
-                }
-            }
+            table_selector.append('<tr><td align="right">' + node.string + ':</td>' + type_widget.render() + '</tr>');
             type_widget.start();
             type_widget.set_value(node.value);
             self.add_widget.push(type_widget);
         });
-        table_selector.find("td").attr("width","100px");
+        table_selector.append('<tr><td align="right"> <button id="new_field">New Field</button></td></tr>');
         self.add_node_dialog.$element.find('#new_field').click(function() {
             model_data = new openerp.web.DataSetSearch(self,'ir.model', null, null);
             model_data.read_slice([], {domain: [['model','=', self.model]]}, function(result) {
@@ -985,13 +1012,9 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         this.$element.find("select[id=" + this.name + "]").css('width', '100%').change(function() {
             self.on_ui_change();
             if(self.name == "node_type"){
-                if(self.get_value() == "field"){
-                    self.$element.find('#new_field').show();
-                    self.$element.find("select[id=field_value]").show();
-                }else{
-                    self.$element.find('#new_field').hide();
-                    self.$element.find("select[id=field_value]").hide();
-                }
+                (self.get_value() == "field")?
+                    self.$element.find("select[id=field_value]").show():
+                        self.$element.find("select[id=field_value]").hide();
             }
         });
       
