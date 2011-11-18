@@ -2358,6 +2358,46 @@ class BaseModel(object):
         except AttributeError:
             pass
 
+
+    def _read_group_fill_results(self, cr, uid, domain, groupby, groupby_list, float_int_fields, read_group_result, context=None):
+        """Helper method for filling in read_group results for all missing values of
+           the field being grouped by, in case self._group_by_full provides methods
+           to give the list of all the values that should be displayed."""
+        # self._group_by_full should map groupable fields to a method that returns
+        # a list of all aggregated values that we want to display for this field
+        # This is useful to implement kanban views for instance, where all columns
+        # should be displayed even if they don't contain any record.
+        # let "groups" represent the various possible values for the group_by field
+        present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
+        # grab the list of all groups that should be displayed, including all present groups 
+        all_groups = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
+                                                  context=context)
+        result_template = dict.fromkeys(float_int_fields, False)
+        result_template.update({'__context':{'group_by':groupby_list[1:]}, groupby + '_count':0})
+        result = []
+        def append_filler_line(right_side):
+            line = dict(result_template)
+            line.update({
+                groupby: right_side,
+                '__domain': [(groupby, '=', right_side[0])] + domain,
+            })
+            result.append(line)
+        #as both lists use the same ordering, we can merge in one pass
+        while read_group_result or all_groups:
+            left_side = read_group_result[0] if read_group_result else None
+            right_side = all_groups[0] if all_groups else None
+            if left_side is None:
+                append_filler_line(all_groups.pop(0))
+            elif right_side is None:
+                result.append(read_group_result.pop(0))
+            elif left_side[groupby][0] == right_side[0]:
+                result.append(read_group_result.pop(0))
+                all_groups.pop(0)
+            else:
+                result.append(read_group_result.pop(0)) # should be False
+                append_filler_line(all_groups.pop(0))
+        return result
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
@@ -2477,23 +2517,9 @@ class BaseModel(object):
             d.update(alldata[d['id']])
             del d['id']
 
-        if groupby and groupby in self._group_by_full:
-            gids = [x[groupby][0] for x in data if x[groupby]]
-            stages = self._group_by_full[groupby](self, cr, uid, gids, domain, context)
-            # as both lists are sorted in the same way, we can merge in one pass
-            pos = 0
-            while stages and ((pos<len(data)) or (pos<len(stages))):
-                if ((pos<len(data)) and (pos<len(stages))) and (not data[pos][groupby] or (data[pos][groupby][0] == stages[pos][0])):
-                    pos+=1
-                    continue
-                val = dict.fromkeys(float_int_fields, False)
-                val.update({
-                    groupby: stages[pos],
-                    '__domain': [(groupby, '=', stages[pos][0])]+domain,
-                    groupby+'_count': 0L,
-                    '__context': {'group_by': groupby_list[1:]}
-                })
-                data.insert(pos, val)
+        if groupby in self._group_by_full:
+            data = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
+                                                 float_int_fields, data, context=context)
         return data
 
     def _inherits_join_add(self, current_table, parent_model_name, query):
