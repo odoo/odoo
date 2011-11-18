@@ -733,14 +733,14 @@ class users_view(osv.osv):
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         if not fields:
-            group_fields, fields = [], self.fields_get(cr, uid, context).keys()
+            group_fields, fields = [], self.fields_get(cr, uid, context=context).keys()
         else:
             group_fields, fields = partition(is_field_group, fields)
         if group_fields:
             group_obj = self.pool.get('res.groups')
             fields.append('groups_id')
             # read the normal fields (and 'groups_id')
-            res = super(users_view, self).read(cr, uid, ids, fields, context, load)
+            res = super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
             records = res if isinstance(res, list) else [res]
             for record in records:
                 # get the field 'groups_id' and insert the group_fields
@@ -752,9 +752,9 @@ class users_view(osv.osv):
                         record[f] = not groups.isdisjoint(get_boolean_groups(f))
                     elif is_selection_groups(f):
                         selected = groups.intersection(get_selection_groups(f))
-                        record[f] = group_obj.get_maximal(cr, uid, selected, context)
+                        record[f] = group_obj.get_maximal(cr, uid, selected, context=context)
             return res
-        return super(users_view, self).read(cr, uid, ids, fields, context, load)
+        return super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         res = super(users_view, self).fields_get(cr, user, allfields, context, write_access)
