@@ -2483,7 +2483,7 @@ class BaseModel(object):
             # as both lists are sorted in the same way, we can merge in one pass
             pos = 0
             while stages and ((pos<len(data)) or (pos<len(stages))):
-                if (pos<len(data)) and (not data[pos][groupby] or (data[pos][groupby][0] == stages[pos][0])):
+                if ((pos<len(data)) and (pos<len(stages))) and (not data[pos][groupby] or (data[pos][groupby][0] == stages[pos][0])):
                     pos+=1
                     continue
                 val = dict.fromkeys(float_int_fields, False)
