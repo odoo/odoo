@@ -10,7 +10,6 @@
             <field name="project_id" ref="project.project_project_9"/>
             <field name="product_owner_id" ref="base.user_root"/>
             <field model="res.users" name="scrum_master_id" search="[('login','=','admin')]"/>
-            <field name="state">open</field>
         </record>
 
         <record id="scrum_sprint_1" model="project.scrum.sprint">
@@ -387,6 +386,9 @@
 			<field name="state">open</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_7"/>
         </record>
+
+        <!-- Resource: project_scrum.meeting -->
+
 		<record id="scrum_meeting_0" model="project.scrum.meeting">
 			<field name="question_yesterday">
 Admin: Worked on the Automatic migration system

@@ -263,6 +263,8 @@
                                     <group colspan="4" col="6">
                                             <field name="date"/>
                                             <field name="user_id"/>
+                                            <button name="%(mail.action_email_compose_message_wizard)d"
+                                                string="Send Email" type="action" icon="terp-mail-message-new"/>
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Scrum Meeting">
@@ -273,8 +275,6 @@
                                             <separator colspan="4" string="Are there anything blocking you?"/>
                                             <field colspan="4" name="question_blocks" nolabel="1"/>
                                             <separator colspan="4" string=""/>
-                                            <button name="button_send_to_master" type="object" string="Send to Scrum Master" icon="gtk-ok"/>
-                                            <button name="button_send_product_owner" type="object" string="Send to Product Owner" icon="gtk-ok"/>
                                         </page>
                                         <page string="Optional Info">
                                             <separator colspan="4" string="Are your Sprint Backlog estimate accurate ?"/>

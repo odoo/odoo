@@ -1,0 +1,57 @@
+-
+  In Order to Test process of Sprint,
+-
+  I Open sprint of "Week 31"
+-
+  !python {model: project.scrum.sprint}: |
+    self.button_open(cr, uid, [ref("scrum_sprint_0")])
+-
+  I check state of sprint after opened.
+-
+  !assert {model: project.scrum.sprint, id: scrum_sprint_0, severity: error, string: Sprint should be in Open state}:
+       - state == "open"
+-
+  I put sprint in pending state to allocate task to resources.
+-
+  !python {model: project.scrum.sprint}: |
+    self.button_pending(cr, uid, [ref("scrum_sprint_0")])
+-
+  I check state of sprint after put in pending.
+-
+  !assert {model: project.scrum.sprint, id: scrum_sprint_0, severity: error, string: Sprint should be in pending state}:
+       - state == "pending"
+-
+  I assign Backlog into this Sprint
+-
+  !python {model: project.scrum.backlog.assign.sprint}: |
+    new_id = self.create(cr, uid, {'sprint_id': ref("scrum_sprint_0")})
+    self.assign_sprint(cr, uid, [new_id], {"active_ids": [ref("scrum_product_backlog_1")],
+    "active_model": 'project.scrum.product.backlog', "active_id": ref("scrum_product_backlog_1")
+    })
+-
+  I create tasks from backlog for sprint
+-
+  !python {model: project.scrum.backlog.create.task}: |
+    new_id = self.create(cr, uid, {'user_id': ref("base.user_root")})
+    self.do_create(cr, uid, [new_id], {
+    "active_ids": [ref("scrum_product_backlog_0")], 'active_model': 'project.scrum.product.backlog',  "active_id": ref("scrum_product_backlog_0")
+    })
+-
+  I send email to scrum master with scrum meeting details.
+-
+  !python {model: mail.compose.message }: |
+    ctx = context.copy()
+    ctx.update({'active_model': 'project.scrum.meeting', 'active_id': ref("scrum_meeting_0"), 'active_ids': [ref("scrum_meeting_0")]})
+    vals = self.default_get(cr, uid , [], context=ctx)
+    new_id = self.create(cr, uid, {'email_to': 'tpa@tinyerp.com', 'subject': 'test'})
+    self.send_mail(cr, uid, [new_id], context=ctx)
+-
+  I close sprint after review
+-
+  !python {model: project.scrum.sprint}: |
+    self.button_close(cr, uid, [ref("scrum_sprint_0")])
+-
+  I check state after closed sprint.
+-
+  !assert {model: project.scrum.sprint, id: scrum_sprint_0, severity: error, string: Sprint shoud be  in close state}:
+       - state == "done"
