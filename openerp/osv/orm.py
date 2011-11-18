@@ -2359,7 +2359,7 @@ class BaseModel(object):
             pass
 
 
-    def _read_group_fill_results(self, cr, uid, domain, groupby, groupby_list, float_int_fields, read_group_result, context=None):
+    def _read_group_fill_results(self, cr, uid, domain, groupby, groupby_list, aggregated_fields, read_group_result, context=None):
         """Helper method for filling in read_group results for all missing values of
            the field being grouped by, in case self._group_by_full provides methods
            to give the list of all the values that should be displayed."""
@@ -2372,7 +2372,7 @@ class BaseModel(object):
         # grab the list of all groups that should be displayed, including all present groups 
         all_groups = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
                                                   context=context)
-        result_template = dict.fromkeys(float_int_fields, False)
+        result_template = dict.fromkeys(aggregated_fields, False)
         result_template.update({'__context':{'group_by':groupby_list[1:]}, groupby + '_count':0})
         result = []
         def append_filler_line(right_side):
@@ -2447,7 +2447,6 @@ class BaseModel(object):
 
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fget = self.fields_get(cr, uid, fields)
-        float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
         flist = ''
         group_count = group_by = groupby
         if groupby:
@@ -2463,17 +2462,17 @@ class BaseModel(object):
                 raise except_orm(_('Invalid group_by'),
                                  _('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.')%(groupby,))
 
-
-        fields_pre = [f for f in float_int_fields if
-                   f == self.CONCURRENCY_CHECK_FIELD
-                or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
-        for f in fields_pre:
-            if f not in ['id', 'sequence']:
-                group_operator = fget[f].get('group_operator', 'sum')
-                if flist:
-                    flist += ', '
-                qualified_field = '"%s"."%s"' % (self._table, f)
-                flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
+        aggregated_fields = [
+            f for f in fields
+            if f not in ('id', 'sequence')
+            if fget[f]['type'] in ('integer', 'float')
+            if (f in self._columns and getattr(self._columns[f], '_classic_write'))]
+        for f in aggregated_fields:
+            group_operator = fget[f].get('group_operator', 'sum')
+            if flist:
+                flist += ', '
+            qualified_field = '"%s"."%s"' % (self._table, f)
+            flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
 
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
@@ -2519,7 +2518,8 @@ class BaseModel(object):
 
         if groupby in self._group_by_full:
             data = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
-                                                 float_int_fields, data, context=context)
+                                                 aggregated_fields, data, context=context)
+
         return data
 
     def _inherits_join_add(self, current_table, parent_model_name, query):
