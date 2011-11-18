@@ -143,7 +143,7 @@ session.web.ActionManager = session.web.Widget.extend({
         var ClientWidget = session.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
     },
-    ir_actions_report_xml: function(action) {
+    ir_actions_report_xml: function(action, on_closed) {
         var self = this;
         $.blockUI();
         self.rpc("/web/session/eval_domain_and_context", {
@@ -157,6 +157,10 @@ session.web.ActionManager = session.web.Widget.extend({
                 data: {action: JSON.stringify(action)},
                 complete: $.unblockUI
             });
+            if (!self.dialog && on_closed) {
+                on_closed();
+            }
+            self.dialog_stop();
         });
     },
     ir_actions_act_url: function (action) {
@@ -882,7 +886,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             }
         };
         var context = new session.web.CompoundContext(dataset.get_context(), action_data.context || {});
-        
+
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
