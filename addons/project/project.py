@@ -425,20 +425,19 @@ class task(osv.osv):
     _date_name = "date_start"
 
     def _read_group_type_id(self, cr, uid, ids, domain, context=None):
-        context = context or {}
         stage_obj = self.pool.get('project.task.type')
-        stage_ids = stage_obj.search(cr, uid, ['|',('id','in',ids)] + [('project_default','=',1)], context=context)
+        stage_ids = stage_obj.search(cr, uid, ['|',('id','in',ids),('project_default','=',1)], context=context)
         return stage_obj.name_get(cr, uid, stage_ids, context=context)
 
-    def _read_group_user_id(self, cr, uid, ids, domain, context={}):
-        context = context or {}
-        if type(context.get('project_id', None)) not in (int, long):
-            return None
+    def _read_group_user_id(self, cr, uid, ids, domain, context=None):
+        if context is None: context = {}
+        res_users = self.pool.get('res.users')
+        if type(context.get('project_id')) not in (int, long):
+            return res_users.name_get(cr, uid, ids, context=context)
         proj = self.pool.get('project.project').browse(cr, uid, context['project_id'], context=context)
-        ids += map(lambda x: x.id, proj.members)
-        stage_obj = self.pool.get('res.users')
-        stage_ids = stage_obj.search(cr, uid, [('id','in',ids)], context=context)
-        return stage_obj.name_get(cr, uid, ids, context=context)
+        ids += [x.id for x in proj.members]
+        user_ids = res_users.search(cr, uid, [('id','in',ids)], context=context)
+        return res_users.name_get(cr, uid, user_ids, context=context)
 
     _group_by_full = {
         'type_id': _read_group_type_id,
