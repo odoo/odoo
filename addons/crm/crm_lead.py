@@ -449,7 +449,7 @@ class crm_lead(crm_case, osv.osv):
                 id2 = data_obj.browse(cr, uid, id2, context=context).res_id
             if id3:
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-            context .update({
+            context.update({
                 'default_opportunity_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
                 'default_user_id': uid, 
