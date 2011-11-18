@@ -515,7 +515,7 @@ class Root(object):
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
 
         if request.path == '/':
-            params = urllib.urlencode(dict(request.args, debug=''))
+            params = urllib.urlencode(request.args)
             return werkzeug.utils.redirect(self.root + '?' + params, 301)(
                 environ, start_response)
         elif request.path == '/mobile':

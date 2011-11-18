@@ -76,7 +76,13 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
     if (typeof value === 'number' && isNaN(value)) {
         value = false;
     }
+    //noinspection FallthroughInSwitchStatementJS
     switch (value) {
+        case '':
+            if (descriptor.type === 'char') {
+                return '';
+            }
+            console.warn('Field', descriptor, 'had an empty string as value, treating as false...');
         case false:
         case Infinity:
         case -Infinity:

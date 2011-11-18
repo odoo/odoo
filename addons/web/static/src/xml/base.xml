@@ -714,7 +714,7 @@
 </t>
 <t t-name="Widget">
     Unhandled widget
-    <t t-raw="console.log('Unhandled widget', widget)"/>
+    <t t-js="dict">console.warn('Unhandled widget', dict.widget);</t>
 </t>
 <t t-name="WidgetFrame">
     <table border="0" width="100%" cellpadding="0" cellspacing="0" class="oe_frame oe_forms">
@@ -907,13 +907,13 @@
 </t>
 <t t-name="web.datetimepicker">
     <div class="oe_datepicker_root">
-        <input type="text" size="1" style="width: 100%"/>
+        <input type="text" size="1" style="width: 100%"
+            t-att-name="widget.name"
+            t-attf-class="oe_datepicker_master field_#{widget.type_of_date}"
+        />
         <img class="oe_input_icon oe_datepicker_trigger" t-att-src='widget.session.server + "/web/static/src/img/ui/field_calendar.png"'
              title="Select date" width="16" height="16" border="0"/>
-        <div class="oe_datepicker ui-widget-content ui-corner-all" style="display: none; position: absolute; z-index: 1;">
-            <div class="oe_datepicker_container"/>
-            <button type="button" class="oe_datepicker_close ui-state-default ui-priority-primary ui-corner-all" style="float: right;">Done</button>
-        </div>
+        <input type="text" size="1" class="oe_datepicker_container" disabled="disabled"/>
     </div>
 </t>
 <t t-name="FieldSelection">
@@ -1081,7 +1081,7 @@
     </table>
 </t>
 <t t-name="WidgetButton">
-    <button type="button" style="width: 100%" class="button">
+    <button type="button" class="oe_button">
         <img t-if="widget.node.attrs.icon" t-att-src="widget.session.server + '/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
@@ -1163,8 +1163,8 @@
         t-att-title="attrs.help"
         t-att-class="classes.join(' ')"
         t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined">
-    <img t-if="attrs.icon" t-att-src="widget.session.server + '/web/static/src/img/icons/' + attrs.icon + '.png'" width="16" height="16"/>
-    <br t-if="attrs.icon and attrs.string"/>
+    <img t-att-src="widget.session.server + '/web/static/src/img/icons/' + (attrs.icon || 'gtk-home') + '.png'" width="16" height="16"/>
+    <br t-if="attrs.string"/>
     <t t-esc="attrs.string"/>
 </button>
 <span t-name="SearchView.filters" class="filter_label_group"

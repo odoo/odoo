@@ -210,7 +210,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
                     sidebar_id : self.element_id + '_sidebar_' + view.view_type,
                     action : self.action,
                     action_views_ids : views_ids
-                }, self.flags, view.options || {})
+                }, self.flags, self.flags[view.view_type] || {}, view.options || {})
             });
             views_ids[view.view_type] = view.view_id;
         });

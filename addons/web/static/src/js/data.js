@@ -316,7 +316,7 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
             def.reject();
         } else {
             fields = fields || false;
-            return this.read_ids([this.ids[this.index]], fields).then(function(records) {
+            this.read_ids([this.ids[this.index]], fields).then(function(records) {
                 def.resolve(records[0]);
             }, function() {
                 def.reject.apply(def, arguments);
