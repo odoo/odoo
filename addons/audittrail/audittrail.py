@@ -245,33 +245,35 @@ class audittrail_objects_proxy(object_proxy):
          Logging function: This function performs the logging operation for create/read/unlink operation
          :param cr: the current row, from the database cursor,
          :param user_id: the current user’s ID,
-         :param model: Object whose values are being changed
+         :param model: record of ir.model related to the object which values are being changed
          :param method: method to log: create, read, unlink
          :param resource_data: list of data modified for the model
          :param pool: current db's pooler object.
          :param resource_pool: pooler object of the model who's values are being changed.
          :return:True
         """
-        key1 = '%s_value'%(method == 'create' and 'new' or 'old')
-        key2 = '%s_value_text'%(method == 'create' and 'new' or 'old')
-        vals = { 'method': method, 'object_id': model.id,'user_id': user_id}
-        for resource, fields in resource_data.iteritems():
-            lines = []
-            for field_key, value in fields.iteritems():
-                if field_key in ('__last_update', 'id'):continue
-                ret_val = self.get_value_text(cr, 1, pool, resource_pool, method, field_key, value, method != 'read')
-                line = {
-                      'name': field_key,
-                      key1: value,
-                      key2: ret_val and ret_val or value
-                      }
-                lines.append(line)
-            if lines:
-                vals.update({'res_id': resource})
-                log_id = pool.get('audittrail.log').create(cr, 1, vals)
-                self.create_log_line(cr, uid, log_id, model, lines)
+        #checking if an audittrail rule apply in super admin mode
+        if self.check_rules(cr, 1, model.model, method):
+            key1 = '%s_value'%(method == 'create' and 'new' or 'old')
+            key2 = '%s_value_text'%(method == 'create' and 'new' or 'old')
+            vals = {'method': method, 'object_id': model.id,'user_id': user_id}
+            for resource, fields in resource_data.iteritems():
+                lines = []
+                for field_key, value in fields.iteritems():
+                    if field_key in ('__last_update', 'id'):continue
+                    ret_val = self.get_value_text(cr, 1, pool, resource_pool, method, field_key, value, method != 'read')
+                    line = {
+                          'name': field_key,
+                          key1: value,
+                          key2: ret_val and ret_val or value
+                          }
+                    lines.append(line)
+                if lines:
+                    vals.update({'res_id': resource})
+                    log_id = pool.get('audittrail.log').create(cr, 1, vals)
+                    self.create_log_line(cr, 1, log_id, model, lines)
         return True
-    
+
     def log_fct(self, cr, uid, model, method, fct_src, *args):
         """
         Logging function: This function is performing the logging operation
@@ -292,21 +294,23 @@ class audittrail_objects_proxy(object_proxy):
         model = model_pool.browse(cr, uid, model_id)
         relational_table_log = True if (args and args[-1] == 'child_relation_log') else False
 
+        print model.model
+        print method
+        print ">>>>>>>"
         if method == 'create':
             resource_data = {}
             fields_to_read = []
             if relational_table_log:
-                res_id = args[0]
+                res = args[0]
             else:
-                res_id = fct_src(cr, uid_orig, model.model, method, *args)
+                res = fct_src(cr, uid_orig, model.model, method, *args)
                 fields_to_read = args[0].keys()
-            if res_id:
-                resource = resource_pool.read(cr, uid, res_id, fields_to_read)
+            if res:
+                resource = resource_pool.read(cr, uid, res, fields_to_read)
                 if not isinstance(resource,list):
                     resource = [resource]
                 map(lambda x: resource_data.setdefault(x['id'], x), resource)
                 self.start_log_process(cr, uid_orig, model, method, resource_data, pool, resource_pool)
-            return res_id
 
         elif method in('read', 'unlink'):
             res_ids = args[0]
@@ -320,7 +324,6 @@ class audittrail_objects_proxy(object_proxy):
             self.start_log_process(cr, uid_orig, model, method, old_values, pool, resource_pool)
             if not relational_table_log and method == 'unlink':
                 res = fct_src(cr, uid_orig, model.model, method, *args)
-            return res
         else: #method is write or workflow action
             res_ids = []
             res = True
@@ -334,18 +337,142 @@ class audittrail_objects_proxy(object_proxy):
                     res_ids = [res_ids]
             if res_ids:
                 #store the old values into a dictionary
-                old_values = self.process_data(cr, uid_orig, pool, res_ids, model, method, type='old')
+                old_values = self.get_data(cr, uid_orig, pool, res_ids, model, method)
             #process the original function or workflow trigger
             res = fct_src(cr, uid_orig, model.model, method, *args)
             if method == 'copy':
                 res_ids = [res]
             if res_ids:
-                #check the new value and log the changes if any
-                self.process_data(cr, uid_orig, pool, res_ids, model, method, old_values)
-            return res
+                #check the new value and store them into a dictionary
+                new_values = self.get_data(cr, uid_orig, pool, res_ids, model, method)
+                self.process_data(cr, uid_orig, pool, res_ids, model, method, old_values, new_values)
+        return res
+
+    def get_data(self, cr, uid_orig, pool, res_ids, model, method):
+        """
+        This is specially created to log actions and workflow actions on an object recursively.
+        It processes and iterates recursively on old data (i.e before the method was executed )
+        and stores it in a dict. Then this dict is used to compare with the new data
+        (i.e after the method execution) and log the changes.
+
+            :param cr: the current row, from the database cursor,
+            :param uid_orig: the current user’s ID,
+            :param pool: current db's pooler object.
+            :param res_ids: Id's of resource to be logged/compared.
+            :param model: Object whose values are being changed
+            :param method: method to log: create, read, unlink,write,actions,workflow actions
+            :return: dict mapping a tuple (model_id, resource_id) with its value and textual value
+                { (model_id, resource_id): { 'value': ...
+                                             'textual_value': ...
+                                           },
+                }
+        """
+        data = {}
+        # read all the field of the given resource in super admin mode
+        resource_pool = pool.get(model.model)
+        for resource in resource_pool.read(cr, 1, res_ids):
+            values_text = {}
+            values = {}
+            resource_id = resource['id']
+            for field in resource:
+                if field in ('__last_update', 'id'):
+                    continue
+                values[field] = resource[field]
+                ret_val = self.get_value_text(cr, 1, pool, resource_pool, method, field, resource[field], False)
+                values_text[field] = ret_val and ret_val or resource[field]
+                data[(model.id, resource_id)] = {'text':values_text, 'value': values}
+                field_obj = resource_pool._all_columns.get(field).column
+                if field_obj._type in ('one2many','many2many'):
+                    #checking if an audittrail rule apply in super admin mode
+                    if self.check_rules(cr, 1, field_obj._obj, method):
+                        #checking if the model associated to a *2m field exists, in super admin mode
+                        x2m_model_ids = pool.get('ir.model').search(cr, 1, [('model', '=', field_obj._obj)])
+                        x2m_model_id = x2m_model_ids and x2m_model_ids[0] or False
+                        assert x2m_model_id, _("'%s' Model does not exist..." %(field_obj._obj))
+                        x2m_model = pool.get('ir.model').browse(cr, 1, x2m_model_id)
+                        data.update(self.get_data(cr, 1, pool, resource[field], x2m_model, method))
+        return data
+
+    def prepare_audittrail_log_line(self, cr, uid, pool, model, resource, method, old_values, new_values):
+        lines = {
+            (model.id, resource['id']): []
+        }
+        for field in resource:
+            if field in ('__last_update', 'id'):
+                continue
+            field_obj = (pool.get(model.model)._all_columns.get(field)).column
+            if field_obj._type in ('one2many','many2many'):
+                #checking if an audittrail rule apply in super admin mode
+                if self.check_rules(cr, 1, field_obj._obj, method):
+                    #checking if the model associated to a *2m field exists, in super admin mode
+                    x2m_model_ids = pool.get('ir.model').search(cr, 1, [('model', '=', field_obj._obj)])
+                    x2m_model_id = x2m_model_ids and x2m_model_ids[0] or False
+                    assert x2m_model_id, _("'%s' Model does not exist..." %(field_obj._obj))
+                    x2m_model = pool.get('ir.model').browse(cr, 1, x2m_model_id)
+                    if resource[field]:
+                        for resource_id in resource[field]:
+                            x2many_new_values = new_values[(x2m_model_id, resource_id)]
+                            x2many_new_values.update({'id': resource['id']})
+                            x = self.prepare_audittrail_log_line(cr, 1, pool, x2m_model, x2many_new_values, method, old_values.get((x2m_model_id, resource_id),{}), x2many_new_values)
+                            lines.update(x)
+            # if the value value is different than the old value: record the change
+            if old_values[(model.id, resource['id'])]['value'][field] != new_values[(model.id, resource['id'])]['value'][field]:
+                data = {
+                      'name': field,
+                      'new_value': resource[field],
+                      'old_value': (model.id, resource['id']) in old_values and old_values[(model.id, resource['id'])]['value'].get(field),
+                      'new_value_text': (model.id, resource['id']) in new_values and new_values[(model.id, resource['id'])]['text'].get(field),
+                      'old_value_text': (model.id, resource['id']) in old_values and old_values[(model.id, resource['id'])]['text'].get(field)
+                }
+                lines[(model.id, resource['id'])].append(data)
+        return lines
+
+    def process_data(self, cr, uid, pool, res_ids, model, method, old_values={}, new_values={}):
+        """
+        This is specially created to log actions and workflow actions on an object recursively.
+        It processes and iterates recursively on old data (i.e before the method was executed )
+        and stores it in a dict. Then this dict is used to compare with the new data
+        (i.e after the method execution) and log the changes.
+
+        :param cr: the current row, from the database cursor,
+        :param uid: the current user’s ID,
+        :param pool: current db's pooler object.
+        :param res_ids: Id's of resource to be logged/compared.
+        :param model: Object whose values are being changed
+        :param method: method to log: create, read, unlink,write,actions,workflow actions
+        :param original_values: dict of values of res_ids read before execution of the method only when type is 'new'
+        :param type: Either of 'new' or 'old' to know which data to process.
+        :return: dict of values
+        """
+        # read all the field of the given resource in super admin mode
+        for resource in pool.get(model.model).read(cr, 1, res_ids):
+            lines = self.prepare_audittrail_log_line(cr, uid, pool, model, resource, method, old_values, new_values)
+
+            # if at least one modification has been found
+            for model_id, resource_id in lines:
+                vals = {
+                    'method': method,
+                    'object_id': model_id,
+                    'user_id': uid,
+                    'res_id': resource_id,
+                }
+                if (model_id, resource_id) not in old_values and method !='copy':
+                    # the resource was not existing so we are forcing the method to 'create'
+                    # (because it could also come with the value 'write' if we are creating
+                    #  new record through a one2many field)
+                    vals.update({'method': 'create'})
+                if (model_id, resource_id) not in new_values and method !='copy':
+                    # the resource is not existing anymore so we are forcing the method to 'unlink'
+                    # (because it could also come with the value 'write' if we are deleting the
+                    #  record through a one2many field)
+                    vals.update({'method': 'unlink'})
+                # create the audittrail log in super admin mode
+                log_id = pool.get('audittrail.log').create(cr, 1, vals)
+                model = pool.get('ir.model').browse(cr, uid, model_id)
+                self.create_log_line(cr, 1, log_id, model, lines[(model_id, resource_id)])
         return True
 
-    def process_data(self, cr, uid_orig, pool, res_ids, model, method, original_values={}, type='new'):
+    def process_data_old(self, cr, uid_orig, pool, res_ids, model, method, original_values={}, type='new'):
         """
         This is specially created to log actions and workflow actions on an object recursively.
         It processes and iterates recursively on old data (i.e before the method was executed )
@@ -369,15 +496,7 @@ class audittrail_objects_proxy(object_proxy):
             _old_values_text = {}
             _old_value = {}
             resource_id = resource['id']
-            if type == 'new':
-                vals = {'method': method,'object_id': model.id,'user_id': uid_orig }
-                vals.update({'res_id': resource_id})
-                if resource_id not in original_values and method !='copy':
-                    # the resource was not existing so we are forcing the method to 'create'
-                    # (because it could also come with the value 'write' if we are creating 
-                    #  new record through a one2many field)
-                    vals.update({'method': 'create'})
-                lines = []
+            lines = []
             for field in resource:
                 if field in ('__last_update', 'id'):continue
                 field_obj = (resource_pool._all_columns.get(field)).column
@@ -406,6 +525,18 @@ class audittrail_objects_proxy(object_proxy):
                     _old_values_text[field] = ret_val and ret_val or resource[field]
             if type == 'new':
                 if lines:
+                    vals = {
+                        'method': method,
+                        'object_id': model.id,
+                        'user_id': uid_orig,
+                        'res_id': resource_id,
+                    }
+                    if resource_id not in original_values and method !='copy':
+                        # the resource was not existing so we are forcing the method to 'create'
+                        # (because it could also come with the value 'write' if we are creating 
+                        #  new record through a one2many field)
+                        vals.update({'method': 'create'})
+                    # create the audittrail log in super admin mode
                     log_id = pool.get('audittrail.log').create(cr, 1, vals)
                     self.create_log_line(cr, 1, log_id, model, lines)
             else:
@@ -417,7 +548,7 @@ class audittrail_objects_proxy(object_proxy):
         Checks if auditrails is installed for that db and then if one rule match
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID,
-        @param model: Object whose values are being changed
+        @param model: value of _name of the object which values are being changed
         @param method: method to log: create, read, unlink,write,actions,workflow actions
         @return: True or False
         """
