@@ -2516,7 +2516,7 @@ class BaseModel(object):
             d.update(alldata[d['id']])
             del d['id']
 
-        if groupby in self._group_by_full:
+        if groupby and groupby in self._group_by_full:
             data = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
                                                  aggregated_fields, data, context=context)
 
