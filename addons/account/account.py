@@ -1166,6 +1166,15 @@ class account_move(osv.osv):
                     return False
         return True
 
+    def _check_date(self, cursor, user, ids, context=None):
+        journal_obj = self.pool.get('account.journal')
+        period_obj = self.pool.get('account.period')
+        for move in self.browse(cursor, user, ids, context=context):
+            if move.journal_id.allow_date:
+                if not time.strptime(move.date[:10],'%Y-%m-%d') >= time.strptime(move.period_id.date_start, '%Y-%m-%d') or not time.strptime(move.date[:10], '%Y-%m-%d') <= time.strptime(move.period_id.date_stop, '%Y-%m-%d'):
+                        return False
+        return True
+
     _constraints = [
         (_check_centralisation,
             'You cannot create more than one move per period on centralized journal',
@@ -1173,6 +1182,9 @@ class account_move(osv.osv):
         (_check_period_journal,
             'You cannot create entries on different periods/journals in the same move',
             ['line_id']),
+        (_check_date,
+            'The date of your Journal Entry is not in the defined period!',
+            ['journal_id'])
     ]
 
     def post(self, cr, uid, ids, context=None):
