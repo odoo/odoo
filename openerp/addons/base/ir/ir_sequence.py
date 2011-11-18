@@ -150,9 +150,9 @@ class ir_sequence(openerp.osv.osv.osv):
 
         for row in rows:
             # 4 cases: we test the previous impl. against the new one.
+            i = values.get('number_increment', row['number_increment'])
+            n = values.get('number_next', row['number_next'])
             if row['implementation'] == 'standard':
-                i = values.get('number_increment', row['number_increment'])
-                n = values.get('number_next', row['number_next'])
                 if new_implementation in ('standard', None):
                     self._alter_sequence(cr, row['id'], i, n)
                 else:
