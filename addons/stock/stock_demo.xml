@@ -9,6 +9,14 @@
         <!--
     Resource: stock.location
     -->
+        <record id="chain_location_1" model="stock.location">
+            <field name="name">Cold Storage</field>
+            <field name="location_id" ref="stock_location_suppliers"/>
+            <field name="chained_location_type">fixed</field>
+            <field name="chained_location_id" ref="stock_location_customers"/>
+            <field name="chained_auto_packing">auto</field>
+            <field name="usage">internal</field>
+        </record>
         <record id="stock_location_3" model="stock.location">
             <field name="name">IT Suppliers</field>
             <field name="location_id" ref="stock_location_suppliers"/>

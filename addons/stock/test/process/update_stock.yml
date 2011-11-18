@@ -1,22 +1,18 @@
 -
   In order to test the stock module, I will update the current stock of the product.
 - 
-  I Creating a location record for test the chained location flow.
+  I assign a chain location cold storage to test the chained location flow.
 - 
-  !record {model: stock.location, id: stock_location_loc0}:
+  !record {model: stock.location, id: stock_location_stock}:
     chained_auto_packing: auto
-    chained_delay: 0.0
-    chained_location_type: none
-    location_id: stock.stock_location_company
-    name: chain location
-    parent_left: 2
-    parent_right: 3
+    chained_location_type: fixed
+    chained_location_id: stock.chain_location_1
     usage: internal
 - 
   I assignd the created location in to warehouse.
 - 
   !record {model: stock.warehouse, id: stock.warehouse0}:
-    lot_stock_id: stock_location_loc0
+    lot_stock_id: stock_location_stock
 -
   I create Stock Production Lot for product CPU2
 -
@@ -36,7 +32,7 @@
   !python {model: stock.change.product.qty}: |
     #stock.stock_location_stock
     product = self.pool.get('product.product').browse(cr, uid, ref('product.product_product_cpu2'))
-    fields = {'location_id' : ref('stock_location_loc0'), 'new_quantity': 2, 'product_id': product.id, 'prodlot_id': ref('stock.stock_production_lot0')}
+    fields = {'location_id' : ref('stock_location_stock'), 'new_quantity': 2, 'product_id': product.id, 'prodlot_id': ref('stock.stock_production_lot0')}
     ids = self.create(cr, uid, fields)
     self.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
     assert product.qty_available == 2,'Product Quantity is not Updated'
@@ -48,7 +44,7 @@
     inventory = self.browse(cr, uid, ids)[0]
     assert inventory.product_id.id == ref('product.product_product_cpu2'), 'Product is not correspond'
     assert inventory.product_qty == 2,'product Quantity is not correspond'
-    assert inventory.location_id.id == ref('stock_location_loc0'), 'Location is not correspond'
+    assert inventory.location_id.id == ref('stock_location_stock'), 'Location is not correspond'
     assert inventory.state == 'done', 'State should be in Done state'
 -
   I check stock moves created.
