@@ -837,7 +837,7 @@
         <li t-if="widget.field and widget.field.selection" data-item="selection">
             <span class="oe_tooltip_technical_title">Selection:</span>
             <ul>
-                <li t-foreach="widget.field.selection" t-as="option">
+                <li t-foreach="widget.field.selection" t-as="option" t-if="option[0]">
                     [<t t-esc="option[0]"/>]
                     <t t-if="option[1]"> - </t>
                     <t t-esc="option[1]"/>
