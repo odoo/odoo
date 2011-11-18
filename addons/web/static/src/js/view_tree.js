@@ -215,17 +215,23 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
     // Get details in listview
     activate: function(id) {
         var self = this;
+        var local_context = {
+            active_model: self.dataset.model,
+            active_id: id,
+            active_ids: [id]};
         this.rpc('/web/treeview/action', {
             id: id,
             model: this.dataset.model,
             context: new openerp.web.CompoundContext(
-                this.dataset.get_context(), {
-                    active_model: this.dataset.model,
-                    active_id: id,
-                    active_ids: [id]})
+                this.dataset.get_context(), local_context)
         }, function (actions) {
             if (!actions.length) { return; }
             var action = actions[0][2];
+            var c = new openerp.web.CompoundContext(local_context);
+            if (action.context) {
+                c.add(action.context);
+            }
+            action.context = c;
             self.do_action(action);
         });
     },
