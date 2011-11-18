@@ -2,13 +2,6 @@
 <openerp>
     <data>
 
-        <menuitem id="base.menu_hr_dasboard" name="Dashboard" parent="hr.menu_hr_reporting" sequence="0"/>
-        <menuitem
-            action="hr.open_board_hr"
-            icon="terp-graph"
-            id="base.menu_hr_project"
-            parent="base.menu_hr_dasboard"
-            sequence="4"/>
         <record id="action_my_expense" model="ir.actions.act_window">
             <field name="name">My Expenses</field>
             <field name="res_model">hr.expense.expense</field>
@@ -23,8 +16,8 @@
             <field name="inherit_id" ref="hr.board_hr_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/hpaned/child1" position="inside">
-                     <action colspan="4" height="220" name="%(action_my_expense)d" string="My Expenses" />
+                <xpath expr="/form/board/column" position="inside">
+                     <action name="%(action_my_expense)d" string="My Expenses"/>
                 </xpath>
             </field>
         </record>

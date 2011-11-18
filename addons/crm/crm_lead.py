@@ -42,6 +42,16 @@ class crm_lead(crm_case, osv.osv):
     _order = "priority,date_action,id desc"
     _inherit = ['mail.thread','res.partner.address']
 
+    def _read_group_stage_ids(self, cr, uid, ids, domain, context=None):
+        context = context or {}
+        stage_obj = self.pool.get('crm.case.stage')
+        stage_ids = stage_obj.search(cr, uid, ['|', ('id','in',ids), ('case_default','=',1)], context=context)
+        return stage_obj.name_get(cr, uid, stage_ids, context=context)
+
+    _group_by_full = {
+        'stage_id': _read_group_stage_ids
+    }
+
     # overridden because res.partner.address has an inconvenient name_get,
     # especially if base_contact is installed.
     def name_get(self, cr, user, ids, context=None):
@@ -133,7 +143,7 @@ class crm_lead(crm_case, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
             select=True, help="Optional linked partner, usually after conversion of the lead"),
 
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
         'name': fields.char('Name', size=64, select=1),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
@@ -204,7 +214,6 @@ class crm_lead(crm_case, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
-        #'stage_id': _get_stage_id,
     }
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):

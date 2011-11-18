@@ -431,7 +431,7 @@
                         <filter name="scrum_daily" icon="terp-go-today" string="Daily" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Daily Meetings"/>
                         <separator orientation="vertical"/>
                         <field name="sprint_id">
-                            <filter icon="terp-check" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
+                            <filter icon="terp-check" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
                         </field>
                         <field name="date"/>
                     </group>
@@ -473,7 +473,6 @@
             <field eval="'project.scrum.sprint'" name="model"/>
             <field name="name">View sprint tasks</field>
             <field eval="'ir.actions.act_window,'+str(action_sprint_task_open)" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <record id="action_sprint_backlog_open" model="ir.actions.act_window">
@@ -488,7 +487,6 @@
             <field eval="'project.scrum.sprint'" name="model"/>
             <field name="name">View sprint backlog</field>
             <field eval="'ir.actions.act_window,'+str(action_sprint_backlog_open)" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <!--
@@ -507,7 +505,6 @@
             <field eval="'project.scrum.project'" name="model"/>
             <field name="name">View project's backlog</field>
             <field eval="'ir.actions.act_window,'+str(dblc_proj)" name="value"/>
-            <field eval="True" name="object"/>
         </record>
         <record id="dblc_proj2" model="ir.actions.act_window">
             <field name="res_model">project.task</field>
@@ -521,7 +518,6 @@
             <field eval="'project.scrum.project'" name="model"/>
             <field name="name">View project's tasks</field>
             <field eval="'ir.actions.act_window,'+str(dblc_proj2)" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <!--

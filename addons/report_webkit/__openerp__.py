@@ -38,43 +38,53 @@ This module adds a new Report Engine based on WebKit library (wkhtmltopdf) to su
 The module structure and some code is inspired by the report_openoffice module.
 
 The module allows:
-    -HTML report definition
-    -Multi header support
-    -Multi logo
-    -Multi company support
-    -HTML and CSS-3 support (In the limit of the actual WebKIT version)
-    -JavaScript support
-    -Raw HTML debugger
-    -Book printing capabilities
-    -Margins definition
-    -Paper size definition
+
+    - HTML report definition
+    - Multi header support
+    - Multi logo
+    - Multi company support
+    - HTML and CSS-3 support (In the limit of the actual WebKIT version)
+    - JavaScript support
+    - Raw HTML debugger
+    - Book printing capabilities
+    - Margins definition
+    - Paper size definition
 
 ... and much more
 
 Multiple headers and logos can be defined per company.
-CSS style, header and footer body are defined per company
-
-The library to install can be found here
-http://code.google.com/p/wkhtmltopdf/
-The system libraries are available for Linux, Mac OS X i386 and Windows 32.
-
-After installing the wkhtmltopdf library on the OpenERP Server machine, you need to set the
-path to the wkthtmltopdf executable file on the Company.
+CSS style, header and footer body are defined per company.
 
 For a sample report see also the webkit_report_sample module, and this video:
     http://files.me.com/nbessi/06n92k.mov
 
+Requirements and Installation
+-----------------------------
+This module requires the ``wkthtmltopdf`` library to render HTML documents as
+PDF. Version 0.9.9 or later is necessary, and can be found at http://code.google.com/p/wkhtmltopdf/
+for Linux, Mac OS X (i386) and Windows (32bits).
 
-TODO :
-JavaScript support activation deactivation
-Collated and book format support
-Zip return for separated PDF
-Web client WYSIWYG
+After installing the library on the OpenERP Server machine, you need to set the
+path to the ``wkthtmltopdf`` executable file on each Company.
+
+If you are experiencing missing header/footer problems on Linux, be sure to
+install a "static" version of the library. The default ``wkhtmltopdf`` on
+Ubuntu is known to have this issue.
+
+
+TODO
+----
+
+ * JavaScript support activation deactivation
+ * Collated and book format support
+ * Zip return for separated PDF
+ * Web client WYSIWYG
+
                     """,
     "version" : "0.9",
     "depends" : ["base"],
-    "author" : "Camptocamp SA - NBessi",
-    "category": "Tools",
+    "author" : "Camptocamp",
+    "category": "Hidden", # i.e a technical module, not shown in Application install menu
     "url": "http://http://www.camptocamp.com/",
     "data": [ "security/ir.model.access.csv",
               "data.xml",

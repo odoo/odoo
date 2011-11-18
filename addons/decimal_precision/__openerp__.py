@@ -30,7 +30,7 @@ The decimal precision is configured per company.
     "author": "OpenERP SA",
     "version": "0.1",
     "depends": ["base"],
-    "category" : "Tools",
+    "category" : "Hidden",
     'complexity': "easy",
     "init_xml": [],
     "update_xml": [

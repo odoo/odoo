@@ -70,6 +70,8 @@ def gen_salt( length=8, symbols=ascii_letters + digits ):
 import hashlib
 
 def encrypt_md5( raw_pw, salt, magic=magic_md5 ):
+    raw_pw = raw_pw.encode('utf-8')
+    salt = salt.encode('utf-8')
     hash = hashlib.md5()
     hash.update( raw_pw + magic + salt )
     st = hashlib.md5()

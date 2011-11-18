@@ -29,17 +29,34 @@ class res_company(osv.osv):
     _columns = {
         'bvr_delta_horz': fields.float('BVR Horz. Delta (mm)',
             help='horiz. delta in mm 1.2 will print the bvr 1.2mm lefter, negative value is possible'),
-            
+
         'bvr_delta_vert': fields.float('BVR Vert. Delta (mm)',
             help='vert. delta in mm 1.2 will print the bvr 1.2mm lower, negative value is possible'),
-            
+
+        'bvr_scan_line_vert': fields.float('BVR vert. position for scan line (mm)',
+            help='Vert. position in mm for scan line'),
+
+        'bvr_scan_line_horz': fields.float('BVR horiz. position for scan line(mm)',
+            help='Horiz. position in mm for scan line'),
+
+        'bvr_scan_line_font_size': fields.float('BVR scan line font size (pt)'),
+
+        'bvr_scan_line_letter_spacing':fields.float('BVR scan line letter spacing'),
+
         'bvr_background': fields.boolean('Insert BVR background ?'),
-        
+
         'bvr_only': fields.boolean('Separated BVR only ?',
             help='Print only the BVR separated page'),
-            
+
         'invoice_only': fields.boolean('Invoice only (Do not use with bvr only)?',
             help='Print only the invoice without BVR'),
+    }
+
+    _defaults = {
+        'bvr_scan_line_vert': 232,
+        'bvr_scan_line_horz': 72,
+        'bvr_scan_line_font_size': 12,
+        'bvr_scan_line_letter_spacing': 0,
     }
 
 res_company()

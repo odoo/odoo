@@ -34,21 +34,8 @@
 - 
   !record {model: account.journal, id: account.sales_journal}:
     analytic_journal_id: account.cose_journal_sale    
--
-  I'm creating new Seller "Mr. Pinakin" with him email "info@mycustomer.com".
-- 
-  !record {model: res.partner, id: res_partner_mrpinakin0}:
-    address:
-        - city: Namur
-          country_id: base.be
-          phone: (+32).10.45.18.77
-          street: 23, street ways
-          type: default
-          zip: '2324324'
-          email: 'info@mycustomer.com'
-    name: Mr. Pinakin
 
--      
+-
   I'm creating new Buyer "Mr. Patel" with his email "info@myinfobid.com".
 - 
   !record {model: res.partner, id: res_partner_mrpatel0}:
@@ -61,21 +48,7 @@
         email: 'info@myinfobid.com'
     name: Mr. Patel
         
--      
-  I'm creating new Buyer "Mr. Johnson" with his email "info@mrkjohnson.com".
-- 
-  !record {model: res.partner, id: res_partner_mrkjohnson0}:
-    address:
-      - city: paris
-        country_id: base.fr
-        name: Mark Johnson
-        street: 1 rue Rockfeller
-        type: invoice
-        zip: '75016'
-        email: 'info@mrkjohnson.com'
-    name: Mr. Mark Johnson
-        
--      
+-
   I'm creating new Buyer "Mr. Rahi" with his email "info@poalrahi.com".
 - 
   !record {model: res.partner, id: res_partner_poalrahi0}:
@@ -140,7 +113,7 @@
     date_dep: !eval "'%s-08-01' %(datetime.now().year)"
     method: keep
     name: AD/006
-    partner_id: res_partner_mrpinakin0
+    partner_id: base.res_partner_maxtor
     specific_cost_ids:
       - account: auction.auction_expense
         amount: 200.0
@@ -149,7 +122,7 @@
   I create a new object wooden-chair which is to be auctioned.
 -
   !record {model: auction.lots, id: auction_lots_woodenchair0}:
-    ach_uid: res_partner_mrkjohnson0
+    ach_uid: base.res_partner_seagate
     artist_id: auction_artists_vincentvangogh0
     auction_id: auction_dates_antiquefurnitureexhibition0
     bord_vnd_id: auction_deposit_ad0
@@ -199,12 +172,12 @@
     price: 3200.0
  
 -
-  I create another bid for an object "wooden-chair" bid by a Mr.Johnson
+  I create another bid for an object "wooden-chair" bid by a Mr.Seagate
 -  
   !record {model: auction.bid, id: auction_bid_bid2}:
     auction_id: auction_dates_antiquefurnitureexhibition0
     name: bid/003
-    partner_id: res_partner_mrkjohnson0
+    partner_id: base.res_partner_seagate
 -
   I create a bid line.
 -
@@ -215,7 +188,7 @@
     lot_id: auction.auction_lots_woodenchair0
     price: 4000.0
 -
-  Mr. MarkJohnson bid are selected as the Finalist Bid with 4000 Euro
+  Mr. Seagate bids are selected as the Finalist Bid with 4000 Euro
 -
   I check that buyer price and seller price gets bound with the value
 -
@@ -250,7 +223,7 @@
 -
   !record {model: auction.lots.make.invoice.buyer, id: auction_lots_make_invoice_buyer_0}:
     amount: 3090.0
-    buyer_id: res_partner_mrkjohnson0
+    buyer_id: base.res_partner_seagate
     number: !eval "'%s/003' %(datetime.now().year)"
     objects: 1
 -

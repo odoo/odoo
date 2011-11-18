@@ -25,44 +25,47 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Incoming Mail Server">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1" colspan="4"/>
-                        <field name="type" select="1" on_change="onchange_server_type(type, is_ssl)"/>
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field name="type" select="1" on_change="onchange_server_type(type, is_ssl, object_id)"/>
                         <field name="date" select="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Server &amp; Login">
-                            <group col="4" colspan="2">
+                            <group col="4" colspan="2" attrs="{'invisible' : [('type', '=', 'local')]}">
                                 <separator string="Server Information" colspan="2"/>
-                                <field name="server" colspan="4"/>
-                                <field name="port" />
+                                <field name="server" colspan="4" attrs="{'required' : [('type', '!=', 'local')]}" />
+                                <field name="port" required="1" attrs="{'required' : [('type', '!=', 'local')]}" />
                                 <field name="is_ssl" select="1" on_change="onchange_server_type(type, is_ssl)"/>
                             </group>
-                            <group col="2" colspan="2">
+                            <group col="2" colspan="2" attrs="{'invisible' : [('type', '=', 'local')]}">
                                 <separator string="Login Information" colspan="2"/>
-                                <field name="user" />
-                                <field name="password" password="True" />
+                                <field name="user" attrs="{'required' : [('type', '!=', 'local')]}"/>
+                                <field name="password" password="True" attrs="{'required' : [('type', '!=', 'local')]}"/>
                             </group>
                             <group col="2" colspan="2">
-                                <separator string="Automated Processing" colspan="2"/>
-                                <field name="object_id"/>
-                                <field name="action_id"/>
+                                <separator string="Actions to Perform on Incoming Mails" colspan="2"/>
+                                <field name="object_id" on_change="onchange_server_type(type, is_ssl, object_id)"/>
+                                <field name="action_id" groups="base.group_extended"/>
                             </group>
-                            <separator string="Description" colspan="4"/>
-                            <field name="note" colspan="4" nolabel="1"/>
+                            <group attrs="{'invisible' : [('type', '!=', 'local')]}" colspan="4" col="4">
+                                <separator string="Configuration" colspan="4"/>
+                                <field name="configuration" colspan="4"/>
+                                <field name="script" colspan="4" widget="url"/>
+                            </group>
                         </page>
-                        <page string="Advanced">
+                        <page string="Advanced" groups="base.group_extended">
                             <group colspan="2" col="2">
                                 <separator string="Advanced options" colspan="2"/>
-                                <field name="priority"/>
+                                <field name="priority" groups="base.group_extended"/>
                                 <field name="attach"/>
                                 <field name="original"/>
                                 <field name="active" select="1"/>
                             </group>
                         </page>
                     </notebook>
-                    <group col="6" colspan="4">
-                        <field name="state" select="1"/>
+                    <group colspan="4" col="6" attrs="{'invisible' : [('type', '=', 'local')]}">
+                        <field name="state"/>
                         <button string="Reset Confirmation" type="object" name="set_draft" icon="gtk-convert" states="done"/>
                         <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft" icon="gtk-apply"/>
                         <button string="Fetch Now" type="object" name="fetch_mail" states="done" icon="gtk-network"/>
@@ -83,13 +86,6 @@
                     <filter string="SSL" icon="terp-camera_test" domain="[('is_ssl','=',True)]" help="If SSL required."/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
-                    <field name="object_id"/>
-                    <newline/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    </group>
                 </search>
             </field>
         </record>

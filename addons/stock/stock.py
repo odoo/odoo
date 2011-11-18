@@ -661,6 +661,9 @@ class stock_picking(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
+    ]
 
     def action_process(self, cr, uid, ids, context=None):
         if context is None: context = {}
@@ -1525,7 +1528,7 @@ class stock_move(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=True),
+        'name': fields.char('Name', size=250, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
@@ -1585,36 +1588,60 @@ class stock_move(osv.osv):
         """ Gets default address of partner for destination location
         @return: Address id or False
         """
+        mod_obj = self.pool.get('ir.model.data')
+        picking_type = context.get('picking_type')
+        location_id = False
+
         if context is None:
             context = {}
         if context.get('move_line', []):
             if context['move_line'][0]:
                 if isinstance(context['move_line'][0], (tuple, list)):
-                    return context['move_line'][0][2] and context['move_line'][0][2].get('location_dest_id',False)
+                    location_id = context['move_line'][0][2] and context['move_line'][0][2].get('location_dest_id',False)
                 else:
                     move_list = self.pool.get('stock.move').read(cr, uid, context['move_line'][0], ['location_dest_id'])
-                    return move_list and move_list['location_dest_id'][0] or False
-        if context.get('address_out_id', False):
+                    location_id = move_list and move_list['location_dest_id'][0] or False
+        elif context.get('address_out_id', False):
             property_out = self.pool.get('res.partner.address').browse(cr, uid, context['address_out_id'], context).partner_id.property_stock_customer
-            return property_out and property_out.id or False
-        return False
+            location_id = property_out and property_out.id or False
+        else:
+            location_xml_id = False
+            if picking_type == 'in':
+                location_xml_id = 'stock_location_stock'
+            elif picking_type == 'out':
+                location_xml_id = 'stock_location_customers'
+            if location_xml_id:
+                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+        return location_id
 
     def _default_location_source(self, cr, uid, context=None):
         """ Gets default address of partner for source location
         @return: Address id or False
         """
+        mod_obj = self.pool.get('ir.model.data')
+        picking_type = context.get('picking_type')
+        location_id = False
+
         if context is None:
             context = {}
         if context.get('move_line', []):
             try:
-                return context['move_line'][0][2]['location_id']
+                location_id = context['move_line'][0][2]['location_id']
             except:
                 pass
-        if context.get('address_in_id', False):
+        elif context.get('address_in_id', False):
             part_obj_add = self.pool.get('res.partner.address').browse(cr, uid, context['address_in_id'], context=context)
             if part_obj_add.partner_id:
-                return part_obj_add.partner_id.property_stock_supplier.id
-        return False
+                location_id = part_obj_add.partner_id.property_stock_supplier.id
+        else:
+            location_xml_id = False
+            if picking_type == 'in':
+                location_xml_id = 'stock_location_suppliers'
+            elif picking_type == 'out':
+                location_xml_id = 'stock_location_stock'
+            if location_xml_id:
+                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+        return location_id
 
     _defaults = {
         'location_id': _default_location_source,
@@ -1743,7 +1770,7 @@ class stock_move(osv.osv):
         """ On change of product id, if finds UoM, UoS, quantity and UoS quantity.
         @param prod_id: Changed Product id
         @param loc_id: Source location id
-        @param loc_id: Destination location id
+        @param loc_dest_id: Destination location id
         @param address_id: Address id of partner
         @return: Dictionary of values
         """
@@ -2033,14 +2060,14 @@ class stock_move(osv.osv):
         else:
             acc_dest = accounts['stock_account_output']
 
-        acc_variation = accounts.get('property_stock_variation', False)
+        acc_valuation = accounts.get('property_stock_valuation_account_id', False)
         journal_id = accounts['stock_journal']
 
-        if acc_dest == acc_variation:
-            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Output Account defined on this product and Variant account on category of this product are same.'))
+        if acc_dest == acc_valuation:
+            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Output Account defined on this product and Valuation account on category of this product are same.'))
 
-        if acc_src == acc_variation:
-            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Input Account defined on this product and Variant account on category of this product are same.'))
+        if acc_src == acc_valuation:
+            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Input Account defined on this product and Valuation account on category of this product are same.'))
 
         if not acc_src:
             raise osv.except_osv(_('Error!'),  _('There is no stock input account defined for this product or its category: "%s" (id: %d)') % \
@@ -2051,10 +2078,10 @@ class stock_move(osv.osv):
         if not journal_id:
             raise osv.except_osv(_('Error!'), _('There is no journal defined on the product category: "%s" (id: %d)') % \
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
-        if not acc_variation:
-            raise osv.except_osv(_('Error!'), _('There is no inventory variation account defined on the product category: "%s" (id: %d)') % \
+        if not acc_valuation:
+            raise osv.except_osv(_('Error!'), _('There is no inventory Valuation account defined on the product category: "%s" (id: %d)') % \
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
-        return journal_id, acc_src, acc_dest, acc_variation
+        return journal_id, acc_src, acc_dest, acc_valuation
 
     def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
         """
@@ -2104,17 +2131,17 @@ class stock_move(osv.osv):
             if move.location_id.company_id \
                 and (move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal'\
                      or move.location_id.company_id != move.location_dest_id.company_id):
-                journal_id, acc_src, acc_dest, acc_variation = self._get_accounting_data_for_valuation(cr, uid, move, src_company_ctx)
+                journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, src_company_ctx)
                 reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, src_company_ctx)
-                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_variation, acc_dest, reference_amount, reference_currency_id, context))]
+                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_valuation, acc_dest, reference_amount, reference_currency_id, context))]
 
             # Incoming moves (or cross-company input part)
             if move.location_dest_id.company_id \
                 and (move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal'\
                      or move.location_id.company_id != move.location_dest_id.company_id):
-                journal_id, acc_src, acc_dest, acc_variation = self._get_accounting_data_for_valuation(cr, uid, move, dest_company_ctx)
+                journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, dest_company_ctx)
                 reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, src_company_ctx)
-                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_src, acc_variation, reference_amount, reference_currency_id, context))]
+                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_src, acc_valuation, reference_amount, reference_currency_id, context))]
 
             move_obj = self.pool.get('account.move')
             for j_id, move_lines in account_moves:
@@ -2686,7 +2713,7 @@ class stock_warehouse(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'partner_address_id': fields.many2one('res.partner.address', 'Owner Address'),
         'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True, domain=[('usage','<>','view')]),
-        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage','<>','view')]),
+        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage','=','internal')]),
         'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True, domain=[('usage','<>','view')]),
     }
     _defaults = {

@@ -6,9 +6,9 @@
                   groups="group_stock_manager,group_stock_user" sequence="5"
                   web_icon="images/warehouse.png"
                   web_icon_hover="images/warehouse-hover.png"/>
-        <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1" groups="base.group_extended"/>
-        <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="2"/>
-        <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="6"/>
+        <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1"/>
+        <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="2" groups="base.group_extended"/>
+        <menuitem id="menu_stock_product" name="Products" parent="menu_stock_root" sequence="6"/>
         <menuitem name="Products by Category" id="menu_product_by_category_stock_form" action="product.product_category_action"
            parent="stock.menu_stock_product" sequence="0"/>
         <menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
@@ -16,7 +16,7 @@
         <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="1"/>
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
         <menuitem
-            id="menu_product_in_config_stock" name="Product"
+            id="menu_product_in_config_stock" name="Products"
             parent="stock.menu_stock_configuration" sequence="2"/>
         <menuitem
             action="product.product_category_action_form" id="menu_product_category_config_stock"
@@ -479,7 +479,6 @@
             <field name="model">stock.move</field>
             <field name="name">Downstream traceability</field>
             <field eval="'ir.actions.act_window,'+str(action3)" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <record id="action5" model="ir.actions.act_window">
@@ -496,7 +495,6 @@
             <field name="model">stock.move</field>
             <field name="name">Upstream traceability</field>
             <field eval="'ir.actions.act_window,'+str(action5)" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <record id="view_location_form" model="ir.ui.view">
@@ -676,6 +674,7 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
+                    <field name="partner_id" invisible="True"/>
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="origin"/>
                     <field name="date"/>
@@ -903,7 +902,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}" >
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id, 'picking_type': type}" >
                                 <tree colors="grey:scrapped==True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -1124,7 +1123,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id}" >
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id, 'picking_type': type}" >
                                 <tree colors="grey:scrapped==True" string="Stock Moves">
                                     <field name="product_id" />
                                     <field name="product_qty" />
@@ -1217,10 +1216,8 @@
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
                                 <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
-                                <group colspan="1" states="done">
-                                    <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
-                                </group>
-                                    <button states="done" name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}" type="action" icon="terp-gtk-go-back-rtl" />
+                                <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
+                                <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}" type="action" icon="terp-gtk-go-back-rtl" />
                             </group>
                         </page>
                         <page string="Additional Info" groups="base.group_extended,base.group_multi_company">
@@ -1358,7 +1355,7 @@
 
 
 
-        <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_warehouse_mgmt" sequence="2"/>
+        <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_warehouse_mgmt" sequence="2" groups="base.group_extended"/>
 
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
@@ -1385,7 +1382,6 @@
                     <button name="%(track_line)d" string="Split in production lots" type="action"
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
                         states="draft,waiting,confirmed,assigned,done"
-                        context="{'default_use_exist': picking_id.type=='in'}"
                         groups="base.group_extended"/>
                     <field groups="base.group_extended" name="tracking_id"/>
                     <button name="setlast_tracking" string="Put in current pack" type="object"
@@ -1558,7 +1554,6 @@
                     <button name="%(track_line)d" string="Split in production lots" type="action"
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
                        states="draft,waiting,confirmed,assigned,done"
-                        context="{'default_use_exist': picking_id.type=='in'}"
                         groups="base.group_extended"/>
                     <field name="tracking_id" groups="base.group_extended"/>
                     <button name="setlast_tracking" string="Put in current pack" type="object"
@@ -1830,7 +1825,6 @@
             <field name="model">stock.location</field>
             <field name="name">Products</field>
             <field eval="'ir.actions.act_window,%d'%act_product_location_open" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
 
@@ -1839,7 +1833,6 @@
             <field name="model">stock.location</field>
             <field name="name">Open Products</field>
             <field eval="'ir.actions.act_window,%d'%action_view_stock_location_product" name="value"/>
-            <field eval="True" name="object"/>
         </record>
         <record id="action_picking_tree_out" model="ir.actions.act_window">
             <field name="name">Customers Packings</field>
@@ -1895,8 +1888,8 @@
             <field name="act_window_id" ref="action_out_picking_move"/>
         </record>
 
-      <menuitem action="action_reception_picking_move" id="menu_action_pdct_in" parent="menu_stock_products_moves" sequence="1"/>
-      <menuitem action="action_out_picking_move" id="menu_action_pdct_out" parent="menu_stock_products_moves" sequence="2"/>
+      <menuitem action="action_reception_picking_move" id="menu_action_pdct_in" parent="menu_stock_products_moves" sequence="1" groups="base.group_extended"/>
+      <menuitem action="action_out_picking_move" id="menu_action_pdct_out" parent="menu_stock_products_moves" sequence="2" groups="base.group_extended"/>
 
 
          <record id="view_stock_journal_filter" model="ir.ui.view">

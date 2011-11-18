@@ -307,8 +307,8 @@ class account_invoice_line(osv.osv):
         res ['analytics_id'] = line.analytics_id and line.analytics_id.id or False
         return res
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
-        res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context=context)
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None, company_id=None):
+        res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context=context, company_id=company_id)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context=context)
         if rec and rec.analytics_id:
             res_prod['value'].update({'analytics_id': rec.analytics_id.id})
@@ -462,7 +462,7 @@ sale_order_line()
 class account_bank_statement(osv.osv):
     _inherit = "account.bank.statement"
     _name = "account.bank.statement"
-    
+
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, st_line_number, context=None):
         account_move_line_pool = self.pool.get('account.move.line')
         account_bank_statement_line_pool = self.pool.get('account.bank.statement.line')
@@ -484,7 +484,7 @@ class account_bank_statement(osv.osv):
                 if not st_line.amount:
                     continue
         return True
-    
+
 account_bank_statement()
 
 

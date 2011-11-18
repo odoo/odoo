@@ -45,17 +45,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Warehouse board">
-                    <hpaned position="200">
-                        <child1>
-                            <action colspan="4" name="%(action_incoming_product_board)d" string="Incoming Product"  width="510"/>
-                            <action colspan="4" name="%(action_outgoing_product_board)d" string="Outgoing Product" width="510"/>
-                        </child1>
+                    <board style="1-2">
+                        <column>
+                            <action name="%(action_incoming_product_board)d" string="Incoming Product"/>
+                            <action name="%(action_outgoing_product_board)d" string="Outgoing Product"/>
+                        </column>
 
-                        <child2>
-                            <action colspan="4" name="%(action_stock_incoming_product_delay)d" string="Incoming Products Delay" />
-                            <action colspan="4" name="%(action_stock_outgoing_product_delay)d" string="Outgoing Products Delay" />
-                        </child2>
-                    </hpaned>
+                        <column>
+                            <action name="%(action_stock_incoming_product_delay)d" string="Incoming Products Delay"/>
+                            <action name="%(action_stock_outgoing_product_delay)d" string="Outgoing Products Delay"/>
+                        </column>
+                    </board>
                 </form>
             </field>
         </record>

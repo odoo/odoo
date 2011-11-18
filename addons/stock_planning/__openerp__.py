@@ -23,7 +23,7 @@
     "name": "Master Procurement Schedule",
     "version": "1.2",
     "author": "OpenERP SA and Grzegorz Grzelak (OpenGLOBE)",
-    "category": "Warehouse",
+    "category": "Hidden",
     "images": ["images/master_procurement_schedule.jpeg","images/sales_forecast.jpeg","images/stock_planning_line.jpeg","images/stock_sales_period.jpeg"],
     "depends": ["crm", "stock","sale"],
     "complexity": "expert",

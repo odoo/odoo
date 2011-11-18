@@ -20,7 +20,7 @@
 #
 ##############################################################################
 {
-    'name': 'Human Resource Payroll Accounting',
+    'name': 'Payroll Accounting',
     'version': '1.0',
     'category': 'Human Resources',
     'complexity': "expert",

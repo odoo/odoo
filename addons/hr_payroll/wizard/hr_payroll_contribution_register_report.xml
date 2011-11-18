@@ -33,7 +33,6 @@
 
         <record model="ir.values" id="payslip_lines_contribution_register_value">
             <field name="model_id" ref="model_hr_contribution_register" />
-            <field name="object" eval="1" />
             <field name="name">PaySlip Lines</field>
             <field name="key2">client_print_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_payslip_lines_contribution_register'))" />

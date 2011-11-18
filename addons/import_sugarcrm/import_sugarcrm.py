@@ -210,12 +210,12 @@ class sugar_import(import_framework):
         
     def get_email_mapping(self): 
         return { 
-                'model' : 'mailgate.message',
+                'model' : 'mail.message',
                 'dependencies' : [self.TABLE_USER, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD, self.TABLE_OPPORTUNITY, self.TABLE_MEETING, self.TABLE_CALL],
                 'hook' : self.import_email,
                 'map' : {
-                        'name':'name',
-                        'history' : const("1"),
+                        'subject':'name',
+                        'state' : const('received'),
                         'date':'date_sent',
                         'email_from': 'from_addr_name',
                         'email_to': 'to_addrs_names',
@@ -226,7 +226,9 @@ class sugar_import(import_framework):
                         'model': 'model',
                         'partner_id/.id': 'partner_id/.id',                         
                         'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
-                        'description': ppconcat('description', 'description_html'),
+                        'body_text': 'description',
+                        'body_html' : 'description_html',
+                        
                 }
             } 
     
@@ -575,10 +577,10 @@ class sugar_import(import_framework):
         }
         
     def get_opportunity_status(self, sugar_val):
-        fields = ['name', 'type']
+        fields = ['name', 'case_default']
         name = 'Opportunity_' + sugar_val['sales_stage']
-        data = [sugar_val['sales_stage'], 'Opportunity']
-        return self.import_object(fields, data, 'crm.case.stage', self.TABLE_STAGE, name, [('type', '=', 'opportunity'), ('name', 'ilike', sugar_val['sales_stage'])])
+        data = [sugar_val['sales_stage'], '1']
+        return self.import_object(fields, data, 'crm.case.stage', self.TABLE_STAGE, name, [('name', 'ilike', sugar_val['sales_stage'])])
     
     def import_opportunity_contact(self, val):
         sugar_opportunities_contact = set(sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Opportunities', module_id=val.get('id'), related_module='Contacts', query=None, deleted=None))
@@ -647,11 +649,11 @@ class sugar_import(import_framework):
         import lead
     """
     def get_lead_status(self, sugar_val):
-        fields = ['name', 'type']
+        fields = ['name', 'case_default']
         name = 'lead_' + sugar_val.get('status', '')
-        data = [sugar_val.get('status', ''), 'lead']
-        return self.import_object(fields, data, 'crm.case.stage', self.TABLE_STAGE, name, [('type', '=', 'lead'), ('name', 'ilike', sugar_val.get('status', ''))])
-
+        data = [sugar_val.get('status', ''), '1']
+        return self.import_object(fields, data, 'crm.case.stage', self.TABLE_STAGE, name, [('name', 'ilike', sugar_val.get('status', ''))])
+    
     lead_state = {
         'New' : 'draft',
         'Assigned':'open',
@@ -1085,7 +1087,7 @@ class import_sugarcrm(osv.osv):
         scheduler Method
         """
         context = {'username': args[4], 'password': args[5], 'url': args[3], 'instance_name': args[3]}
-        imp = sugar_import(self, cr, uid, args[2], "import_sugarcrm", [args[1]], context)
+        imp = sugar_import(self, cr, uid, args[2], "import_sugarcrm", args[1], context)
         imp.set_table_list(args[0])
         imp.start()
         return True 
@@ -1129,7 +1131,7 @@ class import_sugarcrm(osv.osv):
                 raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module") %(keys,module,module))
         url = self.parse_valid_url(context)
         context.update({'url': url})
-        imp = sugar_import(self, cr, uid, context.get('instance_name'), "import_sugarcrm", [context.get('email_user')], context)
+        imp = sugar_import(self, cr, uid, context.get('instance_name'), "import_sugarcrm", context.get('email_user'), context)
         imp.set_table_list(keys)
         imp.start()
         obj_model = self.pool.get('ir.model.data')

@@ -104,30 +104,19 @@ class project_task(osv.osv):
         res = super(project_task,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         search_extended = False
         timebox_obj = self.pool.get('project.gtd.timebox')
-        access_pool = self.pool.get('ir.model.access')
-        if (res['type'] == 'search') and access_pool.check_groups(cr, uid, "project_gtd.group_project_getting"):
+        if (res['type'] == 'search') and context.get('gtd', False):
             tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]), context=context)
-            search_extended ='''<newline/><group col="%d" expand="%d" string="%s">''' % (len(tt)+7,1,_('Getting Things Done'))
-            search_extended += '''<filter domain="[('timebox_id','=', False)]" context="{'set_editable':True,'set_visible':True,'gtd_visible':True,'user_invisible':True}" icon="gtk-new" help="Undefined Timebox" string="%s"/>''' % (_('Inbox'),)
-            search_extended += '''<filter context="{'set_editable':True,'set_visible':True,'gtd_visible':True,'user_invisible':True}" icon="gtk-new" help="Getting things done" string="%s"/>''' % (_('GTD'),)
-            search_extended += '''<separator orientation="vertical"/>'''
+            search_extended =''
             for time in tt:
                 if time.icon:
                     icon = time.icon
                 else :
                     icon=""
-                search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''" context="{'gtd_visible':True, 'user_invisible': True}"/>'''
-            search_extended += '''
-            <separator orientation="vertical"/>
-            <field name="context_id" select="1" widget="selection"/>
-            </group>
-            </search> '''
-        if search_extended:
-            res['arch'] = unicode(res['arch'], 'utf8').replace('</search>', search_extended)
-            attrs_sel = self.pool.get('project.gtd.context').name_search(cr, uid, '', [], context=context)
-            context_id_info = self.pool.get('project.task').fields_get(cr, uid, ['context_id'], context=context)
-            context_id_info['context_id']['selection'] = attrs_sel
-            res['fields'].update(context_id_info)
+                search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''" context="{'user_invisible': True}"/>\n'''
+            search_extended +='''<separator orientation="vertical"/>'''
+
+            res['arch'] = res['arch'].replace('<separator name="gtdsep"/>', search_extended)
+
         return res
 
 project_task()

@@ -25,6 +25,7 @@ import netsvc
 
 from osv import fields,osv
 from tools.translate import _
+import decimal_precision as dp
 
 class purchase_requisition(osv.osv):
     _name = "purchase.requisition"
@@ -93,7 +94,7 @@ class purchase_requisition_line(osv.osv):
     _columns = {
         'product_id': fields.many2one('product.product', 'Product' ),
         'product_uom_id': fields.many2one('product.uom', 'Product UoM'),
-        'product_qty': fields.float('Quantity', digits=(16,2)),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
@@ -164,7 +165,7 @@ class procurement_order(osv.osv):
             if procurement.product_id.purchase_requisition:
                 requisition_id=self.pool.get('purchase.requisition').create(cr, uid, {
                     'name': sequence_obj.get(cr, uid, 'purchase.order.requisition'),
-                    'origin': procurement.name,
+                    'origin': procurement.origin,
                     'date_end': procurement.date_planned,
                     'warehouse_id':procurement.purchase_id and procurement.purchase_id.warehouse_id.id,
                     'company_id':procurement.company_id.id,

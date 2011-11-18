@@ -47,7 +47,8 @@ class hr_employee_category(osv.osv):
         'name': fields.char("Category", size=64, required=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
-        'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories')
+        'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories'),
+        'employee_ids': fields.many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', 'Employees'),
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
@@ -154,7 +155,9 @@ class hr_employee(osv.osv):
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
         'photo': fields.binary('Photo'),
-        'passport_id':fields.char('Passport No', size=64)
+        'passport_id':fields.char('Passport No', size=64),
+        'color': fields.integer('Color Index'),
+        'city': fields.related('address_id', 'city', type='char', string='City'),
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -203,6 +206,7 @@ class hr_employee(osv.osv):
         'active': 1,
         'photo': _get_photo,
         'marital': 'single',
+        'color': 0,
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):

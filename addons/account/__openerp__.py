@@ -22,7 +22,7 @@
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Finance',
+    "category": 'Accounting & Finance',
     'complexity': "normal",
     "description": """
 Accounting and Financial Management.
@@ -53,7 +53,7 @@ module named account_voucher.
     'website': 'http://www.openerp.com',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
     'init_xml': [],
-    "depends" : ["base_setup", "product", "analytic", "process","board"],
+    "depends" : ["base_setup", "product", "analytic", "process", "board", "edi"],
     'update_xml': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -103,8 +103,7 @@ module named account_voucher.
         'account_end_fy.xml',
         'account_invoice_view.xml',
         'partner_view.xml',
-        'data/account_invoice.xml',
-        'data/account_data2.xml',
+        'data/account_data.xml',
         'account_invoice_workflow.xml',
         'project/project_view.xml',
         'project/project_report.xml',
@@ -119,12 +118,13 @@ module named account_voucher.
         'process/statement_process.xml',
         'process/customer_invoice_process.xml',
         'process/supplier_invoice_process.xml',
-        'sequence_view.xml',
+        'ir_sequence_view.xml',
         'company_view.xml',
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",
         "wizard/account_report_balance_sheet_view.xml",
-        "account_bank_view.xml"
+        "edi/invoice_action_data.xml",
+        "account_bank_view.xml",
     ],
     'demo_xml': [
         'demo/account_demo.xml',
@@ -146,10 +146,9 @@ module named account_voucher.
         'test/account_fiscalyear_close.yml',
         'test/account_bank_statement.yml',
         'test/account_cash_statement.yml',
+        'test/test_edi_invoice.yml',
         'test/account_report.yml',
-
-
-            ],
+    ],
     'installable': True,
     'active': False,
     'certificate': '0080331923549',
