@@ -338,7 +338,8 @@ class Session(openerpweb.Controller):
             "session_id": req.session_id,
             "uid": req.session._uid,
             "context": ctx,
-            "db": req.session._db
+            "db": req.session._db,
+            "login": req.session._login
         }
 
     @openerpweb.jsonrequest
@@ -347,7 +348,8 @@ class Session(openerpweb.Controller):
         return {
             "uid": req.session._uid,
             "context": req.session.get_context() if req.session._uid else False,
-            "db": req.session._db
+            "db": req.session._db,
+            "login": req.session._login
         }
 
     @openerpweb.jsonrequest
