@@ -759,7 +759,7 @@ class sale_order(osv.osv):
         """
         move_obj = self.pool.get('stock.move')
         picking_obj = self.pool.get('stock.picking')
-        procurement_order_obj = self.pool.get('procurement.order')
+        procurement_obj = self.pool.get('procurement.order')
 
         proc_ids = []
         for line in order_lines:
@@ -778,7 +778,7 @@ class sale_order(osv.osv):
                     # a service has no stock move
                     move_id = False
 
-                proc_id = procurement_order_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, *args))
+                proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, *args))
                 proc_ids.append(proc_id)
                 line.write({'procurement_id': proc_id})
 
@@ -793,7 +793,7 @@ class sale_order(osv.osv):
                                     for mov in move_obj.browse(cr, uid, mov_ids):
                                         # FIXME: the following seems broken: what if move_id doesn't exist? What if there are several mov_ids? Shouldn't that be a sum?
                                         move_obj.write(cr, uid, [move_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
-                                        procurement_order_obj.write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
+                                        procurement_obj.write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
 
         wf_service = netsvc.LocalService("workflow")
         if picking_id:
