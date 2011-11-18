@@ -42,7 +42,8 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
             model: this.model,
             view_id: this.view_id,
             view_type: "tree",
-            toolbar: this.view_manager ? !!this.view_manager.sidebar : false
+            toolbar: this.view_manager ? !!this.view_manager.sidebar : false,
+            context: this.dataset.get_context()
         }, this.on_loaded);
     },
     /**
