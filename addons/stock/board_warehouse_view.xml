@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <record id="action_incoming_product_board" model="ir.actions.act_window">
-            <field name="name">Incoming Product</field>
+            <field name="name">Incoming Shipments</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -12,7 +12,7 @@
         </record>
 
         <record id="action_outgoing_product_board" model="ir.actions.act_window">
-            <field name="name">Outgoing Product</field>
+            <field name="name">Delivery Orders</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -47,8 +47,8 @@
                 <form string="Warehouse board">
                     <board style="1-2">
                         <column>
-                            <action name="%(action_incoming_product_board)d" string="Incoming Product"/>
-                            <action name="%(action_outgoing_product_board)d" string="Outgoing Product"/>
+                            <action name="%(action_incoming_product_board)d" string="Incoming Shipments"/>
+                            <action name="%(action_outgoing_product_board)d" string="Delivery Orders"/>
                         </column>
 
                         <column>
