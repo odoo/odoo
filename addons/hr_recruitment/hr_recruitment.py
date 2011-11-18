@@ -440,7 +440,18 @@ class hr_applicant(crm.crm_case, osv.osv):
                                                  })
         else:
             raise osv.except_osv(_('Warning!'),_('You must define Applied Job for Applicant !'))
-        return self.case_close(cr, uid, ids, *args)
+        self.case_close(cr, uid, ids, *args)
+
+        mod_obj = self.pool.get('ir.model.data')
+        act = mod_obj.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
+
+        act_obj = self.pool.get('ir.actions.act_window')
+        act_win = act_obj.read(cr, uid, act[1], [])
+
+        act_win['domain'] = [('id','=',emp_id)]
+        act_win['view_mode'] = 'form,tree'
+        act_win['res_id'] = emp_id
+        return act_win
 
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as draft
