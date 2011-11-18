@@ -117,10 +117,10 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                 var head = $.trim($(this).text());
                 var dataset = new openerp.web.DataSetSearch(self, result.fields[relational].relation, result.fields[relational].context);
                 dataset.domain=[['id', 'in', self.datarecord[relational]]];
-                dataset.read_slice([], {}, function(result1,ids){
+                dataset.read_slice([], {limit:80}, function(result1,ids){
                     _.extend(self.action.context,{"html_name_get" : true});
                     var dataset1 = new openerp.web.DataSet(self, result.fields[relational].relation,result.fields[relational].context);
-                    dataset1.name_get(dataset.ids,function(res){
+                    dataset1.name_get(result1,function(res){
                     var additional = "";
                     if(res['html_name_get']){
                         additional = res['display'];

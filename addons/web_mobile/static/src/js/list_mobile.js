@@ -32,11 +32,10 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
         var self = this;
         var dataset = new openerp.web.DataSetSearch(this, this.action.res_model,this.action.context);
         dataset.domain = self.action.domain;
-        dataset.read_slice([], {}, function(result,ids){
+        dataset.read_slice([], {limit:80}, function(result,ids){
             _.extend(self.action.context,{"html_name_get" : true});
-
             var dataset1 = new openerp.web.DataSet(self, self.action.res_model,self.action.context);
-            dataset1.name_get(dataset.ids,function(res){
+            dataset1.name_get(result,function(res){
                 var additional = "";
                 if(res['html_name_get']){
                     additional = res['display'];
