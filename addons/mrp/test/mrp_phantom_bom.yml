@@ -179,11 +179,9 @@
 -
   !record {model: mrp.production, id: mrp_production_mo0}:
     bom_id: mrp.mrp_bom_orangejuice0
-    company_id: base.main_company
     date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     location_dest_id: stock.stock_location_output
     location_src_id: stock.stock_location_stock
-    name: MO/00002
     product_id: mrp.product_product_orangejuice0
     product_lines:
       - name: Orange

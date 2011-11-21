@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-09-16 09:10+0000\n"
-"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2011-11-07 12:53+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:06+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2011-11-08 05:42+0000\n"
+"X-Generator: Launchpad (build 14231)\n"
 
 #. module: account
 #: code:addons/account/account.py:1291
@@ -584,6 +584,8 @@ msgstr ""
 #: field:account.move.bank.reconcile,journal_id:0
 #: view:account.move.line:0
 #: field:account.move.line,journal_id:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
 #: code:addons/account/account_move_line.py:983
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,journal_id:0
@@ -966,6 +968,7 @@ msgstr "Créer des périodes trimestrielles"
 
 #. module: account
 #: report:account.overdue:0
+#: report:account.aged_trial_balance:0
 msgid "Due"
 msgstr "Due"
 
@@ -1060,6 +1063,10 @@ msgstr "Modèle d'écritures"
 #: field:account.journal,code:0
 #: report:account.partner.balance:0
 #: field:account.period,code:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Code"
 msgstr "Code"
 
@@ -1389,6 +1396,7 @@ msgstr "Analyse des écritures comptables"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_partner_all
 #: model:ir.ui.menu,name:account.next_id_22
+#: report:account.aged_trial_balance:0
 msgid "Partners"
 msgstr "Partenaires"
 
@@ -2188,7 +2196,7 @@ msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
-msgid "Search Chart of Account Templates"
+msgid "Search Chart of Accounts Templates"
 msgstr "Chercher un modèle de plan comptable"
 
 #. module: account
@@ -2297,6 +2305,11 @@ msgstr "Modèle de produit"
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
 #: model:ir.model,name:account.model_account_fiscalyear
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Fiscal Year"
 msgstr "Exercice comptable"
 
@@ -3174,7 +3187,9 @@ msgstr "Laisser vide pour utiliser le compte de dépense"
 #: field:account.common.report,journal_ids:0
 #: report:account.general.journal:0
 #: field:account.general.journal,journal_ids:0
+#: report:account.general.ledger_landscape:0
 #: view:account.journal.period:0
+#: report:account.partner.balance:0
 #: field:account.partner.balance,journal_ids:0
 #: field:account.partner.ledger,journal_ids:0
 #: field:account.pl.report,journal_ids:0
@@ -3535,6 +3550,7 @@ msgstr ""
 #: field:account.entries.report,date:0
 #: selection:account.general.journal,filter:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: field:account.invoice.report,date:0
 #: report:account.journal.period.print:0
 #: view:account.move:0
@@ -4656,7 +4672,7 @@ msgstr "Écritures comptables"
 
 #. module: account
 #: selection:account.account.type,report_type:0
-msgid "Balance Sheet (Assets Accounts)"
+msgid "Balance Sheet (Asset Accounts)"
 msgstr "Bilan (comptes d'actif)"
 
 #. module: account
@@ -4836,6 +4852,7 @@ msgstr "Balance Analytique -"
 #: report:account.general.ledger_landscape:0
 #: report:pl.account:0
 #: report:pl.account.horizontal:0
+#: report:account.aged_trial_balance:0
 msgid "Target Moves"
 msgstr "Mouvements Cibles"
 
@@ -5670,6 +5687,16 @@ msgstr "La nouvelle devise n'est pas correctement paramétrée !"
 #: field:account.print.journal,filter:0
 #: field:account.report.general.ledger,filter:0
 #: field:account.vat.declaration,filter:0
+#: field:account.account.balance,filter:0
+#: field:account.central.journal,filter:0
+#: field:account.general.journal,filter:0
+#: field:account.partner.balance,filter:0
+#: field:account.balancesheet,filter:0
+#: field:account.balancesheet.horizontal,filter:0
+#: field:account.general.ledger,filter:0
+#: field:account.general.ledger_landscape,filter:0
+#: field:pl.account,filter:0
+#: field:pl.account.horizontal,filter:0
 msgid "Filter by"
 msgstr "Filtrer par"
 
@@ -6542,6 +6569,7 @@ msgstr "  valorisation : pourcentage"
 #: code:addons/account/invoice.py:1008
 #: code:addons/account/wizard/account_invoice_refund.py:100
 #: code:addons/account/wizard/account_invoice_refund.py:102
+#: code:addons/account/wizard/account_open_closed_fiscalyear.py:40
 #: code:addons/account/wizard/account_use_model.py:44
 #, python-format
 msgid "Error !"
@@ -6684,6 +6712,7 @@ msgstr "Position fiscale des taxes"
 #: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
+#: model:ir.actions.report.xml,name:account.account_general_ledger_landscape
 #: model:ir.ui.menu,name:account.menu_general_ledger
 msgid "General Ledger"
 msgstr "Grand livre"
@@ -6739,6 +6768,8 @@ msgstr "Plan de taxes comptables"
 #: report:account.general.journal:0
 #: report:account.invoice:0
 #: report:account.partner.balance:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Total:"
 msgstr "Total :"
 
@@ -6948,7 +6979,7 @@ msgstr "Lignes analytiques"
 #: model:ir.actions.act_window,help:account.action_account_analytic_account_tree2
 msgid ""
 "The normal chart of accounts has a structure defined by the legal "
-"requirement of the country. The analytic chart of account structure should "
+"requirement of the country. The analytic chart of accounts structure should "
 "reflect your own business needs in term of costs/revenues reporting. They "
 "are usually structured by contracts, projects, products or departements. "
 "Most of the OpenERP operations (invoices, timesheets, expenses, etc) "
@@ -7353,6 +7384,7 @@ msgstr "Information optionnelle"
 
 #. module: account
 #: view:account.analytic.line:0
+#: field:account.bank.statement,user_id:0
 #: view:account.journal:0
 #: field:account.journal,user_id:0
 #: view:analytic.entries.report:0
@@ -7949,6 +7981,7 @@ msgstr "Gestion de la comptabilité et des finances"
 #: view:account.entries.report:0
 #: field:account.entries.report,period_id:0
 #: view:account.fiscalyear:0
+#: report:account.general.ledger_landscape:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
 #: field:account.journal.period,period_id:0
@@ -8070,6 +8103,21 @@ msgid "Company Currency"
 msgstr "Devise société"
 
 #. module: account
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.aged_trial_balance:0
+msgid "Chart of Accounts"
+msgstr "Plan comptable"
+
+#. module: account
 #: model:process.node,name:account.process_node_paymententries0
 #: model:process.transition,name:account.process_transition_reconcilepaid0
 msgid "Payment"
@@ -8185,6 +8233,7 @@ msgstr "Journal d'avoirs"
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
+#: report:account.general.ledger_landscape:0
 #: report:account.partner.balance:0
 #: report:account.balancesheet:0
 #: report:account.balancesheet.horizontal:0
@@ -8269,6 +8318,12 @@ msgstr "Modèle de pièce comptable"
 #: field:report.invoice.created,date_due:0
 msgid "Due Date"
 msgstr "Date d'échéance"
+
+#. module: account
+#: view:account.print.invoice:0
+#: field:account.print.invoice,date_due:0
+msgid "Due Date"
+msgstr "Echéance"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_supplier
@@ -8783,6 +8838,7 @@ msgstr "Impossible de trouver le code parent pour le compte modèle !"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
+#: report:account.aged_trial_balance:0
 msgid "Analysis Direction"
 msgstr "Direction d'Analyse"
 
@@ -8913,6 +8969,10 @@ msgstr "Laisser vide pour utiliser le compte de revenu"
 #: report:account.third_party_ledger_other:0
 #: field:report.account.receivable,balance:0
 #: field:report.aged.receivable,balance:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Balance"
 msgstr "Balance"
 
@@ -8964,7 +9024,7 @@ msgstr ""
 #: selection:account.account.template,type:0
 #: selection:account.entries.report,type:0
 msgid "Payable"
-msgstr "Payable"
+msgstr "Débiteurs"
 
 #. module: account
 #: view:report.account.sales:0
@@ -9063,6 +9123,7 @@ msgstr "Saisie manuelle"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.move.line,move_id:0
 #: field:analytic.entries.report,move_id:0
@@ -9142,7 +9203,7 @@ msgstr "Juillet"
 
 #. module: account
 #: view:account.account:0
-msgid "Chart of accounts"
+msgid "Chart of Accounts"
 msgstr "Plan comptable"
 
 #. module: account
@@ -9189,7 +9250,7 @@ msgstr "Période de fin"
 #: field:account.print.journal,chart_account_id:0
 #: field:account.report.general.ledger,chart_account_id:0
 #: field:account.vat.declaration,chart_account_id:0
-msgid "Chart of account"
+msgid "Chart of Accounts"
 msgstr "Plan comptable"
 
 #. module: account
@@ -9237,6 +9298,7 @@ msgstr "Écriture d'abonnement"
 #: report:account.general.journal:0
 #: field:account.general.journal,date_from:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: field:account.installer,date_start:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
@@ -9249,6 +9311,7 @@ msgstr "Écriture d'abonnement"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,date_from:0
+#: report:account.aged_trial_balance:0
 msgid "Start Date"
 msgstr "Date de début"
 
@@ -9673,6 +9736,7 @@ msgstr "Validé"
 #: report:account.general.journal:0
 #: field:account.general.journal,date_to:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: field:account.installer,date_stop:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
@@ -9760,6 +9824,7 @@ msgstr "États"
 #: field:report.account.sales,amount_total:0
 #: field:report.account_type.sales,amount_total:0
 #: field:report.invoice.created,amount_total:0
+#: report:account.aged_trial_balance:0
 msgid "Total"
 msgstr "Total"
 
@@ -10290,6 +10355,7 @@ msgstr "account.addtmpl.wizard"
 #: field:account.partner.ledger,result_selection:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: report:account.aged_trial_balance:0
 msgid "Partner's"
 msgstr "Du partenaire"
 
@@ -10440,6 +10506,18 @@ msgstr "Actif"
 #: report:account.balancesheet.horizontal:0
 msgid "Liabilities"
 msgstr "Passif"
+
+#. module: account
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+msgid "Expenses"
+msgstr "Charges"
+
+#. module: account
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+msgid "Income"
+msgstr "Produits"
 
 #~ msgid "Aged Trial Balance"
 #~ msgstr "Balance Agée"
@@ -10678,9 +10756,6 @@ msgstr "Passif"
 
 #~ msgid "Close states"
 #~ msgstr "Clôturer l'état"
-
-#~ msgid "Income"
-#~ msgstr "Produits"
 
 #~ msgid "Print General Journal"
 #~ msgstr "Imprimer le journal général"
@@ -11744,7 +11819,10 @@ msgstr "Passif"
 #~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
 #~ msgstr "Le solde affiché (%.2f) est différent du solde calculé. (%.2f)"
 
-#~ msgid "Chart of Account"
+#~ msgid "Balance Sheet (Assets Accounts)"
+#~ msgstr "Bilan (comptes d'actif)"
+
+#~ msgid "Chart of Accounts"
 #~ msgstr "Plan comptable"
 
 #~ msgid "Balance:"
