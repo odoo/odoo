@@ -244,7 +244,7 @@ class audittrail_objects_proxy(object_proxy):
         """
         Logging function: This function is performing the logging operation
         @param model: Object whose values are being changed
-        @param method: method to log: create, read, write, unlink
+        @param method: method to log: create, read, write, unlink, action or workflow action
         @param fct_src: execute method of Object proxy
 
         @return: Returns result as per method of Object proxy
@@ -256,45 +256,47 @@ class audittrail_objects_proxy(object_proxy):
         model_id = model_ids and model_ids[0] or False
         assert model_id, _("'%s' Model does not exist..." %(model))
         model = model_pool.browse(cr, 1, model_id)
+
+        # fields to log. currently only used by log on read()
         field_list = []
+        old_values = new_values = {}
 
         if method == 'create':
-            old_values = {}
             res = fct_src(cr, uid_orig, model.model, method, *args)
             if res:
                 res_ids = [res]
                 new_values = self.get_data(cr, uid_orig, pool, res_ids, model, method)
         elif method == 'read':
-            new_values = {}
-            old_values = {}
             res = fct_src(cr, uid_orig, model.model, method, *args)
-            field_list = args[1]
+            # build the res_ids and the old_values dict. Here we don't use get_data() to
+            # avoid performing an additional read()
             res_ids = []
             for record in res:
                 res_ids.append(record['id'])
                 old_values[(model.id, record['id'])] = {'value': record, 'text': record}
+            # log only the fields read
+            field_list = args[1]
         elif method == 'unlink':
             res_ids = args[0]
             old_values = self.get_data(cr, uid_orig, pool, res_ids, model, method)
             res = fct_src(cr, uid_orig, model.model, method, *args)
-            new_values = {}
-        else: #method is write, action or workflow action
+        else: # method is write, action or workflow action
             res_ids = []
             if args:
                 res_ids = args[0]
                 if isinstance(res_ids, (long, int)):
                     res_ids = [res_ids]
             if res_ids:
-                #store the old values into a dictionary
+                # store the old values into a dictionary
                 old_values = self.get_data(cr, uid_orig, pool, res_ids, model, method)
-            #process the original function, workflow trigger...
+            # process the original function, workflow trigger...
             res = fct_src(cr, uid_orig, model.model, method, *args)
             if method == 'copy':
                 res_ids = [res]
             if res_ids:
-                #check the new values and store them into a dictionary
+                # check the new values and store them into a dictionary
                 new_values = self.get_data(cr, uid_orig, pool, res_ids, model, method)
-        #compare the old and new values and create audittrail log if needed
+        # compare the old and new values and create audittrail log if needed
         self.process_data(cr, uid_orig, pool, res_ids, model, method, old_values, new_values, field_list)
         return res
 
