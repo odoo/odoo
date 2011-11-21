@@ -552,6 +552,17 @@ class mrp_operations_operation(osv.osv):
 
         return super(mrp_operations_operation, self).create(cr, uid, vals, context=context)
 
+    def initialize_workflow_instance(self, cr, uid, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        wc_line_obj = self.pool.get('mrp.production.workcenter.line')
+        prod_obj = self.pool.get('mrp.production')
+        production_ids = prod_obj.search(cr, uid, [], context=context)
+        for op in prod_obj.browse(cr, uid, production_ids, context=context):
+            wc_lines = wc_line_obj.search(cr, uid, [('production_id','=',op.id)], context=context)
+            for line_id in wc_lines:
+                wf_service.trg_create(uid, 'mrp.production.workcenter.line', line_id, cr)
+        return True
+
     _columns={
         'production_id':fields.many2one('mrp.production','Production',required=True),
         'workcenter_id':fields.many2one('mrp.workcenter','Work Center',required=True),
