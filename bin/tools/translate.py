@@ -135,7 +135,7 @@ class GettextAlias(object):
         
         if not (cr and lang):
             args = frame.f_locals.get('args',False)
-            if args:
+            if args and args[-1] is not None:
                 lang = args[-1].get('lang',False)
                 if frame.f_globals.get('pooler',False):
                     cr = pooler.get_db(frame.f_globals['pooler'].pool_dic.keys()[0]).cursor()
