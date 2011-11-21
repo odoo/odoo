@@ -155,12 +155,14 @@ session.web.ActionManager = session.web.Widget.extend({
             self.session.get_file({
                 url: '/web/report',
                 data: {action: JSON.stringify(action)},
-                complete: $.unblockUI
-            });
-            if (!self.dialog && on_closed) {
-                on_closed();
-            }
-            self.dialog_stop();
+                complete: $.unblockUI,
+                success: function(){
+                    if (!self.dialog && on_closed) {
+                        on_closed();
+                    }
+                    self.dialog_stop();
+                }
+            })
         });
     },
     ir_actions_act_url: function (action) {
