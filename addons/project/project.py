@@ -592,7 +592,12 @@ class task(osv.osv):
         'state': fields.selection([('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done'), ('cancelled', 'Cancelled')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
-        'kanban_state': fields.selection([('blocked', 'Blocked'),('normal', 'Normal'),('done', 'Done')], 'Kanban State', readonly=True, required=False),
+        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
+                                         help="A task's kanban state indicates special situations affecting it:\n"
+                                              " * Normal is the default situation\n"
+                                              " * Blocked indicates something is preventing the progress of this task\n"
+                                              " * Ready To Pull indicates the task is ready to be pulled to the next stage",
+                                         readonly=True, required=False),
         'create_date': fields.datetime('Create Date', readonly=True,select=True),
         'date_start': fields.datetime('Starting Date',select=True),
         'date_end': fields.datetime('Ending Date',select=True),
@@ -966,6 +971,20 @@ class task(osv.osv):
 
     def prev_type(self, cr, uid, ids, *args):
         return self._change_type(cr, uid, ids, False, *args)
+
+    # Overridden to reset the kanban_state to normal whenever
+    # the stage (type_id) of the task changes.
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        if vals and not 'kanban_state' in vals and 'type_id' in vals:
+            new_stage = vals.get('type_id')
+            vals_reset_kstate = dict(vals, kanban_state='normal')
+            for t in self.browse(cr, uid, ids, context=context):
+                write_vals = vals_reset_kstate if t.type_id != new_stage else vals 
+                super(task,self).write(cr, uid, [t.id], write_vals, context=context)
+            return True
+        return super(task,self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         if context == None:
