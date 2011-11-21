@@ -39,13 +39,12 @@ DEFAULT_MODULES = {
     'Accounting & Finance' : ['account'],
     'Purchase Management' : ['purchase'],
     'Human Resources' : ['hr',],
-    'Point of Sales' : ['point_of_sale',],
+    'Point of Sale' : ['point_of_sale',],
     'Marketing' : ['marketing',],
 }
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
-
     _inherit = 'res.config.installer'
 
     _columns = {
@@ -311,10 +310,7 @@ class base_setup_installer(osv.osv_memory):
                 cr.commit()
                 self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
 
-        if 'html' in context:
-            return {'type' : 'ir.actions.reload'}
-        else:
-            return {'type' : 'ir.actions.act_window_close'}
+        return self.pool.get('res.config').next(cr, uid, [], context=context)
 
 #Migrate data from another application Conf wiz
 

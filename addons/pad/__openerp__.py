@@ -22,5 +22,8 @@ Lets the company customize which Pad installation should be used to link to new 
     'web': True,
     'certificate' : '001183545978470526509',
     'js': ['static/src/js/pad.js'],
+    'qweb' : [
+        "static/src/xml/*.xml",
+    ],
     'images': ['static/src/img/pad_link_companies.jpeg'],
 }

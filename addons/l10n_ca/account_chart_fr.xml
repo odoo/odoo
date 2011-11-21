@@ -89,6 +89,7 @@
 		<field name="parent_id" ref="chart115_fr"/>
 		<field name="type">receivable</field>
 		<field name="user_type" ref="user_type_tiers_receiv_fr" />
+		<field name="reconcile" eval="True"/>
 		<field name="name">Comptes clients</field>
 	</record>
 
@@ -129,6 +130,7 @@
 		<field name="parent_id" ref="chart118_fr"/>
 		<field name="type">receivable</field>
 		<field name="user_type" ref="user_type_tiers_receiv_fr" />
+		<field name="reconcile" eval="True"/>
 		<field name="name">TPS à recevoir</field>
 	</record>
 
@@ -137,6 +139,7 @@
 		<field name="parent_id" ref="chart118_fr"/>
 		<field name="type">receivable</field>
 		<field name="user_type" ref="user_type_tiers_receiv_fr" />
+		<field name="reconcile" eval="True"/>
 		<field name="name">TVP/TVQ à recevoir</field>
 	</record>
 
@@ -145,6 +148,7 @@
 		<field name="parent_id" ref="chart118_fr"/>
 		<field name="type">receivable</field>
 		<field name="user_type" ref="user_type_tiers_receiv_fr" />
+		<field name="reconcile" eval="True"/>
 		<field name="name">TVH à recevoir</field>
 	</record>
 
@@ -227,6 +231,7 @@
 		<field name="parent_id" ref="chart211_fr"/>
 		<field name="type">payable</field>
 		<field name="user_type" ref="user_type_tiers_payable_fr" />
+		<field name="reconcile" eval="True"/>
 		<field name="name">Comptes fournisseurs</field>
 	</record>
 
@@ -251,6 +256,7 @@
 		<field name="parent_id" ref="chart213_fr"/>
 		<field name="type">payable</field>
 		<field name="user_type" ref="user_type_tiers_payable_fr" />
+		<field name="reconcile" eval="True"/>
 		<field name="name">TPS à payer</field>
 	</record>
 
@@ -259,6 +265,7 @@
 		<field name="parent_id" ref="chart213_fr"/>
 		<field name="type">payable</field>
 		<field name="user_type" ref="user_type_tiers_payable_fr" />
+		<field name="reconcile" eval="True"/>
 		<field name="name">TVP/TVQ à payer</field>
 	</record>
 
@@ -267,6 +274,7 @@
 		<field name="parent_id" ref="chart213_fr"/>
 		<field name="type">payable</field>
 		<field name="user_type" ref="user_type_tiers_payable_fr" />
+		<field name="reconcile" eval="True"/>
 		<field name="name">TVH à payer</field>
 	</record>
 
@@ -517,7 +525,7 @@
 	</record>
 	
 	<record id="chart5113_fr" model="account.account.template">
-		<field name="code">513</field>
+		<field name="code">5113</field>
 		<field name="parent_id" ref="chart511_fr"/>
 		<field name="type">other</field>
 		<field name="user_type" ref="user_type_produit_fr" />

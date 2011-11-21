@@ -1,54 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- res.bank base form-->    
         <record model="ir.ui.view" id="view_res_bank_form">
             <field name="name">res.bank.form</field>
             <field name="model">res.bank</field>
             <field name="type">form</field>
+            <field name="sequence" eval="9" />
             <field name="inherit_id" ref="base.view_res_bank_form"/>
             <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="code"/>
+                </field>
                 <field name="bic" position="after">
                     <field name="clearing"/>
                 </field>
             </field>
         </record>
         
+        <!-- res.bank base tree-->
         <record model="ir.ui.view" id="l10nch_view_res_bank_tree">
             <field name="name">res.bank.tree</field>
             <field name="model">res.bank</field>
             <field name="type">tree</field>
+            <field name="sequence" eval="9" />
             <field name="inherit_id" ref="base.view_res_bank_tree"/>
             <field name="arch" type="xml">
-                <field name="code" position="after">
+                <field name="name" position="after">
+                    <field name="code" select="1"/>
                     <field name="clearing" select="1"/>
                 </field>
             </field>
         </record>
-
-        <record model="ir.ui.view" id="l10nch_view_res_partner_bank">
-            <field name="name">res.partner_bank.form</field>
-            <field name="model">res.partner.bank</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_partner_bank_form"/>
-            <field name="arch" type="xml">
-                <field name="country_id" position="after">
-                    <field name="print_bank"/>
-                    <field name="print_account"/>
-                </field>
-            </field>
-        </record>
-         <record model="ir.ui.view" id="l10nch_view_res_partner_bank">
-            <field name="name">res.partner_partner_bank.form</field>
+        
+        <!-- res.partner.bank in res partner form-->
+        <!-- Partner -> Bank Details -->
+        
+        <record model="ir.ui.view" id="l10nch_view_res_partner_bank_hide_f1">
+            <field name="name">res.partner_bank.form.hide.f1</field>
             <field name="model">res.partner</field>
             <field name="type">form</field>
+            <field name="sequence" eval="9" />
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
-                <field name="bank" position="after">
-                    <newline />
-                    <field name="print_bank"/>
-                    <field name="print_account"/>
+                <field name="acc_number" position="replace">
                 </field>
             </field>
         </record>
+        <record model="ir.ui.view" id="l10nch_view_res_partner_bank_hide_f2">
+            <field name="name">res.partner_bank.form.hide.f2</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="sequence" eval="9" />
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <field name="bank" position="replace">
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="l10nch_view_res_partner_bank_add_groups">
+            <field name="name">res.partner_bank.form.hide.f2</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="sequence" eval="10" />
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <newline/>
+                    <separator colspan="4" string="Account infos"/>
+                    <group string="Bank account info" colspan="4" attrs="{'invisible': [('state','in', ['bvpost','bvrpost'])]}" >
+                        <field name="acc_number" string="Account/IBAN Number" attrs="{'required': [('state','not in',['bvpost','bvrpost'])]}"/>
+                        <field name="dta_code"/>
+                        <newline/>
+                    </group>
+                    <newline/>
+                    <group string="Postal account info" colspan="4"  attrs="{'invisible': [('state','not in', ['bvpost','bvrpost','bvbank','bvrbank'])]}" >
+                        <field name="post_number" attrs="{'required': [('state','in',['bvpost','bvrpost','bvrbank'])]}"/>
+                        <newline/>
+                    </group>
+                    <separator colspan="4" string="Financial institute infos"/>
+                    <field name="bank" />
+                </field>
+            </field>
+        </record>
+
+
+        <!-- res.partner.bank base form-->
+        <!-- Sales -> Configuration -> Address Book -> Bank accounts -->
+        <!-- Invoice -> Bank account -->
+
+        <record model="ir.ui.view" id="l10nch_view_res_partner_bank_acc_number_hide_frominvoice">
+            <field name="name">res.partner_bank.form.hide.acc_number.frominvoice</field>
+            <field name="model">res.partner.bank</field>
+            <field name="type">form</field>
+            <field name="sequence" eval="9" />
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="acc_number" position="replace">
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="l10nch_view_res_partner_bank_hide_bank_frominvoice2">
+            <field name="name">res.partner_bank.form.hide.bank.frominvoice</field>
+            <field name="model">res.partner.bank</field>
+            <field name="type">form</field>
+            <field name="sequence" eval="9" />
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="bank" position="replace"> 
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="l10nch_view_res_partner_bank_from_invoice">
+            <field name="name">res.partner_bank.form.hide.frominvoice</field>
+            <field name="model">res.partner.bank</field>
+            <field name="type">form</field>
+            <field name="sequence" eval="10"/>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <newline/>
+                    
+                    <separator colspan="4" string="Account infos"/>
+                        <newline/>
+                    <group string="Bank account info" colspan="4" attrs="{'invisible': [('state','in', ['bvpost','bvrpost'])]}" >
+                            <field name="acc_number" string="Account/IBAN Number" attrs="{'required': [('state','not in',['bvpost','bvrpost'])]}"/>
+                            <field name="dta_code"/>
+                        <newline/>
+                    </group>
+                    <newline/>
+                    <group string="Postal account info" colspan="4"  attrs="{'invisible': [('state','not in', ['bvpost','bvrpost','bvbank','bvrbank'])]}" >
+                        <field name="post_number" attrs="{'required': [('state','in',['bvpost','bvrpost','bvrbank'])]}"/>
+                        <newline/>
+                    </group>
+                    <separator colspan="4" string="Financial institute infos"/>
+                    <newline/>
+                    <field name="my_bank"  attrs="{'invisible': [('company_id', '!=', True)]}" colspan="4"/>
+                    <group string="BVR print options" colspan="4"  attrs="{'invisible': [('my_bank', '!=', True)]}" >
+                        <field name="bvr_adherent_num"/>
+                        <field name="print_bank"/>
+                        <field name="print_account"/>
+                        <newline/>
+                    </group>
+                    <newline/>
+                    <field name="bank" />
+                </field>
+            </field>
+        </record>        
+
+        <!-- res.partner form bank list-->
+        <!-- Adding Type and bank name -->
+        <record id="l10nch_view_partner_bank_details_list" model="ir.ui.view">
+            <field name="name">res.partner.form.bank_details.list</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page/field[@name='bank_ids']/tree/field[@name='acc_number']" position="before">
+                    <field name="state" />
+                    <field name="bank" /> 
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- res.partner form bank list-->
+        <!-- Adding Type and bank name -->
+        <record id="l10nch_view_partner_bank_invoice_tree" model="ir.ui.view">
+            <field name="name">res.partner.bank.tree.from_invoice</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_tree"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="acc_number" position="before">
+                    <field name="state" />
+                    <field name="bank" />
+                </field> 
+            </field>
+        </record>
+
+
     </data>
 </openerp>

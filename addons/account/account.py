@@ -144,7 +144,7 @@ class account_account_type(osv.osv):
             ('none','/'),
             ('income','Profit & Loss (Income Accounts)'),
             ('expense','Profit & Loss (Expense Accounts)'),
-            ('asset','Balance Sheet (Assets Accounts)'),
+            ('asset','Balance Sheet (Asset Accounts)'),
             ('liability','Balance Sheet (Liability Accounts)')
         ],'P&L / BS Category', select=True, readonly=False, help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
         'note': fields.text('Description'),
@@ -404,7 +404,7 @@ class account_account(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True),
+        'name': fields.char('Name', size=256, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, required=True, select=1),
         'type': fields.selection([
@@ -431,9 +431,9 @@ class account_account(osv.osv):
         'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
         'foreign_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Foreign Balance', multi='balance',
                                            help="Total amount (in Secondary currency) for transactions held in secondary currency for this account."),
-        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance', 
+        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance',
                                             help="Total amount (in Company currency) for transactions held in secondary currency for this account."),
-        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance', 
+        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance',
                                                 help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this box if this account allows reconciliation of journal items."),
         'exchange_rate': fields.related('currency_id', 'rate', type='float', string='Exchange Rate', digits=(12,6)),
@@ -2001,8 +2001,11 @@ class account_tax(osv.osv):
                 cur_price_unit+=amount2
         return res
 
-    def compute_all(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
+    def compute_all(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None, force_excluded=False):
         """
+        :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of
+            tax. It's used in encoding by line where you don't matter if you encoded a tax with that boolean to True or
+            False
         RETURN: {
                 'total': 0.0,                # Total without taxes
                 'total_included: 0.0,        # Total with taxes
@@ -2014,10 +2017,10 @@ class account_tax(osv.osv):
         tin = []
         tex = []
         for tax in taxes:
-            if tax.price_include:
-                tin.append(tax)
-            else:
+            if not tax.price_include or force_excluded:
                 tex.append(tax)
+            else:
+                tin.append(tax)
         tin = self.compute_inv(cr, uid, tin, price_unit, quantity, address_id=address_id, product=product, partner=partner)
         for r in tin:
             totalex -= r.get('amount', 0.0)
@@ -2183,6 +2186,7 @@ class account_model(osv.osv):
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         pt_obj = self.pool.get('account.payment.term')
+        period_obj = self.pool.get('account.period')
 
         if context is None:
             context = {}
@@ -2190,14 +2194,14 @@ class account_model(osv.osv):
         if datas.get('date', False):
             context.update({'date': datas['date']})
 
-        period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date', False))
-        if not period_id:
-            raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
-        period_id = period_id[0]
-
         move_date = context.get('date', time.strftime('%Y-%m-%d'))
         move_date = datetime.strptime(move_date,"%Y-%m-%d")
         for model in self.browse(cr, uid, ids, context=context):
+            ctx = context.copy()
+            ctx.update({'company_id': model.company_id.id})
+            period_ids = period_obj.find(cr, uid, dt=context.get('date', False), context=ctx)
+            period_id = period_ids and period_ids[0] or False
+            ctx.update({'journal_id': model.journal_id.id,'period_id': period_id})
             try:
                 entry['name'] = model.name%{'year': move_date.strftime('%Y'), 'month': move_date.strftime('%m'), 'date': move_date.strftime('%Y-%m')}
             except:
@@ -2246,9 +2250,7 @@ class account_model(osv.osv):
                     'date': context.get('date',time.strftime('%Y-%m-%d')),
                     'date_maturity': date_maturity
                 })
-                c = context.copy()
-                c.update({'journal_id': model.journal_id.id,'period_id': period_id})
-                account_move_line_obj.create(cr, uid, val, context=c)
+                account_move_line_obj.create(cr, uid, val, context=ctx)
 
         return move_ids
 
@@ -2395,7 +2397,7 @@ class account_account_template(osv.osv):
     _description ='Templates for Accounts'
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True),
+        'name': fields.char('Name', size=256, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, select=1),
         'type': fields.selection([
@@ -2803,7 +2805,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         res['value']["sale_tax"] = False
         res['value']["purchase_tax"] = False
         if chart_template_id:
-            # default tax is given by the lowesst sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
+            # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while installing the generic chart of accounts
             sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
                                           , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence, id desc")
             purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
@@ -3120,7 +3122,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             tmp = line.acc_name
             dig = obj_multi.code_digits
             if not ref_acc_bank.code:
-                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of account hasn\'t a code.'))
+                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of accounts hasn\'t a code.'))
             while True:
                 new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
                 ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company_id)])

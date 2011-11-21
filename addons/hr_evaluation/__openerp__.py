@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Periodic Evaluations",
+    "name" : "HR Periodic Appraisals",
     "version": "0.1",
     "author": "OpenERP SA",
     "category": "Human Resources",
