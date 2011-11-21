@@ -250,9 +250,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             return null;
         }
 
-        var method = call[1], args = [], context_index = null;
+        var method = call[1];
         if (!_.str.trim(call[2])) {
-            return {method: method, args: args, context_index: context_index}
+            return {method: method, args: [], context_index: null}
         }
 
         var argument_replacement = {
@@ -265,20 +265,18 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 return ctx;
             }
         };
-        var parent_fields = null;
-        _.each(call[2].split(','), function (a, i) {
+        var parent_fields = null, context_index = null;
+        var args = _.map(call[2].split(','), function (a, i) {
             var field = _.str.trim(a);
 
             // literal constant or context
             if (field in argument_replacement) {
-                args.push(argument_replacement[field](i));
-                return;
+                return argument_replacement[field](i);
             }
             // form field
             if (self.fields[field]) {
                 var value = self.fields[field].get_on_change_value();
-                args.push(value == null ? false : value);
-                return;
+                return value == null ? false : value;
             }
             // parent field
             var splitted = field.split('.');
@@ -288,16 +286,14 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 }
                 var p_val = parent_fields[_.str.trim(splitted[1])];
                 if (p_val !== undefined) {
-                    args.push(p_val == null ? false : p_val);
-                    return;
+                    return p_val == null ? false : p_val;
                 }
             }
             // string literal
             var first_char = field[0], last_char = field[field.length-1];
             if ((first_char === '"' && last_char === '"')
                 || (first_char === "'" && last_char === "'")) {
-                args.push(field.slice(1, -1));
-                return;
+                return field.slice(1, -1);
             }
 
             throw new Error("Could not get field with name '" + field +
