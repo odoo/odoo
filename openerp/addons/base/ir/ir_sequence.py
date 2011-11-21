@@ -38,7 +38,7 @@ class ir_sequence_type(openerp.osv.osv.osv):
         ('code_unique', 'unique(code)', '`code` must be unique.'),
     ]
 
-def _code_get(self, cr, uid, context={}):
+def _code_get(self, cr, uid, context=None):
     cr.execute('select code, name from ir_sequence_type')
     return cr.fetchall()
 
