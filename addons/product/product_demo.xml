@@ -321,6 +321,19 @@
             <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
+        <record id="product_product_sprouting" model="product.product">
+            <field name="default_code">Sprouting</field>
+            <field name="supply_method">buy</field>
+            <field name="list_price">250.0</field>
+            <field name="standard_price">200.0</field>
+            <field name="uom_id" ref="product_uom_kgm"/>
+            <field name="uom_po_id" ref="product_uom_kgm"/>
+            <field name="procure_method">make_to_stock</field>
+            <field name="sale_delay">7.0</field>
+            <field name="name">Sprouting Foods</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_marketableproduct0"/>
+        </record> 
         <record id="product_product_tow1" model="product.product">
             <field name="default_code">TOW1</field>
             <field name="list_price">37.5</field>

@@ -1,14 +1,6 @@
 -
   In order to test the stock module, I will update the current stock of the product.
 - 
-  I assign a chain location cold storage to test the chained location flow.
-- 
-  !record {model: stock.location, id: stock_location_stock}:
-    chained_auto_packing: auto
-    chained_location_type: fixed
-    chained_location_id: stock.chain_location_1
-    usage: internal
-- 
   I assignd the created location in to warehouse.
 - 
   !record {model: stock.warehouse, id: stock.warehouse0}:
@@ -52,3 +44,29 @@
   !python {model: stock.move}: |
     ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_cpu2'))])
     assert [x.state for x in self.browse(cr, uid, ids) if x.state == 'done'], 'stock moves should be done!'
+
+- 
+  Now for the test chain location functionality,
+  I update product 'Sprouting Foods' with the help of 'Change Product Quantity' wizard
+  and assign a location 'Refrigerated Vehicles' to test the chained location flow.
+- 
+  !python {model: stock.change.product.qty}: |
+    product = self.pool.get('product.product').browse(cr, uid, ref('product.product_product_sprouting'))
+    fields = {'location_id' : ref('refrigerate_location_stock'), 'new_quantity': 1, 'product_id': product.id}
+    ids = self.create(cr, uid, fields)
+    self.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
+
+-
+  I check stock moves of product 'Sprouting Foods'.
+-
+  !python {model: stock.move}: |
+    ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_sprouting'))])
+    for i in self.browse(cr, uid, ids):
+      assert i.product_qty >= 1,"Product is not correspond"
+      if i.location_id.name == 'Inventory loss':
+        assert i.location_dest_id.name == 'Refrigerated Vehicles',"Destination location must be 'Refrigerated Vehicles'"
+      if i.location_id.name == 'Refrigerated Vehicles':
+        assert i.location_dest_id.name == 'Cold Storage',"Destination location must be 'Cold Storage' because the source location is 'Refrigerated Vehicles'"
+      if i.location_id.name == 'Cold Storage':
+        assert i.location_dest_id.name == 'Customers',"Destination location must be 'Customers' because the source location is 'Cold Storage'"
+      
