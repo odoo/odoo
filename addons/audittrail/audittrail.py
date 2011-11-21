@@ -332,7 +332,7 @@ class audittrail_objects_proxy(object_proxy):
                     continue
                 values[field] = resource[field]
                 # get the textual value of that field for this record
-                values_text[field] = self.get_value_text(cr, 1, pool, resource_pool, method, field, resource[field], False)
+                values_text[field] = self.get_value_text(cr, 1, pool, resource_pool, method, field, resource[field])
 
                 field_obj = resource_pool._all_columns.get(field).column
                 if field_obj._type in ('one2many','many2many'):
