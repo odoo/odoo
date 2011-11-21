@@ -165,7 +165,7 @@ openerp.point_of_sale = function(db) {
     var App, CashRegister, CashRegisterCollection, Category, CategoryCollection, CategoryWidget,
     NumpadState, NumpadWidget, Order, OrderButtonView, OrderCollection, OrderWidget, Orderline,
     OrderlineCollection, OrderlineWidget, PaymentButtonWidget, PaymentView, Paymentline,
-    PaymentlineCollection, PaymentlineView, PaypadWidget, Product, ProductCollection,
+    PaymentlineCollection, PaymentlineWidget, PaypadWidget, Product, ProductCollection,
     ProductListWidget, ProductWidget, ReceiptLineView, ReceiptView, Shop, ShopView, StepsWidget;
 
     /*
@@ -779,6 +779,7 @@ openerp.point_of_sale = function(db) {
     ProductListWidget = db.web.Widget.extend({
         init: function(parent, element_id, options) {
             this._super(parent, element_id);
+            this.model = options.model;
             this.shop = options.shop;
             this.shop.get('products').bind('reset', this.render_element, this);
         },
@@ -797,22 +798,19 @@ openerp.point_of_sale = function(db) {
     /*
      "Payment" step.
      */
-    PaymentlineView = (function() {
-        __extends(PaymentlineView, Backbone.View);
-        function PaymentlineView() {
-            PaymentlineView.__super__.constructor.apply(this, arguments);
-        }
-
-        PaymentlineView.prototype.tagName = 'tr';
-        PaymentlineView.prototype.className = 'paymentline';
-        PaymentlineView.prototype.template = qweb_template('pos-paymentline-template');
-        PaymentlineView.prototype.initialize = function() {
-            return this.model.bind('change', this.render, this);
-        };
-        PaymentlineView.prototype.events = {
-            'keyup input': 'changeAmount'
-        };
-        PaymentlineView.prototype.changeAmount = function(event) {
+    PaymentlineWidget = db.web.Widget.extend({
+        tag_name: 'tr',
+        template_fct: qweb_template('pos-paymentline-template'),
+        init: function(parent, element_id, options) {
+            this._super(parent, element_id);
+            this.model = options.model;
+            this.model.bind('change', this.render_element, this);
+        },
+        start: function () {
+            this.$element.addClass('paymentline');
+            $('input', this.$element).keyup(_.bind(this.changeAmount, this));
+        },
+        changeAmount: function(event) {
             var newAmount;
             newAmount = event.currentTarget.value;
             if (newAmount && !isNaN(newAmount)) {
@@ -820,15 +818,16 @@ openerp.point_of_sale = function(db) {
                     amount: parseFloat(newAmount)
                 });
             }
-        };
-        PaymentlineView.prototype.render = function() {
-            return $(this.el).html(this.template({
+        },
+        render_element: function() {
+            debugger;
+            this.$element.html(this.template_fct({
                 name: (this.model.get('journal_id'))[1],
                 amount: this.model.get('amount')
             }));
-        };
-        return PaymentlineView;
-    })();
+            return this;
+        },
+    });
     PaymentView = (function() {
         __extends(PaymentView, Backbone.View);
         function PaymentView() {
@@ -876,16 +875,18 @@ openerp.point_of_sale = function(db) {
             return this.render();
         };
         PaymentView.prototype.addPaymentLine = function(newPaymentLine) {
-            return this.paymentLineList().append((new PaymentlineView({
+            var x = new PaymentlineWidget(null, null, {
                     model: newPaymentLine
-                })).render());
+                });
+            x.appendTo(this.paymentLineList());
         };
         PaymentView.prototype.render = function() {
             this.paymentLineList().empty();
             this.currentPaymentLines.each(__bind( function(paymentLine) {
-                return this.paymentLineList().append((new PaymentlineView({
-                        model: paymentLine
-                    })).render());
+                var x = new PaymentlineWidget(null, null, {
+                    model: paymentLine
+                });
+                return this.paymentLineList().append(x);
             }, this));
             return this.updatePaymentSummary();
         };
