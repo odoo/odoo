@@ -31,7 +31,7 @@ class res_partner_bank(osv.osv):
     _inherit = "res.partner.bank"
 
     def _check_key(self, cr, uid, ids):
-        print """Check the RIB key"""
+        """Check the RIB key"""
         for bank_acc in self.browse(cr, uid, ids):
             # Ignore the accounts of type other than rib
             if bank_acc.state !='rib':
@@ -43,11 +43,9 @@ class res_partner_bank(osv.osv):
             or not bank_acc.acc_number or len(bank_acc.acc_number) != 11
             or not bank_acc.key or len(bank_acc.key) != 2):
                 return False
-            
             # Get the rib data (without the key)
             rib = "%s%s%s" % (bank_acc.bank_code, bank_acc.office,
                               bank_acc.acc_number)
-            print rib
             # Translate letters into numbers according to a specific table
             #    (notice how s -> 2)
             # Note: maketrans and translate work best with latin1 - that
@@ -57,10 +55,8 @@ class res_partner_bank(osv.osv):
             rib = rib.lower().encode('latin-1').translate(
                 string.maketrans(u'abcdefghijklmnopqrstuvwxyz',
                                  u'12345678912345678923456789'))
-            print rib
             # compute the key
             key = 97 - (100 * int(rib)) % 97
-            print int(bank_acc.key), key
             if int(bank_acc.key) != key:
                 return False
         return True
