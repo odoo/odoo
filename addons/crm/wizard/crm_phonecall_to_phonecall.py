@@ -31,6 +31,8 @@ class crm_phonecall2phonecall(osv.osv_memory):
     _columns = {
         'name' : fields.char('Call summary', size=64, required=True, select=1),
         'user_id' : fields.many2one('res.users',"Assign To"),
+        'contact_name':fields.char('Contact', size=64),
+        'phone':fields.char('Phone', size=64),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                 domain="['|',('section_id','=',False),('section_id','=',section_id),\
                 ('object_id.model', '=', 'crm.phonecall')]"), 
@@ -38,6 +40,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
         'section_id':fields.many2one('crm.case.section','Sales Team'),
         'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True),
         'partner_id' : fields.many2one('res.partner', "Partner"),
+        'note':fields.text('Note')
     }
 
 
