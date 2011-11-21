@@ -18,7 +18,7 @@
 -
   I click on the "Make Payment" wizard to pay the PoS order
 - 
-  !record {model: pos.make.payment, id: pos_make_payment_2, context: {'active_id': ref('pos_order_pos1'), 'active_ids': [ref('pos_order_pos1')]} }:
+  !record {model: pos.make.payment, id: pos_make_payment_2, context: '{"active_id": ref("pos_order_pos1"), "active_ids": [ref("pos_order_pos1")]}' }:
     amount: !eval >
         (450*2 + 300*3*1.05)*0.95
 -

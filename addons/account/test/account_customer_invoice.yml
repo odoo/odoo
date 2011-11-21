@@ -1,23 +1,46 @@
 -
   In order to test account invoice I create a new customer invoice
 -
-  !record {model: account.invoice, id: account_invoice_customer0}:
-    account_id: account.a_recv
-    address_contact_id: base.res_partner_address_zen
-    address_invoice_id: base.res_partner_address_zen
+  I will create bank detail
+-
+  !record {model: res.partner.bank, id: res_partner_bank_0}:
+    state: bank
     company_id: base.main_company
-    currency_id: base.EUR
-    date_invoice: !eval time.strftime('%Y-%m-%d')
-    invoice_line:
-      - account_id: account.a_sale
-        name: '[PC3] Medium PC'
-        price_unit: 900.0
-        quantity: 10.0
-        product_id: product.product_product_pc3
-        uos_id: product.product_uom_unit
+    partner_id: base.main_partner
+    acc_number: 123456789
+    footer: True
+    bank: base.res_bank_1
+    bank_name: Reserve
+-
+  I create a customer invoice
+-
+  !record {model: account.invoice, id: account_invoice_customer0, view: invoice_form}:
+    payment_term: account.account_payment_term_advance
+    partner_bank_id: res_partner_bank_0
     journal_id: account.sales_journal
     partner_id: base.res_partner_3
     reference_type: none
+    name: 'Test Customer Invoice'
+    invoice_line:
+      - product_id: product.product_product_pc3
+        quantity: 10.0
+-
+  I manually assign tax on invoice
+-
+  !python {model: account.invoice.tax}: |
+    amt = self.amount_change(cr, uid, [], 50.0, ref('base.EUR'), ref('base.main_company'), False)
+    base_amt = self.base_change(cr, uid, [], 9000.0, ref('base.EUR'), ref('base.main_company'), False)
+    invoice_tax_line = {
+        'name':  'Test Tax for Customer Invoice',
+        'manual': 1,
+        'base': base_amt['value']['base_amount'],
+        'amount': amt['value']['tax_amount'],
+        'account_id': ref('account.ova'),
+        'invoice_id': ref("account_invoice_customer0"),
+        }
+    tax = self.create(cr, uid, invoice_tax_line)
+    assert tax, "Tax has not been assigned correctly"
+
 -
   I check that Initially customer invoice is in the "Draft" state
 -
@@ -54,6 +77,23 @@
   !python {model: account.invoice}: |
     acc_id=self.browse(cr, uid, ref("account_invoice_customer0"))
     assert acc_id.move_id, "Move not created for open invoice"
+-
+  I pay the Invoice
+-
+  !python {model: account.invoice}: |
+    import time
+    pay = self.pay_and_reconcile(cr, uid, [ref('account_invoice_customer0')],
+        9050.0, ref('cash'), ref('account.period_10'),
+        ref('bank_journal'), ref('cash'),
+        ref('account.period_10'), ref('bank_journal'),
+        name='Payment for test customer invoice')
+    assert (pay == True), "Incorrect Payment"
+-
+  I verify that invoice is now in Paid state
+-
+  !python {model: account.invoice}: |
+    inv = self.browse(cr, uid, ref("account_invoice_customer0"))
+    assert (inv.state == 'paid'), "Invoice is not in Paid state"
 -
   I refund the invoice Using Refund Button
 -

@@ -1,29 +1,10 @@
 -
   In order to test hr_timesheet_sheet module in OpenERP, I create timesheet and check validation process done by manager.
 -
-  I will create a company and set maximum allowed difference between timesheet and attendance to 1 hour
--
-  !record {model: res.company, id: res_company_openERP}:
-    currency_id: base.ARS
-    name: OpenERP SA
-    partner_id: base.res_partner_desertic_hispafuentes
-    timesheet_max_difference: 1.0
-
--
-  I assign this company to Admin user
--
-  !record {model: res.users, id: base.user_root}:
-    company_id: res_company_openERP
-    company_ids:
-      - base.main_company
-      - res_company_openERP
-
--
-  I  create a new employee “Mark Johnson”.
+  I  create a new employee "Mark Johnson".
 -
   !record {model: hr.employee, id: hr_employee_employee0}:
     address_home_id: base.res_partner_address_1
-    company_id: res_company_openERP
     gender: male
     marital: single
     name: Mark Johnson
@@ -71,13 +52,30 @@
     user_id: base.user_demo
     employee_id: 'hr_employee_employee0'
 -
-  Now , at the time of login, I create Attendances and perform "Sign In" action.
+  Now, at the time of login, I create Attendances and perform "Sign In" action.
 -
-  !record {model: hr.attendance, id: hr_attendance_0}:
-    action: sign_in
-    employee_id: 'hr_employee_employee0'
-    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(max(0,datetime.now().hour-1),max(0,datetime.now().minute-1),max(0,datetime.now().second-1))
-
+  !python {model: hr_timesheet_sheet.sheet}:
+    self.sign_in(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {})
+-
+  I want to check attendance and work of yesterday. I click on <- button.
+-
+  !python {model: hr_timesheet_sheet.sheet}: |
+     self.date_previous(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
+-
+  Then I click on "Today" button to fill today's timesheet.
+-
+  !python {model: hr_timesheet_sheet.sheet}: |
+     self.date_today(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
+-
+  I want to go to a particular date and see attendance then I select the date and click on "Go to:" button.
+-
+  !python {model: hr_timesheet_sheet.sheet}: |
+     self.button_dummy(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
+-
+  I can also move to next day by clicking on -> button.
+-
+  !python {model: hr_timesheet_sheet.sheet}: |
+     self.date_next(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
 -
   At the time of logout, I create attendance and perform "Sign Out".
 -
@@ -88,7 +86,6 @@
 
 -
   I create Timesheet Entry for time spend on today work.
-
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:

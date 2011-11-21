@@ -1,8 +1,12 @@
 <openerp>
     <data>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_sale_salesman,base.group_sale_manager"/>
+        <menuitem icon="terp-partner"
+            id="base.menu_base_partner" name="Sales"
+            sequence="0" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
-        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
+        <menuitem id="base.menu_sales" name="Sales"
+            parent="base.menu_base_partner" sequence="1"
+            />
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
 
@@ -136,7 +140,7 @@
                                             <field name="price_unit"/>
 
                                             <field groups="product.group_uos" name="product_uos_qty"/>
-                                            <field groups="product.group_uos" name="product_uos"/>
+                                            <field groups="product.group_uos" name="product_uos" nolabel="1"/>
                                             <newline/>
                                             <field name="product_packaging"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}" on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)"
@@ -485,8 +489,8 @@
             src_model="product.product"
             groups="base.group_sale_salesman"/>
 
-        <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5" groups="-base.group_extended"/>
-        <menuitem id="menu_invoicing_sales_order_lines" parent="menu_invoiced" action="action_order_line_tree2" sequence="2" groups="base.group_no_one"/>
+        <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5" groups="-base.group_extended"/>
+        <menuitem id="menu_invoicing_sales_order_lines" parent="base.menu_invoiced" action="action_order_line_tree2" sequence="2" groups="base.group_no_one"/>
 
         <!-- configartion view -->
 

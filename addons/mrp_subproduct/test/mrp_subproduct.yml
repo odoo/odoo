@@ -106,14 +106,11 @@
 -
   !record {model: mrp.production, id: mrp_production_mo0}:
     bom_id: mrp_bom_woodenchair0
-    company_id: base.main_company
     date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     location_dest_id: stock.stock_location_stock
     location_src_id: stock.stock_location_stock
-    name: MO/00004
     product_id: product_product_woodenchair0
     product_qty: 10.0
-    product_uom: product.product_uom_unit
     product_uos_qty: 0.0
 -
   I compute the data of production order.

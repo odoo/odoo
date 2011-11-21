@@ -34,9 +34,9 @@ class procurement_order(osv.osv):
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
         project_obj = self.pool.get('project.project')
+        uom_obj = self.pool.get('product.uom')
+        default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
         for procurement in self.browse(cr, uid, ids, context=context):
-            # project_id = the product's associated project if it exists,
-            #              the sales order's associated project otherwise
             project_id = False
             if procurement.product_id.project_id:
                 project_id = procurement.product_id.project_id.id
@@ -45,10 +45,12 @@ class procurement_order(osv.osv):
                 if account_id:
                     project_ids = project_obj.search(cr, uid, [('analytic_account_id', '=', account_id)])
                     project_id = project_ids and project_ids[0] or False
-            
-            # create task under the project
+            if procurement.product_uom.id != default_uom:
+                planned_hours = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, default_uom)
+            else:
+                planned_hours = procurement.product_qty
+
             self.write(cr, uid, [procurement.id], {'state': 'running'})
-            planned_hours = procurement.product_qty
             task_id = self.pool.get('project.task').create(cr, uid, {
                 'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
                 'date_deadline': procurement.date_planned,

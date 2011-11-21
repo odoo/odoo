@@ -6,6 +6,7 @@
         -->
 
         <!-- Project Phases -->
+
         <record id="project_phase_1" model="project.phase">
             <field eval="[(6, 0, [])]" name="previous_phase_ids"/>
             <field name="name">Collect Requirement and Make SRS</field>
@@ -15,6 +16,8 @@
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
+        <function model="project.phase" name="set_open" eval="[ref('project_phase_1')]"/>
+        
         <record id="project_phase_2" model="project.phase">
             <field eval="[(6, 0, [ref('project_phase_1')])]" name="previous_phase_ids"/>
             <field name="name">Design Model</field>
@@ -23,7 +26,8 @@
             <field name="duration">20</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
-
+        <function model="project.phase" name="set_open" eval="[ref('project_phase_2')]"/>
+        
         <record id="project_phase_3" model="project.phase">
             <field eval="[(6, 0, [ref('project_phase_2')])]" name="previous_phase_ids"/>
             <field name="name">Planning and compute Risk analysis, Time chart </field>
@@ -32,7 +36,8 @@
             <field name="duration">20</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
-
+        <function model="project.phase" name="set_open" eval="[ref('project_phase_3')]"/>
+        
         <record id="project_phase_4" model="project.phase">
             <field eval="[(6, 0, [ref('project_phase_2')])]" name="previous_phase_ids"/>
             <field name="name">Development and Integration</field>
@@ -60,6 +65,7 @@
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
+        <function model="project.phase" name="set_open" eval="[ref('project_phase_6')]"/>
         <!-- Tasks -->
 
         <record id="project.project_task_1" model="project.task">
