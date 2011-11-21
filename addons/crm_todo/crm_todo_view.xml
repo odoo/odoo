@@ -46,13 +46,15 @@
 
 
     <record model="ir.actions.act_window" id="crm_todo_action">
-        <field name="name">Todo List</field>
+        <field name="name">My Tasks</field>
         <field name="res_model">project.task</field>
-        <field name="context">{'set_editable':True,'set_visible':True,'gtd':True,'user_invisible':True, 'search_default_user_id':uid, "search_default_current": 1, "search_default_open": 1, "lead_id": 1}</field>
+        <field name="context">{'set_editable':True,'set_visible':True,'gtd':True,'user_invisible':True, "search_default_open": 1, "lead_id": 1}</field>
+        <field name="search_view_id" ref="project_gtd.view_task_gtd_search"/>
+        <field name="domain">[('user_id','=',uid)]</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,gantt,graph,kanban</field>
     </record>
-    <menuitem name="Tasks"
+    <menuitem
         id="menu_crm_todo"
         parent="base.menu_sales"
         action="crm_todo_action"/>

@@ -344,6 +344,7 @@
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('category_ids','=', active_ids)]</field>
         </record>
 
         <record id="hr_employee_category_open" model="ir.values">
@@ -351,7 +352,6 @@
             <field eval="'hr.employee.category'" name="model"/>
             <field name="name">Employees by Categories</field>
             <field eval="'ir.actions.act_window,%d'%hr_employee_normal_action_tree" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <menuitem action="open_view_categ_tree"
@@ -385,7 +385,7 @@
                         </page>
                     </notebook>
                     <group col="6" colspan="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                         <button name="job_recruitement" string="In Recruitement" states="open" type="object" icon="gtk-go-forward"/>
                         <button name="job_open" string="In Position" states="old,recruit" type="object" icon="terp-camera_test"/>
                         <button name="job_old" string="Mark as Old" states="open,recruit" type="object" icon="gtk-cancel"/>

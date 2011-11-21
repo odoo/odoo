@@ -1,0 +1,220 @@
+/** EDI content **/
+.openerp .company_logo {
+    background-size: 180px 46px;
+}
+.oe_edi_view {
+    width: 65%;
+    vertical-align: top;
+    padding: 0px 25px;
+    border-right: 1px solid #D2CFCF;
+}
+.oe_edi_sidebar_container {
+    width: 35%;
+    padding: 0px 10px;
+    vertical-align: top;
+}
+button.oe_edi_action_print {
+    font-size: 1.5em;
+    margin-left: 35%;
+    margin-bottom: 20px;
+}
+button.oe_edi_action_print img {
+    vertical-align: bottom;
+    width: 32px;
+    height: 32px;
+}
+
+.openerp input.invalid {
+    background-color: #F66 !important;
+    border: 1px solid #D00 !important;
+    color: #000;
+}
+/* following browse-specific hacks need to be separate rules, as browsers are
+   required to ignore rules with unknown selectors. At time of writing, there
+   is no standard way to style HTML5 placeholders */
+.openerp input.invalid:-moz-placeholder {
+    color: #FFF;
+}
+.openerp input.invalid::-webkit-input-placeholder {
+    color: #FFF;
+}
+
+/** EDI Sidebar **/
+.oe_edi_sidebar_title {
+    border-bottom: 1px solid #D2CFCF;
+    font-weight: bold;
+    font-size: 1.3em;
+    min-width: 10em;
+}
+.oe_edi_nested_block, .oe_edi_nested_block_import, .oe_edi_nested_block_pay {
+    margin: 0px 40px;
+    min-width: 10em;
+    display: none; /* made visible by click on parent input/label */
+}
+.oe_edi_right_top .oe_edi_nested_block label {
+    float: left;
+    text-align: right;
+    margin-right: 0.5em;
+    line-height: 180%;
+    font-weight: bold;
+    min-width: 5em;
+}
+.oe_edi_option {
+    padding-left: 5px;
+    line-height: 2em;
+}
+.oe_edi_option:hover {
+    background: #e8e8e8;
+}
+.oe_edi_import_button {
+    margin: 2px 10px;
+    white-space: nowrap;
+}
+.oe_edi_small, .oe_edi_small input {
+    font-size: 90%;
+}
+
+/** Sidebar bottom **/
+.oe_edi_paypal_button {
+    margin: 6px;
+}
+
+
+/** Paperbox, from http://www.sitepoint.com/pure-css3-paper-curl/ **/
+body {
+    background: #EEE; /* contrast with paper */
+}
+.oe_edi_paperbox {
+    position: relative;
+    width: 700px;
+    padding: 30px;
+    padding-bottom: 50px;
+    margin: 20px auto;
+    background-color: #fff;
+    -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+}
+.oe_edi_paperbox:before, .oe_edi_paperbox:after {
+    position: absolute;
+    width: 40%;
+    height: 10px;
+    content: ' ';
+    left: 12px;
+    bottom: 15px;
+    background: transparent;
+    -webkit-transform: skew(-5deg) rotate(-5deg);
+    -moz-transform: skew(-5deg) rotate(-5deg);
+    -ms-transform: skew(-5deg) rotate(-5deg);
+    -o-transform: skew(-5deg) rotate(-5deg);
+    transform: skew(-5deg) rotate(-5deg);
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+.oe_edi_paperbox:after {
+    left: auto; right: 12px;
+    -webkit-transform: skew(5deg) rotate(5deg);
+    -moz-transform: skew(5deg) rotate(5deg);
+    -ms-transform: skew(5deg) rotate(5deg);
+    -o-transform: skew(5deg) rotate(5deg);
+    transform: skew(5deg) rotate(5deg);
+}
+
+/** Sale Order / Purchase Order Preview **/
+table.oe_edi_data, .oe_edi_doc_title {
+    border-collapse: collapse;
+    clear: both;
+}
+.oe_edi_data th {
+    white-space: nowrap;
+}
+.oe_edi_data .oe_edi_floor {
+    border-bottom: 1px solid black;
+}
+.oe_edi_data .oe_edi_ceiling {
+    border-top: 1px solid black;
+}
+.oe_edi_data .oe_edi_data_row {
+    border-bottom: 1px solid #D2CFCF;
+}
+.oe_edi_data_row td {
+    vertical-align: top;
+}
+.oe_edi_inner_note {
+    font-style: italic;
+    font-size: 95%;
+    padding-left: 10px;
+}
+.oe_edi_shade {
+    background: #e8e8e8;
+}
+.oe_edi_company_name {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.oe_edi_address_from {
+    float: left;
+}
+.oe_edi_address_to {
+    float: right;
+    margin-top: 25px;
+    margin-bottom: 30px;
+}
+.oe_edi_company_block_title {
+    width: 375px;
+    margin: 0px;
+    padding: 2px 14px;
+    background-color: #252525;
+    border-top-left-radius: 5px 5px;
+    border-top-right-radius: 5px 5px;
+    background-repeat: repeat no-repeat; 
+}
+.oe_edi_company_block_title .oe_edi_company_name {
+    margin: 0px;
+    font-size: 1em;
+    color: #FFF;
+}
+.oe_edi_company_block_body {
+    width: 375px;
+    margin: 0px;
+    padding: 5px 14px;
+    line-height: 16px;
+    background-color: rgb(242, 242, 242);
+}
+.oe_edi_company_block_body p {
+    color: #222;
+    margin: 5px 0px;
+}
+.oe_edi_summary_label {
+    float: left;
+}
+.oe_edi_summary_value {
+    float: right;
+}
+
+
+/** Python code highlighting **/
+/*  GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+    (http://qbnz.com/highlighter/ and http://geshi.org/) */
+.python .de1, .python .de2 {font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;}
+.python  {font-family:monospace;}
+.python .imp {font-weight: bold; color: red;}
+.python li, .python .li1 {background: #ffffff; list-style: none;}
+.python .ln {width:1px;text-align:right;margin:0;padding:0 2px;vertical-align:top;}
+.python .li2 {background: #f8f8f8;}
+.python .kw1 {color: #ff7700;font-weight:bold;}
+.python .kw2 {color: #008000;}
+.python .kw3 {color: #dc143c;}
+.python .kw4 {color: #0000cd;}
+.python .co1 {color: #808080; font-style: italic;}
+.python .coMULTI {color: #808080; font-style: italic;}
+.python .es0 {color: #000099; font-weight: bold;}
+.python .br0 {color: black;}
+.python .sy0 {color: #66cc66;}
+.python .st0 {color: #483d8b;}
+.python .nu0 {color: #ff4500;}
+.python .me1 {color: black;}
+.python span.xtra { display:block; }
+.python ol { padding: 0px; }

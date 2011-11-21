@@ -201,7 +201,7 @@ class account_asset_asset(osv.osv):
     _columns = {
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
         'name': fields.char('Asset', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'code': fields.char('Reference ', size=16, readonly=True, states={'draft':[('readonly',False)]}),
+        'code': fields.char('Reference', size=32, readonly=True, states={'draft':[('readonly',False)]}),
         'purchase_value': fields.float('Gross value ', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'currency_id': fields.many2one('res.currency','Currency',required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),

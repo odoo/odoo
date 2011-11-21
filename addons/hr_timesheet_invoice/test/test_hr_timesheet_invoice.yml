@@ -3,11 +3,9 @@
 -
   I create an account analytic line.
 -
-  !record {model: account.analytic.line, id: account_analytic_line_developyamlforhrmodule0}:
+  !record {model: account.analytic.line, id: account_analytic_line_developyamlforhrmodule0 }:
     account_id: account.analytic_sednacom
     amount: -1.0
-    company_id: base.main_company
-    date: !eval time.strftime('%Y-%m-%d')
     general_account_id: account.a_expense
     journal_id: hr_timesheet.analytic_journal
     name: develop yaml for hr module
@@ -15,8 +13,6 @@
     product_uom_id: product.uom_hour
     to_invoice: hr_timesheet_invoice.timesheet_invoice_factor2
     unit_amount: 5.00
-    user_id: base.user_root
-
 -
   Assign partner name and price list in analytic account.
 -
@@ -77,7 +73,6 @@
   I create final invoice for this analytic account.
 -
   !record {model: hr.timesheet.invoice.create.final, id: hr_timesheet_invoice_create_final_0}:
-    balance_product: product.product_consultant
     date: 1
     name: 1
     price: 1
@@ -89,10 +84,3 @@
     import netsvc
     wkf_service = netsvc.LocalService("workflow")
     res = self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_final_0")], {"active_ids": [ref("account.analytic_sednacom")]})
-    invoice_ids = eval(res['domain'])[0][2]
-    for inv in invoice_ids:
-       wkf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_open', cr)
--
-  I can also make some theoretical revenue reports.
--
-  I can also see timesheet profit using Timesheet profit report.

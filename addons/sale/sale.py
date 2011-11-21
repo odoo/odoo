@@ -217,7 +217,7 @@ class sale_order(osv.osv):
         'partner_shipping_id': fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Shipping address for current sales order."),
 
         'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="Incoterm which stands for 'International Commercial terms' implies its a series of sales terms which are used in the commercial transaction."),
-        'picking_policy': fields.selection([('direct', 'Deliver each products when available'), ('one', 'Deliver all products at once')],
+        'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
             'Picking Policy', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
         'order_policy': fields.selection([
             ('prepaid', 'Pay before delivery'),
@@ -231,7 +231,7 @@ class sale_order(osv.osv):
   - The 'Invoice on order after delivery' choice will generate the draft invoice based on sales order after all picking lists have been finished.
   - The 'Invoice based on deliveries' choice is used to create an invoice during the picking process."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Pricelist for current sales order."),
-        'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)]}, help="The analytic account related to a sales order."),
+        'project_id': fields.many2one('account.analytic.account', 'Contract/Analytic Account', readonly=True, states={'draft': [('readonly', False)]}, help="The analytic account related to a sales order."),
 
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', readonly=True, help="This is the list of invoices that have been generated for this sales order. The same sales order may have been invoiced in several times (by line for example)."),
@@ -280,7 +280,7 @@ class sale_order(osv.osv):
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
     }
     _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'Order Reference must be unique !'),
+        ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
     ]
     _order = 'name desc'
 
@@ -619,6 +619,8 @@ class sale_order(osv.osv):
 
     def action_wait(self, cr, uid, ids, *args):
         for o in self.browse(cr, uid, ids):
+            if not o.order_line:
+                raise osv.except_osv(_('Error !'),_('You cannot confirm a sale order which has no line.'))
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime(DEFAULT_SERVER_DATE_FORMAT)})
             else:
@@ -691,7 +693,6 @@ class sale_order(osv.osv):
             'move_id': move_id,
             'property_ids': [(6, 0, [x.id for x in line.property_ids])],
             'company_id': order.company_id.id,
-            'sale_line_id': line.id,
         }
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, *args):

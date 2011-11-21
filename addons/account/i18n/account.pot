@@ -1928,7 +1928,7 @@ msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
-msgid "Search Chart of Account Templates"
+msgid "Search Chart of Accounts Templates"
 msgstr ""
 
 #. module: account
@@ -6200,7 +6200,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_analytic_account_tree2
-msgid "The normal chart of accounts has a structure defined by the legal requirement of the country. The analytic chart of account structure should reflect your own business needs in term of costs/revenues reporting. They are usually structured by contracts, projects, products or departements. Most of the OpenERP operations (invoices, timesheets, expenses, etc) generate analytic entries on the related account."
+msgid "The normal chart of accounts has a structure defined by the legal requirement of the country. The analytic chart of accounts structure should reflect your own business needs in term of costs/revenues reporting. They are usually structured by contracts, projects, products or departements. Most of the OpenERP operations (invoices, timesheets, expenses, etc) generate analytic entries on the related account."
 msgstr ""
 
 #. module: account
@@ -7145,6 +7145,20 @@ msgid "Company Currency"
 msgstr ""
 
 #. module: account
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+msgid "Chart of Accounts"
+msgstr ""
+
+#. module: account
 #: model:process.node,name:account.process_node_paymententries0
 #: model:process.transition,name:account.process_transition_reconcilepaid0
 msgid "Payment"
@@ -7321,6 +7335,8 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,date_due:0
 #: field:report.invoice.created,date_due:0
+#: view:account.print.invoice:0
+#: field:account.print.invoice,date_due:0
 msgid "Due Date"
 msgstr ""
 
@@ -8069,7 +8085,7 @@ msgstr ""
 
 #. module: account
 #: view:account.account:0
-msgid "Chart of accounts"
+msgid "Chart of Accounts"
 msgstr ""
 
 #. module: account
@@ -8116,7 +8132,7 @@ msgstr ""
 #: field:account.print.journal,chart_account_id:0
 #: field:account.report.general.ledger,chart_account_id:0
 #: field:account.vat.declaration,chart_account_id:0
-msgid "Chart of account"
+msgid "Chart of Accounts"
 msgstr ""
 
 #. module: account
@@ -9246,4 +9262,16 @@ msgstr ""
 #: report:account.balancesheet:0
 #: report:account.balancesheet.horizontal:0
 msgid "Liabilities"
+msgstr ""
+
+#. module: account
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+msgid "Expenses"
+msgstr ""
+
+#. module: account
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+msgid "Income"
 msgstr ""

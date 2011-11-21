@@ -116,39 +116,26 @@
                <field name="type">form</field>
                <field name="arch" type="xml">
                     <form string="Sales Dashboard">
-                         <hpaned>
-                            <child1>
-                                <action
-                                    string="My Open Opportunities"
-                                    name="%(act_my_oppor)d"
-                                    colspan="4"
-                                    height="150"
-                                    groups="base.group_sale_salesman,base.group_sale_manager"
-                                    width="510"/>
+                         <board style="1-1">
+                            <column>
+                                <action string="My Open Opportunities"
+                                    name="%(act_my_oppor)d"/>
                                 <action
                                     string="My Meetings"
-                                    name="%(act_my_meetings)d"
-                                    height="150"
-                                    colspan="4"/>
-                            </child1>
-                            <child2>
-                                <action
-                                    string="My Planned Revenues by Stage"
-                                    name="%(act_my_oppor_stage)d"
-                                    groups="base.group_sale_salesman,base.group_sale_manager"
-                                    colspan="4"/>
-                                <action
-                                    string="My Win/Lost Ratio"
-                                    name="%(act_sales_pipeline)d"
-                                    groups="base.group_sale_salesman,base.group_sale_manager"
-                                    colspan="4"/>
-                            </child2>
-                    </hpaned>
+                                    name="%(act_my_meetings)d"/>
+                            </column>
+                            <column>
+                                <action string="My Planned Revenues by Stage"
+                                    name="%(act_my_oppor_stage)d"/>
+                                <action string="My Win/Lost Ratio"
+                                    name="%(act_sales_pipeline)d"/>
+                            </column>
+                    </board>
                 </form>
             </field>
         </record>
         <record model="ir.actions.act_window" id="open_board_crm">
-            <field name="name">Sales Dashboard</field>
+            <field name="name">Sales</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>

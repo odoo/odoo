@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Todo List based on the Getting Things Done methodology',
+    'name': 'Todo List based on the GTD methodology',
     'version': '1.0',
     'category': 'Project Management',
     'complexity': "easy",
