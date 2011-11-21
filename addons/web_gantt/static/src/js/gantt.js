@@ -87,12 +87,16 @@ init: function(parent, dataset, view_id) {
             projects = this.database_projects;
         
         if (!this.group_by.length) return def.resolve().promise();
-        this.data_groups = _.groupBy(projects, function(project, index) {
-            return  _.map(self.group_by, function(group, index) {
+        this.data_groups = _.groupBy(projects, function(project) {
+            return  _.map(self.group_by, function(group) {
                 if(!project[group]) project[group] = 'Undefined';
                 else if(project[group] instanceof Array) project[group] = project[group][1];
                 return project[group];
             });
+        });
+        
+        this.group_keys = _.map(this.group_by, function(group, index) {
+            return _.map(projects, function(project){return project[group]});
         });
         return def.resolve().promise();
     },
@@ -102,6 +106,7 @@ init: function(parent, dataset, view_id) {
         
         this.GanttTasks = [];
         if(this.group_by.length) {
+            
         } else {
             this.GanttTasks.push(new GanttTaskInfo(0, self.name, self.project_start_date, self.total_duration, 100, ""));
         }
@@ -198,10 +203,9 @@ init: function(parent, dataset, view_id) {
         var self = this;
         
         if (this.group_by.length) {
-            
         }
         else {
-            _.each(this.GanttTasks, function(tsk, index){
+            _.each(this.GanttTasks, function(tsk, index) {
                 self.GanttProjects.addTask(tsk);
             });
         }
@@ -238,7 +242,6 @@ init: function(parent, dataset, view_id) {
         
         ganttChartControl.attachEvent("onTaskEndResize", function(task) {return self.ResizeTask(task);});
         ganttChartControl.attachEvent("onTaskEndDrag", function(task) {return self.ResizeTask(task);});
-        ganttChartControl.attachEvent("onTaskClick", function(task) { return self.editTask(task);});
     },
     
     format_date : function(date) {
@@ -257,7 +260,6 @@ init: function(parent, dataset, view_id) {
     },
     
     ResizeTask: function(task) {
-        
         var self = this,
             event_id = task.getId();
         
@@ -277,6 +279,8 @@ init: function(parent, dataset, view_id) {
         this.dataset
             .write(event_id, data, {})
             .done(function() {
+                var get_project = _.find(self.database_projects, function(project){ return project.id == event_id});
+                _.extend(get_project,data);
                 self.reloadView();
             });
     },
@@ -350,7 +354,7 @@ init: function(parent, dataset, view_id) {
                 }).done(function(projects){
                     self.on_project_loaded(projects);
                 });
-        })
+        });
     }
 
 });
