@@ -708,20 +708,22 @@ session.web.Sidebar = session.web.Widget.extend({
             });
             return false;
         }
-        var additional_context = {
-            active_id: ids[0],
-            active_ids: ids,
-            active_model: self.widget_parent.dataset.model
-        };
-        self.rpc("/web/action/load", {
-            action_id: item.action.id,
-            context: additional_context
-        }, function(result) {
-            result.result.context = _.extend(result.result.context || {},
-                additional_context);
-            result.result.flags = result.result.flags || {};
-            result.result.flags.new_window = true;
-            self.do_action(result.result);
+        self.widget_parent.sidebar_context().then(function (context) {
+            var additional_context = _.extend({
+                active_id: ids[0],
+                active_ids: ids,
+                active_model: self.widget_parent.dataset.model
+            }, context);
+            self.rpc("/web/action/load", {
+                action_id: item.action.id,
+                context: additional_context
+            }, function(result) {
+                result.result.context = _.extend(result.result.context || {},
+                    additional_context);
+                result.result.flags = result.result.flags || {};
+                result.result.flags.new_window = true;
+                self.do_action(result.result);
+            });
         });
     },
     do_fold: function() {
@@ -979,6 +981,9 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         });
     },
     on_sidebar_view_log: function() {
+    },
+    sidebar_context: function () {
+        return $.Deferred().resolve({}).promise();
     }
 });
 
