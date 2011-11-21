@@ -19,9 +19,6 @@
 #
 ##############################################################################
 
-import string
-import unicodedata
-
 import netsvc
 from osv import fields, osv
 from tools.translate import _
@@ -48,14 +45,10 @@ class res_partner_bank(osv.osv):
                               bank_acc.acc_number)
             # Translate letters into numbers according to a specific table
             #    (notice how s -> 2)
-            # Note: maketrans and translate work best with latin1 - that
-            #    should not be a problem for RIB data
-            # XXX use dict((ord(a), b) for a, b in zip(intab, outtab)) 
-            #    and translate()
-            rib = rib.lower().encode('latin-1').translate(
-                string.maketrans(u'abcdefghijklmnopqrstuvwxyz',
-                                 u'12345678912345678923456789'))
-            # compute the key
+            table = dict((ord(a), b) for a, b in zip(
+                u'abcdefghijklmnopqrstuvwxyz', u'12345678912345678923456789'))
+            rib = rib.lower().translate(table)
+            # compute the key	
             key = 97 - (100 * int(rib)) % 97
             if int(bank_acc.key) != key:
                 return False
