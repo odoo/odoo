@@ -676,7 +676,7 @@ class sale_order(osv.osv):
                 return False
             return canceled
 
-    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, *args):
+    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
         return {
             'name': line.name,
             'origin': order.name,
@@ -695,7 +695,7 @@ class sale_order(osv.osv):
             'company_id': order.company_id.id,
         }
 
-    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, *args):
+    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
         output_id = order.shop_id.warehouse_id.lot_output_id.id
         return {
@@ -722,7 +722,7 @@ class sale_order(osv.osv):
             'price_unit': line.product_id.standard_price or 0.0
         }
 
-    def _prepare_order_picking(self, cr, uid, order, *args):
+    def _prepare_order_picking(self, cr, uid, order, context=None):
         pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
         return {
             'name': pick_name,
@@ -772,13 +772,13 @@ class sale_order(osv.osv):
             if line.product_id:
                 if line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     if not picking_id:
-                        picking_id = picking_obj.create(cr, uid, self._prepare_order_picking(cr, uid, order, *args))
-                    move_id = move_obj.create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, *args))
+                        picking_id = picking_obj.create(cr, uid, self._prepare_order_picking(cr, uid, order, {})) #TODO pass context if present
+                    move_id = move_obj.create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, {}))
                 else:
                     # a service has no stock move
                     move_id = False
 
-                proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, *args))
+                proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, {}))
                 proc_ids.append(proc_id)
                 line.write({'procurement_id': proc_id})
 
