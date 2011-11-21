@@ -294,9 +294,6 @@ class audittrail_objects_proxy(object_proxy):
         model = model_pool.browse(cr, uid, model_id)
         relational_table_log = True if (args and args[-1] == 'child_relation_log') else False
 
-        print model.model
-        print method
-        print ">>>>>>>"
         if method == 'create':
             resource_data = {}
             fields_to_read = []
@@ -368,7 +365,7 @@ class audittrail_objects_proxy(object_proxy):
                 }
         """
         data = {}
-        # read all the field of the given resource in super admin mode
+        # read all the fields of the given resource in super admin mode
         resource_pool = pool.get(model.model)
         for resource in resource_pool.read(cr, 1, res_ids):
             values_text = {}
@@ -394,58 +391,87 @@ class audittrail_objects_proxy(object_proxy):
         return data
 
     def prepare_audittrail_log_line(self, cr, uid, pool, model, resource, method, old_values, new_values):
+        """
+        This function compares the old data (i.e before the method was executed) and the new data 
+        (after the method was executed) and returns a structure with all the needed information to
+        log those differences.
+
+        :param cr: the current row, from the database cursor,
+        :param uid: the current user’s ID,
+        :param pool: current db's pooler object.
+        :param model: model object which values are being changed
+        :param resource: dictionary mapping all the fields of a given resource and its current values
+        :param method: method to log: create, read, unlink, write, actions, workflow actions
+        :param old_values: dict of values read before execution of the method
+        :param new_values: dict of values read after execution of the method
+
+        :return: dictionary with 
+            * keys: tuples build as ID of model object to log and ID of resource to log
+            * values: list of all the changes in field values for this couple (model, resource)
+              return {
+                (model.id, resource['id']): []
+              }
+
+        The reason why the structure returned is build as above is because when modifying an existing 
+        record (res.partner, for example), we may have to log a change done in a x2many field (on 
+        res.partner.address, for example)
+        """
+        key = (model.id, resource['id'])
         lines = {
-            (model.id, resource['id']): []
+            key: []
         }
         for field in resource:
             if field in ('__last_update', 'id'):
                 continue
             field_obj = (pool.get(model.model)._all_columns.get(field)).column
             if field_obj._type in ('one2many','many2many'):
-                #checking if an audittrail rule apply in super admin mode
+                # checking if an audittrail rule apply in super admin mode
                 if self.check_rules(cr, 1, field_obj._obj, method):
-                    #checking if the model associated to a *2m field exists, in super admin mode
+                    # checking if the model associated to a *2m field exists, in super admin mode
                     x2m_model_ids = pool.get('ir.model').search(cr, 1, [('model', '=', field_obj._obj)])
                     x2m_model_id = x2m_model_ids and x2m_model_ids[0] or False
                     assert x2m_model_id, _("'%s' Model does not exist..." %(field_obj._obj))
                     x2m_model = pool.get('ir.model').browse(cr, 1, x2m_model_id)
-                    if resource[field]:
-                        for resource_id in resource[field]:
-                            x2many_new_values = new_values[(x2m_model_id, resource_id)]
-                            x2many_new_values.update({'id': resource['id']})
-                            x = self.prepare_audittrail_log_line(cr, 1, pool, x2m_model, x2many_new_values, method, old_values.get((x2m_model_id, resource_id),{}), x2many_new_values)
-                            lines.update(x)
+                    resource_ids = list(set(old_values[(model.id, resource['id'])]['value'][field] + new_values[(model.id, resource['id'])]['value'][field]))
+                    if resource_ids:
+                        for resource_id in resource_ids:
+                            if (x2m_model_id, resource_id) in new_values:
+                                x2many_values = new_values[(x2m_model_id, resource_id)]
+                            else:
+                                x2many_values = old_values[(x2m_model_id, resource_id)]
+                            x2many_values['value'].update({'id': resource_id})
+                            lines.update(self.prepare_audittrail_log_line(cr, 1, pool, x2m_model, x2many_values['value'], method, old_values, new_values))
             # if the value value is different than the old value: record the change
-            if old_values[(model.id, resource['id'])]['value'][field] != new_values[(model.id, resource['id'])]['value'][field]:
+            if key not in old_values or key not in new_values or old_values[key]['value'][field] != new_values[key]['value'][field]:
                 data = {
                       'name': field,
                       'new_value': resource[field],
-                      'old_value': (model.id, resource['id']) in old_values and old_values[(model.id, resource['id'])]['value'].get(field),
-                      'new_value_text': (model.id, resource['id']) in new_values and new_values[(model.id, resource['id'])]['text'].get(field),
-                      'old_value_text': (model.id, resource['id']) in old_values and old_values[(model.id, resource['id'])]['text'].get(field)
+                      'old_value': key in old_values and old_values[key]['value'].get(field),
+                      'new_value_text': key in new_values and new_values[key]['text'].get(field),
+                      'old_value_text': key in old_values and old_values[key]['text'].get(field)
                 }
-                lines[(model.id, resource['id'])].append(data)
+                lines[key].append(data)
         return lines
 
     def process_data(self, cr, uid, pool, res_ids, model, method, old_values={}, new_values={}):
         """
-        This is specially created to log actions and workflow actions on an object recursively.
-        It processes and iterates recursively on old data (i.e before the method was executed )
-        and stores it in a dict. Then this dict is used to compare with the new data
-        (i.e after the method execution) and log the changes.
+        This function processes and iterates recursively to log the difference between the old
+        data (i.e before the method was executed) and the new data and creates audittrail log
+        accordingly.
 
         :param cr: the current row, from the database cursor,
         :param uid: the current user’s ID,
         :param pool: current db's pooler object.
         :param res_ids: Id's of resource to be logged/compared.
-        :param model: Object whose values are being changed
-        :param method: method to log: create, read, unlink,write,actions,workflow actions
-        :param original_values: dict of values of res_ids read before execution of the method only when type is 'new'
-        :param type: Either of 'new' or 'old' to know which data to process.
-        :return: dict of values
+        :param model: model object which values are being changed
+        :param method: method to log: create, read, unlink, write, actions, workflow actions
+        :param old_values: dict of values read before execution of the method
+        :param new_values: dict of values read after execution of the method
+        :return: True
         """
         # read all the field of the given resource in super admin mode
         for resource in pool.get(model.model).read(cr, 1, res_ids):
+            # compare old and new values and get audittrail log lines accordingly
             lines = self.prepare_audittrail_log_line(cr, uid, pool, model, resource, method, old_values, new_values)
 
             # if at least one modification has been found
@@ -466,10 +492,11 @@ class audittrail_objects_proxy(object_proxy):
                     # (because it could also come with the value 'write' if we are deleting the
                     #  record through a one2many field)
                     vals.update({'method': 'unlink'})
-                # create the audittrail log in super admin mode
-                log_id = pool.get('audittrail.log').create(cr, 1, vals)
-                model = pool.get('ir.model').browse(cr, uid, model_id)
-                self.create_log_line(cr, 1, log_id, model, lines[(model_id, resource_id)])
+                # create the audittrail log in super admin mode, only if a change has been detected
+                if lines[(model_id, resource_id)]:
+                    log_id = pool.get('audittrail.log').create(cr, 1, vals)
+                    model = pool.get('ir.model').browse(cr, uid, model_id)
+                    self.create_log_line(cr, 1, log_id, model, lines[(model_id, resource_id)])
         return True
 
     def process_data_old(self, cr, uid_orig, pool, res_ids, model, method, original_values={}, type='new'):
