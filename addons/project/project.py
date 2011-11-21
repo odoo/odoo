@@ -424,20 +424,53 @@ class task(osv.osv):
     _log_create = True
     _date_name = "date_start"
 
-    def _read_group_type_id(self, cr, uid, ids, domain, context=None):
-        stage_obj = self.pool.get('project.task.type')
-        stage_ids = stage_obj.search(cr, uid, ['|',('id','in',ids),('project_default','=',1)], context=context)
-        return stage_obj.name_get(cr, uid, stage_ids, context=context)
 
-    def _read_group_user_id(self, cr, uid, ids, domain, context=None):
+    def _resolve_project_id_from_context(self, cr, uid, context=None):
+        """Return ID of project based on the value of 'project_id'
+           context key, or None if it cannot be resolved to a single project.
+        """
         if context is None: context = {}
+        if type(context.get('project_id')) in (int, long):
+            project_id = context['project_id']
+            return project_id
+        if isinstance(context.get('project_id'), basestring):
+            project_name = context['project_id']
+            project_ids = self.pool.get('project.project').name_search(cr, uid, name=project_name)
+            if len(project_ids) == 1:
+                return project_ids[0][0]
+
+    def _read_group_type_id(self, cr, uid, ids, domain, read_group_order=None, context=None):
+        stage_obj = self.pool.get('project.task.type')
+        project_id = self._resolve_project_id_from_context(cr, uid, context=context)
+        order = stage_obj._order
+        if read_group_order == 'type_id desc':
+            # lame way to allow reverting search, should just work in the trivial case
+            order = '%s desc' % order
+        if project_id:
+            domain = ['|', ('id','in',ids), ('project_ids','in',project_id)]
+        else:
+            domain = ['|', ('id','in',ids), ('project_default','=',1)]
+        stage_ids = stage_obj.search(cr, uid, domain, order=order, context=context)
+        result = stage_obj.name_get(cr, uid, stage_ids, context=context)
+        # restore order of the search
+        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        return result
+
+    def _read_group_user_id(self, cr, uid, ids, domain, read_group_order=None, context=None):
         res_users = self.pool.get('res.users')
-        if type(context.get('project_id')) not in (int, long):
-            return res_users.name_get(cr, uid, ids, context=context)
-        proj = self.pool.get('project.project').browse(cr, uid, context['project_id'], context=context)
-        ids += [x.id for x in proj.members]
-        user_ids = res_users.search(cr, uid, [('id','in',ids)], context=context)
-        return res_users.name_get(cr, uid, user_ids, context=context)
+        project_id = self._resolve_project_id_from_context(cr, uid, context=context)
+        if project_id:
+            ids += self.pool.get('project.project').read(cr, uid, project_id, ['members'], context=context)['members']
+            order = res_users._order
+            # lame way to allow reverting search, should just work in the trivial case
+            if read_group_order == 'user_id desc':
+                order = '%s desc' % order
+            # de-duplicate and apply search order
+            ids = res_users.search(cr, uid, [('id','in',ids)], order=order, context=context)
+        result = res_users.name_get(cr, uid, ids, context=context)
+        # restore order of the search
+        result.sort(lambda x,y: cmp(ids.index(x[0]), ids.index(y[0])))
+        return result
 
     _group_by_full = {
         'type_id': _read_group_type_id,
