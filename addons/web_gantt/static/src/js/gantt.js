@@ -106,7 +106,13 @@ init: function(parent, dataset, view_id) {
         
         this.GanttTasks = [];
         if(this.group_by.length) {
-            
+            if(this.group_by.length > 1) {
+                
+            } else {
+                _.each(_.uniq(this.group_keys[0]), function(group, index) {
+                    self.GanttTasks.push(new GanttTaskInfo(index, group, self.project_start_date, self.total_duration, 100,""));
+                });
+            }
         } else {
             this.GanttTasks.push(new GanttTaskInfo(0, self.name, self.project_start_date, self.total_duration, 100, ""));
         }
@@ -118,7 +124,21 @@ init: function(parent, dataset, view_id) {
         var self = this,
             tasks = this.database_projects;
         if (this.group_by.length) {
-            
+            if (this.group_by.length > 1) {
+            } else {
+                _.each(_.values(this.data_groups), function(child_tasks, index) {
+                    _.each(child_tasks, function(chld) {
+                        var name = chld[self.text];
+                        if (chld[self.text] instanceof Array) {
+                            name = chld[self.text][1];
+                        }
+                        var duration = _.keys(self.group_project_duration).indexOf(""+chld.id);
+                        duration = _.values(self.group_project_duration)[duration];
+                        self.GanttTasks[index].addChildTask(new GanttTaskInfo(chld.id, name, self.format_date(chld[self.date_start]), duration, 100, ""))
+                    });
+                    
+                });
+            }
         }
         else {
             _.each(tasks, function(task, index){
@@ -138,15 +158,19 @@ init: function(parent, dataset, view_id) {
             projects = this.database_projects;
             
         this.project_duration = [];
-        
+        this.group_project_duration = {};
         _.each(projects, function(project, index) {
+            var duration = 0,
+                id = project.id;
             if (self.date_stop && project[self.date_stop]) {
-                self.project_duration.push(self.duration_difference(project[self.date_start], project[self.date_stop]));
+                duration = self.duration_difference(project[self.date_start], project[self.date_stop]);
+//                self.project_duration.push(self.duration_difference(project[self.date_start], project[self.date_stop]));
             } else if(self.date_delay && project[self.date_delay]) {
-                self.project_duration.push(project[self.date_delay]);
-            } else {
-                self.project_duration.push(0);
+                duration = project[self.date_delay];
+//                self.project_duration.push(project[self.date_delay]);
             }
+            self.project_duration.push(duration);
+            self.group_project_duration[id]  =  duration;
         });
         
         this.max_project_duration = _.max(this.project_duration);
@@ -203,6 +227,9 @@ init: function(parent, dataset, view_id) {
         var self = this;
         
         if (this.group_by.length) {
+            _.each(this.GanttTasks, function(tsk, index) {
+                self.GanttProjects.addTask(tsk);
+            });
         }
         else {
             _.each(this.GanttTasks, function(tsk, index) {
@@ -239,7 +266,6 @@ init: function(parent, dataset, view_id) {
                 }
             }
         });
-        
         ganttChartControl.attachEvent("onTaskEndResize", function(task) {return self.ResizeTask(task);});
         ganttChartControl.attachEvent("onTaskEndDrag", function(task) {return self.ResizeTask(task);});
     },
