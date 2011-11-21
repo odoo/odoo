@@ -55,4 +55,11 @@ $(document).ready(function () {
         var result = f.parse_on_change('on_null(False)', {});
         deepEqual(result.args, [false]);
     });
+    test('Literal string', function () {
+        var f = make_form();
+        var result = f.parse_on_change('on_str("foo")', {});
+        deepEqual(result.args, ['foo']);
+        var result2 = f.parse_on_change("on_str('foo')", {});
+        deepEqual(result2.args, ['foo']);
+    });
 });

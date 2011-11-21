@@ -268,26 +268,38 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var parent_fields = null;
         _.each(call[2].split(','), function (a, i) {
             var field = _.str.trim(a);
+
+            // literal constant or context
             if (field in argument_replacement) {
                 args.push(argument_replacement[field](i));
                 return;
-            } else if (self.fields[field]) {
+            }
+            // form field
+            if (self.fields[field]) {
                 var value = self.fields[field].get_on_change_value();
                 args.push(value == null ? false : value);
                 return;
-            } else {
-                var splitted = field.split('.');
-                if (splitted.length > 1 && _.str.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
-                    if (parent_fields === null) {
-                        parent_fields = self.dataset.parent_view.get_fields_values();
-                    }
-                    var p_val = parent_fields[_.str.trim(splitted[1])];
-                    if (p_val !== undefined) {
-                        args.push(p_val == null ? false : p_val);
-                        return;
-                    }
+            }
+            // parent field
+            var splitted = field.split('.');
+            if (splitted.length > 1 && _.str.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
+                if (parent_fields === null) {
+                    parent_fields = self.dataset.parent_view.get_fields_values();
+                }
+                var p_val = parent_fields[_.str.trim(splitted[1])];
+                if (p_val !== undefined) {
+                    args.push(p_val == null ? false : p_val);
+                    return;
                 }
             }
+            // string literal
+            var first_char = field[0], last_char = field[field.length-1];
+            if ((first_char === '"' && last_char === '"')
+                || (first_char === "'" && last_char === "'")) {
+                args.push(field.slice(1, -1));
+                return;
+            }
+
             throw new Error("Could not get field with name '" + field +
                             "' for onchange '" + onchange + "'");
         });
