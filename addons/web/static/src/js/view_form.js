@@ -285,7 +285,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     }
                 }
             }
-            throw "Could not get field with name '" + field + "' for onchange '" + onchange + "'";
+            throw new Error("Could not get field with name '" + field +
+                            "' for onchange '" + onchange + "'");
         });
 
         return {
