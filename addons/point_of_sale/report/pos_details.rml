@@ -203,10 +203,10 @@
           <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d'),date=True) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(getperiod(data['form']),date = True) ]] </para>
+          <para style="terp_default_Centre_8">[[ formatLang(data['form']['date_start'],date=True) ]] </para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(getperiod2(data['form']),date = True) ]] </para>
+          <para style="terp_default_Centre_8">[[ formatLang(data['form']['date_end'],date=True) ]] </para>
         </td>
       </tr>
     </blockTable>
@@ -349,7 +349,7 @@
           <para style="terp_default_Bold_9">Sales total(Revenue)</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(getsalestotal2(data['form']), dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(getsalestotal2(), dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -357,7 +357,7 @@
           <para style="terp_default_Bold_9">Qty of product</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(getqtytotal2(data['form'])) ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(getqtytotal2()) ]]</para>
         </td>
       </tr>
       <tr>
@@ -381,7 +381,7 @@
           <para style="terp_default_Bold_9">Total paid</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(getpaidtotal2(data['form']), dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(getpaidtotal2(), dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
