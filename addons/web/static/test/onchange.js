@@ -22,12 +22,12 @@ $(document).ready(function () {
             window.openerp.web.form(openerp);
         }
     });
-//    test('Parse args-less onchange', function () {
-//        var f = new openerp.web.FormView(null, {});
-//        var result = f.parse_on_change('on_change_foo()', {});
-//        equal(result.method, 'on_change_foo');
-//        deepEqual(result.args, []);
-//    });
+    test('Parse args-less onchange', function () {
+        var f = new openerp.web.FormView(null, {});
+        var result = f.parse_on_change('on_change_foo()', {});
+        equal(result.method, 'on_change_foo');
+        deepEqual(result.args, []);
+    });
     test('Parse 1-arg onchange', function () {
         var f = make_form({foo:  3});
         var result = f.parse_on_change('on_change_foo(foo)', {});

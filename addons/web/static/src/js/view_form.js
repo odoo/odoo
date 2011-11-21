@@ -250,8 +250,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             return null;
         }
 
-        var method = call[1], args = [];
-        var context_index = null;
+        var method = call[1], args = [], context_index = null;
+        if (!_.str.trim(call[2])) {
+            return {method: method, args: args, context_index: context_index}
+        }
+
         var argument_replacement = {
             'False': function () {return false;},
             'True': function () {return true;},
