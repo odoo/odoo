@@ -10,7 +10,6 @@
 .openerp .dhx_cal_container, .openerp .dhx_cal_event {
 	background-position:0 24px;
 	background-repeat:repeat-x;
-	background-color:white;
     font-family: Ubuntu, Helvetica, sans-serif;
 	position:relative;
 	overflow:hidden;
@@ -229,7 +228,8 @@
 	position:absolute;
 	top:44px;
 	width:600px;
-	overflow-y:auto;overflow-x:hidden;
+	overflow-y:auto;
+	overflow-x:hidden;
 }
 
 .openerp .dhx_cal_data tr td {
@@ -245,9 +245,28 @@
 	border-left:1px dotted #586A7E;
 }
 
-.openerp .dhx_scale_holder{position:absolute;border-right:1px dotted #586A7E;background-image:url("/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/databg.png");}
-.openerp .dhx_scale_holder_now{position:absolute;border-right:1px dotted #586A7E;background-image:url("/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/databg_now.png");}.
-openerp .dhx_scale_hour{height:41px;width:50px;border-bottom:1px dotted #8894A3;background-color:#C2D5FC;text-align:center;line-height:40px;color:#586A7E;overflow:hidden;}
+.openerp .dhx_scale_holder{
+	position:absolute;
+	border-right:1px solid #ccc;
+	background-image:url("/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/databg.png");
+}
+.openerp .dhx_scale_holder_now{
+	position:absolute;
+	border-right:1px solid #ccc;
+	background-image:url("/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/databg_now.png");
+}
+
+.openerp .dhx_scale_hour{
+	height:41px;
+	width:50px;
+	border-bottom:1px dotted #8894A3;
+	border-right:1px dotted #8894A3;
+	background-color:#ddd;
+	text-align:center;
+	line-height:40px;
+	color:#586A7E;
+	overflow:hidden;
+}
 
 .openerp .dhx_month_head{
 	background-color:#F4F4F4; 
@@ -255,19 +274,21 @@ openerp .dhx_scale_hour{height:41px;width:50px;border-bottom:1px dotted #8894A3;
 	text-shadow: 0 1px 0 white;	
 	font-weight:bold;
 	text-align:center;
-	border-right:1px dotted #586A7E;
+	border-left:1px solid #E9E9E9;
 	height:18px;
-	padding-right:6px;
+	padding-right:4px;
 	padding-top:4px;
 	text-align:right;
 	font-size:0.9em;
 }
-
-.openerp .dhx_month_body{
-	border-right:1px dotted #586A7E;
-	border-bottom:1px dotted #586A7E;
-	background-color:#FFF;
+.openerp .dhx_mini_calendar .dhx_month_head{
+	padding-right:6px;
 }
+
+.openerp .dhx_cal_data table tbody tr td:nth-child(7) {
+	color:red;
+}	
+
 
 .openerp .dhx_now .openerp .dhx_month_body{
 	background-color:#cccccc;
@@ -285,11 +306,30 @@ openerp .dhx_scale_hour{height:41px;width:50px;border-bottom:1px dotted #8894A3;
 
 .openerp .dhx_loading{position:absolute;width:128px;height:15px;background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/loading.gif);z-index:9999;}
 
-.openerp .dhx_multi_day_icon,.openerp .dhx_multi_day{background-color:#E1E6FF;background-repeat:no-repeat;border-right:1px dotted #8894A3;}.openerp .dhx_multi_day{position:absolute;border-top:1px dotted #8894A3;}.
+.openerp .dhx_multi_day_icon, .openerp .dhx_multi_day{
+	background-color:#ddd;
+	background-repeat:no-repeat;
+	/*border-right:1px dotted #8894A3;*/
+}
+.openerp .dhx_multi_day{
+	position:absolute;
+/*	border-top:1px dotted #8894A3;*/
+}
 
-dhx_multi_day_icon{background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/clock_big.gif);}.openerp .dhx_multi_day_icon_small{background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/clock_small.gif);}
+.openerp .dhx_multi_day_icon{
+	background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/clock_big.gif);
+}
 
-.openerp .dhx_multi_day_icon, .openerp .dhx_multi_day_icon_small{background-position:center center;background-color:#E1E6FF;background-repeat:no-repeat;border-bottom:1px dotted #8894A3;border-right:1px dotted #8894A3;}
+.openerp .dhx_multi_day_icon_small {
+	background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/clock_small.gif);
+}
+
+.openerp .dhx_multi_day_icon, .openerp .dhx_multi_day_icon_small{
+	background-position:center center; 
+	background-repeat:no-repeat;
+	border:1px dotted #8894A3;
+	border-left:0px;
+}
 
 .openerp .dhtmlxLayoutPolyContainer_dhx_skyblue .dhx_cal_container{background-color:none;}
 
@@ -328,14 +368,24 @@ dhx_multi_day_icon{background-image:url(/web_calendar/static/lib/dhtmlxScheduler
 
 .openerp .dhx_cal_event .dhx_body{
 	border-width:0 1px 1px 1px;
-	padding:5px;
+	padding:0px 5px;
 	-moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; -moz-border-radius-bottomright: 3px; -webkit-border-bottom-right-radius: 3px; border-bottom-right-radius: 3px;
 	font-size:90%;
+	line-height:9px;
 }
 
-.openerp .dhx_resize_denied .dhx_cal_event .dhx_footer{cursor:default;}
+.openerp .dhx_resize_denied .dhx_cal_event .dhx_footer{
+	cursor:default;
+}
 
-.openerp .dhx_cal_event .dhx_footer{height:1px;margin-left:2px;border-width:0 1px 1px 1px;cursor:s-resize;}
+.openerp .dhx_cal_event .dhx_footer{
+	height:2px;
+	margin-left:2px;
+	border-width:0 1px 1px 1px; 
+	cursor:s-resize;
+	overflow:auto;
+	background-color:red;
+}
 
 /*
 The old one
@@ -370,9 +420,27 @@ The old one
 
 .openerp .dhx_in_move{background-color:#FFFF80;}
 
-.openerp div .dhx_cal_editor{background-color:#FFE763;border:1px solid #B7A543;border-top-style:dotted;z-index:999;position:absolute;overflow:hidden;}
+.openerp div .dhx_cal_editor{
+	background-color:white;
+	border:1px solid #B7A543;
+	width:100%;
+	/*min-height:40px;*/
+	height:100%;
+	z-index:999;
+	position:absolute;
+	overflow:hidden;
+}
 
-.openerp textarea .dhx_cal_editor{width:100%;height:100%;border:0 solid black;margin:none;padding:none;overflow:auto;}
+.openerp textarea .dhx_cal_editor{
+	background-color:white;
+	width:100%;
+/*	min-height:40px;*/
+	height:100%;
+	border:0 solid black;
+	margin:none;
+	padding:none;
+	overflow:auto;
+}
 
 .openerp div .dhx_menu_head{background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/controls.gif);background-position:0 -43px;width:10px;height:10px;margin-left:5px;margin-top:1px;border:none;cursor:default;}
 
@@ -575,12 +643,6 @@ font-size:11px;line-height:24px;}
 .openerp .dhx_cal_light_rec .dhx_cal_light_wide{width:816px;}
 .openerp .dhx_cal_light_rec .dhx_cal_light_wide .dhx_cal_larea{width:808px;}
 
-.openerp .dhx_multi_day{border:none;border-top:1px solid #A4BED4;}
-
-.openerp .dhx_multi_day_icon,.openerp .dhx_multi_day_icon_small{border-right:none;}
-
-
-
 .openerp .dhx_cal_navline{background-color:none;height:23px!important;}
 
 
@@ -588,14 +650,7 @@ font-size:11px;line-height:24px;}
 
 .openerp .dhx_scale_bar{/*background-image:url(imgs/top-separator.gif);background-position:0 0;background-repeat:no-repeat; */background-color:transparent;padding-top:3px;border-left:0;}
 
-.openerp .dhx_scale_holder{border-right:1px solid #A4BED4;}
-
-.openerp .dhx_scale_holder_now{border-right:1px solid #A4BED4;}
-.openerp .dhx_scale_hour{background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/left-time-bg.png);border-bottom:1px solid #A4BED4;color:#2F3A48;}
-
-.openerp .dhx_multi_day{background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/multi-days-bg.png);background-repeat:repeat;border-bottom:1px solid #A4BED4;border-left:0;}
-
-.openerp .dhx_multi_day_icon,.openerp .dhx_multi_day_icon_small{background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/multi-days-bg.png);border-bottom:1px solid #A4BED4;border-left:1px solid #fff;background-position:0 0;background-repeat:repeat;}
+.openerp .dhx_multi_day{background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/multi-days-bg.png);background-repeat:repeat;}
 
 .openerp .dhx_month_head{background-color:#F4F4F4;}
 
@@ -630,10 +685,8 @@ font-size:11px;line-height:24px;}
 
 .openerp .div .dhx_cal_editor{background-color:#FFE4AB;}
 
-.openerp .dhx_month_head{border-right:1px solid #E9E9E9;}
-
 .openerp .dhx_month_body{ 
-	border-right:1px solid #E9E9E9;
+	border-left:1px solid #E9E9E9;
 	border-bottom:1px solid #E9E9E9;
 }
 
@@ -671,11 +724,6 @@ font-size:11px;line-height:24px;}
 	border-left:1px dotted #7e7e7e; */
 	}
 
-.openerp .dhx_scale_hour {
-	background-color:#bac6cf;
-	border-bottom:1px dotted #7e7e7e;
-	color: #020202;
-}
 
 .openerp .dhx_cal_drag {
 	background-color:#ff8d8d;
@@ -688,16 +736,6 @@ font-size:11px;line-height:24px;}
 	background-color:#f7ffb1;
 }
 
-
-.openerp .dhx_scale_holder {
-	background-image:url("/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/databg.png");
-	border-right:1px dotted #7e7e7e;
-}
-
-.openerp .dhx_scale_holder_now {
-	background-image:url("/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/databg_now.png");
-	border-right:1px dotted #7e7e7e;
-}
 
 .openerp .dhx_cal_event div .dhx_menu_icon {
 	border: medium none;
@@ -839,34 +877,6 @@ div.openerp .dhx_repeat_divider {
 .openerp .dhx_cal_navline{
 	background-color:none;
 }
-
-
-.openerp .dhx_scale_holder {
-	border-right:1px solid #757575;
-}
-
-.openerp .dhx_scale_holder_now{
-	border-right:1px solid #757575;
-}
-
-.openerp .dhx_scale_hour{
-	background-image:url("/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/left-time-bg.png");
-	border-bottom:1px solid #757575;
-	color: #020202;
-}
-
-.openerp .dhx_multi_day{
-	background-image:url("/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/multi-days-bg.png");
-	border-bottom:1px solid #757575;
-}
-
-.openerp .dhx_multi_day_icon, .openerp .dhx_multi_day_icon_small{
-	background-image:url("/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/multi-days-bg.png");
-	border-bottom:1px solid #757575;
-	border-left:1px solid #FFFFFF;
-}
-
-
 
 .openerp .dhx_in_move{
 	background-image:url("/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/move.png");
@@ -1050,8 +1060,5 @@ div.openerp .dhx_cal_editor textarea {
 	border-color: #757575;
 }
 .openerp .dhx_cal_event .dhx_header, .openerp .dhx_cal_event .dhx_header {
-	display:none;
-}
-.openerp .dhx_scale_holder .dhx_cal_event .dhx_footer, .openerp .dhx_scale_holder_now .dhx_cal_event .dhx_footer {
 	display:none;
 }
