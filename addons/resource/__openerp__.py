@@ -45,6 +45,7 @@ It also manages the leaves of every resource.
     ],
     'demo_xml': ['resource_demo.xml'
     ],
+    'test': [],#TODO: Add Resource test cases
     'installable': True,
     'active': False,
     'certificate': '00746371192190459469',
