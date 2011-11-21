@@ -29,8 +29,8 @@ To make it easier to enter RIB data, it will also allow to search for banks by c
     """,
     "author" : "Numérigraphe SARL",
     'depends': ['base', 'account'],
-    'init_xml': ['base_rib_data.xml', ],
-    'update_xml': ['base_rib_view.xml', ],
+    'init_xml': ['bank_data.xml', ],
+    'update_xml': ['bank_view.xml', ],
     'installable': True,
     'active': False,
 }
