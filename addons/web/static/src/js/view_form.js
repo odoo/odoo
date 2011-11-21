@@ -242,69 +242,83 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         $pager.find('span.oe_pager_index').html(index);
         $pager.find('span.oe_pager_count').html(this.dataset.ids.length);
     },
+    parse_on_change: function (on_change, widget) {
+        var self = this;
+        var onchange = _.str.trim(on_change);
+        var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
+        if (!call) {
+            return null;
+        }
+
+        var method = call[1], args = [];
+        var context_index = null;
+        var argument_replacement = {
+            'False': function () {return false;},
+            'True': function () {return true;},
+            'None': function () {return null;},
+            'context': function (i) {
+                context_index = i;
+                var ctx = widget.build_context ? widget.build_context() : {};
+                return ctx;
+            }
+        };
+        var parent_fields = null;
+        _.each(call[2].split(','), function (a, i) {
+            var field = _.str.trim(a);
+            if (field in argument_replacement) {
+                args.push(argument_replacement[field](i));
+                return;
+            } else if (self.fields[field]) {
+                var value = self.fields[field].get_on_change_value();
+                args.push(value == null ? false : value);
+                return;
+            } else {
+                var splitted = field.split('.');
+                if (splitted.length > 1 && _.str.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
+                    if (parent_fields === null) {
+                        parent_fields = self.dataset.parent_view.get_fields_values();
+                    }
+                    var p_val = parent_fields[_.str.trim(splitted[1])];
+                    if (p_val !== undefined) {
+                        args.push(p_val == null ? false : p_val);
+                        return;
+                    }
+                }
+            }
+            throw "Could not get field with name '" + field + "' for onchange '" + onchange + "'";
+        });
+
+        return {
+            method: method,
+            args: args,
+            context_index: context_index
+        };
+    },
     do_onchange: function(widget, processed) {
         var self = this;
         var act = function() {
             try {
-            processed = processed || [];
-            if (widget.node.attrs.on_change) {
-                var onchange = _.str.trim(widget.node.attrs.on_change);
-                var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
-                if (call) {
-                    var method = call[1], args = [];
-                    var context_index = null;
-                    var argument_replacement = {
-                        'False' : function() {return false;},
-                        'True' : function() {return true;},
-                        'None' : function() {return null;},
-                        'context': function(i) {
-                            context_index = i;
-                            var ctx = widget.build_context ? widget.build_context() : {};
-                            return ctx;
-                        }
-                    };
-                    var parent_fields = null;
-                    _.each(call[2].split(','), function(a, i) {
-                        var field = _.str.trim(a);
-                        if (field in argument_replacement) {
-                            args.push(argument_replacement[field](i));
-                            return;
-                        } else if (self.fields[field]) {
-                            var value = self.fields[field].get_on_change_value();
-                            args.push(value == null ? false : value);
-                            return;
-                        } else {
-                            var splitted = field.split('.');
-                            if (splitted.length > 1 && _.str.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
-                                if (parent_fields === null) {
-                                    parent_fields = self.dataset.parent_view.get_fields_values();
-                                }
-                                var p_val = parent_fields[_.str.trim(splitted[1])];
-                                if (p_val !== undefined) {
-                                    args.push(p_val == null ? false : p_val);
-                                    return;
-                                }
-                            }
-                        }
-                        throw "Could not get field with name '" + field +
-                            "' for onchange '" + onchange + "'";
-                    });
-                    var ajax = {
-                        url: '/web/dataset/call',
-                        async: false
-                    };
-                    return self.rpc(ajax, {
-                        model: self.dataset.model,
-                        method: method,
-                        args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(args),
-                        context_id: context_index === null ? null : context_index + 1
-                    }).pipe(function(response) {
-                        return self.on_processed_onchange(response, processed);
-                    });
-                } else {
-                    console.warn("Wrong on_change format", on_change);
+                processed = processed || [];
+                var on_change = widget.node.attrs.on_change;
+                if (on_change) {
+                    var change_spec = self.parse_on_change(on_change, widget);
+                    if (change_spec) {
+                        var ajax = {
+                            url: '/web/dataset/call',
+                            async: false
+                        };
+                        return self.rpc(ajax, {
+                            model: self.dataset.model,
+                            method: change_spec.method,
+                            args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
+                            context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
+                        }).pipe(function(response) {
+                            return self.on_processed_onchange(response, processed);
+                        });
+                    } else {
+                        console.warn("Wrong on_change format", on_change);
+                    }
                 }
-            }
             } catch(e) {
                 console.error(e);
                 return $.Deferred().reject();
