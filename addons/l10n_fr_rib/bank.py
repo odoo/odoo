@@ -24,6 +24,7 @@ import unicodedata
 
 import netsvc
 from osv import fields, osv
+from tools.translate import _
 
 class res_partner_bank(osv.osv):
     """Add fields and behavior for French RIB"""
@@ -36,8 +37,8 @@ class res_partner_bank(osv.osv):
             if bank_acc.state !='rib':
                 continue
             # Fail if the needed values are empty of too short 
-            if (not bank_acc.bank or not bank_acc.bank.code
-            or len(bank_acc.bank.code) != 5
+            if (not bank_acc.bank_code
+            or len(bank_acc.bank_code) != 5
             or not bank_acc.office or len(bank_acc.office) != 5
             or not bank_acc.acc_number or len(bank_acc.acc_number) != 11
             or not bank_acc.key or len(bank_acc.key) != 2):
@@ -80,27 +81,51 @@ class res_partner_bank(osv.osv):
                 limit, order, context=context, count=count)
         return res
 
+    def onchange_bank_id(self, cr, uid, ids, bank_id, context=None):
+        """Change the bank code"""
+        result = super(res_partner_bank, self).onchange_bank_id(cr, uid, ids, bank_id,
+                                                        context=context)
+        if bank_id:
+            bank = self.pool.get('res.bank').browse(cr, uid, bank_id, 
+                                                    context=context)
+            result['bank_code'] = bank.code
+        return {'value': result}
+
     _columns = {
-        'office': fields.char('Office Code', size=5, readonly=True,
-                              help="Office Code"),
+        'bank_code': fields.char('Bank Code', size=64, readonly=True,),
+        'office': fields.char('Office Code', size=5, readonly=True,),
         'key': fields.char('Key', size=2, readonly=True,
                            help="The key is a number allowing to check the "
                                 "correctness of the other codes."),
     }
     
+    def _construct_constraint_msg(self, cr, uid, ids, context=None):
+        """Quote the data in the warning message"""
+        # Only process the first id
+        if type(ids) not in (int, long):
+            id = ids[0]
+        rib = self.browse(cr, uid, id, context=context)
+        if rib:
+            return (_("\nThe RIB key %s does not correspond to the other "
+                        "codes: %s %s %s.") %
+                        (rib.key, 
+                        rib.bank_code, 
+                        rib.office,
+                        rib.acc_number) )
+
     _constraints = [(_check_key,
-                     "The RIB key does not correspond to the other codes.",
+                     _construct_constraint_msg,
                      ["key"])]
     
 res_partner_bank()
 
-# overload the name_search method on banks to make it easier to enter RIB data
 class res_bank(osv.osv):
+    """Add the bank code to make it easier to enter RIB data"""
     _inherit = 'res.bank'
 
-    # allow a search by code
     def name_search(self, cr, user, name, args=None, operator='ilike',
                     context=None, limit=80):
+        """Search by bank code"""
         if args is None:
             args = []
         ids = []
@@ -111,15 +136,10 @@ class res_bank(osv.osv):
             ids = self.search(cr, user, [('code', operator, name)] + args,
                               limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
-
-    # show the code before the name
-    def name_get(self, cr, uid, ids, context=None):
-        result = []
-        for bank in self.browse(cr, uid, ids, context):
-            result.append((bank.id,
-                (bank.code and (bank.code + ' - ') or '') + bank.name))
-        return result
-
+        
+    _columns = {
+        'rib_code': fields.char('RIB Bank Code', size=64),
+    }
 res_bank()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

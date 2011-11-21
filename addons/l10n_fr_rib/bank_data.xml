@@ -3,14 +3,15 @@
     <data>
 
         <!--
-		Default bank account description
+		RIB bank details
 		-->
         <record id="bank_rib" model="res.partner.bank.type">
             <field name="name">RIB Bank Details</field>
             <field name="code">rib</field>
         </record>
-        <record id="rib_bank_field" model="res.partner.bank.type.field">
-            <field name="name">bank</field>
+        
+        <record id="rib_bank_code_field" model="res.partner.bank.type.field">
+            <field name="name">bank_code</field>
             <field name="bank_type_id" ref="bank_rib"/>
             <field eval="True" name="required"/>
             <field eval="False" name="readonly"/>
@@ -33,6 +34,11 @@
             <field name="bank_type_id" ref="bank_rib"/>
             <field eval="True" name="required"/>
             <field eval="False" name="readonly"/>
+        </record>
+        <record id="rib_bic_field" model="res.partner.bank.type.field">
+            <field name="name">bank_bic</field>
+            <field name="bank_type_id" ref="bank_rib"/>
+            <field name="required" eval="0"/>
         </record>
     </data>
 </openerp>
