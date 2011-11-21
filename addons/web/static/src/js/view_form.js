@@ -578,6 +578,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 return false;
         }
         return true;
+    },
+    sidebar_context: function () {
+        // TODO: ensure form is saved?
+        return $.Deferred().resolve(this.get_fields_values()).promise();
     }
 });
 openerp.web.FormDialog = openerp.web.Dialog.extend({
