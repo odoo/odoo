@@ -166,7 +166,7 @@ openerp.point_of_sale = function(db) {
     NumpadState, NumpadWidget, Order, OrderButtonView, OrderCollection, OrderWidget, Orderline,
     OrderlineCollection, OrderlineWidget, PaymentButtonWidget, PaymentWidget, Paymentline,
     PaymentlineCollection, PaymentlineWidget, PaypadWidget, Product, ProductCollection,
-    ProductListWidget, ProductWidget, ReceiptLineWidget, ReceiptView, Shop, ShopView, StepsWidget;
+    ProductListWidget, ProductWidget, ReceiptLineWidget, ReceiptWidget, Shop, ShopView, StepsWidget;
 
     /*
      ---
@@ -912,64 +912,61 @@ openerp.point_of_sale = function(db) {
             this.$element.html(this.template_fct(this.model.toJSON()));
         },
     });
-    ReceiptView = (function() {
-        __extends(ReceiptView, Backbone.View);
-        function ReceiptView() {
-            ReceiptView.__super__.constructor.apply(this, arguments);
-        }
-
-        ReceiptView.prototype.initialize = function(options) {
+    ReceiptWidget = db.web.Widget.extend({
+        init: function(parent, options) {
+            this._super(parent);
+            this.model = options.model;
             this.shop = options.shop;
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindOrderLineEvents();
-            return this.bindPaymentLineEvents();
-        };
-        ReceiptView.prototype.events = {
-            "click button#pos-finish-order": "finishOrder"
-        };
-        ReceiptView.prototype.finishOrder = function() {
+            this.bindPaymentLineEvents();
+        },
+        start: function () {
+            $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
+        },
+        finishOrder: function() {
             $('.step-screen').hide();
             $('#products-screen').show();
             this.shop.get('selectedOrder').destroy();
-        };
-        ReceiptView.prototype.receiptLineList = function() {
-            return $(this.el).find('#receiptlines');
-        };
-        ReceiptView.prototype.bindOrderLineEvents = function() {
+        },
+        receiptLineList: function() {
+            return this.$element.find('#receiptlines');
+        },
+        bindOrderLineEvents: function() {
             this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
             this.currentOrderLines.bind('add', this.addReceiptLine, this);
-            this.currentOrderLines.bind('change', this.render, this);
-            return this.currentOrderLines.bind('remove', this.render, this);
-        };
-        ReceiptView.prototype.bindPaymentLineEvents = function() {
+            this.currentOrderLines.bind('change', this.render_element, this);
+            this.currentOrderLines.bind('remove', this.render_element, this);
+        },
+        bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
-            return this.currentPaymentLines.bind('all', this.updateReceiptSummary, this);
-        };
-        ReceiptView.prototype.changeSelectedOrder = function() {
+            this.currentPaymentLines.bind('all', this.updateReceiptSummary, this);
+        },
+        changeSelectedOrder: function() {
             this.currentOrderLines.unbind();
             this.bindOrderLineEvents();
             this.currentPaymentLines.unbind();
             this.bindPaymentLineEvents();
-            return this.render();
-        };
-        ReceiptView.prototype.addReceiptLine = function(newOrderItem) {
+            this.render_element();
+        },
+        addReceiptLine: function(newOrderItem) {
             var x = new ReceiptLineWidget(null, {
                     model: newOrderItem
             });
             x.appendTo(this.receiptLineList());
-            return this.updateReceiptSummary();
-        };
-        ReceiptView.prototype.render = function() {
-            this.receiptLineList().empty();
+            this.updateReceiptSummary();
+        },
+        render_element: function() {
+            this.$element.html(qweb_template('pos-receipt-view'));
             this.currentOrderLines.each(__bind( function(orderItem) {
                 var x = new ReceiptLineWidget(null, {
                         model: orderItem
                 });
                 x.appendTo(this.receiptLineList());
             }, this));
-            return this.updateReceiptSummary();
-        };
-        ReceiptView.prototype.updateReceiptSummary = function() {
+            this.updateReceiptSummary();
+        },
+        updateReceiptSummary: function() {
             var change, currentOrder, tax, total;
             currentOrder = this.shop.get('selectedOrder');
             total = currentOrder.getTotal();
@@ -977,10 +974,9 @@ openerp.point_of_sale = function(db) {
             change = currentOrder.getPaidTotal() - total;
             $('#receipt-summary-tax').html(tax.toFixed(2));
             $('#receipt-summary-total').html(total.toFixed(2));
-            return $('#receipt-summary-change').html(change.toFixed(2));
-        };
-        return ReceiptView;
-    })();
+            $('#receipt-summary-change').html(change.toFixed(2));
+        },
+    });
     OrderButtonView = (function() {
         __extends(OrderButtonView, Backbone.View);
         function OrderButtonView() {
@@ -1058,10 +1054,11 @@ openerp.point_of_sale = function(db) {
             });
             this.paymentView.render_element();
             this.paymentView.start();
-            this.receiptView = new ReceiptView({
+            this.receiptView = new ReceiptWidget(null, {
                 shop: this.shop,
-                el: $('#receipt-screen')
             });
+            debugger;
+            this.receiptView.replace($('#receipt-screen'));
             this.numpadView = new NumpadWidget(null, 'numpad', {
                 state: this.numpadState
             });
