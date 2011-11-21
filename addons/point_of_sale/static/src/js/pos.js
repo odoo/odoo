@@ -166,7 +166,7 @@ openerp.point_of_sale = function(db) {
     NumpadState, NumpadWidget, Order, OrderButtonView, OrderCollection, OrderWidget, Orderline,
     OrderlineCollection, OrderlineWidget, PaymentButtonWidget, PaymentView, Paymentline,
     PaymentlineCollection, PaymentlineView, PaypadWidget, Product, ProductCollection,
-    ProductListView, ProductWidget, ReceiptLineView, ReceiptView, Shop, ShopView, StepsWidget;
+    ProductListWidget, ProductWidget, ReceiptLineView, ReceiptView, Shop, ShopView, StepsWidget;
 
     /*
      ---
@@ -776,31 +776,24 @@ openerp.point_of_sale = function(db) {
             return this;
         },
     });
-    ProductListView = (function() {
-        __extends(ProductListView, Backbone.View);
-        function ProductListView() {
-            ProductListView.__super__.constructor.apply(this, arguments);
-        }
-
-        ProductListView.prototype.tagName = 'ol';
-        ProductListView.prototype.className = 'product-list';
-        ProductListView.prototype.initialize = function(options) {
+    ProductListWidget = db.web.Widget.extend({
+        init: function(parent, element_id, options) {
+            this._super(parent, element_id);
             this.shop = options.shop;
-            return (this.shop.get('products')).bind('reset', this.render, this);
-        };
-        ProductListView.prototype.render = function() {
-            $(this.el).empty();
+            this.shop.get('products').bind('reset', this.render_element, this);
+        },
+        render_element: function() {
+            this.$element.empty();
             (this.shop.get('products')).each(__bind( function(product) {
                 var p = new ProductWidget(null, null, {
                         model: product,
                         shop: this.shop
                 });
-                p.appendTo($(this.el));
+                p.appendTo(this.$element);
             }, this));
-            return $('#products-screen').append(this.el);
-        };
-        return ProductListView;
-    })();
+            return this;
+        },
+    });
     /*
      "Payment" step.
      */
@@ -1053,9 +1046,11 @@ openerp.point_of_sale = function(db) {
             this.numpadState = new NumpadState({
                 shop: this.shop
             });
-            this.productListView = new ProductListView({
+            this.productListView = new ProductListWidget(null, "products-screen-ol", {
                 shop: this.shop
             });
+            this.productListView.render_element();
+            this.productListView.start();
             this.paypadView = new PaypadWidget(null, 'paypad', {
                 shop: this.shop
             });
@@ -1080,9 +1075,13 @@ openerp.point_of_sale = function(db) {
             this.numpadView.start();
             this.stepsView = new StepsWidget(null, 'steps');
             this.stepsView.start();
+            this.start();
         };
         ShopView.prototype.events = {
             'click button#neworder-button': 'createNewOrder'
+        };
+        ShopView.prototype.start = function() {
+            this.productListView.start();
         };
         ShopView.prototype.createNewOrder = function() {
             var newOrder;
@@ -1114,7 +1113,7 @@ openerp.point_of_sale = function(db) {
                 shop: this.shop,
                 el: $element
             });
-            this.categoryView = new CategoryWidget(null, 'products-screen');
+            this.categoryView = new CategoryWidget(null, 'products-screen-categories');
             this.categoryView.on_change_category.add_last(_.bind(this.category, this));
             this.category();
         };
