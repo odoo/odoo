@@ -164,7 +164,7 @@ openerp.point_of_sale = function(db) {
 
     var App, CashRegister, CashRegisterCollection, Category, CategoryCollection, CategoryWidget,
     NumpadState, NumpadWidget, Order, OrderButtonView, OrderCollection, OrderWidget, Orderline,
-    OrderlineCollection, OrderlineWidget, PaymentButtonWidget, PaymentView, Paymentline,
+    OrderlineCollection, OrderlineWidget, PaymentButtonWidget, PaymentWidget, Paymentline,
     PaymentlineCollection, PaymentlineWidget, PaypadWidget, Product, ProductCollection,
     ProductListWidget, ProductWidget, ReceiptLineView, ReceiptView, Shop, ShopView, StepsWidget;
 
@@ -820,7 +820,6 @@ openerp.point_of_sale = function(db) {
             }
         },
         render_element: function() {
-            debugger;
             this.$element.html(this.template_fct({
                 name: (this.model.get('journal_id'))[1],
                 amount: this.model.get('amount')
@@ -828,81 +827,75 @@ openerp.point_of_sale = function(db) {
             return this;
         },
     });
-    PaymentView = (function() {
-        __extends(PaymentView, Backbone.View);
-        function PaymentView() {
-            PaymentView.__super__.constructor.apply(this, arguments);
-        }
-
-        PaymentView.prototype.initialize = function(options) {
+    PaymentWidget = db.web.Widget.extend({
+        init: function(parent, element_id, options) {
+            this._super(parent, element_id);
+            this.model = options.model;
             this.shop = options.shop;
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindPaymentLineEvents();
-            return this.bindOrderLineEvents();
-        };
-        PaymentView.prototype.paymentLineList = function() {
-            return $(this.el).find('#paymentlines');
-        };
-        PaymentView.prototype.events = {
-            'click button#validate-order': 'validateCurrentOrder'
-        };
-        PaymentView.prototype.validateCurrentOrder = function() {
+            this.bindOrderLineEvents();
+        },
+        paymentLineList: function() {
+            return this.$element.find('#paymentlines');
+        },
+        start: function() {
+            $('button#validate-order', this.$element).click(_.bind(this.validateCurrentOrder, this));
+        },
+        validateCurrentOrder: function() {
             var callback, currentOrder;
             currentOrder = this.shop.get('selectedOrder');
-            callback = __bind( function() {
+            callback = __bind(function() {
                 return currentOrder.set({
                     validated: true
                 });
             }, this);
-            return pos.push('pos.order', currentOrder.exportAsJSON(), callback);
-        };
-        PaymentView.prototype.bindPaymentLineEvents = function() {
+            pos.push('pos.order', currentOrder.exportAsJSON(), callback);
+        },
+        bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
             this.currentPaymentLines.bind('add', this.addPaymentLine, this);
-            this.currentPaymentLines.bind('change', this.render, this);
-            this.currentPaymentLines.bind('remove', this.render, this);
-            return this.currentPaymentLines.bind('all', this.updatePaymentSummary, this);
-        };
-        PaymentView.prototype.bindOrderLineEvents = function() {
+            this.currentPaymentLines.bind('all', this.updatePaymentSummary, this);
+        },
+        bindOrderLineEvents: function() {
             this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
-            return this.currentOrderLines.bind('all', this.updatePaymentSummary, this);
-        };
-        PaymentView.prototype.changeSelectedOrder = function() {
+            this.currentOrderLines.bind('all', this.updatePaymentSummary, this);
+        },
+        changeSelectedOrder: function() {
             this.currentPaymentLines.unbind();
             this.bindPaymentLineEvents();
             this.currentOrderLines.unbind();
             this.bindOrderLineEvents();
-            return this.render();
-        };
-        PaymentView.prototype.addPaymentLine = function(newPaymentLine) {
+            this.render_element();
+        },
+        addPaymentLine: function(newPaymentLine) {
             var x = new PaymentlineWidget(null, null, {
                     model: newPaymentLine
                 });
             x.appendTo(this.paymentLineList());
-        };
-        PaymentView.prototype.render = function() {
+        },
+        render_element: function() {
             this.paymentLineList().empty();
             this.currentPaymentLines.each(__bind( function(paymentLine) {
                 var x = new PaymentlineWidget(null, null, {
                     model: paymentLine
                 });
-                return this.paymentLineList().append(x);
+                this.paymentLineList().append(x);
             }, this));
-            return this.updatePaymentSummary();
-        };
-        PaymentView.prototype.updatePaymentSummary = function() {
+            this.updatePaymentSummary();
+        },
+        updatePaymentSummary: function() {
             var currentOrder, dueTotal, paidTotal, remaining, remainingAmount;
             currentOrder = this.shop.get('selectedOrder');
             paidTotal = currentOrder.getPaidTotal();
             dueTotal = currentOrder.getTotal();
-            $(this.el).find('#payment-due-total').html(dueTotal.toFixed(2));
-            $(this.el).find('#payment-paid-total').html(paidTotal.toFixed(2));
+            this.$element.find('#payment-due-total').html(dueTotal.toFixed(2));
+            this.$element.find('#payment-paid-total').html(paidTotal.toFixed(2));
             remainingAmount = dueTotal - paidTotal;
             remaining = remainingAmount > 0 ? 0 : (-remainingAmount).toFixed(2);
-            return $('#payment-remaining').html(remaining);
-        };
-        return PaymentView;
-    })();
+            $('#payment-remaining').html(remaining);
+        },
+    });
     /*
      "Receipt" step.
      */
@@ -1062,10 +1055,11 @@ openerp.point_of_sale = function(db) {
                 numpadState: this.numpadState
             });
             this.orderView.start();
-            this.paymentView = new PaymentView({
-                shop: this.shop,
-                el: $('#payment-screen')
+            this.paymentView = new PaymentWidget(null, 'payment-screen', {
+                shop: this.shop
             });
+            this.paymentView.render_element();
+            this.paymentView.start();
             this.receiptView = new ReceiptView({
                 shop: this.shop,
                 el: $('#receipt-screen')
