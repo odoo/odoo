@@ -19,7 +19,19 @@
 #
 ##############################################################################
 
-import bank
+{
+    'name': 'French RIB Bank Details',
+    'version': '1.0',
+    'category': 'Localization/Account Charts',
+    'description': '''
+This module installs the base for RIB bank accounts (French standard for bank accounts). 
+To make it easier to enter RIB data, it will also allow to search for banks by code.''',
+    'author' : u'Numérigraphe SARL',
+    'depends': ['base', 'account'],
+    'init_xml': ['bank_data.xml', ],
+    'update_xml': ['bank_view.xml', ],
+    'installable': True,
+    'active': False,
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
