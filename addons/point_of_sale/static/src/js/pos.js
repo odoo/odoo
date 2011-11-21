@@ -166,7 +166,7 @@ openerp.point_of_sale = function(db) {
     NumpadState, NumpadWidget, Order, OrderButtonView, OrderCollection, OrderWidget, Orderline,
     OrderlineCollection, OrderlineWidget, PaymentButtonWidget, PaymentWidget, Paymentline,
     PaymentlineCollection, PaymentlineWidget, PaypadWidget, Product, ProductCollection,
-    ProductListWidget, ProductWidget, ReceiptLineView, ReceiptView, Shop, ShopView, StepsWidget;
+    ProductListWidget, ProductWidget, ReceiptLineWidget, ReceiptView, Shop, ShopView, StepsWidget;
 
     /*
      ---
@@ -899,23 +899,19 @@ openerp.point_of_sale = function(db) {
     /*
      "Receipt" step.
      */
-    ReceiptLineView = (function() {
-        __extends(ReceiptLineView, Backbone.View);
-        function ReceiptLineView() {
-            ReceiptLineView.__super__.constructor.apply(this, arguments);
-        }
-
-        ReceiptLineView.prototype.tagName = 'tr';
-        ReceiptLineView.prototype.className = 'receiptline';
-        ReceiptLineView.prototype.template = qweb_template('pos-receiptline-template');
-        ReceiptLineView.prototype.initialize = function() {
-            return this.model.bind('change', this.render, this);
-        };
-        ReceiptLineView.prototype.render = function() {
-            return $(this.el).html(this.template(this.model.toJSON()));
-        };
-        return ReceiptLineView;
-    })();
+    ReceiptLineWidget = db.web.Widget.extend({
+        tag_name: 'tr',
+        template_fct: qweb_template('pos-receiptline-template'),
+        init: function(parent, options) {
+            this._super(parent);
+            this.model = options.model;
+            this.model.bind('change', this.render_element, this);
+        },
+        render_element: function() {
+            this.$element.addClass('receiptline');
+            this.$element.html(this.template_fct(this.model.toJSON()));
+        },
+    });
     ReceiptView = (function() {
         __extends(ReceiptView, Backbone.View);
         function ReceiptView() {
@@ -957,17 +953,19 @@ openerp.point_of_sale = function(db) {
             return this.render();
         };
         ReceiptView.prototype.addReceiptLine = function(newOrderItem) {
-            this.receiptLineList().append((new ReceiptLineView({
+            var x = new ReceiptLineWidget(null, {
                     model: newOrderItem
-                })).render());
+            });
+            x.appendTo(this.receiptLineList());
             return this.updateReceiptSummary();
         };
         ReceiptView.prototype.render = function() {
             this.receiptLineList().empty();
             this.currentOrderLines.each(__bind( function(orderItem) {
-                return this.receiptLineList().append((new ReceiptLineView({
+                var x = new ReceiptLineWidget(null, {
                         model: orderItem
-                    })).render());
+                });
+                x.appendTo(this.receiptLineList());
             }, this));
             return this.updateReceiptSummary();
         };
