@@ -292,7 +292,8 @@ to help you get started:
 .. toctree::
     :maxdepth: 1
 
-    guides/client-action.rst
+    guides/client-action
+    guides/sidebar-protocol
 
 Utility behaviors
 -----------------

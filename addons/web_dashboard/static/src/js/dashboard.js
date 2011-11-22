@@ -268,6 +268,15 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         }
         if (am.inner_viewmanager) {
             am.inner_viewmanager.on_mode_switch.add(function(mode) {
+                var new_views = [];
+                _.each(action_orig.views, function(view) {
+                    new_views[view[1] === mode ? 'unshift' : 'push'](view);
+                });
+                if (!new_views.length || new_views[0][1] !== mode) {
+                    new_views.unshift([false, mode]);
+                }
+                action_orig.views = new_views;
+                action_orig.res_id = am.inner_viewmanager.dataset.ids[am.inner_viewmanager.dataset.index];
                 self.do_action(action_orig);
             });
         }

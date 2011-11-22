@@ -176,7 +176,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.datarecord = record;
 
         _(this.fields).each(function (field, f) {
-            field.dirty = false;
+            field.reset();
             var result = field.set_value(self.datarecord[f] || false);
             if (result && _.isFunction(result.promise)) {
                 deferred_stack.push(result);
@@ -438,7 +438,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     if (!first_invalid_field) {
                         first_invalid_field = f;
                     }
-                } else if (f.is_dirty()) {
+                } else if (f.name !== 'id' && !f.readonly && (!self.datarecord.id || f.is_dirty())) {
+                    // Special case 'id' field, do not save this field
+                    // on 'create' : save all non readonly fields
+                    // on 'edit' : save non readonly modified fields
                     values[f.name] = f.get_value();
                 }
             }
@@ -575,6 +578,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 return false;
         }
         return true;
+    },
+    sidebar_context: function () {
+        return this.do_save().pipe($.proxy(this, 'get_fields_values'));
     }
 });
 openerp.web.FormDialog = openerp.web.Dialog.extend({
@@ -1191,8 +1197,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         this.nolabel = (this.field.nolabel || node.attrs.nolabel) === '1';
         this.readonly = this.modifiers['readonly'] === true;
         this.required = this.modifiers['required'] === true;
-        this.invalid = false;
-        this.dirty = false;
+        this.invalid = this.dirty = false;
 
         this.classname = 'oe_form_field_' + this.type;
     },
@@ -1262,6 +1267,9 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         this.invalid = false;
     },
     focus: function() {
+    },
+    reset: function() {
+        this.dirty = false;
     }
 });
 
@@ -1351,7 +1359,6 @@ openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
         if (value === false || value === undefined) {
             // As in GTK client, floats default to 0
             value = 0;
-            this.dirty = true;
         }
         this._super.apply(this, [value]);
     }

@@ -143,7 +143,7 @@ session.web.ActionManager = session.web.Widget.extend({
         var ClientWidget = session.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
     },
-    ir_actions_report_xml: function(action) {
+    ir_actions_report_xml: function(action, on_closed) {
         var self = this;
         $.blockUI();
         self.rpc("/web/session/eval_domain_and_context", {
@@ -155,8 +155,14 @@ session.web.ActionManager = session.web.Widget.extend({
             self.session.get_file({
                 url: '/web/report',
                 data: {action: JSON.stringify(action)},
-                complete: $.unblockUI
-            });
+                complete: $.unblockUI,
+                success: function(){
+                    if (!self.dialog && on_closed) {
+                        on_closed();
+                    }
+                    self.dialog_stop();
+                }
+            })
         });
     },
     ir_actions_act_url: function (action) {
@@ -673,13 +679,7 @@ session.web.Sidebar = session.web.Widget.extend({
                     item.callback.apply(self, [item]);
                 }
                 if (item.action) {
-                    if (self.widget_parent instanceof session.web.FormView) {
-                        self.widget_parent.do_save(function() {
-                            self.on_item_action_clicked(item);
-                        });
-                    } else {
-                        self.on_item_action_clicked(item);
-                    }
+                    self.on_item_action_clicked(item);
                 }
                 return false;
             });
@@ -693,29 +693,31 @@ session.web.Sidebar = session.web.Widget.extend({
     },
     on_item_action_clicked: function(item) {
         var self = this;
-        var ids = self.widget_parent.get_selected_ids();
-        if (ids.length == 0) {
-            //TODO: make prettier warning?
-            $("<div />").text(_t("You must choose at least one record.")).dialog({
-                title: _t("Warning"),
-                modal: true
+        self.widget_parent.sidebar_context().then(function (context) {
+            var ids = self.widget_parent.get_selected_ids();
+            if (ids.length == 0) {
+                //TODO: make prettier warning?
+                $("<div />").text(_t("You must choose at least one record.")).dialog({
+                    title: _t("Warning"),
+                    modal: true
+                });
+                return false;
+            }
+            var additional_context = _.extend({
+                active_id: ids[0],
+                active_ids: ids,
+                active_model: self.widget_parent.dataset.model
+            }, context);
+            self.rpc("/web/action/load", {
+                action_id: item.action.id,
+                context: additional_context
+            }, function(result) {
+                result.result.context = _.extend(result.result.context || {},
+                    additional_context);
+                result.result.flags = result.result.flags || {};
+                result.result.flags.new_window = true;
+                self.do_action(result.result);
             });
-            return false;
-        }
-        var additional_context = {
-            active_id: ids[0],
-            active_ids: ids,
-            active_model: self.widget_parent.dataset.model
-        };
-        self.rpc("/web/action/load", {
-            action_id: item.action.id,
-            context: additional_context
-        }, function(result) {
-            result.result.context = _.extend(result.result.context || {},
-                additional_context);
-            result.result.flags = result.result.flags || {};
-            result.result.flags.new_window = true;
-            self.do_action(result.result);
         });
     },
     do_fold: function() {
@@ -882,7 +884,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             }
         };
         var context = new session.web.CompoundContext(dataset.get_context(), action_data.context || {});
-        
+
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
@@ -973,6 +975,9 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         });
     },
     on_sidebar_view_log: function() {
+    },
+    sidebar_context: function () {
+        return $.Deferred().resolve({}).promise();
     }
 });
 
