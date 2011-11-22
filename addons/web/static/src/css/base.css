@@ -754,7 +754,7 @@ label.error {
 }
 .openerp .oe-listview th.oe-sortable {
     cursor: pointer;
-	font-size:80%;
+	font-size:75%;
 	text-transform:uppercase;
 	padding:0px;
 	margin:0px;
@@ -767,6 +767,7 @@ label.error {
     display: inline-block;
 	vertical-align:middle;
 }
+
 
 .openerp .oe-listview .oe-field-cell {
     cursor: pointer;
@@ -948,10 +949,16 @@ label.error {
 
 .openerp label.oe_label_help, .openerp label.oe_label {
     display: block;
-	font-size:85%;
+	color:#4c4c4c;
+	font-size:80%;
+	font-weight:700;
+/*	letter-spacing:1px;*/
 }
 .openerp label.oe_label_help {
     cursor: help;
+}
+.openerp .oe_form_frame_cell  .oe_label, .openerp .oe_form_frame_cell  .oe_label_help {
+	font-weight:500;
 }
 .openerp #tiptip_content {
     font-size: 12px;
