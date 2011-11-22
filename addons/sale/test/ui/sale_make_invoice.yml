@@ -1,5 +1,5 @@
 -
-  In order to test the 'Make Invoices' wizard of sale module in the Open-ERP,
+  In order to test the 'Make Invoices' wizard of sale module in the OpenERP,
   I take a Sale order and create invoice.
 -
   I confirm the Sale Order.
@@ -27,8 +27,8 @@
   !python {model: sale.order}: |
     inv = self.browse(cr, uid, ref('order3')).invoice_ids
     inv1 = self.browse(cr, uid, ref('order5')).invoice_ids
-    assert inv, "Invoices has not been generated"
-    assert inv1, "Invoices has not been generated"
+    assert inv, "Invoices are not created"
+    assert inv1, "Invoices are not created"
 -
   I verify that an account invoice line is created.
 -
@@ -37,7 +37,7 @@
     inv = self.browse(cr, uid, ref('order3')).invoice_ids
     inv1 = self.browse(cr, uid, ref('order5')).invoice_ids
     for line in inv:
-      assert line.invoice_line, "Account invoice line has not been created for order3"
+      assert line.invoice_line, "Account invoice line not been created for order3"
     for line in inv1:
-      assert line.invoice_line, "Account invoice line has not been created for order5"
+      assert line.invoice_line, "Account invoice line not been created for order5"
 

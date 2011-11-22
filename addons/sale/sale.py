@@ -797,7 +797,7 @@ class sale_order(osv.osv):
                 proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, *args))
                 proc_ids.append(proc_id)
                 line.write({'procurement_id': proc_id})
-                self.ship_exception(cr, uid, order, move_obj, line, move_id, proc_id)
+                #self.ship_exception(cr, uid, order, move_obj, line, move_id, proc_id)
 
         wf_service = netsvc.LocalService("workflow")
         if picking_id:

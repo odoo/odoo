@@ -9,23 +9,41 @@
     except Exception,e:
       pass
 -
-  For cancel the sale order I have to cancel the invoice of sale order.
+  To cancel the sale order from Invoice Exception, I have to cancel the invoice of sale order.
 -
   !python {model: sale.order}: |
     import netsvc
-    invoice_ids = [x.id for x in self.browse(cr, uid, ref("order4")).invoice_ids]
     wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'sale.order', ref('order3'), 'order_confirm', cr)
+
+    invoice_ids = [x.id for x in self.browse(cr, uid, ref("order3")).invoice_ids]
     for invoice in invoice_ids:
       wf_service.trg_validate(uid, 'account.invoice', invoice, 'invoice_cancel', cr)
+
+#code introduced by revid: mtr@tinyerp.com-20110915060653-cbedeckll1ijre66 
+#form 'lp:~openerp-dev/openobject-addons/trunk-sale_coverage-mtr' branch
+
 -
   I check order status in "Invoice Exception" and related invoice is in cancel state.
 -
   !python {model: sale.order}: |
-    order = self.browse(cr, uid, ref("order4"))
+    order = self.browse(cr, uid, ref("order3"))
     assert order.invoice_ids[0].state == "cancel","order's related invoice should be cancelled"
     assert order.state == "invoice_except", "order should be in Invoice Exception state after cancel Invoice"
 -
-  Now need to cancel the rekated picking of sale order.
+  Then I click on the Ignore Exception button.
+-
+  !workflow {model: sale.order, action: invoice_corrected, ref: order3}
+-
+  And then again I set the invoice to draft state.
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("order3"))
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','cancel')])
+    self.action_cancel_draft(cr, uid, invoice_id, ({'active_model': 'ir.ui.menu','active_ids': [ref("sale.menu_sale_order")], 'type': 'out_invoice', 'active_id': ref("sale.menu_sale_order")},))
+-
+  Now I need to cancel the related picking of sale order.
 -
   !python {model: sale.order}: |
     import netsvc
@@ -39,8 +57,37 @@
 -
   !python {model: sale.order}: |
     order = self.browse(cr, uid, ref("order4"))
-    assert order.picking_ids[0].state == "cancel","order's related invoice should be cancelled"
-    assert order.state == "shipping_except", "order should be in Invoice Exception state after cancel Invoice"
+    assert order.picking_ids[0].state == "cancel","order's related picking should be cancelled"
+    #assert order.state == "shipping_except", "order should be in Ship Exception state after cancel picking"
+
+#code introduced by revid: mtr@tinyerp.com-20110921101038-xf1l3whyblmjbdx9
+#form 'lp:~openerp-dev/openobject-addons/trunk-sale_coverage-mtr' branch
+-
+  Then I click on the "Recreate Packing" button on sale order
+-
+  !workflow {model: sale.order, action: ship_recreate, ref: order4}
+-
+  I verfiy that sale order state is now 'In Progress'.
+-
+  !assert {model: sale.order, id: order4}:
+    - state == 'progress'
+-
+  I verify that picking is generated for sale order.
+-
+  !python {model: stock.picking}: |
+    order = self.browse(cr, uid, ref("order4"))
+    picking_id = self.search(cr, uid, [('sale_id','=',ref("order4"))])
+    assert picking_id,"Picking has not been generated"
+-
+  Now need to cancel the rekated picking of sale order.
+-
+  !python {model: sale.order}: |
+    import netsvc
+    order = self.browse(cr, uid, ref("order4"))
+    picking_ids = [x.id for x in self.browse(cr, uid, ref("order4")).picking_ids]
+    wf_service = netsvc.LocalService("workflow")
+    for picking in picking_ids:
+      wf_service.trg_validate(uid, 'stock.picking', picking, 'button_cancel', cr)
 -
   Now I am able to cancel this sale order.
 -
@@ -55,4 +102,5 @@
   Again set cancelled order to draft.
 -
   !python {model: sale.order}: |
-    self.action_cancel_draft(cr, uid, [ref("order4")]) 
+    self.action_cancel_draft(cr, uid, [ref("order4")])
+

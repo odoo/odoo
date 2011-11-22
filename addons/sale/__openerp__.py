@@ -91,7 +91,7 @@ Dashboard for Sales Manager that includes:
         'test/process/order_policy.yml',
         'test/process/run_scheduler.yml',
         'test/process/cancel_order.yml',
-        'test/process/get_picking_details.yml',
+        #'test/process/get_picking_details.yml',
         'test/ui/demo_data.yml',
         'test/ui/sale_make_invoice.yml',
         'test/ui/make_advance_invoice.yml',
