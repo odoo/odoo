@@ -100,17 +100,17 @@ class res_partner_bank(osv.osv):
         return result
 
     def _default_value(self, cursor, user, field, context=None):
+        if context is None: context = {}
         if field in ('country_id', 'state_id'):
             value = False
         else:
             value = ''
-        if not context.get('address', False):
+        if not context.get('address'):
             return value
-        for _, id, address in context['address']:
-            if not (id or address): continue
-            if not address:
-                address = self.pool['res.partner.address']\
-                    .read(cursor, user, [id], ['type', field], context=context)[0]
+
+        for address in self.pool.get('res.partner').resolve_o2m_commands_to_record_dicts(
+            cursor, user, 'address', context['address'], ['type', field], context=context):
+
             if address.get('type') == 'default':
                 return address.get(field, value)
             elif not address.get('type'):
