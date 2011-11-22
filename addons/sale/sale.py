@@ -737,7 +737,7 @@ class sale_order(osv.osv):
             'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
             'company_id': order.company_id.id,
         }
-    
+
     def ship_exception(self, cr, uid, order, move_obj, line, move_id, proc_id):
 # FIXME: deals with potentially cancelled shipments, seems broken, see below
 # FIXME: was introduced by revid: mtr@mtr-20101125100355-0a1b7m792t63mssv
@@ -751,8 +751,8 @@ class sale_order(osv.osv):
                                 # FIXME: the following seems broken: what if move_id doesn't exist? What if there are several mov_ids? Shouldn't that be a sum?
                                 move_obj.write(cr, uid, [move_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
                                 self.pool.get('procurement.order').write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
-        return True    
-    
+        return True
+
     def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, *args):
         """Create the required procurements to supply sale order lines, also connecting
         the procurements to appropriate stock moves in order to bring the goods to the
