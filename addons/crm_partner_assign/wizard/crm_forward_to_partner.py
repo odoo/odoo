@@ -64,9 +64,10 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         res = {}
         res_id = context.get('active_id')
         model = context.get('active_model')
-        body_text = self._get_body_text(cr, uid, model, res_id, history_type, context=context)
+        lead = self.pool.get(model).browse(cr, uid, res_id, context)
+        body_text = self._get_info_body_text(cr, uid, lead, context=context)
         context['mail.compose.message.body'] = history_type
-        if msg_val:
+        if body_text:
             res = {'value': {'body_text' : body_text}}
         return res
     
