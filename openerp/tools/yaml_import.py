@@ -1,10 +1,12 @@
 # -*- encoding: utf-8 -*-
+import threading
 import types
 import time # used to eval time.strftime expressions
 from datetime import datetime, timedelta
 import logging
 
 import openerp.pooler as pooler
+import openerp.sql_db as sql_db
 import misc
 from config import config
 import yaml_tag
@@ -305,7 +307,7 @@ class YamlInterpreter(object):
         import openerp.osv as osv
         record, fields = node.items()[0]
         model = self.get_model(record.model)
-        if isinstance(model, osv.osv.osv_memory):
+        if model.is_transient():
             record_dict=self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)
@@ -331,12 +333,14 @@ class YamlInterpreter(object):
 
     def _create_record(self, model, fields):
         record_dict = {}
+        fields = fields or {}
         for field_name, expression in fields.items():
             field_value = self._eval_field(model, field_name, expression)
             record_dict[field_name] = field_value
         return record_dict
 
     def process_ref(self, node, column=None):
+        assert node.search or node.id, '!ref node should have a `search` attribute or `id` attribute'
         if node.search:
             if node.model:
                 model_name = node.model
@@ -374,7 +378,10 @@ class YamlInterpreter(object):
             if column._type in ("many2many", "one2many"):
                 value = [(6, 0, elements)]
             else: # many2one
-                value = self._get_first_result(elements)
+                if isinstance(elements, (list,tuple)):
+                    value = self._get_first_result(elements)
+                else:
+                    value = elements
         elif column._type == "many2one":
             value = self.get_id(expression)
         elif column._type == "one2many":
@@ -799,5 +806,20 @@ def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False):
 
 # keeps convention of convert.py
 convert_yaml_import = yaml_import
+
+def threaded_yaml_import(db_name, module_name, file_name, delay=0):
+    def f():
+        time.sleep(delay)
+        cr = None
+        fp = None
+        try:
+            cr = sql_db.db_connect(db_name).cursor()
+            fp = misc.file_open(file_name)
+            convert_yaml_import(cr, module_name, fp, {}, 'update', True)
+        finally:
+            if cr: cr.close()
+            if fp: fp.close()
+    threading.Thread(target=f).start()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

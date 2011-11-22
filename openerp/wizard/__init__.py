@@ -44,7 +44,6 @@ class interface(netsvc.Service):
     def __init__(self, name):
         assert not self.exists('wizard.'+name), 'The wizard "%s" already exists!' % (name,)
         super(interface, self).__init__('wizard.'+name)
-        self.exportMethod(self.execute)
         self.wiz_name = name
 
     def translate_view(self, cr, node, state, lang):
@@ -156,7 +155,7 @@ class interface(netsvc.Service):
             if isinstance(e, except_wizard) \
                 or isinstance(e, except_osv) \
                 or isinstance(e, except_orm):
-                self.abortResponse(2, e.name, 'warning', e.value)
+                netsvc.abort_response(2, e.name, 'warning', e.value)
             else:
                 import traceback
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception(

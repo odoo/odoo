@@ -42,17 +42,17 @@ from osv import fields, osv, orm
 
 
 ACTION_DICT = {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'base.module.upgrade',
-            'target': 'new',
-            'type': 'ir.actions.act_window',
-            'nodestroy':True,
-        }
+    'view_type': 'form',
+    'view_mode': 'form',
+    'res_model': 'base.module.upgrade',
+    'target': 'new',
+    'type': 'ir.actions.act_window',
+    'nodestroy':True,
+}
 
 class module_category(osv.osv):
     _name = "ir.module.category"
-    _description = "Module Category"
+    _description = "Application"
 
     def _module_nbr(self,cr,uid, ids, prop, unknow_none, context):
         cr.execute('SELECT category_id, COUNT(*) \
@@ -72,12 +72,19 @@ class module_category(osv.osv):
 
     _columns = {
         'name': fields.char("Name", size=128, required=True, select=True),
-        'parent_id': fields.many2one('ir.module.category', 'Parent Category', select=True),
-        'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Categories'),
-        'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer')
+        'parent_id': fields.many2one('ir.module.category', 'Parent Application', select=True),
+        'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Applications'),
+        'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer'),
+        'module_ids' : fields.one2many('ir.module.module', 'category_id', 'Modules'),
+        'description' : fields.text("Description"),
+        'sequence' : fields.integer('Sequence'),
+        'visible' : fields.boolean('Visible'),
     }
     _order = 'name'
-module_category()
+
+    _defaults = {
+        'visible' : 1,
+    }
 
 class module(osv.osv):
     _name = "ir.module.module"
@@ -107,48 +114,59 @@ class module(osv.osv):
         view_obj = self.pool.get('ir.ui.view')
         report_obj = self.pool.get('ir.actions.report.xml')
         menu_obj = self.pool.get('ir.ui.menu')
-        mlist = self.browse(cr, uid, ids, context=context)
-        mnames = {}
-        for m in mlist:
-            # skip uninstalled modules below,
-            # no data to find anyway
-            if m.state in ('installed', 'to upgrade', 'to remove'):
-                mnames[m.name] = m.id
-            res[m.id] = {
-                'menus_by_module':[],
-                'reports_by_module':[],
+
+        dmodels = []
+        if field_name is None or 'views_by_module' in field_name:
+            dmodels.append('ir.ui.view')
+        if field_name is None or 'reports_by_module' in field_name:
+            dmodels.append('ir.actions.report.xml')
+        if field_name is None or 'menus_by_module' in field_name:
+            dmodels.append('ir.ui.menu')
+        assert dmodels, "no models for %s" % field_name
+        
+        for module_rec in self.browse(cr, uid, ids, context=context):
+            res[module_rec.id] = {
+                'menus_by_module': [],
+                'reports_by_module': [],
                 'views_by_module': []
             }
 
-        if not mnames:
-            return res
+            # Skip uninstalled modules below, no data to find anyway.
+            if module_rec.state not in ('installed', 'to upgrade', 'to remove'):
+                continue
 
-        view_id = model_data_obj.search(cr,uid,[('module','in', mnames.keys()),
-            ('model','in',('ir.ui.view','ir.actions.report.xml','ir.ui.menu'))])
-        for data_id in model_data_obj.browse(cr,uid,view_id,context):
-            # We use try except, because views or menus may not exist
+            # then, search and group ir.model.data records
+            imd_models = dict( [(m,[]) for m in dmodels])
+            imd_ids = model_data_obj.search(cr,uid,[('module','=', module_rec.name),
+                ('model','in',tuple(dmodels))])
+
+            for imd_res in model_data_obj.read(cr, uid, imd_ids, ['model', 'res_id'], context=context):
+                imd_models[imd_res['model']].append(imd_res['res_id'])
+
+            # For each one of the models, get the names of these ids.
+            # We use try except, because views or menus may not exist.
             try:
-                key = data_id.model
-                res_mod_dic = res[mnames[data_id.module]]
-                if key=='ir.ui.view':
-                    v = view_obj.browse(cr,uid,data_id.res_id)
+                res_mod_dic = res[module_rec.id]
+                for v in view_obj.browse(cr, uid, imd_models.get('ir.ui.view', []), context=context):
                     aa = v.inherit_id and '* INHERIT ' or ''
                     res_mod_dic['views_by_module'].append(aa + v.name + '('+v.type+')')
-                elif key=='ir.actions.report.xml':
-                    res_mod_dic['reports_by_module'].append(report_obj.browse(cr,uid,data_id.res_id).name)
-                elif key=='ir.ui.menu':
-                    res_mod_dic['menus_by_module'].append(menu_obj.browse(cr,uid,data_id.res_id).complete_name)
+
+                for rx in report_obj.browse(cr, uid, imd_models.get('ir.actions.report.xml', []), context=context):
+                    res_mod_dic['reports_by_module'].append(rx.name)
+
+                for um in menu_obj.browse(cr, uid, imd_models.get('ir.ui.menu', []), context=context):
+                    res_mod_dic['menus_by_module'].append(um.complete_name)
             except KeyError, e:
                 self.__logger.warning(
-                            'Data not found for reference %s[%s:%s.%s]', data_id.model,
-                            data_id.res_id, data_id.model, data_id.name, exc_info=True)
-                pass
+                            'Data not found for items of %s', module_rec.name)
+            except AttributeError, e:
+                self.__logger.warning(
+                            'Data not found for items of %s %s', module_rec.name, str(e))
             except Exception, e:
-                self.__logger.warning('Unknown error while browsing %s[%s]',
-                            data_id.model, data_id.res_id, exc_info=True)
-                pass
+                self.__logger.warning('Unknown error while fetching data of %s',
+                            module_rec.name, exc_info=True)
         for key, value in res.iteritems():
-            for k, v in res[key].iteritems() :
+            for k, v in res[key].iteritems():
                 res[key][k] = "\n".join(sorted(v))
         return res
 
@@ -207,6 +225,7 @@ class module(osv.osv):
         'demo': False,
         'license': 'AGPL-3',
         'web': False,
+        'complexity': 'normal',
     }
     _order = 'name'
 
@@ -277,7 +296,7 @@ class module(osv.osv):
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
         demo = False
-        for module in self.browse(cr, uid, ids):
+        for module in self.browse(cr, uid, ids, context=context):
             mdemo = False
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
@@ -437,12 +456,11 @@ class module(osv.osv):
             res.append(mod.url)
             if not download:
                 continue
-            zipfile = urllib.urlopen(mod.url).read()
+            zip_content = urllib.urlopen(mod.url).read()
             fname = addons.get_module_path(str(mod.name)+'.zip', downloaded=True)
             try:
-                fp = file(fname, 'wb')
-                fp.write(zipfile)
-                fp.close()
+                with open(fname, 'wb') as fp:
+                    fp.write(zip_content)
             except Exception:
                 self.__logger.exception('Error when trying to create module '
                                         'file %s', fname)

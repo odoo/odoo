@@ -22,6 +22,8 @@
 """ OpenERP core library.
 
 """
+# The hard-coded super-user id (a.k.a. administrator, or root user).
+SUPERUSER_ID = 1
 
 import addons
 import conf
@@ -41,6 +43,7 @@ import tiny_socket
 import tools
 import wizard
 import workflow
+import wsgi
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

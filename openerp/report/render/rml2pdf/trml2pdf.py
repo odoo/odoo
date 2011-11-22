@@ -447,14 +447,14 @@ class _rml_canvas(object):
                 self._logger.debug("Image %s used", node.get('name'))
                 s = StringIO(image_data)
             else:
+                newtext = node.text
                 if self.localcontext:
-                    res = utils._regex.findall(node.text)
+                    res = utils._regex.findall(newtext)
                     for key in res:
-                        newtext = eval(key, {}, self.localcontext)
-                        node.text = newtext or ''
+                        newtext = eval(key, {}, self.localcontext) or ''
                 image_data = None
-                if node.text:
-                    image_data = base64.decodestring(node.text)
+                if newtext:
+                    image_data = base64.decodestring(newtext)
                 if image_data:
                     s = StringIO(image_data)
                 else:

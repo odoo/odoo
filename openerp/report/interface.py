@@ -41,9 +41,9 @@ def toxml(value):
     return unicode_value.replace('&', '&amp;').replace('<','&lt;').replace('>','&gt;')
 
 class report_int(netsvc.Service):
-    def __init__(self, name, audience='*'):
+    def __init__(self, name):
         assert not self.exists(name), 'The report "%s" already exists!' % name
-        super(report_int, self).__init__(name, audience)
+        super(report_int, self).__init__(name)
         if name[0:7]<>'report.':
             raise Exception, 'ConceptionError, bad report name, should start with "report."'
         self.name = name
@@ -51,8 +51,6 @@ class report_int(netsvc.Service):
         self.name2 = '.'.join(name.split('.')[1:])
         # TODO the reports have methods with a 'title' kwarg that is redundant with this attribute
         self.title = None
-        #self.joinGroup('report')
-        self.exportMethod(self.create)
 
     def create(self, cr, uid, ids, datas, context=None):
         return False
@@ -233,6 +231,7 @@ class report_rml(report_int):
     def _get_path(self):
         ret = []
         ret.append(self.tmpl.replace(os.path.sep, '/').rsplit('/',1)[0]) # Same dir as the report rml
+        ret.append('addons')
         ret.append(tools.config['root_path'])
         return ret
 

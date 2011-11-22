@@ -58,16 +58,16 @@ class Graph(dict):
 
     """
 
-    def add_node(self, name, deps):
+    def add_node(self, name, info):
         max_depth, father = 0, None
-        for n in [Node(x, self) for x in deps]:
+        for n in [Node(x, self, None) for x in info['depends']]:
             if n.depth >= max_depth:
                 father = n
                 max_depth = n.depth
         if father:
-            return father.add_child(name)
+            return father.add_child(name, info)
         else:
-            return Node(name, self)
+            return Node(name, self, info)
 
     def update_from_db(self, cr):
         if not len(self):
@@ -120,7 +120,7 @@ class Graph(dict):
                     continue
                 later.clear()
                 current.remove(package)
-                node = self.add_node(package, deps)
+                node = self.add_node(package, info)
                 node.data = info
                 for kind in ('init', 'demo', 'update'):
                     if package in tools.config[kind] or 'all' in tools.config[kind] or kind in force:
@@ -154,12 +154,13 @@ class Graph(dict):
 
 
 class Singleton(object):
-    def __new__(cls, name, graph):
+    def __new__(cls, name, graph, info):
         if name in graph:
             inst = graph[name]
         else:
             inst = object.__new__(cls)
             inst.name = name
+            inst.info = info
             graph[name] = inst
         return inst
 
@@ -167,19 +168,21 @@ class Singleton(object):
 class Node(Singleton):
     """ One module in the modules dependency graph.
 
-    Node acts as a per-module singleton.
+    Node acts as a per-module singleton. A node is constructed via
+    Graph.add_module() or Graph.add_modules(). Some of its fields are from
+    ir_module_module (setted by Graph.update_from_db()).
 
     """
 
-    def __init__(self, name, graph):
+    def __init__(self, name, graph, info):
         self.graph = graph
         if not hasattr(self, 'children'):
             self.children = []
         if not hasattr(self, 'depth'):
             self.depth = 0
 
-    def add_child(self, name):
-        node = Node(name, self.graph)
+    def add_child(self, name, info):
+        node = Node(name, self.graph, info)
         node.depth = self.depth + 1
         if node not in self.children:
             self.children.append(node)

@@ -68,6 +68,9 @@ rml2sxw = {
     'para': 'p',
 }
 
+def get_date_length(date_format=DT_FORMAT):
+    return len((datetime.now()).strftime(date_format))
+
 class _format(object):
     def set_value(self, cr, uid, name, object, field, lang_obj):
         self.object = object
@@ -78,7 +81,7 @@ class _format(object):
 class _float_format(float, _format):
     def __init__(self,value):
         super(_float_format, self).__init__()
-        self.val = value
+        self.val = value or 0.0
 
     def __str__(self):
         digits = 2
@@ -86,17 +89,17 @@ class _float_format(float, _format):
             digits = self._field.digits[1]
         if hasattr(self, 'lang_obj'):
             return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
-        return self.val
+        return str(self.val)
 
 class _int_format(int, _format):
     def __init__(self,value):
         super(_int_format, self).__init__()
-        self.val = value and str(value) or str(0)
+        self.val = value or 0
 
     def __str__(self):
         if hasattr(self,'lang_obj'):
             return self.lang_obj.format('%.d', self.name, True)
-        return self.val
+        return str(self.val)
 
 class _date_format(str, _format):
     def __init__(self,value):
@@ -106,7 +109,7 @@ class _date_format(str, _format):
     def __str__(self):
         if self.val:
             if getattr(self,'name', None):
-                date = datetime.strptime(self.name, DT_FORMAT)
+                date = datetime.strptime(self.name[:get_date_length()], DT_FORMAT)
                 return date.strftime(str(self.lang_obj.date_format))
         return self.val
 
@@ -264,7 +267,7 @@ class rml_parse(object):
                 d = obj._field.digits[1] or DEFAULT_DIGITS
         return d
 
-    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False):
+    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False, currency_obj=False):
         """
             Assuming 'Account' decimal.precision=3:
                 formatLang(value) -> digits=2 (default)
@@ -296,13 +299,19 @@ class rml_parse(object):
                 date_format = date_format + " " + self.lang_dict['time_format']
                 parse_format = DHM_FORMAT
             if not isinstance(value, time.struct_time):
-                return time.strftime(date_format, time.strptime(value, parse_format))
+                return time.strftime(date_format, time.strptime(value[:get_date_length(parse_format)], parse_format))
 
             else:
                 date = datetime(*value.timetuple()[:6])
             return date.strftime(date_format)
 
-        return self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
+        res = self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
+        if currency_obj:
+            if currency_obj.position == 'after':
+                res='%s %s'%(res,currency_obj.symbol)
+            elif currency_obj and currency_obj.position == 'before':
+                res='%s %s'%(currency_obj.symbol, res)
+        return res
 
     def repeatIn(self, lst, name,nodes_parent=False):
         ret_lst = []

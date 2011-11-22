@@ -19,17 +19,11 @@
 #
 ##############################################################################
 
+import openerp.exceptions
 import openerp.pooler as pooler
 import openerp.tools as tools
 
 #.apidoc title: Authentication helpers
-
-class ExceptionNoTb(Exception):
-    """ When rejecting a password, hide the traceback
-    """
-    def __init__(self, msg):
-        super(ExceptionNoTb, self).__init__(msg)
-        self.traceback = ('','','')
 
 def login(db, login, password):
     pool = pooler.get_pool(db)
@@ -40,7 +34,7 @@ def check_super(passwd):
     if passwd == tools.config['admin_passwd']:
         return True
     else:
-        raise ExceptionNoTb('AccessDenied: Invalid super administrator password.')
+        raise openerp.exceptions.AccessDenied()
 
 def check(db, uid, passwd):
     pool = pooler.get_pool(db)

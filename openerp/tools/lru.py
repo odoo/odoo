@@ -12,7 +12,7 @@ class LRUNode(object):
         self.me = me
         self.next = None
 
-class LRU:
+class LRU(object):
     """
     Implementation of a length-limited O(1) LRU queue.
     Built for and used by PyPE:
@@ -113,3 +113,8 @@ class LRU:
         del self[key]
         return v
 
+    @synchronized()
+    def clear(self):
+        self.d = {}
+        self.first = None
+        self.last = None

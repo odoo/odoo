@@ -1,0 +1,61 @@
+-
+  Test the cron jobs scheduling.
+-
+  Disable the existing cron jobs if any during the tests.
+-
+  !python {model: ir.cron }: |
+      # For this test to work, as it involves multiple database cursors,
+      # we have to commit changes. But YAML tests must be rollbacked, so
+      # the final database state is left untouched. So we have to be a bit
+      # ugly here: use our own cursor, commit, and clean after ourselves.
+      # We also pass around some ids using setattr/delattr, and we have to
+      # rollback the previous tests otherwise we won't be able to touch the
+      # db.
+      # Well, this should probably be a standalone, or regular unit test,
+      # instead of using the YAML infrastructure.
+      cr.rollback()
+      our_cr = self.pool.db.cursor()
+      try:
+          ids = self.search(our_cr, uid, [], {})
+          setattr(self, 'saved_ids', ids)
+          self.write(our_cr, uid, ids, {'active': False}, {})
+          our_cr.commit()
+      finally:
+          our_cr.close()
+-
+  Three concurrent jobs started with a slight time gap. Assume 4 cron threads.
+  This will take about 2 minutes.
+-
+  !python {model: ir.cron }: |
+      # Pretend initialization is already done. We the use a try/finally
+      # to reset _init correctly.
+      self.pool._init = False
+      our_cr = self.pool.db.cursor()
+      try:
+          self.test_00(our_cr, uid) # this will commit using the passed cursor
+          import openerp.cron
+          openerp.cron._thread_slots = 4
+          # Wake up this db as soon as the master cron thread starts.
+          openerp.cron.schedule_wakeup(1, self.pool.db.dbname)
+          # Pretend to be the master thread, for 4 iterations.
+          openerp.cron.runner_body()
+          openerp.cron.runner_body()
+          openerp.cron.runner_body()
+          openerp.cron.runner_body()
+      finally:
+          self.pool._init = True
+          our_cr.close()
+-
+  Clean after ourselves.
+-
+  !python {model: ir.cron }: |
+      our_cr = self.pool.db.cursor()
+      try:
+          ids = [x for x in self.search(our_cr, uid, ['|', ('active', '=', True), ('active', '=', False)], {}) if x not in self.saved_ids]
+          self.unlink(our_cr, uid, ids, {})
+          ids = self.saved_ids
+          delattr(self, 'saved_ids')
+          self.write(our_cr, uid, ids, {'active': True}, {})
+          our_cr.commit()
+      finally:
+          our_cr.close()
