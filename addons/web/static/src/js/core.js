@@ -360,7 +360,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.debug = ($.deparam($.param.querystring()).debug != undefined);
         // TODO: session should have an optional name indicating that they'll
         //       be saved to (and revived from) cookies
-        this.name = 'session';
+        this.name = openerp._session_id;
     },
 
     bind: function(server, continuation) {
