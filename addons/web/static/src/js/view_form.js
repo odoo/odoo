@@ -107,7 +107,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$form_header.find('button.oe_form_button_delete').click(this.on_button_delete);
         this.$form_header.find('button.oe_form_button_toggle').click(this.on_toggle_readonly);
 
-        if (this.options.sidebar && this.options.sidebar_id) {
+        if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
             this.sidebar.do_unfold();
