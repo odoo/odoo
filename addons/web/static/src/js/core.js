@@ -398,7 +398,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
 
     get_absolute_url: function(path) {
-        var r_has_protocol = /^https?:\/\//,
+        var absolute_url,
+            r_has_protocol = /^https?:\/\//,
             r_absolute_internal = /^\/[^\/]/;   // starts with / (but not //)
 
         
@@ -416,7 +417,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             parts.push(path);
             absolute_url = this.server + parts.join('/');
         }
-        return absolute_url
+        return absolute_url;
     },
 
     /**
@@ -488,7 +489,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 return;
             }
             self.uid = false;
-            self.on_session_invalid(function() {
+            self.on_session_invalid(function() {    // retry
                 self.rpc(url, payload,
                     function() {
                         deferred.resolve.apply(deferred, arguments);
@@ -521,7 +522,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     on_session_valid: function(continuation) {
         this.load_modules(continuation);
     },
-    on_session_invalid: function(contination) {
+    on_session_invalid: function(continuation) {
     },
     session_is_valid: function() {
         return this.uid;
