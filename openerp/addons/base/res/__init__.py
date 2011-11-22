@@ -22,7 +22,6 @@
 import tools
 
 import country
-import bank
 import res_lang
 import partner
 import res_config

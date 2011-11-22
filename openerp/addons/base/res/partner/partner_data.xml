@@ -35,20 +35,15 @@
 
         <!-- Default bank account description -->
         <record id="bank_normal" model="res.partner.bank.type">
-            <field name="name">Bank account</field>
+            <field name="name">Normal Bank Account</field>
             <field name="code">bank</field>
         </record>
-        <record id="bank_normal_field" model="res.partner.bank.type.field">
-            <field name="name">acc_number</field>
-            <field eval="True" name="required"/>
-            <field name="bank_type_id" ref="bank_normal"/>
-        </record>
-        <record id="bank_normal_field_contry" model="res.partner.bank.type.field">
-            <field name="name">country_id</field>
-            <field eval="True" name="readonly"/>
-            <field name="bank_type_id" ref="bank_normal"/>
-        </record>
 
+        <record id="bank_normal_field_bic" model="res.partner.bank.type.field">
+            <field name="name">bank_bic</field>
+            <field name="bank_type_id" ref="bank_normal"/>
+            <field name="required" eval="0"/>
+        </record>
         <!--
         Resource: res.request.link
         -->
