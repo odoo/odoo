@@ -303,7 +303,7 @@ openerp.web_process = function (openerp) {
                     pager: false
                 }
             });
-        },
+        }
     });
 };
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
