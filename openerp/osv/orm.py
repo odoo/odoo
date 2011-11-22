@@ -2359,43 +2359,70 @@ class BaseModel(object):
             pass
 
 
-    def _read_group_fill_results(self, cr, uid, domain, groupby, groupby_list, aggregated_fields, read_group_result, context=None):
-        """Helper method for filling in read_group results for all missing values of
-           the field being grouped by, in case self._group_by_full provides methods
-           to give the list of all the values that should be displayed."""
+    def _read_group_fill_results(self, cr, uid, domain, groupby, groupby_list, aggregated_fields,
+                                 read_group_result, read_group_order=None, context=None):
+        """Helper method for filling in empty groups for all possible values of
+           the field being grouped by"""
+
         # self._group_by_full should map groupable fields to a method that returns
-        # a list of all aggregated values that we want to display for this field
+        # a list of all aggregated values that we want to display for this field,
+        # in the form of a m2o-like pair (key,label).
         # This is useful to implement kanban views for instance, where all columns
         # should be displayed even if they don't contain any record.
-        # let "groups" represent the various possible values for the group_by field
+
+        # Grab the list of all groups that should be displayed, including all present groups 
         present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
-        # grab the list of all groups that should be displayed, including all present groups 
         all_groups = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
-                                                  context=context)
+                                                  read_group_order=read_group_order, context=context)
+
         result_template = dict.fromkeys(aggregated_fields, False)
-        result_template.update({'__context':{'group_by':groupby_list[1:]}, groupby + '_count':0})
+        result_template.update({groupby + '_count':0})
+        if groupby_list and len(groupby_list) > 1:
+            result_template.update(__context={'group_by': groupby_list[1:]})
+
+        # Merge the left_side (current results as dicts) with the right_side (all
+        # possible values as m2o pairs). Both lists are supposed to be using the
+        # same ordering, and can be merged in one pass.
         result = []
-        def append_filler_line(right_side):
-            line = dict(result_template)
-            line.update({
-                groupby: right_side,
-                '__domain': [(groupby, '=', right_side[0])] + domain,
-            })
-            result.append(line)
-        #as both lists use the same ordering, we can merge in one pass
+        known_values = {}
+        def append_left(left_side):
+            grouped_value = left_side[groupby] and left_side[groupby][0]
+            if not grouped_value in known_values:
+                result.append(left_side)
+                known_values[grouped_value] = left_side
+            else:
+                count_attr = groupby + '_count'
+                known_values[grouped_value].update({count_attr: left_side[count_attr]})
+        def append_right(right_side):
+            grouped_value = right_side[0]
+            if not grouped_value in known_values:
+                line = dict(result_template)
+                line.update({
+                    groupby: right_side,
+                    '__domain': [(groupby,'=',grouped_value)] + domain,
+                })
+                result.append(line)
+                known_values[grouped_value] = line
         while read_group_result or all_groups:
             left_side = read_group_result[0] if read_group_result else None
             right_side = all_groups[0] if all_groups else None
+            assert left_side is None or left_side[groupby] is False \
+                 or isinstance(left_side[groupby], (tuple,list)), \
+                'M2O-like pair expected, got %r' % left_side[groupby]
+            assert right_side is None or isinstance(right_side, (tuple,list)), \
+                'M2O-like pair expected, got %r' % right_side
             if left_side is None:
-                append_filler_line(all_groups.pop(0))
+                append_right(all_groups.pop(0))
             elif right_side is None:
-                result.append(read_group_result.pop(0))
-            elif left_side[groupby][0] == right_side[0]:
-                result.append(read_group_result.pop(0))
-                all_groups.pop(0)
+                append_left(read_group_result.pop(0))
+            elif left_side[groupby] == right_side:
+                append_left(read_group_result.pop(0))
+                all_groups.pop(0) # discard right_side
+            elif not left_side[groupby] or not left_side[groupby][0]:
+                # left side == "Undefined" entry, not present on right_side
+                append_left(read_group_result.pop(0))
             else:
-                result.append(read_group_result.pop(0)) # should be False
-                append_filler_line(all_groups.pop(0))
+                append_right(all_groups.pop(0))
         return result
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
@@ -2491,7 +2518,8 @@ class BaseModel(object):
             alldata[r['id']] = r
             del r['id']
 
-        data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=orderby or groupby, context=context)
+        order = orderby or groupby
+        data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=order, context=context)
         # the IDS of records that have groupby field value = False or '' should be sorted too
         data_ids += filter(lambda x:x not in data_ids, alldata.keys())
         data = self.read(cr, uid, data_ids, groupby and [groupby] or ['id'], context=context)
@@ -2518,7 +2546,8 @@ class BaseModel(object):
 
         if groupby and groupby in self._group_by_full:
             data = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
-                                                 aggregated_fields, data, context=context)
+                                                 aggregated_fields, data, read_group_order=order,
+                                                 context=context)
 
         return data
 

@@ -24,7 +24,7 @@ import time
 
 def _links_get(self, cr, uid, context=None):
     obj = self.pool.get('res.request.link')
-    ids = obj.search(cr, uid, [], context)
+    ids = obj.search(cr, uid, [], context=context)
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
 
