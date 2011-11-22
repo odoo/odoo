@@ -118,7 +118,6 @@ class plugin_handler(osv.osv_memory):
              if partner_id = 0 then create a new partner with the same name that the address
             @return : the partner_id sended or created, this allow the plugin to open the right partner page
         """
-        print "create contact", data, partner_id
         partner_obj = self.pool.get('res.partner')
         dictcreate = dict(data) 
         if partner_id == 0:
