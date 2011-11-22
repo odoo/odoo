@@ -77,3 +77,5 @@ class l10n_chart_it_report_libroIVA_credito(report_sxw.rml_parse):
 report_sxw.report_sxw('report.l10n_it.report.libroIVA_credito','account.report_libroiva',
                       'l10n_it/report/libroIVA_credito.rml',
                        parser=l10n_chart_it_report_libroIVA_credito,header=False)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -60,3 +60,5 @@ Italian accounting chart and localization.
     'certificate' : '00926677190009155165',
     'images': ['images/config_chart_l10n_it.jpeg','images/l10n_it_chart.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

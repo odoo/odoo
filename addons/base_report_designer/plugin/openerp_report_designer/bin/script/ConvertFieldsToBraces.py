@@ -83,3 +83,5 @@ if __name__<>"package":
 else:
     g_ImplementationHelper.addImplementation( ConvertFieldsToBraces, "org.openoffice.openerp.report.convertFB", ("com.sun.star.task.Job",),) 
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

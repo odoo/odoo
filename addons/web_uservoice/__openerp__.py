@@ -44,3 +44,5 @@ Invite OpenERP user feedback, powered by uservoice.
     ],
     'images': ['static/src/img/submit_an_idea.jpeg', 'static/src/img/web_uservoice_feedback.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

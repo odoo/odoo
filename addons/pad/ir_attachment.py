@@ -33,3 +33,5 @@ class ir_attachment(osv.osv):
                 'url' : url,
             })
             return url
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

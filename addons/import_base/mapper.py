@@ -167,3 +167,5 @@ class call(mapper):
             else:
                 args.append(arg)
         return self.fun(external_values, *args)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

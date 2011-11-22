@@ -52,3 +52,5 @@ class l10n_chart_it_report_libroIVA (osv.osv):
 l10n_chart_it_report_libroIVA()
 
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
