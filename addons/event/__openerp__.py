@@ -58,7 +58,7 @@ Note that:
              'test/process/event_draft2cancel.yml',
              'test/process/partner_register2invoice.yml',
              'test/ui/duplicate_event.yml',
-             'test/ui/onchange_events.yml'],
+             'test/ui/demo_data.yml'],
     'installable': True,
     'active': False,
     'certificate': '0083059161581',
