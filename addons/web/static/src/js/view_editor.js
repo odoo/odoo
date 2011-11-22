@@ -294,7 +294,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 });
             }else{
                 var temp = _.reject(xpath_arch_object[0].child_id[0].att_list, function(list) {
-                    return _.include(list, "position")
+                    return list instanceof Array? _.include(list, "position"): false;
                 });
                 expr_to_list = [_.flatten(temp)];
             }
@@ -706,8 +706,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             _.each(widgets, function(widget) {
                 var type_widget =  new (self.property.get_any([widget.type])) (self.edit_node_dialog, widget);
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
-                    if (res instanceof Array) return _.include(res, widget.name);
-                    else return false;
+                    return res instanceof Array? _.include(res, widget.name): false;
                 });
                 value = value instanceof Array ? value[1] : value;
                 self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + widget.string + ':</td>' + type_widget.render() + '</tr>');
