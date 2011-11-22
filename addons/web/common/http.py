@@ -374,12 +374,14 @@ def session_context(request, storage_path, session_cookie='sessionid'):
         # either by login process or by HTTP requests without an OpenERP
         # session id, and are generally noise
         for key, value in request.session.items():
-            if isinstance(value, session.OpenERPSession) and not value._uid and not value.jsonp_requests:
+            if (isinstance(value, session.OpenERPSession) 
+                and not value._uid
+                and not value.jsonp_requests
+            ):
                 _logger.info('remove session %s: %r', key, value.jsonp_requests)
                 del request.session[key]
 
         with session_lock:
-            # FIXME: remove this when non-literals disappear
             if sid:
                 # Re-load sessions from storage and merge non-literal
                 # contexts and domains (they're indexed by hash of the
@@ -401,6 +403,11 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                         v.contexts_store.update(stored.contexts_store)
                         v.domains_store.update(stored.domains_store)
                         v.jsonp_requests.update(stored.jsonp_requests)
+
+                # add missing keys
+                for k, v in in_store.iteritems():
+                    if k not in request.session:
+                        request.session[k] = v
 
             session_store.save(request.session)
 
