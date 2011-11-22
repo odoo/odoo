@@ -9,7 +9,7 @@ from osv import osv, fields
 
 class plugin_handler(osv.osv_memory):
     _name = 'plugin.handler'
-    
+
     def _make_url(self, cr, uid, res_id, model, context=None):
         """
             @param id: on which document the message is pushed
@@ -20,16 +20,16 @@ class plugin_handler(osv.osv_memory):
         if base_url:
             base_url += '/?id=%s&model=%s'%(res_id,model)
         return base_url
-    
+
     def is_installed(self, cr, uid):
         return True
-    
+
     def partner_get(self, cr, uid, address_email):
         ids = self.pool.get('res.partner.address').search(cr, uid, [('partner_id', '!=', False), ('email', 'like', address_email)])
         res_id = ids and self.pool.get('res.partner.address').browse(cr, uid, ids[0]).partner_id.id or 0
         url = self._make_url(cr, uid, res_id, 'res.partner')
         return ('res.partner', res_id , url)
-    
+
     def document_get(self, cr, uid, email):
         """
             @param email: email is a standard RFC2822 email message
@@ -55,7 +55,7 @@ class plugin_handler(osv.osv_memory):
             model = msg.model
             url = self._make_url(cr, uid, res_id, model)
         return (model,  res_id, url)
-        
+
     def document_type(self, cr, uid, context=None):
         """
             Return the list of available model to push
@@ -68,6 +68,7 @@ class plugin_handler(osv.osv_memory):
         doc_dict['res.partner'] = "Partner"
         return doc_dict.items()
 
+    # Can be used where search record was used 
     def list_document_get(self, cr, uid, model, name):
         """
             This function return the result of name_search on the object model
@@ -77,7 +78,7 @@ class plugin_handler(osv.osv_memory):
             [(id, 'name')]
         """
         return self.pool.get(model).name_search(cr,uid,name)
-    
+
     def push_message(self, cr, uid, model, email, res_id=0):
         """
             @param email: email is a standard RFC2822 email message
@@ -108,8 +109,7 @@ class plugin_handler(osv.osv_memory):
             notify = "Mail succefully pushed"
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url, notify)
-        
-    
+
     def contact_create(self, cr, uid, data, partner_id):
         """
             @param data : the data use to create the res.partner.address
@@ -126,25 +126,26 @@ class plugin_handler(osv.osv_memory):
         self.pool.get('res.partner.address').create(cr, uid, dictcreate)
         url = self._make_url(cr, uid, partner_id, 'res.partner')
         return ('res.partner', partner_id, url)
-    
-    
-    
-    ##############################
-    #                            #
-    #    Specific to outlook     #
-    #                            #
-    ##############################
-    
-    def attachment_create(self,cr, uid, data):
-        """
-            @param data : the data use to create the ir.attachment
-            [('field_name', value)], field name is required.
-        """
-        ir_attachment_obj = self.pool.get('ir.attachment')
-        attachment_ids = ir_attachment_obj.search(cr, uid, [('res_model', '=', data.get('res_model')), ('res_id', '=', data.get('res_id')), ('datas_fname', '=', data.get('datas_fname'))])
-        if attachment_ids:
-            return attachment_ids[0]
-        else:
-            vals = {"res_model": data.get('res_model'), "res_id": data.get('res_id'), "name": data.get('name'), "datas" : data.get('datas'), "datas_fname" : data.get('datas_fname')}
-            return ir_attachment_obj.create(cr, uid, vals)
 
+    # Specific to outlook rfc822 is not available so we split in arguments headerd,body,attachemnts
+    def push_message_outlook(self, cr, uid, model, headers, body_text, body_html, attachments):
+        pass
+        # ----------------------------------------
+        # solution 1
+        # construct a fake rfc822 from the separated arguement
+        #m = email.asdfsadf
+        # use the push_message method
+        #self.push_message(m)
+        # ----------------------------------------
+        # solution 2
+        # use self.pushmessage only with header and body
+        # add attachemnt yourself after
+
+        #ir_attachment_obj = self.pool.get('ir.attachment')
+        #attachment_ids = ir_attachment_obj.search(cr, uid, [('res_model', '=', data.get('res_model')), ('res_id', '=', data.get('res_id')), ('datas_fname', '=', data.get('datas_fname'))])
+        #if attachment_ids:
+        #    return attachment_ids[0]
+        #else:
+        #    vals = {"res_model": data.get('res_model'), "res_id": data.get('res_id'), "name": data.get('name'), "datas" : data.get('datas'), "datas_fname" : data.get('datas_fname')}
+        #    return ir_attachment_obj.create(cr, uid, vals)
+        #return (model, res_id, url, notify)
