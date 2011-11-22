@@ -1,4 +1,3 @@
-/* TODO: separate openerp web client page css from openerp views css */
 body.openerp {
     padding: 0;
     margin: 0;
@@ -31,14 +30,14 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
     text-align: right !important;
 }
 .oe-listview-header-columns {
-	background: #ccc; /* Old browsers */
-    background: -moz-linear-gradient(top, #ffffff 0%, #ebe9e9 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#ebe9e9)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* Opera11.10+ */
-    background: -ms-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* IE10+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#EBE9E9',GradientType=0 ); /* IE6-9 */
-    background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
+	background: #444; /* Old browsers */
+    background: -moz-linear-gradient(top, #ffffff 0%, #d1d1d1 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#d1d1d1)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #ffffff 0%,#d1d1d1 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #ffffff 0%,#d1d1d1 100%); /* Opera11.10+ */
+    background: -ms-linear-gradient(top, #ffffff 0%,#d1d1d1 100%); /* IE10+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#d1d1d1',GradientType=0 ); /* IE6-9 */
+    background: linear-gradient(top, #ffffff 0%,#d1d1d1 100%); /* W3C */
 }
 
 .openerp .oe_hide {
@@ -556,9 +555,9 @@ label.error {
 
 /* SearchView */
 .openerp .filter_label, .openerp .filter_icon {
-    border: 1px solid #666;
     border-left-width: 0;
     background: #F0F0F0;
+	border: 1px solid #999;
     background: -moz-linear-gradient(top, #F0F0F0 0%, #C0C0C0 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#F0F0F0), color-stop(100%,#C0C0C0));
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F0F0F0', endColorstr='#C0C0C0',GradientType=0 );
@@ -570,13 +569,13 @@ label.error {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F0F0F0', endColorstr='#A1A7CE',GradientType=0 );
 }
 .openerp .filter_label:active, .openerp .filter_icon:active {
-    background: #AAAAAA;
+    background: #aaa;
     background: -moz-linear-gradient(top, #999999 0%, #EEEEEE 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#999999), color-stop(100%,#EEEEEE));
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#999999', endColorstr='#EEEEEE',GradientType=0 );
 }
 .openerp .filter_label.enabled, .openerp .filter_icon.enabled {
-    background: #AAAAAA;
+    background: #aaa;
 }
 .openerp .filter_icon {
     height: 22px;
@@ -600,13 +599,17 @@ label.error {
     white-space: nowrap;
 }
 .openerp .filter_label_group button:first-child {
-    border-left: 1px solid #666;
     -webkit-border-top-left-radius: 7px;
     -webkit-border-bottom-left-radius: 7px;
     -moz-border-radius-topleft: 7px;
     -moz-border-radius-bottomleft: 7px;
     border-top-left-radius: 7px;
     border-bottom-left-radius: 7px;
+	 /*border-left:0px;*/
+	border-right:none;
+}
+.openerp .filter_label_group button {
+	border-right:none;
 }
 .openerp .filter_label_group button:last-child {
     -webkit-border-top-right-radius: 7px;
@@ -615,6 +618,20 @@ label.error {
     -moz-border-radius-bottomright: 7px;
     border-top-right-radius: 7px;
     border-bottom-right-radius: 7px;
+	border-right:1px solid #999;
+}
+.openerp .filter_label_group button.filter_icon img {
+	padding:1px 8px 0px 8px;
+}
+.openerp .filter_label_group button.filter_icon:first-child { 
+	border-left:solid 1px #999;
+	margin-left:-7px;
+    -webkit-border-top-left-radius: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+    -moz-border-radius-bottomleft: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
 }
 
 .openerp .searchview_group_string {
@@ -731,10 +748,16 @@ label.error {
     text-align: left;
     padding: 1px 2px;
 }
-.openerp .oe-listview th.oe-record-selector,
-.openerp .oe-listview td.oe-button,
-.openerp .oe-listview td.oe-record-delete {
-    padding: 0 1px;
+
+.openerp .oe-record-delete button{
+	border:none;
+	height:12px;
+	width:12px;
+	background-image:url("/web/static/src/img/iconset-b-remove.gif");
+	background-repeat:no-repeat;
+	background-position:center center;
+	background-color:transparent;
+	cursor:pointer;
 }
 
 /* Could use :not selectors if they were supported by MSIE8... */
@@ -771,11 +794,10 @@ label.error {
 
 .openerp .oe-listview .oe-field-cell {
     cursor: pointer;
-	font-size:90%
     margin-top: 0px;
     margin-bottom: 0px;
-    padding-top: 0px;
-    padding-bottom: 0px;
+    padding-top: 3px;
+    padding-bottom: 3px;
 	font-size:80%;
 }
 .openerp .oe-listview .oe-field-cell progress {
