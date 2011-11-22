@@ -461,7 +461,7 @@ class account_account(osv.osv):
     }
 
     _defaults = {
-        'type': 'view',
+        'type': 'other',
         'reconcile': False,
         'active': True,
         'currency_mode': 'current',
@@ -715,6 +715,19 @@ class account_journal(osv.osv):
     ]
 
     _order = 'code'
+
+    def _check_currency(self, cr, uid, ids, context=None):
+        for journal in self.browse(cr, uid, ids, context=context):
+            if journal.currency:
+                if journal.default_credit_account_id and not journal.default_credit_account_id.currency_id.id == journal.currency.id:
+                    return False
+                if journal.default_debit_account_id and not journal.default_debit_account_id.currency_id.id == journal.currency.id:
+                    return False
+        return True
+
+    _constraints = [
+        (_check_currency, 'Configuration error! The currency chosen should be shared by the default accounts too.', ['currency','default_debit_account_id','default_credit_account_id']),
+    ]
 
     def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
         journal = self.browse(cr, uid, id, context=context)
