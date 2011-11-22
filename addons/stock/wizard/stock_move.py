@@ -254,7 +254,7 @@ class stock_move_split_lines_exist(osv.osv_memory):
     _name = "stock.move.split.lines"
     _description = "Stock move Split lines"
     _columns = {
-        'name': fields.char('Tracking serial', size=64),
+        'name': fields.char('Production Lot', size=64),
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'wizard_id': fields.many2one('stock.move.split', 'Parent Wizard'),
         'wizard_exist_id': fields.many2one('stock.move.split', 'Parent Wizard (for existing lines)'),
