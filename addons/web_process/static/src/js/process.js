@@ -246,9 +246,10 @@ openerp.web_process = function (openerp) {
                 transitions['active'] = src.active && !dst.gray;
                 process_graph.addEdge(src['name'], dst['name'], {directed : true});
             });
-
+            var width = $(document).width();
+            var height = $(document).height();
             var layouter = new Graph.Layout.Ordered(process_graph);
-            var render_process_graph = new Graph.Renderer.Raphael('process_canvas', process_graph, $('#process_canvas').width(), $('#process_canvas').height());
+            var render_process_graph = new Graph.Renderer.Raphael('process_canvas', process_graph, width, height);
         },
         jump_to_view: function(model, id) {
             var self = this;
