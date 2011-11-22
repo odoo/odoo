@@ -101,7 +101,7 @@ class Graph(dict):
             # NOTE The call to load_information_from_description_file is already
             # done by db.initialize, so it is possible to not do it again here.
             info = openerp.modules.module.load_information_from_description_file(module)
-            if info['installable']:
+            if info and info['installable']:
                 packages.append((module, info)) # TODO directly a dict, like in get_modules_with_version
             else:
                 logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable, skipped' % (module))

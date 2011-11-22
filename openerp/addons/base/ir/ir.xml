@@ -2043,7 +2043,9 @@
             <field name="view_id" ref="ir_mail_server_list" />
             <field name="search_view_id" ref="view_ir_mail_server_search"/>
         </record>
-        <menuitem id="next_id_15" name="Parameters" parent="base.menu_config" groups="base.group_extended" />
-        <menuitem id="menu_mail_servers" parent="base.next_id_15" action="action_ir_mail_server_list" sequence="15"/>
+
+        <menuitem id="menu_email" name="Email" parent="base.menu_config" groups="base.group_extended"/>
+        <menuitem id="menu_mail_servers" parent="menu_email" action="action_ir_mail_server_list" sequence="15"/>
+
     </data>
 </openerp>

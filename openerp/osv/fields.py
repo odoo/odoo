@@ -131,12 +131,24 @@ class boolean(_column):
     _symbol_f = lambda x: x and 'True' or 'False'
     _symbol_set = (_symbol_c, _symbol_f)
 
+    def __init__(self, string='unknown', required=False, **args):
+        super(boolean, self).__init__(string=string, required=required, **args)
+        if required:
+            warnings.warn("Making a boolean field `required` has no effect, as NULL values are "
+                          "automatically turned into False", PendingDeprecationWarning, stacklevel=2)
+
 class integer(_column):
     _type = 'integer'
     _symbol_c = '%s'
     _symbol_f = lambda x: int(x or 0)
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self,x: x or 0
+
+    def __init__(self, string='unknown', required=False, **args):
+        super(integer, self).__init__(string=string, required=required, **args)
+        if required:
+            warnings.warn("Making an integer field `required` has no effect, as NULL values are "
+                          "automatically turned into 0", PendingDeprecationWarning, stacklevel=2)
 
 class integer_big(_column):
     """Experimental 64 bit integer column type, currently unused.
@@ -154,6 +166,12 @@ class integer_big(_column):
     _symbol_f = lambda x: int(x or 0)
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self,x: x or 0
+
+    def __init__(self, string='unknown', required=False, **args):
+        super(integer_big, self).__init__(string=string, required=required, **args)
+        if required:
+            warnings.warn("Making an integer_big field `required` has no effect, as NULL values are "
+                          "automatically turned into 0", PendingDeprecationWarning, stacklevel=2)
 
 class reference(_column):
     _type = 'reference'
@@ -208,10 +226,13 @@ class float(_column):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self,x: x or 0.0
 
-    def __init__(self, string='unknown', digits=None, digits_compute=None, **args):
-        _column.__init__(self, string=string, **args)
+    def __init__(self, string='unknown', digits=None, digits_compute=None, required=False, **args):
+        _column.__init__(self, string=string, required=required, **args)
         self.digits = digits
         self.digits_compute = digits_compute
+        if required:
+            warnings.warn("Making a float field `required` has no effect, as NULL values are "
+                          "automatically turned into 0.0", PendingDeprecationWarning, stacklevel=2)
 
 
     def digits_change(self, cr):
@@ -1037,7 +1058,7 @@ class related(function):
 
        _columns = {
            'foo_id': fields.many2one('my.foo', 'Foo'),
-           'bar': fields.related('frol', 'foo_id', type='char', string='Frol of Foo'),
+           'bar': fields.related('foo_id', 'frol', type='char', string='Frol of Foo'),
         }
     """
 
@@ -1145,17 +1166,19 @@ class related(function):
     def _field_get2(self, cr, uid, obj, context=None):
         if self._relations:
             return
+        result = []
         obj_name = obj._name
         for i in range(len(self._arg)):
             f = obj.pool.get(obj_name).fields_get(cr, uid, [self._arg[i]], context=context)[self._arg[i]]
-            self._relations.append({
+            result.append({
                 'object': obj_name,
                 'type': f['type']
 
             })
             if f.get('relation',False):
                 obj_name = f['relation']
-                self._relations[-1]['relation'] = f['relation']
+                result[-1]['relation'] = f['relation']
+        self._relations = result
 
 # ---------------------------------------------------------
 # Dummy fields
@@ -1363,6 +1386,9 @@ def field_to_dict(model, cr, user, field, context=None):
         res['relation'] = field._obj
         res['domain'] = field._domain
         res['context'] = field._context
+
+    if isinstance(field, one2many):
+        res['relation_field'] = field._fields_id
 
     return res
 

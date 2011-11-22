@@ -27,22 +27,6 @@ import tools
 import os
 import logging
 
-def _check_xml(self, cr, uid, ids, context=None):
-    logger = logging.getLogger('init')
-    for view in self.browse(cr, uid, ids, context):
-        eview = etree.fromstring(view.arch.encode('utf8'))
-        frng = tools.file_open(os.path.join('base','rng','view.rng'))
-        try:
-            relaxng_doc = etree.parse(frng)
-            relaxng = etree.RelaxNG(relaxng_doc)
-            if not relaxng.validate(eview):
-                for error in relaxng.error_log:
-                    logger.error(tools.ustr(error))
-                return False
-        finally:
-            frng.close()
-    return True
-
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
@@ -86,6 +70,23 @@ class view(osv.osv):
         'priority': 16
     }
     _order = "priority,name"
+
+    def _check_xml(self, cr, uid, ids, context=None):
+        logger = logging.getLogger('init')
+        for view in self.browse(cr, uid, ids, context):
+            eview = etree.fromstring(view.arch.encode('utf8'))
+            frng = tools.file_open(os.path.join('base','rng','view.rng'))
+            try:
+                relaxng_doc = etree.parse(frng)
+                relaxng = etree.RelaxNG(relaxng_doc)
+                if not relaxng.validate(eview):
+                    for error in relaxng.error_log:
+                        logger.error(tools.ustr(error))
+                    return False
+            finally:
+                frng.close()
+        return True
+
     _constraints = [
         (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
     ]
@@ -109,7 +110,7 @@ class view(osv.osv):
                       (view_id, model))
         return cr.fetchall()
 
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         if not isinstance(ids, (list, tuple)):
             ids = [ids]
         result = super(view, self).write(cr, uid, ids, vals, context)
@@ -122,7 +123,7 @@ class view(osv.osv):
 
         return result
 
-    def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node,label,scale,context={}):
+    def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node, label, scale, context=None):
         if not label:
             label = []
         nodes=[]

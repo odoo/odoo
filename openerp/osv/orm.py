@@ -229,11 +229,6 @@ POSTGRES_CONFDELTYPES = {
     'SET DEFAULT': 'd',
 }
 
-def last_day_of_current_month():
-    today = datetime.date.today()
-    last_day = str(calendar.monthrange(today.year, today.month)[1])
-    return time.strftime('%Y-%m-' + last_day)
-
 def intersect(la, lb):
     return filter(lambda x: x in lb, la)
 
@@ -663,6 +658,10 @@ class BaseModel(object):
     _order = 'id'
     _sequence = None
     _description = None
+
+    # dict of {field:method}, with method returning the name_get of records
+    # to include in the _read_group, if grouped on this field
+    _group_by_full = {}
 
     # Transience
     _transient = False # True in a TransientModel
@@ -1175,8 +1174,7 @@ class BaseModel(object):
         return {'datas': datas}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
-        """
-        Import given data in given module
+        """Import given data in given module
 
         This method is used when importing data via client menu.
 
@@ -1191,21 +1189,26 @@ class BaseModel(object):
             order_line/product_uom_qty,
             order_line/product_uom/id    (=xml_id)
 
-        This method returns a 4-tuple with the following structure:
+        This method returns a 4-tuple with the following structure::
 
-        * The first item is a return code, it returns either ``-1`` in case o
+            (return_code, errored_resource, error_message, unused)
 
-        :param cr: database cursor
-        :param uid: current user id
-        :param fields: list of fields
+        * The first item is a return code, it is ``-1`` in case of
+          import error, or the last imported row number in case of success
+        * The second item contains the record data dict that failed to import
+          in case of error, otherwise it's 0
+        * The third item contains an error message string in case of error,
+          otherwise it's 0
+        * The last item is currently unused, with no specific semantics
+
+        :param fields: list of fields to import
         :param data: data to import
         :param mode: 'init' or 'update' for record creation
         :param current_module: module name
         :param noupdate: flag for record creation
-        :param context: context arguments, like lang, time zone,
         :param filename: optional file to store partial import state for recovery
-        :returns: 4-tuple of a return code, an errored resource, an error message and ???
-        :rtype: (int, dict|0, str|0, ''|0)
+        :returns: 4-tuple in the form (return_code, errored_resource, error_message, unused)
+        :rtype: (int, dict or 0, str or 0, str or 0)
         """
         if not context:
             context = {}
@@ -1257,7 +1260,7 @@ class BaseModel(object):
             nbrmax = position+1
 
             done = {}
-            for i in range(len(fields)):
+            for i, field in enumerate(fields):
                 res = False
                 if i >= len(line):
                     raise Exception(_('Please check that all your lines have %d columns.'
@@ -1266,11 +1269,11 @@ class BaseModel(object):
                 if not line[i]:
                     continue
 
-                field = fields[i]
                 if field[:len(prefix)] <> prefix:
                     if line[i] and skip:
                         return False
                     continue
+                field_name = field[len(prefix)]
 
                 #set the mode for m2o, o2m, m2m : xml_id/id/name
                 if len(field) == len(prefix)+1:
@@ -1286,7 +1289,7 @@ class BaseModel(object):
                     return [(6,0,res)]
 
                 # ID of the record using a XML ID
-                if field[len(prefix)]=='id':
+                if field_name == 'id':
                     try:
                         data_res_id = _get_id(model_name, line[i], current_module, 'id')
                     except ValueError:
@@ -1295,16 +1298,17 @@ class BaseModel(object):
                     continue
 
                 # ID of the record using a database ID
-                elif field[len(prefix)]=='.id':
+                elif field_name == '.id':
                     data_res_id = _get_id(model_name, line[i], current_module, '.id')
                     continue
 
+                field_type = fields_def[field_name]['type']
                 # recursive call for getting children and returning [(0,0,{})] or [(1,ID,{})]
-                if fields_def[field[len(prefix)]]['type']=='one2many':
-                    if field[len(prefix)] in done:
+                if field_type == 'one2many':
+                    if field_name in done:
                         continue
-                    done[field[len(prefix)]] = True
-                    relation = fields_def[field[len(prefix)]]['relation']
+                    done[field_name] = True
+                    relation = fields_def[field_name]['relation']
                     relation_obj = self.pool.get(relation)
                     newfd = relation_obj.fields_get( cr, uid, context=context )
                     pos = position
@@ -1313,7 +1317,7 @@ class BaseModel(object):
 
                     first = 0
                     while pos < len(datas):
-                        res2 = process_liness(self, datas, prefix + [field[len(prefix)]], current_module, relation_obj._name, newfd, pos, first)
+                        res2 = process_liness(self, datas, prefix + [field_name], current_module, relation_obj._name, newfd, pos, first)
                         if not res2:
                             break
                         (newrow, pos, w2, data_res_id2, xml_id2) = res2
@@ -1329,36 +1333,36 @@ class BaseModel(object):
 
                         res.append( (data_res_id2 and 1 or 0, data_res_id2 or 0, newrow) )
 
-
-                elif fields_def[field[len(prefix)]]['type']=='many2one':
-                    relation = fields_def[field[len(prefix)]]['relation']
+                elif field_type == 'many2one':
+                    relation = fields_def[field_name]['relation']
                     res = _get_id(relation, line[i], current_module, mode)
 
-                elif fields_def[field[len(prefix)]]['type']=='many2many':
-                    relation = fields_def[field[len(prefix)]]['relation']
+                elif field_type == 'many2many':
+                    relation = fields_def[field_name]['relation']
                     res = many_ids(line[i], relation, current_module, mode)
 
-                elif fields_def[field[len(prefix)]]['type'] == 'integer':
+                elif field_type == 'integer':
                     res = line[i] and int(line[i]) or 0
-                elif fields_def[field[len(prefix)]]['type'] == 'boolean':
+                elif field_type == 'boolean':
                     res = line[i].lower() not in ('0', 'false', 'off')
-                elif fields_def[field[len(prefix)]]['type'] == 'float':
+                elif field_type == 'float':
                     res = line[i] and float(line[i]) or 0.0
-                elif fields_def[field[len(prefix)]]['type'] == 'selection':
-                    for key, val in fields_def[field[len(prefix)]]['selection']:
+                elif field_type == 'selection':
+                    for key, val in fields_def[field_name]['selection']:
                         if tools.ustr(line[i]) in [tools.ustr(key), tools.ustr(val)]:
                             res = key
                             break
                     if line[i] and not res:
-                        logger.notifyChannel("import", netsvc.LOG_WARNING,
-                                _("key '%s' not found in selection field '%s'") % \
-                                        (tools.ustr(line[i]), tools.ustr(field[len(prefix)])))
-                        warning += [_("Key/value '%s' not found in selection field '%s'") % (tools.ustr(line[i]), tools.ustr(field[len(prefix)]))]
+                        logging.getLogger('orm.import').warn(
+                            _("key '%s' not found in selection field '%s'"),
+                            tools.ustr(line[i]), tools.ustr(field_name))
+                        warning.append(_("Key/value '%s' not found in selection field '%s'") % (
+                            tools.ustr(line[i]), tools.ustr(field_name)))
 
                 else:
                     res = line[i]
 
-                row[field[len(prefix)]] = res or False
+                row[field_name] = res or False
 
             result = (row, nbrmax, warning, data_res_id, xml_id)
             return result
@@ -1803,7 +1807,7 @@ class BaseModel(object):
         """
         _rec_name = self._rec_name
         if _rec_name not in self._columns:
-            _rec_name = self._columns.keys()[0]
+            _rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
 
         view = etree.Element('tree', string=self._description)
         etree.SubElement(view, 'field', name=_rec_name)
@@ -2265,7 +2269,8 @@ class BaseModel(object):
         if context is None:
             context = {}
         args = args[:]
-        if name:
+        # optimize out the default criterion of ``ilike ''`` that matches everything
+        if not (name == '' and operator == 'ilike'):
             args += [(self._rec_name, operator, name)]
         access_rights_uid = name_get_uid or user
         ids = self._search(cr, user, args, limit=limit, context=context, access_rights_uid=access_rights_uid)
@@ -2353,6 +2358,46 @@ class BaseModel(object):
         except AttributeError:
             pass
 
+
+    def _read_group_fill_results(self, cr, uid, domain, groupby, groupby_list, aggregated_fields, read_group_result, context=None):
+        """Helper method for filling in read_group results for all missing values of
+           the field being grouped by, in case self._group_by_full provides methods
+           to give the list of all the values that should be displayed."""
+        # self._group_by_full should map groupable fields to a method that returns
+        # a list of all aggregated values that we want to display for this field
+        # This is useful to implement kanban views for instance, where all columns
+        # should be displayed even if they don't contain any record.
+        # let "groups" represent the various possible values for the group_by field
+        present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
+        # grab the list of all groups that should be displayed, including all present groups 
+        all_groups = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
+                                                  context=context)
+        result_template = dict.fromkeys(aggregated_fields, False)
+        result_template.update({'__context':{'group_by':groupby_list[1:]}, groupby + '_count':0})
+        result = []
+        def append_filler_line(right_side):
+            line = dict(result_template)
+            line.update({
+                groupby: right_side,
+                '__domain': [(groupby, '=', right_side[0])] + domain,
+            })
+            result.append(line)
+        #as both lists use the same ordering, we can merge in one pass
+        while read_group_result or all_groups:
+            left_side = read_group_result[0] if read_group_result else None
+            right_side = all_groups[0] if all_groups else None
+            if left_side is None:
+                append_filler_line(all_groups.pop(0))
+            elif right_side is None:
+                result.append(read_group_result.pop(0))
+            elif left_side[groupby][0] == right_side[0]:
+                result.append(read_group_result.pop(0))
+                all_groups.pop(0)
+            else:
+                result.append(read_group_result.pop(0)) # should be False
+                append_filler_line(all_groups.pop(0))
+        return result
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
@@ -2402,7 +2447,6 @@ class BaseModel(object):
 
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fget = self.fields_get(cr, uid, fields)
-        float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
         flist = ''
         group_count = group_by = groupby
         if groupby:
@@ -2418,17 +2462,17 @@ class BaseModel(object):
                 raise except_orm(_('Invalid group_by'),
                                  _('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.')%(groupby,))
 
-
-        fields_pre = [f for f in float_int_fields if
-                   f == self.CONCURRENCY_CHECK_FIELD
-                or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
-        for f in fields_pre:
-            if f not in ['id', 'sequence']:
-                group_operator = fget[f].get('group_operator', 'sum')
-                if flist:
-                    flist += ', '
-                qualified_field = '"%s"."%s"' % (self._table, f)
-                flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
+        aggregated_fields = [
+            f for f in fields
+            if f not in ('id', 'sequence')
+            if fget[f]['type'] in ('integer', 'float')
+            if (f in self._columns and getattr(self._columns[f], '_classic_write'))]
+        for f in aggregated_fields:
+            group_operator = fget[f].get('group_operator', 'sum')
+            if flist:
+                flist += ', '
+            qualified_field = '"%s"."%s"' % (self._table, f)
+            flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
 
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
@@ -2471,6 +2515,11 @@ class BaseModel(object):
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
+
+        if groupby and groupby in self._group_by_full:
+            data = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
+                                                 aggregated_fields, data, context=context)
+
         return data
 
     def _inherits_join_add(self, current_table, parent_model_name, query):
@@ -3802,6 +3851,7 @@ class BaseModel(object):
             for id in ids:
                 result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
 
+        unknown_fields = updend[:]
         for table in self._inherits:
             col = self._inherits[table]
             nids = []
@@ -3814,9 +3864,14 @@ class BaseModel(object):
             for val in updend:
                 if self._inherit_fields[val][0] == table:
                     v[val] = vals[val]
+                    unknown_fields.remove(val)
             if v:
                 self.pool.get(table).write(cr, user, nids, v, context)
 
+        if unknown_fields:
+            self.__logger.warn(
+                'No such field(s) in model %s: %s.',
+                self._name, ', '.join(unknown_fields))
         self._validate(cr, user, ids, context)
 
         # TODO: use _order to set dest at the right position and not first node of parent
@@ -3939,6 +3994,7 @@ class BaseModel(object):
                 tocreate[v] = {'id': vals[self._inherits[v]]}
         (upd0, upd1, upd2) = ('', '', [])
         upd_todo = []
+        unknown_fields = []
         for v in vals.keys():
             if v in self._inherit_fields:
                 (table, col, col_detail, original_parent) = self._inherit_fields[v]
@@ -3947,6 +4003,11 @@ class BaseModel(object):
             else:
                 if (v not in self._inherit_fields) and (v not in self._columns):
                     del vals[v]
+                    unknown_fields.append(v)
+        if unknown_fields:
+            self.__logger.warn(
+                'No such field(s) in model %s: %s.',
+                self._name, ', '.join(unknown_fields))
 
         # Try-except added to filter the creation of those records whose filds are readonly.
         # Example : any dashboard which has all the fields readonly.(due to Views(database views))
@@ -4593,7 +4654,7 @@ class BaseModel(object):
         :type default: dictionary
         :param context: context arguments, like lang, time zone
         :type context: dictionary
-        :return: True
+        :return: id of the newly created record
 
         """
         if context is None:

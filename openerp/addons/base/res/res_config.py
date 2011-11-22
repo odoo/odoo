@@ -70,6 +70,9 @@ class res_config_configurable(osv.osv_memory):
             res = next.action_launch(context=context)
             res['nodestroy'] = False
             return res
+        #if there is no next action and if html is in the context: reload instead of closing
+        if context and 'html' in context:
+            return {'type' : 'ir.actions.reload'}
         return {'type' : 'ir.actions.act_window_close'}
 
     def start(self, cr, uid, ids, context=None):

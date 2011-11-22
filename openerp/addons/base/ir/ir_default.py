@@ -34,7 +34,7 @@ class ir_default(osv.osv):
         'company_id': fields.many2one('res.company','Company')
     }
 
-    def _get_company_id(self, cr, uid, context={}):
+    def _get_company_id(self, cr, uid, context=None):
         res = self.pool.get('res.users').read(cr, uid, [uid], ['company_id'], context=context)
         if res and res[0]['company_id']:
             return res[0]['company_id'][0]

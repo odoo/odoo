@@ -69,7 +69,7 @@ and you would be tempted to believe something like this would be possible:
   ['!', ['=', 'company_id.name', ['&', ..., ...]]]
 
 That is, a domain could be a valid operand. But this is not the case. A domain
-is really limited to a two-level nature, and can not takes a recursive form: a
+is really limited to a two-level nature, and can not take a recursive form: a
 domain is not a valid second-level operand.
 
 Unaccent - Accent-insensitive search
@@ -593,23 +593,13 @@ class expression(object):
                         if operator in NEGATIVE_TERM_OPERATORS:
                             res_ids.append(False) # TODO this should not be appended if False was in 'right'
                         return (left, 'in', res_ids)
-
-                    m2o_str = False
-                    if right:
-                        if isinstance(right, basestring): # and not isinstance(field, fields.related):
-                            m2o_str = True
-                        elif isinstance(right, (list, tuple)):
-                            m2o_str = True
-                            for ele in right:
-                                if not isinstance(ele, basestring):
-                                    m2o_str = False
-                                    break
-                        if m2o_str:
-                            self.__exp[i] = _get_expression(field_obj, cr, uid, left, right, operator, context=context)
-                    elif right == []:
-                        pass # Handled by __leaf_to_sql().
-                    else: # right is False
-                        pass # Handled by __leaf_to_sql().
+                    # resolve string-based m2o criterion into IDs
+                    if isinstance(right, basestring) or \
+                            right and isinstance(right, (tuple,list)) and all(isinstance(item, basestring) for item in right):
+                        self.__exp[i] = _get_expression(field_obj, cr, uid, left, right, operator, context=context)
+                    else: 
+                        # right == [] or right == False and all other cases are handled by __leaf_to_sql()
+                        pass
 
             else:
                 # other field type

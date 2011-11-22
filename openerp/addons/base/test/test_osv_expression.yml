@@ -235,11 +235,14 @@
         res_3.sort()
         res_4 = self.search(cr, uid, [('parent_id', 'not in', [False])]) # get rows with not null parent_id
         res_4.sort()
-        assert res_0 == partner_ids
-        assert res_1 == partner_ids
-        assert res_2 == with_parent
-        assert res_3 == partner_ids
-        assert res_4 == with_parent
+        res_4b = self.search(cr, uid, [('parent_id', 'not ilike', '')]) # get only rows without parent
+        res_4b.sort()
+        assert res_0 == partner_ids, 'res0: expected %r, got %r' % (partner_ids, res_0)
+        assert res_1 == partner_ids, 'res1: expected %r, got %r' % (partner_ids, res_1)
+        assert res_2 == with_parent, 'res2: expected %r, got %r' % (with_parent, res_2)
+        assert res_3 == partner_ids, 'res3: expected %r, got %r' % (partner_ids, res_3)
+        assert res_4 == with_parent, 'res4: expected %r, got %r' % (with_parent, res_4)
+        assert res_4b == without_parent, 'res4b: expected %r, got %r' % (without_parent, res_4b)
         # The results of these queries, when combined with queries 0..4 must
         # give the whole set of ids.
         res_5 = self.search(cr, uid, [('parent_id', 'like', 'probably_unexisting_name')])
@@ -252,11 +255,15 @@
         res_8.sort()
         res_9 = self.search(cr, uid, [('parent_id', 'in', [False])])
         res_9.sort()
-        assert res_5 == []
-        assert res_6 == []
-        assert res_7 == without_parent
-        assert res_8 == []
-        assert res_9 == without_parent
+        res_9b = self.search(cr, uid, [('parent_id', 'ilike', '')]) # get those with a parent
+        res_9b.sort()
+
+        assert res_5 == [], 'res5: expected %r, got %r' % ([], res_5)
+        assert res_6 == [], 'res6: expected %r, got %r' % ([], res_6)
+        assert res_7 == without_parent, 'res7: expected %r, got %r' % (without_parent, res_7)
+        assert res_8 == [], 'res8: expected %r, got %r' % ([], res_8)
+        assert res_9 == without_parent, 'res9: expected %r, got %r' % (without_parent, res_9)
+        assert res_9b == with_parent, 'res9b: expected %r, got %r' % (with_parent, res_9b)
         # These queries must return exactly the results than the queries 0..4,
         # i.e. not ... in ... must be the same as ... not in ... .
         res_10 = self.search(cr, uid, ['!', ('parent_id', 'like', 'probably_unexisting_name')])
@@ -287,6 +294,17 @@
         res_17 = self.search(cr, uid, [('website', 'not in', False)])
         res_17.sort()
         assert res_17 == with_website
+
+-
+    Check behavior for required many2one fields
+-
+    !python {model: res.company }: |
+        company_ids = sorted(self.search(cr, uid, []))
+        # currency_id is required
+        res_101 = sorted(self.search(cr, uid, [('currency_id', 'not ilike', '')])) # get no companies
+        res_102 = sorted(self.search(cr, uid, [('currency_id', 'ilike', '')])) # get all companies
+        assert res_101 == [], 'res_101: expected %r, got %r' % ([], res_101)
+        assert res_102 == company_ids, 'res_102: expected %r, got %r' % (company_ids, res_102)
 -
     Property of the query (one2many not in False).
 -

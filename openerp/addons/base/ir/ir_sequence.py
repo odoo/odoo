@@ -38,7 +38,7 @@ class ir_sequence_type(openerp.osv.osv.osv):
         ('code_unique', 'unique(code)', '`code` must be unique.'),
     ]
 
-def _code_get(self, cr, uid, context={}):
+def _code_get(self, cr, uid, context=None):
     cr.execute('select code, name from ir_sequence_type')
     return cr.fetchall()
 
@@ -150,9 +150,9 @@ class ir_sequence(openerp.osv.osv.osv):
 
         for row in rows:
             # 4 cases: we test the previous impl. against the new one.
+            i = values.get('number_increment', row['number_increment'])
+            n = values.get('number_next', row['number_next'])
             if row['implementation'] == 'standard':
-                i = values.get('number_increment', row['number_increment'])
-                n = values.get('number_next', row['number_next'])
                 if new_implementation in ('standard', None):
                     self._alter_sequence(cr, row['id'], i, n)
                 else:

@@ -62,7 +62,7 @@ class ir_translation(osv.osv):
         'xml_id': fields.char('External ID', size=128, help='Maps to the ir_model_data for which this translation is provided.'),
     }
 
-    def _auto_init(self, cr, context={}):
+    def _auto_init(self, cr, context=None):
         super(ir_translation, self)._auto_init(cr, context)
 
         # FIXME: there is a size limit on btree indexed values so we can't index src column with normal btree. 
