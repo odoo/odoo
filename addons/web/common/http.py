@@ -186,7 +186,7 @@ class JsonRequest(WebRequest):
             session_id = params.get('sid')
             if session_id:
                 self.init_session(session_id)
-                stored_request = self.session.jsonp_requests.get(rid, {})
+                stored_request = self.session.jsonp_requests.pop(rid, {})
             else:
                 stored_request = {}
 
