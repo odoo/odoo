@@ -165,6 +165,7 @@ class JsonRequest(WebRequest):
         requestf = self.httprequest.stream
         direct_json_request = None
         jsonp_callback = None
+        rid = None
         if requestf:
             direct_json_request = requestf.read()
 
@@ -222,10 +223,12 @@ class JsonRequest(WebRequest):
             return werkzeug.exceptions.BadRequest()
 
         error = None
+        if not rid:
+            rid = self.jsonrequest.get('id')
         try:
             if _logger.isEnabledFor(logging.DEBUG):
-                _logger.debug("--> %s.%s\n%s", controller.__class__.__name__, method.__name__, pprint.pformat(self.jsonrequest))
-            response['id'] = self.jsonrequest.get('id')
+                _logger.debug("[%s] --> %s.%s\n%s", rid, controller.__class__.__name__, method.__name__, pprint.pformat(self.jsonrequest))
+            response['id'] = rid
             response["result"] = method(controller, self, **self.params)
         except openerplib.AuthenticationError:
             error = {
@@ -260,9 +263,10 @@ class JsonRequest(WebRequest):
             }
         if error:
             response["error"] = error
+            _logger.error("[%s] <--\n%s", rid, pprint.pformat(response))
 
-        if _logger.isEnabledFor(logging.DEBUG):
-            _logger.debug("<--\n%s", pprint.pformat(response))
+        elif _logger.isEnabledFor(logging.DEBUG):
+            _logger.debug("[%s] <--\n%s", rid, pprint.pformat(response))
 
         return build_response(response)
 
