@@ -297,6 +297,16 @@ class hr_payslip(osv.osv):
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
     }
+    
+    def _check_dates(self, cr, uid, ids, context=None):
+		for i in self.read(cr, uid, ids, ['date_from', 'date_to'], context=context):
+			if i['date_from'] > i['date_to']:
+				return False
+		return True
+
+    _constraints = [ 
+	    (_check_dates, 'Error! Payslip from-date must be lower then contract to-date.', ['date_from', 'date_to'])
+		]  
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
