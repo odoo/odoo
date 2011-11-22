@@ -137,8 +137,9 @@ class hr_expense_expense(osv.osv):
             inv_ids.append(self.browse(cr, uid, id).invoice_id.id)
         return {
             'name': _('Supplier Invoices'),
+            'view_type': 'form',
             'view_mode': 'form',
-            'view_id': [res[1] if res else False],
+            'view_id': [res and res[1] or False],
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice', 'journal_type': 'purchase'}",
             'type': 'ir.actions.act_window',
