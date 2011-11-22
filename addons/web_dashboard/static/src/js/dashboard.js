@@ -103,7 +103,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             }, function(result) {
                 self.actions_attrs[aid] = {
                     name: aid,
-                    string: _.trim(result.result.name)
+                    string: _.str.trim(result.result.name)
                 };
                 qdict.action = {
                     attrs : self.actions_attrs[aid]
@@ -218,9 +218,35 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         });
     },
     on_load_action: function(result) {
-        var self = this;
-        var action_orig = _.extend({}, result.result);
-        var action = result.result;
+        var self = this,
+            action = result.result,
+            action_attrs = this.actions_attrs[action.id],
+            view_mode = action_attrs.view_mode;
+
+        // TODO: Use xmo's python evaluator when ready
+        if (action_attrs.context) {
+            action.context = _.extend(action.context || {}, action_attrs.context);
+        }
+        if (action_attrs.domain) {
+            action.domain = action.domain || [];
+            action.domain.push.apply(action.domain, action_attrs.domain);
+        }
+        var action_orig = _.extend({}, action);
+
+        if (view_mode && view_mode != action.view_mode) {
+            var action_view_mode = action.view_mode.split(',');
+            action.views = _.map(view_mode.split(','), function(mode) {
+                if (_.indexOf(action_view_mode, mode) < 0) {
+                    return [false, mode == 'tree' ? 'list': mode];
+                } else {
+                    mode = mode === 'tree' ? 'list' : mode;
+                    return _.find(action.views, function(view) {
+                        return view[1] == mode;
+                    });
+                }
+            });
+        }
+
         action.flags = {
             search_view : false,
             sidebar : false,
@@ -228,7 +254,10 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             action_buttons : false,
             pager: false,
             low_profile: true,
-            display_title: false
+            display_title: false,
+            list: {
+                selectable: false
+            }
         };
         var am = new openerp.web.ActionManager(this);
         this.action_managers.push(am);
@@ -420,7 +449,7 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
         var Installer = new openerp.web.DataSet(this, 'base.setup.installer');
         Installer.call('default_get', [], function (installed_modules) {
             var installed = _(installed_modules).any(function (active, name) {
-                return _.startsWith(name, 'cat') && active; });
+                return _.str.startsWith(name, 'cat') && active; });
 
             if(installed) {
                 self.do_display_root_menu();
@@ -521,7 +550,7 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
     },
     on_widget_loaded: function (widgets) {
         var widget = widgets[0];
-        var url = _.sprintf(
+        var url = _.str.sprintf(
             '/web_dashboard/widgets/content?session_id=%s&widget_id=%d',
             this.session.session_id, widget.id);
         this.$element.html(QWeb.render('HomeWidget.content', {

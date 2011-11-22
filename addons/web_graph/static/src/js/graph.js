@@ -233,7 +233,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     // second argument is coerced to a str, no good for boolean
                     r[self.abscissa] = records[0][self.abscissa];
                     _(records).each(function (record) {
-                        var key = _.sprintf('%s_%s',
+                        var key = _.str.sprintf('%s_%s',
                             self.ordinate,
                             record[self.group_field].toLowerCase().replace(/\s/g, '_'));
                         r[key] = record[self.ordinate];
@@ -278,7 +278,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                 border: false,
                 width: 1024,
                 tooltip:{
-                    template: _.sprintf("#%s#, %s=#%s#",
+                    template: _.str.sprintf("#%s#, %s=#%s#",
                         self.abscissa, group_list[0].text, group_list[0].group)
                 },
                 radius: 0,
@@ -306,7 +306,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                 bar_chart.addSeries({
                     value: "#"+column.group+"#",
                     tooltip:{
-                        template: _.sprintf("#%s#, %s=#%s#",
+                        template: _.str.sprintf("#%s#, %s=#%s#",
                             self.abscissa, column.text, column.group)
                     },
                     color: column.color

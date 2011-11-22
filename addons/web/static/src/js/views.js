@@ -210,7 +210,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
                     sidebar_id : self.element_id + '_sidebar_' + view.view_type,
                     action : self.action,
                     action_views_ids : views_ids
-                }, self.flags, view.options || {})
+                }, self.flags, self.flags[view.view_type] || {}, view.options || {})
             });
             views_ids[view.view_type] = view.view_id;
         });
@@ -534,7 +534,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             $logs_list = $logs.find('ul').empty();
         $logs.toggleClass('oe-has-more', log_records.length > cutoff);
         _(log_records.reverse()).each(function (record) {
-            $(_.sprintf('<li><a href="#">%s</a></li>', record.name))
+            $(_.str.sprintf('<li><a href="#">%s</a></li>', record.name))
                 .appendTo($logs_list)
                 .delegate('a', 'click', function (e) {
                     self.do_action({
@@ -628,7 +628,7 @@ session.web.Sidebar = session.web.Widget.extend({
     },
 
     add_section: function(name, code) {
-        if(!code) code = _.underscored(name);
+        if(!code) code = _.str.underscored(name);
         var $section = this.sections[code];
 
         if(!$section) {
@@ -656,7 +656,7 @@ session.web.Sidebar = session.web.Widget.extend({
         //
 
         var self = this,
-            $section = this.add_section(_.titleize(section_code.replace('_', ' ')), section_code),
+            $section = this.add_section(_.str.titleize(section_code.replace('_', ' ')), section_code),
             section_id = $section.attr('id');
 
         if (items) {

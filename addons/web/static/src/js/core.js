@@ -125,7 +125,11 @@ openerp.web.callback = function(obj, method) {
                 callback.callback_chain.splice(i, 1);
                 i -= 1;
             }
-            r = c.callback.apply(c.self, c.args.concat(args));
+            var result = c.callback.apply(c.self, c.args.concat(args));
+            if (c.callback === method) {
+                // return the result of the original method
+                r = result;
+            }
             // TODO special value to stop the chain
             // openerp.web.callback_stop
         }
@@ -354,6 +358,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.debug = (window.location.search.indexOf('?debug') !== -1);
         this.session_id = false;
         this.uid = false;
+        this.username = false;
         this.user_context= {};
         this.db = false;
         this.module_list = [];
@@ -484,10 +489,13 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         var self = this;
         var params = { db: db, login: login, password: password };
         return this.rpc("/web/session/login", params, function(result) {
-            self.session_id = result.session_id;
-            self.uid = result.uid;
-            self.user_context = result.context;
-            self.db = result.db;
+            _.extend(self, {
+                session_id: result.session_id,
+                uid: result.uid,
+                user_context: result.context,
+                db: result.db,
+                username: result.login
+            });
             self.session_save();
             self.on_session_valid();
             return true;
@@ -501,9 +509,12 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         var self = this;
         this.session_id = this.get_cookie('session_id');
         return this.rpc("/web/session/get_session_info", {}).then(function(result) {
-            self.uid = result.uid;
-            self.user_context = result.context;
-            self.db = result.db;
+            _.extend(self, {
+                uid: result.uid,
+                user_context: result.context,
+                db: result.db,
+                username: result.login
+            });
             if (self.uid)
                 self.on_session_valid();
             else
@@ -716,7 +727,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 if (parseInt(cookie_val, 10) !== token) { continue; }
 
                 // clear cookie
-                document.cookie = _.sprintf("%s=;expires=%s;path=/",
+                document.cookie = _.str.sprintf("%s=;expires=%s;path=/",
                     cookie_name, new Date().toGMTString());
                 if (options.success) { options.success(); }
                 complete();
@@ -1055,7 +1066,7 @@ openerp.web.qweb.format_text_node = function(s) {
     if (translation && translation.value === 'off') {
         return s;
     }
-    var ts = _.trim(s);
+    var ts = _.str.trim(s);
     if (ts.length === 0) {
         return s;
     }
