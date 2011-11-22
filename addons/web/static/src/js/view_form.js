@@ -140,7 +140,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             // null index means we should start a new record
             promise = this.on_button_new();
         } else {
-            promise = this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
+            promise = this.dataset.read_index(_.keys(this.fields_view.fields)).pipe(this.on_record_loaded);
         }
         this.$element.show();
         if (this.sidebar) {
@@ -155,6 +155,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
     },
     on_record_loaded: function(record) {
+        var self = this,
+            deferred_stack = $.Deferred.queue();
         if (!record) {
             throw("Form: No record received");
         }
@@ -172,33 +174,41 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$form_header.find('.oe_form_on_readonly').toggle(this.readonly);
         this.$form_header.find('.oe_form_on_editable').toggle(!this.readonly);
         this.datarecord = record;
-        for (var f in this.fields) {
-            var field = this.fields[f];
-            field.dirty = false;
-            field.set_value(this.datarecord[f] || false);
-            field.validate();
-        }
-        if (!record.id) {
-            // New record: Second pass in order to trigger the onchanges
-            this.show_invalid = false;
-            for (var f in record) {
-                var field = this.fields[f];
-                if (field) {
-                    field.dirty = true;
-                    this.do_onchange(field);
+
+        _(this.fields).each(function (field, f) {
+            field.reset();
+            var result = field.set_value(self.datarecord[f] || false);
+            if (result && _.isFunction(result.promise)) {
+                deferred_stack.push(result);
+            }
+            $.when(result).then(function() {
+                field.validate();
+            });
+        });
+        deferred_stack.push('force resolution if no fields');
+        return deferred_stack.then(function() {
+            if (!record.id) {
+                // New record: Second pass in order to trigger the onchanges
+                self.show_invalid = false;
+                for (var f in record) {
+                    var field = self.fields[f];
+                    if (field) {
+                        field.dirty = true;
+                        self.do_onchange(field);
+                    }
                 }
             }
-        }
-        this.on_form_changed();
-        this.initial_mutating_lock.resolve();
-        this.show_invalid = true;
-        this.do_update_pager(record.id == null);
-        if (this.sidebar) {
-            this.sidebar.attachments.do_update();
-        }
-        if (this.default_focus_field && !this.embedded_view) {
-            this.default_focus_field.focus();
-        }
+            self.on_form_changed();
+            self.initial_mutating_lock.resolve();
+            self.show_invalid = true;
+            self.do_update_pager(record.id == null);
+            if (self.sidebar) {
+                self.sidebar.attachments.do_update();
+            }
+            if (self.default_focus_field && !self.embedded_view) {
+                self.default_focus_field.focus();
+            }
+        });
     },
     on_form_changed: function() {
         for (var w in this.widgets) {
@@ -354,12 +364,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 var keys = _.keys(self.fields_view.fields);
                 $.when(self.do_set_editable()).then(function() {
                     if (keys.length) {
-                        self.dataset.default_get(keys).then(self.on_record_loaded).then(function() {
+                        self.dataset.default_get(keys).pipe(self.on_record_loaded).then(function() {
                             def.resolve();
                         });
                     } else {
-                        self.on_record_loaded({});
-                        def.resolve();
+                        self.on_record_loaded({}).then(function() {
+                            def.resolve();
+                        });
                     }
                 });
             }
@@ -427,7 +438,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     if (!first_invalid_field) {
                         first_invalid_field = f;
                     }
-                } else if (f.is_dirty()) {
+                } else if (f.name !== 'id' && !f.readonly && (!self.datarecord.id || f.is_dirty())) {
+                    // Special case 'id' field, do not save this field
+                    // on 'create' : save all non readonly fields
+                    // on 'edit' : save non readonly modified fields
                     values[f.name] = f.get_value();
                 }
             }
@@ -476,8 +490,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             // should not happen in the server, but may happen for internal purpose
             return $.Deferred().reject();
         } else {
-            this.reload();
-            return $.when(r).then(success);
+            return $.when(this.reload()).pipe(function () {
+                return $.when(r).then(success); }, null);
         }
     },
     /**
@@ -524,7 +538,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (self.dataset.index == null || self.dataset.index < 0) {
                 return $.when(self.on_button_new());
             } else {
-                return self.dataset.read_index(_.keys(self.fields_view.fields), self.on_record_loaded);
+                return self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded);
             }
         };
         this.reload_lock = this.reload_lock.pipe(act, act);
@@ -564,6 +578,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 return false;
         }
         return true;
+    },
+    sidebar_context: function () {
+        return this.do_save().pipe($.proxy(this, 'get_fields_values'));
     }
 });
 openerp.web.FormDialog = openerp.web.Dialog.extend({
@@ -1180,8 +1197,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         this.nolabel = (this.field.nolabel || node.attrs.nolabel) === '1';
         this.readonly = this.modifiers['readonly'] === true;
         this.required = this.modifiers['required'] === true;
-        this.invalid = false;
-        this.dirty = false;
+        this.invalid = this.dirty = false;
 
         this.classname = 'oe_form_field_' + this.type;
     },
@@ -1251,6 +1267,9 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         this.invalid = false;
     },
     focus: function() {
+    },
+    reset: function() {
+        this.dirty = false;
     }
 });
 
@@ -1340,7 +1359,6 @@ openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
         if (value === false || value === undefined) {
             // As in GTK client, floats default to 0
             value = 0;
-            this.dirty = true;
         }
         this._super.apply(this, [value]);
     }
@@ -2109,7 +2127,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     },
     reload_current_view: function() {
         var self = this;
-        self.is_loaded = self.is_loaded.pipe(function() {
+        return self.is_loaded = self.is_loaded.pipe(function() {
             var view = self.viewmanager.views[self.viewmanager.active_view].controller;
             if(self.viewmanager.active_view === "list") {
                 return view.reload_content();
@@ -2182,8 +2200,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         if (this.dataset.index === null && this.dataset.ids.length > 0) {
             this.dataset.index = 0;
         }
-        self.reload_current_view();
-        this.is_setted.resolve();
+        self.is_setted.resolve();
+        return self.reload_current_view();
     },
     get_value: function() {
         var self = this;

@@ -1072,7 +1072,7 @@
     </table>
 </t>
 <t t-name="WidgetButton">
-    <button type="button" style="width: 100%" class="button">
+    <button type="button" class="oe_button">
         <img t-if="widget.node.attrs.icon" t-att-src="'/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>

@@ -809,33 +809,33 @@ label.error {
     also on the first and last children of the first and last row
  */
 .openerp .oe-listview table.oe-listview-content {
-    -webkit-border-radius: 7px;
-    -moz-border-radius: 7px;
-    border-radius: 7px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
 .openerp .oe-listview table.oe-listview-content thead tr:first-child th:first-child {
-    -webkit-border-top-left-radius: 7px;
-    -moz-border-radius-topleft: 7px;
-    border-top-left-radius: 7px;
+    -webkit-border-top-left-radius: 4px;
+    -moz-border-radius-topleft: 4px;
+    border-top-left-radius: 4px;
 }
 .openerp .oe-listview table.oe-listview-content thead tr:first-child th:last-child {
-    -webkit-border-top-right-radius: 7px;
-    -moz-border-radius-topright: 7px;
-    border-top-right-radius: 7px;
+    -webkit-border-top-right-radius: 4px;
+    -moz-border-radius-topright: 4px;
+    border-top-right-radius: 4px;
 }
 .openerp .oe-listview table.oe-listview-content tfoot tr:last-child th:first-child,
 .openerp .oe-listview table.oe-listview-content tfoot tr:last-child td:first-child,
 .openerp .oe-listview table.oe-listview-content tbody:last-child tr:last-child th:first-child {
-    -webkit-border-bottom-left-radius: 7px;
-    -moz-border-radius-bottomleft: 7px;
-    border-bottom-left-radius: 7px;
+    -webkit-border-bottom-left-radius: 4px;
+    -moz-border-radius-bottomleft: 4px;
+    border-bottom-left-radius: 4px;
 }
 .openerp .oe-listview table.oe-listview-content tfoot tr:last-child th:last-child,
 .openerp .oe-listview table.oe-listview-content tfoot tr:last-child td:last-child,
 .openerp .oe-listview table.oe-listview-content tbody:last-child tr:last-child td:last-child {
-    -webkit-border-bottom-right-radius: 7px;
-    -moz-border-radius-bottomright: 7px;
-    border-bottom-right-radius: 7px;
+    -webkit-border-bottom-right-radius: 4px;
+    -moz-border-radius-bottomright: 4px;
+    border-bottom-right-radius: 4px;
 }
 
 /* Notebook */
@@ -967,17 +967,25 @@ label.error {
 .openerp .oe_forms textarea {
     resize:vertical;
 }
-.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms .button {
+.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms .oe_button {
     height: 22px;
 }
 .openerp .oe_forms input.field_datetime {
     min-width: 11em;
 }
-.openerp .oe_forms .button {
+.openerp .oe_forms .oe_button {
     color: #4c4c4c;
     white-space: nowrap;
+    min-width: 100%;
+    width: 100%;
 }
-.openerp .oe_forms .button span {
+@-moz-document url-prefix() {
+    /* Strange firefox behaviour on width: 100% + white-space: nowrap */
+    .openerp .oe_forms .oe_button {
+        width: auto;
+    }
+}
+.openerp .oe_forms .oe_button span {
     position: relative;
     vertical-align: top;
 }
