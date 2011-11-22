@@ -280,7 +280,7 @@ class sale_order(osv.osv):
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
     }
     _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'Order Reference must be unique !'),
+        ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
     ]
     _order = 'name desc'
 
@@ -772,6 +772,10 @@ class sale_order(osv.osv):
                                will be added. A new picking will be created if ommitted.
         :return: True
         """
+        move_obj = self.pool.get('stock.move')
+        picking_obj = self.pool.get('stock.picking')
+        procurement_obj = self.pool.get('procurement.order')
+
         proc_ids = []
         move_obj = self.pool.get('stock.move')
         for line in order_lines:
@@ -784,17 +788,17 @@ class sale_order(osv.osv):
             if line.product_id:
                 if line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     if not picking_id:
-                        picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, *args))
+                        picking_id = picking_obj.create(cr, uid, self._prepare_order_picking(cr, uid, order, *args))
                     move_id = move_obj.create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, *args))
                 else:
                     # a service has no stock move
                     move_id = False
 
-                proc_id = self.pool.get('procurement.order').create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, *args))
+                proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, *args))
                 proc_ids.append(proc_id)
                 line.write({'procurement_id': proc_id})
                 self.ship_exception(cr, uid, order, move_obj, line, move_id, proc_id)
-                
+
         wf_service = netsvc.LocalService("workflow")
         if picking_id:
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)

@@ -18,10 +18,17 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import logging
 
 import models
 import edi_service
 from models.edi import EDIMixin, edi_document
 
 # web
-import controllers
+try:
+    import controllers
+except ImportError:
+    logging.getLogger('init.load').warn(
+        """Could not load openerp-web section of EDI, EDI will not behave correctly
+
+To fix, launch openerp-web in embedded mode""")

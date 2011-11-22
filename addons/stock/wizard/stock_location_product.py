@@ -43,15 +43,15 @@ class stock_location_product(osv.osv_memory):
         location_products = self.read(cr, uid, ids, ['from_date', 'to_date'], context=context)
         if location_products:
             return {
-                'name': False, 
-                'view_type': 'form', 
-                'view_mode': 'tree,form', 
-                'res_model': 'product.product', 
-                'type': 'ir.actions.act_window', 
-                'context': {'location': context.get('active_id'), 
-                       'from_date': location_products[0]['from_date'], 
-                       'to_date': location_products[0]['to_date']}, 
-                'domain': [('type', '<>', 'service')], 
+                'name': False,
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'product.product',
+                'type': 'ir.actions.act_window',
+                'context': {'location': context['active_id'],
+                       'from_date': location_products[0]['from_date'],
+                       'to_date': location_products[0]['to_date']},
+                'domain': [('type', '<>', 'service')],
             }
 
 stock_location_product()

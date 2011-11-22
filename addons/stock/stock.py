@@ -661,6 +661,9 @@ class stock_picking(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
+    ]
 
     def action_process(self, cr, uid, ids, context=None):
         if context is None: context = {}
@@ -1525,7 +1528,7 @@ class stock_move(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=True),
+        'name': fields.char('Name', size=250, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
