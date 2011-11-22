@@ -123,7 +123,9 @@ Creates a dashboard for CRM that includes:
             'test/process/merge_opportunity.yml',
             'test/process/cancel_lead.yml',
             'test/process/segmentation.yml',
-            'test/ui/onchange_events.yml',
+            'test/ui/demo_data.yml',
+            'test/ui/duplicate_lead.yml',
+            'test/ui/delete_lead.yml'
              ],
     'installable': True,
     'active': False,
