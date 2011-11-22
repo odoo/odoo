@@ -553,16 +553,24 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         var self = this;
         this.session_id = this.get_cookie('session_id');
         return this.rpc("/web/session/get_session_info", {}).then(function(result) {
+            // If immediately follows a login (triggered by trying to restore
+            // an invalid session or no session at all), refresh session data
+            // (should not change, but just in case...) but should not call
+            // on_session_valid again as it triggers reloading the menu
+            var already_logged = self.uid;
             _.extend(self, {
                 uid: result.uid,
                 user_context: result.context,
                 db: result.db,
                 username: result.login
             });
-            if (self.uid)
-                self.on_session_valid(continuation);
-            else
-                self.on_session_invalid(continuation);
+            if (!already_logged) {
+                if (self.uid) {
+                    self.on_session_valid(continuation);
+                } else {
+                    self.on_session_invalid(continuation);
+                }
+            }
         }, function() {
             self.on_session_invalid(continuation);
         });
@@ -889,7 +897,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      */
     tag_name: 'div',
     /**
-     * Construct the widget and set its parent if a parent is given.
+     * Constructs the widget and sets its parent if a parent is given.
      *
      * @constructs openerp.web.Widget
      * @extends openerp.web.CallbackEnabled
@@ -921,7 +929,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         this.widget_is_stopped = false;
     },
     /**
-     * Render the current widget and appends it to the given jQuery object or Widget.
+     * Renders the current widget and appends it to the given jQuery object or Widget.
      *
      * @param target A jQuery object or a Widget instance.
      */
@@ -932,7 +940,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         }, target);
     },
     /**
-     * Render the current widget and prepends it to the given jQuery object or Widget.
+     * Renders the current widget and prepends it to the given jQuery object or Widget.
      *
      * @param target A jQuery object or a Widget instance.
      */
@@ -943,7 +951,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         }, target);
     },
     /**
-     * Render the current widget and inserts it after to the given jQuery object or Widget.
+     * Renders the current widget and inserts it after to the given jQuery object or Widget.
      *
      * @param target A jQuery object or a Widget instance.
      */
@@ -954,7 +962,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         }, target);
     },
     /**
-     * Render the current widget and inserts it before to the given jQuery object or Widget.
+     * Renders the current widget and inserts it before to the given jQuery object or Widget.
      *
      * @param target A jQuery object or a Widget instance.
      */
@@ -963,6 +971,16 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         return this._render_and_insert(function(t) {
             self.$element.insertBefore(t);
         }, target);
+    },
+    /**
+     * Renders the current widget and replaces the given jQuery object.
+     *
+     * @param target A jQuery object or a Widget instance.
+     */
+    replace: function(target) {
+        return this._render_and_insert(_.bind(function(t) {
+            this.$element.replaceAll(t);
+        }, this), target);
     },
     _render_and_insert: function(insertion, target) {
         this.render_element();
@@ -1009,7 +1027,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         return $.Deferred().done().promise();
     },
     /**
-     * Destroys the current widget, also destroy all its children before destroying itself.
+     * Destroys the current widget, also destroys all its children before destroying itself.
      */
     stop: function() {
         _.each(_.clone(this.widget_children), function(el) {
@@ -1025,7 +1043,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         this.widget_is_stopped = true;
     },
     /**
-     * Inform the action manager to do an action. Of course, this suppose that
+     * Informs the action manager to do an action. This supposes that
      * the action manager can be found amongst the ancestors of the current widget.
      * If that's not the case this method will simply return `false`.
      */

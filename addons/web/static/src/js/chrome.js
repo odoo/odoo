@@ -1122,7 +1122,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.action_manager.do_action(action);
     },
     do_about: function() {
-    },
+    }
 
 });
 

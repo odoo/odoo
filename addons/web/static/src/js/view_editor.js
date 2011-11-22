@@ -32,7 +32,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 search_view:false,
                 pager:false,
                 radio: true
-            },
+            }
         };
         this.view_edit_dialog = new openerp.web.Dialog(this, {
             modal: true,
@@ -50,7 +50,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 "Close": function(){
                     self.view_edit_dialog.close();
                 }
-            },
+            }
         });
         this.view_edit_dialog.start().open();
         var action_manager = new openerp.web.ActionManager(this);
@@ -276,8 +276,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             views_switcher: false,
                             action_buttons:false,
                             search_view:false,
-                            pager:false,
-                        },
+                            pager:false
+                        }
                     };
                     var action_manager = new openerp.web.ActionManager(self);
                     action_manager.do_action(action);
@@ -289,7 +289,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         this.edit_xml_dialog.start().open();
         this.edit_xml_dialog.$element.html(QWeb.render('view_editor', {
-            'data': one_object['main_object'],
+            'data': one_object['main_object']
         }));
         this.edit_xml_dialog.$element.find("tr[id^='viewedit-']").click(function() {
             self.edit_xml_dialog.$element.find("tr[id^='viewedit-']").removeClass('ui-selected');
