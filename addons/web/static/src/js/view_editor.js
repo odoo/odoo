@@ -593,7 +593,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var arch = _.detect(self.one_object['arch'], function(element) 
             {return element.view_id == self.one_object.clicked_tr_view[0]});
         var obj = self.get_object_by_id(this.one_object.clicked_tr_view[1],this.one_object['main_object'], []);
-         //for finding xpath tag from inherit view
+        //for finding xpath tag from inherit view
         var xml_arch = QWeb.load_xml(arch.arch);
         if (xml_arch.childNodes[0].tagName == "data") {
             var check_list = _.flatten(obj[0].child_id[0].att_list);
@@ -723,8 +723,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }else if(move_direct == "remove_node"){
                     parent = $(arch1).parents();
                     if(parent.length == 0 || (parent[0].tagName.toLowerCase() == "data")){
-                        id = id -1;
-                        level = level - 1;
+                        self.one_object.clicked_tr_id = self.one_object.clicked_tr_id -1;
+                        self.one_object.clicked_tr_level = self.one_object.clicked_tr_level - 1;
                         (parent.length == 0)?parent.push("remove_view"):false;
                     }
                     $(arch1).remove();
@@ -735,6 +735,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         tr_element.remove();
                     });
                     cur_tr.remove();
+                    var parent_img = _.detect(self.one_object['parent_child_id'],function(element){
+                        return _.include(element.value, self.one_object.clicked_tr_id);
+                    });
+                    if(parent_img.value.length == 1){
+                        self.edit_xml_dialog.$element.
+                            find("tr[id='viewedit-"+parent_img.key+"']").
+                            find("img[id^='parentimg-']").remove();
+                    }
                     self.one_object['parent_child_id'] = self.parent_child_list(self.one_object['main_object'],[]);
                 }
                 
