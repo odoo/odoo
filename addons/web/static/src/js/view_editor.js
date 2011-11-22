@@ -486,19 +486,21 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         var tr = $(side).find('a').text();
         var parent_tr = ($(side).prevAll("tr[level="+String(this.one_object.clicked_tr_level - 1)+"]"))[0];
+        var field_dataset = new openerp.web.DataSetSearch(this, this.model, null, null);
         parent_tr = $(parent_tr).find('a').text();
-        self.rpc("/web/searchview/fields_get", {model:self.model}, function(result) {
-                    var fields = _.keys(result.fields);
-                    fields.push(" "),fields.sort();
-                    var property_to_check = [];
-                    _.each([tr,parent_tr],function(element){
-                        property_to_check.push(
-                            _.detect(_.keys(_CHILDREN),function(res){
-                                    return _.str.include(element, res);
-                                }));
-                        });
-                    self.on_add_node(property_to_check, fields);
+        field_dataset.call( 'fields_get', [],  function(result) {
+            var fields = _.keys(result);
+            fields.push(" "),fields.sort();
+            var property_to_check = [];
+            _.each([tr,parent_tr],function(element){
+                property_to_check.push(
+                    _.detect(_.keys(_CHILDREN),function(res){
+                            return _.str.include(element, res);
+                        }));
                 });
+            self.on_add_node(property_to_check, fields);
+            });
+
     },
     do_node_edit: function(side){
         var self = this;
@@ -681,9 +683,15 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     var object_xml = self.create_View_Node(temp_xml.childNodes[0]);
                     (update_values[1] == "Inside")? object_xml.level = obj.level + 1:object_xml.level = obj.level;
                     var clone = self.create_clone(tr_click.clone(),object_xml);
+                    var after_append = _.detect(self.one_object['parent_child_id'],function(ele){
+                            return self.one_object.clicked_tr_id == ele.key;
+                    });
+                    after_append = (after_append)?_.last(after_append.value):self.one_object.clicked_tr_id;
+
                      switch (update_values[1]) {
                          case "After":
-                            tr_click.after(clone);
+                            self.edit_xml_dialog.$element.
+                                find("tr[id='viewedit-"+after_append+"']").after(clone);
                             $(arch1).after(update_values[0]);
                             child_list.splice(index + 1, 0, object_xml);
                             break;
@@ -693,10 +701,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             child_list.splice(index - 1, 0, object_xml);
                             break;
                         case "Inside":
-                            var after_append = _.detect(self.one_object['parent_child_id'],function(ele){
-                                    return self.one_object.clicked_tr_id == ele.key;
-                            });
-                            after_append = (after_append)?_.last(after_append.value):self.one_object.clicked_tr_id;
                             if(tr_click.find("img[id^='parentimg-']").length == 0){
                             ($(tr_click.find('a').parent()).siblings('td'))
                                 .append($('<img width="16" height="16"></img>').
@@ -706,9 +710,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                                         self.do_parent_img_hide_show(this);
                                     }));
                             }
+                            $(arch1).append(update_values[0]);
                             self.edit_xml_dialog.$element.
                                 find("tr[id='viewedit-"+after_append+"']").after(clone);
-                            $(arch1).append(update_values[0]);
                             obj.child_id.push(object_xml);
                             break;
                    }
@@ -977,7 +981,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             type_widget.set_value(node.value);
             self.add_widget.push(type_widget);
         });
-        console.log("table_selector.find", table_selector.find("td[id^=]"));
         table_selector.find("td[id^=]").attr("width","100px");
         self.add_node_dialog.$element.find('#new_field').click(function() {
             model_data = new openerp.web.DataSetSearch(self,'ir.model', null, null);
