@@ -173,3 +173,5 @@ class TestO2MSerialization(unittest2.TestCase):
             self.partner.resolve_o2m_commands_to_record_dicts(
                 self.cr, UID, 'address', [REPLACE_WITH([42])], ['name'])
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

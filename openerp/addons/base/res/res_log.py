@@ -76,3 +76,5 @@ class res_log(osv.osv):
         return result
 
 res_log()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
