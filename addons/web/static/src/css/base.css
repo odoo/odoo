@@ -5,6 +5,7 @@ body.openerp {
     min-width: 1000px;
     overflow-y: scroll;
     font-size: 80%;
+	font-family: Ubuntu, Helvetica, sans-serif;
 }
 
 body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp option, .openerp button, .openerp .ui-widget {
@@ -272,7 +273,7 @@ label.error {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#BD5E54', endColorstr='#90322A',GradientType=0 ); /* IE6-9 */
     background: linear-gradient(top, #bd5e54 0%,#90322a 60%); /* W3C */
 
-    border: 1px solid #6E2A24;
+    border: 1px solid #5E1A14;
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -283,7 +284,7 @@ label.error {
     text-transform: uppercase;
     line-height: 20px;
     font-weight: bold;
-    font-size: 85%;
+    font-size: 75%;
 
     white-space: nowrap;
 }
@@ -442,6 +443,8 @@ label.error {
     margin: 0;
     padding: 4px 10px;
     text-shadow: 0 1px 0 #111111;
+	font-weight:600;
+	line-height:14px;
 }
 .openerp .header_title small {
     color: #ccc;
@@ -509,6 +512,10 @@ label.error {
     font-weight: bold;
 }
 
+.openerp .logout {
+	font-size:80%;
+}
+
 /* Footer */
 .openerp div.oe_footer {
     background: none repeat scroll 0 0 #CCCCCC;
@@ -551,6 +558,9 @@ label.error {
 /* View Manager */
 .openerp .oe_vm_switch {
     float: right;
+}
+.openerp .oe-view-manager-header .oe_view_title {
+	font-size:150%;
 }
 
 /* SearchView */
@@ -831,6 +841,7 @@ label.error {
 .openerp .oe-list-pager .oe-pager-state {
     cursor: pointer;
 	font-size:90%;
+	color:#555;
 }
 
 .openerp .oe-listview .oe-group-name {
@@ -925,6 +936,10 @@ label.error {
 }
 
 /* Form */
+.openerp .oe_form_frame_cell input[type="checkbox"] {
+	margin-top:5px;
+	vertical-align:center;
+}
 .openerp table.oe_frame td {
     color: #4c4c4c;
 }
@@ -1000,7 +1015,7 @@ label.error {
 }
 
 .openerp .oe_forms label.oe_label, .openerp .oe_forms label.oe_label_help {
-    margin: 3px 0 0 10px;
+    margin: 3px 0 0 3px;
 }
 .openerp label.oe_label_help span {
     font-size: 80%;
@@ -1199,6 +1214,7 @@ label.error {
 
 .openerp .view-manager-main-content {
     width: 100%;
+	padding:0px 7px;
 }
 .openerp .oe-view-manager-header {
     overflow: auto;
@@ -1515,6 +1531,7 @@ label.error {
 .oe-shortcut-toggle {
     height: 20px;
     padding: 0;
+	margin-top:4px;
     width: 24px;
     cursor: pointer;
     display: block;
