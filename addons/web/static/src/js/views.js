@@ -679,13 +679,7 @@ session.web.Sidebar = session.web.Widget.extend({
                     item.callback.apply(self, [item]);
                 }
                 if (item.action) {
-                    if (self.widget_parent instanceof session.web.FormView) {
-                        self.widget_parent.do_save(function() {
-                            self.on_item_action_clicked(item);
-                        });
-                    } else {
-                        self.on_item_action_clicked(item);
-                    }
+                    self.on_item_action_clicked(item);
                 }
                 return false;
             });
@@ -699,16 +693,16 @@ session.web.Sidebar = session.web.Widget.extend({
     },
     on_item_action_clicked: function(item) {
         var self = this;
-        var ids = self.widget_parent.get_selected_ids();
-        if (ids.length == 0) {
-            //TODO: make prettier warning?
-            $("<div />").text(_t("You must choose at least one record.")).dialog({
-                title: _t("Warning"),
-                modal: true
-            });
-            return false;
-        }
         self.widget_parent.sidebar_context().then(function (context) {
+            var ids = self.widget_parent.get_selected_ids();
+            if (ids.length == 0) {
+                //TODO: make prettier warning?
+                $("<div />").text(_t("You must choose at least one record.")).dialog({
+                    title: _t("Warning"),
+                    modal: true
+                });
+                return false;
+            }
             var additional_context = _.extend({
                 active_id: ids[0],
                 active_ids: ids,

@@ -730,6 +730,19 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
             return_records();
         }
         return completion.promise();
+    },
+    call_button: function (method, args, callback, error_callback) {
+        var id = args[0][0], index;
+        for(var i=0, len=this.cache.length; i<len; ++i) {
+            var record = this.cache[i];
+            // if record we call the button upon is in the cache
+            if (record.id === id) {
+                // evict it so it gets reloaded from server
+                this.cache.splice(i, 1);
+                break;
+            }
+        }
+        return this._super(method, args, callback, error_callback);
     }
 });
 openerp.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
