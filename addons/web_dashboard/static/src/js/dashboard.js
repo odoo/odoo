@@ -218,9 +218,35 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         });
     },
     on_load_action: function(result) {
-        var self = this;
-        var action_orig = _.extend({}, result.result);
-        var action = result.result;
+        var self = this,
+            action = result.result,
+            action_attrs = this.actions_attrs[action.id],
+            view_mode = action_attrs.view_mode;
+
+        // TODO: Use xmo's python evaluator when ready
+        if (action_attrs.context) {
+            action.context = _.extend(action.context || {}, action_attrs.context);
+        }
+        if (action_attrs.domain) {
+            action.domain = action.domain || [];
+            action.domain.push.apply(action.domain, action_attrs.domain);
+        }
+        var action_orig = _.extend({}, action);
+
+        if (view_mode && view_mode != action.view_mode) {
+            var action_view_mode = action.view_mode.split(',');
+            action.views = _.map(view_mode.split(','), function(mode) {
+                if (_.indexOf(action_view_mode, mode) < 0) {
+                    return [false, mode == 'tree' ? 'list': mode];
+                } else {
+                    mode = mode === 'tree' ? 'list' : mode;
+                    return _.find(action.views, function(view) {
+                        return view[1] == mode;
+                    });
+                }
+            });
+        }
+
         action.flags = {
             search_view : false,
             sidebar : false,
@@ -228,7 +254,10 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             action_buttons : false,
             pager: false,
             low_profile: true,
-            display_title: false
+            display_title: false,
+            list: {
+                selectable: false
+            }
         };
         var am = new openerp.web.ActionManager(this);
         this.action_managers.push(am);

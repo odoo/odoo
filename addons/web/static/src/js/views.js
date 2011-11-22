@@ -143,7 +143,7 @@ session.web.ActionManager = session.web.Widget.extend({
         var ClientWidget = session.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
     },
-    ir_actions_report_xml: function(action) {
+    ir_actions_report_xml: function(action, on_closed) {
         var self = this;
         $.blockUI();
         self.rpc("/web/session/eval_domain_and_context", {
@@ -155,8 +155,14 @@ session.web.ActionManager = session.web.Widget.extend({
             self.session.get_file({
                 url: '/web/report',
                 data: {action: JSON.stringify(action)},
-                complete: $.unblockUI
-            });
+                complete: $.unblockUI,
+                success: function(){
+                    if (!self.dialog && on_closed) {
+                        on_closed();
+                    }
+                    self.dialog_stop();
+                }
+            })
         });
     },
     ir_actions_act_url: function (action) {
@@ -210,7 +216,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
                     sidebar_id : self.element_id + '_sidebar_' + view.view_type,
                     action : self.action,
                     action_views_ids : views_ids
-                }, self.flags, view.options || {})
+                }, self.flags, self.flags[view.view_type] || {}, view.options || {})
             });
             views_ids[view.view_type] = view.view_id;
         });
@@ -882,7 +888,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             }
         };
         var context = new session.web.CompoundContext(dataset.get_context(), action_data.context || {});
-        
+
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {

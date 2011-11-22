@@ -39,13 +39,12 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
         this.$groups = this.$element.find('.oe_kanban_groups tr');
         var context = new openerp.web.CompoundContext(this.dataset.get_context());
-        this.rpc('/web/view/load', {
+        return this.rpc('/web/view/load', {
                 'model': this.dataset.model,
                 'view_id': this.view_id,
                 'view_type': 'kanban',
                 context: context
             }, this.on_loaded);
-        this.do_reload();
     },
     on_loaded: function(data) {
         this.fields_view = data;
