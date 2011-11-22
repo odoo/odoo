@@ -507,12 +507,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             var properties = _PROPERTIES[result[0].att_list[0]];
             self.on_edit_node(properties);
         }
-/*        var tr = $(side).find('a').text();
-        var tag = _.detect(_.keys(_PROPERTIES),function(res){
-            return _.includes(tr, res);
-        });
-        var properties = _PROPERTIES[tag];
-        self.on_edit_node(properties);*/
     },
     do_node_down: function(cur_tr, img){
         var self = this;
@@ -930,14 +924,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var  render_list = [];
         var  render_list =[{'name': 'node_type','selection': _.keys(_CHILDREN).sort(), 
                             'value': 'field', 'string': 'Node Type','type': 'selection'},
-                {'name': 'position','selection': positions, 'value': false, 'string': 'Position','type': 'selection'},
-                {'name': 'field_value','selection': fields, 'value': false, 'string': '','type': 'selection'}];
+                {'name': 'field_value','selection': fields, 'value': false, 'string': '','type': 'selection'},
+            {'name': 'position','selection': positions, 'value': false, 'string': 'Position','type': 'selection'}   ];
         this.add_widget = [];
         this.add_node_dialog = new openerp.web.Dialog(this,{
             modal: true,
             title: 'Properties',
-            width: 500,
-            height: 300,
+            width: 450,
+            height: 190,
             buttons: {
                     "Update": function(){
                         var check_add_node = true;
@@ -964,16 +958,27 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
            }
         }).start().open();
         this.add_node_dialog.$element.
-        append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
-        var table_selector = self.add_node_dialog.$element.find('table[id=rec_table]');
+        append('<table id="rec_table"  style="width:420px" class="oe_forms"><tbody><tr></tbody></table>');
+        var table_selector = self.add_node_dialog.$element.find('table[id=rec_table] tbody');
         _.each(render_list,function(node){
             type_widget = new (self.property.get_any([node.type])) (self.add_node_dialog, node);
-            table_selector.append('<tr><td align="right">' + node.string + ':</td>' + type_widget.render() + '</tr>');
+            if(node.name == "position"){
+                table_selector.
+                    append('</tr><tr><td align="right" width="100px">' + node.string + '</td>' + type_widget.render() + '</tr>');
+            }else{
+                table_selector.
+                    append('<td align="right">' + node.string + '</td>' + type_widget.render() );
+                if(node.name == "field_value"){
+                    table_selector.
+                        append('<td id="new_field" align="right"  width="100px"> <button>New Field</button></td>');
+                }
+            }
             type_widget.start();
             type_widget.set_value(node.value);
             self.add_widget.push(type_widget);
         });
-        table_selector.append('<tr><td align="right"> <button id="new_field">New Field</button></td></tr>');
+        console.log("table_selector.find", table_selector.find("td[id^=]"));
+        table_selector.find("td[id^=]").attr("width","100px");
         self.add_node_dialog.$element.find('#new_field').click(function() {
             model_data = new openerp.web.DataSetSearch(self,'ir.model', null, null);
             model_data.read_slice([], {domain: [['model','=', self.model]]}, function(result) {
@@ -1001,7 +1006,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 new_fields_name = new openerp.web.DataSetSearch(self,'ir.model.fields', null, null);
                 new_fields_name.read_ids([controller.datarecord.id], ['name'], function(result) {
                 self.add_node_dialog.$element.
-                    find('select[id=field_value]'). append($("<option></option>").
+                    find('select[id=field_value]').append($("<option></option>").
                     attr("value",result[0].name).text(result[0].name));
                     _.detect(self.add_widget,function(widget){
                         (widget.name == "field_value")?widget.selection.push(result[0].name):false;
@@ -1090,9 +1095,13 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         this.$element.find("select[id=" + this.name + "]").css('width', '100%').change(function() {
             self.on_ui_change();
             if(self.name == "node_type"){
-                (self.get_value() == "field")?
-                    self.$element.find("select[id=field_value]").show():
-                        self.$element.find("select[id=field_value]").hide();
+                if(self.get_value() == "field"){
+                    self.$element.find('#new_field').show();
+                    self.$element.find("select[id=field_value]").show();
+                }else{
+                    self.$element.find('#new_field').hide();
+                    self.$element.find("select[id=field_value]").hide();
+                }
             }
         });
       
