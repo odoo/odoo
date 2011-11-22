@@ -1,0 +1,23 @@
+-
+  I generate resource detail for the User "Demo"
+-
+  !python {model: resource.resource}: |
+    res = self.generate_resources(cr, uid, [ref('base.user_demo')], ref('timesheet_group1'))
+    assert res, "Resource is not generated."
+    for resource in res.values():
+        assert resource.get('efficiency') == 0.8, "Wrong resource has been Generated"
+        assert resource.get('vacation'), 'No vaction calculated'
+
+-
+  I compute vecation for the reource "Demo Resource"
+-
+  !python {model: resource.resource}: |
+    res= self.compute_vacation(cr, uid, ref('timesheet_group1'), ref('resource_resource_demorsource'))
+    assert res, "No vacation generated for the resource 'Demo Resource'."
+
+-
+  I compute the working calendar for the resource 'Demo Resource'.
+-
+  !python {model: resource.resource}: |
+    res= self.compute_working_calendar(cr, uid, ref('timesheet_group1'))
+    assert res, "No working calendar generated for the resource 'Demo Resource'."
