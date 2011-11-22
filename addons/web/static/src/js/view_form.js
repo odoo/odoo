@@ -955,8 +955,9 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
         var type = {};
         if (node.tag == 'field') {
             type = this.view.fields_view.fields[node.attrs.name] || {};
-            if (node.attrs.widget == 'statusbar') {
+            if (node.attrs.widget == 'statusbar' && node.attrs.nolabel !== '1') {
                 // This way we can retain backward compatibility between addons and old clients
+                node.attrs.colspan = (parseInt(node.attrs.colspan, 10) || 1) + 1;
                 node.attrs.nolabel = '1';
             }
         }
