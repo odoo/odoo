@@ -273,6 +273,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (field in argument_replacement) {
                 return argument_replacement[field](i);
             }
+            // literal number
+            if (/^-?\d+(\.\d+)?$/.test(field)) {
+                return Number(field);
+            }
             // form field
             if (self.fields[field]) {
                 var value = self.fields[field].get_on_change_value();
