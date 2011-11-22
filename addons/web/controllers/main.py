@@ -268,13 +268,18 @@ class Database(openerpweb.Controller):
             params['db_lang'],
             params['create_admin_pwd']
         )
-
+        
         try:
             return req.session.proxy("db").create(*create_attrs)
         except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': e.faultCode, 'title': 'Create Database'}
-        return {'error': 'Could not create database !', 'title': 'Create Database'}
+            if e.faultCode and isinstance(e.faultCode, str)\
+                and e.faultCode.split(':')[0] == 'AccessDenied':
+                    return {'error': e.faultCode, 'title': 'Database creation error'}
+            return {
+                'error': "Could not create database '%s': %s" % (
+                    params['db_name'], e.faultString),
+                'title': 'Database creation error'
+            }
 
     @openerpweb.jsonrequest
     def drop(self, req, fields):
@@ -338,7 +343,8 @@ class Session(openerpweb.Controller):
             "session_id": req.session_id,
             "uid": req.session._uid,
             "context": ctx,
-            "db": req.session._db
+            "db": req.session._db,
+            "login": req.session._login
         }
 
     @openerpweb.jsonrequest
@@ -347,7 +353,8 @@ class Session(openerpweb.Controller):
         return {
             "uid": req.session._uid,
             "context": req.session.get_context() if req.session._uid else False,
-            "db": req.session._db
+            "db": req.session._db,
+            "login": req.session._login
         }
 
     @openerpweb.jsonrequest
