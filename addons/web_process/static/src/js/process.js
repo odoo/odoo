@@ -45,6 +45,7 @@ openerp.web_process = function (openerp) {
                 if(self.process_id) {
                     self.graph_get().done(function(res) {
                         self.process_notes = res.notes;
+                        self.process_title = res.name;
                         self.process_subflows = _.filter(res.nodes, function(x) {
                             return x.subflow != false;
                         });
