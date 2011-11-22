@@ -115,6 +115,7 @@ class res_partner_bank(osv.osv):
 
     _rec_name = 'acc_number'
     _columns = {
+        'name': fields.char('Bank Account', size=64), # to be removed in v6.2 ?
         'acc_number': fields.char('Account Number', size=64, required=True),
         'bank': fields.many2one('res.bank', 'Bank'),
         'bank_bic': fields.char('Bank Identifier Code', size=16),
@@ -149,6 +150,7 @@ class res_partner_bank(osv.osv):
             cursor, user, 'country_id', context=context),
         'state_id': lambda obj, cursor, user, context: obj._default_value(
             cursor, user, 'state_id', context=context),
+        'name': lambda *args: '/'
     }
 
     def fields_get(self, cr, uid, fields=None, context=None):

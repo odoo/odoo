@@ -458,7 +458,8 @@ def trans_export(lang, modules, buffer, format, cr):
             tar.close()
 
         else:
-            raise Exception(_('Bad file format'))
+            raise Exception(_('Unrecognized extension: must be one of '
+                '.csv, .po, or .tgz (received .%s).' % format))
 
     newlang = not bool(lang)
     if newlang:

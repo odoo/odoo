@@ -70,9 +70,6 @@ from openerp.tools import SKIPPED_ELEMENT_TYPES
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
-# Mapping between openerp module names and their osv classes.
-module_class_list = {}
-
 # Super-user identifier (aka Administrator aka root)
 ROOT_USER_ID = 1
 
@@ -806,23 +803,21 @@ class orm_template(object):
         return obj
 
     def __new__(cls):
-        """ Register this model.
+        """Register this model.
 
         This doesn't create an instance but simply register the model
         as being part of the module where it is defined.
-
-        TODO make it possible to not even have to call the constructor
-        to be registered.
-
         """
-
         # Set the module name (e.g. base, sale, accounting, ...) on the class.
         module = cls.__module__.split('.')[0]
         if not hasattr(cls, '_module'):
             cls._module = module
 
-        # Remember which models to instanciate for this module.
-        module_class_list.setdefault(cls._module, []).append(cls)
+        # Record this class in the list of models to instantiate for this module,
+        # managed by the metaclass.
+        module_model_list = MetaModel.module_to_models.setdefault(cls._module, [])
+        if cls not in module_model_list:
+            module_model_list.append(cls)
 
         # Since we don't return an instance here, the __init__
         # method won't be called.
