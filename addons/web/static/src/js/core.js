@@ -509,16 +509,24 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         var self = this;
         this.session_id = this.get_cookie('session_id');
         return this.rpc("/web/session/get_session_info", {}).then(function(result) {
+            // If immediately follows a login (triggered by trying to restore
+            // an invalid session or no session at all), refresh session data
+            // (should not change, but just in case...) but should not call
+            // on_session_valid again as it triggers reloading the menu
+            var already_logged = self.uid;
             _.extend(self, {
                 uid: result.uid,
                 user_context: result.context,
                 db: result.db,
                 username: result.login
             });
-            if (self.uid)
-                self.on_session_valid();
-            else
-                self.on_session_invalid();
+            if (!already_logged) {
+                if (self.uid) {
+                    self.on_session_valid();
+                } else {
+                    self.on_session_invalid();
+                }
+            }
         }, function() {
             self.on_session_invalid();
         });
