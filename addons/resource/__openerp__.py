@@ -45,7 +45,10 @@ It also manages the leaves of every resource.
     ],
     'demo_xml': ['resource_demo.xml'
     ],
-    'test': ['test/on_chnage_resource.yml'],#TODO: Add Resource test cases
+    'test': [
+                'test/on_chnage_resource.yml',
+                'test/test_resource.yml',
+            ],
     'installable': True,
     'active': False,
     'certificate': '00746371192190459469',
