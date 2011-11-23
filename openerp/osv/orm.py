@@ -51,7 +51,6 @@ import pickle
 import re
 import simplejson
 import time
-import traceback
 import types
 import warnings
 from lxml import etree
@@ -2373,7 +2372,9 @@ class BaseModel(object):
         # Grab the list of all groups that should be displayed, including all present groups 
         present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
         all_groups = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
-                                                  read_group_order=read_group_order, context=context)
+                                                  read_group_order=read_group_order,
+                                                  access_rights_uid=openerp.SUPERUSER_ID,
+                                                  context=context)
 
         result_template = dict.fromkeys(aggregated_fields, False)
         result_template.update({groupby + '_count':0})
