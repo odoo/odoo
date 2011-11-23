@@ -29,7 +29,7 @@
   !python {model: sale.order}: |
     order = self.browse(cr, uid, ref("order3"))
     assert order.invoice_ids[0].state == "cancel","order's related invoice should be cancelled"
-    assert order.state == "invoice_except", "order should be in Invoice Exception state after cancel Invoice"
+    assert order.state == "invoice_except", "Order should be in Invoice Exception state after cancel Invoice"
 -
   Then I click on the Ignore Exception button.
 -
@@ -43,22 +43,27 @@
     invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','cancel')])
     self.action_cancel_draft(cr, uid, invoice_id, ({'active_model': 'ir.ui.menu','active_ids': [ref("sale.menu_sale_order")], 'type': 'out_invoice', 'active_id': ref("sale.menu_sale_order")},))
 -
-  Now I need to cancel the related picking of sale order.
+  Now I creating a partial picking.
 -
   !python {model: sale.order}: |
     import netsvc
     order = self.browse(cr, uid, ref("order4"))
-    picking_ids = [x.id for x in self.browse(cr, uid, ref("order4")).picking_ids]
-    wf_service = netsvc.LocalService("workflow")
-    for picking in picking_ids:
-      wf_service.trg_validate(uid, 'stock.picking', picking, 'button_cancel', cr)
--
-  I check order status in "Shipping Exception" and related picking is in cancel state.
--
-  !python {model: sale.order}: |
-    order = self.browse(cr, uid, ref("order4"))
-    assert order.picking_ids[0].state == "cancel","order's related picking should be cancelled"
-    #assert order.state == "shipping_except", "order should be in Ship Exception state after cancel picking"
+    assert order.picking_ids, "Picking is not created for this sale order"
+    partial_pick = self.pool.get('stock.partial.picking')
+    stock = self.pool.get('stock.picking')
+    pick_ids = [x.id for x in self.browse(cr, uid, ref("order4")).picking_ids]
+    stock1 = stock.browse(cr, uid, pick_ids)
+    data = stock.force_assign(cr, uid, pick_ids)
+    if data == True:
+      partial_id = partial_pick.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': pick_ids})
+      partial = partial_pick.browse(cr,uid,partial_id)
+      line_id = partial.move_ids[0].id
+      partial.write({'move_ids': [(1,line_id,{'quantity': 5})]})
+      partial.do_partial()
+      picking_id = stock.search(cr, uid, [('origin','=',order.name),('state','=','assigned')])
+      wf_service = netsvc.LocalService("workflow")
+      for picking in picking_id:
+        wf_service.trg_validate(uid, 'stock.picking', picking, 'button_cancel', cr)
 
 #code introduced by revid: mtr@tinyerp.com-20110921101038-xf1l3whyblmjbdx9
 #form 'lp:~openerp-dev/openobject-addons/trunk-sale_coverage-mtr' branch
@@ -79,7 +84,7 @@
     picking_id = self.search(cr, uid, [('sale_id','=',ref("order4"))])
     assert picking_id,"Picking has not been generated"
 -
-  Now need to cancel the rekated picking of sale order.
+  Now I need to cancel the rekated picking of sale order.
 -
   !python {model: sale.order}: |
     import netsvc

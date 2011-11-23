@@ -82,9 +82,6 @@
   I check that Picking details after correspond with Quotation1.
 -
   !python {model: sale.order}: |
-    from datetime import datetime, timedelta
-    from dateutil.relativedelta import relativedelta
-    from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
     sale_order = self.browse(cr, uid, ref("order"))
     for picking in sale_order.picking_ids:
       assert picking.state == "auto" or "confirmed", "Picking state should be in waitting state"

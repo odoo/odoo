@@ -44,15 +44,6 @@ class stock_picking(osv.osv):
         'sale_id': False
     }
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        """ Changes picking state to cancel.
-        @return: True
-        """
-        sale_id = self.browse(cr, uid, ids)[0].sale_id.id
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'sale.order', sale_id, 'ship_exception', cr)
-        return super(stock_picking, self).action_cancel(cr, uid, ids)
-    
     def get_currency_id(self, cursor, user, picking):
         if picking.sale_id:
             return picking.sale_id.pricelist_id.currency_id.id

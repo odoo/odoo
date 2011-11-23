@@ -738,9 +738,17 @@ class sale_order(osv.osv):
             'company_id': order.company_id.id,
         }
 
-    def ship_exception(self, cr, uid, order, move_obj, line, move_id, proc_id):
+    def ship_recreate(self, cr, uid, order, line, move_id, proc_id):
 # FIXME: deals with potentially cancelled shipments, seems broken, see below
 # FIXME: was introduced by revid: mtr@mtr-20101125100355-0a1b7m792t63mssv
+        """
+        Define ship_recreate for process after shipping exception
+        param order: sale order to which the order lines belong
+        param line: sale order line records to procure
+        param move_id: the ID of stock move
+        param proc_id: the ID of procurement
+        """
+        move_obj = self.pool.get('stock.move')
         if order.state == 'shipping_except':
             for pick in order.picking_ids:
                 for move in pick.move_lines:
@@ -775,9 +783,7 @@ class sale_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         picking_obj = self.pool.get('stock.picking')
         procurement_obj = self.pool.get('procurement.order')
-
         proc_ids = []
-        move_obj = self.pool.get('stock.move')
         for line in order_lines:
             if line.state == 'done':
                 continue
@@ -797,7 +803,7 @@ class sale_order(osv.osv):
                 proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, *args))
                 proc_ids.append(proc_id)
                 line.write({'procurement_id': proc_id})
-                #self.ship_exception(cr, uid, order, move_obj, line, move_id, proc_id)
+                self.ship_recreate(cr, uid, order, line, move_id, proc_id)
 
         wf_service = netsvc.LocalService("workflow")
         if picking_id:
