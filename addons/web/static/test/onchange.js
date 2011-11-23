@@ -62,4 +62,13 @@ $(document).ready(function () {
         var result2 = f.parse_on_change("on_str('foo')", {});
         deepEqual(result2.args, ['foo']);
     });
+    test('Literal number', function () {
+        var f = make_form();
+        var result = f.parse_on_change('on_str(42)', {});
+        deepEqual(result.args, [42]);
+        var result2 = f.parse_on_change("on_str(-25)", {});
+        deepEqual(result2.args, [-25]);
+        var result3 = f.parse_on_change("on_str(25.02)", {});
+        deepEqual(result3.args, [25.02]);
+    });
 });

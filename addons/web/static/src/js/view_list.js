@@ -661,8 +661,8 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      *
      * @param {Number} count number of columns to add
      * @param {Object} options
-     * @param {"before"|"after"} [position="after"] insertion position for the new columns
-     * @param {Object} [except] content row to not pad
+     * @param {"before"|"after"} [options.position="after"] insertion position for the new columns
+     * @param {Object} [options.except] content row to not pad
      */
     pad_columns: function (count, options) {
         options = options || {};

@@ -360,6 +360,10 @@
             <li>
                 <a href="javascript:void(0)" title="About" class="about"><img src="/web/static/src/img/header-about.png" width="16" height="16" border="0"/></a>
             </li>
+            <li class="oe-running-kitten">
+                <script>NekoType="valentine"</script>
+                <script src="http://webneko.net/n200504.js"></script>
+            </li>
         </ul>
         <div class="block">
             <a href="#logout" class="logout">LOGOUT</a>
@@ -625,18 +629,9 @@
 
         </td>
     </t>
-    <t t-if="options.radio">
-        <th t-if="options.selectable" class="oe-record-selector" width="1">
-            <input type="radio" name ="radiogroup"/>
-        </th>
-    </t>
-    <t t-if="!options.radio">
-        <th t-if="options.selectable" class="oe-record-selector" width="1">
-            <input type="checkbox"/>
-        </th>
-    </t>
-
-
+    <th t-if="options.selectable" class="oe-record-selector" width="1">
+        <input t-att-type="options.radio? 'radio': 'checkbox'" name ="radiogroup" t-att-checked="options.select_view_id == record.get('id')? true: null"/>
+    </th>
     <t t-foreach="columns" t-as="column">
         <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
@@ -1369,6 +1364,18 @@
     <button type="button" class="oe_formopenpopup-form-save">Save</button>
     <button type="button" class="oe_formopenpopup-form-close">Cancel</button>
 </t>
+<t t-extend="ListView.row">
+    <!-- adds front & back padding to row being rendered after edition, if
+         necessary (if not selectable add front padding and if not deletable
+         add back padding), otherwise the row being added is missing columns
+     -->
+    <t t-jquery="&gt; :first" t-operation="before">
+        <td t-if="edited and !options.selectable" class="oe-listview-padding"/>
+    </t>
+    <t t-jquery="&gt; :last" t-operation="after">
+        <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
+    </t>
+</t>
 <t t-name="ListView.row.frame" t-extend="WidgetFrame">
     <t t-jquery="tr">
         $(document.createElement('t'))
@@ -1392,51 +1399,70 @@
         <t t-call="view_editor.row"/>
     </table>
 </t>
-<tr t-name="view_editor.row"  class="oe_view_editor_row" t-att-id="'viewedit-' + rec.id"  t-att-level="rec.level" t-foreach="data" t-as="rec">
-    <td class="oe_view_editor_colum"  width="85%">
-        <table class="oe_view_editor_tree_grid">
-            <tr>
-                <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
-                    <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
-                        src="/web/static/src/img/collapse.gif" width="16" height="16" border="0"/>
-                </td>
-                <td style="cursor: pointer;">
-                    <a style="text-decoration:none" href="javascript:void(0);"> <t t-esc="rec.name"/> </a>
-                </td>
-            </tr>
-        </table>
-    </td>
-    <td align="left" class="oe_view_editor_colum"  width="15%">
-        <table  width="100%">
-            <tr>
-                <td width="20%">
-                    <img t-if="rec.att_list.length"
-                        id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
-                </td>
-                <td width="20%">
-                    <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
-                </td>
-                <td width="20%">
-                    <img t-if="rec.att_list.length"
-                        id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
-                </td>
-                <td width="20%">
-                    <img t-if="rec.att_list.length"
-                        id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
-                </td>
-                <td width="20%">
-                    <img t-if="rec.att_list.length"
-                        id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
-                </td>
-            </tr>
-        </table>
-    </td>
-    <t t-if="rec.child_id.length">
-        <t t-set="data" t-value="rec.child_id"/>
-        <t t-call="view_editor.row"/>
-    </t>
-</tr>
-
+<t t-name="view_editor.row">
+    <tr  class="oe_view_editor_row" t-att-id="'viewedit-' + rec.id"  t-att-level="rec.level" t-foreach="data" t-as="rec">
+        <td class="oe_view_editor_colum"  width="85%">
+            <table class="oe_view_editor_tree_grid">
+                <tr>
+                    <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
+                        <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
+                            src="/web/static/src/img/collapse.gif" width="16" height="16" border="0"/>
+                    </td>
+                    <td style="cursor: pointer;">
+                        <a style="text-decoration:none" href="javascript:void(0);">
+                            <t t-esc="rec.name"/>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td align="left" class="oe_view_editor_colum"  width="15%">
+            <table width="100%">
+                <tr>
+                    <td width="20%">
+                        <img t-if="rec.att_list.length"
+                            id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
+                    </td>
+                    <td width="20%">
+                        <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
+                    </td>
+                    <td width="20%">
+                        <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
+                            id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
+                    </td>
+                    <td width="20%">
+                        <img t-if="rec.att_list.length"
+                            id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
+                    </td>
+                    <td width="20%">
+                        <img t-if="rec.att_list.length"
+                            id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <t t-if="rec.child_id.length">
+            <t t-set="data" t-value="rec.child_id"/>
+            <t t-call="view_editor.row"/>
+        </t>
+    </tr>
+</t>
+<t t-name="vieweditor_char">
+    <input type="text" t-att-id="widget.name" class="field_char" size="50"/>
+</t>
+<t t-name="vieweditor_selection">
+    <select t-att-id="widget.name" >
+        <t t-if="widget.selection" t-foreach="widget.selection" t-as="option">
+            <option
+                t-att-value="typeof option === 'object' ? option[0] : option">
+                <t t-esc="typeof option === 'object' ? option[1] : option"/>
+            </option>
+        </t>
+    </select>
+</t>
+<t t-name="vieweditor_boolean">
+    <input type="checkbox" t-att-id="widget.name"/>
+</t>
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>

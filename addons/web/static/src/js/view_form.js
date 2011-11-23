@@ -107,7 +107,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$form_header.find('button.oe_form_button_delete').click(this.on_button_delete);
         this.$form_header.find('button.oe_form_button_toggle').click(this.on_toggle_readonly);
 
-        if (this.options.sidebar && this.options.sidebar_id) {
+        if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
             this.sidebar.do_unfold();
@@ -272,6 +272,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             // literal constant or context
             if (field in argument_replacement) {
                 return argument_replacement[field](i);
+            }
+            // literal number
+            if (/^-?\d+(\.\d+)?$/.test(field)) {
+                return Number(field);
             }
             // form field
             if (self.fields[field]) {
@@ -951,8 +955,9 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
         var type = {};
         if (node.tag == 'field') {
             type = this.view.fields_view.fields[node.attrs.name] || {};
-            if (node.attrs.widget == 'statusbar') {
+            if (node.attrs.widget == 'statusbar' && node.attrs.nolabel !== '1') {
                 // This way we can retain backward compatibility between addons and old clients
+                node.attrs.colspan = (parseInt(node.attrs.colspan, 10) || 1) + 1;
                 node.attrs.nolabel = '1';
             }
         }
@@ -985,7 +990,7 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
 });
 
 openerp.web.form.WidgetGroup = openerp.web.form.WidgetFrame.extend({
-    template: 'WidgetGroup',
+    template: 'WidgetGroup'
 }),
 
 openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({

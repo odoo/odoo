@@ -521,9 +521,12 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
     run_configuration_wizards: function () {
         var self = this;
         new openerp.web.DataSet(this, 'res.config').call('start', [[]], function (action) {
-            $.unblockUI();
             self.widget_parent.widget_parent.do_action(action, function () {
                 openerp.webclient.do_reload();
+            });
+            self.$element.empty();
+            self.do_display_root_menu().then(function () {
+                $.unblockUI();
             });
         });
     }

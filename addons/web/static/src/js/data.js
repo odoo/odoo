@@ -826,7 +826,7 @@ openerp.web.Model = openerp.web.CallbackEnabled.extend({
                 var index = {};
                 _.each(_.range(result.length), function(i) {
                     index[result[i]["id"]] = result[i];
-                })
+                });
                 result = _.map(args[0], function(x) {return index[x];});
             }
             return result;
@@ -843,7 +843,7 @@ openerp.web.Model = openerp.web.CallbackEnabled.extend({
             context: context
         }).pipe(function(result) {
             return result.records;
-        });;
+        });
     }
 });
 

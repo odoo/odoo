@@ -5,6 +5,7 @@
 openerp.web.list_editable = function (openerp) {
     var KEY_RETURN = 13,
         KEY_ESCAPE = 27;
+    var QWeb = openerp.web.qweb;
 
     // editability status of list rows
     openerp.web.ListView.prototype.defaults.editable = null;
@@ -350,6 +351,19 @@ openerp.web.list_editable = function (openerp) {
         new_record: function () {
             this.dataset.index = null;
             this.render_row_as_form();
+        },
+        render_record: function (record) {
+            var index = this.records.indexOf(record);
+            // FIXME: context dict should probably be extracted cleanly
+            return QWeb.render('ListView.row', {
+                columns: this.columns,
+                options: this.options,
+                record: record,
+                row_parity: (index % 2 === 0) ? 'even' : 'odd',
+                view: this.view,
+                render_cell: $.proxy(this, 'render_cell'),
+                edited: !!this.edition_form
+            });
         }
     });
     if (!openerp.web.list) {
