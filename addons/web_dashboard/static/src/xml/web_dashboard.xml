@@ -33,7 +33,7 @@
             <span class='ui-icon ui-icon-minusthick oe-dashboard-fold' t-if="!action.attrs.fold"></span>
             <span class='ui-icon ui-icon-plusthick oe-dashboard-fold' t-if="action.attrs.fold"></span>
         </h2>
-        <div t-att-id="view.element_id + '_action_' + action.attrs.name" class="oe-dashboard-action-content" t-att-style="action.attrs.fold ? 'display: none' : null"></div>
+        <div t-attf-id="#{view.element_id}_action_#{column_index}_#{action_index}" class="oe-dashboard-action-content" t-att-style="action.attrs.fold ? 'display: none' : null"></div>
     </div>
 </t>
 <t t-name="DashBoard.layouts">

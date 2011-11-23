@@ -33,15 +33,17 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
 
         this.actions_attrs = {};
         // Init actions
-        _.each(this.node.children, function(column) {
-            _.each(column.children, function(action) {
+        _.each(this.node.children, function(column, column_index) {
+            _.each(column.children, function(action, action_index) {
                 delete(action.attrs.width);
                 delete(action.attrs.height);
                 delete(action.attrs.colspan);
                 self.actions_attrs[action.attrs.name] = action.attrs;
                 self.rpc('/web/action/load', {
                     action_id: parseInt(action.attrs.name, 10)
-                }, self.on_load_action);
+                }, function(result) {
+                    self.on_load_action(result, column_index + '_' + action_index);
+                });
             });
         });
     },
@@ -135,7 +137,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             self.$element.find('.oe-dashboard-link-undo, .oe-dashboard-link-reset').show();
         });
     },
-    on_load_action: function(result) {
+    on_load_action: function(result, index) {
         var self = this,
             action = result.result,
             action_attrs = this.actions_attrs[action.id],
@@ -179,7 +181,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         };
         var am = new openerp.web.ActionManager(this);
         this.action_managers.push(am);
-        am.appendTo($("#"+this.view.element_id + '_action_' + action.id));
+        am.appendTo($('#' + this.view.element_id + '_action_' + index));
         am.do_action(action);
         am.do_action = function(action) {
             self.do_action(action);
