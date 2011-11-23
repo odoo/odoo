@@ -41,20 +41,22 @@ class plugin_handler(osv.osv_memory):
         model = False
         res_id = 0
         url = False
+        name = ""
 
         msg = mail_message_obj.parse_message(email)
         references = [msg.get('message-id')]
         refs =  msg.get('references',False)
         if refs:
             references.extend(refs.split())
-            
+
         msg_ids = mail_message_obj.search(cr, uid, [('message_id','in',references)])
         if msg_ids:
             msg = mail_message_obj.browse(cr, uid, msg_ids[0])
             res_id = msg.res_id
             model = msg.model
             url = self._make_url(cr, uid, res_id, model)
-        return (model,  res_id, url)
+            name =  self.pool.get(model).name_get(cr, uid, res_id)[1]
+        return (model, res_id, url, name)
 
     def document_type(self, cr, uid, context=None):
         """
