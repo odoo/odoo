@@ -34,21 +34,20 @@ class hr_payslip(osv.osv):
     _inherit = 'hr.payslip'
     _description = 'Pay Slip'
     
-    def _get_journal(self, cr, uid, context=None):
-		if context is None:
-			context = {}
-		journal_obj = self.pool.get('account.journal')
-		res = journal_obj.search(cr, uid, [('type', '=','sale')])
-		return res and res[0] or False   
-
+    def _get_journal_id(self, cr, uid, *args):
+	model_data = self.pool.get('ir.model.data')
+	res = model_data.search(cr,uid, [('name', '=', 'expenses_journal')])
+	if res:return model_data.browse(cr,uid,res[0]).res_id
+	return False
+    
     _columns = {
         'period_id': fields.many2one('account.period', 'Force Period',states={'draft': [('readonly', False)]}, readonly=True, domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
         'journal_id': fields.many2one('account.journal', 'Expense Journal',states={'draft': [('readonly', False)]}, readonly=True, required=True),
         'move_id': fields.many2one('account.move', 'Accounting Entry', readonly=True),
     }
-
+    
     _defaults = {
-			'journal_id': _get_journal,
+	'journal_id':_get_journal_id
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
