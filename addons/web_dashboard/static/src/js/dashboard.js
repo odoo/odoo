@@ -111,8 +111,10 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         this.do_save_dashboard();
     },
     on_close_action: function(e) {
-        $(e.currentTarget).parents('.oe-dashboard-action:first').remove();
-        this.do_save_dashboard();
+        if (confirm("Are you sure you want to remove this item ?")) {
+            $(e.currentTarget).parents('.oe-dashboard-action:first').remove();
+            this.do_save_dashboard();
+        }
     },
     do_save_dashboard: function() {
         var self = this;
