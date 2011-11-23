@@ -600,7 +600,6 @@ class account_voucher(osv.osv):
                         rs['amount'] = amount
                         total_credit -= amount
 
-            default['value']['line_ids'].append(rs)
             if rs['type'] == 'cr':
                 default['value']['line_cr_ids'].append(rs)
             else:
@@ -880,6 +879,7 @@ class account_voucher(osv.osv):
 
     def _convert_amount(self, cr, uid, amount, voucher_id, context=None):
         #TODO: doccument me
+        #TODO: rounding errors
         currency_obj = self.pool.get('res.currency')
         voucher = self.browse(cr, uid, voucher_id, context=context)
         res = amount
@@ -892,8 +892,7 @@ class account_voucher(osv.osv):
             rate_between_voucher_and_base = voucher.payment_rate or 1.0
             res = amount / rate_between_voucher_and_base * rate_between_base_and_company
         else:
-            res = currency_obj.compute(cr, uid, voucher.currency_id.id, voucher.company_id.currency_id.id, amount, context=ctx)
-        print 'res', res
+            res = currency_obj.compute(cr, uid, voucher.currency_id.id, voucher.company_id.currency_id.id, amount, context=context)
         return res
 
     def voucher_move_line_create(self, cr, uid, voucher_id, line_total, move_id, company_currency, current_currency, context=None):
