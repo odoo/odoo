@@ -2535,15 +2535,6 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         this._super();
         var self = this;
         search_defaults = {};
-        if( "__contexts" in this.context.__contexts[0])
-        {
-                _.each(this.context.__contexts[0].__contexts[0], function (value, key) {
-                    var match = /^search_default_(.*)$/.exec(key);
-                    if (match) {
-                        search_defaults[match[1]] = value;
-                    }
-                });
-        }
         this.dataset = new openerp.web.ProxyDataSet(this, this.model,
             this.context);
         this.dataset.create_function = function() {
@@ -2558,7 +2549,18 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         this.dataset.parent_view = this.options.parent_view;
         this.dataset.on_default_get.add(this.on_default_get);
         if (this.options.initial_view == "search") {
-            this.setup_search_view(search_defaults);
+            self.rpc('/web/session/eval_domain_and_context', {
+                    domains: []  ,
+                    contexts: [this.context],
+                }, function (results) {           
+                    _.each(results.context, function (value, key) {
+                        var match = /^search_default_(.*)$/.exec(key);
+                        if (match) {
+                            search_defaults[match[1]] = value;
+                        }
+                    });
+                    self.setup_search_view(search_defaults);
+            });
         } else { // "form"
             this.new_object();
         }
