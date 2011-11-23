@@ -45,7 +45,7 @@
   !python {model: crm.phonecall}: |
     self.case_close(cr, uid, [ref("crm.crm_case_phone06")])
 -
-  I check that the hone call is in 'Held' state.
+  I check that the phone call is in 'Held' state.
 -
   !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call Helded}:
     - state == "done"

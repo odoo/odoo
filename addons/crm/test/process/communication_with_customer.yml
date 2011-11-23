@@ -46,7 +46,7 @@
   !python {model: crm.phonecall}: |
     self.convert_partner(cr, uid, [ref('crm.crm_case_phone06')], context=context)
 -
-  I check coverted phonecall to partner.
+  I check converted phonecall to partner.
 -
   !python {model: res.partner}: |
     partner_id = self.search(cr, uid, [('phonecall_ids', '=', ref('crm.crm_case_phone06'))])
