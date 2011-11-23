@@ -615,7 +615,7 @@ class account_voucher(osv.osv):
             default['value']['writeoff_amount'] = self._compute_writeoff_amount(cr, uid, default['value']['line_dr_ids'], default['value']['line_cr_ids'], price)
         return default
 
-    def onchange_payment_rate_currency(self, cr, uid, ids, currency_id, payment_rate_currency_id, date, amount, company_id, context=None):
+    def onchange_payment_rate_currency(self, cr, uid, ids, currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context=None):
         if context is None:
             context = {}
         res = {'value': {}}
@@ -623,8 +623,6 @@ class account_voucher(osv.osv):
         if currency_id and currency_id == payment_rate_currency_id:
             ctx = context.copy()
             ctx.update({'date': date})
-            payment_rate = self.pool.get('res.currency').browse(cr, uid, currency_id, context=ctx).rate
-            res['value'].update({'payment_rate': payment_rate})
             vals = self.onchange_rate(cr, uid, ids, payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context=ctx)
             for key in vals.keys():
                 res[key].update(vals[key])
