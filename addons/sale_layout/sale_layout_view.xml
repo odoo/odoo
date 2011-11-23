@@ -44,7 +44,7 @@
                                             attrs="{'invisible':[('layout_type','!=','article')],'required':[('layout_type','not in',['title','text','subtotal','line','break'])]}"/>
 
                                         <field groups="product.group_uos" name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
-                                        <field groups="product.group_uos" name="product_uos"/>
+                                        <field groups="product.group_uos" name="product_uos" nolabel="1"/>
                                         <newline/>
 
                                         <field
