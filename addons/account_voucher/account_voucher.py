@@ -882,7 +882,7 @@ class account_voucher(osv.osv):
 
     def _convert_amount(self, cr, uid, amount, voucher_id, context=None):
         #TODO: doccument me
-        #TODO: rounding errors
+        #TODO: check: rounding errors ?
         currency_obj = self.pool.get('res.currency')
         voucher = self.browse(cr, uid, voucher_id, context=context)
         res = amount
@@ -944,7 +944,7 @@ class account_voucher(osv.osv):
                 'account_id': line.account_id.id,
                 'move_id': move_id,
                 'partner_id': voucher_brw.partner_id.id,
-                'currency_id': company_currency <> current_currency and current_currency or False,
+                'currency_id': line.move_line_id and (company_currency <> line.move_line_id.currency_id.id and line.move_line_id.currency_id.id) or False,
                 'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                 'quantity': 1,
                 'credit': 0.0,
@@ -976,7 +976,18 @@ class account_voucher(osv.osv):
                     raise osv.except_osv(_('No Account Base Code and Account Tax Code!'),_("You have to configure account base code and account tax code on the '%s' tax!") % (tax_data.name))
 
             sign = (move_line['debit'] - move_line['credit']) < 0 and -1 or 1
-            move_line['amount_currency'] = company_currency <> current_currency and sign * line.amount or False
+            #TODO: comment me
+            amount_currency = False
+            if line.move_line_id:
+                if line.move_line_id.currency_id and line.move_line_id.currency_id.id != company_currency:
+                    if line.move_line_id.currency_id.id == current_currency:
+                        amount_currency = sign * (line.amount)
+                    elif line.move_line_id.currency_id.id == voucher_brw.payment_rate_currency_id.id:
+                        amount_currency = (move_line['debit'] - move_line['credit']) * voucher_brw.payment_rate
+                    else:
+                        amount_currency = currency_obj.compute(cr, uid, company_currency, line.move_line_id.currency_id.id, move_line['debit']-move_line['credit'], context=ctx)
+
+            move_line['amount_currency'] = amount_currency
             voucher_line = move_line_obj.create(cr, uid, move_line)
             rec_ids = [voucher_line, line.move_line_id.id]
 

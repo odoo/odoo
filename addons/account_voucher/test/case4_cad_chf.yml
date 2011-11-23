@@ -152,7 +152,7 @@
 -
   I check that my debtor account is correct
 -
-  I check that the debtor account has 1 new line with -186.74 as amount_currency columns and 149.39 of credit and currency is CHF.
+  I check that the debtor account has 1 new line with -298.78 as amount_currency columns and 149.39 of credit and currency is CAD.
 -
   I check that my currency rate difference is correct. 0 in debit with no amount_currency
 -
@@ -166,7 +166,7 @@
     for move_line in move_line_obj.browse(cr, uid, move_lines):
         if move_line.amount_currency == 200:
             assert move_line.debit == 160.00, "Bank account has wrong entry."
-        elif move_line.amount_currency == -186.74:
+        elif move_line.amount_currency == -298.78:
             assert move_line.credit == 149.39, "Debtor account has wrong entry."
         elif move_line.debit == 0.00 and move_line.credit == 0.00:
             assert move_line.amount_currency == 0.00, "Incorrect Currency Difference."

@@ -191,18 +191,6 @@
     for move_line in move_line_obj.browse(cr, uid, move_lines):
         assert move_line.state == 'valid', "Voucher move is not valid"
 -
-  I check that my debtor account is correct
--
-  I check that the debtor account has 2 new lines with 0 in amount_currency columns and their credit columns are 130 and 70
--
-  !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 2 USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
-    voucher_id = self.browse(cr, uid, voucher[0])
-    move_line_obj = self.pool.get('account.move.line')
-    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
-    for move_line in move_line_obj.browse(cr, uid, move_lines):
-        assert move_line.amount_currency == 0.00, "A line has the 'amount_currency' column filled"
--
   I check the residual amount of Invoice1, should be 55.56 in residual currency and 20 in amount_residual
 -
   !python {model: account.invoice}: |
