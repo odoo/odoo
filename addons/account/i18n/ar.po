@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-11-16 05:18+0000\n"
+"PO-Revision-Date: 2011-11-21 15:14+0000\n"
 "Last-Translator: kifcaliph <kifcaliph@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-17 05:54+0000\n"
-"X-Generator: Launchpad (build 14291)\n"
+"X-Launchpad-Export-Date: 2011-11-22 05:21+0000\n"
+"X-Generator: Launchpad (build 14299)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -601,6 +601,8 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disable"
 msgstr ""
+"إذا قمت إلغاء تسوية العمليات، عليك أيضاً التحقق من كل الإجراءات المتعلقة لكل "
+"هذه المعاملات لأنهم لن يتم إيقافها"
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -625,7 +627,7 @@ msgstr "سجل مركزي"
 #. module: account
 #: sql_constraint:account.sequence.fiscalyear:0
 msgid "Main Sequence must be different from current !"
-msgstr ""
+msgstr "المسلسل الرئيسي لابد أن يختلف من الحالي !"
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -642,7 +644,7 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement,balance_end_real:0
 msgid "closing balance entered by the cashbox verifier"
-msgstr ""
+msgstr "رصيد الإغلاق من محقق النقدية"
 
 #. module: account
 #: view:account.period:0
@@ -713,7 +715,7 @@ msgstr "شركاء تم تسويتهم اليوم"
 #: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid "The statement balance is incorrect !\n"
-msgstr "رصيد الكشف خطأ\n"
+msgstr "رصيد الكشف خاطئ !\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -756,7 +758,7 @@ msgstr "نوع"
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
 msgid "Account Subscription Line"
-msgstr ""
+msgstr "خط حساب الإشتراك"
 
 #. module: account
 #: help:account.invoice,reference:0
@@ -818,6 +820,8 @@ msgid ""
 "Can not %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only Refund this invoice"
 msgstr ""
+"لا يمكن لفاتورة %s حيث تمت تسويتها، يجب إلغاء التسوية أولاً. يمكنك رد "
+"الفاتورة فقط."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -840,7 +844,7 @@ msgstr "الشريك التالي للموازنة"
 msgid ""
 "You can not do this modification on a confirmed entry ! Please note that you "
 "can just change some non important fields !"
-msgstr ""
+msgstr "لا يمكنك التعديلات لقيد مؤكد ! يمكنك تحرير بعض الحقول غير المهمة فقط"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -937,7 +941,7 @@ msgstr "مشتريات"
 #. module: account
 #: field:account.model,lines_id:0
 msgid "Model Entries"
-msgstr ""
+msgstr "نموذج للقيود"
 
 #. module: account
 #: field:account.account,code:0
@@ -985,7 +989,7 @@ msgstr "اسم الحساب"
 #: field:account.chart.template,property_reserve_and_surplus_account:0
 #: field:res.company,property_reserve_and_surplus_account:0
 msgid "Reserve and Profit/Loss Account"
-msgstr ""
+msgstr "حساب الإحتياطي و الربح و الخسارة"
 
 #. module: account
 #: field:report.account.receivable,name:0
@@ -1020,7 +1024,7 @@ msgstr ""
 #. module: account
 #: view:account.tax:0
 msgid "Applicability Options"
-msgstr ""
+msgstr "خيارات التطابق"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -1112,12 +1116,12 @@ msgstr "رمز الضرائب"
 #. module: account
 #: field:account.account,currency_mode:0
 msgid "Outgoing Currencies Rate"
-msgstr ""
+msgstr "معدل العملات الصادرة"
 
 #. module: account
 #: help:account.move.line,move_id:0
 msgid "The move of this entry line."
-msgstr ""
+msgstr "الحركة لخط هذا القيد"
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -1253,7 +1257,7 @@ msgstr "رصيد أول المدة"
 #. module: account
 #: view:account.invoice:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "إعادة التعيين لمسودة"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -1608,7 +1612,7 @@ msgstr ""
 #. module: account
 #: view:account.change.currency:0
 msgid "This wizard will change the currency of the invoice"
-msgstr ""
+msgstr "هذا المعالج لتغيير العملة للفاتورة"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_chart
@@ -1621,13 +1625,13 @@ msgstr ""
 #. module: account
 #: constraint:account.fiscalyear:0
 msgid "Error! You cannot define overlapping fiscal years"
-msgstr ""
+msgstr "خطأ! لا يمكنك تعريف سنوات مالية متداخلة"
 
 #. module: account
 #: code:addons/account/account_move_line.py:808
 #, python-format
 msgid "The account is not defined to be reconciled !"
-msgstr ""
+msgstr "لم يعرف الحساب لتسويته !"
 
 #. module: account
 #: field:account.cashbox.line,pieces:0
@@ -1639,7 +1643,7 @@ msgstr "قيم"
 msgid ""
 "If the active field is set to False, it will allow you to hide the journal "
 "period without removing it."
-msgstr ""
+msgstr "إذا كان الحقل"
 
 #. module: account
 #: view:res.partner:0
@@ -1691,7 +1695,7 @@ msgstr "مرجع العميل"
 #: code:addons/account/account_cash_statement.py:328
 #, python-format
 msgid "User %s does not have rights to access %s journal !"
-msgstr ""
+msgstr "المستخدم %s ليس لديه صلاحيات الكتابة و التحرير ليومية %s!"
 
 #. module: account
 #: help:account.period,special:0
@@ -1712,7 +1716,7 @@ msgstr ""
 #: code:addons/account/account.py:499
 #, python-format
 msgid "You cannot deactivate an account that contains account moves."
-msgstr ""
+msgstr "لا يمكنك إلغاء نشاط حساب إذا كان يحتوي علي حركات حساب."
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
@@ -2267,7 +2271,7 @@ msgstr "تمركز المدين"
 #: view:account.invoice.confirm:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
 msgid "Confirm Draft Invoices"
-msgstr ""
+msgstr "تأكي الفواتير المسودة"
 
 #. module: account
 #: field:account.entries.report,day:0
@@ -4890,7 +4894,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_journal.py:63
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "خطأ في الإعدادات!"
 
 #. module: account
 #: help:account.partner.reconcile.process,to_reconcile:0
@@ -4924,7 +4928,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_change_currency
 #: model:ir.model,name:account.model_account_change_currency
 msgid "Change Currency"
-msgstr ""
+msgstr "تغيير العملة"
 
 #. module: account
 #: model:process.node,note:account.process_node_accountingentries0
@@ -4935,7 +4939,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Payment Date"
-msgstr ""
+msgstr "تاريخ الدفع"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -4975,7 +4979,7 @@ msgstr ""
 #: field:account.model.line,amount_currency:0
 #: field:account.move.line,amount_currency:0
 msgid "Amount Currency"
-msgstr ""
+msgstr "مبلغ العملة"
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:39
@@ -5008,7 +5012,7 @@ msgstr ""
 #. module: account
 #: view:account.move.line:0
 msgid "Number (Move)"
-msgstr ""
+msgstr "رقم (حركة)"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -5059,7 +5063,7 @@ msgstr ""
 #: field:account.print.journal,amount_currency:0
 #: field:account.report.general.ledger,amount_currency:0
 msgid "With Currency"
-msgstr ""
+msgstr "مع العملة"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5154,7 +5158,7 @@ msgstr ""
 #. module: account
 #: field:res.partner,debit:0
 msgid "Total Payable"
-msgstr ""
+msgstr "إجمالي مستحق الدفع"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_line_extended_form
@@ -5220,7 +5224,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_state_open
 #: model:ir.model,name:account.model_account_state_open
 msgid "Account State Open"
-msgstr ""
+msgstr "فتح حالة الحساب"
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -5286,7 +5290,7 @@ msgstr ""
 #: code:addons/account/wizard/account_change_currency.py:60
 #, python-format
 msgid "New currency is not confirured properly !"
-msgstr ""
+msgstr "العملة الجديدة لم يتم ضبطها بشكل صحيح !"
 
 #. module: account
 #: field:account.aged.trial.balance,filter:0
@@ -5354,7 +5358,7 @@ msgstr ""
 #. module: account
 #: field:account.payment.term.line,days:0
 msgid "Number of Days"
-msgstr ""
+msgstr "عدد الأيام"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -5406,7 +5410,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3
 msgid "Customer Refunds"
-msgstr ""
+msgstr "رد للعملاء"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -5699,7 +5703,7 @@ msgstr ""
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 30"
-msgstr ""
+msgstr "  عدد الأيام: 30"
 
 #. module: account
 #: help:account.analytic.line,currency_id:0
@@ -5755,7 +5759,7 @@ msgstr ""
 #: field:account.invoice,internal_number:0
 #: field:report.invoice.created,number:0
 msgid "Invoice Number"
-msgstr ""
+msgstr "رقم الفاتورة"
 
 #. module: account
 #: help:account.tax,include_base_amount:0
@@ -6038,7 +6042,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:1003
 #, python-format
 msgid "Total debit"
-msgstr ""
+msgstr "إجمالي الخصم"
 
 #. module: account
 #: code:addons/account/account_move_line.py:781
@@ -6248,7 +6252,7 @@ msgstr ""
 #: code:addons/account/wizard/account_change_currency.py:65
 #, python-format
 msgid "Currnt currency is not confirured properly !"
-msgstr ""
+msgstr "العملة الجديدة لم يتم ضبطها بشكل صحيح !"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
@@ -6316,7 +6320,7 @@ msgstr ""
 #: report:account.invoice:0
 #: report:account.partner.balance:0
 msgid "Total:"
-msgstr ""
+msgstr "الإجمالي:"
 
 #. module: account
 #: code:addons/account/account.py:2050
@@ -6359,7 +6363,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
-msgstr "فواتير العميل"
+msgstr "فواتير العملاء"
 
 #. module: account
 #: field:account.move.line.reconcile,writeoff:0
@@ -6369,7 +6373,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.line:0
 msgid "Sales"
-msgstr ""
+msgstr "المبيعات"
 
 #. module: account
 #: view:account.journal.column:0
@@ -6596,7 +6600,7 @@ msgstr ""
 #. module: account
 #: help:res.partner,credit:0
 msgid "Total amount this customer owes you."
-msgstr ""
+msgstr "إجمالي المبلغ المدين لهذا العميل لك."
 
 #. module: account
 #: model:ir.model,name:account.model_ir_sequence
@@ -6870,7 +6874,7 @@ msgstr ""
 #: code:addons/account/installer.py:432
 #, python-format
 msgid "Sales Journal"
-msgstr ""
+msgstr "يومية المبيعات"
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:104
@@ -6893,7 +6897,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Sales Properties"
-msgstr ""
+msgstr "خصائص المبيعات"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
@@ -6903,7 +6907,7 @@ msgstr ""
 #. module: account
 #: report:account.overdue:0
 msgid "Total amount due:"
-msgstr ""
+msgstr "إجمالي المبلغ المستحق:"
 
 #. module: account
 #: field:account.analytic.chart,to_date:0
@@ -7018,7 +7022,7 @@ msgstr ""
 #. module: account
 #: view:report.account_type.sales:0
 msgid "Sales by Account type"
-msgstr ""
+msgstr "المبيعات حسب نوع الحساب"
 
 #. module: account
 #: help:account.invoice,move_id:0
@@ -7043,7 +7047,7 @@ msgstr ""
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 14"
-msgstr ""
+msgstr "  عدد الأيام: 14"
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -7180,7 +7184,7 @@ msgstr ""
 #. module: account
 #: help:account.change.currency,currency_id:0
 msgid "Select a currency to apply on the invoice"
-msgstr ""
+msgstr "اختر عملة للفاتورة"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:100
@@ -7212,7 +7216,7 @@ msgstr ""
 #: field:account.subscription,state:0
 #: field:report.invoice.created,state:0
 msgid "State"
-msgstr ""
+msgstr "الحالة"
 
 #. module: account
 #: help:account.open.closed.fiscalyear,fyear_id:0
@@ -7319,7 +7323,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,residual:0
 msgid "Total Residual"
-msgstr ""
+msgstr "إجمالي المتبقي"
 
 #. module: account
 #: model:process.node,note:account.process_node_invoiceinvoice0
@@ -7431,7 +7435,7 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Net Total:"
-msgstr ""
+msgstr "صافي الإجمالي:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_generic_reporting
@@ -7504,7 +7508,7 @@ msgstr ""
 #. module: account
 #: field:account.account,company_currency_id:0
 msgid "Company Currency"
-msgstr ""
+msgstr "عملة الشركة"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -7687,7 +7691,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.line,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "المجموع الفرعي"
 
 #. module: account
 #: view:account.vat.declaration:0
@@ -7810,7 +7814,7 @@ msgstr ""
 #. module: account
 #: help:res.partner,debit:0
 msgid "Total amount you have to pay to this supplier."
-msgstr ""
+msgstr "إجمالي المبلغ الواجب دفعه لهذا المورد."
 
 #. module: account
 #: model:process.node,name:account.process_node_analytic0
@@ -7890,7 +7894,7 @@ msgstr ""
 #: field:report.account_type.sales,currency_id:0
 #: field:report.invoice.created,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "عملة"
 
 #. module: account
 #: help:account.bank.statement.line,sequence:0
@@ -8050,7 +8054,7 @@ msgstr ""
 #: code:addons/account/installer.py:476
 #, python-format
 msgid "Sales Refund Journal"
-msgstr ""
+msgstr "يومية رد المبيعات"
 
 #. module: account
 #: code:addons/account/account.py:927
@@ -8070,7 +8074,7 @@ msgstr ""
 #. module: account
 #: model:process.node,note:account.process_node_bankstatement0
 msgid "Registered payment"
-msgstr ""
+msgstr "دفع مسجل"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -8199,7 +8203,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:1006
 #, python-format
 msgid "Total credit"
-msgstr ""
+msgstr "إجمالي الإئتمان"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliervalidentries0
@@ -8238,7 +8242,7 @@ msgstr ""
 #: code:addons/account/wizard/account_change_currency.py:71
 #, python-format
 msgid "Current currency is not confirured properly !"
-msgstr ""
+msgstr "العملة الجديدة لم يتم ضبطها بشكل صحيح !"
 
 #. module: account
 #: code:addons/account/account.py:938
@@ -8644,7 +8648,7 @@ msgstr ""
 #: code:addons/account/invoice.py:804
 #, python-format
 msgid "Bad total !"
-msgstr ""
+msgstr "إجمالي سئ!"
 
 #. module: account
 #: field:account.journal,sequence_id:0
@@ -8730,7 +8734,7 @@ msgstr ""
 #: field:account.account.template,currency_id:0
 #: field:account.bank.accounts.wizard,currency_id:0
 msgid "Secondary Currency"
-msgstr ""
+msgstr "عملة ثانية"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
@@ -8795,7 +8799,7 @@ msgstr ""
 #: field:account.invoice,number:0
 #: field:account.move,name:0
 msgid "Number"
-msgstr ""
+msgstr "رقم"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -8851,7 +8855,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,currency_rate:0
 msgid "Currency Rate"
-msgstr ""
+msgstr "معدل العملة"
 
 #. module: account
 #: help:account.payment.term.line,value_amount:0
@@ -9096,7 +9100,7 @@ msgstr ""
 #: field:report.account_type.sales,amount_total:0
 #: field:report.invoice.created,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "الإجمالي"
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:97
@@ -9147,7 +9151,7 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement,total_entry_encoding:0
 msgid "Total cash transactions"
-msgstr ""
+msgstr "إجمالي معاملات النقدية"
 
 #. module: account
 #: help:account.partner.reconcile.process,today_reconciled:0
@@ -9248,7 +9252,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_report_account_sales
 msgid "Report of the Sales by Account"
-msgstr ""
+msgstr "تقرير المبيعات بالحساب"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
@@ -9500,7 +9504,7 @@ msgstr ""
 #. module: account
 #: field:account.subscription,period_total:0
 msgid "Number of Periods"
-msgstr ""
+msgstr "عدد الفترات"
 
 #. module: account
 #: report:account.general.journal:0
