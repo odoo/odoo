@@ -579,6 +579,7 @@ class crm_lead(crm_case, osv.osv):
                     'name': lead.partner_name or lead.contact_name or lead.name,
                     'user_id': lead.user_id.id,
                     'comment': lead.description,
+                    'section_id': lead.section_id.id or False,
                     'address': []
         })
         return partner_id
@@ -587,6 +588,7 @@ class crm_lead(crm_case, osv.osv):
         res = False
         res_partner = self.pool.get('res.partner')
         if partner_id:
+            res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id.id or False})
             contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
             res = lead.write({'partner_id' : partner_id, 'partner_address_id': contact_id}, context=context)
             
