@@ -118,6 +118,9 @@ class crm_lead(osv.osv):
                          'user_id' : user_id}
                    }
 
+    def action_assign_partner(self, cr, uid, ids, context=None):
+        return self.assign_partner(cr, uid, ids, partner_id=False, context=context)
+
     def assign_partner(self, cr, uid, ids, partner_id=False, context=None):
         partner_ids = {}
         res = False
@@ -127,6 +130,9 @@ class crm_lead(osv.osv):
         for lead in self.browse(cr, uid, ids, context=context):
             if not partner_id:
                 partner_id = partner_ids.get(lead.id, False)
+            if not partner_id:
+                continue
+            self.assign_geo_localize(cr, uid, [lead.id], lead.partner_latitude, lead.partner_longitude, context=context)
             partner = res_partner.browse(cr, uid, partner_id, context=context)
             if partner.user_id:
                 for lead_id in ids:
@@ -188,7 +194,7 @@ class crm_lead(osv.osv):
                 # 5. fifth way: anywhere in same country
                 if not partner_ids:
                     # still haven't found any, let's take all partners in the country!
-                    partner_ids = partner.search(cr, uid, [
+                    partner_ids = res_partner.search(cr, uid, [
                         ('partner_weight', '>', 0),
                         ('country', '=', lead.country_id.id),
                     ], context=context)
