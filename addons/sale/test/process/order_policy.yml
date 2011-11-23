@@ -16,70 +16,7 @@
     sale_order = self.browse(cr, uid, ref("order"))
     assert sale_order.picking_ids, "Picking is not created for this sale order"
 -
-  For testing 'Invoice based on deliveries' order policy, I confirm the Quotation2.
--
-  !workflow {model: sale.order, action: order_confirm, ref: order2}
--
-  After Quotation2 is confirmed, I check that related Picking is created and it is linked.
--
-  !python {model: sale.order}: |
-    sale_order = self.browse(cr, uid, ref("order2"))
-    assert sale_order.picking_ids, "Picking is not created for this sale order"
--
-  For testing 'Pay before delivery' order policy, I confirm the Quotation3.
--
-  !workflow {model: sale.order, action: order_confirm, ref: order3}
--
-  After Quotation3 is confirmed, I check that related Invoice is created and it is linked.
--
-  !python {model: sale.order}: |
-    sale_order = self.browse(cr, uid, ref("order3"))
-    assert sale_order.invoice_ids, "Invoice is not created for this sale order"
--
-  For testing the 'Deliver & invoice on demand' order policy, I confirm the Quotation4.
--
-  !workflow {model: sale.order, action: order_confirm, ref: order4}
--
-  After confirmed Quotation4, I create the Invoice for it and check that Invoice created.
-  After Quotation1 is confirmed, I check that related Picking is created and it is linked.
--
-  !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("order4"))
-    self.manual_invoice(cr, uid, [ref('order4')])
-    assert so.invoice_ids, "Invoices has not been generated for this sale order"
--
-  I check that Invoice details are correspond with Quotation3.
--
-  !python {model: sale.order}: |
-    order = self.browse(cr, uid, ref("order3"))
-    ac = order.partner_id.property_account_receivable.id
-    journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)], limit=1)
-    
-    for invoice in order.invoice_ids:
-      assert invoice.origin == order.name,"Name is not correspond"
-      assert invoice.type == 'out_invoice',"Type should be Out Invoice"
-      assert invoice.reference == order.client_order_ref or order.name,"Reference is not correspond"
-      assert invoice.partner_id.id == order.partner_id.id,"Partner is not correspond"
-      assert invoice.address_invoice_id.id == order.partner_invoice_id.id,"Invoice Address is not correspond"
-      assert invoice.currency_id.id == order.pricelist_id.currency_id.id, "Currency is not correspond"
-      assert invoice.comment == order.note,"Notes is not correspond"
-      assert invoice.fiscal_position.id ==  order.fiscal_position.id or order.partner_id.property_account_position.id,"Fiscal position not correspond"
-      assert invoice.company_id.id == order.company_id.id,"Company is not correspond"
-      assert invoice.user_id.id == order.user_id.id or False, "User is not correspond"   
-      assert invoice.account_id.id == ac,"There is no receivable account"
-      assert invoice.journal_id.id == journal_ids[0],"There is no sales journal defined for this company"
-      for inv in invoice.invoice_line:
-        for so in order.order_line:
-          if inv.name == so.name:
-            ac = so.product_id.product_tmpl_id.property_account_income.id or so.product_id.categ_id.property_account_income_categ.id
-            assert inv.name == so.name,"Name is not correspond"
-            assert inv.origin == so.order_id.name,"Origin is not correspond"
-            assert inv.discount == so.discount,"Discount is not correspond"
-            assert inv.product_id.id == so.product_id.id or False,"Product is not correspond"
-            assert inv.note == so.notes,"Notes is not correspond"
-            assert inv.account_id.id == ac,"There is no income account defined for this product"
--
-  I check that Picking details after correspond with Quotation1.
+  I check that Picking details are correspond with Quotation1.
 -
   !python {model: sale.order}: |
     sale_order = self.browse(cr, uid, ref("order"))
@@ -123,14 +60,124 @@
       self.do_partial(cr, uid, [partial_id])
     assert order.shipped == True, "Sale order is not marked as delivered"
     assert order.invoice_ids, "Invoice not created after picking for sale order1"
+
+#Progressbar code introduced by revid: mtr@tinyerp.com-20110829113915-leecwthb7g99txzk
+#form 'lp:~openerp-dev/openobject-addons/trunk-sale_coverage-mtr' branch
 -
-  Now I create draft invoice for order2 where Invoice Policy is "Invoice based on deliveries".
+  I verify that Picked Progessbar is 100%.
 -
-  !python {model: stock.picking}: |
+  !python {model: sale.order}: |
+    picked_rate = self._picked_rate(cr, uid, [ref("order")], 'picked_rate', None, {'active_model': 'ir.ui.menu','section_id': False, 'active_id': ref("order"), 'bin_size': True,'active_ids': [ref("order")], 'department_id': False})
+    picked = picked_rate.values()
+    assert picked[0] == 100, "Picked Progress bar is not 100%"
+-
+  For testing 'Pay before delivery' order policy, I confirm the Quotation3.
+-
+  !workflow {model: sale.order, action: order_confirm, ref: order3}
+-
+  After Quotation3 is confirmed, I check that related Invoice is created and it is linked.
+-
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("order3"))
+    assert sale_order.invoice_ids, "Invoice is not created for this sale order"
+-
+  I check that Invoice details are correspond with Quotation3.
+-
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref("order3"))
+    ac = order.partner_id.property_account_receivable.id
+    journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)], limit=1)
+    
+    for invoice in order.invoice_ids:
+      assert invoice.origin == order.name,"Name is not correspond"
+      assert invoice.type == 'out_invoice',"Type should be Out Invoice"
+      assert invoice.reference == order.client_order_ref or order.name,"Reference is not correspond"
+      assert invoice.partner_id.id == order.partner_id.id,"Partner is not correspond"
+      assert invoice.address_invoice_id.id == order.partner_invoice_id.id,"Invoice Address is not correspond"
+      assert invoice.currency_id.id == order.pricelist_id.currency_id.id, "Currency is not correspond"
+      assert invoice.comment == order.note,"Notes is not correspond"
+      assert invoice.fiscal_position.id ==  order.fiscal_position.id or order.partner_id.property_account_position.id,"Fiscal position not correspond"
+      assert invoice.company_id.id == order.company_id.id,"Company is not correspond"
+      assert invoice.user_id.id == order.user_id.id or False, "User is not correspond"   
+      assert invoice.account_id.id == ac,"There is no receivable account"
+      assert invoice.journal_id.id == journal_ids[0],"There is no sales journal defined for this company"
+      for inv in invoice.invoice_line:
+        for so in order.order_line:
+          if inv.name == so.name:
+            ac = so.product_id.product_tmpl_id.property_account_income.id or so.product_id.categ_id.property_account_income_categ.id
+            assert inv.name == so.name,"Name is not correspond"
+            assert inv.origin == so.order_id.name,"Origin is not correspond"
+            assert inv.discount == so.discount,"Discount is not correspond"
+            assert inv.product_id.id == so.product_id.id or False,"Product is not correspond"
+            assert inv.note == so.notes,"Notes is not correspond"
+            assert inv.account_id.id == ac,"There is no income account defined for this product"
+-
+  For testing 'Invoice based on deliveries' order policy, I confirm the Quotation2.
+-
+  !workflow {model: sale.order, action: order_confirm, ref: order2}
+-
+  After Quotation2 is confirmed, I check that related Picking is created and it is linked.
+-
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("order2"))
+    assert sale_order.picking_ids, "Picking is not created for this sale order"
+-
+  Now, I validate the picking.
+-
+  !python {model: stock.partial.picking}: |
     order = self.pool.get('sale.order').browse(cr, uid, ref("order2"))
-    pick_ids = self.search(cr, uid, [('sale_id','=',ref('order2'))])
-    data = self.force_assign(cr, uid, [pick_ids[0]])
+    pick_ids = order.picking_ids
+    stock = self.pool.get('stock.picking')
+    data = stock.force_assign(cr, uid, [pick_ids[0].id])
     if data == True:
-      self.action_invoice_create(cr, uid, pick_ids, ref('account.expenses_journal'))
-    assert order.invoice_ids, "Invoice not created after picking for sale order2"
+      partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
+      self.do_partial(cr, uid, [partial_id])
+-
+  Then I click on 'Create Invoices' button.
+-
+  !python {model: stock.invoice.onshipping}: |
+    import time
+    sale_obj=self.pool.get('sale.order')
+    sale_id=sale_obj.browse(cr, uid, ref("order2"))
+    ids = [x.id for x in sale_id.picking_ids]
+    wiz_id = self.create(cr, uid, {'invoice_date': time.strftime('%Y-%m-%d'), 'journal_id': ref('account.sales_journal')},
+      {'active_ids': ids, 'active_model': 'stock.picking'})
+    self.create_invoice(cr, uid, [wiz_id], {"active_ids": ids, "active_id": ids[0]})
+-
+  I check that an invoice has been created.
+-
+  !python {model: sale.order}: |
+    sale_id=self.browse(cr, uid, ref("order2"))
+    assert(sale_id.invoice_ids), "Invoice is not created for order2"
+-
+  For testing the 'Deliver & invoice on demand' order policy, I confirm the Quotation4.
+-
+  !workflow {model: sale.order, action: order_confirm, ref: order4}
+-
+  After Quotation4 is confirmed, I check that related Invoice is created and it is linked.
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("order4"))
+    self.manual_invoice(cr, uid, [ref('order4')])
+    assert so.invoice_ids, "Invoices is not created for this sale order"
+    assert so.picking_ids, "Picking is  not created for this sale order"
+-
+  I open the Invoice for this sale order.
+-
+  !python {model: sale.order}: |
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    so = self.browse(cr, uid, ref("order4"))
+    for invoice in so.invoice_ids:
+      wf_service.trg_validate(uid, 'account.invoice', invoice.id, 'invoice_open', cr)
+
+#Progressbar code introduced by revid: mtr@tinyerp.com-20110829113915-leecwthb7g99txzk
+#form 'lp:~openerp-dev/openobject-addons/trunk-sale_coverage-mtr' branch
+-
+  I verify that Invoiced Progessbar is 100%.
+-
+  !python {model: sale.order}: |
+    invoiced_rate = self._invoiced_rate(cr, uid, [ref("order4")], 'invoiced_rate', None, {'active_model': 'ir.ui.menu','section_id': False, 'active_id': ref("order4"), 'bin_size': True,'active_ids': [ref("order4")], 'department_id': False})
+    invoiced = invoiced_rate.values()
+    assert invoiced[0] == 100, "Invoiced Progress bar is not 100%"
 
