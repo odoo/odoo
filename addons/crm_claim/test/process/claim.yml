@@ -1,5 +1,5 @@
 -
-  Customer claim after sale our product. so He send claim request by email.
+  Customer requests a claim after the sale of our product. He sends claim request by email.
 -
   Mail script will be fetched him request from mail server. so I process that mail after read EML file 
 -
@@ -38,7 +38,7 @@
     claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
     self.case_close(cr, uid, claim_ids)
 -
-  I check Claim details after closed
+  I check Claim details after closed.
 -
   !python {model: crm.claim}: |
     claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
