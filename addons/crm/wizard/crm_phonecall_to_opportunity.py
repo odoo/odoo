@@ -50,7 +50,7 @@ class crm_phonecall2opportunity(osv.osv_memory):
         This function gets default values
         """
         record_id = context and context.get('active_id', False) or False
-        res = super(crm_phonecall2opportunity, self).default_get(cr, uid, fields, context=context)
+        res = {}
 
         if record_id:
             phonecall = self.pool.get('crm.phonecall').browse(cr, uid, record_id, context=context)
