@@ -248,7 +248,6 @@ class crm_phonecall(crm_base, osv.osv):
                             'mobile': default_contact and default_contact.mobile,
                             'section_id': call.section_id and call.section_id.id or False,
                             'description': call.description or False,
-                            'phonecall_id': call.id,
                             'priority': call.priority,
                             'type': 'opportunity', 
                             'phone': call.partner_phone or False,
