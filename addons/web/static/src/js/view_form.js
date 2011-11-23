@@ -273,6 +273,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (field in argument_replacement) {
                 return argument_replacement[field](i);
             }
+            // literal number
+            if (/^-?\d+(\.\d+)?$/.test(field)) {
+                return Number(field);
+            }
             // form field
             if (self.fields[field]) {
                 var value = self.fields[field].get_on_change_value();
@@ -951,8 +955,9 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
         var type = {};
         if (node.tag == 'field') {
             type = this.view.fields_view.fields[node.attrs.name] || {};
-            if (node.attrs.widget == 'statusbar') {
+            if (node.attrs.widget == 'statusbar' && node.attrs.nolabel !== '1') {
                 // This way we can retain backward compatibility between addons and old clients
+                node.attrs.colspan = (parseInt(node.attrs.colspan, 10) || 1) + 1;
                 node.attrs.nolabel = '1';
             }
         }
