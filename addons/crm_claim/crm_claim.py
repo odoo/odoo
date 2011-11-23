@@ -129,8 +129,6 @@ class crm_claim(crm.crm_case, osv.osv):
             if l.state == 'draft':
                 message = _("The claim '%s' has been opened.") % l.name
                 self.log(cr, uid, l.id, message)
-                value = {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')}
-                self.write(cr, uid, [l.id], value)
                 stage_id = self.stage_find(cr, uid, l.section_id.id or False, [('sequence','>',0)])
                 if stage_id:
                     self.stage_set(cr, uid, [l.id], stage_id)
