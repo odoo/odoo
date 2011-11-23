@@ -6,11 +6,11 @@
   !python {model: res.partner}: |
     self.geo_localize(cr, uid, [ref('base.res_partner_ericdubois0')], context)
 -
- I check Geo Lattitude and Longitude of partner after set
+ I check Geo Latitude and Longitude of partner after set
 -
   !python {model: res.partner}: |
     partner = self.browse(cr, uid, ref('base.res_partner_ericdubois0'))
-    assert partner.partner_latitude == 50.4530495 , "Lattitude is wrong"
+    assert partner.partner_latitude == 50.4530495 , "Latitude is wrong"
     assert partner.partner_longitude == 3.9693885 , "Longitude is wrong"
 -
   I assign nearest partner to opportunity.
@@ -18,14 +18,13 @@
   !python {model: crm.lead}: |
     self.assign_partner(cr, uid, [ref('crm.crm_case_abcfuelcounits0')], context=context)
 -
-  I check assigned partner of opportunity who is nearest Geo Lattitude and Longitude of opportunity.
+  I check assigned partner of opportunity who is nearest Geo Latitude and Longitude of opportunity.
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm.crm_case_abcfuelcounits0'))
     assert lead.partner_assigned_id.id == ref('base.res_partner_ericdubois0') , "Opportuniy is not assigned nearest partner"
-    assert lead.partner_latitude == 50.8495239 , "Lattitude is wrong"
+    assert lead.partner_latitude == 50.8495239 , "Latitude is wrong"
     assert lead.partner_longitude == 4.3667002 , "Longitude is wrong"
-    
 -
   I forward this opportunity to its nearest partner.
 -

@@ -6,7 +6,7 @@
    !python {model: crm.lead}: |
      self.case_open(cr, uid, [ref("crm_case_qrecorp0")])
 - 
-  I check lead is in open.
+  I check lead state is "Open".
 -
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead in open state}:
      - state == "open"
@@ -24,7 +24,7 @@
     assert lead.partner_id.id == ref("base.res_partner_agrolait"), 'Partner missmatch!'
     assert lead.stage_id.id == ref("stage_lead1"), 'Stage of opportunity is incorrect!'
 -
-  Now I start Communication and schedule phonecall with customer.
+  Now I begin communication and schedule a phone call with the customer.
 -
   !python {model: crm.opportunity2phonecall}: |
     import time
@@ -72,7 +72,7 @@
     id = self.create(cr, uid, {'user_ids': [ref('base.user_root')], 'section_id': ref('crm.section_sales_department')}, context=context)
     self.mass_convert(cr, uid, [id], context=context)
 -
-  Now i check First lead converted on opportunity.
+  Now I check First lead converted on opportunity.
 -
   !python {model: crm.lead}: |
     opp = self.browse(cr, uid, ref('crm_case_employee0'))
