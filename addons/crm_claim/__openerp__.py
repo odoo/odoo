@@ -49,7 +49,8 @@ automatically new claims based on incoming emails.
         'crm_claim_demo.xml',
     ],
     'test': ['test/process/claim.yml',
-             'test/ui/claim_demo.yml'],
+             'test/ui/claim_demo.yml'#TODO : After installing crm_partner_assign view error
+             ],
     'installable': True,
     'active': False,
     'certificate' : '00612027414703404749',
