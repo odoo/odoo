@@ -125,6 +125,7 @@ module named account_voucher.
         "wizard/account_report_balance_sheet_view.xml",
         "edi/invoice_action_data.xml",
         "account_bank_view.xml",
+        "account_pre_install.yml"
     ],
     'demo_xml': [
         'demo/account_demo.xml',

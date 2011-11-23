@@ -861,19 +861,6 @@ class account_fiscalyear(osv.osv):
     }
     _order = "date_start"
 
-    def _check_fiscal_year(self, cr, uid, ids, context=None):
-        current_fiscal_yr = self.browse(cr, uid, ids, context=context)[0]
-        obj_fiscal_ids = self.search(cr, uid, [('company_id', '=', current_fiscal_yr.company_id.id)], context=context)
-        obj_fiscal_ids.remove(ids[0])
-        data_fiscal_yr = self.browse(cr, uid, obj_fiscal_ids, context=context)
-
-        for old_fy in data_fiscal_yr:
-            if old_fy.company_id.id == current_fiscal_yr['company_id'].id:
-                # Condition to check if the current fiscal year falls in between any previously defined fiscal year
-                if old_fy.date_start <= current_fiscal_yr['date_start'] <= old_fy.date_stop or \
-                    old_fy.date_start <= current_fiscal_yr['date_stop'] <= old_fy.date_stop:
-                    return False
-        return True
 
     def _check_duration(self, cr, uid, ids, context=None):
         obj_fy = self.browse(cr, uid, ids[0], context=context)
@@ -882,8 +869,7 @@ class account_fiscalyear(osv.osv):
         return True
 
     _constraints = [
-        (_check_duration, 'Error! The start date of the fiscal year must be before his end date.', ['date_start','date_stop']),
-        (_check_fiscal_year, 'Error! You can not define overlapping fiscal years for the same company.',['date_start', 'date_stop'])
+        (_check_duration, 'Error! The start date of the fiscal year must be before his end date.', ['date_start','date_stop'])
     ]
 
     def create_period3(self, cr, uid, ids, context=None):
