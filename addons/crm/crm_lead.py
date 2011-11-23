@@ -523,7 +523,9 @@ class crm_lead(crm_case, osv.osv):
 
     def _convert_opportunity_data(self, cr, uid, lead, customer, section_id=False, context=None):
         crm_stage = self.pool.get('crm.case.stage')
-        contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['default']
+        contact_id = False
+        if customer:
+            contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['default']
         if not section_id:
             section_id = lead.section_id and lead.section_id.id or False
         if section_id:
@@ -535,7 +537,7 @@ class crm_lead(crm_case, osv.osv):
                 'planned_revenue': lead.planned_revenue,
                 'probability': lead.probability,
                 'name': lead.name,
-                'partner_id': customer.id,
+                'partner_id': customer and customer.id or False,
                 'user_id': (lead.user_id and lead.user_id.id),
                 'type': 'opportunity',
                 'stage_id': stage_id or False,
@@ -552,9 +554,9 @@ class crm_lead(crm_case, osv.osv):
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
         partner = self.pool.get('res.partner')
         mail_message = self.pool.get('mail.message')
-        
-        customer = partner.browse(cr, uid, partner_id, context=context)
-        
+        customer = False
+        if partner_id:
+            customer = partner.browse(cr, uid, partner_id, context=context)
         for lead in self.browse(cr, uid, ids, context=context):
             if lead.state in ('done', 'cancel'):
                 continue
