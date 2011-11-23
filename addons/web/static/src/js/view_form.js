@@ -1749,7 +1749,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                         return;
                     }
                     var pop = new openerp.web.form.FormOpenPopup(self.view);
-                    pop.show_element(self.field.relation, self.value[0],self.build_context(), {});
+                    pop.show_element(self.field.relation, self.value[0],self.build_context(), {title: self.string || self.name});
                     pop.on_write_completed.add_last(function() {
                         self.set_value(self.value[0]);
                     });
@@ -1910,6 +1910,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         var self = this;
         var pop = new openerp.web.form.SelectCreatePopup(this);
         pop.select_element(self.field.relation,{
+                title: this.string || this.name,
                 initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
                 initial_view: view,
                 disable_multiple_selection: true
@@ -2333,6 +2334,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
             var pop = new openerp.web.form.SelectCreatePopup(this);
             pop.on_default_get.add(self.dataset.on_default_get);
             pop.select_element(self.o2m.field.relation,{
+                title: self.name,
                 initial_view: "form",
                 alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
                 create_function: function(data, callback, error_callback) {
@@ -2356,6 +2358,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
         var self = this;
         var pop = new openerp.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(),{
+            title: self.name,
             auto_write: false,
             alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
             parent_view: self.o2m.view,
@@ -2477,7 +2480,7 @@ openerp.web.form.Many2ManyDataSet = openerp.web.DataSetStatic.extend({
 openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends openerp.web.form.Many2ManyListView# */{
     do_add_record: function () {
         var pop = new openerp.web.form.SelectCreatePopup(this);
-        pop.select_element(this.model, {},
+        pop.select_element(this.model, {title: this.name},
             new openerp.web.CompoundDomain(this.m2m_field.build_domain(), ["!", ["id", "in", this.m2m_field.dataset.ids]]),
             this.m2m_field.build_context());
         var self = this;
@@ -2494,7 +2497,7 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends open
     do_activate_record: function(index, id) {
         var self = this;
         var pop = new openerp.web.form.FormOpenPopup(this);
-        pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {});
+        pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {title: this.name});
         pop.on_write_completed.add_last(function() {
             self.reload_content();
         });
@@ -2533,7 +2536,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         this.render_element();
         openerp.web.form.dialog(this.$element, {close:function() {
             self.check_exit();
-        }});
+        }, title: options.title || ""});
         this.start();
     },
     start: function() {
@@ -2720,7 +2723,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         this.context = context || {};
         this.options = _.defaults(options || {}, {"auto_write": true});
         this.render_element();
-        this.$element.dialog({title: '',
+        this.$element.dialog({title: options.title || '',
                     modal: true,
                     width: 960,
                     height: 600});
