@@ -26,7 +26,6 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         // Events
         this.$element.find('.oe-dashboard-link-undo').click(this.on_undo);
         this.$element.find('.oe-dashboard-link-reset').click(this.on_reset);
-        this.$element.find('.oe-dashboard-link-add_widget').click(this.on_add_widget);
         this.$element.find('.oe-dashboard-link-change_layout').click(this.on_change_layout);
 
         this.$element.delegate('.oe-dashboard-column .oe-dashboard-fold', 'click', this.on_fold_action);
@@ -56,61 +55,6 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             view_id: this.view.fields_view.view_id,
             reset: true
         }, this.do_reload);
-    },
-    on_add_widget: function() {
-        var self = this;
-        var action_manager = new openerp.web.ActionManager(this);
-        var dialog = new openerp.web.Dialog(this, {
-            title : 'Actions',
-            width: 800,
-            height: 600,
-            buttons : {
-                Cancel : function() {
-                    $(this).dialog('destroy');
-                },
-                Add : function() {
-                    self.do_add_widget(action_manager.inner_viewmanager.views.list.controller);
-                    $(this).dialog('destroy');
-                }
-            }
-        }).start().open();
-        action_manager.appendTo(dialog.$element);
-        action_manager.do_action({
-            res_model : 'ir.actions.actions',
-            views : [[false, 'list']],
-            type : 'ir.actions.act_window',
-            limit : 80,
-            auto_search : true,
-            flags : {
-                sidebar : false,
-                views_switcher : false,
-                action_buttons : false
-            }
-        });
-        // TODO: should bind ListView#select_record in order to catch record clicking
-    },
-    do_add_widget : function(listview) {
-        var self = this,
-            actions = listview.groups.get_selection().ids,
-            results = [],
-            qdict = { view : this.view };
-        // TODO: should load multiple actions at once
-        _.each(actions, function(aid) {
-            self.rpc('/web/action/load', {
-                action_id: aid
-            }, function(result) {
-                self.actions_attrs[aid] = {
-                    name: aid,
-                    string: _.str.trim(result.result.name)
-                };
-                qdict.action = {
-                    attrs : self.actions_attrs[aid]
-                };
-                self.$element.find('.oe-dashboard-column:first').prepend(QWeb.render('DashBoard.action', qdict));
-                self.do_save_dashboard();
-                self.on_load_action(result)
-            });
-        });
     },
     on_change_layout: function() {
         var self = this;
