@@ -1,0 +1,71 @@
+-
+  In Order to test process of Employee Expenses.
+-
+  I create this expense.
+-
+  !workflow {model: hr.expense.expense, action: confirm, ref: hr_expense_expense_septemberexpenses0}
+-
+  I change the state of expense.
+-
+  !python {model: hr.expense.expense}: |
+    self.expense_confirm(cr, uid, [ref('hr_expense_expense_septemberexpenses0')])
+-
+  I check the the expense is created or not
+-
+  !assert {model: hr.expense.expense, id: hr_expense_expense_septemberexpenses0}:
+    - state == 'confirm'
+-
+  I accept this expense.
+-
+  !workflow {model: hr.expense.expense, action: validate, ref: hr_expense_expense_septemberexpenses0}
+-
+  I assign home address to employee.
+-
+  !record {model: hr.employee, id: hr.employee1}:
+    address_home_id: base.res_partner_address_1
+    address_id: base.main_address
+-
+  I create the Invoiced for the expense.
+-
+  !python {model: hr.expense.expense}: |
+    self.invoice(cr, uid, [ref('hr_expense_expense_septemberexpenses0')])
+    
+-
+  I check that expense is "Invoiced".
+-
+  !assert {model: hr.expense.expense, id: hr_expense_expense_septemberexpenses0}:
+    - state == 'invoiced'
+-
+  I check that Invoice is created for the expense.
+-
+  !python {model: hr.expense.expense}: |
+    exp = self.browse(cr, uid, [ref('hr_expense_expense_septemberexpenses0')])[0]
+    assert exp.invoice_id, "Invoice should be created"
+-
+  I paid the expense
+-
+  !python {model: hr.expense.expense}: |
+    self.expense_paid(cr, uid, [ref('hr_expense_expense_septemberexpenses0')])
+-
+  I check the expense is paid.
+-
+  !assert {model: hr.expense.expense, id: hr_expense_expense_septemberexpenses0}:
+    - state == 'paid'
+-
+  I cancel the expense
+-
+  !python {model: hr.expense.expense}: |
+    self.expense_canceled(cr, uid, [ref('hr_expense_expense_septemberexpenses0')])
+-
+  I check the expense is cancel.
+-
+  !assert {model: hr.expense.expense, id: hr_expense_expense_septemberexpenses0}:
+    - state == 'cancelled' 
+-
+  we will print a PDF report defined on a HR Expense.
+- 
+  !python {model: hr.expense.expense}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.hr.expense').create(cr, uid, [ref('hr_expense.hr_expense_expense_septemberexpenses0'),ref('hr_expense.hr_expense_expense_septemberexpenses1')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'hr_expense-report.'+format), 'wb+').write(data)
