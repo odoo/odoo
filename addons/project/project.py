@@ -498,7 +498,11 @@ class task(osv.osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
+        translation_obj = self.pool.get('ir.translation')
 
+        is_hour = translation_obj.search(cr, uid, [('name', '=', 'product.uom,name'), ('src', 'in', ['Hour', 'Hours'])])
+        translated = [str(i.value) for i in translation_obj.browse(cr, uid, is_hour, context=context)]
+        translated.extend(['Hour','Hours'])
         # read uom as admin to avoid access rights issues, e.g. for portal/share users,
         # this should be safe (no context passed to avoid side-effects)
         obj_tm = users_obj.browse(cr, 1, uid, context=context).company_id.project_time_mode_id
@@ -506,7 +510,7 @@ class task(osv.osv):
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
 
-        if tm in ['Hours','Hour']:
+        if tm in translated:
             return res
 
         eview = etree.fromstring(res['arch'])
