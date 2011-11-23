@@ -1135,6 +1135,7 @@
     </t>
     <option value="_actions">-- Actions --</option>
     <option value="save_filter">Save Filter</option>
+    <option value="add_to_dashboard">Add to Dashboard</option>
     <option value="manage_filters">Manage Filters</option>
 </t>
 <t t-name="SearchView.managed-filters.add">
@@ -1142,6 +1143,16 @@
         <p>Filter Name:</p>
         <input type="text"/>
         <p>(Any existing filter with the same name will be replaced)</p>
+    </div>
+</t>
+<t t-name="SearchView.add_to_dashboard">
+    <div class="oe_forms">
+        <p><b>Select Dashboard to add this filter to:</b></p>
+        <select style="width: 100%; margin-right: 1em;">
+            <option t-foreach="dashboards" t-as="menu" t-att-value="menu.id" t-att-selected="(menu.id == selected_menu_id) || undefined"><t t-esc="menu.name"/></option>
+        </select>
+        <p><b>Title of new Dashboard item:</b></p>
+        <input type="text" style="width: 100%; margin-right: 1em;"/>
     </div>
 </t>
 <t t-name="SearchView.render_lines">
