@@ -600,6 +600,9 @@ class account_voucher(osv.osv):
                         rs['amount'] = amount
                         total_credit -= amount
 
+            if rs['amount_unreconciled'] == rs['amount']:
+                rs['reconcile'] = True
+
             if rs['type'] == 'cr':
                 default['value']['line_cr_ids'].append(rs)
             else:
@@ -1165,6 +1168,7 @@ class account_voucher_line(osv.osv):
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
         'untax_amount':fields.float('Untax Amount'),
         'amount':fields.float('Amount', digits_compute=dp.get_precision('Account')),
+        'reconcile': fields.boolean('Full Reconcile'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Dr/Cr'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
         'move_line_id': fields.many2one('account.move.line', 'Journal Item'),
@@ -1175,8 +1179,21 @@ class account_voucher_line(osv.osv):
         'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True, readonly=True),
     }
     _defaults = {
-        'name': ''
+        'name': '',
+        'reconcile': False,
     }
+
+    def onchange_reconcile(self, cr, uid, ids, reconcile, amount, amount_unreconciled, context=None):
+        vals = { 'amount': 0.0}
+        if reconcile:
+            vals = { 'amount': amount_unreconciled}
+        return {'value': vals}
+
+    def onchange_amount(self, cr, uid, ids, amount, amount_unreconciled, context=None):
+        vals = {}
+        if amount:
+            vals['reconcile'] = (amount == amount_unreconciled)
+        return {'value': vals}
 
     def onchange_move_line_id(self, cr, user, ids, move_line_id, context=None):
         """
