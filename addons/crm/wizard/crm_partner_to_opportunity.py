@@ -35,6 +35,12 @@ class crm_partner2opportunity(osv.osv_memory):
         'partner_id': fields.many2one('res.partner', 'Partner'),
     }
 
+    def action_cancel(self, cr, uid, ids, context=None):
+        """
+        Closes Partner 2 Opportunity
+        """
+        return {'type':'ir.actions.act_window_close'}
+
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
