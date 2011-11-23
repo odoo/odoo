@@ -108,10 +108,15 @@
                             </field>
                             <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('type', '=', 'payment')]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, context)">
                                 <tree string="Open Customer Journal Entries" editable="bottom" colors="gray:amount==0">
-                                    <field name="move_line_id"/>
-                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','receivable')]"/>
-                                    <field name="date_original"/>
-                                    <field name="amount_original"/>
+                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
+                                        on_change="onchange_move_line_id(move_line_id)"
+                                        domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        />
+                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','payable')]"/>
+                                    <field name="date_original" readonly="1"/>
+                                    <field name="date_due" readonly="1"/>
+                                    <field name="amount_original" readonly="1"/>
+                                    <field name="amount_unreconciled" sum="Open Balance" readonly="1"/>
                                     <field name="amount" sum="Payment"/>
                                 </tree>
                             </field>
@@ -157,6 +162,7 @@
                             invisible="True"/>
                         <field name="pre_line" invisible="1"/>
                         <field name="type" invisible="True"/>
+                        <field name="currency_id" invisible="1" colspan="4"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
@@ -165,7 +171,7 @@
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
-                                        required="1"
+                                        required="1" readonly="1"
                                         />
                                     <field name="account_id" groups="base.group_no_one" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
@@ -178,11 +184,18 @@
                             </field>
                             <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}">
                                 <tree string="Credits" editable="bottom" colors="gray:amount==0">
-                                    <field name="move_line_id"/>
-                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','receivable')]"/>
-                                    <field name="date_original"/>
-                                    <field name="amount_original"/>
-                                    <field name="amount" sum="Payment"/>
+                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
+                                        on_change="onchange_move_line_id(move_line_id)"
+                                        domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        required="1" readonly="1"
+                                        />
+                                    <field name="account_id" groups="base.group_no_one" domain="[('type','=','payable')]"/>
+                                    <field name="date_original" readonly="1"/>
+                                    <field name="date_due" readonly="1"/>
+                                    <field name="amount_original" readonly="1"/>
+                                    <field name="amount_unreconciled" sum="Open Balance" readonly="1"/>
+                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)"/>
+                                    <field name="amount" sum="Payment" on_change="onchange_amount(amount, amount_unreconciled, context)"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
@@ -211,11 +224,6 @@
                                     <field name="analytic_id"
                                            groups="analytic.group_analytic_accounting"/>
                                 </group>
-                                <group col="4" colspan="2">
-                                    <separator string="Other Information" colspan="4"/>
-                                    <field name="number" colspan="4"/>
-                                    <field name="currency_id" invisible="1" colspan="4"/>
-                                </group>
                             </group>
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
@@ -223,6 +231,7 @@
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
+                            <field name="number" colspan="4"/>
                             <field name="move_ids" colspan="4" nolabel="1" readonly="1">
                                <tree string="Journal Items">
                                    <field name="move_id"/>
@@ -316,7 +325,7 @@
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
-                                        required="1"
+                                        required="1" readonly="1"
                                         />
                                     <field name="account_id"  groups="base.group_no_one" domain="[('type','=','receivable')]"/>
                                     <field name="date_original" readonly="1"/>
@@ -329,11 +338,18 @@
                             </field>
                             <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, context)">
                                 <tree string="Credits" editable="bottom" colors="gray:amount==0">
-                                    <field name="move_line_id"/>
-                                    <field name="account_id"  groups="base.group_extended" domain="[('type','=','receivable')]"/>
-                                    <field name="date_original"/>
-                                    <field name="amount_original"/>
-                                    <field name="amount" sum="Payment"/>
+                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
+                                        on_change="onchange_move_line_id(move_line_id)"
+                                        domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        required="1" readonly="1"
+                                        />
+                                    <field name="account_id"  groups="base.group_no_one" domain="[('type','=','receivable')]"/>
+                                    <field name="date_original" readonly="1"/>
+                                    <field name="date_due" readonly="1"/>
+                                    <field name="amount_original" readonly="1"/>
+                                    <field name="amount_unreconciled" sum="Open Balance" readonly="1"/>
+                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)"/>
+                                    <field name="amount" sum="Payment" on_change="onchange_amount(amount, amount_unreconciled, context)"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
@@ -362,10 +378,6 @@
                                     <field name="analytic_id"
                                            groups="analytic.group_analytic_accounting"/>
                                 </group>
-                                <group col="4" colspan="2">
-                                    <separator string="Other Information" colspan="4"/>
-                                    <field name="number" colspan="4"/>
-                                </group>
                             </group>
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
@@ -373,6 +385,7 @@
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
+                            <field name="number" colspan="4"/>
                             <field name="move_ids" colspan="4" nolabel="1" readonly="1">
                                <tree string="Journal Items">
                                    <field name="move_id"/>
