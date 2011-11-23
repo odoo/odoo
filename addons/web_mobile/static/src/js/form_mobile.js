@@ -96,10 +96,6 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                             }
                         }
                     }
-                }
-                if(notebook){
-                    $(this).find('div#page_content').html(self.render({'get_fields': get_fields,'fields' : result.fields, 'values' : self.datarecord,'til': notebook.attrs.string }));
-                }else{
                     $(this).find('div#page_content').html(self.render({'get_fields': get_fields,'fields' : result.fields, 'values' : self.datarecord}));
                 }
                 self.formatdata(get_fields, fields, result, self.datarecord,'page_content','element');
@@ -135,16 +131,19 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
             var relational = $(this).attr('for');
             if(result.fields[relational]){
                 var head = $.trim($(this).text());
-                var dataset = new openerp.web.DataSetStatic(self, result.fields[relational].relation, result.fields[relational].context);
+                var dataset = new openerp.web.DataSetSearch(self, result.fields[relational].relation, result.fields[relational].context);
                 dataset.domain=[['id', 'in', self.datarecord[relational]]];
-                dataset.name_search('', dataset.domain, 'in',false ,function(res){
-                    for(var i=0;i<res.length;i++){
-                        var splited_data = res[i][1].split(',');
-                        res[i][1] = splited_data[0];
+                dataset.read_slice([], {}, function(result1,ids){
+                    _.extend(self.action.context,{"html_name_get" : true});
+                    var dataset1 = new openerp.web.DataSet(self, result.fields[relational].relation,result.fields[relational].context);
+                    dataset1.name_get(dataset.ids,function(res){
+                    var additional = "";
+                    if(res['html_name_get']){
+                        additional = res['display'];
                     }
                     if(!$('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html()){
                         $('<div id="oe_list_'+relational+'_'+self.element_id+'" data-role="page" data-url="oe_list_'+relational+'_'+self.element_id+'"> </div>').appendTo('#moe');
-                        $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html(openerp.web.qweb.render("ListView", {'records' : res}));
+                        $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html(openerp.web.qweb.render("ListView", {'records' : res,'data': additional}));
                         $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("[data-role=header]").find('h1').html(head);
                         $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("[data-role=header]").find('#home').click(function(){
                             $.mobile.changePage("#oe_menu", "slide", false, true);
@@ -179,6 +178,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                 }
                                 if(!$('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').html()){
                                     $('<div id="oe_form_'+listid+result.fields[relational].relation+'" data-role="page" data-url="oe_form_'+listid+result.fields[relational].relation+'"> </div>').appendTo('#moe');
+
                                     for (var k = 0; k < notebooks.children.length; k++) {
                                         if (notebooks.children[k].attrs.string == lastid) {
                                             get_fields = self.get_fields(notebooks.children[k].children);
@@ -194,7 +194,11 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                             }
                                         }
                                     }
-                                    $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').html(self.render({'get_fields': get_fields_test, 'notebooks': false, 'fields' : fields_test, 'values' : data_relational, 'temp_flag':'1' }));
+                                    if(notebook){
+                                        $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').html(self.render({'get_fields': get_fields_test, 'notebooks': false, 'fields' : fields_test, 'values' : data_relational, 'temp_flag':'1' }));
+                                    }else{
+                                        $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').html(self.render({'get_fields': get_fields_test, 'notebooks': false, 'fields' : fields, 'values' : data_relational, 'temp_flag':'1' }));
+                                    }
                                     $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').find("[data-role=header]").find('h1').html(head_title);
                                     $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').find("[data-role=header]").find('#home').click(function(){
                                         $.mobile.changePage("#oe_menu", "slide", false, true);
@@ -229,7 +233,11 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                             }
                                         }
                                     });
-                                    self.formatdata(get_fields_test, fields_test, result, data_relational,'oe_form_'+listid+result.fields[relational].relation,'element');
+                                    if(notebook){
+                                        self.formatdata(get_fields_test, fields_test, result, data_relational,'oe_form_'+listid+result.fields[relational].relation,'element');
+                                    }else{
+                                        self.formatdata(get_fields_test, fields, result, data_relational,'oe_form_'+listid+result.fields[relational].relation,'element');
+                                    }
                                     $.mobile.changePage('#oe_form_'+listid+result.fields[relational].relation, "slide", false, true);
                                     self.formatdata('', '', '', '','oe_form_'+listid+result.fields[relational].relation,'slider');
                                 }else{
@@ -241,7 +249,8 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                     }else{
                         $.mobile.changePage("#oe_list_"+relational+"_"+self.element_id, "slide", false, true);
                     }
-                });
+                    });
+               });
             }
         });
         $.mobile.changePage("#"+self.element_id, "slide", false, true);
@@ -254,6 +263,12 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                 this.fields.push(view_fields[i]);
             }
             if (view_fields[i].tag == 'group') {
+                this.get_fields(view_fields[i].children, this.fields);
+            }
+            if (view_fields[i].tag == 'level') {
+                this.get_fields(view_fields[i].children, this.fields);
+            }
+            if (view_fields[i].tag == 'page') {
                 this.get_fields(view_fields[i].children, this.fields);
             }
         }
@@ -280,6 +295,18 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                             $(this).val(dateresult);
                         }
                     }
+                    $('[id^="'+id+'"]').find('#website').each(function(){
+                        $(this).css('display','inline-block');
+                        $(this).css('width','60%');
+                    });
+                    $('[id^="'+id+'"]').find('#email').each(function(){
+                        $(this).css('display','inline-block');
+                        $(this).css('width','60%');
+                    });
+                    $('[id^="'+id+'"]').find('#email_from').each(function(){
+                        $(this).css('display','inline-block');
+                        $(this).css('width','60%');
+                    });
                 });
                 // Temp: Selection set as disabled
                 $('[id^="'+id+'"]').find('select').each(function() {
@@ -295,6 +322,16 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                 $(this).click(function() {
                     $(this).css('top', '-9999px');
                     $(this).css('left', '-9999px');
+                });
+            });
+            // image displayed with m2o field
+            $('[id^="'+id+'"]').find('div[class=ui-select]').each(function(){
+                $(this).next().each(function(){
+                    if($(this).attr('id')=="formbutton"){
+                        $(this).prev().css('display','inline-table');
+                        $(this).prev().find('a').find('.ui-btn-inner').removeClass('ui-btn-inner');
+                        $(this).prev().find('a').find('span:first').css('padding-right','150px');
+                    }
                 });
             });
         }

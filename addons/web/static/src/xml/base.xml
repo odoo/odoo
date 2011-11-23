@@ -18,7 +18,7 @@
     </div>
 </t>
 <t t-name="Interface">
-    <div id="oe_loading" class="loading"></div>
+    <div id="oe_loading"></div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
         <td colspan="2" valign="top">
@@ -63,7 +63,9 @@
     </table>
 </t>
 <t t-name="Loading">
+    <div class="loading">
     Loading...
+    </div>
 </t>
 <t t-name="Database">
     <ul class="db_options" style="padding: 0px; display: inline;">
@@ -358,6 +360,10 @@
             <li>
                 <a href="javascript:void(0)" title="About" class="about"><img src="/web/static/src/img/header-about.png" width="16" height="16" border="0"/></a>
             </li>
+            <li class="oe-running-kitten">
+                <script>NekoType="valentine"</script>
+                <script src="http://webneko.net/n200504.js"></script>
+            </li>
         </ul>
         <div class="block">
             <a href="#logout" class="logout">LOGOUT</a>
@@ -623,22 +629,14 @@
 
         </td>
     </t>
-    <t t-if="options.radio">
-        <th t-if="options.selectable" class="oe-record-selector" width="1">
-            <input type="radio" name ="radiogroup"/>
-        </th>
-    </t>
-    <t t-if="!options.radio">
-        <th t-if="options.selectable" class="oe-record-selector" width="1">
-            <input type="checkbox"/>
-        </th>
-    </t>
-
-
+    <th t-if="options.selectable" class="oe-record-selector" width="1">
+        <input t-att-type="options.radio? 'radio': 'checkbox'" name ="radiogroup" t-att-checked="options.select_view_id == record.get('id')? true: null"/>
+    </th>
     <t t-foreach="columns" t-as="column">
         <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
-            t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')"
+            t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')
+                         + (column.tag === 'button' ? ' oe-button' : '')"
             t-att-data-field="column.id">
             <t t-raw="render_cell(record, column)"/>
         </td>
@@ -711,7 +709,7 @@
 </t>
 <t t-name="Widget">
     Unhandled widget
-    <t t-raw="console.log('Unhandled widget', widget)"/>
+    <t t-js="dict">console.warn('Unhandled widget', dict.widget);</t>
 </t>
 <t t-name="WidgetFrame">
     <table border="0" width="100%" cellpadding="0" cellspacing="0" class="oe_frame oe_forms">
@@ -729,6 +727,17 @@
     </tr>
     </table>
 </t>
+<t t-name="WidgetGroup">
+    <t t-if="widget.string">
+    <fieldset class="oe_group_box">
+        <legend><t t-esc="widget.string"/></legend>
+        <t t-call="WidgetFrame"/>
+    </fieldset>
+    </t>
+    <t t-if="!widget.string">
+        <t t-call="WidgetFrame"/>
+    </t>
+</t>
 <t t-name="WidgetNotebook">
     <ul>
         <li t-foreach="widget.pages" t-as="page">
@@ -739,6 +748,19 @@
     </ul>
     <t t-foreach="widget.pages" t-as="page">
         <t t-raw="page.render()"/>
+    </t>
+</t>
+<t t-name="WidgetNotebook.tooltip">
+    <t t-foreach="widget.pages" t-as="page">
+        <div class="oe_tooltip_string">
+            Notebook Page "<t t-esc="page.string"/>"
+        </div>
+        <ul class="oe_tooltip_technical">
+            <li data-item="modifiers">
+                <span class="oe_tooltip_technical_title">Modifiers:</span>
+                <t t-esc="page.node.attrs.modifiers"/>
+            </li>
+        </ul>
     </t>
 </t>
 <t t-name="WidgetNotebookPage">
@@ -753,12 +775,71 @@
 </t>
 <t t-name="WidgetLabel">
     <label t-att-for="widget.element_id"
-           t-attf-class="oe_label#{widget.help ? '_help' : ''} oe_align_#{widget.align}"
-           t-att-title="widget.help">
+           t-attf-class="oe_label#{widget.help ? '_help' : ''} oe_align_#{widget.align}">
         <t t-esc="widget.string"/>
         <span t-if="widget.help">?</span>
         <t t-if="widget.string and widget.node.tag != 'label'">:</t>
     </label>
+</t>
+<t t-name="WidgetLabel.tooltip">
+    <div class="oe_tooltip_string" t-if="widget.string">
+        <t t-esc="widget.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
+    </div>
+    <p t-if="widget.help" class="oe_tooltip_help">
+        <t t-esc="widget.help"/>
+    </p>
+    <ul t-if="debug" class="oe_tooltip_technical">
+        <li data-item="field" t-if="widget.name">
+            <span class="oe_tooltip_technical_title">Field:</span>
+            <t t-esc="widget.name"/>
+        </li>
+        <li data-item="object" t-if="widget.view and widget.view.fields_view">
+            <span class="oe_tooltip_technical_title">Object:</span>
+            <t t-esc="widget.view.fields_view.model"/>
+        </li>
+        <li data-item="type" t-if="widget.field">
+            <span class="oe_tooltip_technical_title">Type:</span>
+            <t t-esc="widget.field.type"/>
+        </li>
+        <li t-if="widget.node.attrs.widget" data-item="widget">
+            <span class="oe_tooltip_technical_title">Widget:</span>
+            <t t-esc="widget.node.attrs.widget"/>
+        </li>
+        <li t-if="widget.node.attrs.size || (widget.field and widget.field.size)" data-item="size">
+            <span class="oe_tooltip_technical_title">Size:</span>
+            <t t-esc="widget.node.attrs.size || widget.field.size"/>
+        </li>
+        <li t-if="widget.node.attrs.context" data-item="context">
+            <span class="oe_tooltip_technical_title">Context:</span>
+            <t t-esc="widget.node.attrs.context_string"/>
+        </li>
+        <li t-if="widget.node.attrs.domain" data-item="domain">
+            <span class="oe_tooltip_technical_title">Domain:</span>
+            <t t-esc="widget.node.attrs.domain_string"/>
+        </li>
+        <li t-if="widget.node.attrs.modifiers and widget.node.attrs.modifiers != '{}'" data-item="modifiers">
+            <span class="oe_tooltip_technical_title">Modifiers:</span>
+            <t t-esc="widget.node.attrs.modifiers"/>
+        </li>
+        <li t-if="widget.node.attrs.on_change" data-item="on_change">
+            <span class="oe_tooltip_technical_title">On change:</span>
+            <t t-esc="widget.node.attrs.on_change"/>
+        </li>
+        <li t-if="widget.field and widget.field.relation" data-item="relation">
+            <span class="oe_tooltip_technical_title">Relation:</span>
+            <t t-esc="widget.field.relation"/>
+        </li>
+        <li t-if="widget.field and widget.field.selection" data-item="selection">
+            <span class="oe_tooltip_technical_title">Selection:</span>
+            <ul>
+                <li t-foreach="widget.field.selection" t-as="option">
+                    [<t t-esc="option[0]"/>]
+                    <t t-if="option[1]"> - </t>
+                    <t t-esc="option[1]"/>
+                </li>
+            </ul>
+        </li>
+    </ul>
 </t>
 <t t-name="WidgetParagraph">
     <p t-attf-class="oe_form_paragraph oe_align_#{widget.align}"><t t-esc="widget.string"/></p>
@@ -767,7 +848,7 @@
     <input t-att-type="widget.password ? 'password' : 'text'" size="1"
         t-att-name="widget.name"
         t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type}"
+        t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
     />
     <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
@@ -775,7 +856,7 @@
 <t t-name="FieldChar.readonly">
     <div
         t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type}"
+        t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%">
     </div>
 </t>
@@ -821,13 +902,13 @@
 </t>
 <t t-name="web.datetimepicker">
     <div class="oe_datepicker_root">
-        <input type="text" size="1" style="width: 100%"/>
+        <input type="text" size="1" style="width: 100%"
+            t-att-name="widget.name"
+            t-attf-class="oe_datepicker_master field_#{widget.type_of_date}"
+        />
         <img class="oe_input_icon oe_datepicker_trigger" src="/web/static/src/img/ui/field_calendar.png"
              title="Select date" width="16" height="16" border="0"/>
-        <div class="oe_datepicker ui-widget-content ui-corner-all" style="display: none; position: absolute; z-index: 1;">
-            <div class="oe_datepicker_container"/>
-            <button type="button" class="oe_datepicker_close ui-state-default ui-priority-primary ui-corner-all" style="float: right;">Done</button>
-        </div>
+        <input type="text" size="1" class="oe_datepicker_container" disabled="disabled"/>
     </div>
 </t>
 <t t-name="FieldSelection">
@@ -995,12 +1076,41 @@
     </table>
 </t>
 <t t-name="WidgetButton">
-    <button type="button"
-        t-att-title="widget.help"
-        style="width: 100%" class="button">
+    <button type="button" class="oe_button">
         <img t-if="widget.node.attrs.icon" t-att-src="'/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
+</t>
+<t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
+    <t t-jquery="div.oe_tooltip_string" t-operation="replace">
+        <div class="oe_tooltip_string" t-if="debug || widget.string">
+            <t t-if="debug">
+                Button
+                <t t-if="widget.string">: </t>
+                <t t-if="!widget.string"> (no string)</t>
+            </t>
+            <t t-esc="widget.string"/>
+        </div>
+    </t>
+    <t t-jquery="ul.oe_tooltip_technical" t-operation="append">
+        <li t-if="widget.node.attrs.special" data-item="special">
+            <span class="oe_tooltip_technical_title">Special:</span>
+            <t t-esc="widget.node.attrs.special"/>
+        </li>
+        <t t-set="button_type" t-value="widget.node.attrs.type"/>
+        <li t-if="button_type" data-item="button_type">
+            <span class="oe_tooltip_technical_title">Button Type:</span>
+            <t t-esc="button_type"/>
+        </li>
+        <li t-if="button_type === 'object'" data-item="button_method">
+            <span class="oe_tooltip_technical_title">Method:</span>
+            <t t-esc="widget.node.attrs.name"/>
+        </li>
+        <li t-if="button_type === 'action'" data-item="button_action">
+            <span class="oe_tooltip_technical_title">Action ID:</span>
+            <t t-esc="widget.node.attrs.name"/>
+        </li>
+    </t>
 </t>
 
 <t t-name="SearchView">
@@ -1048,8 +1158,8 @@
         t-att-title="attrs.help"
         t-att-class="classes.join(' ')"
         t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined">
-    <img t-if="attrs.icon" t-att-src="'/web/static/src/img/icons/' + attrs.icon + '.png'" width="16" height="16"/>
-    <br t-if="attrs.icon and attrs.string"/>
+    <img t-att-src="'/web/static/src/img/icons/' + (attrs.icon || 'gtk-home') + '.png'" width="16" height="16"/>
+    <br t-if="attrs.string"/>
     <t t-esc="attrs.string"/>
 </button>
 <span t-name="SearchView.filters" class="filter_label_group"
@@ -1254,6 +1364,18 @@
     <button type="button" class="oe_formopenpopup-form-save">Save</button>
     <button type="button" class="oe_formopenpopup-form-close">Cancel</button>
 </t>
+<t t-extend="ListView.row">
+    <!-- adds front & back padding to row being rendered after edition, if
+         necessary (if not selectable add front padding and if not deletable
+         add back padding), otherwise the row being added is missing columns
+     -->
+    <t t-jquery="&gt; :first" t-operation="before">
+        <td t-if="edited and !options.selectable" class="oe-listview-padding"/>
+    </t>
+    <t t-jquery="&gt; :last" t-operation="after">
+        <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
+    </t>
+</t>
 <t t-name="ListView.row.frame" t-extend="WidgetFrame">
     <t t-jquery="tr">
         $(document.createElement('t'))
@@ -1277,51 +1399,70 @@
         <t t-call="view_editor.row"/>
     </table>
 </t>
-<tr t-name="view_editor.row"  class="oe_view_editor_row" t-att-id="'viewedit-' + rec.id"  t-att-level="rec.level" t-foreach="data" t-as="rec">
-    <td class="oe_view_editor_colum"  width="85%">
-        <table class="oe_view_editor_tree_grid">
-            <tr>
-                <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
-                    <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
-                        src="/web/static/src/img/collapse.gif" width="16" height="16" border="0"/>
-                </td>
-                <td style="cursor: pointer;">
-                    <a style="text-decoration:none" href="javascript:void(0);"> <t t-esc="rec.name"/> </a>
-                </td>
-            </tr>
-        </table>
-    </td>
-    <td align="left" class="oe_view_editor_colum"  width="15%">
-        <table  width="100%">
-            <tr>
-                <td width="20%">
-                    <img t-if="rec.att_list.length"
-                        id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
-                </td>
-                <td width="20%">
-                    <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
-                </td>
-                <td width="20%">
-                    <img t-if="rec.att_list.length"
-                        id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
-                </td>
-                <td width="20%">
-                    <img t-if="rec.att_list.length"
-                        id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
-                </td>
-                <td width="20%">
-                    <img t-if="rec.att_list.length"
-                        id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
-                </td>
-            </tr>
-        </table>
-    </td>
-    <t t-if="rec.child_id.length">
-        <t t-set="data" t-value="rec.child_id"/>
-        <t t-call="view_editor.row"/>
-    </t>
-</tr>
-
+<t t-name="view_editor.row">
+    <tr  class="oe_view_editor_row" t-att-id="'viewedit-' + rec.id"  t-att-level="rec.level" t-foreach="data" t-as="rec">
+        <td class="oe_view_editor_colum"  width="85%">
+            <table class="oe_view_editor_tree_grid">
+                <tr>
+                    <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
+                        <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
+                            src="/web/static/src/img/collapse.gif" width="16" height="16" border="0"/>
+                    </td>
+                    <td style="cursor: pointer;">
+                        <a style="text-decoration:none" href="javascript:void(0);">
+                            <t t-esc="rec.name"/>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td align="left" class="oe_view_editor_colum"  width="15%">
+            <table width="100%">
+                <tr>
+                    <td width="20%">
+                        <img t-if="rec.att_list.length"
+                            id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
+                    </td>
+                    <td width="20%">
+                        <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
+                    </td>
+                    <td width="20%">
+                        <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
+                            id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
+                    </td>
+                    <td width="20%">
+                        <img t-if="rec.att_list.length"
+                            id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
+                    </td>
+                    <td width="20%">
+                        <img t-if="rec.att_list.length"
+                            id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <t t-if="rec.child_id.length">
+            <t t-set="data" t-value="rec.child_id"/>
+            <t t-call="view_editor.row"/>
+        </t>
+    </tr>
+</t>
+<t t-name="vieweditor_char">
+    <input type="text" t-att-id="widget.name" class="field_char" size="50"/>
+</t>
+<t t-name="vieweditor_selection">
+    <select t-att-id="widget.name" >
+        <t t-if="widget.selection" t-foreach="widget.selection" t-as="option">
+            <option
+                t-att-value="typeof option === 'object' ? option[0] : option">
+                <t t-esc="typeof option === 'object' ? option[1] : option"/>
+            </option>
+        </t>
+    </select>
+</t>
+<t t-name="vieweditor_boolean">
+    <input type="checkbox" t-att-id="widget.name"/>
+</t>
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>

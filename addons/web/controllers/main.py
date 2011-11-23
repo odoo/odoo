@@ -268,13 +268,18 @@ class Database(openerpweb.Controller):
             params['db_lang'],
             params['create_admin_pwd']
         )
-
+        
         try:
             return req.session.proxy("db").create(*create_attrs)
         except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': e.faultCode, 'title': 'Create Database'}
-        return {'error': 'Could not create database !', 'title': 'Create Database'}
+            if e.faultCode and isinstance(e.faultCode, str)\
+                and e.faultCode.split(':')[0] == 'AccessDenied':
+                    return {'error': e.faultCode, 'title': 'Database creation error'}
+            return {
+                'error': "Could not create database '%s': %s" % (
+                    params['db_name'], e.faultString),
+                'title': 'Database creation error'
+            }
 
     @openerpweb.jsonrequest
     def drop(self, req, fields):
@@ -307,7 +312,7 @@ class Database(openerpweb.Controller):
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
         try:
-            data = base64.b64encode(db_file.file.read())
+            data = base64.b64encode(db_file.read())
             req.session.proxy("db").restore(restore_pwd, new_db, data)
             return ''
         except xmlrpclib.Fault, e:
@@ -338,7 +343,8 @@ class Session(openerpweb.Controller):
             "session_id": req.session_id,
             "uid": req.session._uid,
             "context": ctx,
-            "db": req.session._db
+            "db": req.session._db,
+            "login": req.session._login
         }
 
     @openerpweb.jsonrequest
@@ -347,7 +353,8 @@ class Session(openerpweb.Controller):
         return {
             "uid": req.session._uid,
             "context": req.session.get_context() if req.session._uid else False,
-            "db": req.session._db
+            "db": req.session._db,
+            "login": req.session._login
         }
 
     @openerpweb.jsonrequest
@@ -935,10 +942,12 @@ class View(openerpweb.Controller):
             domain = elem.get(el, '').strip()
             if domain:
                 elem.set(el, parse_domain(domain, session))
+                elem.set(el + '_string', domain)
         for el in ['context', 'default_get']:
             context_string = elem.get(el, '').strip()
             if context_string:
                 elem.set(el, parse_context(context_string, session))
+                elem.set(el + '_string', context_string)
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, view_type, toolbar=False):
@@ -1417,6 +1426,7 @@ class ExcelExport(Export):
             for cell_index, cell_value in enumerate(row):
                 if isinstance(cell_value, basestring):
                     cell_value = re.sub("\r", " ", cell_value)
+                if cell_value is False: cell_value = None
                 worksheet.write(row_index + 1, cell_index, cell_value, style)
 
         fp = StringIO()

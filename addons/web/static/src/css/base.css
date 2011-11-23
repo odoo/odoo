@@ -26,7 +26,7 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
     margin: 0;
 }
 
-.openerp .oe-number {
+.openerp .oe-listview .oe-number {
     text-align: right !important;
 }
 .openerp .oe_hide {
@@ -713,7 +713,26 @@ label.error {
 .openerp .oe-listview th {
     vertical-align: middle;
     text-align: left;
+    padding: 1px 2px;
 }
+.openerp .oe-listview th.oe-record-selector,
+.openerp .oe-listview td.oe-button,
+.openerp .oe-listview td.oe-record-delete {
+    padding: 0 1px;
+}
+
+/* Could use :not selectors if they were supported by MSIE8... */
+.openerp .oe-listview tbody td {
+    border-left: 1px solid #dadada;
+}
+.openerp .oe-listview tbody td:first-child,
+.openerp .oe-listview tbody td.oe-button,
+.openerp .oe-listview tbody td.oe-button+td,
+.openerp .oe-listview tbody th.oe-record-selector+td,
+.openerp .oe-listview tbody td.oe-record-delete {
+    border-left: none;
+}
+
 .openerp .oe-listview td.oe-record-delete {
     text-align: right;
 }
@@ -790,33 +809,33 @@ label.error {
     also on the first and last children of the first and last row
  */
 .openerp .oe-listview table.oe-listview-content {
-    -webkit-border-radius: 7px;
-    -moz-border-radius: 7px;
-    border-radius: 7px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
 .openerp .oe-listview table.oe-listview-content thead tr:first-child th:first-child {
-    -webkit-border-top-left-radius: 7px;
-    -moz-border-radius-topleft: 7px;
-    border-top-left-radius: 7px;
+    -webkit-border-top-left-radius: 4px;
+    -moz-border-radius-topleft: 4px;
+    border-top-left-radius: 4px;
 }
 .openerp .oe-listview table.oe-listview-content thead tr:first-child th:last-child {
-    -webkit-border-top-right-radius: 7px;
-    -moz-border-radius-topright: 7px;
-    border-top-right-radius: 7px;
+    -webkit-border-top-right-radius: 4px;
+    -moz-border-radius-topright: 4px;
+    border-top-right-radius: 4px;
 }
 .openerp .oe-listview table.oe-listview-content tfoot tr:last-child th:first-child,
 .openerp .oe-listview table.oe-listview-content tfoot tr:last-child td:first-child,
 .openerp .oe-listview table.oe-listview-content tbody:last-child tr:last-child th:first-child {
-    -webkit-border-bottom-left-radius: 7px;
-    -moz-border-radius-bottomleft: 7px;
-    border-bottom-left-radius: 7px;
+    -webkit-border-bottom-left-radius: 4px;
+    -moz-border-radius-bottomleft: 4px;
+    border-bottom-left-radius: 4px;
 }
 .openerp .oe-listview table.oe-listview-content tfoot tr:last-child th:last-child,
 .openerp .oe-listview table.oe-listview-content tfoot tr:last-child td:last-child,
 .openerp .oe-listview table.oe-listview-content tbody:last-child tr:last-child td:last-child {
-    -webkit-border-bottom-right-radius: 7px;
-    -moz-border-radius-bottomright: 7px;
-    border-bottom-right-radius: 7px;
+    -webkit-border-bottom-right-radius: 4px;
+    -moz-border-radius-bottomright: 4px;
+    border-bottom-right-radius: 4px;
 }
 
 /* Notebook */
@@ -824,6 +843,9 @@ label.error {
     padding: 0;
     background: none;
     border-width: 0;
+}
+.openerp .oe_form_notebook .ui-tabs-panel {
+    padding: 4px;
 }
 .openerp .oe_form_notebook ul.ui-tabs-nav {
     padding-left: 0;
@@ -852,6 +874,17 @@ label.error {
 .openerp table.oe_frame {
     color: #4c4c4c;
 }
+.openerp fieldset.oe_group_box {
+    border: 1px solid #AAAAAA;
+    moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background: #F9F9F9;
+    padding: 4px;
+}
+.openerp fieldset.oe_group_box legend {
+    font-weight: bold;
+}
 .openerp td.oe_form_frame_cell {
     padding: 2px;
     position: relative;
@@ -874,6 +907,22 @@ label.error {
 }
 .openerp label.oe_label_help {
     cursor: help;
+}
+.openerp #tiptip_content {
+    font-size: 12px;
+}
+.openerp .oe_tooltip_string {
+    color: #FD5;
+    font-weight: bold;
+    font-size: 13px;
+}
+.openerp .oe_tooltip_technical {
+    padding: 0 0 4px 0;
+    margin: 5px 0 0 15px;
+    list-style: circle;
+}
+.openerp .oe_tooltip_technical_title {
+    font-weight: bold;
 }
 
 .openerp .oe_forms label.oe_label, .openerp .oe_forms label.oe_label_help {
@@ -918,20 +967,25 @@ label.error {
 .openerp .oe_forms textarea {
     resize:vertical;
 }
-.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms .button {
+.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms .oe_button {
     height: 22px;
 }
 .openerp .oe_forms input.field_datetime {
     min-width: 11em;
 }
-.openerp .oe_forms.oe_frame .oe_datepicker_root {
-    width: 100%;
-}
-.openerp .oe_forms .button {
+.openerp .oe_forms .oe_button {
     color: #4c4c4c;
     white-space: nowrap;
+    min-width: 100%;
+    width: 100%;
 }
-.openerp .oe_forms .button span {
+@-moz-document url-prefix() {
+    /* Strange firefox behaviour on width: 100% + white-space: nowrap */
+    .openerp .oe_forms .oe_button {
+        width: auto;
+    }
+}
+.openerp .oe_forms .oe_button span {
     position: relative;
     vertical-align: top;
 }
@@ -940,13 +994,20 @@ label.error {
     cursor: pointer;
     right: 5px;
     top: 3px;
+    z-index: 2;
+}
+.openerp .oe_datepicker_container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: none;
 }
 .openerp .oe_datepicker_root {
     position: relative;
     display: inline-block;
 }
-.openerp .oe_datepicker_root input[type="text"] {
-    min-width: 160px;
+.openerp .oe_forms.oe_frame .oe_datepicker_root {
+    width: 100%;
 }
 .openerp .oe_input_icon_disabled {
     position: absolute;
@@ -954,7 +1015,7 @@ label.error {
     opacity: 0.5;
     filter:alpha(opacity=50);
     right: 5px;
-    top: 5px;
+    top: 3px;
 }
 .openerp img.oe_field_translate {
     margin-left: -21px;
@@ -1247,6 +1308,14 @@ label.error {
 .openerp li.oe_sidebar_print {
     padding-left: 20px;
     background: 1px 3px url(/web/static/src/img/icons/gtk-print.png) no-repeat;
+}
+
+.openerp .oe-running-kitten {
+    display: none;
+}
+
+.openerp.kitten-mode-activated .oe-running-kitten {
+    display: inherit;
 }
 
 .openerp.kitten-mode-activated .main_table {
