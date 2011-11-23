@@ -126,8 +126,17 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         this.$element.find('.oe-dashboard-column').each(function() {
             var actions = [];
             $(this).find('.oe-dashboard-action').each(function() {
-                var action_id = $(this).attr('data-id');
-                actions.push(self.actions_attrs[action_id]);
+                var action_id = $(this).attr('data-id'),
+                    new_attrs = _.clone(self.actions_attrs[action_id]);
+                if (new_attrs.domain) {
+                    new_attrs.domain = new_attrs.domain_string;
+                    delete(new_attrs.domain_string);
+                }
+                if (new_attrs.context) {
+                    new_attrs.context = new_attrs.context_string;
+                    delete(new_attrs.context_string);
+                }
+                actions.push(new_attrs);
             });
             board.columns.push(actions);
         });
