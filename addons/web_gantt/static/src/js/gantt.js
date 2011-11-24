@@ -309,9 +309,11 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             }, 200);
         });
         $("div #_1, div #_1 + div").hide();
+        
         _.each(final_events, function(id) {
-            self.$element.find('.taskNameItem[id="'+id+'"]').click(function() {
-                self.editTask(self.ganttChartControl.getProjectById("_1").getTaskById(id));
+            var Task = self.ganttChartControl.getProjectById("_1").getTaskById(id);
+            Task.cTaskNameItem[0].click(function() {
+                self.editTask(Task);
             })
         });
     },
