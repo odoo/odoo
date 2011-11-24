@@ -93,19 +93,5 @@
     wf_service = netsvc.LocalService("workflow")
     for picking in picking_ids:
       wf_service.trg_validate(uid, 'stock.picking', picking, 'button_cancel', cr)
--
-  Now I am able to cancel this sale order.
--
-  !python {model: sale.order}: |
-    self.action_cancel(cr, uid, [ref("order4")])
--
-  I check that sale order is cancelled.
--
-  !assert {model: sale.order, id: order4}:
-    - state == 'cancel'
--
-  Again set cancelled order to draft.
--
-  !python {model: sale.order}: |
-    self.action_cancel_draft(cr, uid, [ref("order4")])
+
 
