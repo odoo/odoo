@@ -223,3 +223,5 @@ class OpenIDController(openerpweb.Controller):
         session = getattr(req.session, 'openid_session', {})
         return {'status': session.get('status'), 'message': session.get('message')}
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

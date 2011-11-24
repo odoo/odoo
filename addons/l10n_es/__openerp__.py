@@ -59,3 +59,5 @@ for yearly account reporting (balance, profit & losses).
     "certificate" : "00408828172062583229",
     'images': ['images/config_chart_l10n_es.jpeg','images/l10n_es_chart.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
