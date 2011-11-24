@@ -1094,6 +1094,7 @@ openerp.web.qweb.format_text_node = function(s) {
 
 /** Setup default connection */
 openerp.connection = new openerp.web.Connection();
+openerp.web.qweb.default_dict['__debug__'] = openerp.connection.debug;
 
 };
 
