@@ -330,6 +330,7 @@
                     <field name="state"/>
                     <field name="kanban_state"/>
                     <field name="project_id"/>
+                    <field name="remaining_hours" sum="Remaining Time"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="pad_url">http://pad.openerp.com/<t t-raw="_.str.underscored(_.str.trim(record.name.raw_value))"/></t>
@@ -338,32 +339,39 @@
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
                                 <div class="oe_kanban_box oe_kanban_color_border">
                                     <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                        <tr>
-                                            <td class="oe_kanban_title1" align="left" valign="middle">
-                                                <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
-                                                <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
-                                                <span t-att-title="record.project_id.value"><field name="name"/></span>
-                                            </td>
-                                            <td valign="top" width="22">
-                                                <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td align="left" valign="middle" width="16">
+                                            <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
+                                            <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <b t-att-title="record.project_id.value"><field name="name"/></b>
+                                        </td>
+                                        <td valign="top" width="22">
+                                            <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>
+                                        </td>
+                                    </tr>
                                     </table>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                        <div>
+                                        <div class="oe_kanban_description">
                                             <t t-esc="kanban_text_ellipsis(record.description.value, 160)"/>
+                                            <span class="oe_kanban_project_times" style="white-space: nowrap">
+                                                <i t-if="record.date_deadline.raw_value"><field name="date_deadline"/> ,</i>
+                                                <t t-set="hours" t-value="record.remaining_hours.raw_value"/>
+                                                <t t-set="times" t-value="[
+                                                     [1, (hours gte 1 and hours lt 2)]
+                                                    ,[2, (hours gte 2 and hours lt 5)]
+                                                    ,[5, (hours gte 5 and hours lt 10)]
+                                                    ,[10, (hours gte 10)]
+                                                ]"/>
+                                                <t t-foreach="times" t-as="time"
+                                                    ><a t-if="!time[1]" t-attf-name="set_remaining_time_#{time[0]}"
+                                                        type="object" class="oe_kanban_button"><t t-esc="time[0]"/></a
+                                                    ><b t-if="time[1]" class="oe_kanban_button oe_kanban_button_active"><t t-esc="Math.round(hours)"/></b
+                                                ></t>
+                                            </span>
                                         </div>
-                                        <div>
-                                            <i t-if="record.date_deadline.raw_value"><field name="date_deadline"/> ,</i>
-                                            <field name="remaining_hours" sum="Remaining Time"/>
-                                            <t t-set="style_bold">font-weight: bold</t>
-                                            <t t-set="hours" t-value="record.remaining_hours.raw_value"/>
-                                            <a name="set_remaining_time_1" type="object" t-att-style="(hours gte 1 and hours lt 2) ? style_bold : undefined"> [1]</a>
-                                            <a name="set_remaining_time_2" type="object" t-att-style="(hours gte 2 and hours lt 5) ? style_bold : undefined"> [2]</a>
-                                            <a name="set_remaining_time_5" type="object" t-att-style="(hours gte 5 and hours lt 10) ? style_bold : undefined"> [5]</a>
-                                            <a name="set_remaining_time_10" type="object" t-att-style="hours gte 10 ? style_bold : undefined"> [10]</a>
-                                        </div>
-                                        <br class="oe_kanban_clear"/>
+                                        <div class="oe_kanban_clear"/>
                                     </div>
                                     <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                         <div class="oe_kanban_left">
@@ -375,7 +383,7 @@
                                             <a name="set_kanban_state_normal" string="Normal" kanban_states="blocked,done" type="object" icon="gtk-media-play"/>
                                             <a name="set_kanban_state_done" string="Done" kanban_states="blocked,normal" type="object" icon="gtk-apply"/>
                                         </div>
-                                        <br class="oe_kanban_clear"/>
+                                        <div class="oe_kanban_clear"/>
                                     </div>
                                 </div>
                             </div>
