@@ -38,9 +38,12 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         this.color_field = this.fields_view.arch.attrs.color,
         this.colors = this.fields_view.arch.attrs.colors;
         
-        var level = this.fields_view.arch.children[0];
-        this.parent = level.attrs.link,
-        this.text = level.children.length ? level.children[0].attrs.name : level.attrs.name;
+        if (this.fields_view.arch.children.length) {
+            var level = this.fields_view.arch.children[0];
+            this.parent = level.attrs.link, this.text = level.children.length ? level.children[0].attrs.name : level.attrs.name;
+        } else {
+            this.text = 'name';
+        }
         
         if (!this.date_start) {
             return self.do_warn(_t("date_start is not defined "))
@@ -308,7 +311,10 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                 self.reloadView();
             }, 200);
         });
-        $("div #_1, div #_1 + div").hide();
+        
+        $(self.ganttChartControl.getProjectById("_1").projectItem[0]).hide();
+        $(self.ganttChartControl.getProjectById("_1").projectNameItem).hide();
+        $(self.ganttChartControl.getProjectById("_1").descrProject).hide();
         
         _.each(final_events, function(id) {
             var Task = self.ganttChartControl.getProjectById("_1").getTaskById(id);
