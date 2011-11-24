@@ -359,11 +359,12 @@
         </record>
         <record id="ch_1024" model="account.account.template">
             <field name="type">other</field>
-            <field name="name">Compte en devise A</field>
+            <field name="name">Compte en devise EUR</field>
             <field name="code">1024</field>
             <field name="user_type" ref="account_type_cash"/>
             <field name="note"/>
             <field ref="ch_102_0" name="parent_id"/>
+            <field name="currency_id" ref="base.EUR"/>
         </record>
         <record id="ch_1025" model="account.account.template">
             <field name="type">other</field>
