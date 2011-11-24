@@ -26,31 +26,34 @@
             <field name="name">IT</field>
             <field name="parent_id" ref="dep_technical"/>
             <field name="company_id" ref="base.main_company"/>
+            <field name="manager_id" ref="employee2"/>
         </record>
 
         <record id="dep_marketing" model="hr.department">
             <field name="name">Marketing</field>
             <field name="parent_id" ref="dep_management"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="manager_id" ref="employee2"/>
         </record>
 
         <record id="dep_sales" model="hr.department">
             <field name="name">Sales</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="parent_id" ref="dep_management"/>
+            <field name="manager_id" ref="employee4"/>
         </record>
 
         <record id="dep_sales_europe" model="hr.department">
             <field name="name">Sales Europe</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="parent_id" ref="dep_sales"/>
+            <field name="manager_id" ref="employee5"/>
         </record>
 
         <record id="dep_sales_america" model="hr.department">
             <field name="name">Sales America</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="parent_id" ref="dep_sales"/>
+            <field name="manager_id" ref="employee6"/>
         </record>
 
         <!-- HR Jobs -->
@@ -106,7 +109,19 @@
         </record>
 
         <record id="employee3" model="hr.employee">
-            <field name="department_id" ref="dep_sales"/>
+            <field name="department_id" ref="hr.dep_management"/>
+        </record>
+
+        <record id="employee4" model="hr.employee">
+            <field name="department_id" ref="hr.dep_management"/>
+        </record>
+
+        <record id="employee5" model="hr.employee">
+            <field name="department_id" ref="hr.dep_sales"/>
+        </record>
+
+        <record id="employee6" model="hr.employee">
+            <field name="department_id" ref="hr.dep_sales"/>
         </record>
 
     </data>

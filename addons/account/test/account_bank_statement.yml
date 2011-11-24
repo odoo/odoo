@@ -5,19 +5,9 @@
 -
   !python {model: account.bank.statement}: |
     import time
-    period = self._get_period(cr, uid, {'lang': u'en_US', 'tz': False, 'active_model': 'ir.ui.menu',
-      'journal_type': 'bank', 'period_id':time.strftime('%m'), 'active_ids': [ref('menu_bank_statement_tree')], 'active_id': ref('menu_bank_statement_tree')})
-    assert period, _('Period has not been selected')
     journal = self._default_journal_id(cr, uid, {'lang': u'en_US', 'tz': False, 'active_model': 'ir.ui.menu',
       'journal_type': 'bank', 'period_id': time.strftime('%m'), 'active_ids': [ref('menu_bank_statement_tree')], 'active_id': ref('menu_bank_statement_tree')})
     assert journal, _('Journal has not been selected')
--
-  I select the date
--
-  !python {model: account.bank.statement}: |
-    import time
-    date = self.onchange_date(cr, uid, [], time.strftime('%Y-%m-%d'), context=None)
-    assert date, _('Date has not been selected')
 -
   I create a bank statement with Opening and Closing balance 0.
 -

@@ -45,7 +45,6 @@
 
         <record model="ir.values" id="action_account_balance_report_values1">
             <field name="model_id" ref="account.model_account_account" />
-            <field name="object" eval="1" />
             <field name="name">Trial Balance</field>
             <field name="key2">client_print_multi</field>
             <field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_balance_menu'))" />

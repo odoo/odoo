@@ -39,7 +39,13 @@ class hr_payslip(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Expense Journal',states={'draft': [('readonly', False)]}, readonly=True, required=True),
         'move_id': fields.many2one('account.move', 'Accounting Entry', readonly=True),
     }
-    
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['move_id'] = False
+        return super(hr_payslip, self).copy(cr, uid, id, default, context=context)
+
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
@@ -95,9 +101,9 @@ class hr_payslip(osv.osv):
                 partner_id = False
                 debit_account_id = line.salary_rule_id.account_debit.id
                 credit_account_id = line.salary_rule_id.account_credit.id
-                
+
                 if debit_account_id:
-                    
+
                     debit_line = (0, 0, {
                     'name': line.name,
                     'date': timenow,
@@ -113,9 +119,9 @@ class hr_payslip(osv.osv):
                 })
                     line_ids.append(debit_line)
                     debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
-                
+
                 if credit_account_id:
-                    
+
                     credit_line = (0, 0, {
                     'name': line.name,
                     'date': timenow,
@@ -147,7 +153,7 @@ class hr_payslip(osv.osv):
                     'credit': debit_sum - credit_sum,
                 })
                 line_ids.append(adjust_credit)
-                
+
             elif debit_sum < credit_sum:
                 acc_id = slip.journal_id.default_debit_account_id.id
                 if not acc_id:
