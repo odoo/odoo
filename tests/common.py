@@ -61,3 +61,5 @@ def setUpModule():
 def tearDownModule():
     """ Shutdown the OpenERP server similarly to a single ctrl-c. """
     openerp.service.stop_services()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

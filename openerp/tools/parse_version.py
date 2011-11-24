@@ -99,3 +99,5 @@ if __name__ == '__main__':
         chk(('0', '4.2', '4.2.3.4', '5.0.0-alpha', '5.0.0-rc1', '5.0.0-rc1.1', '5.0.0_rc2', '5.0.0_rc3', '5.0.0'), False)
         chk(('5.0.0-0_rc3', '5.0.0-1dev', '5.0.0-1'), False) 
         
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

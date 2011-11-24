@@ -999,3 +999,5 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
     obj.parse(doc.getroot())
     return True
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

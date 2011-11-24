@@ -46,3 +46,5 @@ class TranslationToolsTestCase(unittest.TestCase):
          \\\\nope\n\n"
          """)
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

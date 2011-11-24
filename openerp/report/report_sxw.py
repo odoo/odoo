@@ -656,3 +656,5 @@ class report_sxw(report_rml, preprocess.report):
         html = create_doc(mako_html,html_parser.localcontext)
         return (html,'html')
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

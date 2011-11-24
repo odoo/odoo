@@ -707,3 +707,5 @@ class module_dependency(osv.osv):
             ], string='State', readonly=True, select=True),
     }
 module_dependency()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
