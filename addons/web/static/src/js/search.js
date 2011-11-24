@@ -203,12 +203,24 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             select.val("_filters");
             return;
         }
-        if (val.slice(0, "get:".length) == "get:") {
-            val = val.slice("get:".length);
-            val = parseInt(val);
-            var filter = this.managed_filters[val];
-            this.on_search([filter.domain], [filter.context], []);
-        } else if (val == "save_filter") {
+        switch(val) {
+        case 'add_to_dashboard':
+            this.on_add_to_dashboard();
+            break;
+        case 'manage_filters':
+            select.val("_filters");
+            this.do_action({
+                res_model: 'ir.filters',
+                views: [[false, 'list'], [false, 'form']],
+                type: 'ir.actions.act_window',
+                context: {"search_default_user_id": this.session.uid,
+                "search_default_model_id": this.dataset.model},
+                target: "current",
+                limit : 80,
+                auto_search : true
+            });
+            break;
+        case 'save_filter':
             select.val("_filters");
             var data = this.build_search_data();
             var context = new openerp.web.CompoundContext();
@@ -242,20 +254,13 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                     }}
                 ]
             });
-        } else if (val == "add_to_dashboard") {
-            this.on_add_to_dashboard();
-        } else { // manage_filters
-            select.val("_filters");
-            this.do_action({
-                res_model: 'ir.filters',
-                views: [[false, 'list'], [false, 'form']],
-                type: 'ir.actions.act_window',
-                context: {"search_default_user_id": this.session.uid,
-                "search_default_model_id": this.dataset.model},
-                target: "current",
-                limit : 80,
-                auto_search : true
-            });
+            break;
+        }
+        if (val.slice(0, 4) == "get:") {
+            val = val.slice(4);
+            val = parseInt(val, 10);
+            var filter = this.managed_filters[val];
+            this.on_search([filter.domain], [filter.context], []);
         }
     },
     on_add_to_dashboard: function() {
