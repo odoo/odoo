@@ -26,10 +26,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.group_operators = ['avg', 'max', 'min', 'sum', 'count'];
         this.qweb = new QWeb2.Engine();
         this.qweb.debug = openerp.connection.debug;
-        this.qweb.default_dict = {
-            '_' : _,
-            '_t' : _t
-        }
+        this.qweb.default_dict = _.clone(QWeb.default_dict);
         this.has_been_loaded = $.Deferred();
         this.search_domain = this.search_context = this.search_group_by = null;
         this.currently_dragging = {};

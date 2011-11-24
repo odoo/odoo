@@ -1076,7 +1076,8 @@ openerp.web._t = new openerp.web.TranslationDataBase().build_translation_functio
 openerp.web.qweb = new QWeb2.Engine();
 openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
 openerp.web.qweb.default_dict = {
-    '_' : _
+    '_' : _,
+    '_t' : openerp.web._t
 }
 openerp.web.qweb.format_text_node = function(s) {
     // Note that 'this' is the Qweb Node of the text
