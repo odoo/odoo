@@ -937,7 +937,7 @@ label.error {
     background: #f9f9f9;
 }
 /* Unedit Form */
-.openerp .field_char, .openerp .field_date, .openerp .field_float, .openerp .field_selection, .openerp .oe_form_field_many2one a {
+.openerp .field_char, .openerp .field_date, .openerp .field_float, .openerp .oe_form_field_many2one a {
 	vertical-align:middle;
 	padding-top:3px;
 	font-size:90%;
@@ -1060,6 +1060,16 @@ label.error {
     margin: 3px 0 0 0;
 }
 
+/* Uneditable Form View */
+.openerp .oe_form_readonly .field_char, .openerp .oe_form_readonly .oe_form_field_email  {
+    padding-top:4px;    
+}
+
+.openerp .oe_form_readonly .field_selection {
+    padding-top:2px;
+}
+
+
 /* Inputs */
 .openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms textarea {
     -moz-box-sizing: border-box;
@@ -1075,6 +1085,10 @@ label.error {
     min-width: 90px;
     color: #1f1f1f;
 }
+.openerp .oe_forms select{
+    padding-top: 2px;
+}
+
 .openerp .oe_forms textarea {
     resize:vertical;
 }
@@ -1500,6 +1514,7 @@ label.error {
 }
 .openerp .oe_forms .oe-m2o input[type="text"] {
     padding-right: 20px;
+    padding-top: 2px;
 }
 .openerp .oe-m2o-drop-down-button {
     margin-left: -23px;
@@ -1514,6 +1529,9 @@ label.error {
 }
 .openerp .oe-m2o-disabled-cm {
     color: grey;
+}
+.openerp ul[role="listbox"] li a {
+    font-size:80%;
 }
 .parent_top {
     vertical-align: text-top;
