@@ -255,7 +255,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment')]</field>
-            <field name="context">{'type':'payment'}</field>
+            <field name="context">{'default_type': 'payment', 'type': 'payment'}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_vendor_pay"/>
             <field name="target">current</field>
@@ -403,7 +403,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]</field>
-            <field name="context">{'type':'receipt'}</field>
+            <field name="context">{'default_type':'receipt', 'type':'receipt'}</field>
             <field name="search_view_id" ref="view_voucher_filter_customer_pay"/>
             <field name="view_id" eval="False"/>
             <field name="target">current</field>

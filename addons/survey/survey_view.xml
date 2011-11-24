@@ -1122,6 +1122,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid)]</field>
+            <field name="context">{'default_user_id': uid}</field>
             <field name="view_id" ref="survey_request_tree"></field>
             <field name="search_view_id" ref="survey_request_search"/>
         </record>

@@ -135,7 +135,7 @@
         <field name="name">My Tasks</field>
         <field name="res_model">project.task</field>
         <field name="search_view_id" ref="view_task_gtd_search"/>
-        <field name="context">{'set_editable':True,'set_visible':True,'gtd':True,'user_invisible':True, "search_default_open": 1}</field>
+        <field name="context">{'default_user_id': uid, 'set_editable':True,'set_visible':True,'gtd':True,'user_invisible':True, "search_default_open": 1}</field>
         <field name="domain">[('user_id','=',uid)]</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,gantt,graph,kanban</field>

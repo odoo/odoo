@@ -54,6 +54,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid),('state','=','open')]</field>
+            <field name="context">{'default_user_id': uid}</field>
             <field name="view_id" ref="view_task_tree"/>
         </record>
 
@@ -72,6 +73,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid),('state','=','open'),('date_deadline','&lt;&gt;',False)]</field>
+            <field name="context">{'default_user_id': uid}</field>
             <field name="view_id" ref="view_task_tree"/>
         </record>
 

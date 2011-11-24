@@ -80,6 +80,7 @@
             <field name="view_id" ref="account.view_bank_statement_form2"/>
             <field name="search_view_id" ref="account.view_account_bank_statement_filter"/>
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
+            <field name="context">{'default_journal_id_type': 'cash'}</field>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
             <field name="sequence" eval="5"/>

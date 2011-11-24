@@ -173,6 +173,7 @@ Objects per Day
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
         <field name="domain">[('user_id','=',uid),('month','=',time.strftime('%Y-%m-01'))]</field>
+        <field name="context">{'default_user_id': uid}</field>
     </record>
     <record model="ir.actions.act_window" id="action_report_auction_object_date_tree">
         <field name="name">Auction Object Date</field>
