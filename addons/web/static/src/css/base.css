@@ -13,6 +13,20 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
 	font-size:85%;
 }
 
+.openerp .view-manager-main-content>div{
+    padding:0px 8px;
+}
+.openerp .view-manager-main-content>div.oe-view-manager-header {
+    padding:0px;
+}
+.openerp .view-manager-main-content>div.oe-view-manager-header > a, .openerp .view-manager-main-content>div.oe-view-manager-header > div {
+    padding:0px 8px;
+}
+
+.openerp .oe-dashboard-action .view-manager-main-content > div {
+    padding:0px 0px;
+}
+
 .oe_box {
     border: 1px solid #aaf;
     padding: 2px;
@@ -383,6 +397,10 @@ label.error {
     white-space: nowrap;
     color: white;
     text-shadow: 0 1px 0 #333;
+    
+}
+.openerp a.oe_secondary_submenu_item {
+    padding: 0 5px 2px 10px;
 }
 .openerp a.oe_secondary_submenu_item:hover,
 .openerp a.oe_secondary_submenu_item.leaf.active {
@@ -395,7 +413,7 @@ label.error {
     background: -ms-linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,#5a5858 96%); /* IE10+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#5A5858',GradientType=0 ); /* IE6-9 */
     background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,#5a5858 96%); /* W3C */
-    padding: 0 5px 2px 5px;
+    padding: 0 5px 2px 10px;
     line-height: 20px;
     color: #3f3d3d;
     text-decoration: none;
@@ -407,6 +425,7 @@ label.error {
 .openerp a.oe_secondary_submenu_item.submenu span:before {
     content: "\25b8";
 }
+
 
 /* Header */
 .openerp .header {
@@ -671,6 +690,11 @@ label.error {
 .openerp .searchview_group_content .oe_label, .openerp .searchview_group_content .oe_label_help {
 	font-weight:bold;
 	color:#4c4c4c;
+}
+
+.openerp .oe-searchview-render-line .oe_label, .openerp .oe-searchview-render-line .oe_label_help {
+    font-weight:bold;
+    font-size:80%;
 }
 
 .openerp .searchview_extended_group {
