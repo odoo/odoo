@@ -727,6 +727,11 @@
     </tr>
     </table>
 </t>
+<t t-name="WidgetFrame.readonly" t-extend="WidgetFrame">
+    <t t-jquery="&gt;table">
+        this.attr('class', this.attr('class')+' oe_form_readonly');
+    </t>
+</t>
 <t t-name="WidgetGroup">
     <t t-if="widget.string">
     <fieldset class="oe_group_box">
