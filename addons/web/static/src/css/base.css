@@ -443,7 +443,7 @@ label.error {
     margin: 0;
     padding: 4px 10px;
     text-shadow: 0 1px 0 #111111;
-	font-weight:600;
+	font-weight:normal;
 	line-height:14px;
 }
 .openerp .header_title small {
@@ -478,15 +478,11 @@ label.error {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#929292', endColorstr='#4D4D4D',GradientType=0 );
 }
 .openerp .header_corner ul.block {
-    /*float: left;*/
     list-style: none;
     height: 34px;
     margin: 0;
     padding: 0 0 0 2px;
-    /*background: url(../images/top-sep-a.png) no-repeat;*/
     line-height: 33px;
-    /*font-size: 1em;*/
-    /*text-transform: uppercase;*/
 }
 .openerp .header_corner ul.block li {
     float: left;
@@ -670,6 +666,8 @@ label.error {
 .openerp .searchview_group_content {
     padding-left: 10px;
 }
+
+
 .openerp .searchview_group_content .oe_label, .openerp .searchview_group_content .oe_label_help {
 	font-weight:bold;
 	color:#4c4c4c;
@@ -763,16 +761,13 @@ label.error {
 	border:none;
 	height:12px;
 	width:12px;
-	background-image:url("/web/static/src/img/iconset-b-remove.gif");
-	background-repeat:no-repeat;
-	background-position:center center;
-	background-color:transparent;
+    background: url("/web/static/src/img/iconset-b-remove.png") no-repeat scroll center center transparent;
 	cursor:pointer;
 }
 
 /* Could use :not selectors if they were supported by MSIE8... */
 .openerp .oe-listview tbody td {
-    border-left: 1px solid #dadada;
+    /*border-left: 1px solid #dadada; currently commenting to test with no vertical lines in list view*/
 }
 .openerp .oe-listview tbody td:first-child,
 .openerp .oe-listview tbody td.oe-button,
@@ -797,10 +792,14 @@ label.error {
 .openerp .oe-listview th.oe-sortable .ui-icon {
     height: 60%;
 	margin: -6px 0px 0px 0px;
+	display: inline;
     display: inline-block;
 	vertical-align:middle;
 }
 
+.openerp .oe-record-selector, .openerp .oe-field-cell, .openerp .oe-record-delete {
+	border-bottom:1px solid #E3E3E3;
+}
 
 .openerp .oe-listview .oe-field-cell {
     cursor: pointer;
@@ -953,6 +952,10 @@ label.error {
 	margin-top:5px;
 	vertical-align:center;
 }
+.openerp .oe_form_frame_cell .input[type="text"] {
+    padding-bottom:1px;
+}
+
 .openerp table.oe_frame td {
     color: #4c4c4c;
 }
@@ -997,18 +1000,21 @@ label.error {
 	font-weight:bold;
 }
 
+
+.openerp label.oe_label_help, .openerp label.oe_label, .openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms .oe_button, .openerp .oe_forms textarea {
+    font-size:85%;
+}
+
 .openerp label.oe_label_help, .openerp label.oe_label {
     display: block;
 	color:#4c4c4c;
-	font-size:80%;
-	font-weight:700;
-/*	letter-spacing:1px;*/
+	font-weight:normal;
 }
 .openerp label.oe_label_help {
     cursor: help;
 }
 .openerp .oe_form_frame_cell  .oe_label, .openerp .oe_form_frame_cell  .oe_label_help {
-	font-weight:500;
+	font-weight:normal;
 }
 .openerp #tiptip_content {
     font-size: 12px;
@@ -1057,7 +1063,7 @@ label.error {
     -webkit-box-sizing: border-box;
     -ms-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 0 2px 0 2px;
+    padding: 0px 2px 1px 2px;
     border: 1px solid #999;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -1204,9 +1210,6 @@ label.error {
 .openerp tbody.ui-widget-content {
 	margin-bottom:10px;
 	border-spacing:4px;
-	/*border:1px solid red;
-	background-color:red;
-	color:red;*/
 }
 .openerp .ui-widget-header {
 	background-image:none;
@@ -1227,7 +1230,7 @@ label.error {
 
 .openerp .view-manager-main-content {
     width: 100%;
-	padding:0px 7px;
+	padding:0px;
 }
 .openerp .oe-view-manager-header {
     overflow: auto;
@@ -1565,7 +1568,6 @@ label.error {
 /* ================ */
 .oe-shortcuts {
     position: absolute;
-
     margin: 0;
     padding: 6px 15px;
     top: 37px;
@@ -1591,8 +1593,12 @@ label.error {
     text-align: center;
     border-left: 1px solid #909090;
     padding: 4px;
-    font-size: 90%;
+    font-size: 80%;
     font-weight: normal;
+}
+
+.oe-shortcuts li:hover {
+    background-color:#666;
 }
 .oe-shortcuts li:first-child {
     border-left: none;
