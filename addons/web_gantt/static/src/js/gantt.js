@@ -497,10 +497,15 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
 
     do_search: function (domains, contexts, groupbys) {
         var self = this;
-        this.group_by = groupbys;
-        if(this.fields_view.arch.attrs.default_group_by) {
-            this.group_by = _.uniq(this.group_by.concat(this.fields_view.arch.attrs.default_group_by.split(',')));
+        this.group_by = [];
+        if (this.fields_view.arch.attrs.default_group_by) {
+            this.group_by = this.fields_view.arch.attrs.default_group_by.split(',');
         }
+        
+        if (groupbys.length) {
+            this.group_by = groupbys;
+        }
+        
         $.when(this.has_been_loaded).then(function() {
                 self.dataset.read_slice([], {
                     domain: domains,
