@@ -91,6 +91,10 @@ class account_voucher(osv.osv):
         return False
 
     def _get_payment_rate_currency(self, cr, uid, context=None):
+        '''
+        Return the default value for field payment_rate_currency_id: the currency of the journal
+        if there is one, otherwise the currency of the user's company
+        '''
         if context is None: context = {}
         journal_pool = self.pool.get('account.journal')
         journal_id = context.get('journal_id', False)
@@ -266,7 +270,6 @@ class account_voucher(osv.osv):
                                            ('without_writeoff', 'Keep Open'),
                                            ('with_writeoff', 'Reconcile Payment Balance'),
                                            ], 'Payment Difference', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'exchange_acc_id': fields.many2one('account.account', 'Exchange Diff. Account', readonly=True, states={'draft': [('readonly', False)]}),
         'writeoff_acc_id': fields.many2one('account.account', 'Counterpart Account', readonly=True, states={'draft': [('readonly', False)]}),
         'comment': fields.char('Counterpart Comment', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'analytic_id': fields.many2one('account.analytic.account','Write-Off Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
@@ -851,8 +854,14 @@ class account_voucher(osv.osv):
         :return: the account move line and its counterpart to create, depicted as mapping between fieldname and value
         :rtype: tuple of dict
         '''
-        if not line.voucher_id.exchange_acc_id.id:
-            raise osv.except_osv(_('Error!'), _('You must provide an account for the exchange difference.'))
+        if amount_residual > 0:
+            account_id = line.voucher_id.company_id.expense_currency_exchange_account_id
+            if not account_id:
+                raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Income Currency Rate' on the company! "))
+        else:
+            account_id = line.voucher_id.company_id.income_currency_exchange_account_id
+            if not account_id:
+                raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Expense Currency Rate' on the company! "))
 
         move_line = {
             'journal_id': line.voucher_id.journal_id.id,
@@ -872,7 +881,7 @@ class account_voucher(osv.osv):
             'journal_id': line.voucher_id.journal_id.id,
             'period_id': line.voucher_id.period_id.id,
             'name': _('change')+': '+(line.name or '/'),
-            'account_id': line.voucher_id.exchange_acc_id.id,
+            'account_id': account_id.id,
             'move_id': move_id,
             'amount_currency': 0.0,
             'partner_id': line.voucher_id.partner_id.id,
@@ -1139,7 +1148,7 @@ class account_voucher(osv.osv):
             # We automatically reconcile the account move lines.
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
-                    move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.exchange_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
+                    move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
         return True
 
     def copy(self, cr, uid, id, default={}, context=None):
@@ -1389,5 +1398,20 @@ def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
         if result != None:
             results.append(result)
     return results
+
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'income_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Income Currency Rate",
+            domain="[('type', '=', 'other')]",),
+        'expense_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Expense Currency Rate",
+            domain="[('type', '=', 'other')]",),
+    }
+
+res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

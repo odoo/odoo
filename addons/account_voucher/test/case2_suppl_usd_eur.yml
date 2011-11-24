@@ -2,6 +2,15 @@
   In order to check the Account_voucher module with multi-currency in OpenERP, 
   I create 2 Invoices in USD and make 2 Payments one in USD and another in EUR, based on the currency rating on that particular date
 -
+  I set the income and expense currency accounts on the main company
+-
+  !python {model: res.company}: |
+    from datetime import datetime
+    vals = {
+      'income_currency_exchange_account_id': ref('account.o_expense'),
+      'expense_currency_exchange_account_id': ref('account.o_expense')}
+    self.write(cr, uid, ref('base.main_company'), vals)
+-
   I create a bank journal with EUR as currency
 -
   !record {model: account.journal, id: bank_journal_EUR}:
