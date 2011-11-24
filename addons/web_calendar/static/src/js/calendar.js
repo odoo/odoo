@@ -249,17 +249,17 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             self.dataset.default_get(_.keys(fields), function (default_value) {
                _.each(default_value ,function(value, key){
                     (!_.include(_.keys(data), key))?data[key] = value:false;
-                    self.dataset.create(data, function(r) {
-                        var id = parseInt(r.result, 10);
-                        self.dataset.ids.push(id);
-                        scheduler.changeEventId(event_id, id);
-                        self.refresh_minical();
-                    }, function(r, event) {
-                        self.creating_event_id = event_id;
-                        self.form_dialog.form.on_record_loaded(data);
-                        self.form_dialog.open();
-                        event.preventDefault();
-                    });
+                });
+                self.dataset.create(data, function(r) {
+                    var id = parseInt(r.result, 10);
+                    self.dataset.ids.push(id);
+                    scheduler.changeEventId(event_id, id);
+                    self.refresh_minical();
+                }, function(r, event) {
+                    self.creating_event_id = event_id;
+                    self.form_dialog.form.on_record_loaded(data);
+                    self.form_dialog.open();
+                    event.preventDefault();
                 });
             });
         });
