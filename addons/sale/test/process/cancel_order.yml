@@ -52,18 +52,39 @@
     partial_pick = self.pool.get('stock.partial.picking')
     stock = self.pool.get('stock.picking')
     pick_ids = [x.id for x in self.browse(cr, uid, ref("order4")).picking_ids]
-    stock1 = stock.browse(cr, uid, pick_ids)
     data = stock.force_assign(cr, uid, pick_ids)
     if data == True:
-      partial_id = partial_pick.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': pick_ids})
+      context={'active_model': 'stock.picking','active_ids': pick_ids}      
+      partial_id = partial_pick.create(cr, uid, {},context)
       partial = partial_pick.browse(cr,uid,partial_id)
       line_id = partial.move_ids[0].id
-      partial.write({'move_ids': [(1,line_id,{'quantity': 5})]})
-      partial.do_partial()
-      picking_id = stock.search(cr, uid, [('origin','=',order.name),('state','=','assigned')])
-      wf_service = netsvc.LocalService("workflow")
-      for picking in picking_id:
-        wf_service.trg_validate(uid, 'stock.picking', picking, 'button_cancel', cr)
+      partial_pick.write(cr, uid, partial_id, {'move_ids': [(1,line_id,{'update_cost': 0, 'product_id': ref('product.product_product_pc1'), 'product_uom': ref('product.product_uom_unit'), 'currency': False, 'prodlot_id': False, 'cost': False, 'location_dest_id': ref('stock.stock_location_customers'), 'location_id': ref('stock.stock_location_stock'), 'quantity': 5})]})
+      partial_pick.do_partial(cr, uid, [partial_id], context)
+-
+  Now I cancel a partial picking.
+-
+  !python {model: sale.order}: |
+    import netsvc
+    order = self.browse(cr, uid, ref("order4"))
+    assert len(order.picking_ids) >= 2,'After partial picking there must be two or more picking'
+    assert order.picking_ids[0].state == 'assigned',"Partial Picking should be in 'Ready to progress' state"
+    assert order.picking_ids[0].move_lines[0].product_qty == 10.0,"Partial Picking product quantity must be 10.0"
+    pick_ids = order.picking_ids
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'stock.picking', order.picking_ids[0].id, 'button_cancel', cr)
+-
+  The scheduler runs.
+-
+  !function {model: procurement.order, name: run_scheduler}:
+    - model: procurement.order
+      search: "[]"
+-
+  Now I cancel a partial picking.
+-
+  !python {model: sale.order}: |
+    import netsvc
+    order = self.browse(cr, uid, ref("order4"))
+    print order.state
 
 #code introduced by revid: mtr@tinyerp.com-20110921101038-xf1l3whyblmjbdx9
 #form 'lp:~openerp-dev/openobject-addons/trunk-sale_coverage-mtr' branch
@@ -93,5 +114,19 @@
     wf_service = netsvc.LocalService("workflow")
     for picking in picking_ids:
       wf_service.trg_validate(uid, 'stock.picking', picking, 'button_cancel', cr)
-
+-
+  Now I am able to cancel this sale order.
+-
+  !python {model: sale.order}: |
+    self.action_cancel(cr, uid, [ref("order4")])
+-
+  I check that sale order is cancelled.
+-
+  !assert {model: sale.order, id: order4}:
+    - state == 'cancel'
+-
+  Again set cancelled order to draft.
+-
+  !python {model: sale.order}: |
+    self.action_cancel_draft(cr, uid, [ref("order4")])
 
