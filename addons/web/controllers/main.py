@@ -1386,7 +1386,7 @@ class Export(View):
 
         context = req.session.eval_context(req.context)
         Model = req.session.model(model)
-        ids = ids or Model.search(domain, context=context)
+        ids = ids or Model.search(domain, 0, False, False, context)
 
         field_names = map(operator.itemgetter('name'), fields)
         import_data = Model.export_data(ids, field_names, context).get('datas',[])
