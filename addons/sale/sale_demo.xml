@@ -255,8 +255,8 @@
             <field name="type">make_to_order</field>
             <field name="delay">15</field>
         </record>
-        <workflow action="order_confirm" model="sale.order" ref="order7"/>
-        <workflow action="manual_invoice" model="sale.order" ref="order7"/>
+        <!-- <workflow action="order_confirm" model="sale.order" ref="order7"/> -->
+        <!-- <workflow action="manual_invoice" model="sale.order" ref="order7"/> -->
         <!-- Run all schedulers -->
         <function model="procurement.order" name="run_scheduler"/>
 

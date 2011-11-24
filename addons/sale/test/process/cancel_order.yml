@@ -1,138 +1,92 @@
 -
   In order to test the cancel sale order.
 -
-  I try to cancel sale order and It's order policy is Manual.
+  Now I cancel quotation.
 -
   !python {model: sale.order}: |
-    try:
-      self.action_cancel(cr, uid, [ref("order4")])
-    except Exception,e:
-      pass
+    self.action_cancel(cr, uid, [ref("order7")])
+-
+  I check state of quotation after cancelled.
+-
+  !assert {model: sale.order, id: order7}:
+    - state == 'cancel'
+-
+  I set cancelled quotation to draft.
+-
+  !python {model: sale.order}: |
+    self.action_cancel_draft(cr, uid, [ref("order7")])
+
+-
+  I confirm order
+-
+  !workflow {model: sale.order, action: order_confirm, ref: order7}
+-
+  I send delivery in two shipments, so I am doing a partial delivery order.
+-
+  !python {model: stock.picking}: |
+    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("order7"))])
+    first_picking = self.browse(cr, uid, delivery_orders[0], context=context)
+    if first_picking.force_assign(context=context):
+      print first_picking.move_lines
+      first_move = first_picking.move_lines[0]
+      values = {'move%s'%(first_move.id): {'product_qty': 5}}
+      first_picking.do_partial(values, context=context)
+-
+  Now I cancel a lastest shipment
+-
+  !python {model: stock.picking}: |
+    import netsvc
+    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("order7"))])
+    last_delivery_order_id = delivery_orders[-1]
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'stock.picking', last_delivery_order_id, 'button_cancel', cr)
+-
+  I run the scheduler.
+-
+  !python {model: procurement.order}: |
+     self.run_scheduler(cr, uid)      
+-
+  I check order status in "Ship Exception".
+-
+  !assert {model: sale.order, id: order7}:
+    - state == "ship_except"
+-
+  Now I regenerate shipment
+-
+  !workflow {model: sale.order, action: ship_recreate, ref: order7}
+-
+  I check state of order in 'In Progress'.
+-
+  !assert {model: sale.order, id: order7}:
+    - state == 'progress'
+-
+  I make invoice for order
+-
+  !workflow {model: sale.order, action: manual_invoice, ref: order7}
 -
   To cancel the sale order from Invoice Exception, I have to cancel the invoice of sale order.
 -
   !python {model: sale.order}: |
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'sale.order', ref('order3'), 'order_confirm', cr)
-
-    invoice_ids = [x.id for x in self.browse(cr, uid, ref("order3")).invoice_ids]
-    for invoice in invoice_ids:
-      wf_service.trg_validate(uid, 'account.invoice', invoice, 'invoice_cancel', cr)
-
-#code introduced by revid: mtr@tinyerp.com-20110915060653-cbedeckll1ijre66 
-#form 'lp:~openerp-dev/openobject-addons/trunk-sale_coverage-mtr' branch
+    invoice_ids = self.browse(cr, uid, ref("order7")).invoice_ids
+    first_invoice_id = invoice_ids[0]
+    wf_service.trg_validate(uid, 'account.invoice', first_invoice_id, 'invoice_cancel', cr)
 
 -
   I check order status in "Invoice Exception" and related invoice is in cancel state.
 -
-  !python {model: sale.order}: |
-    order = self.browse(cr, uid, ref("order3"))
-    assert order.invoice_ids[0].state == "cancel","order's related invoice should be cancelled"
-    assert order.state == "invoice_except", "Order should be in Invoice Exception state after cancel Invoice"
+  !assert {model: sale.order, id: order7}:
+    - state == "invoice_except", "Order should be in Invoice Exception state after cancel Invoice"
 -
   Then I click on the Ignore Exception button.
 -
-  !workflow {model: sale.order, action: invoice_corrected, ref: order3}
+  !workflow {model: sale.order, action: invoice_corrected, ref: order7}
+  
 -
-  And then again I set the invoice to draft state.
+  I check state of order in 'In Progress'.
 -
-  !python {model: account.invoice}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("order3"))
-    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','cancel')])
-    self.action_cancel_draft(cr, uid, invoice_id, ({'active_model': 'ir.ui.menu','active_ids': [ref("sale.menu_sale_order")], 'type': 'out_invoice', 'active_id': ref("sale.menu_sale_order")},))
--
-  Now I creating a partial picking.
--
-  !python {model: sale.order}: |
-    import netsvc
-    import time
-    order = self.browse(cr, uid, ref("order4"))
-    assert order.picking_ids, "Picking is not created for this sale order"
-    partial_pick = self.pool.get('stock.partial.picking')
-    stock = self.pool.get('stock.picking')
-    pick_ids = [x.id for x in self.browse(cr, uid, ref("order4")).picking_ids]
-    data = stock.force_assign(cr, uid, pick_ids)
-    if data == True:
-      context={'active_model': 'stock.picking','active_ids': pick_ids} 
-      values = {'move_ids': [(1,order.picking_ids[0].move_lines[0].id,{'update_cost': 0, 'product_id': ref('product.product_product_pc1'), 'product_uom': ref('product.product_uom_unit'), 'currency': False, 'prodlot_id': False, 'cost': False, 'location_dest_id': ref('stock.stock_location_customers'), 'location_id': ref('stock.stock_location_stock'), 'quantity': 5})]}
-      stock.do_partial(cr, uid, pick_ids, values, context)
--
-  Now I cancel a partial picking.
--
-  !python {model: sale.order}: |
-    import netsvc
-    order = self.browse(cr, uid, ref("order4"))
-    assert len(order.picking_ids) >= 2,'After partial picking there must be two or more picking'
-    assert order.picking_ids[0].state == 'assigned',"Partial Picking should be in 'Ready to progress' state"
-    #assert order.picking_ids[0].move_lines[0].product_qty == 10.0,"Partial Picking product quantity must be 10.0"
-    pick_ids = order.picking_ids
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'stock.picking', order.picking_ids[0].id, 'button_cancel', cr)
--
-  I check partial picking is in cancel state.
--
-  !python {model: sale.order}: |
-    import netsvc
-    order = self.browse(cr, uid, ref("order4"))
-    print order.state,order.picking_ids[0]
-    assert order.picking_ids[0].state == 'cancel',"After cancel the picking should be in cancelled state"
--
-  The scheduler runs.
--
-  !function {model: procurement.order, name: run_scheduler}:
-    - model: procurement.order
-      search: "[]"
--
-  I check order status in "Ship Exception".
--
-  !python {model: sale.order}: |
-    import netsvc
-    order = self.browse(cr, uid, ref("order4"))
-   #print order.state,order.picking_ids[0]
-
-#code introduced by revid: mtr@tinyerp.com-20110921101038-xf1l3whyblmjbdx9
-#form 'lp:~openerp-dev/openobject-addons/trunk-sale_coverage-mtr' branch
--
-  Then I click on the "Recreate Packing" button on sale order
--
-  !workflow {model: sale.order, action: ship_recreate, ref: order4}
--
-  I verfiy that sale order state is now 'In Progress'.
--
-  !assert {model: sale.order, id: order4}:
+  !assert {model: sale.order, id: order7}:
     - state == 'progress'
--
-  I verify that picking is generated for sale order.
--
-  !python {model: stock.picking}: |
-    order = self.browse(cr, uid, ref("order4"))
-    picking_id = self.search(cr, uid, [('sale_id','=',ref("order4"))])
-    assert picking_id,"Picking has not been generated"
--
-  Now I need to cancel the rekated picking of sale order.
--
-  !python {model: sale.order}: |
-    import netsvc
-    order = self.browse(cr, uid, ref("order4"))
-    picking_ids = [x.id for x in self.browse(cr, uid, ref("order4")).picking_ids]
-    wf_service = netsvc.LocalService("workflow")
-    for picking in picking_ids:
-      wf_service.trg_validate(uid, 'stock.picking', picking, 'button_cancel', cr)
--
-  Now I am able to cancel this sale order.
--
-  !python {model: sale.order}: |
-    self.action_cancel(cr, uid, [ref("order4")])
--
-  I check that sale order is cancelled.
--
-  !assert {model: sale.order, id: order4}:
-    - state == 'cancel'
--
-  Again set cancelled order to draft.
--
-  !python {model: sale.order}: |
-    self.action_cancel_draft(cr, uid, [ref("order4")])
+  
+      
+      
 
