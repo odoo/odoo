@@ -771,8 +771,8 @@ label.error {
 }
 .openerp .oe-listview tbody td:first-child,
 .openerp .oe-listview tbody td.oe-button,
-.openerp .oe-listview tbody td.oe-button+td,
-.openerp .oe-listview tbody th.oe-record-selector+td,
+.openerp .oe-listview tbody td.oe-button,
+.openerp .oe-listview tbody th.oe-record-selector,
 .openerp .oe-listview tbody td.oe-record-delete {
     border-left: none;
 }
@@ -797,11 +797,18 @@ label.error {
 	vertical-align:middle;
 }
 
-.openerp .oe-record-selector, .openerp .oe-field-cell, .openerp .oe-record-delete {
+/*.openerp .oe-record-selector, .openerp .oe-field-cell, .openerp .oe-record-delete {
 	border-bottom:1px solid #E3E3E3;
 }
 .openerp .oe-record-selector:empty,  .openerp .oe-record-delete button[style="visibility: hidden"] {
     border-bottom:none;
+} */
+.openerp .oe-listview table tbody td {
+	border-bottom:1px solid #E3E3E3;
+}
+
+.openerp .oe-listview .oe-record-selector {
+    border-bottom:1px solid #E3E3E3; 
 }
 
 .openerp .oe-listview .oe-field-cell {
