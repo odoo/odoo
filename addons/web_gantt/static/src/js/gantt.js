@@ -312,7 +312,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         
         _.each(final_events, function(id) {
             var Task = self.ganttChartControl.getProjectById("_1").getTaskById(id);
-            Task.cTaskNameItem[0].click(function() {
+            $(Task.cTaskNameItem[0]).click(function() {
                 self.editTask(Task);
             })
         });
