@@ -2533,8 +2533,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
     },
     start: function() {
         this._super();
-        var self = this;
-        search_defaults = {};
+        var self = this;        
         this.dataset = new openerp.web.ProxyDataSet(this, this.model,
             this.context);
         this.dataset.create_function = function() {
@@ -2553,6 +2552,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                     domains: []  ,
                     contexts: [this.context],
                 }, function (results) {           
+                    var search_defaults = {};
                     _.each(results.context, function (value, key) {
                         var match = /^search_default_(.*)$/.exec(key);
                         if (match) {
