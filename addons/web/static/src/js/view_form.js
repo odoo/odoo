@@ -1605,7 +1605,7 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
     init: function(view, node) {
         var self = this;
         this._super(view, node);
-        this.values = this.field.selection;
+        this.values = _.clone(this.field.selection);
         _.each(this.values, function(v, i) {
             if (v[0] === false && v[1] === '') {
                 self.values.splice(i, 1);
@@ -3121,7 +3121,7 @@ openerp.web.form.FieldSelectionReadonly = openerp.web.form.FieldReadonly.extend(
         // lifted straight from r/w version
         var self = this;
         this._super(view, node);
-        this.values = this.field.selection;
+        this.values = _.clone(this.field.selection);
         _.each(this.values, function(v, i) {
             if (v[0] === false && v[1] === '') {
                 self.values.splice(i, 1);
