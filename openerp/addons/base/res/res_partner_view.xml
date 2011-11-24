@@ -281,6 +281,7 @@
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
             <field name="domain">[('domain','=','partner')]</field>
+            <field name="context">{'domain': 'partner'}</field>
             <field name="help">Manage the partner titles you want to have available in your system. The partner titles is the legal status of the company: Private Limited, SA, etc.</field>
         </record>
 
@@ -292,6 +293,7 @@
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
             <field name="domain">[('domain','=','contact')]</field>
+            <field name="context">{'domain': 'contact'}</field>
             <field name="help">Manage the contact titles you want to have available in your system and the way you want to print them in letters and other documents. Some example: Mr., Mrs. </field>
         </record>
 
