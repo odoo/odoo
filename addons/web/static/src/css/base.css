@@ -767,7 +767,7 @@ label.error {
 
 /* Could use :not selectors if they were supported by MSIE8... */
 .openerp .oe-listview tbody td {
-    /*border-left: 1px solid #dadada; currently commenting to test with no vertical lines in list view*/
+    border-left: 1px solid #dadada; /*currently commenting to test with no vertical lines in list view*/
 }
 .openerp .oe-listview tbody td:first-child,
 .openerp .oe-listview tbody td.oe-button,
@@ -799,6 +799,9 @@ label.error {
 
 .openerp .oe-record-selector, .openerp .oe-field-cell, .openerp .oe-record-delete {
 	border-bottom:1px solid #E3E3E3;
+}
+.openerp .oe-record-selector:empty,  .openerp .oe-record-delete button[style="visibility: hidden"] {
+    border-bottom:none;
 }
 
 .openerp .oe-listview .oe-field-cell {
@@ -1034,7 +1037,7 @@ label.error {
 }
 
 .openerp .oe_forms label.oe_label, .openerp .oe_forms label.oe_label_help {
-    margin: 3px 0 0 3px;
+    margin: 4px 0 0 3px;
 }
 .openerp label.oe_label_help span {
     font-size: 80%;
@@ -1086,6 +1089,9 @@ label.error {
     white-space: nowrap;
     min-width: 100%;
     width: 100%;
+}
+.openerp .oe_forms .button { 
+    height:22px;
 }
 @-moz-document url-prefix() {
     /* Strange firefox behaviour on width: 100% + white-space: nowrap */
