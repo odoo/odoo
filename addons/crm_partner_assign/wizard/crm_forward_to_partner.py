@@ -125,7 +125,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
                 lead.assign_partner(cr, uid, [case.id], this.partner_id.id, context=context)
 
             if this.send_to == 'user':
-                lead.assign_salesman(cr, uid, [case.id], [this.user_id.id], context=context)
+                lead.allocate_salesman(cr, uid, [case.id], [this.user_id.id], context=context)
 
             email_cc = to_email(case.email_cc)
             email_cc = email_cc and email_cc[0] or ''
