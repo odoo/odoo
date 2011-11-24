@@ -365,7 +365,7 @@
                                                     ,[10, (hours gte 10)]
                                                 ]"/>
                                                 <t t-foreach="times" t-as="time"
-                                                    ><a t-if="!time[1]" t-attf-name="set_remaining_time_#{time[0]}"
+                                                    ><a t-if="!time[1]" t-attf-data-name="set_remaining_time_#{time[0]}"
                                                         type="object" class="oe_kanban_button"><t t-esc="time[0]"/></a
                                                     ><b t-if="time[1]" class="oe_kanban_button oe_kanban_button_active"><t t-esc="Math.round(hours)"/></b
                                                 ></t>
@@ -379,7 +379,7 @@
                                             <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         </div>
                                         <div class="oe_kanban_right">
-                                            <a name="set_kanban_state_blocked" string="Block" kanban_states="normal,done" type="object" icon="gtk-media-pause"/>
+                                            <a name="set_kanban_state_blocked" string="Blocked" kanban_states="normal,done" type="object" icon="gtk-media-pause"/>
                                             <a name="set_kanban_state_normal" string="Normal" kanban_states="blocked,done" type="object" icon="gtk-media-play"/>
                                             <a name="set_kanban_state_done" string="Done" kanban_states="blocked,normal" type="object" icon="gtk-apply"/>
                                         </div>
