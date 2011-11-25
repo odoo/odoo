@@ -132,7 +132,7 @@
       </record>
 
       <act_window
-            context="{'search_default_server_id': active_id, 'default_server_id': active_id}"
+            context="{'search_default_server_id': active_id, 'default_fetchmail_server_id': active_id}"
             id="act_server_history" name="Messages" domain="[('email_from', '!=', False), ('fetchmail_server_id', '=', active_id)]"
             res_model="mail.message" src_model="fetchmail.server"/>
 

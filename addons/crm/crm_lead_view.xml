@@ -35,7 +35,7 @@
             <field name="res_model">crm.case.categ</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_categ_tree-view"/>
-            <field name="context">{'object_id': 'crm.lead'}</field>
+            <field name="context" eval="{'object_id': ref('model_crm_lead')}"/>
             <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
             <field name="help">Create specific categories that fit your company's activities to better classify and analyse your leads and opportunities. Such categories could for instance reflect your product structure or the different types of sales you do.</field>
         </record>
