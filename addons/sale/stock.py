@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import osv, fields
-import netsvc
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -198,4 +197,3 @@ class stock_picking(osv.osv):
         return result
 
 stock_picking()
-
