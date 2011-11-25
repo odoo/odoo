@@ -194,13 +194,12 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             partner_assigned_id = lead.partner_assigned_id and lead.partner_assigned_id.id or False
             user_id = False
             if not partner_assigned_id:
-                partner_assigned_id = lead.search_geo_partner(cr, uid, [lead.id], context=None).get(lead.id, False)
+                partner_assigned_id = proxy.search_geo_partner(cr, uid, [lead.id], context=None).get(lead.id, False)
             if partner_assigned_id:
                 assigned_partner = partner.browse(cr, uid, partner_assigned_id, context=context)
                 user_id = assigned_partner.user_id and assigned_partner.user_id.id or False
                 email_cc = assigned_partner.user_id and assigned_partner.user_id.user_email or ''
                 email = assigned_partner.email
-            
             
             res.update({
                 'subject' : subject,
