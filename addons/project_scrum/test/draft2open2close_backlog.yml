@@ -37,5 +37,5 @@
 -
   !python {model: project.scrum.backlog.merge}: |
     self.check_backlogs(cr, uid, [ref("scrum_product_backlog_1"),ref("scrum_product_backlog_2")], {"active_ids": [ref("scrum_product_backlog_1"),ref("scrum_product_backlog_2")],
-    "active_model": 'project.scrum.product.backlog', "active_id": ref("scrum_product_backlog_1")
+    "active_id": ref("scrum_product_backlog_1")
     })
