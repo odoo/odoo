@@ -23,6 +23,10 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
     padding:0px 8px;
 }
 
+.openerp .view-manager-main-content > div.oe-view-manager-header > a[style] + h2.oe_view_title{ /* Padding only for the view form title*/
+    padding-left:10px;
+}
+
 .openerp .oe-dashboard-action .view-manager-main-content > div {
     padding:0px 0px;
 }
@@ -1070,6 +1074,10 @@ label.error {
 .openerp .oe_forms label.oe_label, .openerp .oe_forms label.oe_label_help {
     margin: 4px 0 0 3px;
 }
+.openerp .oe_forms .searchview_group_content label.oe_label, .openerp .searchview_group_content .oe_forms label.oe_label_help { /* making a distinction between labels in search view and other labels */
+    margin: 3px 0 0 3px;
+}
+
 .openerp label.oe_label_help span {
     font-size: 80%;
     color: darkgreen;
