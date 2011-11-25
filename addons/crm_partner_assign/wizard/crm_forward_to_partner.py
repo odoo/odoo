@@ -35,6 +35,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         'send_to': fields.selection([('user', 'User'), ('partner', 'Partner'), \
                          ('email', 'Email Address')], 'Send to', required=True),
         'user_id': fields.many2one('res.users', "User"),
+        'attachment_ids': fields.many2many('ir.attachment','lead_forward_to_partner_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
         'partner_id' : fields.many2one('res.partner', 'Partner'),
         'address_id' : fields.many2one('res.partner.address', 'Address'),
         'history': fields.selection([('info', 'Case Information'), ('latest', 'Latest email'), ('whole', 'Whole Story')], 'Send history', required=True),
