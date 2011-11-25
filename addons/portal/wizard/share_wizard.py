@@ -184,3 +184,5 @@ class share_wizard_portal(osv.osv_memory):
 
 share_wizard_portal()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

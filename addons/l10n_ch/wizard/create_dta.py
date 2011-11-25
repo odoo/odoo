@@ -26,6 +26,7 @@ import base64
 from osv import osv, fields
 import pooler
 from tools.translate import _
+import unicode2ascii
 
 TRANS=[
     (u'é','e'),
@@ -37,6 +38,24 @@ TRANS=[
     (u'â','a'),
     (u'ä','a'),
 ]
+
+def _u2a(text) :
+    """Tries to convert unicode charactere to asci equivalence"""
+    if not text : return ""
+    txt = ""
+    for c in text:
+        if ord(c) < 128 :
+            txt += c
+        elif c in unicode2ascii.EXTRA_LATIN_NAMES :
+            txt += unicode2ascii.EXTRA_LATIN_NAMES[c]
+        elif c in unicode2ascii.UNI2ASCII_CONVERSIONS :
+            txt += unicode2ascii.UNI2ASCII_CONVERSIONS[c]
+        elif c in unicode2ascii.EXTRA_CHARACTERS :
+            txt += unicode2ascii.EXTRA_CHARACTERS[c]
+        elif c in unicode2ascii.FG_HACKS :
+            txt += unicode2ascii.FG_HACKS[c]
+        else : txt+= "_"
+    return txt
 
 def tr(string_in):
     try:
@@ -339,7 +358,9 @@ def _create_dta(obj, cr, uid, data, context=None):
     if context is None:
         context = {}
     payment = payment_obj.browse(cr, uid, data['id'], context=context)
-
+    # if payment.state != 'done':
+        # raise osv.except_osv(_('Order not confirmed'),
+        #         _('Please confirm it'))
     if not payment.mode:
         raise osv.except_osv(_('Error'),
                 _('No payment mode'))
@@ -365,11 +386,13 @@ def _create_dta(obj, cr, uid, data, context=None):
     v['comp_name'] = co_addr.name
     v['comp_dta'] = bank.dta_code or '' #XXX not mandatory in pratice
 
-    v['comp_bank_number'] = bank.acc_number or ''
-    if bank.iban:
-        v['comp_bank_iban'] = bank.iban.replace(' ','') or ''
-    else:
-        v['comp_bank_iban'] = ''
+    # iban and account number are the same field and depends only on the type of account
+    v['comp_bank_iban'] = v['comp_bank_number'] = bank.acc_number or ''
+    
+    #if bank.iban:
+    #    v['comp_bank_iban'] = bank.iban.replace(' ','') or ''
+    #else:
+    #    v['comp_bank_iban'] = ''
     if not v['comp_bank_iban']:
         raise osv.except_osv(_('Error'),
                 _('No IBAN for the company bank account.'))
@@ -403,7 +426,7 @@ def _create_dta(obj, cr, uid, data, context=None):
                     'on the partner: %s\n' \
                     'on line: %s') % (pline.bank_id.state, pline.partner_id.name, pline.name))
 
-        v['partner_bank_iban'] =  pline.bank_id.iban or False
+        v['partner_bank_iban'] =  pline.bank_id.acc_number or False
         v['partner_bank_number'] =  pline.bank_id.acc_number  \
                 and pline.bank_id.acc_number.replace('.','').replace('-','') \
                 or  False
@@ -468,7 +491,7 @@ def _create_dta(obj, cr, uid, data, context=None):
         # si payment structure  -> bvr (826)
         # si non -> (827)
 
-        if elec_pay == 'dta_iban':
+        if elec_pay == 'iban':
             # If iban => country=country code for space reason
             v['comp_country'] = co_addr.country_id and co_addr.country_id.code+'-' or ''
             record_type = record_gt836
@@ -512,13 +535,10 @@ def _create_dta(obj, cr, uid, data, context=None):
 
         elif elec_pay == 'bvbank':
             if not v['partner_bank_number'] :
-                if v['partner_bank_iban'] :
-                    v['partner_bank_number']= v['partner_bank_iban']
-                else:
-                    raise osv.except_osv(_('Error'), _('You must provide ' \
-                            'a bank number \n' \
-                            'for the partner bank: %s\n' \
-                            'on line: %s') % (res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1] , pline.name))
+                raise osv.except_osv(_('Error'), _('You must provide ' \
+                        'a bank number \n' \
+                        'for the partner bank: %s\n' \
+                        'on line: %s') % (res_partner_bank_obj.name_get(cr, uid, [pline.bank_id.id], context)[0][1] , pline.name))
             if not  v['partner_bank_clearing']:
                 raise osv.except_osv(_('Error'), _('You must provide ' \
                         'a Clearing Number\n' \
@@ -551,17 +571,17 @@ def _create_dta(obj, cr, uid, data, context=None):
     v['sequence'] = str(seq).rjust(5).replace(' ','0')
     if dta :
         dta = dta + record_gt890(v).generate()
-
+    dta_data = _u2a(dta)
     dta_data = base64.encodestring(dta)
     payment_obj.set_done(cr, uid, [data['id']], context)
     attachment_obj.create(cr, uid, {
-        'name': 'DTA',
+        'name': 'DTA%s'%time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime()),
         'datas': dta_data,
-        'datas_fname': 'DTA.txt',
+        'datas_fname': 'DTA%s.txt'%time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime()),
         'res_model': 'payment.order',
         'res_id': data['id'],
         }, context=context)
-    return {'dta': dta_data}
+    return dta_data
 
 class create_dta_wizard(osv.osv_memory):
     _name="create.dta.wizard"
@@ -572,6 +592,11 @@ class create_dta_wizard(osv.osv_memory):
     def create_dta(self, cr, uid, ids, context=None):
         if not context:
             context = {}
+        if isinstance(ids, list):
+            req_id = ids[0]
+        else:
+            req_id = ids
+        current = self.browse(cr, uid, req_id, context)
         data = {}
         active_ids = context.get('active_ids', [])
         active_id = context.get('active_id', [])
@@ -579,25 +604,8 @@ class create_dta_wizard(osv.osv_memory):
         data['ids'] = active_ids
         data['id'] = active_id
         dta_file = _create_dta(self, cr, uid, data, context)
-        context.update({'dta_file':dta_file})
-        return self.save_dta(cr, uid, ids, context)
-
-    def save_dta(self, cr, uid, ids, context=None):
-        obj_model = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'), ('name','=','dta_save_view')])
-        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'create.dta.wizard',
-            'views': [(resource_id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': context,
-        }
-
+        current.write({'dta_file': dta_file})
+        return True
 
 create_dta_wizard()
 

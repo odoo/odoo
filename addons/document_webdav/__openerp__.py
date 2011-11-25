@@ -72,3 +72,5 @@ which needs explicit configuration in openerp-server.conf, too.
         "certificate" : "001236490750845657973",
         'images': ['images/dav_properties.jpeg','images/directories_structure_principals.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -51,3 +51,5 @@ class auction_taken(osv.osv_memory):
               return {'lot_ids': []}
 
 auction_taken()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

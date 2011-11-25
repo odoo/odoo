@@ -27,6 +27,7 @@ from osv import osv, fields
 import netsvc
 from tools.translate import _
 import logging
+import decimal_precision as dp
 
 _logger = logging.getLogger('mps') 
 
@@ -80,8 +81,8 @@ class stock_sale_forecast(osv.osv):
                                         help = 'Shows which period this forecast concerns.'),
         'product_id': fields.many2one('product.product', 'Product', readonly=True, required=True, states={'draft':[('readonly',False)]}, \
                                         help = 'Shows which product this forecast concerns.'),
-        'product_qty': fields.float('Forecast Quantity', required=True, readonly=True, states={'draft':[('readonly',False)]}, \
-                                        help= 'Forecast Product quantity.'),
+        'product_qty': fields.float('Forecast Quantity', digits_compute=dp.get_precision('Product UoM'), required=True, readonly=True, \
+                                        states={'draft':[('readonly',False)]}, help= 'Forecast Product quantity.'),
         'product_amt': fields.float('Product Amount', readonly=True, states={'draft':[('readonly',False)]}, \
                                         help='Forecast value which will be converted to Product Quantity according to prices.'),
         'product_uom_categ': fields.many2one('product.uom.categ', 'Product UoM Category'),  # Invisible field for product_uom domain

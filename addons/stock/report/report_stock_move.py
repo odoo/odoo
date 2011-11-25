@@ -154,6 +154,9 @@ class report_stock_inventory(osv.osv):
     _auto = False
     _columns = {
         'date': fields.datetime('Date', readonly=True),
+        'year': fields.char('Year', size=4, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
+            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September')]),
         'partner_id':fields.many2one('res.partner.address', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'product_categ_id':fields.many2one('product.category', 'Product Category', readonly=True),
@@ -219,3 +222,5 @@ CREATE OR REPLACE view report_stock_inventory AS (
 report_stock_inventory()
 
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

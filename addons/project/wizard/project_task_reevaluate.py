@@ -81,3 +81,5 @@ class project_task_reevaluate(osv.osv_memory):
                 task_pool.do_reopen(cr, uid, [task_id], context=context)
         return {'type': 'ir.actions.act_window_close'}
 project_task_reevaluate()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

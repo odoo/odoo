@@ -28,7 +28,7 @@ class followup(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description'),
         'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-Up'),
-        'company_id': fields.many2one('res.company', 'Company'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account_followup.followup', context=c),
@@ -45,7 +45,7 @@ class followup(osv.osv):
                 company.append(l.company_id.id)
         return True
     _constraints = [
-        (check_company_uniq, 'Only One Folllowup by Company.',['company_id'] )
+        (check_company_uniq, 'Only One Followup by Company.',['company_id'] )
         ]
 
 followup()
@@ -85,7 +85,7 @@ class account_move_line(osv.osv):
     _columns = {
         'followup_line_id': fields.many2one('account_followup.followup.line', 'Follow-up Level'),
         'followup_date': fields.date('Latest Follow-up', select=True),
-                }
+    }
 
 account_move_line()
 

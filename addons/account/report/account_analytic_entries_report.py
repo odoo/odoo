@@ -55,10 +55,10 @@ class analytic_entries_report(osv.osv):
                  select
                      min(a.id) as id,
                      count(distinct a.id) as nbr,
-                     a.create_date as date,
-                     to_char(a.create_date, 'YYYY') as year,
-                     to_char(a.create_date, 'MM') as month,
-                     to_char(a.create_date, 'YYYY-MM-DD') as day,
+                     a.date as date,
+                     to_char(a.date, 'YYYY') as year,
+                     to_char(a.date, 'MM') as month,
+                     to_char(a.date, 'YYYY-MM-DD') as day,
                      a.user_id as user_id,
                      a.name as name,
                      analytic.partner_id as partner_id,
@@ -76,9 +76,11 @@ class analytic_entries_report(osv.osv):
                      account_analytic_line a, account_analytic_account analytic
                  where analytic.id = a.account_id
                  group by
-                     a.create_date, a.user_id,a.name,analytic.partner_id,a.company_id,a.currency_id,
+                     a.date, a.user_id,a.name,analytic.partner_id,a.company_id,a.currency_id,
                      a.account_id,a.general_account_id,a.journal_id,
                      a.move_id,a.product_id,a.product_uom_id
             )
         """)
 analytic_entries_report()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

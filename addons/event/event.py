@@ -296,6 +296,7 @@ class event_registration(osv.osv):
         return res
 
     _columns = {
+        'id': fields.integer('ID'),
         'name': fields.char('Summary', size=124,  readonly=True, states={'draft': [('readonly', False)]}),
         'email_cc': fields.text('CC', size=252, readonly=False, states={'done': [('readonly', True)]}, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'nb_register': fields.integer('Quantity', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Number of Registrations or Tickets"),

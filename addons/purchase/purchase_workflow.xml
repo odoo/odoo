@@ -138,12 +138,12 @@
         <record id="trans_except_picking" model="workflow.transition">
             <field name="act_from" ref="act_except_picking"/>
             <field name="act_to" ref="act_cancel"/>
-            <field name="signal">cancel</field>
+            <field name="signal">purchase_cancel</field>
         </record>
         <record id="trans_except_invoice" model="workflow.transition">
             <field name="act_from" ref="act_except_invoice"/>
             <field name="act_to" ref="act_cancel"/>
-            <field name="signal">cancel</field>
+            <field name="signal">purchase_cancel</field>
         </record>
         <record id="trans_picking_except_picking" model="workflow.transition">
             <field name="act_from" ref="act_picking"/>

@@ -105,8 +105,7 @@ class crm_claim(crm.crm_case, osv.osv):
         if not part:
             return {'value': {'partner_address_id': False,
                             'email_from': False,
-                            'partner_phone': False,
-                            'partner_mobile': False
+                            'partner_phone': False
                             }}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
         data = {'partner_address_id': addr['contact']}
@@ -121,7 +120,7 @@ class crm_claim(crm.crm_case, osv.osv):
         if not add:
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        return {'value': {'email_from': address.email, 'partner_phone': address.phone, 'partner_mobile': address.mobile}}
+        return {'value': {'email_from': address.email, 'partner_phone': address.phone}}
 
     def case_open(self, cr, uid, ids, *args):
         """Opens Claim"""

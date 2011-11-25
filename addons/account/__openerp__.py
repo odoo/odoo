@@ -53,7 +53,7 @@ module named account_voucher.
     'website': 'http://www.openerp.com',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
     'init_xml': [],
-    "depends" : ["base_setup", "product", "analytic", "process","board"],
+    "depends" : ["base_setup", "product", "analytic", "process", "board", "edi"],
     'update_xml': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -123,7 +123,9 @@ module named account_voucher.
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",
         "wizard/account_report_balance_sheet_view.xml",
-        "account_bank_view.xml"
+        "edi/invoice_action_data.xml",
+        "account_bank_view.xml",
+        "account_pre_install.yml"
     ],
     'demo_xml': [
         'demo/account_demo.xml',
@@ -145,10 +147,9 @@ module named account_voucher.
         'test/account_fiscalyear_close.yml',
         'test/account_bank_statement.yml',
         'test/account_cash_statement.yml',
+        'test/test_edi_invoice.yml',
         'test/account_report.yml',
-
-
-            ],
+    ],
     'installable': True,
     'active': False,
     'certificate': '0080331923549',

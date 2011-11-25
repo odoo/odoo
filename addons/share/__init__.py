@@ -22,3 +22,5 @@
 import ir_model
 import res_users
 import wizard
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
