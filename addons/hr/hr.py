@@ -92,6 +92,7 @@ class hr_job(osv.osv):
         'name': fields.char('Job Name', size=128, required=True, select=True),
         'expected_employees': fields.function(_no_of_employee, string='Expected Employees', help='Required number of Employees in total for that job.',
             store = {
+                'hr.job': (lambda self, cr, uid, ids, c={}: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             },
             multi='no_of_employee'),
