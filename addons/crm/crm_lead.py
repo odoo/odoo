@@ -666,7 +666,7 @@ class crm_lead(crm_case, osv.osv):
                 self.write(cr, uid, [lead_id], value, context=context)
         return True
 
-    def schedule_phonecall(self, cr, uid, ids, schedule_time, call_summary, user_id=False, section_id=False, categ_id=False, action='schedule', context=None):
+    def schedule_phonecall(self, cr, uid, ids, schedule_time, call_summary, desc, phone, contact_name, user_id=False, section_id=False, categ_id=False, action='schedule', context=None):
         """
         action :('schedule','Schedule a call'), ('log','Log a call')
         """
@@ -687,12 +687,12 @@ class crm_lead(crm_case, osv.osv):
                     'opportunity_id' : lead.id,
                     'user_id' : user_id or False,
                     'categ_id' : categ_id or False,
-                    'description' : lead.description or False,
+                    'description' : desc or '',
                     'date' : schedule_time,
                     'section_id' : section_id or False,
                     'partner_id': lead.partner_id and lead.partner_id.id or False,
                     'partner_address_id': lead.partner_address_id and lead.partner_address_id.id or False,
-                    'partner_phone' : lead.phone or (lead.partner_address_id and lead.partner_address_id.phone or False),
+                    'partner_phone' : phone or lead.phone or (lead.partner_address_id and lead.partner_address_id.phone or False),
                     'partner_mobile' : lead.partner_address_id and lead.partner_address_id.mobile or False,
                     'priority': lead.priority,
             }
