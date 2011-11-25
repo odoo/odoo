@@ -1,6 +1,7 @@
 {
     "name" : "Base Kanban",
     "category" : "Hidden",
+    "description":'Openerp web kanban view',
     "version" : "2.0",
     "depends" : ["web"],
     "js": [

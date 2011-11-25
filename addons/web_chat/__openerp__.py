@@ -1,6 +1,7 @@
 {
     "name": "Web Chat",
     "category" : "Hidden",
+    "description":'Openerp web chat',
     "version": "2.0",
     "depends": ['web'],
     "js": [

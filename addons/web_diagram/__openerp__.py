@@ -1,6 +1,7 @@
 {
     "name" : "OpenERP Web Diagram",
     "category" : "Hidden",
+    "description":'Openerp web Diagram view',
     "version" : "2.0",
     "depends" : ["base"],
     "js": [

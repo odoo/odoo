@@ -1,6 +1,7 @@
 {
     "name": "web Gantt",
     "category" : "Hidden",
+    "description":'Openerp web gantt chart',
     "version": "2.0",
     "depends": ['web'],
     "js": [

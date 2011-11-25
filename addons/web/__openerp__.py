@@ -1,6 +1,7 @@
 {
     "name" : "web",
     "category" : "Hidden",
+    "description":'Core of openerp web',
     "depends" : [],
     'active': True,
     'post_load' : 'wsgi_postload',
