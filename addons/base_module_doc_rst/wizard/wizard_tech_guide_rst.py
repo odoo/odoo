@@ -507,3 +507,5 @@ class wizard_tech_guide_rst(wizard.interface):
 
 wizard_tech_guide_rst('tech.guide.rst')
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

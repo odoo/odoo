@@ -38,3 +38,5 @@ def write_data_to_file( filename, data ):
 	fp.write( data )
 	fp.close()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

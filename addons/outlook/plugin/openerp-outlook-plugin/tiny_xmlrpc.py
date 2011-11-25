@@ -569,3 +569,5 @@ class XMLRpcConn(object):
             name = ustr(rec['name'])
             res.append((obj,rec['id'],name,obj))
         return res
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
