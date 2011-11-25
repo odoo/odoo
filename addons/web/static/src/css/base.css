@@ -27,6 +27,12 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
     padding-left:10px;
 }
 
+.openerp .view-manager-main-content .view-manager-main-content > div { /* No padding for other nested childs */
+    padding-left:0px;
+    padding-right:0px;
+}
+
+
 .openerp .oe-dashboard-action .view-manager-main-content > div {
     padding:0px 0px;
 }
@@ -958,7 +964,7 @@ label.error {
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
     line-height: 0.8em;
-	font-size:0.85em;
+	font-size:95%;
 	color:#555;
 }
 .openerp .oe_form_notebook ul.ui-tabs-nav li {
@@ -1230,8 +1236,8 @@ label.error {
     font-weight: bold;
     border-bottom-width: 1px;
     margin: 3px 4px 3px 1px;
-    height: 15px;
-	font-size:90%;
+    height: 17px;
+	font-size:95%;
 }
 .openerp .separator.horizontal:empty {
 	height: 5px;
