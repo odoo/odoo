@@ -51,7 +51,6 @@
                        <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
                             <form string="Functions and Addresses">
                                <group colspan="4" col="4">
-                                   <field name="sequence_contact" />
                                    <field name="function"/>
                                    <field name="name" on_change="onchange_name(name,address_id)"/> 
                                    <field name="address_id"/>                                   
@@ -65,19 +64,14 @@
                                    <field name="phone"/>
                                    <field name="fax"/>
                                    <field name="email" widget="email"/>
-                                   <field name="extension"/>
-                                   <field name="other"/>
                                </group>
                             </form>
                             <tree string="Functions and Addresses">
-                                <field name="sequence_contact" string="Seq."/>
                                 <field name="function"/>
                                 <field name="name" on_change="onchange_partner(name)"/> 
 								<field name="address_id" attrs="{'required': [('name', '!=', False)]}" on_change="onchange_address(address_id)"/>
                                 <field name="phone"/>
                                 <field name="fax"/>
-                                <field name="extension"/>
-                                <field name="other"/>
                                 <field name="email"/>
                                 <field name="state" />
                             </tree>
@@ -173,18 +167,14 @@
                         </group>
                         <field name="job_ids" mode="tree,form" nolabel="1" colspan="4">
                             <tree string="Contacts" editable="top">
-                                <field name="sequence_partner"/>
                                 <field name="contact_id"/>
                                 <field name="function"/>
                                 <field name="phone"/>
                                 <field name="fax"/>
-                                <field name="extension"/>
-                                <field name="other"/>
                                 <field name="email"/>
                             </tree>
                             <form string="Contacts">
                             <group colspan="4" col="4">
-                                <field name="sequence_partner"/>
                                 <field name="contact_id"/>
                                 <field name="function"/>
                             </group>
@@ -192,8 +182,6 @@
                             <group colspan="4" col="4">
                                 <field name="phone"/>
                                 <field name="fax"/>
-                                <field name="extension"/>
-                                <field name="other"/>
                                 <field name="email" widget="email"/>
                             </group>
                             </form>
@@ -364,7 +352,6 @@
                 <field name="email"/>
                 <field name="phone"/>
                 <field name="fax"/>
-                <field name="extension"/>
                 <field name="state" />
             </tree>
         </field>
@@ -385,9 +372,6 @@
 	             <field name="email" widget="email"/>
 	             <field name="phone"/>
 	             <field name="fax"/>
-	             <field name="extension"/>
-	             <field name="sequence_contact" groups="base.group_user"/>
-	             <field name="sequence_partner" groups="base.group_user"/>
 	             <field name="date_start" groups="base.group_user"/>
 	             <field name="date_stop" groups="base.group_user"/>
 	             <field name="state" />

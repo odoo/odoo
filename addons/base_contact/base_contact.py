@@ -165,7 +165,34 @@ class res_partner_address(osv.osv):
     }
 res_partner_address()
 
-class res_partner_job(osv.osv):
+class res_partner_location(osv.osv):
+    _name = 'res.partner.location'
+    _inherit = 'res.partner.address'
+    _table = 'res_partner_address'
+
+res_partner_location()
+
+class res_partner_address(osv.osv):
+    _name = 'res.partner.address'
+    _inherits = { 'res.partner.location' : 'address_id' }
+    _table = 'res_partner_job'
+
+    _columns = {
+        'address_id' : fields.many2one('res.partner.location', 'Location'),
+        'contact_id' : fields.many2one('res.partner.contact', 'Contact'),
+        'function': fields.char('Partner Function', size=64, help="Function of this contact with this partner"),
+        'date_start': fields.date('Date Start',help="Start date of job(Joining Date)"),
+        'date_stop': fields.date('Date Stop', help="Last date of job"),
+        'state': fields.selection([('past', 'Past'),('current', 'Current')], \
+                                  'State', required=True, help="Status of Address"),
+    }
+
+    _description ='Contact Partner Function'
+
+    _defaults = {
+        'state': 'current',
+    }
+
     def name_get(self, cr, uid, ids, context=None):
         """
             @param self: The object pointer
@@ -183,7 +210,7 @@ class res_partner_job(osv.osv):
 
         jobs = self.browse(cr, uid, ids, context=context)
 
-        contact_ids = [rec.contact_id.id for rec in jobs]
+        contact_ids = [rec.contact_id.id for rec in jobs if rec.contact_id]
         contact_names = dict(self.pool.get('res.partner.contact').name_get(cr, uid, contact_ids, context=context))
 
         for r in jobs:
@@ -193,38 +220,6 @@ class res_partner_job(osv.osv):
 
         return res
 
-    _name = 'res.partner.job'
-    _description ='Contact Partner Function'
-    _order = 'sequence_contact'
-
-    _columns = {
-        'name': fields.related('address_id', 'partner_id', type='many2one',\
-                     relation='res.partner', string='Partner', help="You may\
-                     enter Address first,Partner will be linked automatically if any."),
-        'address_id': fields.many2one('res.partner.address', 'Address', \
-                        help='Address which is linked to the Partner'), # TO Correct: domain=[('partner_id', '=', name)]
-        'contact_id': fields.many2one('res.partner.contact','Contact', required=True, ondelete='cascade'),
-        'function': fields.char('Partner Function', size=64, help="Function of this contact with this partner"),
-        'sequence_contact': fields.integer('Contact Seq.',help='Order of\
-                     importance of this address in the list of addresses of the linked contact'),
-        'sequence_partner': fields.integer('Partner Seq.',help='Order of importance\
-                 of this job title in the list of job title of the linked partner'),
-        'email': fields.char('E-Mail', size=240, help="Job E-Mail"),
-        'phone': fields.char('Phone', size=64, help="Job Phone no."),
-        'fax': fields.char('Fax', size=64, help="Job FAX no."),
-        'extension': fields.char('Extension', size=64, help='Internal/External extension phone number'),
-        'other': fields.char('Other', size=64, help='Additional phone field'),
-        'date_start': fields.date('Date Start',help="Start date of job(Joining Date)"),
-        'date_stop': fields.date('Date Stop', help="Last date of job"),
-        'state': fields.selection([('past', 'Past'),('current', 'Current')], \
-                                'State', required=True, help="Status of Address"),
-    }
-
-    _defaults = {
-        'sequence_contact' : lambda *a: 0,
-        'state': lambda *a: 'current',
-    }
-    
     def onchange_name(self, cr, uid, ids, address_id='', name='', context=None):    
         return {'value': {'address_id': address_id}, 'domain':{'partner_id':'name'}}     
     
@@ -254,9 +249,12 @@ class res_partner_job(osv.osv):
                         .browse(cr, uid, address_id, context=context)
             partner_id = address.partner_id.id
         return {'value': {'name': partner_id}}
-    
+res_partner_address()
+
+class res_partner_job(osv.osv):
+    _name = 'res.partner.job'
+    _inherit = 'res.partner.address'
+
 res_partner_job()
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
