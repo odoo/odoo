@@ -85,3 +85,4 @@ class auction_transfer_unsold_object(osv.osv):
             return {'type': 'ir.actions.act_window_close'}    
         
 auction_transfer_unsold_object()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

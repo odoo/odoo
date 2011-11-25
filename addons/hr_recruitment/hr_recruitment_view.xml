@@ -338,8 +338,8 @@
                                         <a t-if="record.survey.raw_value" name="action_print_survey" type="object" string="Print Interview" icon="gtk-print" />
                                     </div>
                                     <div class="oe_kanban_right">
-                                        <a name="case_open" string="Mark Won" states="pending,draft" type="object" icon="lead-stage-won" />
-                                        <a name="case_pending" string="Mark Lost" states="draft,open" type="object" icon="lead-stage-lost" />
+                                        <a name="case_open" string="Open" states="pending,draft" type="object" icon="kanban-apply" />
+                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
                                     </div>
                                     <br class="oe_kanban_clear"/>
                                 </div>
