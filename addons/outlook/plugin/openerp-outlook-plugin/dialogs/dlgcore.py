@@ -321,3 +321,5 @@ class ProcessorPage(ProcessorDialog):
         self.template[0][2] = self.template[0][2] & ~(win32con.DS_MODALFRAME|win32con.WS_POPUP|win32con.WS_OVERLAPPED|win32con.WS_CAPTION)
         self.template[0][2] = self.template[0][2] | win32con.WS_CHILD
         return win32gui.CreateDialogIndirect(self.hinst, self.template, self.parent, message_map)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

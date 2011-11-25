@@ -147,7 +147,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
             res['value'] = {'filter_id':False}
         return res
 
-    def pre_action(self, cr, uid, ids, model, context=None):
+    def post_action(self, cr, uid, ids, model, context=None):
         # Searching for action rules
         cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule \
                         LEFT JOIN ir_model model on (model.id = rule.model_id) \
@@ -156,7 +156,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         # Check if any rule matching with current object
         for obj_name, rule_id in res:
             if not (model == obj_name):
-                continue
+                continue # TODO add this condition in the WHERE clause above.
             else:
                 obj = self.pool.get(obj_name)
                 # If the rule doesn't involve a time condition, run it immediately
@@ -166,31 +166,36 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return True
 
     def _create(self, old_create, model, context=None):
-        if context is None:
-            context  = {}
-        def make_call_old(cr, uid, vals, context=context):
+        """
+        Return a wrapper around `old_create` calling both `old_create` and
+        `post_action`, in that order.
+        """
+        def wrapper(cr, uid, vals, context=context):
             new_id = old_create(cr, uid, vals, context=context)
             if not context.get('action'):
-                self.pre_action(cr, uid, [new_id], model, context=context)
+                self.post_action(cr, uid, [new_id], model, context=context)
             return new_id
-        return make_call_old
-
+        return wrapper
+    
     def _write(self, old_write, model, context=None):
-        if context is None:
-            context  = {}
-        def make_call_old(cr, uid, ids, vals, context=context):
-            if context is None:
-               context = {}
+        """
+        Return a wrapper around `old_write` calling both `old_write` and
+        `post_action`, in that order.
+        """
+        def wrapper(cr, uid, ids, vals, context=context):
             if isinstance(ids, (str, int, long)):
                 ids = [ids]
+            old_write(cr, uid, ids, vals, context=context)
             if not context.get('action'):
-                self.pre_action(cr, uid, ids, model, context=context)
-            return old_write(cr, uid, ids, vals, context=context)
-        return make_call_old
+                self.post_action(cr, uid, ids, model, context=context)
+            return True
+        return wrapper
 
     def _register_hook(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+        """
+        Wrap every `create` and `write` methods of the models specified by
+        the rules (given by `ids`).
+        """
         for action_rule in self.browse(cr, uid, ids, context=context):
             model = action_rule.model_id.model
             obj_pool = self.pool.get(model)
@@ -200,15 +205,16 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 obj_pool.base_action_ruled = True
 
         return True
+
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
         self._register_hook(cr, uid, [res_id], context=context)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        res = super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
+        super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
         self._register_hook(cr, uid, ids, context=context)
-        return res
+        return True
 
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, \
                        context=None):

@@ -1,0 +1,16 @@
+-
+  !record {model: ir.actions.todo, id: config_call_account_template}:
+    action_id: account.action_wizard_multi_chart
+    category_id: account.category_accounting_configuration
+    type: automatic
+-
+  !python {model: ir.actions.todo}: |
+    if self.browse(cr, uid, ref('l10n_be.config_call_account_template')).state=='open':
+        wiz = self.pool.get('wizard.multi.charts.accounts')
+        wiz_id = wiz.create(cr, uid, {
+            'chart_template_id': ref('l10n_be.l10nbe_chart_template')
+        })
+        wiz.execute(cr, uid, [wiz_id])
+        self.write(cr, uid, [ref('l10n_be.config_call_account_template')], {
+            'state': 'done'
+        })

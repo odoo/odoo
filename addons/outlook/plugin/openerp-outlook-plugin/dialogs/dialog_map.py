@@ -1806,3 +1806,5 @@ dialog_map = {
                     (CommandButtonProcessor,     "IDPB_SELECT_STATE IDC_LIST_STATE IDD_SELECT_STATE" , SelectStateFromList,()),
                 ),
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

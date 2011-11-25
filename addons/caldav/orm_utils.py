@@ -46,3 +46,5 @@ if True: # we need this indentation level ;)
         return res[0][0]
 
 #eof
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

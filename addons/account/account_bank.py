@@ -42,8 +42,12 @@ class bank(osv.osv):
         return (bank.bank_name or '') + ' ' + bank.acc_number
 
     def post_write(self, cr, uid, ids, context={}):
+        if isinstance(ids, (int, long)):
+          ids = [ids]
+
         obj_acc = self.pool.get('account.account')
         obj_data = self.pool.get('ir.model.data')
+
         for bank in self.browse(cr, uid, ids, context):
             if bank.company_id and not bank.journal_id:
                 # Find the code and parent of the bank account to create
@@ -104,3 +108,5 @@ class bank(osv.osv):
 
                 self.write(cr, uid, [bank.id], {'journal_id': journal_id}, context=context)
         return True
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

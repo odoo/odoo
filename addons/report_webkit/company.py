@@ -58,3 +58,5 @@ class ResCompany(osv.osv):
 
     }
 ResCompany()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

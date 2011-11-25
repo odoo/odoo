@@ -374,7 +374,7 @@ class payment_line(osv.osv):
         data = {}
         move_line_obj = self.pool.get('account.move.line')
 
-        data['amount_currency'] = data['communication'] = data['partner_id'] = data['reference'] = data['date_created'] = data['bank_id'] = data['amount'] = False
+        data['amount_currency'] = data['communication'] = data['partner_id'] = data['bank_id'] = data['amount'] = False
 
         if move_line_id:
             line = move_line_obj.browse(cr, uid, move_line_id, context=context)
@@ -396,8 +396,6 @@ class payment_line(osv.osv):
             temp_dict = self.onchange_partner(cr, uid, ids, line.partner_id.id, payment_type)
             data.update(temp_dict['value'])
 
-            data['reference'] = line.ref
-            data['date_created'] = line.date_created
             data['communication'] = line.ref
 
             if date_prefered == 'now':

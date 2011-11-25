@@ -110,3 +110,5 @@ class pos_box_out(osv.osv_memory):
 
 pos_box_out()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -49,9 +49,11 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <group>
-                        <filter icon="terp-go-year" string=" Year "
+                        <filter icon="terp-go-year" string="Year"
+                                name="year"
                                 domain="[('date_current','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_current','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
                                 help="Timesheet in current year"/>
+                        <separator orientation="vertical"/>								
                         <filter icon="terp-go-month" string=" Month "
                                 name="month"
                                 domain="[('date_current','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_current','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
@@ -117,7 +119,7 @@
             <field name="res_model">timesheet.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{'search_default_month':1,'search_default_User_id':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_User_id':1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="search_view_id" ref="view_timesheet_report_search"/>
         </record>
         <menuitem action="action_timesheet_report_stat_all" id="menu_timesheet_report_all"
