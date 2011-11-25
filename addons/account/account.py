@@ -1681,7 +1681,10 @@ class account_tax_code(osv.osv):
         move_state = ('posted', )
         if context.get('state', 'all') == 'all':
             move_state = ('draft', 'posted', )
-        fiscalyear_id = context.get('fiscalyear_id', False)
+        if context.get('fiscalyear_id', False):
+            fiscalyear_id = context['fiscalyear_id']
+        else:
+            fiscalyear_id = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
         where = ''
         where_params = ()
         if fiscalyear_id:
