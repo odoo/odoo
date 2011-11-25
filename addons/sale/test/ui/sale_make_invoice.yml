@@ -22,7 +22,7 @@
     context = {"lang": 'en_US', "search_default_user_id":1, "tz": False, "active_model": 'sale.order', "active_ids": [ref("order3"),ref("order5")], "active_id":ref("order3")}
     self.make_invoices(cr, uid, [ref("sale_make_invoice_1")], context)
 -
-  I verify that an invoice has been created
+  I verify that an invoice has been created.
 -
   !python {model: sale.order}: |
     inv = self.browse(cr, uid, ref('order3')).invoice_ids

@@ -1,7 +1,7 @@
 -
   In order to test the Sale order flow, I compute the total of the listed products for Quotation1.
 -
-  I check the total untaxed amount of the Quotation1 is correctly computed
+  I check the total untaxed amount of the Quotation1 is correctly computed.
 -
   !assert {model: sale.order, id: order, string: The amount of the Quotation is not correctly computed}:
     - sum([l.price_subtotal for l in order_line]) == amount_untaxed
