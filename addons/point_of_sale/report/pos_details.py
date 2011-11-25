@@ -88,7 +88,7 @@ class pos_details(report_sxw.rml_parse):
     def _paid_total_2(self):
         return self.total or 0.0
 
-    def _get_sum_dis_2(self,form):
+    def _get_sum_dis_2(self):
         return self.discount or 0.0
 
     def _get_sum_discount(self, objects):
