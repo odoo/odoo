@@ -16,7 +16,7 @@
   !python {model: sale.order}: |
     self.action_cancel_draft(cr, uid, [ref("order7")])
 -
-  I confirm order
+  I confirm order.
 -
   !workflow {model: sale.order, action: order_confirm, ref: order7}
 -
@@ -30,7 +30,7 @@
       values = {'move%s'%(first_move.id): {'product_qty': 5}}
       first_picking.do_partial(values, context=context)
 -
-  Now I cancel latest shipment
+  Now I cancel latest shipment.
 -
   !python {model: stock.picking}: |
     import netsvc
@@ -50,7 +50,7 @@
   !assert {model: sale.order, id: order7, string: Sale order should be in shipping exception}:
     - state == "ship_except"
 -
-  Now I regenerate shipment
+  Now I regenerate shipment.
 -
   !workflow {model: sale.order, action: ship_recreate, ref: order7}
 -
@@ -59,7 +59,7 @@
   !assert {model: sale.order, id: order7, string: Sale order should be In Progress state}:
     - state == 'manual'
 -
-  I make invoice for order
+  I make invoice for order.
 -
   !workflow {model: sale.order, action: manual_invoice, ref: order7}
 -
