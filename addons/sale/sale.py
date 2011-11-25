@@ -43,6 +43,7 @@ class sale_shop(osv.osv):
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.shop', context=c),
     }
+
 sale_shop()
 
 class sale_order(osv.osv):
@@ -455,8 +456,10 @@ class sale_order(osv.osv):
             for record in self.pool.get('sale.order').browse(cr, uid, id).invoice_ids:
                 inv_ids1.add(record.id)
         inv_ids = list(inv_ids1.difference(inv_ids))
+
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         res_id = res and res[1] or False,
+
         return {
             'name': _('Customer Invoices'),
             'view_type': 'form',
@@ -781,6 +784,7 @@ class sale_order(osv.osv):
         picking_obj = self.pool.get('stock.picking')
         procurement_obj = self.pool.get('procurement.order')
         proc_ids = []
+
         for line in order_lines:
             if line.state == 'done':
                 continue
@@ -1273,6 +1277,7 @@ class sale_order_line(osv.osv):
             if rec.state not in ['draft', 'cancel']:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete a sales order line which is in state \'%s\'!') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
+
 sale_order_line()
 
 class sale_config_picking_policy(osv.osv_memory):
