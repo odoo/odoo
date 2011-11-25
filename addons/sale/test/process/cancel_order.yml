@@ -35,7 +35,7 @@
   !python {model: stock.picking}: |
     import netsvc
     delivery_orders = self.search(cr, uid, [('sale_id','=',ref("order7"))])
-    last_delivery_order_id = delivery_orders[-1]
+    last_delivery_order_id = delivery_orders[0]
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'stock.picking', last_delivery_order_id, 'button_cancel', cr)
 -
@@ -48,7 +48,7 @@
   I check order status in "Ship Exception".
 -
   !assert {model: sale.order, id: order7, string: Sale order should be in shipping exception}:
-    - state == "ship_except"
+    - state == "shipping_except"
 -
   Now I regenerate shipment.
 -

@@ -180,3 +180,4 @@
     invoiced_rate = self._invoiced_rate(cr, uid, [ref("order4")], 'invoiced_rate', None, {'active_model': 'ir.ui.menu','section_id': False, 'active_id': ref("order4"), 'bin_size': True,'active_ids': [ref("order4")], 'department_id': False})
     invoiced = invoiced_rate.values()
     assert invoiced[0] == 100, "Invoiced Progress bar is not 100%"
+
