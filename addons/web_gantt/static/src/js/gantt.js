@@ -312,12 +312,13 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             }, 200);
         });
         
-        $(self.ganttChartControl.getProjectById("_1").projectItem[0]).hide();
-        $(self.ganttChartControl.getProjectById("_1").projectNameItem).hide();
-        $(self.ganttChartControl.getProjectById("_1").descrProject).hide();
+        var Project = self.ganttChartControl.getProjectById("_1");
+        $(Project.projectItem[0]).hide();
+        $(Project.projectNameItem).hide();
+        $(Project.descrProject).hide();
         
         _.each(final_events, function(id) {
-            var Task = self.ganttChartControl.getProjectById("_1").getTaskById(id);
+            var Task = Project.getTaskById(id);
             $(Task.cTaskNameItem[0]).click(function() {
                 self.editTask(Task);
             })
@@ -365,7 +366,13 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         
         pop.show_element(this.model, event_id, this.context || this.dataset.context, {});
         
-        pop.on_write_completed.add_last(function() {
+        pop.on_write.add(function(id, data) {
+            var get_project = _.find(self.database_projects, function(project){ return project.id == id});
+            if (get_project) {
+                _.extend(get_project, data);
+            } else {
+                _.extend(self.database_projects, _.extend(data, {'id': id}));
+            }
             self.reloadView();
         });
     },
