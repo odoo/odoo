@@ -87,7 +87,7 @@
     order = self.browse(cr, uid, ref("order3"))
     ac = order.partner_id.property_account_receivable.id
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)], limit=1)
-    
+
     for invoice in order.invoice_ids:
       assert invoice.origin == order.name,"Name is not correspond"
       assert invoice.type == 'out_invoice',"Type should be Out Invoice"
@@ -98,7 +98,7 @@
       assert invoice.comment == order.note,"Notes is not correspond"
       assert invoice.fiscal_position.id ==  order.fiscal_position.id or order.partner_id.property_account_position.id,"Fiscal position not correspond"
       assert invoice.company_id.id == order.company_id.id,"Company is not correspond"
-      assert invoice.user_id.id == order.user_id.id or False, "User is not correspond"   
+      assert invoice.user_id.id == order.user_id.id or False, "User is not correspond"
       assert invoice.account_id.id == ac,"There is no receivable account"
       assert invoice.journal_id.id == journal_ids[0],"There is no sales journal defined for this company"
       for inv in invoice.invoice_line:
@@ -180,4 +180,3 @@
     invoiced_rate = self._invoiced_rate(cr, uid, [ref("order4")], 'invoiced_rate', None, {'active_model': 'ir.ui.menu','section_id': False, 'active_id': ref("order4"), 'bin_size': True,'active_ids': [ref("order4")], 'department_id': False})
     invoiced = invoiced_rate.values()
     assert invoiced[0] == 100, "Invoiced Progress bar is not 100%"
-

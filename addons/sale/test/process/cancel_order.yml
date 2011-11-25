@@ -42,8 +42,8 @@
   I run the scheduler.
 -
   !python {model: procurement.order}: |
-     
-     self.run_scheduler(cr, uid)      
+
+     self.run_scheduler(cr, uid)
 -
   I check order status in "Ship Exception".
 -
@@ -80,10 +80,9 @@
   Then I click on the Ignore Exception button.
 -
   !workflow {model: sale.order, action: invoice_corrected, ref: order7}
-  
+
 -
   I check state of order in 'In Progress'.
 -
   !assert {model: sale.order, id: order7, string: Sale order should be In progress state}:
     - state == 'progress'
-
