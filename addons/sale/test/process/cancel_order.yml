@@ -26,7 +26,6 @@
     delivery_orders = self.search(cr, uid, [('sale_id','=',ref("order7"))])
     first_picking = self.browse(cr, uid, delivery_orders[0], context=context)
     if first_picking.force_assign(cr, uid, first_picking):
-      print first_picking.move_lines
       first_move = first_picking.move_lines[0]
       values = {'move%s'%(first_move.id): {'product_qty': 5}}
       first_picking.do_partial(values, context=context)
@@ -43,6 +42,7 @@
   I run the scheduler.
 -
   !python {model: procurement.order}: |
+     
      self.run_scheduler(cr, uid)      
 -
   I check order status in "Ship Exception".
@@ -54,10 +54,10 @@
 -
   !workflow {model: sale.order, action: ship_recreate, ref: order7}
 -
-  I check state of order in 'In Progress'.
+  I check state of order in 'To Invoice'.
 -
   !assert {model: sale.order, id: order7, string: Sale order should be In Progress state}:
-    - state == 'progress'
+    - state == 'manual'
 -
   I make invoice for order
 -
