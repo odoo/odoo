@@ -337,44 +337,44 @@ openerp.web_dashboard.apps = {
     applications: [
         [
             {
-                module: 'crm', name: 'CRM',
+                module: 'crm', name: 'CRM', menu: 'Sales',
                 help: "Acquire leads, follow opportunities, manage prospects and phone calls, \u2026"
             }, {
-                module: 'sale', name: 'Sales',
+                module: 'sale', name: 'Sales', menu: 'Sales',
                 help: "Do quotations, follow sales orders, invoice and control deliveries"
             }, {
-                module: 'account_voucher', name: 'Invoicing',
+                module: 'account_voucher', name: 'Invoicing', menu: 'Accounting',
                 help: "Send invoice, track payments and reminders"
             }, {
-                module: 'point_of_sale', name: 'Point of Sales',
+                module: 'point_of_sale', name: 'Point of Sale', menu: 'Point of Sale',
                 help: "Manage shop sales, use touch-screen POS"
             }
         ], [
             {
-                module: 'purchase', name: 'Purchase',
+                module: 'purchase', name: 'Purchase', menu: 'Sales',
                 help: "Do purchase orders, control invoices and reception, follow your suppliers, \u2026"
             }, {
-                module: 'stock', name: 'Warehouse',
+                module: 'stock', name: 'Warehouse', menu: 'Warehouse',
                 help: "Track your stocks, schedule product moves, manage incoming and outgoing shipments, \u2026"
             }, {
-                module: 'mrp', name: 'Manufacturing',
+                module: 'mrp', name: 'Manufacturing', menu: 'Manufacturing',
                 help: "Manage your manufacturing, control your supply chain, personalize master data, \u2026"
             }, {
-                module: 'account_accountant', name: 'Accounting and Finance',
+                module: 'account_accountant', name: 'Accounting and Finance', menu: 'Accounting',
                 help: "Record financial operations, automate followup, manage multi-currency, \u2026"
             }
         ], [
             {
-                module: 'project', name: 'Projects',
+                module: 'project', name: 'Projects', menu: 'Project',
                 help: "Manage projects, track tasks, invoice task works, follow issues, \u2026"
             }, {
-                module: 'hr', name: 'Human Resources',
+                module: 'hr', name: 'Human Resources', menu: 'Human Resources',
                 help: "Manage employees and their contracts, follow laves, recruit people, \u2026"
             }, {
-                module: 'marketing', name: 'Marketing',
+                module: 'marketing', name: 'Marketing', menu: 'Marketing',
                 help: "Manage campaigns, follow activities, automate emails, \u2026"
             }, {
-                module: 'knowledge', name: 'Knowledge',
+                module: 'knowledge', name: 'Knowledge', menu: 'Knowledge',
                 help: "Track your documents, browse your files, \u2026"
             }
         ]
@@ -426,10 +426,10 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
         var installer = QWeb.render('StaticHome', render_ctx);
         self.$element.append(installer);
         this.$element.delegate('.oe-static-home-tile-text button', 'click', function () {
-            self.install_module($(this).val());
+            self.install_module($(this).val(), $(this).data('menu'));
         });
     },
-    install_module: function (module_name) {
+    install_module: function (module_name, menu_name) {
         var self = this;
         var Modules = new openerp.web.DataSetSearch(
             this, 'ir.module.module', null,
@@ -443,21 +443,23 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
                 [_.pluck(records, 'id'), 'to install', ['uninstalled']],
                 function () {
                     Upgrade.call('upgrade_module', [[]], function () {
-                        self.run_configuration_wizards();
+                        self.run_configuration_wizards(menu_name);
                     });
                 }
             )
         });
     },
-    run_configuration_wizards: function () {
+    run_configuration_wizards: function (menu_name) {
         var self = this;
         new openerp.web.DataSet(this, 'res.config').call('start', [[]], function (action) {
             self.widget_parent.widget_parent.do_action(action, function () {
                 openerp.webclient.do_reload();
             });
             self.$element.empty();
-            self.do_display_root_menu().then(function () {
-                $.unblockUI();
+            var dss = new openerp.web.DataSetSearch(this, 'ir.ui.menu', null, [['parent_id', '=', false], ['name', '=', menu_name]]);
+            dss.read_slice(['id'], {}, function(menus) {
+                if(!(menus.length === 1)) { $.unblockUI(); return; }
+                $.when(openerp.webclient.menu.on_menu_click(null, menus[0].id)).then($.unblockUI);
             });
         });
     }
