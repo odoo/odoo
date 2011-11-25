@@ -859,7 +859,7 @@ class account_fiscalyear(osv.osv):
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
-    _order = "date_start"
+    _order = "date_start, id"
 
 
     def _check_duration(self, cr, uid, ids, context=None):
@@ -904,6 +904,10 @@ class account_fiscalyear(osv.osv):
         return True
 
     def find(self, cr, uid, dt=None, exception=True, context=None):
+        res = self.finds(cr, uid, dt, exception, context=context)
+        return res and res[0] or False
+
+    def finds(self, cr, uid, dt=None, exception=True, context=None):
         if context is None: context = {}
         if not dt:
             dt = time.strftime('%Y-%m-%d')
@@ -918,8 +922,8 @@ class account_fiscalyear(osv.osv):
             if exception:
                 raise osv.except_osv(_('Error !'), _('No fiscal year defined for this date !\nPlease create one.'))
             else:
-                return False
-        return ids[0]
+                return []
+        return ids
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if args is None:
@@ -1682,13 +1686,15 @@ class account_tax_code(osv.osv):
         if context.get('state', 'all') == 'all':
             move_state = ('draft', 'posted', )
         if context.get('fiscalyear_id', False):
-            fiscalyear_id = context['fiscalyear_id']
+            fiscalyear_id = [context['fiscalyear_id']]
         else:
-            fiscalyear_id = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
+            fiscalyear_id = self.pool.get('account.fiscalyear').finds(cr, uid, exception=False)
         where = ''
         where_params = ()
         if fiscalyear_id:
-            pids = map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_id).period_ids)
+            pids = []
+            for fy in fiscalyear_id:
+                pids += map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fy).period_ids)
             if pids:
                 where = ' AND line.period_id IN %s AND move.state IN %s '
                 where_params = (tuple(pids), move_state)
