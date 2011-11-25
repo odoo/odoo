@@ -81,9 +81,9 @@ class hr_job(osv.osv):
 
     def _get_job_position(self, cr, uid, ids, context=None):
         result = {}
-        for data in self.pool.get('hr.employee').browse(cr, uid, ids, context=context):
-            if data.job_id:
-                result[data.job_id.id] = True
+        for employee in self.pool.get('hr.employee').browse(cr, uid, ids, context=context):
+            if employee.job_id:
+                result[employee.job_id.id] = True
         return result.keys()
 
     _name = "hr.job"
