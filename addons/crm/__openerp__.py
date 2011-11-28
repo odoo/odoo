@@ -123,7 +123,7 @@ Creates a dashboard for CRM that includes:
             'test/process/merge_opportunity.yml',
             'test/process/cancel_lead.yml',
             'test/process/segmentation.yml',
-            'test/ui/crm_demo.yml', #TODO : After installing crm_partner_assign view error  
+            'test/ui/crm_demo.yml',
             'test/ui/duplicate_lead.yml',
             'test/ui/delete_lead.yml'
              ],
