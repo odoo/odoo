@@ -82,8 +82,9 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "board_warehouse_view.xml",
     ],
     'test': [
+        'test/ui/physical_inventory.yml',
         'test/process/update_stock.yml',
-        #'test/stock_report.yml',
+        #'test/ui/stock_report.yml',
         #'test/stock_test_wizard.yml',
         'test/process/stock_demo_backorder.yml',
         'test/process/scrap_move.yml',

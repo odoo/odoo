@@ -1,0 +1,37 @@
+-
+  I create a record for physical inventory.
+-
+   !record {model: stock.inventory, id: stock_physical_inventory0}:
+    company_id: base.main_company
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    name: Physical inventory
+    state: draft    
+-
+  Now, Define the location for import inventory.
+-
+  !record {model: stock.fill.inventory, id: stock_fill_inventory_0}:
+    location_id: stock.stock_location_stock
+    recursive: False
+    set_stock_zero: False
+-
+  I fill inventory.
+-
+  !python {model: stock.fill.inventory}: |
+    context = {"full": "1", "active_model": "stock.inventory", "active_ids":[ref("stock_physical_inventory0")], "active_id": ref("stock_physical_inventory0")}
+    self.view_init(cr, uid, ["set_stock_zero", "location_id", "recursive"], context)
+    self.fill_inventory(cr, uid, [ref("stock_fill_inventory_0")], context)
+-
+  I confirm the Inventory.
+-
+  !python {model: stock.inventory}: |
+   inventory = self.browse(cr, uid, [ref('stock_physical_inventory0')])
+   self.action_confirm(cr,uid,[ref('stock_physical_inventory0')])
+   assert inventory[0].state == 'confirm',"After confirm the inventory it should be in 'Confirm' state"
+   self.action_done(cr,uid,[ref('stock_physical_inventory0')])
+-
+  I Validate the Inventory.
+-
+  !python {model: stock.inventory}: |
+   inventory = self.browse(cr, uid, [ref('stock_physical_inventory0')])
+   assert inventory[0].state == 'done',"After validate the inventory it should be in 'Done' state" 
+
