@@ -62,7 +62,7 @@ class stock_partial_picking(osv.osv_memory):
             res.update(picking_id=picking_id)
         if 'move_ids' in fields:
             picking = self.pool.get('stock.picking').browse(cr, uid, picking_id, context=context)
-            moves = [self._partial_move_for(cr, uid, m) for m in picking.move_lines if m.state == 'assigned']
+            moves = [self._partial_move_for(cr, uid, m) for m in picking.move_lines if m.state not in ('done','cancel')]
             res.update(move_ids=moves)
         if 'date' in fields:
             res.update(date=time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
@@ -88,7 +88,7 @@ class stock_partial_picking(osv.osv_memory):
     def _partial_move_for(self, cr, uid, move):
         partial_move = {
             'product_id' : move.product_id.id,
-            'quantity' : move.product_qty,
+            'quantity' : move.state in ('assigned','new') and move.product_qty or 0,
             'product_uom' : move.product_uom.id,
             'prodlot_id' : move.prodlot_id.id,
             'move_id' : move.id,
@@ -121,7 +121,7 @@ class stock_partial_picking(osv.osv_memory):
                                                     'location_dest_id' : move.location_dest_id.id,
                                                     'picking_id': partial.picking_id.id
                                                     },context=context)
-                stock_move.action_done(cr, uid, [move_id], context)
+                stock_move.action_confirm(cr, uid, [move_id], context)
             partial_data['move%s' % (move_id)] = {
                 'product_id': move.product_id.id,
                 'product_qty': move.quantity,

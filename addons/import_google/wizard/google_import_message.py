@@ -40,3 +40,5 @@ class google_import_message(osv.osv):
         return res
 
 google_import_message()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

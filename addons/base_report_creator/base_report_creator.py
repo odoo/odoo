@@ -247,7 +247,10 @@ class report_creator(osv.osv):
             #End Loop
         return {'datas': final_datas}
 
-
+    def unlink(self, cr, uid, ids, context=None):
+        menu_ids = [report.menu_id.id for report in self.browse(cr, uid, ids, context) if report.menu_id]
+        self.pool.get('ir.ui.menu').unlink(cr, uid, menu_ids, context=context)
+        return super(report_creator, self).unlink(cr, uid, ids, context=context)
     def _path_get(self, cr, uid, models, filter_ids=[]):
         """
         @param cr: the current row, from the database cursor,

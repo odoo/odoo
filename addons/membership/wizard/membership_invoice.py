@@ -35,7 +35,7 @@ class membership_invoice(osv.osv_memory):
         """This function returns value of  product's member price based on product id.
         """
         if not product_id:
-            return {'value': {'unit_price': False}}
+            return {'value': {'member_price': False}}
         return {'value': {'member_price': self.pool.get('product.product').price_get(cr, uid, [product_id])[product_id]}}
 
     def membership_invoice(self, cr, uid, ids, context=None):

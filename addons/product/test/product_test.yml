@@ -5,7 +5,6 @@
     name: 20KG
     uom_type: bigger
     category_id: product.product_uom_categ_kgm
-    rounding: 0.010
     factor_inv: 20
 -
   I create a 10KG UOM for 'Sugar'  
@@ -14,14 +13,12 @@
     name: 10KG
     uom_type: bigger
     category_id: product.product_uom_categ_kgm
-    rounding: 0.010
     factor_inv: 10
 -
   I create a new product 'Sugar' in 20KG UOM.
 -
  !record {model: product.product, id: product_sugar_id1}:
     categ_id: 'product.product_category_rawmaterial0'
-    cost_method: standard
     name: Sugar 20KG
     procure_method: make_to_order
     standard_price: 400.0
