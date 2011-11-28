@@ -5,6 +5,10 @@
         This Demo data file Human Resources, Phases and Resources,Tasks allocation and  also run scheduling of phase and tasks.
         -->
 
+        <record id="project.project_integrate_openerp" model="project.project">
+            <field name="resource_calendar_id" ref="resource.timesheet_group1"/>
+        </record>
+
         <!-- Project Phases -->
 
         <record id="project_phase_1" model="project.phase">
@@ -13,6 +17,7 @@
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="1" name="sequence"/>
             <field name="duration">30</field>
+            <field name="constraint_date_start" eval="time.strftime('%Y-%m-01 10:00:00')"></field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 

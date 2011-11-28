@@ -43,9 +43,7 @@ Features
     "init_xml": [],
     "demo_xml": ["project_long_term_demo.xml"],
     "test": [
-          'test/schedule_project_phases.yml',
-          'test/schedule_project_tasks.yml',
-          'test/draft2open2close_phase.yml',
+          'test/phase_process.yml',
     ],
     "update_xml": [
         "security/ir.model.access.csv",
