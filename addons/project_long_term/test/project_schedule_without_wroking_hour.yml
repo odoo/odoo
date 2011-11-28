@@ -15,7 +15,6 @@
     product_uom: product.uom_day
     name: "Analysis Flow for Yaml"
     project_id: project_project_developyamlproject_2
-    responsible_id: project.res_users_analyst
     state: draft
     
 - 
@@ -71,7 +70,7 @@
   !python {model: project.project}: |
      proj=self.browse(cr, uid, [ref("project_project_developyamlproject_2")])[0]
      for phase in proj.phase_ids:
-        if (not phase.responsible_id) or (not phase.date_start) or (not phase.date_end):
+        if (not phase.date_start) or (not phase.date_end):
            raise AssertionError("Phases not scheduled")      
       
 

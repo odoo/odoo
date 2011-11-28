@@ -8,8 +8,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Fiscal Position">
-                    <field name="name" select="1"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <field name="active" groups="base.group_extended"/>
+                    </group>
                     <separator string="Mapping" colspan="4"/>
                     <newline/>
                     <field name="tax_ids" colspan="2" widget="one2many_list" nolabel="1">

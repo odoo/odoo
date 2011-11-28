@@ -22,7 +22,7 @@
 {
     'name': 'Thailand - Thai Chart of Accounts',
     'version': '1.0',
-    'category': 'Finance',
+    'category': 'Localization/Account Charts',
     'description': """
 Chart of Accounts for Thailand.
 ===============================
@@ -38,3 +38,5 @@ Thai accounting chart and localization.
     'certificate' : '00722263103978957725',
     'images': ['images/config_chart_l10n_th.jpeg','images/l10n_th_chart.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

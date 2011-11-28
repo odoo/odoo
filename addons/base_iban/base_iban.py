@@ -128,6 +128,12 @@ class res_partner_bank(osv.osv):
             return _('The IBAN does not seem to be correct. You should have entered something like this %s'), (iban_example)
         return _('The IBAN is invalid, it should begin with the country code'), ()
 
+    def _check_bank(self, cr, uid, ids, context=None):
+        for partner_bank in self.browse(cr, uid, ids, context=context):
+            if partner_bank.state == 'iban' and not partner_bank.bank.bic:
+                return False
+        return True
+
     def get_bban_from_iban(self, cr, uid, ids, context=None):
         '''
         This function returns the bank account number computed from the iban account number, thanks to the mapping_list dictionary that contains the rules associated to its country.
@@ -157,7 +163,10 @@ class res_partner_bank(osv.osv):
         # to not break community modules.
         'iban': fields.related('acc_number', string='IBAN', size=34, readonly=True, help="International Bank Account Number", type="char"),
     }
-    _constraints = [(check_iban, _construct_constraint_msg, ["acc_number"])]
+    _constraints = [
+        (check_iban, _construct_constraint_msg, ["iban"]),
+        (_check_bank, '\nPlease define BIC/Swift code on bank for bank type IBAN Account to make valid payments', ['bic'])
+    ]
 
 res_partner_bank()
 

@@ -37,12 +37,14 @@ class account_installer(osv.osv_memory):
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
-        ids = modules.search(cr, uid, [('name', 'like', 'l10n_')], context=context)
+        # Looking for the module with the 'Account Charts' category
+        category_name, category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'module_category_localization_account_charts')
+        ids = modules.search(cr, uid, [('category_id', '=', category_id)], context=context)
         charts = list(
             sorted(((m.name, m.shortdesc)
                     for m in modules.browse(cr, uid, ids, context=context)),
                    key=itemgetter(1)))
-        charts.insert(0, ('configurable', 'Generic Chart Of Account'))
+        charts.insert(0, ('configurable', 'Generic Chart Of Accounts'))
         return charts
 
     _columns = {
@@ -56,33 +58,24 @@ class account_installer(osv.osv_memory):
         'date_stop': fields.date('End Date', required=True),
         'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
+        'has_default_company' : fields.boolean('Has Default Company', readonly=True),
     }
 
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id and user.company_id.id or False
 
-    def _get_default_charts(self, cr, uid, context=None):
-        module_name = False
-        company_id = self._default_company(cr, uid, context=context)
-        company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
-        address_id = self.pool.get('res.partner').address_get(cr, uid, [company.partner_id.id])
-        if address_id['default']:
-            address = self.pool.get('res.partner.address').browse(cr, uid, address_id['default'], context=context)
-            code = address.country_id.code
-            module_name = (code and 'l10n_' + code.lower()) or False
-        if module_name:
-            module_id = self.pool.get('ir.module.module').search(cr, uid, [('name', '=', module_name)], context=context)
-            if module_id:
-                return module_name
-        return 'configurable'
+    def _default_has_default_company(self, cr, uid, context=None):
+        count = self.pool.get('res.company').search_count(cr, uid, [], context=context)
+        return bool(count == 1)
 
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
         'period': 'month',
         'company_id': _default_company,
-        'charts': _get_default_charts
+        'has_default_company': _default_has_default_company,
+        'charts': 'configurable'
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -95,7 +88,7 @@ class account_installer(osv.osv_memory):
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
         for field in res['fields']:
             if field == 'company_id':
-                res['fields'][field]['domain'] = unconfigured_cmp
+                res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
                 res['fields'][field]['selection'] = [('', '')]
                 if unconfigured_cmp:
                     cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
@@ -110,6 +103,10 @@ class account_installer(osv.osv_memory):
         return {}
 
     def execute(self, cr, uid, ids, context=None):
+        self.execute_simple(cr, uid, ids, context)
+        super(account_installer, self).execute(cr, uid, ids, context=context)
+
+    def execute_simple(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         fy_obj = self.pool.get('account.fiscalyear')
@@ -133,7 +130,6 @@ class account_installer(osv.osv_memory):
                         fy_obj.create_period(cr, uid, [fiscal_id])
                     elif res['period'] == '3months':
                         fy_obj.create_period3(cr, uid, [fiscal_id])
-        super(account_installer, self).execute(cr, uid, ids, context=context)
 
     def modules_to_install(self, cr, uid, ids, context=None):
         modules = super(account_installer, self).modules_to_install(
@@ -144,27 +140,5 @@ class account_installer(osv.osv_memory):
         return modules | set([chart])
 
 account_installer()
-
-class account_installer_modules(osv.osv_memory):
-    _inherit = 'base.setup.installer'
-    _columns = {
-        'account_analytic_plans': fields.boolean('Multiple Analytic Plans',
-            help="Allows invoice lines to impact multiple analytic accounts "
-                 "simultaneously."),
-        'account_payment': fields.boolean('Suppliers Payment Management',
-            help="Streamlines invoice payment and creates hooks to plug "
-                 "automated payment systems in."),
-        'account_followup': fields.boolean('Followups Management',
-            help="Helps you generate reminder letters for unpaid invoices, "
-                 "including multiple levels of reminding and customized "
-                 "per-partner policies."),
-        'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
-            help="This module will support the Anglo-Saxons accounting methodology by "
-                "changing the accounting logic with stock transactions."),
-        'account_asset': fields.boolean('Assets Management',
-            help="Helps you to manage your assets and their depreciation entries."),
-    }
-
-account_installer_modules()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

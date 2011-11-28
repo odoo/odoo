@@ -18,26 +18,34 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 {
-    'name': 'Base VAT',
+    'name': 'VAT Number Validation',
     'version': '1.0',
-    'category': 'Tools',
-    'category': 'Generic Modules/Base',
+    'category': 'Hidden',
     'complexity': "easy",
     'description': """
-Enable VAT Number for a partner and check its validity.
-=======================================================
+VAT validation for Partners' VAT numbers
+========================================
 
-This module follows the methods stated at http://sima-pc.com/nif.php for
-checking the validity of VAT Number assigned to partners in European countries.
+After installing this module, values entered in the VAT field of Partners will
+be validated for all supported countries. The country is inferred from the
+2-letter country code that prefixes the VAT number, e.g. ``BE0477472701``
+will be validated using the Belgian rules.
+
+Supported countries currently include EU countries, and a few non-EU countries
+such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,
+only the country code will be validated.
+
     """,
     'author': 'OpenERP SA',
     'depends': ['account'],
     'website': 'http://www.openerp.com',
-    'update_xml': ['base_vat_view.xml'],
+    'data': ['base_vat_view.xml'],
     'installable': True,
     'active': False,
     'certificate': '0084849360989',
     'images': ['images/1_partner_vat.jpeg'],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

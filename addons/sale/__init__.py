@@ -25,9 +25,9 @@
 
 import sale
 import stock
-import sale_installer
 import wizard
 import report
 import company
+import edi
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

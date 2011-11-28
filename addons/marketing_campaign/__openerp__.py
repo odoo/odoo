@@ -21,7 +21,7 @@
 
 
 {
-    "name" : "Marketing Campaign",
+    "name" : "Marketing Campaigns",
     "version" : "1.1",
     "depends" : ["marketing",
                  "document",
@@ -29,7 +29,7 @@
                  "decimal_precision"
                 ],
     "author" : "OpenERP SA",
-    "category": 'Sales',
+    "category": 'Marketing',
     'complexity': "expert",
     "description": """
 This module provides leads automation through marketing campaigns (campaigns can in fact be defined on any resource, not just CRM Leads).

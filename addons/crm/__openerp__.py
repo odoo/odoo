@@ -23,7 +23,7 @@
 {
     'name': 'Customer & Supplier Relationship Management',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Customer Relationship Management',
     'complexity': "easy",
     'description': """
 The generic OpenERP Customer Relationship Management.
@@ -55,11 +55,10 @@ Creates a dashboard for CRM that includes:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [
-        'base',
         'base_action_rule',
         'base_setup',
         'process',
-        'mail_gateway',
+        'mail',
         'base_calendar',
         'resource',
         'board'
@@ -69,7 +68,6 @@ Creates a dashboard for CRM that includes:
         'crm_meeting_data.xml',
         'crm_lead_data.xml',
         'crm_meeting_data.xml',
-        'crm_opportunity_data.xml',
         'crm_phonecall_data.xml',
     ],
     'update_xml': [
@@ -86,7 +84,6 @@ Creates a dashboard for CRM that includes:
         'wizard/crm_opportunity_to_phonecall_view.xml',
         'wizard/crm_partner_to_opportunity_view.xml',
 
-        'wizard/crm_send_email_view.xml',
         'wizard/crm_add_note_view.xml',
         'wizard/crm_merge_opportunities_view.xml',
 
@@ -103,9 +100,6 @@ Creates a dashboard for CRM that includes:
         'crm_phonecall_view.xml',
         'crm_phonecall_menu.xml',
 
-        'crm_opportunity_view.xml',
-        'crm_opportunity_menu.xml',
-
         'report/crm_lead_report_view.xml',
         'report/crm_phonecall_report_view.xml',
 
@@ -113,15 +107,14 @@ Creates a dashboard for CRM that includes:
         'crm_installer_view.xml',
 
         'res_partner_view.xml',
-        'board_crm_view.xml',
         'board_crm_statistical_view.xml',
+        'board_crm_view.xml',
 
     ],
     'demo_xml': [
         'crm_demo.xml',
         'crm_lead_demo.xml',
         'crm_meeting_demo.xml',
-        'crm_opportunity_demo.xml',
         'crm_phonecall_demo.xml',
     ],
     'test': [
@@ -132,6 +125,11 @@ Creates a dashboard for CRM that includes:
             'test/test_crm_recurrent_meeting.yml',
             'test/test_crm_stage_changes.yml',
             'test/test_crm_recurrent_meeting_case2.yml',
+            'test/test_crm_lead_case2.yml',
+            'test/test_crm_opportunity_case2.yml',
+            'test/test_crm_phonecall_case2.yml',
+            'test/test_crm_partner2opportunity.yml',
+            'test/test_crm_segmentation.yml',
              ],
     'installable': True,
     'active': False,

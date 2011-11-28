@@ -102,6 +102,7 @@ class survey_send_invitation(osv.osv_memory):
         partner_ids = record['partner_ids']
         user_ref= self.pool.get('res.users')
         survey_ref= self.pool.get('survey')
+        mail_message = self.pool.get('mail.message')
 
         model_data_obj = self.pool.get('ir.model.data')
         group_id = model_data_obj._get_id(cr, uid, 'base', 'group_survey_user')
@@ -115,10 +116,9 @@ class survey_send_invitation(osv.osv_memory):
         existing = ""
         created = ""
         error = ""
-        res_user = ""
         user_exists = False
         new_user = []
-        attachments = []
+        attachments = {}
         current_sur = survey_ref.browse(cr, uid, context.get('active_id'), context=context)
         exist_user = current_sur.invited_user_ids
         if exist_user:
@@ -133,8 +133,8 @@ class survey_send_invitation(osv.osv_memory):
                 file_data += line
                 if not line:
                     break
-            attachments.append((id.title +".pdf",file_data))
             file.close()
+            attachments[id.title +".pdf"] = file_data
             os.remove(addons.get_module_resource('survey', 'report') + id.title +".pdf")
 
         for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids):
@@ -151,33 +151,18 @@ class survey_send_invitation(osv.osv_memory):
                     mail = record['mail']%{'login':addr.email, 'passwd':user.password, \
                                                 'name' : addr.name}
                     if record['send_mail_existing']:
-                        tools.email_send(record['mail_from'], [addr.email] , \
-                                         record['mail_subject_existing'] , mail)
+                        mail_message.schedule_with_attach(cr, uid, record['mail_from'], [addr.email] , \
+                                         record['mail_subject_existing'] , mail, context=context)
                         existing+= "- %s (Login: %s,  Password: %s)\n" % (user.name, addr.email, \
                                                                           user.password)
-                    continue
-                user_id = user_ref.search(cr, uid, [('address_id', '=', addr.id)])
-                if user_id:
-                    for user_email in user_ref.browse(cr, uid, user_id):
-                        mail = record['mail']%{'login': user_email.login, \
-                                                        'passwd': user_email.password, 'name': addr.name}
-                        if record['send_mail_existing']:
-                            tools.email_send(record['mail_from'], [addr.email],\
-                                                  record['mail_subject_existing'], mail)
-                            res_user+= "- %s (Login: %s,  Password: %s)\n" % \
-                                 (user_email.name, user_email.login, user_email.password)
-                    continue
-                else:
-                    error += "- No User found linked to email address '%s'.\n Impossible to send a reminder to a partner never invited before \n"%(addr.email)
                     continue
 
                 passwd= self.genpasswd()
                 out+= addr.email + ',' + passwd + '\n'
                 mail= record['mail'] % {'login' : addr.email, 'passwd' : passwd, 'name' : addr.name}
                 if record['send_mail']:
-                    ans = tools.email_send(record['mail_from'], [addr.email], \
-                                           record['mail_subject'], mail,attach = attachments)
-
+                    ans = mail_message.schedule_with_attach(cr, uid, record['mail_from'], [addr.email], \
+                                           record['mail_subject'], mail, attachments=attachments, context=context)
                     if ans:
                         res_data = {'name': addr.name or 'Unknown',
                                     'login': addr.email,
@@ -208,8 +193,6 @@ class survey_send_invitation(osv.osv_memory):
             note += "%d contacts where ignored (an email address is missing).\n\n" % (skipped)
         if error:
             note += 'E-Mail not send successfully:\n====================\n%s\n' % (error)
-        if res_user:
-            note += 'E-mail ID used the following user:\n====================\n%s\n' % (res_user)
         context.update({'note' : note})
         return {
             'view_type': 'form',

@@ -17,9 +17,9 @@
              <field name="type">form</field>
             <field name="inherit_id" ref="account.board_account_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/hpaned/child1/action[@string='Draft Customer Invoices']" position="before">
-                    <action colspan="4" height="160" name="%(hr_timesheet_invoice.action_analytic_account_tree)d" string="Analytic accounts to close" width="510"/>
-                    <action colspan="4" height="160" name="%(act_my_account)d" string="Accounts to invoice" width="510"/>
+                <xpath expr="/form/board/column/action[@string='Draft Customer Invoices']" position="before">
+                    <action name="%(hr_timesheet_invoice.action_analytic_account_tree)d" string="Analytic accounts to close"/>
+                    <action name="%(act_my_account)d" string="Accounts to invoice"/>
                 </xpath>
             </field>
         </record> -->
@@ -31,8 +31,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.board_account_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/hpaned/child2/action[@string='Aged income']" position="after">
-                    <action colspan="4" height="220" name="%(action_account_analytic_line_to_invoice)d" string="Costs to invoice"/>
+                <xpath expr="/form/board/column/action[@string='Aged income']" position="after">
+                    <action name="%(action_account_analytic_line_to_invoice)d" string="Costs to invoice"/>
                 </xpath>
             </field>
         </record> -->
@@ -67,8 +67,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.board_hr_manager_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/hpaned/child1" position="inside">
-                    <action colspan="4" height="220" name="%(action_timesheet_uninvoiced_line)d" string="Uninvoice Lines With Billing Rate" />
+                <xpath expr="/form/board/column" position="inside">
+                    <action name="%(action_timesheet_uninvoiced_line)d" string="Uninvoice Lines With Billing Rate"/>
                 </xpath>
             </field>
         </record>

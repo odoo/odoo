@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
-		<record id="pos_payment_report_date_form" model="ir.ui.view">
-			<field name="name">pos.payment.report.date.form</field>
-		    <field name="model">pos.payment.report.date</field>
-		    <field name="type">form</field>
-		    <field name="arch" type="xml">
-		    <form string="Sale by Date and User">
-			     <group col="4" colspan="4">
-			        <separator string="Dates" colspan="4"/>
-					<field name="date_start"/>
-	                <field name="date_end"/>
-	                <separator string="User" colspan="4"/>
-	                <field name="user_id" nolabel="1" colspan="4"/>
-	                <separator string="" colspan="4"/>
+    <data>
+        <record id="pos_payment_report_date_form" model="ir.ui.view">
+            <field name="name">pos.payment.report.date.form</field>
+            <field name="model">pos.payment.report.date</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Sale by Date and User">
+                 <group col="4" colspan="4">
+                    <separator string="Dates" colspan="4"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <separator string="User" colspan="4"/>
+                    <field name="user_id" nolabel="1" colspan="4"/>
+                    <separator string="" colspan="4"/>
                     <label string="" colspan="2"/>
-	                <group colspan="2" col="2">
-						<button icon='gtk-cancel' special="cancel"
-						        string="Close" />
-						<button name="print_report" string="Print Report"
-						        colspan="1" type="object" icon="gtk-print" />
-		            </group>
-			     </group>            
-		    </form>
-		    </field>
-		</record>
+                    <group colspan="2" col="2">
+                        <button icon='gtk-cancel' special="cancel"
+                                string="Close" />
+                        <button name="print_report" string="Print Report"
+                                colspan="1" type="object" icon="gtk-print" />
+                    </group>
+                 </group>            
+            </form>
+            </field>
+        </record>
 
         <record id="action_report_pos_payment_repport_date" model="ir.actions.act_window">
-            <field name="name">Sales lines Report</field>
+            <field name="name">Sales by Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.payment.report.date</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-		</data>
+        </data>
 </openerp>              

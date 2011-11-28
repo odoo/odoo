@@ -91,3 +91,5 @@ def generateEML(mail):
         print cemail.lastErrorText()
         sys.exit()
     return new_mail, eml_path
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

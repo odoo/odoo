@@ -3,22 +3,17 @@
     <data>
             
         <!--   Create Forecast section   -->
-
         <record id="view_stock_sale_forecast_createlines_form" model="ir.ui.view">
             <field name="name">stock.sale.forecast.createlines</field>
             <field name="model">stock.sale.forecast.createlines</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create Forecasts Lines">
-                    <separator colspan ="4" string="Creates forecast lines for selected warehouse and period."/>
                     <field name="period_id"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
                     <field name="copy_forecast"/>
                     <field name="product_categ_id" widget="selection"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <newline/>
-                    <label colspan ="4" string="Note: Doesn't duplicate existing lines created by you."/>
-                    <separator colspan ="4" />
                     <group colspan="4">
                         <button icon="gtk-cancel"  special="cancel" string="Close"/>
                         <button icon="gtk-execute" name="create_forecast" string="Create" type="object" />
@@ -34,12 +29,10 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_stock_sale_forecast_createlines_form"/>
             <field name="target">new</field>
+            <field name="help">This wizard helps create many forecast lines at once. After creating them you only have to fill in the forecast quantities. The wizard doesn't duplicate the line when another one exist for the same selection.</field>
         </record>
 
         <menuitem id="menu_stock_sale_forecast_createlines" name="Create Sales Forecasts" 
                 parent="menu_stock_sale_forecast" action="action_stock_sale_forecast_createlines_form" sequence="5"/>
-
     </data>
 </openerp>
-
-        

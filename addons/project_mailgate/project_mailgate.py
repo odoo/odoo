@@ -21,121 +21,85 @@
 
 from osv import fields, osv
 from tools.translate import _
+import tools
 import binascii
 
 
 class project_tasks(osv.osv):
     _name = "project.task"
-    _inherit = ['mailgate.thread', 'project.task']
+    _inherit = ['mail.thread','project.task']
 
-    _columns={
-                'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model', '=', _name)], readonly=True),
-              }
+    _columns = {
+         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)], readonly=True),
+    }
 
-    def message_new(self, cr, uid, msg, context=None):
-#        """
-#        Automatically calls when new email message arrives
-#
-#        @param self: The object pointer
-#        @param cr: the current row, from the database cursor,
-#        @param uid: the current user’s ID for security checks
-#        """
-        mailgate_obj = self.pool.get('email.server.tools')
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        res_id = super(project_tasks,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
         subject = msg.get('subject')
-        body = msg.get('body')
+        body = msg.get('body_text')
         msg_from = msg.get('from')
-        #TODO map email priority with openerp task priority
-        priority = msg.get('priority') 
-
         data = {
             'name': subject,
             'description': body,
             'planned_hours': 0.0,
         }
-        res = mailgate_obj.get_partner(cr, uid, msg_from)
-        if res:
-            data.update(res)
-        res = self.create(cr, uid, data)
+        data.update(self.message_partner_by_email(cr, uid, msg_from))
+        self.write(cr, uid, [res_id], data, context)
+        return res_id
 
-        attachments = msg.get('attachments', [])
-        for attachment in attachments or []:
-            data_attach = {
-                'name': attachment,
-                'datas': binascii.b2a_base64(str(attachments.get(attachment))),
-                'datas_fname': attachment,
-                'description': 'Mail attachment',
-                'res_model': self._name,
-                'res_id': res,
-            }
-            self.pool.get('ir.attachment').create(cr, uid, data_attach)
-
-        return res
-
-    def message_update(self, cr, uid, id, msg, data={}, default_act='pending'):
-        mailgate_obj = self.pool.get('email.server.tools')
-        msg_actions, body_data = mailgate_obj.msg_act_get(msg)
+    def message_update(self, cr, uid, ids, msg, data={}, default_act='pending'):
         data.update({
-            'description': body_data,
+            'description': msg['body_text'],
         })
         act = 'do_'+default_act
-        if 'state' in msg_actions:
-            if msg_actions['state'] in ['draft', 'close', 'cancel', 'open', 'pending']:
-                act = 'do_' + msg_actions['state']
 
-        for k1, k2 in [('cost', 'planned_hours')]:
-            try:
-                data[k2] = float(msg_actions[k1])
-            except:
-                pass
+        maps = { 
+            'cost':'planned_hours',
+        }
+        for line in msg['body_text'].split('\n'):
+            line = line.strip()
+            res = tools.misc.command_re.match(line)
+            if res:
+                match = res.group(1).lower()
+                field = maps.get(match)
+                if field:
+                    try:
+                        data[field] = float(res.group(2).lower())
+                    except (ValueError, TypeError):
+                        pass
+                elif match.lower() == 'state' \
+                        and res.group(2).lower() in ['cancel','close','draft','open','pending']:
+                    act = 'do_%s' % res.group(2).lower()
 
-        if 'priority' in msg_actions:
-            if msg_actions['priority'] in ('1', '2', '3', '4', '5'):
-                data['priority'] = msg_actions['priority']
-
-        self.write(cr, uid, [id], data)
-        getattr(self, act)(cr, uid, [id])
+        self.write(cr, uid, ids, data, context=context)
+        getattr(self,act)(cr, uid, ids, context=context)
+        self.message_append_dict(cr, uid, [res_id], msg, context=context)
         return True
 
-    def message_followers(self, cr, uid, ids, context=None):
-        res = []
-        if isinstance(ids, (str, int, long)):
-            select = [ids]
-        else:
-            select = ids
-        for task in self.browse(cr, uid, select, context=context):
-            user_email = (task.user_id and task.user_id.user_email) or False
-            res += [(user_email, False, False, task.priority)]
-        if isinstance(ids, (str, int, long)):
-            return len(res) and res[0] or False
-        return res
-
-    def msg_send(self, cr, uid, id, *args, **argv):
-        return True
-
-    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
-        mailgate_pool = self.pool.get('mailgate.thread')
-        return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
-                                       subject=subject, email=email, \
-                                       details=details, email_from=email_from,\
-                                       message_id=message_id, attach=attach, \
-                                       context=context)
+    def message_thread_followers(self, cr, uid, ids, context=None):
+        followers = super(project_tasks,self).message_thread_followers(cr, uid, ids, context=context)
+        for task in self.browse(cr, uid, followers.keys(), context=context):
+            task_followers = set(followers[task.id])
+            task_followers.add(task.user_id.user_email)
+            followers[task.id] = filter(None, task_followers)
+        return followers
 
     def do_draft(self, cr, uid, ids, context=None):
         res = super(project_tasks, self).do_draft(cr, uid, ids, context)
         tasks = self.browse(cr, uid, ids, context=context)
-        self._history(cr, uid, tasks, _('Draft'), context=context)
+        self.message_append(cr, uid, tasks, _('Draft'), context=context)
         return res
 
     def do_open(self, cr, uid, ids, context=None):
         res = super(project_tasks, self).do_open(cr, uid, ids, context)
         tasks = self.browse(cr, uid, ids, context=context)
-        self._history(cr, uid, tasks, _('Open'), context=context)
+        self.message_append(cr, uid, tasks, _('Open'), context=context)
         return res
 
     def do_pending(self, cr, uid, ids, context=None):
         res = super(project_tasks, self).do_pending(cr, uid, ids, context)
         tasks = self.browse(cr, uid, ids, context=context)
-        self._history(cr, uid, tasks, _('Pending'), context=context)
+        self.message_append(cr, uid, tasks, _('Pending'), context=context)
         return res
 
     def do_close(self, cr, uid, ids, context=None):
@@ -143,13 +107,13 @@ class project_tasks(osv.osv):
         tasks = self.browse(cr, uid, ids, context=context)
         for task in tasks:
             if task.state == 'done':
-                self._history(cr, uid, tasks, _('Done'), context=context)
+                self.message_append(cr, uid, tasks, _('Done'), context=context)
         return res
 
     def do_cancel(self, cr, uid, ids, context=None):
         res = super(project_tasks, self).do_cancel(cr, uid, ids, context=context)
         tasks = self.browse(cr, uid, ids, context=context)
-        self._history(cr, uid, tasks, _('Cancel'), context=context)
+        self.message_append(cr, uid, tasks, _('Cancel'), context=context)
         return res
 
 project_tasks()

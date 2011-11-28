@@ -117,3 +117,5 @@ elif __name__=="package":
             NewReport,
             "org.openoffice.openerp.report.opennewreport",
             ("com.sun.star.task.Job",),)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

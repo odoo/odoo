@@ -3,27 +3,16 @@
   I create a Sale Order for LG Viewty Smart for qty 100 having order_policy manual.
 -
   !record {model: sale.order, id: sale_order_so5}:
-    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
     order_line:
-      - name: LG Viewty Smart
-        price_unit: 170.0
-        product_uom: product.product_uom_unit
-        product_uom_qty: 100.0
-        state: draft
-        delay: 7.0
+      - product_uom_qty: 100.0
         product_id: sale.product_product_lgviewtysmart0
+        name: LG View
         product_uos_qty: 100.0
-        th_weight: 0.0
         type: make_to_order
     order_policy: manual
     partner_id: sale.res_partner_cleartrail0
-    partner_invoice_id: sale.res_partner_address_2
-    partner_order_id: sale.res_partner_address_1
-    partner_shipping_id: sale.res_partner_address_3
     picking_policy: direct
-    pricelist_id: product.list0
-    shop_id: sale.shop
 -
   I use the Advance Payment wizard.
 -
@@ -42,8 +31,8 @@
   I verify whether the invoice has been generated.
 -
   !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so5"))
-    assert so.invoice_ids, "Invoices has not been generated for sale_order_so5"
+    so = self.read(cr, uid, ref("sale_order_so5"))
+    assert so['invoice_ids'], "Invoices has not been generated for sale_order_so5"
 -
   I open the Invoice for the SO.
 -

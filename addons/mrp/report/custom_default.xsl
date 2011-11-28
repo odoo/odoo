@@ -39,7 +39,7 @@
 
 	<xsl:template name="first_page_frames">
 		<xsl:if test="$page_format='a4_normal'">
-			<frame id="main" x1="1cm" y1="2.5cm" width="21.0cm" height="29.0cm"/>
+			<frame id="main" x1="1cm" y1="2.5cm" width="19.0cm" height="25.0cm"/>
 		</xsl:if>
 
 		<xsl:if test="$page_format='a4_letter'">
@@ -49,7 +49,7 @@
 	</xsl:template>
 
 	<xsl:template name="other_pages_frames">
-		<frame id="main" x1="1cm" y1="2.5cm" width="21.0cm" height="29cm"/>
+		<frame id="main" x1="1cm" y1="2.5cm" width="19.0cm" height="25.0cm"/>
 	</xsl:template>
 
 </xsl:stylesheet>

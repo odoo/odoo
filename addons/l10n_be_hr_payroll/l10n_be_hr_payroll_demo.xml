@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Employee Contract -->
+        <record id="hr_payroll.hr_contract_firstcontract1" model="hr.contract">
+            <field name="name">Bonamy's Contract (Belgium payroll C.P. 218)</field>
+            <field name="struct_id" ref="hr_payroll_salary_structure_employee"/>
+            <field eval="2500.0" name="wage"/>
+            <field eval="6.0" name="meal_voucher_amount"/>
+            <field eval="1.09" name="meal_voucher_employee_deduction"/>
+            <field eval="250.0" name="car_company_amount"/>
+            <field eval="110" name="car_employee_deduction"/>
+            <field eval="50.0" name="additional_net_amount"/>
+            <field name="working_hours" ref="resource.timesheet_group1"/>
+        </record>
+
+        <record id="hr_payroll.hr_employee_bonamy0" model="hr.employee">
+            <field name="marital">single</field>
+        </record>
+
+    </data>
+</openerp>
+

@@ -32,9 +32,6 @@ import pos_sales_user
 import pos_sales_user_today
 import pos_payment_report_date
 import pos_payment_report_user
-import pos_sales_user_today_current_user
-import pos_receipt_with_remboursment
-import pos_receipt_without_remboursment
 import pos_report
 import pos_order_report
 import report_cash_register

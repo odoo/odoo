@@ -21,8 +21,8 @@
 
 
 {
-    'category': 'Sales', 
-    'name': 'CRM Fundraising',
+    'category': 'Customer Relationship Management', 
+    'name': 'Fundraising',
     'version': '1.0',
     'complexity': "easy",
     'description': """

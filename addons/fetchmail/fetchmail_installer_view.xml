@@ -1,18 +1,19 @@
 <openerp>
     <data>
-	 <record model="ir.actions.act_window" id="view_email_server_form_installer">
-	        <field name="name">Setup Your Mail server</field>
-	        <field name="type">ir.actions.act_window</field>
-	        <field name="res_model">email.server</field>
-	        <field name="view_type">form</field>
-	        <field name="view_mode">tree,form</field>
-	        <field name="view_id" ref="fetchmail.view_email_server_form"/>
-	    </record>
+     <record model="ir.actions.act_window" id="view_email_server_form_installer">
+            <field name="name">Setup Incoming Mail Servers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fetchmail.server</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help">You can connect OpenERP to your incoming mail server so that documents (leads, tasks, issues, etc) are synchronized automatically with your incoming emails.</field>
+        </record>
 
-	    <record id="view_email_server_form_installer_todo" model="ir.actions.todo">
-	        <field name="action_id" ref="view_email_server_form_installer"/>
-	        <field name="category_id" ref="base.category_sales_management_config"/>
-	        <field name="sequence">4</field>
+        <record id="view_email_server_form_installer_todo" model="ir.actions.todo">
+            <field name="action_id" ref="view_email_server_form_installer"/>
+            <field name="category_id" ref="base.category_sales_management_config"/>
+            <field name="sequence">4</field>
         </record>
     </data>
 </openerp>

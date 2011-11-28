@@ -10,7 +10,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="name" position="before">
-                    <field name="state" select="1" on_change="onchange_invoice_line_view(state)" />
+                    <field name="state" on_change="onchange_invoice_line_view(state)" />
                     <field name="sequence"/>
             	</field>
             </field>
@@ -23,6 +23,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <xpath expr="/tree/field[@name='name']" position="before">
+                    <field name="state" invisible="1"/>
                     <field name="sequence" string="Seq."/>
                 </xpath>
             </field>
@@ -52,6 +53,18 @@
                     <field name="abstract_line_ids" colspan="4" nolabel="1"/>
                 </xpath>
             </field>
+        </record>
+
+        <record model="ir.ui.view" id="account_invoice_supplier_form_layout">
+          <field name="name">account.invoice.supplier.form.layout</field>
+          <field name="model">account.invoice</field>
+          <field name="inherit_id" ref="account.invoice_supplier_form"/>
+          <field name="type">form</field>
+          <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line']/tree/*[1]" position="before">
+              <field name="state" invisible="1"/>
+            </xpath>
+          </field>
         </record>
 
 <!-- notification message views -->

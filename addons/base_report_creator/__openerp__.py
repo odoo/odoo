@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Statistical Report Creator',
+    'name': 'Query Builder',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Advanced Reporting',
     'complexity': "expert",
     'description': """
 This module allows you to create any statistic report on several objects.

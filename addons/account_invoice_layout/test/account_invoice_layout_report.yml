@@ -1,22 +1,9 @@
 -
-  In order to Print the Invoice layout report in Normal Mode, we will create a invoice record
--
-  !record {model: account.invoice, id: test_invoice_1}:
-    currency_id: base.EUR
-    company_id: base.main_company
-    address_invoice_id: base.res_partner_address_tang
-    partner_id: base.res_partner_asus
-    state: draft
-    type: out_invoice
-    account_id: account.a_recv
-    name: Test invoice 1
-    address_contact_id: base.res_partner_address_tang
--
   Print the Invoice layout report in Normal Mode
 -
   !python {model: account.invoice}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.invoice.layout').create(cr, uid, [ref('test_invoice_1')], {}, {})
+    (data, format) = netsvc.LocalService('report.account.invoice.layout').create(cr, uid, [ref('account.demo_invoice_0')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account_invoice_layout.'+format), 'wb+').write(data)
 
@@ -25,7 +12,7 @@
 -
   !python {model: account.invoice}: |
     ctx={}
-    ctx.update({'model': 'account.invoice','active_ids': [ref('test_invoice_1')]})
+    ctx.update({'model': 'account.invoice','active_ids': [ref('account.demo_invoice_0')]})
     data_dict = {'message':ref('account_invoice_layout.demo_message1')}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_invoice_special_msg',wiz_data=data_dict, context=ctx, our_module='account_invoice_layout')

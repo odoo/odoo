@@ -31,8 +31,8 @@ class account_followup_print(osv.osv_memory):
     _description = 'Print Followup & Send Mail to Customers'
     _columns = {
         'date': fields.date('Follow-up Sending Date', required=True, help="This field allow you to select a forecast date to plan your follow-ups"),
-        'followup_id': fields.many2one('account_followup.followup', 'Follow-up', required=True)
-                }
+        'followup_id': fields.many2one('account_followup.followup', 'Follow-up', required=True),
+    }
 
     def _get_followup(self, cr, uid, context=None):
         if context is None:
@@ -51,7 +51,7 @@ class account_followup_print(osv.osv_memory):
         data = self.browse(cr, uid, ids, context=context)[0]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        context.update({'followup_id': data.followup_id.id, 'date':data.date})
+        context.update({'followup_id': data.followup_id.id, 'date': data.date, 'company_id': data.followup_id.company_id.id})
         return {
             'name': _('Select Partners'),
             'view_type': 'form',
@@ -87,10 +87,13 @@ class account_followup_stat_by_partner(osv.osv):
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_followup_stat_by_partner')
+        # Here we don't have other choice but to create a virtual ID based on the concatenation
+        # of the partner_id and the company_id. An assumption that the number of companies will
+        # not reach 10 000 records is made, what should be enough for a time.
         cr.execute("""
             create or replace view account_followup_stat_by_partner as (
                 SELECT
-                    l.partner_id AS id,
+                    l.partner_id * 10000 + l.company_id as id,
                     l.partner_id AS partner_id,
                     min(l.date) AS date_move,
                     max(l.date) AS date_move_last,
@@ -115,12 +118,13 @@ class account_followup_print_all(osv.osv_memory):
     _name = 'account.followup.print.all'
     _description = 'Print Followup & Send Mail to Customers'
     _columns = {
-        'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True, domain="[('account_id.type', '=', 'receivable'), ('account_id.reconcile', '=', True), ('reconcile_id','=', False), ('state', '!=', 'draft'), ('account_id.active', '=', True), ('debit', '>', 0)]"),
+        'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True),
         'email_conf': fields.boolean('Send email confirmation'),
         'email_subject': fields.char('Email Subject', size=64),
         'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
         'email_body': fields.text('Email body'),
-        'summary': fields.text('Summary', required=True, readonly=True)
+        'summary': fields.text('Summary', required=True, readonly=True),
+        'test_print': fields.boolean('Test Print', help='Check if you want to print followups without changing followups level.')
     }
     def _get_summary(self, cr, uid, context=None):
         if context is None:
@@ -147,6 +151,8 @@ class account_followup_print_all(osv.osv_memory):
             context = {}
         if ids:
             data = self.browse(cr, uid, ids, context=context)[0]
+        company_id = 'company_id' in context and context['company_id'] or data.company_id.id
+
         cr.execute(
             "SELECT l.partner_id, l.followup_line_id,l.date_maturity, l.date, l.id "\
             "FROM account_move_line AS l "\
@@ -158,7 +164,8 @@ class account_followup_print_all(osv.osv_memory):
                 "AND (l.partner_id is NOT NULL) "\
                 "AND (a.active) "\
                 "AND (l.debit > 0) "\
-            "ORDER BY l.date")
+                "AND (l.company_id = %s) "\
+            "ORDER BY l.date", (company_id,))
         move_lines = cr.fetchall()
         old = None
         fups = {}
@@ -188,16 +195,16 @@ class account_followup_print_all(osv.osv_memory):
                 continue
             if followup_line_id not in fups:
                 continue
+            stat_line_id = partner_id * 10000 + company_id
             if date_maturity:
                 if date_maturity <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                     if partner_id not in partner_list:
-                        partner_list.append(partner_id)
+                        partner_list.append(stat_line_id)
                     to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
             elif date and date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                 if partner_id not in partner_list:
-                    partner_list.append(partner_id)
-                to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
-
+                    partner_list.append(stat_line_id)
+                to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
         return {'partner_ids': partner_list, 'to_update': to_update}
 
     def do_mail(self ,cr, uid, ids, context=None):
@@ -205,6 +212,7 @@ class account_followup_print_all(osv.osv_memory):
         move_obj = self.pool.get('account.move.line')
         user_obj = self.pool.get('res.users')
         line_obj = self.pool.get('account_followup.stat')
+        mail_message = self.pool.get('mail.message')
 
         if context is None:
             context = {}
@@ -223,7 +231,7 @@ class account_followup_print_all(osv.osv_memory):
                 partners.append(line.partner_id)
                 dict_lines[line.partner_id.id] =line
             for partner in partners:
-                ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable'])])
+                ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable']),('company_id','=',context.get('company_id', False))])
                 data_lines = move_obj.browse(cr, uid, ids_lines, context=context)
                 followup_data = dict_lines[partner.id]
                 dest = False
@@ -277,7 +285,7 @@ class account_followup_print_all(osv.osv_memory):
                 msg = ''
                 if dest:
                     try:
-                        tools.email_send(src, dest, sub, body)
+                        mail_message.schedule_with_attach(cr, uid, src, dest, sub, body, context=context)
                         msg_sent += partner.name + '\n'
                     except Exception, e:
                         raise osv.except_osv('Error !', e )
@@ -287,7 +295,7 @@ class account_followup_print_all(osv.osv_memory):
             if not msg_unsent:
                 summary = _("All E-mails have been successfully sent to Partners:.\n\n%s") % msg_sent
             else:
-                msg_unsent = _("E-Mail not sent to following Partners, Email not available !\n\n%s") % msg_unsent
+                msg_unsent = _("E-Mail not sent to following Partners, E-mail not available !\n\n%s") % msg_unsent
                 msg_sent = msg_sent and _("\n\nE-Mail sent to following Partners successfully. !\n\n%s") % msg_sent
                 line = '=========================================================================='
                 summary = msg_unsent + line + msg_sent
@@ -296,7 +304,7 @@ class account_followup_print_all(osv.osv_memory):
             context.update({'summary': '\n\n\nE-Mail has not been sent to any partner. If you want to send it, please tick send email confirmation on wizard.'})
 
         return {
-            'name': _('Follwoup Summary'),
+            'name': _('Followup Summary'),
             'view_type': 'form',
             'context': context,
             'view_mode': 'tree,form',
@@ -315,14 +323,15 @@ class account_followup_print_all(osv.osv_memory):
         to_update = res
         data['followup_id'] = 'followup_id' in context and context['followup_id'] or False
         date = 'date' in context and context['date'] or data['date']
-        for id in to_update.keys():
-            if to_update[id]['partner_id'] in data['partner_ids']:
-                cr.execute(
-                    "UPDATE account_move_line "\
-                    "SET followup_line_id=%s, followup_date=%s "\
-                    "WHERE id=%s",
-                    (to_update[id]['level'],
-                    date, int(id),))
+        if not data['test_print']:
+            for id in to_update.keys():
+                if to_update[id]['partner_id'] in data['partner_ids']:
+                    cr.execute(
+                        "UPDATE account_move_line "\
+                        "SET followup_line_id=%s, followup_date=%s "\
+                        "WHERE id=%s",
+                        (to_update[id]['level'],
+                        date, int(id),))
         data.update({'date': context['date']})
         datas = {
              'ids': [],

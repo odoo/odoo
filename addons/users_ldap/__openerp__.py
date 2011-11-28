@@ -50,6 +50,13 @@ anonymous authentication for users, it is only for the master
 LDAP account that is used to verify if a user exists before
 attempting to authenticate it.
 
+Securing the connection with STARTTLS is available for LDAP
+servers supporting it, by enabling the TLS option in the LDAP
+configuration.
+
+For further options configuring the LDAP settings, refer to the
+ldap.conf manpage :manpage:`ldap.conf(5)`.
+
 Security Considerations
 +++++++++++++++++++++++
 Users' LDAP passwords are never stored in the OpenERP database,
@@ -77,6 +84,9 @@ As LDAP users have blank passwords by default in the local
 OpenERP database (which means no access), the first step
 always fails and the LDAP server is queried to do the
 authentication.
+
+Enabling STARTTLS ensures that the authentication query to the
+LDAP server is encrypted.
 
 User Template
 +++++++++++++
@@ -106,7 +116,7 @@ will disable LDAP authentication if installed at the same time.
 
 
     "website" : "http://www.openerp.com",
-    "category" : "Tools",
+    "category" : "Hidden",
     "data" : [
         "users_ldap_view.xml",
         "user_ldap_installer.xml",

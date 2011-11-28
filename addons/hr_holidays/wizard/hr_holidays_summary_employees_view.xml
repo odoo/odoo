@@ -35,7 +35,6 @@
 
 		<record model="ir.values" id="hr_holidays_summary_employee_value">
             <field name="model_id" ref="hr.model_hr_employee" />
-            <field name="object" eval="1" />
             <field name="name">Employee's Holidays</field>
             <field name="key2">client_print_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_hr_holidays_summary_employee'))" />

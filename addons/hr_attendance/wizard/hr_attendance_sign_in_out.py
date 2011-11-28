@@ -29,18 +29,18 @@ class hr_si_so_ask(osv.osv_memory):
     _columns = {
         'name': fields.char('Employees name', size=32, required=True, readonly=True),
         'last_time': fields.datetime('Your last sign out', required=True),
-        'emp_id': fields.char('Empoyee ID', size=32, required=True, readonly=True),
+        'emp_id': fields.many2one('hr.employee', 'Empoyee ID', readonly=True),
         }
 
     def _get_empname(self, cr, uid, context=None):
-        emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
+        emp_id = context.get('emp_id', self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context))
         if emp_id:
             employee = self.pool.get('hr.employee').browse(cr, uid, emp_id, context=context)[0].name
             return employee
         return ''
 
     def _get_empid(self, cr, uid, context=None):
-        emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
+        emp_id = context.get('emp_id', self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context))
         if emp_id:
             return emp_id[0]
         return False
@@ -52,27 +52,28 @@ class hr_si_so_ask(osv.osv_memory):
 
     def sign_in(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]
+        data['emp_id'] = data['emp_id'] and data['emp_id'][0]
         return self.pool.get('hr.sign.in.out').sign_in(cr, uid, data, context)
 
     def sign_out(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]
+        data['emp_id'] = data['emp_id'] and data['emp_id'][0]
         return self.pool.get('hr.sign.in.out').sign_out(cr, uid, data, context)
 
 hr_si_so_ask()
 
 class hr_sign_in_out(osv.osv_memory):
-
     _name = 'hr.sign.in.out'
     _description = 'Sign In Sign Out'
 
     _columns = {
         'name': fields.char('Employees name', size=32, required=True, readonly=True),
         'state': fields.char('Current state', size=32, required=True, readonly=True),
-        'emp_id': fields.char('Employee ID', size=32, required=True, readonly=True),
+        'emp_id': fields.many2one('hr.employee', 'Empoyee ID', readonly=True),
                 }
 
     def _get_empid(self, cr, uid, context=None):
-        emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
+        emp_id = context.get('emp_id', self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context))
         if emp_id:
             employee = self.pool.get('hr.employee').browse(cr, uid, emp_id, context=context)[0]
             return {'name': employee.name, 'state': employee.state, 'emp_id': emp_id[0]}
@@ -88,6 +89,7 @@ class hr_sign_in_out(osv.osv_memory):
         obj_model = self.pool.get('ir.model.data')
         att_obj = self.pool.get('hr.attendance')
         data = self.read(cr, uid, ids, [], context=context)[0]
+        data['emp_id'] = data['emp_id'] and data['emp_id'][0]
         emp_id = data['emp_id']
         att_id = att_obj.search(cr, uid, [('employee_id', '=', emp_id)], limit=1, order='name desc')
         last_att = att_obj.browse(cr, uid, att_id, context=context)
@@ -106,6 +108,7 @@ class hr_sign_in_out(osv.osv_memory):
                 'res_model': 'hr.sign.in.out.ask',
                 'views': [(resource_id,'form')],
                 'type': 'ir.actions.act_window',
+                'context': context,
                 'target': 'new',
             }
 
@@ -113,6 +116,7 @@ class hr_sign_in_out(osv.osv_memory):
         obj_model = self.pool.get('ir.model.data')
         att_obj = self.pool.get('hr.attendance')
         data = self.read(cr, uid, ids, [], context=context)[0]
+        data['emp_id'] = data['emp_id'] and data['emp_id'][0]
         emp_id = data['emp_id']
         att_id = att_obj.search(cr, uid, [('employee_id', '=', emp_id),('action', '!=', 'action')], limit=1, order='name desc')
         last_att = att_obj.browse(cr, uid, att_id, context=context)
@@ -128,6 +132,7 @@ class hr_sign_in_out(osv.osv_memory):
                 'res_model': 'hr.sign.in.out',
                 'views': [(resource_id,'form')],
                 'type': 'ir.actions.act_window',
+                'context': context,
                 'target': 'new',
             }
 

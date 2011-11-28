@@ -9,10 +9,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
-                    <group col="20" colspan="8">
+                    <group>
                         <filter string="Last 30 Days" icon="terp-go-month" name="this_month"
                             domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-week" string="7 Days" separator="1"
+                        <filter icon="terp-go-week" string="7 Days" 
                             domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical" />
                         <filter icon="terp-check"
@@ -33,7 +33,7 @@
                    <group  expand="0" string="Extended Filters..." groups="base.group_extended">
                       <field name="partner_id"/>
                       <separator orientation="vertical"/>
-                      <field name="stage_id" widget="selection" domain="[('type', '=', 'opportunity')]" />
+                      <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
                       <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
                       <separator orientation="vertical"/>
                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -141,7 +141,7 @@
             <field name="name">Opp. Assignment Analysis</field>
             <field name="res_model">crm.lead.report.assign</field>
             <field name="view_type">form</field>
-            <field name="context">{"search_default_group_partner_date": 1, "search_default_group_grade":1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'default_type': 'opportunity', "search_default_group_partner_date": 1, "search_default_group_grade":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_mode">tree</field>
             <field name="domain">[('type', '=', 'opportunity')]</field>
         </record>

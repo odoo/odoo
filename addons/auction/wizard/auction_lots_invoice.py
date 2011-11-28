@@ -49,9 +49,8 @@ class auction_lots_invoice(osv.osv_memory):
         if context is None: 
             context = {}
         res = super(auction_lots_invoice, self).default_get(cr, uid, fields, context=context)
-        service = netsvc.LocalService("object_proxy")
-        lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', context.get('active_ids', []))
-        auction = service.execute(cr.dbname, uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
+        lots = self.pool.get('auction.lots').read(cr, uid, context.get('active_ids', []))
+        auction = self.pool.get('auction.dates').read(cr, uid, [lots[0]['auction_id'][0]])[0]
 
         price = 0.0
         price_topay = 0.0
@@ -59,7 +58,7 @@ class auction_lots_invoice(osv.osv_memory):
         for lot in lots:
             price_lot = lot['obj_price'] or 0.0
 
-            costs = service.execute(cr.dbname, uid, 'auction.lots', 'compute_buyer_costs', [lot['id']])
+            costs = self.pool.get('auction.lots').compute_buyer_costs(cr, uid, [lot['id']])
             price_lot += costs['amount']
             price += price_lot
 
@@ -68,7 +67,7 @@ class auction_lots_invoice(osv.osv_memory):
                     raise osv.except_osv(_('UserError'), _('Two different buyers for the same invoice !\nPlease correct this problem before invoicing'))
                 uid = lot['ach_uid'][0]
             elif lot['ach_login']:
-                refs = service.execute(uid, 'res.partner', 'search', [('ref','=',lot['ach_login'])])
+                refs = self.pool.get('res.partner').search(cr, uid, [('ref','=',lot['ach_login'])])
                 if len(refs):
                     uid = refs[-1]
             if 'ach_pay_id' in lot and lot['ach_pay_id']:
@@ -105,7 +104,6 @@ class auction_lots_invoice(osv.osv_memory):
         """
         if context is None: 
             context = {}
-        service = netsvc.LocalService("object_proxy")
         datas = {'ids' : context.get('active_ids',[])}
         res = self.read(cr, uid, ids, ['number','ach_uid'])
         res = res and res[0] or {}

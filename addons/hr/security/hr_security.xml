@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="1">
+    <data noupdate="1">
 
     <record id="base.group_hr_user" model="res.groups">
         <field name="name">Human Resources / HR Officer</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
     <record id="base.group_hr_manager" model="res.groups">
         <field name="name">Human Resources / HR Manager</field>
         <field name="implied_ids" eval="[(4, ref('base.group_hr_user'))]"/>
     </record>
-
-</data>
+    <record id="hr_dept_comp_rule" model="ir.rule">
+        <field name="name">Department multi company rule</field>
+        <field model="ir.model" name="model_id" ref="model_hr_department"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+    <record id="hr_job_comp_rule" model="ir.rule">
+        <field name="name">Job multi company rule</field>
+        <field model="ir.model" name="model_id" ref="model_hr_job"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+    
+    </data>
 </openerp>

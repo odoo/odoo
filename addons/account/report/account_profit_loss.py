@@ -141,11 +141,15 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
                           'code': cal_list['expense'][i].code,
                           'name': cal_list['expense'][i].name,
                           'level': cal_list['expense'][i].level,
-                          'balance':cal_list['expense'][i].balance,
+                          'balance': cal_list['expense'][i].balance != 0 and \
+                                    cal_list['expense'][i].balance * cal_list['expense'][i].user_type.sign or \
+                                    cal_list['expense'][i].balance,
                           'code1': cal_list['income'][i].code,
                           'name1': cal_list['income'][i].name,
                           'level1': cal_list['income'][i].level,
-                          'balance1':cal_list['income'][i].balance,
+                          'balance1': cal_list['income'][i].balance != 0 and \
+                                        cal_list['income'][i].balance * cal_list['income'][i].user_type.sign or \
+                                        cal_list['income'][i].balance,
                           }
                     self.result_temp.append(temp)
                 else:
@@ -158,7 +162,9 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
                               'code1': cal_list['income'][i].code,
                               'name1': cal_list['income'][i].name,
                               'level1': cal_list['income'][i].level,
-                              'balance1':cal_list['income'][i].balance,
+                              'balance1': cal_list['income'][i].balance != 0 and \
+                                            cal_list['income'][i].balance * cal_list['income'][i].user_type.sign \
+                                            or cal_list['income'][i].balance,
                               }
                         self.result_temp.append(temp)
                     if  i < len(cal_list['expense']):
@@ -166,7 +172,9 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
                               'code': cal_list['expense'][i].code,
                               'name': cal_list['expense'][i].name,
                               'level': cal_list['expense'][i].level,
-                              'balance':cal_list['expense'][i].balance,
+                              'balance': cal_list['expense'][i].balance != 0 and \
+                                            cal_list['expense'][i].balance * cal_list['expense'][i].user_type.sign \
+                                            or cal_list['expense'][i].balance,
                               'code1': '',
                               'name1': '',
                               'level1': False,

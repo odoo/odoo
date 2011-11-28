@@ -7,7 +7,7 @@
             <field name="model">res.company</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <notebook>
+                <notebook position="inside">
                     <page string="Overdue Payments" position="inside">
                         <separator string="Overdue Payments Message" colspan="4"/>
                         <field name="overdue_msg" nolabel="1" colspan ="4"/>
@@ -24,6 +24,7 @@
             <field name="arch" type="xml">
                 <field name="currency_id" position="after">
                       <field name="property_reserve_and_surplus_account" colspan="2"/>
+                      <field name="paypal_account" />
                 </field>
             </field>
         </record>

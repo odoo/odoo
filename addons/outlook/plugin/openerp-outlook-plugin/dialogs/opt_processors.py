@@ -316,3 +316,5 @@ class ProtocolComboProcessor(ComboProcessor):
         if sel == -1:
             win32gui.SendMessage(combo, win32con.CB_SETCURSEL, 1, 0)
         self.active_control_id = self.control_id
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

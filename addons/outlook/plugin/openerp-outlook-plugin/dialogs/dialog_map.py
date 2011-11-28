@@ -186,7 +186,6 @@ def check():
         win32ui.MessageBox("No server running on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
         return False
     if str(NewConn.getitem('_login')) == 'False':
-        win32ui.MessageBox("Please login to the database first", "OpenERP Connection", flag_excl)
         return False
     return True
 
@@ -1807,3 +1806,5 @@ dialog_map = {
                     (CommandButtonProcessor,     "IDPB_SELECT_STATE IDC_LIST_STATE IDD_SELECT_STATE" , SelectStateFromList,()),
                 ),
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

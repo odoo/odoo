@@ -22,7 +22,7 @@
 {
     'name': 'Analytic Journal Billing Rate, Define the default invoicing rate for a specific journal',
     'version': '1.0',
-    'category': 'Human Resources',
+    'category': 'Hidden',
     'description': """
 This module allows you to define what is the default invoicing rate for a specific journal on a given account.
 ==============================================================================================================
