@@ -1029,7 +1029,8 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
     set_bundle: function(translation_bundle) {
         var self = this;
         this.db = {};
-        var modules = _.keys(translation_bundle.modules).sort();
+        var modules = _.keys(translation_bundle.modules);
+        modules.sort();
         if (_.include(modules, "web")) {
             modules = ["web"].concat(_.without(modules, "web"));
         }
