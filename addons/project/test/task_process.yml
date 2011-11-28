@@ -5,12 +5,12 @@
     self.do_pending(cr, uid, [ref("project_task_1")])
     context.update({"active_id": ref("project_task_1")})
 -
-  I Check state  of task after put in pending.
+  I check state  of task after put in pending.
 -
   !assert {model: project.task, id: project_task_1, severity: error, string: task should be in pending state}:
     - state == "pending"
 -
-  !record {model: project.task.delegate, id: delegate_id}: 
+  !record {model: project.task.delegate, id: delegate_id}:
     user_id: res_users_analyst
     planned_hours: 12.0
     planned_hours_me: 2.0
@@ -27,7 +27,7 @@
     assert task.planned_hours == 2.0, "Planning hours is not correct after delegated."
     assert task.state == "pending", "Task should be in Pending after delegated."
 -
-  I Re-open the task.
+  I re-open the task.
 -
   !python {model: project.task}: |
     self.do_reopen(cr, uid, [ref("project_task_1")])
@@ -37,7 +37,7 @@
   !assert {model: project.task, id: project_task_1, severity: error, string: task should be open.}:
     - state == "open"
 -
-  !record {model: project.task.reevaluate, id: reevaluate_id}: 
+  !record {model: project.task.reevaluate, id: reevaluate_id}:
     remaining_hours : 120
 -
   I reevaluate task with remaining hours.
@@ -55,7 +55,7 @@
   !python {model: project.task}: |
     self.do_close(cr, uid, [ref("project_task_1")])
 -
-  I Check state after closed.
+  I check state after closed.
 -
   !assert {model: project.task, id: project_task_1, severity: error, string: task is in open state}:
     - state == "done"

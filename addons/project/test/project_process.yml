@@ -25,17 +25,17 @@
   !python {model: project.project}: |
     self.set_pending(cr, uid, [ref("project_integrate_openerp")])
 -
-  I Check state after put in pending.
+  I check state after put in pending.
 -
   !assert {model: project.project, id: project_integrate_openerp, severity: error, string: Project should be in pending state}:
        - state == "pending"
 -
-  I Re-open the project.
+  I re-open the project.
 -
   !python {model: project.project}: |
       self.set_open(cr, uid, [ref("project_integrate_openerp")])
 -
-  I Check state after reopen.
+  I check state after reopen.
 -
   !assert {model: project.project, id: project_integrate_openerp, severity: error, string: Project should be open.}:
        - state == "open"
@@ -45,7 +45,7 @@
   !python {model: project.project}: |
     self.set_done(cr, uid, [ref("project_integrate_openerp")])
 -
-  I Check state after closed.
+  I check state after closed.
 -
   !assert {model: project.project, id: project_integrate_openerp, severity: error, string: Project should be close.}:
        - state == "close"
