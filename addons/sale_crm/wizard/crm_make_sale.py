@@ -103,12 +103,13 @@ class crm_make_sale(osv.osv_memory):
                 }
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid
-                new_id = sale_obj.create(cr, uid, vals)
+                new_id = sale_obj.create(cr, uid, vals, context=context)
+                sale_order = sale_obj.browse(cr, uid, new_id, context=context)
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
                 message = _("Opportunity  '%s' is converted to Quotation.") % (case.name)
                 self.log(cr, uid, case.id, message)
-                case_obj.message_append(cr, uid, [case], _("Converted to Sales Quotation(id: %s).") % (new_id), context=context)
+                case_obj.message_append(cr, uid, [case], _("Converted to Sales Quotation(%s).") % (sale_order.name), context=context)
 
             if make.close:
                 case_obj.case_close(cr, uid, data)
@@ -148,8 +149,10 @@ class crm_make_sale(osv.osv_memory):
     }
     _defaults = {
          'shop_id': _get_shop_id,
-         'close': True,
+         'close': False,
          'partner_id': _selectPartner,
     }
 
 crm_make_sale()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -61,7 +61,7 @@
   On change of operation type it sets source location, destination location and to invoice field
 -
   !python {model: mrp.repair.line}: |
-    self.onchange_operation_type(cr, uid, [ref('mrp_repair_rma0')], type, False)
+    self.onchange_operation_type(cr, uid, [ref('mrp_repair_rma0')], type, False, ref('base.main_company'), {})
 -
   On change of partner sets the values of partner address, partner invoice address and pricelist.
 -

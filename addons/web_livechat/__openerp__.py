@@ -39,8 +39,13 @@ Add "Support" button in header from where you can access OpenERP Support.
     'css' : [
         'static/src/css/lc.css',
     ],
+    'qweb' : [
+        "static/src/xml/*.xml",
+    ],
     'installable': True,
     'active': False,
     'certificate': '0013762192410413',
     'images': ['static/src/img/web_livechat_support.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

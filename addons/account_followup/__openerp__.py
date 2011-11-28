@@ -20,12 +20,12 @@
 ##############################################################################
 
 {
-    'name': 'Followups Management',
+    'name': 'Followup Management',
     'version': '1.0',
     'category': 'Accounting & Finance',
     'complexity': "normal",
     'description': """
-Modules to automate letters for unpaid invoices, with multi-level recalls.
+Module to automate letters for unpaid invoices, with multi-level recalls.
 ==========================================================================
 
 You can define your multiple levels of recall through the menu:

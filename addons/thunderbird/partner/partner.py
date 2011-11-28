@@ -281,3 +281,5 @@ class thunderbird_partner(osv.osv_memory):
         return object
 
 thunderbird_partner()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

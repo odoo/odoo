@@ -44,8 +44,8 @@
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Associated Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Parent" icon="terp-folder-orange" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <filter string="State" icon="terp-folder-green" domain="[]" context="{'group_by':'state'}" groups="base.group_no_one"/>
+                        <filter string="Parent Account" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" groups="base.group_no_one"/>
                     </group>
                 </search>
             </field>
@@ -91,15 +91,18 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Account Data">
-                            <field name="partner_id"/>
-                            <field name="contact_id"/>
-                            <field name="currency_id"/>
-                            <newline/>
-                            <field name="date_start"/>
-                            <field name="date"/>
-                            <newline/>
-                            <field name="quantity_max"/>
-                            <field name="user_id"/>
+                            <group colspan="2" col="2">
+                                <separator colspan="2" string="Contacts"/>
+                                <field name="partner_id" on_change="on_change_partner_id(partner_id)"/>
+                                <field name="contact_id"/>
+                                <field name="user_id"/>
+                            </group>
+                            <group colspan="2" col="2" name="contract">
+                                <separator colspan="2" string="Contract Data"/>
+                                <field name="date_start"/>
+                                <field name="date"/>
+                                <field name="quantity_max"/>
+                            </group>
                         </page>
                         <page string="Description">
                             <field colspan="4" name="description" nolabel="1"/>
@@ -138,7 +141,7 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
-            <field name="help">The normal chart of accounts has a structure defined by the legal requirement of the country. The analytic chart of account structure should reflect your own business needs in term of costs/revenues reporting. They are usually structured by contracts, projects, products or departements. Most of the OpenERP operations (invoices, timesheets, expenses, etc) generate analytic entries on the related account.</field>
+            <field name="help">The normal chart of accounts has a structure defined by the legal requirement of the country. The analytic chart of accounts structure should reflect your own business needs in term of costs/revenues reporting. They are usually structured by contracts, projects, products or departements. Most of the OpenERP operations (invoices, timesheets, expenses, etc) generate analytic entries on the related account.</field>
         </record>
 
         <menuitem groups="analytic.group_analytic_accounting" id="next_id_40"
@@ -255,7 +258,6 @@
             <field eval="'account.analytic.account'" name="model"/>
             <field name="name">Open Account Tree</field>
             <field eval="'ir.actions.act_window,%d'%action_account_tree1" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <record id="account_analytic_line_extended_form" model="ir.ui.view">

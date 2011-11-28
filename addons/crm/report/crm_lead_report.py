@@ -47,28 +47,41 @@ MONTHS = [
 ]
 
 class crm_lead_report(osv.osv):
-    """ CRM Lead Report """
+    """ CRM Lead Analysis """
     _name = "crm.lead.report"
     _auto = False
-    _description = "CRM Lead Report"
+    _description = "CRM Lead Analysis"
+    _rec_name = 'deadline_day'
 
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True),
+        # grouping fields based on Deadline Date
+        'deadline_year': fields.char('Ex. Closing Year', size=10, readonly=True, help="Expected closing year"),
+        'deadline_month':fields.selection(MONTHS, 'Exp. Closing Month', readonly=True, help="Expected closing month"),
+        'deadline_day': fields.char('Exp. Closing Day', size=10, readonly=True, help="Expected closing day"),
+
+        # grouping fields based on Create Date
+        'creation_year': fields.char('Creation Year', size=10, readonly=True, help="Creation year"),
+        'creation_month': fields.selection(MONTHS, 'Creation Month', readonly=True, help="Creation month"),
+        'creation_day': fields.char('Creation Day', size=10, readonly=True, help="Creation day"),
+
+        # other date fields
+        'create_date': fields.datetime('Create Date', readonly=True),
+        'opening_date': fields.date('Opening Date', readonly=True),
+        'date_closed': fields.date('Close Date', readonly=True),
+
+        # durations
+        'delay_open': fields.float('Delay to Open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
+        'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
+        'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
+
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'channel_id':fields.many2one('crm.case.channel', 'Channel', readonly=True),
         'type_id':fields.many2one('crm.case.resource.type', 'Campaign', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'creation_month':fields.selection(MONTHS, 'Creation Date', readonly=True),
-        'deadline_month':fields.selection(MONTHS, 'Exp. Closing', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'create_date': fields.datetime('Create Date', readonly=True, select=True),
-        'day': fields.char('Day', size=128, readonly=True),
         'email': fields.integer('# Emails', size=128, readonly=True),
-        'delay_open': fields.float('Delay to Open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
-        'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
@@ -76,9 +89,6 @@ class crm_lead_report(osv.osv):
                          domain="['|',('section_id','=',False),('section_id','=',section_id)]" , readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
-        'opening_date': fields.date('Opening Date', readonly=True, select=True),
-        'creation_date': fields.date('Creation Date', readonly=True, select=True),
-        'date_closed': fields.date('Close Date', readonly=True, select=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
@@ -87,6 +97,10 @@ class crm_lead_report(osv.osv):
             ('opportunity','Opportunity'),
         ],'Type', help="Type is used to separate Leads and Opportunities"),
     }
+    
+    
+    
+    
     def init(self, cr):
 
         """
@@ -98,13 +112,18 @@ class crm_lead_report(osv.osv):
             CREATE OR REPLACE VIEW crm_lead_report AS (
                 SELECT
                     id,
-                    to_char(c.date_deadline, 'YYYY') as name,
+
+                    to_char(c.date_deadline, 'YYYY') as deadline_year,
                     to_char(c.date_deadline, 'MM') as deadline_month,
-                    to_char(c.date_deadline, 'YYYY-MM-DD') as day,
+                    to_char(c.date_deadline, 'YYYY-MM-DD') as deadline_day,
+
+                    to_char(c.create_date, 'YYYY') as creation_year,
                     to_char(c.create_date, 'MM') as creation_month,
-                    to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
+                    to_char(c.create_date, 'YYYY-MM-DD') as creation_day,
+
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
+
                     c.state,
                     c.user_id,
                     c.probability,

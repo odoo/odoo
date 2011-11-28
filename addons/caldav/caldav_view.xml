@@ -45,6 +45,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('calendar_collection','=',True)]</field>
+            <field name="context">{'default_calendar_collection': True}</field>
         </record>
 
         <record model="ir.actions.act_window" id="document.action_document_directory_form">

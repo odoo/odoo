@@ -55,6 +55,18 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="account_invoice_supplier_form_layout">
+          <field name="name">account.invoice.supplier.form.layout</field>
+          <field name="model">account.invoice</field>
+          <field name="inherit_id" ref="account.invoice_supplier_form"/>
+          <field name="type">form</field>
+          <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line']/tree/*[1]" position="before">
+              <field name="state" invisible="1"/>
+            </xpath>
+          </field>
+        </record>
+
 <!-- notification message views -->
     <record model="ir.ui.view" id="view_notify_message_search">
         <field name="name">notify.message.search</field>

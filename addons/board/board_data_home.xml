@@ -44,15 +44,11 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="">
-          <hpaned>
-            <child1>
+          <board style="1">
+            <column>
               <action name="%(action_application_tiles)d"/>
-            </child1>
-            <child2>
-              <action name="%(action_res_widgets_tweets)d"/>
-              <action name="%(action_res_widgets_events)d"/>
-            </child2>
-          </hpaned>
+            </column>
+          </board>
         </form>
       </field>
     </record>

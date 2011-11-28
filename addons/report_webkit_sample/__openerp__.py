@@ -54,3 +54,5 @@ You have to create the print buttons by calling the wizard. For more details see
     "certificate" : "00436592682591421981",
     'images': ['images/webkit_invoice_report.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

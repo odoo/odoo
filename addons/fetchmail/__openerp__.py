@@ -74,3 +74,5 @@ mail.
     'certificate' : '00692978332890137453',
     'images': ['images/1_email_servers.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
