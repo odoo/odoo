@@ -7,7 +7,7 @@
     location_dest_id: stock.stock_location_customers
     location_id: stock.stock_location_stock
 -
-  Now, withe help of 'Scrap Move' wizard, I scap the move of same Quantity.
+  Now, with the help of 'Scrap Move' wizard, I scap the move of same Quantity.
 -
   !python {model: stock.move.scrap}: |
     context = {'active_model':'stock.move', 'active_id': ref('stock_move_4'), 'active_ids': [ref('stock_move_4')]}

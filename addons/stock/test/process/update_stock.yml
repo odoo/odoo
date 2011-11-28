@@ -1,33 +1,32 @@
 -
   In order to test the stock module, I will update the current stock of the product.
-- 
+-
   I assignd the created location in to warehouse.
-- 
+-
   !record {model: stock.warehouse, id: stock.warehouse0}:
     lot_stock_id: stock_location_stock
 -
-  I create Stock Production Lot for product CPU2
+  I create stock production lot for product CPU2
 -
   !record {model: stock.production.lot, id: stock_production_lot0}:
     product_id: product.product_product_cpu2
     date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     name: 0000001
 -
-  I trace the Stock Production Lot for product CPU2
--
-  !python {model: stock.production.lot }: |
-    self.action_traceability(cr,uid,[ref('stock_production_lot0')], {'lang': 'en_US', 'tz': False, 'active_model': 'ir.ui.menu', 'field': '', 'type': ''})
--
   I take one product CPU2 and with the help of 'Change Product Quantity' wizard I update the product stock.
   Changes the Product Quantity by making a Physical Inventory.
 -
   !python {model: stock.change.product.qty}: |
-    #stock.stock_location_stock
     product = self.pool.get('product.product').browse(cr, uid, ref('product.product_product_cpu2'))
     fields = {'location_id' : ref('stock_location_stock'), 'new_quantity': 2, 'product_id': product.id, 'prodlot_id': ref('stock.stock_production_lot0')}
     ids = self.create(cr, uid, fields)
     self.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
     assert product.qty_available == 2,'Product Quantity is not Updated'
+-
+  I trace the Stock Production Lot for product CPU2
+-
+  !python {model: stock.production.lot }: |
+    self.action_traceability(cr,uid,[ref('stock_production_lot0')], {'lang': 'en_US', 'tz': False, 'active_model': 'ir.ui.menu', 'field': '', 'type': ''})
 -
   I check Physical Inventory created.
 -
@@ -44,15 +43,21 @@
   !python {model: stock.move}: |
     ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_cpu2'))])
     assert [x.state for x in self.browse(cr, uid, ids) if x.state == 'done'], 'stock moves should be done!'
-
-- 
-  Now for the test chain location functionality,
+-
+  For the test chain location functionality,
+  I create stock production lot for product 'Sprouting Foods'.
+-
+  !record {model: stock.production.lot, id: stock_production_lot2}:
+    product_id: product.product_product_sprouting
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    name: 0000002
+-
   I update product 'Sprouting Foods' with the help of 'Change Product Quantity' wizard
   and assign a location 'Refrigerated Vehicles' to test the chained location flow.
-- 
+-
   !python {model: stock.change.product.qty}: |
     product = self.pool.get('product.product').browse(cr, uid, ref('product.product_product_sprouting'))
-    fields = {'location_id' : ref('refrigerate_location_stock'), 'new_quantity': 1, 'product_id': product.id}
+    fields = {'location_id' : ref('refrigerate_location_stock'), 'new_quantity': 1, 'product_id': product.id, 'prodlot_id': ref('stock.stock_production_lot2')}
     ids = self.create(cr, uid, fields)
     self.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
 
@@ -69,4 +74,8 @@
         assert i.location_dest_id.name == 'Cold Storage',"Destination location must be 'Cold Storage' because the source location is 'Refrigerated Vehicles'"
       if i.location_id.name == 'Cold Storage':
         assert i.location_dest_id.name == 'Customers',"Destination location must be 'Customers' because the source location is 'Cold Storage'"
-      
+-
+  I trace the stock production lot for product 'Sprouting Foods'
+-
+  !python {model: stock.production.lot }: |
+    self.action_traceability(cr,uid,[ref('stock_production_lot2')], {'active_model': 'ir.ui.menu', 'field': '', 'type': ''})

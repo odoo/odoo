@@ -1,13 +1,15 @@
-- 
-  In order to test partial delivery and back orders, I will use a delivery order with 5 CPU1 and 5 CPU3
 -
-  I confirm and force the availability of all products on the picking OUT001
-- 
+  In order to test partial delivery and back orders,
+  I select a delivery order of CPU1 and CPU3 product each contain five quantities.
+-
+  I confirm the picking 'OUT001' and make it available .
+-
   !python {model: stock.picking}: |
     self.draft_force_assign(cr, uid, [ref('stock.stock_picking_1')], {})
     self.force_assign(cr, uid, [ref('stock.stock_picking_1')], {})
 -
-  After having confirmed the picking and its two lines, I add a new move line in draft state with 7 FAN2
+  After confirmed the picking and its two lines,
+  I add a new move line in draft state with 'FAN2' of seven quantities.
 -
   !record {model: stock.move, id: stock_move_3}:
     product_id: product.product_product_fan2
@@ -17,7 +19,7 @@
     picking_id: stock_picking_1
 - |
   I click on 'Process Now' to process the delivery order and I change quantities to:
-  7 CPU1, 0 CPU3, 3 FAN2 and a new product of 4 PC1
+  seven for CPU1, zero for CPU3, three for FAN2 and a new product PC1 for four quantites for test the partial delivery.
 -
   !python {model: stock.picking}: |
     result = self.action_process(cr, uid, [ref('stock.stock_picking_1')], {})['res_id']
@@ -46,7 +48,7 @@
     }, {})
     self.pool.get('stock.partial.picking').do_partial(cr, uid, [result], {})
 -
-  I test that the back order contains 5 CPU3, 4 FAN2 and nothing else
+  I test that the back order contains five CPU3 and four FAN2.
 -
   !python {model: stock.picking}: |
     pick = self.browse(cr, uid, ref('stock.stock_picking_1'), {})
@@ -59,4 +61,19 @@
             assert line.product_qty == 0.0, "Wrong quantity for PC1 back order"
         else:
             assert line.product_qty == 0.0, "Wrong quantity for %s back order" % (line.product_id.code,)
+-
+  After the partial picking I check the delivery order or backorder and stock moves.
+-
+  !python {model: stock.picking}: |
+    result = self.search(cr, uid, [('name','=','OUT/00001')])
+    pick = self.pool.get('stock.picking').browse(cr, uid, result)
+    stock = self.pool.get('stock.move')
+    assert pick[0].state == 'assigned',"After partial picking the remaining product's delivery order must be in 'Ready to process' state"
+    assert pick[0].backorder_id.state == 'done',"The backorder state should be 'Done'"
+    done_move = stock.search(cr, uid, [('picking_id','=',pick[0].backorder_id.id)])
+    assign_move = stock.search(cr, uid, [('picking_id','=',pick[0].id)])
+    for move in stock.browse(cr, uid, done_move):
+      assert move.state == 'done',"Stock move of %s picking should be in 'Done' state"%(move.picking_id)
+    for move in stock.browse(cr, uid, assign_move):
+      assert move.state == 'assigned' or 'draft',"Stock move of %s picking should be in 'Available' state"%(move.picking_id)
 
