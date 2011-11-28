@@ -1,14 +1,14 @@
 -
-  In Order to test process of Job Position,
+  I test the process of Job position in hr module of OpenERP,
 - 
-  I open Job Postion for "Jr. Application Engineer"
+  I open Job Postion for "Jr. Application Engineer".
 -
   !python {model: hr.job}: |
     self.job_open(cr, uid, [ref('job_jr_appli')])
 -
   I check state of Job Position after opening it.
 -
-  !assert {model: hr.job, id: job_jr_appli}:
+  !assert {model: hr.job, id: job_jr_appli, string: Job position is in 'open' state and no_of_recruitment = 0}:
     - state == 'open'
     - no_of_recruitment == 0
 -
@@ -19,7 +19,7 @@
 -
   I check 'state' and number of 'Expected in Recruitment' after initiating the recruitment
 -
-  !assert {model: hr.job, id: job_jr_appli}:
+  !assert {model: hr.job, id: job_jr_appli, string: Job position is in 'recruit' state and no_of_recruitment = 1.0}:
     - state == 'recruit'
     - no_of_recruitment == 1.0
 -
@@ -33,8 +33,8 @@
   !python {model: hr.job}: |
     self.job_old(cr, uid, [ref('job_jr_appli')])
 -
-  I check state of Job position and  number of Expected in Recruitment after closed Job position.
+  I check 'state' and number of 'Expected in Recruitment' after closing the Job position.
 -
-  !assert {model: hr.job, id: job_jr_appli}:
+  !assert {model: hr.job, id: job_jr_appli, string: Job position is in 'old' state and no_of_recruitment = 0}:
     - state == 'old'
     - no_of_recruitment == 0
