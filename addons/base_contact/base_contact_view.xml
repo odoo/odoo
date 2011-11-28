@@ -251,6 +251,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <field name="name" position="replace">
+                <field name="name" />
                 <field name='job_ids' string='# of Contacts'/>
             </field>
         </field>
@@ -262,65 +263,23 @@
         <field name="inherit_id" ref="base.view_partner_address_form1"/>
         <field name='type'>form</field>
         <field name='arch' type='xml'>
-            <field name="type" position="replace">
+            <field name="type" position="replace" />
+            <field name="title" position="replace" />
+            <field name="function" position="replace" />
+            <field name="name" position="replace" />
+            <field name="active" position="after">
+                <separator string="Contact" colspan="6" />
+                <group colspan="6" col="2">
+                    <field name="title" />
+                    <field name="contact_firstname" />
+                    <field name="contact_name" />
+                </group>
             </field>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_partner_address_form_inherited1">
-        <field name='name'>res.partner.address.form.inherited1</field>
-        <field name='model'>res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_form1"/>
-        <field name='type'>form</field>
-        <field name='arch' type='xml'>
-            <field name="name" position="replace">
-            </field>
-        </field>
-    </record>
-
-    <record id='view_partner_address_form_inherited2' model='ir.ui.view'>
-        <field name='name'>res.partner.address.form.inherited2</field>
-        <field name='model'>res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_form1"/>
-        <field name='type'>form</field>
-        <field name='arch' type='xml'>
-            <field name="title" position="replace">
-            </field>
-        </field>
-    </record>
-
-    <record id='view_partner_address_form_inherited3' model='ir.ui.view'>
-        <field name='name'>res.partner.address.form.inherited3</field>
-        <field name='model'>res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_form1"/>
-        <field name='type'>form</field>
-        <field name='arch' type='xml'>
-            <field name="function" position="replace">
-            </field>
-        </field>
-    </record>
-
-    <record id='view_partner_address_form_inherited4' model='ir.ui.view'>
-        <field name='name'>res.partner.address.form.inherited4</field>
-        <field name='model'>res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_form1"/>
-        <field name='type'>form</field>
-        <field name='arch' type='xml'>
-            <field name='mobile' position="replace">
-            </field>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_partner_address_form_inherited6">
-        <field name='name'>res.partner.address.form.inherited6</field>
-        <field name='model'>res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_form1"/>
-        <field name='type'>form</field>
-        <field name='arch' type='xml'>
             <field name="partner_id" position="replace">
                 <field name='partner_id' select='1'/>
-                <field name='type' select='2'/>
+                <field name='type' select='2' invisible="1"/>
                 <field name='job_id' invisible="1"/>
+                <field name="function" />
             </field>
         </field>
     </record>
@@ -332,7 +291,7 @@
         <field name="inherit_id" ref="base.view_res_partner_address_filter"/>
         <field name="arch" type="xml">
             <search string="Search Contact">
-                   <field name="job_ids"/>
+                <field name="job_ids"/>
             </search>
         </field>
     </record>

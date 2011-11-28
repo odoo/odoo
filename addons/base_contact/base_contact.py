@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+import addons
 
 class res_partner_contact(osv.osv):
     """ Partner Contact """
@@ -68,10 +69,16 @@ class res_partner_contact(osv.osv):
                                  relation='res.partner.job', string='Main Job'),
         'email': fields.char('E-Mail', size=240),
         'comment': fields.text('Notes', translate=True),
-        'photo': fields.binary('Image'),
+        'photo': fields.binary('Photo'),
 
     }
+
+    def _get_photo(self, cr, uid, context=None):
+        photo_path = addons.get_module_resource('base_contact', 'images', 'photo.png')
+        return open(photo_path, 'rb').read().encode('base64')
+
     _defaults = {
+        'photo' : _get_photo,
         'active' : lambda *a: True,
     }
 
@@ -180,6 +187,8 @@ class res_partner_address(osv.osv):
     _columns = {
         'address_id' : fields.many2one('res.partner.location', 'Location'),
         'contact_id' : fields.many2one('res.partner.contact', 'Contact'),
+        'contact_firstname' : fields.related('contact_id', 'first_name', type='char', size=64, string='FirstName'),
+        'contact_name' : fields.related('contact_id', 'name', type='char', size='64', string="LastName"),
         'function': fields.char('Partner Function', size=64, help="Function of this contact with this partner"),
         'date_start': fields.date('Date Start',help="Start date of job(Joining Date)"),
         'date_stop': fields.date('Date Stop', help="Last date of job"),
