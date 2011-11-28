@@ -47,3 +47,5 @@ that exceeds minimum amount set by configuration wizard.
     'certificate' : '00436592682510544157',
 
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

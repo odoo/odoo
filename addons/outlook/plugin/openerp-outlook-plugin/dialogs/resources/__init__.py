@@ -28,3 +28,5 @@ def GetImageParamsFromBitmapID(rc_parser, bmpid):
             filename = os.path.join( os.path.dirname( __file__ ), filename)
         return 0, filename, win32con.LR_LOADFROMFILE
     assert 0, "not reached"
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

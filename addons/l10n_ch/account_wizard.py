@@ -42,3 +42,5 @@ class WizardMultiChartsAccounts(osv.osv_memory):
 
 WizardMultiChartsAccounts()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

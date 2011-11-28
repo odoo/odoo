@@ -61,7 +61,7 @@ class account_analytic_account(osv.osv):
                     res[id][f] = [int(id * 1000000 + int(x[0])) for x in result]
             elif f == 'last_worked_invoiced_date':
                 for id in ids:
-                    res[id][f] = 0.0
+                    res[id][f] = False
                 if parent_ids:
                     cr.execute("SELECT account_analytic_line.account_id, MAX(date) \
                             FROM account_analytic_line \
@@ -74,8 +74,8 @@ class account_analytic_account(osv.osv):
                         res[account_id][f] = sum
                 for account in accounts:
                     for child in account.child_ids:
-                        if res[account.id].get(f, '') < res.get(child.id, {}).get(f, ''):
-                            res[account.id][f] = res.get(child.id, {}).get(f, '')
+                        if res[account.id][f] < res.get(child.id, {}).get(f):
+                            res[account.id][f] = res.get(child.id, {}).get(f, False)
             elif f == 'ca_to_invoice':
                 for id in ids:
                     res[id][f] = 0.0
@@ -123,7 +123,7 @@ class account_analytic_account(osv.osv):
                     res[id][f] = round(res.get(id, {}).get(f, 0.0), dp) + round(res2.get(id, 0.0), 2)
             elif f == 'last_invoice_date':
                 for id in ids:
-                    res[id][f] = ''
+                    res[id][f] = False
                 if parent_ids:
                     cr.execute ("SELECT account_analytic_line.account_id, \
                                 DATE(MAX(account_invoice.date_invoice)) \
@@ -137,11 +137,11 @@ class account_analytic_account(osv.osv):
                         res[account_id][f] = lid
                 for account in accounts:
                     for child in account.child_ids:
-                        if res[account.id][f] < res.get(child.id, {}).get(f, ''):
-                            res[account.id][f] = res.get(child.id, {}).get(f, '')
+                        if res[account.id][f] < res.get(child.id, {}).get(f):
+                            res[account.id][f] = res.get(child.id, {}).get(f, False)
             elif f == 'last_worked_date':
                 for id in ids:
-                    res[id][f] = ''
+                    res[id][f] = False
                 if parent_ids:
                     cr.execute("SELECT account_analytic_line.account_id, MAX(date) \
                             FROM account_analytic_line \
@@ -154,8 +154,8 @@ class account_analytic_account(osv.osv):
                         res[account_id][f] = lwd
                 for account in accounts:
                     for child in account.child_ids:
-                        if res[account.id][f] < res.get(child.id, {}).get(f, ''):
-                            res[account.id][f] = res.get(child.id, {}).get(f, '')
+                        if res[account.id][f] < res.get(child.id, {}).get(f):
+                            res[account.id][f] = res.get(child.id, {}).get(f, False)
             elif f == 'hours_qtt_non_invoiced':
                 for id in ids:
                     res[id][f] = 0.0
@@ -376,13 +376,11 @@ class account_analytic_account(osv.osv):
 
     def _is_overdue_quantity(self, cr, uid, ids, fieldnames, args, context=None):
         result = dict.fromkeys(ids, 0)
-
         for record in self.browse(cr, uid, ids, context=context):
-            if record.quantity == 0.0 and record.quantity_max == 0.0:
-                result[record.id] = 0
-            else:
+            if record.quantity_max > 0.0:
                 result[record.id] = int(record.quantity >= record.quantity_max)
-
+            else:
+                result[record.id] = 0
         return result
 
     def _get_analytic_account(self, cr, uid, ids, context=None):

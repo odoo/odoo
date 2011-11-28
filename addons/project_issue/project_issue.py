@@ -48,6 +48,13 @@ class project_issue(crm.crm_case, osv.osv):
     _order = "priority, create_date desc"
     _inherit = ['mail.thread']
 
+    def write(self, cr, uid, ids, vals, context=None):
+        #Update last action date everytime the user change the stage, the state or send a new email
+        logged_fields = ['type_id', 'state', 'message_ids']
+        if any([field in vals for field in logged_fields]):
+            vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
+        return super(project_issue, self).write(cr, uid, ids, vals, context)
+
     def case_open(self, cr, uid, ids, *args):
         """
         @param self: The object pointer

@@ -54,3 +54,4 @@ class auction_lots_cancel(osv.osv):
         _columns = {
         }
 auction_lots_cancel()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

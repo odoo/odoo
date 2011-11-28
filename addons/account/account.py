@@ -404,7 +404,7 @@ class account_account(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True),
+        'name': fields.char('Name', size=256, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, required=True, select=1),
         'type': fields.selection([
@@ -431,9 +431,9 @@ class account_account(osv.osv):
         'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
         'foreign_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Foreign Balance', multi='balance',
                                            help="Total amount (in Secondary currency) for transactions held in secondary currency for this account."),
-        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance', 
+        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance',
                                             help="Total amount (in Company currency) for transactions held in secondary currency for this account."),
-        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance', 
+        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance',
                                                 help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this box if this account allows reconciliation of journal items."),
         'exchange_rate': fields.related('currency_id', 'rate', type='float', string='Exchange Rate', digits=(12,6)),
@@ -461,7 +461,7 @@ class account_account(osv.osv):
     }
 
     _defaults = {
-        'type': 'view',
+        'type': 'other',
         'reconcile': False,
         'active': True,
         'currency_mode': 'current',
@@ -716,6 +716,19 @@ class account_journal(osv.osv):
 
     _order = 'code'
 
+    def _check_currency(self, cr, uid, ids, context=None):
+        for journal in self.browse(cr, uid, ids, context=context):
+            if journal.currency:
+                if journal.default_credit_account_id and not journal.default_credit_account_id.currency_id.id == journal.currency.id:
+                    return False
+                if journal.default_debit_account_id and not journal.default_debit_account_id.currency_id.id == journal.currency.id:
+                    return False
+        return True
+
+    _constraints = [
+        (_check_currency, 'Configuration error! The currency chosen should be shared by the default accounts too.', ['currency','default_debit_account_id','default_credit_account_id']),
+    ]
+
     def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
         journal = self.browse(cr, uid, id, context=context)
         if not default:
@@ -846,21 +859,8 @@ class account_fiscalyear(osv.osv):
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
-    _order = "date_start"
+    _order = "date_start, id"
 
-    def _check_fiscal_year(self, cr, uid, ids, context=None):
-        current_fiscal_yr = self.browse(cr, uid, ids, context=context)[0]
-        obj_fiscal_ids = self.search(cr, uid, [('company_id', '=', current_fiscal_yr.company_id.id)], context=context)
-        obj_fiscal_ids.remove(ids[0])
-        data_fiscal_yr = self.browse(cr, uid, obj_fiscal_ids, context=context)
-
-        for old_fy in data_fiscal_yr:
-            if old_fy.company_id.id == current_fiscal_yr['company_id'].id:
-                # Condition to check if the current fiscal year falls in between any previously defined fiscal year
-                if old_fy.date_start <= current_fiscal_yr['date_start'] <= old_fy.date_stop or \
-                    old_fy.date_start <= current_fiscal_yr['date_stop'] <= old_fy.date_stop:
-                    return False
-        return True
 
     def _check_duration(self, cr, uid, ids, context=None):
         obj_fy = self.browse(cr, uid, ids[0], context=context)
@@ -869,8 +869,7 @@ class account_fiscalyear(osv.osv):
         return True
 
     _constraints = [
-        (_check_duration, 'Error! The start date of the fiscal year must be before his end date.', ['date_start','date_stop']),
-        (_check_fiscal_year, 'Error! You can not define overlapping fiscal years for the same company.',['date_start', 'date_stop'])
+        (_check_duration, 'Error! The start date of the fiscal year must be before his end date.', ['date_start','date_stop'])
     ]
 
     def create_period3(self, cr, uid, ids, context=None):
@@ -905,6 +904,10 @@ class account_fiscalyear(osv.osv):
         return True
 
     def find(self, cr, uid, dt=None, exception=True, context=None):
+        res = self.finds(cr, uid, dt, exception, context=context)
+        return res and res[0] or False
+
+    def finds(self, cr, uid, dt=None, exception=True, context=None):
         if context is None: context = {}
         if not dt:
             dt = time.strftime('%Y-%m-%d')
@@ -919,8 +922,8 @@ class account_fiscalyear(osv.osv):
             if exception:
                 raise osv.except_osv(_('Error !'), _('No fiscal year defined for this date !\nPlease create one.'))
             else:
-                return False
-        return ids[0]
+                return []
+        return ids
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if args is None:
@@ -1683,13 +1686,15 @@ class account_tax_code(osv.osv):
         if context.get('state', 'all') == 'all':
             move_state = ('draft', 'posted', )
         if context.get('fiscalyear_id', False):
-            fiscalyear_id = context['fiscalyear_id']
+            fiscalyear_id = [context['fiscalyear_id']]
         else:
-            fiscalyear_id = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
+            fiscalyear_id = self.pool.get('account.fiscalyear').finds(cr, uid, exception=False)
         where = ''
         where_params = ()
         if fiscalyear_id:
-            pids = map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_id).period_ids)
+            pids = []
+            for fy in fiscalyear_id:
+                pids += map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fy).period_ids)
             if pids:
                 where = ' AND line.period_id IN %s AND move.state IN %s '
                 where_params = (tuple(pids), move_state)
@@ -2003,7 +2008,7 @@ class account_tax(osv.osv):
 
     def compute_all(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None, force_excluded=False):
         """
-        :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of 
+        :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of
             tax. It's used in encoding by line where you don't matter if you encoded a tax with that boolean to True or
             False
         RETURN: {
@@ -2186,6 +2191,7 @@ class account_model(osv.osv):
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         pt_obj = self.pool.get('account.payment.term')
+        period_obj = self.pool.get('account.period')
 
         if context is None:
             context = {}
@@ -2193,14 +2199,14 @@ class account_model(osv.osv):
         if datas.get('date', False):
             context.update({'date': datas['date']})
 
-        period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date', False))
-        if not period_id:
-            raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
-        period_id = period_id[0]
-
         move_date = context.get('date', time.strftime('%Y-%m-%d'))
         move_date = datetime.strptime(move_date,"%Y-%m-%d")
         for model in self.browse(cr, uid, ids, context=context):
+            ctx = context.copy()
+            ctx.update({'company_id': model.company_id.id})
+            period_ids = period_obj.find(cr, uid, dt=context.get('date', False), context=ctx)
+            period_id = period_ids and period_ids[0] or False
+            ctx.update({'journal_id': model.journal_id.id,'period_id': period_id})
             try:
                 entry['name'] = model.name%{'year': move_date.strftime('%Y'), 'month': move_date.strftime('%m'), 'date': move_date.strftime('%Y-%m')}
             except:
@@ -2249,9 +2255,7 @@ class account_model(osv.osv):
                     'date': context.get('date',time.strftime('%Y-%m-%d')),
                     'date_maturity': date_maturity
                 })
-                c = context.copy()
-                c.update({'journal_id': model.journal_id.id,'period_id': period_id})
-                account_move_line_obj.create(cr, uid, val, context=c)
+                account_move_line_obj.create(cr, uid, val, context=ctx)
 
         return move_ids
 
@@ -2398,7 +2402,7 @@ class account_account_template(osv.osv):
     _description ='Templates for Accounts'
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True),
+        'name': fields.char('Name', size=256, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, select=1),
         'type': fields.selection([

@@ -479,7 +479,6 @@
             <field name="model">stock.move</field>
             <field name="name">Downstream traceability</field>
             <field eval="'ir.actions.act_window,'+str(action3)" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <record id="action5" model="ir.actions.act_window">
@@ -496,7 +495,6 @@
             <field name="model">stock.move</field>
             <field name="name">Upstream traceability</field>
             <field eval="'ir.actions.act_window,'+str(action5)" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <record id="view_location_form" model="ir.ui.view">
@@ -1060,7 +1058,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
+            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_available': 1}</field>
             <field name="search_view_id" ref="view_picking_out_search"/>
             <field name="help">This is the list of all delivery orders that have to be prepared, according to your different sales orders and your logistics rules.</field>
         </record>
@@ -1337,7 +1335,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','internal')]</field>
-            <field name="context">{'contact_display': 'partner_address',"search_default_available":1}</field>
+            <field name="context">{'default_type': 'internal', 'contact_display': 'partner_address', 'search_default_available': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help">Internal Moves display all inventory operations you have to perform in your warehouse. All operations can be categorized into stock journals, so that each worker has his own list of operations to perform in his own journal. Most operations are prepared automatically by OpenERP according to your preconfigured logistics rules, but you can also record manual stock operations.</field>
         </record>
@@ -1827,7 +1825,6 @@
             <field name="model">stock.location</field>
             <field name="name">Products</field>
             <field eval="'ir.actions.act_window,%d'%act_product_location_open" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
 
@@ -1836,7 +1833,6 @@
             <field name="model">stock.location</field>
             <field name="name">Open Products</field>
             <field eval="'ir.actions.act_window,%d'%action_view_stock_location_product" name="value"/>
-            <field eval="True" name="object"/>
         </record>
         <record id="action_picking_tree_out" model="ir.actions.act_window">
             <field name="name">Customers Packings</field>
@@ -1845,7 +1841,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'contact_display': 'partner',"search_default_available":1}</field>
+            <field name="context">{'default_type': 'out', 'contact_display': 'partner',"search_default_available":1}</field>
             <field name="search_view_id" ref="view_picking_in_search"/>
         </record>
         <record id="action_invoice_tree5_out" model="ir.actions.act_window.view">

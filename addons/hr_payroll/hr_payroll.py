@@ -928,6 +928,10 @@ class hr_payslip_line(osv.osv):
         'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Payroll'),store=True ),
     }
 
+    _defaults = {
+        'quantity': 1.0,
+    }
+
 hr_payslip_line()
 
 class hr_payroll_structure(osv.osv):

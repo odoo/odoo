@@ -590,3 +590,5 @@ if __name__ == '__main__':
     if argz: parser.error('Only stdin -> stdout conversion suported')
 
     uc_filter(sys.stdin, sys.stdout, bs=optz.bs, in_enc=optz.src_enc, out_enc=optz.dst_enc)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
