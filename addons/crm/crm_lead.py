@@ -206,6 +206,7 @@ class crm_lead(crm_case, osv.osv):
         'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
         'color': fields.integer('Color Index'),
         'partner_address_name': fields.related('partner_address_id', 'name', type='char', string='Partner Contact Name', readonly=True),
+        'partner_address_email': fields.related('partner_address_id', 'email', type='char', string='Partner Contact Email', readonly=True),
         'company_currency': fields.related('company_id', 'currency_id', 'symbol', type='char', string='Company Currency', readonly=True),
         'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
