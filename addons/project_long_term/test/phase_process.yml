@@ -41,7 +41,7 @@
   I check state of phase after opened.
 -
   !assert {model: project.phase, id: project_phase_1, severity: error, string: Phase should be in open state}:
-     - state == "open"
+    - state == "open"
 -
   I put phase in pending state.
 -
@@ -51,7 +51,7 @@
   I check state of phase after put in pending.
 -
   !assert {model: project.phase, id: project_phase_1, severity: error, string: Phase should be in pending state}:
-       - state == "pending"
+    - state == "pending"
 -
   I make Phase in cancel state.
 -
@@ -61,7 +61,7 @@
   I check state of phase after cancelled.
 -
   !assert {model: project.phase, id: project_phase_1, severity: error, string: Phase should be in cancel state}:
-       - state == "cancelled"
+    - state == "cancelled"
 -
   I put again in draft phase.
 -
