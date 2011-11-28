@@ -18,3 +18,15 @@
   !python {model: partner.event.registration}: |
     context.update({'active_id': ref("base.res_partner_ericdubois0")})
     self.onchange_event_id(cr, uid, 1, ref("event_1"), context=context)
+-
+  I confirm event from wizard.
+-
+  !python {model: event.confirm}: |
+    context.update({'event_ids': [ref("event_2")]})
+    id = self.create(cr, uid , {})
+    self.confirm(cr, uid, [id], context=context)
+-
+  I call close registration process.
+-
+  !python {model: event.registration}: |
+    self.button_reg_close(cr, uid, [ref("reg_0_2")])
