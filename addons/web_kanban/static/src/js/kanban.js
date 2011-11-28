@@ -411,7 +411,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
         this.$element.find('.oe_kanban_action').click(function() {
             var $action = $(this),
                 type = $action.data('type') || 'button',
-                method = 'do_action_' + type;
+                method = 'do_action_' + (type === 'action' ? 'object' : type);
             if (typeof self[method] === 'function') {
                 self[method]($action);
             } else {
