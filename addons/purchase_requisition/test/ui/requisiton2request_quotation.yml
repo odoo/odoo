@@ -5,13 +5,13 @@
     partner_address_id: base.res_partner_address_3000
     partner_id: base.res_partner_desertic_hispafuentes
 - 
-  I click on 'Create Quotation' for creating PO.
+  I click on 'Create Quotation' for creating a Quatation.
 - 
   !python {model: purchase.requisition.partner}: |
     self.create_order(cr, uid, [ref("purchase_requisition_partner_0")], {"active_model": "purchase.requisition",
       "active_ids": [ref("order_purchase_requisition1")],"active_id": ref("order_purchase_requisition1"), })
 -
-  I check that the purchase order is created.
+  I check that the purchase order created.
 -
   !python {model: purchase.order}: |
     purchase_ids= self.search(cr, uid, [('requisition_id','=',ref("order_purchase_requisition1"))])
@@ -20,4 +20,4 @@
     assert rfq.state == 'draft',"Purchase Order should be in draft state"
     assert rfq.partner_address_id.id == ref('base.res_partner_address_3000'),"Purchase Order Partner address is not correspond"
     assert rfq.partner_id.id == ref('base.res_partner_desertic_hispafuentes'),"Purchase Order Partner is not correspond"
-    
+

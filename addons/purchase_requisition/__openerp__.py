@@ -48,7 +48,6 @@ This new object will regroup and will allow you to easily keep track and order a
             'test/process/purchase_requisition_exclusive.yml',
             'test/ui/requisiton2request_quotation.yml',
             'test/process/cancel_purchase_requisition.yml',
-            'test/ui/onchange_events.yml',
             'test/ui/purchase_requisition_report.yml',
             'test/ui/delete_requisition.yml',
             ],
