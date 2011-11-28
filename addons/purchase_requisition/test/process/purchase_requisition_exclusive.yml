@@ -1,17 +1,21 @@
 -
-  In order to test the exclusive type requisition, I have to create two differ purchase order in one requisition [Tender]
+  In order to test the exclusive type requisition, I have to create two differ purchase order of one requisition [Tender]
 -
-  I start by Checking the product, Product must have requisition field checked. 
+  I select purchase requisition of '[CPU1] Processor AMD Athlon XP 1800+' and '[CPU3] Processor AMD Athlon XP 2200+'.
+  So, those products must have requisition field checked.
+-
+  I start by Checking requisition field for '[CPU1] Processor AMD Athlon XP 1800+' product.
 -
   !record {model: product.product, id: product.product_product_cpu1}:
     purchase_requisition: True
 -
-  Checking requisition field for another product. 
+  Checked requisition field for '[CPU3] Processor AMD Athlon XP 2200+' product. 
 -
   !record {model: product.product, id: product.product_product_cpu3}:
     purchase_requisition: True
 -
-  Now check that purchase order's product must have requisition field checked.
+  I search the purchase orders which have exclusive purchase requisition 'TE00001' and confirm any one of them.
+  Then check the remaining purchase orders goes in to cancel state.
 -
   !python {model: purchase.order}: |
     import netsvc

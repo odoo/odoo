@@ -1,18 +1,15 @@
 -
-  In order to test the purchase requisition module, I have to checked a boolean field 'purchase requisition' in product, 
-  If I checked it then it's requisition will be create.
+  In order to test the purchase requisition module, I have to checked product's boolean field 'purchase requisition'.
 -
   I start by Checking the product, Product must have requisition field checked.
-  and Product supply method is buy and the procure method is make to order.
 -
   !record {model: product.product, id: product.product_product_hdd3}:
-    supply_method: 'buy'
     purchase_requisition: True
 -
-  I create the procurement order for the product and after run that procurement for create purchase requisition.
+  I create the product's procurement order and run that procurement.
+  After Run the procurement I check created purchase requisition [Tender].
 -
   !python {model: product.product}: |
-    import time
     import netsvc
     mk_proc = self.pool.get('make.procurement')
     proc_order = self.pool.get('procurement.order')
