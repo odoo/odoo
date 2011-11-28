@@ -54,23 +54,6 @@ class res_partner_bank(osv.osv):
                 return False
         return True
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-               context=None, count=False):
-        """Search on type == rib"""
-        res = super(res_partner_bank, self).search(cr, uid, args, offset,
-           limit=limit, order=order, context=context, count=count)
-        if filter(lambda x:x[0] == 'acc_number' , args):
-            #get the value of the search
-            rib_value = filter(lambda x:x[0] == 'acc_number' , args)[0][2]
-            #get the other arguments of the search
-            args1 = filter(lambda x:x[0] != 'acc_number' , args)
-            #add the new criterion
-            args1 += [('rib', 'ilike', rib_value)]
-            #append the results to the older search
-            res += super(res_partner_bank, self).search(cr, uid, args1, offset,
-                limit, order, context=context, count=count)
-        return res
-
     def onchange_bank_id(self, cr, uid, ids, bank_id, context=None):
         """Change the bank code"""
         result = super(res_partner_bank, self).onchange_bank_id(cr, uid, ids, bank_id,
