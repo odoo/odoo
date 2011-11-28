@@ -40,6 +40,6 @@
   I set Next Timebox on task
 -
   !python {model: project.task}: |
-      nexts_timebox = self.next_timebox(cr, uid, [ref("project.project_task_10")],
+      next_timebox = self.next_timebox(cr, uid, [ref("project.project_task_10")],
       {'active_ids': [ref("project_gtd.menu_open_gtd_timebox_tree")],})
-      assert nexts_timebox == True, "I set Previous Timebox on task"
+      assert next_timebox == True, "I set Next Timebox on task"
