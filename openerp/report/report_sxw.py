@@ -391,8 +391,12 @@ class report_sxw(report_rml, preprocess.report):
         return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context, fields_process=_fields_process)
 
     def create(self, cr, uid, ids, data, context=None):
+        if context is None:
+            context = {}
         if self.internal_header:
             context.update({'internal_header':self.internal_header})
+        #we ask osv.fields.sanitize_binary_value() not to encode the binary value"
+        context.update({'bin_raw':True})
         pool = pooler.get_pool(cr.dbname)
         ir_obj = pool.get('ir.actions.report.xml')
         report_xml_ids = ir_obj.search(cr, uid,
@@ -519,12 +523,13 @@ class report_sxw(report_rml, preprocess.report):
         context = context.copy()
         report_type = report_xml.report_type
         context['parents'] = sxw_parents
-
-        # if binary content was passed as unicode, we must
-        # re-encode it as a 8-bit string using the pass-through
-        # 'latin1' encoding, to restore the original byte values.
-        # See also osv.fields.sanitize_binary_value()
-        binary_report_content = report_xml.report_sxw_content.encode("latin1")
+        binary_report_content = report_xml.report_sxw_content
+        if isinstance(report_xml.report_sxw_content, unicode):
+            # if binary content was passed as unicode, we must
+            # re-encode it as a 8-bit string using the pass-through
+            # 'latin1' encoding, to restore the original byte values.
+            # See also osv.fields.sanitize_binary_value()
+            binary_report_content = report_xml.report_sxw_content.encode("latin1")
 
         sxw_io = StringIO.StringIO(binary_report_content)
         sxw_z = zipfile.ZipFile(sxw_io, mode='r')

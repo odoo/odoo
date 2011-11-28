@@ -1018,7 +1018,7 @@ class function(_column):
             if context.get('bin_size', False):
                 # client requests only the size of binary fields
                 result = get_nice_size(value)
-            else:
+            elif not context.get('bin_raw'):
                 result = sanitize_binary_value(value)
 
         if field_type in ("integer","integer_big") and value > xmlrpclib.MAXINT:
