@@ -38,11 +38,32 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
             'sum_balance': self._sum_balance,
         })
 
+    def _get_children(self, account_id):
+        result = []
+
+        def _get_rec(account_id):
+            analytic_obj = self.pool.get('account.analytic.account')
+            analytic_search_ids = analytic_obj.search(self.cr, self.uid, [('id', '=', account_id)])
+            analytic_datas = analytic_obj.browse(self.cr, self.uid, analytic_search_ids)
+
+            result.append(account_id)
+            for account in analytic_datas:
+                for child in account.child_ids:
+                    result.append(child.id)
+                    for child_id in child.child_ids:
+                        _get_rec(child_id.id)
+            return result
+
+        child_ids = _get_rec(account_id)
+
+        return child_ids
+
     def _lines_g(self, account_id, date1, date2):
+        chid_ids = self._get_children(account_id)
         self.cr.execute("SELECT sum(aal.amount) AS balance, aa.code AS code, aa.name AS name, aa.id AS id \
                 FROM account_account AS aa, account_analytic_line AS aal \
-                WHERE (aal.account_id=%s) AND (aal.date>=%s) AND (aal.date<=%s) AND (aal.general_account_id=aa.id) AND aa.active \
-                GROUP BY aa.code, aa.name, aa.id ORDER BY aa.code", (account_id, date1, date2))
+                WHERE (aal.account_id IN %s) AND (aal.date>=%s) AND (aal.date<=%s) AND (aal.general_account_id=aa.id) AND aa.active \
+                GROUP BY aa.code, aa.name, aa.id ORDER BY aa.code", (tuple(chid_ids), date1, date2))
         res = self.cr.dictfetchall()
 
         for r in res:
@@ -58,10 +79,11 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         return res
 
     def _lines_a(self, general_account_id, account_id, date1, date2):
+        chid_ids = self._get_children(account_id)
         self.cr.execute("SELECT aal.name AS name, aal.code AS code, aal.amount AS balance, aal.date AS date, aaj.code AS cj FROM account_analytic_line AS aal, account_analytic_journal AS aaj \
-                WHERE (aal.general_account_id=%s) AND (aal.account_id=%s) AND (aal.date>=%s) AND (aal.date<=%s) \
+                WHERE (aal.general_account_id=%s) AND (aal.account_id IN %s) AND (aal.date>=%s) AND (aal.date<=%s) \
                 AND (aal.journal_id=aaj.id) \
-                ORDER BY aal.date, aaj.code, aal.code", (general_account_id, account_id, date1, date2))
+                ORDER BY aal.date, aaj.code, aal.code", (general_account_id, tuple(chid_ids), date1, date2))
         res = self.cr.dictfetchall()
 
         for r in res:
@@ -77,11 +99,13 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         return res
 
     def _account_sum_debit(self, account_id, date1, date2):
-        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id=%s AND date>=%s AND date<=%s AND amount>0", (account_id, date1, date2))
+        chid_ids = self._get_children(account_id)
+        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount>0", (tuple(chid_ids), date1, date2))
         return self.cr.fetchone()[0] or 0.0
 
     def _account_sum_credit(self, account_id, date1, date2):
-        self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id=%s AND date>=%s AND date<=%s AND amount<0", (account_id, date1, date2))
+        chid_ids = self._get_children(account_id)
+        self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount<0", (tuple(chid_ids), date1, date2))
         return self.cr.fetchone()[0] or 0.0
 
     def _account_sum_balance(self, account_id, date1, date2):
@@ -91,16 +115,18 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 
     def _sum_debit(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
-        if not ids:
+        chid_ids = self._get_children(ids[0])
+        if not children:
             return 0.0
-        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount>0", (tuple(ids), date1, date2,))
+        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount>0", (tuple(chid_ids), date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
-        if not ids:
+        chid_ids = self._get_children(ids[0])
+        if not children:
             return 0.0
-        self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount<0", (tuple(ids),date1, date2,))
+        self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount<0", (tuple(chid_ids),date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_balance(self, accounts, date1, date2):
