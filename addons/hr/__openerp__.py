@@ -55,8 +55,8 @@ You can manage:
         'hr_department_demo.xml',
     ],
     'test': [
-             'test/hr_employee_demo.yml',
              'test/open2recruit2close_job.yml',
+             'test/hr_demo.yml',
              ],
     'installable': True,
     'active': False,
