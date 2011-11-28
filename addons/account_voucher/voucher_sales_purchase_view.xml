@@ -168,7 +168,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type','in',['sale','sale_refund']), ('type','=','sale')]</field>
-            <field name="context">{'type':'sale'}</field>
+            <field name="context">{'default_type': 'sale', 'type': 'sale'}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
@@ -198,7 +198,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment'), ('partner_id','=',partner_id)]</field>
-            <field name="context">{'type':'payment', 'partner_id': partner_id, 'default_reference':reference}</field>
+            <field name="context">{'default_type':'payment', 'type':'payment', 'default_partner_id': partner_id, 'partner_id': partner_id, 'default_reference':reference}</field>
             <field name="view_id" ref="view_vendor_payment_form"/>
             <field name="target">current</field>
         </record>
@@ -287,7 +287,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type','in',['purchase','purchase_refund']), ('type','=','purchase')]</field>
-            <field name="context">{'type':'purchase'}</field>
+            <field name="context">{'default_type': 'purchase', 'type': 'purchase'}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>
             <field name="target">current</field>

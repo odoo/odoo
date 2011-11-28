@@ -14,7 +14,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
-            <field name="context">{'object_id':'crm.fundraising'}</field>
+            <field name="context" eval="{'object_id': ref('model_crm_fundraising')}"/>
             <field name="help">Manage and define the fund raising categories you want to be maintained in the system.</field>
         </record>
 
