@@ -1,0 +1,50 @@
+-
+  In Order to test process of "Employee Expenses".
+-
+  I confirm "Expense Bill of September" for one employee of Marketing Department.
+-
+  !workflow {model: hr.expense.expense, action: confirm, ref: sep_expenses}
+-
+  I check state of expense after confirmed.
+-
+  !assert {model: hr.expense.expense, id: sep_expenses}:
+    - state == 'confirm'
+-
+  I accept this expense.
+-
+  !workflow {model: hr.expense.expense, action: validate, ref: sep_expenses}
+-
+  I make Invoice for the expense.
+-
+  !python {model: hr.expense.expense}: |
+    self.invoice(cr, uid, [ref('sep_expenses')])
+-
+  I check invoice details after invoiced.
+-
+  !python {model: hr.expense.expense}: |
+    sep_expenses = self.browse(cr, uid, ref("sep_expenses"), context=context)
+    assert sep_expenses.state == 'invoiced', "Expense should be in 'Invoiced' state."
+    assert sep_expenses.invoice_id, "Expense should have link of Invoice."
+    assert sep_expenses.invoice_id.currency_id == sep_expenses.currency_id,"Invoice currency is not correspond with supplier invoice currency"
+    assert sep_expenses.invoice_id.origin == sep_expenses.name,"Invoice origin is not correspond with supplier invoice"
+    assert sep_expenses.invoice_id.type == 'in_invoice', "Invoice type is not supplier invoice"
+    assert sep_expenses.invoice_id.amount_total == sep_expenses.amount,"Invoice total amount is not correspond with supplier invoice total"
+    assert len(sep_expenses.invoice_id.invoice_line) == len(sep_expenses.line_ids),"Lines of Invoice and supplier invoice Line are not correspond"
+-
+  I paid the expense.
+-
+  !python {model: hr.expense.expense}: |
+    self.expense_paid(cr, uid, [ref('sep_expenses')])
+-
+  I check the expense after paid.
+-
+  !assert {model: hr.expense.expense, id: sep_expenses}:
+    - state == 'paid'
+-
+  I print this expense.
+- 
+  !python {model: hr.expense.expense}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.hr.expense').create(cr, uid, [ref('hr_expense.sep_expenses')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'hr_expense-report.'+format), 'wb+').write(data)
