@@ -55,8 +55,12 @@
   !python {model: project.project}: |
     self.set_template(cr, uid, [ref("project_integrate_openerp")])
 -
+  I schedule tasks of project.
+-
+  !python {model: project.project}: |
+    self.schedule_tasks(cr, uid, [ref("project_integrate_openerp")], context=context)
+-
   I cancel Project.
 -
   !python {model: project.project}: |
-    self.set_cancel(cr, uid, [ref("project_integrate_openerp")])
-
+    self.set_cancel(cr, uid, [ref("project_project_9")])

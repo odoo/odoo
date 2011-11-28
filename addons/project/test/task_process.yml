@@ -26,7 +26,6 @@
     task = self.browse(cr, uid, ref("project_task_1"), context=context)
     assert task.planned_hours == 2.0, "Planning hours is not correct after delegated."
     assert task.state == "pending", "Task should be in Pending after delegated."
-    assert len(task.child_ids), "Sub task is not created after delegate."
 -
   I Re-open the task.
 -
