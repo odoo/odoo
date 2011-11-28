@@ -1,6 +1,4 @@
 -
-  In Order to Test process of Sprint,
--
   I put sprint in pending state to allocate task to resources.
 -
   !python {model: project.scrum.sprint}: |
@@ -69,3 +67,12 @@
 -
   !assert {model: project.scrum.sprint, id: scrum_sprint_0, severity: error, string: Sprint shoud be  in close state}:
        - state == "done"
+-
+  I print Burndown chart of Sprint.
+- 
+  !python {model: project.scrum.sprint}: |
+    import netsvc, tools, os
+    data_dict = {'model': 'project.scrum.sprint', 'id':ref('scrum_sprint_0')}
+    (data, format) = netsvc.LocalService('report.scrum.sprint.burndown').create(cr, uid, [ref('scrum_sprint_0')], data_dict, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'project_scrum-project_scrum_sprint_burndown.'+format), 'wb+').write(data)

@@ -1,6 +1,4 @@
 -
-  In Order to Test process of Backlog cancellation,
--
   I cancel Backlog "Automatic migration system" from draft state.
 -
   !python {model: project.scrum.product.backlog}: |
@@ -11,7 +9,7 @@
   !assert {model: project.scrum.product.backlog, id: scrum_product_backlog_0, severity: error, string: backlog should be in cancel state}:
        - state == "cancel"
 -
-  I cancel Backlog "Editable Trees" from open state.
+  I cancel opened Backlog "Editable Trees".
 -
   !python {model: project.scrum.product.backlog}: |
     self.button_cancel(cr, uid, [ref("scrum_product_backlog_7")])
@@ -21,7 +19,7 @@
   !assert {model: project.scrum.product.backlog, id: scrum_product_backlog_7, severity: error, string: backlog should be in cancel state}:
        - state == "cancel"
 -
-  I put Backlog in pending state because of resource unavailability.
+  I put Backlog in pending due to resource unavailability.
 -
   !python {model: project.scrum.product.backlog}: |
     self.button_pending(cr, uid, [ref("scrum_product_backlog_0")])
@@ -31,7 +29,7 @@
   !assert {model: project.scrum.product.backlog, id: scrum_product_backlog_0, severity: error, string: Backlog should be in pending state}:
        - state == "pending"
 -
-  I cancel Backlog "Automatic migration system" from pending state.
+  I cancel pending Backlog "Automatic migration system".
 -
   !python {model: project.scrum.product.backlog}: |
     self.button_cancel(cr, uid, [ref("scrum_product_backlog_0")])
@@ -41,7 +39,7 @@
   !assert {model: project.scrum.product.backlog, id: scrum_product_backlog_0, severity: error, string: backlog should be in cancel state}:
        - state == "cancel"
 -
-  I Postpone Backlog "Reshape the complete menu" from open state.
+  I Postpone opened Backlog "Reshape the complete menu".
 -
   !python {model: project.scrum.product.backlog}: |
     self.button_postpone(cr, uid, [ref("scrum_product_backlog_6")])
