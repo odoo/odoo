@@ -15,8 +15,10 @@
     applicant_ids = self.search(cr, uid, [('email_from','=', 'Mr. Richard Anderson <Richard_Anderson@yahoo.com>')])
     assert applicant_ids, "Applicant is not created after getting the mail"
     applicant = self.browse(cr, uid, applicant_ids[0], context=context)
-    assert applicant.name == "Application for the post of Jr.application Programmer", "Subject does not match"
+    resume_ids = self.pool.get('ir.attachment').search(cr, uid, [('datas_fname','=','resume.doc'),('res_model','=',self._name),('res_id','=',applicant.id)])
+    assert applicant.name == "Application for the post of Jr.application Programmer.", "Subject does not match"
     assert applicant.state == "draft"
+    assert len(resume_ids), "Resume does not attached."
 -
   I assign the Job position to the applicant
 -
@@ -54,7 +56,7 @@
   !python {model: hr.applicant}: |
     self.action_print_survey(cr, uid, [ref('hr_case_programmer')])
 -
-  On a successful meeting with the applicant, I hired employee.
+  On a successful interview with the applicant, I hired employee.
 -
   !python {model: hr.applicant}: |
      self.case_close(cr, uid, [ref('hr_case_programmer')])
