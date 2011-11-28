@@ -1,0 +1,76 @@
+-
+  In order to test process of Project Task,
+-
+  I put task in pending due to specification is not clear.
+-
+  !python {model: project.task}: |
+    self.do_pending(cr, uid, [ref("project_task_1")])
+-
+  I Check state  of task after put in pending.
+-
+  !assert {model: project.task, id: project_task_1, severity: error, string: task should be in pending state}:
+       - state == "pending"
+-
+  Now I delegate task to team member.
+-
+  !python {model: project.task.delegate}: |
+    new_id = self.create(cr,uid,{'planned_hours': 1.0, 'user_id': 3,
+    'name': 'demo task', 'state': 'pending', 'prefix': 'CHECK: demo task',
+     'planned_hours_me': 1.0, 'new_task_description': 'this is demo.'})
+    self.delegate(cr, uid, [new_id], {"active_id": ref("project_task_1")})
+-
+  I check delegated task details.
+-
+  !assert {model: project.task.delegate, id: project_task_1, severity: error, string: Task should be pending state}:
+
+       - planned_hours == 0.0
+       - name == 'a'
+       - state == "pending"
+-
+  I check new task after delegated task.
+-
+  !record {model: project.task, id: project_task_delegate }:
+    name: test
+    planned_hours: 30.0
+    project_id: project_task_1
+    remaining_hours: 30.0
+    description: testing of delegated task
+    state: draft
+-
+   Now I Delegate task  to these tasks and make it pending
+-
+  !record {model: project.task, id: project_task_1 }:
+    child_ids:
+      - project.project_task_delegate
+    planned_hours: 20.0
+    state: pending
+-
+  I Re-open the task
+-
+  !python {model: project.task}: |
+    self.do_reopen(cr, uid, [ref("project_task_1")])
+-
+
+  I check reopened task details.
+-
+  !assert {model: project.task, id: project_task_1, severity: error, string: task should be open.}:
+       - state == "open"
+-
+  I reevaluate task with remaining hours.
+-
+
+  I Check remaining hours after reevaluated task.
+-
+  !assert {model: project.task.reevaluate, id: project_task_1, severity: error, string: task should be reevaluated}:
+       - remaining_hours == 1.0
+-
+  I close the task.
+-
+  !python {model: project.task}: |
+    self.do_close(cr, uid, [ref("project_task_1")])
+-
+  I Check state after closed.
+-
+  !assert {model: project.task, id: project_task_1, severity: error, string: task is in open state}:
+       - state == "done"
+-

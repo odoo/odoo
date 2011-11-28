@@ -1,0 +1,40 @@
+-
+  I cancel unqualified Project.
+-
+  !python {model: project.project}: |
+    self.set_cancel(cr, uid, [ref("project_task_1")])
+-
+  I cancel Project in to Draft.
+-
+  !python {model: project.project}: |
+    self.set_cancel(cr, uid, [ref("project_task_1")])
+-
+  I cancel pending Project.
+-
+  !python {model: project.project}: |
+    self.set_cancel(cr, uid, [ref("project_task_1")])
+-
+  I cancel opened Project.
+-
+  !python {model: project.project}: |
+    self.set_cancel(cr, uid, [ref("project_task_1")])
+-
+  I cancel delegated Project.
+-
+  !python {model: project.project}: |
+    self.set_cancel(cr, uid, [ref("project_task_1")])
+-
+  I cancel done Project.
+-
+  !python {model: project.project}: |
+    self.set_cancel(cr, uid, [ref("project_task_1")])
+-
+  I cancel close Project.
+-
+  !python {model: project.project}: |
+    self.set_cancel(cr, uid, [ref("project_task_1")])
+-
+  I reset canclled Project into Draft.
+-
+  !python {model: project.project}: |
+    self.set_cancel(cr, uid, [ref("project_task_1")])
