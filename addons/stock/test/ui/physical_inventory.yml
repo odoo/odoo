@@ -12,7 +12,7 @@
   !record {model: stock.fill.inventory, id: stock_fill_inventory_0}:
     location_id: stock.stock_location_stock
     recursive: False
-    set_stock_zero: False
+    set_stock_zero: True
 -
   I fill inventory.
 -
@@ -27,9 +27,11 @@
    inventory = self.browse(cr, uid, [ref('stock_physical_inventory0')])
    self.action_confirm(cr,uid,[ref('stock_physical_inventory0')])
    assert inventory[0].state == 'confirm',"After confirm the inventory it should be in 'Confirm' state"
+   for line in inventory[0].inventory_line_id:
+     assert line.product_qty == 0.0,"Product Quantity should be Zero"
    self.action_done(cr,uid,[ref('stock_physical_inventory0')])
 -
-  I Validate the Inventory.
+  I check the Inventory after Validate.
 -
   !python {model: stock.inventory}: |
    inventory = self.browse(cr, uid, [ref('stock_physical_inventory0')])
