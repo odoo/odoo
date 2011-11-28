@@ -377,6 +377,8 @@
                                         <div class="oe_kanban_left">
                                             <a string="Edit" icon="gtk-edit" type="edit"/>
                                             <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                            <a name="action_close" states="pending,open" string="Done" type="object" icon="terp-dialog-close"/>
+                                            <a name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-sort-descending"/>
                                         </div>
                                         <div class="oe_kanban_right">
                                             <a name="set_kanban_state_blocked" string="Block" kanban_states="normal,done" type="object" icon="kanban-stop"/>
