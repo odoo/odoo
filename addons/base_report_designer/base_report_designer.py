@@ -59,9 +59,17 @@ class report_xml(osv.osv):
         return True
 
     def report_get(self, cr, uid, report_id, context=None):
+        if context is None:
+            context = {}
+        #we ask osv.fields.sanitize_binary_value() not to encode the binary value"
+        context.update({'bin_raw':True})
         report = self.browse(cr, uid, report_id, context=context)
-        sxw_data=(report.report_sxw_content).encode("iso-8859-1", "replace")
-        rml_data= (report.report_rml_content).encode("iso-8859-1", "replace")
+        sxw_data = report.report_sxw_content
+        rml_data = report.report_rml_content
+        if isinstance(report.report_sxw_content, unicode):
+            sxw_data = (report.report_sxw_content).encode("iso-8859-1", "replace")
+        if isinstance(report.report_rml_content, unicode):
+            rml_data = (report.report_rml_content).encode("iso-8859-1", "replace")
         return {
             'file_type' : report.report_type, 
             'report_sxw_content': report.report_sxw_content and base64.encodestring(sxw_data) or False, 
