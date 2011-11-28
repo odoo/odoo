@@ -107,7 +107,6 @@ class res_bank(osv.osv):
                               limit=limit, context=context)
         # Merge the results
         results = list(set(results + self.name_get(cr, user, ids, context)))
-        print results
         return results
         
     _columns = {
