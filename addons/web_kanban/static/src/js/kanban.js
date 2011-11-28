@@ -237,6 +237,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
     },
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
+        var self = this;
         if (old_group === new_group) {
             new_group.records.splice(old_index, 1);
             new_group.records.splice(new_index, 0, record);
@@ -250,6 +251,10 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             this.dataset.write(record.id, data, {}, function() {
                 record.do_reload();
                 new_group.do_save_sequences();
+            }).fail(function(error, evt) {
+                evt.preventDefault();
+                alert("An error has occured while moving the record to this group.");
+                self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }
     },
