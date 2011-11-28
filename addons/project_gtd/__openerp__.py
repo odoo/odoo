@@ -57,8 +57,7 @@ performing those tasks.
     ],
     'demo_xml': ['project_gtd_demo.xml'],
     'test':[
-        #'test/gtd_test.yml',
-         'test/timebox.yml'
+         'test/task_timebox.yml'
     ],
     'installable': True,
     'active': False,
