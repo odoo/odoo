@@ -1,6 +1,10 @@
 {
     "name" : "OpenERP Web mobile",
-    "category" : "Hidden",
+    "category": "Hidden",
+    "description":
+        """
+        OpenERP Web mobile.
+        """,
     "version" : "2.0",
     "depends" : [],
     'active': True,

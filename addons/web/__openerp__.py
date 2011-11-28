@@ -1,6 +1,11 @@
 {
     "name" : "web",
-    "category" : "Hidden",
+    "category": "Hidden",
+    "description":
+        """
+        OpenERP Web core module.
+        This module provides the core of the OpenERP web client.
+        """,
     "depends" : [],
     'active': True,
     'post_load' : 'wsgi_postload',
