@@ -63,7 +63,7 @@ re-invoice your customer's expenses if your work by project.
         'hr_expense_demo.xml',
         ],
     'test': [
-             'test/confirm2heldinvoiced.yml',
+             'test/expense_process.yml',
              ],
     'installable': True,
     'active': False,
