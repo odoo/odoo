@@ -107,12 +107,12 @@ class account_installer(osv.osv_memory):
         configured_cmp = [r[0] for r in cr.fetchall()]
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
         for field in res['fields']:
-           if field == 'company_id':
-               res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
-               res['fields'][field]['selection'] = [('', '')]
-               if unconfigured_cmp:
-                   cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
-                   res['fields'][field]['selection'] = cmp_select
+            if field == 'company_id':
+                res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
+                res['fields'][field]['selection'] = [('', '')]
+                if unconfigured_cmp:
+                    cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
+                    res['fields'][field]['selection'] = cmp_select
         return res
 
     def on_change_tax(self, cr, uid, id, tax):
@@ -136,7 +136,6 @@ class account_installer(osv.osv_memory):
         obj_fiscal_position = self.pool.get('account.fiscal.position')
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         obj_acc_chart_template = self.pool.get('account.chart.template')
-        obj_acc_journal_view = self.pool.get('account.journal.view')
         mod_obj = self.pool.get('ir.model.data')
         obj_sequence = self.pool.get('ir.sequence')
         property_obj = self.pool.get('ir.property')
@@ -265,8 +264,11 @@ class account_installer(osv.osv_memory):
                 }
                 bank_account = obj_acc.create(cr, uid, b_vals, context=ctx)
 
-                view_id_cash = obj_acc_journal_view.search(cr, uid, [('name', '=', 'Bank/Cash Journal View')], context=context)[0] #why fixed name here?
-                view_id_cur = obj_acc_journal_view.search(cr, uid, [('name', '=', 'Bank/Cash Journal (Multi-Currency) View')], context=context)[0] #Why Fixed name here?
+                view_cash_result = mod_obj.get_object_reference(cr, uid, 'account', 'account_journal_bank_view')
+                view_cash_id = view_cash_result and view_cash_result[1] or False
+
+                view_multi_result = mod_obj.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi')
+                view_multi_id = view_multi_result and view_multi_result[1] or False
 
                 cash_result = mod_obj.get_object_reference(cr, uid, 'account', 'conf_account_type_cash')
                 cash_type_id = cash_result and cash_result[1] or False
@@ -301,11 +303,11 @@ class account_installer(osv.osv_memory):
                 }
                 if vals.get('currency_id', False):
                     vals_journal.update({
-                        'view_id': view_id_cur,
+                        'view_id': view_multi_id,
                         'currency': vals.get('currency_id', False)
                     })
                 else:
-                    vals_journal.update({'view_id': view_id_cash})
+                    vals_journal.update({'view_id': view_cash_id})
                 vals_journal.update({
                     'default_credit_account_id': new_account,
                     'default_debit_account_id': new_account,
@@ -353,11 +355,11 @@ class account_installer(osv.osv_memory):
                     }
                     if vals.get('currency_id', False):
                         vals_journal.update({
-                                'view_id': view_id_cur,
+                                'view_id': view_multi_id,
                                 'currency': vals_bnk.get('currency_id', False),
                         })
                     else:
-                        vals_journal.update({'view_id': view_id_cash})
+                        vals_journal.update({'view_id': view_cash_id})
                     vals_journal.update({
                         'default_credit_account_id': child_bnk_acc,
                         'default_debit_account_id': child_bnk_acc,
@@ -507,10 +509,6 @@ class account_installer(osv.osv_memory):
                 'default_debit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id]
             })
         obj_journal.create(cr, uid, vals_journal, context=context)
-
-        # Bank Journals
-        view_id_cash = obj_acc_journal_view.search(cr, uid, [('name', '=', 'Bank/Cash Journal View')], context=context)[0] #TOFIX: Why put fixed name ?
-        view_id_cur = obj_acc_journal_view.search(cr, uid, [('name', '=', 'Bank/Cash Journal (Multi-Currency) View')], context=context)[0] #TOFIX: why put fixed name?
 
         #create the properties
         todo_list = [
