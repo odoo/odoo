@@ -61,10 +61,8 @@ Dashboard for project members that includes:
         'project_demo.xml',
     ],
     'test':[
-        'test/process/draft2delegate2open2done_task.yml',
-        'test/process/template2project2close.yml',
-        'test/process/cancel_project.yml',
-        'test/process/cancel_task.yml',
+        'test/project_process.yml',
+        'test/task_process.yml',
     ],
     'installable': True,
     'active': False,
