@@ -59,7 +59,7 @@
   On a successful interview with the applicant, I hired employee.
 -
   !python {model: hr.applicant}: |
-     self.case_close(cr, uid, [ref('hr_case_programmer')])
+     self.case_close_with_emp(cr, uid, [ref('hr_case_programmer')])
 -
   I check that applicant is "Hired".
 -
