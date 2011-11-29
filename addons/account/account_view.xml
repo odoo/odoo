@@ -2769,7 +2769,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         <field name="type"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Report" attrs="{'invisible': [('state','!=','confirm')]}">
+                        <page string="Report">
                             <field name="display_detail" attrs="{'invisible': [('type','!=','accounts')]}"/>
                             <newline/>
                             <field name="account_ids" nolabel="1" colspan="6" attrs="{'invisible': [('type', '!=', 'accounts')]}"/>
@@ -2779,7 +2779,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <field name="account_type_ids" nolabel="1" attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
                             <newline/>
                         </page>
-                        <page string="Notes" attrs="{'invisible': [('state','!=','confirm')]}">
+                        <page string="Notes">
                             <field name="note" nolabel="1" colspan="4"/>
                         </page>
                     </notebook>
