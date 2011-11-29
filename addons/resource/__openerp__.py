@@ -47,6 +47,7 @@ It also manages the leaves of every resource.
     ],
     'test': [
                 'test/process/test_resource.yml',
+                'test/process/test_resource_calendar.yml',
                 'test/ui/on_change_resource.yml',
                 'test/ui/duplicate_resource.yml',
             ],
