@@ -38,7 +38,7 @@
   Then I click on the 'Post' button of Journal Entries
 -
   !python {model: account.move}: |
-    ids = [ref('account_model_mymodelonyears0')]
+    ids = self.search(cr, uid, [('ref', '=', 'My Test Model')])
     self.button_validate(cr, uid, ids, {})
     moves = self.browse(cr, uid, ids)[0]
     assert(moves.state == 'posted'), _('Journal Entries are not in posted state')
@@ -48,9 +48,6 @@
   !record {model: account.subscription, id: test_recurring_lines }:
     name: Test Recurring Lines
     model_id: account_model_mymodelonyears0
-    date_start: !eval time.strftime('%Y-%m-%d')
-    period_nbr: 1
-    period_total: 12
     period_type: 'day'
 -
   Then I click on the 'Compute' button of Recurring lines

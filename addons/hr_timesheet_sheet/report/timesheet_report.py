@@ -120,3 +120,5 @@ class timesheet_report(osv.osv):
             )
         """)
 timesheet_report()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

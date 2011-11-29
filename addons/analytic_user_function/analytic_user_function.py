@@ -143,3 +143,5 @@ class hr_analytic_timesheet(osv.osv):
 
 hr_analytic_timesheet()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

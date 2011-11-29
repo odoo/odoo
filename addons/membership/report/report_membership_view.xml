@@ -36,9 +36,10 @@
             <field name="arch" type="xml">
                 <search string="Membership">
                     <group>
-                        <filter string="  Year  " icon="terp-go-year"
-                        domain="[('date_from','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_from','&gt;=',time.strftime('%%Y-01-01'))]"
-                        help="Events created in current year"/>
+                        <filter string="Year" icon="terp-go-year" name="year"
+                            domain="[('date_from','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_from','&gt;=',time.strftime('%%Y-01-01'))]"
+                            help="Events created in current year"/>
+                        <separator orientation="vertical"/>
                         <filter string="   Month   " icon="terp-go-month" name="this_month"
                         domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                         help="Events created in current month"/>
@@ -96,7 +97,7 @@
             <field name="res_model">report.membership</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_report_membership_search"/>
-            <field name="context">{"search_default_member":1, 'search_default_Revenue':1, 'search_default_this_month':1, 'search_default_salesman':1,'group_by_no_leaf':1}</field>
+            <field name="context">{"search_default_year":1,"search_default_member":1, 'search_default_Revenue':1, 'search_default_this_month':1, 'search_default_salesman':1,'group_by_no_leaf':1}</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_report_membership_tree_view1">
