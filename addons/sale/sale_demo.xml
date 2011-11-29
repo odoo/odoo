@@ -12,16 +12,15 @@
             <field ref="base.res_partner_address_8" name="partner_invoice_id"/>
             <field ref="base.res_partner_address_8" name="partner_shipping_id"/>
             <field ref="base.res_partner_address_8" name="partner_order_id"/>
-            <field name="order_policy">postpaid</field>
+            <field name="order_policy">picking</field>            
         </record>
 
         <!--Resource: sale.order.line-->
         
         <record id="line" model="sale.order.line">
             <field name="order_id" ref="order"/>
-            <field name="name">New server config + material</field>
-            <field model="product.product" name="product_id" search="[]"/>
-            <field model="product.uom" name="product_uom" search="[]"/>
+            <field name="product_id" ref="product.product_product_mb1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">123.20</field>
             <field name="type">make_to_stock</field>
         </record>
@@ -67,7 +66,8 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_9"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_9"/>
             <field name="partner_order_id" ref="base.res_partner_address_9"/>
-            <field name="order_policy">picking</field>
+            <field name="order_policy">postpaid</field>
+            
         </record>
 
         <!--Resource: sale.order.line-->
