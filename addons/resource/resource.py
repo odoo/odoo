@@ -366,13 +366,6 @@ class resource_resource(osv.osv):
             wktime_cal.append((non_working[:-1], time_range))
         return wktime_cal
 
-    #TODO: Write optimized alogrothem for resource availability. : Method Yet not implemented
-    def check_availability(self, cr, uid, ids, start, end, context=None):
-        if context ==  None:
-            contex = {}
-        allocation = {}
-        return allocation
-
 resource_resource()
 
 class resource_calendar_leaves(osv.osv):
