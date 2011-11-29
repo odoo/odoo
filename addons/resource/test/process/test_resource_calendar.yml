@@ -10,12 +10,12 @@
     result = self.working_hours_on_day(cr, uid, calendar, dt, context)
     assert result, "No Working Our on Day for Resource has been Generated."
 -
-  I Check the Resource 6.0 Hours Working Internal Timeming Based on Resource Calendar.
+  I Check the Resource 6.0 Hours Working Internal Timing Based on Resource Calendar.
 -
   !python {model: resource.calendar}: |
     from datetime import datetime
     dt = datetime.now()
-    result = self.interval_get(cr, uid, ref('timesheet_group1'), dt, 6.0)
+    result = self.interval_get(cr, uid, ref('timesheet_group1'), dt, 6.0, ref('resource_resource_demorsource'))
     assert result, 'No Working Internal Timeming Generated'
     
 -
