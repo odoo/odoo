@@ -62,3 +62,5 @@ class res_currency(osv.osv, EDIMixin):
             self.pool.get('res.currency.rate').create(cr, SUPERUSER_ID, {'currency_id': currency_id,
                                                                          'rate': rate}, context=context)
         return currency_id
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

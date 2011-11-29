@@ -82,3 +82,5 @@ class stock_split_into(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 stock_split_into()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

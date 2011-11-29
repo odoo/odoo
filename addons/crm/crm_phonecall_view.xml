@@ -10,7 +10,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
         <field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
-        <field name="context">{'object_id':'crm.phonecall'}</field>
+        <field name="context" eval="{'object_id': ref('model_crm_phonecall')}"/>
         <field name="help">Create specific phone call categories to better define the type of calls tracked in the system.</field>
     </record>
 

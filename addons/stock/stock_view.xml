@@ -1058,7 +1058,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
+            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_available': 1}</field>
             <field name="search_view_id" ref="view_picking_out_search"/>
             <field name="help">This is the list of all delivery orders that have to be prepared, according to your different sales orders and your logistics rules.</field>
         </record>
@@ -1335,7 +1335,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','internal')]</field>
-            <field name="context">{'contact_display': 'partner_address',"search_default_available":1}</field>
+            <field name="context">{'default_type': 'internal', 'contact_display': 'partner_address', 'search_default_available': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help">Internal Moves display all inventory operations you have to perform in your warehouse. All operations can be categorized into stock journals, so that each worker has his own list of operations to perform in his own journal. Most operations are prepared automatically by OpenERP according to your preconfigured logistics rules, but you can also record manual stock operations.</field>
         </record>
@@ -1841,7 +1841,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'contact_display': 'partner',"search_default_available":1}</field>
+            <field name="context">{'default_type': 'out', 'contact_display': 'partner',"search_default_available":1}</field>
             <field name="search_view_id" ref="view_picking_in_search"/>
         </record>
         <record id="action_invoice_tree5_out" model="ir.actions.act_window.view">

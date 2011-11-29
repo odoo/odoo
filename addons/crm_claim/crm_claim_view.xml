@@ -14,7 +14,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
-            <field name="context">{'object_id':'crm.claim'}</field>
+            <field name="context" eval="{'object_id': ref('model_crm_claim')}"/>
             <field name="help">Create claim categories to better manage and classify your claims. Some example of claims can be: preventive action, corrective action.</field>
         </record>
 
@@ -318,7 +318,7 @@
 
         <act_window
             domain="[('partner_address_id', '=', active_id)]"
-            context="{'default_partner_id': partner_id}"
+            context="{'default_partner_address_id': active_id}"
             id="act_claim_partner_address"
             name="Claims"
             view_mode="tree,form"

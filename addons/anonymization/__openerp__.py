@@ -57,3 +57,5 @@ anonymization process to recover your previous data.
     'images': ['images/anonymization1.jpeg','images/anonymization2.jpeg','images/anonymization3.jpeg'],
 }
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

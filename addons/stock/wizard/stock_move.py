@@ -268,3 +268,5 @@ class stock_move_split_lines_exist(osv.osv_memory):
                         loc_id=False, product_id=False, uom_id=False):
         return self.pool.get('stock.move').onchange_lot_id(cr, uid, [], prodlot_id, product_qty,
                         loc_id, product_id, uom_id)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
