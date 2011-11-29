@@ -158,12 +158,13 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
             var tmp = Number(value);
             if (!isNaN(tmp))
                 return tmp;
-            tmp = value.replace(openerp.web._t.database.parameters.decimal_point, ".");
-            var tmp2 = tmp;
+
+            var tmp2 = tmp = value;
             do {
                 tmp = tmp2;
                 tmp2 = tmp.replace(openerp.web._t.database.parameters.thousands_sep, "");
             } while(tmp !== tmp2);
+            tmp = tmp.replace(openerp.web._t.database.parameters.decimal_point, ".");
             tmp = Number(tmp);
             if (isNaN(tmp))
                 throw new Error(value + " is not a correct float");
