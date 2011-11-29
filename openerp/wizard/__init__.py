@@ -31,6 +31,7 @@ from openerp.osv.osv import except_osv
 from openerp.osv.orm import except_orm
 from openerp.netsvc import Logger, LOG_ERROR
 import sys
+import warnings
 
 class except_wizard(Exception):
     def __init__(self, name, value):
@@ -43,6 +44,10 @@ class interface(netsvc.Service):
 
     def __init__(self, name):
         assert not self.exists('wizard.'+name), 'The wizard "%s" already exists!' % (name,)
+        warnings.warn(
+            "The wizard %s uses the deprecated openerp.wizard.interface class.\n"
+            "It must use the openerp.osv.TransientModel class instead." % \
+            self._name, DeprecationWarning, stacklevel=3)
         super(interface, self).__init__('wizard.'+name)
         self.wiz_name = name
 
