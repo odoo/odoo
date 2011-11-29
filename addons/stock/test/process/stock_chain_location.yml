@@ -1,0 +1,37 @@
+-
+  In order to test the chain location functionality,
+  I create stock production lot for product 'Sprouting Foods'.
+-
+  !record {model: stock.production.lot, id: stock_production_lot2}:
+    product_id: product.product_product_sprouting
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    name: 0000002
+-
+  I update product 'Sprouting Foods' with the help of 'Change Product Quantity' wizard
+  and assign a location 'Refrigerated Vehicles' to test the chained location flow.
+-
+  !python {model: stock.change.product.qty}: |
+    product = self.pool.get('product.product').browse(cr, uid, ref('product.product_product_sprouting'))
+    fields = {'location_id' : ref('refrigerate_location_stock'), 'new_quantity': 1, 'product_id': product.id, 'prodlot_id': ref('stock.stock_production_lot2')}
+    ids = self.create(cr, uid, fields)
+    self.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
+-
+  I check stock moves of product 'Sprouting Foods'.
+-
+  !python {model: stock.move}: |
+    ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_sprouting'))])
+    for i in self.browse(cr, uid, ids):
+      assert i.product_qty >= 1,"Product is not correspond"
+      if i.location_id.name == 'Inventory loss':
+        assert i.location_dest_id.name == 'Refrigerated Vehicles',"Destination location must be 'Refrigerated Vehicles'"
+      if i.location_id.name == 'Refrigerated Vehicles':
+        assert i.location_dest_id.name == 'Cold Storage',"Destination location must be 'Cold Storage' because the source location is 'Refrigerated Vehicles'"
+      if i.location_id.name == 'Cold Storage':
+        assert i.location_dest_id.name == 'Customers',"Destination location must be 'Customers' because the source location is 'Cold Storage'"
+-
+  I trace the stock production lot for product 'Sprouting Foods'
+-
+  !python {model: stock.production.lot }: |
+    self.action_traceability(cr,uid,[ref('stock_production_lot2')], {'active_model': 'ir.ui.menu', 'field': '', 'type': ''})
+
+

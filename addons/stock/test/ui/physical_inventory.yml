@@ -1,5 +1,5 @@
 -
-  I create a record for physical inventory.
+  I create a record for physical inventory and change the product quantity zero by making a physical inventory.
 -
    !record {model: stock.inventory, id: stock_physical_inventory0}:
     company_id: base.main_company
@@ -24,7 +24,7 @@
     except:
       pass
 -
-  I confirm the Inventory.
+  I confirm the inventory.
 -
   !python {model: stock.inventory}: |
    inventory = self.browse(cr, uid, [ref('stock_physical_inventory0')])
@@ -34,7 +34,7 @@
      assert line.product_qty == 0.0,"Product Quantity should be Zero"
    self.action_done(cr,uid,[ref('stock_physical_inventory0')])
 -
-  I check the Inventory after Validate.
+  I check the inventory after validation.
 -
   !python {model: stock.inventory}: |
    inventory = self.browse(cr, uid, [ref('stock_physical_inventory0')])
