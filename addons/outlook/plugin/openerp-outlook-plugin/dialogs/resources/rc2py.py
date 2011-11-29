@@ -37,3 +37,5 @@ if __name__=="__main__":
         convert(sys.argv[1], sys.argv[2])
     else:
         convert()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

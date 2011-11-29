@@ -108,3 +108,5 @@ class bank(osv.osv):
 
                 self.write(cr, uid, [bank.id], {'journal_id': journal_id}, context=context)
         return True
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

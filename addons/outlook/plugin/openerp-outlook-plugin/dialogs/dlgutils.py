@@ -16,3 +16,5 @@ def SetWaitCursor(wait):
     else:
         hCursor = win32gui.LoadCursor(0, 0)
     win32gui.SetCursor(hCursor)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

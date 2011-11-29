@@ -41,3 +41,5 @@ on a remote server.
     "certificate" : "001114200456808204637",
     'images': ['images/project_tasks_caldav.jpeg','images/project_tasks_caldav_attendees.jpeg','images/project_caldav_calendars.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
