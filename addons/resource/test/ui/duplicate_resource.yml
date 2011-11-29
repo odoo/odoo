@@ -1,0 +1,6 @@
+-
+ I duplicate the resource "Demo resource"
+-
+  !python {model: resource.resource}: |
+    copied_id = self.copy(cr, uid, ref("resource_resource_demorsource"))
+    assert copied_id, "Unablr to Duplicate Reousrce"
