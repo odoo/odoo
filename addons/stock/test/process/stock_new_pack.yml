@@ -1,0 +1,25 @@
+-
+  In order to test the new packing facility in OpenERP, I create one pack record.
+-
+  !record {model: stock.tracking, id: stock_tracking_0}:
+    name: 0000007
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')  
+-
+  I have to take one delivery order move and set the craeted pack.
+-
+  !record {model: stock.move, id: stock_move_3}:  
+    tracking_id: stock_tracking_0
+-
+  I split the picking in two quantities.
+-
+  !python {model: stock.move }: |
+    move_ids=self.browse(cr,uid,ref('stock_move_3'))
+    old_moves = self.search(cr, uid, [('picking_id','=',move_ids.picking_id.id)])
+    split_obj=self.pool.get('stock.split.into')
+    split_id = split_obj.create(cr, uid, { 'quantity': 1 })
+    split_obj.split(cr, uid, [split_id],{"active_model": "stock.move", "active_ids": [ref('stock_move_3')],"active_id": ref('stock_move_2')})
+    moves = self.search(cr, uid, [('picking_id','=',move_ids.picking_id.id)])
+    assert len(moves) > len(old_moves),"After spliting the picking, new move should be created"
+    new_move = self.browse(cr, uid, moves[-1])
+    assert new_move.tracking_id,"After spliting the picking, new move should be created with new pack"
+

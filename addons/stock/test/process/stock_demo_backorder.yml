@@ -54,9 +54,9 @@
     pick = self.browse(cr, uid, ref('stock.stock_picking_1'), {})
     for line in pick.move_lines:
         if line.product_id.id == ref('product.product_product_cpu3'):
-            assert line.product_qty == 5.0, "Wrong quantity %.2f for CPU3 back order" % (line.product_qty,)
+            assert line.product_qty == 5.0, "Wrong quantity %s for CPU3 back order" % (line.product_qty,)
         elif line.product_id.id == ref('product.product_product_fan2'):
-            assert line.product_qty == 4.0, "Wrong quantity %.2f for FAN2 back order" % (line.product_qty,)
+            assert line.product_qty == 4.0, "Wrong quantity %s for FAN2 back order" % (line.product_qty,)
         elif line.product_id.id == ref('product.product_product_pc1'):
             assert line.product_qty == 0.0, "Wrong quantity for PC1 back order"
         else:
