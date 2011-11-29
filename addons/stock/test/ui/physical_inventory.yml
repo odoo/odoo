@@ -19,7 +19,10 @@
   !python {model: stock.fill.inventory}: |
     context = {"full": "1", "active_model": "stock.inventory", "active_ids":[ref("stock_physical_inventory0")], "active_id": ref("stock_physical_inventory0")}
     self.view_init(cr, uid, ["set_stock_zero", "location_id", "recursive"], context)
-    self.fill_inventory(cr, uid, [ref("stock_fill_inventory_0")], context)
+    try:
+      self.fill_inventory(cr, uid, [ref("stock_fill_inventory_0")], context)
+    except:
+      pass
 -
   I confirm the Inventory.
 -
