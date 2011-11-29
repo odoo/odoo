@@ -37,7 +37,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.show_invalid = true;
         this.default_focus_field = null;
         this.default_focus_button = null;
-        this.registry = this.readonly ? openerp.web.form.readonly : openerp.web.form.widgets;
+        this.registry = openerp.web.form.widgets;
         this.has_been_loaded = $.Deferred();
         this.$form_header = null;
         this.translatable_fields = [];
@@ -105,7 +105,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
         this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
         this.$form_header.find('button.oe_form_button_delete').click(this.on_button_delete);
-        this.$form_header.find('button.oe_form_button_toggle').click(this.on_toggle_readonly);
 
         if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
@@ -117,22 +116,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
         this.has_been_loaded.resolve();
     },
-    on_toggle_readonly: function() {
-        var self = this;
-        self.translatable_fields = [];
-        self.widgets = {};
-        self.fields = {};
-        self.$form_header.find('button').unbind('click');
-        self.readonly = !self.readonly;
-        self.registry = self.readonly ? openerp.web.form.readonly : openerp.web.form.widgets;
-        self.on_loaded(self.fields_view);
-        return self.reload();
-    },
     do_set_readonly: function() {
         return this.readonly ? $.Deferred().resolve() : this.on_toggle_readonly();
-    },
-    do_set_editable: function() {
-        return !this.readonly ? $.Deferred().resolve() : this.on_toggle_readonly();
     },
     do_show: function () {
         var promise;
@@ -171,8 +156,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.$form_header.find('.oe_form_on_update').show();
             this.$form_header.find('button.oe_form_button_new').show();
         }
-        this.$form_header.find('.oe_form_on_readonly').toggle(this.readonly);
-        this.$form_header.find('.oe_form_on_editable').toggle(!this.readonly);
         this.datarecord = record;
 
         _(this.fields).each(function (field, f) {
@@ -3070,119 +3053,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     }
 });
 
-openerp.web.form.FieldReadonly = openerp.web.form.Field.extend({
 
-});
-openerp.web.form.FieldCharReadonly = openerp.web.form.FieldReadonly.extend({
-    template: 'FieldChar.readonly',
-    init: function(view, node) {
-        this._super(view, node);
-        this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
-    },
-    set_value: function (value) {
-        this._super.apply(this, arguments);
-        var show_value = openerp.web.format_value(value, this, '');
-        if (this.password) {
-            show_value = new Array(show_value.length + 1).join('*');
-        }
-        this.$element.find('div').text(show_value);
-        return show_value;
-    }
-});
-openerp.web.form.FieldURIReadonly = openerp.web.form.FieldCharReadonly.extend({
-    template: 'FieldURI.readonly',
-    scheme: null,
-    set_value: function (value) {
-        var displayed = this._super.apply(this, arguments);
-        this.$element.find('a')
-                .attr('href', this.scheme + ':' + displayed)
-                .text(displayed);
-    }
-});
-openerp.web.form.FieldEmailReadonly = openerp.web.form.FieldURIReadonly.extend({
-    scheme: 'mailto'
-});
-openerp.web.form.FieldUrlReadonly = openerp.web.form.FieldURIReadonly.extend({
-    set_value: function (value) {
-        var s = /(\w+):(.+)/.exec(value);
-        if (!s || !(s[1] === 'http' || s[1] === 'https')) { return; }
-        this.scheme = s[1];
-        this._super(s[2]);
-    }
-});
-openerp.web.form.FieldBooleanReadonly = openerp.web.form.FieldCharReadonly.extend({
-    set_value: function (value) {
-        this._super(value ? '\u2611' : '\u2610');
-    }
-});
-openerp.web.form.FieldSelectionReadonly = openerp.web.form.FieldReadonly.extend({
-    template: 'FieldChar.readonly',
-    init: function(view, node) {
-        // lifted straight from r/w version
-        var self = this;
-        this._super(view, node);
-        this.values = _.clone(this.field.selection);
-        _.each(this.values, function(v, i) {
-            if (v[0] === false && v[1] === '') {
-                self.values.splice(i, 1);
-            }
-        });
-        this.values.unshift([false, '']);
-    },
-    set_value: function (value) {
-        value = value === null ? false : value;
-        value = value instanceof Array ? value[0] : value;
-        var option = _(this.values)
-            .detect(function (record) { return record[0] === value; });
-        this._super(value);
-        this.$element.find('div').text(option ? option[1] : this.values[0][1]);
-    }
-});
-openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldURIReadonly.extend({
-    set_value: function (value) {
-        value = value || null;
-        this.invalid = false;
-        var self = this;
-        this.value = value;
-        self.update_dom();
-        self.on_value_changed();
-        var real_set_value = function(rval) {
-            self.value = rval;
-            self.$element.find('a')
-                 .unbind('click')
-                 .text(rval ? rval[1] : '')
-                 .click(function () {
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: self.field.relation,
-                        res_id: self.value[0],
-                        context: self.build_context(),
-                        views: [[false, 'form']],
-                        target: 'current'
-                    });
-                    return false;
-                 });
-        };
-        if (value && !(value instanceof Array)) {
-            new openerp.web.DataSetStatic(
-                    this, this.field.relation, self.build_context())
-                .name_get([value], function(data) {
-                    real_set_value(data[0]);
-            });
-        } else {
-            setTimeout(function() {real_set_value(value);}, 0);
-        }
-    },
-    get_value: function() {
-        if (!this.value) {
-            return false;
-        } else if (this.value instanceof Array) {
-            return this.value[0];
-        } else {
-            return this.value;
-        }
-    }
-});
 
 /**
  * Registry of form widgets, called by :js:`openerp.web.FormView`
@@ -3218,30 +3089,6 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'statusbar': 'openerp.web.form.FieldStatus'
 });
 
-openerp.web.form.FieldMany2ManyReadonly = openerp.web.form.FieldMany2Many.extend({
-    force_readonly: true
-});
-openerp.web.form.FieldOne2ManyReadonly = openerp.web.form.FieldOne2Many.extend({
-    force_readonly: true
-});
-openerp.web.form.readonly = openerp.web.form.widgets.clone({
-    'char': 'openerp.web.form.FieldCharReadonly',
-    'email': 'openerp.web.form.FieldEmailReadonly',
-    'url': 'openerp.web.form.FieldUrlReadonly',
-    'text': 'openerp.web.form.FieldCharReadonly',
-    'text_wiki' : 'openerp.web.form.FieldCharReadonly',
-    'date': 'openerp.web.form.FieldCharReadonly',
-    'datetime': 'openerp.web.form.FieldCharReadonly',
-    'selection' : 'openerp.web.form.FieldSelectionReadonly',
-    'many2one': 'openerp.web.form.FieldMany2OneReadonly',
-    'many2many' : 'openerp.web.form.FieldMany2ManyReadonly',
-    'one2many' : 'openerp.web.form.FieldOne2ManyReadonly',
-    'one2many_list' : 'openerp.web.form.FieldOne2ManyReadonly',
-    'boolean': 'openerp.web.form.FieldBooleanReadonly',
-    'float': 'openerp.web.form.FieldCharReadonly',
-    'integer': 'openerp.web.form.FieldCharReadonly',
-    'float_time': 'openerp.web.form.FieldCharReadonly'
-});
 
 };
 
