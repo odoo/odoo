@@ -1,7 +1,7 @@
 -  | 
   In order to test resource calendar, I use the Demo record '38 Hours/Week'.
 -
-  I check the working hour on day for resoruce 'Demo Resource' using calendar '38 Hours/Week' .
+  I check the working hour on day for resource 'Demo Resource' using calendar '38 Hours/Week' .
 -
   !python {model: resource.calendar}: |
     from datetime import datetime
@@ -27,3 +27,11 @@
     dt_to = dt_from  + timedelta(days=3)
     hours = self.interval_hours_get(cr, uid, ref('timesheet_group1'), dt_from, dt_to)
     assert hours, 'No Working Hours Generated'
+-
+  I check resource working schedule based on resource calendar for 30 Hours.
+-
+  !python {model: resource.calendar}: |
+    from datetime import datetime, timedelta
+    dt_from = datetime.now()
+    hours = self.interval_min_get(cr, uid, ref('timesheet_group1'), dt_from, 30.0, resource=ref('resource_resource_demorsource'))
+    assert hours, 'No Working Schedule Generated.'
