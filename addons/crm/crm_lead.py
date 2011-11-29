@@ -441,10 +441,11 @@ class crm_lead(crm_case, osv.osv):
         This opens Meeting's calendar view to schedule meeting on current Opportunity
         @return : Dictionary value for created Meeting view
         """
+        if context is None:
+            context = {}
         value = {}
+        data_obj = self.pool.get('ir.model.data')
         for opp in self.browse(cr, uid, ids, context=context):
-            data_obj = self.pool.get('ir.model.data')
-
             # Get meeting views
             result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
             res = data_obj.read(cr, uid, result, ['res_id'])
@@ -457,8 +458,7 @@ class crm_lead(crm_case, osv.osv):
                 id2 = data_obj.browse(cr, uid, id2, context=context).res_id
             if id3:
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-
-            context = {
+            context.update({
                 'default_opportunity_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
                 'default_user_id': uid, 
@@ -466,7 +466,7 @@ class crm_lead(crm_case, osv.osv):
                 'default_email_from': opp.email_from,
                 'default_state': 'open',  
                 'default_name': opp.name
-            }
+            })
             value = {
                 'name': _('Meetings'),
                 'context': context,
