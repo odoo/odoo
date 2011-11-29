@@ -22,7 +22,6 @@
 from datetime import datetime, timedelta
 import math
 from faces import *
-from new import classobj
 from osv import fields, osv
 from tools.translate import _
 
