@@ -250,11 +250,10 @@ class hr_evaluation(osv.osv):
         return True
 
     def button_cancel(self, cr, uid, ids, context=None):
+        interview_obj=self.pool.get('hr.evaluation.interview')
+        evaluation = self.browse(cr, uid, ids[0], context)
+        interview_obj.survey_req_cancel(cr, uid, [r.id for r in evaluation.survey_request_ids])
         self.write(cr, uid, ids,{'state':'cancel'}, context=context)
-        return True
-
-    def button_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids,{'state': 'draft'}, context=context)
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
