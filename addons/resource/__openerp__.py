@@ -46,8 +46,8 @@ It also manages the leaves of every resource.
     'demo_xml': ['resource_demo.xml'
     ],
     'test': [
-                'test/on_chnage_resource.yml',
                 'test/test_resource.yml',
+                'test/on_chnage_resource.yml',
             ],
     'installable': True,
     'active': False,
