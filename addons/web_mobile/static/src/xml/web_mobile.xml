@@ -298,13 +298,22 @@
                     </t>
                     <t t-if="fields[field.attrs.name].type == 'one2many'">
                         <ul data-role="listview" data-inset="true" data-theme="d">
-                            <li data-theme="c" t-att-for="field.attrs.name" >
+                            <li id="o2m_btn" data-theme="c" t-att-for="field.attrs.name" >
                                 <a href="">
                                     <t t-esc="fields[field.attrs.name].string"/>
                                 </a>
                             </li>
-                         </ul>
-                     </t>
+                        </ul>
+                    </t>
+                    <t t-if="fields[field.attrs.name].type == 'many2many'">
+                    <ul data-role="listview" data-inset="true" data-theme="d">
+                        <li id="m2m_btn" data-theme="c" t-att-for="field.attrs.name" >
+                            <a href="">
+                                <t t-esc="fields[field.attrs.name].string"/>
+                            </a>
+                        </li>
+                    </ul>
+                </t>
                 </div>
             </t>
             <t t-if="notebooks">
