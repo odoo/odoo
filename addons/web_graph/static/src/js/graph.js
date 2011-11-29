@@ -187,7 +187,6 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
 
     schedule_bar: function(results) {
         var self = this;
-
         var group_list, view_chart;
         if (!this.group_field) {
             view_chart = (this.orientation === 'horizontal') ? 'barH' : 'bar';
@@ -220,7 +219,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     .map(function (value, index) {
                         return {
                             group: self.ordinate + '_' +
-                                    value.toLowerCase().replace(/\s/g, '_'),
+                                    value.toLowerCase().replace(/[\s\/]+/g,'_'),
                             text: value,
                             color: COLOR_PALETTE[index % COLOR_PALETTE.length]
                         };
@@ -235,21 +234,19 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     _(records).each(function (record) {
                         var key = _.str.sprintf('%s_%s',
                             self.ordinate,
-                            record[self.group_field].toLowerCase().replace(/\s/g, '_'));
+                            record[self.group_field].toLowerCase().replace(/[\s\/]+/g,'_'));
                         r[key] = record[self.ordinate];
                     });
                     return r;
                 })
                 .value();
         }
-
         var abscissa_description = {
             title: "<b>" + this.fields[this.abscissa].string + "</b>",
             template: function (obj) {
                 return obj[self.abscissa] || 'Undefined';
             }
         };
-
         var ordinate_description = {
             lines: true,
             title: "<b>" + this.fields[this.ordinate].string + "</b>"
@@ -263,7 +260,6 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             x_axis = abscissa_description;
             y_axis = ordinate_description;
         }
-
         var renderer = function () {
             if (self.$element.is(':hidden')) {
                 self.renderer = setTimeout(renderer, 100);

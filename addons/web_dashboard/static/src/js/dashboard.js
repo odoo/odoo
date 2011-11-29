@@ -26,7 +26,6 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         // Events
         this.$element.find('.oe-dashboard-link-undo').click(this.on_undo);
         this.$element.find('.oe-dashboard-link-reset').click(this.on_reset);
-        this.$element.find('.oe-dashboard-link-add_widget').click(this.on_add_widget);
         this.$element.find('.oe-dashboard-link-change_layout').click(this.on_change_layout);
 
         this.$element.delegate('.oe-dashboard-column .oe-dashboard-fold', 'click', this.on_fold_action);
@@ -34,19 +33,19 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
 
         this.actions_attrs = {};
         // Init actions
-        _.each(this.node.children, function(column) {
-            _.each(column.children, function(action) {
+        _.each(this.node.children, function(column, column_index) {
+            _.each(column.children, function(action, action_index) {
                 delete(action.attrs.width);
                 delete(action.attrs.height);
                 delete(action.attrs.colspan);
                 self.actions_attrs[action.attrs.name] = action.attrs;
                 self.rpc('/web/action/load', {
                     action_id: parseInt(action.attrs.name, 10)
-                }, self.on_load_action);
+                }, function(result) {
+                    self.on_load_action(result, column_index + '_' + action_index);
+                });
             });
         });
-
-        //this.$element.find('a.oe-dashboard-action-rename').live('click', this.on_rename);
     },
     on_undo: function() {
         this.rpc('/web/view/undo_custom', {
@@ -58,85 +57,6 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             view_id: this.view.fields_view.view_id,
             reset: true
         }, this.do_reload);
-    },
-    on_add_widget: function() {
-        var self = this;
-        var action_manager = new openerp.web.ActionManager(this);
-        var dialog = new openerp.web.Dialog(this, {
-            title : 'Actions',
-            width: 800,
-            height: 600,
-            buttons : {
-                Cancel : function() {
-                    $(this).dialog('destroy');
-                },
-                Add : function() {
-                    self.do_add_widget(action_manager.inner_viewmanager.views.list.controller);
-                    $(this).dialog('destroy');
-                }
-            }
-        }).start().open();
-        action_manager.appendTo(dialog.$element);
-        action_manager.do_action({
-            res_model : 'ir.actions.actions',
-            views : [[false, 'list']],
-            type : 'ir.actions.act_window',
-            limit : 80,
-            auto_search : true,
-            flags : {
-                sidebar : false,
-                views_switcher : false,
-                action_buttons : false
-            }
-        });
-        // TODO: should bind ListView#select_record in order to catch record clicking
-    },
-    do_add_widget : function(listview) {
-        var self = this,
-            actions = listview.groups.get_selection().ids,
-            results = [],
-            qdict = { view : this.view };
-        // TODO: should load multiple actions at once
-        _.each(actions, function(aid) {
-            self.rpc('/web/action/load', {
-                action_id: aid
-            }, function(result) {
-                self.actions_attrs[aid] = {
-                    name: aid,
-                    string: _.str.trim(result.result.name)
-                };
-                qdict.action = {
-                    attrs : self.actions_attrs[aid]
-                };
-                self.$element.find('.oe-dashboard-column:first').prepend(QWeb.render('DashBoard.action', qdict));
-                self.do_save_dashboard();
-                self.on_load_action(result)
-            });
-        });
-    },
-    on_rename : function(e) {
-        var self = this,
-            id = parseInt($(e.currentTarget).parents('.oe-dashboard-action:first').attr('data-id'), 10),
-            $header = $(e.currentTarget).parents('.oe-dashboard-action-header:first'),
-            $rename = $header.find('a.oe-dashboard-action-rename').hide(),
-            $title = $header.find('span.oe-dashboard-action-title').hide(),
-            $input = $header.find('input[name=title]');
-        $input.val($title.text()).show().focus().bind('keydown', function(e) {
-            if (e.which == 13 || e.which == 27) {
-                if (e.which == 13) { //enter
-                    var val = $input.val();
-                    if (!val) {
-                        return false;
-                    }
-                    $title.text(val);
-                    self.actions_attrs[id].string = val;
-                    self.do_save_dashboard();
-                }
-                $input.unbind('keydown').hide();
-                $rename.show();
-                $title.show();
-            }
-        });
     },
     on_change_layout: function() {
         var self = this;
@@ -191,8 +111,10 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         this.do_save_dashboard();
     },
     on_close_action: function(e) {
-        $(e.currentTarget).parents('.oe-dashboard-action:first').remove();
-        this.do_save_dashboard();
+        if (confirm("Are you sure you want to remove this item ?")) {
+            $(e.currentTarget).parents('.oe-dashboard-action:first').remove();
+            this.do_save_dashboard();
+        }
     },
     do_save_dashboard: function() {
         var self = this;
@@ -204,8 +126,17 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         this.$element.find('.oe-dashboard-column').each(function() {
             var actions = [];
             $(this).find('.oe-dashboard-action').each(function() {
-                var action_id = $(this).attr('data-id');
-                actions.push(self.actions_attrs[action_id]);
+                var action_id = $(this).attr('data-id'),
+                    new_attrs = _.clone(self.actions_attrs[action_id]);
+                if (new_attrs.domain) {
+                    new_attrs.domain = new_attrs.domain_string;
+                    delete(new_attrs.domain_string);
+                }
+                if (new_attrs.context) {
+                    new_attrs.context = new_attrs.context_string;
+                    delete(new_attrs.context_string);
+                }
+                actions.push(new_attrs);
             });
             board.columns.push(actions);
         });
@@ -217,7 +148,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             self.$element.find('.oe-dashboard-link-undo, .oe-dashboard-link-reset').show();
         });
     },
-    on_load_action: function(result) {
+    on_load_action: function(result, index) {
         var self = this,
             action = result.result,
             action_attrs = this.actions_attrs[action.id],
@@ -261,13 +192,22 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         };
         var am = new openerp.web.ActionManager(this);
         this.action_managers.push(am);
-        am.appendTo($("#"+this.view.element_id + '_action_' + action.id));
+        am.appendTo($('#' + this.view.element_id + '_action_' + index));
         am.do_action(action);
         am.do_action = function(action) {
             self.do_action(action);
         }
         if (am.inner_viewmanager) {
             am.inner_viewmanager.on_mode_switch.add(function(mode) {
+                var new_views = [];
+                _.each(action_orig.views, function(view) {
+                    new_views[view[1] === mode ? 'unshift' : 'push'](view);
+                });
+                if (!new_views.length || new_views[0][1] !== mode) {
+                    new_views.unshift([false, mode]);
+                }
+                action_orig.views = new_views;
+                action_orig.res_id = am.inner_viewmanager.dataset.ids[am.inner_viewmanager.dataset.index];
                 self.do_action(action_orig);
             });
         }
@@ -512,9 +452,12 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
     run_configuration_wizards: function () {
         var self = this;
         new openerp.web.DataSet(this, 'res.config').call('start', [[]], function (action) {
-            $.unblockUI();
             self.widget_parent.widget_parent.do_action(action, function () {
                 openerp.webclient.do_reload();
+            });
+            self.$element.empty();
+            self.do_display_root_menu().then(function () {
+                $.unblockUI();
             });
         });
     }

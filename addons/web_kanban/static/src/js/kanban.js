@@ -26,10 +26,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.group_operators = ['avg', 'max', 'min', 'sum', 'count'];
         this.qweb = new QWeb2.Engine();
         this.qweb.debug = openerp.connection.debug;
-        this.qweb.default_dict = {
-            '_' : _,
-            '_t' : _t
-        }
+        this.qweb.default_dict = _.clone(QWeb.default_dict);
         this.has_been_loaded = $.Deferred();
         this.search_domain = this.search_context = this.search_group_by = null;
         this.currently_dragging = {};
@@ -240,6 +237,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
     },
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
+        var self = this;
         if (old_group === new_group) {
             new_group.records.splice(old_index, 1);
             new_group.records.splice(new_index, 0, record);
@@ -253,6 +251,10 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             this.dataset.write(record.id, data, {}, function() {
                 record.do_reload();
                 new_group.do_save_sequences();
+            }).fail(function(error, evt) {
+                evt.preventDefault();
+                alert("An error has occured while moving the record to this group.");
+                self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }
     },
@@ -385,17 +387,17 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
         return new_record;
     },
     render: function() {
-        var ctx = {
+        this.qweb_context = {
             record: this.record,
             widget: this
         }
         for (var p in this) {
             if (_.str.startsWith(p, 'kanban_')) {
-                ctx[p] = _.bind(this[p], this);
+                this.qweb_context[p] = _.bind(this[p], this);
             }
         }
         return this._super({
-            'content': this.view.qweb.render('kanban-box', ctx)
+            'content': this.view.qweb.render('kanban-box', this.qweb_context)
         });
     },
     bind_events: function() {
@@ -406,10 +408,23 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             $show_on_click.toggle();
             self.state.folded = !self.state.folded;
         });
+
+        this.$element.find('[tooltip]').tipTip({
+            maxWidth: 500,
+            defaultPosition: 'top',
+            content: function() {
+                var template = $(this).attr('tooltip');
+                if (!self.view.qweb.has_template(template)) {
+                    return false;
+                }
+                return self.view.qweb.render(template, self.qweb_context);
+            }
+        });
+
         this.$element.find('.oe_kanban_action').click(function() {
             var $action = $(this),
                 type = $action.data('type') || 'button',
-                method = 'do_action_' + type;
+                method = 'do_action_' + (type === 'action' ? 'object' : type);
             if (typeof self[method] === 'function') {
                 self[method]($action);
             } else {

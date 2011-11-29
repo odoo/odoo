@@ -44,6 +44,7 @@ openerp.web_process = function (openerp) {
                 if(self.process_id) {
                     self.graph_get().done(function(res) {
                         self.process_notes = res.notes;
+                        self.process_title = res.name;
                         self.process_subflows = _.filter(res.nodes, function(x) {
                             return x.subflow != false;
                         });
@@ -245,9 +246,10 @@ openerp.web_process = function (openerp) {
                 transitions['active'] = src.active && !dst.gray;
                 process_graph.addEdge(src['name'], dst['name'], {directed : true});
             });
-
+            var width = $(document).width();
+            var height = $(document).height();
             var layouter = new Graph.Layout.Ordered(process_graph);
-            var render_process_graph = new Graph.Renderer.Raphael('process_canvas', process_graph, $('#process_canvas').width(), $('#process_canvas').height());
+            var render_process_graph = new Graph.Renderer.Raphael('process_canvas', process_graph, width, height);
         },
         jump_to_view: function(model, id) {
             var self = this;
@@ -303,7 +305,7 @@ openerp.web_process = function (openerp) {
                     pager: false
                 }
             });
-        },
+        }
     });
 };
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

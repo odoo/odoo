@@ -1,6 +1,10 @@
 {
     "name": "web calendar",
-    "category" : "Hidden",
+    "category": "Hidden",
+    "description":
+        """
+        OpenERP Web calendar view.
+        """,
     "version": "2.0",
     "depends": ['web'],
     "js": [
@@ -8,8 +12,9 @@
         'static/lib/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js',
         'static/src/js/calendar.js'
     ],
-    "css": ['static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler.css',
-            'static/lib/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css'
+    "css": [
+            'static/lib/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css',
+            'static/src/css/web_calendar.css'
             ],
     'qweb' : [
         "static/src/xml/*.xml",
