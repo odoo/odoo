@@ -29,7 +29,7 @@
       if i.location_id.name == 'Cold Storage':
         assert i.location_dest_id.name == 'Customers',"Destination location must be 'Customers' because the source location is 'Cold Storage'"
 -
-  I trace the stock production lot for product 'Sprouting Foods'
+  I trace the stock production lot for product 'Sprouting Foods'.
 -
   !python {model: stock.production.lot }: |
     self.action_traceability(cr,uid,[ref('stock_production_lot2')], {'active_model': 'ir.ui.menu', 'field': '', 'type': ''})

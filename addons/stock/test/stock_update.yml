@@ -1,5 +1,5 @@
 -
-  In order to test the stock module, I update the current stock of the product '[CPU2]High speed processor config'.
+  I update the current stock of the product '[CPU2]High speed processor config'.
 -
   I assignd the created location in to warehouse.
 -
@@ -27,7 +27,7 @@
   !python {model: stock.production.lot }: |
     self.action_traceability(cr,uid,[ref('stock_production_lot0')], {'lang': 'en_US', 'tz': False, 'active_model': 'ir.ui.menu', 'field': '', 'type': ''})
 -
-  I check physical inventory created.
+  I check that physical inventory created.
 -
   !python {model: stock.inventory.line}: |
     ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_cpu2'))])
@@ -37,7 +37,7 @@
     assert inventory.location_id.id == ref('stock_location_stock'), 'Location is not correspond'
     assert inventory.state == 'done', 'State should be in Done state'
 -
-  I check stock moves created.
+  I check that stock moves created.
 -
   !python {model: stock.move}: |
     ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_cpu2'))])

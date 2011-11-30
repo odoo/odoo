@@ -1,5 +1,5 @@
 -
-  In order to test the new packing facility in OpenERP, I create one pack record.
+  In order to test the new packing from the existing one, First I create a pack.
 -
   !record {model: stock.tracking, id: stock_tracking_0}:
     name: 0000007
@@ -10,7 +10,7 @@
   !record {model: stock.move, id: stock_move_3}:
     tracking_id: stock_tracking_0
 -
-  I split the picking in two quantities.
+  I split the picking in to two quantities.
 -
   !python {model: stock.move }: |
     move_ids=self.browse(cr,uid,ref('stock_move_3'))
