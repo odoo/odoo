@@ -471,5 +471,47 @@
             <field eval="'account.account,'+str(ref('account.a_sale'))" model="account.account" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
+
+        <!-- 
+            Financial Reports
+        -->
+        <record id="account_financial_report_balancesheet0" model="account.financial.report">
+            <field name="name">Balance Sheet</field>
+            <field name="type">sum</field>
+        </record>
+        <record id="account_financial_report_assets0" model="account.financial.report">
+            <field name="name">Assets</field>
+            <field name="parent_id" ref="account_financial_report_balancesheet0"/>
+            <field name="account_type_ids" eval="[(6,0,[ref('account.account_type_asset')])]"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+        </record>
+        <record id="account_financial_report_liability0" model="account.financial.report">
+            <field name="name">Liability</field>
+            <field name="parent_id" ref="account_financial_report_balancesheet0"/>
+            <field name="account_type_ids" eval="[(6,0,[ref('account.account_type_liability')])]"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+        </record>
+
+        <record id="account_financial_report_profitandloss0" model="account.financial.report">
+            <field name="name">Profit and Loss</field>
+            <field name="type">sum</field>
+        </record>
+        <record id="account_financial_report_income0" model="account.financial.report">
+            <field name="name">Income</field>
+            <field name="parent_id" ref="account_financial_report_profitandloss0"/>
+            <field name="account_type_ids" eval="[(6,0,[ref('account.account_type_income')])]"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+        </record>
+        <record id="account_financial_report_expense0" model="account.financial.report">
+            <field name="name">Expense</field>
+            <field name="parent_id" ref="account_financial_report_profitandloss0"/>
+            <field name="account_type_ids" eval="[(6,0,[ref('account.account_type_expense')])]"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+        </record>
+
     </data>
 </openerp>
