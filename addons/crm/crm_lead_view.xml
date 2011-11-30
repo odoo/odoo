@@ -143,34 +143,6 @@
                             type="object" icon="gtk-convert" />
                     </group>
                  </page>
-                 <page string="Extra Info" groups="base.group_extended">
-                    <group colspan="2" col="2">
-                        <separator string="Categorization" colspan="2" col="2"/>
-                        <field name="company_id"
-                            groups="base.group_multi_company"
-                            widget="selection" colspan="2" />
-                        <field name="type_id" select="1" widget="selection"/>
-                        <field name="channel_id" select="1" widget="selection"/>
-                        <field name="referred"/>
-                    </group>
-                    <group colspan="2" col="2">
-                        <separator string="Dates" colspan="2" col="2"/>
-                        <field name="create_date"/>
-                        <field name="write_date"/>
-                        <field name="date_open"/>
-                        <field name="date_closed"/>
-                    </group>
-                    <group colspan="2" col="2">
-                        <separator string="Mailings" colspan="2" col="2"/>
-                        <field name="optin" on_change="on_change_optin(optin)"/>
-                        <field name="optout" on_change="on_change_optout(optout)"/>
-                    </group>
-                    <group colspan="2" col="2">
-                        <separator string="Statistics" colspan="2" col="2"/>
-                        <field name="day_open"/>
-                        <field name="day_close"/>
-                    </group>
-                 </page>
                  <page string="Communication &amp; History" groups="base.group_extended">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" widget="char" size="512"/>
@@ -222,6 +194,34 @@
                     <button string="Send New Email"
                         name="%(mail.action_email_compose_message_wizard)d"
                         icon="terp-mail-message-new" type="action"/>
+                 </page>
+                 <page string="Extra Info" groups="base.group_extended">
+                    <group colspan="2" col="2">
+                        <separator string="Categorization" colspan="2" col="2"/>
+                        <field name="company_id"
+                            groups="base.group_multi_company"
+                            widget="selection" colspan="2" />
+                        <field name="type_id" select="1" widget="selection"/>
+                        <field name="channel_id" select="1" widget="selection"/>
+                        <field name="referred"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Dates" colspan="2" col="2"/>
+                        <field name="create_date"/>
+                        <field name="write_date"/>
+                        <field name="date_open"/>
+                        <field name="date_closed"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Mailings" colspan="2" col="2"/>
+                        <field name="optin" on_change="on_change_optin(optin)"/>
+                        <field name="optout" on_change="on_change_optout(optout)"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Statistics" colspan="2" col="2"/>
+                        <field name="day_open"/>
+                        <field name="day_close"/>
+                    </group>
                  </page>
                 </notebook>
             </form>
