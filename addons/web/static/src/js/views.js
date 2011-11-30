@@ -280,7 +280,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             }
         }
         $.when(view_promise).then(function () {
-            self.$element.find('.oe_view_title:first').text(
+            self.$element.find('.oe_view_title_text:first').text(
                     self.display_title());
         });
         return view_promise;
@@ -472,10 +472,10 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                     view_id = (fvg && fvg.view_id) || '--';
                 self.$element.find('.oe_get_xml_view span').text(view_id);
                 if (!self.action.name && fvg) {
-                    self.$element.find('.oe_view_title').text(fvg.arch.attrs.string || fvg.name);
+                    self.$element.find('.oe_view_title_text').text(fvg.arch.attrs.string || fvg.name);
                 }
 
-                var $title = self.$element.find('.oe_view_title'),
+                var $title = self.$element.find('.oe_view_title_text'),
                     $search_prefix = $title.find('span.oe_searchable_view');
                 if (controller.searchable !== false) {
                     if (!$search_prefix.length) {
