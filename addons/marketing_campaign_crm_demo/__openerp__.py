@@ -42,7 +42,8 @@ Creates demo data like leads, campaigns and segments for the module marketing_ca
     ],
     'test': [
             'test/process/marketing_campaign.yml',
-            'test/ui/onchange_events.yml'
+            'test/ui/demo_data.yml',
+            'test/ui/workitem_report.yml'
              ],
     'installable': True,
     'active': False,
