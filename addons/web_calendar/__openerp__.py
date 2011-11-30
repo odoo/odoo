@@ -1,6 +1,10 @@
 {
     "name": "web calendar",
-    "category" : "Hidden",
+    "category": "Hidden",
+    "description":
+        """
+        OpenERP Web calendar view.
+        """,
     "version": "2.0",
     "depends": ['web'],
     "js": [

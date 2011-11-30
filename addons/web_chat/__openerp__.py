@@ -1,6 +1,10 @@
 {
     "name": "Web Chat",
-    "category" : "Hidden",
+    "category": "Hidden",
+    "description":
+        """
+        OpenERP Web chat module.
+        """,
     "version": "2.0",
     "depends": ['web'],
     "js": [

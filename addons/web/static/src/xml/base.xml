@@ -534,16 +534,17 @@
         t-att-id="'treerow_' + record.id"
         t-att-data-id="record.id" t-att-data-level="level + 1">
     <t t-set="children" t-value="record[children_field]"/>
-    <t t-set="has_children" t-value="children and children.length"/>
+    <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
         t-att-data-id="record.id"
         t-att-style="color_for(record) + (!field_index ? 'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px;' : '')"
-        t-att-class="!field_index and has_children ? 'treeview-tr' : 'treeview-td'">
+        t-att-class="class">
         <span t-if="!field.attrs.modifiers.invisible">
             <t t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
         </span>
+        <t t-set="class" t-value="'treeview-td'"/>
     </td>
 </tr>
 
@@ -1139,6 +1140,7 @@
     </t>
     <option value="_actions">-- Actions --</option>
     <option value="save_filter">Save Filter</option>
+    <option value="add_to_dashboard">Add to Dashboard</option>
     <option value="manage_filters">Manage Filters</option>
 </t>
 <t t-name="SearchView.managed-filters.add">
@@ -1146,6 +1148,16 @@
         <p>Filter Name:</p>
         <input type="text"/>
         <p>(Any existing filter with the same name will be replaced)</p>
+    </div>
+</t>
+<t t-name="SearchView.add_to_dashboard">
+    <div class="oe_forms">
+        <p><b>Select Dashboard to add this filter to:</b></p>
+        <select style="width: 100%; margin-right: 1em;">
+            <option t-foreach="dashboards" t-as="menu" t-att-value="menu.id" t-att-selected="(menu.id == selected_menu_id) || undefined"><t t-esc="menu.name"/></option>
+        </select>
+        <p><b>Title of new Dashboard item:</b></p>
+        <input type="text" style="width: 100%; margin-right: 1em;"/>
     </div>
 </t>
 <t t-name="SearchView.render_lines">

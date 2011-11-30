@@ -1029,7 +1029,8 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
     set_bundle: function(translation_bundle) {
         var self = this;
         this.db = {};
-        var modules = _.keys(translation_bundle.modules).sort();
+        var modules = _.keys(translation_bundle.modules);
+        modules.sort();
         if (_.include(modules, "web")) {
             modules = ["web"].concat(_.without(modules, "web"));
         }
@@ -1076,7 +1077,8 @@ openerp.web._t = new openerp.web.TranslationDataBase().build_translation_functio
 openerp.web.qweb = new QWeb2.Engine();
 openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
 openerp.web.qweb.default_dict = {
-    '_' : _
+    '_' : _,
+    '_t' : openerp.web._t
 }
 openerp.web.qweb.format_text_node = function(s) {
     // Note that 'this' is the Qweb Node of the text
@@ -1094,6 +1096,7 @@ openerp.web.qweb.format_text_node = function(s) {
 
 /** Setup default connection */
 openerp.connection = new openerp.web.Connection();
+openerp.web.qweb.default_dict['__debug__'] = openerp.connection.debug;
 
 };
 

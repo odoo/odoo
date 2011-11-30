@@ -91,6 +91,14 @@ session.web.ActionManager = session.web.Widget.extend({
         return this[type](action, on_close);
     },
     ir_actions_act_window: function (action, on_close) {
+        if (_(['base.module.upgrade', 'base.setup.installer'])
+                .contains(action.res_model)) {
+            var old_close = on_close;
+            on_close = function () {
+                session.webclient.do_reload();
+                if (old_close) { old_close(); }
+            };
+        }
         if (action.target === 'new') {
             if (this.dialog == null) {
                 this.dialog = new session.web.Dialog(this, { title: action.name, width: '80%' });
@@ -120,12 +128,6 @@ session.web.ActionManager = session.web.Widget.extend({
     ir_actions_act_window_close: function (action, on_closed) {
         if (!this.dialog && on_closed) {
             on_closed();
-        }
-        if (this.dialog && action.context) {
-            var model = action.context.active_model;
-            if (model === 'base.module.upgrade' || model === 'base.setup.installer' || model === 'base.module.upgrade') {
-                session.webclient.do_reload();
-            }
         }
         this.dialog_stop();
     },
