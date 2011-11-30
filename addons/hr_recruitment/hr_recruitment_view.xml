@@ -294,8 +294,8 @@
                 <field name="user_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
-                        <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                        <t t-if="record.priority.raw_value == 1" t-set="border">oe_kanban_color_red</t>
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
                             <div class="oe_kanban_box oe_kanban_color_border">
                                 <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                 <tr>
@@ -306,7 +306,7 @@
                                 </tr>
                                 </table>
                                 <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                    <div t-if="record.priority.raw_value">
+                                    <div t-if="record.priority.raw_value" t-att-title="record.priority.value">
                                         <t t-set="rating" t-value="6 - record.priority.raw_value"/>
                                         <img t-foreach="_.range(1, rating + 1)" src="/web/static/src/img/icons/star-on.png" width="16" height="16"
                                         /><img t-foreach="_.range(rating, 5)" src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
