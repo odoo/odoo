@@ -100,6 +100,7 @@ class report_event_registration(osv.osv):
                     event_registration c ON (e.id=c.event_id)
                 LEFT JOIN
                     event_type t ON (e.type=t.id)
+                WHERE c.active = 'true'
                GROUP BY
                     to_char(e.date_begin, 'YYYY'),
                     to_char(e.date_begin, 'MM'),
