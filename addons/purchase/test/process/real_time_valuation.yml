@@ -1,0 +1,42 @@
+-
+  In order to test real time stock valuation flow,I start by creating a new product 'Sugar'
+-
+  !record {model: product.product, id: product_sugar_id_50kg}:
+    name: Sugar
+    procure_method: make_to_stock
+    supply_method: buy
+    cost_method: standard
+    standard_price: 3600.0
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_gram
+    valuation: real_time
+    categ_id: product.product_category_rawmaterial0
+-
+  I create a draft Purchase Order
+-
+  !record {model: purchase.order, id: purchase_order_sugar}:
+    partner_id: base.res_partner_agrolait
+    partner_address_id: base.res_partner_address_8invoice
+    pricelist_id: 1
+    order_line:
+      - product_id: product_sugar_id_50kg
+        product_qty: 1.0
+        product_uom: product.product_uom_gram
+        price_unit: 3600000
+        name: 'Sugar'
+        date_planned: '2011-08-31'
+-
+  I confirm the purchase order
+-
+  !workflow {model: purchase.order, ref: purchase_order_sugar, action: purchase_confirm}
+-
+  I check that the invoice of order and values.
+-
+  !python {model: purchase.order}: |
+    purchase_order = self.browse(cr, uid, ref("purchase_order_sugar"))
+    for purchase_line in purchase_order.order_line:
+        assert purchase_line.price_unit == 3600000.0
+    assert len(purchase_order.invoice_ids) == 1, "Invoice should be generated."
+    for invoice_line in purchase_order.invoice_ids:
+        for data in invoice_line.invoice_line:
+            assert data.price_unit == 3600000.0, "unit price is not same, got %s, expected 3600000.0"%(purchase_line.price_unit,)
