@@ -1,9 +1,11 @@
 -
-  !record {model: sale.order, id: order2}:
-    partner_id: base.res_partner_2
-    order_line:
-      - product_id: product.product_product_pc2
-        product_uom_qty: 1.0
-    order_line:
-      - product_id: product.product_product_mb1
-        product_uom_qty: 8
+  In order to test process of the Sale Order, I create sale order
+-
+  !record {model: sale.order, id: order}:
+    partner_id: base.res_partner_agrolait
+-
+  !record {model: sale.order.line, id: line}:
+    product_id: product.product_product_mb1
+    price_unit: 150.50
+    product_uom_qty: 8
+   
