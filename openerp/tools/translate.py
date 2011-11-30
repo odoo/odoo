@@ -840,7 +840,7 @@ def trans_generate(lang, modules, cr):
 def trans_load(cr, filename, lang, verbose=True, context=None):
     logger = logging.getLogger('i18n')
     try:
-        fileobj = open(filename,'r')
+        fileobj = misc.file_open(filename)
         logger.info("loading %s", filename)
         fileformat = os.path.splitext(filename)[-1][1:].lower()
         r = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, context=context)
