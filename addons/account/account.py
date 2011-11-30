@@ -3135,6 +3135,19 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     break
                 else:
                     current_num += 1
+
+            # we need to loop again to find next number for journal code 
+            # because we can't rely on the value current_num as,
+            # its possible that we already have bank journals created (e.g. by the creation of res.partner.bank) 
+            # and the next number for account code might have been already used before for journal
+            journal_count = 1
+            while True:
+                journal_code = _('BNK') + str(journal_count)
+                ids = obj_journal.search(cr, uid, [('code', '=', journal_code)], context=context)
+                if not ids:
+                    break
+                journal_count += 1
+
             vals = {
                 'name': tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
@@ -3150,7 +3163,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             #create the bank journal
             vals_journal = {
                 'name': vals['name'],
-                'code': _('BNK') + str(current_num),
+                'code': journal_code,
                 'type': line.account_type == 'cash' and 'cash' or 'bank',
                 'company_id': company_id,
                 'analytic_journal_id': False,
