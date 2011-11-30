@@ -41,13 +41,13 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
         var fields = result.fields;
         var view_fields = result.arch.children;
         var get_fields = this.get_fields(view_fields);
+        var values = self.datarecord;
         for (var j = 0; j < view_fields.length; j++) {
             if (view_fields[j].tag == 'notebook') {
                 var notebooks = view_fields[j];
             }
         }
-        self.$element.html(self.render({'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : self.datarecord ,'temp_flag':'1'}));
-        self.formatdata(get_fields, fields, result, self.datarecord,self.element_id,'element');
+        self.$element.html(self.render({'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : values ,'temp_flag':'1'}));
         self.$element.find("[data-role=header]").find('h1').html(self.head_title);
         self.$element.find("[data-role=header]").find('#home').click(function(){
             $.mobile.changePage("#oe_menu", "slide", false, true);
@@ -55,110 +55,56 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
         self.$element.find('[data-role=collapsible-set]').find('[data-role=collapsible]').each(function(i){
             for (var k = 0; k < notebooks.children.length; k++) {
                 if (notebooks.children[k].attrs.string == $(this).attr('id')) {
-                    get_fields = self.get_fields(notebooks.children[k].children);
-                    for (var i = 0; i < get_fields.length; i++) {
-                        if (fields[get_fields[i].attrs.name].type == 'one2many'){
-                            self.relational_fields = get_fields[i].attrs.name;
-                            if(fields[get_fields[i].attrs.name].views.form){
-                                var get_fields_test = self.get_fields(fields[get_fields[i].attrs.name].views.form.arch.children);
-                                var fields_test = fields[get_fields[i].attrs.name]['views'].form.fields;
-                                var notebook=fields[get_fields[i].attrs.name].views.form.arch;
-                            }
-                        }
-                    }
-                    $(this).find('div#page_content').html(self.render({'get_fields': get_fields,'fields' : result.fields, 'values' : self.datarecord}));
+                    get_fields_notebook = self.get_fields(notebooks.children[k].children);
+                    $(this).find('div#page_content').html(self.render({'get_fields': get_fields_notebook,'fields' : fields, 'values' : values}));
                 }
-                self.formatdata(get_fields, fields, result, self.datarecord,'page_content','element');
             }
         });
-        self.$element.find('[data-role=collapsible-set]').find('[data-role=collapsible]').find('div#page_content').find('[data-role=content]').find('ul').find('li').click(function(ev){
+        self.$element.find('#o2m_m2m').click(function(ev) { 
             ev.preventDefault();
             ev.stopPropagation();
-            var latid,lastid;
-            $(this).parents().each(function(){
-                latid = $(this).attr('id');
-                self.$element.find('[data-role=collapsible-set]').find('[data-role=collapsible]').each(function(){
-                    if(latid==$(this).attr('id')){
-                        lastid = $(this).attr('id');
-                    }
-                });
-            });
             var relational = $(this).attr('for');
-            if(result.fields[relational]){
-                var head = $.trim($(this).text());
-                var dataset = new openerp.web.DataSetSearch(self, result.fields[relational].relation, result.fields[relational].context);
-                dataset.domain=[['id', 'in', self.datarecord[relational]]];
-                dataset.read_slice([], {limit:80}, function(result1,ids){
+            var rel_field = fields[relational];
+            var head = rel_field.string;
+            var rel_model = rel_field.relation;
+            var rel_ids = values[relational];
+            if (rel_ids) {
+                var datasearch = new openerp.web.DataSetSearch(self, rel_field.relation, rel_field.context);
+                datasearch.domain=[['id', 'in', rel_ids]];
+                datasearch.read_slice([], {limit:80}, function(listrec){
                     _.extend(self.action.context,{"html_name_get" : true});
-                    var dataset1 = new openerp.web.DataSet(self, result.fields[relational].relation,result.fields[relational].context);
-                    dataset1.name_get(result1,function(res){
-                    var additional = "";
-                    if(res['html_name_get']){
-                        additional = res['display'];
-                    }
-                    if(!$('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html()){
-                        $('<div id="oe_list_'+relational+'_'+self.element_id+'" data-role="page" data-url="oe_list_'+relational+'_'+self.element_id+'"> </div>').appendTo('#moe');
-                        $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html(openerp.web.qweb.render("ListView", {'records' : res,'data': additional}));
-                        $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("[data-role=header]").find('h1').html(head);
-                        $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("[data-role=header]").find('#home').click(function(){
-                            $.mobile.changePage("#oe_menu", "slide", false, true);
-                        });
-                        $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("a#list-id").click(function(ev){
-                            ev.preventDefault();
-                            ev.stopPropagation();
-                            var head_title = $(this).text();
-                            var listid = $(ev.currentTarget).data('id');
-                            dataset = new openerp.web.DataSetSearch(self, dataset.model, null, null);
-                            dataset.read_slice([],{}, function (result_relational) {
-                                for (var i = 0; i < result_relational.length; i++) {
-                                    if (result_relational[i].id == listid) {
-                                        var data_relational = result_relational[i];
-                                    }
-                                }
-                                if(!$('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').html()){
-                                    $('<div id="oe_form_'+listid+result.fields[relational].relation+'" data-role="page" data-url="oe_form_'+listid+result.fields[relational].relation+'"> </div>').appendTo('#moe');
-                                    for (var k = 0; k < notebooks.children.length; k++) {
-                                        if (notebooks.children[k].attrs.string == lastid) {
-                                            get_fields = self.get_fields(notebooks.children[k].children);
-                                            for (var i = 0; i < get_fields.length; i++) {
-                                                if (fields[get_fields[i].attrs.name].type == 'one2many'){
-                                                    self.relational_fields = get_fields[i].attrs.name;
-                                                    if(fields[get_fields[i].attrs.name].views.form){
-                                                        var get_fields_test = self.get_fields(fields[get_fields[i].attrs.name].views.form.arch.children);
-                                                        var fields_test = fields[get_fields[i].attrs.name]['views'].form.fields;
-                                                        var notebook=fields[get_fields[i].attrs.name].views.form.arch;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    if(notebook){
-                                        $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').html(self.render({'get_fields': get_fields_test, 'notebooks': false, 'fields' : fields_test, 'values' : data_relational, 'temp_flag':'1' }));
-                                    }else{
-                                        $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').html(self.render({'get_fields': get_fields_test, 'notebooks': false, 'fields' : fields, 'values' : data_relational, 'temp_flag':'1' }));
-                                    }
-                                    $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').find("[data-role=header]").find('h1').html(head_title);
-                                    $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').find("[data-role=header]").find('#home').click(function(){
-                                        $.mobile.changePage("#oe_menu", "slide", false, true);
-                                    });
-                                    if(notebook){
-                                        self.formatdata(get_fields_test, fields_test, result, data_relational,'oe_form_'+listid+result.fields[relational].relation,'element');
-                                    }else{
-                                        self.formatdata(get_fields_test, fields, result, data_relational,'oe_form_'+listid+result.fields[relational].relation,'element');
-                                    }
-                                    $.mobile.changePage('#oe_form_'+listid+result.fields[relational].relation, "slide", false, true);
-                                    self.formatdata('', '', '', '','oe_form_'+listid+result.fields[relational].relation,'slider');
+                    var dataset = new openerp.web.DataSet(self, rel_field.relation,rel_field.context);
+                    dataset.name_get(listrec,function(res){
+                        var additional = "";
+                        if(res['html_name_get']){
+                            additional = res['display'];
+                        }
+                        if(!$('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html()){
+                            $('<div id="oe_list_'+relational+'_'+self.element_id+'" data-role="page" data-url="oe_list_'+relational+'_'+self.element_id+'"> </div>').appendTo('#moe');
+                            $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html(openerp.web.qweb.render("ListView", {'records' : res,'data': additional}));
+                            $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("[data-role=header]").find('h1').html(head);
+                            $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("[data-role=header]").find('#home').click(function(){
+                                $.mobile.changePage("#oe_menu", "slide", false, true);
+                            });
+                            $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("a#list-id").click(function(ev){
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                var head_title = $(this).text();
+                                var listid = $(ev.currentTarget).data('id');
+                                if(!$('[id^="oe_form_'+listid+rel_field.relation+'"]').html()){
+                                    $('<div id="oe_form_'+listid+rel_field.relation+'" data-role="page" data-url="oe_form_'+listid+rel_field.relation+'"> </div>').appendTo('#moe');
+                                        this.formview = new openerp.web_mobile.FormView(self, "oe_form_"+listid+rel_field.relation, listid, '', head, rel_field.relation, false);
+                                        this.formview.start();
                                 }else{
-                                    $.mobile.changePage('#oe_form_'+listid+result.fields[relational].relation, "slide", false, true);
+                                    $.mobile.changePage('#oe_form_'+listid+rel_field.relation, "slide", false, true);
                                 }
                             });
-                        });
-                        $.mobile.changePage("#oe_list_"+relational+"_"+self.element_id, "slide", false, true);
-                    }else{
-                        $.mobile.changePage("#oe_list_"+relational+"_"+self.element_id, "slide", false, true);
-                    }
+                            $.mobile.changePage("#oe_list_"+relational+"_"+self.element_id, "slide", false, true);
+                        }else{
+                            $.mobile.changePage("#oe_list_"+relational+"_"+self.element_id, "slide", false, true);
+                        }
                     });
-               });
+                });
             }
         });
         self.$element.find('#m2o_btn').click(this.open_m2o_form);
