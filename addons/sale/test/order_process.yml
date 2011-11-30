@@ -16,7 +16,7 @@
     order = self.pool.get('sale.order').browse(cr, uid, ref("order"))
     assert len(order.invoice_ids) == False, "Invoice should not created."
 -
-  I check that procurement after confirmed quotation.
+  I check the details of procurement after confirmed quotation.
 -
   !python {model: sale.order}: |
     from datetime import datetime, timedelta
@@ -37,7 +37,6 @@
 -
   !python {model: procurement.order}: |
     self.run_scheduler(cr, uid)
-
 -
   I check the details of delivery order after confirmed quotation.
 -
@@ -53,7 +52,7 @@
       assert picking.type == 'out',"Shipment should be Outgoing."
       assert picking.move_type == sale_order.picking_policy,"Delivery Method is not corresponding with delivery method of sale order."
       assert picking.address_id.id == sale_order.partner_shipping_id.id,"Shipping Address is not correspond with sale order."
-      assert picking.note == sale_order.note,"Notes is not correspond with sale order."
+      assert picking.note == sale_order.note,"Note is not correspond with sale order."
       assert picking.invoice_state == (sale_order.order_policy=='picking' and '2binvoiced') or 'none',"Invoice policy is not correspond with sale order."
       assert len(picking.move_lines) == len(sale_order.order_line), "Total move of delivery order are not corresposning with total sale order lines."
       location_id = sale_order.shop_id.warehouse_id.lot_stock_id.id
@@ -72,7 +71,7 @@
          assert move.address_id.id == order_line.address_allotment_id.id or sale_order.partner_shipping_id.id,"Address is not correspond"
          #assert move.location_id.id == location_id,"Source Location is not correspond."
          #assert move.location_dest_id == output_id,"Destination Location is not correspond."
-         assert move.note == order_line.notes,"Notes is not correspond"
+         assert move.note == order_line.notes,"Note is not correspond"
          assert move.price_unit == order_line.product_id.standard_price or 0.0,"Price Unit is not correspond"
 -
   Now, I dispatch delivery order.
@@ -93,7 +92,7 @@
     assert order.picked_rate == 100, "Shipment progress is not 100%."
     assert len(order.invoice_ids) == False, "Invoice should not created on dispatch delivery order."
 -
-  I make Invoice from Delivery Order.
+  I create Invoice from Delivery Order.
 -
   !python {model: stock.invoice.onshipping}: |
     sale = self.pool.get('sale.order')
@@ -102,9 +101,8 @@
     wiz_id = self.create(cr, uid, {'journal_id': ref('account.sales_journal')},
       {'active_ids': ship_ids, 'active_model': 'stock.picking'})
     self.create_invoice(cr, uid, [wiz_id], {"active_ids": ship_ids, "active_id": ship_ids[0]})
-
 -
-  I check that Invoice details after dispatched delivery.
+  I check the invoice details after dispatched delivery.
 -
   !python {model: sale.order}: |
     order = self.browse(cr, uid, ref("order"))
@@ -120,7 +118,7 @@
       assert invoice.partner_id.id == order.partner_id.id,"Customer is not correspond."
       assert invoice.address_invoice_id.id == order.partner_invoice_id.id,"Invoice Address is not correspond."
       assert invoice.currency_id.id == order.pricelist_id.currency_id.id, "Currency is not correspond."
-      #assert invoice.comment == order.note,"Notes is not correspond."
+      #assert invoice.comment == order.note,"Note is not correspond."
       assert invoice.journal_id.id == journal_ids[0],"Sales Journal is not link on Invoice."
       #assert invoice.payment_term.id == order.payment_term and order.payment_term.id or False, "Payment term is not correspond."
       for so_line in order.order_line:
@@ -132,7 +130,6 @@
         assert inv_line.price_unit == so_line.price_unit , "Price Unit is not correspond."
         #assert inv_line.quantity == so_line.product_uom_qty , "Product qty is not correspond."
         #assert inv_line.price_subtotal == so_line.price_subtotal, "Price sub total is not correspond."
-
 -
   Now I confirm the Quotation with "Invoice on order after delivery" policy.
 -
@@ -171,7 +168,6 @@
     sale_order = self.browse(cr, uid, ref("order3"))
     assert len(sale_order.picking_ids) == False, "Delivery order should not created before invoice."
     assert sale_order.invoice_ids, "Invoice should be created."
-
 -
   I confirm the Quotation with "Deliver & invoice on demand".
 -
@@ -184,7 +180,7 @@
     assert len(sale_order.invoice_ids) == False, "Invoice should not created."
     assert sale_order.picking_ids, "Delivery order should be created."
 -
-  I make advance invoice.
+  I create advance invoice.
 -
   !python {model: sale.advance.payment.inv}: |
     ctx = context.copy()
@@ -199,7 +195,7 @@
     order = self.browse(cr, uid, ref('order4'))
     assert order.invoice_ids, "Invoice should be created after make advance invoice."
 -
-  I make Invoice from sale order line.
+  I create Invoice from sale order line.
 -
   !python {model: sale.order.line.make.invoice}: |
     ctx = context.copy()
@@ -212,7 +208,7 @@
     line = self.browse(cr, uid, ref('line8'))
     assert line.invoice_lines, "Invoice line should be created."
 -
-  I make manual Invoice for order.
+  I create manual Invoice for order.
 -
   !record {model: sale.make.invoice, id: sale_make_invoice_1}:
     invoice_date: !eval time.strftime('%Y-%m-%d')
@@ -254,3 +250,4 @@
     (data, format) = netsvc.LocalService('report.sale.order').create(cr, uid, [ref('order')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'sale-sale_order.'+format), 'wb+').write(data)
+

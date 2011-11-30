@@ -12,4 +12,3 @@
   !python {model: sale.order}: |
     id = self.copy(cr, uid, ref('order'))
     self.unlink(cr, uid, [id])
-
