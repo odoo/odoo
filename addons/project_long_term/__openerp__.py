@@ -26,7 +26,7 @@
     "website": "http://www.openerp.com",
     "category": "Project Management",
     "images": ["images/project_phase_form.jpeg","images/project_phases.jpeg", "images/resources_allocation.jpeg"],
-    "depends": ["resource", "project"],
+    "depends": ["project"],
     "description": """
 Long Term Project management module that tracks planning, scheduling, resources allocation.
 ===========================================================================================

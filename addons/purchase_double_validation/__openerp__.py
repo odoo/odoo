@@ -37,9 +37,10 @@ that exceeds minimum amount set by configuration wizard.
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
-	   'purchase_double_validation_workflow.xml',
-	   'purchase_double_validation_installer.xml'
-	    ],
+        'purchase_double_validation_workflow.xml',
+        'purchase_double_validation_installer.xml',
+        'board_purchase_view.xml'
+    ],
     'test': ['test/purchase_double_validation_test.yml'],
     'demo_xml': [],
     'installable': True,
