@@ -1174,6 +1174,11 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
         if (this.node.tag == 'label' && (this.align === 'left' || this.node.attrs.colspan || (this.string && this.string.length > 32))) {
             this.template = "WidgetParagraph";
             this.colspan = parseInt(this.node.attrs.colspan || 1, 10);
+            // Widgets default to right-aligned, but paragraph defaults to
+            // left-aligned
+            if (isNaN(parseFloat(this.node.attrs.align))) {
+                this.align = 'left';
+            }
         } else {
             this.colspan = 1;
             this.width = '1%';
