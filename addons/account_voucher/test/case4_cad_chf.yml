@@ -128,6 +128,8 @@
     for item in voucher_id.line_cr_ids:
         if item.amount_unreconciled == 186.74:
             data += [(item.id, 186.74)]
+        else:
+            data += [(item.id, 0.0)]
     for line_id, amount in data:
         self.pool.get('account.voucher.line').write(cr, uid, [line_id], {'amount': amount})
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
