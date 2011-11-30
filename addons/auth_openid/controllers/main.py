@@ -28,7 +28,7 @@ import werkzeug.urls
 import werkzeug.exceptions
 
 from openerp.modules.registry import RegistryManager
-import web.common.dispatch as openerpweb
+import web.common.http as openerpweb
 
 from openid import oidutil
 from openid.store import memstore
@@ -223,3 +223,5 @@ class OpenIDController(openerpweb.Controller):
         session = getattr(req.session, 'openid_session', {})
         return {'status': session.get('status'), 'message': session.get('message')}
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

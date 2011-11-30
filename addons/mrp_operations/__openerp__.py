@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Work Center Production start end workflow',
+    'name': 'Manufacturing Operations',
     'version': '1.0',
     'category': 'Manufacturing',
     'complexity': "easy",
@@ -65,7 +65,7 @@ So that we can compare the theoretic delay and real delay.
         'process/mrp_operation_process.xml'
     ],
     'demo_xml': ['mrp_operation_data.xml'],
-    'test': ['test/mrp_operations.yml', 'test/mrp_operations_report.yml'],
+    'test': ['test/mrp_operations.yml', 'test/mrp_operations_report.yml','test/mrp_operation_test.yml'],
     'installable': True,
     'active': False,
     'certificate': '0056233813133',

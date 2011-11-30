@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
-        <menuitem name="Configuration" parent="base.menu_tools" id="base.menu_lunch_survey_root" sequence="20"/>
-
         <record model="ir.ui.view" id="view_email_message_form">
             <field name="name">mail.message.form</field>
             <field name="model">mail.message</field>
@@ -100,8 +97,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
-                    <filter icon="terp-camera_test" string="Received" domain="[('state','=','received')]"/>
+                    <filter icon="terp-camera_test" name="received" string="Received" domain="[('state','=','received')]"/>
                     <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
+                    <filter icon="terp-check" name="sent" string="Sent" domain="[('state','=','sent')]"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-gtk-stop" string="Failed" domain="[('state','=','exception')]"/>
                     <field name="email_from"/>
                     <field name="email_to"/>
@@ -132,24 +131,21 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('email_from', '!=', False)]</field>
-             <field name="context">{'search_default_outgoing':1}</field>
+             <field name="context">{'search_default_received':1}</field>
             <field name="search_view_id" ref="view_email_message_search"/>
         </record>
 
         <act_window domain="[('partner_id', '=', active_id), ('email_from', '!=', False)]"
+            context="{'default_partner_id': active_id}"
             id="act_res_partner_emails" name="Emails"
             res_model="mail.message"
             src_model="res.partner"
             view_id="view_email_message_tree"/>
 
-        <menuitem name="Emails" id="menu_email_message_tools" parent="base.menu_tools" />
-
         <menuitem name="Messages"
             id="menu_email_message"
-            parent="menu_email_message_tools"
+            parent="base.menu_email"
             action="action_view_mail_message" />
-
-        <menuitem name="Emails" id="menu_config_email" parent="base.menu_lunch_survey_root" sequence="20"/>
 
     </data>
 </openerp>

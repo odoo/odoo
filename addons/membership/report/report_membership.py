@@ -109,7 +109,7 @@ class report_membership(osv.osv):
             LEFT JOIN membership_membership_line ml ON (ml.partner = p.id)
             LEFT JOIN account_invoice_line il ON (ml.account_invoice_line = il.id)
             LEFT JOIN account_invoice ai ON (il.invoice_id = ai.id)
-            WHERE p.membership_state != 'none'
+            WHERE p.membership_state != 'none' and p.active = 'true'
             GROUP BY
               p.id,
               p.user_id,

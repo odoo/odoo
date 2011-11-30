@@ -92,7 +92,6 @@ class base_action_rule(osv.osv):
     def do_action(self, cr, uid, action, model_obj, obj, context=None):
         res = super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
         write = {}
-
         if hasattr(action, 'act_section_id') and action.act_section_id:
             obj.section_id = action.act_section_id
             write['section_id'] = action.act_section_id.id
@@ -110,6 +109,7 @@ class base_action_rule(osv.osv):
             model_obj.message_append(cr, uid, [obj], _(action.act_state))
 
         model_obj.write(cr, uid, [obj.id], write, context)
+        super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
         emails = []
 
         if hasattr(obj, 'email_from') and action.act_mail_to_partner:

@@ -29,10 +29,10 @@
 ##############################################################################
 
 {
-        "name" : "WebDAV server for Document Management",
+        "name" : "Shared Repositories (WebDAV)",
         "version" : "2.3",
         "author" : "OpenERP SA",
-        "category" : "Tools",
+        "category" : "Knowledge Management",
         'complexity': "normal",
         "website": "http://www.openerp.com",
         "description": """
@@ -72,3 +72,5 @@ which needs explicit configuration in openerp-server.conf, too.
         "certificate" : "001236490750845657973",
         'images': ['images/dav_properties.jpeg','images/directories_structure_principals.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

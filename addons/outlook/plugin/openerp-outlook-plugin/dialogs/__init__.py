@@ -79,3 +79,5 @@ def MakePropertyPage(parent, manager, config, idd, yoffset=24):
 
 import dlgutils
 SetWaitCursor = dlgutils.SetWaitCursor
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

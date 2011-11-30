@@ -21,11 +21,11 @@
 ##############################################################################
 
 {
-    "name" : "Automated Email Retriever",
+    "name" : "Fetch Emails",
     "version" : "1.0",
     "depends" : ["base", 'mail'],
     "author" : "OpenERP SA",
-    "category": 'Tools',
+    "category": 'Customer Relationship Management',
     "description": """
 Retrieve incoming email on POP / IMAP servers
 =============================================
@@ -74,3 +74,5 @@ mail.
     'certificate' : '00692978332890137453',
     'images': ['images/1_email_servers.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

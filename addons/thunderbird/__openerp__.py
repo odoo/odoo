@@ -20,12 +20,12 @@
 #
 ##############################################################################
 {
-    "name" : "Thunderbird Interface",
+    "name" : "Thunderbird Plug-In",
     "version" : "1.0",
     "author" : ['OpenERP SA', 'Axelor'],
     "website" : "http://www.openerp.com/",
     "depends" : ["base","mail"],
-    "category" : "Tools",
+    "category" : "Customer Relationship Management",
     "description": """
 This module is required for the Thuderbird Plug-in to work properly.
 ====================================================================
@@ -45,3 +45,5 @@ HR Applicant and Project Issue from selected mails.
     "certificate" : "00899858104035139949",
     'images': ['images/config_thunderbird.jpeg','images/config_thunderbird_plugin.jpeg','images/thunderbird_document.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

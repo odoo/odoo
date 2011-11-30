@@ -18,19 +18,188 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import pooler
-import tools
-import logging
-from service import security
 import ldap
+import logging
 from ldap.filter import filter_format
 
+import openerp.exceptions
+import pooler
+import tools
+from osv import fields, osv
+from openerp import SUPERUSER_ID
 
 class CompanyLDAP(osv.osv):
     _name = 'res.company.ldap'
     _order = 'sequence'
     _rec_name = 'ldap_server'
+
+    def get_ldap_dicts(self, cr, ids=None):
+        """ 
+        Retrieve res_company_ldap resources from the database in dictionary
+        format.
+
+        :param list ids: Valid ids of model res_company_ldap. If not \
+        specified, process all resources (unlike other ORM methods).
+        :return: ldap configurations
+        :rtype: list of dictionaries
+        """
+
+        if ids:
+            id_clause = 'AND id IN (%s)'
+            args = [tuple(ids)]
+        else:
+            id_clause = ''
+            args = []
+        cr.execute("""
+            SELECT id, company, ldap_server, ldap_server_port, ldap_binddn,
+                   ldap_password, ldap_filter, ldap_base, "user", create_user,
+                   ldap_tls
+            FROM res_company_ldap
+            WHERE ldap_server != '' """ + id_clause + """ ORDER BY sequence
+        """, args)
+        return cr.dictfetchall()
+
+    def connect(self, conf):
+        """ 
+        Connect to an LDAP server specified by an ldap
+        configuration dictionary.
+
+        :param dict conf: LDAP configuration
+        :return: an LDAP object
+        """
+
+        uri = 'ldap://%s:%d' % (conf['ldap_server'],
+                                conf['ldap_server_port'])
+
+        connection = ldap.initialize(uri)
+        if conf['ldap_tls']:
+            connection.start_tls_s()
+        return connection
+
+    def authenticate(self, conf, login, password):
+        """
+        Authenticate a user against the specified LDAP server.
+
+        In order to prevent an unintended 'unauthenticated authentication',
+        which is an anonymous bind with a valid dn and a blank password,
+        check for empty passwords explicitely (:rfc:`4513#section-6.3.1`)
+        
+        :param dict conf: LDAP configuration
+        :param login: username
+        :param password: Password for the LDAP user
+        :return: LDAP entry of authenticated user or False
+        :rtype: dictionary of attributes
+        """
+
+        if not password:
+            return False
+
+        entry = False
+        filter = filter_format(conf['ldap_filter'], (login,))
+        try:
+            results = self.query(conf, filter)
+            if results and len(results) == 1:
+                dn = results[0][0]
+                conn = self.connect(conf)
+                conn.simple_bind_s(dn, password)
+                conn.unbind()
+                entry = results[0]
+        except ldap.INVALID_CREDENTIALS:
+            return False
+        except ldap.LDAPError, e:
+            logger = logging.getLogger('orm.ldap')
+            logger.error('An LDAP exception occurred: %s', e)
+        return entry
+        
+    def query(self, conf, filter, retrieve_attributes=None):
+        """ 
+        Query an LDAP server with the filter argument and scope subtree.
+
+        Allow for all authentication methods of the simple authentication
+        method:
+
+        - authenticated bind (non-empty binddn + valid password)
+        - anonymous bind (empty binddn + empty password)
+        - unauthenticated authentication (non-empty binddn + empty password)
+
+        .. seealso::
+           :rfc:`4513#section-5.1` - LDAP: Simple Authentication Method.
+
+        :param dict conf: LDAP configuration
+        :param filter: valid LDAP filter
+        :param list retrieve_attributes: LDAP attributes to be retrieved. \
+        If not specified, return all attributes.
+        :return: ldap entries
+        :rtype: list of tuples (dn, attrs)
+
+        """
+
+        results = []
+        logger = logging.getLogger('orm.ldap')
+        try:
+            conn = self.connect(conf)
+            conn.simple_bind_s(conf['ldap_binddn'] or '',
+                               conf['ldap_password'] or '')
+            results = conn.search_st(conf['ldap_base'], ldap.SCOPE_SUBTREE,
+                                     filter, retrieve_attributes, timeout=60)
+            conn.unbind()
+        except ldap.INVALID_CREDENTIALS:
+            logger.error('LDAP bind failed.')
+        except ldap.LDAPError, e:
+            logger.error('An LDAP exception occurred: %s', e)
+        return results
+
+    def map_ldap_attributes(self, cr, uid, conf, login, ldap_entry):
+        """
+        Compose values for a new resource of model res_users,
+        based upon the retrieved ldap entry and the LDAP settings.
+        
+        :param dict conf: LDAP configuration
+        :param login: the new user's login
+        :param tuple ldap_entry: single LDAP result (dn, attrs)
+        :return: parameters for a new resource of model res_users
+        :rtype: dict
+        """
+
+        values = { 'name': ldap_entry[1]['cn'][0],
+                   'login': login,
+                   'company_id': conf['company']
+                   }
+        return values
+    
+    def get_or_create_user(self, cr, uid, conf, login, ldap_entry,
+                           context=None):
+        """
+        Retrieve an active resource of model res_users with the specified
+        login. Create the user if it is not initially found.
+
+        :param dict conf: LDAP configuration
+        :param login: the user's login
+        :param tuple ldap_entry: single LDAP result (dn, attrs)
+        :return: res_users id
+        :rtype: int
+        """
+        
+        user_id = False
+        login = tools.ustr(login)
+        cr.execute("SELECT id, active FROM res_users WHERE login=%s", (login,))
+        res = cr.fetchone()
+        if res:
+            if res[1]:
+                user_id = res[0]
+        elif conf['create_user']:
+            logger = logging.getLogger('orm.ldap')
+            logger.debug("Creating new OpenERP user \"%s\" from LDAP" % login)
+            user_obj = self.pool.get('res.users')
+            values = self.map_ldap_attributes(cr, uid, conf, login, ldap_entry)
+            if conf['user']:
+                user_id = user_obj.copy(cr, SUPERUSER_ID, conf['user'],
+                                        default={'active': True})
+                user_obj.write(cr, SUPERUSER_ID, user_id, values)
+            else:
+                user_id = user_obj.create(cr, SUPERUSER_ID, values)
+        return user_id
+
     _columns = {
         'sequence': fields.integer('Sequence'),
         'company': fields.many2one('res.company', 'Company', required=True,
@@ -49,12 +218,16 @@ class CompanyLDAP(osv.osv):
             help="Model used for user creation"),
         'create_user': fields.boolean('Create user',
             help="Create the user if not in database"),
+        'ldap_tls': fields.boolean('Use TLS',
+            help="Request secure TLS/SSL encryption when connecting to the LDAP server. "
+                 "This option requires a server with STARTTLS enabled, "
+                 "otherwise all authentication attempts will fail."),
     }
     _defaults = {
-        'ldap_server': lambda *a: '127.0.0.1',
-        'ldap_server_port': lambda *a: 389,
-        'sequence': lambda *a: 10,
-        'create_user': lambda *a: True,
+        'ldap_server': '127.0.0.1',
+        'ldap_server_port': 389,
+        'sequence': 10,
+        'create_user': True,
     }
 
 CompanyLDAP()
@@ -63,132 +236,52 @@ CompanyLDAP()
 class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
-        'ldaps': fields.one2many('res.company.ldap', 'company', 'LDAP Parameters'),
+        'ldaps': fields.one2many(
+            'res.company.ldap', 'company', 'LDAP Parameters'),
     }
 res_company()
+
 
 class users(osv.osv):
     _inherit = "res.users"
     def login(self, db, login, password):
-
-        if not password:
-            # empty passwords are disallowed for obvious security reasons
-            return False
-
-        ret = super(users,self).login(db, login, password)
-        if ret:
-            return ret
-        logger = logging.getLogger('orm.ldap')
-        pool = pooler.get_pool(db)
+        user_id = super(users, self).login(db, login, password)
+        if user_id:
+            return user_id
         cr = pooler.get_db(db).cursor()
-        action_obj = pool.get('ir.actions.actions')
-        cr.execute("""
-            SELECT id, company, ldap_server, ldap_server_port, ldap_binddn, ldap_password,
-                   ldap_filter, ldap_base, "user", create_user
-            FROM res_company_ldap
-            WHERE ldap_server != '' ORDER BY sequence""")
-        for res_company_ldap in cr.dictfetchall():
-            logger.debug(res_company_ldap)
-            try:
-                l = ldap.open(res_company_ldap['ldap_server'], res_company_ldap['ldap_server_port'])
-                # An empty binddn means anonymous auth, so it should be replaced w/ an empty string
-                # See LDAP RFC 4513, Section 5.1.1
-                if l.simple_bind_s(res_company_ldap['ldap_binddn'] or '',
-                                   res_company_ldap['ldap_password'] or ''):
-                    base = res_company_ldap['ldap_base']
-                    scope = ldap.SCOPE_SUBTREE
-                    filter = filter_format(res_company_ldap['ldap_filter'], (login,))
-                    retrieve_attributes = None
-                    result_id = l.search(base, scope, filter, retrieve_attributes)
-                    timeout = 60
-                    result_type, result_data = l.result(result_id, timeout)
-                    if not result_data:
-                        continue
-                    if result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
-                        dn = result_data[0][0]
-                        logger.debug(dn)
-                        name = result_data[0][1]['cn'][0]
-                        if l.bind_s(dn, password):
-                            l.unbind()
-                            cr.execute("SELECT id FROM res_users WHERE login=%s",(tools.ustr(login),))
-                            res = cr.fetchone()
-                            logger.debug(res)
-                            if res:
-                                cr.close()
-                                return res[0]
-                            if not res_company_ldap['create_user']:
-                                continue
-                            action_id = action_obj.search(cr, 1, [('usage', '=', 'menu')])[0]
-                            if res_company_ldap['user']:
-                                res = self.copy(cr, 1, res_company_ldap['user'],
-                                        default={'active': True})
-                                self.write(cr, 1, res, {
-                                    'name': name,
-                                    'login': login.encode('utf-8'),
-                                    'company_id': res_company_ldap['company'],
-                                    })
-                            else:
-                                res = self.create(cr, 1, {
-                                    'name': name,
-                                    'login': login.encode('utf-8'),
-                                    'company_id': res_company_ldap['company'],
-                                    'action_id': action_id,
-                                    'menu_id': action_id,
-                                    })
-                            cr.commit()
-                            cr.close()
-                            return res
-                    l.unbind()
-            except Exception:
-                logger.warning("Cannot auth", exc_info=True)
-                continue
+        ldap_obj = pooler.get_pool(db).get('res.company.ldap')
+        for conf in ldap_obj.get_ldap_dicts(cr):
+            entry = ldap_obj.authenticate(conf, login, password)
+            if entry:
+                user_id = ldap_obj.get_or_create_user(
+                    cr, SUPERUSER_ID, conf, login, entry)
+                if user_id:
+                    cr.execute('UPDATE res_users SET date=now() WHERE '
+                               'login=%s', (tools.ustr(login),))
+                    cr.commit()
+                    break
         cr.close()
-        return False
+        return user_id
 
     def check(self, db, uid, passwd):
         try:
             return super(users,self).check(db, uid, passwd)
-        except security.ExceptionNoTb: # AccessDenied
+        except openerp.exceptions.AccessDenied:
             pass
 
-        if not passwd:
-            # empty passwords disallowed for obvious security reasons
-            raise security.ExceptionNoTb('AccessDenied')
-
         cr = pooler.get_db(db).cursor()
-        user = self.browse(cr, 1, uid)
-        logger = logging.getLogger('orm.ldap')
-        if user and user.company_id.ldaps:
-            for res_company_ldap in user.company_id.ldaps:
-                try:
-                    l = ldap.open(res_company_ldap.ldap_server, res_company_ldap.ldap_server_port)
-                    # An empty binddn means anonymous auth, so it should be replaced w/ an empty string
-                    # See LDAP RFC 4513, Section 5.1.1
-                    if l.simple_bind_s(res_company_ldap.ldap_binddn or '',
-                                       res_company_ldap.ldap_password or ''):
-                        base = res_company_ldap.ldap_base
-                        scope = ldap.SCOPE_SUBTREE
-                        filter = filter_format(res_company_ldap.ldap_filter, (user.login,))
-                        retrieve_attributes = None
-                        result_id = l.search(base, scope, filter, retrieve_attributes)
-                        timeout = 60
-                        result_type, result_data = l.result(result_id, timeout)
-                        if result_data and result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
-                            dn = result_data[0][0]
-                            # some LDAP servers allow anonymous binding with blank passwords,
-                            # but these have been rejected above, so we're safe to use bind()
-                            if l.bind_s(dn, passwd):
-                                l.unbind()
-                                self._uid_cache.setdefault(db, {})[uid] = passwd
-                                cr.close()
-                                return True
-                        l.unbind()
-                except Exception:
-                    logger.warning('cannot check', exc_info=True)
-                    pass
+        cr.execute('SELECT login FROM res_users WHERE id=%s AND active=TRUE',
+                   (int(uid),))
+        res = cr.fetchone()
+        if res:
+            ldap_obj = pooler.get_pool(db).get('res.company.ldap')
+            for conf in ldap_obj.get_ldap_dicts(cr):
+                if ldap_obj.authenticate(conf, res[0], passwd):
+                    self._uid_cache.setdefault(db, {})[uid] = passwd
+                    cr.close()
+                    return True
         cr.close()
-        raise security.ExceptionNoTb('AccessDenied')
+        raise openerp.exceptions.AccessDenied()
         
 users()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

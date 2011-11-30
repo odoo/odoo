@@ -33,14 +33,14 @@ class hr_si_so_ask(osv.osv_memory):
         }
 
     def _get_empname(self, cr, uid, context=None):
-        emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
+        emp_id = context.get('emp_id', self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context))
         if emp_id:
             employee = self.pool.get('hr.employee').browse(cr, uid, emp_id, context=context)[0].name
             return employee
         return ''
 
     def _get_empid(self, cr, uid, context=None):
-        emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
+        emp_id = context.get('emp_id', self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context))
         if emp_id:
             return emp_id[0]
         return False
@@ -63,7 +63,6 @@ class hr_si_so_ask(osv.osv_memory):
 hr_si_so_ask()
 
 class hr_sign_in_out(osv.osv_memory):
-
     _name = 'hr.sign.in.out'
     _description = 'Sign In Sign Out'
 
@@ -74,7 +73,7 @@ class hr_sign_in_out(osv.osv_memory):
                 }
 
     def _get_empid(self, cr, uid, context=None):
-        emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
+        emp_id = context.get('emp_id', self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context))
         if emp_id:
             employee = self.pool.get('hr.employee').browse(cr, uid, emp_id, context=context)[0]
             return {'name': employee.name, 'state': employee.state, 'emp_id': emp_id[0]}
@@ -109,6 +108,7 @@ class hr_sign_in_out(osv.osv_memory):
                 'res_model': 'hr.sign.in.out.ask',
                 'views': [(resource_id,'form')],
                 'type': 'ir.actions.act_window',
+                'context': context,
                 'target': 'new',
             }
 
@@ -132,6 +132,7 @@ class hr_sign_in_out(osv.osv_memory):
                 'res_model': 'hr.sign.in.out',
                 'views': [(resource_id,'form')],
                 'type': 'ir.actions.act_window',
+                'context': context,
                 'target': 'new',
             }
 

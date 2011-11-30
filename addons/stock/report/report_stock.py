@@ -159,6 +159,7 @@ class report_stock_lines_date(osv.osv):
                     left outer join stock_inventory_line l on (p.id=l.product_id)
                     left join stock_inventory s on (l.inventory_id=s.id)
                 and s.state = 'done'
+                where p.active='true'
                 group by p.id
             )""")
 report_stock_lines_date()

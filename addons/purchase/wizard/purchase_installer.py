@@ -20,15 +20,6 @@
 ##############################################################################
 from osv import fields, osv
 
-class purchase_installer(osv.osv_memory):
-    _inherit = 'base.setup.installer'
-
-    _columns = {
-        'purchase_requisition':fields.boolean('Purchase Requisition',help="Manages your Purchase Requisition and allows you to easily keep track and manage all your purchase orders."),
-        'purchase_analytic_plans': fields.boolean('Purchase Analytic Plans',help="Manages analytic distribution and purchase orders.")
-    }
-purchase_installer()
-
 class purchase_config_wizard(osv.osv_memory):
     _name = 'purchase.config.wizard'
     _inherit = 'res.config'

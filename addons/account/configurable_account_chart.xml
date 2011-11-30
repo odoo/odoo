@@ -171,7 +171,7 @@
                         <field ref="conf_cas" name="parent_id"/>
                         <field name="type">receivable</field>
                         <field eval="True" name="reconcile"/>
-                        <field name="user_type" ref="conf_account_type_asset"/>
+                        <field name="user_type" ref="conf_account_type_receivable"/>
                     </record>
 
                     <record id="conf_ova" model="account.account.template">
@@ -199,24 +199,24 @@
                     </record>
 
                 <record id="conf_cli" model="account.account.template">
-                    <field name="code">111</field>
+                    <field name="code">12</field>
                     <field name="name">Current Liabilities</field>
-                    <field ref="conf_nca" name="parent_id"/>
+                    <field ref="conf_bal" name="parent_id"/>
                     <field name="type">view</field>
                     <field name="user_type" ref="account_type_liability_view1"/>
                 </record>
 
                     <record id="conf_a_pay" model="account.account.template">
-                        <field name="code">1111</field>
+                        <field name="code">120</field>
                         <field name="name">Creditors</field>
                         <field ref="conf_cli" name="parent_id"/>
                         <field name="type">payable</field>
                         <field eval="True" name="reconcile"/>
-                        <field name="user_type" ref="conf_account_type_liability"/>
+                        <field name="user_type" ref="conf_account_type_payable"/>
                     </record>
 
                     <record id="conf_iva" model="account.account.template">
-                        <field name="code">1112</field>
+                        <field name="code">121</field>
                         <field name="name">Tax Received</field>
                         <field ref="conf_cli" name="parent_id"/>
                         <field name="type">other</field>
@@ -224,7 +224,7 @@
                     </record>
 
                     <record id="conf_a_reserve_and_surplus" model="account.account.template">
-                        <field name="code">1113</field>
+                        <field name="code">122</field>
                         <field name="name">Reserve and Profit/Loss Account</field>
                         <field ref="conf_cli" name="parent_id"/>
                         <field name="type">other</field>
@@ -233,7 +233,7 @@
                     </record>
 
                     <record id="conf_o_expense" model="account.account.template">
-                        <field name="code">1114</field>
+                        <field name="code">123</field>
                         <field name="name">Opening Expense Account</field>
                         <field ref="conf_cli" name="parent_id"/>
                         <field name="type">other</field>

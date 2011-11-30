@@ -23,7 +23,7 @@
 {
     'name': 'Audit Trail',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden',
     'description': """
 This module lets administrator track every user operation on all the objects of the system.
 ===========================================================================================

@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Document Management - Wiki - Quality Manual',
+    'name': 'Template: Quality Manual',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Knowledge Management',
     'complexity': "easy",
     'description': """
 Quality Manual Template.

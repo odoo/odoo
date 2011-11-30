@@ -17,7 +17,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
         <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
-        <field name="context">{'object_id':'hr.applicant'}</field>
+        <field name="context" eval="{'object_id': ref('model_hr_applicant')}"/>
     </record>
     # ------------------------------------------------------
     # Stage
@@ -89,7 +89,8 @@
                     <field name="user_id"/>
                     <field name="survey" invisible="1"/>
                     <button name="action_print_survey" string="Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                    <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                    <field name="response" invisible="1"/>
                     <newline/>
                     <field name="date_action"/>
                     <field name="title_action"/>
@@ -217,11 +218,11 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
-               <filter icon="terp-document-new" string="New"
+               <filter icon="terp-document-new" string="New" name="filter_new" 
                    domain="[('state','=','draft')]"
                    help="All Initial Jobs"
                />
-               <filter icon="terp-camera_test" string="In Progress"
+               <filter icon="terp-camera_test" string="In Progress" name="filter_inprogress"
                    domain="[('state','=','open')]"
                    help="Open Jobs"
                />
@@ -285,24 +286,21 @@
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
+                <field name="color"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="survey"/>
                 <templates>
                     <t t-name="kanban-box">
                         <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
                         <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                             <div class="oe_kanban_box oe_kanban_color_border">
                                 <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                    <table class="oe_kanban_table">
-                                        <tr>
-                                            <td class="oe_kanban_title1" align="left" valign="middle">
-                                                <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority" />
-                                                <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
-                                                <field name="partner_name"/>
-                                            </td>
-                                            <td valign="top" width="22">
-                                                <img t-att-src="kanban_gravatar(record.user_id.value, 22)" class="oe_kanban_gravatar"/>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div class="oe_kanban_title1">
+                                        <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority" />
+                                        <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                        <field name="partner_name"/>
+                                    </div>
                                 </div>
                                 <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
                                     <table class="oe_kanban_table">
@@ -336,12 +334,12 @@
                                         <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
                                         <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
-                                        <a name="action_makeMeeting" type="object" string="Schedule Meeting" icon="gtk-redo" />
+                                        <a string="Schedule Meeting" name="action_makeMeeting" type="object" icon="stock_calendar"/>
                                         <a t-if="record.survey.raw_value" name="action_print_survey" type="object" string="Print Interview" icon="gtk-print" />
                                     </div>
                                     <div class="oe_kanban_right">
-                                        <a name="case_open" string="Mark Won" states="pending,draft" type="object" icon="lead-stage-won" />
-                                        <a name="case_pending" string="Mark Lost" states="draft,open" type="object" icon="lead-stage-lost" />
+                                        <a name="case_open" string="Open" states="pending,draft" type="object" icon="kanban-apply" />
+                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
                                     </div>
                                     <br class="oe_kanban_clear"/>
                                 </div>

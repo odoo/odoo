@@ -20,10 +20,10 @@
 #
 ##############################################################################
 {
-    'name': 'Human Resource Payroll',
+    'name': 'Payroll',
     'version': '1.0',
     'category': 'Human Resources',
-    'complexity': "expert",
+    'complexity': "normal",
     'description': """
 Generic Payroll system.
 =======================

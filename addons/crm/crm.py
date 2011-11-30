@@ -155,7 +155,7 @@ class crm_case_categ(osv.osv):
         """Finds id for case object"""
         object_id = context and context.get('object_id', False) or False
         ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
-        return ids and ids[0]
+        return ids and ids[0] or False
 
     _defaults = {
         'object_id' : _find_object_id
@@ -236,13 +236,14 @@ class crm_base(object):
         :param add: Id of Partner's address
         :param email: Partner's email ID
         """
-        if not add:
-            return {'value': {'email_from': False}}
-        address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        if address.email:
-            return {'value': {'email_from': address.email, 'phone': address.phone}}
-        else:
-            return {'value': {'phone': address.phone}}
+        data = {'value': {'email_from': False, 'phone':False}}
+        if add:
+            address = self.pool.get('res.partner.address').browse(cr, uid, add)
+            data['value'] = {'email_from': address and address.email or False ,
+                             'phone':  address and address.phone or False}
+        if 'phone' not in self._columns:
+            del data['value']['phone']
+        return data
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
@@ -484,10 +485,13 @@ class crm_case(crm_base):
                 case_email = case.user_id.user_email
 
             src = case_email
-            dest = case.user_id
+            dest = case.user_id.user_email or ""
             body = case.description or ""
-            if case.message_ids:
-                body = case.message_ids[0].description or ""
+            for message in case.message_ids:
+                if message.email_from:
+                    body = message.description
+                    break
+
             if not destination:
                 src, dest = dest, case.email_from
                 if body and case.user_id.signature:
@@ -574,3 +578,5 @@ class users(osv.osv):
         return res
 
 users()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -44,7 +44,7 @@ class mail_compose_message(osv.osv_memory):
 
             sprint = meeting.sprint_id
             user_data = user_pool.browse(cr, uid, uid, context=context)
-            result.update({'email_from': user_data.address_id and user_data.address_id.email or False})
+            result.update({'email_from': user_data.user_email or False})
 
             if sprint.scrum_master_id and sprint.scrum_master_id.user_email:
                 result.update({'email_to': sprint.scrum_master_id.user_email})

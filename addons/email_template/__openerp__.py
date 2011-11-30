@@ -21,11 +21,11 @@
 ##############################################################################
 
 {
-    "name" : "Email Templates",
+    "name" : "Automated E-Mails",
     "version" : "1.1",
     "author" : "Openlabs",
     "website" : "http://openerp.com",
-    "category" : "Tools",
+    "category" : "Marketing",
     'complexity': "expert",
     "depends" : ['mail'],
     "description": """
@@ -61,8 +61,12 @@ Openlabs was kept
     "data": [
         'wizard/email_template_preview_view.xml',
         'email_template_view.xml',
+        'res_partner_view.xml',
         'wizard/email_compose_message_view.xml',
         'security/ir.model.access.csv'
+    ],
+    "demo": [
+        'res_partner_demo.yml',
     ],
     "installable": True,
     "active": False,

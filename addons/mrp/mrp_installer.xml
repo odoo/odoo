@@ -1,26 +1,5 @@
 <openerp>
   <data>
-    <record id="view_mrp_installer" model="ir.ui.view">
-      <field name="name">mrp.installer.view</field>
-      <field name="model">base.setup.installer</field>
-      <field name="type">form</field>
-      <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
-      <field name="arch" type="xml">
-        <data>
-          <xpath expr="//group[@name='mrp']" position="replace">
-            <newline/>
-            <separator  string="Manufacturing Features" colspan="4" />
-            <field name="stock_location" />
-            <field name="mrp_jit" />
-            <field name="mrp_operations" />
-            <field name="mrp_subproduct" />
-            <field name="mrp_repair" />
-          </xpath>
-        </data>
-      </field>
-    </record>
-
-
     <record id="category_mrp_config" model="ir.actions.todo.category">
         <field name="name">MRP Management</field>
         <field name="sequence">6</field>

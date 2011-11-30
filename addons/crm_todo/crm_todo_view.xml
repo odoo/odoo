@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+    <record id="crm_todo_opportunity_add" model="ir.ui.view">
+        <field name="name">Opportunities - Tasks</field>
+        <field name="model">crm.lead</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
+        <field name="arch" type="xml">
+            <data>
+            <page string="Extra Info" position="before">
+                <page string="Tasks">
+                    <field name="task_ids" colspan="4" nolabel="1">
+                        <tree editable="bottom" string="Tasks">
+                            <field name="name"/>
+                            <field name="user_id"/>
+
+                            <field string="Timebox" name="timebox_id"/>
+                            <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open"/>
+                            <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open"/>
+
+                            <field name="state"/>
+                            <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
+                            <button name="action_close" states="draft,pending,open" string="Done" type="object" icon="terp-dialog-close" help="For changing to done state"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+            </data>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="project_task_crm_tree">
+        <field name="name">project.task.tree.crm</field>
+        <field name="model">project.task</field>
+        <field name="type">tree</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="project.view_task_tree2" />
+        <field name="arch" type="xml">
+            <field name="remaining_hours" position="after">
+                <field name="lead_id" invisible="not context.get('lead_id', False)"/>
+            </field>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="crm_todo_action">
+        <field name="name">My Tasks</field>
+        <field name="res_model">project.task</field>
+        <field name="context">{'set_editable':True,'set_visible':True,'gtd':True,'user_invisible':True, "search_default_open": 1, "lead_id": 1}</field>
+        <field name="search_view_id" ref="project_gtd.view_task_gtd_search"/>
+        <field name="domain">[('user_id','=',uid)]</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar,gantt,graph,kanban</field>
+    </record>
+    <menuitem
+        id="menu_crm_todo"
+        parent="base.menu_sales"
+        action="crm_todo_action"/>
+
+
+    </data>
+</openerp>

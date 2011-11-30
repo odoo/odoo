@@ -54,17 +54,40 @@
             <field name="category_ids" eval="[(6, 0, [ref('category_sr_exec'),ref('category_ceo')])]"/>
         </record>
 
-        <record id="employee2" model="hr.employee">
-            <field name="name">Quentin Paolino</field>
-            <field name="calendar_id" ref="resource.timesheet_group1"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="category_ids" eval="[(6, 0, [ref('category_jr_exec'),ref('category_managers')])]"/>
-        </record>
-
         <record id="employee3" model="hr.employee">
             <field name="name">Antoine Philippe</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="user_id" ref="base.user_root"/>
+            <field name="parent_id" ref="employee1"/>
+            <field name="category_ids" eval="[(6, 0, [ref('category_trainee'),ref('category_employee')])]"/>
+        </record>
+
+        <record id="employee2" model="hr.employee">
+            <field name="name">Quentin Paolino</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="parent_id" ref="employee3"/>
+            <field name="category_ids" eval="[(6, 0, [ref('category_jr_exec'),ref('category_managers')])]"/>
+        </record>
+
+        <record id="employee4" model="hr.employee">
+            <field name="name">John Smith</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="parent_id" ref="employee1"/>
+            <field name="category_ids" eval="[(6, 0, [ref('category_sr_exec'),ref('category_ceo')])]"/>
+        </record>
+
+        <record id="employee5" model="hr.employee">
+            <field name="name"> Thomas McQueen</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="parent_id" ref="employee4"/>
+            <field name="category_ids" eval="[(6, 0, [ref('category_jr_exec'),ref('category_managers')])]"/>
+        </record>
+
+        <record id="employee6" model="hr.employee">
+            <field name="name">Vanessa Dupont</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="parent_id" ref="employee4"/>
             <field name="category_ids" eval="[(6, 0, [ref('category_trainee'),ref('category_employee')])]"/>
         </record>
 
