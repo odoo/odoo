@@ -54,7 +54,8 @@
     vals = self.default_get(cr, uid , [], context=ctx)
     try:
         new_id = self.create(cr, uid, {'email_to': 'xyz@mycompany.com', 'subject': 'test'})
-        self.send_mail(cr, uid, [new_id], context=ctx)
+        # We don't actually send the email, since this could log an error due to config...
+        # self.send_mail(cr, uid, [new_id], context=ctx)
     except Exception, e:
         pass
 -
