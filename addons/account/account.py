@@ -2754,7 +2754,6 @@ class account_financial_report(osv.osv):
         'parent_id': fields.many2one('account.financial.report', 'Parent'),
         'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
         'sequence': fields.integer('Sequence'),
-        'note': fields.text('Notes'),
         'balance': fields.function(_get_balance, 'Balance'),
         'level': fields.function(_get_level, string='Level', store=True, type='integer'),
         'type': fields.selection([
@@ -2764,13 +2763,18 @@ class account_financial_report(osv.osv):
             ('account_report','Report Value'),
             ],'Type'),
         'account_ids': fields.many2many('account.account', 'account_account_financial_report', 'report_line_id', 'account_id', 'Accounts'),
-        'display_detail': fields.boolean('Display details', help='Display every account with its balance instead of the sum.'),
+        'display_detail': fields.selection([
+            ('no_detail','No detail'),
+            ('only_detail','Display children flat'),
+            ('detail_with_hierarchy','Display children with hierarchy')
+            ], 'Display details'),
         'account_report_id':  fields.many2one('account.financial.report', 'Report Value'),
         'account_type_ids': fields.many2many('account.account.type', 'account_account_financial_report_type', 'report_id', 'account_type_id', 'Account Types'),
     }
 
     _defaults = {
         'type': 'sum',
+        'display_detail': 'only_detail',
     }
 
 account_financial_report()
