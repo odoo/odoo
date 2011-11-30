@@ -305,31 +305,46 @@
                 <field name="priority"/>
                 <field name="planned_revenue" sum="Expected Revenues"/>
                 <field name="user_email"/>
+                <field name="user_id"/>
+                <field name="partner_address_email"/>
                 <templates>
+                    <t t-name="lead_details">
+                        <ul class="oe_kanban_tooltip">
+                            <li t-if="record.phone.raw_value"><b>Phone:</b> <field name="phone"/></li>
+                            <li><b>Probability:</b> <field name="probability"/>%%</li>
+                            <li><b>Creation date:</b> <field name="create_date"/></li>
+                            <li t-if="record.date_deadline.raw_value"><b>Date Deadline:</b> <field name="date_deadline"/></li>
+                        </ul>
+                    </t>
                     <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
-                        <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="border">oe_kanban_color_red</t>
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
                             <div class="oe_kanban_box oe_kanban_color_border">
                                 <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                 <tr>
-                                    <td class="oe_kanban_title3" align="left" valign="middle">
+                                    <td align="left" valign="middle" width="16">
                                         <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
                                         <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                    </td>
+                                    <td align="left" valign="middle" class="oe_kanban_title3" tooltip="lead_details">
                                         <field name="partner_id"/>
+                                        <t t-if="record.planned_revenue.raw_value">
+                                            - <t t-esc="Math.round(record.planned_revenue.value)"/>
+                                            <field name="company_currency"/>
+                                        </t>
                                     </td>
-                                    <td class="oe_kanban_title2" align="right" valign="middle" t-if="record.planned_revenue.raw_value" nowrap="nowrap">
-                                        <t t-esc="Math.round(record.planned_revenue.value)"/> <field name="company_currency"/>
-                                    </td>
-                                    <td valign="top" width="22"><img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar"/></td>
+                                    <td valign="top" width="22"><img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/></td>
                                 </tr>
                                 </table>
 
                                 <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                    <div class="oe_kanban_right oe_kanban_small">
-                                        <field name="user_login"/>
-                                    </div>
                                     <div>
-                                        <b><field name="partner_address_name"/></b>
+                                        <b>
+                                            <a t-if="record.partner_address_email.raw_value" t-attf-href="mailto:#{record.partner_address_email.raw_value}">
+                                                <field name="partner_address_name"/>
+                                            </a>
+                                            <field t-if="!record.partner_address_email.raw_value" name="partner_address_name"/>
+                                        </b>
                                     </div>
                                     <div>
                                         <field name="name"/>
@@ -345,13 +360,14 @@
                                         <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
                                         <a string="Schedule/Log Call" name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action"/>
-                                        <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
                                         <a string="Schedule Meeting" name="action_makeMeeting" type="object" icon="stock_calendar"/>
+                                        <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
                                     </div>
                                     <div class="oe_kanban_right">
-                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
-                                        <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply" />
                                         <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="kanban-stop" />
+                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
+                                        <a name="case_open" string="Open" states="pending" type="object" icon="gtk-media-play" />
+                                        <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply" />
                                     </div>
                                     <br class="oe_kanban_clear"/>
                                 </div>
