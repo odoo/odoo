@@ -1,5 +1,5 @@
 -
-  In order to test the stock module, I will update the current stock of the product '[CPU2]High speed processor config'.
+  In order to test the stock module, I update the current stock of the product '[CPU2]High speed processor config'.
 -
   I assignd the created location in to warehouse.
 -
@@ -42,4 +42,3 @@
   !python {model: stock.move}: |
     ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_cpu2'))])
     assert [x.state for x in self.browse(cr, uid, ids) if x.state == 'done'], 'stock moves should be done!'
-

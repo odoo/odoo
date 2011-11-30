@@ -5,7 +5,7 @@
     company_id: base.main_company
     date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     name: Physical inventory
-    state: draft    
+    state: draft
 -
   Now, Define the location for import inventory.
 -
@@ -38,5 +38,4 @@
 -
   !python {model: stock.inventory}: |
    inventory = self.browse(cr, uid, [ref('stock_physical_inventory0')])
-   assert inventory[0].state == 'done',"After validate the inventory it should be in 'Done' state" 
-
+   assert inventory[0].state == 'done',"After validate the inventory it should be in 'Done' state"

@@ -44,4 +44,3 @@
     stock_partial_picking.do_partial(cr, uid, [partial_id], context)
     return_pick_id = self.pool.get('stock.return.picking').create(cr, uid,{}, context)
     self.pool.get('stock.return.picking').create_returns(cr, uid, [return_pick_id], context)
-
