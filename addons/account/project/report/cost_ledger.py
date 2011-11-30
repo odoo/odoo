@@ -50,8 +50,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
             for account in analytic_datas:
                 for child in account.child_ids:
                     result.append(child.id)
-                    for child_id in child.child_ids:
-                        _get_rec(child_id.id)
+                    _get_rec(child.id)
             return result
 
         child_ids = _get_rec(account_id)
@@ -116,7 +115,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
     def _sum_debit(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
         chid_ids = self._get_children(ids[0])
-        if not children:
+        if not chid_ids:
             return 0.0
         self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount>0", (tuple(chid_ids), date1, date2,))
         return self.cr.fetchone()[0] or 0.0
@@ -124,7 +123,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
     def _sum_credit(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
         chid_ids = self._get_children(ids[0])
-        if not children:
+        if not chid_ids:
             return 0.0
         self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount<0", (tuple(chid_ids),date1, date2,))
         return self.cr.fetchone()[0] or 0.0
