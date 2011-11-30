@@ -171,7 +171,7 @@ class hr_payslip(osv.osv):
                 line_ids.append(adjust_debit)
             move.update({'line_id': line_ids})
             move_id = move_pool.create(cr, uid, move, context=context)
-            self.write(cr, uid, [slip.id], {'move_id': move_id}, context=context)
+            self.write(cr, uid, [slip.id], {'move_id': move_id, 'period_id' : period_id}, context=context)
             if slip.journal_id.entry_posted:
                 move_pool.post(cr, uid, [move_id], context=context)
         return super(hr_payslip, self).process_sheet(cr, uid, [slip.id], context=context)
