@@ -113,6 +113,8 @@ $(document).ready(function () {
         equal(g("12345678", [2, 0, 1], '.'), '12.34.56.78');
         equal(g("12345678", [2, 0, 0], '.'), '12.34.56.78');
         equal(g("12345678", [2, 0, -1], '.'), '12.34.56.78');
+        equal(g("12345678", [3,3,3,3], '.'), '12.345.678');
+        equal(g("12345678", [3,0], '.'), '12.345.678');
     });
     test('format_integer', function () {
         openerp.web._t.database.parameters.grouping = [3, 3, 3, 3];
