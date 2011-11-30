@@ -1,0 +1,60 @@
+-
+  I start compaign.
+-
+  !workflow {model: marketing.campaign, action: state_running_set, ref: marketing_campaign_openerppartnerchannel}
+-
+  I check the campaign on Running mode.
+-
+  !assert {model: marketing.campaign, id: marketing_campaign_openerppartnerchannel}:
+    - state == 'running'
+-
+  This campaign is only for OpenERP partner, so I assinged this Campaign 
+  to right segment, after that I start this segment. 
+-
+  !workflow {model: marketing.campaign.segment, action: state_running_set, ref: marketing_campaign_segment0}
+-
+  I check the segment on Running mode.
+-
+  !assert {model: marketing.campaign.segment, id: marketing_campaign_segment0}:
+    - state == 'running'
+-
+  I synchronized this segment manually to see all step of activity and process covered on this campaign.
+-
+  !python {model: marketing.campaign.segment}: |
+    self.synchroniz(cr, uid, [ref("marketing_campaign_segment0")])
+-
+  I process work item.
+-
+  !python {model: marketing.campaign.workitem}: |
+    ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
+    ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_1'))])
+    #assert ids, 'Activity items not created'
+    #self.process(cr, uid, ids)
+    #record = self.browse(cr, uid, ids)[0]
+    #assert record.state == "done", "Activity item not in done state"
+-
+  I print workitem report.
+-
+  !python {model: marketing.campaign.workitem}: |
+    ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
+    ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_1'))])
+    #self.preview(cr, uid, ids)
+-
+  I close segmentation After completion of all activity. 
+-
+  !workflow {model: marketing.campaign.segment, action: state_done_set, ref: marketing_campaign_segment0}
+-
+  I check the segmentation is done.
+-
+  !assert {model: marketing.campaign.segment, id: marketing_campaign_segment0}:
+    - state == 'done'
+-
+  I close this campaing.
+-
+  !workflow {model: marketing.campaign.segment, action: state_done_set, ref: marketing_campaign_openerppartnerchannel}
+-
+  I check the campaing is done.
+-
+  !assert {model: marketing.campaign.segment, id: marketing_campaign_openerppartnerchannel}:
+    - state == 'done'
+
