@@ -426,8 +426,8 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         });
         if (this.action.help && !this.flags.low_profile) {
             var Users = new session.web.DataSet(self, 'res.users'),
-                header = this.$element.find('.oe-view-manager-header');
-            header.delegate('blockquote button', 'click', function() {
+                $tips = this.$element.find('.oe_view_manager_menu_tips');
+            $tips.delegate('blockquote button', 'click', function() {
                 var $this = $(this);
                 //noinspection FallthroughInSwitchStatementJS
                 switch ($this.attr('name')) {
@@ -444,7 +444,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                     if (!(user && user.id === self.session.uid)) {
                         return;
                     }
-                    header.find('blockquote').toggle(user.menu_tips);
+                    $tips.find('blockquote').toggle(user.menu_tips);
                 });
             }
         }
