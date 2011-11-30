@@ -26,15 +26,17 @@ class purchase_order(osv.osv):
     _inherit = "purchase.order"
     _description = "Purchase Order"
 
-    def inv_line_create(self, cr, uid, a, ol):
-        line = super(purchase_order, self).inv_line_create(cr, uid, a, ol)
-        if ol.product_id and not ol.product_id.type == 'service':
-            oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
-            if not oa:
-                oa = ol.product_id.categ_id.property_stock_account_input_categ and ol.product_id.categ_id.property_stock_account_input_categ.id
-            if oa:
-                fpos = ol.order_id.fiscal_position or False
-                a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
-                line[2].update({'account_id': a})
+    def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
+        line = super(purchase_order, self)._prepare_inv_line(cr, uid, account_id, order_line, context=context)
+        if order_line.product_id and not order_line.product_id.type == 'service':
+            acc_id = order_line.product_id.property_stock_account_input and order_line.product_id.property_stock_account_input.id
+            if not acc_id:
+                acc_id = order_line.product_id.categ_id.property_stock_account_input_categ and order_line.product_id.categ_id.property_stock_account_input_categ.id
+            if acc_id:
+                fpos = order_line.order_id.fiscal_position or False
+                new_account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, acc_id)
+                line.update({'account_id': new_account_id})
         return line
 purchase_order()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

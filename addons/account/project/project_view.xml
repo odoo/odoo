@@ -91,15 +91,18 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Account Data">
-                            <field name="partner_id"/>
-                            <field name="contact_id"/>
-                            <field name="currency_id"/>
-                            <newline/>
-                            <field name="date_start"/>
-                            <field name="date"/>
-                            <newline/>
-                            <field name="quantity_max"/>
-                            <field name="user_id"/>
+                            <group colspan="2" col="2">
+                                <separator colspan="2" string="Contacts"/>
+                                <field name="partner_id" on_change="on_change_partner_id(partner_id)"/>
+                                <field name="contact_id"/>
+                                <field name="user_id"/>
+                            </group>
+                            <group colspan="2" col="2" name="contract">
+                                <separator colspan="2" string="Contract Data"/>
+                                <field name="date_start"/>
+                                <field name="date"/>
+                                <field name="quantity_max"/>
+                            </group>
                         </page>
                         <page string="Description">
                             <field colspan="4" name="description" nolabel="1"/>
@@ -255,7 +258,6 @@
             <field eval="'account.analytic.account'" name="model"/>
             <field name="name">Open Account Tree</field>
             <field eval="'ir.actions.act_window,%d'%action_account_tree1" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <record id="account_analytic_line_extended_form" model="ir.ui.view">

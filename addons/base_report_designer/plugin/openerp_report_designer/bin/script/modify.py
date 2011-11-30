@@ -136,3 +136,5 @@ if __name__<>"package":
 else:
     g_ImplementationHelper.addImplementation( modify, "org.openoffice.openerp.report.modify", ("com.sun.star.task.Job",),)
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

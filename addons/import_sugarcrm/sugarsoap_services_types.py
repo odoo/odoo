@@ -644,3 +644,5 @@ class ns0:
             self.pyclass = Holder
 
 # end class ns0 (tns: http://www.sugarcrm.com/sugarcrm)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

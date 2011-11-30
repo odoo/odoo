@@ -57,6 +57,12 @@ product_product()
 class sale_order(osv.osv):
     _inherit ='sale.order'
 
+    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, *args):
+        proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
+                uid, order, line, move_id, date_planned, *args)
+        proc_data['sale_line_id'] = line.id
+        return proc_data
+
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
         if not ids:
             return {}

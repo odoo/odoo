@@ -113,13 +113,9 @@
                 <separator orientation="vertical"/>
                 <filter
                     domain="[('timebox_id','=', False)]"
-                    help="Undefined Timebox" string="Inbox"/>
-                <separator name="gtdsep"/>
-                <filter string="Deadlines" context="{'deadline_visible': False}"
-                    domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline"
-                    icon="terp-gnome-cpu-frequency-applet+"
-                    groups="base.group_extended"/>
+                    help="Tasks having no timebox assigned yet" string="Inbox"/>
                 <separator orientation="vertical"/>
+                <separator name="gtdsep"/>
                 <field name="name"/>
                 <field name="context_id" widget="selection" groups="base.group_extended"
                     context="{'context_show': True}">
@@ -128,6 +124,9 @@
                         context="{'context_show': True}"
                         domain="[]" icon="terp-camera_test"
                         help="Show the context field"/>
+                    <filter string="Show Deadlines" context="{'deadline_visible': False}"
+                        domain="[]" help="Show only tasks having a deadline"
+                        icon="terp-gnome-cpu-frequency-applet+"/>
                 </field>
             </search>
         </field>

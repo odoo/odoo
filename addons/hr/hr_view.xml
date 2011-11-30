@@ -184,7 +184,7 @@
             <field name="view_type">tree</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_employee_tree"/>
-            <field name="domain">[('parent_id','=',False),('user_id','=',uid)]</field>
+            <field name="domain">[('parent_id','=',False)]</field>
             <field name="search_view_id" ref="view_employee_filter"/>
         </record>
 
@@ -352,7 +352,6 @@
             <field eval="'hr.employee.category'" name="model"/>
             <field name="name">Employees by Categories</field>
             <field eval="'ir.actions.act_window,%d'%hr_employee_normal_action_tree" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <menuitem action="open_view_categ_tree"

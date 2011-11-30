@@ -105,3 +105,5 @@ class project_scrum_email(osv.osv_memory):
         if data.product_owner_email:
             mail_message.schedule_with_attach(cr, uid, user_email, [data.product_owner_email], data.subject, body, reply_to=user_email, context=context)
         return {'type': 'ir.actions.act_window_close'}
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

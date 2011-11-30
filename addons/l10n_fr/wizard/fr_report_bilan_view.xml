@@ -31,7 +31,6 @@
 
         <record model="ir.values" id="action_account_bilan_report_values">
             <field name="model_id" ref="model_account_bilan_report" />
-            <field name="object" eval="1" />
             <field name="name">Bilan Report</field>
             <field name="key2">client_print_multi</field>
             <field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_bilan_report'))" />

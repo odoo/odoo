@@ -197,11 +197,19 @@ class hr_applicant(crm.crm_case, osv.osv):
         'color': 0,
     }
 
-    def _read_group_stage_ids(self, cr, uid, ids, domain, context=None):
-        context = context or {}
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        access_rights_uid = access_rights_uid or uid
         stage_obj = self.pool.get('hr.recruitment.stage')
-        stage_ids = stage_obj.search(cr, uid, ['|',('id','in',ids), ('department_id','=',False)], context=context)
-        return stage_obj.name_get(cr, uid, stage_ids, context=context)
+        order = stage_obj._order
+        if read_group_order == 'stage_id desc':
+            # lame hack to allow reverting search, should just work in the trivial case
+            order = "%s desc" % order
+        stage_ids = stage_obj._search(cr, uid, ['|',('id','in',ids),('department_id','=',False)], order=order,
+                                      access_rights_uid=access_rights_uid, context=context)
+        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
+        # restore order of the search
+        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        return result
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
@@ -411,6 +419,9 @@ class hr_applicant(crm.crm_case, osv.osv):
 
     def case_close_with_emp(self, cr, uid, ids, *args):
         hr_employee = self.pool.get('hr.employee')
+        model_data = self.pool.get('ir.model.data')
+        act_window = self.pool.get('ir.actions.act_window')
+        emp_id = False
         for applicant in self.browse(cr, uid, ids):
             address_id = False
             if applicant.partner_id:
@@ -425,7 +436,14 @@ class hr_applicant(crm.crm_case, osv.osv):
                 self.case_close(cr, uid, [applicant.id], *args)
             else:
                 raise osv.except_osv(_('Warning!'),_('You must define Applied Job for Applicant !'))
-        return True
+
+        
+        action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
+        dict_act_window = act_window.read(cr, uid, action_id, [])
+        if emp_id:
+            dict_act_window['res_id'] = emp_id
+        dict_act_window['view_mode'] = 'form,tree'
+        return dict_act_window
 
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as draft

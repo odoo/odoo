@@ -52,3 +52,5 @@ You can also use the geolocalization without using the GPS coordinates.
     'certificate': '00503409558942442061',
     'images': ['images/partner_geo_localization.jpeg','images/partner_grade.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

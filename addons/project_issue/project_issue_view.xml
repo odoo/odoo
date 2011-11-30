@@ -40,7 +40,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'project.issue')]</field>
-            <field name="context">{'object_id':'project.issue'}</field>
+            <field name="context" eval="{'object_id': ref('model_project_issue')}"/>
         </record>
 
         <menuitem action="project_issue_categ_action" name="Categories" id="menu_project_issue_category_act" parent="menu_project_confi" />
@@ -323,9 +323,9 @@
                                         <a string="Convert To Task" name="convert_issue_task" icon="gtk-index" type="object"/>
                                     </div>
                                     <div class="oe_kanban_right">
-                                        <a name="case_open" string="Open" states="draft,pending" type="object" icon="lead-stage-won" />
-                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="lead-stage-pending"/>
-                                        <a name="case_close" string="Close" states="open,draft,pending" type="object" icon="lead-stage-lost"/>
+                                        <a name="case_open" string="Open" states="draft,pending" type="object" icon="kanban-apply" />
+                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause"/>
+                                        <a name="case_close" string="Close" states="open,draft,pending" type="object" icon="kanban-stop"/>
                                     </div>
                                     <br class="oe_kanban_clear"/>
                                 </div>
@@ -397,19 +397,6 @@
     # ------------------------------------------------------
     # Project
     # ------------------------------------------------------
-
-        <record id="project.view_project_resource_form1" model="ir.ui.view">
-            <field name="name">Project Resource Calendar View</field>
-            <field name="model">project.project</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="project.edit_project"/>
-            <field name="arch" type="xml">
-                <field name="priority" position="after">
-                    <field name="resource_calendar_id"/>
-                </field>
-
-            </field>
-       </record>
 
         <record id="view_project_form_inherited" model="ir.ui.view">
             <field name="name">project.project.form.inherited</field>
