@@ -39,23 +39,17 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         })
 
     def _get_children(self, account_id):
+        analytic_obj = self.pool.get('account.analytic.account')
+        if not isinstance(account_id, list):
+            account_id = [account_id]
+        search_ids = analytic_obj.search(self.cr, self.uid, [('parent_id', 'child_of', account_id)])
         result = []
-
-        def _get_rec(account_id):
-            analytic_obj = self.pool.get('account.analytic.account')
-            analytic_search_ids = analytic_obj.search(self.cr, self.uid, [('id', '=', account_id)])
-            analytic_datas = analytic_obj.browse(self.cr, self.uid, analytic_search_ids)
-
-            result.append(account_id)
-            for account in analytic_datas:
-                for child in account.child_ids:
-                    result.append(child.id)
-                    _get_rec(child.id)
-            return result
-
-        child_ids = _get_rec(account_id)
-
-        return child_ids
+        for rec in analytic_obj.browse(self.cr, self.uid, search_ids):
+            for child in rec.child_ids:
+                result.append(child.id)
+        if result:
+            result = self._get_children(result)
+        return search_ids + result
 
     def _lines_g(self, account_id, date1, date2):
         chid_ids = self._get_children(account_id)
@@ -114,7 +108,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 
     def _sum_debit(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
-        chid_ids = self._get_children(ids[0])
+        chid_ids = self._get_children(ids)
         if not chid_ids:
             return 0.0
         self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount>0", (tuple(chid_ids), date1, date2,))
@@ -122,7 +116,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 
     def _sum_credit(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
-        chid_ids = self._get_children(ids[0])
+        chid_ids = self._get_children(ids)
         if not chid_ids:
             return 0.0
         self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount<0", (tuple(chid_ids),date1, date2,))
