@@ -422,7 +422,7 @@ class crm_lead(crm_case, osv.osv):
             else:
                 value = lead[field_name]
 
-            body.append("%s: %s\n" % (field.string, value or ''))
+            body.append("%s: %s" % (field.string, value or ''))
         return "\n".join(body + ['---'])
 
     def _merge_notification(self, cr, uid, opportunity_id, opportunities, context=None):
