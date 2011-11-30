@@ -109,20 +109,18 @@ class project(osv.osv):
                         parents = self._get_parents(cr, uid, [child[0]], parents,context)
         return parents
 
+    def _get_project(self,cr, ids):
+        cr.execute('''SELECT project_id, sum(planned_hours), sum(total_hours), sum(effective_hours), SUM(remaining_hours)
+                      FROM project_task WHERE project_id in %s AND state<>'cancelled'
+                      GROUP BY project_id''', (tuple(ids),))
+        return cr
+
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         if not ids:
             return res
         parents = self._get_parents(cr, uid, ids, ids,context)
-        cr.execute('''SELECT
-                project_id, sum(planned_hours), sum(total_hours), sum(effective_hours), SUM(remaining_hours)
-            FROM
-                project_task
-            WHERE
-                project_id in %s AND
-                state<>'cancelled'
-            GROUP BY
-                project_id''', (tuple(ids),))
+        cr = self._get_project(cr,ids)
         progress = dict(map(lambda x: (x[0], (x[1] or 0.0 ,x[2] or 0.0 ,x[3] or 0.0 ,x[4] or 0.0)), cr.fetchall()))
         for project in self.browse(cr, uid, parents, context=context):
             childs = []
@@ -136,15 +134,7 @@ class project(osv.osv):
             }
             
             if childs:
-                cr.execute('''SELECT
-                    project_id, sum(planned_hours), sum(total_hours), sum(effective_hours), SUM(remaining_hours)
-                FROM
-                    project_task
-                WHERE
-                    project_id in %s AND
-                    state<>'cancelled'
-                GROUP BY
-                    project_id''', (tuple(childs),))
+                cr = self._get_project(cr, childs)
                 child_progress = dict(map(lambda x: (x[0], (x[1] or 0.0 ,x[2] or 0.0 ,x[3] or 0.0 ,x[4] or 0.0)), cr.fetchall()))
                 planned_hours, effective_hours, total_hours, rnd= 0.0, 0.0,0.0, 0.0
                 for child in childs:
@@ -588,8 +578,8 @@ class task(osv.osv):
     def _default_project(self, cr, uid, context=None):
         if context is None:
             context = {}
-        if 'project_id' in context and context['project_id']:
-            return int(context['project_id'])
+        if 'default_project_id' in context and context['default_project_id']:
+            return int(context['default_project_id'])
         return False
 
     def duplicate_task(self, cr, uid, map_ids, context=None):
