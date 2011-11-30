@@ -935,7 +935,6 @@ class account_voucher(osv.osv):
         move_line = {}
 
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
-        analytic_id = voucher_brw.analytic_id.id or False
         current_currency_obj = voucher_brw.currency_id or voucher_brw.journal_id.company_id.currency_id
 
         if not currency_obj.is_zero(cr, uid, current_currency_obj, line_total):
@@ -959,7 +958,7 @@ class account_voucher(osv.osv):
                 'debit': diff < 0 and -diff or 0.0,
                 'amount_currency': company_currency <> current_currency and voucher_brw.writeoff_amount or False,
                 'currency_id': company_currency <> current_currency and current_currency or False,
-                'analytic_account_id': analytic_id
+                'analytic_account_id': voucher_brw.analytic_id and voucher_brw.analytic_id.id or False
             }
 
         return move_line
