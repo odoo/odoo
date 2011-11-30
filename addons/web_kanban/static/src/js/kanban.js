@@ -380,7 +380,11 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             new_record = {};
         _.each(record, function(value, name) {
             var r = _.clone(self.view.fields_view.fields[name] || {});
-            r.raw_value = value;
+            if ((r.type === 'date' || r.type === 'datetime') && value) {
+                r.raw_value = openerp.web.auto_str_to_date(value);
+            } else {
+                r.raw_value = value;
+            }
             r.value = openerp.web.format_value(value, r);
             new_record[name] = r;
         });
