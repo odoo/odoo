@@ -13,28 +13,9 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
 	font-size:85%;
 }
 
-.openerp .view-manager-main-content>div{
-    padding:0px 8px;
-}
-.openerp .view-manager-main-content>div.oe-view-manager-header {
-    padding:0px;
-}
-.openerp .view-manager-main-content>div.oe-view-manager-header > a, .openerp .view-manager-main-content>div.oe-view-manager-header > div {
-    padding:0px 8px;
-}
-
-.openerp .view-manager-main-content > div.oe-view-manager-header > a[style] + h2.oe_view_title{ /* Padding only for the view form title*/
-    padding-left:10px;
-}
-
-.openerp .view-manager-main-content .view-manager-main-content > div { /* No padding for other nested childs */
-    padding-left:0px;
-    padding-right:0px;
-}
-
-
-.openerp .oe-dashboard-action .view-manager-main-content > div {
-    padding:0px 0px;
+.openerp .view-manager-main-content {
+    width: 100%;
+    padding:0px 8px 8px 8px;
 }
 
 .oe_box {
@@ -1306,17 +1287,13 @@ label.error {
     vertical-align: top;
 }
 
-.openerp .view-manager-main-content {
-    width: 100%;
-	padding:0px;
-}
 .openerp .oe-view-manager-header {
     overflow: auto;
 }
 .openerp .oe-view-manager-header h2 {
     float: left;
 }
-.openerp .oe-view-manager-header blockquote {
+.openerp .oe_view_manager_menu_tips blockquote {
     display: none;
     font-size: 85%;
     margin: 0;
@@ -1325,14 +1302,14 @@ label.error {
     padding: 1px 10px;
     color: #4C4C4C;
 }
-.openerp .oe-view-manager-header blockquote p {
+.openerp .oe_view_manager_menu_tips blockquote p {
     margin: 0;
     padding: 6px 1px 4px;
 }
-.openerp .oe-view-manager-header blockquote div {
+.openerp .oe_view_manager_menu_tips blockquote div {
     text-align: right;
 }
-.openerp .oe-view-manager-header blockquote div button {
+.openerp .oe_view_manager_menu_tips blockquote div button {
     border: none;
     background: none;
     padding: 0 4px;
@@ -1636,18 +1613,17 @@ label.error {
 /* Shortcuts*/
 .oe-shortcut-toggle {
     height: 20px;
+    margin-top:3px;
     padding: 0;
-	margin-top:4px;
     width: 24px;
     cursor: pointer;
     display: block;
-    background: url(/web/static/src/img/add-shortcut.png) no-repeat bottom;
+    background: url(/web/static/src/img/add-shortcut.png) no-repeat center center;
     float: left;
 }
 .oe-shortcut-remove{
-    background: url(/web/static/src/img/remove-shortcut.png) no-repeat bottom;
+    background: url(/web/static/src/img/remove-shortcut.png) no-repeat center center;
 }
-/* ================ */
 .oe-shortcuts {
     position: absolute;
     margin: 0;
