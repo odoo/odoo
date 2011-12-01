@@ -7,9 +7,48 @@ openerp.web.page = function (openerp) {
             this._super.apply(this, arguments);
             this.registry = openerp.web.form.readonly;
         },
-        do_set_editable: function() {
-            return !this.readonly ? $.Deferred().resolve() : this.on_toggle_readonly();
+        on_loaded: function(data) {
+            this._super(data);
+            this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
+            this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
+            this.$form_header.find('button.oe_form_button_delete').click(this.on_button_delete);
+  
+        }, 
+        on_button_new: function() {
+            this.dataset.index = null;
+            return this.do_switch_view('form');
         },
+        on_button_duplicate: function() {
+            var self = this;
+            var def = $.Deferred();
+            $.when(this.has_been_loaded).then(function() {
+                self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
+                    return self.on_created({ result : new_id });
+                }).then(function() {
+                    return this.do_switch_view('form');
+                }).then(function() {
+                    def.resolve();
+                });
+            });
+            return def.promise();
+        },
+        on_button_delete: function() {
+            var self = this;
+            var def = $.Deferred();
+            $.when(this.has_been_loaded).then(function() {
+                if (self.datarecord.id && confirm(_t("Do you really want to delete this record?"))) {
+                    self.dataset.unlink([self.datarecord.id]).then(function() {
+                        self.on_pager_action('next');
+                        def.resolve();
+                    });
+                } else {
+                    setTimeout(function () {
+                        def.reject();
+                    }, 0)
+                }
+            });
+            return def.promise();
+        }
     });
     
     openerp.web.form.FieldReadonly = openerp.web.form.Field.extend({

@@ -102,9 +102,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
 
         this.$form_header.find('button.oe_form_button_save').click(this.on_button_save);
-        this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
-        this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
-        this.$form_header.find('button.oe_form_button_delete').click(this.on_button_delete);
 
         if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
@@ -115,9 +112,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.set_common_sidebar_sections(this.sidebar);
         }
         this.has_been_loaded.resolve();
-    },
-    do_set_readonly: function() {
-        return this.readonly ? $.Deferred().resolve() : this.on_toggle_readonly();
     },
     do_show: function () {
         var promise;
@@ -367,7 +361,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
     },
     on_button_save: function() {
-        return this.do_save().then(this.do_set_readonly);
+        var self = this;
+        return this.do_save().then(function() {
+            self.do_switch_view('page');
+        });
     },
     on_button_new: function() {
         var self = this;
@@ -375,49 +372,14 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         $.when(this.has_been_loaded).then(function() {
             if (self.can_be_discarded()) {
                 var keys = _.keys(self.fields_view.fields);
-                $.when(self.do_set_editable()).then(function() {
-                    if (keys.length) {
-                        self.dataset.default_get(keys).pipe(self.on_record_loaded).then(function() {
-                            def.resolve();
-                        });
-                    } else {
-                        self.on_record_loaded({}).then(function() {
-                            def.resolve();
-                        });
-                    }
-                });
-            }
-        });
-        return def.promise();
-    },
-    on_button_duplicate: function() {
-        var self = this;
-        var def = $.Deferred();
-        $.when(this.has_been_loaded).then(function() {
-            if (self.can_be_discarded()) {
-                self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
-                    return self.on_created({ result : new_id });
-                }).then(self.do_set_editable).then(function() {
-                    def.resolve();
-                });
-            }
-        });
-        return def.promise();
-    },
-    on_button_delete: function() {
-        var self = this;
-        var def = $.Deferred();
-        $.when(this.has_been_loaded).then(function() {
-            if (self.can_be_discarded() && self.datarecord.id) {
-                if (confirm(_t("Do you really want to delete this record?"))) {
-                    self.dataset.unlink([self.datarecord.id]).then(function() {
-                        self.on_pager_action('next');
+                if (keys.length) {
+                    self.dataset.default_get(keys).pipe(self.on_record_loaded).then(function() {
                         def.resolve();
                     });
                 } else {
-                    setTimeout(function () {
-                        def.reject();
-                    }, 0)
+                    self.on_record_loaded({}).then(function() {
+                        def.resolve();
+                    });
                 }
             }
         });
@@ -2111,6 +2073,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                     controller.set_editable(false);
             } else if (view_type == "form") {
                 if (self.is_readonly()) {
+                    // TODO NIV: use page view do_switch_view('page')
                     controller.on_toggle_readonly();
                     $(controller.$element.find(".oe_form_buttons")[0]).children().remove();
                 }
@@ -2749,6 +2712,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         }
         this.view_form.appendTo(this.$element.find("#" + this.element_id + "_view_form"));
         var once = $.Deferred().then(function() {
+            // TODO NIV: do_switch_view('page')
             if (self.options.readonly) {
                 self.view_form.on_toggle_readonly();
             }

@@ -960,6 +960,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var action_manager = new openerp.web.ActionManager(self);
         $.when(action_manager.do_action(action)).then(function() {
             var controller = action_manager.dialog_viewmanager.views['form'].controller;
+            // TODO NIV: use page view
             controller.do_set_readonly.add_last(function(){
                 action_manager.stop();
                 new_fields_name = new openerp.web.DataSetSearch(self,'ir.model.fields', null, null);
