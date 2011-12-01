@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-11-30 17:50+0000\n"
+"Last-Translator: Gregor Ljubič (radioglas.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-05 05:44+0000\n"
-"X-Generator: Launchpad (build 14085)\n"
+"X-Launchpad-Export-Date: 2011-12-01 05:54+0000\n"
+"X-Generator: Launchpad (build 14414)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -52,7 +52,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "Datum, ko je bil ustvarjen ta dokument."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -75,7 +75,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Ni fakturiran"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -86,7 +86,7 @@ msgstr "Ciljni naslov"
 #: report:purchase.order:0
 #: field:purchase.report,validator:0
 msgid "Validated By"
-msgstr ""
+msgstr "Potrdil"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_invoice_onshipping
@@ -119,12 +119,12 @@ msgstr ""
 #: code:addons/purchase/wizard/purchase_line_invoice.py:156
 #, python-format
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "Računi dobaviteljev"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Sklic naročila mora biti enoličen!"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -148,7 +148,7 @@ msgstr "Količina"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sale Order"
-msgstr ""
+msgstr "Izberi odprt prodajni nalog"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -156,7 +156,7 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Podjetje"
 
 #. module: purchase
 #: view:board.board:0
@@ -220,13 +220,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr ""
+msgstr "Delni prevzem"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:296
 #, python-format
 msgid "Purchase order '%s' is confirmed."
-msgstr ""
+msgstr "Nakup '%s'  je potrjen."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -259,7 +259,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Purchases"
-msgstr ""
+msgstr "Nabave"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -280,7 +280,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -322,7 +322,7 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 msgid "Products"
-msgstr ""
+msgstr "Izdelki"
 
 #. module: purchase
 #: field:purchase.installer,progress:0
@@ -347,12 +347,12 @@ msgstr "Preklicano"
 #: code:addons/purchase/purchase.py:315
 #, python-format
 msgid "Purchase amount over the limit"
-msgstr ""
+msgstr "Znesek nabave nad mejo"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Convert to Purchase Order"
-msgstr ""
+msgstr "Pretvori v naročilo"
 
 #. module: purchase
 #: field:purchase.order,pricelist_id:0
@@ -369,28 +369,28 @@ msgstr "Izjema pri odpremi"
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Postavke računa"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinglist0
 #: model:process.node,name:purchase.process_node_productrecept0
 msgid "Incoming Products"
-msgstr ""
+msgstr "Vhodni artikli"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Outgoing Products"
-msgstr ""
+msgstr "Odhodni artikli"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Manually Corrected"
-msgstr ""
+msgstr "Ročno popravljanjano"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Mesec   "
 
 #. module: purchase
 #: view:purchase.order:0
@@ -401,29 +401,29 @@ msgstr "Sklic"
 #: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Cannot delete Purchase Order(s) which are in %s State!"
-msgstr ""
+msgstr "Ne morem izbrisati naročil(a), ki so v %s statusu!"
 
 #. module: purchase
 #: field:purchase.report,dest_address_id:0
 msgid "Dest. Address Contact Name"
-msgstr ""
+msgstr "Ime kontakta na ciljnem naslovu"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Prenos zaloge"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dan"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:344
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
-msgstr ""
+msgstr "Nakup '%s'  je bil določen v stanju osnutka"
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -434,7 +434,7 @@ msgstr "Stroškovno mesto"
 #: view:purchase.report:0
 #: field:purchase.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# št. vrstic"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:696
@@ -442,22 +442,22 @@ msgstr ""
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Opozorilo"
 
 #. module: purchase
 #: field:purchase.installer,purchase_analytic_plans:0
 msgid "Purchase Analytic Plans"
-msgstr ""
+msgstr "Analitični načrti nabave"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_installer
 msgid "purchase.installer"
-msgstr ""
+msgstr "nameščanje.nabave"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Osnutek"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -478,7 +478,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:721
 #, python-format
 msgid "Wrong Product UOM !"
-msgstr ""
+msgstr "Napačna ME artikla"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
@@ -490,7 +490,7 @@ msgstr "Potrjeno"
 #: view:purchase.report:0
 #: field:purchase.report,price_average:0
 msgid "Average Price"
-msgstr ""
+msgstr "Povprečna cena"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -512,17 +512,17 @@ msgstr "Nadzor izdaje računov"
 #. module: purchase
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Napaka! Ne morete ustvariti rekurzivnih podjetij."
 
 #. module: purchase
 #: field:purchase.order,partner_ref:0
 msgid "Supplier Reference"
-msgstr ""
+msgstr "Sklic Dobavitelja"
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
 msgid "The tax amount"
-msgstr ""
+msgstr "Znesek davka"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -539,7 +539,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "State"
-msgstr ""
+msgstr "Država"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
@@ -562,12 +562,12 @@ msgstr "Prevzemni list"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Print"
-msgstr ""
+msgstr "Natisni"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
 msgid "Merge Purchase orders"
-msgstr ""
+msgstr "Spajanje naročil"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
@@ -589,7 +589,7 @@ msgstr "Faks:"
 #: view:purchase.report:0
 #: field:purchase.report,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Skupna cena"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -600,7 +600,7 @@ msgstr "Neobdavčen znesek"
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
-msgstr ""
+msgstr "Ceniki"
 
 #. module: purchase
 #: field:purchase.report,partner_address_id:0
@@ -635,17 +635,17 @@ msgstr "Napaka!"
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "General Information"
-msgstr ""
+msgstr "Splošne informacije"
 
 #. module: purchase
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Moja Tabla"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Purchase Order N°"
-msgstr ""
+msgstr "Naročilo N°"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -672,7 +672,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Order"
-msgstr ""
+msgstr "Obrazec Naročilo"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
@@ -700,19 +700,19 @@ msgstr "Opravljeno"
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Julij"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 #: view:res.company:0
 msgid "Configuration"
-msgstr ""
+msgstr "Nastavitve"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_by_supplier
 #: view:purchase.report:0
 msgid "Purchase by supplier"
-msgstr ""
+msgstr "Nabava po dobaviteljih"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -722,7 +722,7 @@ msgstr "Skupni znesek"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
 msgid "Receptions"
-msgstr ""
+msgstr "Sprejemi"
 
 #. module: purchase
 #: field:purchase.order,validator:0
@@ -760,7 +760,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.report:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Mesec-1    "
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:373
@@ -771,7 +771,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Čaka Odobritev"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -789,17 +789,17 @@ msgstr ""
 #: field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
 msgid "Order Date"
-msgstr ""
+msgstr "Datum Naročila"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
 msgid "Incoming products to control"
-msgstr ""
+msgstr "Dohodni artikli za nadzor"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
 msgid "Approbation"
-msgstr ""
+msgstr "dobritev"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -836,7 +836,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Avgust"
 
 #. module: purchase
 #: field:purchase.installer,purchase_requisition:0
@@ -846,13 +846,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Kategorije Merskih Enot"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
-msgstr ""
+msgstr "Dni za Dostaviti"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -863,13 +863,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Nabava"
 
 #. module: purchase
 #: view:purchase.order:0
 #: field:purchase.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Računi"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
@@ -879,18 +879,18 @@ msgstr ""
 #. module: purchase
 #: field:purchase.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Slika"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Total Orders Lines by User per month"
-msgstr ""
+msgstr "Skupaj naročil po uporabniku na mesec"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mesec"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -911,7 +911,7 @@ msgstr "Nabavni nalogi, čakajoči na odobritev"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
-msgstr ""
+msgstr "Skupaj brez davka"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
@@ -922,7 +922,7 @@ msgstr "Prejeto"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
 msgid "List of ordered products."
-msgstr ""
+msgstr "Pregled naročnih artiklov."
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
@@ -940,7 +940,7 @@ msgstr "Upravljanje nabave"
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
 #: model:process.node,note:purchase.process_node_invoicecontrol0
 msgid "To be reviewed by the accountant."
-msgstr ""
+msgstr "Za pregledat s strani računovodstva."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
@@ -963,7 +963,7 @@ msgstr "Zaračunano"
 #: view:purchase.report:0
 #: field:purchase.report,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "Kategorija"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
@@ -974,17 +974,17 @@ msgstr ""
 #. module: purchase
 #: view:purchase.report:0
 msgid "  Year  "
-msgstr ""
+msgstr "  Leto  "
 
 #. module: purchase
 #: field:purchase.report,state:0
 msgid "Order State"
-msgstr ""
+msgstr "Stanje Naročila"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
 msgid "Create invoices"
-msgstr ""
+msgstr "Ustvari račune"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
@@ -996,7 +996,7 @@ msgstr "Postavka nabavnega naloga"
 #. module: purchase
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Napaka! Ni mogoče rekurzivno kreirati pridruženih članov"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1022,7 +1022,7 @@ msgstr ""
 #. module: purchase
 #: view:res.partner:0
 msgid "Purchase Properties"
-msgstr ""
+msgstr "Lastnosti Nakupa"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
@@ -1050,7 +1050,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Nastavitev"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_qty_per_product
@@ -1071,12 +1071,12 @@ msgstr ""
 #. module: purchase
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr ""
+msgstr "Prodaja in Nabava"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Junij"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1098,12 +1098,12 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Razširjeni filtri..."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:362
@@ -1132,12 +1132,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Exception"
-msgstr ""
+msgstr "Izjema"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1170,12 +1170,12 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Januar"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Podjetja"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1185,7 +1185,7 @@ msgstr "Prekliči nabavni nalog"
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Morate določiti proizvodno serijo tega artikla"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -1195,7 +1195,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_deshboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Nadzorna plošča"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1206,13 +1206,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
 msgid "Pricelists Types"
-msgstr ""
+msgstr "Vrste cenikov"
 
 #. module: purchase
 #: view:purchase.order:0
 #: view:purchase.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "Ponudbe"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_po_per_month_tree
@@ -1223,18 +1223,18 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "History"
-msgstr ""
+msgstr "Zgodovina"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Izdelki po kategorijah"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,delay:0
 msgid "Days to Validate"
-msgstr ""
+msgstr "Dni za Potrditi"
 
 #. module: purchase
 #: help:purchase.order,origin:0
@@ -1316,7 +1316,7 @@ msgstr "Račun"
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
@@ -1461,7 +1461,7 @@ msgstr "Proizvod"
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
 msgid "Confirmation"
-msgstr ""
+msgstr "Potrditev"
 
 #. module: purchase
 #: report:purchase.order:0
