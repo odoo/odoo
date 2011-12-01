@@ -665,7 +665,7 @@
         <menuitem id="menu_res_company_global"
             parent="base.menu_administration"
             name="Companies"
-            sequence="5"/>
+            sequence="2"/>
 
         <record id="action_res_company_tree" model="ir.actions.act_window">
             <field name="name">Company's Structure</field>
@@ -1548,7 +1548,7 @@
             <field name="view_id" ref="ir_cron_view_tree"/>
         </record>
 
-        <menuitem id="next_id_10" name="Scheduler" parent="base.menu_config"  groups="base.group_extended"/>
+        <menuitem id="next_id_10" name="Scheduler" parent="base.menu_config"  groups="base.group_extended" sequence="11"/>
         <menuitem action="ir_cron_act" id="menu_ir_cron_act" parent="next_id_10"/>
 
 
@@ -1924,7 +1924,7 @@
             <field name="view_type">form</field>
             <field name="help">The configuration wizards are used to help you configure a new instance of OpenERP. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
-        <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
+        <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="2"/>
 
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
                 parent="next_id_11" sequence="20"/>
