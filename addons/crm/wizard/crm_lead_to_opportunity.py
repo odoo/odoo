@@ -37,7 +37,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                                     ('nothing', 'Do not link to a partner')], \
                                     'Action', required=True),
         'name': fields.selection([('convert', 'Convert to Opportunity'), ('merge', 'Merge with existing Opportunity')],'Select Action', required=True),
-        'opportunity_ids': fields.many2many('crm.lead',  'merge_opportunity_rel', 'merge_id', 'opportunity_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),
+        'opportunity_ids': fields.many2many('crm.lead', string='Opportunities', domain=[('type', '=', 'opportunity')]),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -236,7 +236,7 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
 
 
     _columns = {
-            'user_ids':  fields.many2many('res.users', 'mass_convert_rel', 'user_id', 'wizard_id', 'Salesmans'),
+            'user_ids':  fields.many2many('res.users', string='Salesmans'),
             'section_id': fields.many2one('crm.case.section', 'Sales Team'),
 
     }

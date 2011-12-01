@@ -36,7 +36,7 @@
                 <field name="activity_ids" nolabel = "1" colspan="4" context="{'default_object_id': object_id, 'default_campaign_id': active_id}" />
                 <separator string="" colspan="4" />
                 <group col="10" colspan="4">
-                    <field name="state" readonly="1" />
+                    <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
                     <button name="state_cancel_set" string="Cancel" states="running" icon="terp-gtk-stop"/>
                     <button name="state_running_set" string="Run" states="draft,done,cancelled" icon="gtk-apply"/>
                     <button name="state_draft_set" string="Set to Draft" states="done,cancelled" icon="gtk-convert"/>
@@ -161,7 +161,7 @@
                 </group>
                 <separator string="" colspan="4"/>
                 <group col="6" colspan="4">
-                    <field name="state" readonly="1"/>
+                    <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
                     <button name="state_cancel_set" string="Cancel" states="running" icon="terp-gtk-stop"/>
                     <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
                     <button name="state_done_set" string="Close" states="running" icon="terp-dialog-close"/>
@@ -382,7 +382,7 @@
                 </group>
                 <separator string="" colspan="4"/>
                 <group colspan="4" col="11">
-                    <field name="state" readonly="True"/>
+                    <field name="state" readonly="True" widget="statusbar" statusbar_visible="todo,done" statusbar_colors='{"exception":"red"}'/>
                     <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="terp-gtk-stop"/>
                     <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-undo"/>
                     <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>

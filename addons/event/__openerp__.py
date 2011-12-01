@@ -23,7 +23,7 @@
 {
     'name': 'Event',
     'version': '0.1',
-    'category': 'Tools',
+    'category': 'Hidden',
     'complexity': "easy",
     'description': """
 Organization and management of Events.

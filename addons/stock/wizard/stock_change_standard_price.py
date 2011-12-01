@@ -69,6 +69,7 @@ class change_standard_price(osv.osv_memory):
 
         return res
 
+    # onchange_price function is not used anywhere 
     def onchange_price(self, cr, uid, ids, new_price, context=None):
         """ Sets stock input and output account according to the difference
             of old price and new price.
@@ -116,3 +117,5 @@ class change_standard_price(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 change_standard_price()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

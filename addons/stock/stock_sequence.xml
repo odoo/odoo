@@ -29,6 +29,7 @@
             <field name="code">stock.picking.in</field>
             <field name="prefix">IN/</field>
             <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
         </record>
         
         <record id="seq_picking_out" model="ir.sequence">
@@ -36,6 +37,7 @@
             <field name="code">stock.picking.out</field>
             <field name="prefix">OUT/</field>
             <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
         </record>
         
         <record id="seq_picking_internal" model="ir.sequence">
@@ -43,6 +45,7 @@
             <field name="code">stock.picking.internal</field>
             <field name="prefix">INT/</field>
             <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
         </record>
 
         <!--
@@ -59,6 +62,7 @@
             <field name="padding">7</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
         </record>
 
         <record id="sequence_type_tracking" model="ir.sequence.type">
@@ -73,6 +77,7 @@
             <field name="padding">7</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
         </record>
     </data>
 </openerp>

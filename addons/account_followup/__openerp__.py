@@ -20,12 +20,12 @@
 ##############################################################################
 
 {
-    'name': 'Reminders',
+    'name': 'Followup Management',
     'version': '1.0',
-    'category': 'Finance',
+    'category': 'Accounting & Finance',
     'complexity': "normal",
     'description': """
-Modules to automate letters for unpaid invoices, with multi-level recalls.
+Module to automate letters for unpaid invoices, with multi-level recalls.
 ==========================================================================
 
 You can define your multiple levels of recall through the menu:
@@ -52,10 +52,11 @@ Note that if you want to check the followup level for a given partner/account en
         'security/ir.model.access.csv',
         'wizard/account_followup_print_view.xml',
         'report/account_followup_report.xml',
+        'account_followup_demo.xml',   # Defined by default
         'account_followup_view.xml',
-        'account_followup_data.xml'
+        'account_followup_data.xml',
     ],
-    'demo_xml': ['account_followup_demo.xml'],
+    'demo_xml': [],
     'test': ['test/account_followup.yml'],
     'installable': True,
     'active': False,

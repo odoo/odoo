@@ -21,7 +21,6 @@
 
 import hr_department
 import hr
-import installer
 
 import report
 import wizard

@@ -37,6 +37,7 @@
                                 <form string="Survey Page">
                                     <field name="title" select="1"/>
                                     <field name="sequence" groups="base.group_extended"/>
+                                    <separator string="Description" colspan="4"/>
                                     <field name="note" colspan="4" nolabel="1"/>
                                     <field name="question_ids" height="200" width="200" colspan="4" nolabel="1" context="{'line_order': question_ids}">
                                         <form string="Survey Question" >
@@ -180,14 +181,12 @@
                                 </form>
                             </field>
                             <group col="9" colspan="4">
-                                <field name="state"/>
+                                <field name="state" widget="statusbar" statusbar_visible="open,close"/>
                                 <button name="survey_cancel"
                                     string="Cancel" states="open" type="object" icon="gtk-cancel"/>
-                                <button name="survey_draft"
-                                    string="Set to draft" states="cancel,close" type="object"
-                                    icon="gtk-new"/>
-                                <button name="survey_open" string="Open"
-                                    states="draft" type="object" icon="gtk-go-forward"/>
+                                <button name="survey_open"
+                                    string="Open" states="cancel,close" type="object"
+                                    icon="gtk-go-forward"/>
                                 <button name="survey_close"
                                     string="Close" states="open" type="object" icon="gtk-close"/>
                             </group>
@@ -261,7 +260,8 @@
             <field name="arch" type="xml">
                 <search string="Search Survey">
                    <group>
-                        <filter icon="terp-check" string="Current" domain="[('state','in', ('draft', 'open'))]"/>
+                        <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="All New Survey"/>
+                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="All Open Survey"/>
                         <separator orientation="vertical"/>
                         <field name="title"/>
                         <field name="type" widget="selection"/>
@@ -1067,7 +1067,7 @@
                      <field name="state"/>
                         <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
                         <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
-                        <button name="survey_req_waiting_answer" string="Watting Answer" states="draft" type="object" icon="gtk-new"/>
+                        <button name="survey_req_waiting_answer" string="Waiting Answer" states="draft" type="object" icon="gtk-new"/>
                         <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
                     </group>
                 </form>

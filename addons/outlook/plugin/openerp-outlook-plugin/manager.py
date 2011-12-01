@@ -191,3 +191,5 @@ if __name__=='__main__':
         else:
             usage()
     sys.exit(main(verbose))
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

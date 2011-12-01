@@ -26,7 +26,7 @@
     "version" : "3.0",
     "author" : "Spanish Localization Team",
     'website' : 'https://launchpad.net/openerp-spain',
-    "category" : "Finance",
+    "category" : "Localization/Account Charts",
     "description": """
 Spanish Charts of Accounts (PGCE 2008).
 =======================================
@@ -59,3 +59,5 @@ for yearly account reporting (balance, profit & losses).
     "certificate" : "00408828172062583229",
     'images': ['images/config_chart_l10n_es.jpeg','images/l10n_es_chart.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

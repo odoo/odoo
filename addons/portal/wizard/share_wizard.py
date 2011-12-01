@@ -40,10 +40,6 @@ class share_wizard_portal(osv.osv_memory):
     _columns = {
         'user_ids': fields.many2many('res.users', 'share_wizard_res_user_rel', 'share_id', 'user_id', 'Existing users', domain=[('share', '=', True)]),
         'group_ids': fields.many2many('res.groups', 'share_wizard_res_group_rel', 'share_id', 'group_id', 'Existing groups', domain=[('share', '=', False)]),
-
-        # no clean way to extend selection yet, copy the field. 
-        'user_type': fields.selection(_user_type_selection,'Users to share with',
-             help="Select the type of user(s) you would like to share data with."),
     }
 
     def is_portal_manager(self, cr, uid, context=None):
@@ -188,3 +184,5 @@ class share_wizard_portal(osv.osv_memory):
 
 share_wizard_portal()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

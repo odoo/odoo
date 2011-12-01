@@ -40,3 +40,5 @@ class crm_merge_opportunity_assign_partner(osv.osv_memory):
 		return data
 
 crm_merge_opportunity_assign_partner()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -29,8 +29,8 @@ from tools.translate import _
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
-    ('draft', 'Draft'),
-    ('open', 'Open'),
+    ('draft', 'New'),
+    ('open', 'In Progress'),
     ('cancel', 'Cancelled'),
     ('done', 'Closed'),
     ('pending', 'Pending'),
@@ -71,6 +71,7 @@ class crm_case_stage(osv.osv):
         'on_change': fields.boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity."),
         'requirements': fields.text('Requirements'),
         'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', 'Sections'),
+        'case_default': fields.boolean('Common to All Teams', help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
     }
 
     _defaults = {
@@ -106,10 +107,14 @@ class crm_case_section(osv.osv):
         'working_hours': fields.float('Working Hours', digits=(16,2 )),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
     }
+    def _get_stage_common(self, cr, uid, context):
+        ids = self.pool.get('crm.case.stage').search(cr, uid, [('case_default','=',1)], context=context)
+        return ids
 
     _defaults = {
         'active': lambda *a: 1,
         'allow_unlink': lambda *a: 1,
+        'stage_ids': _get_stage_common
     }
 
     _sql_constraints = [
@@ -150,7 +155,7 @@ class crm_case_categ(osv.osv):
         """Finds id for case object"""
         object_id = context and context.get('object_id', False) or False
         ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
-        return ids and ids[0]
+        return ids and ids[0] or False
 
     _defaults = {
         'object_id' : _find_object_id
@@ -231,13 +236,14 @@ class crm_base(object):
         :param add: Id of Partner's address
         :param email: Partner's email ID
         """
-        if not add:
-            return {'value': {'email_from': False}}
-        address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        if address.email:
-            return {'value': {'email_from': address.email, 'phone': address.phone}}
-        else:
-            return {'value': {'phone': address.phone}}
+        data = {'value': {'email_from': False, 'phone':False}}
+        if add:
+            address = self.pool.get('res.partner.address').browse(cr, uid, add)
+            data['value'] = {'email_from': address and address.email or False ,
+                             'phone':  address and address.phone or False}
+        if 'phone' not in self._columns:
+            del data['value']['phone']
+        return data
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
@@ -381,7 +387,7 @@ class crm_case(crm_base):
                 default.update({ 'date_closed': False, })
             if self._columns.get('date_open'):
                 default.update({ 'date_open': False })
-        return super(osv.osv, self).copy(cr, uid, id, default, context=context)
+        return super(crm_case, self).copy(cr, uid, id, default, context=context)
 
 
     def case_open(self, cr, uid, ids, *args):
@@ -479,10 +485,13 @@ class crm_case(crm_base):
                 case_email = case.user_id.user_email
 
             src = case_email
-            dest = case.user_id
+            dest = case.user_id.user_email or ""
             body = case.description or ""
-            if case.message_ids:
-                body = case.message_ids[0].description or ""
+            for message in case.message_ids:
+                if message.email_from:
+                    body = message.description
+                    break
+
             if not destination:
                 src, dest = dest, case.email_from
                 if body and case.user_id.signature:
@@ -569,3 +578,5 @@ class users(osv.osv):
         return res
 
 users()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,5 +1,5 @@
 - 
-  In order to test BVR printing. I create Partner data.
+  In order to test BVR printing. I create Partner data .
 - 
   !record {model: res.partner.category, id: res_partner_category_bvr}:
     name: Customers
@@ -35,7 +35,7 @@
 -
   In order to test the PDF BVR webkit reports defined on an invoice, we will create a Invoice Record
 -
-  !record {model: account.invoice, id: l10n_ch_invoice}:
+  !record {model: account.invoice, id: l10n_ch_invoice, view: False}:
     currency_id: base.CHF
     company_id: base.main_company
     address_invoice_id: res_partner_address_2
@@ -49,7 +49,7 @@
 -
   In order to test the BVR report, I will assign a bank to the invoice
 -
-  !record {model: account.invoice, id: l10n_ch_invoice}:
+  !record {model: account.invoice, id: l10n_ch_invoice, view: False}:
       partner_bank_id: main_partner_bank
 -
   In order to test the PDF reports defined on a l10n_ch, we will print BVR Report

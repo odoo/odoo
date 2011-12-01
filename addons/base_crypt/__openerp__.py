@@ -24,7 +24,7 @@
     "author" : ['OpenERP SA', "FS3"],
     "maintainer" : "OpenERP SA",
     "website" : "http://www.openerp.com",
-    "category" : "Tools",
+    "category" : "Hidden",
     'complexity': "easy",
     "description": """
 Replaces cleartext passwords in the database with a secure hash
@@ -62,3 +62,5 @@ will disable LDAP authentication completely if installed at the same time.
     "installable": True,
     "certificate" : "00721290471310299725",
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -121,3 +121,4 @@ class document_directory_content(osv.osv):
 document_directory_content()
 
 #eof
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

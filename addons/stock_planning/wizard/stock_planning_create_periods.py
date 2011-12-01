@@ -46,6 +46,7 @@ class stock_period_createlines(osv.osv_memory):
         'date_start': fields.date('Start Date', required=True, help="Starting date for planning period."),
         'date_stop': fields.date('End Date', required=True, help="Ending date for planning period."),
         'period_ids': fields.one2many('stock.period', 'planning_id', 'Periods'),
+        'period_ids': fields.many2many('stock.period', 'stock_period_createlines_stock_period_rel', 'wizard_id', 'period_id', 'Periods'),
     }
     _defaults={
         'date_start': _get_new_period_start,

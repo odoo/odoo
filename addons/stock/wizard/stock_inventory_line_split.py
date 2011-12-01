@@ -21,24 +21,17 @@
 
 from osv import fields, osv
 
-from tools.translate import _
-import time
-
 class stock_inventory_line_split(osv.osv_memory):
     _inherit = "stock.move.split"
     _name = "stock.inventory.line.split"
     _description = "Split inventory lines"
 
+    _columns = {
+        'line_ids': fields.one2many('stock.inventory.line.split.lines', 'wizard_id', 'Production Lots'),
+        'line_exist_ids': fields.one2many('stock.inventory.line.split.lines', 'wizard_exist_id', 'Production Lots'),
+     }
 
     def default_get(self, cr, uid, fields, context=None):
-        """ To check the availability of production lot.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param fields: List of fields for which we want default values
-        @param context: A standard dictionary
-        @return: A dictionary which of fields with values.
-        """
         if context is None:
             context = {}
         record_id = context and context.get('active_id',False)
@@ -54,14 +47,13 @@ class stock_inventory_line_split(osv.osv_memory):
 
     def split(self, cr, uid, ids, line_ids, context=None):
         """ To split stock inventory lines according to production lot.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: the ID or list of IDs if we want more than one
-        @param line_ids: the ID or list of IDs of inventory lines we want to split
-        @param context: A standard dictionary
-        @return:
+
+        :param line_ids: the ID or list of IDs of inventory lines we want to split
         """
+        if context is None:
+            context = {}
+        assert context.get('active_model') == 'stock.inventory.line',\
+             'Incorrect use of the inventory line split wizard'
         prodlot_obj = self.pool.get('stock.production.lot')
         ir_sequence_obj = self.pool.get('ir.sequence')
         line_obj = self.pool.get('stock.inventory.line')
@@ -108,7 +100,14 @@ class stock_inventory_line_split(osv.osv_memory):
                         line_obj.write(cr, uid, [inv_line.id], update_val)
 
         return new_line
-stock_inventory_line_split()
+
+class stock_inventory_split_lines(osv.osv_memory):
+    _inherit = "stock.move.split.lines"
+    _name = "stock.inventory.line.split.lines"
+    _description = "Inventory Split lines"
+    _columns = {
+        'wizard_id': fields.many2one('stock.inventory.line.split', 'Parent Wizard'),
+        'wizard_exist_id': fields.many2one('stock.inventory.line.split', 'Parent Wizard'),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

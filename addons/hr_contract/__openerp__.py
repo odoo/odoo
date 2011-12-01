@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Human Resources Contracts',
+    'name': "Employee Contracts",
     'version': '1.0',
     'category': 'Human Resources',
     'complexity': "easy",

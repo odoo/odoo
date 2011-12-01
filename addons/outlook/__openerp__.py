@@ -21,12 +21,12 @@
 
 
 {
-    'name' : 'Outlook Interface',
+    'name' : 'Outlook Plug-In',
     'version' : '1.0',
     'author' : 'OpenERP SA',
     'website' : 'http://www.openerp.com/',
     'depends' : ['base', 'mail'],
-    'category' : 'Tools',
+    'category' : 'Customer Relationship Management',
     'description': '''
 This module provides the Outlook Plug-in.
 =========================================

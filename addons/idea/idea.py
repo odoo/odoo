@@ -185,7 +185,7 @@ class idea_idea(osv.osv):
         'count_votes': fields.function(_vote_count, string="Count of votes", type="integer"),
         'count_comments': fields.function(_comment_count, string="Count of comments", type="integer"),
         'category_id': fields.many2one('idea.category', 'Category', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'state': fields.selection([('draft', 'Draft'),
+        'state': fields.selection([('draft', 'New'),
             ('open', 'Opened'),
             ('close', 'Accepted'),
             ('cancel', 'Refused')],

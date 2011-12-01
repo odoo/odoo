@@ -21,6 +21,7 @@
 
 from datetime import datetime
 from osv import osv, fields
+import decimal_precision as dp
 from tools.translate import _
 import netsvc
 import time
@@ -205,7 +206,7 @@ class mrp_bom(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uos_qty': fields.float('Product UOS Qty'),
         'product_uos': fields.many2one('product.uom', 'Product UOS', help="Product UOS (Unit of Sale) is the unit of measurement for the invoicing and promotion of stock."),
-        'product_qty': fields.float('Product Qty', required=True),
+        'product_qty': fields.float('Product Qty', required=True, digits_compute=dp.get_precision('Product UoM')),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True, help="UoM (Unit of Measure) is the unit of measurement for the inventory control"),
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity."),
         'product_efficiency': fields.float('Manufacturing Efficiency', required=True, help="A factor of 0.9 means a loss of 10% within the production process."),
@@ -274,9 +275,7 @@ class mrp_bom(osv.osv):
             
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            v = {'product_uom': prod.uom_id.id}
-            if not name:
-                v['name'] = prod.name
+            v = {'name': prod.name, 'product_uom': prod.uom_id.id}
             return {'value': v}
         return {}
 
@@ -449,7 +448,7 @@ class mrp_production(osv.osv):
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority'),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'product_qty': fields.float('Product Qty', required=True, states={'draft':[('readonly',False)]}, readonly=True),
+        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product UoM'), required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos_qty': fields.float('Product UoS Qty', states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
@@ -467,7 +466,6 @@ class mrp_production(osv.osv):
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]}),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]}, help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
-
         'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True, ondelete="restrict",
             help="This is the internal picking list that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
@@ -477,11 +475,12 @@ class mrp_production(osv.osv):
         'move_created_ids2': fields.one2many('stock.move', 'production_id', 'Produced Products', domain=[('state','in', ('done', 'cancel'))]),
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
-        'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
+        'state': fields.selection([('draft','New'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','Production Started'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
                                     help='When the production order is created the state is set to \'Draft\'.\n If the order is confirmed the state is set to \'Waiting Goods\'.\n If any exceptions are there, the state is set to \'Picking Exception\'.\
                                     \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production gets started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
         'hour_total': fields.function(_production_calc, type='float', string='Total Hours', multi='workorder', store=True),
         'cycle_total': fields.function(_production_calc, type='float', string='Total Cycles', multi='workorder', store=True),
+        'user_id':fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
@@ -492,6 +491,9 @@ class mrp_production(osv.osv):
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'mrp.production') or '/',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
+    ]
     _order = 'priority desc, date_planned asc';
 
     def _check_qty(self, cr, uid, ids, context=None):
@@ -682,6 +684,17 @@ class mrp_production(osv.osv):
                 res = False
         return res
 
+    def _get_subproduct_factor(self, cr, uid, production_id, move_id=None, context=None):
+        """ Compute the factor to compute the qty of procucts to produce for the given production_id. By default, 
+            it's always equal to the quantity encoded in the production order or the production wizard, but if the 
+            module mrp_subproduct is installed, then we must use the move_id to identify the product to produce 
+            and its quantity.
+        :param production_id: ID of the mrp.order
+        :param move_id: ID of the stock move that needs to be produced. Will be used in mrp_subproduct.
+        :return: The factor to apply to the quantity that we should produce for the given production order.
+        """
+        return 1
+
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
         If Production mode is consume, all stock move lines of raw materials will be done/consumed.
@@ -695,44 +708,50 @@ class mrp_production(osv.osv):
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)
 
-
         produced_qty = 0
-        if production_mode == 'consume_produce':
-            produced_qty = production_qty
-
         for produced_product in production.move_created_ids2:
-            if (produced_product.scrapped) or (produced_product.product_id.id<>production.product_id.id):
+            if (produced_product.scrapped) or (produced_product.product_id.id <> production.product_id.id):
                 continue
             produced_qty += produced_product.product_qty
 
         if production_mode in ['consume','consume_produce']:
-            consumed_products = {}
-            check = {}
-            scrapped = map(lambda x:x.scrapped,production.move_lines2).count(True)
+            consumed_data = {}
 
-            for consumed_product in production.move_lines2:
-                consumed = consumed_product.product_qty
-                if consumed_product.scrapped:
+            # Calculate already consumed qtys
+            for consumed in production.move_lines2:
+                if consumed.scrapped:
                     continue
-                if not consumed_products.get(consumed_product.product_id.id, False):
-                    consumed_products[consumed_product.product_id.id] = consumed_product.product_qty
-                    check[consumed_product.product_id.id] = 0
-                for f in production.product_lines:
-                    if f.product_id.id == consumed_product.product_id.id:
-                        if (len(production.move_lines2) - scrapped) > len(production.product_lines):
-                            check[consumed_product.product_id.id] += consumed_product.product_qty
-                            consumed = check[consumed_product.product_id.id]
-                        rest_consumed = produced_qty * f.product_qty / production.product_qty - consumed
-                        consumed_products[consumed_product.product_id.id] = rest_consumed
+                if not consumed_data.get(consumed.product_id.id, False):
+                    consumed_data[consumed.product_id.id] = 0
+                consumed_data[consumed.product_id.id] += consumed.product_qty
 
-            for raw_product in production.move_lines:
-                for f in production.product_lines:
-                    if f.product_id.id == raw_product.product_id.id:
-                        consumed_qty = consumed_products.get(raw_product.product_id.id, 0)
-                        if consumed_qty == 0:
-                            consumed_qty = production_qty * f.product_qty / production.product_qty
-                        if consumed_qty > 0:
-                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], consumed_qty, raw_product.location_id.id, context=context)
+            # Find product qty to be consumed and consume it
+            for scheduled in production.product_lines:
+
+                # total qty of consumed product we need after this consumption
+                total_consume = ((production_qty + produced_qty) * scheduled.product_qty / production.product_qty)
+
+                # qty available for consume and produce
+                qty_avail = scheduled.product_qty - consumed_data.get(scheduled.product_id.id, 0.0)
+
+                if qty_avail <= 0.0:
+                    # there will be nothing to consume for this raw material
+                    continue
+
+                raw_product = [move for move in production.move_lines if move.product_id.id==scheduled.product_id.id]
+                if raw_product:
+                    # qtys we have to consume
+                    qty = total_consume - consumed_data.get(scheduled.product_id.id, 0.0)
+
+                    if qty > qty_avail:
+                        # if qtys we have to consume is more than qtys available to consume
+                        prod_name = scheduled.product_id.name_get()[0][1]
+                        raise osv.except_osv(_('Warning!'), _('You are going to consume total %s quantities of "%s".\nBut you can consume upto total %s quantities.' % (qty, prod_name, qty_avail)))
+                    if qty < 0.0:
+                        # we already have more qtys consumed than we need 
+                        continue
+
+                    raw_product[0].action_consume(qty, raw_product[0].location_id.id, context=context)
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
@@ -750,11 +769,14 @@ class mrp_production(osv.osv):
 
             for produce_product in production.move_created_ids:
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
-                rest_qty = production.product_qty - produced_qty
-                if rest_qty <= production_qty:
-                    production_qty = rest_qty
+                subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
+                rest_qty = (subproduct_factor * production.product_qty) - produced_qty
+
+                if rest_qty < production_qty:
+                    prod_name = produce_product.product_id.name_get()[0][1]
+                    raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can produce upto total %s quantities.' % (production_qty, prod_name, rest_qty)))
                 if rest_qty > 0 :
-                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty, context=context)
+                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), context=context)
 
         for raw_product in production.move_lines2:
             new_parent_ids = []
@@ -984,7 +1006,7 @@ class mrp_production_product_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'product_qty': fields.float('Product Qty', required=True),
+        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product UoM'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_uos_qty': fields.float('Product UOS Qty'),
         'product_uos': fields.many2one('product.uom', 'Product UOS'),

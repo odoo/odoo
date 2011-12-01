@@ -39,6 +39,18 @@
     date_stop: !eval "'%s-07-31 23:59:00' %(datetime.now().year)"
     name: !eval "'%s, week 31' %(datetime.now().year)"
 -
+  I validate in open state module stock.period
+-
+  !python {model: stock.period}: |
+    self.button_open(cr, uid, [ref("stock_period_01")], {"lang": 'en_GB', "tz": False, "active_model": 'ir.ui.menu', "active_id": ref("stock_planning.menu_stock_period_main"), "active_ids": [ref("stock_planning.menu_stock_period_main")], "department_id": False})
+
+-
+  I validate in close state module stock.period
+-
+  !python {model: stock.period}: |
+    self.button_close(cr, uid, [ref("stock_period_01")], {"lang": 'en_GB', "tz": False, "active_model": 'ir.ui.menu', "active_id": ref("stock_planning.menu_stock_period_main"), "active_ids": [ref("stock_planning.menu_stock_period_main")], "department_id": False})
+
+-
   Now I create the forecast for this period for all PCs.
 -
   !record {model: stock.sale.forecast.createlines, id: stock_sale_forecast_createlines_0}:
@@ -54,6 +66,66 @@
       'en_US', "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_sale_forecast_createlines")],
       "tz": False, "active_id": ref("stock_planning.menu_stock_sale_forecast_createlines"),
       })
+
+-
+  I create stock.period.createlines for the first week of august.
+-
+  !record {model: stock.period.createlines, id: stock_period_createlines_week01}:
+    date_start: !eval "'%s-08-01' %(datetime.now().year)"
+    date_stop: !eval "'%s-08-06' %(datetime.now().year)"
+    name: !eval "'%s, week 31' %(datetime.now().year)"
+
+-
+  Performing an osv_memory action create_stock_periods on module stock.period.createlines
+-
+  !python {model: stock.period.createlines}: |
+    self.create_stock_periods(cr, uid, [ref("stock_period_createlines_week01")], {"lang":
+      'en_US', "name": 'Weekly', "interval": 6, "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_period_creatlines")],
+      "tz": False, "active_id": ref("stock_planning.menu_stock_period_creatlines"),
+      })
+-
+  I create stock.period.createlines for the month of august - september
+-
+  !record {model: stock.period.createlines, id: stock_period_createlines_month01}:
+    date_start: !eval "'%s-08-01' %(datetime.now().year)"
+    date_stop: !eval "'%s-09-01' %(datetime.now().year)"
+    name: !eval "'%s, month 8' %(datetime.now().year)"
+
+-
+  Performing an osv_memory action create_stock_periods on module stock.period.createlines
+-
+  !python {model: stock.period.createlines}: |
+    self.create_stock_periods(cr, uid, [ref("stock_period_createlines_month01")], {"lang":
+      'en_US', "name": 'Monthly', "interval": 6, "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_period_creatlines")],
+      "tz": False, "active_id": ref("stock_planning.menu_stock_period_creatlines"),
+      })
+
+-
+  I create stock.period.createlines for the Day of august 
+-
+  !record {model: stock.period.createlines, id: stock_period_createlines_day01}:
+    date_start: !eval "'%s-08-01' %(datetime.now().year)"
+    date_stop: !eval "'%s-08-01' %(datetime.now().year)"
+    name: !eval "'%s, day 01' %(datetime.now().year)"
+
+-
+  Performing an osv_memory action create_stock_periods on module stock.period.createlines
+-
+  !python {model: stock.period.createlines}: |
+    self.create_stock_periods(cr, uid, [ref("stock_period_createlines_day01")], {"lang":
+      'en_US', "name": 'Daily', "interval": 6, "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_period_creatlines")],
+      "tz": False, "active_id": ref("stock_planning.menu_stock_period_creatlines"),
+      })
+
+-
+  I Read date_start on module stock.period.createlines.
+-
+  !python {model: stock.period.createlines }: |
+    self._get_new_period_start(cr, uid,{"lang":'en_US', "active_model": "ir.ui.menu", 
+    "active_ids": [ref("stock_planning.menu_stock_period_creatlines")],
+     "tz": False, "active_id": ref("stock_planning.menu_stock_period_creatlines"),"department_id": False
+      })
+
 -
   I create a sale order for PC1-Basic PC and PC3-Medium PC.
 -
@@ -100,11 +172,29 @@
     'analyzed_period1_id': ref("stock_period_03"),
     'analyzed_user_id': ref("base.user_root"),
     'analyzed_warehouse_id': ref("stock.warehouse0")}
+    context = {"lang": "en_US", "tz":False, "search_default_create_uid": 1, "active_model": "ir.ui.menu", 
+      "department_id": False, "active_ids": [ref("stock_planning.menu_stock_sale_forecast_all")], 
+      "active_id": ref("stock_planning.menu_stock_sale_forecast_all"), }
     self.write(cr, uid, forecast_ids, write_dict)
-    self.calculate_sales_history(cr, uid, forecast_ids, {"lang": "en_US", "tz":
+    self.calculate_sales_history(cr, uid, forecast_ids, context)
+    self.action_validate(cr, uid, forecast_ids, context)
+
+-
+  Now I applying onchange and unlink forecast record for the product PC3
+-
+  !python {model: stock.sale.forecast}: |
+    forecast_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_pc3'))])
+    self.unlink(cr, uid, forecast_ids, {"lang": "en_US", "tz":
       False, "search_default_create_uid": 1, "active_model": "ir.ui.menu", "department_id":
       False, "active_ids": [ref("stock_planning.menu_stock_sale_forecast_all")], "active_id":
       ref("stock_planning.menu_stock_sale_forecast_all"), })
+    self.product_id_change(cr, uid, forecast_ids, ref('product.product_product_20'))
+    self.onchange_uom(cr, uid, forecast_ids, ref('product.product_uom_unit'), False, ref('product.product_uom_unit'), ref('product.product_product_20'))
+    self.product_amt_change(cr, uid, forecast_ids, 5.0, ref('product.product_uom_unit'), ref('product.product_product_20'))
+    self.product_amt_change(cr, uid, forecast_ids, 5.0, ref('product.product_uom_unit'), ref('product.product_product_20'))
+    self._to_default_uom_factor(cr, uid, ref('product.product_product_20'), ref('product.product_uom_unit'), {})
+    self.onchange_company(cr, uid, forecast_ids, ref('stock.res_company_tinyshop0'))
+
 -
   I create Master procurement schedule for the third week of July.
 -
@@ -113,10 +203,22 @@
     period_id: stock_period_03
     product_categ_id: product.product_category_pc
     warehouse_id: stock.warehouse0
+
+-
+  I create source warehouse for supply from another warehouse.
+-
+  !record {model: stock.warehouse, id: stock_warehouse_0}:
+    name: shop1
+    company_id: base.main_company
+    lot_input_id: stock.stock_location_stock
+    lot_stock_id: stock.stock_location_stock
+    lot_output_id: stock.stock_location_output
+
 -
   Performing an osv_memory action create_planning on module stock.planning.createlines
 -
   !python {model: stock.planning.createlines}: |
+    self.onchange_company(cr, uid, ref("stock_planning_createlines_0"), ref('stock.res_company_tinyshop0'))
     self.create_planning(cr, uid, [ref("stock_planning_createlines_0")], {"lang":
       "en_US", "tz": False, "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_planning_createlines")],
       "active_id": ref("stock_planning.menu_stock_planning_createlines"), "department_id":
@@ -126,11 +228,17 @@
 -
   !python {model: stock.planning}: |
     planning_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_pc1')),('period_id','=',ref('stock_period_03'))])
-    self.write(cr, uid, planning_ids, {'to_procure': 30.0,'planned_outgoing': 40.0})
-    self.calculate_planning(cr, uid, planning_ids, {"lang": "en_US", "tz": False,
-      "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_planning")],
+    self.write(cr, uid, planning_ids, {'to_procure': 30.0,'planned_outgoing': 40.0,'supply_warehouse_id': ref("stock_warehouse_0")})
+    self.onchange_company(cr, uid, planning_ids, ref('stock.res_company_tinyshop0'))
+    self.onchange_uom(cr, uid, planning_ids, ref('product.product_uom_unit'), ref('product.product_product_pc1'),ref('product.product_uom_unit'), False, False)
+    self.product_id_change(cr, uid, planning_ids, ref('product.product_product_20'))
+    context = {"lang": "en_US", "tz": False, "active_model": "ir.ui.menu", 
+      "active_ids": [ref("stock_planning.menu_stock_planning")],
       "active_id": ref("stock_planning.menu_stock_planning"), "department_id": False,
-      })
+      }
+    self.calculate_planning(cr, uid, planning_ids, context)
+    self.internal_supply(cr, uid, planning_ids, context)
+    
 -
   I create a procurement order for the incoming products left.
 -

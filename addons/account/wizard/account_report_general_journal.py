@@ -19,12 +19,16 @@
 #
 ##############################################################################
 
-from osv import osv
+from osv import osv, fields
 
 class account_general_journal(osv.osv_memory):
     _inherit = "account.common.journal.report"
     _name = 'account.general.journal'
     _description = 'Account General Journal'
+
+    _columns = {
+        'journal_ids': fields.many2many('account.journal', 'account_general_journal_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
+    }
 
     def _print_report(self, cr, uid, ids, data, context=None):
         data = self.pre_print_report(cr, uid, ids, data, context=context)
@@ -33,3 +37,5 @@ class account_general_journal(osv.osv_memory):
 account_general_journal()
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

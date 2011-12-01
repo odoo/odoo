@@ -30,10 +30,12 @@ class account_bank_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
         seq = 0
         if 'line_ids' in vals:
+            new_line_ids = []
             for line in vals['line_ids']:
                 seq += 1
                 line[2]['sequence'] = seq
-                vals[seq - 1] = line
+                new_line_ids += tuple(line)
+            vals['line_ids'] = new_line_ids
         return super(account_bank_statement, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -117,6 +119,12 @@ class account_bank_statement(osv.osv):
             res[statement_id] = (currency_id, currency_names[currency_id])
         return res
 
+    def _get_statement(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('account.bank.statement.line').browse(cr, uid, ids, context=context):
+            result[line.statement_id.id] = True
+        return result.keys()
+
     _order = "date desc, id desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
@@ -131,15 +139,19 @@ class account_bank_statement(osv.osv):
             states={'confirm':[('readonly',True)]}),
         'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm': [('readonly', True)]}),
-        'balance_end': fields.function(_end_balance, store=True, # store=True for account_cash_statement
-            string="Balance", help='Balance as calculated based on Starting Balance and transaction lines'),
+        'balance_end': fields.function(_end_balance,
+            store = {
+                'account.bank.statement': (lambda self, cr, uid, ids, c={}: ids, ['line_ids','move_line_ids'], 10),
+                'account.bank.statement.line': (_get_statement, ['amount'], 10),
+            },
+            string="Computed Balance", help='Balance as calculated based on Starting Balance and transaction lines'),
         'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'line_ids': fields.one2many('account.bank.statement.line',
             'statement_id', 'Statement lines',
             states={'confirm':[('readonly', True)]}),
         'move_line_ids': fields.one2many('account.move.line', 'statement_id',
             'Entry lines', states={'confirm':[('readonly',True)]}),
-        'state': fields.selection([('draft', 'Draft'),
+        'state': fields.selection([('draft', 'New'),
                                    ('open','Open'), # used by cash statements
                                    ('confirm', 'Closed')],
                                    'State', required=True, readonly="1",
@@ -209,6 +221,7 @@ class account_bank_statement(osv.osv):
             'period_id': st.period_id.id,
             'date': st_line.date,
             'name': st_line_number,
+            'ref': st_line.ref,
         }, context=context)
         account_bank_statement_line_obj.write(cr, uid, [st_line.id], {
             'move_ids': [(4, move_id, False)]
@@ -306,7 +319,7 @@ class account_bank_statement(osv.osv):
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def check_status_condition(self, cr, uid, state, journal_type='bank'):
-        return state=='draft'
+        return state in ('draft','open')
 
     def button_confirm_bank(self, cr, uid, ids, context=None):
         obj_seq = self.pool.get('ir.sequence')
@@ -330,9 +343,9 @@ class account_bank_statement(osv.osv):
             else:
                 if st.journal_id.sequence_id:
                     c = {'fiscalyear_id': st.period_id.fiscalyear_id.id}
-                    st_number = obj_seq.get_id(cr, uid, st.journal_id.sequence_id.id, context=c)
+                    st_number = obj_seq.next_by_id(cr, uid, st.journal_id.sequence_id.id, context=c)
                 else:
-                    st_number = obj_seq.get(cr, uid, 'account.bank.statement')
+                    st_number = obj_seq.next_by_code(cr, uid, 'account.bank.statement')
 
             for line in st.move_line_ids:
                 if line.state <> 'valid':
@@ -465,7 +478,7 @@ class account_bank_statement_line(osv.osv):
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': lambda self,cr,uid,context={}: context.get('date', time.strftime('%Y-%m-%d')),
         'type': 'general',
     }
 

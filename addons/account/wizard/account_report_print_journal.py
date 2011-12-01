@@ -30,6 +30,7 @@ class account_print_journal(osv.osv_memory):
         'sort_selection': fields.selection([('date', 'Date'),
                                             ('ref', 'Reference Number'),],
                                             'Entries Sorted by', required=True),
+        'journal_ids': fields.many2many('account.journal', 'account_print_journal_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
     }
     _defaults = {
         'sort_selection': 'date',
@@ -45,3 +46,5 @@ class account_print_journal(osv.osv_memory):
 account_print_journal()
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

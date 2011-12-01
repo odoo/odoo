@@ -125,7 +125,7 @@
     "version" : "1.0",
     "author" : "openbig.org",
     "website" : "http://www.openbig.org",
-    "category" : "Finance",
+    "category" : "Localization/Account Charts",
     "description": """
 Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.
 ==============================================================================
@@ -152,3 +152,5 @@ German accounting chart and localization.
     "certificate": "00517849017945584893",
     'images': ['images/config_chart_l10n_de.jpeg','images/l10n_de_chart.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

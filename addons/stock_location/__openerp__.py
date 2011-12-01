@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Warehouse Locations Paths',
+    'name': 'Advanced Routes',
     'version': '1.0',
-    'category': 'Warehouse',
+    'category': 'Manufacturing',
     'description': """
 This module supplements the Warehouse application by effectively implementing Push and Pull inventory flows.
 ============================================================================================================
@@ -96,9 +96,11 @@ You can use the demo data as follow:
     ],
     'installable': True,
     'test':[
-#            'test/stock_location_pull_flow.yml',
-#            'test/stock_location_push_flow.yml',
+            'test/stock_location_pull_flow.yml',
+            'test/stock_location_push_flow.yml',
     ],
     'active': False,
     'certificate': '0046505115101',
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

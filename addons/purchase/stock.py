@@ -35,16 +35,12 @@ class stock_move(osv.osv):
         on the purchase order in case the valuation data was not directly specified during picking
         confirmation.
         """
-        product_uom_obj = self.pool.get('product.uom')
-
         reference_amount, reference_currency_id = super(stock_move, self)._get_reference_accounting_values_for_valuation(cr, uid, move, context=context)
-        default_uom = move.product_id.uom_id.id
-        qty = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
         if move.product_id.cost_method != 'average' or not move.price_unit:
             # no average price costing or cost not specified during picking validation, we will
             # plug the purchase line values if they are found.
             if move.purchase_line_id and move.picking_id.purchase_id.pricelist_id:
-                reference_amount, reference_currency_id = move.purchase_line_id.price_unit * qty, move.picking_id.purchase_id.pricelist_id.currency_id.id
+                reference_amount, reference_currency_id = move.purchase_line_id.price_unit * move.product_qty, move.picking_id.purchase_id.pricelist_id.currency_id.id
         return reference_amount, reference_currency_id
 
 stock_move()
@@ -121,71 +117,18 @@ class stock_picking(osv.osv):
     def _invoice_hook(self, cursor, user, picking, invoice_id):
         purchase_obj = self.pool.get('purchase.order')
         if picking.purchase_id:
-            purchase_obj.write(cursor, user, [picking.purchase_id.id], {'invoice_id': invoice_id,})
+            purchase_obj.write(cursor, user, [picking.purchase_id.id], {'invoice_ids': [(4, invoice_id)]})
         return super(stock_picking, self)._invoice_hook(cursor, user, picking, invoice_id)
-
-stock_picking()
 
 class stock_partial_picking(osv.osv_memory):
     _inherit = 'stock.partial.picking'
 
-    def default_get(self, cr, uid, fields, context=None):
-        """ To get default values for the object.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param fields: List of fields for which we want default values
-        @param context: A standard dictionary
-        @return: A dictionary which of fields with values.
-        """
-        if context is None:
-            context = {}
-        pick_obj = self.pool.get('stock.picking')
-        res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
-        for pick in pick_obj.browse(cr, uid, context.get('active_ids', []), context=context):
-            has_product_cost = (pick.type == 'in' and pick.purchase_id)
-            for m in pick.move_lines:
-                if m.state in ('done','cancel') :
-                    continue
-                if has_product_cost and m.product_id.cost_method == 'average' and m.purchase_line_id:
-                    # We use the original PO unit purchase price as the basis for the cost, expressed
-                    # in the currency of the PO (i.e the PO's pricelist currency)
-                    list_index = 0
-                    for item in res['product_moves_in']:
-                        if item['move_id'] == m.id:
-                            res['product_moves_in'][list_index]['cost'] = m.purchase_line_id.price_unit
-                            res['product_moves_in'][list_index]['currency'] = m.picking_id.purchase_id.pricelist_id.currency_id.id
-                        list_index += 1
-        return res
-stock_partial_picking()
+    # Overridden to inject the purchase price as true 'cost price' when processing
+    # incoming pickings.
+    def _product_cost_for_average_update(self, cr, uid, move):
+        if move.picking_id.purchase_id:
+            return {'cost': move.purchase_line_id.price_unit,
+                    'currency': move.picking_id.purchase_id.pricelist_id.currency_id.id}
+        return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)
 
-class stock_partial_move(osv.osv_memory):
-    _inherit = "stock.partial.move"
-    def default_get(self, cr, uid, fields, context=None):
-        """ To get default values for the object.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param fields: List of fields for which we want default values
-        @param context: A standard dictionary
-        @return: A dictionary which of fields with values.
-        """
-        if context is None:
-            context = {}
-        res = super(stock_partial_move, self).default_get(cr, uid, fields, context=context)
-        move_obj = self.pool.get('stock.move')
-        for m in move_obj.browse(cr, uid, context.get('active_ids', []), context=context):
-            if m.picking_id.type == 'in' and m.product_id.cost_method == 'average' \
-                and m.purchase_line_id and m.picking_id.purchase_id:
-                    # We use the original PO unit purchase price as the basis for the cost, expressed
-                    # in the currency of the PO (i.e the PO's pricelist currency)
-                    list_index = 0
-                    for item in res['product_moves_in']:
-                        if item['move_id'] == m.id:
-                            res['product_moves_in'][list_index]['cost'] = m.purchase_line_id.price_unit
-                            res['product_moves_in'][list_index]['currency'] = m.picking_id.purchase_id.pricelist_id.currency_id.id
-                        list_index += 1
-        return res
-stock_partial_move()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

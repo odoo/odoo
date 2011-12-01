@@ -44,13 +44,12 @@ class product_product(osv.osv):
             stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
 
         journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
-        account_variation = product_obj.categ_id.property_stock_variation and product_obj.categ_id.property_stock_variation.id or False
-
+        account_valuation = product_obj.categ_id.property_stock_valuation_account_id and product_obj.categ_id.property_stock_valuation_account_id.id or False
         return {
             'stock_account_input': stock_input_acc,
             'stock_account_output': stock_output_acc,
             'stock_journal': journal_id,
-            'property_stock_variation': account_variation
+            'property_stock_valuation_account_id': account_valuation
         }
 
     def do_change_standard_price(self, cr, uid, ids, datas, context=None):
@@ -71,9 +70,9 @@ class product_product(osv.osv):
         stock_input_acc = datas.get('stock_input_account', False)
         journal_id = datas.get('stock_journal', False)
         product_obj=self.browse(cr, uid, ids, context=context)[0]
-        account_variation = product_obj.categ_id.property_stock_variation
-        account_variation_id = account_variation and account_variation.id or False
-        if not account_variation_id: raise osv.except_osv(_('Error!'), _('Variation Account is not specified for Product Category: %s') % (product_obj.categ_id.name))
+        account_valuation = product_obj.categ_id.property_stock_valuation_account_id
+        account_valuation_id = account_valuation and account_valuation.id or False
+        if not account_valuation_id: raise osv.except_osv(_('Error!'), _('Valuation Account is not specified for Product Category: %s') % (product_obj.categ_id.name))
         move_ids = []
         loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
         for rec_id in ids:
@@ -132,7 +131,7 @@ class product_product(osv.osv):
                                     })
                         move_line_obj.create(cr, uid, {
                                     'name': product.categ_id.name,
-                                    'account_id': account_variation_id,
+                                    'account_id': account_valuation_id,
                                     'credit': amount_diff,
                                     'move_id': move_id
                                     })
@@ -158,7 +157,7 @@ class product_product(osv.osv):
                                     })
                         move_line_obj.create(cr, uid, {
                                         'name': product.categ_id.name,
-                                        'account_id': account_variation_id,
+                                        'account_id': account_valuation_id,
                                         'debit': amount_diff,
                                         'move_id': move_id
                                     })
@@ -224,8 +223,10 @@ class product_product(osv.osv):
         if context.get('compute_child',True):
             child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
-
+        
+        # this will be a dictionary of the UoM resources we need for conversion purposes, by UoM id
         uoms_o = {}
+        # this will be a dictionary of the product UoM by product id
         product2uom = {}
         for product in self.browse(cr, uid, ids, context=context):
             product2uom[product.id] = product.uom_id.id
@@ -279,22 +280,26 @@ class product_product(osv.osv):
                 'and state in %s ' + (date_str and 'and '+date_str+' ' or '') + ' '\
                 'group by product_id,product_uom',tuple(where))
             results2 = cr.fetchall()
+            
+        # Get the missing UoM resources
         uom_obj = self.pool.get('product.uom')
         uoms = map(lambda x: x[2], results) + map(lambda x: x[2], results2)
         if context.get('uom', False):
             uoms += [context['uom']]
-
         uoms = filter(lambda x: x not in uoms_o.keys(), uoms)
         if uoms:
             uoms = uom_obj.browse(cr, uid, list(set(uoms)), context=context)
             for o in uoms:
                 uoms_o[o.id] = o
+                
         #TOCHECK: before change uom of product, stock move line are in old uom.
         context.update({'raise-exception': False})
+        # Count the incoming quantities
         for amount, prod_id, prod_uom in results:
             amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
                      uoms_o[context.get('uom', False) or product2uom[prod_id]], context=context)
             res[prod_id] += amount
+        # Count the outgoing quantities
         for amount, prod_id, prod_uom in results2:
             amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
                     uoms_o[context.get('uom', False) or product2uom[prod_id]], context=context)
@@ -328,11 +333,64 @@ class product_product(osv.osv):
         return res
 
     _columns = {
-        'qty_available': fields.function(_product_available, type='float', string='Quantity On Hand', help="Current quantities of products in selected locations or all internal if none have been selected.", multi='qty_available', digits_compute=dp.get_precision('Product UoM')),
-        'virtual_available': fields.function(_product_available, type='float', string='Quantity Available', help="Forcasted quantity (computed as Quantity On Hand - Outgoing + Incoming) in selected locations or all internal if none have been selected.", multi='qty_available', digits_compute=dp.get_precision('Product UoM')),
-        'incoming_qty': fields.function(_product_available, type='float', string='Incoming', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected.", multi='qty_available', digits_compute=dp.get_precision('Product UoM')),
-        'outgoing_qty': fields.function(_product_available, type='float', string='Outgoing', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected.", multi='qty_available', digits_compute=dp.get_precision('Product UoM')),
-        'track_production': fields.boolean('Track Manufacturing Lots' , help="Forces to specify a Production Lot for all moves containing this product and generated by a Manufacturing Order"),
+        'qty_available': fields.function(_product_available, multi='qty_available',
+            type='float',  digits_compute=dp.get_precision('Product UoM'),
+            string='Quantity On Hand',
+            help="Current quantity of products.\n"
+                 "In a context with a single Stock Location, this includes "
+                 "goods stored at this Location, or any of its children.\n"
+                 "In a context with a single Warehouse, this includes "
+                 "goods stored in the Stock Location of this Warehouse, or any "
+                 "of its children.\n"
+                 "In a context with a single Shop, this includes goods "
+                 "stored in the Stock Location of the Warehouse of this Shop, "
+                 "or any of its children.\n"
+                 "Otherwise, this includes goods stored in any Stock Location "
+                 "typed as 'internal'."),
+        'virtual_available': fields.function(_product_available, multi='qty_available',
+            type='float',  digits_compute=dp.get_precision('Product UoM'),
+            string='Quantity Available',
+            help="Forcasted quantity (computed as Quantity On Hand "
+                 "- Outgoing + Incoming)\n"
+                 "In a context with a single Stock Location, this includes "
+                 "goods stored at this Location, or any of its children.\n"
+                 "In a context with a single Warehouse, this includes "
+                 "goods stored in the Stock Location of this Warehouse, or any "
+                 "of its children.\n"
+                 "In a context with a single Shop, this includes goods "
+                 "stored in the Stock Location of the Warehouse of this Shop, "
+                 "or any of its children.\n"
+                 "Otherwise, this includes goods stored in any Stock Location "
+                 "typed as 'internal'."),
+        'incoming_qty': fields.function(_product_available, multi='qty_available',
+            type='float',  digits_compute=dp.get_precision('Product UoM'),
+            string='Incoming',
+            help="Quantity of products that are planned to arrive.\n"
+                 "In a context with a single Stock Location, this includes "
+                 "goods arriving to this Location, or any of its children.\n"
+                 "In a context with a single Warehouse, this includes "
+                 "goods arriving to the Stock Location of this Warehouse, or "
+                 "any of its children.\n"
+                 "In a context with a single Shop, this includes goods "
+                 "arriving to the Stock Location of the Warehouse of this "
+                 "Shop, or any of its children.\n"
+                 "Otherwise, this includes goods arriving to any Stock "
+                 "Location typed as 'internal'."),
+        'outgoing_qty': fields.function(_product_available, multi='qty_available',
+            type='float',  digits_compute=dp.get_precision('Product UoM'),
+            string='Outgoing',
+            help="Quantity of products that are planned to leave.\n"
+                 "In a context with a single Stock Location, this includes "
+                 "goods leaving from this Location, or any of its children.\n"
+                 "In a context with a single Warehouse, this includes "
+                 "goods leaving from the Stock Location of this Warehouse, or "
+                 "any of its children.\n"
+                 "In a context with a single Shop, this includes goods "
+                 "leaving from the Stock Location of the Warehouse of this "
+                 "Shop, or any of its children.\n"
+                 "Otherwise, this includes goods leaving from any Stock "
+                 "Location typed as 'internal'."),
+        'track_production': fields.boolean('Track Manufacturing Lots', help="Forces to specify a Production Lot for all moves containing this product and generated by a Manufacturing Order"),
         'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to specify a Production Lot for all moves containing this product and coming from a Supplier Location"),
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Production Lot for all moves containing this product and going to a Customer Location"),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
@@ -424,11 +482,13 @@ class product_template(osv.osv):
         'property_stock_account_input': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Input Account', view_load=True,
-            help='When doing real-time inventory valuation, counterpart Journal Items for all incoming stock moves will be posted in this account. If not set on the product, the one from the product category is used.'),
+            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used."),
         'property_stock_account_output': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Output Account', view_load=True,
-            help='When doing real-time inventory valuation, counterpart Journal Items for all outgoing stock moves will be posted in this account. If not set on the product, the one from the product category is used.'),
+            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
     }
 
 product_template()
@@ -444,15 +504,19 @@ class product_category(osv.osv):
         'property_stock_account_input_categ': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Input Account', view_load=True,
-            help='When doing real-time inventory valuation, counterpart Journal Items for all incoming stock moves will be posted in this account. This is the default value for all products in this category, it can also directly be set on each product.'),
+            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
+                 "can also directly be set on each product"),
         'property_stock_account_output_categ': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Output Account', view_load=True,
-            help='When doing real-time inventory valuation, counterpart Journal Items for all outgoing stock moves will be posted in this account. This is the default value for all products in this category, it can also directly be set on each product.'),
-        'property_stock_variation': fields.property('account.account',
+            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
+                 "can also directly be set on each product"),
+        'property_stock_valuation_account_id': fields.property('account.account',
             type='many2one',
             relation='account.account',
-            string="Stock Variation Account",
+            string="Stock Valuation Account",
             view_load=True,
             help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
     }

@@ -50,9 +50,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Hr Attendance Search">
-                    <filter icon="terp-stock_align_left_24" string="My Attendances" domain="[('employee_id.user_id.id', '=', uid)]" />
+                    <filter icon="terp-stock_align_left_24" string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
                     <separator orientation="vertical"/>
-                    <filter icon="terp-go-today" string="Today" name="today" domain="[('name::date','=',current_date)]" />
+                    <filter icon="terp-go-today" string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
                     <separator orientation="vertical"/>
                     <field name="employee_id"/>
                     <field name="name"/>
@@ -68,7 +68,7 @@
         </record>
 
         <record id="open_view_attendance" model="ir.actions.act_window">
-            <field name="name">Attendances</field>
+            <field name="name">Attendance</field>
             <field name="res_model">hr.attendance</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -79,7 +79,7 @@
 
         <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="3" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
 
-        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root" sequence="4" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
+        <menuitem id="menu_hr_attendance" name="Attendance" parent="hr.menu_hr_root" sequence="4" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
 
         <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance" sequence="20"/>
 
@@ -116,8 +116,8 @@
             <field name="view_id" ref="view_attendance_reason"/>
         </record>
 
-        <menuitem 
-            sequence="2" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" name="Attendances"
+        <menuitem
+            sequence="2" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" name="Attendance"
             groups="base.group_extended"/>
         <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config"/>
 

@@ -111,7 +111,7 @@ class hr_holidays(osv.osv):
 
     _columns = {
         'name': fields.char('Description', required=True, size=64),
-        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
+        'state': fields.selection([('draft', 'New'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
             ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')],
             'State', readonly=True, help='The state is set to \'Draft\', when a holiday request is created.\
             \nThe state is \'Waiting Approval\', when holiday request is confirmed by user.\
@@ -151,16 +151,26 @@ class hr_holidays(osv.osv):
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0 !"),
     ]
 
-    def _create_resource_leave(self, cr, uid, vals, context=None):
+    def _create_resource_leave(self, cr, uid, leaves, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
         obj_res_leave = self.pool.get('resource.calendar.leaves')
-        return obj_res_leave.create(cr, uid, vals, context=context)
+        for leave in leaves:
+            vals = {
+                'name': leave.name,
+                'date_from': leave.date_from,
+                'holiday_id': leave.id,
+                'date_to': leave.date_to,
+                'resource_id': leave.employee_id.resource_id.id,
+                'calendar_id': leave.employee_id.resource_id.calendar_id.id
+            }
+            obj_res_leave.create(cr, uid, vals, context=context)
+        return True
 
-    def _remove_resouce_leave(self, cr, uid, ids, context=None):
+    def _remove_resource_leave(self, cr, uid, ids, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays cancel/removed'''
         obj_res_leave = self.pool.get('resource.calendar.leaves')
         leave_ids = obj_res_leave.search(cr, uid, [('holiday_id', 'in', ids)], context=context)
-        return obj_res_leave.unlink(cr, uid, leave_ids)
+        return obj_res_leave.unlink(cr, uid, leave_ids, context=context)
 
     def onchange_type(self, cr, uid, ids, holiday_type):
         result = {'value': {'employee_id': False}}
@@ -216,7 +226,7 @@ class hr_holidays(osv.osv):
                 }
         return {'warning': warning, 'value': {'double_validation': double_validation}}
 
-    def set_to_draft(self, cr, uid, ids, *args):
+    def set_to_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
             'state': 'draft',
             'manager_id': False,
@@ -228,15 +238,15 @@ class hr_holidays(osv.osv):
             wf_service.trg_create(uid, 'hr.holidays', id, cr)
         return True
 
-    def holidays_validate(self, cr, uid, ids, *args):
-        self.check_holidays(cr, uid, ids)
+    def holidays_validate(self, cr, uid, ids, context=None):
+        self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
         return self.write(cr, uid, ids, {'state':'validate1', 'manager_id': manager})
 
-    def holidays_validate2(self, cr, uid, ids, *args):
-        self.check_holidays(cr, uid, ids)
+    def holidays_validate2(self, cr, uid, ids, context=None):
+        self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
@@ -259,6 +269,7 @@ class hr_holidays(osv.osv):
                     'date_deadline': record.date_to,
                 }
                 case_id = meeting_obj.create(cr, uid, vals)
+                self._create_resource_leave(cr, uid, [record], context=context)
                 self.write(cr, uid, ids, {'case_id': case_id})
             elif record.holiday_type == 'category':
                 emp_ids = obj_emp.search(cr, uid, [('category_ids', 'child_of', [record.category_id.id])])
@@ -286,23 +297,22 @@ class hr_holidays(osv.osv):
             self.write(cr, uid, holiday_ids, {'manager_id2': manager})
         return True
 
-    def holidays_confirm(self, cr, uid, ids, *args):
-        self.check_holidays(cr, uid, ids)
+    def holidays_confirm(self, cr, uid, ids, context=None):
+        self.check_holidays(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'confirm'})
 
-    def holidays_refuse(self, cr, uid, ids, approval, *args):
+    def holidays_refuse(self, cr, uid, ids, approval, context=None):
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
         if approval == 'first_approval':
-            self.write(cr, uid, ids, {'manager_id': manager})
+            self.write(cr, uid, ids, {'state': 'refuse', 'manager_id': manager})
         else:
-            self.write(cr, uid, ids, {'manager_id2': manager})
-        self.write(cr, uid, ids, {'state': 'refuse'})
-        self.holidays_cancel(cr, uid, ids)
+            self.write(cr, uid, ids, {'state': 'refuse', 'manager_id2': manager})
+        self.holidays_cancel(cr, uid, ids, context=context)
         return True
 
-    def holidays_cancel(self, cr, uid, ids, *args):
+    def holidays_cancel(self, cr, uid, ids, context=None):
         obj_crm_meeting = self.pool.get('crm.meeting')
         for record in self.browse(cr, uid, ids):
             # Delete the meeting
@@ -314,9 +324,10 @@ class hr_holidays(osv.osv):
             for request in record.linked_request_ids or []:
                 wf_service.trg_validate(uid, 'hr.holidays', request.id, 'cancel', cr)
 
+        self._remove_resource_leave(cr, uid, ids, context=context)
         return True
 
-    def check_holidays(self, cr, uid, ids):
+    def check_holidays(self, cr, uid, ids, context=None):
         holi_status_obj = self.pool.get('hr.holidays.status')
         for record in self.browse(cr, uid, ids):
             if record.holiday_type == 'employee' and record.type == 'remove':
@@ -358,12 +369,24 @@ class hr_employee(osv.osv):
             leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
         else:
             return False
-        holiday_obj.holidays_confirm(cr, uid, [leave_id])
-        holiday_obj.holidays_validate2(cr, uid, [leave_id])
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'confirm', cr)
+        wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
+        wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
         return True
 
    def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
-        cr.execute("SELECT sum(h.number_of_days_temp) as days, h.employee_id from hr_holidays h join hr_holidays_status s on (s.id=h.holiday_status_id) where h.type='add' and h.state='validate' and s.limit=False group by h.employee_id")
+        cr.execute("""SELECT
+                sum(h.number_of_days) as days,
+                h.employee_id 
+            from
+                hr_holidays h
+                join hr_holidays_status s on (s.id=h.holiday_status_id) 
+            where
+                h.state='validate' and
+                s.limit=False and
+                h.employee_id in (%s)
+            group by h.employee_id"""% (','.join(map(str,ids)),) )
         res = cr.dictfetchall()
         remaining = {}
         for r in res:
@@ -373,9 +396,8 @@ class hr_employee(osv.osv):
                 remaining[employee_id] = 0.0
         return remaining
 
-
    _columns = {
-        'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.', store=True),
+        'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.'),
     }
 
 hr_employee()

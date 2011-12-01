@@ -60,23 +60,25 @@
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
                     <group>
-                        <filter icon="terp-go-year" string="  Year  "
+                        <filter icon="terp-go-year" string="Year"
+                                name="year"
                                 domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;=',time.strftime('%%Y-01-01'))]"
                                 help="Current Year"/>
-                        <filter icon="terp-go-month" string="   Month   "
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-go-month" string="Month"
                                 name="month"
                                 domain="[('date_start','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_start','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                                 help="Current Month"/>
                         <filter icon="terp-go-week"
-                                string="    Month-1    "
+                                string="Month-1"
                                 domain="[('date_start','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_start','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                                 help="Previous Month"/>
                         <separator orientation="vertical"/>
-                        <filter string="Draft"
+                        <filter string="New"
                                 icon="terp-document-new"
                                 domain="[('state','=','draft')]"
-                                help = "Draft tasks"/>
-                        <filter string="Current"
+                                help = "New tasks"/>
+                        <filter string="In progress"
                                 icon="terp-check"
                                 domain="[('state', '=' ,'open')]"
                                 help = "In progress tasks"/>
@@ -146,7 +148,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_task_project_user_search"/>
-            <field name="context">{'search_default_month':1,'search_default_project':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_project':1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="help">This report allows you to analyse the performance of your projects and users. You can analyse the quantities of tasks, the hours spent compared to the planned hours, the average number of days to open or close a task, etc.</field>
         </record>
 
@@ -184,7 +186,7 @@
         <field name="res_model">project.vs.hours</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
-        <field name="domain">[('uid','=',uid),('state','=','open')]</field>
+        <field name="domain">[('user_id','=',uid),('state','=','open')]</field>
         <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
     </record>
 
@@ -272,7 +274,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
         <field name="context">{}</field>
-        <field name="domain">[('uid','=',uid),('state','=','open')]</field>
+        <field name="domain">[('user_id','=',uid),('state','=','open')]</field>
         <field name="view_id" ref="view_project_vs_planned_total_hours_graph"/>
     </record>
 

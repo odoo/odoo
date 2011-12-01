@@ -140,7 +140,7 @@
 	                           domain="[('state','=','pause')]"/>
 	                       <separator orientation="vertical"/>
 	                       <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-	                           domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+	                           domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
 	                           help="Production started late" />
 	                       <separator orientation="vertical"/>
 	                		<field name="name"/>
@@ -268,8 +268,6 @@
         <field name="model" eval="'mrp.production.workcenter.line'"/>
         <field name="name">Work Orders</field>
         <field name="value" eval="'ir.actions.act_window,'+str(mrp_production_wc_action_form)"/>
-        <field name="object" eval="True"/>
-
     </record>
 
     <menuitem name="Work Orders" parent="mrp.menu_mrp_manufacturing"

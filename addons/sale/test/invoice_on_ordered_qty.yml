@@ -31,39 +31,17 @@
 -
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so9}
 -
-  I verify that the picking has been generated for the sale order
+  I verify that the picking has been generated for the sale order and I process it
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so9"))
     assert so.picking_ids,"Picking has not been generated for sale_order_so9"
--
-  Then I confirm the picking
--
-  !record {model: stock.partial.picking, id: stock_partial_picking_0}:
-    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
--
-  Then I done the picking
--
-  !python {model: stock.picking }: |
-    import time
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so9"))
-    picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
-    if picking_id:
-       pick=self.browse(cr,uid,picking_id[0])
-       pick.force_assign(cr, uid)
-       partial_datas = {
-            'partner_id':pick.address_id.partner_id.id,
-             'address_id': pick.address_id.id,
-             'delivery_date' : time.strftime('%Y-%m-%d'),
-            }
-       move = pick.move_lines[0]
-       partial_datas['move%s'%(move.id)]= {
-           'product_id': move.product_id.id,
-           'product_qty': '100',
-           'product_uom': move.product_uom.id,
-       }
-       self.do_partial(cr, uid, [pick.id],partial_datas)
+    picking, = so.picking_ids
+    stock_partial_picking = self.pool.get('stock.partial.picking')
+    partial_id = stock_partial_picking.create(cr, uid, {},
+            context={'active_model': 'stock.picking',
+                     'active_ids': [picking.id]})
+    stock_partial_picking.do_partial(cr, uid, [partial_id])
 -
   I click on Create Invoice button to create the invoice.
 -

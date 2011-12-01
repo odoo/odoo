@@ -1,0 +1,100 @@
+-
+  In order to test repair orders I have created stock move line record.
+-
+  !record {model: stock.move, id: stock_move_pcbasicpc0}:
+    company_id: base.main_company
+    date: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+    date_expected: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+    location_dest_id: stock.stock_location_14
+    location_id: stock.stock_location_stock
+    name: '[PC1] Basic PC'
+    product_id: product.product_product_pc1
+    product_qty: 1.0
+    product_uom: product.product_uom_unit
+    product_uos_qty: 1.0
+
+-
+  I start by creating new Repair order for "Basic PC" product and Invoice Method is "No Invoice".
+-
+  !record {model: mrp.repair, id: mrp_repair_rma2}:
+    address_id: base.res_partner_address_1
+    guarantee_limit: !eval datetime.today().strftime("%Y-%m-%d")
+    invoice_method: 'none'
+    partner_invoice_id: base.res_partner_address_1
+    location_dest_id: stock.stock_location_14
+    location_id: stock.stock_location_14
+    move_id: 'stock_move_pcbasicpc0'
+    name: RMA000055
+    operations:
+      - location_dest_id: stock.location_production
+        location_id: stock.stock_location_stock
+        name: '[HDD1] HDD Seagate 7200.8 80GB'
+        price_unit: 50.0
+        product_id: product.product_product_hdd1
+        product_uom: product.product_uom_unit
+        product_uom_qty: 1.0
+        state: draft
+        to_invoice: 1
+        type: add
+    fees_lines:
+      - name: 'HDD1 Seagate repair fees'
+        product_id: product.product_product_hdd1
+        product_uom_qty: 1.0
+        product_uom: product.product_uom_unit
+        price_unit: 50.0
+    partner_id: base.res_partner_9
+    product_id: product.product_product_pc1
+-
+  I confirm this Repair order.
+-
+  !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rma2}
+-
+  I Cancel this Repair order.
+-
+  !python {model: mrp.repair.cancel}: |
+    context = {"lang": 'en_US', "active_model":"mrp.repair", "active_ids": [ref("mrp_repair_rma2")], "tz": False, "active_id":ref('mrp_repair_rma2')}
+    self.fields_view_get(cr, uid, False, "form", context)
+    self.cancel_repair(cr, uid, [ref("mrp_repair_rma2")], context=context)
+-
+  I check that Repair order is in "Cancel" state.
+-
+  !assert {model: mrp.repair, id: mrp_repair_rma2}:
+      - state == 'cancel'
+-
+  I Reopen the repair order as new.
+-
+  !python {model: mrp.repair}: |
+    self.action_cancel_draft(cr, uid, [ref('mrp_repair_rma2')])
+-
+  I change the Invoice method of the repair order to Before repair.
+-
+  !python {model: mrp.repair}: |
+    self.write(cr, uid, [ref('mrp_repair_rma2')], {'invoice_method': 'b4repair'})
+-
+  I confirm the Repair order again.
+-
+  !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rma2}
+-
+  Repair order state to 'Ready'.
+-
+  !python {model: mrp.repair}: |
+    self.action_repair_ready(cr, uid, [ref('mrp_repair_rma2')], context=None)
+-
+  I click on "Create Invoice" button of this wizard to make invoice.
+-
+  !workflow {model: mrp.repair, action: action_invoice_create, ref: mrp_repair_rma2}
+-
+  I check that Invoice is created for this repair order.
+-
+  !python {model: mrp.repair}: |
+     repair_id = self.browse(cr, uid, [ref('mrp_repair_rma2')], context=context)[0]
+     assert repair_id.invoice_id.id, _("No invoice exists for this repair order.")
+-
+  I start the repairing process by click on "Start Repair" Button.
+-
+  !workflow {model: mrp.repair, action: action_repair_start, ref: mrp_repair_rma2}
+-
+  Repairing Process for product is Done and I End Repair process by click on "End Repair" button For Invoice Type b4repair.
+-
+  !workflow {model: mrp.repair, action: action_repair_end, ref: mrp_repair_rma2}
+

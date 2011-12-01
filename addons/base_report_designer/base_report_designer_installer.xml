@@ -22,8 +22,8 @@
                 <button colspan="1" icon="gtk-close" special="cancel" string="_Close" invisible="not context.get('menu',False)"/>
                 <button name="action_next" icon="gtk-go-forward" type="object" string="Configure" colspan="1" invisible="context.get('menu',False)"/>
               </xpath>
-              <xpath expr="//button[@string='Skip']" position="replace">
-                <button name="action_skip" icon="gtk-jump-to" special="cancel" type="object" string="Skip" colspan="1" invisible="context.get('menu',False)"/>
+              <xpath expr="//button[@string='Cancel']" position="replace">
+                <button name="action_skip" icon="gtk-jump-to" special="cancel" type="object" string="Cancel" colspan="1" invisible="context.get('menu',False)"/>
               </xpath>
               <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
                   <attribute name="string"/>

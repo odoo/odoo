@@ -104,8 +104,9 @@
     I look for the "test2.txt" file at the server
 -
     !python {model: ir.attachment }: |
+        cr.rollback() # restart transaction to see changes (FTP-FS uses its own cursor)
         ids = self.search(cr, uid, [('name', '=', 'test2.txt')])
-        assert ids
+        assert ids, "No test2.txt file found."
 -
     I delete the "test2.txt" file using FTP.
 -
@@ -119,8 +120,9 @@
     I check at the server that test2.txt is deleted
 -
     !python {model: ir.attachment }: |
+        cr.rollback() # restart transaction to see changes (FTP-FS uses its own cursor)
         ids = self.search(cr, uid, [('name', '=', 'test2.txt')])
-        assert not ids
+        assert not ids, "test2.txt file can still be found."
 -
     I create a test2.txt file again.
 -
@@ -131,6 +133,7 @@
         fdata = StringIO('abcd')
         ftp.storbinary('STOR test2.txt', fdata)
         ftp.close()
+        cr.rollback() # restart transaction to see changes (FTP-FS uses its own cursor)
 -
     I delete the test2.txt from the server (RPC).
 -

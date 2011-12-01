@@ -25,6 +25,14 @@ from imaplib import IMAP4
 from imaplib import IMAP4_SSL
 from poplib import POP3
 from poplib import POP3_SSL
+try:
+    import cStringIO as StringIO
+except ImportError:
+    import StringIO
+
+import zipfile
+import base64
+import addons
 
 import netsvc
 from osv import osv, fields
@@ -46,11 +54,12 @@ class fetchmail_server(osv.osv):
             ('draft', 'Not Confirmed'),
             ('done', 'Confirmed'),
         ], 'State', select=True, readonly=True),
-        'server' : fields.char('Server Name', size=256, required=True, readonly=True, help="Hostname or IP of the mail server", states={'draft':[('readonly', False)]}),
-        'port' : fields.integer('Port', required=True, readonly=True, states={'draft':[('readonly', False)]}),
+        'server' : fields.char('Server Name', size=256, readonly=True, help="Hostname or IP of the mail server", states={'draft':[('readonly', False)]}),
+        'port' : fields.integer('Port', readonly=True, states={'draft':[('readonly', False)]}),
         'type':fields.selection([
             ('pop', 'POP Server'),
             ('imap', 'IMAP Server'),
+            ('local', 'Local Server'),
         ], 'Server Type', select=True, required=True, readonly=False),
         'is_ssl':fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)"),
         'attach':fields.boolean('Keep Attachments', help="Whether attachments should be downloaded. "
@@ -58,33 +67,56 @@ class fetchmail_server(osv.osv):
         'original':fields.boolean('Keep Original', help="Whether a full original copy of each email should be kept for reference"
                                                         "and attached to each processed message. This will usually double the size of your message database."),
         'date': fields.datetime('Last Fetch Date', readonly=True),
-        'user' : fields.char('Username', size=256, required=True, readonly=True, states={'draft':[('readonly', False)]}),
-        'password' : fields.char('Password', size=1024, required=True, readonly=True, states={'draft':[('readonly', False)]}),
-        'note': fields.text('Description'),
+        'user' : fields.char('Username', size=256, readonly=True, states={'draft':[('readonly', False)]}),
+        'password' : fields.char('Password', size=1024, readonly=True, states={'draft':[('readonly', False)]}),
         'action_id':fields.many2one('ir.actions.server', 'Server Action', help="Optional custom server action to trigger for each incoming mail, "
                                                                                "on the record that was created or updated by this mail"),
-        'object_id': fields.many2one('ir.model', "Target document type", required=True, help="Process each incoming mail as part of a conversation "
+        'object_id': fields.many2one('ir.model', "Create a New Record", required=True, help="Process each incoming mail as part of a conversation "
                                                                                              "corresponding to this document type. This will create "
                                                                                              "new documents for new conversations, or attach follow-up "
                                                                                              "emails to the existing conversations (documents)."),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Defines the order of processing, "
                                                                                                                   "lower values mean higher priority"),
         'message_ids': fields.one2many('mail.message', 'fetchmail_server_id', 'Messages', readonly=True),
+        'configuration' : fields.text('Configuration'),
+        'script' : fields.char('Script', readonly=True, size=64),
     }
     _defaults = {
         'state': "draft",
+        'type': "pop",
         'active': True,
         'priority': 5,
         'attach': True,
+        'script': '/mail/static/scripts/openerp_mailgate.py',
     }
 
-    def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
+
+    def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False, object_id=False):
         port = 0
+        values = {}
         if server_type == 'pop':
             port = ssl and 995 or 110
         elif server_type == 'imap':
             port = ssl and 993 or 143
-        return {'value':{'port':port}}
+        else:
+            values['server'] = ''
+        values['port'] = port
+
+        conf = {
+            'dbname' : cr.dbname,
+            'uid' : uid,
+            'model' : 'MODELNAME',
+        }
+        if object_id:
+            m = self.pool.get('ir.model')
+            r = m.read(cr,uid,[object_id],['model'])
+            conf['model']=r[0]['model']
+        values['configuration'] = """Use the below script with the following command line options with your Mail Transport Agent (MTA)
+
+openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOSTNAME --port=PORT 
+""" % conf
+
+        return {'value':values}
 
     def set_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids , {'state':'draft'})
