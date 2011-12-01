@@ -4026,7 +4026,7 @@ class BaseModel(object):
         upd_todo = []
         unknown_fields = []
         for v in vals.keys():
-            if v in self._inherit_fields:
+            if v in self._inherit_fields and v not in self._columns:
                 (table, col, col_detail, original_parent) = self._inherit_fields[v]
                 tocreate[table][v] = vals[v]
                 del vals[v]
