@@ -6,6 +6,7 @@
       <field name="content"><![CDATA[
 <script type="text/javascript" src="http://widgets.twimg.com/j/2/widget.js"></script>
 <script type="text/javascript">
+if (typeof(TWTR) !== 'undefined') {
 new TWTR.Widget({
   version: 2,
   type: 'faves',
@@ -36,6 +37,7 @@ new TWTR.Widget({
     behavior: 'all'
   }
 }).render().setUser('openerp').start();
+}
 </script>]]> </field>
     </record>
 
