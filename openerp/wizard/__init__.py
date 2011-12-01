@@ -40,6 +40,10 @@ class except_wizard(Exception):
         self.args = (name, value)
 
 class interface(netsvc.Service):
+    """
+    This is the base class used to implement Wizards. This class is deprecated
+    and `openerp.osv.TransientModel` must be used instead.
+    """
     states = {}
 
     def __init__(self, name):
