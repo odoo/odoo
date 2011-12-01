@@ -1368,10 +1368,12 @@ class BaseModel(object):
 
         fields_def = self.fields_get(cr, uid, context=context)
 
-        if config.get('import_partial', False) and filename:
-            data = pickle.load(file(config.get('import_partial')))
-
         position = 0
+        if config.get('import_partial') and filename:
+            with open(config.get('import_partial'), 'rb') as partial_import_file:
+                data = pickle.load(partial_import_file)
+                position = data.get(filename, 0)
+
         while position<len(datas):
             res = {}
 
@@ -1388,10 +1390,12 @@ class BaseModel(object):
             except Exception, e:
                 return (-1, res, 'Line ' + str(position) + ' : ' + tools.ustr(e), '')
 
-            if config.get('import_partial', False) and filename and (not (position%100)):
-                data = pickle.load(file(config.get('import_partial')))
+            if config.get('import_partial') and filename and (not (position%100)):
+                with open(config.get('import_partial'), 'rb') as partial_import:
+                    data = pickle.load(partial_import)
                 data[filename] = position
-                pickle.dump(data, file(config.get('import_partial'), 'wb'))
+                with open(config.get('import_partial'), 'wb') as partial_import:
+                    pickle.dump(data, partial_import)
                 if context.get('defer_parent_store_computation'):
                     self._parent_store_compute(cr)
                 cr.commit()
