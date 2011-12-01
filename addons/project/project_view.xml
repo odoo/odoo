@@ -350,8 +350,8 @@
                                             <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
                                             <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
                                         </td>
-                                        <td align="left" valign="middle" class="oe_kanban_title3" tooltip="task_details">
-                                            <b><field name="name"/></b>
+                                        <td align="left" valign="middle" class="oe_kanban_title" tooltip="task_details">
+                                            <field name="name"/>
                                         </td>
                                         <td valign="top" width="22">
                                             <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>

@@ -325,7 +325,7 @@
                                         <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
                                         <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
                                     </td>
-                                    <td align="left" valign="middle" class="oe_kanban_title3" tooltip="lead_details">
+                                    <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
                                         <field name="partner_id"/>
                                         <t t-if="record.planned_revenue.raw_value">
                                             - <t t-esc="Math.round(record.planned_revenue.value)"/>
