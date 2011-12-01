@@ -841,12 +841,12 @@ class View(openerpweb.Controller):
         context = req.session.eval_context(req.context)
         fvg = Model.fields_view_get(view_id, view_type, context, toolbar, submenu)
         # todo fme?: check that we should pass the evaluated context here
-        self.process_view(req.session, fvg, context, transform, (view_type != 'kanban'))
+        self.process_view(req.session, fvg, context, transform, (view_type == 'kanban'))
         if toolbar and transform:
             self.process_toolbar(req, fvg['toolbar'])
         return fvg
 
-    def process_view(self, session, fvg, context, transform, skip_whitespaces=True):
+    def process_view(self, session, fvg, context, transform, preserve_whitespaces=False):
         # depending on how it feels, xmlrpclib.ServerProxy can translate
         # XML-RPC strings to ``str`` or ``unicode``. ElementTree does not
         # enjoy unicode strings which can not be trivially converted to
@@ -864,7 +864,7 @@ class View(openerpweb.Controller):
             xml = self.transform_view(arch, session, evaluation_context)
         else:
             xml = ElementTree.fromstring(arch)
-        fvg['arch'] = web.common.xml2json.Xml2Json.convert_element(xml, skip_whitespaces)
+        fvg['arch'] = web.common.xml2json.Xml2Json.convert_element(xml, preserve_whitespaces)
 
         for field in fvg['fields'].itervalues():
             if field.get('views'):

@@ -16,7 +16,7 @@ class Xml2Json(object):
         return Xml2Json.convert_element(root)
 
     @staticmethod
-    def convert_element(el, skip_whitespaces=True):
+    def convert_element(el, preserve_whitespaces=False):
         res = {}
         if el.tag[0] == "{":
             ns, name = el.tag.rsplit("}", 1)
@@ -28,11 +28,11 @@ class Xml2Json(object):
         for k, v in el.items():
             res["attrs"][k] = v
         kids = []
-        if el.text and (not skip_whitespaces or el.text.strip() != ''):
+        if el.text and (preserve_whitespaces or el.text.strip() != ''):
             kids.append(el.text)
         for kid in el:
-            kids.append(Xml2Json.convert_element(kid, skip_whitespaces))
-            if kid.tail and (not skip_whitespaces or kid.tail.strip() != ''):
+            kids.append(Xml2Json.convert_element(kid, preserve_whitespaces))
+            if kid.tail and (preserve_whitespaces or kid.tail.strip() != ''):
                 kids.append(kid.tail)
         res["children"] = kids
         return res
