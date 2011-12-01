@@ -265,13 +265,24 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
         return this;
     },
     select_id: function(id) {
-        var idx = _.indexOf(this.ids, id);
+        var idx = this.get_id_index(id);
         if (idx === -1) {
             return false;
         } else {
             this.index = idx;
             return true;
         }
+    },
+    get_id_index: function(id) {
+        for (var i=0, ii=this.ids.length; i<ii; i++) {
+            // Here we use type coercion because of the mess potentially caused by
+            // OpenERP ids fetched from the DOM as string. (eg: dhtmlxcalendar)
+            // OpenERP ids can be non-numeric too ! (eg: recursive events in calendar)
+            if (id == this.ids[i]) {
+                return i;
+            }
+        }
+        return -1;
     },
     /**
      * Read records.
