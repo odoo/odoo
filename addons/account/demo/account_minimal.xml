@@ -13,49 +13,41 @@
         <record id="account_type_asset" model="account.account.type">
             <field name="name">Asset</field>
             <field name="code">asset</field>
-            <field name="report_type">asset</field>
             <field name="close_method">balance</field>
         </record>
         <record id="account_type_receivable" model="account.account.type">
             <field name="name">Receivable</field>
             <field name="code">receivable</field>
-            <field name="report_type">asset</field>
             <field name="close_method">unreconciled</field>
         </record>
         <record id="account_type_liability" model="account.account.type">
             <field name="name">Liability</field>
             <field name="code">liability</field>
-            <field name="report_type">liability</field>
             <field name="close_method">balance</field>
         </record>
         <record id="account_type_payable" model="account.account.type">
             <field name="name">Payable</field>
             <field name="code">payable</field>
-            <field name="report_type">liability</field>
             <field name="close_method">unreconciled</field>
         </record>
         <record id="account_type_income" model="account.account.type">
             <field name="name">Income</field>
             <field name="code">income</field>
-            <field name="report_type">income</field>
             <field name="close_method">none</field>
         </record>
         <record id="account_type_expense" model="account.account.type">
             <field name="name">Expense</field>
             <field name="code">expense</field>
-            <field name="report_type">expense</field>
             <field name="close_method">none</field>
         </record>
         <record id="account_type_cash_equity" model="account.account.type">
             <field name="name">Equity</field>
             <field name="code">equity</field>
-            <field name="report_type">liability</field>
             <field name="close_method">balance</field>
         </record>
         <record id="account_type_cash_moves" model="account.account.type">
             <field name="name">Cash</field>
             <field name="code">cash</field>
-            <field name="report_type">asset</field>
             <field name="close_method">balance</field>
         </record>
 
@@ -511,6 +503,35 @@
             <field name="account_type_ids" eval="[(6,0,[ref('account.account_type_expense')])]"/>
             <field name="display_detail">detail_with_hierarchy</field>
             <field name="type">account_type</field>
+        </record>
+
+        <!--
+            Update Account Type
+        -->
+
+        <record id="account.account_type_asset" model="account.account.type">
+            <field name="report_type">asset</field>
+        </record>
+        <record id="account.account_type_liability" model="account.account.type">
+            <field name="report_type">liability</field>
+        </record>
+        <record id="account.account_type_income" model="account.account.type">
+            <field name="report_type">income</field>
+        </record>
+        <record id="account.account_type_expense" model="account.account.type">
+            <field name="report_type">expense</field>
+        </record>
+        <record id="account.account_type_receivable" model="account.account.type">
+            <field name="report_type">asset</field>
+        </record>
+        <record id="account.account_type_payable" model="account.account.type">
+            <field name="report_type">liability</field>
+        </record>
+        <record id="account.account_type_cash_equity" model="account.account.type">
+            <field name="report_type">liability</field>
+        </record>
+        <record id="account.account_type_cash_moves" model="account.account.type">
+            <field name="report_type">asset</field>
         </record>
 
     </data>

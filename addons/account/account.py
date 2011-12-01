@@ -130,6 +130,21 @@ account_payment_term_line()
 class account_account_type(osv.osv):
     _name = "account.account.type"
     _description = "Account Type"
+    
+    def _get_report_type(self, cr, uid, context=None):
+        report_obj = self.pool.get('account.financial.report')
+        report_ids = report_obj.search(cr, uid, [], context=context)
+        report_type = [('none','/')]
+        for report in report_obj.browse(cr, uid, report_ids, context=context):
+            type = report.account_type_ids and report.account_type_ids[0] or False
+            if type:
+                if type.code in ('income', 'expense'):
+                    report_name = 'Profit & Loss ('+type.code+' accounts)'
+                elif type.code in ('asset','liability'):
+                    report_name = 'Balance Sheet ('+type.code+' accounts)'
+                report_type.append((type.code, report_name))
+        return report_type
+
     _columns = {
         'name': fields.char('Account Type', size=64, required=True),
         'code': fields.char('Code', size=32, required=True),
@@ -140,13 +155,7 @@ class account_account_type(osv.osv):
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
         'sign': fields.selection([(-1, 'Reverse balance sign'), (1, 'Preserve balance sign')], 'Sign on Reports', required=True, help='For accounts that are typically more debited than credited and that you would like to print as negative amounts in your reports, you should reverse the sign of the balance; e.g.: Expense account. The same applies for  accounts that are typically more credited than debited and that you would like to print as positive amounts in your reports; e.g.: Income account.'),
-        'report_type':fields.selection([
-            ('none','/'),
-            ('income','Profit & Loss (Income Accounts)'),
-            ('expense','Profit & Loss (Expense Accounts)'),
-            ('asset','Balance Sheet (Asset Accounts)'),
-            ('liability','Balance Sheet (Liability Accounts)')
-        ],'P&L / BS Category', select=True, readonly=False, help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
+        'report_type': fields.selection(_get_report_type, 'P&L / BS Category', help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
         'note': fields.text('Description'),
     }
     _defaults = {
@@ -155,6 +164,16 @@ class account_account_type(osv.osv):
         'report_type': 'none',
     }
     _order = "code"
+
+    def write(self, cr, uid, ids, vals, context=None):
+        report_obj = self.pool.get('account.financial.report')
+        if vals.get('report_type'):
+            type_ids = self.search(cr, uid, [('code','=',vals['report_type'])], context=context)
+            report_ids = report_obj.search(cr, uid, [('account_type_ids','in',ids)])
+            for report in report_obj.browse(cr, uid, report_ids, context=context):
+                type_ids += [x.id for x in report.account_type_ids if x.id not in type_ids]
+                report_obj.write(cr, uid, [report.id], {'account_type_ids': [(6,0,type_ids)]}, context=context)
+        return super(account_account_type, self).write(cr, uid, ids, vals, context)
 
 account_account_type()
 
