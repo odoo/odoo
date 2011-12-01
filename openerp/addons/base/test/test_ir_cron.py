@@ -40,7 +40,7 @@ JOB = {
     'model': u'ir.cron'
 }
 
-class x_test_ir_cron(openerp.osv.osv.osv):
+class test_ir_cron(openerp.osv.osv.osv):
     """ Add a few handy methods to test cron jobs scheduling. """
     _inherit = "ir.cron"
 
@@ -57,7 +57,7 @@ class x_test_ir_cron(openerp.osv.osv.osv):
         time.sleep(80)
         print ">>> out _80_seconds"
 
-    def x_test_0(self, cr, uid):
+    def test_0(self, cr, uid):
         now = datetime.now()
         t1 = (now + relativedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')
         t2 = (now + relativedelta(minutes=1, seconds=5)).strftime('%Y-%m-%d %H:%M:%S')
@@ -66,17 +66,17 @@ class x_test_ir_cron(openerp.osv.osv.osv):
         self.create(cr, uid, dict(JOB, name='test_0 _20_seconds B', function='_20_seconds', nextcall=t2))
         self.create(cr, uid, dict(JOB, name='test_0 _20_seconds C', function='_20_seconds', nextcall=t3))
 
-    def x_test_1(self, cr, uid):
+    def test_1(self, cr, uid):
         now = datetime.now()
         t1 = (now + relativedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')
         self.create(cr, uid, dict(JOB, name='test_1 _20_seconds * 3', function='_20_seconds', nextcall=t1, numbercall=3))
 
-    def x_test_2(self, cr, uid):
+    def test_2(self, cr, uid):
         now = datetime.now()
         t1 = (now + relativedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')
         self.create(cr, uid, dict(JOB, name='test_2 _80_seconds * 2', function='_80_seconds', nextcall=t1, numbercall=2))
 
-    def x_test_3(self, cr, uid):
+    def test_3(self, cr, uid):
         now = datetime.now()
         t1 = (now + relativedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')
         t2 = (now + relativedelta(minutes=1, seconds=5)).strftime('%Y-%m-%d %H:%M:%S')
@@ -86,7 +86,7 @@ class x_test_ir_cron(openerp.osv.osv.osv):
         self.create(cr, uid, dict(JOB, name='test_3 _20_seconds C', function='_20_seconds', nextcall=t3))
 
     # This test assumes 4 cron threads.
-    def x_test_00(self, cr, uid):
+    def test_00(self, cr, uid):
         self.test_00_set = set()
         now = datetime.now()
         t1 = (now + relativedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')
