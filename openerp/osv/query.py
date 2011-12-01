@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+#.apidoc title: Query object
 
 def _quote(to_quote):
     if '"' not in to_quote:

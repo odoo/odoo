@@ -56,6 +56,9 @@ class lang(osv.osv):
         default_value = ir_values_obj.get(cr, uid, 'default', False, ['res.partner'])
         if not default_value:
             ir_values_obj.set(cr, uid, 'default', False, 'lang', ['res.partner'], lang)
+        default_value = ir_values_obj.get(cr, uid, 'default', False, ['res.users'])
+        if not default_value:
+            ir_values_obj.set(cr, uid, 'default', False, 'context_lang', ['res.users'], lang)
         return True
 
     def load_lang(self, cr, uid, lang, lang_name=None):
@@ -122,10 +125,10 @@ class lang(osv.osv):
                     return False
         return True
 
-    def _get_default_date_format(self,cursor,user,context={}):
+    def _get_default_date_format(self, cursor, user, context=None):
         return '%m/%d/%Y'
 
-    def _get_default_time_format(self,cursor,user,context={}):
+    def _get_default_time_format(self, cursor, user, context=None):
         return '%H:%M:%S'
 
     _columns = {
@@ -160,7 +163,7 @@ class lang(osv.osv):
         (_check_format, 'Invalid date/time format directive specified. Please refer to the list of allowed directives, displayed when you edit a language.', ['time_format', 'date_format'])
     ]
 
-    @tools.cache(skiparg=3)
+    @tools.ormcache(skiparg=3)
     def _lang_data_get(self, cr, uid, lang_id, monetary=False):
         conv = localeconv()
         lang_obj = self.browse(cr, uid, lang_id)
@@ -171,7 +174,7 @@ class lang(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         for lang_id in ids :
-            self._lang_data_get.clear_cache(cr.dbname,lang_id= lang_id)
+            self._lang_data_get.clear_cache(self)
         return super(lang, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -191,7 +194,7 @@ class lang(osv.osv):
             trans_obj.unlink(cr, uid, trans_ids, context=context)
         return super(lang, self).unlink(cr, uid, ids, context=context)
 
-    def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False):
+    def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False, context=None):
         """ Format() will return the language-specific output for float values"""
 
         if percent[0] != '%':
@@ -286,6 +289,8 @@ def split(l, counts):
     res = []
     saved_count = len(l) # count to use when encoutering a zero
     for count in counts:
+        if not l:
+            break
         if count == -1:
             break
         if count == 0:
@@ -347,7 +352,7 @@ def _group_examples():
         assert g("12345678", [2,0,1], '.') == ('12.34.56.78', 3)
         assert g("12345678", [2,0,0], '.') == ('12.34.56.78', 3)
         assert g("12345678", [2,0,-1], '.') == ('12.34.56.78', 3)
-
+        assert g("12345678", [3,3,3,3], '.') == ('12.345.678', 2)
 
     assert original_group("abc1234567xy", [2], '.') == ('abc1234567.xy', 1)
     assert original_group("abc1234567xy8", [2], '.') == ('abc1234567xy8', 0) # difference here...

@@ -19,37 +19,35 @@
 #
 ##############################################################################
 
-#
-# OSV: Objects Services
-#
+#.apidoc title: Objects Services (OSV)
 
-import sys
-import inspect
+import logging
+from psycopg2 import IntegrityError, errorcodes
+
 import orm
+import openerp
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 import openerp.sql_db as sql_db
-import copy
-import logging
-from psycopg2 import IntegrityError, errorcodes
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
-from openerp.osv.orm import module_class_list
+from openerp.osv.orm import MetaModel, Model, TransientModel, AbstractModel
+import openerp.exceptions
 
+# Deprecated.
 class except_osv(Exception):
-    def __init__(self, name, value, exc_type='warning'):
+    def __init__(self, name, value):
         self.name = name
-        self.exc_type = exc_type
         self.value = value
-        self.args = (exc_type, name)
+        self.args = (name, value)
 
+service = None
 
-class object_proxy(netsvc.Service):
+class object_proxy(object):
     def __init__(self):
         self.logger = logging.getLogger('web-services')
-        netsvc.Service.__init__(self, 'object_proxy', audience='')
-        self.exportMethod(self.exec_workflow)
-        self.exportMethod(self.execute)
+        global service
+        service = self
 
     def check(f):
         @wraps(f)
@@ -79,7 +77,7 @@ class object_proxy(netsvc.Service):
                 # We open a *new* cursor here, one reason is that failed SQL
                 # queries (as in IntegrityError) will invalidate the current one.
                 cr = False
-                
+
                 if hasattr(src, '__call__'):
                     # callable. We need to find the right parameters to call
                     # the  orm._sql_message(self, cr, uid, ids, context) function,
@@ -92,18 +90,18 @@ class object_proxy(netsvc.Service):
                                 ids = args[3]
                             else:
                                 ids = []
-                        cr = sql_db.db_connect(db_name).cursor()
+                        cr = sql_db.db_connect(dbname).cursor()
                         return src(obj, cr, uid, ids, context=(ctx or {}))
                     except Exception:
                         pass
                     finally:
                         if cr: cr.close()
-                   
+
                     return False # so that the original SQL error will
                                  # be returned, it is the best we have.
 
                 try:
-                    cr = sql_db.db_connect(db_name).cursor()
+                    cr = sql_db.db_connect(dbname).cursor()
                     res = translate(cr, name=False, source_type=ttype,
                                     lang=lang, source=src)
                     if res:
@@ -121,16 +119,14 @@ class object_proxy(netsvc.Service):
                     raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
                 return f(self, dbname, *args, **kwargs)
             except orm.except_orm, inst:
-                if inst.name == 'AccessError':
-                    self.logger.debug("AccessError", exc_info=True)
-                self.abortResponse(1, inst.name, 'warning', inst.value)
-            except except_osv, inst:
-                self.abortResponse(1, inst.name, inst.exc_type, inst.value)
+                raise except_osv(inst.name, inst.value)
+            except except_osv:
+                raise
             except IntegrityError, inst:
                 osv_pool = pooler.get_pool(dbname)
                 for key in osv_pool._sql_error.keys():
                     if key in inst[0]:
-                        self.abortResponse(1, _('Constraint Error'), 'warning',
+                        netsvc.abort_response(1, _('Constraint Error'), 'warning',
                                         tr(osv_pool._sql_error[key], 'sql_constraint') or inst[0])
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
@@ -151,9 +147,9 @@ class object_proxy(netsvc.Service):
                         msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
                     except Exception:
                         pass
-                    self.abortResponse(1, _('Integrity Error'), 'warning', msg)
+                    netsvc.abort_response(1, _('Integrity Error'), 'warning', msg)
                 else:
-                    self.abortResponse(1, _('Integrity Error'), 'warning', inst[0])
+                    netsvc.abort_response(1, _('Integrity Error'), 'warning', inst[0])
             except Exception:
                 self.logger.exception("Uncaught exception")
                 raise
@@ -202,60 +198,10 @@ class object_proxy(netsvc.Service):
             cr.close()
         return res
 
-
-class osv_pool(object):
-    """ Model registry for a particular database.
-
-    The registry is essentially a mapping between model names and model
-    instances. There is one registry instance per database.
-
-    """
-
-    def __init__(self):
-        self.obj_pool = {} # model name/model instance mapping
-        self._sql_error = {}
-        self._store_function = {}
-        self._init = True
-        self._init_parent = {}
-
-    def do_parent_store(self, cr):
-        for o in self._init_parent:
-            self.get(o)._parent_store_compute(cr)
-        self._init = False
-
-    def obj_list(self):
-        """ Return the list of model names in this registry."""
-        return self.obj_pool.keys()
-
-    def add(self, model_name, model):
-        """ Add or replace a model in the registry."""
-        self.obj_pool[model_name] = model
-
-    def get(self, name):
-        """ Return a model for a given name or None if it doesn't exist."""
-        return self.obj_pool.get(name)
-
-    def instanciate(self, module, cr):
-        """ Instanciate all the classes of a given module for a particular db."""
-
-        res = []
-
-        # Instanciate classes registered through their constructor and
-        # add them to the pool.
-        for klass in module_class_list.get(module, []):
-            res.append(klass.createInstance(self, cr))
-
-        return res
-
-
-class osv_memory(orm.orm_memory):
-    """ Deprecated class. """
-    pass
-
-
-class osv(orm.orm):
-    """ Deprecated class. """
-    pass
+# deprecated - for backward compatibility.
+osv = Model
+osv_memory = TransientModel
+osv_abstract = AbstractModel # ;-)
 
 
 def start_object_proxy():

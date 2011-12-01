@@ -28,6 +28,8 @@ from reportlab import rl_config
 
 from openerp.tools import config
 
+#.apidoc title: TTF Font Table
+
 """This module allows the mapping of some system-available TTF fonts to
 the reportlab engine.
 
@@ -148,3 +150,5 @@ def SetCustomFonts(rmldoc):
     return True
 
 #eof
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

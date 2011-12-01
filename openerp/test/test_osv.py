@@ -62,3 +62,5 @@ class QueryTestCase(unittest.TestCase):
         query.tables.append('"product_product"')
         self.assertRaises(AssertionError, query.join, ("product_template", "product_category", "categ_id", "id"), outer=False)
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

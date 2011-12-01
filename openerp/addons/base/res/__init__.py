@@ -21,17 +21,23 @@
 
 import tools
 
-import country
-import bank
+import res_country
 import res_lang
-import partner
+import res_partner
+import res_partner_event
+import res_bank
 import res_config
 import res_currency
 import res_company
-import res_user
+import res_users
 import res_request
-import res_lang 
-import res_log 
-import ir_property
+import res_lang
+import res_log
 import res_widget
+import ir_property
+
+import wizard
+import report
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

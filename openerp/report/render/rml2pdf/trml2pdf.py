@@ -226,7 +226,11 @@ class _rml_styles(object,):
         return style
 
 class _rml_doc(object):
-    def __init__(self, node, localcontext, images={}, path='.', title=None):
+    def __init__(self, node, localcontext=None, images=None, path='.', title=None):
+        if images is None:
+            images = {}
+        if localcontext is None:
+            localcontext = {}
         self.localcontext = localcontext
         self.etree = node
         self.filename = self.etree.get('filename')
@@ -311,7 +315,9 @@ class _rml_doc(object):
             self.canvas.save()
 
 class _rml_canvas(object):
-    def __init__(self, canvas, localcontext, doc_tmpl=None, doc=None, images={}, path='.', title=None):
+    def __init__(self, canvas, localcontext, doc_tmpl=None, doc=None, images=None, path='.', title=None):
+        if images is None:
+            images = {}
         self.localcontext = localcontext
         self.canvas = canvas
         self.styles = doc.styles
@@ -447,14 +453,14 @@ class _rml_canvas(object):
                 self._logger.debug("Image %s used", node.get('name'))
                 s = StringIO(image_data)
             else:
+                newtext = node.text
                 if self.localcontext:
-                    res = utils._regex.findall(node.text)
+                    res = utils._regex.findall(newtext)
                     for key in res:
-                        newtext = eval(key, {}, self.localcontext)
-                        node.text = newtext or ''
+                        newtext = eval(key, {}, self.localcontext) or ''
                 image_data = None
-                if node.text:
-                    image_data = base64.decodestring(node.text)
+                if newtext:
+                    image_data = base64.decodestring(newtext)
                 if image_data:
                     s = StringIO(image_data)
                 else:
@@ -564,7 +570,9 @@ class _rml_canvas(object):
                 tags[n.tag](n)
 
 class _rml_draw(object):
-    def __init__(self, localcontext ,node, styles, images={}, path='.', title=None):
+    def __init__(self, localcontext, node, styles, images=None, path='.', title=None):
+        if images is None:
+            images = {}
         self.localcontext = localcontext
         self.node = node
         self.styles = styles
@@ -595,10 +603,12 @@ class _rml_Illustration(platypus.flowables.Flowable):
 
 class _rml_flowable(object):
     def __init__(self, doc, localcontext, images=None, path='.', title=None):
+        if images is None:
+            images = {}
         self.localcontext = localcontext
         self.doc = doc
         self.styles = doc.styles
-        self.images = images or {}
+        self.images = images
         self.path = path
         self.title = title
         self._logger = logging.getLogger('report.rml.flowable')
@@ -610,11 +620,10 @@ class _rml_flowable(object):
             for key in txt_n.attrib.keys():
                 if key in ('rml_except', 'rml_loop', 'rml_tag'):
                     del txt_n.attrib[key]
-            if True or not self._textual(n).isspace():
-                if not n.tag == 'bullet':
-                    txt_n.text = utils.xml2str(self._textual(n))
-                txt_n.tail = n.tail and utils._process_text(self, n.tail.replace('\n','')) or ''
-                rc1 += etree.tostring(txt_n)
+            if not n.tag == 'bullet':
+                txt_n.text = utils.xml2str(self._textual(n))
+            txt_n.tail = n.tail and utils.xml2str(utils._process_text(self, n.tail.replace('\n',''))) or ''
+            rc1 += etree.tostring(txt_n)
         return rc1
 
     def _table(self, node):
@@ -631,9 +640,11 @@ class _rml_flowable(object):
             paraStyle = None
             if tr.get('style'):
                 st = copy.deepcopy(self.styles.table_styles[tr.get('style')])
-                for s in st._cmds:
-                    s[1][1] = posy
-                    s[2][1] = posy
+                for si in range(len(st._cmds)):
+                    s = list(st._cmds[si])
+                    s[1] = (s[1][0],posy)
+                    s[2] = (s[2][0],posy)
+                    st._cmds[si] = tuple(s)
                 styles.append(st)
             if tr.get('paraStyle'):
                 paraStyle = self.styles.styles[tr.get('paraStyle')]
@@ -889,7 +900,9 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
             self.canv._pageNumber = 0
 
 class _rml_template(object):
-    def __init__(self, localcontext, out, node, doc, images={}, path='.', title=None):
+    def __init__(self, localcontext, out, node, doc, images=None, path='.', title=None):
+        if images is None:
+            images = {}
         if not localcontext:
             localcontext={'internal_header':True}
         self.localcontext = localcontext
@@ -950,12 +963,8 @@ class _rml_template(object):
             fis.append(PageCount())
             self.doc_tmpl.build(fis)
 
-def parseNode(rml, localcontext=None,fout=None, images=None, path='.',title=None):
+def parseNode(rml, localcontext=None, fout=None, images=None, path='.', title=None):
     node = etree.XML(rml)
-    if localcontext is None:
-        localcontext = {}
-    if images is None:
-        images = {}
     r = _rml_doc(node, localcontext, images, path, title=title)
     #try to override some font mappings
     try:
@@ -971,7 +980,7 @@ def parseNode(rml, localcontext=None,fout=None, images=None, path='.',title=None
     r.render(fp)
     return fp.getvalue()
 
-def parseString(rml, localcontext = {},fout=None, images={}, path='.',title=None):
+def parseString(rml, localcontext=None, fout=None, images=None, path='.', title=None):
     node = etree.XML(rml)
     r = _rml_doc(node, localcontext, images, path, title=title)
 
@@ -1006,3 +1015,5 @@ if __name__=="__main__":
         print 'Usage: trml2pdf input.rml >output.pdf'
         print 'Try \'trml2pdf --help\' for more information.'
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -64,7 +64,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'MAKE_FUNCTION', 'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3',
     # New in Python 2.7 - http://bugs.python.org/issue4715 :
     'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE',
-    'POP_JUMP_IF_TRUE'
+    'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY'
     ] if x in opmap))
 
 _logger = logging.getLogger('safe_eval')
@@ -212,7 +212,13 @@ except ImportError:
             node_or_string = node_or_string.body
         return _convert(node_or_string)
 
-def _import(name, globals={}, locals={}, fromlist=[], level=-1):
+def _import(name, globals=None, locals=None, fromlist=None, level=-1):
+    if globals is None:
+        globals = {}
+    if locals is None:
+        locals = {}
+    if fromlist is None:
+        fromlist = []
     if name in _ALLOWED_MODULES:
         return __import__(name, globals, locals, level)
     raise ImportError(name)
@@ -274,6 +280,8 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'tuple': tuple,
                 'map': map,
                 'abs': abs,
+                'min': min,
+                'max': max,
                 'reduce': reduce,
                 'filter': filter,
                 'round': round,

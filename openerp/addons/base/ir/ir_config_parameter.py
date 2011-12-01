@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2011 OpenERP SA (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,13 +19,13 @@
 #
 ##############################################################################
 """
-A module to store some configuration parameters relative to a whole database.
+Store database-specific configuration parameters
 """
 
 from osv import osv,fields
 import uuid
 import datetime
-from tools import misc
+from tools import misc, config
 
 """
 A dictionary holding some configuration parameters to be initialized when the database is created.
@@ -33,26 +33,23 @@ A dictionary holding some configuration parameters to be initialized when the da
 _default_parameters = {
     "database.uuid": lambda: str(uuid.uuid1()),
     "database.create_date": lambda: datetime.datetime.now().strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT),
+    "web.base.url": lambda: "http://localhost:%s" % config.get('xmlrpc_port'),
 }
 
 class ir_config_parameter(osv.osv):
-    """ An osv to old configuration parameters for a given database.
-    
-    To be short, it's just a global dictionary of strings stored in a table. """
-    
+    """Per-database storage of configuration key-value pairs."""
+
     _name = 'ir.config_parameter'
-    
+
     _columns = {
-        # The key of the configuration parameter.
         'key': fields.char('Key', size=256, required=True, select=1),
-        # The value of the configuration parameter.
         'value': fields.text('Value', required=True),
     }
-    
+
     _sql_constraints = [
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
-    
+
     def init(self, cr):
         """
         Initializes the parameters listed in _default_parameters.
@@ -62,31 +59,29 @@ class ir_config_parameter(osv.osv):
             if not ids:
                 self.set_param(cr, 1, key, func())
 
-    def get_param(self, cr, uid, key, context=None):
-        """ Get the value of a parameter.
-        
-        @param key: The key of the parameter.
-        @type key: string
-        @return: The value of the parameter, False if it does not exist.
-        @rtype: string
+    def get_param(self, cr, uid, key, default=False, context=None):
+        """Retrieve the value for a given key.
+
+        :param string key: The key of the parameter value to retrieve.
+        :param string default: default value if parameter is missing.
+        :return: The value of the parameter, or ``default`` if it does not exist.
+        :rtype: string
         """
         ids = self.search(cr, uid, [('key','=',key)], context=context)
         if not ids:
-            return False
+            return default
         param = self.browse(cr, uid, ids[0], context=context)
         value = param.value
         return value
     
     def set_param(self, cr, uid, key, value, context=None):
-        """ Set the value of a parameter.
+        """Sets the value of a parameter.
         
-        @param key: The key of the parameter.
-        @type key: string
-        @param value: The value of the parameter.
-        @type value: string
-        @return: Return the previous value of the parameter of False if it did
-        not existed.
-        @rtype: string
+        :param string key: The key of the parameter value to set.
+        :param string value: The value to set.
+        :return: the previous value of the parameter or False if it did
+                 not exist.
+        :rtype: string
         """
         ids = self.search(cr, uid, [('key','=',key)], context=context)
         if ids:
@@ -98,4 +93,4 @@ class ir_config_parameter(osv.osv):
             self.create(cr, uid, {'key': key, 'value': value}, context=context)
             return False
 
-ir_config_parameter()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

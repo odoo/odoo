@@ -1,42 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
-              datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-  <!-- Handling of element overloading when inheriting from a base
-       template
-  -->
-  <rng:define name="overload">
-    <rng:optional>
-      <!--
-          Alter matched element with content
-      -->
-      <rng:choice>
-        <rng:attribute name="position">
-          <rng:choice>
-            <!-- Insert content before first child -->
-            <rng:value>before</rng:value>
-            <!-- Insert content after last child -->
-            <rng:value>after</rng:value>
-            <!-- Replace all children with content -->
-            <rng:value>inside</rng:value>
-            <!-- Replace matched element itself with content -->
-            <rng:value>replace</rng:value>
-          </rng:choice>
-        </rng:attribute>
-        <rng:group>
-          <rng:attribute name="position">
-            <!-- Edit element attributes -->
-            <rng:value>attributes</rng:value>
-          </rng:attribute>
-          <rng:oneOrMore>
-            <rng:element name="attribute">
-              <rng:attribute name="name"><rng:text/></rng:attribute>
-              <rng:text />
-            </rng:element>
-          </rng:oneOrMore>
-        </rng:group>
-      </rng:choice>
-    </rng:optional>
-  </rng:define>
+             xmlns:a="http://relaxng.org/ns/annotation/1.0"
+             datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <!-- Handling of element overloading when inheriting from a base
+         template
+    -->
+    <rng:define name="overload">
+        <rng:optional>
+            <!--
+                Alter matched element with content
+            -->
+            <rng:choice>
+                <rng:attribute name="position">
+                    <rng:choice>
+                        <!-- Insert content before first child -->
+                        <rng:value>before</rng:value>
+                        <!-- Insert content after last child -->
+                        <rng:value>after</rng:value>
+                        <!-- Replace all children with content -->
+                        <rng:value>inside</rng:value>
+                        <!-- Replace matched element itself with content -->
+                        <rng:value>replace</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+                <rng:group>
+                    <rng:attribute name="position">
+                        <!-- Edit element attributes -->
+                        <rng:value>attributes</rng:value>
+                    </rng:attribute>
+                    <rng:oneOrMore>
+                        <rng:element name="attribute">
+                            <rng:attribute name="name"><rng:text/></rng:attribute>
+                            <rng:text />
+                        </rng:element>
+                    </rng:oneOrMore>
+                </rng:group>
+            </rng:choice>
+        </rng:optional>
+    </rng:define>
 
     <rng:define name="access_rights">
         <rng:optional>
@@ -44,29 +45,113 @@
         </rng:optional>
     </rng:define>
 
+    <rng:define name="dashboard-column">
+        <rng:element name="column">
+            <rng:zeroOrMore>
+                <rng:element name="action">
+                    <!-- Action identifier, used by clients to get the
+                         actual action from db -->
+                    <rng:attribute name="name"/>
+                    <!-- Displayed name of dashboard item (above idem) -->
+                    <rng:optional><rng:attribute name="string"/></rng:optional>
+                    <!-- Merged into the action descriptor's own
+                         context before executing the action -->
+                    <rng:optional><rng:attribute name="context"/></rng:optional>
+                    <!-- Added to the action descriptor's own domain
+                         before executing the action -->
+                    <rng:optional><rng:attribute name="domain"/></rng:optional>
+                    <!-- In case the action is an act_window,
+                         overrides its own @views. -->
+                    <rng:optional><rng:attribute name="view_mode"/></rng:optional>
+                </rng:element>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+    <rng:define name="dashboard">
+        <rng:choice>
+            <rng:element name="board">
+                <a:documentation>
+                  New-style (6.1) dashboard definition
+                </a:documentation>
+                <rng:choice>
+                    <rng:group>
+                        <a:documentation>
+                          Single-column dashboard style
+                        </a:documentation>
+                        <rng:attribute name="style">
+                            <rng:value>1</rng:value>
+                        </rng:attribute>
+                        <rng:ref name="dashboard-column"/>
+                    </rng:group>
+                    <rng:group>
+                        <a:documentation>
+                          Three different 2-column dashboard styles:
+                          50|50, 33|66 and 66|33.
+                        </a:documentation>
+                        <rng:attribute name="style">
+                            <rng:choice>
+                                <rng:value>1-1</rng:value>
+                                <rng:value>1-2</rng:value>
+                                <rng:value>2-1</rng:value>
+                            </rng:choice>
+                        </rng:attribute>
+                        <rng:ref name="dashboard-column"/>
+                        <rng:ref name="dashboard-column"/>
+                    </rng:group>
+                    <rng:group>
+                        <a:documentation>
+                          Three-column dashboard style: 33|33|33
+                        </a:documentation>
+                        <rng:attribute name="style">
+                            <rng:value>1-1-1</rng:value>
+                        </rng:attribute>
+                        <rng:ref name="dashboard-column"/>
+                        <rng:ref name="dashboard-column"/>
+                        <rng:ref name="dashboard-column"/>
+                    </rng:group>
+                </rng:choice>
+            </rng:element>
+            <!--
+                DEPRECATED old-style dashboards
+            -->
+            <rng:element>
+                <rng:choice>
+                    <rng:name>hpaned</rng:name>
+                    <rng:name>vpaned</rng:name>
+                </rng:choice>
+                <rng:optional>
+                    <rng:attribute name="position">
+                        <rng:data type="int"/>
+                    </rng:attribute>
+                </rng:optional>
+                <rng:zeroOrMore>
+                    <rng:optional><rng:ref name="any"/></rng:optional>
+                    <rng:optional><rng:ref name="html"/></rng:optional>
+                </rng:zeroOrMore>
+            </rng:element>
+        </rng:choice>
+    </rng:define>
 
-
-  <rng:define name="container">
-    <rng:optional><rng:attribute name="col"/></rng:optional>
-    <rng:zeroOrMore>
-      <rng:choice>
-        <rng:ref name="notebook"/>
-        <rng:ref name="field"/>
-        <rng:ref name="group"/>
-        <rng:ref name="button"/>
-        <rng:ref name="hpaned" />
-        <rng:ref name="label" />
-        <rng:ref name="separator"/>
-        <rng:ref name="image"/>
-        <rng:ref name="form"/>
-        <rng:ref name="vpaned"/>
-        <rng:ref name="filter"/>
-        <rng:ref name="html"/>
-        <rng:element name="newline"><rng:empty/></rng:element>
-        <rng:element name="properties"><rng:empty/></rng:element>
-      </rng:choice>
-    </rng:zeroOrMore>
-  </rng:define>
+    <rng:define name="container">
+        <rng:optional><rng:attribute name="col"/></rng:optional>
+        <rng:zeroOrMore>
+            <rng:choice>
+                <rng:ref name="notebook"/>
+                <rng:ref name="field"/>
+                <rng:ref name="group"/>
+                <rng:ref name="button"/>
+                <rng:ref name="label" />
+                <rng:ref name="separator"/>
+                <rng:ref name="image"/>
+                <rng:ref name="form"/>
+                <rng:ref name="dashboard"/>
+                <rng:ref name="filter"/>
+                <rng:ref name="html"/>
+                <rng:element name="newline"><rng:empty/></rng:element>
+                <rng:element name="properties"><rng:empty/></rng:element>
+            </rng:choice>
+        </rng:zeroOrMore>
+    </rng:define>
 
     <rng:define name="form">
         <rng:element name="form">
@@ -81,12 +166,8 @@
     <rng:define name="diagram">
         <rng:element name="diagram">
             <rng:optional><rng:attribute name="string"/></rng:optional>
-            <rng:zeroOrMore>
-                <rng:choice>
-                    <rng:ref name="node"/>
-                    <rng:ref name="arrow"/>
-                </rng:choice>
-            </rng:zeroOrMore>
+            <rng:ref name="node"/>
+            <rng:ref name="arrow"/>
         </rng:element>
     </rng:define>
 
@@ -96,11 +177,9 @@
             <rng:optional><rng:attribute name="shape"/></rng:optional>
             <rng:optional><rng:attribute name="bgcolor"/></rng:optional>
             <rng:optional><rng:attribute name="form_view_ref"/></rng:optional>
-            <rng:zeroOrMore>
-                <rng:choice>
-                    <rng:ref name="field"/>
-                </rng:choice>
-            </rng:zeroOrMore>
+            <rng:oneOrMore>
+              <rng:ref name="field"/>
+            </rng:oneOrMore>
         </rng:element>
     </rng:define>
 
@@ -111,11 +190,27 @@
             <rng:attribute name="destination" />
             <rng:optional><rng:attribute name="form_view_ref"/></rng:optional>
             <rng:optional><rng:attribute name="label"/></rng:optional>
+            <rng:oneOrMore>
+              <rng:ref name="field"/>
+            </rng:oneOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="kanban">
+        <rng:element name="kanban">
+            <rng:optional>
+                <!-- group-by field to apply in the kanban view when no other
+                     grouping is selected in the search view -->
+                <rng:attribute name="default_group_by" />
+            </rng:optional>
             <rng:zeroOrMore>
-                <rng:choice>
-                    <rng:ref name="field"/>
-                </rng:choice>
+                <rng:ref name="field"/>
             </rng:zeroOrMore>
+            <rng:element name="templates">
+                <rng:oneOrMore>
+                    <rng:ref name="any"/>
+                </rng:oneOrMore>
+            </rng:element>
         </rng:element>
     </rng:define>
 
@@ -202,18 +297,18 @@
             <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="width"/></rng:optional>
             <rng:optional><rng:attribute name="wrap"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="notebook"/>
                     <rng:ref name="field"/>
                     <rng:ref name="group"/>
                     <rng:ref name="button"/>
-                    <rng:ref name="hpaned" />
                     <rng:ref name="label" />
                     <rng:ref name="separator"/>
                     <rng:ref name="image"/>
                     <rng:ref name="form"/>
-                    <rng:ref name="vpaned"/>
+                    <rng:ref name="dashboard"/>
                     <rng:ref name="filter"/>
                     <rng:ref name="html"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
@@ -259,37 +354,10 @@
             <rng:optional><rng:attribute name="date_stop"/></rng:optional>
             <rng:optional><rng:attribute name="date_string"/></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="default_group_by"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:optional><rng:ref name="level"/></rng:optional>
                 <rng:optional><rng:ref name="field"/></rng:optional>
-                <rng:optional><rng:ref name="html"/></rng:optional>
-            </rng:zeroOrMore>
-        </rng:element>
-    </rng:define>
-
-    <rng:define name="hpaned">
-        <rng:element name="hpaned">
-            <rng:optional>
-              <rng:attribute name="position">
-                <rng:data type="int"/>
-              </rng:attribute>
-            </rng:optional>
-            <rng:zeroOrMore>
-                <rng:ref name="any" />
-                <rng:optional><rng:ref name="html"/></rng:optional>
-            </rng:zeroOrMore>
-        </rng:element>
-    </rng:define>
-
-    <rng:define name="vpaned">
-        <rng:element name="vpaned">
-            <rng:optional>
-              <rng:attribute name="position">
-                <rng:data type="int"/>
-              </rng:attribute>
-            </rng:optional>
-            <rng:zeroOrMore>
-                <rng:optional><rng:ref name="any"/></rng:optional>
                 <rng:optional><rng:ref name="html"/></rng:optional>
             </rng:zeroOrMore>
         </rng:element>
@@ -330,8 +398,7 @@
                     <rng:ref name="form" />
                     <rng:ref name="page" />
                     <rng:ref name="notebook"/>
-                    <rng:ref name="hpaned"/>
-                    <rng:ref name="vpaned"/>
+                    <rng:ref name="dashboard"/>
                     <rng:ref name="filter"/>
                     <rng:ref name="html"/>
                 </rng:choice>
@@ -354,6 +421,7 @@
         <rng:element name="separator">
             <rng:ref name="overload"/>
             <rng:ref name="access_rights"/>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
             <rng:optional><rng:attribute name="rowspan"/></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>
@@ -443,7 +511,6 @@
             <rng:optional><rng:attribute name="operator"/></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
             <rng:optional><rng:attribute name="nolabel"/></rng:optional>
-            <rng:optional><rng:attribute name="default"/></rng:optional>
             <rng:optional><rng:attribute name="default_get"/></rng:optional>
             <rng:optional><rng:attribute name="required"/></rng:optional>
             <rng:optional><rng:attribute name="readonly"/></rng:optional>
@@ -465,9 +532,12 @@
             <rng:optional><rng:attribute name="selection"/></rng:optional>
             <rng:optional><rng:attribute name="default_focus"/></rng:optional>
             <rng:optional><rng:attribute name="filters"/></rng:optional>
+            <rng:optional><rng:attribute name="statusbar_visible"/></rng:optional>
+            <rng:optional><rng:attribute name="statusbar_colors"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="diagram"/>
+                    <rng:ref name="kanban"/>
                     <rng:ref name="form"/>
                     <rng:ref name="data"/>
                     <rng:ref name="tree"/>
@@ -600,7 +670,6 @@
             <rng:optional><rng:attribute name="context"/></rng:optional>
             <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="domain"/></rng:optional>
-            <rng:optional><rng:attribute name="default"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="form" />
@@ -627,6 +696,7 @@
     <rng:start>
         <rng:choice>
             <rng:ref name="diagram" />
+            <rng:ref name="kanban" />
             <rng:ref name="form" />
             <rng:ref name="search" />
             <rng:ref name="group" />

@@ -106,6 +106,11 @@ CREATE TABLE ir_act_server (
 )
 INHERITS (ir_actions);
 
+CREATE TABLE ir_act_client (
+    primary key(id)
+)
+INHERITS (ir_actions);
+
 
 CREATE TABLE ir_ui_view (
     id serial NOT NULL,
@@ -285,6 +290,7 @@ CREATE TABLE ir_module_module (
     state character varying(16),
     latest_version character varying(64),
     shortdesc character varying(256),
+    complexity character varying(32),
     category_id integer REFERENCES ir_module_category ON DELETE SET NULL,
     certificate character varying(64),
     description text,

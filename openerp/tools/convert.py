@@ -45,7 +45,6 @@ import openerp.loglevels as loglevels
 import openerp.pooler as pooler
 from config import config
 from translate import _
-from yaml_import import convert_yaml_import
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from misc import SKIPPED_ELEMENT_TYPES
@@ -301,14 +300,12 @@ form: module.record_id""" % (xml_id,)
                 pass
         if ids:
             self.pool.get(d_model).unlink(cr, self.uid, ids)
-            self.pool.get('ir.model.data')._unlink(cr, self.uid, d_model, ids)
 
     def _remove_ir_values(self, cr, name, value, model):
         ir_values_obj = self.pool.get('ir.values')
         ir_value_ids = ir_values_obj.search(cr, self.uid, [('name','=',name),('value','=',value),('model','=',model)])
         if ir_value_ids:
             ir_values_obj.unlink(cr, self.uid, ir_value_ids)
-            self.pool.get('ir.model.data')._unlink(cr, self.uid, 'ir.values', ir_value_ids)
 
         return True
 
@@ -317,7 +314,8 @@ form: module.record_id""" % (xml_id,)
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
             res[dest] = rec.get(f,'').encode('utf8')
             assert res[dest], "Attribute %s of report is empty !" % (f,)
-        for field,dest in (('rml','report_rml'),('file','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment'),('attachment_use','attachment_use')):
+        for field,dest in (('rml','report_rml'),('file','report_rml'),('xml','report_xml'),('xsl','report_xsl'),
+                           ('attachment','attachment'),('attachment_use','attachment_use'), ('usage','usage')):
             if rec.get(field):
                 res[dest] = rec.get(field).encode('utf8')
         if rec.get('auto'):
@@ -404,7 +402,7 @@ form: module.record_id""" % (xml_id,)
             self._remove_ir_values(cr, string, value, model)
 
     def _tag_url(self, cr, rec, data_node=None):
-        url = rec.get("string",'').encode('utf8')
+        url = rec.get("url",'').encode('utf8')
         target = rec.get("target",'').encode('utf8')
         name = rec.get("name",'').encode('utf8')
         xml_id = rec.get('id','').encode('utf8')
@@ -656,6 +654,12 @@ form: module.record_id""" % (xml_id,)
                 resw = cr.fetchone()
                 if (not values.get('name', False)) and resw:
                     values['name'] = resw[0]
+            elif a_type=='url':
+                a_id = self.id_get(cr, a_action)
+                cr.execute('select name from ir_act_url where id=%s', (int(a_id),))
+                resw = cr.fetchone()
+                if (not values.get('name')) and resw:
+                    values['name'] = resw[0]
         if rec.get('sequence'):
             values['sequence'] = int(rec.get('sequence'))
         if rec.get('icon'):
@@ -880,16 +884,16 @@ form: module.record_id""" % (xml_id,)
 
         for n in de.findall('./data'):
             for rec in n:
-                    if rec.tag in self._tags:
-                        try:
-                            self._tags[rec.tag](self.cr, rec, n)
-                        except:
-                            self.__logger.error('Parse error in %s:%d: \n%s',
-                                                rec.getroottree().docinfo.URL,
-                                                rec.sourceline,
-                                                etree.tostring(rec).strip(), exc_info=True)
-                            self.cr.rollback()
-                            raise
+                if rec.tag in self._tags:
+                    try:
+                        self._tags[rec.tag](self.cr, rec, n)
+                    except:
+                        self.__logger.error('Parse error in %s:%d: \n%s',
+                                            rec.getroottree().docinfo.URL,
+                                            rec.sourceline,
+                                            etree.tostring(rec).strip(), exc_info=True)
+                        self.cr.rollback()
+                        raise
         return True
 
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False):
@@ -995,3 +999,5 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
     obj.parse(doc.getroot())
     return True
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

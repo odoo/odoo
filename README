@@ -1,17 +1,55 @@
 About OpenERP
----------------
+-------------
 
-OpenERP is a free Enterprise Resource Planning and Customer Relationship 
-Management software. It is mainly developed to meet changing needs.
+OpenERP is an OpenSrouce/Free software Enterprise Resource Planning and
+Customer Relationship Management software. More info at:
 
-The main functional features are: CRM & SRM, analytic and financial accounting,
-double-entry stock management, sales and purchases management, tasks automation,
-help desk, marketing campaign, ... and vertical modules for very specific 
-businesses.
+    http://www.openerp.com
 
-Technical features include a distributed server, flexible workflows, an object 
-database, dynamic GUIs, customizable reports, NET-RPC and XML-RPC interfaces, ...
+Installation on Debian Ubuntu
+-----------------------------
 
-For more information, please visit: 
-http://www.openerp.com
+Add the the apt repository in your source.list and type:
+
+    $ apt-get install openerp
+
+Installation on RedHat, Fedora, CentOS
+--------------------------------------
+
+Install the required dependencies:
+
+    $ yum install python
+    $ easy_install pip
+    $ pip install .....
+
+Install the openerp rpm
+
+    $ rpm -i openerp-VERSION.rpm
+
+Installation on Windows
+-----------------------
+
+Installation on MacOSX
+-----------------------
+
+Setuping you first database
+---------------------------
+
+Point your browser to http://localhost:8069/ and click "Database", the default
+master password is "admin".
+
+Detailed System Requirements
+----------------------------
+
+You need the following software installed:
+
+python, postgresql-client, python-dateutil, python-gdata, python-ldap,
+python-libxslt1, python-lxml, python-mako, python-openid, python-psycopg2,
+python-pybabel, python-pychart, python-pydot, python-pyparsing,
+python-reportlab, python-simplejson, python-tz, python-vobject, python-webdav,
+python-werkzeug, python-yaml, python-zsi, graphviz, ghostscript, postgresql,
+python-imaging, python-matplotlib
+
+For Luxembourg localization, you also need:
+* pdftk (http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/)
 

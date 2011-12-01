@@ -28,6 +28,8 @@ import base64
 from tools.translate import _
 from osv import osv, fields
 
+ADDONS_PATH = tools.config['addons_path'].split(",")[-1]
+
 class base_module_import(osv.osv_memory):
     """ Import Module """
 
@@ -37,7 +39,8 @@ class base_module_import(osv.osv_memory):
 
     _columns = {
           'module_file': fields.binary('Module .ZIP file', required=True),
-          'state':fields.selection([('init','init'),('done','done')], 'state', readonly=True),
+          'state':fields.selection([('init','init'),('done','done')],
+                                   'state', readonly=True),
           'module_name': fields.char('Module Name', size=128),
     }
 
@@ -48,26 +51,30 @@ class base_module_import(osv.osv_memory):
     def importzip(self, cr, uid, ids, context):
         (data,) = self.browse(cr, uid, ids , context=context)
         module_data = data.module_file
-
-        val = base64.decodestring(module_data)
+        zip_data = base64.decodestring(module_data)
         fp = StringIO()
-        fp.write(val)
-        fdata = zipfile.ZipFile(fp, 'r')
-        fname = fdata.namelist()[0]
-        module_name = os.path.split(fname)[0]
-
-        ad = tools.config['addons_path'].split(",")[-1]
-
-        fname = os.path.join(ad, module_name+'.zip')
+        fp.write(zip_data)
         try:
-            fp = file(fname, 'wb')
-            fp.write(val)
-            fp.close()
-        except IOError:
-            raise osv.except_osv(_('Error !'), _('Can not create the module file: %s !') % (fname,) )
+            file_data = zipfile.ZipFile(fp, 'r')
+        except zipfile.BadZipfile:
+            raise osv.except_osv(_('Error !'), _('File is not a zip file!'))
+        init_file_name = sorted(file_data.namelist())[0]
+        module_name = os.path.split(init_file_name)[0]
 
-        self.pool.get('ir.module.module').update_list(cr, uid, {'module_name': module_name,})
-        self.write(cr, uid, ids, {'state':'done', 'module_name': module_name}, context)
+        file_path = os.path.join(ADDONS_PATH, '%s.zip' % module_name)
+        try:
+            zip_file = open(file_path, 'wb')
+        except IOError:
+            raise osv.except_osv(_('Error !'),
+                                 _('Can not create the module file: %s !') % \
+                                 (file_path,) )
+        zip_file.write(zip_data)
+        zip_file.close()
+
+        self.pool.get('ir.module.module').update_list(cr, uid,
+                                                  {'module_name': module_name,})
+        self.write(cr, uid, ids, {'state':'done', 'module_name': module_name},
+                   context)
         return False
 
     def action_module_open(self, cr, uid, ids, context):

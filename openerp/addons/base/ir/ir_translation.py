@@ -154,15 +154,10 @@ class ir_translation(osv.osv):
     _log_access = False
 
     def _get_language(self, cr, uid, context):
-        lang_obj = self.pool.get('res.lang')
-        lang_ids = lang_obj.search(cr, uid, [('translatable', '=', True)],
-                context=context)
-        langs = lang_obj.browse(cr, uid, lang_ids, context=context)
-        res = [(lang.code, lang.name) for lang in langs]
-        for lang_dict in tools.scan_languages():
-            if lang_dict not in res:
-                res.append(lang_dict)
-        return res
+        lang_model = self.pool.get('res.lang')
+        lang_ids = lang_model.search(cr, uid, [('translatable', '=', True)], context=context)
+        lang_data = lang_model.read(cr, uid, lang_ids, ['code', 'name'], context=context)
+        return [(d['code'], d['name']) for d in lang_data]
 
     _columns = {
         'name': fields.char('Field Name', size=128, required=True),
@@ -175,7 +170,6 @@ class ir_translation(osv.osv):
     
     _sql_constraints = [ ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)', 
         'Language code of translation item must be among known languages' ), ]
-
 
     def _auto_init(self, cr, context=None):
         super(ir_translation, self)._auto_init(cr, context)
@@ -207,7 +201,7 @@ class ir_translation(osv.osv):
             return
         return super(ir_translation, self)._check_selection_field_value(cr, uid, field, value, context=context)
     
-    @tools.cache(skiparg=3, multi='ids')
+    @tools.ormcache_multi(skiparg=3, multi=6)
     def _get_ids(self, cr, uid, name, tt, lang, ids):
         translations = dict.fromkeys(ids, False)
         if ids:
@@ -227,9 +221,9 @@ class ir_translation(osv.osv):
         tr = self._get_ids(cr, uid, name, tt, lang, ids)
         for res_id in tr:
             if tr[res_id]:
-                self._get_source.clear_cache(cr.dbname, uid, name, tt, lang, tr[res_id])
-        self._get_source.clear_cache(cr.dbname, uid, name, tt, lang)
-        self._get_ids.clear_cache(cr.dbname, uid, name, tt, lang, ids)
+                self._get_source.clear_cache(self, uid, name, tt, lang, tr[res_id])
+            self._get_ids.clear_cache(self, uid, name, tt, lang, res_id)
+        self._get_source.clear_cache(self, uid, name, tt, lang)
 
         cr.execute('delete from ir_translation ' \
                 'where lang=%s ' \
@@ -248,7 +242,7 @@ class ir_translation(osv.osv):
                 })
         return len(ids)
 
-    @tools.cache(skiparg=3)
+    @tools.ormcache(skiparg=3)
     def _get_source(self, cr, uid, name, types, lang, source=None):
         """
         Returns the translation for the given combination of name, type, language
@@ -293,13 +287,12 @@ class ir_translation(osv.osv):
             return tools.ustr(source)
         return trad
 
-    def create(self, cursor, user, vals, context=None):
+    def create(self, cr, uid, vals, context=None):
         if not context:
             context = {}
-        ids = super(ir_translation, self).create(cursor, user, vals, context=context)
-        for trans_obj in self.read(cursor, user, [ids], ['name','type','res_id','src','lang'], context=context):
-            self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
-            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
+        ids = super(ir_translation, self).create(cr, uid, vals, context=context)
+        self._get_source.clear_cache(self, uid, vals.get('name',0), vals.get('type',0),  vals.get('lang',0), vals.get('src',0))
+        self._get_ids.clear_cache(self, uid, vals.get('name',0), vals.get('type',0), vals.get('lang',0), vals.get('res_id',0))
         return ids
 
     def write(self, cursor, user, ids, vals, context=None):
@@ -309,8 +302,8 @@ class ir_translation(osv.osv):
             ids = [ids]
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
-            self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
-            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
+            self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'])
+            self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['res_id'])
         return result
 
     def unlink(self, cursor, user, ids, context=None):
@@ -319,8 +312,8 @@ class ir_translation(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
-            self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
-            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
+            self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'])
+            self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['res_id'])
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
 
