@@ -252,8 +252,13 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             self.refresh_minical();
         }, function(r, event) {
             self.creating_event_id = event_id;
-            self.form_dialog.form.on_record_loaded(data);
-            self.form_dialog.open();
+            var fields = self.form_dialog.form.fields_view.fields,
+                fields_to_fetch = _.difference(_(fields).keys(), _(data).keys());
+            self.dataset.default_get(fields_to_fetch, function (default_values) {
+                self.form_dialog.form.on_record_loaded(
+                    _.extend(default_values, data));
+                self.form_dialog.open();
+            });
             event.preventDefault();
         });
     },
