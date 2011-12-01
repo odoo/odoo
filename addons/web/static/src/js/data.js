@@ -266,7 +266,7 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
     },
     select_id: function(id) {
         var idx = this.get_id_index(id);
-        if (idx === -1) {
+        if (idx === null) {
             return false;
         } else {
             this.index = idx;
@@ -282,7 +282,7 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
                 return i;
             }
         }
-        return -1;
+        return null;
     },
     /**
      * Read records.
