@@ -356,7 +356,7 @@ class res_partner_address(osv.osv):
     def get_city(self, cr, uid, id):
         return self.browse(cr, uid, id).city
 
-    def display_address(self, cr, uid, address):
+    def _display_address(self, cr, uid, address, context=None):
         '''
         The purpose of this function is to build and return an address formatted accordingly to the
         standards of the country where it belongs.
