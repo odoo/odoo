@@ -462,6 +462,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Object} results results of evaluating domain and process for a search
      */
     do_search: function (domain, context, group_by) {
+        this.page = 0;
         this.groups.datagroup = new openerp.web.DataGroup(
             this, this.model, domain, context, group_by);
         this.groups.datagroup.sort = this.dataset._sort;
