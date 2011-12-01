@@ -923,7 +923,7 @@ class account_invoice(osv.osv):
                 'line_id': line,
                 'journal_id': journal_id,
                 'date': date,
-                'type': entry_type,
+                #'type': entry_type,
                 'narration':inv.comment
             }
             period_id = inv.period_id and inv.period_id.id or False
@@ -1209,7 +1209,7 @@ class account_invoice(osv.osv):
         l2['name'] = name
 
         lines = [(0, 0, l1), (0, 0, l2)]
-        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date, 'type': entry_type}
+        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
         move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
 
         line_ids = []
