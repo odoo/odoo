@@ -31,7 +31,7 @@ class Country(osv.osv):
         'code': fields.char('Country Code', size=2,
             help='The ISO country code in two chars.\n'
             'You can use this field for quick search.', required=True),
-        'address_format': fields.text('Address Format')            
+        'address_format': fields.text('Address Format'),           
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)',

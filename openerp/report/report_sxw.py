@@ -170,6 +170,7 @@ class rml_parse(object):
             'setHtmlImage' : self.set_html_image,
             'strip_name' : self._strip_name,
             'time' : time,
+            'display_address': self.display_address,
             # more context members are setup in setCompany() below:
             #  - company_id
             #  - logo
@@ -312,6 +313,9 @@ class rml_parse(object):
             elif currency_obj and currency_obj.position == 'before':
                 res='%s %s'%(currency_obj.symbol, res)
         return res
+
+    def display_address(self, address_browse_record):
+        return self.pool.get('res.partner.address').display_address(self.cr, self.uid, address_browse_record)
 
     def repeatIn(self, lst, name,nodes_parent=False):
         ret_lst = []
