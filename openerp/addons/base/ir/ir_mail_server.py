@@ -383,6 +383,7 @@ class ir_mail_server(osv.osv):
 
         # Do not actually send emails in testing mode!
         if getattr(threading.currentThread(), 'testing', False):
+            _logger.log(logging.TEST, "skip sending email in test mode")
             return message['Message-Id']
 
         # Get SMTP Server Details from Mail Server
