@@ -65,14 +65,13 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
             ev.stopPropagation();
             var relational = $(this).attr('for');
             var rel_field = fields[relational];
-            var head = rel_field.string;
-            var rel_model = rel_field.relation;
             var rel_ids = values[relational];
+            var head = rel_field.string;
             if (rel_ids) {
                 var datasearch = new openerp.web.DataSetSearch(self, rel_field.relation, rel_field.context);
                 datasearch.domain=[['id', 'in', rel_ids]];
-                datasearch.read_slice([], {limit:80}, function(listrec){
-                    _.extend(self.action.context,{"html_name_get" : true});
+                datasearch.read_slice(['name'], {context:rel_field.context, domain: datasearch.domain, limit:80}, function(listrec){
+                    _.extend(rel_field.context,{"html_name_get" : true});
                     var dataset = new openerp.web.DataSet(self, rel_field.relation,rel_field.context);
                     dataset.name_get(listrec,function(res){
                         var additional = "";
@@ -112,10 +111,12 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
         self.formatdata('', '', '', '',self.element_id,'slider');
     },
     open_m2o_form : function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
         var head = $(this).find('a').attr('name');
         var selected_id = $(this).find('a').attr('value');
         var select_model = $(this).attr('for');
-        if(selected_id!="false"){
+        if(selected_id){
             if(!$('[id^="oe_form_'+selected_id+select_model+'"]').html()){
                 $('<div id="oe_form_'+selected_id+select_model+'" data-role="page" data-url="oe_form_'+selected_id+select_model+'"> </div>').appendTo('#moe');
                     this.formview = new openerp.web_mobile.FormView(self, "oe_form_"+selected_id+select_model, selected_id, '', head, select_model, false);
