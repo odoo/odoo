@@ -414,11 +414,12 @@
 </t>
 <t t-name="ViewManager">
     <table class="view-manager-main-table">
+    <tbody>
     <tr>
         <td class="view-manager-main-content">
             <div class="oe-view-manager-header">
                 <h2 class="oe_view_title" t-if="self.flags.display_title !== false">
-                    <t t-esc="self.display_title()"/>
+                    <span class="oe_view_title_text"><t t-esc="self.display_title()"/></span>
                 </h2>
                 <div class="oe_vm_switch">
                     <t t-if="views.length != 1" t-foreach="views" t-as="view">
@@ -439,21 +440,30 @@
             </t>
         </td>
     </tr>
+    </tbody>
     </table>
 </t>
 
 <t t-extend="ViewManager" t-name="ViewManagerAction">
-    <t t-jquery=".oe-view-manager-header" t-operation="prepend">
-        <blockquote t-if="self.action.help and !self.flags.low_profile
-                         and !(self.action.id in self.session.hidden_menutips)">
-            <p><t t-esc="self.action.help"/></p>
-            <div>
-                <button type="button" name="hide">Hide this tip</button>
-                <button type="button" name="disable">Disable all tips</button>
-            </div>
-        </blockquote>
-    	<a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
-    	   href="javascript: void(0)"> </a>
+    <t t-jquery=".view-manager-main-table tbody" t-operation="prepend">
+        <tr>
+            <td class="oe_view_manager_menu_tips" colspan="2">
+                <blockquote t-if="self.action.help and !self.flags.low_profile
+                                 and !(self.action.id in self.session.hidden_menutips)">
+                    <p><t t-esc="self.action.help"/></p>
+                    <div>
+                        <button type="button" name="hide">Hide this tip</button>
+                        <button type="button" name="disable">Disable all tips</button>
+                    </div>
+                </blockquote>
+            </td>
+        </tr>
+    </t>
+    <t t-jquery="h2.oe_view_title" t-operation="prepend">
+        <a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
+            href="javascript: void(0)"> </a>
+    </t>
+    <t t-jquery="h2.oe_view_title" t-operation="after">
         <button t-if="self.session.debug" class="oe_get_xml_view">
             View#<span></span>
         </button>
@@ -639,7 +649,7 @@
         </td>
     </t>
     <td t-if="options.deletable" class='oe-record-delete' width="1">
-        <button type="button" name="delete">♻</button>
+        <button type="button" name="delete"></button>
     </td>
 </tr>
 <t t-name="ListView.row.form">
@@ -723,6 +733,11 @@
         </t>
     </tr>
     </table>
+</t>
+<t t-name="WidgetFrame.readonly" t-extend="WidgetFrame">
+    <t t-jquery="&gt;table">
+        this.attr('class', this.attr('class')+' oe_form_readonly');
+    </t>
 </t>
 <t t-name="WidgetGroup">
     <t t-if="widget.string">

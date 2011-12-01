@@ -1,3 +1,4 @@
+
 .openerp .oe_kanban_view .ui-sortable-placeholder {
     border: 1px dotted black;
     visibility: visible !important;
@@ -18,9 +19,10 @@
 }
 
 .openerp .oe_kanban_group_title {
-    color: #000000;
-    font-size: 130%;
+    font-size: 100%;
     font-weight: bold;
+    padding-left:2px;
+    color: #666666;
 }
 .openerp .oe_kanban_group_title_undefined {
     color: #666666;
@@ -44,10 +46,10 @@
 .openerp .oe_kanban_fold_icon {
     cursor: pointer;
     float: left;
-    padding: 2px 2px 0 0;
+    padding: 4px 2px 0 2px;
     width: 16px;
     height: 16px;
-    background: url(/web_kanban/static/src/img/minus-icon.png) no-repeat;
+    background: url(/web_kanban/static/src/img/minus-icon.png) no-repeat center center;
 }
 .openerp .oe_kanban_group_folded .oe_kanban_fold_icon {
     background: url(/web_kanban/static/src/img/plus-icon.png) no-repeat;
@@ -63,6 +65,7 @@
 }
 .openerp ul.oe_kanban_aggregates span {
     text-decoration: underline;
+    font-size:90%;
 }
 
 .openerp .oe_kanban_action_button {
@@ -91,14 +94,18 @@
     padding: 0 4px 0 4px;
 }
 .openerp .oe_kanban_title2 {
-    font-size: 110%;
+    font-size: 100%;
     font-weight: bold;
+    color:#3A3A3A;
     padding: 0 4px 0 4px;
 }
 .openerp .oe_kanban_title3 {
-    font-size: 100%;
-    font-weight: bold;
+    font-size: 95%;
+    font-weight: normal;
     padding: 0 4px 0 4px;
+    line-height:16px;
+}
+.openerp .oe_kanban_title3 img{
 }
 .openerp .oe_kanban_small {
     font-size: 80%;
@@ -106,6 +113,7 @@
 }
 .openerp .oe_kanban_table {
     width: 100%;
+    font-size:95%;
     border: none;
     border-collapse: collapse;
     margin: 0;
@@ -122,6 +130,13 @@
 }
 .openerp .oe_kanban_box_content {
     padding: 4px;
+    font-size:90%;
+}
+.openerp .oe_kanban_box_content div:last-child {
+    padding-top:4px;
+    color:#555;
+}
+
 }
 .openerp .oe_kanban_button {
     border: 1px solid #8ec1da;

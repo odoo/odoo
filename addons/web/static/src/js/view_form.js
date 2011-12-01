@@ -3078,6 +3078,9 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
 openerp.web.form.FieldReadonly = openerp.web.form.Field.extend({
 
 });
+openerp.web.form.WidgetFrameReadonly = openerp.web.form.WidgetFrame.extend({
+    template: 'WidgetFrame.readonly'
+});
 openerp.web.form.FieldCharReadonly = openerp.web.form.FieldReadonly.extend({
     template: 'FieldChar.readonly',
     init: function(view, node) {
@@ -3230,6 +3233,7 @@ openerp.web.form.FieldOne2ManyReadonly = openerp.web.form.FieldOne2Many.extend({
     force_readonly: true
 });
 openerp.web.form.readonly = openerp.web.form.widgets.clone({
+    'frame': 'openerp.web.form.WidgetFrameReadonly',
     'char': 'openerp.web.form.FieldCharReadonly',
     'email': 'openerp.web.form.FieldEmailReadonly',
     'url': 'openerp.web.form.FieldUrlReadonly',
