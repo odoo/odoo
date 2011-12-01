@@ -1684,7 +1684,7 @@
     </table>
 </t>
 <t t-name="ImportView.error">
-    <p style="white-space:pre-line;">The import failed due to:<t t-esc="error.message"/></p>
+    <p style="white-space:pre;">The import failed due to:<t t-esc="error.message"/></p>
     <t t-if="error.preview">
         <p>Here is a preview of the file we could not import:</p>
         <pre><t t-esc="error.preview"/></pre>

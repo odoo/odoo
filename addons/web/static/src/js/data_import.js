@@ -199,6 +199,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             result_node.append(QWeb.render('ImportView.error', {
                 'error': results['error']}));
             this.$element.find('fieldset').removeClass('oe-closed');
+            return;
         } else if (results['success']) {
             if (this.widget_parent.widget_parent.active_view == "list") {
                 this.widget_parent.reload_content();
