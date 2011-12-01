@@ -989,7 +989,6 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
-            payment_term_id = False
             partner =  picking.address_id and picking.address_id.partner_id
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
@@ -1000,10 +999,8 @@ class stock_picking(osv.osv):
 
             if inv_type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
-                payment_term_id = self._get_payment_term(cr, uid, picking)
             else:
                 account_id = partner.property_account_payable.id
-
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cr, uid, picking).values()
             address = address_obj.browse(cr, uid, address_contact_id, context=context)
@@ -1030,7 +1027,7 @@ class stock_picking(osv.osv):
                     'address_invoice_id': address_invoice_id,
                     'address_contact_id': address_contact_id,
                     'comment': comment,
-                    'payment_term': payment_term_id,
+                    'payment_term': self._get_payment_term(cr, uid, picking),
                     'fiscal_position': partner.property_account_position.id,
                     'date_invoice': context.get('date_inv',False),
                     'company_id': picking.company_id.id,
@@ -1811,7 +1808,7 @@ class stock_move(osv.osv):
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
         """ On change of Scheduled Date gives a Move date.
-        @param date_expected: Scheduled Date 
+        @param date_expected: Scheduled Date
         @param date: Move Date
         @return: Move Date
         """
@@ -2706,7 +2703,7 @@ class stock_inventory_line(osv.osv):
             return {'value': {'product_qty': 0.0, 'product_uom': False}}
         obj_product = self.pool.get('product.product').browse(cr, uid, product)
         uom = uom or obj_product.uom_id.id
-        amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date})[product]
+        amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date, 'compute_child': False})[product]
         result = {'product_qty': amount, 'product_uom': uom}
         return {'value': result}
 
