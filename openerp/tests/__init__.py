@@ -15,3 +15,5 @@ def make_suite_no_db():
     suite = unittest2.TestSuite()
     suite.addTests(unittest2.TestLoader().loadTestsFromModule(test_xmlrpc))
     return suite
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

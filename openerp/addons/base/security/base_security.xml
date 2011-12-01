@@ -49,14 +49,12 @@
         <record model="ir.rule" id="res_widget_user_rule">
             <field name="name">res.widget.user rule</field>
             <field name="model_id" ref="model_res_widget_user"/>
-            <field name="global" eval="True"/>
             <field name="domain_force">['|', ('user_id','=',user.id),('user_id','=',False)]</field>
         </record>
 
         <record model="ir.rule" id="res_partner_rule">
             <field name="name">res.partner company</field>
             <field name="model_id" ref="model_res_partner"/>
-            <field name="global" eval="True"/>
             <!-- Show partners from ancestors and descendants companies (or company-less), this is usually a better
                  default for multicompany setups. -->
             <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
@@ -65,16 +63,22 @@
         <record model="ir.rule" id="multi_company_default_rule">
             <field name="name">Multi_company_default company</field>
             <field name="model_id" ref="model_multi_company_default"/>
-            <field name="global" eval="True"/>
             <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
         </record>
 
-    <record model="ir.rule" id="ir_values_default_rule">
-        <field name="name">Defaults: alter personal values only</field>
-        <field name="model_id" ref="model_ir_values"/>
-        <field name="domain_force">[('key','=','default'),('user_id','=',user.id)]</field>
-        <field name="perm_read" eval="False"/>
-    </record>
+        <record model="ir.rule" id="ir_values_default_rule">
+            <field name="name">Defaults: alter personal values only</field>
+            <field name="model_id" ref="model_ir_values"/>
+            <field name="domain_force">[('key','=','default'),('user_id','=',user.id)]</field>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <!-- Used for dashboard customizations, users should only be able to edit their own dashboards -->
+        <record model="ir.rule" id="ir_ui_view_custom_personal">
+            <field name="name">ir.ui.view_custom rule</field>
+            <field name="model_id" ref="model_ir_ui_view_custom"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+        </record>
 
     </data>
 </openerp>

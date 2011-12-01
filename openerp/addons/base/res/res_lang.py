@@ -125,10 +125,10 @@ class lang(osv.osv):
                     return False
         return True
 
-    def _get_default_date_format(self,cursor,user,context={}):
+    def _get_default_date_format(self, cursor, user, context=None):
         return '%m/%d/%Y'
 
-    def _get_default_time_format(self,cursor,user,context={}):
+    def _get_default_time_format(self, cursor, user, context=None):
         return '%H:%M:%S'
 
     _columns = {
@@ -289,6 +289,8 @@ def split(l, counts):
     res = []
     saved_count = len(l) # count to use when encoutering a zero
     for count in counts:
+        if not l:
+            break
         if count == -1:
             break
         if count == 0:
@@ -350,7 +352,7 @@ def _group_examples():
         assert g("12345678", [2,0,1], '.') == ('12.34.56.78', 3)
         assert g("12345678", [2,0,0], '.') == ('12.34.56.78', 3)
         assert g("12345678", [2,0,-1], '.') == ('12.34.56.78', 3)
-
+        assert g("12345678", [3,3,3,3], '.') == ('12.345.678', 2)
 
     assert original_group("abc1234567xy", [2], '.') == ('abc1234567.xy', 1)
     assert original_group("abc1234567xy8", [2], '.') == ('abc1234567xy8', 0) # difference here...

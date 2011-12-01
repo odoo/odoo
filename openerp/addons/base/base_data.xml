@@ -1680,5 +1680,20 @@
             <field name="currency_id" ref="CLP"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
+
+        <!--  Uruguayan peso -->
+        <record id="UYU" model="res.currency">
+            <field name="name">UYU</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateUYU" model="res.currency.rate">
+            <field name="currency_id" ref="UYU" />
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+            <field name="rate">28.36</field>
+        </record>
+
     </data>
 </openerp>
