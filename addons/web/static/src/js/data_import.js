@@ -183,6 +183,20 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.$element.find('#result').empty();
         var headers, result_node = this.$element.find("#result");
 
+        if (results['error']) {
+            result_node.append(QWeb.render('ImportView.error', {
+                'error': results['error']}));
+            this.$element.find('fieldset').removeClass('oe-closed');
+            return;
+        }
+        if (results['success']) {
+            if (this.widget_parent.widget_parent.active_view == "list") {
+                this.widget_parent.reload_content();
+            }
+            this.stop();
+            return;
+        }
+
         if (results['records']) {
             var lines_to_skip = parseInt(this.$element.find('#csv_skip').val(), 10),
                 with_headers = this.$element.find('#file_has_headers').prop('checked');
@@ -195,17 +209,6 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                           : results.records
             }));
             this.$element.find('fieldset').addClass('oe-closed');
-        } else if (results['error']) {
-            result_node.append(QWeb.render('ImportView.error', {
-                'error': results['error']}));
-            this.$element.find('fieldset').removeClass('oe-closed');
-            return;
-        } else if (results['success']) {
-            if (this.widget_parent.widget_parent.active_view == "list") {
-                this.widget_parent.reload_content();
-            }
-            this.stop();
-            return;
         }
         this.$element.find('form').removeClass('oe-import-no-result');
 
