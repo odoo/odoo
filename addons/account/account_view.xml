@@ -786,7 +786,6 @@
                     <group col="2" colspan="2">
                         <separator string="Reporting Configuration" colspan="4"/>
                         <field name="report_type" select="2"/>
-                        <field name="sign" />                        
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Closing Method" colspan="4"/>
@@ -2767,6 +2766,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         <field name="parent_id"/>
                         <field name="sequence"/>
                         <field name="type"/>
+                        <field name="sign"/>
                     </group>
                     <notebook colspan="6">
                         <page string="Report">

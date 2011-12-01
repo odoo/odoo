@@ -154,13 +154,11 @@ class account_account_type(osv.osv):
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'sign': fields.selection([(-1, 'Reverse balance sign'), (1, 'Preserve balance sign')], 'Sign on Reports', required=True, help='For accounts that are typically more debited than credited and that you would like to print as negative amounts in your reports, you should reverse the sign of the balance; e.g.: Expense account. The same applies for  accounts that are typically more credited than debited and that you would like to print as positive amounts in your reports; e.g.: Income account.'),
         'report_type': fields.selection(_get_report_type, 'P&L / BS Category', help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
         'note': fields.text('Description'),
     }
     _defaults = {
         'close_method': 'none',
-        'sign': 1,
         'report_type': 'none',
     }
     _order = "code"
@@ -2789,11 +2787,13 @@ class account_financial_report(osv.osv):
             ], 'Display details'),
         'account_report_id':  fields.many2one('account.financial.report', 'Report Value'),
         'account_type_ids': fields.many2many('account.account.type', 'account_account_financial_report_type', 'report_id', 'account_type_id', 'Account Types'),
+        'sign': fields.selection([(-1, 'Reverse balance sign'), (1, 'Preserve balance sign')], 'Sign on Reports', required=True, help='For accounts that are typically more debited than credited and that you would like to print as negative amounts in your reports, you should reverse the sign of the balance; e.g.: Expense account. The same applies for  accounts that are typically more credited than debited and that you would like to print as positive amounts in your reports; e.g.: Income account.'),
     }
 
     _defaults = {
         'type': 'sum',
         'display_detail': 'only_detail',
+        'sign': 1,
     }
 
 account_financial_report()
