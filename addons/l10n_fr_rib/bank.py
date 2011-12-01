@@ -59,10 +59,11 @@ class res_partner_bank(osv.osv):
         result = super(res_partner_bank, self).onchange_bank_id(cr, uid, ids, bank_id,
                                                         context=context)
         if bank_id:
+            value = result.setdefault('value', {})
             bank = self.pool.get('res.bank').browse(cr, uid, bank_id, 
                                                     context=context)
-            result['bank_code'] = bank.rib_code
-        return {'value': result}
+            value['bank_code'] = bank.rib_code
+        return result
 
     _columns = {
         'bank_code': fields.char('Bank Code', size=64, readonly=True,),
