@@ -28,6 +28,7 @@ from email import Encoders
 import logging
 import re
 import smtplib
+import threading
 
 from osv import osv
 from osv import fields
