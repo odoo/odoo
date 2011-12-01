@@ -705,7 +705,7 @@ class sale_order(osv.osv):
             'date_expected': date_planned,
             'product_qty': line.product_uom_qty,
             'product_uom': line.product_uom.id,
-            'product_uos_qty': line.product_uos_qty,
+            'product_uos_qty': (line.product_uos and line.product_uos_qty) or line.product_uom_qty,
             'product_uos': (line.product_uos and line.product_uos.id)\
                     or line.product_uom.id,
             'product_packaging': line.product_packaging.id,
@@ -738,8 +738,7 @@ class sale_order(osv.osv):
         }
 
     def ship_recreate(self, cr, uid, order, line, move_id, proc_id):
-# FIXME: deals with potentially cancelled shipments, seems broken, see below
-# FIXME: was introduced by revid: mtr@mtr-20101125100355-0a1b7m792t63mssv
+        # FIXME: deals with potentially cancelled shipments, seems broken (specially if shipment has production lot)
         """
         Define ship_recreate for process after shipping exception
         param order: sale order to which the order lines belong

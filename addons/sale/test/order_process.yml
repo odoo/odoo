@@ -65,7 +65,7 @@
          assert move.product_id.id == order_line.product_id.id,"Product is not correspond."
          assert move.product_qty == order_line.product_uom_qty,"Product Quantity is not correspond."
          assert move.product_uom.id == order_line.product_uom.id,"Product UOM is not correspond."
-         assert move.product_uos_qty == order_line.product_uos_qty,"Product UOS Quantity is not correspond."
+         assert move.product_uos_qty == (order_line.product_uos and order_line.product_uos_qty) or order_line.product_uom_qty,"Product UOS Quantity is not correspond."
          assert move.product_uos == (order_line.product_uos and order_line.product_uos.id) or order_line.product_uom.id,"Product UOS is not correspond"
          assert move.product_packaging.id == order_line.product_packaging.id,"Product packaging is not correspond."
          assert move.address_id.id == order_line.address_allotment_id.id or sale_order.partner_shipping_id.id,"Address is not correspond"
@@ -125,10 +125,10 @@
         ac = so_line.product_id.product_tmpl_id.property_account_income.id or so_line.product_id.categ_id.property_account_income_categ.id
         assert inv_line.product_id.id == so_line.product_id.id or False,"Product is not correspond"
         assert inv_line.account_id.id == ac,"Account of Invoice line is not corresponding."
-        assert inv_line.uos_id.id == so_line.product_uom.id , "UOM is not correspond."
+        assert inv_line.uos_id.id == (so_line.product_uos and so_line.product_uos.id) or so_line.product_uom.id, "Product UOS is not correspond."
         assert inv_line.price_unit == so_line.price_unit , "Price Unit is not correspond."
-        #assert inv_line.quantity == so_line.product_uom_qty , "Product qty is not correspond."
-        #assert inv_line.price_subtotal == so_line.price_subtotal, "Price sub total is not correspond."
+        assert inv_line.quantity == (so_line.product_uos and so_line.product_uos_qty) or so_line.product_uom_qty , "Product qty is not correspond."
+        assert inv_line.price_subtotal == so_line.price_subtotal, "Price sub total is not correspond."
 -
   Now I confirm the Quotation with "Invoice on order after delivery" policy.
 -
