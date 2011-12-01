@@ -42,6 +42,7 @@ The RIB and IBAN codes for a single account can be entered by recording two Bank
     'init_xml': ['bank_data.xml', ],
     'update_xml': ['bank_view.xml', ],
     'installable': True,
+    'certificate': '003407950790',
     'active': False,
 }
 
