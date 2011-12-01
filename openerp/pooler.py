@@ -34,11 +34,6 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False,
     return registry.db, registry
 
 
-def delete_pool(db_name):
-    """Delete an existing registry."""
-    RegistryManager.delete(db_name)
-
-
 def restart_pool(db_name, force_demo=False, status=None, update_module=False):
     """Delete an existing registry and return a database connection and a newly initialized registry."""
     registry = RegistryManager.new(db_name, force_demo, status, update_module, True)

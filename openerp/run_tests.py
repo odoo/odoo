@@ -25,3 +25,5 @@ import test
 
 if __name__ == '__main__':
     unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromModule(test))
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

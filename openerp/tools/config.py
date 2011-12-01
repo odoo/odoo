@@ -24,6 +24,7 @@ import optparse
 import os
 import sys
 import openerp
+import openerp.conf
 import openerp.loglevels as loglevels
 import logging
 import openerp.release as release
@@ -101,8 +102,13 @@ class configmanager(object):
         group.add_option("-P", "--import-partial", dest="import_partial", my_default='',
                         help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
+        group.add_option("--addons-path", dest="addons_path",
+                         help="specify additional addons paths (separated by commas).",
+                         action="callback", callback=self._check_addons_path, nargs=1, type="string")
+        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules default=web")
         parser.add_option_group(group)
 
+        # XML-RPC / HTTP
         group = optparse.OptionGroup(parser, "XML-RPC Configuration")
         group.add_option("--xmlrpc-interface", dest="xmlrpc_interface", my_default='',
                          help="Specify the TCP IP address for the XML-RPC protocol. The empty string binds to all interfaces.")
@@ -112,6 +118,7 @@ class configmanager(object):
                          help="disable the XML-RPC protocol")
         parser.add_option_group(group)
 
+        # XML-RPC / HTTPS
         title = "XML-RPC Secure Configuration"
         if not self.has_ssl:
             title += " (disabled as ssl is unavailable)"
@@ -137,6 +144,13 @@ class configmanager(object):
                          help="specify the TCP port for the NETRPC protocol", type="int")
         group.add_option("--no-netrpc", dest="netrpc", action="store_false", my_default=True,
                          help="disable the NETRPC protocol")
+        parser.add_option_group(group)
+
+        # WEB
+        # TODO move to web addons after MetaOption merge
+        group = optparse.OptionGroup(parser, "Web interface Configuration")
+        group.add_option("--db-filter", dest="dbfilter", default='.*',
+                         help="Filter listed database", metavar="REGEXP")
         parser.add_option_group(group)
 
         # Static HTTP
@@ -222,9 +236,6 @@ class configmanager(object):
                          help="overwrites existing translation terms on updating a module or importing a CSV or a PO file.")
         group.add_option("--modules", dest="translate_modules",
                          help="specify modules to export. Use in combination with --i18n-export")
-        group.add_option("--addons-path", dest="addons_path",
-                         help="specify additional addons paths (separated by commas).",
-                         action="callback", callback=self._check_addons_path, nargs=1, type="string")
         parser.add_option_group(group)
 
         security = optparse.OptionGroup(parser, 'Security-related options')
@@ -250,8 +261,12 @@ class configmanager(object):
                               "osv_memory tables. This is a decimal value expressed in hours, "
                               "and the default is 1 hour.",
                          type="float")
+        group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=4,
+                         help="Maximum number of threads processing concurrently cron jobs.",
+                         type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
+
         parser.add_option_group(group)
 
         # Copy all optparse options (i.e. MyOption) into self.options.
@@ -260,9 +275,26 @@ class configmanager(object):
                 self.options[option.dest] = option.my_default
                 self.casts[option.dest] = option
 
-        self.parse_config()
+        self.parse_config(None, False)
 
-    def parse_config(self, args=None):
+    def parse_config(self, args=None, complete=True):
+        """ Parse the configuration file (if any) and the command-line
+        arguments.
+
+        This method initializes openerp.tools.config and openerp.conf (the
+        former should be removed in the furture) with library-wide
+        configuration values.
+
+        This method must be called before proper usage of this library can be
+        made.
+
+        Typical usage of this method:
+
+            openerp.tools.config.parse_config(sys.argv[1:])
+
+        :param complete: this is a hack used in __init__(), leave it to True.
+
+        """
         if args is None:
             args = []
         opt, args = self.parser.parse_args(args)
@@ -319,8 +351,8 @@ class configmanager(object):
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
-                'secure_cert_file', 'secure_pkey_file',
-                'static_http_enable', 'static_http_document_root', 'static_http_url_prefix'
+                'static_http_enable', 'static_http_document_root', 'static_http_url_prefix',
+                'secure_cert_file', 'secure_pkey_file', 'dbfilter'
                 ]
 
         for arg in keys:
@@ -337,7 +369,7 @@ class configmanager(object):
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs',
             'test_file', 'test_disable', 'test_commit', 'test_report_directory',
-            'osv_memory_count_limit', 'osv_memory_age_limit', 'unaccent',
+            'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
         ]
 
         for arg in keys:
@@ -418,6 +450,20 @@ class configmanager(object):
 
         if opt.save:
             self.save()
+
+        openerp.conf.max_cron_threads = self.options['max_cron_threads']
+
+        openerp.conf.addons_paths = self.options['addons_path'].split(',')
+        if opt.server_wide_modules:
+            openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
+        else:
+            openerp.conf.server_wide_modules = ['web']
+        if complete:
+            openerp.modules.module.initialize_sys_path()
+            openerp.modules.loading.open_openerp_namespace()
+            # openerp.addons.__path__.extend(openerp.conf.addons_paths) # This
+            # is not compatible with initialize_sys_path(): import crm and
+            # import openerp.addons.crm load twice the module.
 
     def _generate_pgpassfile(self):
         """
@@ -555,3 +601,5 @@ class configmanager(object):
 
 config = configmanager()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

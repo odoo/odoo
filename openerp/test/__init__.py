@@ -21,3 +21,5 @@
 
 from test_osv import *
 from test_translate import *
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -98,7 +98,7 @@ class res_partner_title(osv.osv):
     _order = 'name'
 res_partner_title()
 
-def _lang_get(self, cr, uid, context={}):
+def _lang_get(self, cr, uid, context=None):
     obj = self.pool.get('res.lang')
     ids = obj.search(cr, uid, [], context=context)
     res = obj.read(cr, uid, ids, ['code', 'name'], context)
@@ -131,15 +131,20 @@ class res_partner(osv.osv):
         'customer': fields.boolean('Customer', help="Check this box if the partner is a customer."),
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'city': fields.related('address', 'city', type='char', string='City'),
+        'function': fields.related('address', 'function', type='char', string='function'),
+        'subname': fields.related('address', 'name', type='char', string='Contact Name'),
         'phone': fields.related('address', 'phone', type='char', string='Phone'),
         'mobile': fields.related('address', 'mobile', type='char', string='Mobile'),
         'country': fields.related('address', 'country_id', type='many2one', relation='res.country', string='Country'),
         'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
         'email': fields.related('address', 'email', type='char', size=240, string='E-mail'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
+        'color': fields.integer('Color Index'),
     }
 
-    def _default_category(self, cr, uid, context={}):
+    def _default_category(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'category_id' in context and context['category_id']:
             return [context['category_id']]
         return []
@@ -147,13 +152,15 @@ class res_partner(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
         'customer': lambda *a: 1,
-        'address': [{'type': 'default'}],
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
+        'color': 0,
     }
 
-    def copy(self, cr, uid, id, default={}, context={}):
-        name = self.read(cr, uid, [id], ['name'])[0]['name']
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        name = self.read(cr, uid, [id], ['name'], context)[0]['name']
         default.update({'name': name+ _(' (copy)'), 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
@@ -178,10 +185,12 @@ class res_partner(osv.osv):
 
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         if not len(ids):
             return []
-        if context.get('show_ref', False):
+        if context.get('show_ref'):
             rec_name = 'ref'
         else:
             rec_name = 'name'
@@ -191,16 +200,13 @@ class res_partner(osv.osv):
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
-            args=[]
-        if not context:
-            context={}
-        if name:
+            args = []
+        # short-circuit ref match when possible
+        if name and operator in ('=', 'ilike', '=ilike', 'like'):
             ids = self.search(cr, uid, [('ref', '=', name)] + args, limit=limit, context=context)
-            if not ids:
-                ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context)
-        else:
-            ids = self.search(cr, uid, args, limit=limit, context=context)
-        return self.name_get(cr, uid, ids, context)
+            if ids:
+                return self.name_get(cr, uid, ids, context)
+        return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
 
     def _email_send(self, cr, uid, ids, email_from, subject, body, on_error=None):
         partners = self.browse(cr, uid, ids)
@@ -223,9 +229,11 @@ class res_partner(osv.osv):
             ids = ids[16:]
         return True
 
-    def address_get(self, cr, uid, ids, adr_pref=['default']):
+    def address_get(self, cr, uid, ids, adr_pref=None):
+        if adr_pref is None:
+            adr_pref = ['default']
         address_obj = self.pool.get('res.partner.address')
-        address_ids = address_obj.search(cr, uid, [('partner_id', '=', ids)])
+        address_ids = address_obj.search(cr, uid, [('partner_id', 'in', ids)])
         address_rec = address_obj.read(cr, uid, address_ids, ['type'])
         res = list(tuple(addr.values()) for addr in address_rec)
         adr = dict(res)
@@ -300,13 +308,16 @@ class res_partner_address(osv.osv):
         'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
 #        'company_id': fields.related('partner_id','company_id',type='many2one',relation='res.company',string='Company', store=True),
         'company_id': fields.many2one('res.company', 'Company',select=1),
+        'color': fields.integer('Color Index'),
     }
     _defaults = {
         'active': lambda *a: 1,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner.address', context=c),
     }
 
-    def name_get(self, cr, user, ids, context={}):
+    def name_get(self, cr, user, ids, context=None):
+        if context is None:
+            context = {}
         if not len(ids):
             return []
         res = []

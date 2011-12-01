@@ -100,3 +100,5 @@ if __name__=='__main__':
     result = a.preprocess_rml(node)
     print etree.tostring(result)
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

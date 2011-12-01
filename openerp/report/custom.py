@@ -136,16 +136,15 @@ class report_custom(report_int):
             ids = self.pool.get(report.model_id.model).search(cr, uid, [])
             datas['ids'] = ids
 
-        service = netsvc.LocalService("object_proxy")
         report_id = datas['report_id']
-        report = service.execute(cr.dbname, uid, 'ir.report.custom', 'read', [report_id], context=context)[0]
-        fields = service.execute(cr.dbname, uid, 'ir.report.custom.fields', 'read', report['fields_child0'], context=context)
+        report = self.pool.get('ir.report.custom').read(cr, uid, [report_id], context=context)[0]
+        fields = self.pool.get('ir.report.custom.fields').read(cr, uid, report['fields_child0'], context=context)
 
         fields.sort(lambda x,y : x['sequence'] - y['sequence'])
 
         if report['field_parent']:
-            parent_field = service.execute(cr.dbname, uid, 'ir.model.fields', 'read', [report['field_parent'][0]],['model'])
-        model_name = service.execute(cr.dbname, uid, 'ir.model', 'read', [report['model_id'][0]], ['model'],context=context)[0]['model']
+            parent_field = self.pool.get('ir.model.fields').read(cr, uid, [report['field_parent'][0]], ['model'])
+        model_name = self.pool.get('ir.model').read(cr, uid, [report['model_id'][0]], ['model'], context=context)[0]['model']
 
         fct = {}
         fct['id'] = lambda x : x
@@ -160,9 +159,7 @@ class report_custom(report_int):
                 field_child = f['field_child'+str(i)]
                 if field_child:
                     row.append(
-                        service.execute(cr.dbname, uid, 
-                                        'ir.model.fields', 'read', [field_child[0]],
-                                        ['name'], context=context)[0]['name']
+                        self.pool.get('ir.model.fields').read(cr, uid, [field_child[0]], ['name'], context=context)[0]['name']
                     )
                     if f['fc'+str(i)+'_operande']:
                         fct_name = 'id'
@@ -346,7 +343,7 @@ class report_custom(report_int):
 
 
     def _create_lines(self, cr, uid, ids, report, fields, results, context):
-        service = netsvc.LocalService("object_proxy")
+        pool = pooler.get_pool(cr.dbname)
         pdf_string = cStringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
         
@@ -376,7 +373,7 @@ class report_custom(report_int):
         for f in fields:
             field_id = (f['field_child3'] and f['field_child3'][0]) or (f['field_child2'] and f['field_child2'][0]) or (f['field_child1'] and f['field_child1'][0]) or (f['field_child0'] and f['field_child0'][0])
             if field_id:
-                type = service.execute(cr.dbname, uid, 'ir.model.fields', 'read', [field_id],['ttype'])
+                type = pool.get('ir.model.fields').read(cr, uid, [field_id],['ttype'])
                 if type[0]['ttype'] == 'date':
                     date_idx = idx
                     fct[idx] = process_date[report['frequency']] 
@@ -449,7 +446,7 @@ class report_custom(report_int):
 
 
     def _create_bars(self, cr, uid, ids, report, fields, results, context):
-        service = netsvc.LocalService("object_proxy")
+        pool = pooler.get_pool(cr.dbname)
         pdf_string = cStringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
         
@@ -475,7 +472,7 @@ class report_custom(report_int):
         for f in fields:
             field_id = (f['field_child3'] and f['field_child3'][0]) or (f['field_child2'] and f['field_child2'][0]) or (f['field_child1'] and f['field_child1'][0]) or (f['field_child0'] and f['field_child0'][0])
             if field_id:
-                type = service.execute(cr.dbname, uid, 'ir.model.fields', 'read', [field_id],['ttype'])
+                type = pool.get('ir.model.fields').read(cr, uid, [field_id],['ttype'])
                 if type[0]['ttype'] == 'date':
                     date_idx = idx
                     fct[idx] = process_date[report['frequency']] 

@@ -147,6 +147,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
     logger.debug('loading %d packages...', len(graph))
 
+    # get db timestamp
+    cr.execute("select now()::timestamp")
+    dt_before_load = cr.fetchone()[0]
+
     # register, instantiate and initialize models for each modules
     for index, package in enumerate(graph):
         module_name = package.name
@@ -158,7 +162,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         logger.info('module %s: loading objects', package.name)
         migrations.migrate_module(package, 'pre')
         register_module_classes(package.name)
-        models = pool.instanciate(package.name, cr)
+        models = pool.load(cr, package)
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
@@ -213,6 +217,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     delattr(package, kind)
 
         cr.commit()
+
+    # mark new res_log records as read
+    cr.execute("update res_log set read=True where create_date >= %s", (dt_before_load,))
 
     cr.commit()
 
@@ -273,8 +280,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # This is a brand new pool, just created in pooler.get_db_and_pool()
         pool = pooler.get_pool(cr.dbname)
 
-        processed_modules = [] # for cleanup step after install
-        loaded_modules = [] # to avoid double loading
         report = tools.assertion_report()
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -285,8 +290,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if not graph:
             logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
             raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
-        loaded, processed = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
-        processed_modules.extend(processed)
+
+        # processed_modules: for cleanup step after install
+        # loaded_modules: to avoid double loading
+        loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
         if tools.config['load_language']:
             for lang in tools.config['load_language'].split(','):
@@ -339,16 +346,16 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
-                if model_obj and not isinstance(model_obj, osv.osv.osv_memory):
-                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model, name))
+                if model_obj and not model_obj.is_transient():
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'Model %s (%s) has no access rules!' % (model, name))
 
             # Temporary warning while we remove access rights on osv_memory objects, as they have
             # been replaced by owner-only access rights
             cr.execute("""select distinct mod.model, mod.name from ir_model_access acc, ir_model mod where acc.model_id = mod.id""")
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
-                if isinstance(model_obj, osv.osv.osv_memory) and not isinstance(model_obj, osv.osv.osv):
-                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'In-memory object %s (%s) should not have explicit access rules!' % (model, name))
+                if model_obj and model_obj.is_transient():
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'The transient model %s (%s) should not have explicit access rules!' % (model, name))
 
             cr.execute("SELECT model from ir_model")
             for (model,) in cr.fetchall():
@@ -356,7 +363,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 if obj:
                     obj._check_removed_columns(cr, log=True)
                 else:
-                    logger.notifyChannel('init', netsvc.LOG_WARNING, "Model %s is referenced but not present in the orm pool!" % model)
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, "Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)" % model)
 
             # Cleanup orphan records
             pool.get('ir.model.data')._process_end(cr, 1, processed_modules)

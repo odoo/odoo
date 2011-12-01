@@ -25,7 +25,7 @@ Store database-specific configuration parameters
 from osv import osv,fields
 import uuid
 import datetime
-from tools import misc
+from tools import misc, config
 
 """
 A dictionary holding some configuration parameters to be initialized when the database is created.
@@ -33,6 +33,7 @@ A dictionary holding some configuration parameters to be initialized when the da
 _default_parameters = {
     "database.uuid": lambda: str(uuid.uuid1()),
     "database.create_date": lambda: datetime.datetime.now().strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT),
+    "web.base.url": lambda: "http://localhost:%s" % config.get('xmlrpc_port'),
 }
 
 class ir_config_parameter(osv.osv):
@@ -91,3 +92,5 @@ class ir_config_parameter(osv.osv):
         else:
             self.create(cr, uid, {'key': key, 'value': value}, context=context)
             return False
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

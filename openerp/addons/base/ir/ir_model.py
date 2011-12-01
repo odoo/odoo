@@ -63,7 +63,7 @@ class ir_model(osv.osv):
         models = self.browse(cr, uid, ids, context=context)
         res = dict.fromkeys(ids)
         for model in models:
-            res[model.id] = isinstance(self.pool.get(model.model), osv.osv_memory)
+            res[model.id] = self.pool.get(model.model).is_transient()
         return res
 
     def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
@@ -124,12 +124,13 @@ class ir_model(osv.osv):
 
     # overridden to allow searching both on model name (model field)
     # and model description (name field)
-    def name_search(self, cr, uid, name='', args=None, operator='ilike',  context=None, limit=None):
+    def _name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
         if args is None:
             args = []
         domain = args + ['|', ('model', operator, name), ('name', operator, name)]
-        return super(ir_model, self).name_search(cr, uid, None, domain,
-                        operator=operator, limit=limit, context=context)
+        return self.name_get(cr, name_get_uid or uid,
+                             super(ir_model, self).search(cr, uid, domain, limit=limit, context=context),
+                             context=context)
 
 
     def unlink(self, cr, user, ids, context=None):
@@ -160,12 +161,12 @@ class ir_model(osv.osv):
             #pooler.restart_pool(cr.dbname)
         return res
 
-    def instanciate(self, cr, user, model, context={}):
+    def instanciate(self, cr, user, model, context=None):
         class x_custom_model(osv.osv):
             pass
         x_custom_model._name = model
         x_custom_model._module = False
-        a = x_custom_model.createInstance(self.pool, cr)
+        a = x_custom_model.create_instance(self.pool, cr)
         if (not a._columns) or ('x_name' in a._columns.keys()):
             x_name = 'x_name'
         else:
@@ -481,14 +482,12 @@ class ir_model_access(osv.osv):
 
         if isinstance(model, browse_record):
             assert model._table_name == 'ir.model', 'Invalid model object'
-            model_name = model.name
+            model_name = model.model
         else:
             model_name = model
 
-        # osv_memory objects can be read by everyone, as they only return
-        # results that belong to the current user (except for superuser)
-        model_obj = self.pool.get(model_name)
-        if isinstance(model_obj, osv.osv_memory):
+        # TransientModel records have no access rights, only an implicit access rule
+        if self.pool.get(model_name).is_transient():
             return True
 
         # We check if a specific rule exists
@@ -523,7 +522,7 @@ class ir_model_access(osv.osv):
             }
 
             raise except_orm(_('AccessError'), msgs[mode] % (model_name, groups) )
-        return r
+        return r or False
 
     __cache_clearing_methods = []
 
@@ -673,18 +672,20 @@ class ir_model_data(osv.osv):
         action_id = False
 
         if xml_id:
-            cr.execute('''SELECT imd.id, imd.res_id, md.id
+            cr.execute('''SELECT imd.id, imd.res_id, md.id, imd.model
                           FROM ir_model_data imd LEFT JOIN %s md ON (imd.res_id = md.id)
                           WHERE imd.module=%%s AND imd.name=%%s''' % model_obj._table,
                           (module, xml_id))
             results = cr.fetchall()
-            for imd_id2,res_id2,real_id2 in results:
+            for imd_id2,res_id2,real_id2,real_model in results:
                 if not real_id2:
                     self._get_id.clear_cache(self, uid, module, xml_id)
                     self.get_object_reference.clear_cache(self, uid, module, xml_id)
                     cr.execute('delete from ir_model_data where id=%s', (imd_id2,))
                     res_id = False
                 else:
+                    assert model == real_model, "External ID conflict, %s already refers to a `%s` record,"\
+                        " you can't define a `%s` record with this ID." % (xml_id, real_model, model)
                     res_id,action_id = res_id2,imd_id2
 
         if action_id and res_id:

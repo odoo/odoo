@@ -100,16 +100,20 @@ class res_partner_bank(osv.osv):
         return result
 
     def _default_value(self, cursor, user, field, context=None):
+        if context is None: context = {}
         if field in ('country_id', 'state_id'):
             value = False
         else:
             value = ''
-        if not context.get('address', False):
+        if not context.get('address'):
             return value
-        for ham, spam, address in context['address']:
-            if address.get('type', False) == 'default':
+
+        for address in self.pool.get('res.partner').resolve_o2m_commands_to_record_dicts(
+            cursor, user, 'address', context['address'], ['type', field], context=context):
+
+            if address.get('type') == 'default':
                 return address.get(field, value)
-            elif not address.get('type', False):
+            elif not address.get('type'):
                 value = address.get(field, value)
         return value
 
@@ -186,7 +190,7 @@ class res_partner_bank(osv.osv):
             res.append((val.id, result))
         return res
 
-    def onchange_company_id(self, cr, uid, ids, company_id, context={}):
+    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
         result = {}
         if company_id:
             c = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
@@ -197,7 +201,7 @@ class res_partner_bank(osv.osv):
                 result = r
         return result
 
-    def onchange_bank_id(self, cr, uid, ids, bank_id, context={}):
+    def onchange_bank_id(self, cr, uid, ids, bank_id, context=None):
         result = {}
         if bank_id:
             bank = self.pool.get('res.bank').browse(cr, uid, bank_id, context=context)
@@ -206,7 +210,7 @@ class res_partner_bank(osv.osv):
         return {'value': result}
 
 
-    def onchange_partner_id(self, cr, uid, id, partner_id, context={}):
+    def onchange_partner_id(self, cr, uid, id, partner_id, context=None):
         result = {}
         if partner_id:
             part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
@@ -220,4 +224,4 @@ class res_partner_bank(osv.osv):
 
 res_partner_bank()
 
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

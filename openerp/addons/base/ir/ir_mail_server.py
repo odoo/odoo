@@ -44,8 +44,8 @@ _logger = logging.getLogger('ir.mail_server')
 
 class MailDeliveryException(osv.except_osv):
     """Specific exception subclass for mail delivery errors"""
-    def __init__(self, name, value, exc_type='warning'):
-        super(MailDeliveryException, self).__init__(name, value, exc_type=exc_type)
+    def __init__(self, name, value):
+        super(MailDeliveryException, self).__init__(name, value)
 
 class WriteToLogger(object):
     """debugging helper: behave as a fd and pipe to logger at the given level"""
@@ -145,14 +145,14 @@ class ir_mail_server(osv.osv):
 
     _columns = {
         'name': fields.char('Description', size=64, required=True, select=True),
-        'smtp_host': fields.char('Server Name', size=128, required=True, help="Hostname or IP of SMTP server"),
+        'smtp_host': fields.char('SMTP Server', size=128, required=True, help="Hostname or IP of SMTP server"),
         'smtp_port': fields.integer('SMTP Port', size=5, required=True, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."),
         'smtp_user': fields.char('Username', size=64, help="Optional username for SMTP authentication"),
         'smtp_pass': fields.char('Password', size=64, help="Optional password for SMTP authentication"),
         'smtp_encryption': fields.selection([('none','None'),
                                              ('starttls','TLS (STARTTLS)'),
                                              ('ssl','SSL/TLS')],
-                                            string='Connection Security',
+                                            string='Connection Security', required=True,
                                             help="Choose the connection encryption scheme:\n"
                                                  "- None: SMTP sessions are done in cleartext.\n"
                                                  "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
@@ -236,15 +236,18 @@ class ir_mail_server(osv.osv):
         return connection
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None):
+               attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,
+               body_alternative=None, subtype_alternative='plain'):
         """Constructs an RFC2822 email.message.Message object based on the keyword arguments passed, and returns it.
 
            :param string email_from: sender email address
            :param list email_to: list of recipient addresses (to be joined with commas) 
            :param string subject: email subject (no pre-encoding/quoting necessary)
-           :param string body: email body, according to the ``subtype`` (by default, plaintext).
+           :param string body: email body, of the type ``subtype`` (by default, plaintext).
                                If html subtype is used, the message will be automatically converted
-                               to plaintext and wrapped in multipart/alternative.
+                               to plaintext and wrapped in multipart/alternative, unless an explicit
+                               ``body_alternative`` version is passed.
+           :param string body_alternative: optional alternative body, of the type specified in ``subtype_alternative``
            :param string reply_to: optional value of Reply-To header
            :param string object_id: optional tracking identifier, to be included in the message-id for
                                     recognizing replies. Suggested format for object-id is "res_id-model",
@@ -252,6 +255,8 @@ class ir_mail_server(osv.osv):
            :param string subtype: optional mime subtype for the text body (usually 'plain' or 'html'),
                                   must match the format of the ``body`` parameter. Default is 'plain',
                                   making the content part of the mail "text/plain".
+           :param string subtype_alternative: optional mime subtype of ``body_alternative`` (usually 'plain'
+                                              or 'html'). Default is 'plain'.
            :param list attachments: list of (filename, filecontents) pairs, where filecontents is a string
                                     containing the bytes of the attachment
            :param list email_cc: optional list of string values for CC header (to be joined with commas)
@@ -276,7 +281,7 @@ class ir_mail_server(osv.osv):
         if not body: body = u''
 
         email_body_utf8 = ustr(body).encode('utf-8')
-        email_text_part = MIMEText(email_body_utf8 or '', _subtype=subtype, _charset='utf-8')
+        email_text_part = MIMEText(email_body_utf8, _subtype=subtype, _charset='utf-8')
         msg = MIMEMultipart()
 
         if not message_id:
@@ -304,11 +309,19 @@ class ir_mail_server(osv.osv):
         for key, value in headers.iteritems():
             msg[ustr(key).encode('utf-8')] = encode_header(value)
 
-        if html2text and subtype == 'html':
-            # Always provide alternative text body if possible.
+        if subtype == 'html' and not body_alternative and html2text:
+            # Always provide alternative text body ourselves if possible.
             text_utf8 = tools.html2text(email_body_utf8.decode('utf-8')).encode('utf-8')
             alternative_part = MIMEMultipart(_subtype="alternative")
             alternative_part.attach(MIMEText(text_utf8, _charset='utf-8', _subtype='plain'))
+            alternative_part.attach(email_text_part)
+            msg.attach(alternative_part)
+        elif body_alternative:
+            # Include both alternatives, as specified, within a multipart/alternative part
+            alternative_part = MIMEMultipart(_subtype="alternative")
+            body_alternative_utf8 = ustr(body_alternative).encode('utf-8')
+            alternative_body_part = MIMEText(body_alternative_utf8, _subtype=subtype_alternative, _charset='utf-8')
+            alternative_part.attach(alternative_body_part)
             alternative_part.attach(email_text_part)
             msg.attach(alternative_part)
         else:
@@ -418,7 +431,9 @@ class ir_mail_server(osv.osv):
                     # ignored, just a consequence of the previous exception
                     pass
         except Exception, e:
-            msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (smtp_server, e.__class__.__name__, e)
+            msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (tools.ustr(smtp_server),
+                                                                             e.__class__.__name__,
+                                                                             tools.ustr(e))
             _logger.exception(msg)
             raise MailDeliveryException(_("Mail delivery failed"), msg)
         return message_id

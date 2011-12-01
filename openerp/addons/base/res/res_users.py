@@ -35,6 +35,8 @@ from osv import fields,osv
 from osv.orm import browse_record
 from service import security
 from tools.translate import _
+import openerp
+import openerp.exceptions
 
 class groups(osv.osv):
     _name = "res.groups"
@@ -204,6 +206,7 @@ class users(osv.osv):
         return dict.fromkeys(ids, '')
 
     _columns = {
+        'id': fields.integer('ID'),
         'name': fields.char('User Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
                                  " and most listings"),
@@ -416,14 +419,42 @@ class users(osv.osv):
         data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
         return dataobj.browse(cr, uid, data_id, context=context).res_id
 
+    def authenticate(self, db, login, password, user_agent_env):
+        """Verifies and returns the user ID corresponding to the given
+          ``login`` and ``password`` combination, or False if there was
+          no matching user.
+
+           :param str db: the database on which user is trying to authenticate
+           :param str login: username
+           :param str password: user password
+           :param dict user_agent_env: environment dictionary describing any
+               relevant environment attributes
+        """
+        uid = self.login(db, login, password)
+        if uid == openerp.SUPERUSER_ID:
+            # Successfully logged in as admin!
+            # Attempt to guess the web base url...
+            if user_agent_env and user_agent_env.get('base_location'):
+                cr = pooler.get_db(db).cursor()
+                try:
+                    self.pool.get('ir.config_parameter').set_param(cr, uid, 'web.base.url',
+                                                                   user_agent_env['base_location'])
+                    cr.commit()
+                except Exception:
+                    logging.getLogger('res.users').exception("Failed to update web.base.url configuration parameter")
+                finally:
+                    cr.close()
+        return uid
 
     def login(self, db, login, password):
         if not password:
             return False
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute('UPDATE res_users SET date=now() WHERE login=%s AND password=%s AND active RETURNING id',
-                    (tools.ustr(login), tools.ustr(password)))
+            cr.execute("""UPDATE res_users
+                            SET date = now() AT TIME ZONE 'UTC'
+                            WHERE login=%s AND password=%s AND active RETURNING id""",
+                       (tools.ustr(login), tools.ustr(password)))
             res = cr.fetchone()
             cr.commit()
             if res:
@@ -437,14 +468,14 @@ class users(osv.osv):
         if passwd == tools.config['admin_passwd']:
             return True
         else:
-            raise security.ExceptionNoTb('AccessDenied')
+            raise openerp.exceptions.AccessDenied()
 
     def check(self, db, uid, passwd):
         """Verifies that the given (uid, password) pair is authorized for the database ``db`` and
            raise an exception if it is not."""
         if not passwd:
             # empty passwords disallowed for obvious security reasons
-            raise security.ExceptionNoTb('AccessDenied')
+            raise openerp.exceptions.AccessDenied()
         if self._uid_cache.get(db, {}).get(uid) == passwd:
             return
         cr = pooler.get_db(db).cursor()
@@ -453,7 +484,7 @@ class users(osv.osv):
                         (int(uid), passwd, True))
             res = cr.fetchone()[0]
             if not res:
-                raise security.ExceptionNoTb('AccessDenied')
+                raise openerp.exceptions.AccessDenied()
             if self._uid_cache.has_key(db):
                 ulist = self._uid_cache[db]
                 ulist[uid] = passwd
@@ -470,7 +501,7 @@ class users(osv.osv):
             cr.execute('SELECT id FROM res_users WHERE id=%s AND password=%s', (uid, passwd))
             res = cr.fetchone()
             if not res:
-                raise security.ExceptionNoTb('Bad username or password')
+                raise openerp.exceptions.AccessDenied()
             return res[0]
         finally:
             cr.close()
@@ -481,7 +512,7 @@ class users(osv.osv):
         password is not used to authenticate requests.
 
         :return: True
-        :raise: security.ExceptionNoTb when old password is wrong
+        :raise: openerp.exceptions.AccessDenied when old password is wrong
         :raise: except_osv when new password is not set or empty
         """
         self.check(cr.dbname, uid, old_passwd)
@@ -700,16 +731,16 @@ class users_view(osv.osv):
         self._process_values_groups(cr, uid, values, context)
         return super(users_view, self).write(cr, uid, ids, values, context)
 
-    def read(self, cr, uid, ids, fields, context=None, load='_classic_read'):
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         if not fields:
-            group_fields, fields = [], self.fields_get(cr, uid, context).keys()
+            group_fields, fields = [], self.fields_get(cr, uid, context=context).keys()
         else:
             group_fields, fields = partition(is_field_group, fields)
         if group_fields:
             group_obj = self.pool.get('res.groups')
             fields.append('groups_id')
             # read the normal fields (and 'groups_id')
-            res = super(users_view, self).read(cr, uid, ids, fields, context, load)
+            res = super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
             records = res if isinstance(res, list) else [res]
             for record in records:
                 # get the field 'groups_id' and insert the group_fields
@@ -721,9 +752,31 @@ class users_view(osv.osv):
                         record[f] = not groups.isdisjoint(get_boolean_groups(f))
                     elif is_selection_groups(f):
                         selected = groups.intersection(get_selection_groups(f))
-                        record[f] = group_obj.get_maximal(cr, uid, selected, context)
+                        record[f] = group_obj.get_maximal(cr, uid, selected, context=context)
             return res
-        return super(users_view, self).read(cr, uid, ids, fields, context, load)
+        return super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
+
+    def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
+        res = super(users_view, self).fields_get(cr, user, allfields, context, write_access)
+        apps, others = self.pool.get('res.groups').get_classified(cr, user, context)
+        for app, groups in apps:
+            ids = [g.id for name, g in groups]
+            app_name = name_boolean_groups(ids)
+            sel_name = name_selection_groups(ids)
+            selection = [(g.id, name) for name, g in groups]
+            res[app_name] = {'type': 'boolean', 'string': app}
+            tips = [name + ': ' + (g.comment or '') for name, g in groups]
+            if tips:
+                res[app_name].update(help='\n'.join(tips))
+            res[sel_name] = {'type': 'selection', 'string': 'Group', 'selection': selection}
+
+        for sec, groups in others:
+            for gname, g in groups:
+                name = name_boolean_group(g.id)
+                res[name] = {'type': 'boolean', 'string': gname}
+                if g.comment:
+                    res[name].update(help=g.comment)
+        return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                 context=None, toolbar=False, submenu=False):
