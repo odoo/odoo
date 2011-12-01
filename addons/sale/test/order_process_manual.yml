@@ -1,0 +1,75 @@
+-
+  I confirm the Quotation with "Deliver & invoice on demand".
+-
+  !workflow {model: sale.order, action: order_confirm, ref: order4}
+-
+  I check that Invoice should not created.
+-
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("order4"))
+    assert len(sale_order.invoice_ids) == False, "Invoice should not created."
+    assert sale_order.picking_ids, "Delivery order should be created."
+-
+  I create advance invoice.
+-
+  !python {model: sale.advance.payment.inv}: |
+    ctx = context.copy()
+    ctx.update({"active_model": 'sale.order', "active_ids": [ref("order4")], "active_id":ref("order4")})
+    order_line = self.pool.get('sale.order.line').browse(cr, uid, ref("line7"), context=context)
+    pay_id = self.create(cr, uid, {'product_id': order_line.product_id.id, 'amount': order_line.price_subtotal, 'qtty': order_line.product_uom_qty})
+    self.create_invoices(cr, uid, [pay_id], context=ctx)
+-
+  I check Invoice which made advance
+-
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref('order4'))
+    assert order.invoice_ids, "Invoice should be created after make advance invoice."
+-
+  I create Invoice from sale order line.
+-
+  !python {model: sale.order.line.make.invoice}: |
+    ctx = context.copy()
+    ctx.update({"active_model": 'sale.order.line', "active_ids": [ref("line8")], "active_id":ref("line8")})
+    self.make_invoices(cr, uid, [], context=ctx)
+-
+  I check Invoice which made from sale order line.
+-
+  !python {model: sale.order.line}: |
+    line = self.browse(cr, uid, ref('line8'))
+    assert line.invoiced, "Line is not invoiced."
+    assert line.invoice_lines, "Invoice line should be created."
+-
+  I create manual Invoice for order.
+-
+  !record {model: sale.make.invoice, id: sale_make_invoice_1}:
+    invoice_date: !eval time.strftime('%Y-%m-%d')
+-
+  !python {model: sale.make.invoice}: |
+    ctx = context.copy()
+    ctx = ctx.update({"active_model": 'sale.order', "active_ids": [ref("order4")], "active_id":ref("order4")})
+    self.make_invoices(cr, uid, [ref("sale_make_invoice_1")], context)
+-
+  I open the Invoice.
+-
+  !python {model: sale.order}: |
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    so = self.browse(cr, uid, ref("order4"))
+    for invoice in so.invoice_ids:
+      wf_service.trg_validate(uid, 'account.invoice', invoice.id, 'invoice_open', cr)
+-
+  I check Invoice after do manual.
+-
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("order4"))
+    assert sale_order.invoice_ids, "Invoice should be created."
+    #assert sale_order.state == 'progress', 'Order should be in progress.'
+    #assert sale_order.invoiced, "Order is not invoiced."
+-
+  I set order policy "Deliver & invoice on demand" as default policy.
+-
+  !record {model: sale.config.picking_policy, id: sale.config.picking_policy_0}:
+    order_policy: 'manual'
+-
+  !python {model: sale.config.picking_policy}: |
+    self.execute(cr, uid, [ref("sale.config.picking_policy_0")])
