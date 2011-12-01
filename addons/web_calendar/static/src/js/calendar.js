@@ -245,24 +245,21 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
     do_create_event: function(event_id, event_obj) {
         var self = this,
             data = this.get_event_data(event_obj);
-        this.dataset.call( 'fields_get', [],  function(fields) {
-            self.dataset.default_get(_.keys(fields), function (default_value) {
-               _.each(default_value ,function(value, key){
-                    (!_.include(_.keys(data), key))?data[key] = value:false;
-                });
-                self.dataset.create(data, function(r) {
-                    var id = parseInt(r.result, 10);
-                    self.dataset.ids.push(id);
-                    scheduler.changeEventId(event_id, id);
-                    self.refresh_minical();
-                }, function(r, event) {
-                    self.creating_event_id = event_id;
-                    self.form_dialog.form.on_record_loaded(data);
-                    self.form_dialog.open();
-                    event.preventDefault();
-                });
+        self.dataset.create(data, function(r) {
+            var id = parseInt(r.result, 10);
+            self.dataset.ids.push(id);
+            scheduler.changeEventId(event_id, id);
+            self.refresh_minical();
+        }, function(r, event) {
+                self.creating_event_id = event_id;
+                self.dataset.default_get
+                    (_.difference(_(self.form_dialog.form.fields_view.fields).keys(), _(data).keys()),
+                        function (default_value) {
+                            self.form_dialog.form.on_record_loaded(_.extend(default_value, data));
+                            self.form_dialog.open();
+                    });
+                event.preventDefault();
             });
-        });
     },
     do_save_event: function(event_id, event_obj) {
         var self = this,
