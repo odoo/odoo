@@ -50,6 +50,7 @@
   I check that the RFQ details which created for supplier.
 -
   !python {model: purchase.order}: |
+    purchase_requisition = self.pool.get("purchase.requisition")
     purchase_ids = self.search(cr, uid, [('requisition_id','=',ref("requisition1"))])
     assert purchase_ids, "RFQ is not created."
     rfq = self.browse(cr, uid, purchase_ids[0], context=context)
@@ -60,10 +61,10 @@
     for rfq_line in rfq.order_line:
         for line in requisition.line_ids:
             if rfq_line.product_id.id == line.product_id.id:
-                product = line.product_id
-                uom_id = line.product_uom_id.id or False
-                assert rfq_line.product_qty == line.product_qty, "Quantity is not correspond."
-                assert rfq_line.product_uom.id == uom_id, "UOM is not correspond."
+                seller_price, qty, default_uom_po_id, date_planned = purchase_requisition._seller_details(cr, uid, line, supplier, context=context)
+                assert rfq_line.product_qty == qty, "Quantity is not correspond."
+                assert rfq_line.product_uom.id == default_uom_po_id, "UOM is not correspond."
+                assert rfq_line.price_unit == seller_price, "Unit Price is not correspond."   
 -
   I confirmed RFQ which has best price.
 -
