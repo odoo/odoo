@@ -29,7 +29,7 @@ class stock_move_consume(osv.osv_memory):
 
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'product_qty': fields.float('Quantity', required=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True)
     }
@@ -254,7 +254,7 @@ class stock_move_split_lines_exist(osv.osv_memory):
     _name = "stock.move.split.lines"
     _description = "Stock move Split lines"
     _columns = {
-        'name': fields.char('Tracking serial', size=64),
+        'name': fields.char('Production Lot', size=64),
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'wizard_id': fields.many2one('stock.move.split', 'Parent Wizard'),
         'wizard_exist_id': fields.many2one('stock.move.split', 'Parent Wizard (for existing lines)'),
@@ -268,3 +268,5 @@ class stock_move_split_lines_exist(osv.osv_memory):
                         loc_id=False, product_id=False, uom_id=False):
         return self.pool.get('stock.move').onchange_lot_id(cr, uid, [], prodlot_id, product_qty,
                         loc_id, product_id, uom_id)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

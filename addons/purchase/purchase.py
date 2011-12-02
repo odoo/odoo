@@ -188,7 +188,7 @@ class purchase_order(osv.osv):
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
-        'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated invoice'),('picking','Based on receptions')], 'Invoicing Control', required=True,
+        'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on receptions')], 'Invoicing Control', required=True,
             help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' frow where you can selectively create an invoice.\n" \
                 "Based on generated invoice: create a draft invoice you can validate later.\n" \
                 "Based on receptions: let you create an invoice when receptions are validated."
@@ -227,7 +227,7 @@ class purchase_order(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', context=c),
     }
     _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'Order Reference must be unique !'),
+        ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
     ]
     _name = "purchase.order"
     _description = "Purchase Order"
@@ -253,31 +253,32 @@ class purchase_order(osv.osv):
     def button_dummy(self, cr, uid, ids, context=None):
         return True
 
-    def onchange_dest_address_id(self, cr, uid, ids, adr_id):
-        if not adr_id:
+    def onchange_dest_address_id(self, cr, uid, ids, address_id):
+        if not address_id:
             return {}
+        address = self.pool.get('res.partner.address')
         values = {'warehouse_id': False}
-        part_id = self.pool.get('res.partner.address').browse(cr, uid, adr_id).partner_id
-        if part_id:
-            loc_id = part_id.property_stock_customer.id
-            values.update({'location_id': loc_id})
+        supplier = address.browse(cr, uid, address_id).partner_id
+        if supplier:
+            location_id = supplier.property_stock_customer.id
+            values.update({'location_id': location_id})
         return {'value':values}
 
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id):
         if not warehouse_id:
             return {}
-        res = self.pool.get('stock.warehouse').read(cr, uid, [warehouse_id], ['lot_input_id'])[0]['lot_input_id'][0]
-        return {'value':{'location_id': res, 'dest_address_id': False}}
+        warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id)
+        return {'value':{'location_id': warehouse.lot_input_id.id, 'dest_address_id': False}}
 
-    def onchange_partner_id(self, cr, uid, ids, part):
-
-        if not part:
+    def onchange_partner_id(self, cr, uid, ids, partner_id):
+        partner = self.pool.get('res.partner')
+        if not partner_id:
             return {'value':{'partner_address_id': False, 'fiscal_position': False}}
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['default'])
-        part = self.pool.get('res.partner').browse(cr, uid, part)
-        pricelist = part.property_product_pricelist_purchase.id
-        fiscal_position = part.property_account_position and part.property_account_position.id or False
-        return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
+        supplier_address = partner.address_get(cr, uid, [partner_id], ['default'])
+        supplier = partner.browse(cr, uid, partner_id)
+        pricelist = supplier.property_product_pricelist_purchase.id
+        fiscal_position = supplier.property_account_position and supplier.property_account_position.id or False
+        return {'value':{'partner_address_id': supplier_address['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
 
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
@@ -299,7 +300,7 @@ class purchase_order(osv.osv):
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
         return True
-
+    # Dead code:
     def wkf_warn_buyer(self, cr, uid, ids):
         self.write(cr, uid, ids, {'state' : 'wait', 'validator' : uid})
         request = pooler.get_pool(cr.dbname).get('res.request')
@@ -318,17 +319,25 @@ class purchase_order(osv.osv):
                        'ref_partner_id': po.partner_id.id,
                        'ref_doc1': 'purchase.order,%d' % (po.id,),
                 })
-    def inv_line_create(self, cr, uid, a, ol):
-        return (0, False, {
-            'name': ol.name,
-            'account_id': a,
-            'price_unit': ol.price_unit or 0.0,
-            'quantity': ol.product_qty,
-            'product_id': ol.product_id.id or False,
-            'uos_id': ol.product_uom.id or False,
-            'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
-            'account_analytic_id': ol.account_analytic_id.id or False,
-        })
+
+    def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
+        """Collects require data from purchase order line that is used to create invoice line 
+        for that purchase order line
+        :param account_id: Expense account of the product of PO line if any.
+        :param browse_record order_line: Purchase order line browse record
+        :return: Value for fields of invoice lines.
+        :rtype: dict
+        """
+        return {
+            'name': order_line.name,
+            'account_id': account_id,
+            'price_unit': order_line.price_unit or 0.0,
+            'quantity': order_line.product_qty,
+            'product_id': order_line.product_id.id or False,
+            'uos_id': order_line.product_uom.id or False,
+            'invoice_line_tax_id': [(6, 0, [x.id for x in order_line.taxes_id])],
+            'account_analytic_id': order_line.account_analytic_id.id or False,
+        }
 
     def action_cancel_draft(self, cr, uid, ids, *args):
         if not len(ids):
@@ -344,52 +353,71 @@ class purchase_order(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
-    def action_invoice_create(self, cr, uid, ids, *args):
+    def action_invoice_create(self, cr, uid, ids, context=None):
+        """Generates invoice for given ids of purchase orders and links that invoice ID to purchase order.
+        :param ids: list of ids of purchase orders.
+        :return: ID of created invoice.
+        :rtype: int
+        """
         res = False
 
         journal_obj = self.pool.get('account.journal')
-        for o in self.browse(cr, uid, ids):
-            il = []
-            todo = []
-            for ol in o.order_line:
-                todo.append(ol.id)
-                if ol.product_id:
-                    a = ol.product_id.product_tmpl_id.property_account_expense.id
-                    if not a:
-                        a = ol.product_id.categ_id.property_account_expense_categ.id
-                    if not a:
-                        raise osv.except_osv(_('Error !'), _('There is no expense account defined for this product: "%s" (id:%d)') % (ol.product_id.name, ol.product_id.id,))
-                else:
-                    a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category').id
-                fpos = o.fiscal_position or False
-                a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
-                il.append(self.inv_line_create(cr, uid, a, ol))
+        inv_obj = self.pool.get('account.invoice')
+        inv_line_obj = self.pool.get('account.invoice.line')
+        fiscal_obj = self.pool.get('account.fiscal.position')
+        property_obj = self.pool.get('ir.property')
 
-            a = o.partner_id.property_account_payable.id
-            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase'),('company_id', '=', o.company_id.id)], limit=1)
+        for order in self.browse(cr, uid, ids, context=context):
+            pay_acc_id = order.partner_id.property_account_payable.id
+            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase'),('company_id', '=', order.company_id.id)], limit=1)
             if not journal_ids:
                 raise osv.except_osv(_('Error !'),
-                    _('There is no purchase journal defined for this company: "%s" (id:%d)') % (o.company_id.name, o.company_id.id))
-            inv = {
-                'name': o.partner_ref or o.name,
-                'reference': o.partner_ref or o.name,
-                'account_id': a,
+                    _('There is no purchase journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
+
+            # generate invoice line correspond to PO line and link that to created invoice (inv_id) and PO line
+            inv_lines = []
+            for po_line in order.order_line:
+                if po_line.product_id:
+                    acc_id = po_line.product_id.product_tmpl_id.property_account_expense.id
+                    if not acc_id:
+                        acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
+                    if not acc_id:
+                        raise osv.except_osv(_('Error !'), _('There is no expense account defined for this product: "%s" (id:%d)') % (po_line.product_id.name, po_line.product_id.id,))
+                else:
+                    acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category').id
+                fpos = order.fiscal_position or False
+                acc_id = fiscal_obj.map_account(cr, uid, fpos, acc_id)
+
+                inv_line_data = self._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
+                inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
+                inv_lines.append(inv_line_id)
+
+                po_line.write({'invoiced':True, 'invoice_lines': [(4, inv_line_id)]}, context=context)
+
+            # get invoice data and create invoice
+            inv_data = {
+                'name': order.partner_ref or order.name,
+                'reference': order.partner_ref or order.name,
+                'account_id': pay_acc_id,
                 'type': 'in_invoice',
-                'partner_id': o.partner_id.id,
-                'currency_id': o.pricelist_id.currency_id.id,
-                'address_invoice_id': o.partner_address_id.id,
-                'address_contact_id': o.partner_address_id.id,
+                'partner_id': order.partner_id.id,
+                'currency_id': order.pricelist_id.currency_id.id,
+                'address_invoice_id': order.partner_address_id.id,
+                'address_contact_id': order.partner_address_id.id,
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
-                'origin': o.name,
-                'invoice_line': il,
-                'fiscal_position': o.fiscal_position.id or o.partner_id.property_account_position.id,
-                'payment_term': o.partner_id.property_payment_term and o.partner_id.property_payment_term.id or False,
-                'company_id': o.company_id.id,
+                'invoice_line': [(6, 0, inv_lines)], 
+                'origin': order.name,
+                'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
+                'payment_term': order.partner_id.property_payment_term and order.partner_id.property_payment_term.id or False,
+                'company_id': order.company_id.id,
             }
-            inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
-            self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)
-            self.pool.get('purchase.order.line').write(cr, uid, todo, {'invoiced':True})
-            self.write(cr, uid, [o.id], {'invoice_ids': [(4, inv_id)]})
+            inv_id = inv_obj.create(cr, uid, inv_data, context=context)
+
+            # compute the invoice
+            inv_obj.button_compute(cr, uid, [inv_id], context=context, set_total=True)
+
+            # Link this new invoice to related purchase order
+            order.write({'invoice_ids': [(4, inv_id)]}, context=context)
             res = inv_id
         return res
 
@@ -539,6 +567,7 @@ class purchase_order(osv.osv):
          @return: new purchase order id
 
         """
+        #TOFIX: merged order line should be unlink
         wf_service = netsvc.LocalService("workflow")
         def make_key(br, fields):
             list_key = []
@@ -654,7 +683,7 @@ class purchase_order_line(osv.osv):
 
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True),
         'date_planned': fields.date('Scheduled Date', required=True, select=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
@@ -694,6 +723,11 @@ class purchase_order_line(osv.osv):
         default.update({'state':'draft', 'move_ids':[],'invoiced':0,'invoice_lines':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
+    #TOFIX:
+    # - name of method should "onchange_product_id"
+    # - docstring
+    # - merge 'product_uom_change' method
+    # - split into small internal methods for clearity 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
             name=False, price_unit=False, notes=False, context={}):
@@ -767,6 +801,8 @@ class purchase_order_line(osv.osv):
         res['domain'] = domain
         return res
 
+    #TOFIX:
+    # - merge into 'product_id_change' method
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
             name=False, price_unit=False, notes=False, context={}):
@@ -891,23 +927,4 @@ class procurement_order(osv.osv):
         return res
 
 procurement_order()
-
-class stock_invoice_onshipping(osv.osv_memory):
-    _inherit = "stock.invoice.onshipping"
-
-    def create_invoice(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        res = super(stock_invoice_onshipping,self).create_invoice(cr, uid, ids, context=context)
-        purchase_obj = self.pool.get('purchase.order')
-        picking_obj = self.pool.get('stock.picking')
-        for pick_id in res:
-            pick = picking_obj.browse(cr, uid, pick_id, context=context)
-            if pick.purchase_id:
-                purchase_obj.write(cr, uid, [pick.purchase_id.id], {
-                    'invoice_ids': [(4, res[pick_id])]}, context=context)
-        return res
-
-stock_invoice_onshipping()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

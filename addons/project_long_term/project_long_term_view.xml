@@ -274,23 +274,6 @@
 
 
     # ------------------------------------------------------
-    # Project
-    # ------------------------------------------------------
-
-        <record id="project.view_project_user_form1" model="ir.ui.view">
-            <field name="name">Project Resource Calendar View</field>
-            <field name="model">project.project</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="project.edit_project"/>
-            <field name="arch" type="xml">
-                <field name="effective_hours" position="after">
-                    <field name="resource_calendar_id"/>
-                </field>
-
-            </field>
-       </record>
-
-    # ------------------------------------------------------
     # Project Task
     # ------------------------------------------------------
 
@@ -300,9 +283,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
-                <field name="sequence" position="after">
+                <xpath expr="//field[@name='effective_hours']" position="after">
                     <field name="phase_id"/>
-                </field>
+                </xpath>
             </field>
         </record>
         <record id="view_phase_task_search_form" model="ir.ui.view">
@@ -324,7 +307,7 @@
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
             <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" position="after">
-            <filter string="Project Phase" name="group_project_id_phase" icon="terp-folder-violet" domain="[]" context="{'group_by':'phase_id'}" groups="base.group_extended"/>
+                <filter string="Project Phase" name="group_project_id_phase" icon="terp-folder-violet" domain="[]" context="{'group_by':'phase_id'}" groups="base.group_extended"/>
             </filter>
             </field>
         </record>
@@ -342,22 +325,20 @@
         </record>
 
     <act_window
+        context="{'search_default_phase_id': [active_id], 'default_phase_id' : active_id}"
         id="project_phase_task_list"
         name="Related Tasks"
         res_model="project.task"
         src_model="project.phase"
         view_mode="tree,form"
-        context="{'search_default_phase_id': [active_id]}"
-        domain="[('phase_id', '=', active_id),('project_id','=',project_id)]"
         />
 
     <act_window
-        context="{'search_default_project_id': [active_id]}"
+        context="{'search_default_project_id': active_id, 'default_project_id': active_id}"
         id="act_project_phases"
         name="Phases"
         res_model="project.phase"
         src_model="project.project"
-        domain="[('project_id', '=', active_id)]"
         view_mode="tree,form"
         view_type="form" 
         />
@@ -367,12 +348,10 @@
     # ------------------------------------------------------
 
         <menuitem action="act_project_phase_list"
-            groups="base.group_extended"
             id="menu_project_phase_list" parent="project.menu_project_management" sequence="2"/>
 
         <menuitem action="act_project_phase"
             icon="STOCK_INDENT"
-            groups="base.group_extended"
             id="menu_project_phase"   parent="base.menu_project_long_term" sequence="1"/>
 
         <menuitem id="menu_resouce_allocation" action="act_resouce_allocation"
@@ -381,12 +360,12 @@
 
         <menuitem id="menu_pm_users_project1"
             groups="base.group_extended"
-            name="Users" parent="project.menu_definitions" sequence="3"/>
+            name="Resources" parent="project.menu_definitions" sequence="3"/>
 
         <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_main_pm" sequence="4" groups="project.group_project_user,project.group_project_manager"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="menu_pm_users_project1" sequence="2"/>
-        <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar" parent="menu_pm_users_project1" sequence="1"/>
-        <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves" parent="menu_pm_users_project1" sequence="1"/>
+        <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar" parent="menu_pm_users_project1" sequence="5"/>
+        <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves" parent="menu_pm_users_project1" sequence="3"/>
 
     </data>
 </openerp>

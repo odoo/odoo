@@ -68,7 +68,7 @@ class hr_recruitment_stage(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
-        'department_id':fields.many2one('hr.department', 'Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep tempy this field."),
+        'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep tempy this field."),
         'requirements': fields.text('Requirements')
     }
     _defaults = {
@@ -194,9 +194,27 @@ class hr_applicant(crm.crm_case, osv.osv):
         'state': lambda *a: 'draft',
         'priority': lambda *a: '',
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
     }
+
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        access_rights_uid = access_rights_uid or uid
+        stage_obj = self.pool.get('hr.recruitment.stage')
+        order = stage_obj._order
+        if read_group_order == 'stage_id desc':
+            # lame hack to allow reverting search, should just work in the trivial case
+            order = "%s desc" % order
+        stage_ids = stage_obj._search(cr, uid, ['|',('id','in',ids),('department_id','=',False)], order=order,
+                                      access_rights_uid=access_rights_uid, context=context)
+        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
+        # restore order of the search
+        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        return result
+
+    _group_by_full = {
+        'stage_id': _read_group_stage_ids
+    }
+
 
     def onchange_job(self,cr, uid, ids, job, context=None):
         result = {}
@@ -430,7 +448,18 @@ class hr_applicant(crm.crm_case, osv.osv):
                                                  })
         else:
             raise osv.except_osv(_('Warning!'),_('You must define Applied Job for Applicant !'))
-        return self.case_close(cr, uid, ids, *args)
+        self.case_close(cr, uid, ids, *args)
+
+        mod_obj = self.pool.get('ir.model.data')
+        act = mod_obj.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
+
+        act_obj = self.pool.get('ir.actions.act_window')
+        act_win = act_obj.read(cr, uid, act[1], [])
+
+        act_win['domain'] = [('id','=',emp_id)]
+        act_win['view_mode'] = 'form,tree'
+        act_win['res_id'] = emp_id
+        return act_win
 
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as draft

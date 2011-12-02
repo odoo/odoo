@@ -23,8 +23,8 @@
 
 
         <!--
-	Resource: product.uom
-	-->
+            Resource: product.uom
+        -->
         <record id="product_uom_unit" model="product.uom">
             <field name="category_id" ref="product_uom_categ_unit"/>
             <field name="name">PCE</field>
@@ -57,7 +57,7 @@
             <field name="category_id" ref="product_uom_categ_kgm"/>
             <!-- 'tonne' is the most common spelling in english-speaking countries,
                  the alternative is 'metric ton' in the US, abbreviated as 'mt' -->
-            <field name="name">tonne</field>
+            <field name="name">t</field>
             <field name="factor" eval="0.001"/>
             <field name="uom_type">bigger</field>
         </record>

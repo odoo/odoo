@@ -1,0 +1,76 @@
+-
+  !record {model: purchase.order, id: order_purchase1}:
+    partner_id: base.res_partner_asus
+    invoice_method: order
+    order_line:
+      - product_id: product.product_product_pc2
+        price_unit: 150.50
+        product_qty: 5.0
+      - product_id: product.product_product_pc1
+        price_unit: 450.20
+        product_qty: 2.0
+
+-
+  !record {model: purchase.order, id: order_purchase2}:
+    partner_id: base.res_partner_3
+    invoice_method: picking
+    order_line:
+      - product_id: product.product_product_pc3
+        price_unit: 900
+
+-
+  !record {model: purchase.order, id: order_purchase3}:
+    partner_id: base.res_partner_desertic_hispafuentes
+    order_line:
+      - product_id: product.product_product_0
+        price_unit: 900.20
+        product_qty: 10.0
+      - product_id: product.product_product_1
+        price_unit: 100.00
+        product_qty: 5
+
+-
+  !record {model: purchase.order, id: order_purchase4}:
+    partner_id: base.res_partner_4
+    order_line:
+      - product_id: product.product_product_pc2
+        price_unit: 40
+        product_qty: 5
+      - product_id: product.product_product_mb1
+        price_unit: 45
+        product_qty: 15.0
+      - product_id: product.product_product_mb2
+        price_unit: 45
+        product_qty: 15
+
+-
+  !record {model: purchase.order, id: order_purchase5}:
+    partner_id: base.res_partner_maxtor
+    order_line:
+      - product_id: product.product_product_cpu1
+        product_qty: 3
+      - product_id: product.product_product_cpu3
+        product_qty: 13
+      - product_id: product.product_product_hdd1
+        product_qty: 10
+
+-
+  !record {model: purchase.order, id: order_purchase6}:
+    partner_id: base.res_partner_vickingdirect0
+    order_line:
+      - product_id: product.product_product_hdd2
+        product_qty: 10
+      - product_id: product.product_product_ram
+        product_qty: 10
+      - product_id: product.product_product_ram512
+        product_qty: 10
+
+-
+  !record {model: purchase.order, id: order_purchase7}:
+    partner_id: base.res_partner_desertic_hispafuentes
+    order_line:
+      - product_id: product.product_product_0
+        product_qty: 5
+      - product_id: product.product_product_1
+        product_qty: 15
+

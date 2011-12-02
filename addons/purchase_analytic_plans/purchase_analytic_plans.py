@@ -35,9 +35,9 @@ class purchase_order(osv.osv):
     _name='purchase.order'
     _inherit='purchase.order'
 
-    def inv_line_create(self, cr, uid, a, ol):
-        res=super(purchase_order,self).inv_line_create(cr, uid, a, ol)
-        res[2]['analytics_id']=ol.analytics_id.id
+    def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
+        res = super(purchase_order, self)._prepare_inv_line(cr, uid, account_id, order_line, context=context)
+        res['analytics_id'] = order_line.analytics_id.id
         return res
 
 purchase_order()

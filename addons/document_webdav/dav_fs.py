@@ -1023,3 +1023,5 @@ class openerp_dav_handler(dav_interface):
             if cr: cr.close()
 
 #eof
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

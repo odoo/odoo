@@ -62,3 +62,5 @@ will disable LDAP authentication completely if installed at the same time.
     "installable": True,
     "certificate" : "00721290471310299725",
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -14,7 +14,7 @@
 
     <record model="ir.actions.act_window" id="crm_case_categ_meet_create_partner">
         <field name="name">Schedule a Meeting</field>
-        <field name="context" eval="{'default_state':'draft'}"/>
+        <field name="context">{'default_partner_id': active_id}</field>
     </record>
 
 
