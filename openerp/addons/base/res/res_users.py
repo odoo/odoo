@@ -522,6 +522,8 @@ class users(osv.osv):
 
 users()
 
+
+
 #
 # Extension of res.groups and res.users with a relation for "implied" or 
 # "inherited" groups.  Once a user belongs to a group, it automatically belongs
@@ -530,21 +532,38 @@ users()
 
 class groups_implied(osv.osv):
     _inherit = 'res.groups'
+
+    def _get_trans_implied(self, cr, uid, ids, field, arg, context=None):
+        "computes the transitive closure of relation implied_ids"
+        trans_memo = {}
+        def compute_trans(g):
+            "computes the list of group ids transitively implied by g"
+            # use a memo for performance and cycle avoidance
+            if g.id in trans_memo:
+                return trans_memo[g.id]
+            trans_memo[g.id] = set()
+            for h in g.implied_ids:
+                trans_memo[g.id].add(h.id)
+                trans_memo[g.id].update(compute_trans(h))
+            return trans_memo[g.id]
+        res = {}
+        for g in self.browse(cr, 1, ids, context):
+            res[g.id] = list(compute_trans(g))
+        return res
+
     _columns = {
         'implied_ids': fields.many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
             string='Inherits', help='Users of this group automatically inherit those groups'),
+        'trans_implied_ids': fields.function(_get_trans_implied,
+            type='many2many', relation='res.groups', string='Transitively inherits'),
     }
 
     def get_closure(self, cr, uid, ids, context=None):
-        "return the closure of ids, i.e., all groups recursively implied by ids"
-        closure = set()
-        todo = self.browse(cr, 1, ids)
-        while todo:
-            g = todo.pop()
-            if g.id not in closure:
-                closure.add(g.id)
-                todo.extend(g.implied_ids)
-        return list(closure)
+        "return the reflexive transitive closure of implied_ids for group ids"
+        res = set()
+        for g in self.browse(cr, 1, ids):
+            res.update(map(int, [g] + g.trans_implied_ids))
+        return list(res)
 
     def create(self, cr, uid, values, context=None):
         users = values.pop('users', None)
@@ -557,11 +576,11 @@ class groups_implied(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         res = super(groups_implied, self).write(cr, uid, ids, values, context)
         if values.get('users') or values.get('implied_ids'):
-            # add implied groups (to all users of each group)
+            # add all implied groups (to all users of each group)
             for g in self.browse(cr, uid, ids):
-                gids = self.get_closure(cr, uid, [g.id], context)
-                users = [(4, u.id) for u in g.users]
-                super(groups_implied, self).write(cr, uid, gids, {'users': users}, context)
+                gids = map(int, g.trans_implied_ids)
+                vals = {'users': [(4, u.id) for u in g.users]}
+                super(groups_implied, self).write(cr, uid, gids, vals, context)
         return res
 
     def get_maximal(self, cr, uid, ids, context=None):
