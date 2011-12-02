@@ -697,7 +697,7 @@ def name_selection_groups(ids): return 'sel_groups_' + '_'.join(map(str, ids))
 def is_boolean_group(name): return name.startswith('in_group_')
 def is_boolean_groups(name): return name.startswith('in_groups_')
 def is_selection_groups(name): return name.startswith('sel_groups_')
-def is_field_group(name):
+def is_reified_group(name):
     return is_boolean_group(name) or is_boolean_groups(name) or is_selection_groups(name)
 
 def get_boolean_group(name): return int(name[9:])
@@ -754,7 +754,7 @@ class users_view(osv.osv):
         if not fields:
             group_fields, fields = [], self.fields_get(cr, uid, context=context).keys()
         else:
-            group_fields, fields = partition(is_field_group, fields)
+            group_fields, fields = partition(is_reified_group, fields)
         if group_fields:
             group_obj = self.pool.get('res.groups')
             fields.append('groups_id')
