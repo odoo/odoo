@@ -547,9 +547,9 @@ class account_voucher(osv.osv):
 
         #order the lines by most old first
         ids.reverse()
-        moves = move_line_pool.browse(cr, uid, ids, context=context)
+        account_move_lines = move_line_pool.browse(cr, uid, ids, context=context)
 
-        for line in moves:
+        for line in account_move_lines:
             if line.credit and line.reconcile_partial_id and ttype == 'receipt':
                 continue
             if line.debit and line.reconcile_partial_id and ttype == 'payment':
@@ -578,7 +578,7 @@ class account_voucher(osv.osv):
                 total_debit += line.debit and line.amount_currency or 0.0
 
         #voucher line creation
-        for line in moves:
+        for line in account_move_lines:
             if line.credit and line.reconcile_partial_id and ttype == 'receipt':
                 continue
             if line.debit and line.reconcile_partial_id and ttype == 'payment':
@@ -589,7 +589,7 @@ class account_voucher(osv.osv):
             else:
                 amount_original = currency_pool.compute(cr, uid, company_currency, currency_id, line.credit or line.debit or 0.0)
                 amount_unreconciled = currency_pool.compute(cr, uid, company_currency, currency_id, abs(line.amount_residual))
-            currency_id = line.currency_id and line.currency_id.id or line.company_id.currency_id.id
+            line_currency_id = line.currency_id and line.currency_id.id or company_currency
             rs = {
                 'name':line.move_id.name,
                 'type': line.credit and 'dr' or 'cr',
@@ -600,12 +600,11 @@ class account_voucher(osv.osv):
                 'date_original':line.date,
                 'date_due':line.date_maturity,
                 'amount_unreconciled': amount_unreconciled,
-                'currency_id': currency_id,
+                'currency_id': line_currency_id,
             }
 
             #split voucher amount by most old first, but only for lines in the same currency
             if not move_line_found:
-                line_currency_id = line.currency_id and line.currency_id.id or company_currency
                 if currency_id == line_currency_id:
                     if line.credit:
                         amount = min(amount_unreconciled, abs(total_debit))
@@ -1029,7 +1028,7 @@ class account_voucher(osv.osv):
             voucher_line = move_line_obj.create(cr, uid, move_line)
             rec_ids = [voucher_line, line.move_line_id.id]
 
-            if currency_rate_difference:
+            if not currency_obj.is_zero(cr, uid, voucher_brw.company_id.currency_id, currency_rate_difference):
                 # Change difference entry
                 exch_lines = self._get_exchange_lines(cr, uid, line, move_id, currency_rate_difference, company_currency, current_currency, context=context)
                 new_id = move_line_obj.create(cr, uid, exch_lines[0],context)
@@ -1245,7 +1244,6 @@ class account_voucher_line(osv.osv):
     }
     _defaults = {
         'name': '',
-        'reconcile': False,
     }
 
     def onchange_reconcile(self, cr, uid, ids, reconcile, amount, amount_unreconciled, context=None):
@@ -1418,6 +1416,7 @@ def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
             result = operation[2]
         elif operation[0] == 1:
             result = target_osv.read(cr, uid, operation[1], fields, context=context)
+            if not result: result = {}
             result.update(operation[2])
         elif operation[0] == 4:
             result = target_osv.read(cr, uid, operation[1], fields, context=context)
