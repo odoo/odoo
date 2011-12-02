@@ -670,7 +670,7 @@ class marketing_campaign_workitem(osv.osv):
 
     def _process_one(self, cr, uid, workitem, context=None):
         if workitem.state != 'todo':
-            return
+            return False
 
         activity = workitem.activity_id
         proxy = self.pool.get(workitem.object_id.model)

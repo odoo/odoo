@@ -61,7 +61,6 @@ Note: If you need demo data, you can install the marketing_campaign_crm_demo mod
         'marketing_campaign_demo.xml',
     ],
     'test': [
-        'test/marketing_campaign_demo.yml',
         'test/marketing_campaign.yml',
      ],
     'installable': True,
