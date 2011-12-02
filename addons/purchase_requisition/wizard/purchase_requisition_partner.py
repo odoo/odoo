@@ -31,7 +31,7 @@ class purchase_requisition_partner(osv.osv_memory):
     _description = "Purchase Requisition Partner"
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', required=True,domain=[('supplier', '=', True)]),
-        'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True),
+        'partner_address_id':fields.many2one('res.partner.address', 'Address'),
     }
 
     def view_init(self, cr, uid, fields_list, context=None):

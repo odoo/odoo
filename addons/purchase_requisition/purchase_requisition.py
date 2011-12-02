@@ -133,7 +133,7 @@ class purchase_order(osv.osv):
                             proc_obj.write(cr, uid, proc_ids, {'purchase_id': po.id})
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
-                    self.pool.get('purchase.requisition').write(cr, uid, [po.requisition_id.id], {'state':'done','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
+                    po.requisition_id.tender_done(context=context)
         return res
 
 purchase_order()
