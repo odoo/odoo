@@ -30,11 +30,11 @@
     proc_ids = self.search(cr, uid, [('product_id','=', ref('product.product_product_cpu2'))])
     assert proc_ids, 'No Procurement created.'
     proc_order = self.browse(cr, uid, proc_ids)
-    assert proc_order[0].product_qty == 15.0,"Procurement order is not corresponded to product quantities"
+    assert proc_order[0].product_qty == 15.0,"Procurement product quantity is not corresponded."
 -
   I check product quantity.
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product.product_product_cpu2'))
-    assert product.virtual_available >= 5.0,"After run the scheduler the product virtual stock still not update as specified in stock rule"
+    assert product.virtual_available >= 5.0,"After run the scheduler product's virtual stock is not updated."
 
