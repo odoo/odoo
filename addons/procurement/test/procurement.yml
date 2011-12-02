@@ -1,0 +1,25 @@
+-
+  For test the procurement module, First I have to check current product quantity.
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref('product.product_product_cpu2'))
+    assert product.virtual_available < 5.0,'Virtual stock have more quantities. so, not possible to check minimum stock rule process'
+-
+  I create minimum stock rule for product CPU2.
+-
+  !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op0}:
+    company_id: base.main_company
+    location_id: stock.stock_location_stock
+    logic: max
+    name: OP/00008
+    product_id: product.product_product_cpu2    
+    product_max_qty: 15.0
+    product_min_qty: 5.0
+    product_uom: product.product_uom_kgm
+    qty_multiple: 1
+    warehouse_id: stock.warehouse0
+-
+  I run the scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
