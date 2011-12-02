@@ -223,8 +223,8 @@
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
     assert (move_line.amount_residual_currency == 55.56 and move_line.amount_residual == 20) , "Residual amount is not correct for first Invoice"
--    toto
-  I check the residual amuont of Invoice2, should be 22.22 in residual currency and 10 in amount_residual
+-
+  I check the residual amount of Invoice2, should be 22.22 in residual currency and 10 in amount_residual
 -
    !python {model: account.invoice}: |
     invoice_id = self.browse(cr, uid, ref("account_second_invoice_feb_michal"))
@@ -328,8 +328,8 @@
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
     assert (move_line.amount_residual_currency == 0.0 and move_line.amount_residual == 0.0 and invoice_id.state == 'paid') , "Residual amount is not correct for first Invoice"
--    
-  I check the residual amuont of invoice 2, should be 0 in residual currency and 0 in amount_residual and paid
+-
+  I check the residual amount of invoice 2, should be 0 in residual currency and 0 in amount_residual and paid
 -
    !python {model: account.invoice}: |
     invoice_id = self.browse(cr, uid, ref("account_second_invoice_feb_michal"))
