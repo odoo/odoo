@@ -155,6 +155,7 @@
             res_model="resource.calendar.leaves"
             src_model="resource.calendar"
             view_mode="calendar,tree,form"
+            context="{'default_calendar_id': active_id}"
             domain="[('calendar_id','=',active_id), ('resource_id','=',False)]"/>
 
         <act_window
@@ -163,6 +164,7 @@
             res_model="resource.calendar.leaves"
             src_model="resource.calendar"
             view_mode="calendar,tree,form"
+            context="{'default_calendar_id': active_id}"
             domain="[('calendar_id','=',active_id), ('resource_id','!=',False)]"/>
 
         <record id="resource_resource_form" model="ir.ui.view">

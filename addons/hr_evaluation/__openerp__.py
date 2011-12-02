@@ -27,7 +27,7 @@
     'complexity': "easy",
     "website": "http://www.openerp.com",
     "images": ["images/hr_evaluation_analysis.jpeg","images/hr_evaluation.jpeg"],
-    "depends": ["hr",'hr_recruitment','survey'],
+    "depends": ["hr","base_calendar","survey"],
     "description": """
 Ability to create employees evaluation.
 =======================================

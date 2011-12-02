@@ -297,3 +297,5 @@ if __name__ == '__main__':
 
 #mngr = manager.GetManager()
 #mngr.ShowManager("IDD_MANAGER")
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

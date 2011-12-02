@@ -7,7 +7,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Manufacturing board">
-                    <board style="1-2">
+                    <board style="2-1">
                         <column>
                             <action name="%(mrp.mrp_production_action2)d" string="Next Production Orders"/>
                             <action name="%(procurement.procurement_exceptions)d" string="Procurements in Exception" domain="[('state','=','exception')]"/>

@@ -9,3 +9,5 @@ class FakeParser:
 	bitmaps = {'IDB_OPENERPLOGO': 'OpenERP_Logo.bmp'}
 def ParseDialogs(s):
 	return FakeParser()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

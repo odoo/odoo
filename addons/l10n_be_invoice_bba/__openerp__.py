@@ -53,3 +53,5 @@ A 'random' Structured Communication will generated if no algorithm is specified 
     ],
     'active': False,
     'installable': True,}
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
