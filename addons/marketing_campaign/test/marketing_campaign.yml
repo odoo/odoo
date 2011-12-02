@@ -22,11 +22,6 @@
   !assert {model: marketing.campaign.segment, id: marketing_campaign_segment0}:
     - state == 'running'
 -
-  I set credit limit for customer.
--
-  !python {model: res.partner}: |
-    self.write(cr, uid, [ref("base.res_partner_agrolait")], {'credit_limit':1000}, context=context)
--
   I synchronized segment manually to see all step of activity and process covered on this campaign.
 -
   !python {model: marketing.campaign.segment}: |
@@ -36,19 +31,14 @@
 -
   !python {model: marketing.campaign.workitem}: |
     ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
-    ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_1'))])
+    ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_0'))])
     assert ids, 'Followup item is not created for first activity.'
--
-  Now I increase credit limit of customer
--
-  !python {model: res.partner}: |
-    self.write(cr, uid, [ref("base.res_partner_agrolait")], {'credit_limit':41000}, context=context)
 -  
   I process followup of first activity.
 -
   !python {model: marketing.campaign.workitem}: |
     ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
-    ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_1'))])
+    ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_0'))])
     self.process(cr, uid, ids)
     record = self.browse(cr, uid, ids)[0]
     assert record.state == "done", "Followup item should be closed after process."
@@ -57,21 +47,44 @@
 -
   !python {model: marketing.campaign.workitem}: |
     ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
-    ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_2'))])
+    ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_1'))])
     assert ids, 'Followup item is not created for second activity.'
+-
+  Now I increase credit limit of customer
+-
+  !python {model: res.partner}: |
+    self.write(cr, uid, [ref("base.res_partner_agrolait")], {'credit_limit':41000}, context=context)
+-  
+  I process followup of second activity after set draft.
+-
+  !python {model: marketing.campaign.workitem}: |
+    ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
+    ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_1'))])
+    self.button_draft(cr, uid, ids, context=context)
+    self.process(cr, uid, ids, context=context)
+    record = self.browse(cr, uid, ids[0], context=context)
+    assert record.state == "done", "Followup item should be closed after process."
+-
+  I check followup detail of third activity after process of second activity.
+-
+  !python {model: marketing.campaign.workitem}: |
+    ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
+    ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_2'))])
+    assert ids, 'Followup item is not created for third activity.'
 -
   Now I increase credit limit of customer
 -
   !python {model: res.partner}: |
     self.write(cr, uid, [ref("base.res_partner_agrolait")], {'credit_limit':151000}, context=context)
 -  
-  I process followup of second activity.
+  I process followup of third activity after set draft.
 -
   !python {model: marketing.campaign.workitem}: |
     ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
     ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_2'))])
-    self.process(cr, uid, ids)
-    record = self.browse(cr, uid, ids)[0]
+    self.button_draft(cr, uid, ids, context=context)
+    self.process(cr, uid, ids, context=context)
+    record = self.browse(cr, uid, ids[0], context=context)
     assert record.state == "done", "Followup item should be closed after process."
 -
   I print workitem report.
