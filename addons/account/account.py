@@ -789,9 +789,11 @@ class account_journal(osv.osv):
         result = self.browse(cr, user, ids, context=context)
         res = []
         for rs in result:
-            name = rs.name
             if rs.currency:
-                name = "%s (%s)" % (rs.name, rs.currency.name)
+                currency = rs.currency
+            else:
+                currency = rs.company_id.currency_id
+            name = "%s (%s)" % (rs.name, currency.name)
             res += [(rs.id, name)]
         return res
 
