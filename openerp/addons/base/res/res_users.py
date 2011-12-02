@@ -40,8 +40,25 @@ import openerp.exceptions
 
 class groups(osv.osv):
     _name = "res.groups"
-    _order = 'name'
     _description = "Access Groups"
+    _order = 'full_name'
+    _rec_name = 'full_name'
+
+    def _get_full_name(self, cr, uid, ids, field, arg, context=None):
+        res = {}
+        for g in self.browse(cr, uid, ids, context):
+            if g.category_id:
+                res[g.id] = '%s / %s' % (g.category_id.name, g.name)
+            else:
+                res[g.id] = g.name
+        return res
+
+    def _from_group_ids(self, cr, uid, ids, context=None):
+        return ids
+
+    def _from_category_ids(obj, cr, uid, ids, context=None):
+        return obj.pool.get('res.groups').search(cr, uid, [('category_id', 'in', ids)], context=context)
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
@@ -50,9 +67,16 @@ class groups(osv.osv):
             'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'comment' : fields.text('Comment',size=250),
+        'category_id': fields.many2one('ir.module.category', 'Application', select=True),
+        'full_name': fields.function(_get_full_name, type='char', string='Group Name',
+            store={
+                'res.groups': (_from_group_ids, ['category_id', 'name'], 10),
+                'ir.module.category': (_from_category_ids, ['name'], 10),
+            }),
     }
+
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'The name of the group must be unique !')
+        ('name_uniq', 'unique (full_name)', 'The name of the group must be unique !')
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -643,31 +667,6 @@ users_implied()
 
 class groups_view(osv.osv):
     _inherit = 'res.groups'
-    _rec_name = 'full_name'
-
-    def _get_full_name(self, cr, uid, ids, field, arg, context=None):
-        res = {}
-        for g in self.browse(cr, uid, ids, context):
-            if g.category_id:
-                res[g.id] = '%s / %s' % (g.category_id.name, g.name)
-            else:
-                res[g.id] = g.name
-        return res
-
-    def _from_group_ids(self, cr, uid, ids, context=None):
-        return ids
-
-    def _from_category_ids(obj, cr, uid, ids, context=None):
-        return obj.pool.get('res.groups').search(cr, uid, [('category_id', 'in', ids)], context=context)
-
-    _columns = {
-        'category_id': fields.many2one('ir.module.category', 'Application', select=True),
-        'full_name': fields.function(_get_full_name, type='char', string='Group Name',
-            store={
-                'res.groups': (_from_group_ids, ['category_id', 'name'], 10),
-                'ir.module.category': (_from_category_ids, ['name'], 10),
-            }),
-    }
 
     def get_classified(self, cr, uid, context=None):
         """ classify all groups by prefix; return a pair (apps, others) where
