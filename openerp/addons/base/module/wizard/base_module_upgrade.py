@@ -116,3 +116,5 @@ class base_module_upgrade(osv.osv_memory):
         return self.pool.get('res.config').next(cr, uid, [], context=context)
 
 base_module_upgrade()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

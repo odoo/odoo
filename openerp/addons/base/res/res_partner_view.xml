@@ -281,6 +281,7 @@
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
             <field name="domain">[('domain','=','partner')]</field>
+            <field name="context">{'default_domain': 'partner'}</field>
             <field name="help">Manage the partner titles you want to have available in your system. The partner titles is the legal status of the company: Private Limited, SA, etc.</field>
         </record>
 
@@ -292,6 +293,7 @@
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
             <field name="domain">[('domain','=','contact')]</field>
+            <field name="context">{'default_domain': 'contact'}</field>
             <field name="help">Manage the contact titles you want to have available in your system and the way you want to print them in letters and other documents. Some example: Mr., Mrs. </field>
         </record>
 
@@ -541,7 +543,7 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
-            <field name="context">{'search_default_supplier': 1}</field>
+            <field name="context">{'search_default_supplier': 1,'default_customer': 0,'default_supplier': 1}</field>
             <field name="filter" eval="True"/>
             <field name="help">You can access all information regarding your suppliers from the supplier form: accounting data, history of emails, meetings, purchases, etc. You can uncheck the 'Suppliers' filter button in order to search in all your partners, including customers and prospects.</field>
         </record>

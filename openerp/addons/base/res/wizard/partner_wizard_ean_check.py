@@ -75,3 +75,5 @@ class partner_wizard_ean_check(osv.osv_memory):
         return {}
 
 partner_wizard_ean_check()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

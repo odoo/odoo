@@ -40,3 +40,5 @@ def check(db, uid, passwd):
     pool = pooler.get_pool(db)
     user_obj = pool.get('res.users')
     return user_obj.check(db, uid, passwd)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -153,3 +153,5 @@ def init_servers():
         netrpcd = TinySocketServerThread(
             tools.config.get('netrpc_interface', ''), 
             int(tools.config.get('netrpc_port', 8070)))
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -19,7 +19,10 @@ ADMIN_USER = common.ADMIN_USER
 ADMIN_USER_ID = common.ADMIN_USER_ID
 ADMIN_PASSWORD = common.ADMIN_PASSWORD
 
-setUpModule = common.setUpModule
+def setUpModule():
+  common.start_openerp()
+  common.create_xmlrpc_proxies()
+
 tearDownModule = common.tearDownModule
 
 class test_xmlrpc(unittest2.TestCase):
@@ -64,3 +67,5 @@ class test_xmlrpc(unittest2.TestCase):
 if __name__ == '__main__':
     unittest2.main()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

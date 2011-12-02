@@ -1212,7 +1212,6 @@ class BaseModel(object):
         if not context:
             context = {}
         fields = map(fix_import_export_id_paths, fields)
-        logger = netsvc.Logger()
         ir_model_data_obj = self.pool.get('ir.model.data')
 
         # mode: id (XML id) or .id (database id) or False for name_get
@@ -1290,7 +1289,7 @@ class BaseModel(object):
                 # ID of the record using a XML ID
                 if field_name == 'id':
                     try:
-                        data_res_id = _get_id(model_name, line[i], current_module, 'id')
+                        data_res_id = _get_id(model_name, line[i], current_module)
                     except ValueError:
                         pass
                     xml_id = line[i]
@@ -1363,42 +1362,43 @@ class BaseModel(object):
 
                 row[field_name] = res or False
 
-            result = (row, nbrmax, warning, data_res_id, xml_id)
-            return result
+            return row, nbrmax, warning, data_res_id, xml_id
 
         fields_def = self.fields_get(cr, uid, context=context)
 
-        if config.get('import_partial', False) and filename:
-            data = pickle.load(file(config.get('import_partial')))
-
         position = 0
-        while position<len(datas):
-            res = {}
+        if config.get('import_partial') and filename:
+            with open(config.get('import_partial'), 'rb') as partial_import_file:
+                data = pickle.load(partial_import_file)
+                position = data.get(filename, 0)
 
+        while position<len(datas):
             (res, position, warning, res_id, xml_id) = \
                     process_liness(self, datas, [], current_module, self._name, fields_def, position=position)
             if len(warning):
                 cr.rollback()
-                return (-1, res, 'Line ' + str(position) +' : ' + '!\n'.join(warning), '')
+                return -1, res, 'Line ' + str(position) +' : ' + '!\n'.join(warning), ''
 
             try:
                 ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, mode=mode, xml_id=xml_id,
                      noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
-                return (-1, res, 'Line ' + str(position) + ' : ' + tools.ustr(e), '')
+                return -1, res, 'Line ' + str(position) + ' : ' + tools.ustr(e), ''
 
-            if config.get('import_partial', False) and filename and (not (position%100)):
-                data = pickle.load(file(config.get('import_partial')))
+            if config.get('import_partial') and filename and (not (position%100)):
+                with open(config.get('import_partial'), 'rb') as partial_import:
+                    data = pickle.load(partial_import)
                 data[filename] = position
-                pickle.dump(data, file(config.get('import_partial'), 'wb'))
+                with open(config.get('import_partial'), 'wb') as partial_import:
+                    pickle.dump(data, partial_import)
                 if context.get('defer_parent_store_computation'):
                     self._parent_store_compute(cr)
                 cr.commit()
 
         if context.get('defer_parent_store_computation'):
             self._parent_store_compute(cr)
-        return (position, 0, 0, 0)
+        return position, 0, 0, 0
 
     def get_invalid_fields(self, cr, uid):
         return list(self._invalids)
@@ -4026,7 +4026,7 @@ class BaseModel(object):
         upd_todo = []
         unknown_fields = []
         for v in vals.keys():
-            if v in self._inherit_fields:
+            if v in self._inherit_fields and v not in self._columns:
                 (table, col, col_detail, original_parent) = self._inherit_fields[v]
                 tocreate[table][v] = vals[v]
                 del vals[v]

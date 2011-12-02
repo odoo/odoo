@@ -31,6 +31,13 @@ class Country(osv.osv):
         'code': fields.char('Country Code', size=2,
             help='The ISO country code in two chars.\n'
             'You can use this field for quick search.', required=True),
+        'address_format': fields.text('Address Format', help="""You can state here the usual format to use for the \
+addresses belonging to this country.\n\nYou can use the python-style string patern with all the field of the address \
+(for example, use '%(street)s' to display the field 'street') plus
+            \n%(state_name)s: the name of the state
+            \n%(state_code)s: the code of the state
+            \n%(country_name)s: the name of the country
+            \n%(country_code)s: the code of the country"""),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)',
@@ -38,6 +45,9 @@ class Country(osv.osv):
         ('code_uniq', 'unique (code)',
             'The code of the country must be unique !')
     ]
+    _defaults = {
+        'address_format': "%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s",
+    }
 
     def name_search(self, cr, user, name='', args=None, operator='ilike',
             context=None, limit=100):
