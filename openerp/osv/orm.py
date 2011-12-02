@@ -3659,6 +3659,13 @@ class BaseModel(object):
         self.check_unlink(cr, uid)
 
         properties = self.pool.get('ir.property')
+        ##search if there are properties created with resource that is about to be deleted
+        ## if found delete the properties too.
+        unlink_properties = properties.search(cr, uid, [('res_id', 'in', ['%s,%s' % (self._name, i) for i in ids])], context=context)
+        if unlink_properties:
+            properties.unlink(cr, uid, unlink_properties, context=context)
+        
+        ## check if the model is used as a default property
         domain = [('res_id', '=', False),
                   ('value_reference', 'in', ['%s,%s' % (self._name, i) for i in ids]),
                  ]
