@@ -681,6 +681,12 @@ class account_move_line(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
+        if context and context.get('fiscalyear', False):
+            periods = self.pool.get('account.fiscalyear').browse(cr, uid, context.get('fiscalyear'), context=context).period_ids
+            period_ids = [period.id for period in periods]
+            args.append(('period_id', 'in', period_ids))
+        if context and context.get('periods', False):
+            args.append(('period_id', 'in', context.get('periods')))
         if context and context.get('next_partner_only', False):
             if not context.get('partner_id', False):
                 partner = self.get_next_partner_only(cr, uid, offset, context)
