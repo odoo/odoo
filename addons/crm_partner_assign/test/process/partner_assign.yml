@@ -30,7 +30,7 @@
 -
   !python {model: crm.lead.forward.to.partner}: |
     context.update({'active_model': 'crm.lead', 'active_id': ref('crm.crm_case_abcfuelcounits0'), 'active_ids': [ref('crm.crm_case_abcfuelcounits0')]})
-    forward_id = self.create(cr, uid, {'send_to': 'partner'}, context=context)
+    forward_id = self.create(cr, uid, {'email_from': 'test@openerp.com', 'send_to': 'partner'}, context=context)
     try:
       self.action_forward(cr, uid, [forward_id], context=context)
     except:
