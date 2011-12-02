@@ -294,7 +294,7 @@ class project_issue(crm.crm_case, osv.osv):
         data_obj = self.pool.get('ir.model.data')
         task_obj = self.pool.get('project.task')
 
-
+        
         if context is None:
             context = {}
 
@@ -306,7 +306,7 @@ class project_issue(crm.crm_case, osv.osv):
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-
+        
         for bug in case_obj.browse(cr, uid, ids, context=context):
             new_task_id = task_obj.create(cr, uid, {
                 'name': bug.name,
@@ -314,7 +314,7 @@ class project_issue(crm.crm_case, osv.osv):
                 'description':bug.description,
                 'date': bug.date,
                 'project_id': bug.project_id.id,
-                'priority': bug.priority,
+                'priority': tools.ustr(int(bug.priority) - 1),
                 'user_id': bug.user_id.id,
                 'planned_hours': 0.0,
             })
@@ -324,7 +324,6 @@ class project_issue(crm.crm_case, osv.osv):
                 'state':'pending'
             }
             case_obj.write(cr, uid, [bug.id], vals)
-
         return  {
             'name': _('Tasks'),
             'view_type': 'form',
