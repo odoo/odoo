@@ -61,7 +61,8 @@ Creates a dashboard for CRM that includes:
         'mail',
         'base_calendar',
         'resource',
-        'board'
+        'board',
+        'fetchmail'
     ],
     'init_xml': [
         'crm_data.xml',
