@@ -1,5 +1,8 @@
 openerp.web.page = function (openerp) {
-    
+
+var _t = openerp.web._t;
+var QWeb = openerp.web.qweb;
+
     openerp.web.views.add('page', 'openerp.web.PageView');
     openerp.web.PageView = openerp.web.FormView.extend({
         form_template: "PageView",
@@ -9,12 +12,15 @@ openerp.web.page = function (openerp) {
         },
         on_loaded: function(data) {
             this._super(data);
-            this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
+            this.$form_header.find('button.oe_form_button_edit').click(this.on_button_edit);
+            this.$form_header.find('button.oe_form_button_create').click(this.on_button_create);
             this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
             this.$form_header.find('button.oe_form_button_delete').click(this.on_button_delete);
-  
-        }, 
-        on_button_new: function() {
+        },
+        on_button_edit: function() {
+            return this.do_switch_view('form');
+        },
+        on_button_create: function() {
             this.dataset.index = null;
             return this.do_switch_view('form');
         },
@@ -25,7 +31,7 @@ openerp.web.page = function (openerp) {
                 self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
                     return self.on_created({ result : new_id });
                 }).then(function() {
-                    return this.do_switch_view('form');
+                    return self.do_switch_view('form');
                 }).then(function() {
                     def.resolve();
                 });
@@ -50,7 +56,6 @@ openerp.web.page = function (openerp) {
             return def.promise();
         }
     });
-    
     openerp.web.form.FieldReadonly = openerp.web.form.Field.extend({
 
     });

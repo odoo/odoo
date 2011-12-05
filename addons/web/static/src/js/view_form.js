@@ -41,8 +41,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.has_been_loaded = $.Deferred();
         this.$form_header = null;
         this.translatable_fields = [];
-        _.defaults(this.options, {"always_show_new_button": true,
-            "not_interactible_on_create": false});
+        _.defaults(this.options, {
+            "not_interactible_on_create": false
+        });
         this.mutating_lock = $.Deferred();
         this.initial_mutating_lock = this.mutating_lock;
         this.on_change_lock = $.Deferred().resolve();
@@ -102,6 +103,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
 
         this.$form_header.find('button.oe_form_button_save').click(this.on_button_save);
+        this.$form_header.find('button.oe_form_button_cancel').click(this.on_button_cancel);
 
         if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
@@ -138,17 +140,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             deferred_stack = $.Deferred.queue();
         if (!record) {
             throw("Form: No record received");
-        }
-        if (!record.id) {
-            this.$form_header.find('.oe_form_on_create').show();
-            this.$form_header.find('.oe_form_on_update').hide();
-            if (!this.options["always_show_new_button"]) {
-                this.$form_header.find('button.oe_form_button_new').hide();
-            }
-        } else {
-            this.$form_header.find('.oe_form_on_create').hide();
-            this.$form_header.find('.oe_form_on_update').show();
-            this.$form_header.find('button.oe_form_button_new').show();
         }
         this.datarecord = record;
 
@@ -365,6 +356,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         return this.do_save().then(function() {
             self.do_switch_view('page');
         });
+    },
+    on_button_cancel: function() {
+        return this.do_switch_view('page');
     },
     on_button_new: function() {
         var self = this;

@@ -263,7 +263,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         }
 
         this.$element
-            .find('.views-switchers button').removeAttr('disabled')
+            .find('.oe_vm_switch button').removeAttr('disabled')
             .filter('[data-view-type="' + view_type + '"]')
             .attr('disabled', true);
 
