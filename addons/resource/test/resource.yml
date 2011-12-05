@@ -1,5 +1,10 @@
--  | 
-  In order to test resource calendar, I use the Demo record '38 Hours/Week'.
+-
+  In order to test resource calendar.
+  I assign workig calendar '38 Hours/Week' to human resource.
+-
+  !python {model: resource.resource}: |    
+    self.write(cr, uid, [ref('resource_analyst'), ref('resource_designer'), ref('resource_developer')], {'calendar_id' : ref('timesheet_group1')})
+
 -
   I check the working hour on day for resource 'Demo Resource' using calendar '38 Hours/Week' .
 -
@@ -15,7 +20,7 @@
   !python {model: resource.calendar}: |
     from datetime import datetime
     dt = datetime.now()
-    result = self.interval_get(cr, uid, ref('timesheet_group1'), dt, 6.0, ref('resource_resource_demorsource'))
+    result = self.interval_get(cr, uid, ref('timesheet_group1'), dt, 6.0, ref('resource_analyst'))
     assert result, 'No Working Internal Timeming Generated'
     
 -
@@ -33,5 +38,5 @@
   !python {model: resource.calendar}: |
     from datetime import datetime, timedelta
     dt_from = datetime.now()
-    hours = self.interval_min_get(cr, uid, ref('timesheet_group1'), dt_from, 30.0, resource=ref('resource_resource_demorsource'))
+    hours = self.interval_min_get(cr, uid, ref('timesheet_group1'), dt_from, 30.0, resource=ref('resource_analyst'))
     assert hours, 'No Working Schedule Generated.'

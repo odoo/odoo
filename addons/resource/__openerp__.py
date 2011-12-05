@@ -46,10 +46,7 @@ It also manages the leaves of every resource.
     'demo_xml': ['resource_demo.xml'
     ],
     'test': [
-                'test/process/test_resource.yml',
-                'test/process/test_resource_calendar.yml',
-                'test/ui/on_change_resource.yml',
-                'test/ui/duplicate_resource.yml',
+                'test/resource.yml',
             ],
     'installable': True,
     'active': False,
