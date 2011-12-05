@@ -176,7 +176,7 @@ class mrp_bom(osv.osv):
         @param arg: User defined argument
         @return:  Dictionary of values
         """
-        res = dict(map(lambda x: (x,''), ids))
+        res = dict.fromkeys(ids, False)
         for line in self.browse(cr, uid, ids, context=context):
             if line.type == 'phantom' and not line.bom_id:
                 res[line.id] = 'set'
