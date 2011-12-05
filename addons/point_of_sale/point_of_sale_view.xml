@@ -797,14 +797,16 @@
           <field name="name">Start Point of Sale</field>
           <field name="tag">pos.ui</field>
         </record>
+
         <record id="menu_point_root_touchscreen" model="ir.ui.menu">
           <field name="name">Point of Sale</field>
           <field name="sequence" eval="20"/>
-          <field name="web_icon">images/pos.png</field>
-          <field name="web_icon_hover">images/pos-hover.png</field>
           <field name="action" ref="action_pos_pos"/>
         </record>
 
+        <!-- use menuitem to add web_icon and web_icon_hover above -->
+        <menuitem id="menu_point_root_touchscreen"
+            web_icon="images/pos.png" web_icon_hover="images/pos-hover.png"/>
 
     </data>
 </openerp>
