@@ -1192,7 +1192,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                         } else if (column.type === 'float') {
                             format = "%.2f";
                         }
-                        $('<td>')
+                        $('<td class="oe-number">')
                             .text(_.str.sprintf(format, value))
                             .appendTo($row);
                     } else {
