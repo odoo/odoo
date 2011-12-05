@@ -24,17 +24,6 @@ import os
 from tools.translate import _
 
 
-class translate_message(osv.osv_memory):
-    _name = "translate.message"
-    _description = "Translation Message"
-
-    _columns = {
-        'message' : fields.text('Message', readonly=True),
-     }
-
-translate_message()
-
-
 class wizard_multi_charts_accounts(osv.osv_memory):
     """
     Change wizard that a new account chart for a company.
@@ -62,17 +51,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         #find the source from Account Template
         for x in in_obj.browse(cr, uid, in_ids):
             src.update({x.id: x.name})
-        message = ''
         for lang in langs:
-            notdone = []
             #find the value from Translation
             value = xlat_obj._get_ids(cr, uid, in_obj._name + ',' + in_field, 'model', lang, in_ids)
             for j in range(len(in_ids)):
                 in_id = in_ids[j]
-                if not value[in_id]:
-                    # if source have no translation available
-                    notdone.append(src[in_id])
-                else:
+                if value[in_id]:
                     #copy Translation from Source to Destination object
                     xlat_obj.create(cr, uid, {
                       'name': out_obj._name + ',' + in_field,
@@ -82,13 +66,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                       'src': src[in_id],
                       'value': value[in_id],
                 })
-            if notdone:
-                message += '\nLanguage: %s \n\tThere is no translation available for following %s(s): \n\t%s '\
-                            % (lang, out_obj._description, '\n\t'.join(notdone))
-            else:
-                message += '\nLanguage: %s \n\tTranslation successfully done for %s(s) .' % (lang, out_obj._description)
-
-        return message
+                else:
+                    logger.notifyChannel('addons.'+self._name, netsvc.LOG_ERROR,
+                             'Language: %s. Translation from template: there is no translation available for %s!' %(lang,  out_obj._description))
+        return True
 
     def execute(self, cr, uid, ids, context=None):
         res = super(wizard_multi_charts_accounts, self).execute(cr, uid, ids, context=context)
@@ -103,8 +84,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
 
-        resource_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'l10n_multilang', 'view_translate_message_wizard')
-
         company_id = obj_multi.company_id.id
         acc_template_root_id = obj_multi.chart_template_id.account_root_id.id
         acc_root_id = obj_acc.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', None)])[0]
@@ -118,40 +97,27 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             langs.append(lang.code)
             obj_mod.update_translations(cr, uid, installed_mids, lang.code)
 
-        warn_msg = ''
-
         # copy account.account translations
         in_ids = obj_acc_template.search(cr, uid, [('id', 'child_of', [acc_template_root_id])], order='id')[1:]
         out_ids = obj_acc.search(cr, uid, [('id', 'child_of', [acc_root_id])], order='id')[1:]
-        warn_msg += self.copy_translations(cr, uid, langs, obj_acc_template, 'name', in_ids, obj_acc, out_ids)
+        self.copy_translations(cr, uid, langs, obj_acc_template, 'name', in_ids, obj_acc, out_ids)
 
         # copy account.tax.code translations
         in_ids = obj_tax_code_template.search(cr, uid, [('id', 'child_of', [tax_code_template_root_id])], order='id')[1:]
         out_ids = obj_tax_code.search(cr, uid, [('id', 'child_of', [tax_code_root_id])], order='id')[1:]
-        warn_msg += self.copy_translations(cr, uid, langs, obj_tax_code_template, 'name', in_ids, obj_tax_code, out_ids)
+        self.copy_translations(cr, uid, langs, obj_tax_code_template, 'name', in_ids, obj_tax_code, out_ids)
 
         # copy account.tax translations
         in_ids = sorted([x.id for x in obj_multi.chart_template_id.tax_template_ids])
         out_ids = obj_tax.search(cr, uid, [('company_id', '=', company_id)], order='id')
-        warn_msg += self.copy_translations(cr, uid, langs, obj_tax_template, 'name', in_ids, obj_tax, out_ids)
+        self.copy_translations(cr, uid, langs, obj_tax_template, 'name', in_ids, obj_tax, out_ids)
 
         # copy account.fiscal.position translations
         in_ids = obj_fiscal_position_template.search(cr, uid, [('chart_template_id', '=', obj_multi.chart_template_id.id)], order='id')
         out_ids = obj_fiscal_position.search(cr, uid, [('company_id', '=', company_id)], order='id')
-        warn_msg += self.copy_translations(cr, uid, langs, obj_fiscal_position_template, 'name', in_ids, obj_fiscal_position, out_ids)
+        self.copy_translations(cr, uid, langs, obj_fiscal_position_template, 'name', in_ids, obj_fiscal_position, out_ids)
 
-        #open new wizard its for displaying warning message
-        if warn_msg:
-            res_id = self.pool.get('translate.message').create(cr, uid, {'message': warn_msg})
-            return {
-                'res_id': res_id,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'translate.message',
-                'views': [(resource_id and resource_id[1] or False,'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-            }
+        return res
 
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = super(wizard_multi_charts_accounts, self).onchange_chart_template_id(cr, uid, ids, chart_template_id, context=context)

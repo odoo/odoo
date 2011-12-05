@@ -21,23 +21,5 @@
       </field>
     </record>
 
-
-    <record id="view_translate_message_wizard" model="ir.ui.view">
-        <field name="name">Translation Process</field>
-        <field name="model">translate.message</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Translation Process">
-                <newline/>
-                <separator string="Translation Process Completed" colspan="4" />
-                <field colspan="4" name="message" nolabel="1" width="450" height="250"/>
-                <newline/>
-                <separator string="" colspan="4" />
-                <button special="cancel" string="Close" icon="gtk-ok"/>
-            </form>
-        </field>
-    </record>
-
- 
   </data>
 </openerp>
