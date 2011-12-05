@@ -181,6 +181,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
+        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
     }
 
     def _get_stage(self, cr, uid, context=None):
