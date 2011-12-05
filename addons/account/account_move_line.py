@@ -1099,34 +1099,12 @@ class account_move_line(osv.osv):
                 move_obj.validate(cr, uid, [line.move_id.id], context=context)
         return result
 
-    def _check_date(self, cr, uid, vals, context=None, check=True):
-        if context is None:
-            context = {}
-        move_obj = self.pool.get('account.move')
-        journal_obj = self.pool.get('account.journal')
-        period_obj = self.pool.get('account.period')
-        journal_id = False
-        if 'date' in vals.keys():
-            if 'journal_id' in vals and 'journal_id' not in context:
-                journal_id = vals['journal_id']
-            if 'period_id' in vals and 'period_id' not in context:
-                period_id = vals['period_id']
-            elif 'journal_id' not in context and 'move_id' in vals:
-                if vals.get('move_id', False):
-                    m = move_obj.browse(cr, uid, vals['move_id'])
-                    journal_id = m.journal_id.id
-                    period_id = m.period_id.id
-            else:
-                journal_id = context.get('journal_id', False)
-                period_id = context.get('period_id', False)
-            if journal_id:
-                journal = journal_obj.browse(cr, uid, journal_id, context=context)
-                if journal.allow_date and period_id:
-                    period = period_obj.browse(cr, uid, period_id, context=context)
-                    if not time.strptime(vals['date'][:10],'%Y-%m-%d') >= time.strptime(period.date_start, '%Y-%m-%d') or not time.strptime(vals['date'][:10], '%Y-%m-%d') <= time.strptime(period.date_stop, '%Y-%m-%d'):
-                        raise osv.except_osv(_('Error'),_('The date of your Journal Entry is not in the defined period!'))
-        else:
-            return True
+    def _check_date(self, cr, uid, ids, context=None):
+        for l in self.browse(cr, uid, ids, context=context):
+            if l.journal_id.allow_date:
+                if not time.strptime(l.date[:10],'%Y-%m-%d') >= time.strptime(l.period_id.date_start, '%Y-%m-%d') or not time.strptime(l.date[:10], '%Y-%m-%d') <= time.strptime(l.period_id.date_stop, '%Y-%m-%d'):
+                    return False
+        return True
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         if context is None:
@@ -1136,7 +1114,6 @@ class account_move_line(osv.osv):
         journal_obj = self.pool.get('account.journal')
         if vals.get('account_tax_id', False):
             raise osv.except_osv(_('Unable to change tax !'), _('You can not change the tax, you should remove and recreate lines !'))
-        self._check_date(cr, uid, vals, context, check)
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
         if update_check:
@@ -1219,7 +1196,6 @@ class account_move_line(osv.osv):
             company_id = self.pool.get('account.move').read(cr, uid, vals['move_id'], ['company_id']).get('company_id', False)
             if company_id:
                 vals['company_id'] = company_id[0]
-        self._check_date(cr, uid, vals, context, check)
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
         if 'journal_id' in vals:
