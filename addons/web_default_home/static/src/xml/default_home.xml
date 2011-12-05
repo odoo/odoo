@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="Welcome-Page">
+  <div class="installer">
+    <h1>Welcome to OpenERP</h1>
+    <h3>Please choose the first application to install.</h3>
+    <ul>
+      <t t-foreach="applications" t-as="application" >
+        <li>
+          <a href="#" class="install-module-link" t-att-data-module="application.module" t-att-data-menu="application.menu" >
+            <img t-att-src="'/web_dashboard/static/src/img/installer_' + application.module + '.png'"/>
+            <div><t t-esc="application.name"/></div>
+          </a>
+        </li>
+      </t>
+    </ul>
+  </div>
+</t>
+
+</templates>

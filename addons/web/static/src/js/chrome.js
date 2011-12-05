@@ -1061,15 +1061,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         // TODO: add actual loading if there is url state to unpack, test on window.location.hash
         // not logged in
         if (!this.session.uid) { return; }
-        var ds = new openerp.web.DataSetSearch(this, 'res.users');
-        ds.read_ids([this.session.uid], ['action_id'], function (users) {
-            var home_action = users[0].action_id;
-            if (!home_action) {
-                self.default_home();
-                return;
-            }
-            self.execute_home_action(home_action[0], ds);
-        })
+        self.action_manager.do_action({type: 'ir.actions.client', tag: 'default_home'});
     },
     default_home: function () {
     },

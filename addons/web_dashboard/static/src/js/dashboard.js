@@ -385,21 +385,6 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
     start: function () {
         var self = this;
         this._super();
-        // Check for installed application
-        var Installer = new openerp.web.DataSet(this, 'base.setup.installer');
-        Installer.call('default_get', [], function (installed_modules) {
-            var installed = _(installed_modules).any(function (active, name) {
-                return _.str.startsWith(name, 'cat') && active; });
-
-            if(installed) {
-                self.do_display_root_menu();
-            } else {
-                self.do_display_installer();
-            }
-        });
-    },
-    do_display_root_menu: function() {
-        var self = this;
         var dss = new openerp.web.DataSetSearch( this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
         var r = dss.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
             // Create a matrix of 3*x applications
@@ -408,58 +393,8 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
                 rows.push(applications.splice(0, 3));
             }
             var tiles = QWeb.render( 'ApplicationTiles.content', {rows: rows});
-            self.$element.append(tiles)
-                .find('.oe-dashboard-home-tile')
-                    .click(function () {
-                        openerp.webclient.menu.on_menu_click(null, $(this).data('menuid'))
-                    });
-        });
-        return  r;
-    },
-    do_display_installer: function() {
-        var self = this;
-        var render_ctx = {
-            url: window.location.protocol + '//' + window.location.host + window.location.pathname,
-            session: self.session,
-            rows: openerp.web_dashboard.apps.applications
-        };
-        var installer = QWeb.render('StaticHome', render_ctx);
-        self.$element.append(installer);
-        this.$element.delegate('.oe-static-home-tile-text button', 'click', function () {
-            self.install_module($(this).val(), $(this).data('menu'));
-        });
-    },
-    install_module: function (module_name, menu_name) {
-        var self = this;
-        var Modules = new openerp.web.DataSetSearch(
-            this, 'ir.module.module', null,
-            [['name', '=', module_name], ['state', '=', 'uninstalled']]);
-        var Upgrade = new openerp.web.DataSet(this, 'base.module.upgrade');
-
-        $.blockUI();
-        Modules.read_slice(['id'], {}, function (records) {
-            if (!(records.length === 1)) { $.unblockUI(); return; }
-            Modules.call('state_update',
-                [_.pluck(records, 'id'), 'to install', ['uninstalled']],
-                function () {
-                    Upgrade.call('upgrade_module', [[]], function () {
-                        self.run_configuration_wizards(menu_name);
-                    });
-                }
-            )
-        });
-    },
-    run_configuration_wizards: function (menu_name) {
-        var self = this;
-        new openerp.web.DataSet(this, 'res.config').call('start', [[]], function (action) {
-            self.widget_parent.widget_parent.do_action(action, function () {
-                openerp.webclient.do_reload();
-            });
-            self.$element.empty();
-            var dss = new openerp.web.DataSetSearch(this, 'ir.ui.menu', null, [['parent_id', '=', false], ['name', '=', menu_name]]);
-            dss.read_slice(['id'], {}, function(menus) {
-                if(!(menus.length === 1)) { $.unblockUI(); return; }
-                $.when(openerp.webclient.menu.on_menu_click(null, menus[0].id)).then($.unblockUI);
+            self.$element.append(tiles).find('.oe-dashboard-home-tile').click(function () {
+                openerp.webclient.menu.on_menu_click(null, $(this).data('menuid'))
             });
         });
     }
