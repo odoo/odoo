@@ -148,13 +148,11 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             action_attrs = this.actions_attrs[action.id],
             view_mode = action_attrs.view_mode;
 
-        // TODO: Use xmo's python evaluator when ready
         if (action_attrs.context) {
-            action.context = _.extend(action.context || {}, action_attrs.context);
+            action.context = action_attrs.context;
         }
         if (action_attrs.domain) {
-            action.domain = action.domain || [];
-            action.domain.push.apply(action.domain, action_attrs.domain);
+            action.domain = action_attrs.domain;
         }
         var action_orig = _.extend({}, action);
 
