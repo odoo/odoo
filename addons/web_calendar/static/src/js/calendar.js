@@ -263,24 +263,21 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             data = this.get_event_data(event_obj),
             form = self.form_dialog.form,
             fields_to_fetch = _(form.fields_view.fields).keys();
+        this.dataset.index = null;
         self.creating_event_id = event_id;
-        self.dataset.default_get(fields_to_fetch, function(default_values) {
-            form.on_record_loaded(default_values).then(function() {
-                form.show_invalid = false;
-                _.each(['date_start', 'date_stop', 'date_delay'], function(field) {
-                    var field_name = self[field];
-                    if (field_name) {
-                        field = form.fields[field_name];
-                        field.set_value(data[field_name]);
-                        field.dirty = true;
-                        form.do_onchange(field);
-                    }
-                });
-                form.show_invalid = true;
-                form.do_show().then(function() {
-                    self.form_dialog.open();
-                });
+        this.form_dialog.form.do_show().then(function() {
+            form.show_invalid = false;
+            _.each(['date_start', 'date_stop', 'date_delay'], function(field) {
+                var field_name = self[field];
+                if (field_name) {
+                    field = form.fields[field_name];
+                    field.set_value(data[field_name]);
+                    field.dirty = true;
+                    form.do_onchange(field);
+                }
             });
+            form.show_invalid = true;
+            self.form_dialog.open();
         });
     },
     do_save_event: function(event_id, event_obj) {
