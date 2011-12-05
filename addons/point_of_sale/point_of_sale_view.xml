@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem name="Point of Sale" id="menu_point_root" sequence="21"
+        <menuitem name="PoS Backend" id="menu_point_root" sequence="21"
             icon="terp-partner"
-            groups="group_pos_manager,group_pos_user"
+            groups="group_pos_manager"
             web_icon="images/pos.png"
             web_icon_hover="images/pos-hover.png"/>
 
@@ -797,12 +797,12 @@
           <field name="name">Start Point of Sale</field>
           <field name="tag">pos.ui</field>
         </record>
+        <menuitem name="Point of Sale" id="menu_point_root_touchscreen" sequence="20"
+            icon="terp-partner"
+            groups="group_pos_user"
+            action="action_pos_pos"
+            web_icon="images/pos.png"
+            web_icon_hover="images/pos-hover.png"/>
 
-        <record id="menu_pos_pos" model="ir.ui.menu">
-          <field name="name">Start Point of Sale</field>
-          <field name="sequence" eval="5"/>
-          <field name="parent_id" ref="menu_point_root"/>
-          <field name="action" ref="action_pos_pos"/>
-        </record>
     </data>
 </openerp>
