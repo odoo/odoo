@@ -74,7 +74,20 @@
                     <field name="category_id"/>
                     <field name="state"/>
                     <templates>
-                        <field name="name"/>
+                        <t t-name="kanban-box">
+                            <table border="0">
+                            <tr>
+                                <td>
+                                    <img src="/web/static/src/img/header-preferences.png"/>
+                                </td><td>
+                                    <field name="name"/><br/>
+                                    <field name="category_id"/><br/>
+                                    <field name="complexity"/><br/>
+                                    <field name="state"/>
+                                </td>
+                            </tr>
+                            </table>
+                        </t>
                     </templates>
                 </kanban>
             </field>
