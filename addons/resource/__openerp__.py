@@ -47,6 +47,7 @@ It also manages the leaves of every resource.
     ],
     'test': [
                 'test/resource.yml',
+                'test/duplicate_resource.yml',
             ],
     'installable': True,
     'active': False,

@@ -47,8 +47,6 @@
     dt_to = dt_from+ timedelta(days=6) 
     hours = self.interval_hours_get(cr, uid, ref('timesheet_group1'), dt_from, dt_to, resource=ref('resource_developer'))
     assert hours > 27 , 'Invalid Total Week working hour calculated'
-
-    
 -
   Project Analysis work is of 20 hours which will start from Week startso i will calculate working schedule for resource Analyst for the same.
 -
