@@ -2,6 +2,37 @@
 Copyright DHTMLX LTD. http://www.dhtmlx.com
 To use this component please contact sales@dhtmlx.com to obtain license
 */
+
+dhtmlx=function(obj){
+	for (var a in obj) dhtmlx[a]=obj[a];
+	return dhtmlx; //simple singleton
+};
+dhtmlx.extend_api=function(name,map,ext){
+	var t = window[name];
+	if (!t) return; //component not defined
+	window[name]=function(obj){
+		if (obj && typeof obj == "object" && !obj.tagName){
+			var that = t.apply(this,(map._init?map._init(obj):arguments));
+			//global settings
+			for (var a in dhtmlx)
+				if (map[a]) this[map[a]](dhtmlx[a]);			
+			//local settings
+			for (var a in obj){
+				if (map[a]) this[map[a]](obj[a]);
+				else if (a.indexOf("on")==0){
+					this.attachEvent(a,obj[a]);
+				}
+			}
+		} else
+			var that = t.apply(this,arguments);
+		if (map._patch) map._patch(this);
+		return that||this;
+	};
+	window[name].prototype=t.prototype;
+	if (ext)
+		dhtmlXHeir(window[name].prototype,ext);
+};
+
 dhtmlxAjax={
 	get:function(url,callback){
 		var t=new dtmlXMLLoaderObject(true);
