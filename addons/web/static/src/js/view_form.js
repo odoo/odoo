@@ -445,6 +445,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         return def.promise();
     },
     can_be_discarded: function() {
+        return true; // Disabled until the page view and button refactoring is done
         return !this.is_dirty() || confirm(_t("Warning, the record has been modified, your changes will be discarded."));
     },
     /**
