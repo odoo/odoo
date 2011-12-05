@@ -14,14 +14,8 @@
       <field name="arch" type="xml">
         <data>
           <field name="bank_accounts_id" position="before">
-            <field name="bank_from_template" />
-          </field>
-          <field name="bank_accounts_id" position="before">
-            <separator string="Languages" colspan="4"/>
-            <field name="lang_ids" colspan="4" nolabel="1"/>
-          </field>
-          <field name="bank_accounts_id" position="attributes">
-            <attribute name="attrs">{'invisible': [('bank_from_template', '=', False)]}</attribute>
+            <separator string="Languages" colspan="4" groups="base.group_extended"/>
+            <field name="lang_ids" colspan="4" nolabel="1" groups="base.group_extended"/>
           </field>
         </data>
       </field>

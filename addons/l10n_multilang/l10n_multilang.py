@@ -54,7 +54,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         @param in_ids: List of ids of source object
         @param out_obj: Destination object for which translation is to be copied
         @param out_ids: List of ids of destination object
-        
+
         @param Return: String containing information of the translations loaded.
         """
         src = {}
@@ -102,9 +102,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_tax = self.pool.get('account.tax')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
-        
+
         resource_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'l10n_multilang', 'view_translate_message_wizard')
-        
+
         company_id = obj_multi.company_id.id
         acc_template_root_id = obj_multi.chart_template_id.account_root_id.id
         acc_root_id = obj_acc.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', None)])[0]
@@ -158,7 +158,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         installed_lang = self.get_lang(cr, uid, chart_template_id, context=context)
         res['value'].update({'lang_ids': installed_lang})
         return res
-    
+
     def get_lang(self, cr, uid, template_id=False, context=None):
         installed_lang = []
         if template_id:
@@ -185,10 +185,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     _columns = {
         'lang_ids': fields.many2many('res.lang', 'res_lang_type_rel', 'wizard_id', 'lang_id', 'Language'),
-        'bank_from_template': fields.boolean('Banks/Cash from Template', 
-            help="If True then Generate Bank/Cash accounts and journals from the Templates.", readonly=True),
     }
-  
+
 wizard_multi_charts_accounts()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
