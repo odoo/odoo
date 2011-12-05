@@ -290,43 +290,36 @@
                 <field name="state"/>
                 <field name="priority"/>
                 <field name="survey"/>
+                <field name="email_from"/>
+                <field name="user_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
-                        <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                        <t t-if="record.priority.raw_value == 1" t-set="border">oe_kanban_color_red</t>
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
                             <div class="oe_kanban_box oe_kanban_color_border">
-                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                    <div class="oe_kanban_title1">
-                                        <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority" />
-                                        <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                <tr>
+                                    <td align="left" valign="middle" class="oe_kanban_title">
                                         <field name="partner_name"/>
-                                    </div>
-                                </div>
+                                    </td>
+                                    <td valign="top" width="22"><img t-att-src="kanban_gravatar(record.email_from.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/></td>
+                                </tr>
+                                </table>
                                 <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                    <table class="oe_kanban_table">
-                                        <tr>
-                                            <td>
-                                                <div class="oe_kanban_right oe_kanban_small">
-                                                    <field name="user_id"/>
-                                                </div>
-                                                <div class="oe_kanban_title2">
-                                                    <field name="job_id"/>
-                                                    <t t-if="record.priority.raw_value == 0"></t>
-                                                    <t t-if="record.priority.raw_value == 5">(Not Good)</t>
-                                                    <t t-if="record.priority.raw_value == 4">(On Average)</t>
-                                                    <t t-if="record.priority.raw_value == 3">(Good)</t>
-                                                    <t t-if="record.priority.raw_value == 2">(Very Good)</t>
-                                                    <t t-if="record.priority.raw_value == 1">(Excellent)</t>
-                                                </div>
-                                                <div class="oe_kanban_title3">
-                                                    <field name="type_id"/>
-                                                </div>
-                                                <div class="oe_kanban_title3">
-                                                    <i><field name="date_action"/><field name="title_action"/></i>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div t-if="record.priority.raw_value" t-att-title="record.priority.value">
+                                        <t t-set="rating" t-value="6 - record.priority.raw_value"/>
+                                        <img t-foreach="_.range(1, rating + 1)" src="/web/static/src/img/icons/star-on.png" width="16" height="16"
+                                        /><img t-foreach="_.range(rating, 5)" src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
+                                    </div>
+                                    <div t-if="record.job_id.raw_value">
+                                        <field name="job_id"/>
+                                    </div>
+                                    <div t-if="record.type_id.raw_value">
+                                        <field name="type_id"/>
+                                    </div>
+                                    <div t-if="record.date_action.raw_value or record.title_action.raw_value">
+                                        <i t-if="record.date_action.raw_value"><field name="date_action"/> :</i> <field name="title_action"/>
+                                    </div>
                                 </div>
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left">

@@ -7,104 +7,104 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2009-02-03 06:25+0000\n"
-"Last-Translator: <>\n"
+"PO-Revision-Date: 2011-12-03 15:19+0000\n"
+"Last-Translator: kifcaliph <kifcaliph@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:04+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-04 04:43+0000\n"
+"X-Generator: Launchpad (build 14418)\n"
 
 #. module: base_contact
 #: field:res.partner.contact,title:0
 msgid "Title"
-msgstr ""
+msgstr "اللقب"
 
 #. module: base_contact
 #: view:res.partner.address:0
 msgid "# of Contacts"
-msgstr ""
+msgstr "عدد جهات الاتصال"
 
 #. module: base_contact
 #: field:res.partner.job,fax:0
 msgid "Fax"
-msgstr ""
+msgstr "فاكس"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "title"
-msgstr ""
+msgstr "الاسم"
 
 #. module: base_contact
 #: help:res.partner.job,date_start:0
 msgid "Start date of job(Joining Date)"
-msgstr ""
+msgstr "تاريخ الالتحاق بالوظيفة"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Select the Option for Addresses Migration"
-msgstr ""
+msgstr "حدد الخيار لنقل العناوين"
 
 #. module: base_contact
 #: help:res.partner.job,function:0
 msgid "Function of this contact with this partner"
-msgstr ""
+msgstr "مهمة جهة الاتصال هذه عند هذا الشريك"
 
 #. module: base_contact
 #: help:res.partner.job,state:0
 msgid "Status of Address"
-msgstr ""
+msgstr "حالة العنوان"
 
 #. module: base_contact
 #: help:res.partner.job,name:0
 msgid ""
 "You may                     enter Address first,Partner will be linked "
 "automatically if any."
-msgstr ""
+msgstr "يمكنك إدخال العنوان أولاً، وسيتمّ ربط الشريك تلقائياً إن وُجِد."
 
 #. module: base_contact
 #: help:res.partner.job,fax:0
 msgid "Job FAX no."
-msgstr ""
+msgstr "فاكس العمل"
 
 #. module: base_contact
 #: field:res.partner.contact,mobile:0
 msgid "Mobile"
-msgstr ""
+msgstr "الجوال"
 
 #. module: base_contact
 #: view:res.partner.contact:0
 #: field:res.partner.contact,comment:0
 msgid "Notes"
-msgstr ""
+msgstr "ملاحظات"
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_contacts0
 msgid "People you work with."
-msgstr ""
+msgstr "أشخاص تعمل معهم."
 
 #. module: base_contact
 #: model:process.transition,note:base_contact.process_transition_functiontoaddress0
 msgid "Define functions and address."
-msgstr ""
+msgstr "تعريف المهام والعنوان"
 
 #. module: base_contact
 #: help:res.partner.job,date_stop:0
 msgid "Last date of job"
-msgstr ""
+msgstr "تاريخ ترك الوظيفة"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 #: field:base.contact.installer,migrate:0
 msgid "Migrate"
-msgstr ""
+msgstr "نقل"
 
 #. module: base_contact
 #: view:res.partner.contact:0
 #: field:res.partner.job,name:0
 msgid "Partner"
-msgstr ""
+msgstr "الشريك"
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_function0
@@ -114,12 +114,12 @@ msgstr ""
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_partners0
 msgid "Partners"
-msgstr ""
+msgstr "الشركاء"
 
 #. module: base_contact
 #: field:res.partner.job,state:0
 msgid "State"
-msgstr ""
+msgstr "المحافظة"
 
 #. module: base_contact
 #: help:res.partner.contact,active:0
@@ -151,27 +151,42 @@ msgid ""
 "an other object.\n"
 "    "
 msgstr ""
+"\n"
+"        تمكنك هذه الوحدة البرمجية من إدارة جهات الاتصال بشكل كامل.\n"
+"    فهي تسمح لك بـتعرف:\n"
+"        * جهات اتصال غير ذات صلة بشريك،\n"
+"        * جهات اتصال ذات عناوين عمل متعددة (ربما لارتباطها بشركاء مختلفين)،\n"
+"        * جهات اتصال ذات مهام مختلفة لكل عنوان من عناوين وظائفها\n"
+"\n"
+"    كذلك تضيف هذه الوحدة البرمجية عناصر جديدة إلى القائمة تحت\n"
+"        الشركاء / جهات الاتصال\n"
+"        الشركاء / المهام\n"
+"\n"
+"    تنبه إلى أن هذه الوحدة البرمجية تقوم بتحويل العناوين الموجودة مسبقاً إلى "
+"\"عناوين\" و \"جهات اتصال\"، مما يعني أن بعض حقول العناوين سيتم حذفها (مثل "
+"اسم جهة الاتصال) لأنه من المفترض أن يتم تعريفها في كائن آخر.\n"
+"    "
 
 #. module: base_contact
 #: model:ir.module.module,shortdesc:base_contact.module_meta_information
 #: model:process.process,name:base_contact.process_process_basecontactprocess0
 msgid "Base Contact"
-msgstr ""
+msgstr "جهة الاتصال الأساسية"
 
 #. module: base_contact
 #: field:res.partner.job,date_stop:0
 msgid "Date Stop"
-msgstr ""
+msgstr "تاريخ التوقف"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.action_res_partner_job
 msgid "Contact's Jobs"
-msgstr ""
+msgstr "الوظائف"
 
 #. module: base_contact
 #: view:res.partner:0
 msgid "Categories"
-msgstr ""
+msgstr "الفئات"
 
 #. module: base_contact
 #: help:res.partner.job,sequence_partner:0
@@ -179,70 +194,72 @@ msgid ""
 "Order of importance                 of this job title in the list of job "
 "title of the linked partner"
 msgstr ""
+"ترتيب المسمى الوظيفي هذا  حسب الأهمية بين المسميات الوظيغية المستخدمة لدى "
+"الشريك"
 
 #. module: base_contact
 #: field:res.partner.job,extension:0
 msgid "Extension"
-msgstr ""
+msgstr "الامتداد"
 
 #. module: base_contact
 #: help:res.partner.job,extension:0
 msgid "Internal/External extension phone number"
-msgstr ""
+msgstr "امتداد رقم الهاتف الداخلي/الخارجي"
 
 #. module: base_contact
 #: help:res.partner.job,phone:0
 msgid "Job Phone no."
-msgstr ""
+msgstr "هاتف العمل"
 
 #. module: base_contact
 #: view:res.partner.contact:0
 #: field:res.partner.contact,job_ids:0
 msgid "Functions and Addresses"
-msgstr ""
+msgstr "المهام والعناوين"
 
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_contact
 #: field:res.partner.job,contact_id:0
 msgid "Contact"
-msgstr ""
+msgstr "جهة الاتصال"
 
 #. module: base_contact
 #: help:res.partner.job,email:0
 msgid "Job E-Mail"
-msgstr ""
+msgstr "البريد الإلكتروني للعمل"
 
 #. module: base_contact
 #: field:res.partner.job,sequence_partner:0
 msgid "Partner Seq."
-msgstr ""
+msgstr "رقم الشريك"
 
 #. module: base_contact
 #: model:process.transition,name:base_contact.process_transition_functiontoaddress0
 msgid "Function to address"
-msgstr ""
+msgstr "مهمة إلى عنوان"
 
 #. module: base_contact
 #: field:base.contact.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "سير الإعدادات"
 
 #. module: base_contact
 #: field:res.partner.contact,name:0
 msgid "Last Name"
-msgstr ""
+msgstr "اسم العائلة"
 
 #. module: base_contact
 #: view:res.partner:0
 #: view:res.partner.contact:0
 msgid "Communication"
-msgstr ""
+msgstr "التواصل"
 
 #. module: base_contact
 #: field:base.contact.installer,config_logo:0
 #: field:res.partner.contact,photo:0
 msgid "Image"
-msgstr ""
+msgstr "صورة"
 
 #. module: base_contact
 #: selection:res.partner.job,state:0
@@ -252,7 +269,7 @@ msgstr ""
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_address
 msgid "Partner Addresses"
-msgstr ""
+msgstr "عناوين الشريك"
 
 #. module: base_contact
 #: view:base.contact.installer:0
@@ -262,12 +279,12 @@ msgstr ""
 #. module: base_contact
 #: field:res.partner.job,sequence_contact:0
 msgid "Contact Seq."
-msgstr ""
+msgstr "رقم جهة الاتصال"
 
 #. module: base_contact
 #: view:res.partner.address:0
 msgid "Search Contact"
-msgstr ""
+msgstr "بحث جهة الإتصال"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.action_partner_contact_form
@@ -277,7 +294,7 @@ msgstr ""
 #: view:res.partner:0
 #: field:res.partner.address,job_ids:0
 msgid "Contacts"
-msgstr ""
+msgstr "جهات الاتصال"
 
 #. module: base_contact
 #: view:base.contact.installer:0
@@ -289,58 +306,58 @@ msgstr ""
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_addresses0
 msgid "Working and private addresses."
-msgstr ""
+msgstr "عناوين العمل والعناوين الخاصة"
 
 #. module: base_contact
 #: help:res.partner.job,address_id:0
 msgid "Address which is linked to the Partner"
-msgstr ""
+msgstr "العنوان المرتبط بالشريك"
 
 #. module: base_contact
 #: field:res.partner.job,function:0
 msgid "Partner Function"
-msgstr ""
+msgstr "مهمة الشريك"
 
 #. module: base_contact
 #: help:res.partner.job,other:0
 msgid "Additional phone field"
-msgstr ""
+msgstr "حقل هاتف إضافي"
 
 #. module: base_contact
 #: field:res.partner.contact,website:0
 msgid "Website"
-msgstr ""
+msgstr "الموقع الإلكتروني"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Otherwise these details will not be visible from address/contact."
-msgstr ""
+msgstr "وإلا فلن تظهر هذه التفاصيل في العنوان/جهة الاتصال."
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "ضبط الإعدادات"
 
 #. module: base_contact
 #: field:res.partner.contact,email:0
 #: field:res.partner.job,email:0
 msgid "E-Mail"
-msgstr ""
+msgstr "البريد الإلكتروني"
 
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_base_contact_installer
 msgid "base.contact.installer"
-msgstr ""
+msgstr "base.contact.installer"
 
 #. module: base_contact
 #: view:res.partner.job:0
 msgid "Contact Functions"
-msgstr ""
+msgstr "مهام جهة الاتصال"
 
 #. module: base_contact
 #: field:res.partner.job,phone:0
 msgid "Phone"
-msgstr ""
+msgstr "هاتف"
 
 #. module: base_contact
 #: view:base.contact.installer:0
@@ -350,164 +367,164 @@ msgstr ""
 #. module: base_contact
 #: field:res.partner.contact,active:0
 msgid "Active"
-msgstr ""
+msgstr "نشِط"
 
 #. module: base_contact
 #: field:res.partner.contact,function:0
 msgid "Main Function"
-msgstr ""
+msgstr "المهمة الرئيسية"
 
 #. module: base_contact
 #: model:process.transition,note:base_contact.process_transition_partnertoaddress0
 msgid "Define partners and their addresses."
-msgstr ""
+msgstr "تعريف الشركاء وعناوينهم"
 
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "Seq."
-msgstr ""
+msgstr "رقم"
 
 #. module: base_contact
 #: field:res.partner.contact,lang_id:0
 msgid "Language"
-msgstr ""
+msgstr "اللغة"
 
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "Extra Information"
-msgstr ""
+msgstr "معلومات إضافية"
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_partners0
 msgid "Companies you work with."
-msgstr ""
+msgstr "الشركات التي تتعامل معها."
 
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "Partner Contact"
-msgstr ""
+msgstr "جهة الاتصال بالشريك"
 
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "General"
-msgstr ""
+msgstr "عام"
 
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "Photo"
-msgstr ""
+msgstr "صورة"
 
 #. module: base_contact
 #: field:res.partner.contact,birthdate:0
 msgid "Birth Date"
-msgstr ""
+msgstr "تاريخ الميلاد"
 
 #. module: base_contact
 #: help:base.contact.installer,migrate:0
 msgid "If you select this, all addresses will be migrated."
-msgstr ""
+msgstr "إذا اخترت هذا الخيار، سيتم نقل جميع العناوين."
 
 #. module: base_contact
 #: selection:res.partner.job,state:0
 msgid "Current"
-msgstr ""
+msgstr "الحالي"
 
 #. module: base_contact
 #: field:res.partner.contact,first_name:0
 msgid "First Name"
-msgstr ""
+msgstr "الاسم الأول"
 
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_job
 msgid "Contact Partner Function"
-msgstr ""
+msgstr "مهمة الشريك"
 
 #. module: base_contact
 #: field:res.partner.job,other:0
 msgid "Other"
-msgstr ""
+msgstr "غير ذلك"
 
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_function0
 msgid "Function"
-msgstr ""
+msgstr "المهمة"
 
 #. module: base_contact
 #: field:res.partner.address,job_id:0
 #: field:res.partner.contact,job_id:0
 msgid "Main Job"
-msgstr ""
+msgstr "الوظيفة الرئيسية"
 
 #. module: base_contact
 #: model:process.transition,note:base_contact.process_transition_contacttofunction0
 msgid "Defines contacts and functions."
-msgstr ""
+msgstr "تعريف جهات الاتصال والمهام."
 
 #. module: base_contact
 #: model:process.transition,name:base_contact.process_transition_contacttofunction0
 msgid "Contact to function"
-msgstr ""
+msgstr "جهة اتصال إلى مهمة"
 
 #. module: base_contact
 #: view:res.partner:0
 #: field:res.partner.job,address_id:0
 msgid "Address"
-msgstr ""
+msgstr "العنوان"
 
 #. module: base_contact
 #: field:res.partner.contact,country_id:0
 msgid "Nationality"
-msgstr ""
+msgstr "الجنسية"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.act_res_partner_jobs
 msgid "Open Jobs"
-msgstr ""
+msgstr "الوظائف المفتوحة"
 
 #. module: base_contact
 #: field:base.contact.installer,name:0
 msgid "Name"
-msgstr ""
+msgstr "الاسم"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "You can migrate Partner's current addresses to the contact."
-msgstr ""
+msgstr "يمكنك نقل العناوين الحالية للشريك إلى جهة الاتصال"
 
 #. module: base_contact
 #: field:res.partner.contact,partner_id:0
 msgid "Main Employer"
-msgstr ""
+msgstr "صاحب العمل الرئيسي"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.action_base_contact_installer
 msgid "Address Migration"
-msgstr ""
+msgstr "نقل العنوان"
 
 #. module: base_contact
 #: view:res.partner:0
 msgid "Postal Address"
-msgstr ""
+msgstr "العنوان البريدي"
 
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_addresses0
 #: view:res.partner:0
 msgid "Addresses"
-msgstr ""
+msgstr "العناوين"
 
 #. module: base_contact
 #: model:process.transition,name:base_contact.process_transition_partnertoaddress0
 msgid "Partner to address"
-msgstr ""
+msgstr "شريك إلى عنوان"
 
 #. module: base_contact
 #: field:res.partner.job,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "تاريخ البدء"
 
 #. module: base_contact
 #: help:res.partner.job,sequence_contact:0
 msgid ""
 "Order of                     importance of this address in the list of "
 "addresses of the linked contact"
-msgstr ""
+msgstr "ترتيب هذا العنوان حسب الأهمية بين عناوين جهة الاتصال"

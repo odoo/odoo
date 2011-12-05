@@ -30,7 +30,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         if res:
             return res[0][0]
         return False
-    
+
     def _get_journal_id(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -46,6 +46,8 @@ class stock_invoice_onshipping(osv.osv_memory):
         browse_picking = model_pool.browse(cr, uid, res_ids, context=context)
 
         for pick in browse_picking:
+            if not pick.move_lines:
+                continue
             src_usage = pick.move_lines[0].location_id.usage
             dest_usage = pick.move_lines[0].location_dest_id.usage
             type = pick.type
@@ -75,11 +77,11 @@ class stock_invoice_onshipping(osv.osv_memory):
         'group': fields.boolean("Group by partner"),
         'invoice_date': fields.date('Invoiced date'),
     }
-    
+
     _defaults = {
         'journal_id' : _get_journal,
     }
-    
+
     def view_init(self, cr, uid, fields_list, context=None):
         if context is None:
             context = {}
