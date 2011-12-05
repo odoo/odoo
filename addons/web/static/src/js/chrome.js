@@ -30,8 +30,6 @@ openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Not
         this.$element.notify('create', 'oe_notification_alert', {
             title: title,
             text: text
-        }, {
-            expires: false
         });
     }
 
