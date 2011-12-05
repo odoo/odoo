@@ -205,8 +205,23 @@ class partner_vat_list(osv.osv_memory):
             seq += 1
             sum_tax += line['amount']
             sum_turnover += line['turnover']
-            data_clientinfo += '\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line['vat'] +'</VATNum>\n\t\t<Country>' + line['country'] +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(round(line['amount'] * 100))) +'</Amount>\n\t<TurnOver>'+str(int(round(line['turnover'] * 100))) +'</TurnOver>\n</ClientList>'
 
+            if not line['vat']:
+                raise osv.except_osv("Missing VAT", "Partner %s does not have a vat number")
+            if not line['country']:
+                raise osv.except_osv("Missing Country", "Partner %s doest not have a country")
+            data_clientinfo = "".join([
+                data_clientinfo,
+                '<ClientList SequenceNum="',str(seq),'">\n',
+                '\t<CompanyInfo>\n',
+                '\t\t<VATNum>',line['vat'],'</VATNum>\n',
+                '\t\t<Country>',line['country'],'</Country>\n',
+                '\t</CompanyInfo>\n',
+                '\t<Amount>',str(int(round(line['amount'] * 100))),'</Amount>\n',
+                '\t<TurnOver>',str(int(round(line['turnover'] * 100))),'</TurnOver>\n',
+                '</ClientList>\n'
+            ])
+            
         data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(round(sum_turnover * 100))) +'" TaxSum="'+ str(int(round(sum_tax * 100))) +'" />'
         data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n</VatList>'
         msg = 'Save the File with '".xml"' extension.'
