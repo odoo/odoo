@@ -14,7 +14,6 @@
   !python {model: resource.resource}: |
     resources = self.generate_resources(cr, uid, [ref('base.user_root'),ref('base.user_demo')], ref('timesheet_group1'), context)
     for resource in resources.values():
-        print resource
         assert resource.get('efficiency', 0.0) == 1.0, 'Invalid resource generated.'
 -
   I check per day work hour availability of the Resource based on Working Calendar Assigned to each resource, for first day of the week.
