@@ -1924,7 +1924,8 @@
             <field name="view_type">form</field>
             <field name="help">The configuration wizards are used to help you configure a new instance of OpenERP. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
-        <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="2"/>
+        <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="2"
+            groups="base.group_extended"/>
 
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
                 parent="next_id_11" sequence="20"/>

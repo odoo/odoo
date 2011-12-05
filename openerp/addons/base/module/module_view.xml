@@ -62,12 +62,31 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="module_view_kanban">
+            <field name="name">Modules Kanban</field>
+            <field name="model">ir.module.module</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="icon"/>
+                    <field name="complexity"/>
+                    <field name="category_id"/>
+                    <field name="state"/>
+                    <templates>
+                        <field name="name"/>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
 
         <record id="action_module_open_categ" model="ir.actions.act_window">
             <field name="name">Modules</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="domain">[('category_id','=',active_id)]</field>
         </record>
         <record id="ir_action_module_category" model="ir.values">
@@ -92,6 +111,7 @@
                     <field name="category_id"/>
                     <field name="complexity"/>
                     <field name="demo" readonly="1"/>
+                    <field name="icon"/>
                     <notebook colspan="4">
                         <page string="Module">
                             <group colspan="4" col="4">
@@ -163,7 +183,7 @@
             <field name="name">Modules</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="domain"/>
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help">You can install new modules in order to activate new features, menu, reports or data in your OpenERP instance. To install some modules, click on the button "Install" from the form view and then click on "Start Upgrade".</field>
