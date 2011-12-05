@@ -63,6 +63,13 @@ $(document).ready(function () {
 //        var res = openerp.web.parse_value(val.toString("HH:mm:ss"), {type:"time"});
 //        equal(val.toString("HH:mm:ss"), res.toString("HH:mm:ss"));
 //    });
+    test('parse_integer', function () {
+        var val = openerp.web.parse_value('123,456', {type: 'integer'});
+        equal(val, 123456);
+        openerp.web._t.database.parameters.thousands_sep = '|';
+        var val2 = openerp.web.parse_value('123|456', {type: 'integer'});
+        equal(val2, 123456);
+    });
     test("parse_float", function () {
         var str = "134,112.1234";
         var val = openerp.web.parse_value(str, {type:"float"});
@@ -70,6 +77,12 @@ $(document).ready(function () {
         var str = "-134,112.1234";
         var val = openerp.web.parse_value(str, {type:"float"});
         equal(val, -134112.1234);
+        _.extend(openerp.web._t.database.parameters, {
+            decimal_point: ',',
+            thousands_sep: '.'
+        });
+        var val3 = openerp.web.parse_value('123.456,789', {type: 'float'});
+        equal(val3, 123456.789);
     });
     test('intersperse', function () {
         var g = openerp.web.intersperse;
@@ -100,6 +113,8 @@ $(document).ready(function () {
         equal(g("12345678", [2, 0, 1], '.'), '12.34.56.78');
         equal(g("12345678", [2, 0, 0], '.'), '12.34.56.78');
         equal(g("12345678", [2, 0, -1], '.'), '12.34.56.78');
+        equal(g("12345678", [3,3,3,3], '.'), '12.345.678');
+        equal(g("12345678", [3,0], '.'), '12.345.678');
     });
     test('format_integer', function () {
         openerp.web._t.database.parameters.grouping = [3, 3, 3, 3];

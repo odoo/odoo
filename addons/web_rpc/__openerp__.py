@@ -1,13 +1,14 @@
 {
     "name" : "OpenERP Web web",
     "category" : "Hidden",
+    "description":'Openerp web web',
     "version" : "2.0",
     "depends" : [],
     "installable" : False,
     'active': False,
     'js' : [
         "../web/static/lib/datejs/date-en-US.js",
-        "../web/static/lib/jquery/jquery-1.6.2.js",
+        "../web/static/lib/jquery/jquery-1.6.4.js",
         "../web/static/lib/json/json2.js",
         "../web/static/lib/qweb/qweb2.js",
         "../web/static/lib/underscore/underscore.js",

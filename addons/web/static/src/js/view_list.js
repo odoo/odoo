@@ -462,6 +462,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Object} results results of evaluating domain and process for a search
      */
     do_search: function (domain, context, group_by) {
+        this.page = 0;
         this.groups.datagroup = new openerp.web.DataGroup(
             this, this.model, domain, context, group_by);
         this.groups.datagroup.sort = this.dataset._sort;
@@ -661,8 +662,8 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      *
      * @param {Number} count number of columns to add
      * @param {Object} options
-     * @param {"before"|"after"} [position="after"] insertion position for the new columns
-     * @param {Object} [except] content row to not pad
+     * @param {"before"|"after"} [options.position="after"] insertion position for the new columns
+     * @param {Object} [options.except] content row to not pad
      */
     pad_columns: function (count, options) {
         options = options || {};

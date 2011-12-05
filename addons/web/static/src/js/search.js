@@ -139,6 +139,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         }
     },
     on_loaded: function(data) {
+        this.fields_view = data.fields_view;
         if (data.fields_view.type !== 'search' ||
             data.fields_view.arch.tag !== 'search') {
                 throw new Error(_.str.sprintf(
@@ -197,18 +198,23 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         var self = this;
         var select = this.$element.find(".oe_search-view-filters-management");
         var val = select.val();
-        
-        if (val.slice(0,1) == "_") { // useless action
-            select.val("_filters");
-            return;
-        }
-        if (val.slice(0, "get:".length) == "get:") {
-            val = val.slice("get:".length);
-            val = parseInt(val);
-            var filter = this.managed_filters[val];
-            this.on_search([filter.domain], [filter.context], []);
-        } else if (val == "save_filter") {
-            select.val("_filters");
+        switch(val) {
+        case 'add_to_dashboard':
+            this.on_add_to_dashboard();
+            break;
+        case 'manage_filters':
+            this.do_action({
+                res_model: 'ir.filters',
+                views: [[false, 'list'], [false, 'form']],
+                type: 'ir.actions.act_window',
+                context: {"search_default_user_id": this.session.uid,
+                "search_default_model_id": this.dataset.model},
+                target: "current",
+                limit : 80,
+                auto_search : true
+            });
+            break;
+        case 'save_filter':
             var data = this.build_search_data();
             var context = new openerp.web.CompoundContext();
             _.each(data.contexts, function(x) {
@@ -241,19 +247,63 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                     }}
                 ]
             });
-        } else { // manage_filters
-            select.val("_filters");
-            this.do_action({
-                res_model: 'ir.filters',
-                views: [[false, 'list'], [false, 'form']],
-                type: 'ir.actions.act_window',
-                context: {"search_default_user_id": this.session.uid,
-                "search_default_model_id": this.dataset.model},
-                target: "current",
-                limit : 80,
-                auto_search : true
-            });
+            break;
         }
+        if (val.slice(0, 4) == "get:") {
+            val = val.slice(4);
+            val = parseInt(val, 10);
+            var filter = this.managed_filters[val];
+            this.on_search([filter.domain], [filter.context], []);
+        } else {
+            select.val('');
+        }
+    },
+    on_add_to_dashboard: function() {
+        this.$element.find(".oe_search-view-filters-management")[0].selectedIndex = 0;
+        var self = this,
+            menu = openerp.webclient.menu,
+            $dialog = $(QWeb.render("SearchView.add_to_dashboard", {
+                dashboards : menu.data.data.children,
+                selected_menu_id : menu.$element.find('a.active').data('menu')
+            }));
+        $dialog.find('input').val(this.fields_view.name);
+        $dialog.dialog({
+            modal: true,
+            title: _t("Add to Dashboard"),
+            buttons: [
+                {text: _t("Cancel"), click: function() {
+                    $(this).dialog("close");
+                }},
+                {text: _t("OK"), click: function() {
+                    $(this).dialog("close");
+                    var menu_id = $(this).find("select").val(),
+                        title = $(this).find("input").val(),
+                        data = self.build_search_data(),
+                        context = new openerp.web.CompoundContext(),
+                        domain = new openerp.web.CompoundDomain();
+                    _.each(data.contexts, function(x) {
+                        context.add(x);
+                    });
+                    _.each(data.domains, function(x) {
+                           domain.add(x);
+                    });
+                    self.rpc('/web/searchview/add_to_dashboard', {
+                        menu_id: menu_id,
+                        action_id: self.widget_parent.action.id,
+                        context_to_save: context,
+                        domain: domain,
+                        view_mode: self.widget_parent.active_view,
+                        name: title
+                    }, function(r) {
+                        if (r === false) {
+                            self.do_warn("Could not add filter to dashboard");
+                        } else {
+                            self.do_notify("Filter added to dashboard", '');
+                        }
+                    });
+                }}
+            ]
+        });
     },
     /**
      * Performs the search view collection of widget data.

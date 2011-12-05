@@ -33,6 +33,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.widgets = {};
         this.widgets_counter = 0;
         this.fields = {};
+        this.fields_order = [];
         this.datarecord = {};
         this.show_invalid = true;
         this.default_focus_field = null;
@@ -86,6 +87,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_loaded: function(data) {
         var self = this;
         if (data) {
+            this.fields_order = [];
             this.fields_view = data;
             var frame = new (this.registry.get_object('frame'))(this, this.fields_view.arch);
 
@@ -122,6 +124,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         self.translatable_fields = [];
         self.widgets = {};
         self.fields = {};
+        self.fields_order = [];
         self.$form_header.find('button').unbind('click');
         self.readonly = !self.readonly;
         self.registry = self.readonly ? openerp.web.form.readonly : openerp.web.form.widgets;
@@ -188,15 +191,16 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         deferred_stack.push('force resolution if no fields');
         return deferred_stack.then(function() {
             if (!record.id) {
-                // New record: Second pass in order to trigger the onchanges
                 self.show_invalid = false;
-                for (var f in record) {
-                    var field = self.fields[f];
-                    if (field) {
+                // New record: Second pass in order to trigger the onchanges
+                // respecting the fields order defined in the view
+                _.each(self.fields_order, function(field_name) {
+                    if (record[field_name] !== undefined) {
+                        var field = self.fields[field_name];
                         field.dirty = true;
                         self.do_onchange(field);
                     }
-                }
+                });
             }
             self.on_form_changed();
             self.initial_mutating_lock.resolve();
@@ -441,6 +445,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         return def.promise();
     },
     can_be_discarded: function() {
+        return true; // Disabled until the page view and button refactoring is done
         return !this.is_dirty() || confirm(_t("Warning, the record has been modified, your changes will be discarded."));
     },
     /**
@@ -1174,6 +1179,11 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
         if (this.node.tag == 'label' && (this.align === 'left' || this.node.attrs.colspan || (this.string && this.string.length > 32))) {
             this.template = "WidgetParagraph";
             this.colspan = parseInt(this.node.attrs.colspan || 1, 10);
+            // Widgets default to right-aligned, but paragraph defaults to
+            // left-aligned
+            if (isNaN(parseFloat(this.node.attrs.align))) {
+                this.align = 'left';
+            }
         } else {
             this.colspan = 1;
             this.width = '1%';
@@ -1214,6 +1224,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         this.name = node.attrs.name;
         this.value = undefined;
         view.fields[this.name] = this;
+        view.fields_order.push(this.name);
         this.type = node.attrs.widget || view.fields_view.fields[node.attrs.name].type;
         this.element_name = "field_" + this.name + "_" + this.type;
 
@@ -1605,7 +1616,7 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
     init: function(view, node) {
         var self = this;
         this._super(view, node);
-        this.values = this.field.selection;
+        this.values = _.clone(this.field.selection);
         _.each(this.values, function(v, i) {
             if (v[0] === false && v[1] === '') {
                 self.values.splice(i, 1);
@@ -2553,18 +2564,30 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         this.dataset.parent_view = this.options.parent_view;
         this.dataset.on_default_get.add(this.on_default_get);
         if (this.options.initial_view == "search") {
-            this.setup_search_view();
+            self.rpc('/web/session/eval_domain_and_context', {
+                domains: [],
+                contexts: [this.context]
+            }, function (results) {
+                var search_defaults = {};
+                _.each(results.context, function (value, key) {
+                    var match = /^search_default_(.*)$/.exec(key);
+                    if (match) {
+                        search_defaults[match[1]] = value;
+                    }
+                });
+                self.setup_search_view(search_defaults);
+            });
         } else { // "form"
             this.new_object();
         }
     },
-    setup_search_view: function() {
+    setup_search_view: function(search_defaults) {
         var self = this;
         if (this.searchview) {
             this.searchview.stop();
         }
         this.searchview = new openerp.web.SearchView(this,
-                this.dataset, false, {});
+                this.dataset, false,  search_defaults);
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
@@ -2813,6 +2836,7 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
         this.view_id = 'reference_' + _.uniqueId();
         this.widgets = {};
         this.fields = {};
+        this.fields_order = [];
         this.selection = new openerp.web.form.FieldSelection(this, { attrs: {
             name: 'selection',
             widget: 'selection'
@@ -3061,6 +3085,9 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
 openerp.web.form.FieldReadonly = openerp.web.form.Field.extend({
 
 });
+openerp.web.form.WidgetFrameReadonly = openerp.web.form.WidgetFrame.extend({
+    template: 'WidgetFrame.readonly'
+});
 openerp.web.form.FieldCharReadonly = openerp.web.form.FieldReadonly.extend({
     template: 'FieldChar.readonly',
     init: function(view, node) {
@@ -3109,7 +3136,7 @@ openerp.web.form.FieldSelectionReadonly = openerp.web.form.FieldReadonly.extend(
         // lifted straight from r/w version
         var self = this;
         this._super(view, node);
-        this.values = this.field.selection;
+        this.values = _.clone(this.field.selection);
         _.each(this.values, function(v, i) {
             if (v[0] === false && v[1] === '') {
                 self.values.splice(i, 1);
@@ -3213,6 +3240,7 @@ openerp.web.form.FieldOne2ManyReadonly = openerp.web.form.FieldOne2Many.extend({
     force_readonly: true
 });
 openerp.web.form.readonly = openerp.web.form.widgets.clone({
+    'frame': 'openerp.web.form.WidgetFrameReadonly',
     'char': 'openerp.web.form.FieldCharReadonly',
     'email': 'openerp.web.form.FieldEmailReadonly',
     'url': 'openerp.web.form.FieldUrlReadonly',

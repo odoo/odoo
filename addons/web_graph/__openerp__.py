@@ -1,6 +1,7 @@
 {
     "name": "web Graph",
     "category" : "Hidden",
+    "description":'Openerp web graph view',
     "version": "2.0",
     "depends": ['web'],
     "js": [

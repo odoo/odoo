@@ -91,6 +91,14 @@ session.web.ActionManager = session.web.Widget.extend({
         return this[type](action, on_close);
     },
     ir_actions_act_window: function (action, on_close) {
+        if (_(['base.module.upgrade', 'base.setup.installer'])
+                .contains(action.res_model)) {
+            var old_close = on_close;
+            on_close = function () {
+                session.webclient.do_reload();
+                if (old_close) { old_close(); }
+            };
+        }
         if (action.target === 'new') {
             if (this.dialog == null) {
                 this.dialog = new session.web.Dialog(this, { title: action.name, width: '80%' });
@@ -120,12 +128,6 @@ session.web.ActionManager = session.web.Widget.extend({
     ir_actions_act_window_close: function (action, on_closed) {
         if (!this.dialog && on_closed) {
             on_closed();
-        }
-        if (this.dialog && action.context) {
-            var model = action.context.active_model;
-            if (model === 'base.module.upgrade' || model === 'base.setup.installer' || model === 'base.module.upgrade') {
-                session.webclient.do_reload();
-            }
         }
         this.dialog_stop();
     },
@@ -278,7 +280,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             }
         }
         $.when(view_promise).then(function () {
-            self.$element.find('.oe_view_title:first').text(
+            self.$element.find('.oe_view_title_text:first').text(
                     self.display_title());
         });
         return view_promise;
@@ -424,8 +426,8 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         });
         if (this.action.help && !this.flags.low_profile) {
             var Users = new session.web.DataSet(self, 'res.users'),
-                header = this.$element.find('.oe-view-manager-header');
-            header.delegate('blockquote button', 'click', function() {
+                $tips = this.$element.find('.oe_view_manager_menu_tips');
+            $tips.delegate('blockquote button', 'click', function() {
                 var $this = $(this);
                 //noinspection FallthroughInSwitchStatementJS
                 switch ($this.attr('name')) {
@@ -442,7 +444,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                     if (!(user && user.id === self.session.uid)) {
                         return;
                     }
-                    header.find('blockquote').toggle(user.menu_tips);
+                    $tips.find('blockquote').toggle(user.menu_tips);
                 });
             }
         }
@@ -470,10 +472,10 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                     view_id = (fvg && fvg.view_id) || '--';
                 self.$element.find('.oe_get_xml_view span').text(view_id);
                 if (!self.action.name && fvg) {
-                    self.$element.find('.oe_view_title').text(fvg.arch.attrs.string || fvg.name);
+                    self.$element.find('.oe_view_title_text').text(fvg.arch.attrs.string || fvg.name);
                 }
 
-                var $title = self.$element.find('.oe_view_title'),
+                var $title = self.$element.find('.oe_view_title_text'),
                     $search_prefix = $title.find('span.oe_searchable_view');
                 if (controller.searchable !== false) {
                     if (!$search_prefix.length) {
