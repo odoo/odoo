@@ -727,10 +727,12 @@ class purchase_order_line(osv.osv):
     # - name of method should "onchange_product_id"
     # - docstring
     # - merge 'product_uom_change' method
-    # - split into small internal methods for clearity 
+    # - split into small internal methods for clearity
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
-            name=False, price_unit=False, notes=False, context={}):
+            name=False, price_unit=False, notes=False, context=None):
+        if context is None:
+            context = {}
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist or a supplier in the purchase form !\nPlease set one before choosing a product.'))
         if not  partner_id:
@@ -744,11 +746,14 @@ class purchase_order_line(osv.osv):
         lang=False
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, partner_id, ['lang'])['lang']
-        context={'lang':lang}
+        context['lang'] = lang
         context['partner_id'] = partner_id
 
         prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
         prod_uom_po = prod.uom_po_id.id
+
+        if uom and prod and (uom <> prod_uom_po):
+            uom = prod_uom_po
         if not uom:
             uom = prod_uom_po
         if not date_order:
@@ -773,6 +778,7 @@ class purchase_order_line(osv.osv):
                 if qty < temp_qty: # If the supplier quantity is greater than entered from user, set minimal.
                     qty = temp_qty
                     res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s, you should not purchase less.') % qty}})
+        uom = context.get('uom_change', uom)
         qty_in_product_uom = product_uom_pool._compute_qty(cr, uid, uom, qty, to_uom_id=prod.uom_id.id)
         price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
                     product, qty_in_product_uom or 1.0, partner_id, {
@@ -786,7 +792,7 @@ class purchase_order_line(osv.osv):
             'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
             'date_planned': date_planned or dt,'notes': notes or prod.description_purchase,
             'product_qty': qty,
-            'product_uom': prod.uom_id.id}})
+            'product_uom': uom or prod_uom_po}})
         domain = {}
 
         taxes = self.pool.get('account.tax').browse(cr, uid,map(lambda x: x.id, prod.supplier_taxes_id))
@@ -808,7 +814,7 @@ class purchase_order_line(osv.osv):
             name=False, price_unit=False, notes=False, context={}):
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
                 partner_id, date_order=date_order, fiscal_position=fiscal_position, date_planned=date_planned,
-            name=name, price_unit=price_unit, notes=notes, context=context)
+            name=name, price_unit=price_unit, notes=notes, context={'uom_change': uom})
         if 'product_uom' in res['value']:
             if uom and (uom != res['value']['product_uom']) and res['value']['product_uom']:
                 seller_uom_name = self.pool.get('product.uom').read(cr, uid, [res['value']['product_uom']], ['name'])[0]['name']
