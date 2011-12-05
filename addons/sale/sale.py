@@ -333,6 +333,16 @@ class sale_order(osv.osv):
         }
         return {'warning': warning}
 
+    def onchange_partner_order_id(self, cr, uid, ids, order_id, invoice_id=False, shipping_id=False, context={}):
+        if not order_id:
+            return {}
+        val = {}
+        if not invoice_id:
+            val['partner_invoice_id'] = order_id
+        if not shipping_id:
+            val['partner_shipping_id'] = order_id
+        return {'value': val}
+
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'partner_order_id': False, 'payment_term': False, 'fiscal_position': False}}
