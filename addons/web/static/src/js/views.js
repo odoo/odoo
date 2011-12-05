@@ -380,7 +380,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
             // Not elegant but allows to avoid form chrome (pager, save/new
             // buttons, sidebar, ...) displaying
-            this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
+            this.flags.display_title = this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
         }
 
         // setup storage for session-wise menu hiding
