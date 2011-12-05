@@ -636,6 +636,20 @@
             <field name="categ_id" ref="product_category_shelves0"/>
         </record>
 
+        <record id="product_sugar_id_50kg" model="product.product">
+            <field name="default_code">SUGAR50KG</field>
+            <field name="supply_method">buy</field>
+            <field eval="'make_to_stock'" name="procure_method"/>
+            <field name="list_price">110.0</field>
+            <field name="standard_price">3600.0</field>
+            <field name="uom_id" ref="product_uom_kgm"/>
+            <field name="uom_po_id" ref="product_uom_gram"/>
+            <field name="name">SUGAR of 50KG</field>
+            <field eval="0" name="purchase_ok"/>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_rawmaterial0"/>
+        </record>
+
         <!--
     Resource: product.supplierinfo
     -->
@@ -774,6 +788,15 @@
             <field name="min_qty">1</field>
             <field name="sequence">5</field>
             <field name="product_id" ref="product_product_hdd3"/>
+            <field name="delay">5</field>
+        </record>
+
+         <record id="supplierinfo20" model="product.supplierinfo">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">10</field>
+            <field name="min_qty">1</field>
+            <field name="sequence">5</field>
+            <field name="product_id" ref="product_sugar_id_50kg"/>
             <field name="delay">5</field>
         </record>
 
