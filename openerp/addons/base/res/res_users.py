@@ -554,25 +554,45 @@ users()
 # to the implied groups (transitively).
 #
 
+class cset(object):
+    """ A cset (constrained set) is a set of elements that may be constrained to
+        be a subset of other csets.  Elements added to a cset are automatically
+        added to its supersets.  Cycles in the subset constraints are supported.
+    """
+    def __init__(self, xs):
+        self.supersets = set()
+        self.elements = set(xs)
+    def subsetof(self, other):
+        if other is not self:
+            self.supersets.add(other)
+            other.update(self.elements)
+    def update(self, xs):
+        xs = set(xs) - self.elements
+        if xs:      # xs will eventually be empty in case of a cycle
+            self.elements.update(xs)
+            for s in self.supersets:
+                s.update(xs)
+    def __iter__(self):
+        return iter(self.elements)
+
+
+
 class groups_implied(osv.osv):
     _inherit = 'res.groups'
 
     def _get_trans_implied(self, cr, uid, ids, field, arg, context=None):
         "computes the transitive closure of relation implied_ids"
-        trans_memo = {}
-        def compute_trans(g):
-            "computes the list of group ids transitively implied by g"
-            # use a memo for performance and cycle avoidance
-            if g.id in trans_memo:
-                return trans_memo[g.id]
-            trans_memo[g.id] = set()
-            for h in g.implied_ids:
-                trans_memo[g.id].add(h.id)
-                trans_memo[g.id].update(compute_trans(h))
-            return trans_memo[g.id]
+        memo = {}           # use a memo for performance and cycle avoidance
+        def computed_set(g):
+            if g not in memo:
+                memo[g] = cset(g.implied_ids)
+                for h in g.implied_ids:
+                    computed_set(h).subsetof(memo[g])
+            return memo[g]
+
         res = {}
         for g in self.browse(cr, 1, ids, context):
-            res[g.id] = list(compute_trans(g))
+            res[g.id] = map(int, computed_set(g))
         return res
 
     _columns = {
@@ -584,9 +604,9 @@ class groups_implied(osv.osv):
 
     def get_closure(self, cr, uid, ids, context=None):
         "return the reflexive transitive closure of implied_ids for group ids"
-        res = set()
+        res = set(ids)
         for g in self.browse(cr, 1, ids):
-            res.update(map(int, [g] + g.trans_implied_ids))
+            res.update(map(int, g.trans_implied_ids))
         return list(res)
 
     def create(self, cr, uid, values, context=None):
