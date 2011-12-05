@@ -163,7 +163,17 @@ class crm_lead(crm_case, osv.osv):
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         #'stage_id': _get_stage_id,
     }
-    
+
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None: context={}
+        if not isinstance(ids, list):
+          ids = [ids]
+        for lead in self.browse(cr,uid,ids,context=None):
+           msg_ids = [msg.id for msg in lead.message_ids]
+           if msg_ids:
+               self.pool.get('mailgate.message').unlink(cr, uid, msg_ids, context)
+        return super(crm_lead, self).unlink(cr, uid, ids, context)
+
     
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
