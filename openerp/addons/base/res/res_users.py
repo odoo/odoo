@@ -883,10 +883,12 @@ class users_view(osv.osv):
                         'help': g.comment,
                     }
                 else:
+                    tips = ['%s: %s' % (g.name, g.comment or '') for g in gs]
                     res[name_selection_groups(map(int, gs))] = {
                         'type': 'selection',
                         'string': _('Role'),
                         'selection': [(g.id, g.name) for g in gs],
+                        'help': '\n'.join(tips),
                     }
         return res
 
