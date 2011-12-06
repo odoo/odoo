@@ -211,8 +211,16 @@ class stock_location(osv.osv):
         'stock_virtual_value': fields.function(_product_value, type='float', string='Virtual Stock Value', multi="stock", digits_compute=dp.get_precision('Account')),
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
         'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
-        'valuation_in_account_id': fields.many2one('account.account', 'Stock Input Account',domain = [('type','=','other')], help='This account will be used to value stock moves that have this location as destination, instead of the stock output account from the product.'),
-        'valuation_out_account_id': fields.many2one('account.account', 'Stock Output Account',domain = [('type','=','other')], help='This account will be used to value stock moves that have this location as source, instead of the stock input account from the product.'),
+        'valuation_in_account_id': fields.many2one('account.account', 'Stock Valuation Account (Incoming)', domain = [('type','=','other')],
+                                                   help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
+                                                        "this account will be used to hold the value of products being moved from an internal location "
+                                                        "into this location, instead of the generic Stock Output Account set on the product. "
+                                                        "This has no effect for internal locations."),
+        'valuation_out_account_id': fields.many2one('account.account', 'Stock Valuation Account (Outgoing)', domain = [('type','=','other')],
+                                                   help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
+                                                        "this account will be used to hold the value of products being moved out of this location "
+                                                        "and into an internal location, instead of the generic Stock Output Account set on the product. "
+                                                        "This has no effect for internal locations."),
     }
     _defaults = {
         'active': True,
@@ -661,6 +669,9 @@ class stock_picking(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
+    ]
 
     def action_process(self, cr, uid, ids, context=None):
         if context is None: context = {}
@@ -691,6 +702,8 @@ class stock_picking(osv.osv):
             default['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
             default['origin'] = ''
             default['backorder_id'] = False
+        if picking_obj.invoice_state == 'invoiced':
+            default['invoice_state'] = '2binvoiced'
         res=super(stock_picking, self).copy(cr, uid, id, default, context)
         if res:
             picking_obj = self.browse(cr, uid, res, context=context)
@@ -976,7 +989,6 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
-            payment_term_id = False
             partner =  picking.address_id and picking.address_id.partner_id
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
@@ -987,10 +999,8 @@ class stock_picking(osv.osv):
 
             if inv_type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
-                payment_term_id = self._get_payment_term(cr, uid, picking)
             else:
                 account_id = partner.property_account_payable.id
-
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cr, uid, picking).values()
             address = address_obj.browse(cr, uid, address_contact_id, context=context)
@@ -1017,7 +1027,7 @@ class stock_picking(osv.osv):
                     'address_invoice_id': address_invoice_id,
                     'address_contact_id': address_contact_id,
                     'comment': comment,
-                    'payment_term': payment_term_id,
+                    'payment_term': self._get_payment_term(cr, uid, picking),
                     'fiscal_position': partner.property_account_position.id,
                     'date_invoice': context.get('date_inv',False),
                     'company_id': picking.company_id.id,
@@ -1525,7 +1535,7 @@ class stock_move(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=True),
+        'name': fields.char('Name', size=250, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
@@ -1798,7 +1808,7 @@ class stock_move(osv.osv):
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
         """ On change of Scheduled Date gives a Move date.
-        @param date_expected: Scheduled Date 
+        @param date_expected: Scheduled Date
         @param date: Move Date
         @return: Move Date
         """
@@ -2693,7 +2703,7 @@ class stock_inventory_line(osv.osv):
             return {'value': {'product_qty': 0.0, 'product_uom': False}}
         obj_product = self.pool.get('product.product').browse(cr, uid, product)
         uom = uom or obj_product.uom_id.id
-        amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date})[product]
+        amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date, 'compute_child': False})[product]
         result = {'product_qty': amount, 'product_uom': uom}
         return {'value': result}
 

@@ -181,6 +181,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
+        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
     }
 
     def _get_stage(self, cr, uid, context=None):
@@ -197,11 +198,19 @@ class hr_applicant(crm.crm_case, osv.osv):
         'color': 0,
     }
 
-    def _read_group_stage_ids(self, cr, uid, ids, domain, context=None):
-        context = context or {}
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        access_rights_uid = access_rights_uid or uid
         stage_obj = self.pool.get('hr.recruitment.stage')
-        stage_ids = stage_obj.search(cr, uid, ['|',('id','in',ids), ('department_id','=',False)], context=context)
-        return stage_obj.name_get(cr, uid, stage_ids, context=context)
+        order = stage_obj._order
+        if read_group_order == 'stage_id desc':
+            # lame hack to allow reverting search, should just work in the trivial case
+            order = "%s desc" % order
+        stage_ids = stage_obj._search(cr, uid, ['|',('id','in',ids),('department_id','=',False)], order=order,
+                                      access_rights_uid=access_rights_uid, context=context)
+        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
+        # restore order of the search
+        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        return result
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
@@ -440,7 +449,18 @@ class hr_applicant(crm.crm_case, osv.osv):
                                                  })
         else:
             raise osv.except_osv(_('Warning!'),_('You must define Applied Job for Applicant !'))
-        return self.case_close(cr, uid, ids, *args)
+        self.case_close(cr, uid, ids, *args)
+
+        mod_obj = self.pool.get('ir.model.data')
+        act = mod_obj.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
+
+        act_obj = self.pool.get('ir.actions.act_window')
+        act_win = act_obj.read(cr, uid, act[1], [])
+
+        act_win['domain'] = [('id','=',emp_id)]
+        act_win['view_mode'] = 'form,tree'
+        act_win['res_id'] = emp_id
+        return act_win
 
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as draft

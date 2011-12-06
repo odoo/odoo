@@ -2,7 +2,7 @@
 <openerp>
     <data noupdate="1">
         <record id="survey_2" model="survey">
-            <field name="title">Employee Evaluation</field>
+            <field name="title">Employee Appraisal</field>
             <field name="max_response_limit">20</field>
             <field eval="[(6,0,[])]" name="users"/>
             <field name="type" ref="survey.survey_type1"/>
@@ -11,7 +11,7 @@
             <field name="state">open</field>
         </record>
         <record id="survey_page_1" model="survey.page">
-            <field name="title">Employee Evaluation Form</field>
+            <field name="title">Employee Appraisal Form</field>
             <field name="survey_id" ref="survey_2"/>
             <field eval="1" name="sequence"/>
         </record>
@@ -128,7 +128,7 @@
             <field eval="0" name="is_require_answer"/>
             <field name="type">descriptive_text</field>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
-            <field name="descriptive_text">* The employee will be responsible for completing a draft of the Appraisal Form as a tool for self-evaluation and a starting point for the supervisor’s evaluation. The employee can add examples of achievements for each criterion.
+            <field name="descriptive_text">* The employee will be responsible for completing a draft of the Appraisal Form as a tool for self-appraisal and a starting point for the supervisor’s evaluation. The employee can add examples of achievements for each criterion.
 Once the form had been filled, the employee send it to his supervisor.
 
 * It is the primary responsibility of the supervisor to gather the necessary input from     the appropriate sources of feedback (internal and/or external customers, peers). In case of collaboration with OpenERP SA Belgium, the supervisor must receive completed evaluation form from the employee's Belgian project manager.
@@ -204,7 +204,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question">Subject</field>
             <field eval="0" name="is_require_answer"/>
             <field name="type">matrix_of_choices_only_one_ans</field>
-            <field name="column_name">Recommendations / Evaluations</field>
+            <field name="column_name">Recommendations / Appraisals</field>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field eval="0" name="make_comment_field"/>
             <field eval="0" name="in_visible_menu_choice"/>
@@ -227,7 +227,7 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question">Supervisors only : </field>
             <field eval="0" name="is_require_answer"/>
             <field name="type">matrix_of_choices_only_one_ans</field>
-            <field name="column_name">Recommendations / Evaluations</field>
+            <field name="column_name">Recommendations / Appraisals</field>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field eval="0" name="make_comment_field"/>
             <field eval="0" name="in_visible_menu_choice"/>
@@ -1150,7 +1150,7 @@ Once the form had been filled, the employee send it to his supervisor.
         <record id="hr_evaluation_plan_managersevaluationplan0" model="hr_evaluation.plan">
             <field eval="1" name="active"/>
             <field eval="6" name="month_next"/>
-            <field name="name">Manager's Evaluation Plan</field>
+            <field name="name">Manager's Appraisal Plan</field>
             <field eval="3" name="month_first"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
@@ -1205,33 +1205,21 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="action">final</field>
             <field eval="0" name="send_anonymous_employee"/>
             <field eval="0" name="send_answer_employee"/>
-            <field name="survey_id" ref="hr_recruitment.survey_job_0"/>
+            <field name="survey_id" ref="hr_evaluation.survey_2"/>
             <field eval="0" name="send_answer_manager"/>
             <field eval="1" name="wait"/>
         </record>
     </data>
-    
+
     <data noupdate="1">
         <record id="hr.employee" model="hr.employee">
-            <field name="evaluation_plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
-        </record>
-        
-        <record id="hr.employee1" model="hr.employee">
-            <field name="evaluation_plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
-        </record>
-
-        <record id="hr.employee2" model="hr.employee">
-            <field name="evaluation_plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
-        </record>
-
-        <record id="hr.employee3" model="hr.employee">
             <field name="evaluation_plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
         </record>
     </data>
 
     <data>
         <record forcecreate="True" id="ir_cron_scheduler_evaluation" model="ir.cron">
-           <field name="name">Run Employee Evaluation</field>
+           <field name="name">Run Employee Appraisal</field>
            <field eval="True" name="active" />
            <field name="user_id" ref="base.user_root" />
            <field name="interval_number">1</field>

@@ -35,5 +35,5 @@ import product
 import ir_sequence
 import company
 import res_currency
-
+import edi
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

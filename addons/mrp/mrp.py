@@ -174,7 +174,7 @@ class mrp_bom(osv.osv):
         @param arg: User defined argument
         @return:  Dictionary of values
         """
-        res = dict(map(lambda x: (x,''), ids))
+        res = dict.fromkeys(ids, False)
         for line in self.browse(cr, uid, ids, context=context):
             if line.type == 'phantom' and not line.bom_id:
                 res[line.id] = 'set'
@@ -481,6 +481,9 @@ class mrp_production(osv.osv):
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'mrp.production') or '/',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
+    ]
     _order = 'priority desc, date_planned asc';
 
     def _check_qty(self, cr, uid, ids, context=None):

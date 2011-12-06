@@ -104,13 +104,6 @@
         </record>
 
         <record id="t10" model="workflow.transition">
-            <field name="act_from" ref="act_invoice"/>
-            <field name="act_to" ref="act_refused"/>
-            <field name="signal">subflow.cancel</field>
-            <field name="group_id" ref="base.group_hr_user"/>
-        </record>
-
-		<record id="t11" model="workflow.transition">
             <field name="act_from" ref="act_refused"/>
             <field name="act_to" ref="act_draft"/>
             <field name="signal">draft</field>

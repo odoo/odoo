@@ -209,3 +209,5 @@ class report_object_encoded(osv.osv):
 
 report_object_encoded()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

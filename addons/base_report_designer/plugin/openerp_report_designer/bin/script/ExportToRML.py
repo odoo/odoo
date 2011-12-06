@@ -130,3 +130,5 @@ if __name__<>"package" and __name__=="__main__":
     ExportToRML(None)
 elif __name__=="package":
     g_ImplementationHelper.addImplementation( ExportToRML, "org.openoffice.openerp.report.exporttorml", ("com.sun.star.task.Job",),)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

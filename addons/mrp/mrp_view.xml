@@ -529,7 +529,6 @@
             <field eval="'mrp.bom'" name="model"/>
             <field name="name">Bill of Materials Structure</field>
             <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <record id="mrp_bom_revision_tree" model="ir.ui.view">
@@ -986,6 +985,7 @@
             id="action_product_bom_structure"
             name="Product BoM Structure"
             domain="[('product_id', '=', active_id),('bom_id','=',False)]"
+            context="{'default_product_id': active_id}"
             view_type="tree"
             view_id="mrp_bom_tree_view"
             res_model="mrp.bom"

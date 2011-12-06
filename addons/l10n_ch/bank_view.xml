@@ -138,7 +138,7 @@
                     </group>
                     <separator colspan="4" string="Financial institute infos"/>
                     <newline/>
-                    <field name="my_bank"  attrs="{'invisible': [('company_id', '!=', True)]}" colspan="4"/>
+                    <field name="my_bank"  attrs="{'invisible': [('company_id', '=', False)]}" colspan="4"/>
                     <group string="BVR print options" colspan="4"  attrs="{'invisible': [('my_bank', '!=', True)]}" >
                         <field name="bvr_adherent_num"/>
                         <field name="print_bank"/>
