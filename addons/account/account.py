@@ -2475,7 +2475,6 @@ class account_account_template(osv.osv):
         @param code_digits: Digit getting from wizard.multi.charts.accounts.,this is use for account code.
         @param company_id: company_id selected from wizard.multi.charts.accounts.
         @return : return acc_template_ref for reference purpose.
-        
         """
         if context is None:
             context = {}
@@ -2976,7 +2975,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                               , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all')), ('installable', '=', True)], order="sequence, id desc")
                 res['value'].update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False, 'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
-            res['value'].update({'complete_tax': complete_tax, 'code_digits': data.code_digits})
+            res['value'].update({'complete_tax': complete_tax})
+            if data.code_digits:
+               res['value'].update({'code_digits': data.code_digits})
         return res
 
 
@@ -3005,7 +3006,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                           , "=", ids[0]), ('type_tax_use', 'in', ('purchase','all')), ('installable', '=', True)], order="sequence")
                 res.update({'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
-
         return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -3173,12 +3173,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 }
             self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
 
-        data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi') 
-        view_id_cur = data and data[1] or False
-
-        data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view') 
-        view_id_cash = data and data[1] or False
-            
         return True
 
     def generate_properties(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
@@ -3338,7 +3332,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     'purchase_tax': obj_multi.complete_tax and obj_multi.purchase_tax.id or False, 
                      }
 
-        acc_temp_ref = self._install_template(cr, uid, obj_multi.chart_template_id.id, company_id, code_digits=code_digits, tax_data=tax_data, context=context)                         
+        acc_template_ref = self._install_template(cr, uid, obj_multi.chart_template_id.id, company_id, code_digits=code_digits, tax_data=tax_data, context=context)                         
         if obj_multi.bank_accounts_id:
             for acc in obj_multi.bank_accounts_id:
                 journal_data.append({
@@ -3350,6 +3344,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         #Create Bank journals
         current_num = 1
         valid = True
+        obj_data = self.pool.get('ir.model.data')
+        data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi') 
+        view_id_cur = data and data[1] or False
+
+        data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view') 
+        view_id_cash = data and data[1] or False
+            
         for line in journal_data:
             #create the account_account for this bank journal
             if not ref_acc_bank.code:
