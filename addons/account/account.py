@@ -2618,7 +2618,7 @@ class account_chart_template(osv.osv):
         'parent_id': fields.many2one('account.chart.template', 'Parent Chart Template'),
         'code_digits': fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"), 
         'visible': fields.boolean('Can be Visible?', help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template."),
-        'set_tax_complete': fields.boolean('Complete Set of Tax', help="Check this if you want to create new default Sales and Purchase taxes from selected rate instead of choosing it from list of taxes."),
+        'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This last choice assumes that the set of tax defined on this template is complete'),
         'account_root_id': fields.many2one('account.account.template', 'Root Account', domain=[('parent_id','=',False)]),
         'tax_code_root_id': fields.many2one('account.tax.code.template', 'Root Tax Code', domain=[('parent_id','=',False)]),
         'tax_template_ids': fields.one2many('account.tax.template', 'chart_template_id', 'Tax Template List', help='List of all the taxes that have to be installed by the wizard'),
@@ -2636,7 +2636,8 @@ class account_chart_template(osv.osv):
 
     _defaults = {
         'visible': True,
-        'code_digits': 6
+        'code_digits': 6,
+        'complete_tax_set': True,
     }
 
 account_chart_template()
@@ -2959,23 +2960,23 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         "purchase_tax": fields.many2one("account.tax.template", "Default Purchase Tax"),
         'sale_tax_rate': fields.float('Sales Tax(%)'),
         'purchase_tax_rate': fields.float('Purchase Tax(%)'),
-        'complete_tax': fields.boolean('Complete Tax'),
+        'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
     }
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = {}
         tax_templ_obj = self.pool.get('account.tax.template')
-        res['value'] = {'complete_tax': False, 'sale_tax': False, 'purchase_tax': False, 'code_digits': 0}
+        res['value'] = {'complete_tax_set': False, 'sale_tax': False, 'purchase_tax': False}
         if chart_template_id:
             data = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
-            complete_tax = data.set_tax_complete
-            if complete_tax:
-            # default tax is given by the lowesst sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
+            res['value'].update({'complete_tax_set': data.complete_tax_set})
+            if data.complete_tax_set:
+            # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                               , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all')), ('installable', '=', True)], order="sequence, id desc")
                 purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                               , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all')), ('installable', '=', True)], order="sequence, id desc")
                 res['value'].update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False, 'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
-            res['value'].update({'complete_tax': complete_tax})
+
             if data.code_digits:
                res['value'].update({'code_digits': data.code_digits})
         return res
@@ -3235,7 +3236,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ir_values_obj = self.pool.get('ir.values')
 
         # create tax templates and real taxes from purchase_tax_rate,sale_tax_rate fields
-        if not template.set_tax_complete and tax_data:
+        if not template.complete_tax_set and tax_data:
             tax_dict = {'sale': tax_data['sale'], 'purchase': tax_data['purchase']}
             for tax_type, value in tax_dict.items():
                 tax_name = tax_type == 'sale' and 'TAX Received' or 'TAX Paid'
@@ -3294,8 +3295,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     'account_collected_id': acc_template_ref.get(value['account_collected_id'], False),
                     'account_paid_id': acc_template_ref.get(value['account_paid_id'], False),
                 })
-        
-        # Create Jourals
+
+        # Create Journals
         self.generate_journals(cr, uid, template_id, acc_template_ref, company_id, code_digits, context)
 
         # generate properties function
@@ -3317,7 +3318,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         obj_acc = self.pool.get('account.account')
         obj_journal = self.pool.get('account.journal')
-        
+
         obj_multi = self.browse(cr, uid, ids[0])
         company_id = obj_multi.company_id.id
 
@@ -3328,8 +3329,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_data = {
                     'sale': obj_multi.sale_tax_rate, 
                     'purchase': obj_multi.purchase_tax_rate, 
-                    'sale_tax': obj_multi.complete_tax and obj_multi.sale_tax.id or False, 
-                    'purchase_tax': obj_multi.complete_tax and obj_multi.purchase_tax.id or False, 
+                    'sale_tax': obj_multi.complete_tax_set and obj_multi.sale_tax.id or False, 
+                    'purchase_tax': obj_multi.complete_tax_set and obj_multi.purchase_tax.id or False, 
                      }
 
         acc_template_ref = self._install_template(cr, uid, obj_multi.chart_template_id.id, company_id, code_digits=code_digits, tax_data=tax_data, context=context)                         
@@ -3340,7 +3341,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                             'account_type': acc.account_type,
                             'currency_id': acc.currency_id.id,
                             })
-        
+
         #Create Bank journals
         current_num = 1
         valid = True
@@ -3350,7 +3351,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view') 
         view_id_cash = data and data[1] or False
-            
+
         for line in journal_data:
             #create the account_account for this bank journal
             if not ref_acc_bank.code:

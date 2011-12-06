@@ -2191,7 +2191,7 @@
                     <field name="parent_id" />
                     <!--<field name="code_digits" />-->
                     <field name="visible" />
-                    <field name="set_tax_complete" />
+                    <field name="complete_tax_set" />
                     </group>
                     <field name="tax_template_ids" colspan="4" readonly="1" nolabel="1"/>
                     <separator string="Properties" colspan="4"/>
@@ -2447,11 +2447,11 @@
                     <field name ="code_digits" groups="account.group_account_user"/>
                     <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)"/>
                     <field name ="seq_journal" groups="base.group_extended"/>
-                    <field name="sale_tax" attrs="{'invisible': [('complete_tax', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
-                    <field name="purchase_tax" attrs="{'invisible': [('complete_tax', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
-                    <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax', '=', True)]}"/>
-                    <field name ="purchase_tax_rate" attrs="{'invisible': [('complete_tax', '=', True)]}"/>
-                    <field name ="complete_tax" invisible="1"/>
+                    <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
+                    <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                    <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
+                    <field name ="purchase_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
+                    <field name ="complete_tax_set" invisible="1"/>
                     <newline/> <!-- extended view because the web UI is not good for one2many -->
                     <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list" groups="account.group_account_user">
                         <form string="Bank Information">
