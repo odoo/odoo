@@ -739,15 +739,17 @@ class groups_view(osv.osv):
             xml = []
             xml.append('<!-- GENERATED AUTOMATICALLY BY GROUPS -->')
             xml.append('<field name="groups_id" position="replace">')
+            xml.append('<group col="6">')
             for app, selects in self.get_groups_by_application(cr, uid, context):
-                category = app and app.name or _('Other')
-                xml.append('<separator string="%s" colspan="6"/>' % category)
+                app_name = app and app.name or _('Other')
+                xml.append('<separator string="%s" colspan="6"/>' % app_name)
                 for gs in selects:
                     if len(gs) == 1:
                         field_name = name_boolean_group(gs[0].id)
                     else:
                         field_name = name_selection_groups(map(int, gs))
                     xml.append('<field name="%s"/>' % field_name)
+            xml.append('</group>')
             xml.append('</field>')
             view.write({'arch': '\n'.join(xml)})
         return True
@@ -869,11 +871,6 @@ class users_view(osv.osv):
         res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access)
         # add reified groups fields
         for app, selects in self.pool.get('res.groups').get_groups_by_application(cr, uid, context):
-            all_gs = reduce(lambda x, y: x + y, selects)
-            res[name_boolean_groups(map(int, all_gs))] = {
-                'type': 'boolean',
-                'string': app and app.name or _('Other'),
-            }
             for gs in selects:
                 if len(gs) == 1:
                     g = gs[0]
