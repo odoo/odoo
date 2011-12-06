@@ -166,7 +166,7 @@ openerp.point_of_sale = function(db) {
     NumpadState, NumpadWidget, Order, OrderButtonWidget, OrderCollection, OrderWidget, Orderline,
     OrderlineCollection, OrderlineWidget, PaymentButtonWidget, PaymentWidget, Paymentline,
     PaymentlineCollection, PaymentlineWidget, PaypadWidget, Product, ProductCollection,
-    ProductListWidget, ProductWidget, ReceiptLineWidget, ReceiptWidget, Shop, ShopView, StepsWidget;
+    ProductListWidget, ProductWidget, ReceiptLineWidget, ReceiptWidget, Shop, ShopWidget, StepsWidget;
 
     /*
      ---
@@ -921,9 +921,6 @@ openerp.point_of_sale = function(db) {
             this.bindOrderLineEvents();
             this.bindPaymentLineEvents();
         },
-        start: function () {
-            $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
-        },
         finishOrder: function() {
             $('.step-screen').hide();
             $('#products-screen').show();
@@ -958,6 +955,7 @@ openerp.point_of_sale = function(db) {
         },
         render_element: function() {
             this.$element.html(qweb_template('pos-receipt-view'));
+            $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
             this.currentOrderLines.each(__bind( function(orderItem) {
                 var x = new ReceiptLineWidget(null, {
                         model: orderItem
@@ -1016,14 +1014,14 @@ openerp.point_of_sale = function(db) {
             this.$element.addClass('order-selector-button');
         }
     });
-    ShopView = (function() {
-        __extends(ShopView, Backbone.View);
-        function ShopView() {
-            ShopView.__super__.constructor.apply(this, arguments);
-        }
-
-        ShopView.prototype.initialize = function(options) {
+    ShopWidget = db.web.Widget.extend({
+        init: function(parent, options) {
+            this._super(parent);
             this.shop = options.shop;
+        },
+        start: function() {
+            $('button#neworder-button', this.$element).click(_.bind(this.createNewOrder, this));
+
             (this.shop.get('orders')).bind('add', this.orderAdded, this);
             (this.shop.get('orders')).add(new Order);
             this.numpadState = new NumpadState({
@@ -1059,23 +1057,16 @@ openerp.point_of_sale = function(db) {
             this.numpadView.start();
             this.stepsView = new StepsWidget(null, 'steps');
             this.stepsView.start();
-            this.start();
-        };
-        ShopView.prototype.events = {
-            'click button#neworder-button': 'createNewOrder'
-        };
-        ShopView.prototype.start = function() {
-            this.productListView.start();
-        };
-        ShopView.prototype.createNewOrder = function() {
+        },
+        createNewOrder: function() {
             var newOrder;
             newOrder = new Order;
             (this.shop.get('orders')).add(newOrder);
-            return this.shop.set({
+            this.shop.set({
                 selectedOrder: newOrder
             });
-        };
-        ShopView.prototype.orderAdded = function(newOrder) {
+        },
+        orderAdded: function(newOrder) {
             var newOrderButton;
             newOrderButton = new OrderButtonWidget(null, {
                 order: newOrder,
@@ -1083,9 +1074,8 @@ openerp.point_of_sale = function(db) {
             });
             newOrderButton.appendTo($('#orders'));
             newOrderButton.selectOrder();
-        };
-        return ShopView;
-    })();
+        },
+    });
     App = (function() {
         function App($element) {
             this.initialize($element);
@@ -1093,10 +1083,11 @@ openerp.point_of_sale = function(db) {
 
         App.prototype.initialize = function($element) {
             this.shop = new Shop;
-            this.shopView = new ShopView({
-                shop: this.shop,
-                el: $element
+            this.shopView = new ShopWidget(null, {
+                shop: this.shop
             });
+            this.shopView.$element = $element;
+            this.shopView.start();
             this.categoryView = new CategoryWidget(null, 'products-screen-categories');
             this.categoryView.on_change_category.add_last(_.bind(this.category, this));
             this.category();
