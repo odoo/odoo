@@ -739,11 +739,15 @@ class groups_view(osv.osv):
             xml = []
             xml.append('<!-- GENERATED AUTOMATICALLY BY GROUPS -->')
             xml.append('<field name="groups_id" position="replace">')
-            for app, gs in self.get_groups_by_application(cr, uid, context):
+            for app, selects in self.get_groups_by_application(cr, uid, context):
                 category = app and app.name or _('Other')
                 xml.append('<separator string="%s" colspan="6"/>' % category)
-                for g in gs:
-                    xml.append('<field name="%s"/>' % name_boolean_group(g.id))
+                for gs in selects:
+                    if len(gs) == 1:
+                        field_name = name_boolean_group(gs[0].id)
+                    else:
+                        field_name = name_selection_groups(map(int, gs))
+                    xml.append('<field name="%s"/>' % field_name)
             xml.append('</field>')
             view.write({'arch': '\n'.join(xml)})
         return True
@@ -758,11 +762,33 @@ class groups_view(osv.osv):
 
     def get_groups_by_application(self, cr, uid, context=None):
         """ return all groups classified by application, as a list of pairs:
-            [(app, [group, ...]), ...], where app and group are browse records.
+            [(app, [[group, ...], ...]), ...], where app and group are browse records.
             The groups of an application are given as sequences (for linear sets of groups);
             those linear sets of groups may be shown on the screen as a selection widget.
             Applications are given in sequence order, and groups are given in reverse implication order.
         """
+        def linearize(groups):
+            groups = set(groups)
+            # determine sequence order: a group appear after its implied groups
+            order = dict.fromkeys(groups, 0)
+            for g in groups:
+                for h in groups.intersection(g.trans_implied_ids):
+                    order[h] -= 1
+            groups = sorted(groups, key=lambda g: order[g])
+            # extract sequences
+            res = []
+            while groups:
+                g = groups.pop()
+                gs, nogs = partition(lambda h: h in g.trans_implied_ids, groups)
+                gs.append(g)
+                # check that gs is truly linear (sequence order are distinct)
+                if len(set(map(lambda h: order[h], gs))) == len(gs):
+                    res.append(gs)
+                    groups = nogs
+                else:
+                    res.append([g])
+            return res
+
         # classify all groups by application
         by_app, others = {}, []
         for g in self.browse(cr, uid, self.search(cr, uid, []), context):
@@ -774,9 +800,9 @@ class groups_view(osv.osv):
         res = []
         apps = sorted(by_app.iterkeys(), key=lambda a: a.sequence or 0)
         for app in apps:
-            res.append((app, sorted(by_app[app], key=lambda g: g.name)))
+            res.append((app, linearize(by_app[app])))
         if others:
-            res.append((False, sorted(others, key=lambda g: g.name)))
+            res.append((False, linearize(others)))
         return res
 
 groups_view()
@@ -833,8 +859,8 @@ class users_view(osv.osv):
                     elif is_boolean_groups(f):
                         record[f] = not user_group_ids.isdisjoint(get_boolean_groups(f))
                     elif is_selection_groups(f):
-                        # TODO
-                        pass
+                        selected = [gid for gid in get_selection_groups(f) if gid in user_group_ids]
+                        record[f] = selected and selected[-1] or False
             return res
 
         return super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
@@ -842,14 +868,26 @@ class users_view(osv.osv):
     def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
         res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access)
         # add reified groups fields
-        for app, gs in self.pool.get('res.groups').get_groups_by_application(cr, uid, context):
-            for g in gs:
-                name = name_boolean_group(g.id)
-                res[name] = {
-                    'type': 'boolean',
-                    'string': g.name,
-                    'help': g.comment,
-                }
+        for app, selects in self.pool.get('res.groups').get_groups_by_application(cr, uid, context):
+            all_gs = reduce(lambda x, y: x + y, selects)
+            res[name_boolean_groups(map(int, all_gs))] = {
+                'type': 'boolean',
+                'string': app and app.name or _('Other'),
+            }
+            for gs in selects:
+                if len(gs) == 1:
+                    g = gs[0]
+                    res[name_boolean_group(g.id)] = {
+                        'type': 'boolean',
+                        'string': g.name,
+                        'help': g.comment,
+                    }
+                else:
+                    res[name_selection_groups(map(int, gs))] = {
+                        'type': 'selection',
+                        'string': _('Role'),
+                        'selection': [(g.id, g.name) for g in gs],
+                    }
         return res
 
 users_view()
