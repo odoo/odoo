@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Customer & Supplier Relationship Management',
+    'name': 'Customer Relationship Management',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'complexity': "easy",

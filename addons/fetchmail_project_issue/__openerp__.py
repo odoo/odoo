@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Fetchmail for Project Issue",
+    "name" : "eMail Gateway for Project Issues",
     "version" : "1.0",
     "depends" : ["fetchmail", "project_issue"],
     "author" : "OpenERP SA",
-    "category": 'Hidden/Link',
+    "category": "Project Management",
     "description": """
     """,
     'website': 'http://www.openerp.com',

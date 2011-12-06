@@ -21,7 +21,7 @@
     "name" : "Claim from Delivery",
     "version" : "1.0",
     "author" : "OpenERP SA",
-    "category" : "Hidden",
+    'category': 'Sales Management',
     "depends" : ["base", "crm_claim", "stock"],
     "init_xml" : [],
     "demo_xml" : [],

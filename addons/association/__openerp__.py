@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Association profile',
+    'name': 'Associations Management',
     'version': '0.1',
     'category': 'Specific Industry Applications',
     'complexity': "normal",

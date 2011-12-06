@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'To Do List',
+    'name': 'CRM Todo Lists',
     'version': '1.0',
     "category": 'Hidden/Link',
     'complexity': "easy",

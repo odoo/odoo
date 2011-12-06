@@ -19,11 +19,11 @@
 #
 ##############################################################################
 {
-    "name" : "Accounting and Financial Management",
+    "name" : "eInvoicing",
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Accounting & Finance',
-    'complexity': "normal",
+    'complexity': "easy",
     "description": """
 Accounting and Financial Management.
 ====================================
@@ -152,7 +152,6 @@ module named account_voucher.
     ],
     'installable': True,
     'active': False,
-    'core': True,
     'certificate': '0080331923549',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

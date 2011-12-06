@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Expenses',
+    'name': 'Expenses Management',
     'version': '1.0',
     'category': 'Human Resources',
     'complexity': "easy",

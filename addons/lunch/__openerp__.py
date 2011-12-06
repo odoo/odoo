@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Lunch",
+    "name": "Lunch Orders",
     "author": "OpenERP SA",
     'complexity': "easy",
     "Description": """

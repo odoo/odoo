@@ -19,10 +19,10 @@
 #
 ##############################################################################
 {
-    "name" : "Accountant Access",
+    "name" : "Accounting and Finance",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Hidden',
+    "category": 'Accounting & Finance',
     'complexity': "normal",
     "description": """
 Accounting Access Rights.
