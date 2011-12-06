@@ -6,20 +6,6 @@
         <field name="sequence">25</field>
         <field name="restart">onskip</field>
     </record>
-    <!--  Wizard for Multi Charts of Accounts -->
-    <record id="view_wizard_multi_chart_belgian_coa" model="ir.ui.view">
-      <field name="name">view.wizard.multi.chart</field>
-      <field name="model">wizard.multi.charts.accounts</field>
-      <field name="inherit_id" ref="account.view_wizard_multi_chart"/>
-      <field name="arch" type="xml">
-        <data>
-          <field name="bank_accounts_id" position="before">
-            <separator string="Languages" colspan="4" groups="base.group_extended"/>
-            <field name="lang_ids" colspan="4" nolabel="1" groups="base.group_extended"/>
-          </field>
-        </data>
-      </field>
-    </record>
 
   </data>
 </openerp>
