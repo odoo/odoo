@@ -24,21 +24,14 @@ from osv import fields, osv
 from tools.translate import _
 
 
+#in this file, we mostly add the tag translate=True on existing fields that we now want to be translated
+
 class account_account_template(osv.osv):
     _inherit = 'account.account.template'
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True, translate=True),
     }
 account_account_template()
-
-
-class account_account(osv.osv):
-    _inherit = 'account.account'
-    _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True, translate=True),
-    }
-account_account()
-
 
 class account_tax(osv.osv):
     _inherit = 'account.tax'
@@ -68,6 +61,7 @@ class account_chart_template(osv.osv):
     _inherit = 'account.chart.template'
     _columns={
         'name': fields.char('Name', size=64, required=True, translate=True),
+        'spoken_languages': fields.char('Spoken Languages', size=64, help="State here the languages for which the translations of templates could be loaded at the time of installation of this localization module and copied in the final object when generating them from templates. You must provide the language codes separated by ';'"),
     }
     _order = 'name'
 account_chart_template()
@@ -93,7 +87,7 @@ class account_journal(osv.osv):
     _inherit = 'account.journal'
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
-    }    
+    }
 account_journal()
 
 
