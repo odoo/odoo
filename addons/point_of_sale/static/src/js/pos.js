@@ -531,8 +531,8 @@ openerp.point_of_sale = function(db) {
      ---
      */
     NumpadWidget = db.web.Widget.extend({
-        init: function(parent, element_id, options) {
-            this._super(parent, element_id);
+        init: function(parent, options) {
+            this._super(parent);
             this.state = options.state;
         },
         start: function() {
@@ -564,8 +564,8 @@ openerp.point_of_sale = function(db) {
      Gives access to the payment methods (aka. 'cash registers')
      */
     PaypadWidget = db.web.Widget.extend({
-        init: function(parent, element_id, options) {
-            this._super(parent, element_id);
+        init: function(parent, options) {
+            this._super(parent);
             this.shop = options.shop;
         },
         start: function() {
@@ -612,8 +612,8 @@ openerp.point_of_sale = function(db) {
      Modifying an order after validation shouldn't be allowed.
      */
     StepsWidget = db.web.Widget.extend({
-        init: function(parent, element_id) {
-            this._super(parent, element_id);
+        init: function(parent) {
+            this._super(parent);
             this.step = "products";
         },
         start: function() {
@@ -633,8 +633,8 @@ openerp.point_of_sale = function(db) {
     OrderlineWidget = db.web.Widget.extend({
         tagName: 'tr',
         template_fct: qweb_template('pos-orderline-template'),
-        init: function(parent, element_id, options) {
-            this._super(parent, element_id);
+        init: function(parent, options) {
+            this._super(parent);
             this.model = options.model;
             this.model.bind('change', __bind( function() {
                 this.$element.hide();
@@ -666,8 +666,8 @@ openerp.point_of_sale = function(db) {
         },
     });
     OrderWidget = db.web.Widget.extend({
-        init: function(parent, element_id, options) {
-            this._super(parent, element_id);
+        init: function(parent, options) {
+            this._super(parent);
             this.shop = options.shop;
             this.numpadState = options.numpadState;
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
@@ -685,7 +685,7 @@ openerp.point_of_sale = function(db) {
             return this.currentOrderLines.bind('remove', this.render, this);
         },
         addLine: function(newLine) {
-            var line = new OrderlineWidget(null, null, {
+            var line = new OrderlineWidget(null, {
                     model: newLine,
                     order: this.shop.get('selectedOrder'),
                     numpadState: this.numpadState
@@ -696,7 +696,7 @@ openerp.point_of_sale = function(db) {
         render_element: function() {
             this.$element.empty();
             this.currentOrderLines.each(__bind( function(orderLine) {
-                var line = new OrderlineWidget(null, null, {
+                var line = new OrderlineWidget(null, {
                         model: orderLine,
                         order: this.shop.get('selectedOrder'),
                         numpadState: this.numpadState
@@ -757,8 +757,8 @@ openerp.point_of_sale = function(db) {
     ProductWidget = db.web.Widget.extend({
         tag_name:'li',
         template_fct: qweb_template('pos-product-template'),
-        init: function(parent, element_id, options) {
-            this._super(parent, element_id);
+        init: function(parent, options) {
+            this._super(parent);
             this.model = options.model;
             this.shop = options.shop;
         },
@@ -777,8 +777,8 @@ openerp.point_of_sale = function(db) {
         },
     });
     ProductListWidget = db.web.Widget.extend({
-        init: function(parent, element_id, options) {
-            this._super(parent, element_id);
+        init: function(parent, options) {
+            this._super(parent);
             this.model = options.model;
             this.shop = options.shop;
             this.shop.get('products').bind('reset', this.render_element, this);
@@ -786,7 +786,7 @@ openerp.point_of_sale = function(db) {
         render_element: function() {
             this.$element.empty();
             (this.shop.get('products')).each(__bind( function(product) {
-                var p = new ProductWidget(null, null, {
+                var p = new ProductWidget(null, {
                         model: product,
                         shop: this.shop
                 });
@@ -801,8 +801,8 @@ openerp.point_of_sale = function(db) {
     PaymentlineWidget = db.web.Widget.extend({
         tag_name: 'tr',
         template_fct: qweb_template('pos-paymentline-template'),
-        init: function(parent, element_id, options) {
-            this._super(parent, element_id);
+        init: function(parent, options) {
+            this._super(parent);
             this.model = options.model;
             this.model.bind('change', this.render_element, this);
         },
@@ -828,8 +828,8 @@ openerp.point_of_sale = function(db) {
         },
     });
     PaymentWidget = db.web.Widget.extend({
-        init: function(parent, element_id, options) {
-            this._super(parent, element_id);
+        init: function(parent, options) {
+            this._super(parent);
             this.model = options.model;
             this.shop = options.shop;
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
@@ -869,7 +869,7 @@ openerp.point_of_sale = function(db) {
             this.render_element();
         },
         addPaymentLine: function(newPaymentLine) {
-            var x = new PaymentlineWidget(null, null, {
+            var x = new PaymentlineWidget(null, {
                     model: newPaymentLine
                 });
             x.appendTo(this.paymentLineList());
@@ -877,7 +877,7 @@ openerp.point_of_sale = function(db) {
         render_element: function() {
             this.paymentLineList().empty();
             this.currentPaymentLines.each(__bind( function(paymentLine) {
-                var x = new PaymentlineWidget(null, null, {
+                var x = new PaymentlineWidget(null, {
                     model: paymentLine
                 });
                 this.paymentLineList().append(x);
@@ -1027,35 +1027,41 @@ openerp.point_of_sale = function(db) {
             this.numpadState = new NumpadState({
                 shop: this.shop
             });
-            this.productListView = new ProductListWidget(null, "products-screen-ol", {
+            this.productListView = new ProductListWidget(null, {
                 shop: this.shop
             });
+            this.productListView.$element = $("#products-screen-ol");
             this.productListView.render_element();
             this.productListView.start();
-            this.paypadView = new PaypadWidget(null, 'paypad', {
+            this.paypadView = new PaypadWidget(null, {
                 shop: this.shop
             });
+            this.paypadView.$element = $('#paypad');
             this.paypadView.render_element();
             this.paypadView.start();
-            this.orderView = new OrderWidget(null, 'current-order-content', {
+            this.orderView = new OrderWidget(null, {
                 shop: this.shop,
                 numpadState: this.numpadState
             });
+            this.orderView.$element = $('#current-order-content');
             this.orderView.start();
-            this.paymentView = new PaymentWidget(null, 'payment-screen', {
+            this.paymentView = new PaymentWidget(null, {
                 shop: this.shop
             });
+            this.paymentView.$element = $('#payment-screen');
             this.paymentView.render_element();
             this.paymentView.start();
             this.receiptView = new ReceiptWidget(null, {
                 shop: this.shop,
             });
             this.receiptView.replace($('#receipt-screen'));
-            this.numpadView = new NumpadWidget(null, 'numpad', {
+            this.numpadView = new NumpadWidget(null, {
                 state: this.numpadState
             });
+            this.numpadView.$element = $('#numpad');
             this.numpadView.start();
-            this.stepsView = new StepsWidget(null, 'steps');
+            this.stepsView = new StepsWidget(null);
+            this.stepsView.$element = $('#steps');
             this.stepsView.start();
         },
         createNewOrder: function() {
