@@ -146,9 +146,11 @@ class partner_vat_intra(osv.osv_memory):
                        AND l.period_id IN %s
                       GROUP BY p.name, l.partner_id, p.vat, t.code''', (codes, tuple([p.id for p in wiz_data.period_ids])))            
 
+        p_count = 0
         for row in cr.dictfetchall():
             if not row['vat']:
                 p_list += str(row['partner_name']) + ', '
+                p_count += 1
                 continue
 
             seq += 1
@@ -163,11 +165,13 @@ class partner_vat_intra(osv.osv_memory):
                                         'partner_name': row['partner_name'],
                                         'seq': seq, 
                                         'vatnum': row['vat'][2:].replace(' ','').upper(), 
+                                        'vat': row['vat'],
                                         'country': row['vat'][:2],
                                         'amount': amt,
+                                        'intra_code': row['intra_code'],
                                         'code': intra_code})
 
-        xmldict.update({'dnum': dnum, 'clientnbr': str(seq), 'amountsum': amount_sum})
+        xmldict.update({'dnum': dnum, 'clientnbr': str(seq), 'amountsum': amount_sum, 'partner_wo_vat': p_count})
         return xmldict
 
     def create_xml(self, cursor, user, ids, context=None):
