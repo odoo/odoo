@@ -3154,7 +3154,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'type': line.account_type == 'cash' and 'cash' or 'bank',
                 'company_id': company_id,
                 'analytic_journal_id': False,
-                'currency_id': False,
+                'currency': False,
             }
             if line.currency_id:
                 vals_journal['view_id'] = view_id_cur
