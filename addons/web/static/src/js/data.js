@@ -444,7 +444,7 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
             model: this.model,
             method: method,
             domain_id: null,
-            context_id: 1,
+            context_id: args.length - 1,
             args: args || []
         }, callback, error_callback);
     },
