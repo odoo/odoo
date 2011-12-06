@@ -602,13 +602,6 @@ class groups_implied(osv.osv):
             type='many2many', relation='res.groups', string='Transitively inherits'),
     }
 
-    def get_closure(self, cr, uid, ids, context=None):
-        "return the reflexive transitive closure of implied_ids for group ids"
-        res = set(ids)
-        for g in self.browse(cr, 1, ids):
-            res.update(map(int, g.trans_implied_ids))
-        return list(res)
-
     def create(self, cr, uid, values, context=None):
         users = values.pop('users', None)
         gid = super(groups_implied, self).create(cr, uid, values, context)
@@ -626,20 +619,6 @@ class groups_implied(osv.osv):
                 vals = {'users': [(4, u.id) for u in g.users]}
                 super(groups_implied, self).write(cr, uid, gids, vals, context)
         return res
-
-    def get_maximal(self, cr, uid, ids, context=None):
-        "return the maximal element among the group ids"
-        max_set, max_closure = set(), set()
-        for gid in ids:
-            if gid not in max_closure:
-                closure = set(self.get_closure(cr, uid, [gid], context))
-                max_set -= closure          # remove implied groups from max_set
-                max_set.add(gid)            # gid is maximal
-                max_closure |= closure      # update closure of max_set
-        if len(max_set) > 1:
-            log = logging.getLogger('res.groups')
-            log.warning('Groups %s are maximal among %s, only one expected.', max_set, ids)
-        return bool(max_set) and max_set.pop()
 
 groups_implied()
 
@@ -661,12 +640,13 @@ class users_implied(osv.osv):
         if values.get('groups_id'):
             # add implied groups for all users
             groups_obj = self.pool.get('res.groups')
-            for u in self.browse(cr, uid, ids):
-                old_gids = map(int, u.groups_id)
-                new_gids = groups_obj.get_closure(cr, uid, old_gids, context)
-                if len(old_gids) != len(new_gids):
-                    values = {'groups_id': [(6, 0, new_gids)]}
-                    super(users_implied, self).write(cr, uid, [u.id], values, context)
+            for user in self.browse(cr, uid, ids):
+                groups = set(user.groups_id)
+                for g in user.groups_id:
+                    groups.update(g.trans_implied_ids)
+                if len(groups) != len(user.groups_id):
+                    values = {'groups_id': [(6, 0, map(int, groups))]}
+                    super(users_implied, self).write(cr, uid, [user.id], values, context)
         return res
 
 users_implied()
