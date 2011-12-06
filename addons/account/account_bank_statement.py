@@ -129,7 +129,7 @@ class account_bank_statement(osv.osv):
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself'), # readonly for account_cash_statement
+        'name': fields.char('Name', size=64, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='If you enter the Statement name other than /, the Moves created for accounting Entries will be same as statement name. This allows the statement entries to have a reference to the bank statement they appeared on.'), # readonly for account_cash_statement
         'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
             readonly=True, states={'draft':[('readonly',False)]}),
