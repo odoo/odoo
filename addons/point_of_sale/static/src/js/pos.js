@@ -1136,12 +1136,17 @@ openerp.point_of_sale = function(db) {
             pos = new Pos(this.session);
 
             this.$element.find('#steps').buttonset();
+            
+            $('.oe_toggle_secondary_menu').hide();
+            $('.oe_footer').hide();
 
             return pos.ready.then( function() {
                 pos.app = new App(self.$element);
             });
         },
         stop: function() {
+            $('.oe_footer').show();
+            $('.oe_toggle_secondary_menu').show();
             pos = undefined;
             this._super();
         }
