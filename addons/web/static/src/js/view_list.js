@@ -1281,10 +1281,15 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             items: '> tr[data-id]',
             stop: function (event, ui) {
                 var to_move = list.records.get(ui.item.data('id')),
-                    target_id = ui.item.prev().data('id');
+                    target_id = ui.item.prev().data('id'),
+                    from_index = list.records.indexOf(to_move),
+                    target = list.records.get(target_id);
+                if (list.records.at(from_index - 1) == target) {
+                    return;
+                }
 
                 list.records.remove(to_move);
-                var to = target_id ? list.records.indexOf(list.records.get(target_id)) + 1 : 0;
+                var to = target_id ? list.records.indexOf(target) + 1 : 0;
                 list.records.add(to_move, { at: to });
 
                 // resequencing time!
