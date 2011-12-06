@@ -786,6 +786,7 @@ class procurement_order(osv.osv):
         prod_obj = self.pool.get('product.product')
         acc_pos_obj = self.pool.get('account.fiscal.position')
         po_obj = self.pool.get('purchase.order')
+        po_line_obj = self.pool.get('purchase.order.line')
         for procurement in self.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
@@ -794,6 +795,7 @@ class procurement_order(osv.osv):
             partner_id = partner.id
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
+            fiscal_position = partner.property_account_position and partner.property_account_position.id or False
 
             uom_id = procurement.product_id.uom_po_id.id
 
@@ -806,6 +808,10 @@ class procurement_order(osv.osv):
             newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
             newdate = (newdate - relativedelta(days=company.po_lead)) - relativedelta(days=seller_delay)
 
+            res_onchange = po_line_obj.product_id_change(cr, uid, ids, pricelist_id, procurement.product_id.id, qty, uom_id,
+                partner_id, time.strftime('%Y-%m-%d'), fiscal_position=fiscal_position, date_planned=datetime.now() + relativedelta(days=seller_delay or 0.0),
+            name=procurement.name, price_unit=procurement.product_id.list_price, notes=procurement.product_id.description_purchase)
+
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})
 
@@ -813,10 +819,10 @@ class procurement_order(osv.osv):
 
             line = {
                 'name': product.partner_ref,
-                'product_qty': qty,
+                'product_qty': res_onchange['value']['product_qty'],
                 'product_id': procurement.product_id.id,
-                'product_uom': uom_id,
-                'price_unit': price,
+                'product_uom': res_onchange['value']['product_uom'],
+                'price_unit': res_onchange['value']['price_unit'],
                 'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                 'move_dest_id': res_id,
                 'notes': product.description_purchase,
