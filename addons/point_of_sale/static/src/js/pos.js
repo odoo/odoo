@@ -149,18 +149,12 @@ openerp.point_of_sale = function(db) {
     /* global variable */
     var pos;
 
-    var App, CashRegister, CashRegisterCollection, Category, CategoryCollection, CategoryWidget,
-    NumpadState, NumpadWidget, Order, OrderButtonWidget, OrderCollection, OrderWidget, Orderline,
-    OrderlineCollection, OrderlineWidget, PaymentButtonWidget, PaymentWidget, Paymentline,
-    PaymentlineCollection, PaymentlineWidget, PaypadWidget, Product, ProductCollection,
-    ProductListWidget, ProductWidget, ReceiptLineWidget, ReceiptWidget, Shop, ShopWidget, StepsWidget;
-
     /*
      ---
      Models
      ---
      */
-    CashRegister = (function() {
+    var CashRegister = (function() {
         __extends(CashRegister, Backbone.Model);
         function CashRegister() {
             CashRegister.__super__.constructor.apply(this, arguments);
@@ -168,7 +162,7 @@ openerp.point_of_sale = function(db) {
 
         return CashRegister;
     })();
-    CashRegisterCollection = (function() {
+    var CashRegisterCollection = (function() {
         __extends(CashRegisterCollection, Backbone.Collection);
         function CashRegisterCollection() {
             CashRegisterCollection.__super__.constructor.apply(this, arguments);
@@ -177,7 +171,7 @@ openerp.point_of_sale = function(db) {
         CashRegisterCollection.prototype.model = CashRegister;
         return CashRegisterCollection;
     })();
-    Product = (function() {
+    var Product = (function() {
         __extends(Product, Backbone.Model);
         function Product() {
             Product.__super__.constructor.apply(this, arguments);
@@ -185,7 +179,7 @@ openerp.point_of_sale = function(db) {
 
         return Product;
     })();
-    ProductCollection = (function() {
+    var ProductCollection = (function() {
         __extends(ProductCollection, Backbone.Collection);
         function ProductCollection() {
             ProductCollection.__super__.constructor.apply(this, arguments);
@@ -194,7 +188,7 @@ openerp.point_of_sale = function(db) {
         ProductCollection.prototype.model = Product;
         return ProductCollection;
     })();
-    Category = (function() {
+    var Category = (function() {
         __extends(Category, Backbone.Model);
         function Category() {
             Category.__super__.constructor.apply(this, arguments);
@@ -202,7 +196,7 @@ openerp.point_of_sale = function(db) {
 
         return Category;
     })();
-    CategoryCollection = (function() {
+    var CategoryCollection = (function() {
         __extends(CategoryCollection, Backbone.Collection);
         function CategoryCollection() {
             CategoryCollection.__super__.constructor.apply(this, arguments);
@@ -217,7 +211,7 @@ openerp.point_of_sale = function(db) {
      To add more of the same product, just update the quantity accordingly.
      The Order also contains payment information.
      */
-    Orderline = (function() {
+    var Orderline = (function() {
         __extends(Orderline, Backbone.Model);
         function Orderline() {
             Orderline.__super__.constructor.apply(this, arguments);
@@ -248,7 +242,7 @@ openerp.point_of_sale = function(db) {
         };
         return Orderline;
     })();
-    OrderlineCollection = (function() {
+    var OrderlineCollection = (function() {
         __extends(OrderlineCollection, Backbone.Collection);
         function OrderlineCollection() {
             OrderlineCollection.__super__.constructor.apply(this, arguments);
@@ -260,7 +254,7 @@ openerp.point_of_sale = function(db) {
     /*
      Every PaymentLine has all the attributes of the corresponding CashRegister.
      */
-    Paymentline = (function() {
+    var Paymentline = (function() {
         __extends(Paymentline, Backbone.Model);
         function Paymentline() {
             Paymentline.__super__.constructor.apply(this, arguments);
@@ -285,7 +279,7 @@ openerp.point_of_sale = function(db) {
         };
         return Paymentline;
     })();
-    PaymentlineCollection = (function() {
+    var PaymentlineCollection = (function() {
         __extends(PaymentlineCollection, Backbone.Collection);
         function PaymentlineCollection() {
             PaymentlineCollection.__super__.constructor.apply(this, arguments);
@@ -294,7 +288,7 @@ openerp.point_of_sale = function(db) {
         PaymentlineCollection.prototype.model = Paymentline;
         return PaymentlineCollection;
     })();
-    Order = (function() {
+    var Order = (function() {
         __extends(Order, Backbone.Model);
         function Order() {
             Order.__super__.constructor.apply(this, arguments);
@@ -393,7 +387,7 @@ openerp.point_of_sale = function(db) {
         };
         return Order;
     })();
-    OrderCollection = (function() {
+    var OrderCollection = (function() {
         __extends(OrderCollection, Backbone.Collection);
         function OrderCollection() {
             OrderCollection.__super__.constructor.apply(this, arguments);
@@ -402,7 +396,7 @@ openerp.point_of_sale = function(db) {
         OrderCollection.prototype.model = Order;
         return OrderCollection;
     })();
-    Shop = (function() {
+    var Shop = (function() {
         __extends(Shop, Backbone.Model);
         function Shop() {
             Shop.__super__.constructor.apply(this, arguments);
@@ -439,7 +433,7 @@ openerp.point_of_sale = function(db) {
      The numpad handles both the choice of the property currently being modified
      (quantity, price or discount) and the edition of the corresponding numeric value.
      */
-    NumpadState = (function() {
+    var NumpadState = (function() {
         __extends(NumpadState, Backbone.Model);
         function NumpadState() {
             NumpadState.__super__.constructor.apply(this, arguments);
@@ -517,7 +511,7 @@ openerp.point_of_sale = function(db) {
      Views
      ---
      */
-    NumpadWidget = db.web.Widget.extend({
+    var NumpadWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.state = options.state;
@@ -550,7 +544,7 @@ openerp.point_of_sale = function(db) {
     /*
      Gives access to the payment methods (aka. 'cash registers')
      */
-    PaypadWidget = db.web.Widget.extend({
+    var PaypadWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -580,7 +574,7 @@ openerp.point_of_sale = function(db) {
             }, this));
         }
     });
-    PaymentButtonWidget = db.web.Widget.extend({
+    var PaymentButtonWidget = db.web.Widget.extend({
         template_fct: qweb_template('pos-payment-button-template'),
         render_element: function() {
             this.$element.html(this.template_fct({
@@ -598,7 +592,7 @@ openerp.point_of_sale = function(db) {
      It should be possible to go back to any step as long as step 3 hasn't been completed.
      Modifying an order after validation shouldn't be allowed.
      */
-    StepsWidget = db.web.Widget.extend({
+    var StepsWidget = db.web.Widget.extend({
         init: function(parent) {
             this._super(parent);
             this.step = "products";
@@ -617,7 +611,7 @@ openerp.point_of_sale = function(db) {
     /*
      Shopping carts.
      */
-    OrderlineWidget = db.web.Widget.extend({
+    var OrderlineWidget = db.web.Widget.extend({
         tagName: 'tr',
         template_fct: qweb_template('pos-orderline-template'),
         init: function(parent, options) {
@@ -652,7 +646,7 @@ openerp.point_of_sale = function(db) {
             return this.order.selected = this.model;
         },
     });
-    OrderWidget = db.web.Widget.extend({
+    var OrderWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -706,7 +700,7 @@ openerp.point_of_sale = function(db) {
     /*
      "Products" step.
      */
-    CategoryWidget = db.web.Widget.extend({
+    var CategoryWidget = db.web.Widget.extend({
         start: function() {
             this.$element.find(".oe-pos-categories-list a").click(_.bind(this.changeCategory, this));
         },
@@ -741,7 +735,7 @@ openerp.point_of_sale = function(db) {
         },
         on_change_category: function(id) {},
     });
-    ProductWidget = db.web.Widget.extend({
+    var ProductWidget = db.web.Widget.extend({
         tag_name:'li',
         template_fct: qweb_template('pos-product-template'),
         init: function(parent, options) {
@@ -763,7 +757,7 @@ openerp.point_of_sale = function(db) {
             return this;
         },
     });
-    ProductListWidget = db.web.Widget.extend({
+    var ProductListWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
@@ -785,7 +779,7 @@ openerp.point_of_sale = function(db) {
     /*
      "Payment" step.
      */
-    PaymentlineWidget = db.web.Widget.extend({
+    var PaymentlineWidget = db.web.Widget.extend({
         tag_name: 'tr',
         template_fct: qweb_template('pos-paymentline-template'),
         init: function(parent, options) {
@@ -814,7 +808,7 @@ openerp.point_of_sale = function(db) {
             return this;
         },
     });
-    PaymentWidget = db.web.Widget.extend({
+    var PaymentWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
@@ -886,7 +880,7 @@ openerp.point_of_sale = function(db) {
     /*
      "Receipt" step.
      */
-    ReceiptLineWidget = db.web.Widget.extend({
+    var ReceiptLineWidget = db.web.Widget.extend({
         tag_name: 'tr',
         template_fct: qweb_template('pos-receiptline-template'),
         init: function(parent, options) {
@@ -899,7 +893,7 @@ openerp.point_of_sale = function(db) {
             this.$element.html(this.template_fct(this.model.toJSON()));
         },
     });
-    ReceiptWidget = db.web.Widget.extend({
+    var ReceiptWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
@@ -962,7 +956,7 @@ openerp.point_of_sale = function(db) {
             $('#receipt-summary-change').html(change.toFixed(2));
         },
     });
-    OrderButtonWidget = db.web.Widget.extend({
+    var OrderButtonWidget = db.web.Widget.extend({
         tag_name: 'li',
         template_fct: qweb_template('pos-order-selector-button-template'),
         init: function(parent, options) {
@@ -1001,7 +995,7 @@ openerp.point_of_sale = function(db) {
             this.$element.addClass('order-selector-button');
         }
     });
-    ShopWidget = db.web.Widget.extend({
+    var ShopWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -1069,7 +1063,7 @@ openerp.point_of_sale = function(db) {
             newOrderButton.selectOrder();
         },
     });
-    App = (function() {
+    var App = (function() {
         function App($element) {
             this.initialize($element);
         }
