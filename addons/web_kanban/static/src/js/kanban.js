@@ -82,7 +82,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 var type = node.attrs.type || '';
                 if (_.indexOf('action,object,edit,delete,color'.split(','), type) !== -1) {
                     _.each(node.attrs, function(v, k) {
-                        if (_.indexOf('icon,type,name,string,context,states,kanban_states'.split(','), k) != -1) {
+                        if (_.indexOf('icon,type,name,args,string,context,states,kanban_states'.split(','), k) != -1) {
                             node.attrs['data-' + k] = v;
                             delete(node.attrs[k]);
                         }
