@@ -215,6 +215,7 @@ class module(osv.osv):
         'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
         'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
         'web': fields.boolean('Has a web component', readonly=True),
+        'icon': fields.char('Icon URL', size=128),
         'complexity': fields.selection([('easy','Easy'), ('normal','Normal'), ('expert','Expert')],
             string='Complexity', readonly=True,
             help='Level of difficulty of module. Easy: intuitive and easy to use for everyone. Normal: easy to use for business experts. Expert: requires technical skills.'),
