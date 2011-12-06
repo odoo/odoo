@@ -778,12 +778,15 @@ class DataSet(openerpweb.Controller):
         return Model.unlink(ids, req.session.eval_context(req.context))
 
     def call_common(self, req, model, method, args, domain_id=None, context_id=None):
-        domain = args[domain_id] if domain_id and len(args) - 1 >= domain_id  else []
-        context = args[context_id] if context_id and len(args) - 1 >= context_id  else {}
+        has_domain = domain_id is not None and domain_id < len(args)
+        has_context = context_id is not None and context_id < len(args)
+
+        domain = args[domain_id] if has_domain else []
+        context = args[context_id] if has_context else {}
         c, d = eval_context_and_domain(req.session, context, domain)
-        if domain_id and len(args) - 1 >= domain_id:
+        if has_domain:
             args[domain_id] = d
-        if context_id and len(args) - 1 >= context_id:
+        if has_context:
             args[context_id] = c
 
         for i in xrange(len(args)):

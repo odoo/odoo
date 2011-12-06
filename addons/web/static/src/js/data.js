@@ -425,8 +425,8 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
         return this.rpc('/web/dataset/call', {
             model: this.model,
             method: method,
-            domain_id: domain_index || null,
-            context_id: context_index || null,
+            domain_id: domain_index == undefined ? null : domain_index,
+            context_id: context_index == undefined ? null : context_index,
             args: args || []
         }, callback, error_callback);
     },

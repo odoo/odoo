@@ -57,7 +57,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             });
         }
         return $.when(
-            this.dataset.call('fields_get', []),
+            this.dataset.call_and_eval('fields_get', [false, {}], null, 1),
             loaded)
             .then(function (fields_result, view_result) {
                 self.fields = fields_result[0];
