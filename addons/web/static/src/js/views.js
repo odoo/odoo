@@ -909,7 +909,19 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         if (action_data.special) {
             return handler({result: {"type":"ir.actions.act_window_close"}});
         } else if (action_data.type=="object") {
-            return dataset.call_button(action_data.name, [[record_id], context], handler);
+            var args = [[record_id]], additional_args = [];
+            if (action_data.args) {
+                try {
+                    // Warning: quotes and double quotes problem due to json and xml clash
+                    // Maybe we should force escaping in xml or do a better parse of the args array
+                    additional_args = JSON.parse(action_data.args.replace(/'/g, '"'));
+                    args = args.concat(additional_args);
+                } catch(e) {
+                    console.error("Could not JSON.parse arguments", action_data.args);
+                }
+            }
+            args.push(context);
+            return dataset.call_button(action_data.name, args, handler);
         } else if (action_data.type=="action") {
             return this.rpc('/web/action/load', { action_id: parseInt(action_data.name, 10), context: context, do_not_eval: true}, handler);
         } else  {
