@@ -391,7 +391,6 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             "domain" : [[record_id, '=', id], ['id','in',this.dataset.ids]],
             "views" : views,
             "type" : "ir.actions.act_window",
-            "auto_search" : true,
             "view_type" : "list",
             "view_mode" : "list"
         });

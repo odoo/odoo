@@ -210,8 +210,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 context: {"search_default_user_id": this.session.uid,
                 "search_default_model_id": this.dataset.model},
                 target: "current",
-                limit : 80,
-                auto_search : true
+                limit : 80
             });
             break;
         case 'save_filter':

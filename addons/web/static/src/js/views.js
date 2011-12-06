@@ -188,7 +188,6 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         this.model = dataset ? dataset.model : undefined;
         this.dataset = dataset;
         this.searchview = null;
-        this.last_search = false;
         this.active_view = null;
         this.views_src = _.map(views, function(x) {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
@@ -253,11 +252,11 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
                 if (self.searchview && view.controller.searchable !== false) {
-                    self.do_searchview_search();
+                    self.searchview.do_search();
                 }
             });
         } else if (this.searchview && view.controller.searchable !== false) {
-            self.do_searchview_search();
+            this.searchview.do_search();
         }
 
         if (this.searchview) {
@@ -306,20 +305,15 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
     do_searchview_search: function(domains, contexts, groupbys) {
         var self = this,
             controller = this.views[this.active_view].controller;
-        if (domains || contexts) {
-            this.rpc('/web/session/eval_domain_and_context', {
-                domains: [this.action.domain || []].concat(domains || []),
-                contexts: [this.action.context || {}].concat(contexts || []),
-                group_by_seq: groupbys || []
-            }, function (results) {
-                self.dataset.context = results.context;
-                self.dataset.domain = results.domain;
-                self.last_search = [results.domain, results.context, results.group_by];
-                controller.do_search(results.domain, results.context, results.group_by);
-            });
-        } else if (this.last_search) {
-            controller.do_search.apply(controller, this.last_search);
-        }
+        this.rpc('/web/session/eval_domain_and_context', {
+            domains: [this.action.domain || []].concat(domains || []),
+            contexts: [this.action.context || {}].concat(contexts || []),
+            group_by_seq: groupbys || []
+        }, function (results) {
+            self.dataset.context = results.context;
+            self.dataset.domain = results.domain;
+            controller.do_search(results.domain, results.context, results.group_by);
+        });
     },
     /**
      * Event launched when a controller has been inited.
@@ -413,10 +407,6 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var main_view_loaded = this._super();
 
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
-        if (searchview_loaded && this.action['auto_search'] !== false) {
-            // schedule auto_search
-            manager_ready.then(this.searchview.do_search);
-        }
 
         this.$element.find('.oe_get_xml_view').click(function () {
             // TODO: add search view?
@@ -971,7 +961,6 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
             views: [[false, 'list'], [false, 'form']],
             type : 'ir.actions.act_window',
-            auto_search : true,
             view_type : "list",
             view_mode : "list"
         });
