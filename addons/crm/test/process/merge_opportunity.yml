@@ -13,17 +13,13 @@
     res_id = self.create(cr, uid, {'name': "Quoi de prix de votre autre service?", 'partner_id': ref("base.res_partner_9")}, context=context)
     self.make_opportunity(cr, uid, [res_id], context=context)
 -
-  For merge all opportunities of customer.
+  Now I merge all opportunities of customer.
 -
   !python {model: crm.lead}: |
     opportunity_ids = self.search(cr, uid, [('partner_id','=', ref("base.res_partner_9"))])
     context.update({'active_model': 'crm.lead','active_ids': opportunity_ids})
 -
-  I create record for merge. 
--
   !record {model: crm.merge.opportunity, id: opportunity_merge_id }:
--
-  I Merged opportunities of customer.. 
 -
   !python {model: crm.merge.opportunity}: |
     self.action_merge(cr, uid, [ref("opportunity_merge_id")], context=context)
