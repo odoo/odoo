@@ -23,7 +23,7 @@
 {
     'name': 'To Do List',
     'version': '1.0',
-    'category': 'Customer Relationship Management',
+    "category": 'Hidden/Link',
     'complexity': "easy",
     'description': """
 Todo list for CRM leads and opportunities.

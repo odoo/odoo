@@ -72,6 +72,7 @@ Note that:
              'test/hr_holidays_report.yml',
              ],
     'installable': True,
+    'core': True,
     'active': False,
     'certificate': '0086579209325',
 }

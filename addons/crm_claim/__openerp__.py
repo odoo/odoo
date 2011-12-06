@@ -52,6 +52,7 @@ automatically new claims based on incoming emails.
              'test/ui/claim_demo.yml'
              ],
     'installable': True,
+    'core': True,
     'active': False,
     'certificate' : '00612027414703404749',
     'images': ['images/claim_categories.jpeg','images/claim_stages.jpeg','images/claims.jpeg'],
