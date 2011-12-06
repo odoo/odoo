@@ -22,11 +22,8 @@
 
 import logging
 from functools import partial
-from xml.sax.saxutils import quoteattr
 
-import simplejson
 import pytz
-from lxml import etree
 
 import netsvc
 import pooler
@@ -683,7 +680,6 @@ def get_boolean_group(name): return int(name[9:])
 def get_boolean_groups(name): return map(int, name[10:].split('_'))
 def get_selection_groups(name): return map(int, name[11:].split('_'))
 
-def encode(s): return s.encode('utf8') if isinstance(s, unicode) else s
 def partition(f, xs):
     "return a pair equivalent to (filter(f, xs), filter(lambda x: not f(x), xs))"
     yes, nos = [], []
