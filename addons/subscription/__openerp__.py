@@ -23,7 +23,7 @@
 {
     'name': 'Recurring Documents',
     'version': '1.0',
-    'category': 'tools',
+    'category': 'Tools',
     'description': """
 Create recurring documents.
 ===========================
