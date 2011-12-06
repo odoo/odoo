@@ -212,6 +212,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         var views_ids = {};
         _.each(this.views_src, function(view) {
             self.views[view.view_type] = $.extend({}, view, {
+                deferred : $.Deferred(),
                 controller : null,
                 options : _.extend({
                     sidebar_id : self.element_id + '_sidebar_' + view.view_type,
@@ -249,6 +250,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             var container = $("#" + this.element_id + '_view_' + view_type);
             view_promise = controller.appendTo(container);
             this.views[view_type].controller = controller;
+            this.views[view_type].deferred.resolve();
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
                 if (self.searchview && view.controller.searchable !== false) {
