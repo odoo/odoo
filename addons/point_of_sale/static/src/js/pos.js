@@ -294,7 +294,8 @@ openerp.point_of_sale = function(db) {
         }
 
         Order.prototype.defaults = {
-            validated: false
+            validated: false,
+            step: 'products',
         };
         Order.prototype.initialize = function() {
             this.set({
@@ -313,8 +314,7 @@ openerp.point_of_sale = function(db) {
         };
         Order.prototype.validatedChanged = function() {
             if (this.get("validated") && !this.previous("validated")) {
-                $('.step-screen').hide();
-                $('#receipt-screen').show();
+                this.set({'step': 'receipt'});
             }
         }
         Order.prototype.generateUniqueId = function() {
@@ -554,8 +554,7 @@ openerp.point_of_sale = function(db) {
         performPayment: function(event) {
             var cashRegister, cashRegisterCollection, cashRegisterId;
             /* set correct view */
-            $('.step-screen').hide();
-            $('#payment-screen').show();
+            this.shop.get('selectedOrder').set({'step': 'payment'});
 
             cashRegisterId = event.currentTarget.attributes['cash-register-id'].nodeValue;
             cashRegisterCollection = this.shop.get('cashRegisters');
@@ -592,20 +591,27 @@ openerp.point_of_sale = function(db) {
      Modifying an order after validation shouldn't be allowed.
      */
     var StepsWidget = db.web.Widget.extend({
-        init: function(parent) {
+        init: function(parent, options) {
             this._super(parent);
-            this.step = "products";
+            this.shop = options.shop;
+            this.change_order();
+            this.shop.bind('change:selectedOrder', this.change_order, this);
         },
-        start: function() {
-            this.$element.find('input.step-button').click(_.bind(this.clickChangeStep, this));
+        change_order: function() {
+            if (this.selected_order) {
+                this.selected_order.unbind('change:step', this.change_step);
+            }
+            this.selected_order = this.shop.get('selectedOrder');
+            if (this.selected_order) {
+                this.selected_order.bind('change:step', this.change_step, this);
+            }
+            this.change_step();
         },
-        clickChangeStep: function(event) {
-            var newStep;
-            newStep = event.currentTarget.attributes['data-step'].nodeValue;
+        change_step: function() {
+            var new_step = this.selected_order ? this.selected_order.get('step') : 'products';
             $('.step-screen').hide();
-            $('#' + newStep + '-screen').show();
-            return this.step = newStep;
-        }
+            $('#' + new_step + '-screen').show();
+        },
     });
     /*
      Shopping carts.
@@ -902,8 +908,6 @@ openerp.point_of_sale = function(db) {
             this.bindPaymentLineEvents();
         },
         finishOrder: function() {
-            $('.step-screen').hide();
-            $('#products-screen').show();
             this.shop.get('selectedOrder').destroy();
         },
         receiptLineList: function() {
@@ -1040,7 +1044,7 @@ openerp.point_of_sale = function(db) {
             });
             this.numpadView.$element = $('#numpad');
             this.numpadView.start();
-            this.stepsView = new StepsWidget(null);
+            this.stepsView = new StepsWidget(null, {shop: this.shop});
             this.stepsView.$element = $('#steps');
             this.stepsView.start();
         },
