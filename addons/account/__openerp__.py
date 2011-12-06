@@ -105,6 +105,7 @@ module named account_voucher.
         'account_invoice_view.xml',
         'partner_view.xml',
         'data/account_data.xml',
+        'data/data_account_type.xml',
         'account_invoice_workflow.xml',
         'project/project_view.xml',
         'project/project_report.xml',
