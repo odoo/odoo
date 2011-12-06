@@ -115,7 +115,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             self._process_taxes_translations(cr, uid, obj_multi, company_id, langs, 'name', context=context)
 
             # copy account.fiscal.position translations
-            self.process_fiscal_pos_translations(cr, uid, obj_multi, company_id, langs, 'name', context=context)
+            self._process_fiscal_pos_translations(cr, uid, obj_multi, company_id, langs, 'name', context=context)
 
         return res
 
