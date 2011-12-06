@@ -163,7 +163,7 @@ openerp.point_of_sale = function(db) {
     var pos;
 
     var App, CashRegister, CashRegisterCollection, Category, CategoryCollection, CategoryWidget,
-    NumpadState, NumpadWidget, Order, OrderButtonView, OrderCollection, OrderWidget, Orderline,
+    NumpadState, NumpadWidget, Order, OrderButtonWidget, OrderCollection, OrderWidget, Orderline,
     OrderlineCollection, OrderlineWidget, PaymentButtonWidget, PaymentWidget, Paymentline,
     PaymentlineCollection, PaymentlineWidget, PaypadWidget, Product, ProductCollection,
     ProductListWidget, ProductWidget, ReceiptLineWidget, ReceiptWidget, Shop, ShopView, StepsWidget;
@@ -977,50 +977,45 @@ openerp.point_of_sale = function(db) {
             $('#receipt-summary-change').html(change.toFixed(2));
         },
     });
-    OrderButtonView = (function() {
-        __extends(OrderButtonView, Backbone.View);
-        function OrderButtonView() {
-            OrderButtonView.__super__.constructor.apply(this, arguments);
-        }
-
-        OrderButtonView.prototype.tagName = 'li';
-        OrderButtonView.prototype.className = 'order-selector-button';
-        OrderButtonView.prototype.template = qweb_template('pos-order-selector-button-template');
-        OrderButtonView.prototype.initialize = function(options) {
+    OrderButtonWidget = db.web.Widget.extend({
+        tag_name: 'li',
+        template_fct: qweb_template('pos-order-selector-button-template'),
+        init: function(parent, options) {
+            this._super(parent);
             this.order = options.order;
             this.shop = options.shop;
-            this.order.bind('destroy', __bind( function() {
-                return $(this.el).remove();
+            this.order.bind('destroy', _.bind( function() {
+                return this.stop();
             }, this));
-            return this.shop.bind('change:selectedOrder', __bind( function(shop) {
+            this.shop.bind('change:selectedOrder', _.bind( function(shop) {
                 var selectedOrder;
                 selectedOrder = shop.get('selectedOrder');
                 if (this.order === selectedOrder) {
-                    return this.setButtonSelected();
+                    this.setButtonSelected();
                 }
             }, this));
-        };
-        OrderButtonView.prototype.events = {
-            'click button.select-order': 'selectOrder',
-            'click button.close-order': 'closeOrder'
-        };
-        OrderButtonView.prototype.selectOrder = function(event) {
-            return this.shop.set({
+        },
+        start: function() {
+            $('button.select-order', this.$element).click(_.bind(this.selectOrder, this));
+            $('button.close-order', this.$element).click(_.bind(this.closeOrder, this));
+        },
+        selectOrder: function(event) {
+            this.shop.set({
                 selectedOrder: this.order
             });
-        };
-        OrderButtonView.prototype.setButtonSelected = function() {
+        },
+        setButtonSelected: function() {
             $('.selected-order').removeClass('selected-order');
-            return $(this.el).addClass('selected-order');
-        };
-        OrderButtonView.prototype.closeOrder = function(event) {
-            return this.order.destroy();
-        };
-        OrderButtonView.prototype.render = function() {
-            return $(this.el).html(this.template(this.order.toJSON()));
-        };
-        return OrderButtonView;
-    })();
+            this.$element.addClass('selected-order');
+        },
+        closeOrder: function(event) {
+            this.order.destroy();
+        },
+        render_element: function() {
+            this.$element.html(this.template_fct(this.order.toJSON()));
+            this.$element.addClass('order-selector-button');
+        }
+    });
     ShopView = (function() {
         __extends(ShopView, Backbone.View);
         function ShopView() {
@@ -1057,7 +1052,6 @@ openerp.point_of_sale = function(db) {
             this.receiptView = new ReceiptWidget(null, {
                 shop: this.shop,
             });
-            debugger;
             this.receiptView.replace($('#receipt-screen'));
             this.numpadView = new NumpadWidget(null, 'numpad', {
                 state: this.numpadState
@@ -1083,12 +1077,12 @@ openerp.point_of_sale = function(db) {
         };
         ShopView.prototype.orderAdded = function(newOrder) {
             var newOrderButton;
-            newOrderButton = new OrderButtonView({
+            newOrderButton = new OrderButtonWidget(null, {
                 order: newOrder,
                 shop: this.shop
             });
-            $('#orders').append(newOrderButton.render());
-            return newOrderButton.selectOrder();
+            newOrderButton.appendTo($('#orders'));
+            newOrderButton.selectOrder();
         };
         return ShopView;
     })();
