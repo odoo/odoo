@@ -296,7 +296,6 @@ openerp.web_process = function (openerp) {
                 res_id: self.process_id,
                 views : [[false, 'form']],
                 type : 'ir.actions.act_window',
-                auto_search : false,
                 flags : {
                     search_view: false,
                     sidebar : false,
