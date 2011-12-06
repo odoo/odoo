@@ -68,6 +68,11 @@ class partner_vat_intra(osv.osv_memory):
     }
 
     def _get_datas(self, cr, uid, ids, context=None):
+        """Collects require data for vat intra xml
+        :param ids: id of wizard.
+        :return: dict of all data to be used to generate xml for Partner VAT Intra.
+        :rtype: dict
+        """
         if context is None:
             context = {}
 
@@ -175,6 +180,10 @@ class partner_vat_intra(osv.osv_memory):
         return xmldict
 
     def create_xml(self, cursor, user, ids, context=None):
+        """Creates xml that is to be exported and sent to estate for partner vat intra.
+        :return: Value for next action.
+        :rtype: dict
+        """
         mod_obj = self.pool.get('ir.model.data')
         xml_data = self._get_datas(cursor, user, ids, context=context)
         data_file = ''
