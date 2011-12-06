@@ -23,7 +23,8 @@ import base64
 
 from osv import osv, fields
 from tools.translate import _
-    
+from report import report_sxw
+
 class partner_vat_intra(osv.osv_memory):
     """
     Partner Vat Intra
@@ -159,6 +160,7 @@ class partner_vat_intra(osv.osv_memory):
 #            intra_code = row['intra_code'] == '88' and 'L' or (row['intra_code'] == '44b' and 'T' or (row['intra_code'] == '44a' and 'S' or ''))
 
             xmldict['clientlist'].append({
+                                        'partner_name': row['partner_name'],
                                         'seq': seq, 
                                         'vatnum': row['vat'][2:].replace(' ','').upper(), 
                                         'country': row['vat'][:2],
@@ -196,7 +198,8 @@ class partner_vat_intra(osv.osv_memory):
         data_file += data_head + data_decl + data_comp_period + data_clientinfo + '\n\t</DeclarantList>\n</VatIntra>'
         context['file_save'] = data_file
 
-        model, res_id = mod_obj.get_object_reference(cursor, user, 'l10n_be', "view_vat_intra_save")
+        model_data_ids = mod_obj.search(cursor, user,[('model','=','ir.ui.view'),('name','=','view_vat_intra_save')], context=context)
+        resource_id = mod_obj.read(cursor, user, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
 
         return {
             'name': _('Save'),
@@ -204,13 +207,37 @@ class partner_vat_intra(osv.osv_memory):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'partner.vat.intra',
-            'views': [(res_id,'form')],
+            'views': [(resource_id,'form')],
             'view_id': 'view_vat_intra_save',
             'type': 'ir.actions.act_window',
             'target': 'new',
         }
 
+    def preview(self, cr, uid, ids, context=None):
+        xml_data = self._get_datas(cr, uid, ids, context=context)
+        datas = {
+             'ids': [],
+             'model': 'partner.vat.intra',
+             'form': xml_data
+        }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'partner.vat.intra.print',
+            'datas': datas,
+        }
+
 
 partner_vat_intra()
+
+
+class vat_intra_print(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context):
+        super(vat_intra_print, self).__init__(cr, uid, name, context=context)
+        self.localcontext.update({
+            'time': time,
+        })
+        
+report_sxw.report_sxw('report.partner.vat.intra.print', 'partner.vat.intra', 'addons/l10n_be/wizard/l10n_be_vat_intra_print.rml', parser=vat_intra_print)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
