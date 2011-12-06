@@ -179,6 +179,7 @@ class partner_vat_intra(osv.osv_memory):
         xml_data = self._get_datas(cursor, user, ids, context=context)
         data_file = ''
 
+        # Can't we do this by etree?
         data_head = """<?xml version="1.0"?>
 <VatIntra xmlns="http://www.minfin.fgov.be/VatIntra" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" RecipientId="VAT-ADMIN" SenderId="%(company_vat)s" ControlRef="%(controlref)s" MandataireId="%(mand_id)s" SenderDate="%(sender_date)s" VersionTech="1.3">
 	<AgentRepr DecNumber="1">
