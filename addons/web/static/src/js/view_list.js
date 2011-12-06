@@ -1296,7 +1296,14 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     // write are independent from one another, so we can just
                     // launch them all at the same time and we don't really
                     // give a fig about when they're done
-                    dataset.write(record.get('id'), {sequence: seq});
+                    // FIXME: breaks on o2ms (e.g. Accounting > Financial
+                    //        Accounting > Taxes > Taxes, child tax accounts)
+                    //        when synchronous (without setTimeout)
+                    (function (dataset, id, seq) {
+                        setTimeout(function () {
+                            dataset.write(id, {sequence: seq});
+                        }, 0);
+                    }(dataset, record.get('id'), seq));
                     record.set('sequence', seq);
                 }
 
