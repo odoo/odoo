@@ -60,6 +60,7 @@ performing those tasks.
         'test/gtd_test.yml'
     ],
     'installable': True,
+    'core': True,
     'active': False,
     'certificate': '0043525236301',
 }

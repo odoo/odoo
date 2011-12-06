@@ -88,6 +88,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
         'test/stock_demo_backorder.yml'
     ],
     'installable': True,
+    'core': True,
     'active': False,
     'certificate': '0055421559965',
 }

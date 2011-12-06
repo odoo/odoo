@@ -129,6 +129,7 @@ Creates a dashboard for CRM that includes:
             'test/ui/delete_lead.yml'
              ],
     'installable': True,
+    'core': True,
     'active': False,
     'certificate': '0079056041421',
     'images': ['images/sale_crm_crm_dashboard.png', 'images/crm_dashboard.jpeg','images/leads.jpeg','images/meetings.jpeg','images/opportunities.jpeg','images/outbound_calls.jpeg','images/stages.jpeg'],

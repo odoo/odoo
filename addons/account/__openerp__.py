@@ -152,6 +152,7 @@ module named account_voucher.
     ],
     'installable': True,
     'active': False,
+    'core': True,
     'certificate': '0080331923549',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -60,6 +60,7 @@ system to store and search in your CV base.
     'installable': True,
     'active': False,
     'certificate' : '001073437025460275621',
+    'core': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
