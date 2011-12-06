@@ -17,7 +17,6 @@ openerp.point_of_sale = function(db) {
         child.__super__ = parent.prototype;
         return child;
     };
-    /* end */
 
     var QWeb = db.web.qweb;
     QWeb.add_template("/point_of_sale/static/src/xml/pos.xml");
