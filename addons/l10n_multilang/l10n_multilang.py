@@ -95,14 +95,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         res_lang_obj = self.pool.get('res.lang')
         installed_lang_ids = res_lang_obj.search(cr, uid, [])
         installed_langs = [x.code for x in res_lang_obj.browse(cr, uid, installed_lang_ids, context=context)]
-        for lang in obj_multi.chart_template_id.spoken_languages.split(';'):
-            if lang not in installed_langs:
-                # the language is not installed, so we don't need to load its translations
-                continue
-            else: 
-                # the language was already installed, so the po files have been loaded at the installation time
-                # and now we need to copy the translations of templates to the right objects
-                langs.append(lang)
+        if obj_multi.chart_template_id.spoken_languages:
+            for lang in obj_multi.chart_template_id.spoken_languages.split(';'):
+                if lang not in installed_langs:
+                    # the language is not installed, so we don't need to load its translations
+                    continue
+                else: 
+                    # the language was already installed, so the po files have been loaded at the installation time
+                    # and now we need to copy the translations of templates to the right objects
+                    langs.append(lang)
         if langs:
             # write account.account translations in the real COA
             self._process_accounts_translations(cr, uid, obj_multi, company_id, langs, 'name', context=context)
