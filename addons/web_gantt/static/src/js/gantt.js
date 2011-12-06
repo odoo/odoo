@@ -289,8 +289,8 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                 }
             }
         });
-        self.ganttChartControl.attachEvent("onTaskEndResize", function(task) {return self.ResizeTask(task);});
-        self.ganttChartControl.attachEvent("onTaskEndDrag", function(task) {return self.ResizeTask(task);});
+        self.ganttChartControl.attachEvent("onTaskEndResize", function(task) {return self.resizeTask(task);});
+        self.ganttChartControl.attachEvent("onTaskEndDrag", function(task) {return self.resizeTask(task);});
         
         var taskdiv = $("div.taskPanel").parent();
         taskdiv.addClass('ganttTaskPanel');
@@ -312,24 +312,26 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             }, 200);
         });
         
-        var Project = self.ganttChartControl.getProjectById("_1");
-        $(Project.projectItem[0]).hide();
-        $(Project.projectNameItem).hide();
-        $(Project.descrProject).hide();
-        
-        _.each(final_events, function(id) {
-            var Task = Project.getTaskById(id);
-            $(Task.cTaskNameItem[0]).click(function() {
-                self.editTask(Task);
-            })
-        });
+        var project = self.ganttChartControl.getProjectById("_1");
+        if (project) {
+            $(project.projectItem[0]).hide();
+            $(project.projectNameItem).hide();
+            $(project.descrProject).hide();
+            
+            _.each(final_events, function(id) {
+                var Task = project.getTaskById(id);
+                $(Task.cTaskNameItem[0]).click(function() {
+                    self.editTask(Task);
+                })
+            });
+        }
     },
     
-    ResizeTask: function(task) {
+    resizeTask: function(task) {
         var self = this,
             event_id = task.getId();
         if(task.childTask.length)
-            return $.when(this.do_warn(_t("Project can not be resized"))).then(this.reloadView());
+            return;
         
         var data = {};
         data[this.date_start] = task.getEST().toString(this.date_format);
