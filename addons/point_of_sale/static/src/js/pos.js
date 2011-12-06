@@ -1,14 +1,9 @@
 openerp.point_of_sale = function(db) {
+    
     db.point_of_sale = {};
 
-    /* Some utility functions defined by Coffee script */
-    var __bind = function(fn, me) {
-        return function() {
-            return fn.apply(me, arguments);
-        };
-    };
-    var __hasProp = Object.prototype.hasOwnProperty;
     var __extends = function(child, parent) {
+        var __hasProp = Object.prototype.hasOwnProperty;
         for (var key in parent) {
             if (__hasProp.call(parent, key))
                 child[key] = parent[key];
@@ -21,14 +16,6 @@ openerp.point_of_sale = function(db) {
         child.prototype = new ctor;
         child.__super__ = parent.prototype;
         return child;
-    };
-    var __indexOf = Array.prototype.indexOf ||
-    function(item) {
-        for (var i = 0, l = this.length; i < l; i++) {
-            if (this[i] === item)
-                return i;
-        }
-        return -1;
     };
     /* end */
 
@@ -65,7 +52,7 @@ openerp.point_of_sale = function(db) {
      */
     var Pos = (function() {
         function Pos(session) {
-            this.build_tree = __bind(this.build_tree, this);
+            this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
                 this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
@@ -386,11 +373,11 @@ openerp.point_of_sale = function(db) {
         Order.prototype.exportAsJSON = function() {
             var orderLines, paymentLines, result;
             orderLines = [];
-            (this.get('orderLines')).each(__bind( function(item) {
+            (this.get('orderLines')).each(_.bind( function(item) {
                 return orderLines.push([0, 0, item.exportAsJSON()]);
             }, this));
             paymentLines = [];
-            (this.get('paymentLines')).each(__bind( function(item) {
+            (this.get('paymentLines')).each(_.bind( function(item) {
                 return paymentLines.push([0, 0, item.exportAsJSON()]);
             }, this));
             result = {
@@ -429,7 +416,7 @@ openerp.point_of_sale = function(db) {
             this.set({
                 cashRegisters: new CashRegisterCollection(pos.store.get('account.bank.statement')),
             });
-            return (this.get('orders')).bind('remove', __bind( function(removedOrder) {
+            return (this.get('orders')).bind('remove', _.bind( function(removedOrder) {
                 if ((this.get('orders')).isEmpty()) {
                     this.addAndSelectOrder(new Order);
                 }
@@ -579,14 +566,14 @@ openerp.point_of_sale = function(db) {
 
             cashRegisterId = event.currentTarget.attributes['cash-register-id'].nodeValue;
             cashRegisterCollection = this.shop.get('cashRegisters');
-            cashRegister = cashRegisterCollection.find(__bind( function(item) {
+            cashRegister = cashRegisterCollection.find(_.bind( function(item) {
                 return (item.get('id')) === parseInt(cashRegisterId, 10);
             }, this));
             return (this.shop.get('selectedOrder')).addPaymentLine(cashRegister);
         },
         render_element: function() {
             this.$element.empty();
-            return (this.shop.get('cashRegisters')).each(__bind( function(cashRegister) {
+            return (this.shop.get('cashRegisters')).each(_.bind( function(cashRegister) {
                 var button = new PaymentButtonWidget();
                 button.model = cashRegister;
                 button.appendTo(this.$element);
@@ -636,11 +623,11 @@ openerp.point_of_sale = function(db) {
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
-            this.model.bind('change', __bind( function() {
+            this.model.bind('change', _.bind( function() {
                 this.$element.hide();
                 this.render_element();
             }, this));
-            this.model.bind('remove', __bind( function() {
+            this.model.bind('remove', _.bind( function() {
                 return this.$element.remove();
             }, this));
             this.order = options.order;
@@ -695,7 +682,7 @@ openerp.point_of_sale = function(db) {
         },
         render_element: function() {
             this.$element.empty();
-            this.currentOrderLines.each(__bind( function(orderLine) {
+            this.currentOrderLines.each(_.bind( function(orderLine) {
                 var line = new OrderlineWidget(null, {
                         model: orderLine,
                         order: this.shop.get('selectedOrder'),
@@ -785,7 +772,7 @@ openerp.point_of_sale = function(db) {
         },
         render_element: function() {
             this.$element.empty();
-            (this.shop.get('products')).each(__bind( function(product) {
+            (this.shop.get('products')).each(_.bind( function(product) {
                 var p = new ProductWidget(null, {
                         model: product,
                         shop: this.shop
@@ -845,7 +832,7 @@ openerp.point_of_sale = function(db) {
         validateCurrentOrder: function() {
             var callback, currentOrder;
             currentOrder = this.shop.get('selectedOrder');
-            callback = __bind(function() {
+            callback = _.bind(function() {
                 return currentOrder.set({
                     validated: true
                 });
@@ -876,7 +863,7 @@ openerp.point_of_sale = function(db) {
         },
         render_element: function() {
             this.paymentLineList().empty();
-            this.currentPaymentLines.each(__bind( function(paymentLine) {
+            this.currentPaymentLines.each(_.bind( function(paymentLine) {
                 var x = new PaymentlineWidget(null, {
                     model: paymentLine
                 });
@@ -956,7 +943,7 @@ openerp.point_of_sale = function(db) {
         render_element: function() {
             this.$element.html(qweb_template('pos-receipt-view'));
             $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
-            this.currentOrderLines.each(__bind( function(orderItem) {
+            this.currentOrderLines.each(_.bind( function(orderItem) {
                 var x = new ReceiptLineWidget(null, {
                         model: orderItem
                 });
@@ -1110,7 +1097,7 @@ openerp.point_of_sale = function(db) {
             this.categoryView.start();
             products = pos.store.get('product.product').filter( function(p) {
                 var _ref;
-                return _ref = p.pos_categ_id[0], __indexOf.call(c.subtree, _ref) >= 0;
+                return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
             });
             (this.shop.get('products')).reset(products);
             var self = this;
