@@ -155,6 +155,17 @@
                 </form>
             </field>
         </record>
+
+        <record id="user_groups_view" model="ir.ui.view">
+            <field name="name">res.users.groups</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="view_users_form"/>
+            <field name="arch" type="xml">
+                <!-- dummy, will be modified by groups -->
+                <field name="groups_id" position="after"/>
+            </field>
+        </record>
+
         <record id="view_users_tree" model="ir.ui.view">
             <field name="name">res.users.tree</field>
             <field name="model">res.users</field>
