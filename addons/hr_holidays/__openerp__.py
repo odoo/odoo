@@ -23,7 +23,7 @@
 {
     "name": "Leaves Management",
     "version": "1.5",
-    "author": ['OpenERP SA', 'Axelor'],
+    "author": "OpenERP SA",
     "category": "Human Resources",
     'complexity': "easy",
     "website": "http://www.openerp.com",
