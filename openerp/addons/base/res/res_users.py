@@ -774,12 +774,12 @@ class groups_view(osv.osv):
         """
         def linearized(gs):
             gs = set(gs)
-            # determine sequence order: a group appear after its implied groups
+            # determine sequence order: a group should appear after its implied groups
             order = dict.fromkeys(gs, 0)
             for g in gs:
                 for h in gs.intersection(g.trans_implied_ids):
                     order[h] -= 1
-            # check linearity, i.e., whether sequence orders are distinct
+            # check whether order is total, i.e., sequence orders are distinct
             if len(set(order.itervalues())) == len(gs):
                 return sorted(gs, key=lambda g: order[g])
             return None
