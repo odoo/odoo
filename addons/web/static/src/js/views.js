@@ -193,6 +193,8 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         this.views = {};
         this.flags = this.flags || {};
         this.registry = session.web.views;
+        this.views = [];
+        this.views_history = [];
     },
     render: function() {
         return session.web.qweb.render(this.template, {
@@ -232,11 +234,15 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
      * Asks the view manager to switch visualization mode.
      *
      * @param {String} view_type type of view to display
+     * @param {Boolean} [no_store=false] don't store the view being switched to on the switch stack
      * @returns {jQuery.Deferred} new view loading promise
      */
-    on_mode_switch: function(view_type) {
+    on_mode_switch: function(view_type, no_store) {
         var self = this,
             view_promise;
+        if (!no_store) {
+            this.views_history.push(view_type);
+        }
         this.active_view = view_type;
         var view = this.views[view_type];
         if (!view.controller) {
@@ -247,6 +253,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
                 controller.set_embedded_view(view.embedded_view);
             }
             controller.do_switch_view.add_last(this.on_mode_switch);
+            controller.do_prev_view.add_last(this.on_prev_view);
             var container = $("#" + this.element_id + '_view_' + view_type);
             view_promise = controller.appendTo(container);
             this.views[view_type].controller = controller;
@@ -285,6 +292,11 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
                     self.display_title());
         });
         return view_promise;
+    },
+    on_prev_view: function () {
+        this.views_history.pop();
+        var previous_view = this.views_history[this.views_history.length - 1];
+        this.on_mode_switch(previous_view, true);
     },
     /**
      * Sets up the current viewmanager's search view.
@@ -453,10 +465,10 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
 
         return manager_ready;
     },
-    on_mode_switch: function (view_type) {
+    on_mode_switch: function (view_type, no_store) {
         var self = this;
         return $.when(
-                this._super(view_type),
+                this._super(view_type, no_store),
                 this.shortcut_check(this.views[view_type])
             ).then(function() {
                 var controller = self.views[self.active_view].controller,
@@ -939,8 +951,16 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         this.embedded_view = embedded_view;
         this.options.sidebar = false;
     },
-    do_switch_view: function(view) {
-    },
+    /**
+     * Switches to a specific view type
+     *
+     * @param {String} view view type to switch to
+     */
+    do_switch_view: function(view) { },
+    /**
+     * Cancels the switch to the current view, switches to the previous one
+     */
+    do_prev_view: function () { },
     do_search: function(view) {
     },
 

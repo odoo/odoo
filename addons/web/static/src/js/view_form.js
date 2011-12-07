@@ -357,11 +357,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_button_save: function() {
         var self = this;
         return this.do_save().then(function() {
-            self.do_switch_view('page');
+            self.do_prev_view();
         });
     },
     on_button_cancel: function() {
-        return this.do_switch_view('page');
+        return this.do_prev_view();
     },
     on_button_new: function() {
         var self = this;
@@ -383,7 +383,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         return def.promise();
     },
     can_be_discarded: function() {
-        return true; // Disabled until the page view and button refactoring is done
+        return true; // FIXME: Disabled until the page view and button refactoring is done
         return !this.is_dirty() || confirm(_t("Warning, the record has been modified, your changes will be discarded."));
     },
     /**
