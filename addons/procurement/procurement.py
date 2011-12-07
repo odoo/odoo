@@ -569,15 +569,4 @@ class stock_warehouse_orderpoint(osv.osv):
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
     
 stock_warehouse_orderpoint()
-
-class sale_order(osv.osv):
-    _inherit = 'sale.order'
-
-    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id,
-        date_planned, *args):
-        d = super(sale_order, self)._prepare_order_line_procurement(cr, uid,
-            order, line, move_id, date_planned, *args)
-        d['property_ids'] = [(6, 0, [x.id for x in line.property_ids])]
-        return d
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
