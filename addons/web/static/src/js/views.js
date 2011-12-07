@@ -254,11 +254,11 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
                 if (self.searchview && view.controller.searchable !== false) {
-                    self.searchview.do_search();
+                    self.searchview.ready.then(self.searchview.do_search);
                 }
             });
         } else if (this.searchview && view.controller.searchable !== false) {
-            this.searchview.do_search();
+            this.searchview.ready.then(this.searchview.do_search);
         }
 
         if (this.searchview) {
