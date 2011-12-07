@@ -82,7 +82,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 var type = node.attrs.type || '';
                 if (_.indexOf('action,object,edit,delete,color'.split(','), type) !== -1) {
                     _.each(node.attrs, function(v, k) {
-                        if (_.indexOf('icon,type,name,string,context,states,kanban_states'.split(','), k) != -1) {
+                        if (_.indexOf('icon,type,name,args,string,context,states,kanban_states'.split(','), k) != -1) {
                             node.attrs['data-' + k] = v;
                             delete(node.attrs[k]);
                         }
@@ -380,7 +380,11 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             new_record = {};
         _.each(record, function(value, name) {
             var r = _.clone(self.view.fields_view.fields[name] || {});
-            r.raw_value = value;
+            if ((r.type === 'date' || r.type === 'datetime') && value) {
+                r.raw_value = openerp.web.auto_str_to_date(value);
+            } else {
+                r.raw_value = value;
+            }
             r.value = openerp.web.format_value(value, r);
             new_record[name] = r;
         });

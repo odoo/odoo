@@ -462,6 +462,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Object} results results of evaluating domain and process for a search
      */
     do_search: function (domain, context, group_by) {
+        this.page = 0;
         this.groups.datagroup = new openerp.web.DataGroup(
             this, this.model, domain, context, group_by);
         this.groups.datagroup.sort = this.dataset._sort;
@@ -1191,7 +1192,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                         } else if (column.type === 'float') {
                             format = "%.2f";
                         }
-                        $('<td>')
+                        $('<td class="oe-number">')
                             .text(_.str.sprintf(format, value))
                             .appendTo($row);
                     } else {
@@ -1280,10 +1281,15 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             items: '> tr[data-id]',
             stop: function (event, ui) {
                 var to_move = list.records.get(ui.item.data('id')),
-                    target_id = ui.item.prev().data('id');
+                    target_id = ui.item.prev().data('id'),
+                    from_index = list.records.indexOf(to_move),
+                    target = list.records.get(target_id);
+                if (list.records.at(from_index - 1) == target) {
+                    return;
+                }
 
                 list.records.remove(to_move);
-                var to = target_id ? list.records.indexOf(list.records.get(target_id)) + 1 : 0;
+                var to = target_id ? list.records.indexOf(target) + 1 : 0;
                 list.records.add(to_move, { at: to });
 
                 // resequencing time!
@@ -1295,7 +1301,14 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     // write are independent from one another, so we can just
                     // launch them all at the same time and we don't really
                     // give a fig about when they're done
-                    dataset.write(record.get('id'), {sequence: seq});
+                    // FIXME: breaks on o2ms (e.g. Accounting > Financial
+                    //        Accounting > Taxes > Taxes, child tax accounts)
+                    //        when synchronous (without setTimeout)
+                    (function (dataset, id, seq) {
+                        setTimeout(function () {
+                            dataset.write(id, {sequence: seq});
+                        }, 0);
+                    }(dataset, record.get('id'), seq));
                     record.set('sequence', seq);
                 }
 

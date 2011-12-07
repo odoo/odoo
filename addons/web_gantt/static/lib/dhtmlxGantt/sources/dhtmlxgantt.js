@@ -173,9 +173,8 @@ GanttProjectInfo.prototype.getTaskByIdInTree = function(parentTask, id)
  * @type:  public
  * @topic: 0
  */
-function GanttTaskInfo(id, name, est, duration, percentCompleted, predecessorTaskId, color)
+function GanttTaskInfo(id, name, est, duration, percentCompleted, predecessorTaskId)
 {
-    this.color = color || "white";
     this.Id = id;
     this.Name = name;
     this.EST = est;
@@ -349,7 +348,7 @@ GanttProject.prototype.create = function()
  *  @type: public
  *  @topic: 0
  */
-function GanttChart(day_length)
+function GanttChart()
 {
     this.Error = new GanttError();
     this.dhtmlXMLSenderObject = new dhtmlXMLSenderObject(this);
@@ -357,7 +356,7 @@ function GanttChart(day_length)
     //settings
     this.heightTaskItem = 12;
     this.dayInPixels = 24;
-    this.hoursInDay = day_length;
+    this.hoursInDay = 8;
     this._showTreePanel = true;
     this._showTooltip = true;
     this.isShowDescTask = false;
@@ -1162,7 +1161,7 @@ GanttProject.prototype.deleteChildTask = function(task)
  * @type: public
  * @topic: 1
  */
-GanttProject.prototype.insertTask = function(id, name, EST, Duration, PercentCompleted, predecessorTaskId, color, parentTaskId)
+GanttProject.prototype.insertTask = function(id, name, EST, Duration, PercentCompleted, predecessorTaskId, parentTaskId)
 {
     var task = null;
     var _task = null;
@@ -1205,7 +1204,7 @@ GanttProject.prototype.insertTask = function(id, name, EST, Duration, PercentCom
             return false;
         }
 
-        task = new GanttTaskInfo(id, name, EST, Duration, PercentCompleted, predecessorTaskId, color);
+        task = new GanttTaskInfo(id, name, EST, Duration, PercentCompleted, predecessorTaskId);
 
         if (!this.Chart.checkPosParentTask(parentTask, task)) {
             this.Chart.Error.throwError("DATA_INSERT_ERROR", 19, [parentTaskId,id]);
@@ -4870,13 +4869,11 @@ GanttTask.prototype.createTaskItem = function()
         cellTblTask.height = this.Chart.heightTaskItem + "px";
         cellTblTask.width = this.TaskInfo.PercentCompleted + "%";
         cellTblTask.style.lineHeight = "1px";
-        cellTblTask.style.backgroundColor = self.TaskInfo.color;
-        
         var imgPr = document.createElement("img");
         imgPr.style.width = (this.TaskInfo.PercentCompleted * this.TaskInfo.Duration * this.Chart.hourInPixelsWork) / 100 + "px";
         imgPr.style.height = this.Chart.heightTaskItem + "px";
         cellTblTask.appendChild(imgPr);
-        //imgPr.src = this.Chart.imgs + "progress_filled.png";
+        imgPr.src = this.Chart.imgs + "progress_filled.png";
     }
 
     if (this.TaskInfo.PercentCompleted != 100)
@@ -4946,9 +4943,9 @@ GanttTask.prototype.createTaskItem = function()
     }
 
     var taskClick = function() {
-        self.Chart.callEvent("onTaskDblClick", [self]);
+        self.Chart.callEvent("onTaskClick", [self]);
     };
-    this.addEvent(divMove, 'dblclick', taskClick, false);
+    this.addEvent(divMove, 'click', taskClick, false);
 
     if (this.Chart.isEditable)
     {
