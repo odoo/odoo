@@ -47,6 +47,7 @@
         "static/src/js/data_import.js",
         "static/src/js/search.js",
         "static/src/js/view_form.js",
+        "static/src/js/view_page.js",
         "static/src/js/view_list.js",
         "static/src/js/view_list_editable.js",
         "static/src/js/view_tree.js",
