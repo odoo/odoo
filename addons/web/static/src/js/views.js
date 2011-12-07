@@ -455,6 +455,9 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
     },
     on_mode_switch: function (view_type) {
         var self = this;
+        if (!_.include(_.pluck(this.views_src,"view_type"),view_type))
+            return;
+
         return $.when(
                 this._super(view_type),
                 this.shortcut_check(this.views[view_type])
