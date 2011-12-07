@@ -1,7 +1,6 @@
 openerp.web.page = function (openerp) {
-
-var _t = openerp.web._t;
-var QWeb = openerp.web.qweb;
+    var _t = openerp.web._t;
+    var QWeb = openerp.web.qweb;
 
     openerp.web.views.add('page', 'openerp.web.PageView');
     openerp.web.PageView = openerp.web.FormView.extend({

@@ -2053,16 +2053,20 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                     view.options.deletable = null;
                 }
             } else if (view.view_type === "form") {
+                if (self.is_readonly()) {
+                    view.view_type = 'page';
+                }
                 view.options.not_interactible_on_create = true;
             }
             views.push(view);
         });
         this.views = views;
-        
+
         this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views);
         this.viewmanager.registry = openerp.web.views.clone({
             list: 'openerp.web.form.One2ManyListView',
-            form: 'openerp.web.FormView'
+            form: 'openerp.web.FormView',
+            page: 'openerp.web.PageView'
         });
         var once = $.Deferred().then(function() {
             self.init_form_last_update.resolve();
@@ -2075,11 +2079,9 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 controller.o2m = self;
                 if (self.is_readonly())
                     controller.set_editable(false);
-            } else if (view_type == "form") {
-                if (self.is_readonly()) {
-                    // TODO NIV: use page view do_switch_view('page')
-                    controller.on_toggle_readonly();
-                    $(controller.$element.find(".oe_form_buttons")[0]).children().remove();
+            } else if (view_type == "form" || view_type == 'page') {
+                if (view_type == 'page') {
+                    controller.$element.find(".oe_form_buttons").hide();
                 }
                 controller.on_record_loaded.add_last(function() {
                     once.resolve();
@@ -2109,22 +2111,23 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     reload_current_view: function() {
         var self = this;
         return self.is_loaded = self.is_loaded.pipe(function() {
-            var view = self.viewmanager.views[self.viewmanager.active_view].controller;
-            if(self.viewmanager.active_view === "list") {
+            var active_view = self.viewmanager.active_view;
+            var view = self.viewmanager.views[active_view].controller;
+            if(active_view === "list") {
                 return view.reload_content();
-            } else if (self.viewmanager.active_view === "form") {
+            } else if (active_view === "form" || active_view === 'page') {
                 if (self.dataset.index === null && self.dataset.ids.length >= 1) {
                     self.dataset.index = 0;
                 }
                 var act = function() {
                     return view.do_show();
-                }
+                };
                 self.form_last_update = self.form_last_update.pipe(act, act);
                 return self.form_last_update;
-            } else if (self.viewmanager.active_view === "graph") {
+            } else if (active_view === "graph") {
                 return view.do_search(self.build_domain(), self.dataset.get_context(), []);
             }
-        });
+        }, undefined);
     },
     set_value: function(value) {
         value = value || [];
@@ -2711,19 +2714,15 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
     on_write_completed: function() {},
     setup_form_view: function() {
         var self = this;
-        this.view_form = new openerp.web.FormView(this, this.dataset, false, self.options.form_view_options);
+        var FormClass = this.options.readonly
+                ? openerp.web.views.get_object('page')
+                : openerp.web.views.get_object('form');
+        this.view_form = new FormClass(this, this.dataset, false, self.options.form_view_options);
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
         this.view_form.appendTo(this.$element.find("#" + this.element_id + "_view_form"));
-        var once = $.Deferred().then(function() {
-            // TODO NIV: do_switch_view('page')
-            if (self.options.readonly) {
-                self.view_form.on_toggle_readonly();
-            }
-        });
         this.view_form.on_loaded.add_last(function() {
-            once.resolve();
             var $buttons = self.view_form.$element.find(".oe_form_buttons");
             $buttons.html(QWeb.render("FormOpenPopup.form.buttons"));
             var $nbutton = $buttons.find(".oe_formopenpopup-form-save");
