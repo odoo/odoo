@@ -45,16 +45,11 @@
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase12}
 -
-  I check that the order which was initially in the draft state has transmit to confirm state for double validation.
--
-  !assert {model: purchase.order, id: order_purchase12}:
-    - state == 'confirmed'
--
   I Approved the purchase order.
 -
   !workflow {model: purchase.order, action: purchase_approve, ref: order_purchase12}
 -
-  I check that the order which was initially in the confirmed state has transmit to approved state.
+  I check that the order has transmit to approved state.
 -
   !assert {model: purchase.order, id: order_purchase12}:
     - state == 'approved'
