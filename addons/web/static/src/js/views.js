@@ -388,10 +388,16 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         }
         this.dataset = dataset;
         this.flags = this.action.flags || {};
-        if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
-            // Not elegant but allows to avoid form chrome (pager, save/new
-            // buttons, sidebar, ...) displaying
-            this.flags.display_title = this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
+        if (action.res_model == 'board.board' && action.view_mode === 'form') {
+            // Special case for Dashboards
+            _.extend(this.flags, {
+                views_switcher : false,
+                display_title : false,
+                search_view : false,
+                pager : false,
+                sidebar : false,
+                action_buttons : false
+            });
         }
 
         // setup storage for session-wise menu hiding
