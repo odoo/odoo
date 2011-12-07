@@ -3045,7 +3045,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             obj_journal.create(cr, uid, vals_journal, context=context)
         return True
 
-    def generate_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, code_digits, context=None):
+    def generate_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
         """
         This method used for creating journals.
         @param cr: A database cursor.
@@ -3054,127 +3054,84 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         @param acc_template_ref: Account templates reference.
         @param company_id: company_id selected from wizard.multi.charts.accounts.
         """
-#TODO: do a for loop
+        journal_data = self._prepare_all_journals(cr, uid, chart_template_id, acc_template_ref, company_id, context=context)
+        for vals_journal in journal_data:
+            self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
+        return True
+
+    def _prepare_all_journals(cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
+        def _get_analytic_journal(journal_type):
+            # Get the analytic journal
+            analytic_journal_ids = []
+            if journal_type in ('sale', 'sale_refund'):
+                analytical_journal_ids = analytic_journal_obj.search(cr, uid, [('type','=','sale')], context=context)
+            elif journal_type in ('purchase', 'purchase_refund'):
+                analytical_journal_ids = analytic_journal_obj.search(cr, uid, [('type','=','purchase')], context=context)
+            elif journal_type == 'general':
+                analytical_journal_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'situation')], context=context)
+            return analytic_journal_ids and analytic_journal_ids[0] or False
+
+        def _get_default_account(journal_type, type='debit'):
+            # Get the default accounts
+            default_account = False
+            if journal_type in ('sale', 'sale_refund'):
+                default_account = acc_template_ref.get(template.property_account_income_categ.id)
+            elif journal_type in ('purchase', 'purchase_refund'):
+                default_account = acc_template_ref.get(template.property_account_expense_categ.id)
+            elif journal_type == 'situation':
+                if type == 'debit':
+                    default_account = acc_template_ref.get(template.property_account_expense_opening.id)
+                else:
+                    default_account = acc_template_ref.get(template.property_account_income_opening.id)
+            return default_account
+
+        def _get_view_id(journal_type):
+            # Get the journal views
+            if journal_type in ('general', 'situation'):
+                data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_view')
+            elif journal_type in ('sale_refund', 'purchase_refund'):
+                data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_refund_journal_view') 
+            else:
+                data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_journal_view')
+            return data and data[1] or False
+
+        journal_names = {
+            'sale': _('Sales Journal'),
+            'purchase': _('Purchase Journal'),
+            'sale_refund': _('Sales Refund Journal'),
+            'purchase_refund': _('Purchase Refund Journal'),
+            'general': _('Miscellaneous Journal'),
+            'situation': _('Opening Entries Journal'),
+        }
+        journal_codes = {
+            'sale': _('SAJ'),
+            'purchase': _('EXJ'),
+            'sale_refund': _('SCNJ'),
+            'purchase_refund': _('ECNJ'),
+            'general': _('MISC'),
+            'situation': _('OPEJ'),
+        }
+
         obj_data = self.pool.get('ir.model.data')
         analytic_journal_obj = self.pool.get('account.analytic.journal')
-        obj_journal = self.pool.get('account.journal')
-        obj_acc = self.pool.get('account.account')
         template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
 
-        data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_journal_view') 
-        view_id = data and data[1] or False
-
-        income_acc_id = acc_template_ref.get(template.property_account_income_categ.id)
-        expense_acc_id = acc_template_ref.get(template.property_account_expense_categ.id)
-        credit_acc_id = acc_template_ref.get(template.property_account_income_opening.id)
-        debit_acc_id = acc_template_ref.get(template.property_account_expense_opening.id)
-
-        #Sales Journal
-        analytical_sale_ids = analytic_journal_obj.search(cr, uid, [('type','=','sale')], context=context)
-        analytical_journal_sale = analytical_sale_ids and analytical_sale_ids[0] or False
-        vals_journal = {
-            'name': _('Sales Journal'),
-            'type': 'sale',
-            'code': _('SAJ'),
-            'view_id': view_id,
-            'company_id': company_id,
-            'analytic_journal_id': analytical_journal_sale,
-        }
-
-        if template.property_account_receivable:
-            vals_journal.update({
-                            'default_credit_account_id': income_acc_id,
-                            'default_debit_account_id': income_acc_id
-                               })
-        self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
-
-        # Purchase Journal
-        analytical_purchase_ids = analytic_journal_obj.search(cr,uid,[('type','=','purchase')], context=context)
-        analytical_journal_purchase = analytical_purchase_ids and analytical_purchase_ids[0] or False
-
-        vals_journal = {
-            'name': _('Purchase Journal'),
-            'type': 'purchase',
-            'code': _('EXJ'),
-            'view_id': view_id,
-            'company_id': company_id,
-            'analytic_journal_id': analytical_journal_purchase,
-        }
-
-        if template.property_account_payable:
-            vals_journal.update({
-                            'default_credit_account_id': expense_acc_id,
-                            'default_debit_account_id': expense_acc_id
-                               })
-        self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
-
-        # Creating Journals Sales Refund and Purchase Refund
-        data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_refund_journal_view') 
-        view_id = data and data[1] or False
-
-        #Sales Refund Journal
-        vals_journal = {
-            'name': _('Sales Refund Journal'),
-            'type': 'sale_refund',
-            'code': _('SCNJ'),
-            'view_id': view_id,
-            'analytic_journal_id': analytical_journal_sale,
-            'company_id': company_id
-        }
-        if template.property_account_receivable:
-            vals_journal.update({
-                            'default_credit_account_id': income_acc_id,
-                            'default_debit_account_id': income_acc_id
-                               })
-        self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
-
-        # Purchase Refund Journal
-        vals_journal = {
-            'name': _('Purchase Refund Journal'),
-            'type': 'purchase_refund',
-            'code': _('ECNJ'),
-            'view_id': view_id,
-            'analytic_journal_id': analytical_journal_purchase,
-            'company_id': company_id
-        }
-        if template.property_account_payable:
-            vals_journal.update({
-                            'default_credit_account_id': expense_acc_id,
-                            'default_debit_account_id': expense_acc_id
-                               })
-        self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
-
-        # Miscellaneous Journal
-        data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_view') 
-        view_id = data and data[1] or False
-
-        analytical_miscellaneous_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'situation')], context=context)
-
-        vals_journal = {
-            'name': _('Miscellaneous Journal'),
-            'type': 'general',
-            'code': _('MISC'),
-            'view_id': view_id,
-            'analytic_journal_id': analytical_miscellaneous_ids and analytical_miscellaneous_ids[0] or False,
-            'company_id': company_id
-        }
-        self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
-
-        # Opening Entries Journal
-        if template.property_account_income_opening and template.property_account_expense_opening:
-            vals_journal = {
-                'name': _('Opening Entries Journal'),
-                'type': 'situation',
-                'code': _('OPEJ'),
-                'view_id': view_id,
+        journal_data = []
+        for journal_type in ['sale', 'purchase', 'sale_refund', 'purchase_refund', 'general', 'situation']:
+            default_account_id = _get_default_account_id(type)
+            vals = {
+                'type': journal_type,
+                'name': journal_names[journal_type],
+                'code': journal_codes[journal_type],
                 'company_id': company_id,
-                'centralisation': True,
-                'default_credit_account_id': credit_acc_id,
-                'default_debit_account_id': debit_acc_id
-                }
-            self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
-
-        return True
+                'centralisation': journal_type == 'situation',
+                'view_id': _get_view_id(journal_type),
+                'analytic_journal_id': _get_analytic_journal(journal_type),
+                'default_credit_account_id': _get_default_account(journal_type, 'credit'),
+                'default_debit_account_id': _get_default_account(journal_type, 'debit'),
+            }
+            journal_data.append(vals)
+        return journal_data
 
     def generate_properties(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
         """
