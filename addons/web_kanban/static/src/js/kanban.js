@@ -534,8 +534,11 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
         size = size || 160;
         if (!s) {
             return '';
+        } else if (s.length <= size) {
+            return s;
+        } else {
+            return s.substr(0, size) + '...';
         }
-        return s.substr(0, size) + '...';
     }
 });
 };
