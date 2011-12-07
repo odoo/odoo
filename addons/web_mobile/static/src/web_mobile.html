@@ -39,6 +39,9 @@
     <script type="text/javascript">
         var QWeb;
         $(function() {
+            if(document.URL!="http://"+window.location.host+"/web_mobile/static/src/web_mobile.html"){
+                window.location.replace('/mobile');
+            }
             var oe = openerp.init();
             openerp.web_mobile(oe);
             oe.web_mobile.mobilewebclient("moe");
