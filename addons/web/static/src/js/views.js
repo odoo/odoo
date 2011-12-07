@@ -300,10 +300,23 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         });
         return view_promise;
     },
-    on_prev_view: function () {
-        this.views_history.pop();
+    /**
+     * Returns to the view preceding the caller view in this manager's
+     * navigation history (the navigation history is appended to via
+     * on_mode_switch)
+     *
+     * @param {Boolean} [created=false] returning from a creation
+     * @returns {$.Deferred} switching end signal
+     */
+    on_prev_view: function (created) {
+        var current_view = this.views_history.pop();
         var previous_view = this.views_history[this.views_history.length - 1];
-        this.on_mode_switch(previous_view, true);
+        // APR special case: "If creation mode from list (and only from a list),
+        // after saving, go to page view (don't come back in list)"
+        if (created && current_view === 'form' && previous_view === 'list') {
+            return this.on_mode_switch('page');
+        }
+        return this.on_mode_switch(previous_view, true);
     },
     /**
      * Sets up the current viewmanager's search view.

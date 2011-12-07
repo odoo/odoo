@@ -356,8 +356,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     on_button_save: function() {
         var self = this;
-        return this.do_save().then(function() {
-            self.do_prev_view();
+        return this.do_save().then(function(result) {
+            self.do_prev_view(result.created);
         });
     },
     on_button_cancel: function() {
@@ -433,6 +433,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     if (success) {
                         success();
                     }
+                    return $.Deferred().resolve({}).promise();
                 } else {
                     openerp.log("FormView(", self, ") : About to save", values);
                     return self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
