@@ -1,14 +1,14 @@
 -
-  In order to test the chain location functionality,
-  I create stock production lot for product 'Sprouting Foods'.
+  In order to test chained locations, I update the stock of product.
+-
+  I create stock production lot for product.
 -
   !record {model: stock.production.lot, id: stock_production_lot2}:
     product_id: product.product_product_sprouting
     date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     name: 0000002
 -
-  I update product 'Sprouting Foods' with the help of 'Change Product Quantity' wizard
-  and assign a location 'Refrigerated Vehicles' to test the chained location flow.
+  I update product quantity and check the stock moves are properly done or not
 -
   !python {model: stock.change.product.qty}: |
     product = self.pool.get('product.product').browse(cr, uid, ref('product.product_product_sprouting'))
@@ -16,7 +16,7 @@
     ids = self.create(cr, uid, fields)
     self.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
 -
-  I check stock moves of product 'Sprouting Foods'.
+  I check stock moves of product.
 -
   !python {model: stock.move}: |
     ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_sprouting'))])
@@ -29,7 +29,7 @@
       if i.location_id.name == 'Cold Storage':
         assert i.location_dest_id.name == 'Customers',"Destination location must be 'Customers' because the source location is 'Cold Storage'"
 -
-  I trace the stock production lot for product 'Sprouting Foods'.
+  I trace the stock production lot for product.
 -
   !python {model: stock.production.lot }: |
     self.action_traceability(cr,uid,[ref('stock_production_lot2')], {'active_model': 'ir.ui.menu', 'field': '', 'type': ''})

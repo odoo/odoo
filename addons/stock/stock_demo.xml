@@ -9,7 +9,7 @@
         <!--
     Resource: stock.location
     -->
-        <record id="chain_location_1" model="stock.location">
+        <record id="cold_location_1" model="stock.location">
             <field name="name">Cold Storage</field>
             <field name="location_id" ref="stock_location_suppliers"/>
             <field name="chained_location_type">fixed</field>
@@ -49,6 +49,14 @@
         <record id="stock_location_components" model="stock.location">
             <field name="name">Shelf 1</field>
             <field name="location_id" ref="stock_location_stock"/>
+        </record>
+        <record id="refrigerate_location_stock" model="stock.location">
+            <field name="name">Refrigerated Vehicles</field>
+            <field name="location_id" ref="stock_location_company"/>
+            <field name="chained_auto_packing">auto</field>
+            <field name="chained_location_type">fixed</field>
+            <field name="usage">internal</field>
+            <field name="chained_location_id" ref="cold_location_1"/>
         </record>
 
         <!--

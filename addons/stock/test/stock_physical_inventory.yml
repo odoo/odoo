@@ -1,7 +1,7 @@
 -
-  In order to test the stock module, I start it from physical inventory.
+  In order to test the stock module, I need to create initial physical inventory.
 -
-  I create a record for physical inventory and change the product quantity zero by making a physical inventory.
+  I create a physical inventory and change the product quantity zero by making a physical inventory.
 -
    !record {model: stock.inventory, id: stock_physical_inventory0}:
     company_id: base.main_company
@@ -9,35 +9,38 @@
     name: Physical inventory
     state: draft
 -
-  Now, Define the location for import inventory.
--
-  !record {model: stock.fill.inventory, id: stock_fill_inventory_0}:
-    location_id: stock.stock_location_stock
-    recursive: False
-    set_stock_zero: True
--
-  I fill inventory.
+  I define and fill the inventory. Create record using create method.
 -
   !python {model: stock.fill.inventory}: |
-    context = {"full": "1", "active_model": "stock.inventory", "active_ids":[ref("stock_physical_inventory0")], "active_id": ref("stock_physical_inventory0")}
+    vals = {
+            'location_id': ref('stock_location_components'),
+            'recursive': False,
+            'set_stock_zero': True
+           } 
+    ids = self.create(cr, uid, vals, context)
+    context.update({"full": "1", "active_model": "stock.inventory","active_ids": [ids]})
     self.view_init(cr, uid, ["set_stock_zero", "location_id", "recursive"], context)
-    try:
-      self.fill_inventory(cr, uid, [ref("stock_fill_inventory_0")], context)
-    except:
-      pass
+    inventory_id = context.get('ids')
+    self.fill_inventory(cr, uid, inventory_id, context)
 -
   I confirm the inventory.
 -
   !python {model: stock.inventory}: |
-   inventory = self.browse(cr, uid, [ref('stock_physical_inventory0')])
+   inventory = self.browse(cr, uid, [ref('stock_physical_inventory0')])[0]
    self.action_confirm(cr,uid,[ref('stock_physical_inventory0')])
-   assert inventory[0].state == 'confirm',"After confirm the inventory it should be in 'Confirm' state"
-   for line in inventory[0].inventory_line_id:
-     assert line.product_qty == 0.0,"Product Quantity should be Zero"
+   assert inventory.state == 'confirm',"Inventory should be in 'Confirm' state"
    self.action_done(cr,uid,[ref('stock_physical_inventory0')])
+   if inventory.inventory_line_id:
+     for line in inventory.inventory_line_id:
+       assert line.product_qty == 0.0,"Product Quantity should be Zero"
+     assert len(inventory.move_ids) >= 1,"Move should be created after confirmed inventory"
+     for move in  inventory.move_ids:
+       assert move.product_qty == 1.0,"Product quantity of move is not correspond."
+       assert move.location_id.id == ref('location_inventory'),"Source location of move should be 'Inventory loss'"
+       assert move.location_dest_id.id == ref('stock_location_components'),"Destination location of move is not correspond."
 -
   I check the inventory after validation.
 -
   !python {model: stock.inventory}: |
    inventory = self.browse(cr, uid, [ref('stock_physical_inventory0')])
-   assert inventory[0].state == 'done',"After validate the inventory it should be in 'Done' state"
+   assert inventory[0].state == 'done',"Inventory should be in 'Done' state"

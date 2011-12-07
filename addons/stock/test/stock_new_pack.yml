@@ -10,7 +10,7 @@
   !record {model: stock.move, id: stock_move_3}:
     tracking_id: stock_tracking_0
 -
-  I split the picking in to two quantities.
+  I split a Move of Delivery order in to two quantities.
 -
   !python {model: stock.move }: |
     move_ids=self.browse(cr,uid,ref('stock_move_3'))

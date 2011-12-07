@@ -1,5 +1,5 @@
 -
-  In order to test the scrap move, I add create a new move line in draft state with  FAN2
+  In order to test the scrap move, I create moves and scrap some quantities from those moves.
 -
   !record {model: stock.move, id: stock_move_4}:
     product_id: product.product_product_fan2
@@ -7,7 +7,7 @@
     location_dest_id: stock.stock_location_customers
     location_id: stock.stock_location_stock
 -
-  Now, with the help of 'Scrap Move' wizard, I scap the move of same Quantity.
+  I create a move and scrap some quantities from it.
 -
   !python {model: stock.move.scrap}: |
     context = {'active_model':'stock.move', 'active_id': ref('stock_move_4'), 'active_ids': [ref('stock_move_4')]}

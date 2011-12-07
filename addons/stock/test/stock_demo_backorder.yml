@@ -1,15 +1,13 @@
 -
-  In order to test partial delivery and back orders,
-  I select a delivery order of CPU1 and CPU3 product each contain five quantities.
+  In order to test partial delivery and back orders, I select delivery order and check process on it.
 -
-  I confirm the picking 'OUT001' and make it available .
+  I confirm the Delivery order and make it available .
 -
   !python {model: stock.picking}: |
     self.draft_force_assign(cr, uid, [ref('stock.stock_picking_1')], {})
     self.force_assign(cr, uid, [ref('stock.stock_picking_1')], {})
 -
-  After confirmed the picking and its two lines,
-  I add a new move line in draft state with 'FAN2' of seven quantities.
+  I add a new move line in the delivery order.
 -
   !record {model: stock.move, id: stock_move_3}:
     product_id: product.product_product_fan2
@@ -18,8 +16,7 @@
     location_id: stock.stock_location_stock
     picking_id: stock_picking_1
 - |
-  I click on 'Process Now' to process the delivery order and I change quantities to:
-  seven for CPU1, zero for CPU3, three for FAN2 and a new product PC1 for four quantites for test the partial delivery.
+  I make partial delivery for the delivery order.
 -
   !python {model: stock.picking}: |
     result = self.action_process(cr, uid, [ref('stock.stock_picking_1')], {})['res_id']
@@ -48,7 +45,7 @@
     }, {})
     self.pool.get('stock.partial.picking').do_partial(cr, uid, [result], {})
 -
-  I test that the back order contains five CPU3 and four FAN2.
+  I check the backorder and its moves.
 -
   !python {model: stock.picking}: |
     pick = self.browse(cr, uid, ref('stock.stock_picking_1'), {})
@@ -62,7 +59,7 @@
         else:
             assert line.product_qty == 0.0, "Wrong quantity for %s back order" % (line.product_id.code,)
 -
-  After the partial picking I check the delivery order or backorder and stock moves.
+  After the partial picking of Delivery order I check the Backorder and stock moves.
 -
   !python {model: stock.picking}: |
     result = self.search(cr, uid, [('name','=','OUT/00001')])

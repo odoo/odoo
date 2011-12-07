@@ -23,7 +23,7 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-overview'+format), 'wb+').write(data)
 -
-  In order to test the PDF reports defined on a stock, we will print a Stock Picking List report
+  In order to test the PDF reports defined on a stock, we will print a Delivery order List report
 -
   !python {model: stock.picking}: |
     import netsvc, tools, os

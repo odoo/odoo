@@ -1,7 +1,7 @@
 -
-  In order to test the delete stock, create a copy of picking.
+  In order to test the delete stock, create a copy of Delivery order.
 -
-  First, I create copy of picking.
+  First, I create copy of Delivery order.
 -
   !python {model: stock.picking}: |
     context.update({'active_id':ref('stock.stock_picking_1')})
@@ -12,13 +12,13 @@
     move_id = stock.copy(cr, uid, move_ids[0],context)
     context.update({'id1':id1,'move':move_id})
 -
-  Now, I delete a related moves of picking.
+  Now, I delete a related moves of Delivery order.
 -
   !python {model: stock.move}: |
     move = context.get('move')
     self.unlink(cr, uid, [move])
 -
-  Now, directlly delete the picking.
+  Now, directlly delete the Delivery order.
 -
   !python {model: stock.picking}: |
     id = context.get('id1')

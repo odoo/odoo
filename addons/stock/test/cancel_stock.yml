@@ -1,7 +1,7 @@
 -
-  In order to test the cancel stock. I start from cancelling the incoming shipment.
+  In order to test the cancel stock. I start from cancelling the Delivery order.
 -
-  First, I create copies of incoming shipment.
+  First, I create copies of Delivery order.
 -
   !python {model: stock.picking}: |
     stock = self.pool.get('stock.move')
@@ -11,7 +11,7 @@
     id3 = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
     context.update({'id1':id1,'id2':id2,'id3':id3})
 -
-  Now, I cancel all related moves of picking so automatically picking goes to cancelled state..
+  Now, I cancel all related stock moves of Delivery order so automatically Delivery order goes to cancelled state.
 -
   !python {model: stock.picking}: |
     import netsvc
@@ -24,7 +24,7 @@
       stock.force_assign(cr, uid, move)
       wf_service.trg_validate(uid, 'stock.move', move, 'action_cancel', cr)
 -
-  Now, directlly cancel the picking.
+  Now, directlly cancel the Delivery order.
 -
   !python {model: stock.picking}: |
     import netsvc
@@ -32,7 +32,7 @@
     pick_id = context.get('id2')
     wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
 -
-  I return the picking.
+  I return the Delivery order.
 -
   !python {model: stock.picking}: |
     copy_id = context.get('id3')
