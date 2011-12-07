@@ -1103,7 +1103,7 @@ openerp.point_of_sale = function(db) {
                 s = $(this).val().toLowerCase();
                 if (s) {
                     m = products.filter( function(p) {
-                        return p.name.toLowerCase().indexOf(s);
+                        return p.name.toLowerCase().indexOf(s) != -1;
                     });
                     $('.search-clear').fadeIn();
                 } else {
