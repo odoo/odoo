@@ -973,6 +973,8 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         if (data.action.length) {
             var action = data.action[0][2];
             self.on_action(action);
+        } else {
+            self.on_action({type: 'null_action'});
         }
     },
     on_action: function(action) {

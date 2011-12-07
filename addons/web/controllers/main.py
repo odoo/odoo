@@ -605,6 +605,14 @@ def fix_view_modes(action):
     if 'views' not in action:
         generate_views(action)
 
+    id_form = None
+    for index, (id, mode) in enumerate(action['views']):
+        if mode == 'form':
+            id_form = id
+            break
+    if id_form is not None:
+        action['views'].insert(index + 1, (id_form, 'page'))
+
     if action.pop('view_type', 'form') != 'form':
         return action
 
