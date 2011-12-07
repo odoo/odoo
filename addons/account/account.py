@@ -3174,15 +3174,26 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 property_obj.create(cr, uid, vals, context=context)
         return True
 
-#TODO: find a better namespace for  'obj_multi'
-    def _install_template(self, cr, uid, template_id, company_id, code_digits=None, obj_multi=None, context=None):
-        #TODO docstring me
+    def _install_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, context=None):
+        '''
+        This function recursively loads the template objects and create the real objects from them.i
+
+        :param template_id: id of the chart template to load
+        :param company_id: id of the company the wizard is running for
+        :param code_digits: integer that depicts the number of digits the accounts code should have in the COA
+        :param obj_wizard: the current wizard for generating the COA from the templates
+        :returns: return a dictionary containing the mapping between the account template ids and the ids of the real
+            accounts that have been generated from them.
+        :rtype: dict
+        '''
+        res = {}
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         if template.parent_id:
-            self._install_template(cr, uid, template.parent_id.id, company_id, code_digits=code_digits, context=context)
-        return self._load_template(cr, uid, template_id, company_id, code_digits=code_digits, obj_multi=obj_multi, context=context)
+            res.update(self._install_template(cr, uid, template.parent_id.id, company_id, code_digits=code_digits, context=context))
+        res.update(self._load_template(cr, uid, template_id, company_id, code_digits=code_digits, obj_wizard=obj_wizard, context=context))
+        return res
 
-    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, obj_multi=None, context=None):
+    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, context=None):
         #TODO docstring me
         #TODO refactor me
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
@@ -3251,24 +3262,24 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                 models =[('product.product',False)], value=[taxes_ref['taxes_id'][tax_data['purchase_tax']]])
         return acc_template_ref
 
-    def _create_tax_templates(self, cr, uid, obj_multi, company_id, context=None):
+    def _create_tax_templates(self, cr, uid, obj_wizard, company_id, context=None):
         '''
         This function checks if the chosen chart template is configured as containing a full set of taxes, and if
         it's not the case, it creates the templates for account.tax.code and for account.account.tax objects accordingly
         to the provided sale/purchase rates.
 
-        :param obj_multi: browse record of wizard to generate COA from templates
+        :param obj_wizard: browse record of wizard to generate COA from templates
         :param company_id: id of the company for wich the wizard is running
         :return: True
         '''
         obj_tax_code_template = self.pool.get('account.tax.code.template')
         obj_tax_temp = self.pool.get('account.tax.template')
-        chart_template = obj_multi.chart_template_id
+        chart_template = obj_wizard.chart_template_id
         # create tax templates and tax code templates from purchase_tax_rate and sale_tax_rate fields
         if not chart_template.complete_tax_set:
             tax_data = {
-                'sale': obj_multi.sale_tax_rate,
-                'purchase': obj_multi.purchase_tax_rate,
+                'sale': obj_wizard.sale_tax_rate,
+                'purchase': obj_wizard.purchase_tax_rate,
             }
 
             for tax_type, value in tax_data.items():
@@ -3311,16 +3322,16 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         all the provided information to create the accounts, the banks, the journals, the taxes, the tax codes, the
         accounting properties... accordingly for the chosen company.
         '''
-        obj_multi = self.browse(cr, uid, ids[0])
-        company_id = obj_multi.company_id.id
+        obj_wizard = self.browse(cr, uid, ids[0])
+        company_id = obj_wizard.company_id.id
         # If the floats for sale/purchase rates have been filled, create templates from them
-        self._create_tax_templates_from_rates(cr, uid, obj_multi, company_id, context=context)
+        self._create_tax_templates_from_rates(cr, uid, obj_wizard, company_id, context=context)
 
         # Install all the templates objects and generate the real objects
-        acc_template_ref = self._install_template(cr, uid, obj_multi.chart_template_id.id, company_id, code_digits=obj_multi.code_digits, obj_multi=obj_multi, context=context)
+        acc_template_ref = self._install_template(cr, uid, obj_wizard.chart_template_id.id, company_id, code_digits=obj_wizard.code_digits, obj_wizard=obj_wizard, context=context)
 
         # Create Bank journals
-        self._create_bank_journals_from_o2m(cr, uid, obj_multi, company_id, acc_template_ref, context=context)
+        self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
         return True
 
     def _prepare_bank_journal(self, cr, uid, line, current_num, default_account_id, company_id, context=None):
@@ -3390,12 +3401,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'company_id': company_id,
         }
 
-    def _create_bank_journals_from_o2m(self, cr, uid, obj_multi, company_id, acc_template_ref, context=None):
+    def _create_bank_journals_from_o2m(self, cr, uid, obj_wizard, company_id, acc_template_ref, context=None):
         '''
         This function creates bank journals and its accounts for each line encoded in the field bank_accounts_id of the
         wizard.
 
-        :param obj_multi: the current wizard that generates the COA from the templates.
+        :param obj_wizard: the current wizard that generates the COA from the templates.
         :param company_id: the id of the company for which the wizard is running.
         :param acc_template_ref: the dictionary containing the mapping between the ids of account templates and the ids
             of the accounts that have been generated from them.
@@ -3406,15 +3417,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # Build a list with all the data to process
         journal_data = []
-        if obj_multi.bank_accounts_id:
-            for acc in obj_multi.bank_accounts_id:
+        if obj_wizard.bank_accounts_id:
+            for acc in obj_wizard.bank_accounts_id:
                 vals = {
                     'acc_name': acc.acc_name,
                     'account_type': acc.account_type,
                     'currency_id': acc.currency_id.id,
                 }
                 journal_data.append(vals)
-        ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
+        ref_acc_bank = obj_wizard.chart_template_id.bank_account_view_id
         if journal_data and not ref_acc_bank.code:
             raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of accounts hasn\'t a code.'))
 
