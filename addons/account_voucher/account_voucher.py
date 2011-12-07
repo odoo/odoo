@@ -847,6 +847,7 @@ class account_voucher(osv.osv):
         '''
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
+        tax_obj = self.pool.get('account.tax')
         tot_line = line_total
         rec_lst_ids = []
 
