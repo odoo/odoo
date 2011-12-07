@@ -89,13 +89,6 @@ class pos_box_out(osv.osv_memory):
                 raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
             if statement_id:
                 statement_id = statement_id[0]
-            if not statement_id:
-                statement_id = statement_obj.create(cr, uid, {
-                                    'date': time.strftime('%Y-%m-%d 00:00:00'),
-                                    'journal_id': data['journal_id'],
-                                    'company_id': curr_company,
-                                    'user_id': uid,
-                                }, context=context)
             vals['statement_id'] = statement_id
             vals['journal_id'] = data['journal_id']
             if acc_id:
