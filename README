@@ -1,55 +1,29 @@
-About OpenERP
+pydot - Python interface to Graphviz's Dot language
+Ero Carrera (c) 2004-2007
+ero@dkbza.org
+
+This code is distributed under the MIT license.
+
+Requirements:
 -------------
 
-OpenERP is an OpenSrouce/Free software Enterprise Resource Planning and
-Customer Relationship Management software. More info at:
+pyparsing: pydot requires the pyparsing module in order to be
+	able to load DOT files.
 
-    http://www.openerp.com
+GraphViz:  is needed in order to render the graphs into any of
+	the plethora of output formats supported.
 
-Installation on Debian Ubuntu
------------------------------
+Installation:
+-------------
 
-Add the the apt repository in your source.list and type:
+Should suffice with doing:
 
-    $ apt-get install openerp
+ python setup.py install
 
-Installation on RedHat, Fedora, CentOS
---------------------------------------
+Needless to say, no installation is needed just to use the module. A mere:
 
-Install the required dependencies:
+ import pydot
 
-    $ yum install python
-    $ easy_install pip
-    $ pip install .....
-
-Install the openerp rpm
-
-    $ rpm -i openerp-VERSION.rpm
-
-Installation on Windows
------------------------
-
-Installation on MacOSX
------------------------
-
-Setuping you first database
----------------------------
-
-Point your browser to http://localhost:8069/ and click "Database", the default
-master password is "admin".
-
-Detailed System Requirements
-----------------------------
-
-You need the following software installed:
-
-python, postgresql-client, python-dateutil, python-gdata, python-ldap,
-python-libxslt1, python-lxml, python-mako, python-openid, python-psycopg2,
-python-pybabel, python-pychart, python-pydot, python-pyparsing,
-python-reportlab, python-simplejson, python-tz, python-vobject, python-webdav,
-python-werkzeug, python-yaml, python-zsi, graphviz, ghostscript, postgresql,
-python-imaging, python-matplotlib
-
-For Luxembourg localization, you also need:
-* pdftk (http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/)
+should do it, provided that the directory containing the modules is on Python
+module search path.
 

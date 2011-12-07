@@ -92,7 +92,7 @@ setuptools.setup(
           'mako',
           'psycopg2',
           'pydot',
-          'python-dateutil',
+          'python-dateutil < 2',
           'python-ldap',
           'python-openid',
           'pytz',

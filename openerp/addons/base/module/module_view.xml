@@ -39,24 +39,19 @@
             <field name="arch" type="xml">
                 <search string="Search modules">
                     <group col='10' colspan='4'>
+                        <filter icon="terp-check" string="Main Apps" domain="[('core', '=', 1)]"/>
+                        <filter icon="terp-check" string="Extra" domain="[('core', '=', 0)]"/>
+
+                        <separator orientation="vertical"/>
                         <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
-                        <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable'])]"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To be upgraded" domain="[('state','in', ['to upgrade', 'to remove', 'to install'])]"/>
+                        <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-camera_test" string="Certified" domain="[('certificate','&lt;&gt;', False)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="complexity"/>
-                        <field name="description"/>
-                        <field name="dependencies_id"/>
-                        <field name="state"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
-                        <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <field name="name"
+                            domain="['|','|', ('name','ilike',self), ('description','ilike',self), ('shortdesc','ilike',self) ]"
+                            string="Name / Keywords"/>
+                        <field name="name"
+                            domain="['|','|', ('name','ilike',self), ('description','ilike',self), ('shortdesc','ilike',self) ]"
+                            string="Name / Keywords"/>
                     </group>
                </search>
             </field>
@@ -118,13 +113,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module">
-                    <field name="name" select="1"/>
-                    <field name="certificate" />
-                    <field colspan="4" name="shortdesc" select="2"/>
-                    <field name="category_id"/>
-                    <field name="complexity"/>
-                    <field name="demo" readonly="1"/>
-                    <field name="icon"/>
+                    <group colspan="4" col="6">
+                        <field name="name"/>
+                        <field name="shortdesc"/>
+                        <field name="certificate" />
+                        <field name="category_id"/>
+                        <field name="complexity"/>
+                        <field name="demo"/>
+                        <field name="icon"/>
+                        <field name="core"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Module">
                             <group colspan="4" col="4">

@@ -75,14 +75,14 @@ def initialize(cr):
 
         cr.execute('INSERT INTO ir_module_module \
                 (author, website, name, shortdesc, description, \
-                    category_id, state, certificate, web, license, complexity) \
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+                    category_id, state, certificate, web, license, complexity, core, icon) \
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
             info['author'],
             info['website'], i, info['name'],
             info['description'], category_id, state, info['certificate'],
             info['web'],
             info['license'],
-            info['complexity']))
+            info['complexity'], info['core'], info['icon']))
         id = cr.fetchone()[0]
         cr.execute('INSERT INTO ir_model_data \
             (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
