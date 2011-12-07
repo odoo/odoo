@@ -837,7 +837,8 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     init: function(parent, element_id, secondary_menu_id) {
         this._super(parent, element_id);
         this.secondary_menu_id = secondary_menu_id;
-        this.$secondary_menu = $("#" + secondary_menu_id).hide();
+        this.$secondary_menu = $("#" + secondary_menu_id);
+        this.$secondary_menu.hide();
         this.menu = false;
         this.folded = false;
         if (window.localStorage) {
@@ -911,7 +912,10 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         sub_menu_visible = $sub_menu.is(':visible');
         this.$secondary_menu.find('.oe_secondary_menu').hide();
 
-        $('.active', this.$element.add(this.$secondary_menu.show())).removeClass('active');
+        if (this.$secondary_menu.hasClass('oe_folded')) {
+            this.$secondary_menu.show();
+        }
+        $('.active', this.$element.add(this.$secondary_menu)).removeClass('active');
         $main_menu.add($clicked_menu).add($sub_menu).addClass('active');
 
         if (!(this.folded && manual)) {

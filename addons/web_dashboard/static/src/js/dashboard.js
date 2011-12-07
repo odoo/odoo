@@ -376,7 +376,12 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
     template: 'ApplicationTiles',
     start: function () {
         this._super();
+        $('.secondary_menu', this.$element.closest('.openerp')).hide();
         return this.do_display_root_menu();
+    },
+    stop: function () {
+        $('.secondary_menu', this.$element.closest('.openerp')).show();
+        this._super();
     },
     do_display_root_menu: function() {
         var self = this;
