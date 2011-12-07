@@ -120,6 +120,7 @@ will disable LDAP authentication if installed at the same time.
     "data" : [
         "users_ldap_view.xml",
         "user_ldap_installer.xml",
+        "security/ir.model.access.csv",
     ],
     "active": False,
     "installable": True,
