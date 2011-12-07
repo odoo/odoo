@@ -269,7 +269,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             form.show_invalid = false;
             _.each(['date_start', 'date_stop', 'date_delay'], function(field) {
                 var field_name = self[field];
-                if (field_name) {
+                if (field_name && form.fields[field_name]) {
                     field = form.fields[field_name];
                     field.set_value(data[field_name]);
                     field.dirty = true;
