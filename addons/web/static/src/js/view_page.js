@@ -142,7 +142,7 @@ openerp.web.page = function (openerp) {
                             res_model: self.field.relation,
                             res_id: self.value[0],
                             context: self.build_context(),
-                            views: [[false, 'form']],
+                            views: [[false, 'page'], [false, 'form']],
                             target: 'current'
                         });
                         return false;
