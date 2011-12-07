@@ -68,12 +68,16 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
             var rel_ids = values[relational];
             var head = rel_field.string;
             if (rel_ids) {
+                var list_ids = [];
                 var datasearch = new openerp.web.DataSetSearch(self, rel_field.relation, rel_field.context);
                 datasearch.domain=[['id', 'in', rel_ids]];
                 datasearch.read_slice(['name'], {context:rel_field.context, domain: datasearch.domain, limit:80}, function(listrec){
+                    _.each(listrec, function(i) {
+                        list_ids.push(i.id);
+                    });
                     _.extend(rel_field.context,{"html_name_get" : true});
                     var dataset = new openerp.web.DataSet(self, rel_field.relation,rel_field.context);
-                    dataset.name_get(listrec,function(res){
+                    dataset.name_get(list_ids,function(res){
                         var additional = "";
                         if(res['html_name_get']){
                             additional = res['display'];
