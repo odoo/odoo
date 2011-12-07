@@ -660,6 +660,11 @@ users_implied()
 # - Uncategorized groups are presented as boolean fields and grouped in a
 #   section "Others".
 #
+# The user form view is modified by an inherited view (base.user_groups_view);
+# the inherited view replaces the field 'groups_id' by a set of reified group
+# fields (boolean or selection fields).  The arch of that view is regenerated
+# each time groups are changed.
+#
 # Naming conventions for reified groups fields:
 # - boolean field 'in_group_ID' is True iff
 #       ID is in 'groups_id'
