@@ -62,33 +62,29 @@
             <field name="model">ir.module.module</field>
             <field name="type">kanban</field>
             <field name="arch" type="xml">
-                <kanban>
-                    <field name="name"/>
-                    <field name="icon"/>
-                    <field name="complexity"/>
-                    <field name="category_id"/>
-                    <field name="state"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <table border="0">
-                            <tr>
-                                <td>
-                                    <img src="/web/static/src/img/header-preferences.png"/>
-                                </td><td>
-                                    <field name="name"/><br/>
-                                    <field name="category_id"/><br/>
-                                    <field name="complexity"/><br/>
-                                    <field name="state"/>
-                                </td>
-                            </tr>
-                            </table>
-                        </t>
-                    </templates>
-                </kanban>
+
+              <kanban>
+                  <field name="icon"/>
+                  <field name="state"/>
+                  <templates>
+                      <t t-name="kanban-box">
+                        <img t-if="record.icon.value" src="#{record.icon.value}.png" class="module-icon"/>
+                        <img t-if="!record.icon.value" src="/web/static/src/img/header-preferences.png" class="module-icon"/>
+                        <div class="module-desc">
+                          <h4><field name="shortdesc"/></h4>
+                          <p>
+                             <field name="category_id"/><br/>
+                             Complexity: <field name="complexity"/>
+                           </p>
+                          <a type="object" name="button_install" states="uninstalled" class="button">Install</a>
+                          <button t-if="record.state.raw_value == 'installed'" class="label" disabled="disabled">Installed</button>
+                        </div>
+                      </t>
+                  </templates>
+              </kanban>
+
             </field>
         </record>
-
-
 
         <record id="action_module_open_categ" model="ir.actions.act_window">
             <field name="name">Modules</field>
@@ -194,7 +190,7 @@
             <field name="name">Modules</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="domain"/>
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help">You can install new modules in order to activate new features, menu, reports or data in your OpenERP instance. To install some modules, click on the button "Install" from the form view and then click on "Start Upgrade".</field>
