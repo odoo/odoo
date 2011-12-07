@@ -3014,7 +3014,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         cmp_select = []
         acc_template_obj = self.pool.get('account.chart.template')
         company_obj = self.pool.get('res.company')
-        
+
         template_ids = acc_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
         company_ids = company_obj.search(cr, uid, [], context=context)
         #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
@@ -3054,7 +3054,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         @param acc_template_ref: Account templates reference.
         @param company_id: company_id selected from wizard.multi.charts.accounts.
         """
-        
+#TODO: do a for loop
         obj_data = self.pool.get('ir.model.data')
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         obj_journal = self.pool.get('account.journal')
@@ -3068,7 +3068,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         expense_acc_id = acc_template_ref.get(template.property_account_expense_categ.id)
         credit_acc_id = acc_template_ref.get(template.property_account_income_opening.id)
         debit_acc_id = acc_template_ref.get(template.property_account_expense_opening.id)
-                
+
         #Sales Journal
         analytical_sale_ids = analytic_journal_obj.search(cr, uid, [('type','=','sale')], context=context)
         analytical_journal_sale = analytical_sale_ids and analytical_sale_ids[0] or False
@@ -3185,7 +3185,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         @param acc_template_ref: Account templates reference.
         @param company_id: company_id selected from wizard.multi.charts.accounts.
         """
-        
         property_obj = self.pool.get('ir.property')
         field_obj = self.pool.get('ir.model.fields')
         todo_list = [
@@ -3216,16 +3215,19 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             else:
                 #create the property
                 property_obj.create(cr, uid, vals, context=context)
-        
         return True
 
-    def _install_template(self, cr, uid, template_id, company_id, code_digits=None ,tax_data={}, context=None):
+#TODO: find a better namespace for  'obj_multi'
+    def _install_template(self, cr, uid, template_id, company_id, code_digits=None, obj_multi=None, context=None):
+        #TODO docstring me
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         if template.parent_id:
             self._install_template(cr, uid, template.parent_id.id, company_id, code_digits=code_digits, context=context)
-        return self._load_template(cr, uid, template_id, company_id, code_digits=code_digits, tax_data=tax_data,context=context)
+        return self._load_template(cr, uid, template_id, company_id, code_digits=code_digits, obj_multi=obj_multi, context=context)
 
-    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, tax_data={}, context=None):
+    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, obj_multi=None, context=None):
+        #TODO docstring me
+        #TODO refactor me
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         obj_tax_code_template = self.pool.get('account.tax.code.template')
         obj_acc_tax = self.pool.get('account.tax')
@@ -3235,32 +3237,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         ir_values_obj = self.pool.get('ir.values')
 
-        # create tax templates and real taxes from purchase_tax_rate,sale_tax_rate fields
-        if not template.complete_tax_set and tax_data:
-            tax_dict = {'sale': tax_data['sale'], 'purchase': tax_data['purchase']}
-            for tax_type, value in tax_dict.items():
-                tax_name = tax_type == 'sale' and 'TAX Received' or 'TAX Paid'
-                if value > 0.0:
-                    tax_string = _('TAX %s %s%%') % (tax_type, value)
-                    new_tax_code_temp = obj_tax_code_template.create(cr, uid, {'name': tax_string, 'code': tax_string}, context=context)
-                    new_paid_tax_code_temp = obj_tax_code_template.create(cr, uid, {'name': _('%s %s%%') % (tax_name, value), 'code': _('%s %s%%') % (tax_name, value)}, context=context)
-                    sales_tax_temp = obj_tax_temp.create(cr, uid, {
-                                            'name': tax_string,
-                                            'description': tax_string,
-                                            'amount': value/100,
-                                            'base_code_id': new_tax_code_temp,
-                                            'tax_code_id': new_paid_tax_code_temp,
-                                            'ref_base_code_id': new_tax_code_temp,
-                                            'ref_tax_code_id': new_paid_tax_code_temp,
-                                            'type_tax_use': tax_type,
-                                            'installable': True,
-                                            'type': 'percent',
-                                            'sequence': 0,
-                                            'chart_template_id': template_id or False,
-                                }, context=context)
-
 
         # create all the tax code.
+        #TODO in a separated method
         tax_code_template_ref = {}
         tax_code_root_id = template.tax_code_root_id.id
         children_tax_code_template = obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
@@ -3315,47 +3294,176 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                 models =[('product.product',False)], value=[taxes_ref['taxes_id'][tax_data['purchase_tax']]])
         return acc_template_ref
 
+    def _create_tax_templates(self, cr, uid, obj_multi, company_id, context=None):
+        '''
+        This function checks if the chosen chart template is configured as containing a full set of taxes, and if
+        it's not the case, it creates the templates for account.tax.code and for account.account.tax objects accordingly
+        to the provided sale/purchase rates.
+
+        :param obj_multi: browse record of wizard to generate COA from templates
+        :param company_id: id of the company for wich the wizard is running
+        :return: True
+        '''
+        obj_tax_code_template = self.pool.get('account.tax.code.template')
+        obj_tax_temp = self.pool.get('account.tax.template')
+        chart_template = obj_multi.chart_template_id
+        # create tax templates and tax code templates from purchase_tax_rate and sale_tax_rate fields
+        if not chart_template.complete_tax_set:
+            tax_data = {
+                'sale': obj_multi.sale_tax_rate,
+                'purchase': obj_multi.purchase_tax_rate,
+            }
+
+            for tax_type, value in tax_data.items():
+                # don't consider cases where entered value in rates are lower than 0
+                if value >= 0.0:
+                    #create the tax code templates for base and tax
+                    base_code_vals = {
+                        'name': (tax_type == 'sale' and _('Taxable Sales at %s') or _('Taxable Purchases at %')) % value,
+                        'code': (tax_type == 'sale' and _('BASE-S-%s') or _('BASE-P-%s')) %value,
+                        'parent_id': chart_template.tax_code_root_id.id,
+                        'company_id': company_id,
+                    }
+                    new_base_code_id = obj_tax_code_template.create(cr, uid, base_code_vals, context=context)
+                    tax_code_vals = {
+                        'name': (tax_type == 'sale' and _('Tax Received at %s') or _('Tax Paid at %')) % value,
+                        'code': (tax_type == 'sale' and _('TAX-S-%s') or _('TAX-P-%s')) %value,
+                        'parent_id': chart_template.tax_code_root_id.id,
+                        'company_id': company_id,
+                    }
+                    new_tax_code_id = obj_tax_code_template.create(cr, uid, tax_code_vals, context=context)
+                    #create the tax
+                    obj_tax_temp.create(cr, uid, {
+                                            'name': _('Tax %s%%') % value,
+                                            'amount': value/100,
+                                            'base_code_id': new_tax_code_id,
+                                            'tax_code_id': new_paid_tax_code_id,
+                                            'ref_base_code_id': new_tax_code_id,
+                                            'ref_tax_code_id': new_paid_tax_code_id,
+                                            'type_tax_use': tax_type,
+                                            'installable': True,
+                                            'type': 'percent',
+                                            'sequence': 0,
+                                            'chart_template_id': template.id or False,
+                   }, context=context)
+        return True
+
     def execute(self, cr, uid, ids, context=None):
+        '''
+        This function is called at the confirmation of the wizard to generate the COA from the templates. It will read
+        all the provided information to create the accounts, the banks, the journals, the taxes, the tax codes, the
+        accounting properties... accordingly for the chosen company.
+        '''
+        obj_multi = self.browse(cr, uid, ids[0])
+        company_id = obj_multi.company_id.id
+        # If the floats for sale/purchase rates have been filled, create templates from them
+        self._create_tax_templates_from_rates(cr, uid, obj_multi, company_id, context=context)
+
+        # Install all the templates objects and generate the real objects
+        acc_template_ref = self._install_template(cr, uid, obj_multi.chart_template_id.id, company_id, code_digits=obj_multi.code_digits, obj_multi=obj_multi, context=context)
+
+        # Create Bank journals
+        self._create_bank_journals_from_o2m(cr, uid, obj_multi, company_id, acc_template_ref, context=context)
+        return True
+
+    def _prepare_bank_journal(self, cr, uid, line, current_num, default_account_id, company_id, context=None):
+        '''
+        This function prepares the value to use for the creation of a bank journal created through the wizard of 
+        generating COA from templates.
+
+        :param line: dictionary containing the values encoded by the user related to his bank account
+        :param current_num: integer corresponding to a counter of the already created bank journals through this wizard.
+        :param default_account_id: id of the default debit.credit account created before for this journal.
+        :param company_id: id of the company for which the wizard is running
+        :return: mapping of field names and values
+        :rtype: dict
+        '''
+        obj_data = self.pool.get('ir.model.data')
+        # Get the id of journal views
+        tmp = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi')
+        view_id_cur = tmp and tmp[1] or False
+        tmp = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view')
+        view_id_cash = tmp and tmp[1] or False
+        vals = {
+                'name': line['acc_name'],
+                'code': _('BNK') + str(current_num),
+                'type': line['account_type'] == 'cash' and 'cash' or 'bank',
+                'company_id': company_id,
+                'analytic_journal_id': False,
+                'currency_id': False,
+                'default_credit_account_id': default_account_id,
+                'default_debit_account_id': default_account_id,
+        }
+        if line['currency_id']:
+            vals_journal['view_id'] = view_id_cur
+            vals_journal['currency'] = line['currency_id']
+        else:
+            vals_journal['view_id'] = view_id_cash
+        return vals
+
+    def _prepare_bank_account(self, cr, uid, line, new_code, acc_template_ref, ref_acc_bank, company_id, context=None):
+        '''
+        This function prepares the value to use for the creation of the default debit and credit accounts of a
+        bank journal created through the wizard of generating COA from templates.
+
+        :param line: dictionary containing the values encoded by the user related to his bank account
+        :param new_code: integer corresponding to the next available number to use as account code
+        :param acc_template_ref: the dictionary containing the mapping between the ids of account templates and the ids
+            of the accounts that have been generated from them.
+        :param ref_acc_bank: browse record of the account template set as root of all bank accounts for the chosen
+            template
+        :param company_id: id of the company for which the wizard is running
+        :return: mapping of field names and values
+        :rtype: dict
+        '''
+        obj_data = self.pool.get('ir.model.data')
+
+        # Get the id of the user types fr-or cash and bank
+        tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_cash')
+        cash_type = tmp and tmp[1] or False
+        tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_bank')
+        bank_type = tmp and tmp[1] or False
+        return {
+                'name': line['acc_name'],
+                'currency_id': line['currency_id'],
+                'code': new_code,
+                'type': 'liquidity',
+                'user_type': line['account_type'] == 'cash' and cash_type or bank_type,
+                'parent_id': acc_template_ref[ref_acc_bank.id] or False,
+                'company_id': company_id,
+        }
+
+    def _create_bank_journals_from_o2m(self, cr, uid, obj_multi, company_id, acc_template_ref, context=None):
+        '''
+        This function creates bank journals and its accounts for each line encoded in the field bank_accounts_id of the
+        wizard.
+
+        :param obj_multi: the current wizard that generates the COA from the templates.
+        :param company_id: the id of the company for which the wizard is running.
+        :param acc_template_ref: the dictionary containing the mapping between the ids of account templates and the ids
+            of the accounts that have been generated from them.
+        :return: True
+        '''
         obj_acc = self.pool.get('account.account')
         obj_journal = self.pool.get('account.journal')
 
-        obj_multi = self.browse(cr, uid, ids[0])
-        company_id = obj_multi.company_id.id
-
-        code_digits = obj_multi.code_digits
-        ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
-
+        # Build a list with all the data to process
         journal_data = []
-        tax_data = {
-                    'sale': obj_multi.sale_tax_rate, 
-                    'purchase': obj_multi.purchase_tax_rate, 
-                    'sale_tax': obj_multi.complete_tax_set and obj_multi.sale_tax.id or False, 
-                    'purchase_tax': obj_multi.complete_tax_set and obj_multi.purchase_tax.id or False, 
-                     }
-
-        acc_template_ref = self._install_template(cr, uid, obj_multi.chart_template_id.id, company_id, code_digits=code_digits, tax_data=tax_data, context=context)                         
         if obj_multi.bank_accounts_id:
             for acc in obj_multi.bank_accounts_id:
-                journal_data.append({
-                            'acc_name': acc.acc_name,
-                            'account_type': acc.account_type,
-                            'currency_id': acc.currency_id.id,
-                            })
+                vals = {
+                    'acc_name': acc.acc_name,
+                    'account_type': acc.account_type,
+                    'currency_id': acc.currency_id.id,
+                }
+                journal_data.append(vals)
+        ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
+        if journal_data and not ref_acc_bank.code:
+            raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of accounts hasn\'t a code.'))
 
-        #Create Bank journals
         current_num = 1
-        valid = True
-        obj_data = self.pool.get('ir.model.data')
-        data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi') 
-        view_id_cur = data and data[1] or False
-
-        data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view') 
-        view_id_cash = data and data[1] or False
-
         for line in journal_data:
-            #create the account_account for this bank journal
-            if not ref_acc_bank.code:
-                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of accounts hasn\'t a code.'))
+            # Seek the next available number for the account code
             while True:
                 new_code = str(ref_acc_bank.code.ljust(code_digits-len(str(current_num)), '0')) + str(current_num)
                 ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company_id)])
@@ -3363,41 +3471,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     break
                 else:
                     current_num += 1
-            #TODO: create proper user_type for account creation.
-            user_type = self.pool.get('account.account.type').search(cr, uid, [('name', '=', line['account_type'])], context=context)
-            vals = {
-                'name': line['acc_name'],
-                'currency_id': line['currency_id'],
-                'code': new_code,
-                'type': 'liquidity',
-                'user_type': 1,
-                'reconcile': True,
-                'parent_id': acc_template_ref[ref_acc_bank.id] or False,
-                'company_id': company_id,
-            }
-            acc_cash_id  = obj_acc.create(cr,uid,vals)
+            # Create the default debit/credit accounts for this bank journal
+            vals = self._prepare_bank_account(cr, uid, line, new_code, acc_template_ref, ref_acc_bank, company_id, context=context)
+            default_account_id  = obj_acc.create(cr, uid, vals, context=context)
 
             #create the bank journal
-            vals_journal = {
-                'name': vals['name'],
-                'code': _('BNK') + str(current_num),
-                'type': line['account_type'] == 'cash' and 'cash' or 'bank',
-                'company_id': company_id,
-                'analytic_journal_id': False,
-                'currency_id': False,
-            }
-            if line['currency_id']:
-                vals_journal['view_id'] = view_id_cur
-                vals_journal['currency'] = line['currency_id']
-            else:
-                vals_journal['view_id'] = view_id_cash
-            vals_journal['default_credit_account_id'] = acc_cash_id
-            vals_journal['default_debit_account_id'] = acc_cash_id
+            vals_journal = self._prepare_bank_journal(cr, uid, line, current_num, default_account_id, company_id, context=context)
             obj_journal.create(cr, uid, vals_journal)
             current_num += 1
-            valid = True
         return True
-
 
 wizard_multi_charts_accounts()
 
