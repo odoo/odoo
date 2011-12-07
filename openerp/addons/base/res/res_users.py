@@ -572,6 +572,12 @@ class cset(object):
     def __iter__(self):
         return iter(self.elements)
 
+def concat(ls):
+    """ return the concatenation of a list of iterables """
+    res = []
+    for l in ls: res.extend(l)
+    return res
+
 
 
 class groups_implied(osv.osv):
@@ -636,14 +642,10 @@ class users_implied(osv.osv):
         res = super(users_implied, self).write(cr, uid, ids, values, context)
         if values.get('groups_id'):
             # add implied groups for all users
-            groups_obj = self.pool.get('res.groups')
             for user in self.browse(cr, uid, ids):
-                groups = set(user.groups_id)
-                for g in user.groups_id:
-                    groups.update(g.trans_implied_ids)
-                if len(groups) != len(user.groups_id):
-                    values = {'groups_id': [(6, 0, map(int, groups))]}
-                    super(users_implied, self).write(cr, uid, [user.id], values, context)
+                gs = set(concat([g.trans_implied_ids for g in user.groups_id]))
+                vals = {'groups_id': [(4, g.id) for g in gs]}
+                super(users_implied, self).write(cr, uid, [user.id], vals, context)
         return res
 
 users_implied()
