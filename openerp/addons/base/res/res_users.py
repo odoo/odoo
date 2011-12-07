@@ -38,7 +38,6 @@ import openerp.exceptions
 class groups(osv.osv):
     _name = "res.groups"
     _description = "Access Groups"
-    _order = 'full_name'
     _rec_name = 'full_name'
 
     def _get_full_name(self, cr, uid, ids, field, arg, context=None):
@@ -50,12 +49,6 @@ class groups(osv.osv):
                 res[g.id] = g.name
         return res
 
-    def _from_group_ids(self, cr, uid, ids, context=None):
-        return ids
-
-    def _from_category_ids(obj, cr, uid, ids, context=None):
-        return obj.pool.get('res.groups').search(cr, uid, [('category_id', 'in', ids)], context=context)
-
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
@@ -65,15 +58,11 @@ class groups(osv.osv):
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'comment' : fields.text('Comment',size=250),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
-        'full_name': fields.function(_get_full_name, type='char', string='Group Name',
-            store={
-                'res.groups': (_from_group_ids, ['category_id', 'name'], 10),
-                'ir.module.category': (_from_category_ids, ['name'], 10),
-            }),
+        'full_name': fields.function(_get_full_name, type='char', string='Group Name'),
     }
 
     _sql_constraints = [
-        ('name_uniq', 'unique (full_name)', 'The name of the group must be unique !')
+        ('name_uniq', 'unique (COALESCE(category_id, 0), name)', 'The name of the group must be unique !')
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):
