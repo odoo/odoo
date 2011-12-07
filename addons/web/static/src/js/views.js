@@ -90,6 +90,10 @@ session.web.ActionManager = session.web.Widget.extend({
         }
         return this[type](action, on_close);
     },
+    null_action: function() {
+        this.dialog_stop();
+        this.content_stop();
+    },
     ir_actions_act_window: function (action, on_close) {
         if (_(['base.module.upgrade', 'base.setup.installer'])
                 .contains(action.res_model)) {
