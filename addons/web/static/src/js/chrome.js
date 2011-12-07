@@ -165,20 +165,62 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
         });
     },
     on_traceback: function(error) {
+        this.servererror = new openerp.web.ServerError(error);
+        this.servererror.start();
+    }
+});
+openerp.web.ServerError = openerp.web.Dialog.extend({
+    template: 'DialogTraceback',
+    init: function(error) {
+        this._super();
+        this.error = error;
+    },
+    start: function() {
+        var self = this;
         var dialog = new openerp.web.Dialog(this, {
-            title: "OpenERP " + _.str.capitalize(error.type),
+            title: "OpenERP " + _.str.capitalize(this.error.type),
             autoOpen: true,
-            width: '90%',
-            height: '90%',
+            width: '80%',
+            height: '50%',
             min_width: '800px',
-            min_height: '600px',
+            min_height: '500px',
             buttons: {
                 Ok: function() {
                     $(this).dialog("close");
                 }
             }
         }).start();
-        dialog.$element.html(QWeb.render('DialogTraceback', {error: error}));
+        dialog.$element.html(QWeb.render('DialogTraceback', {error: this.error}));
+        dialog.$element.find('.expandcase').each(function() {
+            var $this = $(this);
+            $this.click( function() {
+                if ($this.attr('id') == "case2") {
+                    /* call the status method from the server to verify status of contract
+                       if status is full then contract is valid
+                       if status is none then contract is invalid
+                     */
+                    new openerp.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('status', []).then(function(res) {
+                        var hasacontract = res.status == "full";
+                        if (!hasacontract) {
+                            $this.find('a').attr({ href : 'http://www.openerp.com/support-or-publisher-warranty-contract',target: "_blank" });
+                            $this.find('a').css( 'text-decoration', 'none' );
+                        } else {
+                            $this.next().find('[type=button]').click( function() {
+                                var issuename = $('#issuename').val();
+                                var explanation = $('#explanation').val();
+                                var remark = $('#remark').val();
+
+                                // Call the send method from server to send mail with details
+                                new openerp.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('send', [self.error.data,explanation,remark,issuename]);
+                            });
+                            $this.next().toggle().prev().toggleClass("expandcase collapsecase");
+                        }
+                    });
+                } else {
+                    $this.next().toggle().prev().toggleClass("expandcase collapsecase");
+                }
+            });
+        });
     }
 });
 
@@ -529,6 +571,10 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.selected_db = null;
         this.selected_login = null;
+       // var self = this;
+        new openerp.web.DataSet(this, 'publisher_warranty.contract');//.call_and_eval('status', []);//.then(function(res) {
+//            this.contract = res.status;
+        //});
 
         if (this.has_local_storage && this.remember_credentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');

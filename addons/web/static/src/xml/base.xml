@@ -56,7 +56,11 @@
     <tr>
         <td colspan="2">
             <div id="oe_footer" class="oe_footer">
-                <p class="oe_footer_powered">Powered by <a href="http://www.openerp.com">openerp.com</a>.</p>
+                <p class="oe_footer_powered">Powered by <a href="http://www.openerp.com">openerp.com</a>.
+                    <t t-if="contract !== full">
+                    This is a non supported version.
+                    </t>
+                </p>
             </div>
         </td>
     </tr>
@@ -1346,9 +1350,38 @@
     </table>
 </t>
 <t t-name="DialogTraceback">
-    <pre><t t-esc="error.message"/></pre>
-    <hr/>
-    <pre><t t-esc="error.data.debug"/></pre>
+    <div>
+        <div class="expandcase">
+            <span class="case-head"><t t-esc="'Let me fix it'" /></span>
+        </div>
+        <div class="error-detail error-fix">
+            <pre><t t-esc="error.message"/></pre>
+            <hr/>
+            <pre><t t-esc="error.data.debug"/></pre>
+        </div>
+        <div id="case2" class="expandcase">
+            <span class="case-head"><a><t t-esc="'Fix it for me'" /></a></span>
+        </div>
+        <div class="error-detail">
+            <div>
+                <div class="centeralign"><b>OpenERP Enterprise Contract.</b></div>
+                <div class="centeralign">Your request will be sent to OpenERP and OpenERP Enterprise team will reply you shortly.</div>
+                <div class="fielddiv">
+                    <label>Summary:</label><br/>
+                    <div><input id="issuename" type="text" size="15" /></div>
+                </div><br/><br/>
+                <div class="fielddiv">
+                    <span><label>Description:</label></span><br/>
+                    <span><textarea id="explanation" rows="6" ></textarea></span>
+                </div><br/><br/>
+                <div class="fielddiv">
+                    <span><label>What you did:</label></span><br/>
+                    <span><textarea id="remark" rows="6" ></textarea></span>
+                </div>
+                <div class="centeralign"><input type="button" value="Send To OpenERP Enterprise Team" /></div>
+            </div>
+        </div>
+    </div>
 </t>
 <t t-name="SelectCreatePopup">
     <div t-att-id="element_id">

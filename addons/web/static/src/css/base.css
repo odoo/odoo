@@ -1710,3 +1710,43 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 .openerp .oe_view_editor_tree_grid a {
     display: block;
 }
+
+/* Dialog traceback cases */
+.expandcase {
+	background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat;
+    margin-top:10px;
+}
+.collapsecase {
+	background: transparent url(/web/static/src/img/collapse.gif) 0 50% no-repeat;
+	margin-top:10px;
+}
+.case-head{
+	padding-left:18px;
+	margin-top:5px;
+}
+.error-detail{
+    display:none;
+}
+.error-fix{
+	border:1px solid #999999;
+	overflow:auto;
+}
+.fielddiv{
+    display:inline-block;
+}
+.fielddiv label{
+/*	width:20%; */
+	float:left;
+	text-align:right;
+}
+.fielddiv div{
+	width:79%;
+	float:right;
+}
+.fielddiv input[type=text],textarea{
+    width:80%;
+}
+/* for Alignment center */
+.centeralign{
+    text-align:center;
+}
