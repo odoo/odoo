@@ -708,9 +708,14 @@ class groups_view(osv.osv):
         # and introduces the reified group fields
         view = self.get_user_groups_view(cr, uid, context)
         if view:
+            xml = u"""<?xml version="1.0" encoding="utf-8"?>
+<!-- GENERATED AUTOMATICALLY BY GROUPS -->
+<field name="groups_id" position="replace">
+%s
+%s
+</field>
+"""
             xml1, xml2 = [], []
-            xml1.append('<!-- GENERATED AUTOMATICALLY BY GROUPS -->')
-            xml1.append('<field name="groups_id" position="replace">')
             xml1.append('<separator string="%s" colspan="4"/>' % _('Applications'))
             for app, kind, gs in self.get_groups_by_application(cr, uid, context):
                 if kind == 'selection':
@@ -725,8 +730,7 @@ class groups_view(osv.osv):
                     for g in gs:
                         field_name = name_boolean_group(g.id)
                         xml2.append('<field name="%s"/>' % field_name)
-            xml2.append('</field>')
-            view.write({'arch': '\n'.join(xml1 + xml2)})
+            view.write({'arch': xml % ('\n'.join(xml1), '\n'.join(xml2))})
         return True
 
     def get_user_groups_view(self, cr, uid, context=None):
