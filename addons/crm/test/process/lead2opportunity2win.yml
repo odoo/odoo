@@ -96,3 +96,15 @@
     assert opp.name == "Interest in Your New Product", "Opportunity name not correct"
     assert opp.type == 'opportunity', 'Lead is not converted to opportunity!'
     assert opp.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
+-
+  I confirm  Review needs Meeting.
+-
+  !python {model: crm.meeting}: |
+    context.update({'active_model': 'crm.meeting'}) 
+    self.case_open(cr, uid, [ref('crm.crm_case_reviewneeds0')])
+-
+  I Invite a user for Meeting.
+-
+  !python {model: calendar.attendee}: |
+    meeting_id = self.create(cr, uid, {'user_id': ref('base.user_root'), 'email': 'user@meeting.com' })
+    self.do_accept(cr, uid, [meeting_id])
