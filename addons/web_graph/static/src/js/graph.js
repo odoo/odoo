@@ -57,7 +57,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             });
         }
         return $.when(
-            this.dataset.call_and_eval('fields_get', [false, {}], null, 1),
+            this.dataset.call('fields_get', []),
             loaded)
             .then(function (fields_result, view_result) {
                 self.fields = fields_result[0];
@@ -177,14 +177,243 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         graph_data = _(graph_data).sortBy(function (point) {
             return point[self.abscissa] + '[[--]]' + point[self.group_field];
         });
-
         if (this.chart == 'bar') {
             return this.schedule_bar(graph_data);
         } else if (this.chart == "pie") {
             return this.schedule_pie(graph_data);
+        } else if (this.chart == 'line') {
+            return this.schedule_line(graph_data);
+        } else if (this.chart == 'area') {
+            return this.schedule_area(graph_data);
         }
     },
+    schedule_line: function(results) {
+        var self = this;
+        var group_list, view_chart;
+        if (!this.group_field) {
+            view_chart = "line";
+            group_list = _(this.columns).map(function (column, index) {
+                return {
+                    group: column.name,
+                    text: self.fields[column.name].string,
+                    color: COLOR_PALETTE[index % (COLOR_PALETTE.length)]
+                }
+            });
+        } else {
+            view_chart = "line";
+            group_list = _(results).chain()
+                    .pluck(this.group_field)
+                    .uniq()
+                    .map(function (value, index) {
+                        return {
+                            group: self.ordinate + '_' +
+                                    value.toLowerCase().replace(/[\s\/]+/g,'_'),
+                            text: value,
+                            color: COLOR_PALETTE[index % COLOR_PALETTE.length]
+                        };
+                    }).value();
 
+            results = _(results).chain()
+                .groupBy(function (record) { return record[self.abscissa]; })
+                .map(function (records) {
+                    var r = {};
+                    // second argument is coerced to a str, no good for boolean
+                    r[self.abscissa] = records[0][self.abscissa];
+                    _(records).each(function (record) {
+                        var key = _.str.sprintf('%s_%s',
+                            self.ordinate,
+                            record[self.group_field].toLowerCase().replace(/[\s\/]+/g,'_'));
+                        r[key] = record[self.ordinate];
+                    });
+                    return r;
+                })
+                .value();
+        }
+        var abscissa_description = {
+            title: "<b>" + this.fields[this.abscissa].string + "</b>",
+            template: function (obj) {
+                return obj[self.abscissa] || 'Undefined';
+            }
+        };
+        var ordinate_description = {
+            lines: true,
+            title: "<b>" + this.fields[this.ordinate].string + "</b>"
+        };
+
+        var x_axis, y_axis;
+        x_axis = abscissa_description;
+        y_axis = ordinate_description;
+        var renderer = function () {
+            if (self.$element.is(':hidden')) {
+                self.renderer = setTimeout(renderer, 100);
+                return;
+            }
+            self.renderer = null;
+            var line_chart = new dhtmlXChart({
+                view: view_chart,
+                container: self.element_id+"-linechart",
+                value:"#"+group_list[0].group+"#",
+                item: {
+                    borderColor: group_list[0].color,
+                    color: "#000000"
+                },
+                line: {
+                    color: group_list[0].color,
+                    width: 3
+                },
+                xAxis: x_axis,
+                yAxis: y_axis,
+                padding: {
+                    left: 35,
+                    bottom: 20
+                },
+                origin: 0,
+                values: group_list,
+                legend: {
+                    layout: "x",
+                    align: "left",
+                    valign: "top",
+                    marker: {
+                        type: "round",
+                        width: 12
+                    },
+                    values:group_list
+                }
+               });
+               for (var m = 1; m<group_list.length;m++){
+                var column = group_list[m];
+                if (column.group === self.group_field) { continue; }
+                line_chart.addSeries({
+                        value: "#"+column.group+"#",
+                        item: {
+                            borderColor: column.color,
+                            color: "#000000"
+                        },
+                        line: {
+                            color: column.color,
+                            width: 3
+                        }
+                  });
+                }
+            line_chart.parse(results, "json");
+            self.$element.find("#"+self.element_id+"-linechart").height(
+                self.$element.find("#"+self.element_id+"-linechart").height()+50);
+            line_chart.attachEvent("onItemClick", function(id) {
+                self.open_list_view(line_chart.get(id));
+            });
+        };
+        if (this.renderer) {
+            clearTimeout(this.renderer);
+        }
+        this.renderer = setTimeout(renderer, 0);
+    },
+    schedule_area: function(results) {
+        var self = this;
+        var group_list, view_chart;
+        if (!this.group_field) {
+            view_chart = "area";
+            group_list = _(this.columns).map(function (column, index) {
+                return {
+                    group: column.name,
+                    text: self.fields[column.name].string,
+                    color: COLOR_PALETTE[index % (COLOR_PALETTE.length)]
+                }
+            });
+        } else {
+            // transform series for clustered charts into series for stacked
+            // charts
+            view_chart = "stackedArea";
+            group_list = _(results).chain()
+                    .pluck(this.group_field)
+                    .uniq()
+                    .map(function (value, index) {
+                        return {
+                            group: self.ordinate + '_' +
+                                    value.toLowerCase().replace(/[\s\/]+/g,'_'),
+                            text: value,
+                            color: COLOR_PALETTE[index % COLOR_PALETTE.length]
+                        };
+                    }).value();
+
+            results = _(results).chain()
+                .groupBy(function (record) { return record[self.abscissa]; })
+                .map(function (records) {
+                    var r = {};
+                    // second argument is coerced to a str, no good for boolean
+                    r[self.abscissa] = records[0][self.abscissa];
+                    _(records).each(function (record) {
+                        var key = _.str.sprintf('%s_%s',
+                            self.ordinate,
+                            record[self.group_field].toLowerCase().replace(/[\s\/]+/g,'_'));
+                        r[key] = record[self.ordinate];
+                    });
+                    return r;
+                })
+                .value();
+        }
+        var abscissa_description = {
+            title: "<b>" + this.fields[this.abscissa].string + "</b>",
+            template: function (obj) {
+                return obj[self.abscissa] || 'Undefined';
+            }
+        };
+        var ordinate_description = {
+            lines: true,
+            title: "<b>" + this.fields[this.ordinate].string + "</b>"
+        };
+
+        var x_axis, y_axis;
+        x_axis = abscissa_description;
+        y_axis = ordinate_description;
+        var renderer = function () {
+            if (self.$element.is(':hidden')) {
+                self.renderer = setTimeout(renderer, 100);
+                return;
+            }
+            self.renderer = null;
+            var area_chart = new dhtmlXChart({
+                view: view_chart,
+                container: self.element_id+"-areachart",
+                value:"#"+group_list[0].group+"#",
+                color:group_list[0].color,
+                alpha: 0.6,
+                padding: {
+                    left: 75
+                },
+                yAxis: y_axis,
+                xAxis: x_axis,
+                legend: {
+                        values: group_list,
+                        width: 75,
+                        layout: "x",
+                        align: "left",
+                        valign: "top",
+                        marker: {
+                                type: "round",
+                                width: 12
+                        }
+                }
+            });
+            for (var m = 1; m<group_list.length;m++){
+                var column = group_list[m];
+                if (column.group === self.group_field) { continue; }
+                area_chart.addSeries({
+                    value: "#"+column.group+"#",
+                    color: column.color
+                });
+            };
+            area_chart.parse(results, "json");
+            self.$element.find("#"+self.element_id+"-areachart").height(
+                self.$element.find("#"+self.element_id+"-areachart").height()+50);
+            area_chart.attachEvent("onItemClick", function(id) {
+                self.open_list_view(area_chart.get(id));
+            });
+        };
+        if (this.renderer) {
+            clearTimeout(this.renderer);
+        }
+        this.renderer = setTimeout(renderer, 0);
+    },
     schedule_bar: function(results) {
         var self = this;
         var group_list, view_chart;
@@ -212,7 +441,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             // transform series for clustered charts into series for stacked
             // charts
             view_chart = (this.orientation === 'horizontal')
-                    ? 'stackedBarH' : 'stackedBar';
+                        ? 'stackedBarH' : 'stackedBar';
             group_list = _(results).chain()
                     .pluck(this.group_field)
                     .uniq()
@@ -391,6 +620,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             "domain" : [[record_id, '=', id], ['id','in',this.dataset.ids]],
             "views" : views,
             "type" : "ir.actions.act_window",
+            "auto_search" : true,
             "view_type" : "list",
             "view_mode" : "list"
         });
