@@ -334,7 +334,7 @@ var py = {};
         },
         number: function (str, index) {
             var character = str[index];
-            if (!NUMBER.test(character)) {
+            if (!(character == '.' || NUMBER.test(character))) {
                 this.tokens.push(create(symbols['(number)'], {
                     value: parseFloat(this.builder(true).join(''))
                 }));

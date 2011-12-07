@@ -223,7 +223,6 @@ openerp.web.DiagramView = openerp.web.View.extend({
             res_id: id,
             views : [[false, 'form']],
             type : 'ir.actions.act_window',
-            auto_search : false,
             flags : {
                 search_view: false,
                 sidebar : false,

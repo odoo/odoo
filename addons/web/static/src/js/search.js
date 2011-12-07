@@ -198,17 +198,11 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         var self = this;
         var select = this.$element.find(".oe_search-view-filters-management");
         var val = select.val();
-        
-        if (val.slice(0,1) == "_") { // useless action
-            select.val("_filters");
-            return;
-        }
         switch(val) {
         case 'add_to_dashboard':
             this.on_add_to_dashboard();
             break;
         case 'manage_filters':
-            select.val("_filters");
             this.do_action({
                 res_model: 'ir.filters',
                 views: [[false, 'list'], [false, 'form']],
@@ -216,12 +210,10 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 context: {"search_default_user_id": this.session.uid,
                 "search_default_model_id": this.dataset.model},
                 target: "current",
-                limit : 80,
-                auto_search : true
+                limit : 80
             });
             break;
         case 'save_filter':
-            select.val("_filters");
             var data = this.build_search_data();
             var context = new openerp.web.CompoundContext();
             _.each(data.contexts, function(x) {
@@ -261,6 +253,8 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             val = parseInt(val, 10);
             var filter = this.managed_filters[val];
             this.on_search([filter.domain], [filter.context], []);
+        } else {
+            select.val('');
         }
     },
     on_add_to_dashboard: function() {

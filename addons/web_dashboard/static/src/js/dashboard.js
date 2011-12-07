@@ -24,7 +24,6 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         }).disableSelection().bind('sortstop', self.do_save_dashboard);
 
         // Events
-        this.$element.find('.oe-dashboard-link-undo').click(this.on_undo);
         this.$element.find('.oe-dashboard-link-reset').click(this.on_reset);
         this.$element.find('.oe-dashboard-link-change_layout').click(this.on_change_layout);
 
@@ -46,11 +45,6 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
                 });
             });
         });
-    },
-    on_undo: function() {
-        this.rpc('/web/view/undo_custom', {
-            view_id: this.view.fields_view.view_id
-        }, this.do_reload);
     },
     on_reset: function() {
         this.rpc('/web/view/undo_custom', {
@@ -145,7 +139,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             view_id: this.view.fields_view.view_id,
             arch: arch
         }, function() {
-            self.$element.find('.oe-dashboard-link-undo, .oe-dashboard-link-reset').show();
+            self.$element.find('.oe-dashboard-link-reset').show();
         });
     },
     on_load_action: function(result, index) {
@@ -154,13 +148,11 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             action_attrs = this.actions_attrs[action.id],
             view_mode = action_attrs.view_mode;
 
-        // TODO: Use xmo's python evaluator when ready
         if (action_attrs.context) {
-            action.context = _.extend(action.context || {}, action_attrs.context);
+            action.context = action_attrs.context;
         }
         if (action_attrs.domain) {
-            action.domain = action.domain || [];
-            action.domain.push.apply(action.domain, action_attrs.domain);
+            action.domain = action_attrs.domain;
         }
         var action_orig = _.extend({}, action);
 
@@ -383,25 +375,13 @@ openerp.web_dashboard.apps = {
 openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
     template: 'ApplicationTiles',
     start: function () {
-        var self = this;
         this._super();
-        // Check for installed application
-        var Installer = new openerp.web.DataSet(this, 'base.setup.installer');
-        Installer.call('default_get', [], function (installed_modules) {
-            var installed = _(installed_modules).any(function (active, name) {
-                return _.str.startsWith(name, 'cat') && active; });
-
-            if(installed) {
-                self.do_display_root_menu();
-            } else {
-                self.do_display_installer();
-            }
-        });
+        return this.do_display_root_menu();
     },
     do_display_root_menu: function() {
         var self = this;
-        var dss = new openerp.web.DataSetSearch( this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
-        var r = dss.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
+        return  new openerp.web.DataSetSearch( this, 'ir.ui.menu', null, [['parent_id', '=', false]])
+            .read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
             // Create a matrix of 3*x applications
             var rows = [];
             while (applications.length) {
@@ -413,52 +393,6 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
                     .click(function () {
                         openerp.webclient.menu.on_menu_click(null, $(this).data('menuid'))
                     });
-        });
-        return  r;
-    },
-    do_display_installer: function() {
-        var self = this;
-        var render_ctx = {
-            url: window.location.protocol + '//' + window.location.host + window.location.pathname,
-            session: self.session,
-            rows: openerp.web_dashboard.apps.applications
-        };
-        var installer = QWeb.render('StaticHome', render_ctx);
-        self.$element.append(installer);
-        this.$element.delegate('.oe-static-home-tile-text button', 'click', function () {
-            self.install_module($(this).val());
-        });
-    },
-    install_module: function (module_name) {
-        var self = this;
-        var Modules = new openerp.web.DataSetSearch(
-            this, 'ir.module.module', null,
-            [['name', '=', module_name], ['state', '=', 'uninstalled']]);
-        var Upgrade = new openerp.web.DataSet(this, 'base.module.upgrade');
-
-        $.blockUI();
-        Modules.read_slice(['id'], {}, function (records) {
-            if (!(records.length === 1)) { $.unblockUI(); return; }
-            Modules.call('state_update',
-                [_.pluck(records, 'id'), 'to install', ['uninstalled']],
-                function () {
-                    Upgrade.call('upgrade_module', [[]], function () {
-                        self.run_configuration_wizards();
-                    });
-                }
-            )
-        });
-    },
-    run_configuration_wizards: function () {
-        var self = this;
-        new openerp.web.DataSet(this, 'res.config').call('start', [[]], function (action) {
-            self.widget_parent.widget_parent.do_action(action, function () {
-                openerp.webclient.do_reload();
-            });
-            self.$element.empty();
-            self.do_display_root_menu().then(function () {
-                $.unblockUI();
-            });
         });
     }
 });

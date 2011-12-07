@@ -82,7 +82,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 var type = node.attrs.type || '';
                 if (_.indexOf('action,object,edit,delete,color'.split(','), type) !== -1) {
                     _.each(node.attrs, function(v, k) {
-                        if (_.indexOf('icon,type,name,string,context,states,kanban_states'.split(','), k) != -1) {
+                        if (_.indexOf('icon,type,name,args,string,context,states,kanban_states'.split(','), k) != -1) {
                             node.attrs['data-' + k] = v;
                             delete(node.attrs[k]);
                         }
@@ -380,24 +380,28 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             new_record = {};
         _.each(record, function(value, name) {
             var r = _.clone(self.view.fields_view.fields[name] || {});
-            r.raw_value = value;
+            if ((r.type === 'date' || r.type === 'datetime') && value) {
+                r.raw_value = openerp.web.auto_str_to_date(value);
+            } else {
+                r.raw_value = value;
+            }
             r.value = openerp.web.format_value(value, r);
             new_record[name] = r;
         });
         return new_record;
     },
     render: function() {
-        var ctx = {
+        this.qweb_context = {
             record: this.record,
             widget: this
         }
         for (var p in this) {
             if (_.str.startsWith(p, 'kanban_')) {
-                ctx[p] = _.bind(this[p], this);
+                this.qweb_context[p] = _.bind(this[p], this);
             }
         }
         return this._super({
-            'content': this.view.qweb.render('kanban-box', ctx)
+            'content': this.view.qweb.render('kanban-box', this.qweb_context)
         });
     },
     bind_events: function() {
@@ -408,10 +412,23 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             $show_on_click.toggle();
             self.state.folded = !self.state.folded;
         });
+
+        this.$element.find('[tooltip]').tipTip({
+            maxWidth: 500,
+            defaultPosition: 'top',
+            content: function() {
+                var template = $(this).attr('tooltip');
+                if (!self.view.qweb.has_template(template)) {
+                    return false;
+                }
+                return self.view.qweb.render(template, self.qweb_context);
+            }
+        });
+
         this.$element.find('.oe_kanban_action').click(function() {
             var $action = $(this),
                 type = $action.data('type') || 'button',
-                method = 'do_action_' + type;
+                method = 'do_action_' + (type === 'action' ? 'object' : type);
             if (typeof self[method] === 'function') {
                 self[method]($action);
             } else {

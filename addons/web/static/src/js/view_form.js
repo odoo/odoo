@@ -33,6 +33,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.widgets = {};
         this.widgets_counter = 0;
         this.fields = {};
+        this.fields_order = [];
         this.datarecord = {};
         this.show_invalid = true;
         this.default_focus_field = null;
@@ -87,6 +88,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_loaded: function(data) {
         var self = this;
         if (data) {
+            this.fields_order = [];
             this.fields_view = data;
             var frame = new (this.registry.get_object('frame'))(this, this.fields_view.arch);
 
@@ -156,15 +158,16 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         deferred_stack.push('force resolution if no fields');
         return deferred_stack.then(function() {
             if (!record.id) {
-                // New record: Second pass in order to trigger the onchanges
                 self.show_invalid = false;
-                for (var f in record) {
-                    var field = self.fields[f];
-                    if (field) {
+                // New record: Second pass in order to trigger the onchanges
+                // respecting the fields order defined in the view
+                _.each(self.fields_order, function(field_name) {
+                    if (record[field_name] !== undefined) {
+                        var field = self.fields[field_name];
                         field.dirty = true;
                         self.do_onchange(field);
                     }
-                }
+                });
             }
             self.on_form_changed();
             self.initial_mutating_lock.resolve();
@@ -380,6 +383,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         return def.promise();
     },
     can_be_discarded: function() {
+        return true; // Disabled until the page view and button refactoring is done
         return !this.is_dirty() || confirm(_t("Warning, the record has been modified, your changes will be discarded."));
     },
     /**
@@ -1113,6 +1117,11 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
         if (this.node.tag == 'label' && (this.align === 'left' || this.node.attrs.colspan || (this.string && this.string.length > 32))) {
             this.template = "WidgetParagraph";
             this.colspan = parseInt(this.node.attrs.colspan || 1, 10);
+            // Widgets default to right-aligned, but paragraph defaults to
+            // left-aligned
+            if (isNaN(parseFloat(this.node.attrs.align))) {
+                this.align = 'left';
+            }
         } else {
             this.colspan = 1;
             this.width = '1%';
@@ -1153,6 +1162,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         this.name = node.attrs.name;
         this.value = undefined;
         view.fields[this.name] = this;
+        view.fields_order.push(this.name);
         this.type = node.attrs.widget || view.fields_view.fields[node.attrs.name].type;
         this.element_name = "field_" + this.name + "_" + this.type;
 
@@ -2178,6 +2188,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         var self = this;
         if (!this.dataset)
             return [];
+        this.save_any_view();
         var val = this.dataset.delete_all ? [commands.delete_all()] : [];
         val = val.concat(_.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
@@ -2766,6 +2777,7 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
         this.view_id = 'reference_' + _.uniqueId();
         this.widgets = {};
         this.fields = {};
+        this.fields_order = [];
         this.selection = new openerp.web.form.FieldSelection(this, { attrs: {
             name: 'selection',
             widget: 'selection'

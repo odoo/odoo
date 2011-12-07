@@ -786,12 +786,15 @@ class DataSet(openerpweb.Controller):
         return Model.unlink(ids, req.session.eval_context(req.context))
 
     def call_common(self, req, model, method, args, domain_id=None, context_id=None):
-        domain = args[domain_id] if domain_id and len(args) - 1 >= domain_id  else []
-        context = args[context_id] if context_id and len(args) - 1 >= context_id  else {}
+        has_domain = domain_id is not None and domain_id < len(args)
+        has_context = context_id is not None and context_id < len(args)
+
+        domain = args[domain_id] if has_domain else []
+        context = args[context_id] if has_context else {}
         c, d = eval_context_and_domain(req.session, context, domain)
-        if domain_id and len(args) - 1 >= domain_id:
+        if has_domain:
             args[domain_id] = d
-        if context_id and len(args) - 1 >= context_id:
+        if has_context:
             args[context_id] = c
 
         for i in xrange(len(args)):
@@ -849,12 +852,12 @@ class View(openerpweb.Controller):
         context = req.session.eval_context(req.context)
         fvg = Model.fields_view_get(view_id, view_type, context, toolbar, submenu)
         # todo fme?: check that we should pass the evaluated context here
-        self.process_view(req.session, fvg, context, transform)
+        self.process_view(req.session, fvg, context, transform, (view_type == 'kanban'))
         if toolbar and transform:
             self.process_toolbar(req, fvg['toolbar'])
         return fvg
 
-    def process_view(self, session, fvg, context, transform):
+    def process_view(self, session, fvg, context, transform, preserve_whitespaces=False):
         # depending on how it feels, xmlrpclib.ServerProxy can translate
         # XML-RPC strings to ``str`` or ``unicode``. ElementTree does not
         # enjoy unicode strings which can not be trivially converted to
@@ -872,7 +875,7 @@ class View(openerpweb.Controller):
             xml = self.transform_view(arch, session, evaluation_context)
         else:
             xml = ElementTree.fromstring(arch)
-        fvg['arch'] = web.common.xml2json.Xml2Json.convert_element(xml)
+        fvg['arch'] = web.common.xml2json.Xml2Json.convert_element(xml, preserve_whitespaces)
 
         for field in fvg['fields'].itervalues():
             if field.get('views'):

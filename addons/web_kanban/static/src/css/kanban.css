@@ -18,9 +18,10 @@
 }
 
 .openerp .oe_kanban_group_title {
-    color: #000000;
-    font-size: 130%;
+    font-size: 100%;
     font-weight: bold;
+    padding-left: 2px;
+    color: #333333;
 }
 .openerp .oe_kanban_group_title_undefined {
     color: #666666;
@@ -44,7 +45,7 @@
 .openerp .oe_kanban_fold_icon {
     cursor: pointer;
     float: left;
-    padding: 2px 2px 0 0;
+    padding: 2px;
     width: 16px;
     height: 16px;
     background: url(/web_kanban/static/src/img/minus-icon.png) no-repeat;
@@ -63,6 +64,7 @@
 }
 .openerp ul.oe_kanban_aggregates span {
     text-decoration: underline;
+    font-size: 90%;
 }
 
 .openerp .oe_kanban_action_button {
@@ -85,18 +87,8 @@
     background: #EEE;
     border-bottom: 1px solid #CCC;
 }
-.openerp .oe_kanban_title1 {
-    font-size: 120%;
-    font-weight: bold;
-    padding: 0 4px 0 4px;
-}
-.openerp .oe_kanban_title2 {
-    font-size: 110%;
-    font-weight: bold;
-    padding: 0 4px 0 4px;
-}
-.openerp .oe_kanban_title3 {
-    font-size: 100%;
+.openerp .oe_kanban_title {
+    font-size: 95%;
     font-weight: bold;
     padding: 0 4px 0 4px;
 }
@@ -111,14 +103,18 @@
     margin: 0;
     padding: 0;
 }
+.openerp .oe_kanban_table tr td {
+    padding: 0;
+}
+.openerp .oe_kanban_table tr td.oe_kanban_title {
+    padding: 2px;
+}
 .openerp .oe_kanban_gravatar {
      display: block;
-     border-radius: 2px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
 }
 .openerp .oe_kanban_box_content {
     padding: 4px;
+    font-size: 90%;
 }
 .openerp .oe_kanban_button {
     border: 1px solid #8ec1da;
@@ -193,6 +189,22 @@
 }
 .openerp .oe_kanban_color_border {
     border-color: #CCCCCC;
+}
+.openerp .oe_kanban_tooltip ul,
+.openerp ul.oe_kanban_tooltip {
+    padding: 0 0 4px 0;
+    margin: 5px 0 0 15px;
+    list-style: circle;
+}
+.openerp .oe_kanban_highlight {
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    padding: 1px 5px;
+    margin: 1px 4px;
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 1em;
 }
 
 /* Custom colors are also present in kanban.js */
