@@ -20,5 +20,5 @@
     split_obj.split(cr, uid, [split_id],{"active_model": "stock.move", "active_ids": [ref('stock_move_3')],"active_id": ref('stock_move_2')})
     moves = self.search(cr, uid, [('picking_id','=',move_ids.picking_id.id)])
     assert len(moves) > len(old_moves),"After spliting the picking, new move should be created"
-    new_move = self.browse(cr, uid, moves[-1])
+    new_move = self.browse(cr, uid, moves[-2])
     assert new_move.tracking_id,"After spliting the picking, new move should be created with new pack"
