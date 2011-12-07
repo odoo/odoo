@@ -391,7 +391,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {String} [view="page"] the view type to switch to
      */
     select_record:function (index, view) {
-        view = view || 'page';
+        view = view || index == null ? 'form' : 'page';
         this.dataset.index = index;
         _.delay(_.bind(function () {
             this.do_switch_view(view);
