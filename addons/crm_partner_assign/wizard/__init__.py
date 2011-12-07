@@ -20,6 +20,3 @@
 ##############################################################################
 
 import crm_forward_to_partner
-import crm_merge_opportunity
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

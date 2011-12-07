@@ -880,7 +880,7 @@ class account_fiscalyear(osv.osv):
         for fy in self.browse(cr, uid, ids, context=context):
             ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
             period_obj.create(cr, uid, {
-                    'name': _('Opening Period'),
+                    'name':  "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
                     'code': ds.strftime('00/%Y'),
                     'date_start': ds,
                     'date_stop': ds,

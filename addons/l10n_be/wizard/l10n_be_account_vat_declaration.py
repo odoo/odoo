@@ -70,9 +70,10 @@ class l10n_be_vat_declaration(osv.osv_memory):
             obj_company = data_tax.tax_code_id.company_id
         else:
             obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
-        vat_no = obj_company.partner_id.vat.replace(' ','').upper()
+        vat_no = obj_company.partner_id.vat
         if not vat_no:
             raise osv.except_osv(_('Data Insufficient'), _('No VAT Number Associated with Main Company!'))
+        vat_no = vat_no.replace(' ','').upper()
 
         tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
         ctx = context.copy()

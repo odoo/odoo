@@ -5,6 +5,8 @@
         <menuitem id="base.menu_project_report" name="Reporting"
             groups="project.group_project_manager"
             parent="base.menu_main_pm" sequence="50"/>
+        <menuitem id="project_report_task" name="Tasks"
+            parent="base.menu_project_report"/>
 
         <record id="view_task_project_user_tree" model="ir.ui.view">
             <field name="name">report.project.task.user.tree</field>
@@ -152,7 +154,7 @@
             <field name="help">This report allows you to analyse the performance of your projects and users. You can analyse the quantities of tasks, the hours spent compared to the planned hours, the average number of days to open or close a task, etc.</field>
         </record>
 
-        <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="base.menu_project_report"/>
+        <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="project_report_task"/>
 
    <!-- Views and action for project dashboard -->
    <record id="view_project_vs_remaining_hours_tree" model="ir.ui.view">

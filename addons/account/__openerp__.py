@@ -19,11 +19,11 @@
 #
 ##############################################################################
 {
-    "name" : "Accounting and Financial Management",
+    "name" : "eInvoicing",
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Accounting & Finance',
-    'complexity': "normal",
+    'complexity': "easy",
     "description": """
 Accounting and Financial Management.
 ====================================
