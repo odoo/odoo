@@ -75,6 +75,10 @@ session.web.ActionManager = session.web.Widget.extend({
         }
     },
     do_action: function(action, on_close) {
+        if (!action.type) {
+            console.error("No type for action", action);
+            return;
+        }
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         action.flags = _.extend({
@@ -85,7 +89,7 @@ session.web.ActionManager = session.web.Widget.extend({
             pager : !popup
         }, action.flags || {});
         if (!(type in this)) {
-            console.log("Action manager can't handle action of type " + action.type, action);
+            console.error("Action manager can't handle action of type " + action.type, action);
             return;
         }
         return this[type](action, on_close);
