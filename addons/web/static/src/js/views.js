@@ -643,18 +643,6 @@ session.web.Sidebar = session.web.Widget.extend({
                     }
                 }]);
             }
-            this.add_items('debug', [{
-                label: "Edit Model",
-                callback: function() {
-                    self.rpc('/web/dataset/search_read', {
-                        model: 'ir.model',
-                        fields: ['id'],
-                        domain: [['model', '=', view.dataset.model]]
-                    }, function (result) {
-                        view.on_sidebar_edit_resource('ir.model', result.ids[0]);
-                    });
-                }
-            }]);
             if (view_manager.searchview && view_manager.searchview.view_id) {
                 this.add_items('debug', [{
                     label: "Edit SearchView",
@@ -1024,7 +1012,14 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         console.log('Todo');
     },
     on_sidebar_customize_object: function() {
-        console.log('Todo');
+        var self = this;
+        this.rpc('/web/dataset/search_read', {
+            model: 'ir.model',
+            fields: ['id'],
+            domain: [['model', '=', self.dataset.model]]
+        }, function (result) {
+            self.on_sidebar_edit_resource('ir.model', result.ids[0]);
+        });
     },
     on_sidebar_import: function() {
         var import_view = new session.web.DataImport(this, this.dataset);
