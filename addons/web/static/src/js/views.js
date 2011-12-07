@@ -426,10 +426,11 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
 
         this.$element.find('.oe_get_xml_view').click(function () {
-            // TODO: add search view?
-            $('<pre>').text(session.web.json_node_to_xml(
-                self.views[self.active_view].controller.fields_view.arch, true))
-                    .dialog({ width: '95%'});
+            var view = self.views[self.active_view].controller,
+                view_id = view.fields_view.view_id;
+            if (view_id) {
+                view.on_sidebar_edit_resource('ir.ui.view', view_id);
+            }
         });
         if (this.action.help && !this.flags.low_profile) {
             var Users = new session.web.DataSet(self, 'res.users'),
@@ -589,25 +590,29 @@ session.web.Sidebar = session.web.Widget.extend({
         });
     },
     add_default_sections: function() {
+        var self = this,
+            view = this.widget_parent,
+            view_manager = view.widget_parent,
+            action = view_manager.action;
         if (this.session.uid === 1) {
             this.add_section(_t('Customize'), 'customize');
             this.add_items('customize', [
                 {
                     label: _t("Manage Views"),
-                    callback: this.widget_parent.on_sidebar_manage_views,
+                    callback: view.on_sidebar_manage_views,
                     title: _t("Manage views of the current object")
                 }, {
                     label: _t("Edit Workflow"),
-                    callback: this.widget_parent.on_sidebar_edit_workflow,
+                    callback: view.on_sidebar_edit_workflow,
                     title: _t("Manage views of the current object"),
                     classname: 'oe_hide oe_sidebar_edit_workflow'
                 }, {
                     label: _t("Customize Object"),
-                    callback: this.widget_parent.on_sidebar_customize_object,
+                    callback: view.on_sidebar_customize_object,
                     title: _t("Manage views of the current object")
                 }, {
                     label: _t("Translate"),
-                    callback: this.widget_parent.on_sidebar_translate,
+                    callback: view.on_sidebar_translate,
                     title: _t("Technical translation")
                 }
             ]);
@@ -617,16 +622,48 @@ session.web.Sidebar = session.web.Widget.extend({
         this.add_items('other', [
             {
                 label: _t("Import"),
-                callback: this.widget_parent.on_sidebar_import
+                callback: view.on_sidebar_import
             }, {
                 label: _t("Export"),
-                callback: this.widget_parent.on_sidebar_export
+                callback: view.on_sidebar_export
             }, {
                 label: _t("View Log"),
-                callback: this.widget_parent.on_sidebar_view_log,
+                callback: view.on_sidebar_view_log,
                 classname: 'oe_hide oe_sidebar_view_log'
             }
         ]);
+
+        if (session.connection.debug) {
+            this.add_section("Debug", 'debug');
+            if (action && action.id) {
+                this.add_items('debug', [{
+                    label: "Edit Action",
+                    callback: function() {
+                        view.on_sidebar_edit_resource(action.type, action.id);
+                    }
+                }]);
+            }
+            this.add_items('debug', [{
+                label: "Edit Model",
+                callback: function() {
+                    self.rpc('/web/dataset/search_read', {
+                        model: 'ir.model',
+                        fields: ['id'],
+                        domain: [['model', '=', view.dataset.model]]
+                    }, function (result) {
+                        view.on_sidebar_edit_resource('ir.model', result.ids[0]);
+                    });
+                }
+            }]);
+            if (view_manager.searchview && view_manager.searchview.view_id) {
+                this.add_items('debug', [{
+                    label: "Edit SearchView",
+                    callback: function() {
+                        view.on_sidebar_edit_resource('ir.ui.view', view_manager.searchview.view_id);
+                    }
+                }]);
+            }
+        }
     },
 
     add_toolbar: function(toolbar) {
@@ -1006,6 +1043,25 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             view_type : "list",
             view_mode : "list"
         });
+    },
+    on_sidebar_edit_resource: function(model, id, domain) {
+        var action = {
+            res_model : model,
+            type : 'ir.actions.act_window',
+            view_type : 'form',
+            view_mode : 'form',
+            target : 'new',
+            flags : {}
+        }
+        if (id) {
+            action.res_id = id,
+            action.views = [[false, 'form']];
+        } else if (domain) {
+            action.views = [[false, 'list'], [false, 'form']];
+            action.domain = domain;
+            action.flags.views_switcher = true;
+        }
+        this.do_action(action);
     },
     on_sidebar_view_log: function() {
     },

@@ -62,7 +62,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             .then(function (fields_result, view_result) {
                 self.fields = fields_result[0];
                 self.fields_view = view_result[0];
-                self.on_loaded();
+                self.on_loaded(self.fields_view);
             });
     },
     /**
