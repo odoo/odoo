@@ -197,7 +197,6 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         this.views = {};
         this.flags = this.flags || {};
         this.registry = session.web.views;
-        this.views = [];
         this.views_history = [];
     },
     render: function() {
