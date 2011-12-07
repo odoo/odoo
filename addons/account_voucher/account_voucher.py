@@ -511,6 +511,8 @@ class account_voucher(osv.osv):
         return vals
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context=None):
+        if not journal_id:
+            return {}
         res = self.recompute_voucher_lines(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context=context)
         vals = self.recompute_payment_rate(cr, uid, ids, res, currency_id, date, ttype, journal_id, amount, context=context)
         for key in vals.keys():
