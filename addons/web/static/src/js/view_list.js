@@ -212,7 +212,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         this.$element.find('.oe-list-add')
                 .click(this.do_add_record)
-                .attr('disabled', grouped && !this.options.editable);
+                .attr('disabled', grouped && this.options.editable);
         this.$element.find('.oe-list-delete')
                 .attr('disabled', true)
                 .click(this.do_delete_selected);
