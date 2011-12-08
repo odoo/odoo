@@ -423,23 +423,22 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 self.on_invalid();
                 return $.Deferred().reject();
             } else {
+                var save_deferral;
                 if (!self.datarecord.id) {
                     openerp.log("FormView(", self, ") : About to create", values);
-                    return self.dataset.create(values).pipe(function(r) {
+                    save_deferral = self.dataset.create(values).pipe(function(r) {
                         return self.on_created(r, undefined, prepend_on_create);
-                    }).then(success);
+                    }, null);
                 } else if (_.isEmpty(values)) {
                     openerp.log("FormView(", self, ") : Nothing to save");
-                    if (success) {
-                        success({});
-                    }
-                    return $.Deferred().resolve({}).promise();
+                    save_deferral = $.Deferred().resolve({}).promise();
                 } else {
                     openerp.log("FormView(", self, ") : About to save", values);
-                    return self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
+                    save_deferral = self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
                         return self.on_saved(r);
-                    }).then(success);
+                    }, null);
                 }
+                return save_deferral.then(success);
             }
             } catch (e) {
                 console.error(e);

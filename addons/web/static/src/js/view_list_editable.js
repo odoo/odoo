@@ -303,30 +303,27 @@ openerp.web.list_editable = function (openerp) {
         save_row: function () {
             //noinspection JSPotentiallyInvalidConstructorUsage
             var self = this, done = $.Deferred();
-            this.edition_form.do_save(function (result) {
-                if (result.created && !self.edition_id) {
-                    self.records.add({id: result.result},
-                        {at: self.options.editable === 'top' ? 0 : null});
-                    self.edition_id = result.result;
-                }
-                var edited_record = self.records.get(self.edition_id);
+            return this.edition_form
+                .do_save(null, this.options.editable === 'top')
+                .pipe(function (result) {
+                    if (result.created && !self.edition_id) {
+                        self.records.add({id: result.result},
+                            {at: self.options.editable === 'top' ? 0 : null});
+                        self.edition_id = result.result;
+                    }
+                    var edited_record = self.records.get(self.edition_id);
 
-                $.when(
-                    self.handle_onwrite(self.edition_id),
-                    self.cancel_pending_edition().then(function () {
-                        $(self).trigger('saved', [self.dataset]);
-                    })).then(function () {
-                        done.resolve({
-                            created: result.created || false,
-                            edited_record: edited_record
-                        });
-                    }, function () {
-                        done.reject();
-                    });
-            }, this.options.editable === 'top').fail(function () {
-                done.reject();
-            });
-            return done.promise();
+                    return $.when(
+                        self.handle_onwrite(self.edition_id),
+                        self.cancel_pending_edition().then(function () {
+                            $(self).trigger('saved', [self.dataset]);
+                        })).pipe(function () {
+                            return {
+                                created: result.created || false,
+                                edited_record: edited_record
+                            };
+                        }, null);
+                }, null);
         },
         /**
          * If the current list is being edited, ensures it's saved
