@@ -90,15 +90,12 @@ Dashboard provided by this module:
     ],
     'demo_xml': [
          'mrp_demo.xml',
+         'mrp_production_order_demo.yml'
     ],
     'test': [
-         'test/mrp_procurement.yml',
-         'test/mrp_packs.yml',
-         'test/mrp_phantom_bom.yml',
-         'test/mrp_production_order.yml',
-         'test/mrp_production_cancel.yml',
-         'test/mrp_report.yml',
-
+         'test/order_demo.yml',
+         'test/order_process.yml', 
+         'test/cancel_order.yml',
     ],
     'installable': True,
     'core': True,

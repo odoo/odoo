@@ -71,10 +71,10 @@ class mrp_product_produce(osv.osv_memory):
         if context is None:
             context = {}
         prod_obj = self.pool.get('mrp.production')
-        move_ids = context.get('active_ids', [])
+        production_ids = context.get('active_ids', [])
         for data in self.browse(cr, uid, ids, context=context):
-            for move_id in move_ids:
-                prod_obj.action_produce(cr, uid, move_id,
+            for production_id in production_ids:
+                prod_obj.action_produce(cr, uid, production_id,
                                     data.product_qty, data.mode, context=context)
         return {}
 

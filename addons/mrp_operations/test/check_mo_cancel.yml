@@ -1,0 +1,29 @@
+-
+  I check that there is one Work order generated related to the production order of 5 CPU_GEN.
+-
+  !python {model: mrp.production.workcenter.line}: |
+    from tools.translate import _
+    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo1')),('state','=','draft')])
+    assert order_id, _('No work order defined for this production order!')
+-
+  In order to cancel the production order, I first cancel its picking.
+-
+  !function {model: stock.picking, name: action_cancel}:
+    - model: mrp.production
+      eval: "[obj(ref('mrp_production_mo1')).picking_id.id]"
+-
+  Now I cancel the production order.
+-
+  !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_mo1}
+-
+  Now I check that the production order is cancelled.
+-
+  !assert {model: mrp.production, id: mrp_production_mo1}:
+    - state == 'cancel'
+-
+  I check that the work order related to the production order that is cancelled or not.
+-
+  !python {model: mrp.production.workcenter.line}: |
+    from tools.translate import _
+    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo1')),('state','=','cancel')])
+    assert order_id, _('Work order is not cancelled for this production order!')
