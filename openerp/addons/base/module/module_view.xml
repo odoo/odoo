@@ -65,21 +65,28 @@
 
               <kanban>
                   <field name="icon"/>
+                  <field name="name"/>
                   <field name="state"/>
+                  <field name="complexity"/>
                   <templates>
-                      <t t-name="kanban-box">
-                        <img t-if="record.icon.value" src="#{record.icon.value}.png" class="module-icon"/>
-                        <img t-if="!record.icon.value" src="/web/static/src/img/header-preferences.png" class="module-icon"/>
-                        <div class="module-desc">
-                          <h4><field name="shortdesc"/></h4>
-                          <p>
-                             <field name="category_id"/><br/>
-                             Complexity: <field name="complexity"/>
-                           </p>
-                          <a type="object" name="button_install" states="uninstalled" class="button">Install</a>
-                          <button t-if="record.state.raw_value == 'installed'" class="label" disabled="disabled">Installed</button>
-                        </div>
-                      </t>
+                    <t t-name="kanban-box">
+                      <a type="edit"> 
+                        <img t-attf-src="/#{record.name.value}/static/images/icon.png" class="oe_module_icon"/>
+                      </a>
+                      <div class="oe_module_desc">
+                        <h4><a type="edit"><field name="shortdesc"/></a></h4>
+                        <p>
+                           <field name="category_id"/><br/>
+                           <span t-if="record.complexity.raw_value == 'Expert'" class="oe_label oe_warning">Complex</span>
+                         </p>
+                        <a type="object" name="button_install" states="uninstalled" class="button">Install</a>
+                        <button t-if="record.state.raw_value == 'installed'" class="label" disabled="disabled">Installed</button>
+                      </div>
+                      <script>
+                        $('.oe_module_icon').error(function() { $(this).attr('src', "/base/static/src/img/kanban_partner.png"); });
+                        $('a .oe_module_icon').error(function() { $(this).attr('src', "/base/static/src/img/kanban_partner.png"); });
+                      </script>
+                    </t>
                   </templates>
               </kanban>
 

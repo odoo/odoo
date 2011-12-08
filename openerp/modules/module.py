@@ -251,7 +251,7 @@ def load_information_from_description_file(module):
             info.setdefault('description', '')
             info.setdefault('complexity', 'normal')
             info.setdefault('core', False)
-            info.setdefault('icon', '')
+            info.setdefault('icon', 'images/icon.png')
             info['certificate'] = info.get('certificate') or None
             info['web'] = info.get('web') or False
             info['license'] = info.get('license') or 'AGPL-3'
