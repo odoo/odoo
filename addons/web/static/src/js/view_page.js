@@ -168,7 +168,24 @@ openerp.web.page = function (openerp) {
             }
         }
     });
-    
+    openerp.web.form.FieldReferenceReadonly = openerp.web.form.FieldMany2OneReadonly.extend({
+        set_value: function (value) {
+            if (!value) {
+                return this._super(null);
+            }
+            var reference = value.split(',');
+            this.field.relation = reference[0];
+            var id = parseInt(reference[1], 10);
+            return this._super(id);
+        },
+        get_value: function () {
+            if (!this.value) {
+                return null;
+            }
+            return _.str.sprintf('%s,%d', this.field.relation, this.value[0]);
+        }
+    });
+
     openerp.web.form.FieldMany2ManyReadonly = openerp.web.form.FieldMany2Many.extend({
         force_readonly: true
     });
@@ -188,6 +205,7 @@ openerp.web.page = function (openerp) {
         'many2many' : 'openerp.web.form.FieldMany2ManyReadonly',
         'one2many' : 'openerp.web.form.FieldOne2ManyReadonly',
         'one2many_list' : 'openerp.web.form.FieldOne2ManyReadonly',
+        'reference': 'openerp.web.form.FieldReferenceReadonly',
         'boolean': 'openerp.web.form.FieldBooleanReadonly',
         'float': 'openerp.web.form.FieldCharReadonly',
         'integer': 'openerp.web.form.FieldCharReadonly',

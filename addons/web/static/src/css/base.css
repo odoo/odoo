@@ -956,13 +956,19 @@ label.error {
     background: #f9f9f9;
 }
 /* Unedit Form */
-.openerp .field_char, .openerp .field_date, .openerp .field_float, .openerp .oe_form_field_many2one a {
+.openerp .field_char,
+.openerp .field_date,
+.openerp .field_float,
+.openerp .field_selection,
+.openerp .oe_form_field_many2one a,
+.openerp .oe_form_field_reference a{
     vertical-align: middle;
     padding-top: 3px;
     font-size: 90%;
     color: #222;
 }
-.openerp .oe_form_field_many2one a {
+.openerp .oe_form_field_many2one a,
+.openerp .oe_form_field_reference a {
     color: #9A0404;
     line-height: 12px;
 }
