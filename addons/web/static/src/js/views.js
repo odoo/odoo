@@ -1069,7 +1069,9 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             view_type : 'form',
             view_mode : 'form',
             target : 'new',
-            flags : {}
+            flags : {
+                action_buttons : true
+            }
         }
         if (id) {
             action.res_id = id,
