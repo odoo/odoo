@@ -165,7 +165,7 @@
                            <field name="fax"/>
                            <field name="email" widget="email"/>
                         </group>
-                        <field name="job_ids" mode="tree,form" nolabel="1" colspan="4">
+                        <field name="job_ids" mode="tree,form" nolabel="1" colspan="4" context="{'default_is_job' : True}" default_get="{'is_job' : True}">
                             <tree string="Contacts" editable="top">
                                 <field name="contact_id"/>
                                 <field name="function"/>
@@ -174,16 +174,16 @@
                                 <field name="email"/>
                             </tree>
                             <form string="Contacts">
-                            <group colspan="4" col="4">
-                                <field name="contact_id"/>
-                                <field name="function"/>
-                            </group>
-                            <separator string="Communication" colspan="4"/>
-                            <group colspan="4" col="4">
-                                <field name="phone"/>
-                                <field name="fax"/>
-                                <field name="email" widget="email"/>
-                            </group>
+                                <group colspan="4" col="4">
+                                    <field name="contact_id"/>
+                                    <field name="function"/>
+                                </group>
+                                <separator string="Communication" colspan="4"/>
+                                <group colspan="4" col="4">
+                                    <field name="phone"/>
+                                    <field name="fax"/>
+                                    <field name="email" widget="email"/>
+                                </group>
                             </form>
                         </field>
                     </form>
@@ -298,6 +298,7 @@
 
     <!-- Views for partner job Tree view  -->
 
+    <!--
     <record model="ir.ui.view" id="view_partner_job_tree">
         <field name="name">res.partner.job.tree</field>
         <field name="model">res.partner.job</field>
@@ -315,9 +316,11 @@
             </tree>
         </field>
     </record>
+    -->
 
 <!-- Views for partner job Form view  -->
 
+    <!--
     <record model="ir.ui.view" id="view_partner_job_form">
         <field name="name">res.partner.job.form</field>
         <field name="model">res.partner.job</field>
@@ -337,9 +340,11 @@
             </form>
         </field>
     </record>
+    -->
 
     <!-- Menuitem for res.partner.job -->
 
+    <!--
     <record model="ir.actions.act_window" id="action_res_partner_job">
         <field name="name">Contact's Jobs</field>
         <field name="type">ir.actions.act_window</field>
@@ -352,9 +357,11 @@
         res_model="res.partner.job"
         src_model="res.partner"
         />
+    -->
 
     <!-- Act window defining a shorcut on partner address to open all his jobs -->
 
+    <!--
     <act_window
         id="act_res_partner_jobs" 
         name="Open Jobs"
@@ -362,6 +369,7 @@
         res_model="res.partner.job"
         src_model="res.partner.address"
         />
+    -->
 
 </data>
 </openerp>
