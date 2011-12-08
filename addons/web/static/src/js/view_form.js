@@ -431,7 +431,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 } else if (_.isEmpty(values)) {
                     openerp.log("FormView(", self, ") : Nothing to save");
                     if (success) {
-                        success();
+                        success({});
                     }
                     return $.Deferred().resolve({}).promise();
                 } else {

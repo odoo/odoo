@@ -166,6 +166,35 @@ openerp.web.list_editable = function (openerp) {
             view.arch.attrs.col = 2 * view.arch.children.length;
             return view;
         },
+        on_row_keyup: function (e) {
+            var self = this;
+            switch (e.which) {
+            case KEY_RETURN:
+                this.save_row().then(function (result) {
+                    if (result.created) {
+                        self.new_record();
+                        return;
+                    }
+
+                    var next_record_id,
+                        next_record = self.records.at(
+                                self.records.indexOf(result.edited_record) + 1);
+                    if (next_record) {
+                        next_record_id = next_record.get('id');
+                        self.dataset.index = _(self.dataset.ids)
+                                .indexOf(next_record_id);
+                    } else {
+                        self.dataset.index = 0;
+                        next_record_id = self.records.at(0).get('id');
+                    }
+                    self.edit_record(next_record_id);
+                });
+                break;
+            case KEY_ESCAPE:
+                this.cancel_edition();
+                break;
+            }
+        },
         render_row_as_form: function (row) {
             var self = this;
             this.cancel_pending_edition().then(function () {
@@ -182,18 +211,7 @@ openerp.web.list_editable = function (openerp) {
                     .delegate('button', 'keyup', function (e) {
                         e.stopImmediatePropagation();
                     })
-                    .keyup(function (e) {
-                        switch (e.which) {
-                            case KEY_RETURN:
-                                self.save_row(true);
-                                break;
-                            case KEY_ESCAPE:
-                                self.cancel_edition();
-                                break;
-                            default:
-                                return;
-                        }
-                    });
+                    .keyup($.proxy(self, 'on_row_keyup'));
                 if (row) {
                     $new_row.replaceAll(row);
                 } else if (self.options.editable) {
@@ -269,13 +287,20 @@ openerp.web.list_editable = function (openerp) {
             });
         },
         /**
-         * Saves the current row, and triggers the edition of its following
-         * sibling if asked.
+         * Saves the current row, and returns a Deferred resolving to an object
+         * with the following properties:
          *
-         * @param {Boolean} [edit_next=false] should the next row become editable
-         * @returns {$.Deferred}
+         * ``created``
+         *   Boolean flag indicating whether the record saved was being created
+         *   (``true`` or edited (``false``)
+         * ``edited_record``
+         *   The result of saving the record (either the newly created record,
+         *   or the post-edition record), after insertion in the Collection if
+         *   needs be.
+         *
+         * @returns {$.Deferred<{created: Boolean, edited_record: Record}>}
          */
-        save_row: function (edit_next) {
+        save_row: function () {
             //noinspection JSPotentiallyInvalidConstructorUsage
             var self = this, done = $.Deferred();
             this.edition_form.do_save(function (result) {
@@ -284,33 +309,19 @@ openerp.web.list_editable = function (openerp) {
                         {at: self.options.editable === 'top' ? 0 : null});
                     self.edition_id = result.result;
                 }
-                var edited_record = self.records.get(self.edition_id),
-                    next_record = self.records.at(
-                            self.records.indexOf(edited_record) + 1);
+                var edited_record = self.records.get(self.edition_id);
 
                 $.when(
                     self.handle_onwrite(self.edition_id),
                     self.cancel_pending_edition().then(function () {
                         $(self).trigger('saved', [self.dataset]);
-                        if (!edit_next) {
-                            return;
-                        }
-                        if (result.created) {
-                            self.new_record();
-                            return;
-                        }
-                        var next_record_id;
-                        if (next_record) {
-                            next_record_id = next_record.get('id');
-                            self.dataset.index = _(self.dataset.ids)
-                                    .indexOf(next_record_id);
-                        } else {
-                            self.dataset.index = 0;
-                            next_record_id = self.records.at(0).get('id');
-                        }
-                        self.edit_record(next_record_id);
                     })).then(function () {
-                        done.resolve();
+                        done.resolve({
+                            created: result.created || false,
+                            edited_record: edited_record
+                        });
+                    }, function () {
+                        done.reject();
                     });
             }, this.options.editable === 'top').fail(function () {
                 done.reject();
