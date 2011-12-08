@@ -335,90 +335,6 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
 });
 
 /*
- * ApplicationTiles
- * This client action designed to be used as a dashboard widget display
- * either a list of application to install (if none is installed yet) or
- * a list of root menu
- */
-openerp.web.client_actions.add( 'board.home.applications', 'openerp.web_dashboard.ApplicationTiles');
-openerp.web_dashboard.apps = {
-    applications: [
-        [
-            {
-                module: 'crm', name: 'CRM',
-                help: "Acquire leads, follow opportunities, manage prospects and phone calls, \u2026"
-            }, {
-                module: 'sale', name: 'Sales',
-                help: "Do quotations, follow sales orders, invoice and control deliveries"
-            }, {
-                module: 'account_voucher', name: 'Invoicing',
-                help: "Send invoice, track payments and reminders"
-            }, {
-                module: 'point_of_sale', name: 'Point of Sales',
-                help: "Manage shop sales, use touch-screen POS"
-            }
-        ], [
-            {
-                module: 'purchase', name: 'Purchase',
-                help: "Do purchase orders, control invoices and reception, follow your suppliers, \u2026"
-            }, {
-                module: 'stock', name: 'Warehouse',
-                help: "Track your stocks, schedule product moves, manage incoming and outgoing shipments, \u2026"
-            }, {
-                module: 'mrp', name: 'Manufacturing',
-                help: "Manage your manufacturing, control your supply chain, personalize master data, \u2026"
-            }, {
-                module: 'account_accountant', name: 'Accounting and Finance',
-                help: "Record financial operations, automate followup, manage multi-currency, \u2026"
-            }
-        ], [
-            {
-                module: 'project', name: 'Projects',
-                help: "Manage projects, track tasks, invoice task works, follow issues, \u2026"
-            }, {
-                module: 'hr', name: 'Human Resources',
-                help: "Manage employees and their contracts, follow laves, recruit people, \u2026"
-            }, {
-                module: 'marketing', name: 'Marketing',
-                help: "Manage campaigns, follow activities, automate emails, \u2026"
-            }, {
-                module: 'knowledge', name: 'Knowledge',
-                help: "Track your documents, browse your files, \u2026"
-            }
-        ]
-    ]
-};
-openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
-    template: 'ApplicationTiles',
-    start: function () {
-        this._super();
-        $('.secondary_menu', this.$element.closest('.openerp')).hide();
-        return this.do_display_root_menu();
-    },
-    stop: function () {
-        $('.secondary_menu', this.$element.closest('.openerp')).show();
-        this._super();
-    },
-    do_display_root_menu: function() {
-        var self = this;
-        return  new openerp.web.DataSetSearch( this, 'ir.ui.menu', null, [['parent_id', '=', false]])
-            .read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
-            // Create a matrix of 3*x applications
-            var rows = [];
-            while (applications.length) {
-                rows.push(applications.splice(0, 3));
-            }
-            var tiles = QWeb.render( 'ApplicationTiles.content', {rows: rows});
-            self.$element.append(tiles)
-                .find('.oe-dashboard-home-tile')
-                    .click(function () {
-                        openerp.webclient.menu.on_menu_click(null, $(this).data('menuid'))
-                    });
-        });
-    }
-});
-
-/*
  * Widgets
  * This client action designed to be used as a dashboard widget display
  * the html content of a res_widget given as argument
@@ -457,5 +373,84 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
         }));
     }
 });
+
+/*
+ * HomeTiles this client action display either the list of application to
+ * install (if none is installed yet) or a list of root menu items
+ */
+openerp.web.client_actions.add('default_home', 'session.web_dashboard.ApplicationTiles');
+openerp.web_dashboard.ApplicationTiles = openerp.web.Widget.extend({
+    template: 'web_dashboard.ApplicationTiles',
+    init: function(parent) {
+        this._super(parent);
+    },
+    start: function() {
+        var self = this;
+        var domain = [['application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
+        var ds = new openerp.web.DataSetSearch(this, 'ir.module.module',{},domain);
+        ds.read_slice(['id'], {}, function(result) {
+            console.log(result);
+            if(result.length) {
+                self.on_installed_database();
+            } else {
+                self.on_uninstalled_database();
+            }
+        });
+    },
+    on_uninstalled_database: function() {
+        installer = new openerp.web_dashboard.ApplicationInstaller(this);
+        installer.appendTo(this.$element);
+    },
+    on_installed_database: function() {
+        var self = this;
+        var ds = new openerp.web.DataSetSearch(this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
+        var r = ds.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data', 'module'], {}, function (applications) {
+            //// Create a matrix of 3*x applications
+            //var rows = [];
+            //while (applications.length) {
+            //    rows.push(applications.splice(0, 3));
+            //}
+            //var tiles = QWeb.render('ApplicationTiles.content', {rows: rows});
+            var tiles = QWeb.render('ApplicationTiles.content', {applications: applications});
+            $(tiles).appendTo(self.$element).find('.oe_install-module-link').click(function () {
+                openerp.webclient.menu.on_menu_click(null, $(this).data('menu'))
+            });
+        });
+    }
+});
+
+/**
+ * ApplicationInstaller
+ * This client action  display a list of applications to install.
+ */
+openerp.web.client_actions.add( 'board.application.installer', 'openerp.web_dashboard.ApplicationInstaller');
+openerp.web_dashboard.ApplicationInstaller = openerp.web.Widget.extend({
+    template: 'web_dashboard.ApplicationInstaller',
+    start: function () {
+        var r = this._super();
+        //$('.secondary_menu', this.$element.closest('.openerp')).hide();
+        this.action_manager = new openerp.web.ActionManager(this);
+        this.action_manager.appendTo(this.$element.find('.oe_installer'));
+        this.action_manager.do_action({
+            type: 'ir.actions.act_window',
+            res_model: 'ir.module.module',
+            views: [[false, 'kanban']],
+            flags: {
+                display_title:false,
+                search_view: false,
+                views_switcher: false,
+                action_buttons: false,
+                sidebar: false,
+                pager: false
+            },
+        });
+        return r;
+    },
+    stop: function() {
+        this.action_manager.stop();
+        return this._super();
+    },
+});
+
 
 };
