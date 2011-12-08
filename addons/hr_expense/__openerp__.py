@@ -68,6 +68,6 @@ re-invoice your customer's expenses if your work by project.
     'installable': True,
     'active': False,
     'certificate': '0062479841789',
-    'core': True,
+    'is_application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

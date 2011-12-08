@@ -69,6 +69,6 @@ The validation can be configured in the company:
     'installable': True,
     'active': False,
     'certificate': '0073297700829',
-    'core': True,
+    'is_application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
