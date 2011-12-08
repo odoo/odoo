@@ -49,7 +49,7 @@ FTP client.
     ],
     'installable': True,
     'active': False,
-    'is_application': True,
+    'application': True,
     'certificate': '00934787762705016005',
     'images': ['images/1_configure_ftp.jpeg','images/2_document_browse.jpeg','images/3_document_ftp.jpeg'],
     'post_load': 'post_load',

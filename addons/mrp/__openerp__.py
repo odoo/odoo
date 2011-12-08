@@ -101,7 +101,7 @@ Dashboard provided by this module:
 
     ],
     'installable': True,
-    'is_application': True,
+    'application': True,
     'active': False,
     'certificate': '0032052481373',
 }

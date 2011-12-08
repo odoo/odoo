@@ -71,7 +71,7 @@ Generic Payroll system.
     'installable': True,
     'active': False,
     'certificate' : '001046261404562128861',
-    'is_application': True,
+    'application': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

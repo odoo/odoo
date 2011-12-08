@@ -67,7 +67,7 @@ Dashboard for project members that includes:
     ],
     'installable': True,
     'active': False,
-    'is_application': True,
+    'application': True,
     'certificate': '0075116868317',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

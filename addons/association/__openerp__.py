@@ -37,7 +37,7 @@ It installs the profile for associations to manage events, registrations, member
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'is_application': True,
+    'application': True,
     'certificate': '0078696047261',
     'images': ['images/association1.jpeg'],
 }
