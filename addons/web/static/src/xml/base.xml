@@ -464,7 +464,7 @@
             href="javascript: void(0)"> </a>
     </t>
     <t t-jquery="h2.oe_view_title" t-operation="after">
-        <button class="oe_get_xml_view">
+        <button t-if="self.session.debug" class="oe_get_xml_view">
             View#<span></span>
         </button>
     </t>
