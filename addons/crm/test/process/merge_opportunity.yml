@@ -45,6 +45,36 @@
   !python {model: crm.phonecall}: |
     self.action_make_meeting(cr, uid, [ref("crm.crm_case_phone06")])
 -
+  I set Phone call to Not Held.
+-
+  !python {model: crm.phonecall}: |
+    self.case_pending(cr, uid, [ref("crm.crm_case_phone06")])
+-
+  I check that the phone call is in 'Not Held' state. 
+-
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call Helded}:
+    - state == "pending"
+-
+  I Cancelled the Phone call. 
+-
+  !python {model: crm.phonecall}: |
+    self.case_cancel(cr, uid, [ref("crm.crm_case_phone06")])
+-
+  I check that the phone call is in 'Cancelled' state.
+-
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call Helded}:
+    - state == "cancel"
+-
+  I Reset the Phone call. 
+-
+  !python {model: crm.phonecall}: |
+    self.case_reset(cr, uid, [ref("crm.crm_case_phone06")])
+-
+  I check that the phone call is Reset or Not  
+-
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call Helded}:
+    - state == "open"
+-
   I setting Phone call to Held (Done).
 -
   !python {model: crm.phonecall}: |
