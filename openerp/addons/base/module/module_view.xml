@@ -39,8 +39,8 @@
             <field name="arch" type="xml">
                 <search string="Search modules">
                     <group col='10' colspan='4'>
-                        <filter icon="terp-check" string="Main Apps" domain="[('core', '=', 1)]"/>
-                        <filter icon="terp-check" string="Extra" domain="[('core', '=', 0)]"/>
+                        <filter icon="terp-check" string="Main Apps" domain="[('is_application', '=', 1)]"/>
+                        <filter icon="terp-check" string="Extra" domain="[('is_application', '=', 0)]"/>
 
                         <separator orientation="vertical"/>
                         <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
@@ -121,7 +121,7 @@
                         <field name="complexity"/>
                         <field name="demo"/>
                         <field name="icon"/>
-                        <field name="core"/>
+                        <field name="is_application"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Module">

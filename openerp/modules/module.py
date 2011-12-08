@@ -250,7 +250,7 @@ def load_information_from_description_file(module):
             info.setdefault('name', False)
             info.setdefault('description', '')
             info.setdefault('complexity', 'normal')
-            info.setdefault('core', False)
+            info.setdefault('is_application', False)
             info.setdefault('icon', '')
             info['certificate'] = info.get('certificate') or None
             info['web'] = info.get('web') or False

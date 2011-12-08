@@ -215,7 +215,7 @@ class module(osv.osv):
         'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
         'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
         'web': fields.boolean('Has a web component', readonly=True),
-        'core': fields.boolean('Is a Core Application', readonly=True),
+        'is_application': fields.boolean('Is a Core Application', readonly=True),
         'icon': fields.char('Icon URL', size=128),
         'complexity': fields.selection([('easy','Easy'), ('normal','Normal'), ('expert','Expert')],
             string='Complexity', readonly=True,

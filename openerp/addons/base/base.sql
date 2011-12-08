@@ -295,7 +295,7 @@ CREATE TABLE ir_module_module (
     category_id integer REFERENCES ir_module_category ON DELETE SET NULL,
     certificate character varying(64),
     description text,
-    core boolean default False,
+    is_application boolean default False,
     demo boolean default False,
     web boolean DEFAULT FALSE,
     license character varying(32),
