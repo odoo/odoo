@@ -2465,7 +2465,7 @@ class account_account_template(osv.osv):
             res.append((record['id'],name ))
         return res
 
-    def generate_account(self, cr, uid, template_id, tax_template_ref, code_digits, company_id, context=None):
+    def generate_account(self, cr, uid, template_id, tax_template_ref, acc_template_ref, code_digits, company_id, context=None):
         """
         This method for generating accounts from templates.
         @param cr: A database cursor.
@@ -2481,14 +2481,14 @@ class account_account_template(osv.osv):
         obj_acc = self.pool.get('account.account')
         company_name = self.pool.get('res.company').browse(cr, uid, company_id, context=context).name
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
-        acc_template_ref = {}
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context.copy()
         ctx.update({'defer_parent_store_computation': True})
-        #import pdb;pdb.set_trace()
-        #TODO: this is where the program currently fail as the search doesn't return the template id 16 (bank view id of demo chart C)
-        children_acc_template = self.search(cr, uid, [('parent_id','child_of', [template.account_root_id.id]),'|', ('chart_template_id','=', [template_id]),('chart_template_id','=', False), ('nocreate','!=',True)], order='id')
+        children_acc_template = self.search(cr, uid, ['|', ('chart_template_id','=', [template_id]),'&',('parent_id','child_of', [template.account_root_id.id]),('chart_template_id','=', False), ('nocreate','!=',True)], order='id')
         for account_template in self.browse(cr, uid, children_acc_template, context=context):
+            # skip the root of COA if it's not the main one
+            if (template.account_root_id.id == account_template.id) and template.parent_id:
+                continue
             tax_ids = []
             for tax in account_template.tax_ids:
                 tax_ids.append(tax_template_ref[tax.id])
@@ -2754,20 +2754,19 @@ class account_tax_template(osv.osv):
     }
     _order = 'sequence'
 
-    def generate_tax(self, cr, uid, tax_templates, tax_code_template_ref, company_id, context=None):
+    def _generate_tax(self, cr, uid, tax_templates, tax_code_template_ref, company_id, context=None):
         """
         This method generate taxes from templates.
-        @param cr: A database cursor.
-        @param uid: ID of the user currently logged in.
-        @param tax_templates: Tax templates.
-        @param tax_code_template_ref: Taxcode templates reference.
-        @param company_id: if tax generated from account multi wizard at that time company_id is wizard company_id field
-        or logged user company_id.
-        @param Return: 
-        {'tax_template_to_tax': New generated taxes ids, 
-         'account_dict': Used this reference value for Account Tax, 
-        }
-        """#TODO: improve this docstring
+
+        :param tax_templates: list of browse record of the tax templates to process
+        :param tax_code_template_ref: Taxcode templates reference.
+        :param company_id: id of the company the wizard is running for
+        :returns:
+            {
+            'tax_template_to_tax': mapping between tax template and the newly generated taxes corresponding,
+            'account_dict': dictionary containing a to-do list with all the accounts to assign on new taxes
+            }
+        """
         if context is None:
             context = {}
         res = {}
@@ -3169,11 +3168,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     def generate_properties(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
         """
         This method used for creating properties.
-        @param cr: A database cursor.
-        @param uid: ID of the user currently logged in.
-        @param chart_temp_id: Chart Template Id.
-        @param acc_template_ref: Account templates reference.
-        @param company_id: company_id selected from wizard.multi.charts.accounts.
+
+        :param chart_template_id: id of the current chart template for which we need to create properties
+        :param acc_template_ref: Mapping between ids of account templates and real accounts created from them
+        :param company_id: company_id selected from wizard.multi.charts.accounts.
+        :returns: True
         """
         property_obj = self.pool.get('ir.property')
         field_obj = self.pool.get('ir.model.fields')
@@ -3186,28 +3185,28 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             ('property_account_income','product.template','account.account'),
             ('property_reserve_and_surplus_account','res.company','account.account')
         ]
-        template_id = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
+        template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
         for record in todo_list:
-            rec_list = []
-            rec_list = property_obj.search(cr, uid, [('name','=', record[0]),('company_id', '=', company_id)], context=context)
-            account = getattr(template_id, record[0])
-            field = field_obj.search(cr, uid, [('name', '=', record[0]),('model', '=', record[1]),('relation', '=', record[2])], context=context)
-            vals = {
-                'name': record[0],
-                'company_id': company_id,
-                'fields_id': field[0],
-                'value': account and 'account.account,' + str(acc_template_ref[account.id]) or False,
-            }
-
-            if rec_list:
-                #the property exist: modify it
-                property_obj.write(cr, uid, rec_list, vals, context=context)
-            else:
-                #create the property
-                property_obj.create(cr, uid, vals, context=context)
+            account = getattr(template, record[0])
+            value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
+            if value:
+                field = field_obj.search(cr, uid, [('name', '=', record[0]),('model', '=', record[1]),('relation', '=', record[2])], context=context)
+                vals = {
+                    'name': record[0],
+                    'company_id': company_id,
+                    'fields_id': field[0],
+                    'value': value,
+                }
+                property_ids = property_obj.search(cr, uid, [('name','=', record[0]),('company_id', '=', company_id)], context=context)
+                if property_ids:
+                    #the property exist: modify it
+                    property_obj.write(cr, uid, property_ids, vals, context=context)
+                else:
+                    #create the property
+                    property_obj.create(cr, uid, vals, context=context)
         return True
 
-    def _install_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, acc_ref={}, taxes_ref={}, context=None):
+    def _install_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, acc_ref={}, taxes_ref={}, tax_code_ref={}, context=None):
         '''
         This function recursively loads the template objects and create the real objects from them.
 
@@ -3215,24 +3214,26 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         :param company_id: id of the company the wizard is running for
         :param code_digits: integer that depicts the number of digits the accounts code should have in the COA
         :param obj_wizard: the current wizard for generating the COA from the templates
-        :returns: return a tuple with a dictionary containing the mapping between the account template ids and the ids
-            of the real accounts that have been generated from them, as first item, and a similar dictionary for mapping
-            between tax templates and taxes
-        :rtype: tuple(dict, dict)
+        :returns: return a tuple with a dictionary containing
+            * the mapping between the account template ids and the ids of the real accounts that have been generated
+              from them, as first item,
+            * a similar dictionary for mapping the tax templates and taxes, as second item,
+            * a last identical containing the mapping of tax code templates and tax codes
+        :rtype: tuple(dict, dict, dict)
         '''
-        #import pdb;pdb.set_trace()
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         if template.parent_id:
-            tmp1, tmp2 = self._install_template(cr, uid, template.parent_id.id, company_id, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref, context=context)
+            tmp1, tmp2, tmp3 = self._install_template(cr, uid, template.parent_id.id, company_id, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref, tax_code_ref=tax_code_ref, context=context)
             acc_ref.update(tmp1)
             taxes_ref.update(tmp2)
-        #import pdb;pdb.set_trace()
-        tmp1, tmp2 = self._load_template(cr, uid, template_id, company_id, code_digits=code_digits, obj_wizard=obj_wizard, account_ref=acc_ref, taxes_ref=taxes_ref, context=context)
+            tax_code_ref.update(tmp3)
+        tmp1, tmp2, tmp3 = self._load_template(cr, uid, template_id, company_id, code_digits=code_digits, obj_wizard=obj_wizard, account_ref=acc_ref, taxes_ref=taxes_ref, tax_code_ref=tax_code_ref, context=context)
         acc_ref.update(tmp1)
         taxes_ref.update(tmp2)
-        return acc_ref, taxes_ref
+        tax_code_ref.update(tmp3)
+        return acc_ref, taxes_ref, tax_code_ref
 
-    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, account_ref={}, taxes_ref={}, context=None):
+    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, account_ref={}, taxes_ref={}, tax_code_ref={}, context=None):
         '''
         This function generates all the objects from the templates
 
@@ -3240,10 +3241,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         :param company_id: id of the company the wizard is running for
         :param code_digits: integer that depicts the number of digits the accounts code should have in the COA
         :param obj_wizard: the current wizard for generating the COA from the templates
-        :returns: return a tuple with a dictionary containing the mapping between the account template ids and the ids
-            of the real accounts that have been generated from them, as first item, and a similar dictionary for mapping
-            between tax templates and taxes
-        :rtype: tuple(dict, dict)
+        :returns: return a tuple with a dictionary containing
+            * the mapping between the account template ids and the ids of the real accounts that have been generated
+              from them, as first item,
+            * a similar dictionary for mapping the tax templates and taxes, as second item,
+            * a last identical containing the mapping of tax code templates and tax codes
+        :rtype: tuple(dict, dict, dict)
         '''
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         obj_tax_code_template = self.pool.get('account.tax.code.template')
@@ -3253,15 +3256,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
 
         # create all the tax code.
-        tax_code_template_ref = obj_tax_code_template.generate_tax_code(cr, uid, template.tax_code_root_id.id, company_id, context=context)
+        tax_code_ref.update(obj_tax_code_template.generate_tax_code(cr, uid, template.tax_code_root_id.id, company_id, context=context))
 
         # Generate taxes from templates.
         tax_templates = [x for x in template.tax_template_ids if x.installable]
-        generated_tax_res = obj_tax_temp.generate_tax(cr, uid, tax_templates, tax_code_template_ref, company_id, context=context)
+        generated_tax_res = obj_tax_temp._generate_tax(cr, uid, tax_templates, tax_code_ref, company_id, context=context)
         taxes_ref.update(generated_tax_res['tax_template_to_tax'])
 
         # Generating Accounts from templates.
-        account_template_ref = obj_acc_template.generate_account(cr, uid, template_id, taxes_ref, code_digits, company_id, context=context)
+        account_template_ref = obj_acc_template.generate_account(cr, uid, template_id, taxes_ref, account_ref, code_digits, company_id, context=context)
         account_ref.update(account_template_ref)
 
         # writing account values on tax after creation of accounts
@@ -3273,7 +3276,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 })
 
         # Create Journals
-        self.generate_journals(cr, uid, template_id, account_ref, company_id, context)
+        self.generate_journals(cr, uid, template_id, account_ref, company_id, context=context)
 
         # generate properties function
         self.generate_properties(cr, uid, template_id, account_ref, company_id, context=context)
@@ -3281,7 +3284,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
         obj_fiscal_position_template.generate_fiscal_position(cr, uid, template_id, taxes_ref, account_ref, company_id, context=context)
 
-        return account_ref, taxes_ref
+        return account_ref, taxes_ref, tax_code_ref
 
     def _create_tax_templates_from_rates(self, cr, uid, obj_wizard, company_id, context=None):
         '''
@@ -3355,19 +3358,18 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         self._create_tax_templates_from_rates(cr, uid, obj_wizard, company_id, context=context)
 
         # Install all the templates objects and generate the real objects
-        acc_template_ref, taxes_ref = self._install_template(cr, uid, obj_wizard.chart_template_id.id, company_id, code_digits=obj_wizard.code_digits, obj_wizard=obj_wizard, context=context)
+        acc_template_ref, taxes_ref, tax_code_ref = self._install_template(cr, uid, obj_wizard.chart_template_id.id, company_id, code_digits=obj_wizard.code_digits, obj_wizard=obj_wizard, context=context)
 
         # write values of default taxes for product
         if obj_wizard.sale_tax and taxes_ref:
             ir_values_obj.set(cr, uid, key='default', key2=False, name="taxes_id", company=company_id,
                                 models =[('product.product',False)], value=[taxes_ref[obj_wizard.sale_tax.id]])
-        if obj_wizard.purchase_tax and taxes_ref['taxes_id']:
+        if obj_wizard.purchase_tax and taxes_ref:
                 ir_values_obj.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=company_id,
                                 models =[('product.product',False)], value=[taxes_ref[obj_wizard.purchase_tax.id]])
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
-        #import pdb;pdb.set_trace()
         return True
 
     def _prepare_bank_journal(self, cr, uid, line, current_num, default_account_id, company_id, context=None):

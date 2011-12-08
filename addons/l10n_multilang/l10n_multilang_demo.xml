@@ -94,6 +94,24 @@
             <field name="user_type" ref="account_type_view"/>
             <field name="chart_template_id" ref="account_chart_template_a"/>
         </record>
+        <record model="account.account.template" id="chart_a_receivable">
+            <field name="name">Debtors A</field>
+            <field name="code">A00025</field>
+            <field name="type">receivable</field>
+            <field name="user_type" ref="account_type_receivable"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="chart_a1"/>
+            <field name="chart_template_id" ref="account_chart_template_a"/>
+        </record>
+        <record model="account.account.template" id="chart_a_payable">
+            <field name="name">Creditors A</field>
+            <field name="code">A00026</field>
+            <field name="type">payable</field>
+            <field name="user_type" ref="account_type_payable"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="chart_a1"/>
+            <field name="chart_template_id" ref="account_chart_template_a"/>
+        </record>
 
         <!-- Tax Code template for A-->
         <record id="atax0" model="account.tax.code.template">
@@ -101,12 +119,12 @@
         </record>
 
         <record id="atax1" model="account.tax.code.template">
-            <field name="name">Tax 001 A</field>
+            <field name="name">Base - 001 A</field>
             <field name="parent_id" ref="atax0"/>
         </record>
 
         <record id="atax2" model="account.tax.code.template">
-            <field name="name">Tax 002 A</field>
+            <field name="name">Tax - 002 A</field>
             <field name="parent_id" ref="atax0"/>
         </record>
 
@@ -156,9 +174,9 @@
         <record model="account.account.template" id="chart_b5">
             <field name="name">Creditors B</field>
             <field name="code">B00025</field>
-            <field name="type">view</field>
+            <field name="type">payable</field>
             <field name="user_type" ref="account_type_payable"/>
-            <field name="reconcile" eval="False"/>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="chart_a1"/>
             <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
@@ -189,7 +207,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="acct_type_asset_view"/>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart_c_root"/>
+            <field name="parent_id" ref="chart_a1"/>
             <field name="chart_template_id" ref="account_chart_template_c"/>
         </record>
 
@@ -199,7 +217,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="acct_type_liability_view"/>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart_c_root"/>
+            <field name="parent_id" ref="chart_a1"/>
             <field name="chart_template_id" ref="account_chart_template_c"/>
         </record>
 
@@ -216,7 +234,7 @@
         <record model="account.account.template" id="chart_c4">
             <field name="name">Expense C</field>
             <field name="code">C00024</field>
-            <field name="type">view</field>
+            <field name="type">other</field>
             <field name="user_type" ref="account_type_payable"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="chart_a1"/>
@@ -238,6 +256,8 @@
             <field name="account_root_id" ref="chart_a_root"/>
             <field name="tax_code_root_id" ref="atax0"/>
             <field name="bank_account_view_id" ref="chart_a2"/>
+            <field name="property_account_receivable" ref="chart_a_receivable"/>
+            <field name="property_account_payable" ref="chart_a_payable"/>
         </record>
 
         <record id="account_chart_template_b" model="account.chart.template">
@@ -246,6 +266,7 @@
             <field name="tax_code_root_id" ref="atax0"/>
             <field name="bank_account_view_id" ref="chart_b6"/>
             <field name="parent_id" ref="account_chart_template_a"/>
+            <field name="property_account_payable" ref="chart_b5"/>
         </record>
 
         <record id="account_chart_template_c" model="account.chart.template">
@@ -254,6 +275,7 @@
             <field name="tax_code_root_id" ref="atax0"/>
             <field name="bank_account_view_id" ref="chart_c5"/>
             <field name="parent_id" ref="account_chart_template_a"/>
+            <field name="property_account_expense" ref="chart_c4"/>
         </record>
 
         <!-- Tax for template A-->
@@ -264,6 +286,8 @@
             <field name="amount">0.21</field>
             <field name="type">percent</field>
             <field name="chart_template_id" ref="account_chart_template_a"/>
+            <field name="base_code_id" ref="atax1"/>
+            <field name="tax_code_id" ref="atax2"/>
         </record>
 
         <record id="tax_temp_6" model="account.tax.template">
@@ -273,6 +297,10 @@
             <field name="amount">0.6</field>
             <field name="type">percent</field>
             <field name="chart_template_id" ref="account_chart_template_a"/>
+            <field name="base_code_id" ref="atax1"/>
+            <field name="tax_code_id" ref="atax2"/>
+            <field name="ref_base_code_id" ref="atax1"/>
+            <field name="ref_tax_code_id" ref="atax2"/>
         </record>
 
 
@@ -284,6 +312,10 @@
             <field name="amount">0.4</field>
             <field name="type">percent</field>
             <field name="chart_template_id" ref="account_chart_template_b"/>
+            <field name="base_code_id" ref="atax1"/>
+            <field name="tax_code_id" ref="atax2"/>
+            <field name="ref_base_code_id" ref="atax1"/>
+            <field name="ref_tax_code_id" ref="atax2"/>
         </record>
 
         <record id="tax_temp_12" model="account.tax.template">
@@ -293,6 +325,8 @@
             <field name="amount">0.12</field>
             <field name="type">percent</field>
             <field name="chart_template_id" ref="account_chart_template_b"/>
+            <field name="base_code_id" ref="atax1"/>
+            <field name="tax_code_id" ref="atax2"/>
         </record>
 
         <!-- account.fiscal.position.template -->
