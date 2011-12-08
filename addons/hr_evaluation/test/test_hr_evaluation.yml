@@ -14,9 +14,9 @@
   !python {model: hr_evaluation.evaluation}: |
      self.button_plan_in_progress(cr, uid, [ref('hr_evaluation_evaluation_0')])
 -
-  I check that state is Plan in progress.
+  I check that state is "Plan in progress".
 -
-  !assert {model: hr_evaluation.evaluation, id: hr_evaluation_evaluation_0, severity: error, string: Evaluation should be in open state}:
+  !assert {model: hr_evaluation.evaluation, id: hr_evaluation_evaluation_0, severity: error, string: Evaluation should be 'Plan in progress' state}:
     - state == 'wait'
 -
   I find a mistake on evaluation form. So I cancel the evaluation and again start it.
@@ -29,23 +29,24 @@
     evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0') , context)
     assert evaluation.state == 'draft', 'Evaluation should be in draft state'
     self.button_plan_in_progress(cr, uid, [ref('hr_evaluation_evaluation_0')])
+-
+  I check that state is "Plan in progress" and "Interview Request" record is created
+-
+  !python {model: hr_evaluation.evaluation}: |
     interview_obj = self.pool.get('hr.evaluation.interview')
+    evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0') , context)
+    assert evaluation.state == 'wait', "Evaluation should be 'Plan in progress' state"
     interview_ids = interview_obj.search(cr, uid, [('evaluation_id','=', ref('hr_evaluation_evaluation_0'))])
     assert len(interview_ids), "Interview evaluation survey not created"
--
-  I check that state is "Plan in progress".
--
-  !assert {model: hr_evaluation.evaluation, id: hr_evaluation_evaluation_0, severity: error, string: Evaluation should be in open state}:
-    - state == 'wait'
 -
   Give answer of the first page in "Employee Evaluation" survey.
 -
   !python {model: survey.question.wiz}: |
+    name_wiz_obj=self.pool.get('survey.name.wiz')
     interview_obj = self.pool.get('hr.evaluation.interview')
     interview_ids = interview_obj.search(cr, uid, [('evaluation_id','=', ref('hr_evaluation_evaluation_0'))])
     assert len(interview_ids), "Interview evaluation survey not created"
     ctx = {'active_model':'hr.evaluation.interview', 'active_id': interview_ids[0], 'active_ids': [interview_ids], 'survey_id': ref("survey_2")}
-    name_wiz_obj=self.pool.get('survey.name.wiz')
     name_id = name_wiz_obj.create(cr, uid, {'survey_id': ref("survey_2")})
     ctx ["sur_name_id"] = name_id
     self.create(cr, uid, {str(ref("survey_question_2")) +"_" +str(ref("survey_answer_1")) + "_multi" :'tpa',
@@ -59,8 +60,8 @@
   I close this Evaluation survey by giving answer of questions.
 -
   !python {model: hr_evaluation.evaluation}: |
+    interview_obj = self.pool.get('hr.evaluation.interview')
     evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0'))
-    interview_obj=self.pool.get('hr.evaluation.interview')
     interview_obj.survey_req_done(cr, uid, [r.id for r in evaluation.survey_request_ids])
     for survey in evaluation.survey_request_ids:
         interview = interview_obj.browse(cr, uid, survey.id, context)
