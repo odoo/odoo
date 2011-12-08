@@ -101,6 +101,7 @@ Dashboard provided by this module:
 
     ],
     'installable': True,
+    'core': True,
     'active': False,
     'certificate': '0032052481373',
 }

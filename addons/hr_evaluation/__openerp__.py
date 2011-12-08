@@ -54,6 +54,7 @@ in the form of pdf file. Implements a dashboard for My Current Evaluations
     "active": False,
     "installable": True,
     "certificate" : "00883207679172998429",
+    'core': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

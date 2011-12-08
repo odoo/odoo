@@ -79,5 +79,6 @@ Dashboard for purchase management that includes:
     'installable': True,
     'active': False,
     'certificate': '0057234283549',
+    'core': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

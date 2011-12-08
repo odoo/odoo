@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Long Term Planning",
+    "name": "Long Term Projects",
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
@@ -60,6 +60,7 @@ Features
         "wizard/project_compute_tasks_view.xml",
     ],
     'installable': True,
+    'core': True,
     'active': False,
     'certificate': '001227470751077315069',
 }

@@ -17,7 +17,7 @@
             <field name="inherit_id" ref="hr.board_hr_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/board/column" position="inside">
+                <xpath expr="/form/board/column[1]" position="inside">
                      <action name="%(action_my_expense)d" string="My Expenses"/>
                 </xpath>
             </field>
