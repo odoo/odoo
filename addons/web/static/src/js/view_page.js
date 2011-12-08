@@ -7,7 +7,7 @@ openerp.web.page = function (openerp) {
         form_template: "PageView",
         init: function () {
             this._super.apply(this, arguments);
-            this.registry = openerp.web.form.readonly;
+            this.registry = openerp.web.page.readonly;
         },
         on_loaded: function(data) {
             this._super(data);
@@ -55,10 +55,14 @@ openerp.web.page = function (openerp) {
             return def.promise();
         }
     });
-    openerp.web.form.FieldReadonly = openerp.web.form.Field.extend({
+
+    /** @namespace */
+    openerp.web.page = {};
+
+    openerp.web.page.FieldReadonly = openerp.web.form.Field.extend({
 
     });
-    openerp.web.form.FieldCharReadonly = openerp.web.form.FieldReadonly.extend({
+    openerp.web.page.FieldCharReadonly = openerp.web.page.FieldReadonly.extend({
         template: 'FieldChar.readonly',
         init: function(view, node) {
             this._super(view, node);
@@ -74,7 +78,7 @@ openerp.web.page = function (openerp) {
             return show_value;
         }
     });
-    openerp.web.form.FieldURIReadonly = openerp.web.form.FieldCharReadonly.extend({
+    openerp.web.page.FieldURIReadonly = openerp.web.page.FieldCharReadonly.extend({
         template: 'FieldURI.readonly',
         scheme: null,
         set_value: function (value) {
@@ -84,10 +88,10 @@ openerp.web.page = function (openerp) {
                     .text(displayed);
         }
     });
-    openerp.web.form.FieldEmailReadonly = openerp.web.form.FieldURIReadonly.extend({
+    openerp.web.page.FieldEmailReadonly = openerp.web.page.FieldURIReadonly.extend({
         scheme: 'mailto'
     });
-    openerp.web.form.FieldUrlReadonly = openerp.web.form.FieldURIReadonly.extend({
+    openerp.web.page.FieldUrlReadonly = openerp.web.page.FieldURIReadonly.extend({
         set_value: function (value) {
             var s = /(\w+):(.+)/.exec(value);
             if (!s || !(s[1] === 'http' || s[1] === 'https')) { return; }
@@ -95,12 +99,12 @@ openerp.web.page = function (openerp) {
             this._super(s[2]);
         }
     });
-    openerp.web.form.FieldBooleanReadonly = openerp.web.form.FieldCharReadonly.extend({
+    openerp.web.page.FieldBooleanReadonly = openerp.web.page.FieldCharReadonly.extend({
         set_value: function (value) {
             this._super(value ? '\u2611' : '\u2610');
         }
     });
-    openerp.web.form.FieldSelectionReadonly = openerp.web.form.FieldReadonly.extend({
+    openerp.web.page.FieldSelectionReadonly = openerp.web.page.FieldReadonly.extend({
         template: 'FieldChar.readonly',
         init: function(view, node) {
             // lifted straight from r/w version
@@ -123,7 +127,7 @@ openerp.web.page = function (openerp) {
             this.$element.find('div').text(option ? option[1] : this.values[0][1]);
         }
     });
-    openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldURIReadonly.extend({
+    openerp.web.page.FieldMany2OneReadonly = openerp.web.page.FieldURIReadonly.extend({
         set_value: function (value) {
             value = value || null;
             this.invalid = false;
@@ -168,7 +172,7 @@ openerp.web.page = function (openerp) {
             }
         }
     });
-    openerp.web.form.FieldReferenceReadonly = openerp.web.form.FieldMany2OneReadonly.extend({
+    openerp.web.page.FieldReferenceReadonly = openerp.web.page.FieldMany2OneReadonly.extend({
         set_value: function (value) {
             if (!value) {
                 return this._super(null);
@@ -186,29 +190,29 @@ openerp.web.page = function (openerp) {
         }
     });
 
-    openerp.web.form.FieldMany2ManyReadonly = openerp.web.form.FieldMany2Many.extend({
+    openerp.web.page.FieldMany2ManyReadonly = openerp.web.form.FieldMany2Many.extend({
         force_readonly: true
     });
-    openerp.web.form.FieldOne2ManyReadonly = openerp.web.form.FieldOne2Many.extend({
+    openerp.web.page.FieldOne2ManyReadonly = openerp.web.form.FieldOne2Many.extend({
         force_readonly: true
     });
-    openerp.web.form.readonly = openerp.web.form.widgets.clone({
-        'char': 'openerp.web.form.FieldCharReadonly',
-        'email': 'openerp.web.form.FieldEmailReadonly',
-        'url': 'openerp.web.form.FieldUrlReadonly',
-        'text': 'openerp.web.form.FieldCharReadonly',
-        'text_wiki' : 'openerp.web.form.FieldCharReadonly',
-        'date': 'openerp.web.form.FieldCharReadonly',
-        'datetime': 'openerp.web.form.FieldCharReadonly',
-        'selection' : 'openerp.web.form.FieldSelectionReadonly',
-        'many2one': 'openerp.web.form.FieldMany2OneReadonly',
-        'many2many' : 'openerp.web.form.FieldMany2ManyReadonly',
-        'one2many' : 'openerp.web.form.FieldOne2ManyReadonly',
-        'one2many_list' : 'openerp.web.form.FieldOne2ManyReadonly',
-        'reference': 'openerp.web.form.FieldReferenceReadonly',
-        'boolean': 'openerp.web.form.FieldBooleanReadonly',
-        'float': 'openerp.web.form.FieldCharReadonly',
-        'integer': 'openerp.web.form.FieldCharReadonly',
-        'float_time': 'openerp.web.form.FieldCharReadonly'
+    openerp.web.page.readonly = openerp.web.form.widgets.clone({
+        'char': 'openerp.web.page.FieldCharReadonly',
+        'email': 'openerp.web.page.FieldEmailReadonly',
+        'url': 'openerp.web.page.FieldUrlReadonly',
+        'text': 'openerp.web.page.FieldCharReadonly',
+        'text_wiki' : 'openerp.web.page.FieldCharReadonly',
+        'date': 'openerp.web.page.FieldCharReadonly',
+        'datetime': 'openerp.web.page.FieldCharReadonly',
+        'selection' : 'openerp.web.page.FieldSelectionReadonly',
+        'many2one': 'openerp.web.page.FieldMany2OneReadonly',
+        'many2many' : 'openerp.web.page.FieldMany2ManyReadonly',
+        'one2many' : 'openerp.web.page.FieldOne2ManyReadonly',
+        'one2many_list' : 'openerp.web.page.FieldOne2ManyReadonly',
+        'reference': 'openerp.web.page.FieldReferenceReadonly',
+        'boolean': 'openerp.web.page.FieldBooleanReadonly',
+        'float': 'openerp.web.page.FieldCharReadonly',
+        'integer': 'openerp.web.page.FieldCharReadonly',
+        'float_time': 'openerp.web.page.FieldCharReadonly'
     });
 };
