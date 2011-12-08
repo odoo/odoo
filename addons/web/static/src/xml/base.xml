@@ -460,7 +460,7 @@
         </tr>
     </t>
     <t t-jquery="h2.oe_view_title" t-operation="prepend">
-        <a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
+        <a t-if="self.flags.display_title !== false" class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
             href="javascript: void(0)"> </a>
     </t>
     <t t-jquery="h2.oe_view_title" t-operation="after">
@@ -1412,10 +1412,8 @@
             .replaceAll(this)
             .after($(document.createElement('td')).append(
                 $(document.createElement('button')).attr({
-                    'class': 'oe-edit-row-save', 'type': 'button'}).text('Save')))
-            .before($(document.createElement('td')).append(
-                $(document.createElement('button')).attr({
-                    'class': 'oe-edit-row-cancel', 'type': 'button'}).text('Cancel')))
+                    'class': 'oe-edit-row-save', 'type': 'button'})
+                  .html(' ')))
             .unwrap();
     </t>
 </t>

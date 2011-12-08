@@ -1279,6 +1279,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
         list.$current.sortable({
             axis: 'y',
             items: '> tr[data-id]',
+            containment: 'parent',
             stop: function (event, ui) {
                 var to_move = list.records.get(ui.item.data('id')),
                     target_id = ui.item.prev().data('id'),

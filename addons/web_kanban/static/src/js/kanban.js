@@ -429,7 +429,9 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             var $action = $(this),
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);
-            if (typeof self[method] === 'function') {
+            if (_.str.startsWith(type, 'switch_')) {
+                self.view.do_switch_view(type.substr(7));
+            } else if (typeof self[method] === 'function') {
                 self[method]($action);
             } else {
                 self.do_warn("Kanban: no action for type : " + type);

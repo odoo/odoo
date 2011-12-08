@@ -356,8 +356,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     on_button_save: function() {
         var self = this;
-        return this.do_save().then(function() {
-            self.do_prev_view();
+        return this.do_save().then(function(result) {
+            self.do_prev_view(result.created);
         });
     },
     on_button_cancel: function() {
@@ -423,22 +423,22 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 self.on_invalid();
                 return $.Deferred().reject();
             } else {
+                var save_deferral;
                 if (!self.datarecord.id) {
                     openerp.log("FormView(", self, ") : About to create", values);
-                    return self.dataset.create(values).pipe(function(r) {
+                    save_deferral = self.dataset.create(values).pipe(function(r) {
                         return self.on_created(r, undefined, prepend_on_create);
-                    }).then(success);
+                    }, null);
                 } else if (_.isEmpty(values)) {
                     openerp.log("FormView(", self, ") : Nothing to save");
-                    if (success) {
-                        success();
-                    }
+                    save_deferral = $.Deferred().resolve({}).promise();
                 } else {
                     openerp.log("FormView(", self, ") : About to save", values);
-                    return self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
+                    save_deferral = self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
                         return self.on_saved(r);
-                    }).then(success);
+                    }, null);
                 }
+                return save_deferral.then(success);
             }
             } catch (e) {
                 console.error(e);
@@ -1582,7 +1582,7 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
             .change(function () { ischanging = true; })
             .click(function () { ischanging = false; })
             .keyup(function (e) {
-                if (e.which !== 13 || !ischanging) { return; }
+                if (!_([13, 38, 40]).contains(e.which) || !ischanging) { return; }
                 e.stopPropagation();
                 ischanging = false;
             });
@@ -1790,13 +1790,16 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             minLength: 0,
             delay: 0
         });
-        // used to correct a bug when selecting an element by pushing 'enter' in an editable list
+        // Don't propagate KEY_UP and KEY_DOWN event to parent (for editable
+        // list), don't propagate KEY_RETURN either when the autocomplete
+        // control is currently open
         this.$input.keyup(function(e) {
-            if (e.which === 13) {
-                if (isSelecting)
-                    e.stopPropagation();
+            if (e.which === 38 || e.which === 40) {
+                e.stopPropagation();
+            } else if (isSelecting && e.which === 13) {
+                e.stopPropagation();
+                isSelecting = false;
             }
-            isSelecting = false;
         });
     },
     // autocomplete component content handling
@@ -2449,7 +2452,9 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends open
     do_activate_record: function(index, id) {
         var self = this;
         var pop = new openerp.web.form.FormOpenPopup(this);
-        pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {});
+        pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {
+            readonly: this.widget_parent.is_readonly()
+        });
         pop.on_write_completed.add_last(function() {
             self.reload_content();
         });
@@ -2782,6 +2787,7 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
             name: 'selection',
             widget: 'selection'
         }});
+        this.reference_ready = true;
         this.selection.on_value_changed.add_last(this.on_selection_changed);
         this.m2o = new openerp.web.form.FieldMany2One(this, { attrs: {
             name: 'm2o',
@@ -2791,10 +2797,12 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
     on_nop: function() {
     },
     on_selection_changed: function() {
-        var sel = this.selection.get_value();
-        this.m2o.field.relation = sel;
-        this.m2o.set_value(null);
-        this.m2o.$element.toggle(sel !== false);
+        if (this.reference_ready) {
+            var sel = this.selection.get_value();
+            this.m2o.field.relation = sel;
+            this.m2o.set_value(null);
+            this.m2o.$element.toggle(sel !== false);
+        }
     },
     start: function() {
         this._super();
@@ -2809,11 +2817,18 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
     },
     set_value: function(value) {
         this._super(value);
+        this.reference_ready = false;
+        var vals = [], sel_val, m2o_val;
         if (typeof(value) === 'string') {
-            var vals = value.split(',');
-            this.selection.set_value(vals[0]);
-            this.m2o.set_value(parseInt(vals[1], 10));
+            vals = value.split(',');
         }
+        sel_val = vals[0] || false;
+        m2o_val = vals[1] ? parseInt(vals[1], 10) : false;
+        this.selection.set_value(sel_val);
+        this.m2o.field.relation = sel_val;
+        this.m2o.set_value(m2o_val);
+        this.m2o.$element.toggle(sel_val !== false);
+        this.reference_ready = true;
     },
     get_value: function() {
         var model = this.selection.get_value(),
