@@ -370,10 +370,7 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.Widget.extend({
     },
     start: function() {
         var self = this;
-        var applications = [
-            {module: 'crm', name: 'CRM', menu: 'Sales', help: "Acquire leads, follow opportunities, manage prospects and phone calls, \u2026"},
-        ];
-        var domain = [['core','=',true],['state','=','installed']];
+        var domain = [['is_application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
         var ds = new openerp.web.DataSetSearch(this, 'ir.module.module',{},domain);
         ds.read_slice(['id'], {}, function(result) {
             if(result.length) {
@@ -384,25 +381,22 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.Widget.extend({
         });
     },
     on_uninstalled_database: function() {
-        console.log("UNINSTALLED");
-        this.$element.html("ApplicationInstaller");
         installer = new openerp.web_dashboard.ApplicationInstaller(this);
         installer.appendTo(this.$element);
     },
     on_installed_database: function() {
-        console.log("INSTALLED");
-        this.$element.html("ApplicationTiles");
         var self = this;
-        var ds = new openerp.web.DataSetSearch( this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
-        var r = ds.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
-            // Create a matrix of 3*x applications
-            var rows = [];
-            while (applications.length) {
-                rows.push(applications.splice(0, 3));
-            }
-            var tiles = QWeb.render( 'ApplicationTiles.content', {rows: rows});
-            self.$element.append(tiles).find('.oe-dashboard-home-tile').click(function () {
-                openerp.webclient.menu.on_menu_click(null, $(this).data('menuid'))
+        var ds = new openerp.web.DataSetSearch(this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
+        var r = ds.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data', 'module'], {}, function (applications) {
+            //// Create a matrix of 3*x applications
+            //var rows = [];
+            //while (applications.length) {
+            //    rows.push(applications.splice(0, 3));
+            //}
+            //var tiles = QWeb.render('ApplicationTiles.content', {rows: rows});
+            var tiles = QWeb.render('ApplicationTiles.content', {applications: applications});
+            $(tiles).appendTo(self.$element).find('.oe_install-module-link').click(function () {
+                openerp.webclient.menu.on_menu_click(null, $(this).data('menu'))
             });
         });
     }
@@ -413,59 +407,32 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.Widget.extend({
  * This client action  display a list of applications to install.
  */
 openerp.web.client_actions.add( 'board.application.installer', 'openerp.web_dashboard.ApplicationInstaller');
-openerp.web_dashboard.ApplicationInstaller = openerp.web.View.extend({
+openerp.web_dashboard.ApplicationInstaller = openerp.web.Widget.extend({
     template: 'web_dashboard.ApplicationInstaller',
     start: function () {
-        this._super();
-        $('.secondary_menu', this.$element.closest('.openerp')).hide();
-        this.$element.append("Display ir module module kanban view");
-    },
-    /* currenlt unused */
-    on_install_clicked: function() {
-        var Installer = new openerp.web.DataSet(this, 'base.setup.installer');
-        Installer.call('default_get', [], function (installed_modules) {
-            console.log(installed_modules);
-            self.$element.html(QWeb.render('Welcome-Page', {'applications': applications}));
-            self.$element.find('.install-module-link').click(function () {
-                self.install_module($(this).data('module'), $(this).data('menu'));
-                return false;
-            });
+        var r = this._super();
+        //$('.secondary_menu', this.$element.closest('.openerp')).hide();
+        this.action_manager = new openerp.web.ActionManager(this);
+        this.action_manager.appendTo(this.$element.find('.oe_installer'));
+        this.action_manager.do_action({
+            type: 'ir.actions.act_window',
+            res_model: 'ir.module.module',
+            views: [[false, 'kanban']],
+            flags: {
+                display_title:false,
+                search_view: false,
+                views_switcher: false,
+                action_buttons: false,
+                sidebar: false,
+                pager: false
+            },
         });
+        return r;
     },
-    install_module: function (module_name, menu_name) {
-        var self = this;
-        var Modules = new openerp.web.DataSetSearch(
-            this, 'ir.module.module', null,
-            [['name', '=', module_name], ['state', '=', 'uninstalled']]);
-        var Upgrade = new openerp.web.DataSet(this, 'base.module.upgrade');
-
-        $.blockUI();
-        Modules.read_slice(['id'], {}, function (records) {
-            if (!(records.length === 1)) { $.unblockUI(); return; }
-            Modules.call('state_update',
-                [_.pluck(records, 'id'), 'to install', ['uninstalled']],
-                function () {
-                    Upgrade.call('upgrade_module', [[]], function () {
-                        self.run_configuration_wizards(menu_name);
-                    });
-                }
-            )
-        });
+    stop: function() {
+        this.action_manager.stop();
+        return this._super();
     },
-    run_configuration_wizards: function (menu_name) {
-        var self = this;
-        new openerp.web.DataSet(this, 'res.config').call('start', [[]], function (action) {
-            self.widget_parent.widget_parent.do_action(action, function () {
-                openerp.webclient.do_reload();
-            });
-            self.$element.empty();
-            var dss = new openerp.web.DataSetSearch(this, 'ir.ui.menu', null, [['parent_id', '=', false], ['name', '=', menu_name]]);
-            dss.read_slice(['id'], {}, function(menus) {
-                if(!(menus.length === 1)) { $.unblockUI(); return; }
-                $.when(openerp.webclient.menu.on_menu_click(null, menus[0].id)).then($.unblockUI);
-            });
-        });
-    }
 });
 
 
