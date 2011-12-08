@@ -1582,7 +1582,7 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
             .change(function () { ischanging = true; })
             .click(function () { ischanging = false; })
             .keyup(function (e) {
-                if (e.which !== 13 || !ischanging) { return; }
+                if (!_([13, 38, 40]).contains(e.which) || !ischanging) { return; }
                 e.stopPropagation();
                 ischanging = false;
             });
@@ -1790,13 +1790,16 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             minLength: 0,
             delay: 0
         });
-        // used to correct a bug when selecting an element by pushing 'enter' in an editable list
+        // Don't propagate KEY_UP and KEY_DOWN event to parent (for editable
+        // list), don't propagate KEY_RETURN either when the autocomplete
+        // control is currently open
         this.$input.keyup(function(e) {
-            if (e.which === 13) {
-                if (isSelecting)
-                    e.stopPropagation();
+            if (e.which === 38 || e.which === 40) {
+                e.stopPropagation();
+            } else if (isSelecting && e.which === 13) {
+                e.stopPropagation();
+                isSelecting = false;
             }
-            isSelecting = false;
         });
     },
     // autocomplete component content handling
