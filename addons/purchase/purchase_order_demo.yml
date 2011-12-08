@@ -75,7 +75,22 @@
         product_qty: 15
 
 -
-  !record {model: purchase.order, id: order_purchase8}:
+  !record {model: product.product, id: product_sugar_id_50kg}:
+    default_code: SUGAR50KG
+    supply_method: buy
+    list_price: 110.0
+    standard_price: 3600.0
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_gram
+    name: SUGAR of 50KG
+    valuation: real_time
+    property_stock_account_input: account.o_expense
+    property_stock_account_output: account.o_income
+    categ_id: product.product_category_rawmaterial0
+
+-
+  !record {model: purchase.order, id: order_purchase_sugar}:
     partner_id: base.res_partner_asus
     order_line:
-      - product_id: product.product_sugar_id_50kg
+      - product_id: product_sugar_id_50kg
+

@@ -1,8 +1,37 @@
 -
-  In order to test real time stock valuation flow, when default UoM and purchase UoM is different
+   In order to test real time stock valuation flow, I confirmed the purchase order.
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase_sugar}
+-
+  I check that the order which was initially in the draft state has transmit to approved state.
+-
+  !assert {model: purchase.order, id: order_purchase_sugar}:
+    - state == 'approved'
+-
+  In order to test check that picking is generated or not.
 -
   !python {model: purchase.order}: |
-    purchase_order = self.browse(cr, uid, ref("order_purchase8"))
-    assert len(purchase_order.order_line) == 1, "orderline should be generated."
-    for purchase_line in purchase_order.order_line:
-        assert purchase_line.price_unit == 3.6 ,"unit price is not same, got %s, expected 3.6"%(purchase_line.price_unit,)
+    purchase_order = self.browse(cr, uid, ref("order_purchase_sugar"))
+    assert len(purchase_order.picking_ids) >= 1, "You should have only one reception order"
+    for picking in purchase_order.picking_ids:
+      assert picking.purchase_id.id == purchase_order.id
+-
+  Reception is ready for process so now done the reception.
+-
+  !python {model: stock.partial.picking}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("order_purchase_sugar")).picking_ids
+    partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
+    self.do_partial(cr, uid, [partial_id])
+-
+  Check the Journal having proper amount or not.
+-
+  !python {model: account.move.line}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("order_purchase_sugar")).picking_ids
+    for data in pick_ids:
+      for moveline in data.move_lines:
+        ids = self.pool.get('account.move.line').search(cr, uid, [('ref','=',data.name),('partner_id','=',data.partner_id.id)])
+        item_data = self.pool.get('account.move.line').browse(cr, uid, ids)
+        for item in item_data:
+            if item.account_id.id == moveline.product_id.property_stock_account_input.id:
+                assert item.credit == 3.6, "Journal items have not proper credit amount"
+                assert item.debit == 0.0, "Journal items have not proper debit amount"
