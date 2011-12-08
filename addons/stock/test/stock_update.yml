@@ -50,7 +50,7 @@
     new_id = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
     context.update({'new_id':new_id})
 -
-  Now,I return the delivery order.
+  Now,I return the products.
 -
   !python {model: stock.picking}: |
     copy_id = context.get('new_id')
