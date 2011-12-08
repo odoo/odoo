@@ -179,9 +179,6 @@ openerp.web.list_editable = function (openerp) {
                     .delegate('button.oe-edit-row-save', 'click', function () {
                         self.save_row();
                     })
-                    .delegate('button.oe-edit-row-cancel', 'click', function () {
-                        self.cancel_edition();
-                    })
                     .delegate('button', 'keyup', function (e) {
                         e.stopImmediatePropagation();
                     })
@@ -231,20 +228,18 @@ openerp.web.list_editable = function (openerp) {
                           .addClass('oe-field-cell')
                           .removeAttr('width')
                       .end()
-                      .find('td:first').removeClass('oe-field-cell').end()
                       .find('td:last').removeClass('oe-field-cell').end();
+                    if (self.options.selectable) {
+                        $new_row.prepend('<td>');
+                    }
                     // pad in case of groupby
                     _(self.columns).each(function (column) {
                         if (column.meta) {
                             $new_row.prepend('<td>');
                         }
                     });
-                    // Add columns for the cancel and save buttons, if
-                    // there are none in the list
-                    if (!self.options.selectable) {
-                        self.view.pad_columns(
-                            1, {except: $new_row, position: 'before'});
-                    }
+                    // Add column for the save, if
+                    // there is none in the list
                     if (!self.options.deletable) {
                         self.view.pad_columns(
                             1, {except: $new_row});
