@@ -737,7 +737,7 @@ label.error {
 }
 /* List */
 .openerp .oe-listview table {
-    clear: right;
+    reset: right;
     width: 100%;
     border-spacing: 0;
     border: 1px solid silver;
@@ -983,7 +983,7 @@ label.error {
     position: relative;
 }
 .openerp .oe_frame.oe_forms {
-    clear: both;
+    reset: both;
 }
 .openerp table.oe_frame {
     color: #4c4c4c;
@@ -1306,7 +1306,7 @@ label.error {
     color: inherit;
 }
 .openerp .oe-view-manager-logs {
-    clear: both;
+    reset: both;
     background: #fff;
     margin: 0.25em 0;
     font-size: 85%;
@@ -1385,7 +1385,7 @@ label.error {
     margin: 4px 0 0 4px;
 }
 .openerp .oe-sidebar-attachments-items {
-    clear: both;
+    reset: both;
     padding-top: 5px !important;
 }
 .openerp .oe-sidebar-attachments-items li {
@@ -1708,7 +1708,7 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 /* Buttons */
 /***********/
 
-a.button:link, a.button:visited, button, input[type='submit'] {
+a.button:link, a.button:visited, button, input[type='submit'], input[type='reset'] {
   display: inline-block;
   border: 1px solid #ababab;
   color: #404040;
@@ -1741,7 +1741,7 @@ a.button:link, a.button:visited, button, input[type='submit'] {
   outline: none;
 }
 
-a.button:hover, button:hover, input[type='submit']:hover {
+a.button:hover, button:hover, input[type='submit']:hover, input[type='reset']:hover {
   background: #e3e3e3, none;
   -o-background-size: 100% 100%;
   -moz-background-size: 100% 100%;
@@ -1755,7 +1755,7 @@ a.button:hover, button:hover, input[type='submit']:hover {
   cursor: pointer;
 }
 
-a.button:focus, button:focus, input[type='submit']:focus {
+a.button:focus, button:focus, input[type='submit']:focus, input[type='reset']:focus {
   border: 1px solid #80bfff;
   background: #e3e3e3, none;
   -o-background-size: 100% 100%;
@@ -1773,7 +1773,7 @@ a.button:focus, button:focus, input[type='submit']:focus {
   -box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
 }
 
-a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active {
+a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active, input[type='reset']:active, input[type='reset'].active {
   background: #e3e3e3;
   background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
   background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f;
@@ -1784,7 +1784,7 @@ a.button:active, a.button.active, button:active, button.active, input[type='subm
   -box-shadow: none, 0 0 0 transparent;
 }
 
-a.button.disabled, button:disabled, input[type='submit']:disabled {
+a.button.disabled, button:disabled, input[type='submit']:disabled, input[type='reset']:disabled {
   background: #efefef !important;
   border: 1px solid #d1d1d1 !important;
   font-weight: 550;
