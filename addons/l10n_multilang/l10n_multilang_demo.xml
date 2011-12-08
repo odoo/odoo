@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-  <data noupdate="0">
+  <data>
 
         <!-- Account Types -->
 
@@ -42,7 +42,7 @@
 	        <field name="report_type">asset</field>
 	    </record>
 
-        <!-- Chart template -->
+        <!-- Chart template (will be completed later) -->
         <record id="account_chart_template_a" model="account.chart.template">
             <field name="name">Demo Chart A</field>
         </record>
@@ -173,6 +173,15 @@
         </record>
 
         <!-- Account Templates for C -->
+        <record model="account.account.template" id="chart_c_root">
+            <field name="name">Chart of Account C</field>
+            <field name="code">c0</field>
+            <field name="type">view</field>
+            <field ref="chart_a_root" name="parent_id"/>
+            <field name="user_type" ref="account_type_view"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="account_chart_template_c"/>
+        </record>
 
         <record model="account.account.template" id="chart_c1">
             <field name="name">Assets C</field>
@@ -180,7 +189,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="acct_type_asset_view"/>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart_a0"/>
+            <field name="parent_id" ref="chart_c_root"/>
             <field name="chart_template_id" ref="account_chart_template_c"/>
         </record>
 
@@ -190,7 +199,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="acct_type_liability_view"/>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart_a0"/>
+            <field name="parent_id" ref="chart_c_root"/>
             <field name="chart_template_id" ref="account_chart_template_c"/>
         </record>
 
@@ -200,7 +209,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="account_type_receivable"/>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="chart_a1"/>
+            <field name="parent_id" ref="chart_a1"/> <!-- conflict: should we use the parent_id or the chart_templat_id? to find all the accounts to install?? -->
             <field name="chart_template_id" ref="account_chart_template_c"/>
         </record>
 
@@ -241,7 +250,7 @@
 
         <record id="account_chart_template_c" model="account.chart.template">
             <field name="name">Demo Chart C</field>
-            <field name="account_root_id" ref="chart_a_root"/>
+            <field name="account_root_id" ref="chart_c_root"/>
             <field name="tax_code_root_id" ref="atax0"/>
             <field name="bank_account_view_id" ref="chart_c5"/>
             <field name="parent_id" ref="account_chart_template_a"/>
