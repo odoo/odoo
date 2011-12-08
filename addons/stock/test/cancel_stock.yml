@@ -31,16 +31,4 @@
     wf_service = netsvc.LocalService("workflow")
     pick_id = context.get('id2')
     wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
--
-  I return the Delivery order.
--
-  !python {model: stock.picking}: |
-    copy_id = context.get('id3')
-    self.draft_force_assign(cr, uid, [copy_id])
-    self.force_assign(cr, uid, [copy_id])
-    stock_partial_picking = self.pool.get('stock.partial.picking')
-    context.update({'active_model': 'stock.picking','active_ids': [copy_id],'active_id': copy_id})
-    partial_id = stock_partial_picking.create(cr, uid, {}, context=context)
-    stock_partial_picking.do_partial(cr, uid, [partial_id], context)
-    return_pick_id = self.pool.get('stock.return.picking').create(cr, uid,{}, context)
-    self.pool.get('stock.return.picking').create_returns(cr, uid, [return_pick_id], context)
+

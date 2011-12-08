@@ -40,4 +40,26 @@
 -
   !python {model: stock.move}: |
     ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_cpu2'))])
-    assert [x.state for x in self.browse(cr, uid, ids) if x.state == 'done'], 'stock moves should be done!'
+    assert [x.state for x in self.browse(cr, uid, ids) if x.state == 'done'], 'stock moves should be done!'    
+
+-
+  For testing the process of return picking, I create copy of delivery order.
+-
+  !python {model: stock.picking}: |
+    context.update({'active_id':ref('stock.stock_picking_1')})
+    new_id = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
+    context.update({'new_id':new_id})
+-
+  Now,I return the delivery order.
+-
+  !python {model: stock.picking}: |
+    copy_id = context.get('new_id')
+    self.draft_force_assign(cr, uid, [copy_id])
+    self.force_assign(cr, uid, [copy_id])
+    stock_partial_picking = self.pool.get('stock.partial.picking')
+    context.update({'active_model': 'stock.picking','active_ids': [copy_id],'active_id': copy_id})
+    partial_id = stock_partial_picking.create(cr, uid, {}, context=context)
+    stock_partial_picking.do_partial(cr, uid, [partial_id], context)
+    return_pick_id = self.pool.get('stock.return.picking').create(cr, uid,{}, context)
+    self.pool.get('stock.return.picking').create_returns(cr, uid, [return_pick_id], context)
+
