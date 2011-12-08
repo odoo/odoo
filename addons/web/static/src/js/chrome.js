@@ -30,8 +30,6 @@ openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Not
         this.$element.notify('create', 'oe_notification_alert', {
             title: title,
             text: text
-        }, {
-            expires: false
         });
     }
 
@@ -242,6 +240,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
     init: function(parent, element_id, option_id) {
         this._super(parent, element_id);
         this.$option_id = $('#' + option_id);
+        this.unblockUIFunction = $.unblockUI;
     },
     start: function() {
         this._super();
@@ -337,9 +336,25 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                 self.widget_parent.do_login(
                         info.db, admin.login, admin.password);
                 self.stop();
-                $.unblockUI();
+                self.unblockUI();
             });
         });
+    },
+    /**
+     * Blocks UI and replaces $.unblockUI by a noop to prevent third parties
+     * from unblocking the UI
+     */
+    blockUI: function () {
+        $.blockUI();
+        $.unblockUI = function () {};
+    },
+    /**
+     * Reinstates $.unblockUI so third parties can play with blockUI, and
+     * unblocks the UI
+     */
+    unblockUI: function () {
+        $.unblockUI = this.unblockUIFunction;
+        $.unblockUI();
     },
     /**
      * Displays an error dialog resulting from the various RPC communications
@@ -366,10 +381,10 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
         self.$option_id.find("form[name=create_db_form]").validate({
             submitHandler: function (form) {
                 var fields = $(form).serializeArray();
-                $.blockUI();
+                self.blockUI();
                 self.rpc("/web/database/create", {'fields': fields}, function(result) {
                     if (result.error) {
-                        $.unblockUI();
+                        self.unblockUI();
                         self.display_error(result);
                         return;
                     }
@@ -417,7 +432,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
             .html(QWeb.render("BackupDB", self))
             .find("form[name=backup_db_form]").validate({
             submitHandler: function (form) {
-                $.blockUI();
+                self.blockUI();
                 self.session.get_file({
                     form: form,
                     error: function (body) {
@@ -427,7 +442,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                             error: error[1]
                         });
                     },
-                    complete: $.unblockUI
+                    complete: $.proxy(self, 'unblockUI')
                 });
             }
         });
@@ -438,7 +453,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
 
        	self.$option_id.find("form[name=restore_db_form]").validate({
             submitHandler: function (form) {
-                $.blockUI();
+                self.blockUI();
                 $(form).ajaxSubmit({
                     url: '/web/database/restore',
                     type: 'POST',
@@ -463,9 +478,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                             })
                         }
                     },
-                    complete: function () {
-                        $.unblockUI();
-                    }
+                    complete: $.proxy(self, 'unblockUI')
                 });
             }
         });
@@ -824,7 +837,8 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     init: function(parent, element_id, secondary_menu_id) {
         this._super(parent, element_id);
         this.secondary_menu_id = secondary_menu_id;
-        this.$secondary_menu = $("#" + secondary_menu_id).hide();
+        this.$secondary_menu = $("#" + secondary_menu_id);
+        this.$secondary_menu.hide();
         this.menu = false;
         this.folded = false;
         if (window.localStorage) {
@@ -898,7 +912,10 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         sub_menu_visible = $sub_menu.is(':visible');
         this.$secondary_menu.find('.oe_secondary_menu').hide();
 
-        $('.active', this.$element.add(this.$secondary_menu.show())).removeClass('active');
+        if (this.$secondary_menu.hasClass('oe_folded')) {
+            this.$secondary_menu.show();
+        }
+        $('.active', this.$element.add(this.$secondary_menu)).removeClass('active');
         $main_menu.add($clicked_menu).add($sub_menu).addClass('active');
 
         if (!(this.folded && manual)) {
@@ -960,6 +977,8 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         if (data.action.length) {
             var action = data.action[0][2];
             self.on_action(action);
+        } else {
+            self.on_action({type: 'null_action'});
         }
     },
     on_action: function(action) {

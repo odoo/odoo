@@ -246,43 +246,74 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         var self = this,
             data = this.get_event_data(event_obj);
         this.dataset.create(data, function(r) {
-            var id = parseInt(r.result, 10);
+            var id = r.result;
             self.dataset.ids.push(id);
             scheduler.changeEventId(event_id, id);
             self.refresh_minical();
         }, function(r, event) {
-            self.creating_event_id = event_id;
-            self.form_dialog.form.on_record_loaded(data);
-            self.form_dialog.open();
             event.preventDefault();
+            self.do_create_event_with_formdialog(event_id, event_obj);
+        });
+    },
+    do_create_event_with_formdialog: function(event_id, event_obj) {
+        if (!event_obj) {
+            event_obj = scheduler.getEvent(event_id);
+        }
+        var self = this,
+            data = this.get_event_data(event_obj),
+            form = self.form_dialog.form,
+            fields_to_fetch = _(form.fields_view.fields).keys();
+        this.dataset.index = null;
+        self.creating_event_id = event_id;
+        this.form_dialog.form.do_show().then(function() {
+            form.show_invalid = false;
+            _.each(['date_start', 'date_stop', 'date_delay'], function(field) {
+                var field_name = self[field];
+                if (field_name) {
+                    field = form.fields[field_name];
+                    field.set_value(data[field_name]);
+                    field.dirty = true;
+                    form.do_onchange(field);
+                }
+            });
+            form.show_invalid = true;
+            self.form_dialog.open();
         });
     },
     do_save_event: function(event_id, event_obj) {
         var self = this,
-            data = this.get_event_data(event_obj);
-        this.dataset.write(parseInt(event_id, 10), data, {}, function() {
-            self.refresh_minical();
-        });
+            data = this.get_event_data(event_obj),
+            index = this.dataset.get_id_index(event_id);
+        if (index != null) {
+            this.dataset.write(event_id, data, {}, function() {
+                self.refresh_minical();
+            });
+        }
     },
     do_delete_event: function(event_id, event_obj) {
-        var self = this;
         // dhtmlx sends this event even when it does not exist in openerp.
         // Eg: use cancel in dhtmlx new event dialog
-        if (_.indexOf(this.dataset.ids, parseInt(event_id, 10)) > -1) {
-            this.dataset.unlink(parseInt(event_id, 10), function() {
+        var self = this,
+            index = this.dataset.get_id_index(event_id);
+        if (index !== null) {
+            this.dataset.unlink(event_id, function() {
                 self.refresh_minical();
             });
         }
     },
     do_edit_event: function(event_id) {
         var self = this;
-        event_id = parseInt(event_id, 10);
-        var index = _.indexOf(this.dataset.ids, event_id);
-        if (index > -1) {
+        var index = this.dataset.get_id_index(event_id);
+        if (index !== null) {
             this.dataset.index = index;
             this.form_dialog.form.do_show().then(function() {
                 self.form_dialog.open();
             });
+            return false;
+        } else if (scheduler.getState().mode === 'month') {
+            this.do_create_event_with_formdialog(event_id);
+            // TODO: check dhtmlxscheduler problem here. At this line, scheduler
+            // event 'onEventChanged' bound to this.do_save_event() won't be fired !;
             return false;
         }
         return true;

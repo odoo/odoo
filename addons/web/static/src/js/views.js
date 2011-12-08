@@ -75,6 +75,10 @@ session.web.ActionManager = session.web.Widget.extend({
         }
     },
     do_action: function(action, on_close) {
+        if (!action.type) {
+            console.error("No type for action", action);
+            return;
+        }
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         action.flags = _.extend({
@@ -85,12 +89,24 @@ session.web.ActionManager = session.web.Widget.extend({
             pager : !popup
         }, action.flags || {});
         if (!(type in this)) {
-            console.log("Action manager can't handle action of type " + action.type, action);
+            console.error("Action manager can't handle action of type " + action.type, action);
             return;
         }
         return this[type](action, on_close);
     },
+    null_action: function() {
+        this.dialog_stop();
+        this.content_stop();
+    },
     ir_actions_act_window: function (action, on_close) {
+        if (_(['base.module.upgrade', 'base.setup.installer'])
+                .contains(action.res_model)) {
+            var old_close = on_close;
+            on_close = function () {
+                session.webclient.do_reload();
+                if (old_close) { old_close(); }
+            };
+        }
         if (action.target === 'new') {
             if (this.dialog == null) {
                 this.dialog = new session.web.Dialog(this, { title: action.name, width: '80%' });
@@ -120,12 +136,6 @@ session.web.ActionManager = session.web.Widget.extend({
     ir_actions_act_window_close: function (action, on_closed) {
         if (!this.dialog && on_closed) {
             on_closed();
-        }
-        if (this.dialog && action.context) {
-            var model = action.context.active_model;
-            if (model === 'base.module.upgrade' || model === 'base.setup.installer' || model === 'base.module.upgrade') {
-                session.webclient.do_reload();
-            }
         }
         this.dialog_stop();
     },
@@ -186,12 +196,12 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         this.model = dataset ? dataset.model : undefined;
         this.dataset = dataset;
         this.searchview = null;
-        this.last_search = false;
         this.active_view = null;
         this.views_src = _.map(views, function(x) {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
         this.flags = this.flags || {};
         this.registry = session.web.views;
+        this.views_history = [];
     },
     render: function() {
         return session.web.qweb.render(this.template, {
@@ -211,6 +221,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         var views_ids = {};
         _.each(this.views_src, function(view) {
             self.views[view.view_type] = $.extend({}, view, {
+                deferred : $.Deferred(),
                 controller : null,
                 options : _.extend({
                     sidebar_id : self.element_id + '_sidebar_' + view.view_type,
@@ -230,11 +241,15 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
      * Asks the view manager to switch visualization mode.
      *
      * @param {String} view_type type of view to display
+     * @param {Boolean} [no_store=false] don't store the view being switched to on the switch stack
      * @returns {jQuery.Deferred} new view loading promise
      */
-    on_mode_switch: function(view_type) {
+    on_mode_switch: function(view_type, no_store) {
         var self = this,
             view_promise;
+        if (!no_store) {
+            this.views_history.push(view_type);
+        }
         this.active_view = view_type;
         var view = this.views[view_type];
         if (!view.controller) {
@@ -245,17 +260,19 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
                 controller.set_embedded_view(view.embedded_view);
             }
             controller.do_switch_view.add_last(this.on_mode_switch);
+            controller.do_prev_view.add_last(this.on_prev_view);
             var container = $("#" + this.element_id + '_view_' + view_type);
             view_promise = controller.appendTo(container);
             this.views[view_type].controller = controller;
+            this.views[view_type].deferred.resolve();
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
                 if (self.searchview && view.controller.searchable !== false) {
-                    self.do_searchview_search();
+                    self.searchview.ready.then(self.searchview.do_search);
                 }
             });
         } else if (this.searchview && view.controller.searchable !== false) {
-            self.do_searchview_search();
+            this.searchview.ready.then(this.searchview.do_search);
         }
 
         if (this.searchview) {
@@ -263,7 +280,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         }
 
         this.$element
-            .find('.views-switchers button').removeAttr('disabled')
+            .find('.oe_vm_switch button').removeAttr('disabled')
             .filter('[data-view-type="' + view_type + '"]')
             .attr('disabled', true);
 
@@ -278,10 +295,28 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             }
         }
         $.when(view_promise).then(function () {
-            self.$element.find('.oe_view_title:first').text(
+            self.$element.find('.oe_view_title_text:first').text(
                     self.display_title());
         });
         return view_promise;
+    },
+    /**
+     * Returns to the view preceding the caller view in this manager's
+     * navigation history (the navigation history is appended to via
+     * on_mode_switch)
+     *
+     * @param {Boolean} [created=false] returning from a creation
+     * @returns {$.Deferred} switching end signal
+     */
+    on_prev_view: function (created) {
+        var current_view = this.views_history.pop();
+        var previous_view = this.views_history[this.views_history.length - 1];
+        // APR special case: "If creation mode from list (and only from a list),
+        // after saving, go to page view (don't come back in list)"
+        if (created && current_view === 'form' && previous_view === 'list') {
+            return this.on_mode_switch('page');
+        }
+        return this.on_mode_switch(previous_view, true);
     },
     /**
      * Sets up the current viewmanager's search view.
@@ -304,20 +339,15 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
     do_searchview_search: function(domains, contexts, groupbys) {
         var self = this,
             controller = this.views[this.active_view].controller;
-        if (domains || contexts) {
-            this.rpc('/web/session/eval_domain_and_context', {
-                domains: [this.action.domain || []].concat(domains || []),
-                contexts: [this.action.context || {}].concat(contexts || []),
-                group_by_seq: groupbys || []
-            }, function (results) {
-                self.dataset.context = results.context;
-                self.dataset.domain = results.domain;
-                self.last_search = [results.domain, results.context, results.group_by];
-                controller.do_search(results.domain, results.context, results.group_by);
-            });
-        } else if (this.last_search) {
-            controller.do_search.apply(controller, this.last_search);
-        }
+        this.rpc('/web/session/eval_domain_and_context', {
+            domains: [this.action.domain || []].concat(domains || []),
+            contexts: [this.action.context || {}].concat(contexts || []),
+            group_by_seq: groupbys || []
+        }, function (results) {
+            self.dataset.context = results.context;
+            self.dataset.domain = results.domain;
+            controller.do_search(results.domain, results.context, results.group_by);
+        });
     },
     /**
      * Event launched when a controller has been inited.
@@ -375,10 +405,16 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         }
         this.dataset = dataset;
         this.flags = this.action.flags || {};
-        if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
-            // Not elegant but allows to avoid form chrome (pager, save/new
-            // buttons, sidebar, ...) displaying
-            this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
+        if (action.res_model == 'board.board' && action.view_mode === 'form') {
+            // Special case for Dashboards
+            _.extend(this.flags, {
+                views_switcher : false,
+                display_title : false,
+                search_view : false,
+                pager : false,
+                sidebar : false,
+                action_buttons : false
+            });
         }
 
         // setup storage for session-wise menu hiding
@@ -411,21 +447,18 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var main_view_loaded = this._super();
 
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
-        if (searchview_loaded && this.action['auto_search'] !== false) {
-            // schedule auto_search
-            manager_ready.then(this.searchview.do_search);
-        }
 
         this.$element.find('.oe_get_xml_view').click(function () {
-            // TODO: add search view?
-            $('<pre>').text(session.web.json_node_to_xml(
-                self.views[self.active_view].controller.fields_view.arch, true))
-                    .dialog({ width: '95%'});
+            var view = self.views[self.active_view].controller,
+                view_id = view.fields_view.view_id;
+            if (view_id) {
+                view.on_sidebar_edit_resource('ir.ui.view', view_id);
+            }
         });
         if (this.action.help && !this.flags.low_profile) {
             var Users = new session.web.DataSet(self, 'res.users'),
-                header = this.$element.find('.oe-view-manager-header');
-            header.delegate('blockquote button', 'click', function() {
+                $tips = this.$element.find('.oe_view_manager_menu_tips');
+            $tips.delegate('blockquote button', 'click', function() {
                 var $this = $(this);
                 //noinspection FallthroughInSwitchStatementJS
                 switch ($this.attr('name')) {
@@ -442,7 +475,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                     if (!(user && user.id === self.session.uid)) {
                         return;
                     }
-                    header.find('blockquote').toggle(user.menu_tips);
+                    $tips.find('blockquote').toggle(user.menu_tips);
                 });
             }
         }
@@ -459,10 +492,15 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
 
         return manager_ready;
     },
-    on_mode_switch: function (view_type) {
+    on_mode_switch: function (view_type, no_store) {
         var self = this;
+        var switched = $.when(this._super(view_type, no_store)).then(function () {
+            self.$element.find('.oe-view-manager-logs:first')
+                .addClass('oe-folded').removeClass('oe-has-more')
+                .find('ul').empty();
+        });
         return $.when(
-                this._super(view_type),
+                switched,
                 this.shortcut_check(this.views[view_type])
             ).then(function() {
                 var controller = self.views[self.active_view].controller,
@@ -470,10 +508,10 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                     view_id = (fvg && fvg.view_id) || '--';
                 self.$element.find('.oe_get_xml_view span').text(view_id);
                 if (!self.action.name && fvg) {
-                    self.$element.find('.oe_view_title').text(fvg.arch.attrs.string || fvg.name);
+                    self.$element.find('.oe_view_title_text').text(fvg.arch.attrs.string || fvg.name);
                 }
 
-                var $title = self.$element.find('.oe_view_title'),
+                var $title = self.$element.find('.oe_view_title_text'),
                     $search_prefix = $title.find('span.oe_searchable_view');
                 if (controller.searchable !== false) {
                     if (!$search_prefix.length) {
@@ -575,25 +613,29 @@ session.web.Sidebar = session.web.Widget.extend({
         });
     },
     add_default_sections: function() {
+        var self = this,
+            view = this.widget_parent,
+            view_manager = view.widget_parent,
+            action = view_manager.action;
         if (this.session.uid === 1) {
             this.add_section(_t('Customize'), 'customize');
             this.add_items('customize', [
                 {
                     label: _t("Manage Views"),
-                    callback: this.widget_parent.on_sidebar_manage_views,
+                    callback: view.on_sidebar_manage_views,
                     title: _t("Manage views of the current object")
                 }, {
                     label: _t("Edit Workflow"),
-                    callback: this.widget_parent.on_sidebar_edit_workflow,
+                    callback: view.on_sidebar_edit_workflow,
                     title: _t("Manage views of the current object"),
                     classname: 'oe_hide oe_sidebar_edit_workflow'
                 }, {
                     label: _t("Customize Object"),
-                    callback: this.widget_parent.on_sidebar_customize_object,
+                    callback: view.on_sidebar_customize_object,
                     title: _t("Manage views of the current object")
                 }, {
                     label: _t("Translate"),
-                    callback: this.widget_parent.on_sidebar_translate,
+                    callback: view.on_sidebar_translate,
                     title: _t("Technical translation")
                 }
             ]);
@@ -603,16 +645,36 @@ session.web.Sidebar = session.web.Widget.extend({
         this.add_items('other', [
             {
                 label: _t("Import"),
-                callback: this.widget_parent.on_sidebar_import
+                callback: view.on_sidebar_import
             }, {
                 label: _t("Export"),
-                callback: this.widget_parent.on_sidebar_export
+                callback: view.on_sidebar_export
             }, {
                 label: _t("View Log"),
-                callback: this.widget_parent.on_sidebar_view_log,
+                callback: view.on_sidebar_view_log,
                 classname: 'oe_hide oe_sidebar_view_log'
             }
         ]);
+
+        if (session.connection.debug) {
+            this.add_section("Debug", 'debug');
+            if (action && action.id) {
+                this.add_items('debug', [{
+                    label: "Edit Action",
+                    callback: function() {
+                        view.on_sidebar_edit_resource(action.type, action.id);
+                    }
+                }]);
+            }
+            if (view_manager.searchview && view_manager.searchview.view_id) {
+                this.add_items('debug', [{
+                    label: "Edit SearchView",
+                    callback: function() {
+                        view.on_sidebar_edit_resource('ir.ui.view', view_manager.searchview.view_id);
+                    }
+                }]);
+            }
+        }
     },
 
     add_toolbar: function(toolbar) {
@@ -915,7 +977,19 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         if (action_data.special) {
             return handler({result: {"type":"ir.actions.act_window_close"}});
         } else if (action_data.type=="object") {
-            return dataset.call_button(action_data.name, [[record_id], context], handler);
+            var args = [[record_id]], additional_args = [];
+            if (action_data.args) {
+                try {
+                    // Warning: quotes and double quotes problem due to json and xml clash
+                    // Maybe we should force escaping in xml or do a better parse of the args array
+                    additional_args = JSON.parse(action_data.args.replace(/'/g, '"'));
+                    args = args.concat(additional_args);
+                } catch(e) {
+                    console.error("Could not JSON.parse arguments", action_data.args);
+                }
+            }
+            args.push(context);
+            return dataset.call_button(action_data.name, args, handler);
         } else if (action_data.type=="action") {
             return this.rpc('/web/action/load', { action_id: parseInt(action_data.name, 10), context: context, do_not_eval: true}, handler);
         } else  {
@@ -933,8 +1007,16 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         this.embedded_view = embedded_view;
         this.options.sidebar = false;
     },
-    do_switch_view: function(view) {
-    },
+    /**
+     * Switches to a specific view type
+     *
+     * @param {String} view view type to switch to
+     */
+    do_switch_view: function(view) { },
+    /**
+     * Cancels the switch to the current view, switches to the previous one
+     */
+    do_prev_view: function () { },
     do_search: function(view) {
     },
 
@@ -953,7 +1035,14 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         console.log('Todo');
     },
     on_sidebar_customize_object: function() {
-        console.log('Todo');
+        var self = this;
+        this.rpc('/web/dataset/search_read', {
+            model: 'ir.model',
+            fields: ['id'],
+            domain: [['model', '=', self.dataset.model]]
+        }, function (result) {
+            self.on_sidebar_edit_resource('ir.model', result.ids[0]);
+        });
     },
     on_sidebar_import: function() {
         var import_view = new session.web.DataImport(this, this.dataset);
@@ -969,10 +1058,28 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
             views: [[false, 'list'], [false, 'form']],
             type : 'ir.actions.act_window',
-            auto_search : true,
             view_type : "list",
             view_mode : "list"
         });
+    },
+    on_sidebar_edit_resource: function(model, id, domain) {
+        var action = {
+            res_model : model,
+            type : 'ir.actions.act_window',
+            view_type : 'form',
+            view_mode : 'form',
+            target : 'new',
+            flags : {}
+        }
+        if (id) {
+            action.res_id = id,
+            action.views = [[false, 'form']];
+        } else if (domain) {
+            action.views = [[false, 'list'], [false, 'form']];
+            action.domain = domain;
+            action.flags.views_switcher = true;
+        }
+        this.do_action(action);
     },
     on_sidebar_view_log: function() {
     },

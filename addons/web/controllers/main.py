@@ -103,6 +103,7 @@ class WebClient(openerpweb.Controller):
             addons = self.server_wide_modules(req)
         else:
             addons = addons.split(',')
+        r = []
         for addon in addons:
             manifest = openerpweb.addons_manifest.get(addon, None)
             if not manifest:
@@ -112,7 +113,8 @@ class WebClient(openerpweb.Controller):
             globlist = manifest.get(key, [])
             for pattern in globlist:
                 for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    yield path, path[len(addons_path):]
+                    r.append( (path, path[len(addons_path):]))
+        return r
 
     def manifest_list(self, req, mods, extension):
         if not req.debug:
@@ -605,6 +607,14 @@ def fix_view_modes(action):
     if 'views' not in action:
         generate_views(action)
 
+    id_form = None
+    for index, (id, mode) in enumerate(action['views']):
+        if mode == 'form':
+            id_form = id
+            break
+    if id_form is not None:
+        action['views'].insert(index + 1, (id_form, 'page'))
+
     if action.pop('view_type', 'form') != 'form':
         return action
 
@@ -778,12 +788,15 @@ class DataSet(openerpweb.Controller):
         return Model.unlink(ids, req.session.eval_context(req.context))
 
     def call_common(self, req, model, method, args, domain_id=None, context_id=None):
-        domain = args[domain_id] if domain_id and len(args) - 1 >= domain_id  else []
-        context = args[context_id] if context_id and len(args) - 1 >= context_id  else {}
+        has_domain = domain_id is not None and domain_id < len(args)
+        has_context = context_id is not None and context_id < len(args)
+
+        domain = args[domain_id] if has_domain else []
+        context = args[context_id] if has_context else {}
         c, d = eval_context_and_domain(req.session, context, domain)
-        if domain_id and len(args) - 1 >= domain_id:
+        if has_domain:
             args[domain_id] = d
-        if context_id and len(args) - 1 >= context_id:
+        if has_context:
             args[context_id] = c
 
         for i in xrange(len(args)):
@@ -841,12 +854,12 @@ class View(openerpweb.Controller):
         context = req.session.eval_context(req.context)
         fvg = Model.fields_view_get(view_id, view_type, context, toolbar, submenu)
         # todo fme?: check that we should pass the evaluated context here
-        self.process_view(req.session, fvg, context, transform)
+        self.process_view(req.session, fvg, context, transform, (view_type == 'kanban'))
         if toolbar and transform:
             self.process_toolbar(req, fvg['toolbar'])
         return fvg
 
-    def process_view(self, session, fvg, context, transform):
+    def process_view(self, session, fvg, context, transform, preserve_whitespaces=False):
         # depending on how it feels, xmlrpclib.ServerProxy can translate
         # XML-RPC strings to ``str`` or ``unicode``. ElementTree does not
         # enjoy unicode strings which can not be trivially converted to
@@ -864,7 +877,7 @@ class View(openerpweb.Controller):
             xml = self.transform_view(arch, session, evaluation_context)
         else:
             xml = ElementTree.fromstring(arch)
-        fvg['arch'] = web.common.xml2json.Xml2Json.convert_element(xml)
+        fvg['arch'] = web.common.xml2json.Xml2Json.convert_element(xml, preserve_whitespaces)
 
         for field in fvg['fields'].itervalues():
             if field.get('views'):
@@ -1063,6 +1076,44 @@ class SearchView(View):
                                              "user_id": uid
                                              }, context)
         return to_return
+
+    @openerpweb.jsonrequest
+    def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
+        ctx = web.common.nonliterals.CompoundContext(context_to_save)
+        ctx.session = req.session
+        ctx = ctx.evaluate()
+        domain = web.common.nonliterals.CompoundDomain(domain)
+        domain.session = req.session
+        domain = domain.evaluate()
+
+        dashboard_action = load_actions_from_ir_values(req, 'action', 'tree_but_open',
+                                             [('ir.ui.menu', menu_id)], False)
+        if dashboard_action:
+            action = dashboard_action[0][2]
+            if action['res_model'] == 'board.board' and action['views'][0][1] == 'form':
+                # Maybe should check the content instead of model board.board ?
+                view_id = action['views'][0][0]
+                board = req.session.model(action['res_model']).fields_view_get(view_id, 'form')
+                if board and 'arch' in board:
+                    xml = ElementTree.fromstring(board['arch'])
+                    column = xml.find('./board/column')
+                    if column:
+                        new_action = ElementTree.Element('action', {
+                                'name' : str(action_id),
+                                'string' : name,
+                                'view_mode' : view_mode,
+                                'context' : str(ctx),
+                                'domain' : str(domain)
+                            })
+                        column.insert(0, new_action)
+                        arch = ElementTree.tostring(xml, 'utf-8')
+                        return req.session.model('ir.ui.view.custom').create({
+                                'user_id': req.session._uid,
+                                'ref_id': view_id,
+                                'arch': arch
+                            }, req.session.eval_context(req.context))
+
+        return False
 
 class Binary(openerpweb.Controller):
     _cp_path = "/web/binary"
@@ -1348,7 +1399,7 @@ class Export(View):
 
         context = req.session.eval_context(req.context)
         Model = req.session.model(model)
-        ids = ids or Model.search(domain, context=context)
+        ids = ids or Model.search(domain, 0, False, False, context)
 
         field_names = map(operator.itemgetter('name'), fields)
         import_data = Model.export_data(ids, field_names, context).get('datas',[])

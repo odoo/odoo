@@ -20,6 +20,9 @@
  */
 
 (function($){
+    $.tipTipClear = function() {
+        $("#tiptip_holder").remove();
+    }
 	$.fn.tipTip = function(options) {
 		var defaults = { 
 			activation: "hover",
@@ -94,7 +97,7 @@
 			
 				function active_tiptip(){
 					opts.enter.call(this);
-					var org_title = typeof opts.content === 'function' ? opts.content() : opts.content;
+					var org_title = typeof opts.content === 'function' ? opts.content.call(org_elem, opts) : opts.content;
 					org_title = org_title || org_elem.attr(opts.attribute);
 					tiptip_content.html(org_title);
 					tiptip_holder.hide().removeAttr("class").css("margin","0");

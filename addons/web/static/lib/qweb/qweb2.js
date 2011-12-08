@@ -373,6 +373,12 @@ QWeb2.Engine = (function() {
             if (!this.jQuery) {
                 return this.tools.exception("Can't extend template " + template + " without jQuery");
             }
+            var template_dest = this.templates[template],
+                msie_trololo = false;
+            if (template_dest.xml !== undefined) {
+                template_dest = this.jQuery(template_dest.xml);
+                msie_trololo = true;
+            }
             for (var i = 0, ilen = extend_node.childNodes.length; i < ilen; i++) {
                 var child = extend_node.childNodes[i];
                 if (child.nodeType === 1) {
@@ -382,7 +388,7 @@ QWeb2.Engine = (function() {
                         target,
                         error_msg = "Error while extending template '" + template;
                     if (jquery) {
-                        target = this.jQuery(jquery, this.templates[template]);
+                        target = this.jQuery(jquery, template_dest);
                     } else if (xpath) {
                         // NOTE: due to the XPath implementation, extending a template will only work once
                         // when using XPath because XPathResult won't match objects with other constructor than 'Element'
@@ -414,6 +420,9 @@ QWeb2.Engine = (function() {
                         }
                     }
                 }
+            }
+            if (msie_trololo) {
+                this.templates[template] = template_dest[0];
             }
         }
     });

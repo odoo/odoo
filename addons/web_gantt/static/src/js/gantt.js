@@ -2,71 +2,60 @@
  * OpenERP web_gantt
  *---------------------------------------------------------*/
 openerp.web_gantt = function (openerp) {
+var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('gantt', 'openerp.web_gantt.GanttView');
 openerp.web_gantt.GanttView = openerp.web.View.extend({
 
-init: function(parent, dataset, view_id) {
+    init: function(parent, dataset, view_id) {
         this._super(parent);
         this.view_manager = parent || new openerp.web.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
-        this.fields_views = {};
-        this.widgets = {};
-        this.widgets_counter = 0;
-        this.fields = this.dataset.fields ? this.dataset.fields: {};
-        this.ids = this.dataset.ids;
-        this.name = "";
-        this.date_start = "";
-        this.date_delay = "";
-        this.date_stop = "";
-        this.color_field = "";
-        this.colors = [];
-        this.color_values = [];
-        this.calendar_fields = {};
-        this.info_fields = [];
-        this.domain = this.dataset._domain ? this.dataset._domain: [];
+        this.domain = this.dataset.domain || [];
         this.context = this.dataset.context || {};
+        this.has_been_loaded = $.Deferred();
     },
 
     start: function() {
         this._super();
-        this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type": "gantt"}, this.on_loaded);
+        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type": "gantt"}, this.on_loaded);
     },
 
     on_loaded: function(data) {
 
-        var self = this;
-        this.fields_view = data;
-
-        this.name =  this.fields_view.arch.attrs.string;
-        this.view_id = this.fields_view.view_id;
-    	
-        this.date_start = this.fields_view.arch.attrs.date_start;
-        this.date_delay = this.fields_view.arch.attrs.date_delay;
-        this.date_stop = this.fields_view.arch.attrs.date_stop;
-
-        this.color_field = this.fields_view.arch.attrs.color;
+        this.fields_view = data,
+        this.name =  this.fields_view.arch.attrs.string,
+        this.view_id = this.fields_view.view_id,
+        this.fields = this.fields_view.fields;
+        
+        this.date_start = this.fields_view.arch.attrs.date_start,
+        this.date_delay = this.fields_view.arch.attrs.date_delay,
+        this.date_stop = this.fields_view.arch.attrs.date_stop,
         this.day_length = this.fields_view.arch.attrs.day_length || 8;
+
+        this.color_field = this.fields_view.arch.attrs.color,
         this.colors = this.fields_view.arch.attrs.colors;
-        var arch_children = this.fields_view.arch.children[0];
-        this.text = arch_children.children[0] ? arch_children.children[0].attrs.name : arch_children.attrs.name;
-        this.parent = this.fields_view.arch.children[0].attrs.link;
-
-        this.format = "yyyy-MM-dd";
-        this.grp = [];
-
-        self.create_gantt();
-        self.get_events();
-
-        this.$element.html(QWeb.render("GanttView", {"view": this, "fields_view": this.fields_view}));
-
+        
+        if (this.fields_view.arch.children.length) {
+            var level = this.fields_view.arch.children[0];
+            this.parent = level.attrs.link, this.text = level.children.length ? level.children[0].attrs.name : level.attrs.name;
+        } else {
+            this.text = 'name';
+        }
+        
+        if (!this.date_start) {
+            return self.do_warn(_t("date_start is not defined "))
+        }
+        
+        this.$element.html(QWeb.render("GanttView", {'height': $('.oe-application-container').height(), 'width': $('.oe-application-container').width()}));
+        this.has_been_loaded.resolve();
     },
 
-    create_gantt: function() {
+    init_gantt_view: function() {
 
-        ganttChartControl = new GanttChart(this.day_length);
+        ganttChartControl = this.ganttChartControl = new GanttChart(this.day_length);
         ganttChartControl.setImagePath("/web_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
         ganttChartControl.setEditable(true);
         ganttChartControl.showTreePanel(true);
@@ -75,53 +64,71 @@ init: function(parent, dataset, view_id) {
         ganttChartControl.showDescProject(true,'n,d');
 
     },
-
-    get_events: function() {
-
-        var self = this;
-        this.dataset.read_slice([],{}, function(result) {
-            self.load_event(result);
-        });
-
+    
+    project_starting_date : function() {
+        var self = this,
+            projects = this.database_projects,
+            min_date = _.min(projects, function(prj) {
+                return self.format_date(prj[self.date_start]);
+            });
+        if (min_date) this.project_start_date = this.format_date(min_date[self.date_start]);
+        else 
+            this.project_start_date = Date.today();
+        return $.Deferred().resolve().promise();
+    },
+    
+    format_date : function(date) {
+        var datetime_regex = /^(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)(?:\.\d+)?$/,
+            date_regex = /^\d\d\d\d-\d\d-\d\d$/,
+            time_regex = /^(\d\d:\d\d:\d\d)(?:\.\d+)?$/,
+            def = $.Deferred();
+        if(date_regex.exec(date)) {
+            this.date_format = "yyyy-MM-dd";
+        } else if(time_regex.exec(date)) {
+            this.date_format = "HH:mm:ss";
+        } else {
+            this.date_format = "yyyy-MM-dd HH:mm:ss";
+        }
+        if(typeof date === 'string')
+            return openerp.web.auto_str_to_date(date);
+        return date;
     },
 
-    load_event: function(events) {
-
-        var self = this;
-        var result = events;
-        var smalldate = "";
-
-        COLOR_PALETTE = ['#ccccff', '#cc99ff', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
-                 '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
-                 '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
-                 '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#ffc900'];
-
-        if (result.length != 0){
-            var show_event = [];
-            for (var i in result){
-                var res = result[i];
-                if (res[this.date_start] != false){
-                    
-                    var start_date = this.convert_str_date(res[this.date_start]);
-                    res[this.date_start] = start_date;
-                    show_event.push(res);
-                    if (smalldate == ""){
-                        smalldate = start_date;
-                    }
-                    else{
-                        if (start_date < smalldate){
-                            smalldate = start_date;
-                        }
-                    }
-                }
-            }
-            if (smalldate == ""){
-                smalldate = Date.today();
-            }
-            project = new GanttProjectInfo("_1", "", smalldate);
-            ganttChartControl.addProject(project);
+    on_project_loaded: function(events) {
+        
+        if(!events.length) return;
+        var self = this,
+            started_projects = _.filter(events, function(res) {
+            return res[self.date_start];
+        });
+        
+        this.database_projects = started_projects;
+        
+        if(!started_projects.length)
+            return self.do_warn(_t("date_start is not defined"));
+            
+        if(!self.name && started_projects.length) {
+            var name = started_projects[0][self.parent];
+            self.name = name instanceof Array? name[name.length - 1] : name;
         }
-
+        this.$element.find('#add_task').click(function(){
+            self.editTask();
+        });
+        
+        $.when(this.project_starting_date())
+            .then(function() {
+                if(self.ganttChartControl) {
+                    self.ganttChartControl.clearAll();
+                    self.$element.find('#GanttView').empty();
+                }
+            })
+            .done(this.init_gantt_view());
+        
+        var self = this;
+        var show_event = started_projects;
+        _.each(show_event, function(evt) {evt[self.date_start] = self.format_date(evt[self.date_start])});
+        this.project = new GanttProjectInfo("_1", self.name, this.project_start_date);
+        self.ganttChartControl.addProject(this.project);
         //create child
         var k = 0;
         var color_box = {};
@@ -138,12 +145,6 @@ init: function(parent, dataset, view_id) {
             var text = res[this.text];
             var start_date = res[this.date_start];
 
-            var color = res[this.color_field][0] || res[this.color_field];
-            if (color_box[color] == undefined){
-                color_box[color] = COLOR_PALETTE[k];
-                k += 1;
-            }
-
             if (this.date_stop != undefined){
                 if (res[this.date_stop] != false){
                     var stop_date = this.convert_str_date(res[this.date_stop]);
@@ -159,14 +160,14 @@ init: function(parent, dataset, view_id) {
             if (!duration)
                 duration = 0;
 
-            if (self.grp.length){
-                for (var j in self.grp){
-                    var grp_key = res[self.grp[j]['group_by']];
+            if (this.group_by.length){
+                for (var j in self.group_by){
+                    var grp_key = res[self.group_by[j]];
                     if (typeof(grp_key) == "object"){
-                        grp_key = res[self.grp[j]['group_by']][1];
+                        grp_key = res[self.group_by[j]][1];
                     }
                     else{
-                        grp_key = res[self.grp[j]['group_by']];
+                        grp_key = res[self.group_by[j]];
                     }
 
                     if (!grp_key){
@@ -178,7 +179,7 @@ init: function(parent, dataset, view_id) {
                             var mod_id = i+ "_" +j;
                             parents[grp_key] = mod_id;
                             child_event[mod_id] = {};
-                            all_events[mod_id] = {'parent': "", 'evt':[mod_id , grp_key, start_date, start_date, 100, "", "white"]};
+                            all_events[mod_id] = {'parent': "", 'evt':[mod_id , grp_key, start_date, start_date, 100, ""]};
                         }
                         else{
                             mod_id = parents[grp_key];
@@ -190,7 +191,7 @@ init: function(parent, dataset, view_id) {
                             child_event[mod_id][grp_key] = ch_mod_id;
                             child_event[ch_mod_id] = {};
                             temp_id = ch_mod_id;
-                            all_events[ch_mod_id] = {'parent': mod_id, 'evt':[ch_mod_id , grp_key, start_date, start_date, 100, "","white"]};
+                            all_events[ch_mod_id] = {'parent': mod_id, 'evt':[ch_mod_id , grp_key, start_date, start_date, 100, ""]};
                             mod_id = ch_mod_id;
                         }
                         else{
@@ -199,15 +200,15 @@ init: function(parent, dataset, view_id) {
                         }
                     }
                 }
-                all_events[id] = {'parent': temp_id, 'evt':[id , text, start_date, duration, 100, "", color_box[color]]};
+                all_events[id] = {'parent': temp_id, 'evt':[id , text, start_date, duration, 100, ""]};
                 final_events.push(id);
             }
             else {
                 if (i == 0) {
                     var mod_id = "_" + i;
-                    all_events[mod_id] = {'parent': "", 'evt': [mod_id, this.name, start_date, start_date, 100, "", "white"]};
+                    all_events[mod_id] = {'parent': "", 'evt': [mod_id, this.name, start_date, start_date, 100, ""]};
                 }
-                all_events[id] = {'parent': mod_id, 'evt':[id , text, start_date, duration, 100, "", color_box[color]]};
+                all_events[id] = {'parent': mod_id, 'evt':[id , text, start_date, duration, 100, ""]};
                 final_events.push(id);
             }
         }
@@ -245,72 +246,146 @@ init: function(parent, dataset, view_id) {
             }
         }
 
-        for (var j in self.grp) {
+        for (var j in self.group_by) {
             self.render_events(all_events, j);
         }
 
-        if (!self.grp.length) {
+        if (!self.group_by.length) {
             self.render_events(all_events, 0);
         }
 
         for (var i in final_events) {
             evt_id = final_events[i];
             res = all_events[evt_id];
-            task=new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "",res['evt'][6]);
-            prt = project.getTaskById(res['parent']);
+            task=new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "");
+            prt = self.project.getTaskById(res['parent']);
             prt.addChildTask(task);
         }
 
         var oth_hgt = 264;
         var min_hgt = 150;
         var name_min_wdt = 150;
-        var gantt_hgt = jQuery(window).height() - oth_hgt;
-        var search_wdt = jQuery("#oe_app_search").width();
+        var gantt_hgt = $(window).height() - oth_hgt;
+        var search_wdt = $("#oe_app_search").width();
 
-        if (gantt_hgt > min_hgt){
-            jQuery('#GanttDiv').height(gantt_hgt).width(search_wdt);
+        if (gantt_hgt > min_hgt) {
+            $('#GanttView').height(gantt_hgt).width(search_wdt);
         } else{
-            jQuery('#GanttDiv').height(min_hgt).width(search_wdt);
+            $('#GanttView').height(min_hgt).width(search_wdt);
         }
 
-        ganttChartControl.create("GanttDiv");
-        ganttChartControl.attachEvent("onTaskStartDrag", function(task) {self.on_drag_start(task);});
-        ganttChartControl.attachEvent("onTaskEndResize", function(task) {self.on_resize_drag_end(task, "resize");});
-        ganttChartControl.attachEvent("onTaskEndDrag", function(task) {self.on_resize_drag_end(task, "drag");});
+        self.ganttChartControl.create("GanttView");
         
-        ganttChartControl.attachEvent("onTaskDblClick", function(task) {self.open_popup(task);});
+        // Setup Events
+        self.ganttChartControl.attachEvent("onTaskStartDrag", function(task) {
+            if (task.parentTask) {
+                var task_date = task.getEST();
+                if (task_date.getHours()) {
+                    task_date.set({
+                        hour: task_date.getHours(),
+                        minute: task_date.getMinutes(),
+                        second: 0
+                    });
+                }
+            }
+        });
+        self.ganttChartControl.attachEvent("onTaskEndResize", function(task) {return self.resizeTask(task);});
+        self.ganttChartControl.attachEvent("onTaskEndDrag", function(task) {return self.resizeTask(task);});
         
-        var taskdiv = jQuery("div.taskPanel").parent();
+        var taskdiv = $("div.taskPanel").parent();
         taskdiv.addClass('ganttTaskPanel');
         taskdiv.prev().addClass('ganttDayPanel');
-        var $gantt_panel = jQuery(".ganttTaskPanel , .ganttDayPanel");
+        var $gantt_panel = $(".ganttTaskPanel , .ganttDayPanel");
 
-        var ganttrow = jQuery('.taskPanel').closest('tr');
+        var ganttrow = $('.taskPanel').closest('tr');
         var gtd =  ganttrow.children(':first-child');
         gtd.children().addClass('task-name');
 
-        jQuery(".toggle-sidebar").click(function(e) {
+        $(".toggle-sidebar").click(function(e) {
             self.set_width();
         });
 
-        jQuery(window).bind('resize',function() {
-            window.clearTimeout(ganttChartControl._resize_timer);
-            ganttChartControl._resize_timer = window.setTimeout(function(){
-                self.reload_gantt();
+        $(window).bind('resize',function() {
+            window.clearTimeout(self.ganttChartControl._resize_timer);
+            self.ganttChartControl._resize_timer = window.setTimeout(function(){
+                self.reloadView();
             }, 200);
         });
-
-        jQuery("div #_1, div #_1 + div").hide();
+        
+        var project = self.ganttChartControl.getProjectById("_1");
+        if (project) {
+            $(project.projectItem[0]).hide();
+            $(project.projectNameItem).hide();
+            $(project.descrProject).hide();
+            
+            _.each(final_events, function(id) {
+                var Task = project.getTaskById(id);
+                $(Task.cTaskNameItem[0]).click(function() {
+                    self.editTask(Task);
+                })
+            });
+        }
+    },
+    
+    resizeTask: function(task) {
+        var self = this,
+            event_id = task.getId();
+        if(task.childTask.length)
+            return;
+        
+        var data = {};
+        data[this.date_start] = task.getEST().toString(this.date_format);
+        
+        if(this.date_stop) {
+            var diff = task.getDuration() % this.day_length,
+                finished_date = task.getFinishDate().add({hours: diff});
+            data[this.date_stop] = finished_date.toString(this.date_format);
+        } else {
+            data[this.date_delay] = task.getDuration();
+        }
+        this.dataset
+            .write(event_id, data, {})
+            .done(function() {
+                var get_project = _.find(self.database_projects, function(project){ return project.id == event_id});
+                _.extend(get_project,data);
+                self.reloadView();
+            });
+    },
+    
+    editTask: function(task) {
+        var self = this,
+            event_id;
+        if (!task)
+            event_id = 0;
+        else {
+            event_id = task.getId();
+            if(!event_id || !task.parentTask)
+                return false;
+        }
+        if(event_id) event_id = parseInt(event_id, 10);
+        
+        var pop = new openerp.web.form.FormOpenPopup(this);
+        
+        pop.show_element(this.model, event_id, this.context || this.dataset.context, {});
+        
+        pop.on_write.add(function(id, data) {
+            var get_project = _.find(self.database_projects, function(project){ return project.id == id});
+            if (get_project) {
+                _.extend(get_project, data);
+            } else {
+                _.extend(self.database_projects, _.extend(data, {'id': id}));
+            }
+            self.reloadView();
+        });
     },
 
     set_width: function() {
-
         $gantt_panel.width(1);
         jQuery(".ganttTaskPanel").parent().width(1);
 
         var search_wdt = jQuery("#oe_app_search").width();
         var day_wdt = jQuery(".ganttDayPanel").children().children().width();
-        jQuery('#GanttDiv').css('width','100%');
+        jQuery('#GanttView').css('width','100%');
 
         if (search_wdt - day_wdt <= name_min_wdt){
             jQuery(".ganttTaskPanel").parent().width(search_wdt - name_min_wdt);
@@ -372,89 +447,16 @@ init: function(parent, dataset, view_id) {
             if (k != -1) {
                 if (res['evt'][0].substring(k) == "_"+j){
                     if (j == 0){
-                        task = new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "",res['evt'][6]);
-                        project.addTask(task);
+                        task = new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "");
+                        self.project.addTask(task);
                     } else {
-                        task = new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "",res['evt'][6]);
-                        prt = project.getTaskById(res['parent']);
+                        task = new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "");
+                        prt = self.project.getTaskById(res['parent']);
                         prt.addChildTask(task);
                     }
                 }
             }
         }
-    },
-
-    open_popup : function(task) {
-        var self = this;
-        var event_id = task.getId();
-        if(event_id.toString().search("_") != -1)
-            return;
-        if(event_id) event_id = parseInt(event_id, 10);
-        
-        var action_manager = new openerp.web.ActionManager(this);
-        
-        var dialog = new openerp.web.Dialog(this, {
-            width: 800,
-            height: 600,
-            buttons : {
-                Cancel : function() {
-                    $(this).dialog('destroy');
-                },
-                Save : function() {
-                    var form_view = action_manager.inner_viewmanager.views.form.controller;
-
-                    form_view.do_save(function() {
-                        self.get_events();
-                    });
-                    $(this).dialog('destroy');
-                }
-            }
-        }).start().open();
-        action_manager.appendTo(dialog.$element);
-        action_manager.do_action({
-            res_model : this.dataset.model,
-            res_id: event_id,
-            views : [[false, 'form']],
-            type : 'ir.actions.act_window',
-            auto_search : false,
-            flags : {
-                search_view: false,
-                sidebar : false,
-                views_switcher : false,
-                action_buttons : false,
-                pager: false
-            }
-        });
-    },
-
-    on_drag_start : function(task){
-        var st_date = task.getEST();
-        if(st_date.getHours()){
-            self.hh = st_date.getHours();
-            self.mm = st_date.getMinutes();
-        }
-    },
-
-    on_resize_drag_end : function(task, evt){
-
-        var event_id = task.getId();
-        var data = {};
-
-        if(event_id.toString().search("_") != -1)
-            return;
-        if (evt == "drag"){
-            full_date = task.getEST().set({hour: self.hh, minute : self.mm, second:0});
-            data[this.date_start] = this.convert_date_str(full_date);
-        }
-        if (this.date_stop != undefined){
-            tm = (task.getDuration() % this.day_length);
-            stp = task.getFinishDate().add(tm).hour();
-            data[this.date_stop] = this.convert_date_str(stp);
-        }else{
-            data[this.date_delay] = task.getDuration();
-        }
-        this.dataset.write(event_id, data, {}, function(result) {});
-
     },
 
     do_show: function () {
@@ -465,44 +467,62 @@ init: function(parent, dataset, view_id) {
         this.$element.hide();
     },
 
-    convert_str_date: function (str){
-        if (str.length == 19){
-            this.format = "yyyy-MM-dd HH:mm:ss";
-            return openerp.web.str_to_datetime(str);
-        } else if (str.length == 10){
-            this.format = "yyyy-MM-dd";
-            return openerp.web.str_to_date(str);
-        } else if (str.length == 8){
-            this.format = "HH:mm:ss";
-            return openerp.web.str_to_time(str);
+    convert_str_date: function (str) {
+        if (typeof str == 'string') {
+            if (str.length == 19) {
+                this.date_format = "yyyy-MM-dd HH:mm:ss";
+                return openerp.web.str_to_datetime(str);
+            }
+            else 
+                if (str.length == 10) {
+                    this.date_format = "yyyy-MM-dd";
+                    return openerp.web.str_to_date(str);
+                }
+                else 
+                    if (str.length == 8) {
+                        this.date_format = "HH:mm:ss";
+                        return openerp.web.str_to_time(str);
+                    }
+            throw "Unrecognized date/time format";
+        } else {
+            return str;
         }
-        throw "Unrecognized date/time format";
     },
 
     convert_date_str: function(full_date) {
-        if (this.format == "yyyy-MM-dd HH:mm:ss"){
+        if (this.date_format == "yyyy-MM-dd HH:mm:ss"){
             return openerp.web.datetime_to_str(full_date);
-        } else if (this.format == "yyyy-MM-dd"){
+        } else if (this.date_format == "yyyy-MM-dd"){
             return openerp.web.date_to_str(full_date);
-        } else if (this.format == "HH:mm:ss"){
+        } else if (this.date_format == "HH:mm:ss"){
             return openerp.web.time_to_str(full_date);
         }
         throw "Unrecognized date/time format";
     },
-
-    reload_gantt: function() {
-        var self = this;
-        this.dataset.read_slice([],{}, function(response) {
-            ganttChartControl.clearAll();
-            jQuery("#GanttDiv").children().remove();
-            self.load_event(response);
-        });
+    
+    reloadView: function() {
+       return this.on_project_loaded(this.database_projects);
     },
 
     do_search: function (domains, contexts, groupbys) {
         var self = this;
-        this.grp = groupbys;
-        self.reload_gantt();
+        this.group_by = [];
+        if (this.fields_view.arch.attrs.default_group_by) {
+            this.group_by = this.fields_view.arch.attrs.default_group_by.split(',');
+        }
+        
+        if (groupbys.length) {
+            this.group_by = groupbys;
+        }
+        
+        $.when(this.has_been_loaded).then(function() {
+                self.dataset.read_slice([], {
+                    domain: domains,
+                    context: contexts
+                }).done(function(projects){
+                    self.on_project_loaded(projects);
+                });
+        });
     }
 
 });

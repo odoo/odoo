@@ -1,6 +1,11 @@
 {
     "name" : "web",
-    "category" : "Hidden",
+    "category": "Hidden",
+    "description":
+        """
+        OpenERP Web core module.
+        This module provides the core of the OpenERP web client.
+        """,
     "depends" : [],
     'active': True,
     'post_load' : 'wsgi_postload',
@@ -10,7 +15,7 @@
         "static/lib/datejs/parser.js",
         "static/lib/datejs/sugarpak.js",
         "static/lib/datejs/extras.js",
-        "static/lib/jquery/jquery-1.6.2.js",
+        "static/lib/jquery/jquery-1.6.4.js",
         "static/lib/jquery.MD5/jquery.md5.js",
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
@@ -43,6 +48,7 @@
         "static/src/js/data_import.js",
         "static/src/js/search.js",
         "static/src/js/view_form.js",
+        "static/src/js/view_page.js",
         "static/src/js/view_list.js",
         "static/src/js/view_list_editable.js",
         "static/src/js/view_tree.js",
