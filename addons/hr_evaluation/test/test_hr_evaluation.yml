@@ -29,29 +29,22 @@
     evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0') , context)
     assert evaluation.state == 'draft', 'Evaluation should be in draft state'
     self.button_plan_in_progress(cr, uid, [ref('hr_evaluation_evaluation_0')])
+    interview_obj = self.pool.get('hr.evaluation.interview')
+    interview_ids = interview_obj.search(cr, uid, [('evaluation_id','=', ref('hr_evaluation_evaluation_0'))])
+    assert len(interview_ids), "Interview evaluation survey not created"
 -
   I check that state is "Plan in progress".
 -
   !assert {model: hr_evaluation.evaluation, id: hr_evaluation_evaluation_0, severity: error, string: Evaluation should be in open state}:
     - state == 'wait'
 -
-  I create a record for Survey Request.
--
-  !record {model: survey.request, id: survey_request_1}:
-    survey_id: survey_2
-    user_id: base.user_demo
-    state: draft
--
-  I Create a record for interview evaluation.
--
-  !record {model: hr.evaluation.interview, id: evaluation_interview_0}:
-    evaluation_id: hr_evaluation_evaluation_0
-    request_id: survey_request_1
--
   Give answer of the first page in "Employee Evaluation" survey.
 -
   !python {model: survey.question.wiz}: |
-    ctx = {'active_model':'hr.evaluation.interview', 'active_id': ref('evaluation_interview_0'), 'active_ids': [ref('evaluation_interview_0')], 'survey_id': ref("survey_2")}
+    interview_obj = self.pool.get('hr.evaluation.interview')
+    interview_ids = interview_obj.search(cr, uid, [('evaluation_id','=', ref('hr_evaluation_evaluation_0'))])
+    assert len(interview_ids), "Interview evaluation survey not created"
+    ctx = {'active_model':'hr.evaluation.interview', 'active_id': interview_ids[0], 'active_ids': [interview_ids], 'survey_id': ref("survey_2")}
     name_wiz_obj=self.pool.get('survey.name.wiz')
     name_id = name_wiz_obj.create(cr, uid, {'survey_id': ref("survey_2")})
     ctx ["sur_name_id"] = name_id
