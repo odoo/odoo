@@ -182,12 +182,28 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
                 selectable: false
             }
         };
-        var am = new openerp.web.ActionManager(this);
+        var am = new openerp.web.ActionManager(this),
+            // FIXME: ideally the dashboard view shall be refactored like kanban.
+            $action = $('#' + this.view.element_id + '_action_' + index);
         this.action_managers.push(am);
-        am.appendTo($('#' + this.view.element_id + '_action_' + index));
+        am.appendTo($action);
         am.do_action(action);
         am.do_action = function(action) {
             self.do_action(action);
+        }
+        if (action_attrs.creatable && action_attrs.creatable !== 'false') {
+            var form_id = parseInt(action_attrs.creatable, 10);
+            $action.parent().find('button.oe_dashboard_button_create').click(function() {
+                var create_action = _.extend({}, action_orig, {
+                    views : [[(isNaN(form_id) ? false : form_id), 'form']]
+                });
+                _.each(action.views, function(v) {
+                    if (v[1] !== 'form') {
+                        create_action.views.push(v);
+                    }
+                });
+                self.do_action(create_action);
+            });
         }
         if (am.inner_viewmanager) {
             am.inner_viewmanager.on_mode_switch.add(function(mode) {
