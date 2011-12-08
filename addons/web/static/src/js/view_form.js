@@ -2785,6 +2785,7 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
             name: 'selection',
             widget: 'selection'
         }});
+        this.reference_ready = true;
         this.selection.on_value_changed.add_last(this.on_selection_changed);
         this.m2o = new openerp.web.form.FieldMany2One(this, { attrs: {
             name: 'm2o',
@@ -2794,10 +2795,12 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
     on_nop: function() {
     },
     on_selection_changed: function() {
-        var sel = this.selection.get_value();
-        this.m2o.field.relation = sel;
-        this.m2o.set_value(null);
-        this.m2o.$element.toggle(sel !== false);
+        if (this.reference_ready) {
+            var sel = this.selection.get_value();
+            this.m2o.field.relation = sel;
+            this.m2o.set_value(null);
+            this.m2o.$element.toggle(sel !== false);
+        }
     },
     start: function() {
         this._super();
@@ -2812,11 +2815,18 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
     },
     set_value: function(value) {
         this._super(value);
+        this.reference_ready = false;
+        var vals = [], sel_val, m2o_val;
         if (typeof(value) === 'string') {
-            var vals = value.split(',');
-            this.selection.set_value(vals[0]);
-            this.m2o.set_value(parseInt(vals[1], 10));
+            vals = value.split(',');
         }
+        sel_val = vals[0] || false;
+        m2o_val = vals[1] ? parseInt(vals[1], 10) : false;
+        this.selection.set_value(sel_val);
+        this.m2o.field.relation = sel_val;
+        this.m2o.set_value(m2o_val);
+        this.m2o.$element.toggle(sel_val !== false);
+        this.reference_ready = true;
     },
     get_value: function() {
         var model = this.selection.get_value(),
