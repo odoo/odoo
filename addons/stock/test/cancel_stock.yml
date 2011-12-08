@@ -1,17 +1,25 @@
 -
-  In order to test the cancel stock. I start from cancelling the Delivery order.
+  In order to test the cancel stock. I start from cancelling the delivery order.
 -
-  First, I create copies of Delivery order.
+  First, I create copies of delivery order.
 -
   !python {model: stock.picking}: |
     stock = self.pool.get('stock.move')
     context.update({'active_id':ref('stock.stock_picking_1')})
     id1 = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
     id2 = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
-    id3 = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
-    context.update({'id1':id1,'id2':id2,'id3':id3})
+    context.update({'id1':id1,'id2':id2})
 -
-  Now, I cancel all related stock moves of Delivery order so automatically Delivery order goes to cancelled state.
+  Directlly cancel the delivery order.
+-
+  !python {model: stock.picking}: |
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    pick_id = context.get('id2')
+    wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
+
+-
+  Now, I cancel all related stock moves of delivery order so automatically delivery order goes to cancelled state.
 -
   !python {model: stock.picking}: |
     import netsvc
@@ -23,12 +31,4 @@
       wf_service.trg_validate(uid, 'stock.move', move, 'action_confirm', cr)
       stock.force_assign(cr, uid, move)
       wf_service.trg_validate(uid, 'stock.move', move, 'action_cancel', cr)
--
-  Now, directlly cancel the Delivery order.
--
-  !python {model: stock.picking}: |
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
-    pick_id = context.get('id2')
-    wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
 
