@@ -183,7 +183,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'color': fields.integer('Color Index'),
         'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
     }
-
+    # Dead Code
     def _get_stage(self, cr, uid, context=None):
         ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [], context=context)
         return ids and ids[0] or False
@@ -365,6 +365,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         self.write(cr, uid, [res_id], vals, context)
         return res_id
 
+    # Dead Code
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
