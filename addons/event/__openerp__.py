@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Event',
+    'name': 'Events Organisation',
     'version': '0.1',
-    'category': 'Hidden',
+    'category': 'Tools',
     'complexity': "easy",
     'description': """
 Organization and management of Events.
@@ -56,6 +56,7 @@ Note that:
     'demo_xml': ['event_demo.xml'],
     'test': ['test/test_event.yml'],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '0083059161581',
     'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg'],

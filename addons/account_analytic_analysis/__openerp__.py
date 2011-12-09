@@ -21,7 +21,7 @@
 
 
 {
-    'name'      : 'Sales Contract Management',
+    'name'      : 'Contracts Management',
     'version'   : '1.1',
     'category'  : 'Sales Management',
     'complexity': "normal",
@@ -46,6 +46,7 @@ user-wise as well as month wise.
                     ],
     'demo_xml'  : [],
     'installable': True,
+    'application': True,
     'active'    : False,
     'certificate': '0042927202589',
 }
