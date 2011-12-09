@@ -35,7 +35,6 @@
     'init_xml': [],
     "depends" : ['account_accountant'],
     'update_xml': [
-                   'l10n_multilang.xml',
             'l10n_multilang_demo.xml' 
                 ],
     'demo_xml': [
