@@ -66,6 +66,37 @@
     assert woodmm0, "Production line is not generated for WOOD002."
     assert metalcleats, "Production line is not generated for METC000."
     assert woodmm10, "Production line is not generated for WOOD010."
+
+-
+  Now I check workcenter lines.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_shelf100cm"), context=context)
+    routing = order.routing_id
+    assert len(order.workcenter_lines), "Workcenter lines are not generated proper."
+    for line in order.workcenter_lines:
+        if line.name == "Short time assembly - Assembly Section":
+            assert line.sequence, "Sequence is not correspond: %s" % (line.name)
+            assert line.cycle == (4*5*12), "Cycle is not correspond: %s" % (line.name)
+            assert line.hour == (2*4*5*12), "Hours is not correspond: %s"% (line.name)
+        elif line.name == "Short time assembly - Rear Panel SHE100":
+            assert line.sequence, "Sequence is not correspond: %s" % (line.name)
+            assert line.cycle == (1*5*12), "Cycle is not correspond: %s" % (line.name)
+            assert line.hour == (2*1*5*12), "Hours is not correspond: %s"% (line.name)
+        elif line.name == "long time assembly - Shelf of 100cm":
+            assert line.sequence, "Sequence is not correspond: %s" % (line.name)
+            assert line.cycle == (1*5*12), "Cycle is not correspond: %s" % (line.name)
+            assert line.hour == (5*1*5*12), "Hours is not correspond: %s"% (line.name)
+        elif line.name == "Testing - Shelf of 100cm":
+            assert line.sequence, "Sequence is not correspond: %s" % (line.name)
+            assert line.cycle == (1*5*12), "Cycle is not correspond: %s" % (line.name)
+            assert line.hour == (1*1*5*12), "Hours is not correspond: %s"% (line.name)
+        elif line.name == "Packing - Shelf of 100cm":
+            assert line.sequence, "Sequence is not correspond: %s" % (line.name)
+            assert line.cycle == (1*5*12), "Cycle is not correspond: %s" % (line.name)
+            assert line.hour == (0.5*1*5*12), "Hours is not correspond: %s"% (line.name)
+        else:
+            raise AssertionError('unknown workcenter line: %s' % line)
 -
   I confirm the Production Order.
 -

@@ -151,26 +151,38 @@
             <field name="workcenter_id" ref="mrp_workcenter_0"/>
             <field name="name">Short time assembly</field>
             <field name="hour_nbr">2</field>
+            <field name="sequence">5</field>
         </record>
         <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_1"/>
             <field name="workcenter_id" ref="mrp_workcenter_0"/>
             <field name="name">long time assembly</field>
             <field name="hour_nbr">5</field>
+            <field name="sequence">15</field>
         </record>
-        <record id="mrp_routing_workcenter_2" model="mrp.routing.workcenter">
-            <field name="routing_id" ref="mrp_routing_2"/>
+        <record id="mrp_routing_workcenter_3" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_1"/>
             <field name="workcenter_id" ref="mrp_workcenter_0"/>
-            <field name="cycle_nbr">0.5</field>
-            <field name="hour_nbr">3</field>
-            <field name="name">assembly main + processor + fan</field>
+            <field name="name">Testing</field>
+            <field name="hour_nbr">1</field>
+            <field name="sequence">10</field>
         </record>
+        
         <record id="mrp_routing_workcenter_4" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_1"/>
             <field name="workcenter_id" ref="mrp_workcenter_1"/>
             <field name="name">Packing</field>
             <field name="hour_nbr">0.5</field>
             <field name="sequence">5</field>
+        </record>
+
+        <record id="mrp_routing_workcenter_2" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_2"/>
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="cycle_nbr">0.5</field>
+            <field name="hour_nbr">3</field>
+            <field name="sequence">5</field>
+            <field name="name">assembly main + processor + fan</field>
         </record>
 
         <!--
@@ -571,6 +583,7 @@
         <field name="product_id" ref="product.product_product_shelfofcm0"/>
         <field name="product_uom" ref="product.product_uom_unit"/>
         <field name="product_qty">1.0</field>
+        <field name="routing_id" ref="mrp.mrp_routing_1"/>
     </record>
 
     <!-- BoMs for 1 Shelf 100cm
@@ -681,6 +694,7 @@
         <field name="product_id" ref="product.product_product_assemblysection0"/>
         <field name="product_uom" ref="product.product_uom_unit"/>
         <field name="product_qty">1.0</field>
+        <field name="routing_id" ref="mrp.mrp_routing_0"/>
         
     </record>
 
@@ -703,6 +717,7 @@
        <field name="product_uom" ref="product.product_uom_unit"/>
        <field name="product_qty">1.0</field>
        <field name="name">Rear panel SHE100</field>
+        <field name="routing_id" ref="mrp.mrp_routing_0"/>
     </record>
     <record id="mrp_bom_rearpanelarm1_wood002" model="mrp.bom">
        <field name="sequence">1311</field>
@@ -827,7 +842,6 @@
         <field name="location_src_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
         <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
-        <field name="routing_id" ref="mrp.mrp_routing_0"/>
     </record>
 
     
