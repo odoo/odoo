@@ -321,7 +321,19 @@ class module(osv.osv):
     def button_install(self, cr, uid, ids, context=None):
         self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
         return dict(ACTION_DICT, name=_('Install'))
-        
+
+    def button_immediate_install(self, cr, uid, ids, context=None):
+        """ Installs the selected module(s) immediately and fully,
+        returns the next res.config action to execute
+
+        :param ids: identifiers of the modules to install
+        :returns: next res.config item to execute
+        :rtype: dict[str, object]
+        """
+        self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+        cr.commit()
+        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+        return pool.get('res.config').next(db.cursor(), uid, [], context=context)
 
     def button_install_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
