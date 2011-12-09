@@ -2429,7 +2429,7 @@ class account_account_template(osv.osv):
         'child_parent_ids':fields.one2many('account.account.template', 'parent_id', 'Children'),
         'tax_ids': fields.many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', 'Default Taxes'),
         'nocreate': fields.boolean('Optional create', help="If checked, the new chart of accounts will not contain this by default."),
-        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template'),
+        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', help="This optional field allow you to link an account template to a specific chart template that may differ from the one its root parent belongs to. This allow you to define chart templates that extend another and complete it with few new accounts (You don't need to define the whole structure that is common to both several times)."),
     }
 
     _defaults = {
@@ -2466,26 +2466,27 @@ class account_account_template(osv.osv):
             res.append((record['id'],name ))
         return res
 
-    def generate_account(self, cr, uid, template_id, tax_template_ref, acc_template_ref, code_digits, company_id, context=None):
+    def generate_account(self, cr, uid, chart_template_id, tax_template_ref, acc_template_ref, code_digits, company_id, context=None):
         """
         This method for generating accounts from templates.
-        @param cr: A database cursor.
-        @param uid: ID of the user currently logged in.
-        @param account_root_id: Root account id getting from current template.
-        @param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
-        @param code_digits: Digit getting from wizard.multi.charts.accounts.,this is use for account code.
-        @param company_id: company_id selected from wizard.multi.charts.accounts.
-        @return : return acc_template_ref for reference purpose.
+
+        :param chart_template_id: id of the chart template chosen in the wizard
+        :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
+        :paramacc_template_ref: dictionary with the mappping between the account templates and the real accounts.
+        :param code_digits: number of digits got from wizard.multi.charts.accounts, this is use for account code.
+        :param company_id: company_id selected from wizard.multi.charts.accounts.
+        :returns: return acc_template_ref for reference purpose.
+        :rtype: dict
         """
         if context is None:
             context = {}
         obj_acc = self.pool.get('account.account')
         company_name = self.pool.get('res.company').browse(cr, uid, company_id, context=context).name
-        template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
+        template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context.copy()
         ctx.update({'defer_parent_store_computation': True})
-        children_acc_template = self.search(cr, uid, ['|', ('chart_template_id','=', [template_id]),'&',('parent_id','child_of', [template.account_root_id.id]),('chart_template_id','=', False), ('nocreate','!=',True)], order='id')
+        children_acc_template = self.search(cr, uid, ['|', ('chart_template_id','=', [chart_template_id]),'&',('parent_id','child_of', [template.account_root_id.id]),('chart_template_id','=', False), ('nocreate','!=',True)], order='id')
         for account_template in self.browse(cr, uid, children_acc_template, context=context):
             # skip the root of COA if it's not the main one
             if (template.account_root_id.id == account_template.id) and template.parent_id:
@@ -2719,7 +2720,6 @@ class account_tax_template(osv.osv):
         'description': fields.char('Internal Name', size=32),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,),
         'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
-        'installable': fields.boolean('Should be Installed', help="Set this to False if you do not want to create real tax object from this template.")
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -2751,7 +2751,6 @@ class account_tax_template(osv.osv):
         'include_base_amount': False,
         'type_tax_use': 'all',
         'price_include': 0,
-        'installable': True
     }
     _order = 'sequence'
 
@@ -3006,9 +3005,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             if data.complete_tax_set:
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                              , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all')), ('installable', '=', True)], order="sequence, id desc")
+                                              , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence, id desc")
                 purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                              , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all')), ('installable', '=', True)], order="sequence, id desc")
+                                              , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence, id desc")
                 res['value'].update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False, 'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
 
             if data.code_digits:
@@ -3035,11 +3034,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 res.update({'chart_template_id': ids[0]})
             if 'sale_tax' in fields:
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                              , "=", ids[0]), ('type_tax_use', 'in', ('sale','all')), ('installable', '=', True)], order="sequence")
+                                              , "=", ids[0]), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
                 res.update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False})
             if 'purchase_tax' in fields:
                 purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                          , "=", ids[0]), ('type_tax_use', 'in', ('purchase','all')), ('installable', '=', True)], order="sequence")
+                                          , "=", ids[0]), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
                 res.update({'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
         return res
 
@@ -3260,7 +3259,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_code_ref.update(obj_tax_code_template.generate_tax_code(cr, uid, template.tax_code_root_id.id, company_id, context=context))
 
         # Generate taxes from templates.
-        tax_templates = [x for x in template.tax_template_ids if x.installable]
+        tax_templates = [x for x in template.tax_template_ids]
         generated_tax_res = obj_tax_temp._generate_tax(cr, uid, tax_templates, tax_code_ref, company_id, context=context)
         taxes_ref.update(generated_tax_res['tax_template_to_tax'])
 
@@ -3335,7 +3334,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                             'ref_base_code_id': new_base_code_id,
                                             'ref_tax_code_id': new_tax_code_id,
                                             'type_tax_use': tax_type,
-                                            'installable': True,
                                             'type': 'percent',
                                             'sequence': 0,
                                             'chart_template_id': chart_template.id or False,
