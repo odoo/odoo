@@ -2827,13 +2827,13 @@ class account_fiscal_position_template(osv.osv):
 
     def generate_fiscal_position(self, cr, uid, chart_temp_id, tax_template_ref, acc_template_ref, company_id, context=None):
         """
-        This method generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates.
-        @param cr: A database cursor.
-        @param uid: ID of the user currently logged in.
-        @param chart_temp_id: Chart Template Id.
-        @param taxes_ids: Taxes templates reference for generating account.fiscal.position.tax.
-        @param acc_template_ref: Account templates reference for generating account.fiscal.position.account.
-        @param company_id: company_id selected from wizard.multi.charts.accounts.
+        This method generate Fiscal Position, Fiscal Position Accounts and Fiscal Position Taxes from templates.
+
+        :param chart_temp_id: Chart Template Id.
+        :param taxes_ids: Taxes templates reference for generating account.fiscal.position.tax.
+        :param acc_template_ref: Account templates reference for generating account.fiscal.position.account.
+        :param company_id: company_id selected from wizard.multi.charts.accounts.
+        :returns: True
         """
         if context is None:
             context = {}
@@ -2855,7 +2855,7 @@ class account_fiscal_position_template(osv.osv):
                     'account_dest_id': acc_template_ref[acc.account_dest_id.id],
                     'position_id': new_fp
                 })
-        return {}
+        return True
 
 account_fiscal_position_template()
 
@@ -2989,7 +2989,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Cash and Banks', required=True),
         'code_digits':fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'seq_journal':fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
-        "sale_tax": fields.many2one("account.tax.template", "Default Sales Tax"),
+        "sale_tax": fields.many2one("account.tax.template", "Default Sale Tax"),
         "purchase_tax": fields.many2one("account.tax.template", "Default Purchase Tax"),
         'sale_tax_rate': fields.float('Sales Tax(%)'),
         'purchase_tax_rate': fields.float('Purchase Tax(%)'),
@@ -3048,7 +3048,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         acc_template_obj = self.pool.get('account.chart.template')
         company_obj = self.pool.get('res.company')
 
-        template_ids = acc_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
         company_ids = company_obj.search(cr, uid, [], context=context)
         #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
         cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
@@ -3061,11 +3060,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 if unconfigured_cmp:
                     cmp_select = [(line.id, line.name) for line in company_obj.browse(cr, uid, unconfigured_cmp)]
                     res['fields'][field]['selection'] = cmp_select
-            if field == 'chart_template_id':
-                res['fields'][field]['selection'] = [('', '')]
-                if template_ids:
-                    template_select = [(template.id, template.name) for template in acc_template_obj.browse(cr, uid, template_ids)]
-                    res['fields'][field]['selection'] = template_select
         return res
 
     def check_created_journals(self, cr, uid, vals_journal, company_id, context=None):
