@@ -40,7 +40,7 @@
 -
   !python {model: stock.move}: |
     ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_cpu2'))])
-    assert [x.state for x in self.browse(cr, uid, ids) if x.state == 'done'], 'stock moves should be done!'    
+    assert [x.state for x in self.browse(cr, uid, ids) if x.state == 'done'], 'stock moves should be done!'
 
 -
   For testing the process of return picking, I create copy of delivery order.
@@ -62,4 +62,3 @@
     stock_partial_picking.do_partial(cr, uid, [partial_id], context)
     return_pick_id = self.pool.get('stock.return.picking').create(cr, uid,{}, context)
     self.pool.get('stock.return.picking').create_returns(cr, uid, [return_pick_id], context)
-

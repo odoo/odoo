@@ -38,4 +38,3 @@
     (data, format) = netsvc.LocalService('report.stock.product.history').create(cr, uid, [ref('product.product_product_pc1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-product_stock_report.'+format), 'wb+').write(data)
-

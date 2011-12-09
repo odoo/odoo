@@ -55,4 +55,3 @@
     all_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_ice'))])
     new_move=self.browse(cr,uid,all_ids)[-1]
     assert not old_move.tracking_id == new_move.tracking_id,"After spliting the move, new move should be created with new pack"
-
