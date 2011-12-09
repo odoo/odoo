@@ -2954,6 +2954,7 @@ class account_financial_report(osv.osv):
         return res
 
     def _get_balance(self, cr, uid, ids, name, args, context=None):
+        account_obj = self.pool.get('account.account')
         res = {}
         res_all = {}
         for report in self.browse(cr, uid, ids, context=context):
@@ -2963,6 +2964,12 @@ class account_financial_report(osv.osv):
             elif report.type == 'accounts':
                 # it's the sum of balance of the linked accounts
                 for a in report.account_ids:
+                    balance += a.balance
+            elif report.type == 'account_type':
+                # it's the sum of balance of the leaf accounts with such an account type
+                report_types = [x.id for x in report.account_type_ids]
+                account_ids = account_obj.search(cr, uid, [('user_type','in', report_types), ('type','!=','view')], context=context)
+                for a in account_obj.browse(cr, uid, account_ids, context=context):
                     balance += a.balance
             elif report.type == 'account_report' and report.account_report_id:
                 # it's the amount of the linked report
