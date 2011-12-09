@@ -530,8 +530,6 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     msg['To'] = COMMASPACE.join(email_to)
     if email_cc:
         msg['Cc'] = COMMASPACE.join(email_cc)
-    if email_bcc:
-        msg['Bcc'] = COMMASPACE.join(email_bcc)
     msg['Date'] = formatdate(localtime=True)
 
     msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
