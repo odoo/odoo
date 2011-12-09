@@ -20,7 +20,7 @@
 ##############################################################################
 
 import base_contact
-import base_contact_installer
+#import base_contact_installer
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

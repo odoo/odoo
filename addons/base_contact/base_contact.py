@@ -61,31 +61,6 @@ class res_partner_contact(osv.osv):
 
     _order = "name,first_name"
 
-    def name_get2(self, cr, user, ids, context=None):
-
-        """ will return name and first_name.......
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param user: the current user’s ID for security checks,
-            @param ids: List of create menu’s IDs
-            @return: name and first_name
-            @param context: A standard dictionary for contextual values
-        """
-
-        if not len(ids):
-            return []
-        res = []
-        for contact in self.browse(cr, user, ids, context=context):
-            _contact = ""
-            if contact.title:
-                _contact += "%s "%(contact.title.name)
-            _contact += contact.name or ""
-            if contact.name and contact.first_name:
-                _contact += " "
-            _contact += contact.first_name or ""
-            res.append((contact.id, _contact))
-        return res
-    
     def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=None):
         if not args:
             args = []
@@ -111,16 +86,33 @@ res_partner()
 class res_partner_location(osv.osv):
     _name = 'res.partner.location'
     _inherit = 'res.partner.address'
-    #_table = 'res_partner_address'
     _columns = {
         'job_ids': fields.one2many('res.partner.address', 'location_id', 'Contacts'),
     }
+
+    def _auto_init(self, cr, context=None):
+        def table_exists(view_name):
+            cr.execute('SELECT count(relname) FROM pg_class WHERE relname = %s', (view_name,))
+            value = cr.fetchone()[0]
+            return bool(value == 1)
+
+        exists = table_exists(self._table)
+        super(res_partner_location, self)._auto_init(cr, context)
+
+        if not exists:
+            sequence_name = self.pool.get('res.partner.address')._sequence
+            cr.execute("SELECT last_value FROM " + sequence_name)
+            last_sequence = cr.fetchone()[0]
+
+            cr.execute("INSERT INTO res_partner_location SELECT * FROM res_partner_address")
+            cr.execute("ALTER SEQUENCE " + self._sequence + " RESTART WITH " + str(last_sequence))
+
+
 res_partner_location()
 
 class res_partner_address(osv.osv):
     _name = 'res.partner.address'
     _inherits = { 'res.partner.location' : 'location_id' }
-    _table = 'res_partner_job'
 
     _columns = {
         'location_id' : fields.many2one('res.partner.location', 'Location'),
@@ -141,6 +133,19 @@ class res_partner_address(osv.osv):
         'state': 'current',
     }
 
+    def _auto_init(self, cr, context=None):
+        def column_exists(column):
+            cr.execute("select count(attname) from pg_attribute where attrelid = \
+                       (select oid from pg_class where relname = %s) \
+                       and attname = %s", (self._table, column,))
+            value = cr.fetchone()[0]
+            return bool(value == 1)
+
+        exists = column_exists('location_id')
+        super(res_partner_address, self)._auto_init(cr, context)
+
+        if not exists:
+            cr.execute("UPDATE res_partner_address SET location_id = id")
 
 res_partner_address()
 
