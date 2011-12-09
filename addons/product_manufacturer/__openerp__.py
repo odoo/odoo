@@ -21,7 +21,7 @@
     "name" : "Products Attributes & Manufacturers",
     "version" : "1.0",
     "author" : "OpenERP SA",
-    "category" : "Hidden",
+    'category': 'Purchase Management',
     'complexity': "easy",
     "depends" : ["stock"],
     "init_xml" : [],

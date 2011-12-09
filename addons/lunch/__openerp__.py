@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Lunch",
+    "name": "Lunch Orders",
     "author": "OpenERP SA",
     'complexity': "easy",
     "Description": """
@@ -55,6 +55,7 @@
     "demo_xml": ['lunch_demo.xml'],
     "test": ['test/test_lunch.yml', 'test/lunch_report.yml'],
     "installable": True,
+    'application': True,
     "certificate" : "001292377792581874189",
     'images': ['images/cash_moves.jpeg','images/lunch_orders.jpeg','images/products.jpeg'],
 }

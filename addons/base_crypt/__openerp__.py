@@ -19,12 +19,12 @@
 #
 ##############################################################################
 {
-    "name" : "Base - Password Encryption",
+    "name" : "DB Password Encryption",
     "version" : "1.1",
     "author" : ['OpenERP SA', "FS3"],
     "maintainer" : "OpenERP SA",
     "website" : "http://www.openerp.com",
-    "category" : "Hidden",
+    "category" : "Tools",
     'complexity': "easy",
     "description": """
 Replaces cleartext passwords in the database with a secure hash
