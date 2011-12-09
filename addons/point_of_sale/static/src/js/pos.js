@@ -30,22 +30,21 @@ openerp.point_of_sale = function(db) {
      Local store access. Read once from localStorage upon construction and persist on every change.
      There should only be one store active at any given time to ensure data consistency.
      */
-    var Store = (function() {
-        function Store() {
-            var store;
-            store = localStorage['pos'];
-            this.data = (store && JSON.parse(store)) || {};
-        }
-
-        Store.prototype.get = function(key) {
+    var Store = db.web.Class.extend({
+        init: function() {
+            this.data = {};
+        },
+        get: function(key) {
+            if (this.data[key] === undefined) {
+                this.data[key] = JSON.parse(localStorage['oe_pos_' + key]);
+            }
             return this.data[key];
-        };
-        Store.prototype.set = function(key, value) {
+        },
+        set: function(key, value) {
             this.data[key] = value;
-            return localStorage['pos'] = JSON.stringify(this.data);
-        };
-        return Store;
-    })();
+            localStorage['oe_pos_' + key] = JSON.stringify(value);
+        },
+    });
     /*
      Gets all the necessary data from the OpenERP web client (session, shop data etc.)
      */
@@ -60,7 +59,7 @@ openerp.point_of_sale = function(db) {
                 .then(this.build_tree);
         },
         ready: $.Deferred(),
-        store: new Store,
+        store: new Store(),
         fetch: function(osvModel, fields, domain) {
             var dataSetSearch;
             var self = this;
