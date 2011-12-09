@@ -443,16 +443,14 @@ openerp.web_dashboard.ApplicationInstaller = openerp.web.Widget.extend({
                 action_buttons: false,
                 sidebar: false,
                 pager: false
-            },
+            }
         });
-        $('.secondary_menu', this.$element.closest('.openerp')).hide();
         return r;
     },
     stop: function() {
-        $('.secondary_menu', this.$element.closest('.openerp')).show();
         this.action_manager.stop();
         return this._super();
-    },
+    }
 });
 
 
