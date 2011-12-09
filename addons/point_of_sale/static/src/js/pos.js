@@ -49,8 +49,8 @@ openerp.point_of_sale = function(db) {
     /*
      Gets all the necessary data from the OpenERP web client (session, shop data etc.)
      */
-    var Pos = (function() {
-        function Pos(session) {
+    var Pos = db.web.Class.extend({
+        init: function(session) {
             this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
@@ -58,11 +58,10 @@ openerp.point_of_sale = function(db) {
                 this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name']),
                 this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']))
                 .then(this.build_tree);
-        }
-
-        Pos.prototype.ready = $.Deferred();
-        Pos.prototype.store = new Store;
-        Pos.prototype.fetch = function(osvModel, fields, domain) {
+        },
+        ready: $.Deferred(),
+        store: new Store,
+        fetch: function(osvModel, fields, domain) {
             var dataSetSearch;
             var self = this;
             var callback = function(result) {
@@ -70,14 +69,14 @@ openerp.point_of_sale = function(db) {
             };
             dataSetSearch = new db.web.DataSetSearch(this, osvModel, {}, domain);
             return dataSetSearch.read_slice(fields, 0).then(callback);
-        };
-        Pos.prototype.push = function(osvModel, record, callback, errorCallback) {
+        },
+        push: function(osvModel, record, callback, errorCallback) {
             var dataSet;
             dataSet = new db.web.DataSet(this, osvModel, null);
             return dataSet.create(record, callback, errorCallback);
-        };
-        Pos.prototype.categories = {};
-        Pos.prototype.build_tree = function() {
+        },
+        categories: {},
+        build_tree: function() {
             var c, id, _i, _len, _ref, _ref2;
             _ref = this.store.get('pos.category');
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -124,14 +123,14 @@ openerp.point_of_sale = function(db) {
                 }).call(this)
             };
             return this.ready.resolve();
-        };
-        Pos.prototype.build_ancestors = function(parent) {
+        },
+        build_ancestors: function(parent) {
             if (parent != null) {
                 this.current_category.ancestors.unshift(parent);
                 return this.build_ancestors(this.categories[parent].parent);
             }
-        };
-        Pos.prototype.build_subtree = function(category) {
+        },
+        build_subtree: function(category) {
             var c, _i, _len, _ref, _results;
             _ref = category.children;
             _results = [];
@@ -141,9 +140,8 @@ openerp.point_of_sale = function(db) {
                 _results.push(this.build_subtree(this.categories[c]));
             }
             return _results;
-        };
-        return Pos;
-    })();
+        }
+    });
 
     /* global variable */
     var pos;
