@@ -1,7 +1,7 @@
 -
   In order to test chained locations, I update the stock of product.
 -
-  I update product quantity and check the stock moves are properly done or not
+  I update product quantity and check the stock moves are properly done or not.
 -
   !python {model: product.product}: |
     change_qty = self.pool.get('stock.change.product.qty')
@@ -16,9 +16,9 @@
     for move in self.browse(cr, uid, ids):
       assert move.product_qty >= 1,"Product is not correspond"
       if move.location_id.name == 'Inventory loss':
-        assert move.location_dest_id.name == 'Convenience Store',"Destination location must be 'Refrigerated Vehicles'"
+        assert move.location_dest_id.name == 'Convenience Store',"Destination location must be 'Convenience Store'"
       if move.location_id.name == 'Convenience Store':
-        assert move.location_dest_id.name == 'Cold Storage',"Destination location must be 'Cold Storage' because the source location is 'Refrigerated Vehicles'"
+        assert move.location_dest_id.name == 'Cold Storage',"Destination location must be 'Cold Storage' because the source location is 'Convenience Store'"
       if move.location_id.name == 'Cold Storage':
         assert move.location_dest_id.name == 'Customers',"Destination location must be 'Customers' because the source location is 'Cold Storage'"
 -
