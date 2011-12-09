@@ -29,13 +29,11 @@
         Analytic Chart of Accounts and Analytic Journals.
     * Setup wizard changes
         - Copy translations for COA, Tax, Tax Code and Fiscal Position from templates to target objects.
-        - Add option to install languages during the setup.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
     "depends" : ['account_accountant'],
     'update_xml': [
-            'l10n_multilang_demo.xml' 
                 ],
     'demo_xml': [
                 ],
