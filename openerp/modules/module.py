@@ -218,6 +218,11 @@ def get_module_resource(module, *args):
         return resource_path
     return False
 
+def get_module_icon(module):
+    iconpath = ['static', 'src', 'img', 'icon.png']
+    if get_module_resource(module, *iconpath):
+        return ('/' + module + '/') + '/'.join(iconpath)
+    return '/base/'  + '/'.join(iconpath)
 
 def load_information_from_description_file(module):
     """
@@ -241,7 +246,7 @@ def load_information_from_description_file(module):
                 'complexity': 'normal',
                 'depends': [],
                 'description': '',
-                'icon': None,
+                'icon': get_module_icon(module),
                 'installable': True,
                 'license': 'AGPL-3',
                 'name': False,
