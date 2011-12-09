@@ -800,59 +800,60 @@ class users_view(osv.osv):
     _inherit = 'res.users'
 
     def create(self, cr, uid, values, context=None):
-        self._process_values_groups(cr, uid, values, context)
+        self._set_reified_groups(values)
         return super(users_view, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
-        self._process_values_groups(cr, uid, values, context)
+        self._set_reified_groups(values)
         return super(users_view, self).write(cr, uid, ids, values, context)
 
-    def _process_values_groups(self, cr, uid, values, context=None):
-        """ transform all reified group fields into a 'groups_id', adding 
-            also the implied groups """
+    def _set_reified_groups(self, values):
+        """ reflect reified group fields in values into 'groups_id' """
         add, remove = [], []
-        for k in values.keys():
-            if is_boolean_group(k):
-                target = add if values.pop(k) else remove
-                target.append(get_boolean_group(k))
-            elif is_boolean_groups(k):
-                if not values.pop(k):
-                    remove.extend(get_boolean_groups(k))
-            elif is_selection_groups(k):
-                remove.extend(get_selection_groups(k))
-                selected = values.pop(k)
+        for f in values.keys():
+            if is_boolean_group(f):
+                target = add if values.pop(f) else remove
+                target.append(get_boolean_group(f))
+            elif is_boolean_groups(f):
+                if not values.pop(f):
+                    remove.extend(get_boolean_groups(f))
+            elif is_selection_groups(f):
+                remove.extend(get_selection_groups(f))
+                selected = values.pop(f)
                 if selected:
                     add.append(selected)
-        if add or remove:
-            # remove groups in 'remove' and add groups in 'add'
-            gdiff = [(3, id) for id in remove] + [(4, id) for id in add]
-            values.setdefault('groups_id', []).extend(gdiff)
-        return True
+        # remove groups in 'remove' and add groups in 'add'
+        gdiff = [(3, id) for id in remove] + [(4, id) for id in add]
+        values.setdefault('groups_id', []).extend(gdiff)
+
+    def default_get(self, cr, uid, fields, context=None):
+        group_fields, fields = partition(is_reified_group, fields)
+        fields.append('groups_id')
+        values = super(users_view, self).default_get(cr, uid, fields, context)
+        self._get_reified_groups(group_fields, values)
+        return values
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         if not fields:
             fields = self.fields_get(cr, uid, context=context).keys()
         group_fields, fields = partition(is_reified_group, fields)
+        fields.append('groups_id')
+        res = super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
+        for values in (res if isinstance(res, list) else [res]):
+            self._get_reified_groups(group_fields, values)
+        return res
 
-        if group_fields:
-            # first read the normal fields (and 'groups_id')
-            fields.append('groups_id')
-            res = super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
-            # add reified groups fields in result(s)
-            records = res if isinstance(res, list) else [res]
-            for record in records:
-                user_group_ids = set(record['groups_id'])
-                for f in group_fields:
-                    if is_boolean_group(f):
-                        record[f] = get_boolean_group(f) in user_group_ids
-                    elif is_boolean_groups(f):
-                        record[f] = not user_group_ids.isdisjoint(get_boolean_groups(f))
-                    elif is_selection_groups(f):
-                        selected = [gid for gid in get_selection_groups(f) if gid in user_group_ids]
-                        record[f] = selected and selected[-1] or False
-            return res
-
-        return super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
+    def _get_reified_groups(self, fields, values):
+        """ compute the given reified group fields in the dictionary values """
+        gids = set(values.get('groups_id') or [])
+        for f in fields:
+            if is_boolean_group(f):
+                values[f] = get_boolean_group(f) in gids
+            elif is_boolean_groups(f):
+                values[f] = not gids.isdisjoint(get_boolean_groups(f))
+            elif is_selection_groups(f):
+                selected = [gid for gid in get_selection_groups(f) if gid in gids]
+                values[f] = selected and selected[-1] or False
 
     def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
         res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access)
