@@ -840,7 +840,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this.$secondary_menu = $("#" + secondary_menu_id);
         this.$secondary_menu.hide();
         this.menu = false;
-        this.folded = false;
+        this.folded = true;
         if (window.localStorage) {
             this.folded = localStorage.getItem('oe_menu_folded') === 'true';
         }

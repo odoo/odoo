@@ -434,6 +434,7 @@ openerp.web_dashboard.ApplicationInstaller = openerp.web.Widget.extend({
         this.action_manager.do_action({
             type: 'ir.actions.act_window',
             res_model: 'ir.module.module',
+            domain: [['application','=',true]],
             views: [[false, 'kanban']],
             flags: {
                 display_title:false,
