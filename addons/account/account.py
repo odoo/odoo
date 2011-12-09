@@ -760,7 +760,6 @@ class account_journal(osv.osv):
 
         seq = {
             'name': vals['name'],
-            'company_id': vals['company_id'],
             'implementation':'no_gap',
             'prefix': prefix + "/%(year)s/",
             'padding': 4,
