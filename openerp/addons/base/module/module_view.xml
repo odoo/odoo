@@ -70,8 +70,9 @@
                   <field name="complexity"/>
                   <templates>
                     <t t-name="kanban-box">
+                      <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
                       <a type="edit"> 
-                        <img t-attf-src="/#{record.name.value}/static/images/icon.png" class="oe_module_icon"/>
+                        <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
                       </a>
                       <div class="oe_module_desc">
                         <h4><a type="edit"><field name="shortdesc"/></a></h4>
@@ -79,13 +80,9 @@
                            <field name="category_id"/><br/>
                            <span t-if="record.complexity.raw_value == 'Expert'" class="oe_label oe_warning">Complex</span>
                          </p>
-                        <a type="object" name="button_install" states="uninstalled" class="button">Install</a>
-                        <button t-if="record.state.raw_value == 'installed'" class="label" disabled="disabled">Installed</button>
+                        <button type="object" name="button_immediate_install" states="uninstalled" class="button">Install</button>
+                        <button t-if="installed" class="label" disabled="disabled">Installed</button>
                       </div>
-                      <script>
-                        $('.oe_module_icon').error(function() { $(this).attr('src', "/base/static/src/img/kanban_partner.png"); });
-                        $('a .oe_module_icon').error(function() { $(this).attr('src', "/base/static/src/img/kanban_partner.png"); });
-                      </script>
                     </t>
                   </templates>
               </kanban>
