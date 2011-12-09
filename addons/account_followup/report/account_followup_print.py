@@ -64,9 +64,9 @@ class report_rappel(report_sxw.rml_parse):
         line_cur = {base_currency.id: {'line': []}}
 
         for line in movelines:
-            if line.account_id.currency_id and (not line.account_id.currency_id.id in line_cur):
-                line_cur[line.account_id.currency_id.id] = {'line': []}
-            currency = line.account_id.currency_id or line.company_id.currency_id
+            if line.currency_id and (not line.currency_id.id in line_cur):
+                line_cur[line.currency_id.id] = {'line': []}
+            currency = line.currency_id or line.company_id.currency_id
             line_data = {
                          'name': line.move_id.name,
                          'ref': line.ref,

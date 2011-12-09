@@ -32,11 +32,11 @@
                     <field name="prorata"/>
                     <field name="open_asset"/>
                 </group>
-        	<group col="2" colspan="2" groups="analytic.group_analytic_accounting">
-        	    <separator string="Analytic information" colspan="4"/>
-        	    <newline/>
-        	    <field name="account_analytic_id"/>
-        	</group>
+            <group col="2" colspan="2" groups="analytic.group_analytic_accounting">
+                <separator string="Analytic information" colspan="4"/>
+                <newline/>
+                <field name="account_analytic_id"/>
+            </group>
                 <separator string="Notes" colspan="4"/>
                 <field name="note" colspan="4" nolabel="1"/>
             </form>
@@ -317,7 +317,7 @@
         <field name="name">Review Asset Categories</field>
         <field name="res_model">account.asset.category</field>
         <field name="view_type">form</field>
-        <field name="view_mode">form</field>
+        <field name="view_mode">tree,form</field>
     </record>
     
     <record id="asset_category_form_view_todo" model="ir.actions.todo">

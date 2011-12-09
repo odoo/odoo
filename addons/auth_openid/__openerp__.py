@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'OpenID',
+    'name': 'OpenID Authentification',
     'version': '2.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'description': """Allow users to login through OpenID.""",
     'author': 'OpenERP s.a.',
     'maintainer': 'OpenERP s.a.',

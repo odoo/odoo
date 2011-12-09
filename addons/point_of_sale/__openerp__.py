@@ -79,6 +79,7 @@ Main features :
         'test/point_of_sale_report.yml'
     ],
     'installable': True,
+    'application': True,
     'certificate' : '001156338024966477869',
     # Web client
     'js': ['static/lib/backbone/backbone-0.5.3.js', 'static/src/js/pos.js'],

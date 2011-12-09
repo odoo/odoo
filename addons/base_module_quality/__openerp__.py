@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Base module quality - To check the quality of other modules' ,
+    'name': 'Analyse Module Quality' ,
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'description': """
 The aim of this module is to check the quality of other modules.
 ================================================================
