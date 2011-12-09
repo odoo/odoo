@@ -71,12 +71,12 @@ class module_category(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char("Name", size=128, required=True, select=True),
+        'name': fields.char("Name", size=128, required=True, translate=True, select=True),
         'parent_id': fields.many2one('ir.module.category', 'Parent Application', select=True),
         'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Applications'),
         'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer'),
         'module_ids' : fields.one2many('ir.module.module', 'category_id', 'Modules'),
-        'description' : fields.text("Description"),
+        'description' : fields.text("Description", translate=True),
         'sequence' : fields.integer('Sequence'),
         'visible' : fields.boolean('Visible'),
     }
