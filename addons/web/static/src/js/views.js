@@ -246,12 +246,16 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
      */
     on_mode_switch: function(view_type, no_store) {
         var self = this,
+            view = this.views[view_type],
             view_promise;
+        if(!view)
+            return $.Deferred().reject();
+
         if (!no_store) {
             this.views_history.push(view_type);
         }
         this.active_view = view_type;
-        var view = this.views[view_type];
+
         if (!view.controller) {
             // Lazy loading of views
             var controllerclass = this.registry.get_object(view_type);
@@ -494,32 +498,31 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
     },
     on_mode_switch: function (view_type, no_store) {
         var self = this;
-        var switched = $.when(this._super(view_type, no_store)).then(function () {
+
+        return $.when(this._super(view_type, no_store)).then(function () {
+            self.shortcut_check(self.views[view_type]);
+
             self.$element.find('.oe-view-manager-logs:first')
                 .addClass('oe-folded').removeClass('oe-has-more')
                 .find('ul').empty();
-        });
-        return $.when(
-                switched,
-                this.shortcut_check(this.views[view_type])
-            ).then(function() {
-                var controller = self.views[self.active_view].controller,
-                    fvg = controller.fields_view,
-                    view_id = (fvg && fvg.view_id) || '--';
-                self.$element.find('.oe_get_xml_view span').text(view_id);
-                if (!self.action.name && fvg) {
-                    self.$element.find('.oe_view_title_text').text(fvg.arch.attrs.string || fvg.name);
-                }
 
-                var $title = self.$element.find('.oe_view_title_text'),
-                    $search_prefix = $title.find('span.oe_searchable_view');
-                if (controller.searchable !== false) {
-                    if (!$search_prefix.length) {
-                        $title.prepend('<span class="oe_searchable_view">' + _t("Search: ") + '</span>');
-                    }
-                } else {
-                    $search_prefix.remove();
+            var controller = self.views[self.active_view].controller,
+                fvg = controller.fields_view,
+                view_id = (fvg && fvg.view_id) || '--';
+            self.$element.find('.oe_get_xml_view span').text(view_id);
+            if (!self.action.name && fvg) {
+                self.$element.find('.oe_view_title_text').text(fvg.arch.attrs.string || fvg.name);
+            }
+
+            var $title = self.$element.find('.oe_view_title_text'),
+                $search_prefix = $title.find('span.oe_searchable_view');
+            if (controller.searchable !== false) {
+                if (!$search_prefix.length) {
+                    $title.prepend('<span class="oe_searchable_view">' + _t("Search: ") + '</span>');
                 }
+            } else {
+                $search_prefix.remove();
+            }
         });
     },
     shortcut_check : function(view) {
