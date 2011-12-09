@@ -150,7 +150,6 @@ class account_account_type(osv.osv):
         return res
 
     def _save_report_type(self, cr, uid, account_type_id, field_name, field_value, arg, context=None):
-        import pdb;pdb.set_trace()
         obj_data = self.pool.get('ir.model.data')
         obj_financial_report = self.pool.get('account.financial.report') 
         #unlink if it exists somewhere in the financial reports related to BS or PL
