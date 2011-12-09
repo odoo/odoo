@@ -498,16 +498,16 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
     },
     on_mode_switch: function (view_type, no_store) {
         var self = this;
-
-        var switched = $.when(this._super(view_type, no_store)).then(function () {
+    
+        var switched = $.when(this._super(view_type, no_store)).pipe(function () {
+            self.shortcut_check(self.views[view_type]);
             self.$element.find('.oe-view-manager-logs:first')
                 .addClass('oe-folded').removeClass('oe-has-more')
                 .find('ul').empty();
-            self.shortcut_check(self.views[view_type]);
         });
         return $.when(
                 switched
-            ).then(function() {
+            ).pipe(function() {
                 var controller = self.views[self.active_view].controller,
                     fvg = controller.fields_view,
                     view_id = (fvg && fvg.view_id) || '--';
