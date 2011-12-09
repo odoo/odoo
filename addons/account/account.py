@@ -2621,7 +2621,7 @@ class account_tax_code_template(osv.osv):
                 'sign': tax_code_template.sign,
             }
             #check if this tax code already exists
-            rec_list = obj_tax_code.search(cr, uid, [('name', '=', vals['name']),('company_id', '=', vals['company_id'])], context=context)
+            rec_list = obj_tax_code.search(cr, uid, [('name', '=', vals['name']),('code', '=', vals['code']),('company_id', '=', vals['company_id'])], context=context)
             if not rec_list:
                 #if not yet, create it
                 new_tax_code = obj_tax_code.create(cr, uid, vals)
