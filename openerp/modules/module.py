@@ -254,16 +254,9 @@ def load_information_from_description_file(module):
                 'depends data demo test init_xml update_xml demo_xml'.split(),
                 iter(list, None)))
 
-            terp_f = tools.file_open(terp_file)
-            try:
+            with tools.file_open(terp_file) as terp_f:
                 info.update(eval(terp_f.read()))
-            except Exception:
-                logger.notifyChannel('modules', netsvc.LOG_ERROR,
-                    'module %s: exception while evaluating file %s' %
-                    (module, terp_file))
-                raise
-            finally:
-                terp_f.close()
+
             return info
 
     #TODO: refactor the logger in this file to follow the logging guidelines
