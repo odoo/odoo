@@ -98,7 +98,7 @@ Dashboard provided by this module:
          'test/cancel_order.yml',
     ],
     'installable': True,
-    'core': True,
+    'application': True,
     'active': False,
     'certificate': '0032052481373',
 }

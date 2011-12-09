@@ -45,7 +45,7 @@ user rights to Demo user.
     'test': [],
     'installable': True,
     'active': False,
-    'core': True,
+    'application': True,
     'certificate': '00395091383933390541',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
