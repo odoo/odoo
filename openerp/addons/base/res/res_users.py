@@ -816,8 +816,9 @@ class users_view(osv.osv):
                     remove.extend(get_boolean_groups(k))
             elif is_selection_groups(k):
                 remove.extend(get_selection_groups(k))
-                if values[k]:
-                    add.append(values.pop(k))
+                selected = values.pop(k)
+                if selected:
+                    add.append(selected)
         if add or remove:
             # remove groups in 'remove' and add groups in 'add'
             gdiff = [(3, id) for id in remove] + [(4, id) for id in add]
