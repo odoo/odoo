@@ -475,17 +475,15 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
     },
     on_mode_switch: function (view_type, no_store) {
         var self = this;
-        if (!(view_type in this.views))
-            return $.Deferred().reject();
 
         var switched = $.when(this._super(view_type, no_store)).then(function () {
             self.$element.find('.oe-view-manager-logs:first')
                 .addClass('oe-folded').removeClass('oe-has-more')
                 .find('ul').empty();
+            self.shortcut_check(self.views[view_type])
         });
         return $.when(
-                switched,
-                this.shortcut_check(this.views[view_type])
+                switched
             ).then(function() {
                 var controller = self.views[self.active_view].controller,
                     fvg = controller.fields_view,
