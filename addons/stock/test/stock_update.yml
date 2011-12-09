@@ -1,19 +1,19 @@
 -
-  I update the current stock of the product '[CPU2]High speed processor config'.
+  I update the current stock of the product.
 -
   I assign the location.
 -
   !record {model: stock.warehouse, id: stock.warehouse0}:
     lot_stock_id: stock_location_stock
 -
-  I create stock production lot for product '[CPU2]High speed processor config'.
+  I create stock production lot for product.
 -
   !record {model: stock.production.lot, id: stock_production_lot0}:
     product_id: product.product_product_cpu2
     date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     name: 0000001
 -
-  I take '[CPU2]High speed processor config' product and with the help of 'Change Product Quantity' wizard update the product stock.
+  I take product and with the help of 'Change Product Quantity' wizard update the product stock.
 -
   !python {model: product.product}: |
     change_qty = self.pool.get('stock.change.product.qty')
@@ -22,7 +22,7 @@
     change_qty.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
     assert product.qty_available == 5,'Product Quantity is not Updated'
 -
-  I trace the stock production lot for '[CPU2]High speed processor config' product.
+  I trace the stock production lot for product.
 -
   !python {model: stock.production.lot }: |
     self.action_traceability(cr,uid,[ref('stock_production_lot0')], {'lang': 'en_US', 'tz': False, 'active_model': 'ir.ui.menu', 'field': '', 'type': ''})
@@ -50,7 +50,7 @@
     new_id = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
     context.update({'new_id':new_id})
 -
-  Now,I return the products.
+  Now,I return the product.
 -
   !python {model: stock.picking}: |
     copy_id = context.get('new_id')
@@ -62,3 +62,44 @@
     stock_partial_picking.do_partial(cr, uid, [partial_id], context)
     return_pick_id = self.pool.get('stock.return.picking').create(cr, uid,{}, context)
     self.pool.get('stock.return.picking').create_returns(cr, uid, [return_pick_id], context)
+
+-
+  In order to test the PDF reports defined on a stock, we will print a Stock Overviewall(children) report.
+-
+  !python {model: stock.location}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.lot.stock.overview_all').create(cr, uid, [ref('stock.stock_location_stock')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'stock-overviewall'+format), 'wb+').write(data)
+-
+  In order to test the PDF reports defined on stock inventory, we will print a Stock Inventory Move report.
+-
+  !python {model: stock.inventory}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.stock.inventory.move').create(cr, uid, [ref('stock.stock_inventory_0')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'stock-stock_inventory_move.'+format), 'wb+').write(data)
+-
+  In order to test the PDF reports defined on a stock, we will print a stock overview report.
+-
+  !python {model: stock.location}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.lot.stock.overview').create(cr, uid, [ref('stock.stock_location_14')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'stock-overview'+format), 'wb+').write(data)
+-
+  In order to test the PDF reports defined on a stock, we will print a Delivery order List report.
+-
+  !python {model: stock.picking}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.stock.picking.list').create(cr, uid, [ref('stock.stock_picking_1')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'stock-picking_list'+format), 'wb+').write(data)
+-
+  In order to test the PDF reports defined on a stock, we will print product stock Report.
+-
+  !python {model: product.product}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.stock.product.history').create(cr, uid, [ref('product.product_product_pc1')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'stock-product_stock_report.'+format), 'wb+').write(data)
