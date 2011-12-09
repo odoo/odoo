@@ -58,5 +58,6 @@ You can manage:
     'installable': True,
     'active': False,
     'certificate': '0086710558965',
+    "css": [ 'static/src/css/hr.css' ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
