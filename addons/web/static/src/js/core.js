@@ -985,6 +985,22 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         }
         return false;
     },
+
+    do_push_state: function(state) {
+        // create a new state
+        if (this.widget_parent) {
+            return this.widget_parent.do_push_state.apply(this,arguments);
+        }
+        //this.on_state_change(state); 
+        return null;
+    },
+
+    on_state_change: function(state) {
+        _.each(this.widget_children, function(child) {
+            child.on_state_change(state);
+        });
+    },
+
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
