@@ -181,6 +181,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
+        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
     }
 
     def _get_stage(self, cr, uid, context=None):
@@ -473,19 +474,19 @@ class hr_applicant(crm.crm_case, osv.osv):
         res = super(hr_applicant, self).case_reset(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
         return res
-    
-    def set_priority(self, cr, uid, ids, priority):
-        """Set lead priority
+
+    def set_priority(self, cr, uid, ids, priority, *args):
+        """Set applicant priority
         """
         return self.write(cr, uid, ids, {'priority' : priority})
 
     def set_high_priority(self, cr, uid, ids, *args):
-        """Set lead priority to high
+        """Set applicant priority to high
         """
         return self.set_priority(cr, uid, ids, '1')
 
     def set_normal_priority(self, cr, uid, ids, *args):
-        """Set lead priority to normal
+        """Set applicant priority to normal
         """
         return self.set_priority(cr, uid, ids, '3')
 

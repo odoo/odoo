@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    "name" : "Double Validation for Purchase",
+    "name" : "Double Validation on Purchases",
     "version" : "1.1",
-    "category": 'Hidden',
+    'category': 'Purchase Management',
     'complexity': "easy",
     "images" : ["images/purchase_validation.jpeg"],
     "depends" : ["base","purchase"],

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Collaborative Note Pad',
+    'name': 'Collaborative Pads',
     'version': '2.0',
-    'category': 'Hidden',
+    "category": "Project Management",
     'complexity': "easy",
     'description': """
 Adds enhanced support for (Ether)Pad attachments in the web client.

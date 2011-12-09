@@ -171,8 +171,8 @@
                         <field name="user_type" select="1"/>
                         <field name="active" groups="base.group_extended" />
                         <newline/>
-                        <field name="debit" invisible="context.get('config_invisible', True)"/>
-                        <field name="credit" invisible="context.get('config_invisible', True)"/>
+                        <field name="debit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
+                        <field name="credit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
                         <field name="balance" invisible="context.get('config_invisible', True)"/>
                     </group>
                     <notebook colspan="4">

@@ -125,13 +125,13 @@
                 </group>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="product.product_kanban_view">
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
             <field name="type">kanban</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="type">
+                <kanban>
                     <field name="color"/>
                     <field name="type"/>
                     <field name="product_image"/>
