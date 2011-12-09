@@ -1,0 +1,32 @@
+-
+  I set work entry for employee
+-
+  !record {model: project.task.work, id: project_task_work1}:
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    name: Test Timesheet records
+    task_id: project.project_task_1
+    hours: 20.0
+    user_id: project.res_users_analyst
+    company_id: base.main_company
+-
+  I set timesheet line for employee in current timesheet
+-
+  !python {model: hr.analytic.timesheet}: |
+     import datetime
+     uid = ref('project.res_users_analyst')
+     current_date = (datetime.date.today().strftime('%Y-%m-%d'))
+     vals = {'name': 'Test Timesheet records',
+             'user_id': ref('project.res_users_analyst'),
+             'account_id': ref('account.analytic_project_1_development'),
+             'unit_amount': 5.00,
+             'journal_id': ref('hr_timesheet.analytic_journal')
+     }
+     line_id = self.create(cr, uid, vals, None)
+     res = self.on_change_date(cr, uid, [line_id], current_date)
+     values = dict([('date', current_date)] + res['value'].items())
+     res1 = self.on_change_user_id(cr, uid, [line_id], ref('project.res_users_analyst'))
+     values.update(dict([('user_id', ref('project.res_users_analyst'))] + res1['value'].items()))
+     self.write(cr, uid, [line_id], values, None)
+
+
+
