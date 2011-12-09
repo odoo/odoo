@@ -808,7 +808,13 @@ class users_view(osv.osv):
         return super(users_view, self).write(cr, uid, ids, values, context)
 
     def _set_reified_groups(self, values):
-        """ reflect reified group fields in values into 'groups_id' """
+        """ reflect reified group fields in values['groups_id'] """
+        if 'groups_id' in values:
+            # groups are already given, ignore group fields
+            for f in filter(is_reified_group, values.iterkeys()):
+                del values[f]
+            return
+
         add, remove = [], []
         for f in values.keys():
             if is_boolean_group(f):
@@ -823,13 +829,12 @@ class users_view(osv.osv):
                 if selected:
                     add.append(selected)
         # remove groups in 'remove' and add groups in 'add'
-        gdiff = [(3, id) for id in remove] + [(4, id) for id in add]
-        values.setdefault('groups_id', []).extend(gdiff)
+        values['groups_id'] = [(3, id) for id in remove] + [(4, id) for id in add]
 
     def default_get(self, cr, uid, fields, context=None):
         group_fields, fields = partition(is_reified_group, fields)
-        fields.append('groups_id')
-        values = super(users_view, self).default_get(cr, uid, fields, context)
+        fields1 = (fields + ['groups_id']) if group_fields else fields
+        values = super(users_view, self).default_get(cr, uid, fields1, context)
         self._get_reified_groups(group_fields, values)
         return values
 
@@ -844,7 +849,7 @@ class users_view(osv.osv):
         return res
 
     def _get_reified_groups(self, fields, values):
-        """ compute the given reified group fields in the dictionary values """
+        """ compute the given reified group fields from values['groups_id'] """
         gids = set(values.get('groups_id') or [])
         for f in fields:
             if is_boolean_group(f):
