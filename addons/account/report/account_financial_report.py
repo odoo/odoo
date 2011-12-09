@@ -68,7 +68,6 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 account_ids = account_obj._get_children_and_consol(self.cr, self.uid, [x.id for x in report.account_ids])
             elif report.type == 'account_type' and report.account_type_ids:
                 account_ids = account_obj.search(self.cr, self.uid, [('user_type','in', [x.id for x in report.account_type_ids])])
-            account_ids.sort()
             if account_ids:
                 for account in account_obj.browse(self.cr, self.uid, account_ids, context=data['form']['used_context']):
                     flag = False
