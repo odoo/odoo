@@ -40,6 +40,11 @@
   !record {model: project.task.reevaluate, id: reevaluate_id}:
     remaining_hours : 120
 -
+  I chnge the stage of task to next stage
+-
+  !python {model: project.task}: |
+    self.prev_type(cr, uid, [ref("project_task_1")])
+-
   I reevaluate task with remaining hours.
 -
   !python {model: project.task.reevaluate}: |
@@ -50,10 +55,15 @@
   !assert {model: project.task, id: project_task_1, severity: error, string: task should be reevaluated}:
     - remaining_hours == 120.0
 -
+  I chnge the stage of task to next stage
+-
+  !python {model: project.task}: |
+    self.next_type(cr, uid, [ref("project_task_1")])
+-
   I close the task.
 -
   !python {model: project.task}: |
-    self.do_close(cr, uid, [ref("project_task_1")])
+    self.action_close(cr, uid, [ref("project_task_1")])
 -
   I check state after closed.
 -
@@ -64,5 +74,3 @@
 -
   !python {model: project.task}: |
     self.do_cancel(cr, uid, [ref("project_task_2")])
-
-

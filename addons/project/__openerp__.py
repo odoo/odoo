@@ -63,6 +63,7 @@ Dashboard for project members that includes:
     'test':[
         'test/project_process.yml',
         'test/task_process.yml',
+        'test/project_demo.yml',
     ],
     'installable': True,
     'active': False,
