@@ -273,7 +273,8 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                 view: view_chart,
                 container: self.element_id+"-"+self.chart+"chart",
                 value:"#"+group_list[0].group+"#",
-                gradient: "3d",
+                gradient: (self.chart == "bar") ? "3d" : "light",
+                alpha: (self.chart == "area") ? 0.6 : 1,
                 border: false,
                 width: 1024,
                 tooltip:{
@@ -281,7 +282,15 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                         self.abscissa, group_list[0].text, group_list[0].group)
                 },
                 radius: 0,
-                color:group_list[0].color,
+                color: (self.chart != "line") ? group_list[0].color : "",
+                item: (self.chart == "line") ? {
+                            borderColor: group_list[0].color,
+                            color: "#000000"
+                        } : "",
+                line: (self.chart == "line") ? {
+                            color: group_list[0].color,
+                            width: 3
+                        } : "",
                 origin:0,
                 xAxis: x_axis,
                 yAxis: y_axis,
@@ -299,16 +308,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     }
                 }
             });
-            if (self.chart == 'line'){
-                charts.define("item",{
-                    borderColor: group_list[0].color,
-                    color: "#000000"
-                });
-                charts.define("line",{
-                    color: group_list[0].color,
-                    width: 3
-                });
-            }
+
             for (var m = 1; m<group_list.length;m++){
                 var column = group_list[m];
                 if (column.group === self.group_field) { continue; }
@@ -318,18 +318,16 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                         template: _.str.sprintf("#%s#, %s=#%s#",
                             self.abscissa, column.text, column.group)
                     },
-                    color: column.color
+                    color: (self.chart != "line") ? column.color : "",
+                    item: (self.chart == "line") ? {
+                            borderColor: column.color,
+                            color: "#000000"
+                        } : "",
+                    line: (self.chart == "line") ? {
+                            color: column.color,
+                            width: 3
+                        } : ""
                 });
-                if (self.chart == 'line'){
-                    charts.define("item",{
-                        borderColor: column.color,
-                        color: "#000000"
-                    });
-                    charts.define("line",{
-                        color: column.color,
-                        width: 3
-                    });
-                }
             }
             charts.parse(results, "json");
             self.$element.find("#"+self.element_id+"-"+self.chart+"chart").height(
