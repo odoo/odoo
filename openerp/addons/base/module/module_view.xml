@@ -39,8 +39,8 @@
             <field name="arch" type="xml">
                 <search string="Search modules">
                     <group col='10' colspan='4'>
-                        <filter icon="terp-check" string="Main Apps" domain="[('core', '=', 1)]"/>
-                        <filter icon="terp-check" string="Extra" domain="[('core', '=', 0)]"/>
+                        <filter icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
+                        <filter icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
 
                         <separator orientation="vertical"/>
                         <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
@@ -62,33 +62,36 @@
             <field name="model">ir.module.module</field>
             <field name="type">kanban</field>
             <field name="arch" type="xml">
-                <kanban>
-                    <field name="name"/>
-                    <field name="icon"/>
-                    <field name="complexity"/>
-                    <field name="category_id"/>
-                    <field name="state"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <table border="0">
-                            <tr>
-                                <td>
-                                    <img src="/web/static/src/img/header-preferences.png"/>
-                                </td><td>
-                                    <field name="name"/><br/>
-                                    <field name="category_id"/><br/>
-                                    <field name="complexity"/><br/>
-                                    <field name="state"/>
-                                </td>
-                            </tr>
-                            </table>
-                        </t>
-                    </templates>
-                </kanban>
+
+              <kanban>
+                  <field name="icon"/>
+                  <field name="name"/>
+                  <field name="state"/>
+                  <field name="complexity"/>
+                  <templates>
+                    <t t-name="kanban-box">
+                      <a type="edit"> 
+                        <img t-attf-src="/#{record.name.value}/static/images/icon.png" class="oe_module_icon"/>
+                      </a>
+                      <div class="oe_module_desc">
+                        <h4><a type="edit"><field name="shortdesc"/></a></h4>
+                        <p>
+                           <field name="category_id"/><br/>
+                           <span t-if="record.complexity.raw_value == 'Expert'" class="oe_label oe_warning">Complex</span>
+                         </p>
+                        <a type="object" name="button_install" states="uninstalled" class="button">Install</a>
+                        <button t-if="record.state.raw_value == 'installed'" class="label" disabled="disabled">Installed</button>
+                      </div>
+                      <script>
+                        $('.oe_module_icon').error(function() { $(this).attr('src', "/base/static/src/img/kanban_partner.png"); });
+                        $('a .oe_module_icon').error(function() { $(this).attr('src', "/base/static/src/img/kanban_partner.png"); });
+                      </script>
+                    </t>
+                  </templates>
+              </kanban>
+
             </field>
         </record>
-
-
 
         <record id="action_module_open_categ" model="ir.actions.act_window">
             <field name="name">Modules</field>
@@ -121,7 +124,7 @@
                         <field name="complexity"/>
                         <field name="demo"/>
                         <field name="icon"/>
-                        <field name="core"/>
+                        <field name="application"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Module">
@@ -194,7 +197,7 @@
             <field name="name">Modules</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="domain"/>
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help">You can install new modules in order to activate new features, menu, reports or data in your OpenERP instance. To install some modules, click on the button "Install" from the form view and then click on "Start Upgrade".</field>
