@@ -690,6 +690,38 @@ class module(osv.osv):
             })
         return modules_data
 
+    def menus(self, cr, uid, ids, maxdepth=0, context=None):
+        """ Returns ids of all menus of depth below ``maxdepth``
+        created by the modules whose ids are provided.
+
+        :param list[int] ids: modules to get menus from
+        :param list[str] fields: list of menu fields to fetch, defaults to all
+        :param int maxdepth: maximum depth of menus to return, returns all menus by default
+        :returns: a list of menu object dicts
+        :rtype: list[int]
+        """
+        IrModelData = self.pool.get('ir.model.data')
+        menus = []
+        module_names = [module.name for module in self.browse(cr, uid, ids, context=context)]
+
+        all_menu_ids = [model.res_id for model in IrModelData.browse(cr, uid,
+                        IrModelData.search(cr, uid, [
+                            ('model', '=', 'ir.ui.menu'), ('module', 'in', module_names)
+                        ], context=context),
+                    context=context)]
+
+        for candidate in self.pool.get('ir.ui.menu').browse(cr, uid, all_menu_ids, context=context):
+            if not maxdepth:
+                menus.append(candidate.id)
+                continue
+            depth = 1
+            menu = candidate
+            while menu.parent_id:
+                depth += 1
+                menu = menu.parent_id
+            if depth <= maxdepth:
+                menus.append(candidate.id)
+        return menus
 module()
 
 class module_dependency(osv.osv):
