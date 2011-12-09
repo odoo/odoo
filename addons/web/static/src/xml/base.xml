@@ -119,7 +119,7 @@
                            equalTo="input[name=create_admin_pwd]"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Create"/></td>
+                <td colspan="2" align="right"><button>Create</button></td>
             </tr>
         </table>
     </form>
@@ -149,7 +149,7 @@
                 <td><input type="password" name="drop_pwd" class="required"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Drop"/></td>
+                <td colspan="2" align="right"><button>Drop</button></td>
             </tr>
         </table>
     </form>
@@ -181,7 +181,7 @@
                 <td><input type="password" name="backup_pwd" class="required"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Backup"/></td>
+                <td colspan="2" align="right"><button>Backup</button></td>
             </tr>
         </table>
     </form>
@@ -210,7 +210,7 @@
                 <td><input type="text" name="new_db" class="required"/></td>
             </tr>
         <tr>
-            <td colspan="2" align="right"><input type="submit" value="Restore"/></td>
+            <td colspan="2" align="right"><button>Restore</button></td>
             </tr>
         </table>
     </form>
@@ -241,7 +241,7 @@
                            equalTo="input[name=new_pwd]" minlength="1"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Change Password"/></td>
+                <td colspan="2" align="right"><button>Change Password</button></td>
             </tr>
         </table>
     </form>
@@ -290,7 +290,7 @@
                         <td></td>
                         <td>
                         	<button type="button" id="oe-db-config">Database</button>
-                            <button type="submit" name="submit">Login</button>
+                            <button name="submit">Login</button>
                         </td>
                     </tr>
                 </table>
@@ -1130,9 +1130,9 @@
     <form class="oe_forms">
         <t t-call="SearchView.render_lines"/>
         <div class="oe_search-view-buttons">
-            <input type="submit" value="Search"/>
-            <input type="reset" value="Clear"/>
-            <button class="oe_search-view-custom-filter-btn"><span>Advanced Filter</span></button>
+            <button>Search</button>
+            <button type="reset">Clear</button>
+            <button type="button" class="oe_search-view-custom-filter-btn"><span>Advanced Filter</span></button>
             <select class="oe_search-view-filters-management">
             </select>
         </div>
@@ -1609,7 +1609,7 @@
                              minlength="1"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Change Password"/></td>
+                <td colspan="2" align="right"><button>Change Password</button></td>
             </tr>
         </table>
     </form>
