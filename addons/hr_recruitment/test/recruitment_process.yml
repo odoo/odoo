@@ -19,7 +19,6 @@
     assert applicant.name == "Application for the post of Jr.application Programmer.", "Subject does not match"
     assert applicant.state == "draft"
     assert len(resume_ids), "Resume does not attached."
-
 -
   I Refuse applicant for the Recruitment.
 -
@@ -83,7 +82,7 @@
      self.stage_next(cr, uid, [ref('hr_case_programmer')])
      self.stage_previous(cr, uid, [ref('hr_case_programmer')])
 -
-  I Hired employee.
+  I Hired Applicant.
 -
   !python {model: hr.applicant}: |
      self.case_close_with_emp(cr, uid, [ref('hr_case_programmer')])
@@ -93,6 +92,25 @@
 -
   !assert {model: hr.applicant, id: hr_case_programmer}:
     - state == 'done'
+-
+  I Not give Employeement to Hired Aplicant till.
+-
+  !python {model: hired.employee}: |
+    context.update({'active_model': 'hr.applicant', 'active_ids': [ref("hr_recruitment.hr_case_programmer")], 'active_id': ref("hr_recruitment.hr_case_programmer")})
+    emp_id = self.create(cr, uid, {}, context=context)
+    self.case_close(cr, uid, [emp_id], context=context)
+-
+  Now I give Employeement to Hired Applicant .
+-
+  !python {model: hr.applicant}: |
+     self.case_reset(cr, uid, [ref("hr_case_programmer")])
+     self.case_open(cr, uid, [ref("hr_case_programmer")])
+     context.update({'active_model': 'hr.applicant', 'active_ids': [ref("hr_recruitment.hr_case_programmer")], 'active_id': ref("hr_recruitment.hr_case_programmer")})
+-
+  !python {model: hired.employee}: |
+    context.update({'active_model': 'hr.applicant', 'active_ids': [ref("hr_recruitment.hr_case_programmer")], 'active_id': ref("hr_recruitment.hr_case_programmer")})
+    emp_hr_id = self.create(cr, uid, {}, context=context)
+    self.case_close_with_emp(cr, uid, [emp_hr_id], context=context)
 -
   Now Hired Employee want to be a Partner of Company.
 -
