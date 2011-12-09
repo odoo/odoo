@@ -65,6 +65,16 @@ class groups(osv.osv):
         ('name_uniq', 'unique (COALESCE(category_id, 0), name)', 'The name of the group must be unique !')
     ]
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        # add explicit ordering if search is sorted on full_name
+        if order and order.startswith('full_name'):
+            ids = super(groups, self).search(cr, uid, args, context=context)
+            gs = self.browse(cr, uid, ids, context)
+            gs.sort(key=lambda g: g.full_name, reverse=order.endswith('DESC'))
+            gs = gs[offset:offset+limit] if limit else gs[offset:]
+            return map(int, gs)
+        return super(groups, self).search(cr, uid, args, offset, limit, order, context, count)
+
     def copy(self, cr, uid, id, default=None, context=None):
         group_name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': _('%s (copy)')%group_name})
