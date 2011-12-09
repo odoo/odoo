@@ -752,11 +752,11 @@ class groups_view(osv.osv):
         return view
 
     def get_groups_by_application(self, cr, uid, context=None):
-        """ return all groups classified by application, as a list of pairs:
+        """ return all groups classified by application (module category), as a list of pairs:
                 [(app, kind, [group, ...]), ...],
             where app and group are browse records, and kind is either 'boolean' or 'selection'.
             Applications are given in sequence order.  If kind is 'selection', the groups are
-            given in reverse implication order; otherwise they are given in alphabetic order.
+            given in reverse implication order.
         """
         def linearized(gs):
             gs = set(gs)
@@ -785,9 +785,9 @@ class groups_view(osv.osv):
             if gs:
                 res.append((app, 'selection', gs))
             else:
-                res.append((app, 'boolean', sorted(by_app[app], key=lambda g: g.name)))
+                res.append((app, 'boolean', by_app[app]))
         if others:
-            res.append((False, 'boolean', sorted(others, key=lambda g: g.name)))
+            res.append((False, 'boolean', others))
         return res
 
 groups_view()
