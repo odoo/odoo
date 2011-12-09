@@ -44,3 +44,5 @@ class ir_model_access(osv.osv):
         return [x[0] for x in cr.fetchall()]
 
 ir_model_access()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

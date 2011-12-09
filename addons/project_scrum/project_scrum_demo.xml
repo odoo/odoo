@@ -10,7 +10,6 @@
             <field name="project_id" ref="project.project_project_9"/>
             <field name="product_owner_id" ref="base.user_root"/>
             <field model="res.users" name="scrum_master_id" search="[('login','=','admin')]"/>
-            <field name="state">open</field>
         </record>
 
         <record id="scrum_sprint_1" model="project.scrum.sprint">
@@ -158,7 +157,6 @@
             <field name="expected_hours">6.0</field>
             <field name="note">This new system will enable you to migrate automatically from an old version of OpenERP to a new one. This system will migrate not only the OpenERP system but also the customers particularities. This happens without any kind of script or programming. It has been possible to carry out such a system thanks to the descriptive approach of OpenERP components. </field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
-            <field name="state">done</field>
             <field name="project_id" ref="project.project_project_9"/>
         </record>
         <record id="scrum_product_backlog_1" model="project.scrum.product.backlog">
@@ -387,6 +385,9 @@
 			<field name="state">open</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_7"/>
         </record>
+
+        <!-- Resource: project_scrum.meeting -->
+
 		<record id="scrum_meeting_0" model="project.scrum.meeting">
 			<field name="question_yesterday">
 Admin: Worked on the Automatic migration system

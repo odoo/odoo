@@ -254,7 +254,6 @@ class document_file(osv.osv):
             del vals['file_size']
         if ids and vals:
             result = super(document_file,self).write(cr, uid, ids, vals, context=context)
-        cr.commit() # ?
         return result
 
     def create(self, cr, uid, vals, context=None):
@@ -299,7 +298,6 @@ class document_file(osv.osv):
         else:
             #raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
             result = super(document_file, self).create(cr, uid, vals, context)
-            cr.commit() # ?
         return result
 
     def __get_partner_id(self, cr, uid, res_model, res_id, context=None):
@@ -349,3 +347,5 @@ class document_file(osv.osv):
 
 document_file()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

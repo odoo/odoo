@@ -275,3 +275,5 @@ class user_preference(osv.osv_memory):
         }
 
 user_preference()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

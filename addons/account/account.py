@@ -461,7 +461,7 @@ class account_account(osv.osv):
     }
 
     _defaults = {
-        'type': 'view',
+        'type': 'other',
         'reconcile': False,
         'active': True,
         'currency_mode': 'current',
@@ -716,6 +716,19 @@ class account_journal(osv.osv):
 
     _order = 'code'
 
+    def _check_currency(self, cr, uid, ids, context=None):
+        for journal in self.browse(cr, uid, ids, context=context):
+            if journal.currency:
+                if journal.default_credit_account_id and not journal.default_credit_account_id.currency_id.id == journal.currency.id:
+                    return False
+                if journal.default_debit_account_id and not journal.default_debit_account_id.currency_id.id == journal.currency.id:
+                    return False
+        return True
+
+    _constraints = [
+        (_check_currency, 'Configuration error! The currency chosen should be shared by the default accounts too.', ['currency','default_debit_account_id','default_credit_account_id']),
+    ]
+
     def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
         journal = self.browse(cr, uid, id, context=context)
         if not default:
@@ -776,9 +789,11 @@ class account_journal(osv.osv):
         result = self.browse(cr, user, ids, context=context)
         res = []
         for rs in result:
-            name = rs.name
             if rs.currency:
-                name = "%s (%s)" % (rs.name, rs.currency.name)
+                currency = rs.currency
+            else:
+                currency = rs.company_id.currency_id
+            name = "%s (%s)" % (rs.name, currency.name)
             res += [(rs.id, name)]
         return res
 
@@ -846,21 +861,8 @@ class account_fiscalyear(osv.osv):
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
-    _order = "date_start"
+    _order = "date_start, id"
 
-    def _check_fiscal_year(self, cr, uid, ids, context=None):
-        current_fiscal_yr = self.browse(cr, uid, ids, context=context)[0]
-        obj_fiscal_ids = self.search(cr, uid, [('company_id', '=', current_fiscal_yr.company_id.id)], context=context)
-        obj_fiscal_ids.remove(ids[0])
-        data_fiscal_yr = self.browse(cr, uid, obj_fiscal_ids, context=context)
-
-        for old_fy in data_fiscal_yr:
-            if old_fy.company_id.id == current_fiscal_yr['company_id'].id:
-                # Condition to check if the current fiscal year falls in between any previously defined fiscal year
-                if old_fy.date_start <= current_fiscal_yr['date_start'] <= old_fy.date_stop or \
-                    old_fy.date_start <= current_fiscal_yr['date_stop'] <= old_fy.date_stop:
-                    return False
-        return True
 
     def _check_duration(self, cr, uid, ids, context=None):
         obj_fy = self.browse(cr, uid, ids[0], context=context)
@@ -869,8 +871,7 @@ class account_fiscalyear(osv.osv):
         return True
 
     _constraints = [
-        (_check_duration, 'Error! The start date of the fiscal year must be before his end date.', ['date_start','date_stop']),
-        (_check_fiscal_year, 'Error! You can not define overlapping fiscal years for the same company.',['date_start', 'date_stop'])
+        (_check_duration, 'Error! The start date of the fiscal year must be before his end date.', ['date_start','date_stop'])
     ]
 
     def create_period3(self, cr, uid, ids, context=None):
@@ -881,7 +882,7 @@ class account_fiscalyear(osv.osv):
         for fy in self.browse(cr, uid, ids, context=context):
             ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
             period_obj.create(cr, uid, {
-                    'name': _('Opening Period'),
+                    'name':  "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
                     'code': ds.strftime('00/%Y'),
                     'date_start': ds,
                     'date_stop': ds,
@@ -905,6 +906,10 @@ class account_fiscalyear(osv.osv):
         return True
 
     def find(self, cr, uid, dt=None, exception=True, context=None):
+        res = self.finds(cr, uid, dt, exception, context=context)
+        return res and res[0] or False
+
+    def finds(self, cr, uid, dt=None, exception=True, context=None):
         if context is None: context = {}
         if not dt:
             dt = time.strftime('%Y-%m-%d')
@@ -919,8 +924,8 @@ class account_fiscalyear(osv.osv):
             if exception:
                 raise osv.except_osv(_('Error !'), _('No fiscal year defined for this date !\nPlease create one.'))
             else:
-                return False
-        return ids[0]
+                return []
+        return ids
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if args is None:
@@ -1220,7 +1225,7 @@ class account_move(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
         'state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'State', required=True, readonly=True,
-            help='All manually created new journal entry are usually in the state \'Unposted\', but you can set the option to skip that state on the related journal. In that case, they will be behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' state.'),
+            help='All manually created new journal entries are usually in the state \'Unposted\', but you can set the option to skip that state on the related journal. In that case, they will be behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' state.'),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
@@ -1683,13 +1688,15 @@ class account_tax_code(osv.osv):
         if context.get('state', 'all') == 'all':
             move_state = ('draft', 'posted', )
         if context.get('fiscalyear_id', False):
-            fiscalyear_id = context['fiscalyear_id']
+            fiscalyear_id = [context['fiscalyear_id']]
         else:
-            fiscalyear_id = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
+            fiscalyear_id = self.pool.get('account.fiscalyear').finds(cr, uid, exception=False)
         where = ''
         where_params = ()
         if fiscalyear_id:
-            pids = map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_id).period_ids)
+            pids = []
+            for fy in fiscalyear_id:
+                pids += map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fy).period_ids)
             if pids:
                 where = ' AND line.period_id IN %s AND move.state IN %s '
                 where_params = (tuple(pids), move_state)
@@ -3149,7 +3156,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'type': line.account_type == 'cash' and 'cash' or 'bank',
                 'company_id': company_id,
                 'analytic_journal_id': False,
-                'currency_id': False,
+                'currency': False,
             }
             if line.currency_id:
                 vals_journal['view_id'] = view_id_cur

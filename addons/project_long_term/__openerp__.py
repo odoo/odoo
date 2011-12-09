@@ -20,13 +20,13 @@
 ##############################################################################
 
 {
-    "name": "Long Term Planning",
+    "name": "Long Term Projects",
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
     "category": "Project Management",
     "images": ["images/project_phase_form.jpeg","images/project_phases.jpeg", "images/resources_allocation.jpeg"],
-    "depends": ["resource", "project"],
+    "depends": ["project"],
     "description": """
 Long Term Project management module that tracks planning, scheduling, resources allocation.
 ===========================================================================================
@@ -53,6 +53,7 @@ Features
         "wizard/project_compute_tasks_view.xml",
     ],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '001227470751077315069',
 }

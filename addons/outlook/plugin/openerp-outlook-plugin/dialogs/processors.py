@@ -143,3 +143,5 @@ class CommandButtonProcessor(ButtonProcessor):
         if doc is None:
             return ""
         return " ".join(doc.split())
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

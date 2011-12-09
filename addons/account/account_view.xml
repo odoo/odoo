@@ -171,8 +171,8 @@
                         <field name="user_type" select="1"/>
                         <field name="active" groups="base.group_extended" />
                         <newline/>
-                        <field name="debit" invisible="context.get('config_invisible', True)"/>
-                        <field name="credit" invisible="context.get('config_invisible', True)"/>
+                        <field name="debit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
+                        <field name="credit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
                         <field name="balance" invisible="context.get('config_invisible', True)"/>
                     </group>
                     <notebook colspan="4">
@@ -1583,7 +1583,12 @@
             context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1, 'default_account_id': active_id}"
             src_model="account.account"/>
 
-        <act_window domain="[('reconcile_id', '=', active_id)]" id="act_account_acount_move_line_reconcile_open" name="Reconciled entries" res_model="account.move.line" src_model="account.move.reconcile"/>
+        <act_window
+            domain="[('reconcile_id', '=', active_id)]"
+            id="act_account_acount_move_line_reconcile_open"
+            name="Reconciled entries"
+            res_model="account.move.line"
+            src_model="account.move.reconcile"/>
 
 
         <!--
@@ -2037,7 +2042,14 @@
            res_model="account.move.line"
            src_model="account.journal"/>
 
-        <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id], 'default_partner_id': active_id}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner" groups="base.group_extended"/>
+        <act_window
+            context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
+            domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]"
+            id="act_account_partner_account_move_all"
+            name="Receivables &amp; Payables"
+            res_model="account.move.line"
+            src_model="res.partner"
+            groups="base.group_extended"/>
 
         <act_window context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner" groups="account.group_account_user"/>
 

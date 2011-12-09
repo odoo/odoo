@@ -113,7 +113,7 @@
                     <notebook colspan="5">
                         <page string="Sales Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_order_id" on_change="onchange_partner_order_id(partner_order_id, partner_invoice_id, partner_shipping_id)"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
@@ -178,8 +178,10 @@
                                 </form>
                                 <tree string="Sales Order Lines">
                                     <field colspan="4" name="name"/>
-                                    <field name="product_uom_qty" string="Qty"/>
+                                    <field name="product_uom_qty" string="Qty(UoM)"/>
                                     <field name="product_uom" string="UoM"/>
+                                    <field groups="product.group_uos" name="product_uos_qty" string="Qty(UoS)"/>
+                                    <field groups="product.group_uos" name="product_uos" string="UoS"/>
                                     <field name="discount"/>
                                     <field name="price_unit"/>
                                     <field name="price_subtotal"/>

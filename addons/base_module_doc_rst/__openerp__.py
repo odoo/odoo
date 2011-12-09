@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Module Technical Guide in Restructured Text ',
+    'name': 'Generate Docs of Modules',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'description': """
 This module generates the Technical Guides of selected modules in Restructured Text format (RST).
 =================================================================================================
@@ -42,3 +42,5 @@ This module generates the Technical Guides of selected modules in Restructured T
     'images': ['images/base_module_doc_rst1.jpeg'],
 }
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-        "name":"Server Object Synchronization",
+        "name":"Multi-DB Synchronization",
         "version":"0.1",
         "author":"OpenERP SA",
-        "category":"Hidden",
+        "category":"Tools",
         "description": """
 Synchronization with all objects.
 =================================

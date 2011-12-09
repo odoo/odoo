@@ -23,7 +23,7 @@
 {
     'name': 'Planning Management Module',
     'version': '1.0',
-    'category': 'Hidden',
+    "category": "Project Management",
     'complexity': "easy",
     'description': """Keep track of your planning
 This module helps you to manage your plannings.

@@ -10,7 +10,7 @@
         <field name="view_type">form</field>
         <field name="view_id"  ref="crm.crm_case_categ_tree-view"/>
         <field name="domain">[('object_id.model', '=', 'crm.meeting')]</field>
-        <field name="context">{'object_id':'crm.meeting'}</field>
+        <field name="context" eval="{'object_id': ref('model_crm_meeting')}"/>
         <field name="help">Create different meeting categories to better organize and classify your meetings.</field>
     </record>
 
@@ -294,14 +294,18 @@
         <field name="arch" type="xml">
                 <search string="Search Meetings">
                        <group>
-                           <field name="name" string="Subject"/>
-                           <field name="partner_id"/>
-                           <field name="section_id" widget="selection">
+                           <field name="name" string="Meeting / Partner"
+                                domain="[('name','ilike',self), ('partner_id','ilike', self)]"/>
+                           <field name="user_id" groups="base.group_extended">
+                               <filter icon="terp-personal" groups="base.group_extended"
+                                   domain="[('user_id','=',uid)]"
+                                   help="My Meetings" />
+                           </field>
+                           <field name="section_id" widget="selection" groups="base.group_extended">
                                <filter icon="terp-personal+" groups="base.group_extended"
-                                   domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                                   domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                    help="My Sales Team(s)" />
                            </field>
-                           <field name="user_id"/>
                        </group>
                 </search>
             </field>

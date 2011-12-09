@@ -37,3 +37,5 @@ class res_users(osv.osv):
                     help="External user with limited access, created only for the purpose of sharing data.")
      }
 res_users()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

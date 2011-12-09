@@ -16,6 +16,7 @@
         <field eval="15.0" name="duration"/>
         <field eval="&quot;Bug in Accounts module&quot;" name="name"/>
         <field eval="&quot;agr@agrolait.com&quot;" name="email_from"/>
+        <field name="type_id" ref="project.project_tt_specification"/>        
     </record>
 
     <record id="crm_case_programnotgivingproperoutput0" model="project.issue">
@@ -31,6 +32,7 @@
         <field name="categ_id" ref="bug_categ"/>
         <field eval="&quot;Program not giving proper output&quot;" name="name"/>
         <field name="project_id" ref="project.project_project_22"/>
+        <field name="type_id" ref="project.project_tt_specification"/>
     </record>
 
     <record id="crm_case_outputincorrect0" model="project.issue">
@@ -45,6 +47,7 @@
         <field name="categ_id" ref="bug_categ"/>
         <field name="project_id" ref="project.project_project_23"/>
         <field eval="&quot;Output incorrect&quot;" name="name"/>
+        <field name="type_id" ref="project.project_tt_development"/>
     </record>
 
     <record id="crm_case_problemloadingpage0" model="project.issue">
@@ -60,6 +63,7 @@
         <field name="categ_id" ref="bug_categ"/>
         <field name="project_id" ref="project.project_project_22"/>
         <field eval="&quot;Problem loading page&quot;" name="name"/>
+        <field name="type_id" ref="project.project_tt_testing"/>
     </record>
 
     <record id="crm_case_pagenotfound0" model="project.issue">
@@ -74,6 +78,7 @@
         <field name="categ_id" ref="bug_categ"/>
         <field name="project_id" ref="project.project_project_22"/>
         <field eval="&quot;Page not Found&quot;" name="name"/>
+        <field name="type_id" ref="project.project_tt_development"/>
     </record>
 
     <record id="crm_case_programmingerror0" model="project.issue">
@@ -89,6 +94,7 @@
         <field name="categ_id" ref="bug_categ"/>
         <field name="project_id" ref="project.project_project_22"/>
         <field eval="&quot;Programming Error&quot;" name="name"/>
+        <field name="type_id" ref="project.project_tt_testing"/>
     </record>
 
     <record id="crm_case_logicalerrorinprogram0" model="project.issue">
@@ -104,6 +110,7 @@
         <field name="categ_id" ref="bug_categ"/>
         <field name="project_id" ref="project.project_project_9"/>
         <field eval="&quot;Logical Error in Program&quot;" name="name"/>
+        <field name="type_id" ref="project.project_tt_testing"/>
     </record>
 
     <record id="crm_case_constrainterror0" model="project.issue">
@@ -119,6 +126,7 @@
         <field name="categ_id" ref="bug_categ"/>
         <field name="project_id" ref="project.project_project_9"/>
         <field eval="&quot;Constraint Error&quot;" name="name"/>
+        <field name="type_id" ref="project.project_tt_testing"/>
     </record>
 
     <record id="crm_case_errorinprogram0" model="project.issue">
@@ -133,6 +141,7 @@
         <field name="categ_id" ref="feature_request_categ"/>
         <field name="project_id" ref="project.project_project_22"/>
         <field eval="&quot;Error in Program&quot;" name="name"/>
+        <field name="type_id" ref="project.project_tt_testing"/>
     </record>
 
     <record id="crm_case_patcheserrorinprogram0" model="project.issue">
@@ -148,6 +157,7 @@
         <field name="categ_id" ref="feature_request_categ"/>
         <field name="project_id" ref="project.project_project_9"/>
         <field eval="&quot;Patches Error in Program&quot;" name="name"/>
+        <field name="type_id" ref="project.project_tt_testing"/>
     </record>
 
     <record id="crm_case_newfeaturestobeadded0" model="project.issue">
@@ -163,6 +173,7 @@
         <field name="categ_id" ref="feature_request_categ"/>
         <field name="project_id" ref="project.project_project_21"/>
         <field eval="&quot;New Features To Be Added&quot;" name="name"/>
+        <field name="type_id" ref="project.project_tt_merge"/>
     </record>
 
     <record id="crm_case_addmenustothemodule0" model="project.issue">
@@ -179,6 +190,7 @@
         <field name="project_id" ref="project.project_project_21"/>
         <field eval="&quot;Add menus to the module&quot;" name="name"/>
         <field eval="&quot;info@opensides.be&quot;" name="email_from"/>
+        <field name="type_id" ref="project.project_tt_development"/> 
     </record>
 
     <record id="crm_case_includeattendancesheetinproject0" model="project.issue">
@@ -195,6 +207,7 @@
         <field name="project_id" ref="project.project_project_9"/>
         <field eval="&quot;Include Attendance sheet in Project&quot;" name="name"/>
         <field eval="&quot;contact@tecsas.fr&quot;" name="email_from"/>
+        <field name="type_id" ref="project.project_tt_development"/>
     </record>
 
     <record id="crm_case_createnewobject0" model="project.issue">
@@ -210,6 +223,7 @@
         <field name="categ_id" ref="feature_request_categ"/>
         <field name="project_id" ref="project.project_project_22"/>
         <field eval="&quot;Create new object&quot;" name="name"/>
+        <field name="type_id" ref="project.project_tt_specification"/>
     </record>
 
     <record id="crm_case_improvereportsinhrms0" model="project.issue">
@@ -225,6 +239,7 @@
         <field name="categ_id" ref="feature_request_categ"/>
         <field name="project_id" ref="project.project_project_22"/>
         <field eval="&quot;Improve Reports in HRMS&quot;" name="name"/>
+        <field name="type_id" ref="project.project_tt_development"/>
     </record>
 
     <record id="crm_case_improvereportsinpms0" model="project.issue">
@@ -240,6 +255,7 @@
         <field name="categ_id" ref="feature_request_categ"/>
         <field name="project_id" ref="project.project_project_22"/>
         <field eval="&quot;Improve Reports in PMS&quot;" name="name"/>
+        <field name="type_id" ref="project.project_tt_specification"/>
     </record>
 
 </data>
