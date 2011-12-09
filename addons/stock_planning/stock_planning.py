@@ -45,7 +45,7 @@ class stock_period(osv.osv):
     _order = "date_start"
     _columns = {
         'name': fields.char('Period Name', size=64, required=True),
-        'date_start': fields.datetime('Start Date', required=True),
+        'date_start': fields.datetime('Start Date', required=True, select=True),
         'date_stop': fields.datetime('End Date', required=True),
         'state': fields.selection([('draft','Draft'), ('open','Open'),('close','Close')], 'State'),
     }
@@ -449,7 +449,7 @@ class stock_planning(osv.osv):
         'history': fields.text('Procurement History', readonly=True, help = "History of procurement or internal supply of this planning line."),
         'state' : fields.selection([('draft','Draft'),('done','Done')],'State',readonly=True),
         'period_id': fields.many2one('stock.period' , 'Period', required=True, \
-                help = 'Period for this planning. Requisition will be created for beginning of the period.'),
+                help = 'Period for this planning. Requisition will be created for beginning of the period.', select=True),
         'warehouse_id': fields.many2one('stock.warehouse','Warehouse', required=True),
         'product_id': fields.many2one('product.product' , 'Product', required=True, help = 'Product which this planning is created for.'),
         'product_uom_categ' : fields.many2one('product.uom.categ', 'Product UoM Category'), # Invisible field for product_uom domain

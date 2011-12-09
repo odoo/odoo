@@ -84,7 +84,7 @@ class account_analytic_plan_line(osv.osv):
     _columns = {
         'plan_id': fields.many2one('account.analytic.plan','Analytic Plan'),
         'name': fields.char('Plan Name', size=64, required=True, select=True),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', select=True),
         'root_analytic_id': fields.many2one('account.analytic.account', 'Root Account', help="Root account of this plan.", required=False),
         'min_required': fields.float('Minimum Allowed (%)'),
         'max_required': fields.float('Maximum Allowed (%)'),

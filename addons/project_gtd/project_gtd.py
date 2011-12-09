@@ -30,7 +30,7 @@ class project_gtd_context(osv.osv):
     _description = "Context"
     _columns = {
         'name': fields.char('Context', size=64, required=True, select=1, translate=1),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of contexts."),
+        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of contexts."),
     }
     _defaults = {
         'sequence': 1

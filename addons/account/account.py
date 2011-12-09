@@ -53,7 +53,7 @@ class account_payment_term(osv.osv):
     _name = "account.payment.term"
     _description = "Payment Term"
     _columns = {
-        'name': fields.char('Payment Term', size=64, translate=True, required=True),
+        'name': fields.char('Payment Term', size=64, translate=True, required=True, select=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the payment term without removing it."),
         'note': fields.text('Description', translate=True),
         'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms'),
@@ -96,7 +96,7 @@ class account_payment_term_line(osv.osv):
     _description = "Payment Term Line"
     _columns = {
         'name': fields.char('Line Name', size=32, required=True),
-        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
+        'sequence': fields.integer('Sequence', select=True, required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
         'value': fields.selection([('procent', 'Percent'),
                                    ('balance', 'Balance'),
                                    ('fixed', 'Fixed Amount')], 'Valuation',
@@ -132,7 +132,7 @@ class account_account_type(osv.osv):
     _description = "Account Type"
     _columns = {
         'name': fields.char('Account Type', size=64, required=True),
-        'code': fields.char('Code', size=32, required=True),
+        'code': fields.char('Code', size=32, required=True, select=True),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
 
  'None' means that nothing will be done.
@@ -668,7 +668,7 @@ class account_journal_column(osv.osv):
         'name': fields.char('Column Name', size=64, required=True),
         'field': fields.selection(_col_get, 'Field Name', required=True, size=32),
         'view_id': fields.many2one('account.journal.view', 'Journal View', select=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column.", readonly=True),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column.", readonly=True, select=True),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
     }
@@ -852,7 +852,7 @@ class account_fiscalyear(osv.osv):
         'name': fields.char('Fiscal Year', size=64, required=True),
         'code': fields.char('Code', size=6, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'date_start': fields.date('Start Date', required=True),
+        'date_start': fields.date('Start Date', required=True, select=True),
         'date_stop': fields.date('End Date', required=True),
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
         'state': fields.selection([('draft','Open'), ('done','Closed')], 'State', readonly=True),
@@ -948,8 +948,8 @@ class account_period(osv.osv):
         'name': fields.char('Period Name', size=64, required=True),
         'code': fields.char('Code', size=12),
         'special': fields.boolean('Opening/Closing Period', size=12,
-            help="These periods can overlap."),
-        'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly',True)]}),
+            help="These periods can overlap.", select=True),
+        'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly',True)]}, select=True),
         'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
         'state': fields.selection([('draft','Open'), ('done','Closed')], 'State', readonly=True,
@@ -2528,8 +2528,8 @@ class account_tax_code_template(osv.osv):
     _order = 'code'
     _rec_name = 'code'
     _columns = {
-        'name': fields.char('Tax Case Name', size=64, required=True),
-        'code': fields.char('Case Code', size=64),
+        'name': fields.char('Tax Case Name', size=64, required=True, select=True),
+        'code': fields.char('Case Code', size=64, select=True),
         'info': fields.text('Description'),
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Child Codes'),

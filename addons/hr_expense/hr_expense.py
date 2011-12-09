@@ -256,7 +256,7 @@ class hr_expense_line(osv.osv):
 
     _columns = {
         'name': fields.char('Expense Note', size=128, required=True),
-        'date_value': fields.date('Date', required=True),
+        'date_value': fields.date('Date', required=True, select=True),
         'expense_id': fields.many2one('hr.expense.expense', 'Expense', ondelete='cascade', select=True),
         'total_amount': fields.function(_amount, string='Total', digits_compute=dp.get_precision('Account')),
         'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Account')),
@@ -266,7 +266,7 @@ class hr_expense_line(osv.osv):
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
         'ref': fields.char('Reference', size=32),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of expense lines."),
+        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of expense lines."),
         }
     _defaults = {
         'unit_quantity': 1,

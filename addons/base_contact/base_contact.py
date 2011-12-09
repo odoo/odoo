@@ -49,8 +49,8 @@ class res_partner_contact(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Last Name', size=64, required=True),
-        'first_name': fields.char('First Name', size=64),
+        'name': fields.char('Last Name', size=64, required=True, select=True),
+        'first_name': fields.char('First Name', size=64, select=True),
         'mobile': fields.char('Mobile', size=64),
         'title': fields.many2one('res.partner.title','Title'),
         'website': fields.char('Website', size=120),
