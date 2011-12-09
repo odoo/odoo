@@ -11,8 +11,10 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <form string="Module Category">
-                    <field colspan="4" name="name"/>
-                    <field colspan="4" name="parent_id"/>
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="sequence"/>
+                    <field name="description" colspan="4"/>
                 </form>
             </field>
         </record>
