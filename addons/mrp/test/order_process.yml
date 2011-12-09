@@ -1,11 +1,11 @@
 -
-  I change production qty with 3 Dozen Shelf 100cm.
+  I change production qty with 5 Dozen Shelf 100cm.
 -
   !python {model: change.production.qty}: |
     context.update({'active_id': ref('mrp_production_shelf100cm')})
 -
   !record {model: change.production.qty, id: mrp_production_qty}:
-    product_qty: 3.0
+    product_qty: 5.0
 -
   !python {model: change.production.qty}: |
     self.change_prod_qty(cr, uid, [ref("mrp_production_qty")], context=context)
@@ -14,38 +14,58 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_shelf100cm"))
-    assert move.product_uom.id == ref("product.product_uom_dozen"), "UOM is not correspond."
-    assert move.product_qty == 3, "Qty is not changed."
+    assert order.product_uom.id == ref("product.product_uom_dozen"), "UOM is not correspond."
+    assert order.product_qty == 5, "Qty is not changed."
 -
   I compute the production order.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_shelf100cm"), context=context)
-    order.action_compute()
+    order.action_compute(context=context)
 -
   I check production lines after compute.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_shelf100cm"), context=context)
-    assert len(order.move_lines), "Production lines are not generated."
-    for line in order.move_lines:
-        if line.product_id.id == ref('product.product_product_assemblysection0'):
-            assert line.product_qty == (4.0*3.0*12.0), "Qty is not correspond."
+    assert len(order.product_lines) == 5, "Production lines are not generated proper."
+    sidepanel = False
+    woodlintelm = False
+    woodmm0 = False
+    woodmm10 = False
+    metalcleats = False
+    for line in order.product_lines:
+        if line.product_id.id == ref('product.product_product_sidepanel0'):                         #SIDEPAN 	 2 	    PCE
+            assert not sidepanel, "Production line is already generated for SIDEPAN."
+            assert line.product_qty == (2.0*12.0*5.0), "Qty is not correspond."
             assert line.product_uom.id == ref('product.product_uom_unit'), "UOM is not correspond"
-        elif line.product_id.id == ref('product.product_product_sidepanel0'):
-            assert line.product_qty == (2.0*3.0*12.0), "Qty is not correspond."
+            sidepanel = True
+        elif line.product_id.id == ref('product.product_product_woodlintelm0'):                     #LIN40 	     4*0.25 Meter 	
+            assert not woodlintelm, "Production line is already generated for LIN40."            
+            assert line.product_qty == (4*0.25*12.0*5.0), "Qty is not correspond."
+            assert line.product_uom.id == ref('product.product_uom_meter'), "UOM is not correspond"
+            woodlintelm = True
+        elif line.product_id.id == ref('product.product_product_woodmm0'):                          #WOOD002 	 0.25 	    m
+            assert not woodmm0, "Production line is already generated for WOOD002."
+            assert line.product_qty == (0.25*12.0*5.0), "Qty is not correspond."
+            assert line.product_uom.id == ref('product.product_uom_meter'), "UOM is not correspond"
+            woodmm0 = True
+        elif line.product_id.id == ref('product.product_product_metalcleats0'):                     #METC000      4*3      PCE  
+            assert not metalcleats, "Production line is already generated for METC000."
+            assert line.product_qty == (4*3*12.0*5.0), "Qty is not correspond."
             assert line.product_uom.id == ref('product.product_uom_unit'), "UOM is not correspond"
-        elif line.product_id.id == ref('product.product_product_metalcleats0'):
-            assert line.product_qty == (12.0*3.0*12.0), "Qty is not correspond."
-            assert line.product_uom.id == ref('product.product_uom_unit'), "UOM is not correspond"
-        elif line.product_id.id == ref('product.product_product_rearpanelarm0'):
-            assert line.product_qty == (1.0*3.0*12.0), "Qty is not correspond."
-            assert line.product_uom.id == ref('product.product_uom_unit'), "UOM is not correspond"
-        elif line.product_id.id == ref('product.product_product_shelf0'):
-            assert line.product_qty == (3.0*3.0*12.0), "Qty is not correspond."
-            assert line.product_uom.id == ref('product.product_uom_unit'), "UOM is not correspond"
+            metalcleats = True
+        elif line.product_id.id == ref('product.product_product_woodmm10'):                         #WOOD010 	 0.083*3 	m
+            assert not woodmm10, "Production line is already generated for WOOD010."
+            assert line.product_qty == (0.083*3*12.0*5.0), "Qty is not correspond."
+            assert line.product_uom.id == ref('product.product_uom_meter'), "UOM is not correspond"
+            woodmm10 = True
         else:
-            assert_exception("Lines are not correspond.")
+            raise AssertionError('unknown order line: %s' % line)
+    assert sidepanel, "Production line is not generated for SIDEPAN."
+    assert woodlintelm, "Production line is not generated for LIN40."
+    assert woodmm0, "Production line is not generated for WOOD002."
+    assert metalcleats, "Production line is not generated for METC000."
+    assert woodmm10, "Production line is not generated for WOOD010."
 -
   I confirm the Production Order.
 -
@@ -63,25 +83,27 @@
     assert move.product_id.id == order.product_id.id, "Product is not correspond."
     assert move.product_uom.id == order.product_uom.id, "UOM is not correspond."
     assert move.product_qty == order.product_qty, "Qty is not correspond."
-    assert move.product_uos == order.product_uos, "UOS is not correspond."
-    assert move.product_uos_qty == order.product_uos_qty, "UOS qty is not correspond."
+    assert move.product_uos_qty == order.product_uos and order.product_uos_qty or order.product_qty, "UOS qty is not correspond."
+    if order.product_uos:
+        assert move.product_uos.id == order.product_uos.id, "UOS is not correspond."
     assert move.location_id.id == source_location_id, "Source Location is not correspond."
     assert move.location_dest_id.id == order.location_dest_id.id, "Destination Location is not correspond."
     routing_loc = None
-    if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
-        routing_loc = production.bom_id.routing_id.location_id.id
-        
+    if order.bom_id.routing_id and order.bom_id.routing_id.location_id:
+        routing_loc = order.bom_id.routing_id.location_id.id
+    date_planned = order.date_planned    
     for move_line in order.move_lines:
         for order_line in order.product_lines:
-            if line.product_id.type not in ('product', 'consu'):
+            if move_line.product_id.type not in ('product', 'consu'):
                 continue
             if move_line.product_id.id == order_line.product_id.id:
                 assert move_line.date == date_planned, "Planned date is not correspond in 'To consume line'."
                 assert move_line.product_qty == order_line.product_qty, "Qty is not correspond in 'To consume line'."
                 assert move_line.product_uom.id == order_line.product_uom.id, "UOM is not correspond in 'To consume line'."
-                assert move_line.product_uos_qty == order_line.product_uos and order_line.product_uos_qty or False, "UOS qty is not correspond in 'To consume line'."
-                assert move_line.product_uos == order_line.product_uos and order_line.product_uos.id or False, "UOS is not correspond in 'To consume line'."
-                assert move_line.location_id.id == routing_loc or production.location_src_id.id, "Source location is not correspond in 'To consume line'."
+                assert move_line.product_uos_qty == order_line.product_uos and order_line.product_uos_qty or order_line.product_qty, "UOS qty is not correspond in 'To consume line'."
+                if order_line.product_uos:
+                    assert move_line.product_uos.id == order_line.product_uos.id, "UOS is not correspond in 'To consume line'."
+                assert move_line.location_id.id == routing_loc or order.location_src_id.id, "Source location is not correspond in 'To consume line'."
                 assert move_line.location_dest_id.id == source_location_id, "Destination Location is not correspond in 'To consume line'."
 
 -
@@ -95,37 +117,39 @@
     routing_loc = None
     pick_type = 'internal'
     address_id = False
-    if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
-        routing_loc = production.bom_id.routing_id.location_id
+    if order.bom_id.routing_id and order.bom_id.routing_id.location_id:
+        routing_loc = order.bom_id.routing_id.location_id
         if routing_loc.usage <> 'internal':
             pick_type = 'out'
         address_id = routing_loc.address_id and routing_loc.address_id.id or False
         routing_loc = routing_loc.id
     assert order.picking_id.type == pick_type, "Shipment should be Internal."
-    assert order.picking_id.address_id ==  address_id, "Shipment Address is not correspond with Adderss of Routing Location."
-    date_planned = production.date_planned
+    assert order.picking_id.address_id.id ==  address_id, "Shipment Address is not correspond with Adderss of Routing Location."
+    date_planned = order.date_planned
     for move_line in order.picking_id.move_lines:
         for order_line in order.product_lines:
-            if line.product_id.type not in ('product', 'consu'):
+            if move_line.product_id.type not in ('product', 'consu'):
                 continue
             if move_line.product_id.id == order_line.product_id.id:
                 assert move_line.date == date_planned, "Planned date is not correspond."
                 assert move_line.product_qty == order_line.product_qty, "Qty is not correspond."
                 assert move_line.product_uom.id == order_line.product_uom.id, "UOM is not correspond."
-                assert move_line.product_uos_qty == order_line.product_uos and order_line.product_uos_qty or False, "UOS qty is not correspond."
-                assert move_line.product_uos == order_line.product_uos and order_line.product_uos.id or False, "UOS is not correspond."
-                assert move_line.location_id.id == production.location_src_id.id, "Source location is not correspond."
-                assert move_line.location_dest_id.id == routing_loc or production.location_src_id.id, "Destination Location is not correspond."
-                procurement_ids = procurement.search(cr, uid, [('move_id','=',move_line.id)]
+                assert move_line.product_uos_qty == order_line.product_uos and order_line.product_uos_qty or order_line.product_qty, "UOS qty is not correspond."
+                if order_line.product_uos:
+                    assert move_line.product_uos.id == order_line.product_uos.id, "UOS is not correspond."
+                assert move_line.location_id.id == order.location_src_id.id, "Source location is not correspond."
+                assert move_line.location_dest_id.id == routing_loc or order.location_src_id.id, "Destination Location is not correspond."
+                procurement_ids = procurement.search(cr, uid, [('move_id','=',move_line.id)])
                 assert procurement_ids, "Procurement should be created for shipment line of raw materials."
                 shipment_procurement = procurement.browse(cr, uid, procurement_ids[0], context=context)
                 assert shipment_procurement.date_planned == date_planned, "Planned date is not correspond in procurement."
                 assert shipment_procurement.product_id.id == order_line.product_id.id, "Product is not correspond in procurement."
                 assert shipment_procurement.product_qty == order_line.product_qty, "Qty is not correspond in procurement."
                 assert shipment_procurement.product_uom.id == order_line.product_uom.id, "UOM is not correspond in procurement."
-                assert shipment_procurement.product_uos_qty == order_line.product_uos and order_line.product_qty or False, "UOS qty is not correspond in procurement."
-                assert shipment_procurement.product_uos.id == order_line.product_uos and order_line.product_uos.id or False, "UOS is not correspond in procurement."
-                assert shipment_procurement.location_id.id == production.location_src_id.id, "Location is not correspond in procurement."
+                assert shipment_procurement.product_uos_qty == order_line.product_uos and order_line.product_uos_qty or order_line.product_qty, "UOS qty is not correspond in procurement."
+                if order_line.product_uos:
+                    assert shipment_procurement.product_uos.id == order_line.product_uos.id, "UOS is not correspond in procurement."
+                assert shipment_procurement.location_id.id == order.location_src_id.id, "Location is not correspond in procurement."
                 assert shipment_procurement.procure_method == order_line.product_id.procure_method, "Procure method is not correspond in procurement."
    
 
@@ -181,8 +205,9 @@
 -
   I check production order after produced.
 -
-  !assert {model: mrp.production, id: mrp_production_shelf100cm}:
-    - state == 'done'
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_shelf100cm"))
+    assert order.state == 'done', "Production order should be closed."
 
 -
   I print a "BOM Structure".

@@ -559,73 +559,160 @@
             <field name="bom_id" ref="mrp_bom_9"/>
             <field model="product.product" name="product_id" ref="product.product_product_26"/>
         </record>
-
+        
         <!--
     Resource: mrp.bom new EVV
     -->
+    
     <record id="mrp_bom_defaultbomforshelfofcm0" model="mrp.bom">
         <field name="name">Default BOM for Shelf of 100cm</field>
         <field name="code">SHE100</field>
-        <field name="sequence">129</field>
+        <field name="sequence">10</field>
         <field name="product_id" ref="product.product_product_shelfofcm0"/>
         <field name="product_uom" ref="product.product_uom_unit"/>
         <field name="product_qty">1.0</field>
     </record>
 
-    <record id="mrp_bom_assemblysection0" model="mrp.bom">
-        <field name="name">Assembly Section</field>
-        <field name="sequence">123</field>
-        <field name="product_id" ref="product.product_product_assemblysection0"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">4.0</field>
-        <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
-    </record>
-    
+    <!-- BoMs for 1 Shelf 100cm
+            Product Ref. 	Qty 	UoM 	Type of BoM
+                SIDEPAN 	 2 	    PCE 	normal
+                PROFIL 	     4 	    PCE 	phantom
+                RPAN100 	 1 	    PCE 	phantom
+                RCK100 	     3 	    PCE 	phantom
+    -->
+
     <record id="mrp_bom_sidepanel0" model="mrp.bom">
         <field name="name">Side Panel</field>
-        <field name="sequence">125</field>
+        <field name="sequence">101</field>
         <field name="product_id" ref="product.product_product_sidepanel0"/>
         <field name="product_uom" ref="product.product_uom_unit"/>
         <field name="product_qty">2.0</field>
         <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
     </record>
 
-    <record id="mrp_bom_metalcleats0" model="mrp.bom">
-        <field name="name">Metal Cleats</field>
-        <field name="sequence">127</field>
-        <field name="product_id" ref="product.product_product_metalcleats0"/>
+    <record id="mrp_bom_assemblysection0" model="mrp.bom">
+        <field name="name">Assembly Section</field>
+        <field name="sequence">102</field>
+        <field name="product_id" ref="product.product_product_assemblysection0"/>
         <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">12.0</field>
+        <field name="product_qty">4.0</field>
         <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
+        <field name="type">phantom</field>
     </record>
 
     <record id="mrp_bom_rearpanelarm0" model="mrp.bom">
-       <field name="sequence">131</field>
+       <field name="sequence">103</field>
        <field name="product_id" ref="product.product_product_rearpanelarm0"/>
        <field name="product_uom" ref="product.product_uom_unit"/>
        <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
        <field name="product_qty">1.0</field>
        <field name="name">Rear panel SHE100</field>
+       <field name="type">phantom</field> 
     </record>
 
     <record id="mrp_bom_shelf0" model="mrp.bom">
-       <field name="sequence">133</field>
+       <field name="sequence">104</field>
        <field name="product_id" ref="product.product_product_shelf0"/>
        <field name="product_uom" ref="product.product_uom_unit"/>
        <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
        <field name="product_qty">3.0</field>
-       <field name="name">Shelf 100</field>
+       <field name="name">RCK100</field>
+       <field name="type">phantom</field> 
+    </record>
+
+    <!--
+        BOMs for 1 RCK100 PCE 
+                    Product Ref     Qty	UoM  Type of BoM
+                    SPAN100 	    1 	PCE  phantom
+                    METC000 	    4 	PCE  normal
+    -->
+    <record id="mrp_bom_shelf1" model="mrp.bom">
+       <field name="sequence">133</field>
+       <field name="product_id" ref="product.product_product_shelf0"/>
+       <field name="product_uom" ref="product.product_uom_unit"/>
+       <field name="product_qty">1.0</field>
+       <field name="name">RCK100</field>
+    </record>
+    <record id="mrp_bom_shelf0_span100" model="mrp.bom">
+       <field name="sequence">1331</field>
+       <field name="product_id" ref="product.product_product_span100"/>
+       <field name="product_uom" ref="product.product_uom_unit"/>
+       <field name="bom_id" ref="mrp_bom_shelf1"/>
+       <field name="product_qty">1.0</field>
+       <field name="type">phantom</field> <!-- It should be phantom -->
+       <field name="name">SPAN100</field>
+    </record>
+    <record id="mrp_bom_shelf0_metalcleats0" model="mrp.bom">
+       <field name="sequence">1332</field>
+       <field name="product_id" ref="product.product_product_metalcleats0"/>
+       <field name="product_uom" ref="product.product_uom_unit"/>
+       <field name="bom_id" ref="mrp_bom_shelf1"/>
+       <field name="product_qty">4.0</field>
+       <field name="name">METC000</field>
+    </record>
+    <!--
+    Bill of Materials for 1 SPAN100 PCE 
+                    Product Code 	Quantity 	Unit of Measure
+                    WOOD010 	    0.083 	    m
+    -->
+    <record id="mrp_bom_span100" model="mrp.bom">
+       <field name="sequence">135</field>
+       <field name="product_id" ref="product.product_product_span100"/>
+       <field name="product_uom" ref="product.product_uom_unit"/>
+       <field name="product_qty">1.0</field>
+       <field name="name">SPAN100</field>
+    </record>
+    <record id="mrp_bom_span100_wood010" model="mrp.bom">
+       <field name="sequence">1351</field>
+       <field name="product_id" ref="product.product_product_woodmm10"/>
+       <field name="product_uom" ref="product.product_uom_meter"/>
+       <field name="bom_id" ref="mrp_bom_span100"/>
+       <field name="product_qty">0.083</field>
+       <field name="name">WOOD010</field>
+    </record>
+    <!-- BoMs for 1 Assembly Section PCE
+            Product Ref. 	Qty 	UoM 	
+                LIN40 	     0.25 	    Meter 	
+                
+    -->
+    <record id="mrp_bom_assemblysection1" model="mrp.bom">
+        <field name="name">Assembly Section</field>
+        <field name="sequence">123</field>
+        <field name="product_id" ref="product.product_product_assemblysection0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+        <field name="product_qty">1.0</field>
+        
     </record>
 
     <record id="mrp_bom_woodlintelm0" model="mrp.bom">
-       <field name="sequence">135</field>
+       <field name="sequence">1231</field>
        <field name="product_id" ref="product.product_product_woodlintelm0"/>
        <field name="product_uom" ref="product.product_uom_meter"/>
-       <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
-       <field name="product_qty">1.0</field>
-       <field name="bom_id" ref="mrp_bom_assemblysection0"/>
-       <field name="name">Wood Lintel 4m</field>
+       <field name="product_qty">0.25</field>
+       <field name="bom_id" ref="mrp_bom_assemblysection1"/>
+       <field name="name">Wood Lintel 0.25m</field>
     </record>
+    <!--
+    Bill of Materials for 1 RPAN100 PCE 
+                    Product Code 	Quantity 	Unit of Measure
+                    WOOD002 	    0.25 	    m
+    -->
+    <record id="mrp_bom_rearpanelarm1" model="mrp.bom">
+       <field name="sequence">131</field>
+       <field name="product_id" ref="product.product_product_rearpanelarm0"/>
+       <field name="product_uom" ref="product.product_uom_unit"/>
+       <field name="product_qty">1.0</field>
+       <field name="name">Rear panel SHE100</field>
+    </record>
+    <record id="mrp_bom_rearpanelarm1_wood002" model="mrp.bom">
+       <field name="sequence">1311</field>
+       <field name="product_id" ref="product.product_product_woodmm0"/>
+       <field name="product_uom" ref="product.product_uom_meter"/>
+       <field name="bom_id" ref="mrp_bom_rearpanelarm1"/>
+       <field name="product_qty">0.25</field>
+       <field name="name">WOOD002 0.25m</field>
+    </record>
+
 
     <record id="mrp_bom_defaultbomforshelfofcm1" model="mrp.bom">
         <field name="name">Default BOM for Shelf of 200cm</field>
@@ -636,34 +723,14 @@
         <field name="product_qty">1.0</field>
     </record>
 
-    <record id="mrp_bom_defaultbomforkitshelfofcm0" model="mrp.bom">
-        <field name="name">Default BOM for KIT Shelf of 100cm</field>
-        <field name="code">SHE100KIT</field>
-        <field name="sequence">139</field>
-        <field name="product_id" ref="product.product_product_kitshelfofcm0"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">1.0</field>
-        <field name="type">phantom</field>
-    </record>
-
-    <record id="mrp_bom_assemblysection2" model="mrp.bom">
-        <field name="name">Assembly Section</field>
-        <field name="sequence">143</field>
-        <field name="product_id" ref="product.product_product_assemblysection0"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">4.0</field>
-        <field name="bom_id" ref="mrp_bom_defaultbomforkitshelfofcm0"/>
-    </record>
-
-    <record id="mrp_bom_sidepanel2" model="mrp.bom">
-        <field name="name">Side Panel</field>
-        <field name="sequence">145</field>
-        <field name="product_id" ref="product.product_product_sidepanel0"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
-        <field name="product_qty">2.0</field>
-        <field name="bom_id" ref="mrp_bom_defaultbomforkitshelfofcm0"/>
-    </record>
-
+    <!--Defining BoMs of Shelf 200cm
+            Product Ref. 	Qty 	UoM 	Type of BoM
+             RPAN200 	     1 	    PCE 	normal
+             PROFIL          4      PCE     normal
+             SIDEPAN         2      PCE     normal
+             METC000         12     PCE     normal 
+             RCK200 	     3 	    PCE 	normal   
+    -->
     <record id="mrp_bom_rearpanelarm2" model="mrp.bom">
        <field name="sequence">147</field>
        <field name="product_id" ref="product.product_product_rearpanelarm1"/>
@@ -709,18 +776,54 @@
         <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm1"/>
     </record>
 
+    <record id="mrp_bom_defaultbomforkitshelfofcm0" model="mrp.bom">
+        <field name="name">Default BOM for KIT Shelf of 100cm</field>
+        <field name="code">SHE100KIT</field>
+        <field name="sequence">139</field>
+        <field name="product_id" ref="product.product_product_kitshelfofcm0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+        <field name="product_qty">1.0</field>
+        <field name="type">phantom</field>
+    </record>
+
+    <!--Defining BoMs of KIT Shelf 100cm
+            Product Ref. 	Qty 	UoM 	Type of BoM
+                PROFIL	     4 	    PCE 	normal
+                SIDEPAN      2      PCE     normal
+    -->
+
+    <record id="mrp_bom_assemblysection2" model="mrp.bom">
+        <field name="name">Assembly Section</field>
+        <field name="sequence">143</field>
+        <field name="product_id" ref="product.product_product_assemblysection0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+        <field name="product_qty">4.0</field>
+        <field name="bom_id" ref="mrp_bom_defaultbomforkitshelfofcm0"/>
+    </record>
+
+    <record id="mrp_bom_sidepanel2" model="mrp.bom">
+        <field name="name">Side Panel</field>
+        <field name="sequence">145</field>
+        <field name="product_id" ref="product.product_product_sidepanel0"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+        <field name="product_qty">2.0</field>
+        <field name="bom_id" ref="mrp_bom_defaultbomforkitshelfofcm0"/>
+    </record>
+
+    
+
    <record id="product.product_uom_dozen" model="product.uom">
             <field name="category_id" ref="product.product_uom_categ_unit"/>
-            <field name="name">t</field>
-            <field name="factor" eval="1/12"/>
+            <field name="name">Dozen</field>
+            <field name="factor" eval="0.083"/>
             <field name="uom_type">bigger</field>
     </record>
 
 
     <record id="mrp_production_shelf100cm" model="mrp.production">
         <field name="product_id" ref="product.product_product_shelfofcm0"/>
-        <field name="product_uom" ref="product.product.product_uom_dozen"/>
-        <field name="product_qty">5</field>
+        <field name="product_uom" ref="product.product_uom_dozen"/>
+        <field name="product_qty">3</field>
         <field name="location_src_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
         <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
@@ -755,9 +858,10 @@
         <field name="uom_id" ref="product.product_uom_kgm"/>
         <field name="uom_po_id" ref="product.product_uom_kgm"/>
     </record>
-    <record id="orange_supplier_asus" model="product.supplyinfo">
+    <record id="orange_supplier_asus" model="product.supplierinfo">
         <field name="product_id" ref="product_orange"/>
         <field name="name" ref="base.res_partner_asus"/>
+        <field name="min_qty">1.0</field>
         <field name="product_uom" ref="product.product_uom_kgm"/>
     </record>
     <record id="product_sugar" model="product.product">
@@ -769,7 +873,7 @@
         <field name="uom_id" ref="product.product_uom_kgm"/>
         <field name="uom_po_id" ref="product.product_uom_kgm"/>
     </record>
-    <record id="sugar_supplier_desertic" model="product.supplyinfo">
+    <record id="sugar_supplier_desertic" model="product.supplierinfo">
         <field name="product_id" ref="product_sugar"/>
         <field name="name" ref="base.res_partner_desertic_hispafuentes"/>
         <field name="product_uom" ref="product.product_uom_kgm"/>
@@ -784,7 +888,7 @@
         <field name="uom_id" ref="product_uom_litre"/>
         <field name="uom_po_id" ref="product_uom_litre"/>
     </record>
-    <record id="water_supplier_agrolait" model="product.supplyinfo">
+    <record id="water_supplier_agrolait" model="product.supplierinfo">
         <field name="product_id" ref="product_water"/>
         <field name="name" ref="base.res_partner_agrolait"/>
         <field name="product_uom" ref="product_uom_litre"/>
@@ -874,7 +978,7 @@
         <field name="uom_id" ref="product.product_uom_unit"/>
         <field name="uom_po_id" ref="product.product_uom_unit"/>
     </record>
-    <record id="cloth_supplier_maxtor" model="product.supplyinfo">
+    <record id="cloth_supplier_maxtor" model="product.supplierinfo">
         <field name="product_id" ref="product_cloth"/>
         <field name="name" ref="base.res_partner_maxtor"/>
         <field name="product_uom" ref="product.product_uom_unit"/>
@@ -889,7 +993,7 @@
         <field name="uom_id" ref="product.product_uom_unit"/>
         <field name="uom_po_id" ref="product.product_uom_unit"/>
     </record>
-    <record id="buttons_supplier_asus" model="product.supplyinfo">
+    <record id="buttons_supplier_asus" model="product.supplierinfo">
         <field name="product_id" ref="product_buttons"/>
         <field name="name" ref="base.res_partner_asus"/>
         <field name="product_uom" ref="product.product_uom_unit"/>

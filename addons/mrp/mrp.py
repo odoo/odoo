@@ -312,6 +312,7 @@ class mrp_bom(osv.osv):
         phantom = False
         if bom.type == 'phantom' and not bom.bom_lines:
             newbom = self._bom_find(cr, uid, bom.product_id.id, bom.product_uom.id, properties)
+            
             if newbom:
                 res = self._bom_explode(cr, uid, self.browse(cr, uid, [newbom])[0], factor*bom.product_qty, properties, addthis=True, level=level+10)
                 result = result + res[0]
@@ -579,7 +580,7 @@ class mrp_production(osv.osv):
         self.write(cr, uid, ids, {'state': 'picking_except'})
         return True
 
-    def action_compute(self, cr, uid, ids, properties=[]):
+    def action_compute(self, cr, uid, ids, properties=[], context=None):
         """ Computes bills of material of a product.
         @param properties: List containing dictionaries of properties.
         @return: No. of products.
@@ -957,7 +958,7 @@ class mrp_production(osv.osv):
         destination_location_id = production.product_id.product_tmpl_id.property_stock_production.id
         if not source_location_id:
             source_location_id = production.location_src_id.id
-        move_id = move_obj.create(cr, uid, {
+        move_id = stock_move.create(cr, uid, {
             'name': move_name,
             'date': production.date_planned,
             'product_id': production_line.product_id.id,
@@ -971,7 +972,7 @@ class mrp_production(osv.osv):
             'state': 'waiting',
             'company_id': production.company_id.id,
         })
-        production.write('move_lines': [(4, move_id)]}, context=context)
+        production.write({'move_lines': [(4, move_id)]}, context=context)
         return move_id
 
     def action_confirm(self, cr, uid, ids, context=None):
