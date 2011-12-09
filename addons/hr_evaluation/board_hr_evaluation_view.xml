@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <record id="act_hr_evaluation_tree" model="ir.actions.act_window">
-            <field name="name">My Evaluation Remaining</field>
+            <field name="name">My Appraisal Remaining</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr_evaluation.evaluation</field>
             <field name="view_type">form</field>
@@ -17,8 +17,8 @@
             <field name="inherit_id" ref="hr.board_hr_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <xpath expr="/form/board/column" position="inside">
-                <action name="%(act_hr_evaluation_tree)d" string="My Evaluation Remaining"/>
+            <xpath expr="/form/board/column[1]" position="inside">
+                <action name="%(act_hr_evaluation_tree)d" string="My Appraisal Remaining"/>
             </xpath>
             </field>
         </record>

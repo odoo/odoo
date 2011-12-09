@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Fetchmail for CRM Claim",
+    "name" : "eMail Gateway for CRM Claim",
     "version" : "1.0",
     "depends" : ["fetchmail", "crm_claim"],
     "author" : "OpenERP SA",
-    "category": 'Hidden/Link',
+    'category': 'Sales Management',
     "description": """
     """,
     'website': 'http://www.openerp.com',

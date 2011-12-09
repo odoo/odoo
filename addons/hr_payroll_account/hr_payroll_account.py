@@ -40,6 +40,17 @@ class hr_payslip(osv.osv):
         'move_id': fields.many2one('account.move', 'Accounting Entry', readonly=True),
     }
 
+    def _get_default_journal(self, cr, uid, context=None):
+        model_data = self.pool.get('ir.model.data')
+        res = model_data.search(cr, uid, [('name', '=', 'expenses_journal')])
+        if res:
+            return model_data.browse(cr, uid, res[0]).res_id
+        return False
+
+    _defaults = {
+        'journal_id': _get_default_journal,
+    }
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -171,7 +182,7 @@ class hr_payslip(osv.osv):
                 line_ids.append(adjust_debit)
             move.update({'line_id': line_ids})
             move_id = move_pool.create(cr, uid, move, context=context)
-            self.write(cr, uid, [slip.id], {'move_id': move_id}, context=context)
+            self.write(cr, uid, [slip.id], {'move_id': move_id, 'period_id' : period_id}, context=context)
             if slip.journal_id.entry_posted:
                 move_pool.post(cr, uid, [move_id], context=context)
         return super(hr_payslip, self).process_sheet(cr, uid, [slip.id], context=context)

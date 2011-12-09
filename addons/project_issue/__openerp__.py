@@ -59,6 +59,7 @@ and decide on their status as they evolve.
     ],
     'installable': True,
     'active': False,
+    'application': True,
     'certificate' : '001236490750848623845',
 }
 

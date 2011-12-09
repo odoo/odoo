@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Todo List based on the GTD methodology',
+    'name': 'Todo Lists',
     'version': '1.0',
     'category': 'Project Management',
     'complexity': "easy",
@@ -60,6 +60,7 @@ performing those tasks.
         'test/gtd_test.yml'
     ],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '0043525236301',
 }
