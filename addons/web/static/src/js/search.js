@@ -7,7 +7,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
     /**
      * @constructs openerp.web.SearchView
      * @extends openerp.web.Widget
-     * 
+     *
      * @param parent
      * @param element_id
      * @param dataset
@@ -155,7 +155,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         var ext = new openerp.web.search.ExtendedSearch(this, this.model);
         lines.push([ext]);
         this.inputs.push(ext);
-        
+
         var render = QWeb.render("SearchView", {
             'view': data.fields_view['arch'],
             'lines': lines,
@@ -177,7 +177,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         $.when.apply(null, widget_starts).then(function () {
             self.ready.resolve();
         });
-        
+
         this.reload_managed_filters();
     },
     reload_managed_filters: function() {
@@ -409,6 +409,11 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         this.$element.find('table:last').hide();
 
         $('.searchview_extended_groups_list').empty();
+        _.each(this.inputs, function (input) {
+            if(input.datewidget && input.datewidget.value) {
+                input.datewidget.value = false;
+            }
+        });
         setTimeout(this.on_clear, 0);
     },
     /**
@@ -1209,7 +1214,7 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
         this.$element.find('.searchview_extended_prop_value').html(
             this.value.render({}));
         this.value.start();
-        
+
     },
     get_proposition: function() {
         if ( this.attrs.selected == null)
@@ -1356,7 +1361,7 @@ openerp.web.search.custom_filters = new openerp.web.Registry({
     'one2many': 'openerp.web.search.ExtendedSearchProposition.Char',
     'many2one': 'openerp.web.search.ExtendedSearchProposition.Char',
     'many2many': 'openerp.web.search.ExtendedSearchProposition.Char',
-    
+
     'datetime': 'openerp.web.search.ExtendedSearchProposition.DateTime',
     'date': 'openerp.web.search.ExtendedSearchProposition.Date',
     'integer': 'openerp.web.search.ExtendedSearchProposition.Integer',
