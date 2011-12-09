@@ -40,7 +40,7 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
             pwc.get_func('is_livechat_enable')().then(function(res) {
                 console.log('result', res);
                 if(res) {
-                    self.$element.find('a').click(self.do_load_livechat);
+                    self.$element.click(self.do_load_livechat);
                 } else {
                     self.do_action({type: 'ir.act.url', url: 'http://www.openerp.com/support-or-publisher-warranty-contract'});
                 }
@@ -62,7 +62,7 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
         evt.preventDefault();    
         var self = this;
 
-        this.$element.find('Header_Livechat').unbind('click', this.do_load_livechat);
+        this.$element.unbind('click', this.do_load_livechat);
 
         var lc_id = _.uniqueId('livechat_');
         this.$element.attr('id', lc_id);
