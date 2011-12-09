@@ -22,6 +22,7 @@ var __lc_buttons = [];
 
 openerp.web_livechat = function (openerp) {
 
+
 openerp.web_livechat.Livechat = openerp.web.Widget.extend({
     template: 'Header-LiveChat',
 
@@ -33,7 +34,17 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
         var pwc = new openerp.web.Model(self.session, "publisher_warranty.contract");
         pwc.get_func('get_default_livechat_text')().then(function(text) {
             self.$element.html(text);
+            console.log('receiving text', text);
             self.do_update();
+        }).then(function() {
+            pwc.get_func('is_livechat_enable')().then(function(res) {
+                console.log('result', res);
+                if(res) {
+                    self.$element.find('a').click(self.do_load_livechat);
+                } else {
+                    self.do_action({type: 'ir.act.url', url: 'http://www.openerp.com/support-or-publisher-warranty-contract'});
+                }
+            })
         });
 
         openerp.webclient.header.do_update.add_last(this.do_update);
@@ -45,7 +56,14 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
             self.$element.remove();
             return;
         }
-        
+     },
+
+    do_load_livechat: function(evt) {
+        evt.preventDefault();    
+        var self = this;
+
+        this.$element.find('Header_Livechat').unbind('click', this.do_load_livechat);
+
         var lc_id = _.uniqueId('livechat_');
         this.$element.attr('id', lc_id);
 
@@ -56,6 +74,8 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
             if(!res) {
                 //return;
             }
+        // connect to LiveChat
+        __lc_load();
 
             __lc_buttons.push({
                 elementId: lc_id, //'livechat_status',
@@ -77,17 +97,28 @@ if (openerp.webclient) {
         params = '',
         lang = 'en',
         skill = '0';
-    __lc_load = function (p) { if (typeof __lc_loaded != 'function')
-      if (p) { var d = document, l = d.createElement('script'), s =
-        d.getElementsByTagName('script')[0], a = unescape('%26'),
-        h = ('https:' == d.location.protocol ? 'https://' : 'http://'); l.type = 'text/javascript'; l.async = true;
-        l.src = h + 'gis' + p +'.livechatinc.com/gis.cgi?serverType=control'+a+'licenseID='+license+a+'jsonp=__lc_load';
-        if (!(typeof p['server'] !== 'string' || typeof __lc_serv === 'string')) {
-          l.src = h + (__lc_serv = p['server']) + '/licence/'+license+'/script.cgi?lang='+lang+a+'groups='+skill;
-          l.src += (params == '') ? '' : a+'params='+encodeURIComponent(encodeURIComponent(params)); s.parentNode.insertBefore(l, s);
-        } else setTimeout(__lc_load, 1000); if(typeof __lc_serv != 'string'){ s.parentNode.insertBefore(l, s);}
-      } else __lc_load(Math.ceil(Math.random()*5)); }
-    __lc_load();
+    __lc_load = function (p) { 
+      if (typeof __lc_loaded != 'function')
+        if (p) { 
+          var d = document,
+            l = d.createElement('script'),
+            s = d.getElementsByTagName('script')[0],
+            a = unescape('%26'),
+            h = ('https:' == d.location.protocol ? 'https://' : 'http://');
+          l.type = 'text/javascript';
+          l.async = true;
+          l.src = h + 'gis' + p +'.livechatinc.com/gis.cgi?serverType=control'+a+'licenseID='+license+a+'jsonp=__lc_load';
+          if (!(typeof p['server'] !== 'string' || typeof __lc_serv === 'string')) {
+            l.src = h + (__lc_serv = p['server']) + '/licence/'+license+'/script.cgi?lang='+lang+a+'groups='+skill;
+            l.src += (params == '') ? '' : a+'params='+encodeURIComponent(encodeURIComponent(params));
+            s.parentNode.insertBefore(l, s);
+          } else 
+            setTimeout(__lc_load, 1000);
+          if(typeof __lc_serv != 'string'){
+            s.parentNode.insertBefore(l, s);
+          }
+        } else __lc_load(Math.ceil(Math.random()*5));
+    }
 
     // and add widget to webclient
     openerp.webclient.livechat = new openerp.web_livechat.Livechat(openerp.webclient);
