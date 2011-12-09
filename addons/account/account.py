@@ -3074,12 +3074,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     def generate_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
         """
-        This method used for creating journals.
-        @param cr: A database cursor.
-        @param uid: ID of the user currently logged in.
-        @param chart_temp_id: Chart Template Id.
-        @param acc_template_ref: Account templates reference.
-        @param company_id: company_id selected from wizard.multi.charts.accounts.
+        This method is used for creating journals.
+
+        :param chart_temp_id: Chart Template Id.
+        :param acc_template_ref: Account templates reference.
+        :param company_id: company_id selected from wizard.multi.charts.accounts.
+        :returns: True
         """
         journal_data = self._prepare_all_journals(cr, uid, chart_template_id, acc_template_ref, company_id, context=context)
         for vals_journal in journal_data:
@@ -3208,6 +3208,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         :param company_id: id of the company the wizard is running for
         :param code_digits: integer that depicts the number of digits the accounts code should have in the COA
         :param obj_wizard: the current wizard for generating the COA from the templates
+        :param acc_ref: Mapping between ids of account templates and real accounts created from them
+        :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
+        :param tax_code_ref: Mapping between ids of tax code templates and real tax codes created from them
         :returns: return a tuple with a dictionary containing
             * the mapping between the account template ids and the ids of the real accounts that have been generated
               from them, as first item,
@@ -3235,6 +3238,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         :param company_id: id of the company the wizard is running for
         :param code_digits: integer that depicts the number of digits the accounts code should have in the COA
         :param obj_wizard: the current wizard for generating the COA from the templates
+        :param acc_ref: Mapping between ids of account templates and real accounts created from them
+        :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
+        :param tax_code_ref: Mapping between ids of tax code templates and real tax codes created from them
         :returns: return a tuple with a dictionary containing
             * the mapping between the account template ids and the ids of the real accounts that have been generated
               from them, as first item,
@@ -3284,7 +3290,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         '''
         This function checks if the chosen chart template is configured as containing a full set of taxes, and if
         it's not the case, it creates the templates for account.tax.code and for account.account.tax objects accordingly
-        to the provided sale/purchase rates.
+        to the provided sale/purchase rates. Then it saves the new tax templates as default taxes to use for this chart
+        template.
 
         :param obj_wizard: browse record of wizard to generate COA from templates
         :param company_id: id of the company for wich the wizard is running
