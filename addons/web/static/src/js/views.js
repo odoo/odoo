@@ -75,6 +75,10 @@ session.web.ActionManager = session.web.Widget.extend({
         }
     },
     do_action: function(action, on_close) {
+        if (!action.type) {
+            console.error("No type for action", action);
+            return;
+        }
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         action.flags = _.extend({
@@ -85,7 +89,7 @@ session.web.ActionManager = session.web.Widget.extend({
             pager : !popup
         }, action.flags || {});
         if (!(type in this)) {
-            console.log("Action manager can't handle action of type " + action.type, action);
+            console.error("Action manager can't handle action of type " + action.type, action);
             return;
         }
         return this[type](action, on_close);
@@ -197,7 +201,6 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         this.views = {};
         this.flags = this.flags || {};
         this.registry = session.web.views;
-        this.views = [];
         this.views_history = [];
     },
     render: function() {
@@ -301,10 +304,23 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         });
         return view_promise;
     },
-    on_prev_view: function () {
-        this.views_history.pop();
+    /**
+     * Returns to the view preceding the caller view in this manager's
+     * navigation history (the navigation history is appended to via
+     * on_mode_switch)
+     *
+     * @param {Boolean} [created=false] returning from a creation
+     * @returns {$.Deferred} switching end signal
+     */
+    on_prev_view: function (created) {
+        var current_view = this.views_history.pop();
         var previous_view = this.views_history[this.views_history.length - 1];
-        this.on_mode_switch(previous_view, true);
+        // APR special case: "If creation mode from list (and only from a list),
+        // after saving, go to page view (don't come back in list)"
+        if (created && current_view === 'form' && previous_view === 'list') {
+            return this.on_mode_switch('page');
+        }
+        return this.on_mode_switch(previous_view, true);
     },
     /**
      * Sets up the current viewmanager's search view.
@@ -393,10 +409,16 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         }
         this.dataset = dataset;
         this.flags = this.action.flags || {};
-        if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
-            // Not elegant but allows to avoid form chrome (pager, save/new
-            // buttons, sidebar, ...) displaying
-            this.flags.display_title = this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
+        if (action.res_model == 'board.board' && action.view_mode === 'form') {
+            // Special case for Dashboards
+            _.extend(this.flags, {
+                views_switcher : false,
+                display_title : false,
+                search_view : false,
+                pager : false,
+                sidebar : false,
+                action_buttons : false
+            });
         }
 
         // setup storage for session-wise menu hiding
@@ -431,10 +453,11 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
 
         this.$element.find('.oe_get_xml_view').click(function () {
-            // TODO: add search view?
-            $('<pre>').text(session.web.json_node_to_xml(
-                self.views[self.active_view].controller.fields_view.arch, true))
-                    .dialog({ width: '95%'});
+            var view = self.views[self.active_view].controller,
+                view_id = view.fields_view.view_id;
+            if (view_id) {
+                view.on_sidebar_edit_resource('ir.ui.view', view_id);
+            }
         });
         if (this.action.help && !this.flags.low_profile) {
             var Users = new session.web.DataSet(self, 'res.users'),
@@ -480,7 +503,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             self.$element.find('.oe-view-manager-logs:first')
                 .addClass('oe-folded').removeClass('oe-has-more')
                 .find('ul').empty();
-            self.shortcut_check(self.views[view_type])
+            self.shortcut_check(self.views[view_type]);
         });
         return $.when(
                 switched
@@ -595,25 +618,29 @@ session.web.Sidebar = session.web.Widget.extend({
         });
     },
     add_default_sections: function() {
+        var self = this,
+            view = this.widget_parent,
+            view_manager = view.widget_parent,
+            action = view_manager.action;
         if (this.session.uid === 1) {
             this.add_section(_t('Customize'), 'customize');
             this.add_items('customize', [
                 {
                     label: _t("Manage Views"),
-                    callback: this.widget_parent.on_sidebar_manage_views,
+                    callback: view.on_sidebar_manage_views,
                     title: _t("Manage views of the current object")
                 }, {
                     label: _t("Edit Workflow"),
-                    callback: this.widget_parent.on_sidebar_edit_workflow,
+                    callback: view.on_sidebar_edit_workflow,
                     title: _t("Manage views of the current object"),
                     classname: 'oe_hide oe_sidebar_edit_workflow'
                 }, {
                     label: _t("Customize Object"),
-                    callback: this.widget_parent.on_sidebar_customize_object,
+                    callback: view.on_sidebar_customize_object,
                     title: _t("Manage views of the current object")
                 }, {
                     label: _t("Translate"),
-                    callback: this.widget_parent.on_sidebar_translate,
+                    callback: view.on_sidebar_translate,
                     title: _t("Technical translation")
                 }
             ]);
@@ -623,16 +650,36 @@ session.web.Sidebar = session.web.Widget.extend({
         this.add_items('other', [
             {
                 label: _t("Import"),
-                callback: this.widget_parent.on_sidebar_import
+                callback: view.on_sidebar_import
             }, {
                 label: _t("Export"),
-                callback: this.widget_parent.on_sidebar_export
+                callback: view.on_sidebar_export
             }, {
                 label: _t("View Log"),
-                callback: this.widget_parent.on_sidebar_view_log,
+                callback: view.on_sidebar_view_log,
                 classname: 'oe_hide oe_sidebar_view_log'
             }
         ]);
+
+        if (session.connection.debug) {
+            this.add_section("Debug", 'debug');
+            if (action && action.id) {
+                this.add_items('debug', [{
+                    label: "Edit Action",
+                    callback: function() {
+                        view.on_sidebar_edit_resource(action.type, action.id);
+                    }
+                }]);
+            }
+            if (view_manager.searchview && view_manager.searchview.view_id) {
+                this.add_items('debug', [{
+                    label: "Edit SearchView",
+                    callback: function() {
+                        view.on_sidebar_edit_resource('ir.ui.view', view_manager.searchview.view_id);
+                    }
+                }]);
+            }
+        }
     },
 
     add_toolbar: function(toolbar) {
@@ -993,7 +1040,14 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         console.log('Todo');
     },
     on_sidebar_customize_object: function() {
-        console.log('Todo');
+        var self = this;
+        this.rpc('/web/dataset/search_read', {
+            model: 'ir.model',
+            fields: ['id'],
+            domain: [['model', '=', self.dataset.model]]
+        }, function (result) {
+            self.on_sidebar_edit_resource('ir.model', result.ids[0]);
+        });
     },
     on_sidebar_import: function() {
         var import_view = new session.web.DataImport(this, this.dataset);
@@ -1012,6 +1066,27 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             view_type : "list",
             view_mode : "list"
         });
+    },
+    on_sidebar_edit_resource: function(model, id, domain) {
+        var action = {
+            res_model : model,
+            type : 'ir.actions.act_window',
+            view_type : 'form',
+            view_mode : 'form',
+            target : 'new',
+            flags : {
+                action_buttons : true
+            }
+        }
+        if (id) {
+            action.res_id = id,
+            action.views = [[false, 'form']];
+        } else if (domain) {
+            action.views = [[false, 'list'], [false, 'form']];
+            action.domain = domain;
+            action.flags.views_switcher = true;
+        }
+        this.do_action(action);
     },
     on_sidebar_view_log: function() {
     },

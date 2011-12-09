@@ -837,7 +837,8 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     init: function(parent, element_id, secondary_menu_id) {
         this._super(parent, element_id);
         this.secondary_menu_id = secondary_menu_id;
-        this.$secondary_menu = $("#" + secondary_menu_id).hide();
+        this.$secondary_menu = $("#" + secondary_menu_id);
+        this.$secondary_menu.hide();
         this.menu = false;
         this.folded = false;
         if (window.localStorage) {
@@ -911,7 +912,10 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         sub_menu_visible = $sub_menu.is(':visible');
         this.$secondary_menu.find('.oe_secondary_menu').hide();
 
-        $('.active', this.$element.add(this.$secondary_menu.show())).removeClass('active');
+        if (this.$secondary_menu.hasClass('oe_folded')) {
+            this.$secondary_menu.show();
+        }
+        $('.active', this.$element.add(this.$secondary_menu)).removeClass('active');
         $main_menu.add($clicked_menu).add($sub_menu).addClass('active');
 
         if (!(this.folded && manual)) {
@@ -1076,15 +1080,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         // TODO: add actual loading if there is url state to unpack, test on window.location.hash
         // not logged in
         if (!this.session.uid) { return; }
-        var ds = new openerp.web.DataSetSearch(this, 'res.users');
-        ds.read_ids([this.session.uid], ['action_id'], function (users) {
-            var home_action = users[0].action_id;
-            if (!home_action) {
-                self.default_home();
-                return;
-            }
-            self.execute_home_action(home_action[0], ds);
-        })
+        self.action_manager.do_action({type: 'ir.actions.client', tag: 'default_home'});
     },
     default_home: function () {
     },

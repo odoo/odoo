@@ -391,7 +391,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {String} [view="page"] the view type to switch to
      */
     select_record:function (index, view) {
-        view = view || 'page';
+        view = view || index == null ? 'form' : 'page';
         this.dataset.index = index;
         _.delay(_.bind(function () {
             this.do_switch_view(view);
@@ -1279,6 +1279,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
         list.$current.sortable({
             axis: 'y',
             items: '> tr[data-id]',
+            containment: 'parent',
             stop: function (event, ui) {
                 var to_move = list.records.get(ui.item.data('id')),
                     target_id = ui.item.prev().data('id'),

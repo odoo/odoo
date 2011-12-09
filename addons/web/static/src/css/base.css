@@ -768,12 +768,16 @@ label.error {
     padding: 1px 2px;
 }
 
-.openerp .oe-record-delete button{
+.openerp .oe-record-delete button,
+.openerp button.oe-edit-row-save {
     border: none;
     height: 12px;
     width: 12px;
     background: url("/web/static/src/img/iconset-b-remove.png") no-repeat scroll center center transparent;
     cursor: pointer;
+}
+.openerp button.oe-edit-row-save {
+    background-image: url('/web/static/src/img/icons/save-document.png');
 }
 
 /* Could use :not selectors if they were supported by MSIE8... */
@@ -952,13 +956,19 @@ label.error {
     background: #f9f9f9;
 }
 /* Unedit Form */
-.openerp .field_char, .openerp .field_date, .openerp .field_float, .openerp .oe_form_field_many2one a {
+.openerp .field_char,
+.openerp .field_date,
+.openerp .field_float,
+.openerp .field_selection,
+.openerp .oe_form_field_many2one a,
+.openerp .oe_form_field_reference a{
     vertical-align: middle;
     padding-top: 3px;
     font-size: 90%;
     color: #222;
 }
-.openerp .oe_form_field_many2one a {
+.openerp .oe_form_field_many2one a,
+.openerp .oe_form_field_reference a {
     color: #9A0404;
     line-height: 12px;
 }
@@ -1061,6 +1071,7 @@ label.error {
 
 .openerp .oe_forms label.oe_label, .openerp .oe_forms label.oe_label_help {
     margin: 4px 0 0 3px;
+    white-space: nowrap;
 }
 .openerp .oe_forms .searchview_group_content label.oe_label, .openerp .searchview_group_content .oe_forms label.oe_label_help { /* making a distinction between labels in search view and other labels */
     margin: 3px 0 0 3px;
@@ -1153,9 +1164,9 @@ label.error {
 .openerp .oe_input_icon {
     position: absolute;
     cursor: pointer;
-    right: 5px;
-    top: 3px;
-    z-index: 2;
+    right: 4px;
+    top: 5px;
+    z-index: 1;
 }
 .openerp .oe_datepicker_container {
     position: absolute;
@@ -1164,7 +1175,6 @@ label.error {
     display: none;
 }
 .openerp .oe_datepicker_root {
-    position: relative;
     display: inline-block;
 }
 .openerp .oe_forms.oe_frame .oe_datepicker_root {
@@ -1177,13 +1187,6 @@ label.error {
     filter:alpha(opacity=50);
     right: 5px;
     top: 3px;
-}
-.openerp img.oe_field_translate {
-    margin-left: -21px;
-    vertical-align: top;
-    cursor: pointer;
-    position: relative;
-    top: 4px;
 }
 .openerp .oe_trad_field.touched {
     border: 1px solid green !important;

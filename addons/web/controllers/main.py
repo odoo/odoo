@@ -103,6 +103,7 @@ class WebClient(openerpweb.Controller):
             addons = self.server_wide_modules(req)
         else:
             addons = addons.split(',')
+        r = []
         for addon in addons:
             manifest = openerpweb.addons_manifest.get(addon, None)
             if not manifest:
@@ -112,7 +113,8 @@ class WebClient(openerpweb.Controller):
             globlist = manifest.get(key, [])
             for pattern in globlist:
                 for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    yield path, path[len(addons_path):]
+                    r.append( (path, path[len(addons_path):]))
+        return r
 
     def manifest_list(self, req, mods, extension):
         if not req.debug:
