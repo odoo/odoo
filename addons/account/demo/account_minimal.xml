@@ -5,50 +5,11 @@
         Account Type
         -->
 
-        <record id="account_type_root" model="account.account.type">
-            <field name="name">View</field>
-            <field name="code">view</field>
-            <field name="close_method">none</field>
-        </record>
-        <record id="account_type_asset" model="account.account.type">
-            <field name="name">Asset</field>
-            <field name="code">asset</field>
-            <field name="close_method">balance</field>
-        </record>
-        <record id="account_type_receivable" model="account.account.type">
-            <field name="name">Receivable</field>
-            <field name="code">receivable</field>
-            <field name="close_method">unreconciled</field>
-        </record>
-        <record id="account_type_liability" model="account.account.type">
-            <field name="name">Liability</field>
-            <field name="code">liability</field>
-            <field name="close_method">balance</field>
-        </record>
-        <record id="account_type_payable" model="account.account.type">
-            <field name="name">Payable</field>
-            <field name="code">payable</field>
-            <field name="close_method">unreconciled</field>
-        </record>
-        <record id="account_type_income" model="account.account.type">
-            <field name="name">Income</field>
-            <field name="code">income</field>
-            <field name="close_method">none</field>
-        </record>
-        <record id="account_type_expense" model="account.account.type">
-            <field name="name">Expense</field>
-            <field name="code">expense</field>
-            <field name="close_method">none</field>
-        </record>
         <record id="account_type_cash_equity" model="account.account.type">
             <field name="name">Equity</field>
             <field name="code">equity</field>
             <field name="close_method">balance</field>
-        </record>
-        <record id="account_type_cash_moves" model="account.account.type">
-            <field name="name">Cash</field>
-            <field name="code">cash</field>
-            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
         </record>
 
         <!--
@@ -60,7 +21,7 @@
             <field name="name">Chart For Automated Tests</field>
             <field eval="0" name="parent_id"/>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_root"/>
+            <field name="user_type" ref="data_account_type_view"/>
         </record>
 
         <!-- Balance Sheet -->
@@ -70,14 +31,14 @@
             <field name="name">Balance Sheet - (test)</field>
             <field ref="chart0" name="parent_id"/>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_root"/>
+            <field name="user_type" ref="data_account_type_view"/>
         </record>
 
         <record model="account.account" id="assets_view">
             <field name="name">Assets - (test)</field>
             <field name="code">X10</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_asset"/>
+            <field name="user_type" ref="data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="bal"/>
         </record>
@@ -87,7 +48,7 @@
             <field name="name">Fixed Assets - (test)</field>
             <field ref="assets_view" name="parent_id"/>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_asset"/>
+            <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="xfa" model="account.account">
@@ -95,7 +56,7 @@
             <field name="name">Fixed Asset Account - (test)</field>
             <field ref="fas" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_asset"/>
+            <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="nca" model="account.account">
@@ -103,7 +64,7 @@
             <field name="name">Net Current Assets - (test)</field>
             <field ref="assets_view" name="parent_id"/>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_asset"/>
+            <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="cas" model="account.account">
@@ -111,7 +72,7 @@
             <field name="name">Current Assets - (test)</field>
             <field ref="nca" name="parent_id"/>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_asset"/>
+            <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="stk" model="account.account">
@@ -119,7 +80,7 @@
             <field name="name">Purchased Stocks - (test)</field>
             <field ref="cas" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_asset"/>
+            <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="a_recv" model="account.account">
@@ -128,7 +89,7 @@
             <field ref="cas" name="parent_id"/>
             <field name="type">receivable</field>
             <field eval="True" name="reconcile"/>
-            <field name="user_type" ref="account_type_receivable"/>
+            <field name="user_type" ref="data_account_type_receivable"/>
         </record>
 
         <record id="ova" model="account.account">
@@ -136,7 +97,7 @@
             <field name="name">Output VAT - (test)</field>
             <field ref="cas" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_asset"/>
+            <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="bnk" model="account.account">
@@ -144,7 +105,7 @@
             <field name="name">Bank Current Account - (test)</field>
             <field ref="cas" name="parent_id"/>
             <field name="type">liquidity</field>
-            <field name="user_type" ref="account_type_asset"/>
+            <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="cash" model="account.account">
@@ -152,7 +113,7 @@
             <field name="name">Cash - (test)</field>
             <field ref="cas" name="parent_id"/>
             <field name="type">liquidity</field>
-            <field name="user_type" ref="account_type_asset"/>
+            <field name="user_type" ref="data_account_type_asset"/>
         </record>
 
         <record id="o_income" model="account.account">
@@ -160,14 +121,14 @@
             <field name="name">Opening Income - (test)</field>
             <field ref="cas" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_income"/>
+            <field name="user_type" ref="data_account_type_income"/>
         </record>
 
         <record model="account.account" id="liabilities_view">
             <field name="name">Liabilities - (test)</field>
             <field name="code">X11</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_liability"/>
+            <field name="user_type" ref="data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="bal"/>
         </record>
@@ -177,7 +138,7 @@
             <field name="name">Current Liabilities - (test)</field>
             <field ref="liabilities_view" name="parent_id"/>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_liability"/>
+            <field name="user_type" ref="data_account_type_liability"/>
         </record>
 
         <record id="a_pay" model="account.account">
@@ -186,7 +147,7 @@
             <field ref="cli" name="parent_id"/>
             <field name="type">payable</field>
             <field eval="True" name="reconcile"/>
-            <field name="user_type" ref="account_type_payable"/>
+            <field name="user_type" ref="data_account_type_payable"/>
         </record>
 
         <record id="iva" model="account.account">
@@ -194,7 +155,7 @@
             <field name="name">Input VAT - (test)</field>
             <field ref="cli" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_liability"/>
+            <field name="user_type" ref="data_account_type_liability"/>
         </record>
 
         <record id="rsa" model="account.account">
@@ -202,7 +163,7 @@
             <field name="name">Reserve and Profit/Loss - (test)</field>
             <field ref="cli" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_liability"/>
+            <field name="user_type" ref="data_account_type_liability"/>
         </record>
 
         <record id="o_expense" model="account.account">
@@ -210,7 +171,7 @@
             <field name="name">Opening Expense - (test)</field>
             <field ref="cli" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_expense"/>
+            <field name="user_type" ref="data_account_type_expense"/>
         </record>
 
         <!-- Profit and Loss -->
@@ -220,14 +181,14 @@
             <field name="name">Profit and Loss - (test)</field>
             <field ref="chart0" name="parent_id"/>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_root"/>
+            <field name="user_type" ref="data_account_type_view"/>
         </record>
 
         <record model="account.account" id="income_view">
             <field name="name">Income - (test)</field>
             <field name="code">X20</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_income"/>
+            <field name="user_type" ref="data_account_type_income"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="gpf"/>
         </record>
@@ -236,7 +197,7 @@
             <field name="name">Foreign Exchange Gain - (test)</field>
             <field name="code">X201</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_income"/>
+            <field name="user_type" ref="data_account_type_income"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="income_view"/>
         </record>
@@ -246,7 +207,7 @@
             <field name="name">Revenue - (test)</field>
             <field ref="income_view" name="parent_id"/>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_income"/>
+            <field name="user_type" ref="data_account_type_income"/>
         </record>
 
         <record id="a_sale" model="account.account">
@@ -254,14 +215,14 @@
             <field name="name">Product Sales - (test)</field>
             <field ref="rev" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_income"/>
+            <field name="user_type" ref="data_account_type_income"/>
         </record>
 
         <record model="account.account" id="expense_view">
             <field name="name">Expense - (test)</field>
             <field name="code">X21</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_expense"/>
+            <field name="user_type" ref="data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="gpf"/>
         </record>
@@ -272,7 +233,7 @@
             <field name="name">Cost of Sales - (test)</field>
             <field ref="expense_view" name="parent_id"/>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_expense"/>
+            <field name="user_type" ref="data_account_type_expense"/>
         </record>
 
         <record id="cog" model="account.account">
@@ -280,7 +241,7 @@
             <field name="name">Cost of Goods Sold - (test)</field>
             <field ref="cos" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_expense"/>
+            <field name="user_type" ref="data_account_type_expense"/>
         </record>
 
         <record id="ovr" model="account.account">
@@ -288,7 +249,7 @@
             <field name="name">Overheads - (test)</field>
             <field ref="expense_view" name="parent_id"/>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_expense"/>
+            <field name="user_type" ref="data_account_type_expense"/>
         </record>
 
         <record id="a_expense" model="account.account">
@@ -296,14 +257,14 @@
             <field name="name">Expenses - (test)</field>
             <field ref="ovr" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_expense"/>
+            <field name="user_type" ref="data_account_type_expense"/>
         </record>
 
         <record model="account.account" id="income_fx_expense">
             <field name="name">Foreign Exchange Loss - (test)</field>
             <field name="code">X2111</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_expense"/>
+            <field name="user_type" ref="data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="ovr"/>
         </record>
@@ -313,7 +274,7 @@
             <field name="name">Salary Expenses - (test)</field>
             <field ref="ovr" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_expense"/>
+            <field name="user_type" ref="data_account_type_expense"/>
         </record>
 
         <!-- Properties -->
@@ -463,76 +424,5 @@
             <field eval="'account.account,'+str(ref('account.a_sale'))" model="account.account" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-
-        <!-- 
-            Financial Reports
-        -->
-        <record id="account_financial_report_balancesheet0" model="account.financial.report">
-            <field name="name">Balance Sheet</field>
-            <field name="type">sum</field>
-        </record>
-        <record id="account_financial_report_assets0" model="account.financial.report">
-            <field name="name">Assets</field>
-            <field name="parent_id" ref="account_financial_report_balancesheet0"/>
-            <field name="account_type_ids" eval="[(6,0,[ref('account.account_type_asset')])]"/>
-            <field name="display_detail">detail_with_hierarchy</field>
-            <field name="type">account_type</field>
-        </record>
-        <record id="account_financial_report_liability0" model="account.financial.report">
-            <field name="name">Liability</field>
-            <field name="parent_id" ref="account_financial_report_balancesheet0"/>
-            <field name="account_type_ids" eval="[(6,0,[ref('account.account_type_liability')])]"/>
-            <field name="display_detail">detail_with_hierarchy</field>
-            <field name="type">account_type</field>
-        </record>
-
-        <record id="account_financial_report_profitandloss0" model="account.financial.report">
-            <field name="name">Profit and Loss</field>
-            <field name="type">sum</field>
-        </record>
-        <record id="account_financial_report_income0" model="account.financial.report">
-            <field name="name">Income</field>
-            <field name="parent_id" ref="account_financial_report_profitandloss0"/>
-            <field name="account_type_ids" eval="[(6,0,[ref('account.account_type_income')])]"/>
-            <field name="display_detail">detail_with_hierarchy</field>
-            <field name="type">account_type</field>
-        </record>
-        <record id="account_financial_report_expense0" model="account.financial.report">
-            <field name="name">Expense</field>
-            <field name="parent_id" ref="account_financial_report_profitandloss0"/>
-            <field name="account_type_ids" eval="[(6,0,[ref('account.account_type_expense')])]"/>
-            <field name="display_detail">detail_with_hierarchy</field>
-            <field name="type">account_type</field>
-        </record>
-
-        <!--
-            Update Account Type
-        -->
-
-        <record id="account.account_type_asset" model="account.account.type">
-            <field name="report_type">asset</field>
-        </record>
-        <record id="account.account_type_liability" model="account.account.type">
-            <field name="report_type">liability</field>
-        </record>
-        <record id="account.account_type_income" model="account.account.type">
-            <field name="report_type">income</field>
-        </record>
-        <record id="account.account_type_expense" model="account.account.type">
-            <field name="report_type">expense</field>
-        </record>
-        <record id="account.account_type_receivable" model="account.account.type">
-            <field name="report_type">asset</field>
-        </record>
-        <record id="account.account_type_payable" model="account.account.type">
-            <field name="report_type">liability</field>
-        </record>
-        <record id="account.account_type_cash_equity" model="account.account.type">
-            <field name="report_type">liability</field>
-        </record>
-        <record id="account.account_type_cash_moves" model="account.account.type">
-            <field name="report_type">asset</field>
-        </record>
-
     </data>
 </openerp>
