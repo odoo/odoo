@@ -68,7 +68,7 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
     ],
     'certificate': '0037580727101',
     "active": False,
-    "core": True,
+    "application": True,
     "installable": True,
 }
 
