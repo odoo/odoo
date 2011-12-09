@@ -87,8 +87,17 @@
 -
   !python {model: hr.applicant}: |
      self.case_close_with_emp(cr, uid, [ref('hr_case_programmer')])
+     context.update({'active_model': 'hr.applicant', 'active_ids': [ref("hr_recruitment.hr_case_programmer")], 'active_id': ref("hr_recruitment.hr_case_programmer")})
 -
   I check that applicant is "Hired".
 -
   !assert {model: hr.applicant, id: hr_case_programmer}:
     - state == 'done'
+-
+  Now Hired Employee want to be a Partner of Company.
+-
+  !record {model: hr.recruitment.partner.create, id: hr_recruitment_partner_id1 }:
+-
+  !python {model: hr.recruitment.partner.create}: |
+    context.update({'active_model': 'hr.applicant', 'active_ids': [ref("hr_recruitment.hr_case_programmer")], 'active_id': ref("hr_recruitment.hr_case_programmer")})
+    self.make_order(cr, uid, [ref("hr_recruitment_partner_id1")], context=context)
