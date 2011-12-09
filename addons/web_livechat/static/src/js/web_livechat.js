@@ -22,7 +22,6 @@ var __lc_buttons = [];
 
 openerp.web_livechat = function (openerp) {
 
-
 openerp.web_livechat.Livechat = openerp.web.Widget.extend({
     template: 'Header-LiveChat',
 
