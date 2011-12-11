@@ -1147,11 +1147,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     value = value.strftime("%Y%m%d%H%M%S")
                 new_rule = '%s=%s' % (name, value)
                 new_rrule_str.append(new_rule)
-            #if not is_until and until_date:
-            #    value = until_date.strftime("%Y%m%d%H%M%S")
-            #    name = "UNTIL"
-            #    new_rule = '%s=%s' % (name, value)
-            #    new_rrule_str.append(new_rule)
             new_rrule_str = ';'.join(new_rrule_str)
             rdates = get_recurrent_dates(str(new_rrule_str), exdate, event_date, data['exrule'])
             for r_date in rdates:
