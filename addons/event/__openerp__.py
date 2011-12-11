@@ -56,7 +56,6 @@ Note that:
     'demo_xml': ['event_demo.xml'],
     'test': ['test/test_event.yml'],
     'installable': True,
-    'application': True,
     'active': False,
     'certificate': '0083059161581',
     'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg'],
