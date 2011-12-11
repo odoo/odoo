@@ -104,7 +104,9 @@ def _execute(cr, workitem, activity, ident, stack):
     elif activity['kind']=='function':
         if workitem['state']=='active':
             _state_set(cr, workitem, activity, 'running', ident)
-            wkf_expr.execute(cr, ident, workitem, activity)
+            returned_action = wkf_expr.execute(cr, ident, workitem, activity)
+            if type(returned_action) in (dict,):
+                stack.append(returned_action)
             if activity['action_id']:
                 res2 = wkf_expr.execute_action(cr, ident, workitem, activity)
                 # A client action has been returned
