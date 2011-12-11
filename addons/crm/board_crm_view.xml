@@ -83,16 +83,6 @@
             <field name="act_window_id" ref="act_my_oppor"/>
         </record>
 
-          <record model="ir.actions.act_window" id="act_my_meetings">
-               <field name="name">My Meetings</field>
-               <field name="res_model">crm.meeting</field>
-               <field name="view_type">form</field>
-               <field name="view_mode">tree,form</field>
-               <field name="view_id" ref="crm.crm_case_tree_view_meet"/>
-               <field name="domain">[('user_id','=',uid),('state','not in',('cancel','done'))]</field>
-               <field name="context">{'default_user_id': uid}</field>
-          </record>
-
           <record model="ir.actions.act_window" id="act_my_oppor_stage">
                <field name="name">Planned Revenue By Stage</field>
                <field name="res_model">crm.lead.report</field>
@@ -111,11 +101,8 @@
                     <form string="Sales Dashboard">
                          <board style="1-1">
                             <column>
-                                <action string="My Open Opportunities"
+                                <action string="My Opportunities"
                                     name="%(act_my_oppor)d" creatable="true"/>
-                                <action
-                                    string="My Meetings"
-                                    name="%(act_my_meetings)d" creatable="true"/>
                             </column>
                             <column>
                                 <action string="My Planned Revenues by Stage"
