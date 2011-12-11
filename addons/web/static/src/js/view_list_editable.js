@@ -3,11 +3,8 @@
  * @namespace
  */
 openerp.web.list_editable = function (openerp) {
-    // https://developer.mozilla.org/en/DOM/KeyboardEvent#Virtual_key_codes
     var KEY_RETURN = 13,
-        KEY_ESCAPE = 27,
-        KEY_UP = 38,
-        KEY_DOWN = 40;
+        KEY_ESCAPE = 27;
     var QWeb = openerp.web.qweb;
 
     // editability status of list rows
@@ -181,7 +178,7 @@ openerp.web.list_editable = function (openerp) {
 
                     var next_record_id,
                         next_record = self.records.at(
-                            self.records.indexOf(result.edited_record) + 1);
+                                self.records.indexOf(result.edited_record) + 1);
                     if (next_record) {
                         next_record_id = next_record.get('id');
                         self.dataset.index = _(self.dataset.ids)
@@ -191,39 +188,6 @@ openerp.web.list_editable = function (openerp) {
                         next_record_id = self.records.at(0).get('id');
                     }
                     self.edit_record(next_record_id);
-                });
-                break;
-            case KEY_DOWN:
-                this.save_row().then(function (result) {
-                    var next_record_id,
-                        next_record = self.records.at(
-                            self.records.indexOf(result.edited_record) + 1);
-                    if (next_record) {
-                        next_record_id = next_record.get('id');
-                        self.dataset.index = _(self.dataset.ids)
-                                .indexOf(next_record_id);
-                    } else {
-                        self.dataset.index = 0;
-                        next_record_id = self.records.at(0).get('id');
-                    }
-                    self.edit_record(next_record_id);
-                });
-                break;
-            case KEY_UP:
-                this.save_row().then(function (result) {
-                    var previous_record_id,
-                        previous_record = self.records.at(
-                            self.records.indexOf(result.edited_record) - 1);
-                    if (previous_record) {
-                        previous_record_id = previous_record.get('id');
-                        self.dataset.index = _(self.dataset.ids)
-                                .indexOf(previous_record_id);
-                    } else {
-                        var last = self.records.length - 1;
-                        self.dataset.index = last;
-                        previous_record_id = self.records.at(last).get('id');
-                    }
-                    self.edit_record(previous_record_id);
                 });
                 break;
             case KEY_ESCAPE:
