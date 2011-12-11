@@ -1144,12 +1144,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     is_until = True
                     value = parser.parse(value)
                     rrule_until_date = parser.parse(value.strftime("%Y-%m-%d %H:%M:%S"))
-                    if until_date and until_date >= rrule_until_date:
-                        until_date = rrule_until_date
-                    if until_date:
-                        value = until_date.strftime("%Y%m%d%H%M%S")
-                    else:
-                        value = value.strftime("%Y%m%d%H%M%S")
+                    value = value.strftime("%Y%m%d%H%M%S")
                 new_rule = '%s=%s' % (name, value)
                 new_rrule_str.append(new_rule)
             #if not is_until and until_date:
