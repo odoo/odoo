@@ -1434,10 +1434,12 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         # FIXME This whole id mangling has to go!
         if context is None:
             context = {}
-        if fields and ('class' not in fields):
-            fields.append('class')
-        if fields and ('user_id' not in fields):
-            fields.append('user_id')
+        fields2 = fields and fields[:] or None
+
+        EXTRAFIELDS = ('class','user_id','date','duration')
+        for f in EXTRAFIELDS:
+            if fields and (f not in fields):
+                fields2.append(f)
 
         if isinstance(ids, (str, int, long)):
             select = [ids]
@@ -1445,14 +1447,10 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             select = ids
         select = map(lambda x: (x, base_calendar_id2real_id(x)), select)
         result = []
-        if fields and 'date' not in fields:
-            fields.append('date')
-        if fields and 'duration' not in fields:
-            fields.append('duration')
 
         real_data = super(calendar_event, self).read(cr, uid,
                     [real_id for base_calendar_id, real_id in select],
-                    fields=fields, context=context, load=load)
+                    fields=fields2, context=context, load=load)
         real_data = dict(zip([x['id'] for x in real_data], real_data))
 
         for base_calendar_id, real_id in select:
@@ -1464,18 +1462,25 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             res['id'] = base_calendar_id
 
             result.append(res)
-        if isinstance(ids, (str, int, long)):
-            return result and result[0] or False
 
         for r in result:
-            if r['user_id'] and (r['user_id'][0]==uid):
-                continue
+            if r['user_id']:
+                user_id = type(r['user_id']) in (tuple,list) and r['user_id'][0] or r['user_id']
+                if user_id==uid:
+                    continue
             if r['class']=='private':
                 for f in r.keys():
                     if f not in ('id','date','date_deadline','duration','user_id','state'):
                         r[f] = False
                     if f=='name':
                         r[f] = _('Busy')
+
+        for r in result:
+            for k in EXTRAFIELDS:
+                if (k in r) and ((not fields) or (k not in fields)):
+                    del r[k]
+        if isinstance(ids, (str, int, long)):
+            return result and result[0] or False
         return result
 
     def copy(self, cr, uid, id, default=None, context=None):
