@@ -227,7 +227,7 @@
     position:absolute;
     top:44px;
     width:600px;
-    overflow-y:auto;
+    overflow-y:hidden;
     overflow-x:hidden;
 }
 
@@ -350,7 +350,7 @@
     cursor:pointer;
 }
 
-.openerp .dhx_cal_event .dhx_title{
+.openerp .dhx_cal_event .dhx_title {
     height:18px;
     border-bottom-style:solid;
     border-top-style:solid;
@@ -364,6 +364,10 @@
     font-size: 90%;
     -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-topright: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px;
 }
+.openerp .dhx_cal_event .dhx_title {
+    /* fp request: hide the title in weekly/daily views */
+    display: none;
+}
 
 .openerp .dhx_cal_event .dhx_body{
     border-width:0 1px 1px 1px;
@@ -371,6 +375,11 @@
     -moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; -moz-border-radius-bottomright: 3px; -webkit-border-bottom-right-radius: 3px; border-bottom-right-radius: 3px;
     font-size:90%;
     line-height:9px;
+}
+.openerp .dhx_cal_event .dhx_body {
+    /* fp request: hide the title in weekly/daily views */
+    -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-topright: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px;
+    padding-top: 4px;
 }
 
 .openerp .dhx_resize_denied .dhx_cal_event .dhx_footer{
