@@ -7,15 +7,6 @@
         <field name="category_id" ref="base.module_category_usability"/>
     </record>
 
-    <record id="base.group_sale_manager" model="res.groups">
-        <field name="name">Manager</field>
-        <field name="category_id" ref="base.module_category_sales_management"/>
-    </record>
-    <record id="base.group_sale_salesman" model="res.groups">
-        <field name="name">User</field>
-        <field name="category_id" ref="base.module_category_sales_management"/>
-    </record>
-
     <record id="product_comp_rule" model="ir.rule">
         <field name="name" >Product multi-company</field>
         <field name="model_id" ref="model_product_template"/>

@@ -42,7 +42,6 @@ Note that:
     'depends': ['crm', 'base_contact', 'account', 'marketing', 'mail'],
     'init_xml': [],
     'update_xml': [
-        'security/event_security.xml',
         'security/ir.model.access.csv',
         'wizard/event_confirm_registration_view.xml',
         'wizard/event_confirm_view.xml',
