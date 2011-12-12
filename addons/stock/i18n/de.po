@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-10-03 14:08+0000\n"
-"PO-Revision-Date: 2011-05-25 19:17+0000\n"
+"PO-Revision-Date: 2011-12-10 10:03+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-30 06:45+0000\n"
-"X-Generator: Launchpad (build 14404)\n"
+"X-Launchpad-Export-Date: 2011-12-11 06:08+0000\n"
+"X-Generator: Launchpad (build 14450)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -799,7 +799,7 @@ msgstr "Fertigungslos wird verwendet um eine Seriennummer zu vergeben."
 #, python-format
 msgid ""
 "Processing quantity %s for %s is larger than the available quantity %s!"
-msgstr ""
+msgstr "Die Menge %s für %s ist größer als die verfügbare Menge von %s!"
 
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
@@ -886,6 +886,8 @@ msgid ""
 "Either there are no moves linked to the picking or Accounting Journals are "
 "misconfigured!"
 msgstr ""
+"Entweder gibt es keine Buchungen für diese Lieferung oder die Kontenjournale "
+"sind falsch konfiguriert"
 
 #. module: stock
 #: view:stock.location:0
@@ -1764,6 +1766,12 @@ msgid ""
 "Would your payment have been carried out after this mail was sent, please "
 "consider the present one as void."
 msgstr ""
+"Bitte berücksichtigen Sie das folgende Rechnungen fällig sind. Wenn Sie die "
+"Rechnungen bereits überwiesen haben, senden Sie uns bitte eine "
+"Zahlungsbestätigung Ihrer Bank. Sollte sich die Bezahlung weiter verzögern, "
+"kontaktieren Sie uns bitte.\n"
+"Insofern Sie die offenen Rechnungen nach Eingang dieser Zahlungserinnerung "
+"bezahlt haben, betrachten Sie diese Benachrichtung bitte als gegenstandlos."
 
 #. module: stock
 #: code:addons/stock/stock.py:510
@@ -1924,7 +1932,7 @@ msgstr "Preis"
 #. module: stock
 #: view:stock.location:0
 msgid "Chained Location"
-msgstr ""
+msgstr "Verketteter Lagerirt"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -3029,6 +3037,8 @@ msgid ""
 "You cannot add any new move while validating the picking, rather you can "
 "split the lines prior to validation!"
 msgstr ""
+"Sie können keine neuen Buchungen während der Validierung hinzufügen. Die "
+"Lieferung muss ggf. vor der Validierung geteilt werden."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:135
@@ -3407,6 +3417,7 @@ msgid ""
 "Processing quantity %s %s for %s is larger than the available quantity %s %s "
 "!"
 msgstr ""
+"Die Menge %s %s für %s ist größer als die verfügbare Menge von %s %s!"
 
 #. module: stock
 #: selection:report.stock.move,type:0
