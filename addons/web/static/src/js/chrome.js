@@ -1047,54 +1047,50 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         if(this.action_manager)
             this.action_manager.stop();
         this.action_manager = new openerp.web.ActionManager(this);
+        this.action_manager.do_push_state.add(this.do_push_state);
         this.action_manager.appendTo($("#oe_app"));
 
         if (openerp._modules_loaded) { // TODO: find better option than this
-            this.bind_statechange();
+            this.bind_hashchange();
         } else {
             this.session.on_modules_loaded.add({        // XXX what about a $.Deferred ?
-                callback: $.proxy(this, 'bind_statechange'),
+                callback: $.proxy(this, 'bind_hashchange'),
                 unique: true,
                 position: 'last'
             })
         }
     },
 
-    state_change_event: 'hashchange',
-    
-    bind_statechange: function() {
-        $(window).bind(this.state_change_event, this.on_state_change);
+    bind_hashchange: function() {
+        $(window).bind('hashchange', this.on_hashchange);
 
         var state = $.bbq.getState(true);
         if (! _.isEmpty(state)) {
-            $(window).trigger(this.state_change_event);
+            $(window).trigger('hashchange');
         } else {
             this.action_manager.do_action({type: 'ir.actions.client', tag: 'default_home'});
         }
     },
 
     on_logged_out: function() {
+        $(window).unbind('hashchange', this.on_hashchange);
         if(this.action_manager)
             this.action_manager.stop();
         this.action_manager = null;
-        $(window).unbind(this.state_change_event, this.on_state_change);
     },
 
-    on_state_change: function(event) {
-        // as this method is bound to a event via jQuery, the argument is the jQuery Event.. we need to get the current state
-        var state = event.getState(true);       // = bbq.getState, in fact only deparam the hash
-        return this._super(state);
+    on_hashchange: function(event) {
+        var state = event.getState(true);
+        this.action_manager.do_load_state(state);
     },
 
-
-    
-    do_push_state: function(state, extend) {
-        if (extend) {
+    do_push_state: function(state, overwrite) {
+        if (!overwrite) {
             var hash = $.deparam.fragment(true);
             state = _.extend({}, hash, state);
         }
         var url = '#' + $.param(state);
-        $.bbq.pushState(url);      // will set the hash, so will call on_state_change
+        $.bbq.pushState(url);
     },
 
     default_home: function () {

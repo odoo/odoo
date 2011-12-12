@@ -49,36 +49,28 @@ session.web.ActionManager = session.web.Widget.extend({
         }
     },
 
-    handle_state: function() {
-        // Only root ActionManager handle the state
-        return this.widget_parent instanceof session.web.WebClient;
+    do_push_state: function(state, overwrite) {
     },
 
-    do_push_state: function(state, extend) {
-        if (this.handle_state()) {
-            this._super.apply(this, arguments);
-        }
-    },
-
-    on_state_change: function(state) {
-        if (this.handle_state()) { 
-            if (state.action_id) {
-                var run_action = (!this.inner_viewmanager) || this.inner_viewmanager.action.id !== state.action_id;
-                if (run_action) {
-                    this.null_action();
-                    this.do_action(state.action_id);
-                }
+    do_load_state: function(state) {
+        if (state.action_id) {
+            var run_action = (!this.inner_viewmanager) || this.inner_viewmanager.action.id !== state.action_id;
+            if (run_action) {
+                this.null_action();
+                this.do_action(state.action_id);
             }
-            else if (state.client_action) {
-                var run_client = (!this.client_widget) || this.client_widget_name !== state.client_action.tag;
-                if (run_client) {
-                    this.null_action();
-                    this.ir_actions_client(state.client_action);
-                }
+        }
+        else if (state.client_action) {
+            var run_client = (!this.client_widget) || this.client_widget_name !== state.client_action.tag;
+            if (run_client) {
+                this.null_action();
+                this.ir_actions_client(state.client_action);
             }
         }
 
-        return this._super.apply(this, arguments);
+        if (this.inner_viewmanager) {
+            this.inner_viewmanager.do_load_state(state);
+        }
     },
 
     do_action: function(action, on_close) {
@@ -137,9 +129,10 @@ session.web.ActionManager = session.web.Widget.extend({
             this.dialog_stop();
             this.content_stop();
             this.inner_viewmanager = new session.web.ViewManagerAction(this, action);
+            this.inner_viewmanager.do_push_state.add(this.do_push_state);
             this.inner_viewmanager.appendTo(this.$element);
             if (action.id) {
-                this.do_push_state({action_id: action.id});
+                this.do_push_state({action_id: action.id}, true);
             }
         }
     },
@@ -166,7 +159,7 @@ session.web.ActionManager = session.web.Widget.extend({
 
         var client_action = {tag: action.tag};
         if (action.params) _.extend(client_action, {params: action.params});
-        this.do_push_state({client_action: client_action});
+        this.do_push_state({client_action: client_action}, true);
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
@@ -283,7 +276,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             var container = $("#" + this.element_id + '_view_' + view_type);
             view_promise = controller.appendTo(container);
             this.views[view_type].controller = controller;
-            this.views[view_type].deferred.resolve();
+            this.views[view_type].deferred.resolve(view_type);
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
                 if (self.searchview && view.controller.searchable !== false) {
@@ -467,6 +460,12 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
 
         var main_view_loaded = this._super();
 
+        _.each(_.keys(this.views), function(view_type) {
+            $.when(self.views[view_type].deferred).done(function(view_type) {
+                self.views[view_type].controller.do_push_state.add(self.do_push_state);
+            });
+        });
+
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
 
         this.$element.find('.oe_get_xml_view').click(function () {
@@ -541,25 +540,23 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                 $search_prefix.remove();
             }
 
-            self.do_push_state({view_type: self.active_view}, true);
+            self.do_push_state({view_type: self.active_view});
         });
     },
 
-    handle_state: function() {
-        return (this.widget_parent instanceof session.web.ActionManager) && this.widget_parent.handle_state();
+    do_push_state: function(state, overwrite) {
     },
 
-    do_push_state: function(state, extend) {
-        if (this.handle_state()) {
-            this._super.apply(this, arguments);
-        }
-    },
+    do_load_state: function(state) {
+        var self = this,
+            defs = [];
+        if (state.view_type && state.view_type !== this.active_view) {
+            defs.push(this.on_mode_switch(state.view_type, true));
+        } 
 
-    on_state_change: function(state) {
-        if (this.handle_state() && state.view_type && state.view_type !== this.active_view) {
-            this.on_mode_switch(state.view_type, true);
-        }
-        return this._super.apply(this, arguments);
+        $.when(defs).then(function() {
+            self.views[self.active_view].controller.do_load_state(state);
+        });
     },
 
     shortcut_check : function(view) {
@@ -1127,6 +1124,12 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     },
     sidebar_context: function () {
         return $.Deferred().resolve({}).promise();
+    },
+
+    do_push_state: function(state, overwrite) {
+    },
+
+    do_load_state: function(state) {
     }
 });
 
