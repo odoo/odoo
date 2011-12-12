@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Switzerland - localization with 2011 taxes",
+    "name" : "Switzerland - Accounting",
     "description" :  """
 Swiss localisation :
  - DTA generation for a lot of payment types
@@ -63,7 +63,7 @@ TODO :
 """,
     "version" : "6.1",
     "author" : "Camptocamp",
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     "website": "http://www.camptocamp.com",
 
     "depends" : [

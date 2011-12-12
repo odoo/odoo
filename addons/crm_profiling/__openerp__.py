@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Profiling Tools',
+    'name': 'Customer Profiling',
     'version': '1.3',
     'category': 'Marketing',
     'complexity': "easy",

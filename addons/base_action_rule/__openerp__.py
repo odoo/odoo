@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Action Rule',
+    'name': 'Automated Action Rules',
     'version': '1.0',
     'category': 'Sales Management',
     'description': """

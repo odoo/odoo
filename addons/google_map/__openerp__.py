@@ -23,7 +23,7 @@
 {
     'name': 'Google Maps on Customers',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Customer Relationship Management',
     'description': """
 The module adds Google Map field in partner address.
 ====================================================
