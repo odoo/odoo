@@ -349,7 +349,7 @@ def _create_dta(obj, cr, uid, data, context=None):
 
     v['comp_bank_name']= bank.bank and bank.bank.name or False
     v['comp_bank_clearing'] = bank.bank.clearing
-
+    
     if not v['comp_bank_clearing']:
         raise osv.except_osv(_('Error'),
                 _('You must provide a Clearing Number for your bank account.'))
@@ -580,6 +580,7 @@ class create_dta_wizard(osv.osv_memory):
         data['ids'] = active_ids
         data['id'] = active_id
         dta_file = _create_dta(self, cr, uid, data, context)
+        self.write(cr, uid, ids, {'dta_file': dta_file['dta']}, context=context)
         context.update({'dta_file':dta_file})
         return self.save_dta(cr, uid, ids, context)
 
@@ -592,6 +593,7 @@ class create_dta_wizard(osv.osv_memory):
         return {
             'view_type': 'form',
             'view_mode': 'form',
+            'res_id': ids[0],
             'res_model': 'create.dta.wizard',
             'views': [(resource_id, 'form')],
             'type': 'ir.actions.act_window',
