@@ -75,26 +75,31 @@
     routing = order.routing_id
     assert len(order.workcenter_lines), "Workcenter lines are not generated proper."
     for line in order.workcenter_lines:
+        wc = line.workcenter_id
+        hours = ((wc.time_start or 0.0)+(wc.time_stop or 0.0)+line.cycle*(wc.time_cycle or 0.0)) * (wc.time_efficiency or 1.0)
+        factor = 5*12
+        d, m = divmod(factor, wc.capacity_per_cycle)
+        cycle = (d + (m and 1.0 or 0.0))
         if line.name == "Short time assembly - Assembly Section":
             assert line.sequence, "Sequence is not correspond: %s" % (line.name)
-            assert line.cycle == (4*5*12), "Cycle is not correspond: %s" % (line.name)
-            assert line.hour == (2*4*5*12), "Hours is not correspond: %s"% (line.name)
+            assert line.cycle == (4*cycle), "Cycle is not correspond: %s" % (line.name)
+            assert line.hour == (2*cycle*4 + hours), "Hours is not correspond: %s"% (line.name)
         elif line.name == "Short time assembly - Rear Panel SHE100":
             assert line.sequence, "Sequence is not correspond: %s" % (line.name)
-            assert line.cycle == (1*5*12), "Cycle is not correspond: %s" % (line.name)
-            assert line.hour == (2*1*5*12), "Hours is not correspond: %s"% (line.name)
+            assert line.cycle == (1*cycle), "Cycle is not correspond: %s" % (line.name)
+            assert line.hour == (2*cycle + hours), "Hours is not correspond: %s"% (line.name)
         elif line.name == "long time assembly - Shelf of 100cm":
             assert line.sequence, "Sequence is not correspond: %s" % (line.name)
-            assert line.cycle == (1*5*12), "Cycle is not correspond: %s" % (line.name)
-            assert line.hour == (5*1*5*12), "Hours is not correspond: %s"% (line.name)
+            assert line.cycle == (2*cycle), "Cycle is not correspond: %s" % (line.name)
+            assert line.hour == (5*cycle + hours), "Hours is not correspond: %s"% (line.name)
         elif line.name == "Testing - Shelf of 100cm":
             assert line.sequence, "Sequence is not correspond: %s" % (line.name)
-            assert line.cycle == (1*5*12), "Cycle is not correspond: %s" % (line.name)
-            assert line.hour == (1*1*5*12), "Hours is not correspond: %s"% (line.name)
+            assert line.cycle == (1*cycle), "Cycle is not correspond: %s" % (line.name)
+            assert line.hour == (1*cycle + hours), "Hours is not correspond: %s"% (line.name)
         elif line.name == "Packing - Shelf of 100cm":
             assert line.sequence, "Sequence is not correspond: %s" % (line.name)
-            assert line.cycle == (1*5*12), "Cycle is not correspond: %s" % (line.name)
-            assert line.hour == (0.5*1*5*12), "Hours is not correspond: %s"% (line.name)
+            assert line.cycle == (1*cycle), "Cycle is not correspond: %s" % (line.name)
+            assert line.hour == (0.5*cycle + hours), "Hours is not correspond: %s"% (line.name)
         else:
             raise AssertionError('unknown workcenter line: %s' % line)
 -
@@ -239,7 +244,40 @@
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_shelf100cm"))
     assert order.state == 'done', "Production order should be closed."
+- 
+  I check Total Costs at End of Production. 
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_shelf100cm"))
+    account_analytic_line = self.pool.get('account.analytic.line')
+    def rounding(f, r):
+        import math
+        if not r:
+            return f
+        return math.ceil(f / r) * r
 
+    for wc_line in order.workcenter_lines:
+        wc = wc_line.workcenter_id
+        accounts = [wc.costs_hour_account_id, wc.costs_cycle_account_id]
+        cost_per_cyle = wc_line.cycle * wc.costs_cycle
+        cost_per_hours = wc_line.hour * wc.costs_hour
+        if accounts and wc.costs_journal_id and wc.costs_general_account_id and (cost_per_cyle or cost_per_hours):
+            line_ids = account_analytic_line.search(cr, uid, [('name','ilike',wc_line.name)])
+            assert line_ids, 'Costs lines are not generated.'
+            for line in account_analytic_line.browse(cr, uid, line_ids, context=context):
+                if wc.costs_hour_account_id and line.account_id.id == wc.costs_hour_account_id.id:
+                    assert rounding(line.unit_amount, 3) == rounding(wc_line.hour, 3), "Cost Unit Amount is not correspond."
+                    assert rounding(line.amount, 3) == rounding(cost_per_hours, 3), "Cost amount is not correspond."
+                elif wc.costs_cycle_account_id and line.account_id.id == wc.costs_cycle_account_id.id:
+                    assert rounding(line.unit_amount, 3) == rounding(wc_line.cycle, 3), "Cost Unit Amount is not correspond."
+                    assert rounding(line.amount, 3) == rounding(cost_per_cyle, 3), "Cost Amount is not correspond."
+                else:
+                    raise AssertionError('unknown cost line: %s' % line)
+                assert line.general_account_id.id == wc.costs_general_account_id.id, "General Account is not correspond."
+                assert line.journal_id.id == wc.costs_journal_id.id, "Account Journal is not correspond."
+                assert line.product_id.id == wc.product_id.id, "Product is not correspond."
+                assert line.product_uom_id.id == wc.product_id.uom_id.id, "UOM is not correspond."
+            
 -
   I print a "BOM Structure".
 -
