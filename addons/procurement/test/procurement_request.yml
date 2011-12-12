@@ -16,7 +16,21 @@
     
     proc_id = procurement.get('res_id')
     procurements = procur_order.browse(cr, uid, [proc_id])[0]
-    assert procurements.product_id.id == ref('product.product_product_hdd3'),"product is not correspond."
-    assert procurements.product_qty >= 5,"product Quantity is not correspond."
-    assert procurements.state == 'confirmed',"Procurement sytate should be in 'Confirmed'."
-    assert procurements.product_uom.id == ref('product.product_uom_unit'),"product's UOM is not correspond."
+    assert procurements.product_id.id == ref('product.product_product_hdd3'),"Product is not correspond."
+    assert procurements.product_qty >= 5,"Product Quantity is not correspond."
+    assert procurements.state == 'confirmed',"Procurement state should be 'Confirmed'."
+    assert procurements.product_uom.id == ref('product.product_uom_unit'),"Product's UOM is not correspond."
+    context.update({'proc': proc_id})
+-
+  I run the scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
+-
+  I check the current state of procurement.
+-
+  !python {model: procurement.order}: |
+    proc_id = context.get('proc')
+    proc = self.browse(cr, uid, [proc_id])[0]
+    assert proc.state == 'ready' or 'exception',"Procurement should be in Ready or Exception state"
+
