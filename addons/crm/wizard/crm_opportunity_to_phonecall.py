@@ -21,8 +21,6 @@
 
 from osv import osv, fields
 from tools.translate import _
-import pprint
-pp = pprint.PrettyPrinter(indent=4)
 
 import time
 

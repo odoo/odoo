@@ -380,11 +380,15 @@ class mail_message(osv.osv):
 
         if 'To' in fields:
             msg['to'] = decode(msg_txt.get('To'))
+
         if 'Delivered-To' in fields:
             msg['to'] = decode(msg_txt.get('Delivered-To'))
 
         if 'CC' in fields:
             msg['cc'] = decode(msg_txt.get('CC'))
+
+        if 'Cc' in fields:
+            msg['cc'] = decode(msg_txt.get('Cc'))
 
         if 'Reply-To' in fields:
             msg['reply'] = decode(msg_txt.get('Reply-To'))
@@ -454,6 +458,7 @@ class mail_message(osv.osv):
         msg['body'] = msg['body_text']
         msg['sub_type'] = msg['subtype'] or 'plain'
         return msg
+
 
     def send(self, cr, uid, ids, auto_commit=False, context=None):
         """Sends the selected emails immediately, ignoring their current

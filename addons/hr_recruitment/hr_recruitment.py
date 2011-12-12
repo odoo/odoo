@@ -369,7 +369,8 @@ class hr_applicant(crm.crm_case, osv.osv):
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-
+        if vals is None:
+            vals = {}
         msg_from = msg['from']
         vals.update({
             'description': msg['body_text']
