@@ -811,12 +811,12 @@ class account_invoice(osv.osv):
             if not inv.date_invoice:
                 self.write(cr, uid, [inv.id], {'date_invoice':time.strftime('%Y-%m-%d')})
             company_currency = inv.company_id.currency_id.id
-            # create the analytical lines
-            # one move line per invoice line
-            iml = self._get_analytic_lines(cr, uid, inv.id)
-            # check if taxes are all computed
             ctx = context.copy()
             ctx.update({'lang': inv.partner_id.lang})
+            # create the analytical lines
+            # one move line per invoice line
+            iml = self._get_analytic_lines(cr, uid, inv.id, context=ctx)
+            # check if taxes are all computed
             compute_taxes = ait_obj.compute(cr, uid, inv.id, context=ctx)
             self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
 
@@ -835,7 +835,7 @@ class account_invoice(osv.osv):
                     raise osv.except_osv(_('Error !'), _("Can not create the invoice !\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount."))
 
             # one move line per tax line
-            iml += ait_obj.move_line_get(cr, uid, inv.id)
+            iml += ait_obj.move_line_get(cr, uid, inv.id, context=ctx)
 
             entry_type = ''
             if inv.type in ('in_invoice', 'in_refund'):
@@ -1611,7 +1611,7 @@ class account_invoice_tax(osv.osv):
             t['tax_amount'] = cur_obj.round(cr, uid, cur, t['tax_amount'])
         return tax_grouped
 
-    def move_line_get(self, cr, uid, invoice_id):
+    def move_line_get(self, cr, uid, invoice_id, context=None):
         res = []
         cr.execute('SELECT * FROM account_invoice_tax WHERE invoice_id=%s', (invoice_id,))
         for t in cr.dictfetchall():
