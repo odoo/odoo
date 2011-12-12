@@ -165,4 +165,23 @@ $(document).ready(function () {
         equal(openerp.web.format_value(106500, {type: 'integer'}),
               '106,50,0');
     });
+    test('format_float', function () {
+        openerp.web._t.database.parameters.grouping = [3, 3, 3, 3];
+        equal(openerp.web.format_value(1000000, {type: 'float'}),
+              '1,000,000.00');
+        openerp.web._t.database.parameters.grouping = [3, 2, -1];
+        equal(openerp.web.format_value(106500, {type: 'float'}),
+              '1,06,500.00');
+        openerp.web._t.database.parameters.grouping = [1, 2, -1];
+        equal(openerp.web.format_value(106500, {type: 'float'}),
+              '106,50,0.00');
+
+        _.extend(openerp.web._t.database.parameters, {
+            grouping: [3, 0],
+            decimal_point: ',',
+            thousands_sep: '.'
+        });
+        equal(openerp.web.format_value(6000, {type: 'float'}),
+              '6.000,00');
+    });
 });
