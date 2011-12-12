@@ -1167,14 +1167,18 @@ openerp.point_of_sale = function(db) {
         template: "PointOfSale",
         start: function() {
             var self = this;
-            this.$element.find("#loggedas button").click(function() {
-                self.stop();
-            });
 
             if (pos)
                 throw "It is not possible to instantiate multiple instances "+
                     "of the point of sale at the same time.";
             pos = new Pos(this.session);
+            
+            pos.bind('change:pending_operations', this.changed_pending_operations, this);
+            this.changed_pending_operations();
+            
+            this.$element.find("#loggedas button").click(function() {
+                self.try_close();
+            });
 
             this.$element.find('#steps').buttonset();
             
@@ -1184,6 +1188,17 @@ openerp.point_of_sale = function(db) {
             return pos.ready.then( function() {
                 pos.app = new App(self.$element);
             });
+        },
+        changed_pending_operations: function () {
+            var operations = pos.get('pending_operations');
+            var number = operations.length;
+            
+        },
+        try_close: function() {
+            this.close();
+        },
+        close: function() {
+            this.stop();
         },
         stop: function() {
             $('.oe_footer').show();
