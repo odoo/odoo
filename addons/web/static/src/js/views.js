@@ -177,6 +177,9 @@ session.web.ActionManager = session.web.Widget.extend({
     },
     ir_actions_act_url: function (action) {
         window.open(action.url, action.target === 'self' ? '_self' : '_blank');
+    },
+    ir_ui_menu: function (action) {
+        this.widget_parent.do_action(action);
     }
 });
 
