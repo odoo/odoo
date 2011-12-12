@@ -240,7 +240,7 @@ class users(osv.osv):
                                 selection=[('simple','Simplified'),('extended','Extended')],
                                 string='Interface', help="OpenERP offers a simplified and an extended user interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier to use. You can switch to the other interface from the User/Preferences menu at any time."),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
-        'date': fields.datetime('Last Connection', readonly=True),
+        'date': fields.datetime('Latest Connection', readonly=True),
     }
 
     def on_change_company_id(self, cr, uid, ids, company_id):
