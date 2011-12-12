@@ -2,14 +2,9 @@
 <openerp>
 <data noupdate="0">
 
-    <record id="base.group_sale_manager" model="res.groups">
-        <field name="name">Sales / Manager</field>
-    </record>
-    <record id="base.group_sale_salesman" model="res.groups">
-        <field name="name">Sales / User</field>
-    </record>
     <record id="base.group_document_user" model="res.groups">
-        <field name="name">Knowledge / User</field>
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_knowledge_management"/>
     </record>
     
 </data>
