@@ -234,8 +234,9 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         if (this.flags.views_switcher === false) {
             this.$element.find('.oe_vm_switch').hide();
         }
-        // switch to the first one in sequence
-        return this.on_mode_switch(this.views_src[0].view_type);
+        // If no default view defined, switch to the first one in sequence
+        var default_view = this.flags.default_view || this.views_src[0].view_type;
+        return this.on_mode_switch(default_view);
     },
     /**
      * Asks the view manager to switch visualization mode.
