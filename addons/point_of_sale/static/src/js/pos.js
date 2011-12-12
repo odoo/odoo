@@ -871,7 +871,9 @@ openerp.point_of_sale = function(db) {
         validateCurrentOrder: function() {
             var callback, currentOrder;
             currentOrder = this.shop.get('selectedOrder');
+            $('button#validate-order', this.$element).attr('disabled', 'disabled');
             pos.push('pos.order', currentOrder.exportAsJSON()).then(_.bind(function() {
+                $('button#validate-order', this.$element).removeAttr('disabled');
                 return currentOrder.set({
                     validated: true
                 });
