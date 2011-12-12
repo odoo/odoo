@@ -124,7 +124,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         scheduler.attachEvent('onEventDeleted', this.do_delete_event);
         scheduler.attachEvent('onEventChanged', this.do_save_event);
         scheduler.attachEvent('onClick', this.do_edit_event);
-        scheduler.attachEvent('onBeforeLightbox', this.do_edit_event);
+        scheduler.attachEvent('onLightbox', this.do_edit_event);
 
         scheduler.attachEvent('onViewChange', function(mode, date) {
             self.$element.removeClass('oe_cal_day oe_cal_week oe_cal_month').addClass('oe_cal_' + mode);
@@ -313,7 +313,6 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         if (index !== null) {
             this.dataset.index = index;
             this.do_switch_view('page');
-            return false;
         } else if (scheduler.getState().mode === 'month') {
             var event_obj = scheduler.getEvent(event_id);
             if (event_obj._length === 1) {
@@ -322,11 +321,14 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
                 event_obj['end_date'].addHours(1);
             }
             this.do_create_event_with_formdialog(event_id, event_obj);
-            // TODO: check dhtmlxscheduler problem here. At this line, scheduler
-            // event 'onEventChanged' bound to this.do_save_event() won't be fired !;
-            return false;
+            // return false;
+            // Theorically, returning false should prevent the lightbox to open.
+            // It works, but then the scheduler is in a buggy state where drag'n drop
+            // related internal Event won't be fired anymore.
+            // I tried scheduler.editStop(event_id); but doesn't work either
+            // After losing one hour on this, here's a quick and very dirty fix :
+            $(".dhx_cancel_btn").click();
         }
-        return true;
     },
     get_event_data: function(event_obj) {
         var data = {
