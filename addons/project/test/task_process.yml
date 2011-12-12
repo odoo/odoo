@@ -37,13 +37,13 @@
   !assert {model: project.task, id: project_task_1, severity: error, string: task should be open.}:
     - state == "open"
 -
-  !record {model: project.task.reevaluate, id: reevaluate_id}:
-    remaining_hours : 120
--
   I change the stage of task to next stage.
 -
   !python {model: project.task}: |
     self.next_type(cr, uid, [ref("project_task_1")])
+-
+  !record {model: project.task.reevaluate, id: reevaluate_id}:
+    remaining_hours : 120
 -
   I reevaluate task with remaining hours.
 -
@@ -55,11 +55,6 @@
   !assert {model: project.task, id: project_task_1, severity: error, string: task should be reevaluated}:
     - remaining_hours == 120.0
 -
-  I change the stage of task to previous stage.
--
-  !python {model: project.task}: |
-    self.prev_type(cr, uid, [ref("project_task_1")])
--
   I close the task.
 -
   !python {model: project.task}: |
@@ -69,6 +64,11 @@
 -
   !assert {model: project.task, id: project_task_1, severity: error, string: task is in open state}:
     - state == "done"
+-
+  I change the stage of task to previous stage.
+-
+  !python {model: project.task}: |
+    self.prev_type(cr, uid, [ref("project_task_1")])
 -
   I cancel Task.
 -
