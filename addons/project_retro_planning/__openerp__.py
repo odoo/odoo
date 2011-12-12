@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Project Retro planning',
+    'name': 'Project Retro-planning',
     'version': '0.1',
-    'category': 'Hidden',
+    'category': 'Project Management',
     'description': """
 Changes dates according to change in project End Date.
 ======================================================

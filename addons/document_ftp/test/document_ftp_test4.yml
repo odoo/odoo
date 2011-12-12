@@ -4,7 +4,6 @@
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         ftp = te.get_plain_ftp(timeout=1.0)
-        cr.commit()
 - |
     I create two partners 'Partner1' and 'Partner2'.
     I create three partner categories: 'none', 'pat1' and 'all'
@@ -54,7 +53,6 @@
         dirs = ftp.nlst()
         for dir in [ 'All Partner1+2', 'No partners', 'Pat 1' ]:
             assert dir in dirs, "Dir %s not in folder" % dir
-        cr.commit()
 -
     I create a 'partners' folder by the first resource one.
 -
@@ -65,6 +63,8 @@
         ressource_type_id: base.model_res_partner
         domain: "[('category_id','in',[active_id])]"
         ressource_parent_type_id : base.model_res_partner_category
+-
+    I commit (because FTP operations are on different transaction)
 -
     !python {model: document.directory, id: }: |
         cr.commit()
@@ -81,7 +81,6 @@
         for dir in correct:
             res = ftp.nlst(dir+'/Partners of Test')
             assert res == correct[dir], "Dir %s falsely contains %s" %(dir, res)
-        cr.commit()
 -
     I create an ir.attachment, attached (not related) to Partner1
 -
@@ -89,6 +88,11 @@
         name: File of pat1
         res_model: res.partner
         res_id:  !eval ref("tpartner1")
+-
+    I commit (because FTP operations are on different transaction)
+-
+    !python {model: document.directory, id: }: |
+        cr.commit()
 -
     I check that pat1/Partner1 folder has the file.
     I check that all/Partner1 folder has the file
@@ -109,6 +113,7 @@
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Partners Testing/Pat 1/Partners of Test/Partner 1')
         fdata = StringIO('abcd')
         ftp.storbinary('STOR pat1-dynamic.txt', fdata)
+        cr.rollback() # restart transaction to see changes (FTP-FS uses its own cursor)
 -
     I check at the server that the file is attached to Partner1
 -
@@ -159,7 +164,8 @@
         from cStringIO import StringIO
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Partners Testing/Pat 1/Partners of Test/Partner 1')
         ftp.delete('pat1-dynamic.txt')
-        ftp.close()        
+        ftp.close()
+        cr.rollback() # restart transaction to see changes (FTP-FS uses its own cursor)
     
 -
     I delete the Partners Testing folder,  "File of pat1" file, Partner and Partner category.
@@ -177,5 +183,5 @@
         partner_categ_pool.unlink(cr, uid, [ref('tpat_categ_all')])
         partner_pool.unlink(cr, uid, [ref('tpartner1')])
         partner_pool.unlink(cr, uid, [ref('tpartner_2')])
-        cr.commit()    
+        cr.commit() #required because all the operations via FTP were committed
     

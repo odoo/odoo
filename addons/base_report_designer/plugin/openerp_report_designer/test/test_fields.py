@@ -30,3 +30,5 @@ print
 print 'Field selection for a repeatIn', '='*40
 get('account.invoice', level=0, ending=['one2many','many2many'], recur=['many2one'])
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

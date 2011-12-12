@@ -32,7 +32,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Server &amp; Login">
-                            <group col="4" colspan="2" attrs="{'invisible' : [('type', '=', 'local')]}">
+                            <group col="2" colspan="2" attrs="{'invisible' : [('type', '=', 'local')]}">
                                 <separator string="Server Information" colspan="2"/>
                                 <field name="server" colspan="4" attrs="{'required' : [('type', '!=', 'local')]}" />
                                 <field name="port" required="1" attrs="{'required' : [('type', '!=', 'local')]}" />
@@ -132,7 +132,7 @@
       </record>
 
       <act_window
-            context="{'search_default_server_id': active_id, 'default_server_id': active_id}"
+            context="{'search_default_server_id': active_id, 'default_fetchmail_server_id': active_id}"
             id="act_server_history" name="Messages" domain="[('email_from', '!=', False), ('fetchmail_server_id', '=', active_id)]"
             res_model="mail.message" src_model="fetchmail.server"/>
 

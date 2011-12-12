@@ -307,3 +307,5 @@ class document_directory_node(osv.osv):
         'directory_id':  fields.many2one('document.directory', 'Document directory', ondelete="set null"),
     }
 document_directory_node()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

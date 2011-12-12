@@ -1,10 +1,9 @@
 -
   Demo for Account Voucher
 -
-  !record {model: account.voucher, id: account_voucher_voucheraxelor0}:
+  !record {model: account.voucher, id: account_voucher_voucheraxelor0again}:
     account_id: account.cash
     company_id: base.main_company
-    currency_id: base.EUR
     journal_id: account.bank_journal
     name: Voucher Axelor
     narration: Basic PC
@@ -20,6 +19,6 @@
 -
   !python {model: account.voucher}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.voucher.cash_receipt.drcr').create(cr, uid, [ref("account_voucher_voucheraxelor0")], {}, {})
+    (data, format) = netsvc.LocalService('report.voucher.cash_receipt.drcr').create(cr, uid, [ref("account_voucher_voucheraxelor0again")], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account_voucher-report.'+format), 'wb+').write(data)

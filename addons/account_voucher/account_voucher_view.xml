@@ -259,5 +259,19 @@
             </field>
         </record>
 
+        <!-- res.company form view -->
+        <record model="ir.ui.view" id="view_company_inherit_currency_xchange_form">
+            <field name="name">res.company.form.inherit</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="after">
+                      <field name="income_currency_exchange_account_id" colspan="2"/>
+                      <field name="expense_currency_exchange_account_id" colspan="2"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>

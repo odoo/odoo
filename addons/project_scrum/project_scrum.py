@@ -262,7 +262,7 @@ class project_scrum_task(osv.osv):
                 'project.scrum.product.backlog': (_get_task, ['sprint_id'], 10)
             }),
     }
-
+    #dead code
     def onchange_backlog_id(self, cr, uid, backlog_id=False):
         if not backlog_id:
             return {}
@@ -292,7 +292,7 @@ class project_scrum_meeting(osv.osv):
     _defaults = {
         'date' : lambda *a: time.strftime('%Y-%m-%d'),
     }
-
+    # dead code
     def button_send_to_master(self, cr, uid, ids, context=None):
         meeting_id = self.browse(cr, uid, ids, context=context)[0]
         if meeting_id and meeting_id.sprint_id.scrum_master_id.user_email:
@@ -303,6 +303,7 @@ class project_scrum_meeting(osv.osv):
             raise osv.except_osv(_('Error !'), _('Please provide email address for scrum master defined on sprint.'))
         return True
 
+    #dead code
     def button_send_product_owner(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -316,6 +317,7 @@ class project_scrum_meeting(osv.osv):
             raise osv.except_osv(_('Error !'), _('Please provide email address for product owner defined on sprint.'))
         return True
 
+    #dead code
     def email_send(self, cr, uid, ids, email, context=None):
         mail_message_obj = self.pool.get('mail.message')
         meeting_id = self.browse(cr, uid, ids, context=context)[0]
@@ -332,3 +334,5 @@ class project_scrum_meeting(osv.osv):
 
 project_scrum_meeting()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

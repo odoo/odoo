@@ -30,6 +30,7 @@
           <field name="view_type">form</field>
           <field name="view_mode">graph,tree</field>
           <field name="domain">[('type','=','liquidity')]</field>
+          <field name="context">{'default_type': 'liquidity'}</field>
           <field name="view_id" ref="account.view_treasory_graph"/>
       </record>
         <record id="board_account_form" model="ir.ui.view">
@@ -45,7 +46,6 @@
                         </column>
                         <column>
                             <action name="%(action_treasory_graph)d" string="Treasury"/> <!--groups="account.group_account_manager,account.group_account_user"-->
-                            <action name="%(action_aged_receivable)d" string="Aged Receivables"/> <!--groups="account.group_account_manager,account.group_account_user"-->
                         </column>
                     </board>
                 </form>

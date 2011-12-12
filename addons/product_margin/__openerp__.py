@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Margins in Product',
+    'name': 'Margins by Products',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales Management',
     'description': """
 Adds a reporting menu in products that computes sales, purchases, margins and other interesting indicators based on invoices.
 =============================================================================================================================

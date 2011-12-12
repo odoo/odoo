@@ -236,7 +236,7 @@ class mail_compose_message(osv.osv_memory):
                     attachments=attachment, references=references, res_id=int(mail.res_id),
                     subtype=mail.subtype, headers=headers, context=context)
                 # in normal mode, we send the email immediately, as the user expects us to (delay should be sufficiently small)
-                mail_message.send(cr, uid, [msg_id], context)
+                mail_message.send(cr, uid, [msg_id], context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 

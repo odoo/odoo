@@ -101,6 +101,7 @@ class crm_helpdesk_report(osv.osv):
                     abs(avg(extract('epoch' from (c.date_deadline - c.date_closed)))/(3600*24)) as delay_expected
                 from
                     crm_helpdesk c
+                where c.active = 'true'
                 group by to_char(c.date, 'YYYY'), to_char(c.date, 'MM'),to_char(c.date, 'YYYY-MM-DD'),\
                      c.state, c.user_id,c.section_id,c.priority,\
                      c.partner_id,c.company_id,c.date_deadline,c.create_date,c.date,c.date_closed,\

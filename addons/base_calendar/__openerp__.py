@@ -34,7 +34,7 @@ It supports:
     - Recurring events
     - Invitations to people""",
     "author" : "OpenERP SA",
-    'category': 'Hidden',
+    'category': 'Tools',
     'website': 'http://www.openerp.com',
     "init_xml" : [
         'base_calendar_data.xml'

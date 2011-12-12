@@ -2856,3 +2856,5 @@ if __name__ == '__main__':
 #  terminology; parse RFC 822-style dates with no time; lots of other
 #  bug fixes
 #4.1 - MAP - removed socket timeout; added support for chardet library
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
