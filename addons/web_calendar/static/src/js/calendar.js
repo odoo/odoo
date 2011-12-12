@@ -123,9 +123,12 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         scheduler.attachEvent('onEventAdded', this.do_create_event);
         scheduler.attachEvent('onEventDeleted', this.do_delete_event);
         scheduler.attachEvent('onEventChanged', this.do_save_event);
-        scheduler.attachEvent('onDblClick', this.do_edit_event);
         scheduler.attachEvent('onClick', this.do_edit_event);
         scheduler.attachEvent('onBeforeLightbox', this.do_edit_event);
+
+        scheduler.attachEvent('onViewChange', function(mode, date) {
+            self.$element.removeClass('oe_cal_day oe_cal_week oe_cal_month').addClass('oe_cal_' + mode);
+        });
 
         if (this.options.sidebar) {
             this.mini_calendar = scheduler.renderCalendar({
@@ -308,12 +311,16 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         var index = this.dataset.get_id_index(event_id);
         if (index !== null) {
             this.dataset.index = index;
-            this.form_dialog.form.do_show().then(function() {
-                self.form_dialog.open();
-            });
+            this.do_switch_view('page');
             return false;
         } else if (scheduler.getState().mode === 'month') {
-            this.do_create_event_with_formdialog(event_id);
+            var event_obj = scheduler.getEvent(event_id);
+            if (event_obj._length === 1) {
+                event_obj['start_date'].addHours(8);
+                event_obj['end_date'] = new Date(event_obj['start_date']);
+                event_obj['end_date'].addHours(1);
+            }
+            this.do_create_event_with_formdialog(event_id, event_obj);
             // TODO: check dhtmlxscheduler problem here. At this line, scheduler
             // event 'onEventChanged' bound to this.do_save_event() won't be fired !;
             return false;
