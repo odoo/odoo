@@ -192,17 +192,20 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             self.do_action(action);
         }
         if (action_attrs.creatable && action_attrs.creatable !== 'false') {
-            var form_id = parseInt(action_attrs.creatable, 10);
+            var action_id = parseInt(action_attrs.creatable, 10);
             $action.parent().find('button.oe_dashboard_button_create').click(function() {
-                var create_action = _.extend({}, action_orig, {
-                    views : [[(isNaN(form_id) ? false : form_id), 'form']]
-                });
-                _.each(action.views, function(v) {
-                    if (v[1] !== 'form') {
-                        create_action.views.push(v);
-                    }
-                });
-                self.do_action(create_action);
+                if (isNaN(action_id)) {
+                    action.flags.default_view = 'form';
+                    self.do_action(action_orig);
+                } else {
+                    self.rpc('/web/action/load', {
+                        action_id: action_id
+                    }, function(result) {
+                        result.result.flags = result.result.flags || {};
+                        result.result.flags.default_view = 'form';
+                        self.do_action(result.result);
+                    });
+                }
             });
         }
         if (am.inner_viewmanager) {
