@@ -61,20 +61,6 @@ class mrp_property(osv.osv):
     }
 mrp_property()
 
-class StockMove(osv.osv):
-    _inherit = 'stock.move'
-
-    _columns= {
-        'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
-    }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = default or {}
-        default['procurements'] = []
-        return super(StockMove, self).copy(cr, uid, id, default, context=context)
-
-StockMove()
-
 class procurement_order(osv.osv):
     """
     Procurement Orders
