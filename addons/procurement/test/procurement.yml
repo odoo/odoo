@@ -12,7 +12,7 @@
     location_id: stock.stock_location_stock
     logic: max
     name: OP/00008
-    product_id: product.product_product_cpu2    
+    product_id: product.product_product_cpu2
     product_max_qty: 15.0
     product_min_qty: 5.0
     product_uom: product.product_uom_kgm
@@ -37,4 +37,3 @@
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product.product_product_cpu2'))
     assert product.virtual_available >= 5.0,"After run the scheduler product's virtual stock is not updated."
-
