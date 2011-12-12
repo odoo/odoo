@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Repairs',
+    'name': 'Repairs Management',
     'version': '1.0',
     'category': 'Manufacturing',
     'description': """

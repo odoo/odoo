@@ -298,6 +298,14 @@ class hr_payslip(osv.osv):
                     context=context).company_id.id,
     }
 
+    def _check_dates(self, cr, uid, ids, context=None):
+        for payslip in self.browse(cr, uid, ids, context=context):
+            if payslip.date_from > payslip.date_to:
+                return False
+        return True
+
+    _constraints = [(_check_dates, "Payslip 'Date From' must be before 'Date To'.", ['date_from', 'date_to'])]  
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}

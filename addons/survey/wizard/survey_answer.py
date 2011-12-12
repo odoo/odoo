@@ -528,8 +528,8 @@ class survey_question_wiz(osv.osv_memory):
         Create the Answer of survey and store in survey.response object, and if set validation of question then check the value of question if value is wrong then raise the exception.
         """
         if context is None: context = {}
-        
-        survey_question_wiz_id = super(survey_question_wiz,self).create(cr, uid, vals, context=context)
+
+        survey_question_wiz_id = super(survey_question_wiz,self).create(cr, uid, {'name': vals.get('name')}, context=context)
         if context.has_key('active') and context.get('active',False):
             return survey_question_wiz_id
 

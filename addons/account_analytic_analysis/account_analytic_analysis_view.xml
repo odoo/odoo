@@ -110,22 +110,5 @@
             </field>
         </record>
 
-        <record id="view_account_analytic_simplified" model="ir.ui.view">
-            <field name="name">account.analytic.account.simplified.tree</field>
-            <field name="model">account.analytic.account</field>
-            <field name="type">tree</field>
-            <field eval="20" name="priority"/>
-            <field name="arch" type="xml">
-                <tree string="Analytic accounts">
-                    <field name="code"/>
-                    <field name="complete_name"/>
-                    <field name="hours_qtt_non_invoiced"/>
-                    <field name="remaining_hours"/>
-                    <field name="ca_to_invoice"/>
-                    <field name="last_invoice_date"/>
-                </tree>
-            </field>
-        </record>
-
     </data>
 </openerp>

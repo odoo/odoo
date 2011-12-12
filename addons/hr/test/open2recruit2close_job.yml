@@ -1,0 +1,38 @@
+-
+  In order to test the process of Human Resource Management, I open Job Postion for "Jr. Application Engineer".
+- 
+  !python {model: hr.job}: |
+    self.job_open(cr, uid, [ref('job_jr_appli')])
+-
+  I check state of Job Position after opening it.
+-
+  !assert {model: hr.job, id: job_jr_appli, string: Job position is in 'open' state and no_of_recruitment = 0}:
+    - state == 'open'
+    - no_of_recruitment == 0
+-
+  Now, Recruitement is started so I start recruitement of Job Postion of "Jr. Application Engineer" Profile.
+-    
+  !python {model: hr.job}: |
+    self.job_recruitement(cr, uid, [ref('job_jr_appli')])
+-
+  I check 'state' and number of 'Expected in Recruitment' after initiating the recruitment
+-
+  !assert {model: hr.job, id: job_jr_appli, string: Job position is in 'recruit' state and no_of_recruitment = 1.0}:
+    - state == 'recruit'
+    - no_of_recruitment == 1.0
+-
+  I assign the job position to a newly hired employee
+-
+  !python {model: hr.employee}: |
+    self.write(cr, uid, [ref('employee1')], {'job_id':ref('job_jr_appli')})
+-
+  Now I don't want to recruit new employee for this position. so I mark it as Old.
+-
+  !python {model: hr.job}: |
+    self.job_old(cr, uid, [ref('job_jr_appli')])
+-
+  I check 'state' and number of 'Expected in Recruitment' after closing the Job position.
+-
+  !assert {model: hr.job, id: job_jr_appli, string: Job position is in 'old' state and no_of_recruitment = 0}:
+    - state == 'old'
+    - no_of_recruitment == 0
