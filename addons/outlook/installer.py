@@ -32,7 +32,7 @@ class outlook_installer(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         data = super(outlook_installer, self).default_get(cr, uid, fields, context=context)
         data['doc_file'] = 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_outlook.html'
-        file = open(addons.get_module_resource('outlook','plugin','openerp-outlook-plugin_v2.0','OpenERPOutlookPluginSetup','Release','OpenERPOutlookPluginSetup.msi'), 'r')
+        file = open(addons.get_module_resource('outlook','static','openerp-outlook-plugin','OpenERPOutlookPluginSetup','Release','OpenERPOutlookPluginSetup.msi'), 'r')
         data['plugin_file'] = base64.encodestring(file.read())
         return data
 
