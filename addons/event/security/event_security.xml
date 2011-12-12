@@ -3,20 +3,24 @@
   <data>
 
     <record id="marketing.group_marketing_user" model="res.groups">
-        <field name="name">Marketing / User</field>
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_marketing"/>
     </record>
 
     <record id="marketing.group_marketing_manager" model="res.groups">
-        <field name="name">Marketing / Manager</field>
+        <field name="name">Manager</field>
+        <field name="category_id" ref="base.module_category_marketing"/>
         <field name="implied_ids" eval="[(4, ref('marketing.group_marketing_user'))]"/>
     </record>
 
     <record id="base.group_sale_manager" model="res.groups">
-        <field name="name">Sales / Manager</field>
+        <field name="name">Manager</field>
+        <field name="category_id" ref="base.module_category_sales_management"/>
     </record>
 
     <record id="base.group_sale_salesman" model="res.groups">
-        <field name="name">Sales / User</field>
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_sales_management"/>
     </record>
   </data>
 </openerp>
