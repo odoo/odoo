@@ -72,7 +72,7 @@
   !python {model: crm.meeting}: |
      from base_calendar import base_calendar
      base_cal_id = base_calendar.real_id2base_calendar_id(ref('crm_meeting_sprintreview0'), '2011-09-01 13:01:00')
-     self.write(cr, uid, [base_cal_id], {'name': 'Sprint Review for google modules', 'edit_all': True})
+     self.write(cr, uid, [base_cal_id], {'name': 'Sprint Review for google modules'})
 -
   I check whether all the records are edited or not.
 -

@@ -1,2 +1,0 @@
-python addin.py
-pause
