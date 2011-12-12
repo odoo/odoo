@@ -55,7 +55,6 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_shelf100cm"), context=context)
-    routing = order.routing_id
     assert len(order.workcenter_lines), "Workcenter lines are not generated proper."
     for line in order.workcenter_lines:
         wc = line.workcenter_id
