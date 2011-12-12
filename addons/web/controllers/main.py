@@ -604,7 +604,7 @@ def fix_view_modes(action):
     :param dict action: an action descriptor
     :returns: nothing, the action is modified in place
     """
-    if 'views' not in action:
+    if not action.get('views'):
         generate_views(action)
 
     id_form = None
