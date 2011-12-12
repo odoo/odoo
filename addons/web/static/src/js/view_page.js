@@ -59,6 +59,9 @@ openerp.web.page = function (openerp) {
     /** @namespace */
     openerp.web.page = {};
 
+    openerp.web.page.WidgetFrameReadonly = openerp.web.form.WidgetFrame.extend({
+        template: 'WidgetFrame.readonly'
+    });
     openerp.web.page.FieldReadonly = openerp.web.form.Field.extend({
 
     });
@@ -197,6 +200,7 @@ openerp.web.page = function (openerp) {
         force_readonly: true
     });
     openerp.web.page.readonly = openerp.web.form.widgets.clone({
+        'frame': 'openerp.web.page.WidgetFrameReadonly',
         'char': 'openerp.web.page.FieldCharReadonly',
         'email': 'openerp.web.page.FieldEmailReadonly',
         'url': 'openerp.web.page.FieldUrlReadonly',
