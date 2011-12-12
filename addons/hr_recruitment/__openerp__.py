@@ -37,7 +37,7 @@ system to store and search in your CV base.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_recruitment_analysis.jpeg','images/hr_recruitment_applicants.jpeg'],
-    'depends': ['decimal_precision', 'hr', 'survey', 'crm'],
+    'depends': ['decimal_precision', 'hr', 'survey', 'crm', 'fetchmail'],
     'update_xml': [
         'wizard/hr_recruitment_phonecall_view.xml',
         'wizard/hr_recruitment_employee_hired.xml',
@@ -60,6 +60,7 @@ system to store and search in your CV base.
     'installable': True,
     'active': False,
     'certificate' : '001073437025460275621',
+    'application': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
