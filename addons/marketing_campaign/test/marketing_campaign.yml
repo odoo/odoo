@@ -8,11 +8,6 @@
   !assert {model: marketing.campaign, id: marketing_campaign_openerppartnerchannel}:
     - state == 'running'
 -
-  I assign segment to campaign.
--
-  !record {model: marketing.campaign.segment, id: marketing_campaign_segment0}:
-    campaign_id: marketing_campaign_openerppartnerchannel
--
   I start this segment after assinged campaign.
 -
   !workflow {model: marketing.campaign.segment, action: state_running_set, ref: marketing_campaign_segment0}

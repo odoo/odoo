@@ -63,7 +63,7 @@
             <field name="email_template_id" ref="email_template_3"/>
         </record>
 
-       
+
     <!-- Tranisition -->
         <record id="marketing_campaign_transition_0" model="marketing.campaign.transition">
             <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_0"/>
@@ -78,7 +78,7 @@
     <!-- Segment -->
         <record id="filter0" model="ir.filters">
             <field name="name">Partners</field>
-            <field name="domain">[('name','like','agrolait')]</field>
+            <field name="domain">[('name','like','Agrolait')]</field>
             <field name="model_id">res.partner</field>
         </record>
         <record id="marketing_campaign_segment0" model="marketing.campaign.segment">
