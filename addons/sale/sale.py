@@ -324,7 +324,6 @@ class sale_order(osv.osv):
         return True
 
     def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context={}):
-        print order_lines
         if (not pricelist_id) or (not order_lines):
             return {}
         warning = {
