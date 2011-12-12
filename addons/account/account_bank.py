@@ -99,7 +99,6 @@ class bank(osv.osv):
                     'type': 'bank',
                     'company_id': bank.company_id.id,
                     'analytic_journal_id': False,
-                    'currency_id': False,
                     'default_credit_account_id': acc_bank_id,
                     'default_debit_account_id': acc_bank_id,
                     'view_id': view_id_cash

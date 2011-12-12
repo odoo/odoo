@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Google Map',
+    'name': 'Google Maps on Customers',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'description': """
 The module adds Google Map field in partner address.
 ====================================================

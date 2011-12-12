@@ -923,7 +923,6 @@ class account_invoice(osv.osv):
                 'line_id': line,
                 'journal_id': journal_id,
                 'date': date,
-                'type': entry_type,
                 'narration':inv.comment
             }
             period_id = inv.period_id and inv.period_id.id or False
@@ -1081,7 +1080,8 @@ class account_invoice(osv.osv):
             del line['invoice_id']
             for field in ('company_id', 'partner_id', 'account_id', 'product_id',
                           'uos_id', 'account_analytic_id', 'tax_code_id', 'base_code_id'):
-                line[field] = line.get(field, False) and line[field][0]
+                if line.get(field):
+                    line[field] = line[field][0]
             if 'invoice_line_tax_id' in line:
                 line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
         return map(lambda x: (0,0,x), lines)
@@ -1209,7 +1209,7 @@ class account_invoice(osv.osv):
         l2['name'] = name
 
         lines = [(0, 0, l1), (0, 0, l2)]
-        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date, 'type': entry_type}
+        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
         move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
 
         line_ids = []
