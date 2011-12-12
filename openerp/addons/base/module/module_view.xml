@@ -47,8 +47,11 @@
                         <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
                         <separator orientation="vertical"/>
                         <field name="name"
-                            filter_domain="['|','|', ('name','ilike',self), ('description','ilike',self), ('shortdesc','ilike',self) ]"
-                            string="Name / Keywords"/>
+                            filter_domain="['|', ('name','ilike',self), ('shortdesc','ilike',self)]"
+                            string="Name"/>
+                        <field name="name"
+                            filter_domain="[('description','ilike',self)]"
+                            string="Keywords"/>
                     </group>
                </search>
             </field>
