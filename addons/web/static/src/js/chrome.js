@@ -1048,22 +1048,11 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             this.action_manager.stop();
         this.action_manager = new openerp.web.ActionManager(this);
         this.action_manager.appendTo($("#oe_app"));
-        //this.action_manager.do_url_set_hash.add_last(this.do_url_set_hash);
 
-        // if using saved actions, load the action and give it to action manager
-        /*var parameters = jQuery.deparam(jQuery.param.querystring());
-        if (parameters["s_action"] != undefined) {
-            var key = parseInt(parameters["s_action"], 10);
-            var self = this;
-            this.rpc("/web/session/get_session_action", {key:key}, function(action) {
-                self.action_manager.do_action(action);
-            });
-        } else /**/ if (openerp._modules_loaded) { // TODO: find better option than this
-            //this.load_url_state()
+        if (openerp._modules_loaded) { // TODO: find better option than this
             this.bind_statechange();
         } else {
             this.session.on_modules_loaded.add({        // XXX what about a $.Deferred ?
-                //callback: $.proxy(this, 'load_url_state'),
                 callback: $.proxy(this, 'bind_statechange'),
                 unique: true,
                 position: 'last'
@@ -1071,32 +1060,17 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         }
     },
 
-    //state_change_event: 'popstate', //statechange
     state_change_event: 'hashchange',
     
     bind_statechange: function() {
-        console.log('bind', this.state_change_event);
         $(window).bind(this.state_change_event, this.on_state_change);
-        var self = this;
 
-        self.action_manager.do_action({type: 'ir.actions.client', tag: 'default_home'});
-        return;
-        //var state = window.History.getState(false, false);
-        //if (state) {
-        //    this.$element.trigger('statechange')
-        //} else 
-        {
-            var ds = new openerp.web.DataSetSearch(this, 'res.users');
-            ds.read_ids([this.session.uid], ['action_id'], function (users) {
-                var home_action = users[0].action_id;
-                if (!home_action) {
-                    self.default_home();
-                    return;
-                }
-                self.do_action(home_action[0]);
-            });
+        var state = $.bbq.getState(true);
+        if (! _.isEmpty(state)) {
+            $(window).trigger(this.state_change_event);
+        } else {
+            this.action_manager.do_action({type: 'ir.actions.client', tag: 'default_home'});
         }
-
     },
 
     on_logged_out: function() {
@@ -1108,19 +1082,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
 
     on_state_change: function(event) {
         // as this method is bound to a event via jQuery, the argument is the jQuery Event.. we need to get the current state
-        //var state = window.History.getState();
-        //var state = event.getState(true);       // = bbq.getState, in fact only deparam the hash
-        //var state = window.history.state;
-        //if (!state) {
-            // chrome
-        //    state = event.originalEvent.state;
-        //}
-        //var h_state = window.History.getState();
-        //var hash = window.History.getHash();
-        //console.log('getState+Hash', h_state, hash);
-        //var state = $.deparam(hash, true); 
-        var state = $.deparam.fragment(true);
-        console.log('onstatechange', event, state);
+        var state = event.getState(true);       // = bbq.getState, in fact only deparam the hash
         return this._super(state);
     },
 
@@ -1132,47 +1094,9 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             state = _.extend({}, hash, state);
         }
         var url = '#' + $.param(state);
-        //console.log('pushstate', state, url);
-        //window.History.pushState(state, '', url);
-        //window.history.pushState(state, '', url);
-
-        //var state = this.get_state();
-        console.log('pushstate', state);
-        //$.bbq.pushState(state, 0);      // will set the hash, so will call on_state_change
-        window.history.pushState(null, '', url); 
-        //window.location.hash = url;
-
+        $.bbq.pushState(url);      // will set the hash, so will call on_state_change
     },
 
-    /*
-    do_replace_state: function(state) {
-        //var hash = window.History.getHash();
-        var hash = $.deparam.fragment(true);
-        state = _.extend({}, hash, state);
-        var url = '#' + $.param(state);
-        //window.History.replaceState(state, '', url);
-        //window.history.replaceState(state, '', url);
-        
-        //var state = this.get_state();
-        console.log('replacestate', state);
-        //$.bbq.pushState(state, 0);      // FIXME cannot have the "no history" behavior
-        window.history.replaceState(null, '', url);
-        //window.location.hash = url;
-    },
-    /*/
-
-    /**
-     * Loads state from URL if any, or checks if there is a home action and
-     * loads that, assuming we're at the index
-     */
-    /*load_url_state: function () {
-        var self = this;
-        // TODO: add actual loading if there is url state to unpack, test on window.location.hash
-        // not logged in
-        if (!this.session.uid) { return; }
-        self.action_manager.do_action({type: 'ir.actions.client', tag: 'default_home'});
-    },
-    */
     default_home: function () {
     },
     /**
@@ -1196,26 +1120,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.action_manager.do_action(action);
         });
     },
-    /*/
-    do_url_set_hash: function(url) {
-        if(!this.url_external_hashchange) {
-            this.url_internal_hashchange = true;
-            jQuery.bbq.pushState(url);
-        }
-    },
-    //*/
-    /*/
-    on_url_hashchange: function() {
-        if(this.url_internal_hashchange) {
-            this.url_internal_hashchange = false;
-        } else {
-            var url = jQuery.deparam.fragment();
-            this.url_external_hashchange = true;
-            this.action_manager.on_url_hashchange(url);
-            this.url_external_hashchange = false;
-        }
-    },
-    //*/
 
     on_menu_action: function(action) {
         this.action_manager.do_action(action);

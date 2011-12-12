@@ -49,21 +49,32 @@ session.web.ActionManager = session.web.Widget.extend({
         }
     },
 
-    on_state_change: function(state) {
-        console.log(this.identifier_prefix, 'state change', state);
-        
-        if (state.action_id) {
-            var run_action = (!this.inner_viewmanager) || this.inner_viewmanager.action.id !== state.action_id;
-            if (run_action) {
-                this.null_action();
-                this.do_action(state.action_id);
-            }
+    handle_state: function() {
+        // Only root ActionManager handle the state
+        return this.widget_parent instanceof session.web.WebClient;
+    },
+
+    do_push_state: function(state, extend) {
+        if (this.handle_state()) {
+            this._super.apply(this, arguments);
         }
-        else if (state.client_action) {
-            var run_client = (!this.client_widget) || this.client_widget_name === state.client_action.tag;
-            if (run_client) {
-                this.null_action();
-                this.ir_actions_client(state.client_action);
+    },
+
+    on_state_change: function(state) {
+        if (this.handle_state()) { 
+            if (state.action_id) {
+                var run_action = (!this.inner_viewmanager) || this.inner_viewmanager.action.id !== state.action_id;
+                if (run_action) {
+                    this.null_action();
+                    this.do_action(state.action_id);
+                }
+            }
+            else if (state.client_action) {
+                var run_client = (!this.client_widget) || this.client_widget_name !== state.client_action.tag;
+                if (run_client) {
+                    this.null_action();
+                    this.ir_actions_client(state.client_action);
+                }
             }
         }
 
@@ -149,13 +160,12 @@ session.web.ActionManager = session.web.Widget.extend({
     },
     ir_actions_client: function (action) {
         this.content_stop();
+        this.client_widget_name = action.tag;
         var ClientWidget = session.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
-        this.client_widget_name = action.tag;
 
         var client_action = {tag: action.tag};
         if (action.params) _.extend(client_action, {params: action.params});
-
         this.do_push_state({client_action: client_action});
     },
     ir_actions_report_xml: function(action, on_closed) {
@@ -306,18 +316,10 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         $.when(view_promise).then(function () {
             self.$element.find('.oe_view_title_text:first').text(
                     self.display_title());
-            self.do_push_state({view_type: self.active_view}, true);
         });
         return view_promise;
     },
 
-    on_state_change: function(state) {
-        console.log(this.identifier_prefix, 'state change', state);
-        if (state.view_type && state.view_type !== this.active_view) {
-            this.on_mode_switch(state.view_type, true);
-        }
-        return this._super.apply(this, arguments);
-    },
 
     /**
      * Returns to the view preceding the caller view in this manager's
@@ -538,8 +540,28 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             } else {
                 $search_prefix.remove();
             }
+
+            self.do_push_state({view_type: self.active_view}, true);
         });
     },
+
+    handle_state: function() {
+        return (this.widget_parent instanceof session.web.ActionManager) && this.widget_parent.handle_state();
+    },
+
+    do_push_state: function(state, extend) {
+        if (this.handle_state()) {
+            this._super.apply(this, arguments);
+        }
+    },
+
+    on_state_change: function(state) {
+        if (this.handle_state() && state.view_type && state.view_type !== this.active_view) {
+            this.on_mode_switch(state.view_type, true);
+        }
+        return this._super.apply(this, arguments);
+    },
+
     shortcut_check : function(view) {
         var self = this;
         var grandparent = this.widget_parent && this.widget_parent.widget_parent;
