@@ -34,9 +34,13 @@ openerp.point_of_sale = function(db) {
         init: function() {
             this.data = {};
         },
-        get: function(key) {
+        get: function(key, _default) {
             if (this.data[key] === undefined) {
-                this.data[key] = JSON.parse(localStorage['oe_pos_' + key]);
+                var stored = localStorage['oe_pos_' + key];
+                if (stored)
+                    this.data[key] = JSON.parse(stored);
+                else
+                    return _default;
             }
             return this.data[key];
         },
@@ -48,8 +52,12 @@ openerp.point_of_sale = function(db) {
     /*
      Gets all the necessary data from the OpenERP web client (session, shop data etc.)
      */
-    var Pos = db.web.Class.extend({
-        init: function(session) {
+    var Pos = Backbone.Model.extend({
+        initialize: function(session, attributes) {
+            Backbone.Model.prototype.initialize.call(this, attributes);
+            this.store = new Store();
+            this.ready = $.Deferred();
+            this.flush_mutex = new $.Mutex();
             this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
@@ -58,21 +66,56 @@ openerp.point_of_sale = function(db) {
                 this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']))
                 .then(this.build_tree);
         },
-        ready: $.Deferred(),
-        store: new Store(),
+        get: function(attribute) {
+            if (attribute === 'pending_operations') {
+                return this.store.get('pending_operations', []);
+            }
+            return Backbone.Model.prototype.get.call(this, attribute);
+        },
+        set: function(attributes, options) {
+            _.each(attributes, _.bind(function (value, attribute) {
+                if (attribute === 'pending_operations') {
+                    this.store.set('pending_operations', value);
+                }
+            }, this));
+            return Backbone.Model.prototype.set.call(this, attributes, options);
+        },
         fetch: function(osvModel, fields, domain) {
             var dataSetSearch;
             var self = this;
-            var callback = function(result) {
-                return self.store.set(osvModel, result);
-            };
             dataSetSearch = new db.web.DataSetSearch(this, osvModel, {}, domain);
-            return dataSetSearch.read_slice(fields, 0).then(callback);
+            return dataSetSearch.read_slice(fields, 0).then(function(result) {
+                return self.store.set(osvModel, result);
+            });
         },
-        push: function(osvModel, record, callback, errorCallback) {
-            var dataSet;
-            dataSet = new db.web.DataSet(this, osvModel, null);
-            return dataSet.create(record, callback, errorCallback);
+        push: function(osvModel, record) {
+            var ops = this.get('pending_operations');
+            ops.push({model: osvModel, record: record});
+            this.set({pending_operations: ops});
+            return this.flush();
+        },
+        flush: function() {
+            return this.flush_mutex.exec(_.bind(function() {
+                return this._int_flush();
+            }, this));
+        },
+        _int_flush : function() {
+            var ops = this.get('pending_operations');
+            if (ops.length === 0)
+                return $.when();
+            var op = ops[0];
+            var dataSet = new db.web.DataSet(this, op.model, null);
+            /* we prevent the default error handler and assume errors
+             * are a normal use case, except we stop the current iteration
+             */
+            return dataSet.create(op.record).fail(function(unused, event) {
+                event.preventDefault();
+            }).pipe(_.bind(function() {
+                console.debug('saved 1 record');
+                var ops2 = this.get('pending_operations');
+                this.set({'pending_operations': _.without(ops2, op)});
+                return this._int_flush();
+            }, this), function() {return $.when()});
         },
         categories: {},
         build_tree: function() {
@@ -828,12 +871,11 @@ openerp.point_of_sale = function(db) {
         validateCurrentOrder: function() {
             var callback, currentOrder;
             currentOrder = this.shop.get('selectedOrder');
-            callback = _.bind(function() {
+            pos.push('pos.order', currentOrder.exportAsJSON()).then(_.bind(function() {
                 return currentOrder.set({
                     validated: true
                 });
-            }, this);
-            pos.push('pos.order', currentOrder.exportAsJSON(), callback);
+            }, this));
         },
         bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
