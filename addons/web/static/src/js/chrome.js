@@ -1121,7 +1121,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.action_manager.do_action(action);
     },
     do_action: function(action) {
-        console.log("Action",action);
         if(action.type === "ir.ui.menu") {
             this.do_reload();
             this.rpc('/web/menu/action', {'menu_id': action.menu_id}, this.menu.on_menu_action_loaded);
