@@ -411,7 +411,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         $('.searchview_extended_groups_list').empty();
         _.each(this.inputs, function (input) {
             if(input.datewidget && input.datewidget.value) {
-                input.datewidget.value = false;
+                input.datewidget.set_value(false);
             }
         });
         setTimeout(this.on_clear, 0);
