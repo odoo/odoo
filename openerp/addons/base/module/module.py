@@ -331,7 +331,6 @@ class module(osv.osv):
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
         menu_ids = self.root_menus(cr,uid,ids,context)
-        print "Menus, Menus:",menu_ids
         if menu_ids:
             action = {
                 'type': 'ir.ui.menu',
@@ -588,20 +587,6 @@ class module(osv.osv):
                 if not val:
                     logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
-
-    def _translations_subdir(self, module):
-        """ Returns the path to the subdirectory holding translations for the
-        module files, or None if it can't find one
-
-        :param module: a module object
-        :type module: browse(ir.module.module)
-        """
-        subdir = addons.get_module_resource(module.name, 'po')
-        if subdir: return subdir
-        # old naming convention
-        subdir = addons.get_module_resource(module.name, 'i18n')
-        if subdir: return subdir
-        return None
 
     def root_menus(self, cr, uid, ids, context=None):
         """ Return root menu ids the menus created by the modules whose ids are
