@@ -1098,6 +1098,48 @@ openerp.web.qweb.format_text_node = function(s) {
 openerp.connection = new openerp.web.Connection();
 openerp.web.qweb.default_dict['__debug__'] = openerp.connection.debug;
 
+$.Mutex = (function() {
+    function Mutex() {
+        this.def = $.Deferred().resolve();
+    };
+    Mutex.prototype.exec = function(action) {
+        var current = this.def;
+        var next = this.def = $.Deferred();
+        return current.pipe(function() {
+            return $.when(action()).always(function() {
+                next.resolve();
+            });
+        });
+    };
+    return Mutex;
+})();
+
+$.async_when = function() {
+    var async = false;
+    var def = $.Deferred();
+    $.when.apply($, arguments).then(function() {
+        var args = arguments;
+        var action = function() {
+            def.resolve.apply(def, args);
+        };
+        if (async)
+            action();
+        else
+            setTimeout(action, 0);
+    }, function() {
+        var args = arguments;
+        var action = function() {
+            def.reject.apply(def, args);
+        };
+        if (async)
+            action();
+        else
+            setTimeout(action, 0);
+    });
+    async = true;
+    return def;
+};
+
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
