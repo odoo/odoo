@@ -195,7 +195,7 @@
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain"/>
+            <field name="domain">['!', ('category_id.parent_id','child_of','Hidden')]</field>
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help">You can install new modules in order to activate new features, menu, reports or data in your OpenERP instance. To install some modules, click on the button "Install" from the form view and then click on "Start Upgrade".</field>
         </record>
