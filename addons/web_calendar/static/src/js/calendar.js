@@ -290,6 +290,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             data = this.get_event_data(event_obj),
             index = this.dataset.get_id_index(event_id);
         if (index != null) {
+            event_id = this.dataset.ids[index];
             this.dataset.write(event_id, data, {}, function() {
                 self.refresh_minical();
             });
