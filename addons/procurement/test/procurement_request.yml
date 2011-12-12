@@ -41,5 +41,4 @@
     context.update({'active_model':'procurement.order','active_id':proc_id, 'automatic':True})
     values = self.default_get(cr, uid, ['automatic'], context)
     ids = self.create(cr, uid, values, context)
-    a = self.procure_calculation(cr, uid, [ids], context)
-    print"========================================",a
+    self.procure_calculation(cr, uid, [ids], context)
