@@ -346,15 +346,19 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
     },
     do_searchview_search: function(domains, contexts, groupbys) {
         var self = this,
-            controller = this.views[this.active_view].controller;
+            controller = this.views[this.active_view].controller,
+            action_context = this.action.context || {};
         this.rpc('/web/session/eval_domain_and_context', {
             domains: [this.action.domain || []].concat(domains || []),
-            contexts: [this.action.context || {}].concat(contexts || []),
+            contexts: [action_context].concat(contexts || []),
             group_by_seq: groupbys || []
         }, function (results) {
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            controller.do_search(results.domain, results.context, results.group_by);
+            var groupby = results.group_by.length
+                        ? results.group_by
+                        : action_context.group_by;
+            controller.do_search(results.domain, results.context, groupby || []);
         });
     },
     /**
