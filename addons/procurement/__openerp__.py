@@ -60,7 +60,8 @@ depending on the product's configuration.
     ],
     'demo_xml': ['stock_orderpoint.xml'],
     'test': ['test/procurement.yml',
-             'test/procurement_request.yml'
+             'test/procurement_request.yml',
+             'test/all_schedular.yml'
             ],
     'installable': True,
     'active': False,
