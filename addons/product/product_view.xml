@@ -194,7 +194,7 @@
                 </form>
             </field>
         </record>
-        
+
         <!-- Product Kanban View  -->
         <record model="ir.ui.view" id="product_kanban_view">
             <field name="name">Product Kanban</field>
@@ -211,7 +211,7 @@
                             <t t-if="record.type.raw_value!='service' and record.qty_available.raw_value lte 0" t-set="border">oe_kanban_color_red</t>
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
                                 <div class="oe_kanban_box oe_kanban_color_border">
-                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle oe_kanban_title3">
+                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle oe_kanban_title">
                                         <field name="name"/>
                                     </div>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">

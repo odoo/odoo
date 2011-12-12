@@ -122,10 +122,10 @@ class pos_order(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
 
         'state': fields.selection([('draft', 'New'),
-                                   ('paid', 'Done'),
+                                   ('cancel', 'Cancelled'),
+                                   ('paid', 'Paid'),
                                    ('done', 'Posted'),
-                                   ('invoiced', 'Invoiced'),
-                                   ('cancel', 'Cancelled')],
+                                   ('invoiced', 'Invoiced')],
                                   'State', readonly=True),
 
         'invoice_id': fields.many2one('account.invoice', 'Invoice'),
@@ -381,11 +381,12 @@ class pos_order(osv.osv):
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
 
         if not inv_ids: return {}
+        
         mod_obj = self.pool.get('ir.model.data')
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         res_id = res and res[1] or False
         return {
-            'name': _('PoS Invoices'),
+            'name': _('Customer Invoice'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': res_id,
@@ -691,10 +692,12 @@ pos_category()
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'income_pdt': fields.boolean('Product for Input'),
-        'expense_pdt': fields.boolean('Product for Output'),
-        'img': fields.binary('Pos Image, must be 50x50'),
-        'pos_categ_id': fields.many2one('pos.category','POS Category', change_default=True, domain="[('type','=','normal')]" ,help="Select a pos category for the current product")
+        'income_pdt': fields.boolean('PoS Cash Input', help="This is a product you can use to put cash into a statement for the point of sale backend."),
+        'expense_pdt': fields.boolean('PoS Cash Output', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
+        'img': fields.binary('Product Image, must be 50x50', help="Use an image size of 50x50."),
+        'pos_categ_id': fields.many2one('pos.category','PoS Category',
+            domain="[('type','=','normal')]",
+            help="If you want to sell this product through the point of sale, select the category it belongs to.")
     }
 product_product()
 

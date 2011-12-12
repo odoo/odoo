@@ -22,13 +22,14 @@
 import time
 from osv import fields, osv
 from tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+import decimal_precision as dp
 
 class stock_partial_picking_line(osv.TransientModel):
     _name = "stock.partial.picking.line"
     _rec_name = 'product_id'
     _columns = {
         'product_id' : fields.many2one('product.product', string="Product", required=True, ondelete='CASCADE'),
-        'quantity' : fields.float("Quantity", required=True),
+        'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product UoM'), required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, ondelete='CASCADE'),
         'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot', ondelete='CASCADE'),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete='CASCADE'),

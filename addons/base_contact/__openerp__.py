@@ -23,7 +23,7 @@
 {
     'name': 'Base Contact',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales Management',
     'complexity': "expert",
     'description': """
 This module allows you to manage your contacts entirely.

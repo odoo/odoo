@@ -37,6 +37,7 @@ technical OpenERP documentation at http://doc.openerp.com
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'email_template'],
+    'icon': '/edi/static/src/img/knowledge.png',
     'data': [
         'security/ir.model.access.csv',
     ],

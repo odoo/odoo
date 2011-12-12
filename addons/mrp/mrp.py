@@ -176,7 +176,7 @@ class mrp_bom(osv.osv):
         @param arg: User defined argument
         @return:  Dictionary of values
         """
-        res = dict(map(lambda x: (x,''), ids))
+        res = dict.fromkeys(ids, False)
         for line in self.browse(cr, uid, ids, context=context):
             if line.type == 'phantom' and not line.bom_id:
                 res[line.id] = 'set'
@@ -467,7 +467,7 @@ class mrp_production(osv.osv):
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]}),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]}, help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
         'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True, ondelete="restrict",
-            help="This is the internal picking list that brings the finished product to the production plan"),
+            help="This is the Internal Picking List that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
         'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
         'move_lines2': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))]),

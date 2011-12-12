@@ -21,11 +21,11 @@
 
 
 {
-    "name" : "Reporting Hidden Installer",
+    "name" : "Report Designer",
     "version" : "1.0",
     "depends" : ["base", "base_setup"],
     "author" : "OpenERP SA",
-    "category": "Hidden",
+    "category": "Tools",
     "description": """
 Installer for reporting Hidden.
 ==============================
