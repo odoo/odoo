@@ -570,8 +570,16 @@ label.error {
 }
 
 /* SearchView */
+.openerp .oe_searchview_field {
+    position: relative;
+    white-space: nowrap;
+}
+.openerp .oe_searchview_field .oe_input_icon {
+    top: auto;
+    bottom: 5px;
+}
+
 .openerp .filter_label, .openerp .filter_icon {
-    border-left-width: 0;
     background: #F0F0F0;
     border: 1px solid #999;
     background: -moz-linear-gradient(top, #F0F0F0 0%, #C0C0C0 100%);

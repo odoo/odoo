@@ -1172,7 +1172,7 @@
     <table class="oe-searchview-render-line" border="0" cellspacing="0" cellpadding="0"
            t-foreach="lines" t-as="line">
         <tr>
-            <td t-foreach="line" t-as="widget">
+            <td t-foreach="line" t-as="widget" class="oe_searchview_field">
                 <t t-raw="widget.render(defaults)"/>
             </td>
         </tr>
@@ -1198,7 +1198,7 @@
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">?</span>
     </label>
-    <div style="white-space: nowrap;">
+    <div>
         <input type="text" size="15" t-att-name="attrs.name"
                t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"
                t-att-id="element_id"
@@ -1213,7 +1213,7 @@
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">?</span>
     </label>
-    <div style="white-space: nowrap;">
+    <div>
         <span t-att-id="element_id"></span>
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
@@ -1225,7 +1225,7 @@
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">?</span>
     </label>
-    <div style="white-space: nowrap;">
+    <div>
         <select t-att-name="attrs.name" t-att-id="element_id"
                 t-att-autofocus="attrs.default_focus === '1' || undefined">
             <option t-if="prepend_empty"/>
