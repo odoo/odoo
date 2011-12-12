@@ -59,7 +59,7 @@
   !python {model: project.project}: |
     self.schedule_tasks(cr, uid, [ref("project_integrate_openerp")], context=context)
 -
-  I set copy the tasks of project.
+  I copy the tasks of project.
 -
   !python {model: project.project}: |
     self.template_copy(cr, uid, ref("project_integrate_openerp"))
