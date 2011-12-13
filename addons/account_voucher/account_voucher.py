@@ -363,11 +363,8 @@ class account_voucher(osv.osv):
             'amount': False,
         }
         voucher_total = 0.0
-
         line_ids = resolve_o2m_operations(cr, uid, line_pool, line_ids, ["amount"], context)
 
-        total = 0.0
-        total_tax = 0.0
         for line in line_ids:
             line_amount = 0.0
             line_amount = line.get('amount',0.0)
@@ -828,8 +825,6 @@ class account_voucher(osv.osv):
         :return: mapping between fieldname and value of account move line to create
         :rtype: dict
         '''
-        move_line_obj = self.pool.get('account.move.line')
-        currency_obj = self.pool.get('res.currency')
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         debit = credit = 0.0
         # TODO: is there any other alternative then the voucher type ??
@@ -868,7 +863,6 @@ class account_voucher(osv.osv):
         :return: mapping between fieldname and value of account move to create
         :rtype: dict
         '''
-        move_obj = self.pool.get('account.move')
         seq_obj = self.pool.get('ir.sequence')
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         if voucher_brw.number:
@@ -1053,7 +1047,7 @@ class account_voucher(osv.osv):
                 voucher_currency = voucher_brw.currency_id and voucher_brw.currency_id.id or voucher_brw.journal_id.company_id.currency_id.id
                 # We want to set it on the account move line as soon as the original line had a foreign currency
                 if line.move_line_id.currency_id and line.move_line_id.currency_id.id != company_currency:
-                    # we compute the amount in that foreign currency. 
+                    # we compute the amount in that foreign currency.
                     if line.move_line_id.currency_id.id == current_currency:
                         # if the voucher and the voucher line share the same currency, there is no computation to do
                         sign = (move_line['debit'] - move_line['credit']) < 0 and -1 or 1
@@ -1116,7 +1110,6 @@ class account_voucher(osv.osv):
         :return: mapping between fieldname and value of account move line to create
         :rtype: dict
         '''
-        move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
         move_line = {}
 
@@ -1178,9 +1171,6 @@ class account_voucher(osv.osv):
             context = {}
         move_pool = self.pool.get('account.move')
         move_line_pool = self.pool.get('account.move.line')
-        currency_pool = self.pool.get('res.currency')
-        tax_obj = self.pool.get('account.tax')
-        seq_obj = self.pool.get('ir.sequence')
         for voucher in self.browse(cr, uid, ids, context=context):
             if voucher.move_id:
                 continue
@@ -1210,7 +1200,7 @@ class account_voucher(osv.osv):
             # Create the writeoff line if needed
             ml_writeoff = self.writeoff_move_line_get(cr, uid, voucher.id, line_total, move_id, name, company_currency, current_currency, context)
             if ml_writeoff:
-                ml_writeoff_id = move_line_pool.create(cr, uid, ml_writeoff, context)
+                move_line_pool.create(cr, uid, ml_writeoff, context)
             # We post the voucher.
             self.write(cr, uid, [voucher.id], {
                 'move_id': move_id,
@@ -1276,7 +1266,7 @@ class account_voucher_line(osv.osv):
 
     def _currency_id(self, cr, uid, ids, name, args, context=None):
         '''
-        This function returns the currency id of a voucher line. It's either the currency of the 
+        This function returns the currency id of a voucher line. It's either the currency of the
         associated move line (if any) or the currency of the voucher or the company currency.
         '''
         res = {}
