@@ -44,6 +44,7 @@ Features
     "demo_xml": ["project_long_term_demo.xml"],
     "test": [
           'test/phase_process.yml',
+          'test/task_process.yml',
     ],
     "update_xml": [
         "security/ir.model.access.csv",
