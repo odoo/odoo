@@ -13,23 +13,30 @@
   -o-border-radius: 3px;
   -ms-border-radius: 3px;
   border-radius: 3px;
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  -o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  -box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  -o-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .oe_employee_picture {
   width: 100px;
   height: auto;
-  clip: rect(10px, 110px, 100px, 0px);
+  clip: rect(10px, 100px, 110px, 0px);
+}
+
+.oe_employee_picture_wide {
+  height: 100px;
+  width: auto;
+  clip: rect(0px, 115px, 100px, 15px);
 }
 
 .oe_employee_details {
-  width: 200px;
+  width: 220px;
   font-size: 13px;
   padding: 2px 5px;
   color: #4c4c4c;
+  min-height: 120px;
 }
 
 .oe_employee_details h4 {
