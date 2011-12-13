@@ -1,13 +1,47 @@
 -
-  In order to test process to generate task automatic from procurement, I confirm sale order.
+  In order to test process to generate task automatic from procurement, I confirm sale order to sale service product.
 -
   !workflow {model: sale.order, action: order_confirm, ref: sale.order}
 -
-  Now I check that one task is created for my sale order, in the desired project
+  I run the scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
+-
+  Now I check that task details after run procurement
+-
+  !python {model: procurement.order}: |
+    from datetime import datetime
+    procurement_ids = self.search(cr, uid, [('sale_line_id', '=', ref('line_services'))])
+    assert procurement_ids, "Procurement is not generated for Service Order Line."
+    procurement = self.browse(cr, uid, procurement_ids[0], context=context)
+    task = procurement.task_id
+    assert task, "Task is not generated."
+    planned_hours = self._convert_qty_company_hours(cr, uid, procurement, context=context)
+    project_id = False
+    if procurement.product_id.project_id:
+        project_id = procurement.product_id.project_id.id
+    elif procurement.sale_line_id:
+        project_id = procurement.sale_line_id.order_id.project_id.id #TOFIX: is project_id exits in sale.order object ?
+    if project_id:
+        assert task.project_id.id == project_id, "Project is not correspond."
+    assert task.planned_hours == planned_hours, 'Planned Hours are not correspond.'
+    assert datetime.strptime(task.date_deadline, '%Y-%m-%d') == datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S'), 'Deadline is not correspond.'
+    if procurement.product_id.product_manager:
+        assert task.user_id.id == procurement.product_id.product_manager.id, 'Allocated Person is not correspond with Service Product Manager.'
+    assert task.description == procurement.note, "Task description is not correspond."
+-
+  I close that task.
 -
   !python {model: project.task}: |
-    task_id = self.search(cr, uid, [('sale_line_id', '=', ref('line_services'))])
-    task_rec = self.browse(cr, uid, task_id[0])
-    assert task_id, 'Expected Task not found!'
-    assert task_rec.planned_hours, 'Expected hour not found!'
-    assert task_rec.date_deadline, 'Expected task deadline not found!'
+    task_ids = self.search(cr, uid, [('sale_line_id', '=', ref('line_services'))])
+    assert task_ids, "Task is not generated for Service Order Line."
+    self.do_close(cr, uid, task_ids, context=context)
+-
+  I check procurement of Service Order Line after closed task.
+-
+  !python {model: procurement.order}: |
+    procurement_ids = self.search(cr, uid, [('sale_line_id', '=', ref('line_services'))])
+    assert procurement_ids, "Procurement is not generated for Service Order Line."
+    procurement = self.browse(cr, uid, procurement_ids[0], context=context)
+    assert procurement.state , "Procurement should be closed."
