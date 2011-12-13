@@ -164,11 +164,12 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         self.write(cr, uid, ids, {'state': 'cancelled'})
         return True
 
-
+    # dead code
     def signal(self, cr, uid, model, res_id, signal, run_existing=True, context=None):
         record = self.pool.get(model).browse(cr, uid, res_id, context)
         return self._signal(cr, uid, record, signal, run_existing, context)
 
+    #dead code
     def _signal(self, cr, uid, record, signal, run_existing=True, context=None):
         if not signal:
             raise ValueError('signal cannot be False')
@@ -461,6 +462,7 @@ class marketing_campaign_activity(osv.osv):
         return super(marketing_campaign_activity, self).search(cr, uid, args,
                                            offset, limit, order, context, count)
 
+    #dead code
     def _process_wi_report(self, cr, uid, activity, workitem, context=None):
         service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
         (report_data, format) = service.create(cr, uid, [], {}, {})
@@ -481,6 +483,7 @@ class marketing_campaign_activity(osv.osv):
                                             activity.email_template_id.id,
                                             workitem.res_id, context=context)
 
+    #dead code
     def _process_wi_action(self, cr, uid, activity, workitem, context=None):
         if context is None:
             context = {}
