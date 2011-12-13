@@ -3,8 +3,8 @@
  *---------------------------------------------------------*/
 
 openerp.web.views = function(session) {
-
-var _t = session.web._t;
+var QWeb = session.web.qweb,
+    _t = session.web._t;
 
 /**
  * Registry for all the client actions key: tag value: widget
@@ -472,13 +472,8 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
 
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
 
-        this.$element.find('.oe_get_xml_view').click(function () {
-            var view = self.views[self.active_view].controller,
-                view_id = view.fields_view.view_id;
-            if (view_id) {
-                view.on_sidebar_edit_resource('ir.ui.view', view_id);
-            }
-        });
+        this.$element.find('.oe_debug_view').change(this.on_debug_changed);
+
         if (this.action.help && !this.flags.low_profile) {
             var Users = new session.web.DataSet(self, 'res.users'),
                 $tips = this.$element.find('.oe_view_manager_menu_tips');
@@ -516,6 +511,47 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
 
         return manager_ready;
     },
+    on_debug_changed: function (evt) {
+        var $sel = $(evt.currentTarget),
+            $option = $sel.find('option:selected'),
+            val = $sel.val();
+        switch (val) {
+            case 'fvg':
+                $('<pre>').text(session.web.json_node_to_xml(
+                    this.views[this.active_view].controller.fields_view.arch, true)
+                ).dialog({ width: '95%'});
+                break;
+            case 'edit':
+                var model = $option.data('model'),
+                    id = $option.data('id'),
+                    domain = $option.data('domain'),
+                    action = {
+                        res_model : model,
+                        type : 'ir.actions.act_window',
+                        view_type : 'form',
+                        view_mode : 'form',
+                        target : 'new',
+                        flags : {
+                            action_buttons : true
+                        }
+                    };
+                if (id) {
+                    action.res_id = id,
+                    action.views = [[false, 'form']];
+                } else if (domain) {
+                    action.views = [[false, 'list'], [false, 'form']];
+                    action.domain = domain;
+                    action.flags.views_switcher = true;
+                }
+                this.do_action(action);
+                break;
+            default:
+                if (val) {
+                    console.log("No debug handler for ", val);
+                }
+        }
+        evt.currentTarget.selectedIndex = 0;
+    },
     on_mode_switch: function (view_type, no_store) {
         var self = this;
 
@@ -529,7 +565,10 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             var controller = self.views[self.active_view].controller,
                 fvg = controller.fields_view,
                 view_id = (fvg && fvg.view_id) || '--';
-            self.$element.find('.oe_get_xml_view span').text(view_id);
+            self.$element.find('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
+                view: controller,
+                view_manager: self
+            }));
             if (!self.action.name && fvg) {
                 self.$element.find('.oe_view_title_text').text(fvg.arch.attrs.string || fvg.name);
             }
@@ -691,26 +730,6 @@ session.web.Sidebar = session.web.Widget.extend({
                 classname: 'oe_hide oe_sidebar_view_log'
             }
         ]);
-
-        if (session.connection.debug) {
-            this.add_section("Debug", 'debug');
-            if (action && action.id) {
-                this.add_items('debug', [{
-                    label: "Edit Action",
-                    callback: function() {
-                        view.on_sidebar_edit_resource(action.type, action.id);
-                    }
-                }]);
-            }
-            if (view_manager.searchview && view_manager.searchview.view_id) {
-                this.add_items('debug', [{
-                    label: "Edit SearchView",
-                    callback: function() {
-                        view.on_sidebar_edit_resource('ir.ui.view', view_manager.searchview.view_id);
-                    }
-                }]);
-            }
-        }
     },
 
     add_toolbar: function(toolbar) {
