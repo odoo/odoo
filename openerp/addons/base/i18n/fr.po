@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-04 04:49+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-13 04:56+0000\n"
+"X-Generator: Launchpad (build 14458)\n"
 
 #. module: base
 #: view:ir.filters:0
@@ -308,7 +308,7 @@ msgstr "Propriétaire"
 #. module: base
 #: field:ir.actions.act_window,src_model:0
 msgid "Source Object"
-msgstr "Objet Source"
+msgstr "Objet source"
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -605,7 +605,7 @@ msgstr "Serbie"
 #. module: base
 #: selection:ir.translation,type:0
 msgid "Wizard View"
-msgstr "Vue Assistant"
+msgstr "Vue assistant"
 
 #. module: base
 #: model:res.country,name:base.kh
@@ -1034,7 +1034,7 @@ msgstr "Operation annulée"
 #. module: base
 #: help:base.language.export,lang:0
 msgid "To export a new language, do not select a language."
-msgstr "Pour exporter une langue, ne sélectionnez aucune langue."
+msgstr "Pour exporter une nouvelle langue, ne sélectionnez aucune langue."
 
 #. module: base
 #: view:res.request:0
@@ -1099,9 +1099,9 @@ msgid ""
 "you select the invoice, then `object.invoice_address_id.email` is the field "
 "which gives the correct address"
 msgstr ""
-"Fournissez les champs qui seront utilisés pour récupéreer l'adresse email. "
-"Exemple: lorsque vous sélectionnez la facture, alors "
-"`object.invoice_address_id.email` es t le champ qui vous donne l'adresse "
+"Fournit les champs qui seront utilisés pour récupérer l'adresse de courriel. "
+"Par exemple lorsque vous sélectionnez la facture, alors "
+"\"object.invoice_address_id.email\" est le champ qui vous donne l'adresse "
 "correcte."
 
 #. module: base
@@ -1545,7 +1545,7 @@ msgid ""
 "newly added modules as well as any change to existing modules."
 msgstr ""
 "Cet assistant va parcourir tous les répertoires de modules pour détecter les "
-"modules ajoutés ainsi que les modifications apportées aix modules existants."
+"modules ajoutés ainsi que les modifications apportées aux modules existants."
 
 #. module: base
 #: field:res.company,logo:0
@@ -1623,7 +1623,7 @@ msgid ""
 "Views allows you to personalize each view of OpenERP. You can add new "
 "fields, move fields, rename them or delete the ones that you do not need."
 msgstr ""
-"Vues vous permettant de personnaler chaque vue d'OpenERP. Vous pouvez "
+"Vues vous permettant de personnaliser chaque écran d'OpenERP. Vous pouvez "
 "ajouter de nouveaux champs, déplacer, renommer ou supprimer ceux dont vous "
 "n'avez pas besoin."
 
@@ -1893,7 +1893,7 @@ msgstr "Correspondances de champ"
 #. module: base
 #: view:base.language.export:0
 msgid "Export Translations"
-msgstr "Export les traductions"
+msgstr "Exporter les traductions"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom
@@ -2023,7 +2023,7 @@ msgid ""
 "you are working on will be maintained."
 msgstr ""
 "Afficher et gérer la liste de tous les pays pouvant être associés aux "
-"partenaires. Vous pouvez créer ou supprimer des pays pour vous assurez que "
+"partenaires. Vous pouvez créer ou supprimer des pays pour vous assurer que "
 "ceux avec lesquels vous travaillez seront maintenus."
 
 #. module: base
@@ -2202,6 +2202,9 @@ msgid ""
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
 msgstr ""
+"La propriété \"order\" est incorrecte. \"order\" doit contenir une liste de "
+"noms de champs corrects et séparés par des virgules (éventuellement suivis "
+"de \"asc\" ou \"desc\" pour indiquer le sens)"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -2227,9 +2230,9 @@ msgid ""
 "way you want to print them in letters and other documents. Some example: "
 "Mr., Mrs. "
 msgstr ""
-"Gère les titres des contacts dont vous voulez qu'ils soient disponibles dans "
-"le système et comment vous voulez qu'ils soient imprimés sur les lettres et "
-"autres documents. Quelques exemples : M.; Mme. "
+"Gère les civilités des contacts disponibles dans le système et la manière "
+"dont ils seront imprimés sur les lettres et autres documents. Quelques "
+"exemples : M. ; Mme. "
 
 #. module: base
 #: field:res.company,rml_footer1:0
@@ -2507,7 +2510,7 @@ msgstr "Actions planifiées"
 #: field:res.partner.title,name:0
 #: field:res.widget,title:0
 msgid "Title"
-msgstr "Titre"
+msgstr "Civilité"
 
 #. module: base
 #: help:ir.property,res_id:0
@@ -2713,9 +2716,9 @@ msgid ""
 "import a language pack from here. Other OpenERP languages than the official "
 "ones can be found on launchpad."
 msgstr ""
-"Si vous souhaitez une autre langue que l'officielle disponible, vous pouvez "
-"importer la votre ici. Les autres langues OpenERP autre que les officielles "
-"peuvent être trouver sur Launchpad"
+"Si vous souhaitez une autre langue que les langues officielles disponibles, "
+"vous pouvez l'importer à partir d' ici. D'autres langues  peuvent être "
+"trouvées sur Launchpad."
 
 #. module: base
 #: view:ir.module.module:0
@@ -2891,7 +2894,7 @@ msgstr "Action à déclencher"
 #, python-format
 msgid "\"email_from\" needs to be set to send welcome mails to users"
 msgstr ""
-"\"email_from\" doit être positionner pour envoyer un message de bienvenu aux "
+"\"email_from\" doit être rempli pour envoyer un message de bienvenue aux "
 "utilisateurs"
 
 #. module: base
@@ -2903,7 +2906,7 @@ msgstr "Contrainte"
 #: selection:ir.values,key:0
 #: selection:res.partner.address,type:0
 msgid "Default"
-msgstr "Défaut"
+msgstr "Par défaut"
 
 #. module: base
 #: view:ir.model.fields:0
@@ -2920,7 +2923,7 @@ msgstr "Filtres par défaut"
 #. module: base
 #: field:res.request.history,name:0
 msgid "Summary"
-msgstr "Sommaire"
+msgstr "Résumé"
 
 #. module: base
 #: field:multi_company.default,expression:0
@@ -4670,8 +4673,8 @@ msgstr "Contacts"
 msgid ""
 "Unable to delete this document because it is used as a default property"
 msgstr ""
-"Impossible de supprimer ce document, parce qu'il est utilisé dans une "
-"propriété par défaut"
+"Impossible de supprimer ce document, parce qu'il est utilisé comme propriété "
+"par défaut"
 
 #. module: base
 #: view:res.widget.wizard:0
@@ -6405,7 +6408,7 @@ msgstr "Panama"
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_ltd
 msgid "Ltd"
-msgstr "Ltd"
+msgstr "SARL"
 
 #. module: base
 #: help:workflow.transition,group_id:0
@@ -6604,9 +6607,9 @@ msgid ""
 "Manage the partner titles you want to have available in your system. The "
 "partner titles is the legal status of the company: Private Limited, SA, etc."
 msgstr ""
-"Gérer les titres des partenaires qui seront disponibles dans votre système. "
-"Les titres de partenaires sont les statuts légaux des sociétés: SARL, SAS, "
-"SA, etc."
+"Gérer les civilités des partenaires qui seront disponibles dans votre "
+"système. Pour les sociétés, les civilités de partenaires sont les formes "
+"légales : SARL, SAS, SA, etc."
 
 #. module: base
 #: view:base.language.export:0
@@ -8294,7 +8297,7 @@ msgstr "5.  %y, %Y ==> 08, 2008"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_ltd
 msgid "ltd"
-msgstr "Ets"
+msgstr "SARL"
 
 #. module: base
 #: field:ir.values,res_id:0
@@ -9617,7 +9620,7 @@ msgstr "Livraison"
 #: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
-msgstr "Corp."
+msgstr "SA"
 
 #. module: base
 #: model:res.country,name:base.gw
