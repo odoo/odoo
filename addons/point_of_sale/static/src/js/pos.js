@@ -251,26 +251,28 @@ openerp.point_of_sale = function(db) {
      To add more of the same product, just update the quantity accordingly.
      The Order also contains payment information.
      */
-    var Orderline = (function() {
-        __extends(Orderline, Backbone.Model);
-        function Orderline() {
-            Orderline.__super__.constructor.apply(this, arguments);
-        }
-
-        Orderline.prototype.defaults = {
+    var Orderline = Backbone.Model.extend({
+        defaults: {
             quantity: 1,
             list_price: 0,
             discount: 0
-        };
-        Orderline.prototype.incrementQuantity = function() {
+        },
+        initialize: function(attributes) {
+            Backbone.Model.prototype.initialize.apply(this, arguments);
+            this.bind('change:quantity', function(unused, qty) {
+                if (qty == 0)
+                    this.trigger('killme');
+            }, this);
+        },
+        incrementQuantity: function() {
             return this.set({
                 quantity: (this.get('quantity')) + 1
             });
-        };
-        Orderline.prototype.getTotal = function() {
+        },
+        getTotal: function() {
             return (this.get('quantity')) * (this.get('list_price')) * (1 - (this.get('discount')) / 100);
-        };
-        Orderline.prototype.exportAsJSON = function() {
+        },
+        exportAsJSON: function() {
             var result;
             result = {
                 qty: this.get('quantity'),
@@ -279,18 +281,11 @@ openerp.point_of_sale = function(db) {
                 product_id: this.get('id')
             };
             return result;
-        };
-        return Orderline;
-    })();
-    var OrderlineCollection = (function() {
-        __extends(OrderlineCollection, Backbone.Collection);
-        function OrderlineCollection() {
-            OrderlineCollection.__super__.constructor.apply(this, arguments);
-        }
-
-        OrderlineCollection.prototype.model = Orderline;
-        return OrderlineCollection;
-    })();
+        },
+    });
+    var OrderlineCollection = Backbone.Collection.extend({
+        model: Orderline,
+    });
     /*
      Every PaymentLine has all the attributes of the corresponding CashRegister.
      */
@@ -365,9 +360,13 @@ openerp.point_of_sale = function(db) {
             var existing;
             existing = (this.get('orderLines')).get(product.id);
             if (existing != null) {
-                return existing.incrementQuantity();
+                existing.incrementQuantity();
             } else {
-                return (this.get('orderLines')).add(new Orderline(product.toJSON()));
+                var line = new Orderline(product.toJSON());
+                this.get('orderLines').add(line);
+                line.bind('killme', function() {
+                    this.get('orderLines').remove(line);
+                }, this);
             }
         };
         Order.prototype.addPaymentLine = function(cashRegister) {
