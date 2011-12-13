@@ -1558,3 +1558,4 @@ class nodefd_static(StringIO, node_descriptor):
         StringIO.close(self)
 
 #eof
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

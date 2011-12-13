@@ -96,18 +96,6 @@
 			</field>
 		</record>
 
-        <record id="view_l10n_br_journal_form_inherit" model="ir.ui.view">
-           <field name="name">l10n_br.journal.form.inherit</field>
-           <field name="model">account.journal</field>
-           <field name="type">form</field>
-           <field name="inherit_id" ref="account.view_account_journal_form"/>
-           <field name="arch" type="xml">
-                <field name="sequence_id" position="after">
-                    <field name="internal_sequence"/>
-                </field>
-           </field>
-        </record>
-
 	</data>
 	
 </openerp>

@@ -58,3 +58,5 @@ class ErrorDialog:
     def btnOkOrCancel_clicked( self, oActionEvent ):
         self.win.endExecute()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -30,3 +30,5 @@ class res_partner(osv.osv):
         'nrc' : fields.char('NRC', size=16, help='Registration number at the Registry of Commerce'),
     }
 res_partner()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

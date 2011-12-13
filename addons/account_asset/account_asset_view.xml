@@ -32,11 +32,11 @@
                     <field name="prorata"/>
                     <field name="open_asset"/>
                 </group>
-        	<group col="2" colspan="2" groups="analytic.group_analytic_accounting">
-        	    <separator string="Analytic information" colspan="4"/>
-        	    <newline/>
-        	    <field name="account_analytic_id"/>
-        	</group>
+            <group col="2" colspan="2" groups="analytic.group_analytic_accounting">
+                <separator string="Analytic information" colspan="4"/>
+                <newline/>
+                <field name="account_analytic_id"/>
+            </group>
                 <separator string="Notes" colspan="4"/>
                 <field name="note" colspan="4" nolabel="1"/>
             </form>
@@ -51,9 +51,7 @@
             <tree string="Asset category">
                 <field name="name"/>
                 <field name="journal_id"/>
-                <field name="method_time"/>
                 <field name="method"/>
-                <field name="open_asset"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -94,9 +92,9 @@
               <notebook colspan="4">
                  <page string="General">
                     <separator string="Other Information" colspan="4"/>
-                    <field name="parent_id"/>
                     <field name="partner_id"/>
                     <field name="purchase_date"/>
+                    <field name="parent_id" groups="base.group_extended"/>
                     <newline/>
                     <group colspan="2" col="2">
                         <separator string="Depreciation Dates" colspan="2"/>
@@ -121,7 +119,7 @@
                        <button name="set_to_close" states="open" string="Set to Close" type="object" icon="gtk-close"/>
                     </group>
                  </page>
-                 <page string="Depreciation board">
+                 <page string="Depreciation Board">
                     <field name="depreciation_line_ids" colspan="4" nolabel="1" mode="tree,graph">
                        <tree string="Depreciation Lines" colors="blue:(move_check == False);black:(move_check == True)">
                           <field name="depreciation_date"/>
@@ -290,8 +288,12 @@
     </record>
 
     <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance"/>
-    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_tree" action="action_account_asset_asset_tree"/>
-      <record model="ir.actions.act_window" id="action_account_asset_asset_form">
+    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_tree"
+        groups="base.group_extended"
+        sequence="100"
+        action="action_account_asset_asset_tree"/>
+
+    <record model="ir.actions.act_window" id="action_account_asset_asset_form">
         <field name="name">Assets</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">form</field>
@@ -317,7 +319,7 @@
         <field name="name">Review Asset Categories</field>
         <field name="res_model">account.asset.category</field>
         <field name="view_type">form</field>
-        <field name="view_mode">form</field>
+        <field name="view_mode">tree,form</field>
     </record>
     
     <record id="asset_category_form_view_todo" model="ir.actions.todo">

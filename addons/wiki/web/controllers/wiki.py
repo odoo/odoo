@@ -61,3 +61,5 @@ class WikiView(SecuredController):
         res, file_name = self.get_attachment(**kws)
         cherrypy.response.headers['Content-Disposition'] = 'filename="%s"' % (file_name,)
         return base64.decodestring(res)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

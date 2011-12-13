@@ -79,3 +79,4 @@ class report_graph(report.interface.report_int):
         return (pdf_string, 'pdf')
 
 report_graph('report.proximity.graph', 'ir.module.module')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Event',
+    'name': 'Events Organisation',
     'version': '0.1',
-    'category': 'Hidden',
+    'category': 'Tools',
     'complexity': "easy",
     'description': """
 Organization and management of Events.
@@ -54,7 +54,11 @@ Note that:
         'res_partner_view.xml',
     ],
     'demo_xml': ['event_demo.xml'],
-    'test': ['test/test_event.yml'],
+    'test': ['test/process/event_confirm2done.yml',
+             'test/process/event_draft2cancel.yml',
+             'test/process/partner_register2invoice.yml',
+             'test/ui/duplicate_event.yml',
+             'test/ui/demo_data.yml'],
     'installable': True,
     'active': False,
     'certificate': '0083059161581',

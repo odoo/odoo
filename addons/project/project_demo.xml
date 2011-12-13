@@ -77,6 +77,7 @@
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Prepare Requirements Document</field>
             <field name="type_id" ref="project_tt_specification"/>
+            <field name="color">3</field>
         </record>
 
         <record id="project_task_2" model="project.task">
@@ -94,6 +95,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Design Use Cases</field>
+            <field name="date_deadline" eval="time.strftime('%Y-%m-24')"/>
             <field name="type_id" ref="project_tt_specification"/>
         </record>
 
@@ -103,6 +105,9 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Budget Planning</field>
+            <field name="description">Use the account_budget module</field>
+            <field name="date_deadline" eval="time.strftime('%Y-%m-19')"/>
+            <field name="color">3</field>
             <field name="type_id" ref="project_tt_specification"/>
         </record>
 
@@ -112,6 +117,9 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Quality Planning</field>
+            <field name="kanban_state">done</field>
+            <field name="priority">0</field>
+            <field name="date_deadline" eval="time.strftime('%Y-%m-%d')"/>
             <field name="type_id" ref="project_tt_specification"/>
         </record>
 
@@ -139,6 +147,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Dataflow Design</field>
+            <field name="priority">0</field>
             <field name="type_id" ref="project_tt_specification"/>
         </record>
 
@@ -157,6 +166,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Develop Module in Sale Management</field>
+            <field name="kanban_state">blocked</field>
              <field name="type_id" ref="project_tt_development"/>
         </record>
 
@@ -220,6 +230,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Performance Tuning</field>
+            <field name="description">Test on Runbot</field>
              <field name="type_id" ref="project_tt_specification"/>
         </record>
         <function model="project.task" name="do_open" eval="[ref('project_task_16')]"/>
@@ -329,6 +340,7 @@
             <field name="priority">0</field>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Customer analysis + Architecture</field>
+            <field name="color">3</field>
         </record>
         <record id="project_task_186" model="project.task">
             <field name="sequence">15</field>
@@ -338,6 +350,7 @@
             <field name="user_id" eval="False"/>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Internal testing + Software Install</field>
+            <field name="color">4</field>
         </record>
         <record id="project_task_188" model="project.task">
             <field name="sequence">17</field>
