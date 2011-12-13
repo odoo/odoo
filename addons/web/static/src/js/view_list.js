@@ -1192,7 +1192,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     } else if (column.id in group.aggregates) {
                         var value = group.aggregates[column.id];
                         $('<td class="oe-number">')
-                            .text(openerp.web.format_value(value, column))
+                            .html(openerp.web.format_value(value, column))
                             .appendTo($row);
                     } else {
                         $row.append('<td>');
