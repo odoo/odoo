@@ -114,6 +114,7 @@ class project(osv.osv):
             if task.project_id: result[task.project_id.id] = True
         return result.keys()
 
+    #dead code
     def _get_project_work(self, cr, uid, ids, context=None):
         result = {}
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
@@ -360,7 +361,7 @@ def Project():
     working_days = %s
     resource = %s
 """       % (
-            project.id, 
+            project.id,
             project.date_start, working_days,
             '|'.join(['User_'+str(x) for x in puids])
         )
@@ -1100,7 +1101,7 @@ class account_analytic_account(osv.osv):
         if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
             vals['child_ids'] = []
         return super(account_analytic_account, self).create(cr, uid, vals, context=context)
-    
+
     def unlink(self, cr, uid, ids, *args, **kwargs):
         project_obj = self.pool.get('project.project')
         analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
