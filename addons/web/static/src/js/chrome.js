@@ -849,7 +849,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this.$secondary_menu.addClass(this.folded ? 'oe_folded' : 'oe_unfolded');
     },
     do_reload: function() {
-        this.rpc("/web/menu/load", {}, this.on_loaded);
+        return this.rpc("/web/menu/load", {}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.data = data;
@@ -1029,8 +1029,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.menu.start();
     },
     do_reload: function() {
-        this.session.session_restore();
-        this.menu.do_reload();
+        return $.when(this.session.session_restore(),this.menu.do_reload());
     },
     do_notify: function() {
         var n = this.notification;
@@ -1072,6 +1071,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
 
     on_logged_out: function() {
         $(window).unbind('hashchange', this.on_hashchange);
+        this.do_push_state({},true);
         if(this.action_manager)
             this.action_manager.stop();
         this.action_manager = null;
@@ -1100,13 +1100,14 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     do_action: function(action) {
         if(action.type === "ir.ui.menu") {
-            this.do_reload();
-            this.rpc('/web/menu/action', {'menu_id': action.menu_id}, this.menu.on_menu_action_loaded);
+            console.log(action);
+            this.do_reload().then(function () {
+                this.rpc('/web/menu/action', {'menu_id': action.menu_id}, this.menu.on_menu_action_loaded);
+            });
         }
     },
     do_about: function() {
     }
-
 });
 
 };
