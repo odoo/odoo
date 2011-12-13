@@ -25,6 +25,7 @@ openerp.point_of_sale = function(db) {
             return QWeb.render(template, ctx);
         };
     };
+    var _t = db.web._t;
 
     /*
      Local store access. Read once from localStorage upon construction and persist on every change.
@@ -1211,12 +1212,36 @@ openerp.point_of_sale = function(db) {
             });
         },
         changed_pending_operations: function () {
-            var operations = pos.get('pending_operations');
-            var number = operations.length;
-            this.synch_notification.on_change_nbr_pending(number);
+            this.synch_notification.on_change_nbr_pending(pos.get('pending_operations').length);
         },
         try_close: function() {
-            this.close();
+            pos.flush().then(_.bind(function() {
+                var close = _.bind(this.close, this);
+                if (pos.get('pending_operations').length > 0) {
+                    var confirm = false;
+                    $(QWeb.render('pos-close-warning')).dialog({
+                        resizable: false,
+                        height:160,
+                        modal: true,
+                        title: "Warning",
+                        buttons: {
+                            "Yes": function() {
+                                confirm = true;
+                                $( this ).dialog( "close" );
+                            },
+                            "No": function() {
+                                $( this ).dialog( "close" );
+                            }
+                        },
+                        close: function() {
+                            if (confirm)
+                                close();
+                        }
+                    });
+                } else {
+                    close();
+                }
+            }, this));
         },
         close: function() {
             this.stop();
