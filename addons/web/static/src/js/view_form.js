@@ -138,8 +138,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
     },
     on_record_loaded: function(record) {
-        var self = this,
-            deferred_stack = $.Deferred.queue();
+        var self = this, set_values = [];
         if (!record) {
             throw("Form: No record received");
         }
@@ -148,15 +147,12 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         _(this.fields).each(function (field, f) {
             field.reset();
             var result = field.set_value(self.datarecord[f] || false);
-            if (result && _.isFunction(result.promise)) {
-                deferred_stack.push(result);
-            }
+            set_values.push(result);
             $.when(result).then(function() {
                 field.validate();
             });
         });
-        deferred_stack.push('force resolution if no fields');
-        return deferred_stack.then(function() {
+        return $.when.apply(null, set_values).then(function() {
             if (!record.id) {
                 self.show_invalid = false;
                 // New record: Second pass in order to trigger the onchanges
