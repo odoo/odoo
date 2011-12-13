@@ -658,7 +658,7 @@ openerp.point_of_sale = function(db) {
      Shopping carts.
      */
     var OrderlineWidget = db.web.Widget.extend({
-        tagName: 'tr',
+        tag_name: 'tr',
         template_fct: qweb_template('pos-orderline-template'),
         init: function(parent, options) {
             this._super(parent);
