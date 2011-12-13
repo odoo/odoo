@@ -528,6 +528,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             return field.name === name;
         });
         if (!action) { return; }
+        if ('confirm' in action && !window.confirm(action.confirm)) {
+            return;
+        }
 
         var c = new openerp.web.CompoundContext();
         c.set_eval_context(_.extend({
