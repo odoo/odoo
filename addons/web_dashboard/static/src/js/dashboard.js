@@ -154,7 +154,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         if (action_attrs.domain) {
             action.domain = action_attrs.domain;
         }
-        var action_orig = _.extend({}, action);
+        var action_orig = _.extend({ flags : {} }, action);
 
         if (view_mode && view_mode != action.view_mode) {
             var action_view_mode = action.view_mode.split(',');
@@ -195,7 +195,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             var action_id = parseInt(action_attrs.creatable, 10);
             $action.parent().find('button.oe_dashboard_button_create').click(function() {
                 if (isNaN(action_id)) {
-                    action.flags.default_view = 'form';
+                    action_orig.flags.default_view = 'form';
                     self.do_action(action_orig);
                 } else {
                     self.rpc('/web/action/load', {
