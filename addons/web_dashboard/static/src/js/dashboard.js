@@ -397,6 +397,7 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.Widget.extend({
         this._super(parent);
     },
     start: function() {
+        // TODO menu hide
         var self = this;
         var domain = [['application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
         var ds = new openerp.web.DataSetSearch(this, 'ir.module.module',{},domain);
@@ -438,8 +439,8 @@ openerp.web.client_actions.add( 'board.application.installer', 'openerp.web_dash
 openerp.web_dashboard.ApplicationInstaller = openerp.web.Widget.extend({
     template: 'web_dashboard.ApplicationInstaller',
     start: function () {
+        // TODO menu hide
         var r = this._super();
-        //$('.secondary_menu', this.$element.closest('.openerp')).hide();
         this.action_manager = new openerp.web.ActionManager(this);
         this.action_manager.appendTo(this.$element.find('.oe_installer'));
         this.action_manager.do_action({

@@ -1057,7 +1057,13 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             })
         }
     },
-
+    on_logged_out: function() {
+        $(window).unbind('hashchange', this.on_hashchange);
+        this.do_push_state({},true);
+        if(this.action_manager)
+            this.action_manager.stop();
+        this.action_manager = null;
+    },
     bind_hashchange: function() {
         $(window).bind('hashchange', this.on_hashchange);
 
@@ -1068,15 +1074,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             this.action_manager.do_action({type: 'ir.actions.client', tag: 'default_home'});
         }
     },
-
-    on_logged_out: function() {
-        $(window).unbind('hashchange', this.on_hashchange);
-        this.do_push_state({},true);
-        if(this.action_manager)
-            this.action_manager.stop();
-        this.action_manager = null;
-    },
-
     on_hashchange: function(event) {
         var state = event.getState(true);
         if (!_.isEqual(this._current_state, state)) {
@@ -1084,7 +1081,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         }
         this._current_state = state;
     },
-
     do_push_state: function(state, overwrite) {
         if (!overwrite) {
             var hash = $.deparam.fragment(true);
@@ -1094,20 +1090,18 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this._current_state = _.clone(state);
         $.bbq.pushState(url);
     },
-
     on_menu_action: function(action) {
         this.action_manager.do_action(action);
     },
     do_action: function(action) {
         var self = this;
+        // TODO replace by client action menuclick 
         if(action.type === "ir.ui.menu") {
             this.do_reload().then(function () {
                 self.menu.on_menu_click(null, action.menu_id);
             });
         }
     },
-    do_about: function() {
-    }
 });
 
 };
