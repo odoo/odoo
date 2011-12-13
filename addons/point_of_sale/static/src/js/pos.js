@@ -61,25 +61,15 @@ openerp.point_of_sale = function(db) {
             this.flush_mutex = new $.Mutex();
             this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
+            this.set({'pending_operations': this.store.get('pending_operations', [])});
+            this.bind('change:pending_operations', _.bind(function(unused, val) {
+                this.store.set('pending_operations', val);
+            }, this));
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
                 this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
                 this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name']),
                 this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']))
                 .then(this.build_tree);
-        },
-        get: function(attribute) {
-            if (attribute === 'pending_operations') {
-                return this.store.get('pending_operations', []);
-            }
-            return Backbone.Model.prototype.get.call(this, attribute);
-        },
-        set: function(attributes, options) {
-            _.each(attributes, _.bind(function (value, attribute) {
-                if (attribute === 'pending_operations') {
-                    this.store.set('pending_operations', value);
-                }
-            }, this));
-            return Backbone.Model.prototype.set.call(this, attributes, options);
         },
         fetch: function(osvModel, fields, domain) {
             var dataSetSearch;
@@ -90,7 +80,7 @@ openerp.point_of_sale = function(db) {
             });
         },
         push: function(osvModel, record) {
-            var ops = this.get('pending_operations');
+            var ops = _.clone(this.get('pending_operations'));
             ops.push({model: osvModel, record: record});
             this.set({pending_operations: ops});
             return this.flush();
