@@ -2103,7 +2103,7 @@ class stock_move(osv.osv):
                      or move.location_id.company_id != move.location_dest_id.company_id):
                 journal_id, acc_src, acc_dest, acc_variation = self._get_accounting_data_for_valuation(cr, uid, move, dest_company_ctx)
                 reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, src_company_ctx)
-                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_src, acc_variation, reference_amount, reference_currency_id, context))]
+                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_dest, acc_variation, reference_amount, reference_currency_id, context))]
 
             move_obj = self.pool.get('account.move')
             for j_id, move_lines in account_moves:

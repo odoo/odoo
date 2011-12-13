@@ -39,9 +39,9 @@ class product_product(osv.osv):
         if not stock_input_acc:
             stock_input_acc = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id or False
 
-        stock_output_acc = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id or False
+        stock_output_acc = product_obj.property_account_creditor_price_difference and product_obj.property_account_creditor_price_difference.id or False
         if not stock_output_acc:
-            stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
+            stock_output_acc = product_obj.categ_id.property_account_creditor_price_difference_categ and product_obj.categ_id.property_account_creditor_price_difference_categ.id or False
 
         journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
         account_variation = product_obj.categ_id.property_stock_variation and product_obj.categ_id.property_stock_variation.id or False
