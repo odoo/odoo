@@ -20,7 +20,27 @@
   I synchronized segment manually to see all step of activity and process covered on this campaign.
 -
   !python {model: marketing.campaign.segment}: |
+    segment_id = self.browse(cr ,uid ,ref("marketing_campaign_segment0") ,context)
+    assert segment_id.date_next_sync, 'Next Synchronization date is not calculated.'
     self.synchroniz(cr, uid, [ref("marketing_campaign_segment0")])
+-
+  I cancel Marketing Workitems.
+-
+  !python {model: marketing.campaign.workitem}: |
+    ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
+    ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel'))])
+    self.button_cancel(cr, uid, ids)
+    record = self.browse(cr, uid, ids[0])
+    assert record.state == 'cancelled' or record.state == 'done' , 'Marketing Workitem shoud be in cancel state.'
+-
+  I set Marketing Workitems in draft state.
+-
+  !python {model: marketing.campaign.workitem}: |
+    ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
+    ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel'))])
+    self.button_draft(cr, uid, ids)
+    record = self.browse(cr, uid, ids[0])
+    assert record.state == 'todo' or record.state == 'done' , 'Marketing Workitem shoud be in draft state.'
 -
   I check followup detail of first activity.
 -
@@ -28,7 +48,9 @@
     ids = self.search(cr, uid, [('segment_id', '=', ref('marketing_campaign_segment0')),
     ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_0'))])
     assert ids, 'Followup item is not created for first activity.'
--  
+    work_item_id = self.browse(cr ,uid ,ids[0] ,context)
+    assert work_item_id.res_name, 'Resource Name is not defined.'
+-
   I process followup of first activity.
 -
   !python {model: marketing.campaign.workitem}: |
@@ -49,7 +71,7 @@
 -
   !python {model: res.partner}: |
     self.write(cr, uid, [ref("base.res_partner_agrolait")], {'credit_limit':41000}, context=context)
--  
+-
   I process followup of second activity after set draft.
 -
   !python {model: marketing.campaign.workitem}: |
@@ -71,7 +93,7 @@
 -
   !python {model: res.partner}: |
     self.write(cr, uid, [ref("base.res_partner_agrolait")], {'credit_limit':151000}, context=context)
--  
+-
   I process followup of third activity after set draft.
 -
   !python {model: marketing.campaign.workitem}: |
@@ -89,7 +111,27 @@
     ('campaign_id', '=', ref('marketing_campaign_openerppartnerchannel')), ('activity_id', '=', ref('marketing_campaign_activity_2'))])
     self.preview(cr, uid, ids)
 -
-  I close segmentation After completion of all activity. 
+  I cancel segmentation because of some activity.
+-
+  !workflow {model: marketing.campaign.segment, action: state_cancel_set, ref: marketing_campaign_segment0}
+-
+  I check the segmentation is canceled.
+-
+  !assert {model: marketing.campaign.segment, id: marketing_campaign_segment0}:
+    - state == 'cancelled'
+-
+  I reopen the segmentation.
+-
+  !workflow {model: marketing.campaign.segment, action: state_draft_set, ref: marketing_campaign_segment0}
+-
+  !workflow {model: marketing.campaign.segment, action: state_running_set, ref: marketing_campaign_segment0}
+-
+  I check the segment on Running mode after started.
+-
+  !assert {model: marketing.campaign.segment, id: marketing_campaign_segment0}:
+    - state == 'running'
+-
+  I close segmentation After completion of all activity.
 -
   !workflow {model: marketing.campaign.segment, action: state_done_set, ref: marketing_campaign_segment0}
 -
