@@ -32,26 +32,27 @@ class procurement_order(osv.osv):
     def check_produce_service(self, cr, uid, procurement, context=None):
         return True
 
+    def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
+        product_uom = self.pool.get('product.uom')
+        company_time_uom_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
+        if procurement.product_uom.id != company_time_uom_id:
+            planned_hours = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, company_time_uom_id)
+        else:
+            planned_hours = procurement.product_qty
+        return planned_hours
+
     def action_produce_assign_service(self, cr, uid, ids, context=None):
-        project_obj = self.pool.get('project.project')
-        uom_obj = self.pool.get('product.uom')
-        default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
+        project_task = self.pool.get('project.task')
+        
         for procurement in self.browse(cr, uid, ids, context=context):
             project_id = False
             if procurement.product_id.project_id:
                 project_id = procurement.product_id.project_id.id
             elif procurement.sale_line_id:
-                account_id = procurement.sale_line_id.order_id.project_id.id
-                if account_id:
-                    project_ids = project_obj.search(cr, uid, [('analytic_account_id', '=', account_id)])
-                    project_id = project_ids and project_ids[0] or False
-            if procurement.product_uom.id != default_uom:
-                planned_hours = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, default_uom)
-            else:
-                planned_hours = procurement.product_qty
-
-            self.write(cr, uid, [procurement.id], {'state': 'running'})
-            task_id = self.pool.get('project.task').create(cr, uid, {
+                project_id = procurement.sale_line_id.order_id.project_id.id
+            
+            planned_hours = self._convert_qty_company_hours(cr, uid, procurement, context=context)
+            task_id = project_task.create(cr, uid, {
                 'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
                 'date_deadline': procurement.date_planned,
                 'planned_hours':planned_hours,
@@ -60,12 +61,10 @@ class procurement_order(osv.osv):
                 'notes': procurement.note,
                 'procurement_id': procurement.id,
                 'description': procurement.note,
-                'date_deadline': procurement.date_planned,
                 'project_id':  project_id,
-                'state': 'draft',
                 'company_id': procurement.company_id.id,
             },context=context)
-            self.write(cr, uid, [procurement.id],{'task_id':task_id})
+            self.write(cr, uid, [procurement.id], {'task_id':task_id, 'state': 'running'}, context=context)
         return task_id
 
 procurement_order()
