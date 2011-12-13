@@ -1162,7 +1162,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     return column.id === group.grouped_on; });
                 try {
                     $group_column.html(openerp.web.format_cell(
-                        row_data, group_column, _t("Undefined")));
+                        row_data, group_column, _t("Undefined"), false));
                 } catch (e) {
                     $group_column.html(row_data[group_column.id].value);
                 }
