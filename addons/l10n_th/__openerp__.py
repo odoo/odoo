@@ -22,7 +22,7 @@
 {
     'name': 'Thailand - Accounting',
     'version': '1.0',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """
 Chart of Accounts for Thailand.
 ===============================
