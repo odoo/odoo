@@ -26,7 +26,13 @@ class res_groups(osv.osv):
     _columns = {
         'share': fields.boolean('Share Group', readonly=True,
                     help="Group created to set access rights for sharing data with some users.")
-     }
+    }
+
+    def __init__(self, pool, cr):
+        super(res_groups, self).__init__(pool, cr)
+        # add domain in get_groups_by_application()
+        self.groups_by_application_domain.append(('share', '=', False))
+
 res_groups()
 
 class res_users(osv.osv):
