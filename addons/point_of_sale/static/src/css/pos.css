@@ -487,3 +487,25 @@
     background-color: #D92A2A;
 }
 
+@media print {
+    #oe_header, #oe_menu, .point-of-sale #topheader, .point-of-sale #leftpane {
+        display: none;
+    }
+    .point-of-sale #content {
+        top: 0px;
+    }
+    .point-of-sale #rigthpane {
+        left: 0px;
+        background-color: white;
+    }
+    #receipt-screen header, #pos-finish-order {
+        display: none;
+    }
+    #receipt-screen {
+        text-align: left;
+    }
+    .pos-sale-ticket {
+        margin: 0;
+    }
+}
+
