@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
-    <data>
+    <data noupdate="1">
 
         <record id="hr.employee4" model="hr.employee">
             <field name="address_home_id" ref="base.res_partner_address_1"/>
@@ -31,6 +31,19 @@
             <field name="default_code">HA0</field>
             <field name="categ_id" ref="hr_expense.cat_expense"/>
             <field name="hr_expense_ok" eval="True" />
+        </record>
+        <record id="expenses0" model="hr.expense.expense">
+            <field name="name">Expenses</field>
+            <field name="date" eval="time.strftime('%Y-08-25')"/>
+        </record>
+        <record id="expenses_line0" model="hr.expense.line">
+            <field name="name">Travel Expenses</field>
+            <field name="date_value" eval="time.strftime('%Y-08-10')"/>
+            <field name="analytic_account" ref="account.analytic_consultancy"/>
+            <field name="expense_id" ref="expenses0"/>
+            <field eval="200.0" name="unit_amount"/>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field eval="1.0" name="unit_quantity"/>
         </record>
 
         <record id="sep_expenses" model="hr.expense.expense">

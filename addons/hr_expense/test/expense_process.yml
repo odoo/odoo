@@ -1,12 +1,5 @@
 -
-  I test the process of "Employee Expenses" by processing the expenses of an employee for September month
--
-  I check that state is 'Draft'.
--
-  !assert {model: hr.expense.expense, id: sep_expenses, severity: error, string: Expense should be in Draft state}:
-    - state == 'draft'
--
-  I change the state. 
+  In order to test the process of "Employee Expenses" by processing the expenses, I confirm Expense Bill of an employee for September month. 
 -
   !workflow {model: hr.expense.expense, action: confirm, ref: sep_expenses}
 -
@@ -40,6 +33,7 @@
     assert sep_expenses.invoice_id.type == 'in_invoice', "Invoice type is not supplier invoice"
     assert sep_expenses.invoice_id.amount_total == sep_expenses.amount,"Invoice total amount is not correspond with supplier invoice total"
     assert len(sep_expenses.invoice_id.invoice_line) == len(sep_expenses.line_ids),"Lines of Invoice and supplier invoice Line are not correspond"
+    #TODO: check invoice line details with Expenses lines
 -
   I pay the expenses.
 -
@@ -50,6 +44,12 @@
 -
   !assert {model: hr.expense.expense, id: sep_expenses, severity: error, string: Expense should be in Paid state}:
     - state == 'paid'
+-
+  I duplicate the expenses and cancel duplicated.
+-
+  !python {model: hr.expense.expense}: |
+    duplicate_id = self.copy(cr, uid, ref('sep_expenses'), context=context)
+    self.expense_canceled(cr, uid, [duplicate_id])
 -
   I print a report of the expenses.
 - 
