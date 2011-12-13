@@ -1016,9 +1016,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.menu = new openerp.web.Menu(this, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
 
-        this.url_internal_hashchange = false;
-        this.url_external_hashchange = false;
-        jQuery(window).bind('hashchange', this.on_url_hashchange);
+        this._current_state = null;
 
     },
     start: function() {
@@ -1081,7 +1079,10 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
 
     on_hashchange: function(event) {
         var state = event.getState(true);
-        this.action_manager.do_load_state(state);
+        if (!_.isEqual(this._current_state, state)) {
+            this.action_manager.do_load_state(state);
+        }
+        this._current_state = state;
     },
 
     do_push_state: function(state, overwrite) {
@@ -1090,6 +1091,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             state = _.extend({}, hash, state);
         }
         var url = '#' + $.param(state);
+        this._current_state = _.clone(state);
         $.bbq.pushState(url);
     },
 
