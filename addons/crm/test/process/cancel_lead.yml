@@ -1,0 +1,53 @@
+-
+  I cancel unqualified lead.
+-
+  !python {model: crm.lead}: |
+    self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+-
+  I check cancelled lead.
+-
+  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
+    - state == "cancel"
+-
+  I reset cancelled lead into unqualified lead.
+-
+  !python {model: crm.lead}: |
+    self.case_reset(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+-
+  I check unqualified lead after reset.
+-
+  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in draft state}:
+    - state == "draft"
+-
+  I put unqualified lead into pending.
+-
+  !python {model: crm.lead}: |
+    self.case_pending(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+-
+  I check status of pending lead.
+-
+  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in pending state}:
+    - state == "pending"
+-
+  I Escalate the Lead to Parent Team.
+-
+  !python {model: crm.lead}: |
+    self.case_escalate(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+-
+  I check lead escalate to Parent Team.
+-
+  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Escalate lead to parent team}:
+    - section_id.name == "Sales Department"
+-
+  I mark as lost the opportunity.
+-
+  !python {model: crm.lead}: |
+    self.case_mark_lost(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+-
+  I check opportunity after lost.
+-
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm_case_itisatelesalescampaign0'))
+    assert lead.state == 'done', "lead is not done state"
+    assert lead.stage_id.id == ref('crm.stage_lead6'), 'Stage is not changed!'
+    assert lead.probability == 0.0, 'Probability is wrong!'

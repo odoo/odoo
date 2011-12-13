@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Template: Quality Manual',
+    'name': 'Wiki: Quality Manual',
     'version': '1.0',
     'category': 'Knowledge Management',
     'complexity': "easy",

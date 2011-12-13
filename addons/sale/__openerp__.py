@@ -83,9 +83,11 @@ Dashboard for Sales Manager that includes:
         'stock_view.xml',
         'process/sale_process.xml',
         'board_sale_view.xml',
+        'edi/sale_order_action_data.xml',
     ],
     'demo_xml': ['sale_demo.xml'],
     'test': [
+        'test/edi_sale_order.yml',
         'test/data_test.yml',
         'test/manual_order_policy.yml',
         'test/prepaid_order_policy.yml',
@@ -100,6 +102,7 @@ Dashboard for Sales Manager that includes:
     ],
     'installable': True,
     'active': False,
+    'application': True,
     'certificate': '0058103601429',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

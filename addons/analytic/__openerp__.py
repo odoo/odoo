@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Analytic Account",
+    "name" : "Analytic Accounting",
     "version": "1.1",
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
-    "category" : "Hidden",
+    "category": 'Hidden/Dependency',
     "depends" : ["base", "decimal_precision"],
     "description": """
 Module for defining analytic accounting object.

@@ -12,65 +12,18 @@
     bank: base.res_bank_1
     bank_name: Reserve
 -
-  I select the journal for customer invoice
--
-  !python {model: account.invoice}: |
-    journal = self.onchange_journal_id(cr, uid, [], journal_id=ref('account.sales_journal'))
--
-  I select the partner for customer invoice
--
-  !python {model: account.invoice}: |
-    partner = self.onchange_partner_id(cr, uid, [], 'out_invoice', ref('base.res_partner_3'), date_invoice=False,
-      payment_term=ref('account.account_payment_term_advance'), partner_bank_id=ref('res_partner_bank_0'), company_id=ref('base.main_company'))
--
-  I select the company for invoice
--
-  !python {model: account.invoice}: |
-    company = self.onchange_company_id(cr, uid, [], ref('base.main_company'), False, 'out_invoice', [], ref('base.EUR'))
--
   I create a customer invoice
 -
-  !record {model: account.invoice, id: account_invoice_customer0}:
-    account_id: account.a_recv
-    address_contact_id: base.res_partner_address_zen
-    address_invoice_id: base.res_partner_address_zen
-    company_id: base.main_company
-    currency_id: base.EUR
-    date_invoice: !eval time.strftime('%Y-%m-%d')
+  !record {model: account.invoice, id: account_invoice_customer0, view: invoice_form}:
     payment_term: account.account_payment_term_advance
     partner_bank_id: res_partner_bank_0
     journal_id: account.sales_journal
     partner_id: base.res_partner_3
     reference_type: none
     name: 'Test Customer Invoice'
--
-  I select a product for invoice
--
-  !python {model: account.invoice.line}: |
-    product = self.product_id_change(cr, uid, [], ref("product.product_product_pc3"), False, qty=10.0, name='[PC3] Medium PC',
-      type='out_invoice', partner_id=ref('base.res_partner_3'), fposition_id=False, price_unit= 900.0, address_invoice_id=ref('base.res_partner_address_zen'),
-      currency_id=ref('base.EUR'), context={'lang': u'en_US', 'tz': False, 'type': 'out_invoice'}, company_id=ref('base.main_company'))
-    line = {}
-    line.update(product.get('value', {}))
-    line.update({
-        'quantity': 10.0,
-        'invoice_id': ref("account_invoice_customer0"),
-    })
-    invoice_line = self.create(cr, uid, line)
--
-  I select product Uos
--
-  !python {model: account.invoice.line}: |
-    inv_line_id = self.search(cr, uid, [('invoice_id','=',ref('account_invoice_customer0'))])
-    uos = self.uos_id_change(cr, uid, inv_line_id, ref("product.product_product_pc3"), ref('product.product_uom_unit'), qty=0, name='[PC3] Medium PC', type='out_invoice',
-      partner_id=ref('base.res_partner_3'), fposition_id=False, price_unit=False, address_invoice_id=ref('base.res_partner_address_zen'),
-      currency_id=ref('base.EUR'), context={'lang': u'en_US', 'tz': False, 'type': 'out_invoice'}, company_id=ref('base.main_company'))
--
-  I select the account for invoice line
--
-  !python {model: account.invoice.line}: |
-    inv_line_id = self.search(cr, uid, [('invoice_id','=',ref('account_invoice_customer0'))])
-    account = self.onchange_account_id(cr, uid, inv_line_id, False, ref('account.a_sale'))
+    invoice_line:
+      - product_id: product.product_product_pc3
+        quantity: 10.0
 -
   I manually assign tax on invoice
 -

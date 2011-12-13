@@ -25,7 +25,7 @@
     'version' : '1.0',
     'author' : 'OpenERP SA',
     'website' : 'http://www.openerp.com/',
-    'depends' : ['base', 'mail'],
+    'depends' : ['base', 'mail','plugin'],
     'category' : 'Customer Relationship Management',
     'description': '''
 This module provides the Outlook Plug-in.
@@ -33,7 +33,7 @@ This module provides the Outlook Plug-in.
 Outlook plug-in allows you to select an object that you’d like to add
 to your email and its attachments from MS Outlook. You can select a partner, a task,
 a project, an analytical account, or any other object and archive selected
-mail into email.messages with attachments.
+mail into mail.message with attachments.
       ''',
     'init_xml' : [],
     'demo_xml' : [],

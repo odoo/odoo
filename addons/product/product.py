@@ -171,7 +171,7 @@ class product_uom(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if 'category_id' in vals:
             for uom in self.browse(cr, uid, ids, context=context):
-                if uom.category_id != vals['category_id']:
+                if uom.category_id.id != vals['category_id']:
                     raise osv.except_osv(_('Warning'),_("Cannot change the category of existing UoM '%s'.") % (uom.name,))
         return super(product_uom, self).write(cr, uid, ids, vals, context=context)
 
@@ -334,7 +334,7 @@ class product_template(osv.osv):
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
         if uom_id:
             return {'value': {'uom_po_id': uom_id}}
-        return False
+        return {}
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'uom_po_id' in vals:

@@ -7,30 +7,18 @@
              <field name="type">form</field>
              <field name="arch" type="xml">
                 <form string="Document board">
-                     <hpaned position="100">
-                        <child1>
-                            <action
-                                string="New Files"
+                     <board style="2-1" >
+                        <column>
+                            <action string="New Files"
                                 name="%(document.action_view_all_document_tree1)d"
                                 view_mode="tree,form"/>
-                            <action
-                                string="File Size by Month"
+                        </column>
+                        <column>
+                            <action string="File Size by Month"
                                 name="%(document.action_view_size_month)d"
                                 view_mode="graph,tree"/>
-                        </child1>
-                        <child2>
-                            <action
-                                string="Files by Resource Type"
-                                name="%(document.action_view_document_by_resourcetype_graph)d"
-                                view_mode="graph,tree"
-                                />
-
-                            <action
-                                string="Files by Partner"
-                                name="%(document.action_view_files_by_partner)d"
-                                view_mode="graph,tree"/>
-                        </child2>
-                     </hpaned>
+                        </column>
+                     </board>
                  </form>
              </field>
          </record>
@@ -70,26 +58,23 @@
              <field name="type">form</field>
              <field name="arch" type="xml">
                 <form string="Document board">
-                     <hpaned position="100">
-                        <child1>
-                            <action
-                                string="Wall of Shame"
+                     <board style="2-1">
+                        <column>
+                            <action string="Wall of Shame"
                                 name="%(document.action_view_wall)d"
                                 view_mode="tree"/>
 
-                        </child1>
-                        <child2>
-                            <action
-                                string="Files by Users"
+                        </column>
+                        <column>
+                            <action string="Files by Users"
                                 name="%(document.action_view_user_graph)d"
                                 view_mode="graph,tree"/>
 
-                            <action
-                                string="Files by Month"
+                            <action string="Files by Month"
                                 name="%(document.action_view_files_by_month_graph)d"
                                 view_mode="graph,tree"/>
-                        </child2>
-                     </hpaned>
+                        </column>
+                     </board>
                  </form>
             </field>
         </record>

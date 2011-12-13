@@ -20,11 +20,11 @@
 #
 ##############################################################################
 {
-    "name" : "Romania - Chart of Accounts",
+    "name" : "Romania - Accounting",
     "version" : "1.1",
     "author" : "filsys",
     "website": "http://www.filsystem.ro",
-    "category" : "Localization/Account Charts",
+    "category" : "Localization",
     "depends" : ["account_chart", 'base_vat'],
     "description": """
 This is the module to manage the accounting chart, VAT structure and Registration Number for Romania in OpenERP.

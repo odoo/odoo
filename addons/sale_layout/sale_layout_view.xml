@@ -18,10 +18,8 @@
                                 <notebook>
                                     <page string="Order Line">
                                     <group colspan="4" col="5">
-                                        <field name="layout_type" on_change="onchange_sale_order_line_view(layout_type)"/>
+                                        <field colspan="3" name="layout_type" on_change="onchange_sale_order_line_view(layout_type)"/>
                                         <field name="sequence" groups="base.group_extended"/>
-                                    </group>
-                                    <group colspan="4" col="5">
                                         <field colspan="3"
                                             context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'shop':parent.shop_id,'uom':product_uom}"
                                             name="product_id"
@@ -46,7 +44,7 @@
                                             attrs="{'invisible':[('layout_type','!=','article')],'required':[('layout_type','not in',['title','text','subtotal','line','break'])]}"/>
 
                                         <field groups="product.group_uos" name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
-                                        <field groups="product.group_uos" name="product_uos"/>
+                                        <field groups="product.group_uos" name="product_uos" nolabel="1"/>
                                         <newline/>
 
                                         <field

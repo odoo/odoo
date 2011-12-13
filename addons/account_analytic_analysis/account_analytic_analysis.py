@@ -61,7 +61,7 @@ class account_analytic_account(osv.osv):
                     res[id][f] = [int(id * 1000000 + int(x[0])) for x in result]
             elif f == 'last_worked_invoiced_date':
                 for id in ids:
-                    res[id][f] = 0.0
+                    res[id][f] = False
                 if parent_ids:
                     cr.execute("SELECT account_analytic_line.account_id, MAX(date) \
                             FROM account_analytic_line \
@@ -74,8 +74,8 @@ class account_analytic_account(osv.osv):
                         res[account_id][f] = sum
                 for account in accounts:
                     for child in account.child_ids:
-                        if res[account.id].get(f, '') < res.get(child.id, {}).get(f, ''):
-                            res[account.id][f] = res.get(child.id, {}).get(f, '')
+                        if res[account.id][f] < res.get(child.id, {}).get(f):
+                            res[account.id][f] = res.get(child.id, {}).get(f, False)
             elif f == 'ca_to_invoice':
                 for id in ids:
                     res[id][f] = 0.0
@@ -123,7 +123,7 @@ class account_analytic_account(osv.osv):
                     res[id][f] = round(res.get(id, {}).get(f, 0.0), dp) + round(res2.get(id, 0.0), 2)
             elif f == 'last_invoice_date':
                 for id in ids:
-                    res[id][f] = ''
+                    res[id][f] = False
                 if parent_ids:
                     cr.execute ("SELECT account_analytic_line.account_id, \
                                 DATE(MAX(account_invoice.date_invoice)) \
@@ -137,11 +137,11 @@ class account_analytic_account(osv.osv):
                         res[account_id][f] = lid
                 for account in accounts:
                     for child in account.child_ids:
-                        if res[account.id][f] < res.get(child.id, {}).get(f, ''):
-                            res[account.id][f] = res.get(child.id, {}).get(f, '')
+                        if res[account.id][f] < res.get(child.id, {}).get(f):
+                            res[account.id][f] = res.get(child.id, {}).get(f, False)
             elif f == 'last_worked_date':
                 for id in ids:
-                    res[id][f] = ''
+                    res[id][f] = False
                 if parent_ids:
                     cr.execute("SELECT account_analytic_line.account_id, MAX(date) \
                             FROM account_analytic_line \
@@ -154,8 +154,8 @@ class account_analytic_account(osv.osv):
                         res[account_id][f] = lwd
                 for account in accounts:
                     for child in account.child_ids:
-                        if res[account.id][f] < res.get(child.id, {}).get(f, ''):
-                            res[account.id][f] = res.get(child.id, {}).get(f, '')
+                        if res[account.id][f] < res.get(child.id, {}).get(f):
+                            res[account.id][f] = res.get(child.id, {}).get(f, False)
             elif f == 'hours_qtt_non_invoiced':
                 for id in ids:
                     res[id][f] = 0.0
@@ -376,13 +376,11 @@ class account_analytic_account(osv.osv):
 
     def _is_overdue_quantity(self, cr, uid, ids, fieldnames, args, context=None):
         result = dict.fromkeys(ids, 0)
-
         for record in self.browse(cr, uid, ids, context=context):
-            if record.quantity == 0.0 and record.quantity_max == 0.0:
-                result[record.id] = 0
-            else:
+            if record.quantity_max > 0.0:
                 result[record.id] = int(record.quantity >= record.quantity_max)
-
+            else:
+                result[record.id] = 0
         return result
 
     def _get_analytic_account(self, cr, uid, ids, context=None):
@@ -408,25 +406,25 @@ class account_analytic_account(osv.osv):
         'ca_theorical': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Theoretical Revenue',
             help="Based on the costs you had on the project, what would have been the revenue if all these costs have been invoiced at the normal sale price provided by the pricelist.",
             digits_compute=dp.get_precision('Account')),
-        'hours_quantity': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Hours Tot',
-            help="Number of hours you spent on the analytic account (from timesheet). It computes on all journal of type 'general'."),
+        'hours_quantity': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Total Time',
+            help="Number of time you spent on the analytic account (from timesheet). It computes quantities on all journal of type 'general'."),
         'last_invoice_date': fields.function(_analysis_all, multi='analytic_analysis', type='date', string='Last Invoice Date',
             help="If invoice from the costs, this is the date of the latest invoiced."),
         'last_worked_invoiced_date': fields.function(_analysis_all, multi='analytic_analysis', type='date', string='Date of Last Invoiced Cost',
             help="If invoice from the costs, this is the date of the latest work or cost that have been invoiced."),
         'last_worked_date': fields.function(_analysis_all, multi='analytic_analysis', type='date', string='Date of Last Cost/Work',
             help="Date of the latest work done on this account."),
-        'hours_qtt_non_invoiced': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Uninvoiced Hours',
-            help="Number of hours (from journal of type 'general') that can be invoiced if you invoice based on analytic account."),
-        'hours_qtt_invoiced': fields.function(_hours_qtt_invoiced_calc, type='float', string='Invoiced Hours',
-            help="Number of hours that can be invoiced plus those that already have been invoiced."),
-        'remaining_hours': fields.function(_remaining_hours_calc, type='float', string='Remaining Hours',
-            help="Computed using the formula: Maximum Quantity - Hours Tot."),
+        'hours_qtt_non_invoiced': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Uninvoiced Time',
+            help="Number of time (hours/days) (from journal of type 'general') that can be invoiced if you invoice based on analytic account."),
+        'hours_qtt_invoiced': fields.function(_hours_qtt_invoiced_calc, type='float', string='Invoiced Time',
+            help="Number of time (hours/days) that can be invoiced plus those that already have been invoiced."),
+        'remaining_hours': fields.function(_remaining_hours_calc, type='float', string='Remaining Time',
+            help="Computed using the formula: Maximum Time - Total Time"),
         'remaining_ca': fields.function(_remaining_ca_calc, type='float', string='Remaining Revenue',
             help="Computed using the formula: Max Invoice Price - Invoiced Amount.",
             digits_compute=dp.get_precision('Account')),
-        'revenue_per_hour': fields.function(_revenue_per_hour_calc, type='float', string='Revenue per Hours (real)',
-            help="Computed using the formula: Invoiced Amount / Hours Tot.",
+        'revenue_per_hour': fields.function(_revenue_per_hour_calc, type='float', string='Revenue per Time (real)',
+            help="Computed using the formula: Invoiced Amount / Total Time",
             digits_compute=dp.get_precision('Account')),
         'real_margin': fields.function(_real_margin_calc, type='float', string='Real Margin',
             help="Computed using the formula: Invoiced Amount - Total Costs.",

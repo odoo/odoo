@@ -43,7 +43,6 @@
 
         <record model="ir.values" id="hr_timesheet_invoice_create_values">
             <field name="model_id" ref="model_account_analytic_line" />
-            <field name="object" eval="1" />
             <field name="name">Create Invoice</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_hr_timesheet_invoice_create'))" />

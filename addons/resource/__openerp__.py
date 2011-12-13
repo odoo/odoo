@@ -23,7 +23,7 @@
     "name" : "Resource",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category" : "Hidden",
+    "category" : "Hidden/Dependency",
     "website" : "http://www.openerp.com",
     "description": """
 Module for resource management.

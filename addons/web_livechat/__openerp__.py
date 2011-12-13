@@ -21,7 +21,7 @@
 {
     'name': 'Live Chat Support',
     'version': '2.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'complexity': "easy",
     'description': """
 Enable live chat support for those who have a maintenance contract.
@@ -47,3 +47,5 @@ Add "Support" button in header from where you can access OpenERP Support.
     'certificate': '0013762192410413',
     'images': ['static/src/img/web_livechat_support.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

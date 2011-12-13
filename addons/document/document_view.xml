@@ -372,7 +372,6 @@
         <field name="model" eval="'document.directory'"/>
         <field name="name">Browse Files</field>
         <field name="value" eval="'ir.actions.act_window,%d'%action_document_file_directory_form"/>
-        <field name="object" eval="True"/>
     </record>
 
     <record model="ir.ui.view" id="view_attachment_form_inherit">
@@ -414,6 +413,7 @@
     </record>
 
     <act_window domain="[('partner_id', '=', active_id)]"
+        context="{'default_partner_id': active_id}"
         id="act_res_partner_document" name="Related Documents"
         res_model="ir.attachment"
         src_model="res.partner"
@@ -421,6 +421,7 @@
 
     <act_window
         domain="[('parent_id', '=', active_id)]"
+        context="{'default_parent_id': active_id}"
     	id="zoom_directory" name="Related Documents"
         res_model="ir.attachment"
         src_model="document.directory"/>

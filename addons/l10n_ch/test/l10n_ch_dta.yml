@@ -6,7 +6,7 @@
  #   Creating 1 invoice    # 
 ###########################
 -
-  !record {model: account.invoice, id: dta_account_invoice}:
+  !record {model: account.invoice, id: dta_account_invoice, view: False}:
     company_id: base.main_company
     journal_id: account.bank_journal
     currency_id: base.EUR
@@ -25,7 +25,7 @@
 -
   I add an invoice line
 -
-  !record {model: account.invoice.line, id: dta_invoice_line}:
+  !record {model: account.invoice.line, id: dta_invoice_line, view: False}:
     account_id: account.a_expense
     name: '[PC1] Basic PC'
     price_unit: 700.0

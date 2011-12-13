@@ -8,16 +8,16 @@
             <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree toolbar="1" colors="red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic Accounts">
-                    <field name="code"/>
+                <tree toolbar="1" colors="red:state=='pending';grey:state in ('cancelled','close');blue:type=='view'" string="Analytic Accounts">
                     <field name="complete_name"/>
+                    <field name="code"/>
                     <field name="quantity"/>
-                    <field name="quantity_max"/>
                     <field name="date"/>
                     <field name="user_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="state" invisible="1"/>
+                    <field name="type" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -57,11 +57,10 @@
             <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree colors="blue:type == 'view';red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
+                <tree colors="red:state=='pending';grey:state in ('close','cancelled');blue:type=='view'" string="Analytic account" toolbar="1">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="quantity"/>
-                    <field name="quantity_max"/>
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
@@ -85,21 +84,24 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1" colspan="4"/>
                         <field name="code" select="1"/>
-                        <field name="parent_id" on_change="on_change_parent(parent_id)" groups="base.group_extended" domain="[('type','=','view')]"/>
+                        <field name="parent_id" on_change="on_change_parent(parent_id)" groups="base.group_extended"/>
                         <field name="company_id" on_change="on_change_company(company_id)" select="2" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
                         <field name="type" select="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Account Data">
-                            <field name="partner_id"/>
-                            <field name="contact_id"/>
-                            <field name="currency_id"/>
-                            <newline/>
-                            <field name="date_start"/>
-                            <field name="date"/>
-                            <newline/>
-                            <field name="quantity_max"/>
-                            <field name="user_id"/>
+                            <group colspan="2" col="2">
+                                <separator colspan="2" string="Contacts"/>
+                                <field name="partner_id" on_change="on_change_partner_id(partner_id)"/>
+                                <field name="contact_id"/>
+                                <field name="user_id"/>
+                            </group>
+                            <group colspan="2" col="2" name="contract">
+                                <separator colspan="2" string="Contract Data"/>
+                                <field name="date_start"/>
+                                <field name="date"/>
+                                <field name="quantity_max"/>
+                            </group>
                         </page>
                         <page string="Description">
                             <field colspan="4" name="description" nolabel="1"/>
@@ -191,7 +193,7 @@
                     <field name="journal_id" invisible="context.get('to_invoice', False)"/>
                     <field name="amount" sum="Total" invisible="context.get('to_invoice', False)"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)" invisible="not context.get('to_invoice', False)"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total Quantity" invisible="not context.get('to_invoice', False)"/>
+                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total Quantity"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" invisible="not context.get('to_invoice', False)"/>
                     <field domain="[('type','=','normal')]" name="account_id"/>
                     <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
@@ -255,7 +257,6 @@
             <field eval="'account.analytic.account'" name="model"/>
             <field name="name">Open Account Tree</field>
             <field eval="'ir.actions.act_window,%d'%action_account_tree1" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
         <record id="account_analytic_line_extended_form" model="ir.ui.view">

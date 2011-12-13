@@ -1,14 +1,9 @@
 openerp.point_of_sale = function(db) {
+    
     db.point_of_sale = {};
 
-    /* Some utility functions defined by Coffee script */
-    var __bind = function(fn, me) {
-        return function() {
-            return fn.apply(me, arguments);
-        };
-    };
-    var __hasProp = Object.prototype.hasOwnProperty;
     var __extends = function(child, parent) {
+        var __hasProp = Object.prototype.hasOwnProperty;
         for (var key in parent) {
             if (__hasProp.call(parent, key))
                 child[key] = parent[key];
@@ -22,15 +17,6 @@ openerp.point_of_sale = function(db) {
         child.__super__ = parent.prototype;
         return child;
     };
-    var __indexOf = Array.prototype.indexOf ||
-    function(item) {
-        for (var i = 0, l = this.length; i < l; i++) {
-            if (this[i] === item)
-                return i;
-        }
-        return -1;
-    };
-    /* end */
 
     var QWeb = db.web.qweb;
     QWeb.add_template("/point_of_sale/static/src/xml/pos.xml");
@@ -65,7 +51,7 @@ openerp.point_of_sale = function(db) {
      */
     var Pos = (function() {
         function Pos(session) {
-            this.build_tree = __bind(this.build_tree, this);
+            this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
                 this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
@@ -162,18 +148,12 @@ openerp.point_of_sale = function(db) {
     /* global variable */
     var pos;
 
-    var App, CashRegister, CashRegisterCollection, Category, CategoryCollection, CategoryView,
-    NumpadState, NumpadView, Order, OrderButtonView, OrderCollection, OrderView, Orderline,
-    OrderlineCollection, OrderlineView, PaymentButtonView, PaymentView, Paymentline,
-    PaymentlineCollection, PaymentlineView, PaypadView, Product, ProductCollection,
-    ProductListView, ProductView, ReceiptLineView, ReceiptView, Shop, ShopView, StepsView;
-
     /*
      ---
      Models
      ---
      */
-    CashRegister = (function() {
+    var CashRegister = (function() {
         __extends(CashRegister, Backbone.Model);
         function CashRegister() {
             CashRegister.__super__.constructor.apply(this, arguments);
@@ -181,7 +161,7 @@ openerp.point_of_sale = function(db) {
 
         return CashRegister;
     })();
-    CashRegisterCollection = (function() {
+    var CashRegisterCollection = (function() {
         __extends(CashRegisterCollection, Backbone.Collection);
         function CashRegisterCollection() {
             CashRegisterCollection.__super__.constructor.apply(this, arguments);
@@ -190,7 +170,7 @@ openerp.point_of_sale = function(db) {
         CashRegisterCollection.prototype.model = CashRegister;
         return CashRegisterCollection;
     })();
-    Product = (function() {
+    var Product = (function() {
         __extends(Product, Backbone.Model);
         function Product() {
             Product.__super__.constructor.apply(this, arguments);
@@ -198,7 +178,7 @@ openerp.point_of_sale = function(db) {
 
         return Product;
     })();
-    ProductCollection = (function() {
+    var ProductCollection = (function() {
         __extends(ProductCollection, Backbone.Collection);
         function ProductCollection() {
             ProductCollection.__super__.constructor.apply(this, arguments);
@@ -207,7 +187,7 @@ openerp.point_of_sale = function(db) {
         ProductCollection.prototype.model = Product;
         return ProductCollection;
     })();
-    Category = (function() {
+    var Category = (function() {
         __extends(Category, Backbone.Model);
         function Category() {
             Category.__super__.constructor.apply(this, arguments);
@@ -215,7 +195,7 @@ openerp.point_of_sale = function(db) {
 
         return Category;
     })();
-    CategoryCollection = (function() {
+    var CategoryCollection = (function() {
         __extends(CategoryCollection, Backbone.Collection);
         function CategoryCollection() {
             CategoryCollection.__super__.constructor.apply(this, arguments);
@@ -230,7 +210,7 @@ openerp.point_of_sale = function(db) {
      To add more of the same product, just update the quantity accordingly.
      The Order also contains payment information.
      */
-    Orderline = (function() {
+    var Orderline = (function() {
         __extends(Orderline, Backbone.Model);
         function Orderline() {
             Orderline.__super__.constructor.apply(this, arguments);
@@ -261,7 +241,7 @@ openerp.point_of_sale = function(db) {
         };
         return Orderline;
     })();
-    OrderlineCollection = (function() {
+    var OrderlineCollection = (function() {
         __extends(OrderlineCollection, Backbone.Collection);
         function OrderlineCollection() {
             OrderlineCollection.__super__.constructor.apply(this, arguments);
@@ -273,7 +253,7 @@ openerp.point_of_sale = function(db) {
     /*
      Every PaymentLine has all the attributes of the corresponding CashRegister.
      */
-    Paymentline = (function() {
+    var Paymentline = (function() {
         __extends(Paymentline, Backbone.Model);
         function Paymentline() {
             Paymentline.__super__.constructor.apply(this, arguments);
@@ -298,7 +278,7 @@ openerp.point_of_sale = function(db) {
         };
         return Paymentline;
     })();
-    PaymentlineCollection = (function() {
+    var PaymentlineCollection = (function() {
         __extends(PaymentlineCollection, Backbone.Collection);
         function PaymentlineCollection() {
             PaymentlineCollection.__super__.constructor.apply(this, arguments);
@@ -307,14 +287,15 @@ openerp.point_of_sale = function(db) {
         PaymentlineCollection.prototype.model = Paymentline;
         return PaymentlineCollection;
     })();
-    Order = (function() {
+    var Order = (function() {
         __extends(Order, Backbone.Model);
         function Order() {
             Order.__super__.constructor.apply(this, arguments);
         }
 
         Order.prototype.defaults = {
-            validated: false
+            validated: false,
+            step: 'products',
         };
         Order.prototype.initialize = function() {
             this.set({
@@ -333,8 +314,7 @@ openerp.point_of_sale = function(db) {
         };
         Order.prototype.validatedChanged = function() {
             if (this.get("validated") && !this.previous("validated")) {
-                $('.step-screen').hide();
-                $('#receipt-screen').show();
+                this.set({'step': 'receipt'});
             }
         }
         Order.prototype.generateUniqueId = function() {
@@ -386,11 +366,11 @@ openerp.point_of_sale = function(db) {
         Order.prototype.exportAsJSON = function() {
             var orderLines, paymentLines, result;
             orderLines = [];
-            (this.get('orderLines')).each(__bind( function(item) {
+            (this.get('orderLines')).each(_.bind( function(item) {
                 return orderLines.push([0, 0, item.exportAsJSON()]);
             }, this));
             paymentLines = [];
-            (this.get('paymentLines')).each(__bind( function(item) {
+            (this.get('paymentLines')).each(_.bind( function(item) {
                 return paymentLines.push([0, 0, item.exportAsJSON()]);
             }, this));
             result = {
@@ -406,7 +386,7 @@ openerp.point_of_sale = function(db) {
         };
         return Order;
     })();
-    OrderCollection = (function() {
+    var OrderCollection = (function() {
         __extends(OrderCollection, Backbone.Collection);
         function OrderCollection() {
             OrderCollection.__super__.constructor.apply(this, arguments);
@@ -415,7 +395,7 @@ openerp.point_of_sale = function(db) {
         OrderCollection.prototype.model = Order;
         return OrderCollection;
     })();
-    Shop = (function() {
+    var Shop = (function() {
         __extends(Shop, Backbone.Model);
         function Shop() {
             Shop.__super__.constructor.apply(this, arguments);
@@ -429,7 +409,7 @@ openerp.point_of_sale = function(db) {
             this.set({
                 cashRegisters: new CashRegisterCollection(pos.store.get('account.bank.statement')),
             });
-            return (this.get('orders')).bind('remove', __bind( function(removedOrder) {
+            return (this.get('orders')).bind('remove', _.bind( function(removedOrder) {
                 if ((this.get('orders')).isEmpty()) {
                     this.addAndSelectOrder(new Order);
                 }
@@ -452,7 +432,7 @@ openerp.point_of_sale = function(db) {
      The numpad handles both the choice of the property currently being modified
      (quantity, price or discount) and the edition of the corresponding numeric value.
      */
-    NumpadState = (function() {
+    var NumpadState = (function() {
         __extends(NumpadState, Backbone.Model);
         function NumpadState() {
             NumpadState.__super__.constructor.apply(this, arguments);
@@ -530,94 +510,78 @@ openerp.point_of_sale = function(db) {
      Views
      ---
      */
-    NumpadView = (function() {
-        __extends(NumpadView, Backbone.View);
-        function NumpadView() {
-            NumpadView.__super__.constructor.apply(this, arguments);
-        }
-
-        NumpadView.prototype.initialize = function(options) {
-            return this.state = options.state;
-        };
-        NumpadView.prototype.events = {
-            'click button#numpad-backspace': 'clickDeleteLastChar',
-            'click button#numpad-minus': 'clickSwitchSign',
-            'click button.number-char': 'clickAppendNewChar',
-            'click button.mode-button': 'clickChangeMode'
-        };
-        NumpadView.prototype.clickDeleteLastChar = function() {
+    var NumpadWidget = db.web.Widget.extend({
+        init: function(parent, options) {
+            this._super(parent);
+            this.state = options.state;
+        },
+        start: function() {
+            this.$element.find('button#numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
+            this.$element.find('button#numpad-minus').click(_.bind(this.clickSwitchSign, this));
+            this.$element.find('button.number-char').click(_.bind(this.clickAppendNewChar, this));
+            this.$element.find('button.mode-button').click(_.bind(this.clickChangeMode, this));
+        },
+        clickDeleteLastChar: function() {
             return this.state.deleteLastChar();
-        };
-        NumpadView.prototype.clickSwitchSign = function() {
+        },
+        clickSwitchSign: function() {
             return this.state.switchSign();
-        };
-        NumpadView.prototype.clickAppendNewChar = function(event) {
+        },
+        clickAppendNewChar: function(event) {
             var newChar;
             newChar = event.currentTarget.innerText;
             return this.state.appendNewChar(newChar);
-        };
-        NumpadView.prototype.clickChangeMode = function(event) {
+        },
+        clickChangeMode: function(event) {
             var newMode;
             $('.selected-mode').removeClass('selected-mode');
             $(event.currentTarget).addClass('selected-mode');
             newMode = event.currentTarget.attributes['data-mode'].nodeValue;
             return this.state.changeMode(newMode);
-        };
-        return NumpadView;
-    })();
+        }
+    });
     /*
      Gives access to the payment methods (aka. 'cash registers')
      */
-    PaypadView = (function() {
-        __extends(PaypadView, Backbone.View);
-        function PaypadView() {
-            PaypadView.__super__.constructor.apply(this, arguments);
-        }
-
-        PaypadView.prototype.initialize = function(options) {
-            return this.shop = options.shop;
-        };
-        PaypadView.prototype.events = {
-            'click button': 'performPayment'
-        };
-        PaypadView.prototype.performPayment = function(event) {
+    var PaypadWidget = db.web.Widget.extend({
+        init: function(parent, options) {
+            this._super(parent);
+            this.shop = options.shop;
+        },
+        start: function() {
+            this.$element.find('button').click(_.bind(this.performPayment, this));
+        },
+        performPayment: function(event) {
             var cashRegister, cashRegisterCollection, cashRegisterId;
             /* set correct view */
-            $('.step-screen').hide();
-            $('#payment-screen').show();
+            this.shop.get('selectedOrder').set({'step': 'payment'});
 
             cashRegisterId = event.currentTarget.attributes['cash-register-id'].nodeValue;
             cashRegisterCollection = this.shop.get('cashRegisters');
-            cashRegister = cashRegisterCollection.find(__bind( function(item) {
+            cashRegister = cashRegisterCollection.find(_.bind( function(item) {
                 return (item.get('id')) === parseInt(cashRegisterId, 10);
             }, this));
             return (this.shop.get('selectedOrder')).addPaymentLine(cashRegister);
-        };
-        PaypadView.prototype.render = function() {
-            $(this.el).empty();
-            return (this.shop.get('cashRegisters')).each(__bind( function(cashRegister) {
-                return $(this.el).append((new PaymentButtonView({
-                        model: cashRegister
-                    })).render());
+        },
+        render_element: function() {
+            this.$element.empty();
+            return (this.shop.get('cashRegisters')).each(_.bind( function(cashRegister) {
+                var button = new PaymentButtonWidget();
+                button.model = cashRegister;
+                button.appendTo(this.$element);
             }, this));
-        };
-        return PaypadView;
-    })();
-    PaymentButtonView = (function() {
-        __extends(PaymentButtonView, Backbone.View);
-        function PaymentButtonView() {
-            PaymentButtonView.__super__.constructor.apply(this, arguments);
         }
-
-        PaymentButtonView.prototype.template = qweb_template('pos-payment-button-template');
-        PaymentButtonView.prototype.render = function() {
-            return $(this.el).html(this.template({
+    });
+    var PaymentButtonWidget = db.web.Widget.extend({
+        template_fct: qweb_template('pos-payment-button-template'),
+        render_element: function() {
+            this.$element.html(this.template_fct({
                 id: this.model.get('id'),
                 name: (this.model.get('journal_id'))[1]
             }));
-        };
-        return PaymentButtonView;
-    })();
+            return this;
+        }
+    });
     /*
      There are 3 steps in a POS workflow:
      1. prepare the order (i.e. chose products, quantities etc.)
@@ -626,112 +590,108 @@ openerp.point_of_sale = function(db) {
      It should be possible to go back to any step as long as step 3 hasn't been completed.
      Modifying an order after validation shouldn't be allowed.
      */
-    StepsView = (function() {
-        __extends(StepsView, Backbone.View);
-        function StepsView() {
-            StepsView.__super__.constructor.apply(this, arguments);
-        }
-
-        StepsView.prototype.initialize = function(options) {
-            return this.step = "products";
-        };
-        StepsView.prototype.events = {
-            'click input.step-button': 'clickChangeStep'
-        };
-        StepsView.prototype.clickChangeStep = function(event) {
-            var newStep;
-            newStep = event.currentTarget.attributes['data-step'].nodeValue;
+    var StepsWidget = db.web.Widget.extend({
+        init: function(parent, options) {
+            this._super(parent);
+            this.shop = options.shop;
+            this.change_order();
+            this.shop.bind('change:selectedOrder', this.change_order, this);
+        },
+        change_order: function() {
+            if (this.selected_order) {
+                this.selected_order.unbind('change:step', this.change_step);
+            }
+            this.selected_order = this.shop.get('selectedOrder');
+            if (this.selected_order) {
+                this.selected_order.bind('change:step', this.change_step, this);
+            }
+            this.change_step();
+        },
+        change_step: function() {
+            var new_step = this.selected_order ? this.selected_order.get('step') : 'products';
             $('.step-screen').hide();
-            $('#' + newStep + '-screen').show();
-            return this.step = newStep;
-        };
-        return StepsView;
-    })();
+            $('#' + new_step + '-screen').show();
+        },
+    });
     /*
      Shopping carts.
      */
-    OrderlineView = (function() {
-        __extends(OrderlineView, Backbone.View);
-        function OrderlineView() {
-            OrderlineView.__super__.constructor.apply(this, arguments);
-        }
-
-        OrderlineView.prototype.tagName = 'tr';
-        OrderlineView.prototype.template = qweb_template('pos-orderline-template');
-        OrderlineView.prototype.initialize = function(options) {
-            this.model.bind('change', __bind( function() {
-                $(this.el).hide();
-                return this.render();
+    var OrderlineWidget = db.web.Widget.extend({
+        tagName: 'tr',
+        template_fct: qweb_template('pos-orderline-template'),
+        init: function(parent, options) {
+            this._super(parent);
+            this.model = options.model;
+            this.model.bind('change', _.bind( function() {
+                this.$element.hide();
+                this.render_element();
             }, this));
-            this.model.bind('remove', __bind( function() {
-                return $(this.el).remove();
+            this.model.bind('remove', _.bind( function() {
+                return this.$element.remove();
             }, this));
             this.order = options.order;
-            return this.numpadState = options.numpadState;
-        };
-        OrderlineView.prototype.events = {
-            'click': 'clickHandler'
-        };
-        OrderlineView.prototype.clickHandler = function() {
+            this.numpadState = options.numpadState;
+        },
+        start: function() {
+            this.$element.click(_.bind(this.clickHandler, this));
+        },
+        clickHandler: function() {
             this.numpadState.reset();
             return this.select();
-        };
-        OrderlineView.prototype.render = function() {
+        },
+        render_element: function() {
             this.select();
-            return $(this.el).html(this.template(this.model.toJSON())).fadeIn(400, function() {
+            return this.$element.html(this.template_fct(this.model.toJSON())).fadeIn(400, function() {
                 return $('#current-order').scrollTop($(this).offset().top);
             });
-        };
-        OrderlineView.prototype.select = function() {
+        },
+        select: function() {
             $('tr.selected').removeClass('selected');
-            $(this.el).addClass('selected');
+            this.$element.addClass('selected');
             return this.order.selected = this.model;
-        };
-        return OrderlineView;
-    })();
-    OrderView = (function() {
-        __extends(OrderView, Backbone.View);
-        function OrderView() {
-            OrderView.__super__.constructor.apply(this, arguments);
-        }
-
-        OrderView.prototype.initialize = function(options) {
+        },
+    });
+    var OrderWidget = db.web.Widget.extend({
+        init: function(parent, options) {
+            this._super(parent);
             this.shop = options.shop;
             this.numpadState = options.numpadState;
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
-            return this.bindOrderLineEvents();
-        };
-        OrderView.prototype.changeSelectedOrder = function() {
+            this.bindOrderLineEvents();
+        },
+        changeSelectedOrder: function() {
             this.currentOrderLines.unbind();
             this.bindOrderLineEvents();
-            return this.render();
-        };
-        OrderView.prototype.bindOrderLineEvents = function() {
+            return this.render_element();
+        },
+        bindOrderLineEvents: function() {
             this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
             this.currentOrderLines.bind('add', this.addLine, this);
-            this.currentOrderLines.bind('change', this.render, this);
+            this.currentOrderLines.bind('change', this.render_element, this);
             return this.currentOrderLines.bind('remove', this.render, this);
-        };
-        OrderView.prototype.addLine = function(newLine) {
-            $(this.el).append((new OrderlineView({
+        },
+        addLine: function(newLine) {
+            var line = new OrderlineWidget(null, {
                     model: newLine,
                     order: this.shop.get('selectedOrder'),
                     numpadState: this.numpadState
-                })).render());
+            });
+            line.appendTo(this.$element);
             return this.updateSummary();
-        };
-        OrderView.prototype.render = function() {
-            $(this.el).empty();
-            this.currentOrderLines.each(__bind( function(orderLine) {
-                return $(this.el).append((new OrderlineView({
+        },
+        render_element: function() {
+            this.$element.empty();
+            this.currentOrderLines.each(_.bind( function(orderLine) {
+                var line = new OrderlineWidget(null, {
                         model: orderLine,
                         order: this.shop.get('selectedOrder'),
                         numpadState: this.numpadState
-                    })).render());
+                });
+                line.appendTo(this.$element);
             }, this));
             return this.updateSummary();
-        };
-        OrderView.prototype.updateSummary = function() {
+        },
+        updateSummary: function() {
             var currentOrder, tax, total, totalTaxExcluded;
             currentOrder = this.shop.get('selectedOrder');
             total = currentOrder.getTotal();
@@ -740,31 +700,25 @@ openerp.point_of_sale = function(db) {
             $('#subtotal').html(totalTaxExcluded.toFixed(2)).hide().fadeIn();
             $('#tax').html(tax.toFixed(2)).hide().fadeIn();
             return $('#total').html(total.toFixed(2)).hide().fadeIn();
-        };
-        return OrderView;
-    })();
+        },
+    });
     /*
      "Products" step.
      */
-    CategoryView = (function() {
-        __extends(CategoryView, Backbone.View);
-        function CategoryView() {
-            CategoryView.__super__.constructor.apply(this, arguments);
-        }
-        
-        CategoryView.prototype.events = {
-            'click .oe-pos-categories-list a': 'changeCategory'
-        };
-
-        CategoryView.prototype.template = qweb_template('pos-category-template');
-        CategoryView.prototype.render = function(ancestors, children) {
+    var CategoryWidget = db.web.Widget.extend({
+        start: function() {
+            this.$element.find(".oe-pos-categories-list a").click(_.bind(this.changeCategory, this));
+        },
+        template_fct: qweb_template('pos-category-template'),
+        render_element: function() {
+            var self = this;
             var c;
-            return $(this.el).html(this.template({
+            this.$element.html(this.template_fct({
                 breadcrumb: (function() {
                     var _i, _len, _results;
                     _results = [];
-                    for (_i = 0, _len = ancestors.length; _i < _len; _i++) {
-                        c = ancestors[_i];
+                    for (_i = 0, _len = self.ancestors.length; _i < _len; _i++) {
+                        c = self.ancestors[_i];
                         _results.push(pos.categories[c]);
                     }
                     return _results;
@@ -772,88 +726,77 @@ openerp.point_of_sale = function(db) {
                 categories: (function() {
                     var _i, _len, _results;
                     _results = [];
-                    for (_i = 0, _len = children.length; _i < _len; _i++) {
-                        c = children[_i];
+                    for (_i = 0, _len = self.children.length; _i < _len; _i++) {
+                        c = self.children[_i];
                         _results.push(pos.categories[c]);
                     }
                     return _results;
                 })()
             }));
-        };
-        CategoryView.prototype.changeCategory = function(a) {
+        },
+        changeCategory: function(a) {
             var id = $(a.target).data("category-id");
-            this.trigger("changeCategory", id);
-        };
-        return CategoryView;
-    })();
-    ProductView = (function() {
-        __extends(ProductView, Backbone.View);
-        function ProductView() {
-            ProductView.__super__.constructor.apply(this, arguments);
-        }
-
-        ProductView.prototype.tagName = 'li';
-        ProductView.prototype.className = 'product';
-        ProductView.prototype.template = qweb_template('pos-product-template');
-        ProductView.prototype.events = {
-            'click a': 'addToOrder'
-        };
-        ProductView.prototype.initialize = function(options) {
-            return this.shop = options.shop;
-        };
-        ProductView.prototype.addToOrder = function(event) {
+            this.on_change_category(id);
+        },
+        on_change_category: function(id) {},
+    });
+    var ProductWidget = db.web.Widget.extend({
+        tag_name:'li',
+        template_fct: qweb_template('pos-product-template'),
+        init: function(parent, options) {
+            this._super(parent);
+            this.model = options.model;
+            this.shop = options.shop;
+        },
+        start: function(options) {
+            $("a", this.$element).click(_.bind(this.addToOrder, this));
+        },
+        addToOrder: function(event) {
             /* Preserve the category URL */
             event.preventDefault();
             return (this.shop.get('selectedOrder')).addProduct(this.model);
-        };
-        ProductView.prototype.render = function() {
-            return $(this.el).html(this.template(this.model.toJSON()));
-        };
-        return ProductView;
-    })();
-    ProductListView = (function() {
-        __extends(ProductListView, Backbone.View);
-        function ProductListView() {
-            ProductListView.__super__.constructor.apply(this, arguments);
-        }
-
-        ProductListView.prototype.tagName = 'ol';
-        ProductListView.prototype.className = 'product-list';
-        ProductListView.prototype.initialize = function(options) {
+        },
+        render_element: function() {
+            this.$element.addClass("product");
+            this.$element.html(this.template_fct(this.model.toJSON()));
+            return this;
+        },
+    });
+    var ProductListWidget = db.web.Widget.extend({
+        init: function(parent, options) {
+            this._super(parent);
+            this.model = options.model;
             this.shop = options.shop;
-            return (this.shop.get('products')).bind('reset', this.render, this);
-        };
-        ProductListView.prototype.render = function() {
-            $(this.el).empty();
-            (this.shop.get('products')).each(__bind( function(product) {
-                return $(this.el).append((new ProductView({
+            this.shop.get('products').bind('reset', this.render_element, this);
+        },
+        render_element: function() {
+            this.$element.empty();
+            (this.shop.get('products')).each(_.bind( function(product) {
+                var p = new ProductWidget(null, {
                         model: product,
                         shop: this.shop
-                    })).render());
+                });
+                p.appendTo(this.$element);
             }, this));
-            return $('#products-screen').append(this.el);
-        };
-        return ProductListView;
-    })();
+            return this;
+        },
+    });
     /*
      "Payment" step.
      */
-    PaymentlineView = (function() {
-        __extends(PaymentlineView, Backbone.View);
-        function PaymentlineView() {
-            PaymentlineView.__super__.constructor.apply(this, arguments);
-        }
-
-        PaymentlineView.prototype.tagName = 'tr';
-        PaymentlineView.prototype.className = 'paymentline';
-        PaymentlineView.prototype.template = qweb_template('pos-paymentline-template');
-        PaymentlineView.prototype.initialize = function() {
-            return this.model.bind('change', this.render, this);
-        };
-        PaymentlineView.prototype.events = {
-            'keyup input': 'changeAmount'
-        };
-        PaymentlineView.prototype.changeAmount = function(event) {
+    var PaymentlineWidget = db.web.Widget.extend({
+        tag_name: 'tr',
+        template_fct: qweb_template('pos-paymentline-template'),
+        init: function(parent, options) {
+            this._super(parent);
+            this.model = options.model;
+            this.model.bind('change', this.render_element, this);
+        },
+        start: function () {
+            this.$element.addClass('paymentline');
+            $('input', this.$element).keyup(_.bind(this.changeAmount, this));
+        },
+        changeAmount: function(event) {
             var newAmount;
             newAmount = event.currentTarget.value;
             if (newAmount && !isNaN(newAmount)) {
@@ -861,164 +804,151 @@ openerp.point_of_sale = function(db) {
                     amount: parseFloat(newAmount)
                 });
             }
-        };
-        PaymentlineView.prototype.render = function() {
-            return $(this.el).html(this.template({
+        },
+        render_element: function() {
+            this.$element.html(this.template_fct({
                 name: (this.model.get('journal_id'))[1],
                 amount: this.model.get('amount')
             }));
-        };
-        return PaymentlineView;
-    })();
-    PaymentView = (function() {
-        __extends(PaymentView, Backbone.View);
-        function PaymentView() {
-            PaymentView.__super__.constructor.apply(this, arguments);
-        }
-
-        PaymentView.prototype.initialize = function(options) {
+            return this;
+        },
+    });
+    var PaymentWidget = db.web.Widget.extend({
+        init: function(parent, options) {
+            this._super(parent);
+            this.model = options.model;
             this.shop = options.shop;
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindPaymentLineEvents();
-            return this.bindOrderLineEvents();
-        };
-        PaymentView.prototype.paymentLineList = function() {
-            return $(this.el).find('#paymentlines');
-        };
-        PaymentView.prototype.events = {
-            'click button#validate-order': 'validateCurrentOrder'
-        };
-        PaymentView.prototype.validateCurrentOrder = function() {
+            this.bindOrderLineEvents();
+        },
+        paymentLineList: function() {
+            return this.$element.find('#paymentlines');
+        },
+        start: function() {
+            $('button#validate-order', this.$element).click(_.bind(this.validateCurrentOrder, this));
+        },
+        validateCurrentOrder: function() {
             var callback, currentOrder;
             currentOrder = this.shop.get('selectedOrder');
-            callback = __bind( function() {
+            callback = _.bind(function() {
                 return currentOrder.set({
                     validated: true
                 });
             }, this);
-            return pos.push('pos.order', currentOrder.exportAsJSON(), callback);
-        };
-        PaymentView.prototype.bindPaymentLineEvents = function() {
+            pos.push('pos.order', currentOrder.exportAsJSON(), callback);
+        },
+        bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
             this.currentPaymentLines.bind('add', this.addPaymentLine, this);
-            this.currentPaymentLines.bind('change', this.render, this);
-            this.currentPaymentLines.bind('remove', this.render, this);
-            return this.currentPaymentLines.bind('all', this.updatePaymentSummary, this);
-        };
-        PaymentView.prototype.bindOrderLineEvents = function() {
+            this.currentPaymentLines.bind('all', this.updatePaymentSummary, this);
+        },
+        bindOrderLineEvents: function() {
             this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
-            return this.currentOrderLines.bind('all', this.updatePaymentSummary, this);
-        };
-        PaymentView.prototype.changeSelectedOrder = function() {
+            this.currentOrderLines.bind('all', this.updatePaymentSummary, this);
+        },
+        changeSelectedOrder: function() {
             this.currentPaymentLines.unbind();
             this.bindPaymentLineEvents();
             this.currentOrderLines.unbind();
             this.bindOrderLineEvents();
-            return this.render();
-        };
-        PaymentView.prototype.addPaymentLine = function(newPaymentLine) {
-            return this.paymentLineList().append((new PaymentlineView({
+            this.render_element();
+        },
+        addPaymentLine: function(newPaymentLine) {
+            var x = new PaymentlineWidget(null, {
                     model: newPaymentLine
-                })).render());
-        };
-        PaymentView.prototype.render = function() {
+                });
+            x.appendTo(this.paymentLineList());
+        },
+        render_element: function() {
             this.paymentLineList().empty();
-            this.currentPaymentLines.each(__bind( function(paymentLine) {
-                return this.paymentLineList().append((new PaymentlineView({
-                        model: paymentLine
-                    })).render());
+            this.currentPaymentLines.each(_.bind( function(paymentLine) {
+                var x = new PaymentlineWidget(null, {
+                    model: paymentLine
+                });
+                this.paymentLineList().append(x);
             }, this));
-            return this.updatePaymentSummary();
-        };
-        PaymentView.prototype.updatePaymentSummary = function() {
+            this.updatePaymentSummary();
+        },
+        updatePaymentSummary: function() {
             var currentOrder, dueTotal, paidTotal, remaining, remainingAmount;
             currentOrder = this.shop.get('selectedOrder');
             paidTotal = currentOrder.getPaidTotal();
             dueTotal = currentOrder.getTotal();
-            $(this.el).find('#payment-due-total').html(dueTotal.toFixed(2));
-            $(this.el).find('#payment-paid-total').html(paidTotal.toFixed(2));
+            this.$element.find('#payment-due-total').html(dueTotal.toFixed(2));
+            this.$element.find('#payment-paid-total').html(paidTotal.toFixed(2));
             remainingAmount = dueTotal - paidTotal;
             remaining = remainingAmount > 0 ? 0 : (-remainingAmount).toFixed(2);
-            return $('#payment-remaining').html(remaining);
-        };
-        return PaymentView;
-    })();
+            $('#payment-remaining').html(remaining);
+        },
+    });
     /*
      "Receipt" step.
      */
-    ReceiptLineView = (function() {
-        __extends(ReceiptLineView, Backbone.View);
-        function ReceiptLineView() {
-            ReceiptLineView.__super__.constructor.apply(this, arguments);
-        }
-
-        ReceiptLineView.prototype.tagName = 'tr';
-        ReceiptLineView.prototype.className = 'receiptline';
-        ReceiptLineView.prototype.template = qweb_template('pos-receiptline-template');
-        ReceiptLineView.prototype.initialize = function() {
-            return this.model.bind('change', this.render, this);
-        };
-        ReceiptLineView.prototype.render = function() {
-            return $(this.el).html(this.template(this.model.toJSON()));
-        };
-        return ReceiptLineView;
-    })();
-    ReceiptView = (function() {
-        __extends(ReceiptView, Backbone.View);
-        function ReceiptView() {
-            ReceiptView.__super__.constructor.apply(this, arguments);
-        }
-
-        ReceiptView.prototype.initialize = function(options) {
+    var ReceiptLineWidget = db.web.Widget.extend({
+        tag_name: 'tr',
+        template_fct: qweb_template('pos-receiptline-template'),
+        init: function(parent, options) {
+            this._super(parent);
+            this.model = options.model;
+            this.model.bind('change', this.render_element, this);
+        },
+        render_element: function() {
+            this.$element.addClass('receiptline');
+            this.$element.html(this.template_fct(this.model.toJSON()));
+        },
+    });
+    var ReceiptWidget = db.web.Widget.extend({
+        init: function(parent, options) {
+            this._super(parent);
+            this.model = options.model;
             this.shop = options.shop;
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindOrderLineEvents();
-            return this.bindPaymentLineEvents();
-        };
-        ReceiptView.prototype.events = {
-            "click button#pos-finish-order": "finishOrder"
-        };
-        ReceiptView.prototype.finishOrder = function() {
-            $('.step-screen').hide();
-            $('#products-screen').show();
+            this.bindPaymentLineEvents();
+        },
+        finishOrder: function() {
             this.shop.get('selectedOrder').destroy();
-        };
-        ReceiptView.prototype.receiptLineList = function() {
-            return $(this.el).find('#receiptlines');
-        };
-        ReceiptView.prototype.bindOrderLineEvents = function() {
+        },
+        receiptLineList: function() {
+            return this.$element.find('#receiptlines');
+        },
+        bindOrderLineEvents: function() {
             this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
             this.currentOrderLines.bind('add', this.addReceiptLine, this);
-            this.currentOrderLines.bind('change', this.render, this);
-            return this.currentOrderLines.bind('remove', this.render, this);
-        };
-        ReceiptView.prototype.bindPaymentLineEvents = function() {
+            this.currentOrderLines.bind('change', this.render_element, this);
+            this.currentOrderLines.bind('remove', this.render_element, this);
+        },
+        bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
-            return this.currentPaymentLines.bind('all', this.updateReceiptSummary, this);
-        };
-        ReceiptView.prototype.changeSelectedOrder = function() {
+            this.currentPaymentLines.bind('all', this.updateReceiptSummary, this);
+        },
+        changeSelectedOrder: function() {
             this.currentOrderLines.unbind();
             this.bindOrderLineEvents();
             this.currentPaymentLines.unbind();
             this.bindPaymentLineEvents();
-            return this.render();
-        };
-        ReceiptView.prototype.addReceiptLine = function(newOrderItem) {
-            this.receiptLineList().append((new ReceiptLineView({
+            this.render_element();
+        },
+        addReceiptLine: function(newOrderItem) {
+            var x = new ReceiptLineWidget(null, {
                     model: newOrderItem
-                })).render());
-            return this.updateReceiptSummary();
-        };
-        ReceiptView.prototype.render = function() {
-            this.receiptLineList().empty();
-            this.currentOrderLines.each(__bind( function(orderItem) {
-                return this.receiptLineList().append((new ReceiptLineView({
+            });
+            x.appendTo(this.receiptLineList());
+            this.updateReceiptSummary();
+        },
+        render_element: function() {
+            this.$element.html(qweb_template('pos-receipt-view'));
+            $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
+            this.currentOrderLines.each(_.bind( function(orderItem) {
+                var x = new ReceiptLineWidget(null, {
                         model: orderItem
-                    })).render());
+                });
+                x.appendTo(this.receiptLineList());
             }, this));
-            return this.updateReceiptSummary();
-        };
-        ReceiptView.prototype.updateReceiptSummary = function() {
+            this.updateReceiptSummary();
+        },
+        updateReceiptSummary: function() {
             var change, currentOrder, tax, total;
             currentOrder = this.shop.get('selectedOrder');
             total = currentOrder.getTotal();
@@ -1026,133 +956,131 @@ openerp.point_of_sale = function(db) {
             change = currentOrder.getPaidTotal() - total;
             $('#receipt-summary-tax').html(tax.toFixed(2));
             $('#receipt-summary-total').html(total.toFixed(2));
-            return $('#receipt-summary-change').html(change.toFixed(2));
-        };
-        return ReceiptView;
-    })();
-    OrderButtonView = (function() {
-        __extends(OrderButtonView, Backbone.View);
-        function OrderButtonView() {
-            OrderButtonView.__super__.constructor.apply(this, arguments);
-        }
-
-        OrderButtonView.prototype.tagName = 'li';
-        OrderButtonView.prototype.className = 'order-selector-button';
-        OrderButtonView.prototype.template = qweb_template('pos-order-selector-button-template');
-        OrderButtonView.prototype.initialize = function(options) {
+            $('#receipt-summary-change').html(change.toFixed(2));
+        },
+    });
+    var OrderButtonWidget = db.web.Widget.extend({
+        tag_name: 'li',
+        template_fct: qweb_template('pos-order-selector-button-template'),
+        init: function(parent, options) {
+            this._super(parent);
             this.order = options.order;
             this.shop = options.shop;
-            this.order.bind('destroy', __bind( function() {
-                return $(this.el).remove();
+            this.order.bind('destroy', _.bind( function() {
+                return this.stop();
             }, this));
-            return this.shop.bind('change:selectedOrder', __bind( function(shop) {
+            this.shop.bind('change:selectedOrder', _.bind( function(shop) {
                 var selectedOrder;
                 selectedOrder = shop.get('selectedOrder');
                 if (this.order === selectedOrder) {
-                    return this.setButtonSelected();
+                    this.setButtonSelected();
                 }
             }, this));
-        };
-        OrderButtonView.prototype.events = {
-            'click button.select-order': 'selectOrder',
-            'click button.close-order': 'closeOrder'
-        };
-        OrderButtonView.prototype.selectOrder = function(event) {
-            return this.shop.set({
+        },
+        start: function() {
+            $('button.select-order', this.$element).click(_.bind(this.selectOrder, this));
+            $('button.close-order', this.$element).click(_.bind(this.closeOrder, this));
+        },
+        selectOrder: function(event) {
+            this.shop.set({
                 selectedOrder: this.order
             });
-        };
-        OrderButtonView.prototype.setButtonSelected = function() {
+        },
+        setButtonSelected: function() {
             $('.selected-order').removeClass('selected-order');
-            return $(this.el).addClass('selected-order');
-        };
-        OrderButtonView.prototype.closeOrder = function(event) {
-            return this.order.destroy();
-        };
-        OrderButtonView.prototype.render = function() {
-            return $(this.el).html(this.template(this.order.toJSON()));
-        };
-        return OrderButtonView;
-    })();
-    ShopView = (function() {
-        __extends(ShopView, Backbone.View);
-        function ShopView() {
-            ShopView.__super__.constructor.apply(this, arguments);
+            this.$element.addClass('selected-order');
+        },
+        closeOrder: function(event) {
+            this.order.destroy();
+        },
+        render_element: function() {
+            this.$element.html(this.template_fct(this.order.toJSON()));
+            this.$element.addClass('order-selector-button');
         }
-
-        ShopView.prototype.initialize = function(options) {
+    });
+    var ShopWidget = db.web.Widget.extend({
+        init: function(parent, options) {
+            this._super(parent);
             this.shop = options.shop;
+        },
+        start: function() {
+            $('button#neworder-button', this.$element).click(_.bind(this.createNewOrder, this));
+
             (this.shop.get('orders')).bind('add', this.orderAdded, this);
             (this.shop.get('orders')).add(new Order);
             this.numpadState = new NumpadState({
                 shop: this.shop
             });
-            this.productListView = new ProductListView({
+            this.productListView = new ProductListWidget(null, {
                 shop: this.shop
             });
-            this.paypadView = new PaypadView({
+            this.productListView.$element = $("#products-screen-ol");
+            this.productListView.render_element();
+            this.productListView.start();
+            this.paypadView = new PaypadWidget(null, {
+                shop: this.shop
+            });
+            this.paypadView.$element = $('#paypad');
+            this.paypadView.render_element();
+            this.paypadView.start();
+            this.orderView = new OrderWidget(null, {
                 shop: this.shop,
-                el: $('#paypad')
+                numpadState: this.numpadState
             });
-            this.paypadView.render();
-            this.orderView = new OrderView({
+            this.orderView.$element = $('#current-order-content');
+            this.orderView.start();
+            this.paymentView = new PaymentWidget(null, {
+                shop: this.shop
+            });
+            this.paymentView.$element = $('#payment-screen');
+            this.paymentView.render_element();
+            this.paymentView.start();
+            this.receiptView = new ReceiptWidget(null, {
                 shop: this.shop,
-                numpadState: this.numpadState,
-                el: $('#current-order-content')
             });
-            this.paymentView = new PaymentView({
-                shop: this.shop,
-                el: $('#payment-screen')
+            this.receiptView.replace($('#receipt-screen'));
+            this.numpadView = new NumpadWidget(null, {
+                state: this.numpadState
             });
-            this.receiptView = new ReceiptView({
-                shop: this.shop,
-                el: $('#receipt-screen')
-            });
-            this.numpadView = new NumpadView({
-                state: this.numpadState,
-                el: $('#numpad')
-            });
-            return this.stepsView = new StepsView({
-                el: $('#steps')
-            });
-        };
-        ShopView.prototype.events = {
-            'click button#neworder-button': 'createNewOrder'
-        };
-        ShopView.prototype.createNewOrder = function() {
+            this.numpadView.$element = $('#numpad');
+            this.numpadView.start();
+            this.stepsView = new StepsWidget(null, {shop: this.shop});
+            this.stepsView.$element = $('#steps');
+            this.stepsView.start();
+        },
+        createNewOrder: function() {
             var newOrder;
             newOrder = new Order;
             (this.shop.get('orders')).add(newOrder);
-            return this.shop.set({
+            this.shop.set({
                 selectedOrder: newOrder
             });
-        };
-        ShopView.prototype.orderAdded = function(newOrder) {
+        },
+        orderAdded: function(newOrder) {
             var newOrderButton;
-            newOrderButton = new OrderButtonView({
+            newOrderButton = new OrderButtonWidget(null, {
                 order: newOrder,
                 shop: this.shop
             });
-            $('#orders').append(newOrderButton.render());
-            return newOrderButton.selectOrder();
-        };
-        return ShopView;
-    })();
-    App = (function() {
+            newOrderButton.appendTo($('#orders'));
+            newOrderButton.selectOrder();
+        },
+    });
+    var App = (function() {
         function App($element) {
             this.initialize($element);
         }
 
         App.prototype.initialize = function($element) {
             this.shop = new Shop;
-            this.shopView = new ShopView({
-                shop: this.shop,
-                el: $element
+            this.shopView = new ShopWidget(null, {
+                shop: this.shop
             });
-            this.categoryView = new CategoryView;
-            this.categoryView.bind("changeCategory", this.category, this);
+            this.shopView.$element = $element;
+            this.shopView.start();
+            this.categoryView = new CategoryWidget(null, 'products-screen-categories');
+            this.categoryView.on_change_category.add_last(_.bind(this.category, this));
             this.category();
-            return this.categoryView;
         };
         App.prototype.category = function(id) {
             var c, products;
@@ -1160,11 +1088,13 @@ openerp.point_of_sale = function(db) {
                 id = 0;
             }
             c = pos.categories[id];
-            $('#products-screen').html(this.categoryView.render(c.ancestors, c.children));
-            this.categoryView.delegateEvents();
+            this.categoryView.ancestors = c.ancestors;
+            this.categoryView.children = c.children;
+            this.categoryView.render_element();
+            this.categoryView.start();
             products = pos.store.get('product.product').filter( function(p) {
                 var _ref;
-                return _ref = p.pos_categ_id[0], __indexOf.call(c.subtree, _ref) >= 0;
+                return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
             });
             (this.shop.get('products')).reset(products);
             var self = this;
@@ -1206,12 +1136,17 @@ openerp.point_of_sale = function(db) {
             pos = new Pos(this.session);
 
             this.$element.find('#steps').buttonset();
+            
+            $('.oe_toggle_secondary_menu').hide();
+            $('.oe_footer').hide();
 
             return pos.ready.then( function() {
                 pos.app = new App(self.$element);
             });
         },
         stop: function() {
+            $('.oe_footer').show();
+            $('.oe_toggle_secondary_menu').show();
             pos = undefined;
             this._super();
         }

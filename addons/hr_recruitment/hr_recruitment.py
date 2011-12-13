@@ -181,6 +181,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
+        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
     }
 
     def _get_stage(self, cr, uid, context=None):
@@ -197,11 +198,19 @@ class hr_applicant(crm.crm_case, osv.osv):
         'color': 0,
     }
 
-    def _read_group_stage_ids(self, cr, uid, ids, domain, context=None):
-        context = context or {}
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        access_rights_uid = access_rights_uid or uid
         stage_obj = self.pool.get('hr.recruitment.stage')
-        stage_ids = stage_obj.search(cr, uid, ['|',('id','in',ids), ('department_id','=',False)], context=context)
-        return stage_obj.name_get(cr, uid, stage_ids, context=context)
+        order = stage_obj._order
+        if read_group_order == 'stage_id desc':
+            # lame hack to allow reverting search, should just work in the trivial case
+            order = "%s desc" % order
+        stage_ids = stage_obj._search(cr, uid, ['|',('id','in',ids),('department_id','=',False)], order=order,
+                                      access_rights_uid=access_rights_uid, context=context)
+        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
+        # restore order of the search
+        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        return result
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
@@ -356,10 +365,11 @@ class hr_applicant(crm.crm_case, osv.osv):
         self.write(cr, uid, [res_id], vals, context)
         return res_id
 
-    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
+    def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-
+        if vals is None:
+            vals = {}
         msg_from = msg['from']
         vals.update({
             'description': msg['body_text']
@@ -403,14 +413,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         return res
 
     def case_close(self, cr, uid, ids, *args):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        @param *args: Give Tuple Value
-        """
-        employee_obj = self.pool.get('hr.employee')
         res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("Applicant '%s' is being hired.") % name
@@ -418,29 +420,32 @@ class hr_applicant(crm.crm_case, osv.osv):
         return res
 
     def case_close_with_emp(self, cr, uid, ids, *args):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        @param *args: Give Tuple Value
-        """
-        employee_obj = self.pool.get('hr.employee')
-        partner_obj = self.pool.get('res.partner')
-        address_id = False
-        applicant = self.browse(cr, uid, ids)[0]
-        if applicant.partner_id:
-            address_id = partner_obj.address_get(cr, uid, [applicant.partner_id.id], ['contact'])['contact']
-        if applicant.job_id:
-            self.pool.get('hr.job').write(cr, uid, [applicant.job_id.id], {'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
-            emp_id = employee_obj.create(cr,uid,{'name': applicant.partner_name or applicant.name,
-                                                 'job_id': applicant.job_id.id,
-                                                 'address_home_id': address_id,
-                                                 'department_id': applicant.department_id.id
-                                                 })
-        else:
-            raise osv.except_osv(_('Warning!'),_('You must define Applied Job for Applicant !'))
-        return self.case_close(cr, uid, ids, *args)
+        hr_employee = self.pool.get('hr.employee')
+        model_data = self.pool.get('ir.model.data')
+        act_window = self.pool.get('ir.actions.act_window')
+        emp_id = False
+        for applicant in self.browse(cr, uid, ids):
+            address_id = False
+            if applicant.partner_id:
+                address_id = applicant.partner_id.address_get(['contact'])['contact']
+            if applicant.job_id:
+                applicant.job_id.write({'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
+                emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or applicant.name,
+                                                     'job_id': applicant.job_id.id,
+                                                     'address_home_id': address_id,
+                                                     'department_id': applicant.department_id.id
+                                                     })
+                self.case_close(cr, uid, [applicant.id], *args)
+            else:
+                raise osv.except_osv(_('Warning!'),_('You must define Applied Job for Applicant !'))
+
+        
+        action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
+        dict_act_window = act_window.read(cr, uid, action_id, [])
+        if emp_id:
+            dict_act_window['res_id'] = emp_id
+        dict_act_window['view_mode'] = 'form,tree'
+        return dict_act_window
 
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as draft
@@ -454,19 +459,19 @@ class hr_applicant(crm.crm_case, osv.osv):
         res = super(hr_applicant, self).case_reset(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
         return res
-    
-    def set_priority(self, cr, uid, ids, priority):
-        """Set lead priority
+
+    def set_priority(self, cr, uid, ids, priority, *args):
+        """Set applicant priority
         """
         return self.write(cr, uid, ids, {'priority' : priority})
 
     def set_high_priority(self, cr, uid, ids, *args):
-        """Set lead priority to high
+        """Set applicant priority to high
         """
         return self.set_priority(cr, uid, ids, '1')
 
     def set_normal_priority(self, cr, uid, ids, *args):
-        """Set lead priority to normal
+        """Set applicant priority to normal
         """
         return self.set_priority(cr, uid, ids, '3')
 

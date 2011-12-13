@@ -82,10 +82,10 @@
         'active_model': 'ir.ui.menu', 'journal_type': 'purchase', 'active_ids': [ref('menu_action_invoice_tree2')],
         'type': 'in_invoice', 'active_id': ref('menu_action_invoice_tree2')})
     except Exception, e:
-      assert e, _('Warning message has not been raised')
+      assert e, 'Warning message has not been raised'
 -
-  I verify that 'Period Sum' and 'Year sum' of account tax codes gets bind with the values
+  I verify that 'Period Sum' and 'Year sum' of the tax code are the expected values 
 -
   !python {model: account.tax.code}: |
     tax_code = self.browse(cr, uid, ref('tax_case'))
-    assert(tax_code.sum_period == 100.0 and tax_code.sum == 100.0), _("'Period Sum' and 'Year sum' has not been binded with the correct values")
+    assert(tax_code.sum_period == 100.0 and tax_code.sum == 100.0), "Incorrect 'Period Sum' / 'Year sum' expected twice 100.0, got period=%r and year=%r)" % (tax_code.sum_period,tax_code.sum)
