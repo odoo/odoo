@@ -44,10 +44,7 @@ Features
     "demo_xml": ["project_long_term_demo.xml"],
     "test": [
           'test/phase_process.yml',
-<<<<<<< TREE
           'test/task_process.yml',
-=======
->>>>>>> MERGE-SOURCE
     ],
     "update_xml": [
         "security/ir.model.access.csv",
