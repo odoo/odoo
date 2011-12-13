@@ -3,6 +3,7 @@ var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('list', 'openerp.web.ListView');
 openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView# */ {
+    _template: 'ListView',
     defaults: {
         // records can be selected one by one
         'selectable': true,
@@ -200,7 +201,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         this.setup_columns(this.fields_view.fields, grouped);
 
-        this.$element.html(QWeb.render("ListView", this));
+        this.$element.html(QWeb.render(this._template, this));
         // Head hook
         this.$element.find('.all-record-selector').click(function(){
             self.$element.find('.oe-record-selector input').prop('checked',

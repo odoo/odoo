@@ -481,6 +481,9 @@
     <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id"> - Edit SearchView</option>
     <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id"> - Edit Action</option>
 </t>
+<t t-extend="ViewManager" t-name="One2Many.viewmanager">
+    <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
+</t>
 
 <t t-name="Sidebar">
     <a class="toggle-sidebar"></a>
@@ -612,6 +615,18 @@
         </tr>
     </tfoot>
 </table>
+<t t-extend="ListView" t-name="One2Many.listview">
+    <t t-jquery="thead.ui-widget-header > tr:first">
+        this.removeAttr('t-if');
+    </t>
+    <t t-jquery="td.oe-actions">
+        this.removeAttr('t-if');
+        var $title = $(document.createElement('h3')).addClass('oe_view_title');
+        $title.append($(document.createElement('t')).attr(
+            't-esc', 'fields_view.arch.attrs.string'));
+        this.prepend($title);
+    </t>
+</t>
 <th t-name="Listview.navigation.button" t-if="options.pager !== false"
         class="oe-list-pager" t-att-colspan="columns_count">
     <button type="button" disabled="disabled"

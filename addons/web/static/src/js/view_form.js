@@ -2064,6 +2064,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.views = views;
 
         this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views);
+        this.viewmanager.template = 'One2Many.viewmanager';
         this.viewmanager.registry = openerp.web.views.clone({
             list: 'openerp.web.form.One2ManyListView',
             form: 'openerp.web.FormView',
@@ -2280,6 +2281,7 @@ openerp.web.form.One2ManyDataSet = openerp.web.BufferedDataSet.extend({
 });
 
 openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
+    _template: 'One2Many.listview',
     do_add_record: function () {
         if (this.options.editable) {
             this._super.apply(this, arguments);
