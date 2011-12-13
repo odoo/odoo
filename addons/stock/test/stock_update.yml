@@ -4,23 +4,23 @@
   I assign the location.
 -
   !record {model: stock.warehouse, id: stock.warehouse0}:
-    lot_stock_id: stock_location_stock
+    lot_stock_id: cold_location_1
 -
   I create stock production lot for product.
 -
   !record {model: stock.production.lot, id: stock_production_lot0}:
-    product_id: product.product_product_cpu2
+    product_id: product.product_product_ice
     date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     name: 0000001
 -
-  I take product and with the help of 'Change Product Quantity' wizard update the product stock.
+  I update product quantity and check the stock moves are properly done or not.
 -
   !python {model: product.product}: |
     change_qty = self.pool.get('stock.change.product.qty')
-    product = self.browse(cr, uid, ref('product.product_product_cpu2'))
-    ids = change_qty.create(cr, uid, {'location_id' : ref('stock_location_stock'), 'new_quantity': 5, 'product_id': product.id, 'prodlot_id': ref('stock.stock_production_lot0')})
+    product = self.browse(cr, uid, ref('product.product_product_ice'))
+    ids = change_qty.create(cr, uid, {'location_id' : ref('cold_location_1'), 'new_quantity': 5, 'product_id': product.id, 'prodlot_id': ref('stock.stock_production_lot0')})
     change_qty.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
-    assert product.qty_available == 5,'Product Quantity is not Updated'
+    assert product.qty_available == 5,"Product quantity is not updated."
 -
   I trace the stock production lot for product.
 -
@@ -30,55 +30,61 @@
   I check that physical inventory created.
 -
   !python {model: stock.inventory.line}: |
-    ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_cpu2'))])
+    ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_ice'))])
     inventory = self.browse(cr, uid, ids)[0]
-    assert inventory.product_qty == 5,'product Quantity is not correspond'
-    assert inventory.location_id.id == ref('stock_location_stock'), 'Location is not correspond'
-    assert inventory.state == 'done', 'State should be in Done state'
+    assert inventory.product_qty == 5,'Product quantity is not corresponding.'
+    assert inventory.location_id.id == ref('cold_location_1'), 'Location is not corresponding.'
+    assert inventory.state == 'done', "State should be in 'Done' state."
 -
   I check that stock moves created.
 -
   !python {model: stock.move}: |
-    ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_cpu2'))])
-    assert [x.state for x in self.browse(cr, uid, ids) if x.state == 'done'], 'stock moves should be done!'
-
+    ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_ice'))])
+    assert [x.state for x in self.browse(cr, uid, ids) if x.state == 'done'], 'Stock moves should be done!'
 -
-  In order to test the PDF reports defined on a stock, I print a Stock Overviewall(children) report.
+  I check stock moves of product.
 -
-  !python {model: stock.location}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.lot.stock.overview_all').create(cr, uid, [ref('stock.stock_location_stock')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'stock-overviewall'+format), 'wb+').write(data)
+  !python {model: stock.move}: |
+    ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_ice'))])
+    for move in self.browse(cr, uid, ids):
+      assert move.product_qty >= 1,"Product is not corresponding."
+      if move.location_id.id == ref('stock_physical_inventory0'):
+        assert move.location_dest_id.id == ref('convenience_location_stock'),"Destination location must be 'Convenient Store'"
+      if move.location_id.id == ref('convenience_location_stock'):
+        assert move.location_dest_id.id == ref('cold_location_1'),"Destination location must be 'Cold Storage' because the source location is 'Convenient Store'"
+      if move.location_id.id == ref('cold_location_1'):
+        assert move.location_dest_id.id == ref('stock_location_customers'),"Destination location must be 'Customers' because the source location is 'Cold Storage'"
 -
-  In order to test the PDF reports defined on stock inventory, I print a Stock Inventory Move report.
+  I create a move and scrap some quantities from it.
 -
-  !python {model: stock.inventory}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.stock.inventory.move').create(cr, uid, [ref('stock.stock_inventory_0')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'stock-stock_inventory_move.'+format), 'wb+').write(data)
+  !python {model: stock.move.scrap}: |
+    ids = self.pool.get('stock.move').search(cr, uid, [('product_id','=',ref('product.product_product_ice')),('location_dest_id','=',ref('stock_location_customers'))])
+    self.pool.get('stock.move').browse(cr, uid, ids)[0]
+    context = {'active_model':'stock.move', 'active_id':ids[0],'active_ids': ids}
+    values = self.default_get(cr, uid, ['location_id','product_id','product_uom','product_qty'], context)
+    scrap_ids = self.create(cr, uid, values)
+    self.move_scrap(cr, uid, [scrap_ids], context)
 -
-  In order to test the PDF reports defined on a stock, I print a stock overview report.
+  I check scraped move details.
 -
-  !python {model: stock.location}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.lot.stock.overview').create(cr, uid, [ref('stock.stock_location_14')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'stock-overview'+format), 'wb+').write(data)
+  !python {model: stock.move}: |
+    ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_ice')),('location_dest_id','=',ref('stock_location_customers'))])
+    for scrap_move in self.browse(cr, uid, ids):
+      if scrap_move.product_qty == 5.0 and scrap_move.location_dest_id == ref('stock_location_scrapped'):
+        assert scrap_move.state == 'done',"The scraped move should be in 'Done' state."
 -
-  In order to test the PDF reports defined on a stock, I print a Delivery order List report.
+  I split a move in to different quantities.
 -
-  !python {model: stock.picking}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.stock.picking.list').create(cr, uid, [ref('stock.stock_picking_1')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'stock-picking_list'+format), 'wb+').write(data)
--
-  In order to test the PDF reports defined on a stock, I print product stock Report.
--
-  !python {model: product.product}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.stock.product.history').create(cr, uid, [ref('product.product_product_pc1')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'stock-product_stock_report.'+format), 'wb+').write(data)
+  !python {model: stock.move }: |
+    import time
+    ids = self.pool.get('stock.move').search(cr, uid, [('product_id','=',ref('product.product_product_ice')),('location_dest_id','=',ref('stock_location_customers'))])
+    old_move=self.browse(cr,uid,ids)[0]
+    context = {'active_model': 'stock.move','active_id':ids[0],'active_ids': ids}
+    tracking_id = self.pool.get('stock.tracking').create(cr, uid, {'name': '0000007', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
+    self.write(cr, uid, ids, {'tracking_id': tracking_id})
+    split_obj=self.pool.get('stock.split.into')
+    split_id = split_obj.create(cr, uid, {'quantity': 1 })
+    split_obj.split(cr, uid, [split_id], context)
+    all_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_ice'))])
+    new_move=self.browse(cr,uid,all_ids)[-1]
+    assert not old_move.tracking_id == new_move.tracking_id,"After spliting the move, new move should be created with new pack."

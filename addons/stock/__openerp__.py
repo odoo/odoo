@@ -84,10 +84,9 @@ Thanks to the double entry management, the inventory controlling is powerful and
     'test': [
         'test/stock_physical_inventory.yml',
         'test/stock_update.yml',
-        'test/stock_chain_location.yml',
         'test/stock_demo_backorder.yml',
-        'test/delete_stock.yml',
         'test/cancel_stock.yml',
+        'test/stock_report.yml',
     ],
     'installable': True,
     'application': True,

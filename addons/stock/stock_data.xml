@@ -91,7 +91,6 @@
             <field name="location_id" ref="stock_location_locations"/>
         </record>
 
-
         <record id="journal_delivery" model="stock.journal">
             <field name="name">Delivery Orders</field>
         </record>
@@ -104,7 +103,6 @@
             <field name="chained_picking_type">out</field>
             <field name="chained_journal_id" ref="journal_delivery"/>
         </record>
-        
         <record id="stock_location_stock" model="stock.location">
             <field name="name">Stock</field>
             <field name="location_id" ref="stock_location_company"/>

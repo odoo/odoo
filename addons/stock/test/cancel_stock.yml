@@ -1,34 +1,35 @@
 -
-  In order to test the cancel stock. I start from cancelling the delivery order.
+  In order to test the cancel process in stock, I test by cancelling the delivery order.
 -
-  First, I create copies of delivery order.
+  I create two delivery orders to check cancel process with two different ways.
 -
   !python {model: stock.picking}: |
     stock = self.pool.get('stock.move')
     context.update({'active_id':ref('stock.stock_picking_1')})
     id1 = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
     id2 = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
-    context.update({'id1':id1,'id2':id2})
+    context.update({'id1': id1,'id2': id2})
 -
-  Directlly cancel the delivery order.
+  I cancel a delivery order which is in draft state.
 -
   !python {model: stock.picking}: |
     import netsvc
     wf_service = netsvc.LocalService("workflow")
     pick_id = context.get('id2')
+    picking = self.browse(cr, uid, pick_id, context=context)
     wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
-
+    assert picking.state == 'cancel',"Delivery order should be cancelled."
 -
-  Now, I cancel all related stock moves of delivery order so automatically delivery order goes to cancelled state.
+  Now, I cancel all related stock moves of another delivery order so automatically delivery order goes to cancelled state.
 -
   !python {model: stock.picking}: |
     import netsvc
     wf_service = netsvc.LocalService("workflow")
-    stock = self.pool.get('stock.move')
-    pick = self.browse(cr, uid, context.get('id1'))
-    move_ids = stock.search(cr, uid, [('picking_id','=',pick.name)])
-    for move in move_ids:
-      wf_service.trg_validate(uid, 'stock.move', move, 'action_confirm', cr)
-      stock.force_assign(cr, uid, move)
-      wf_service.trg_validate(uid, 'stock.move', move, 'action_cancel', cr)
+    move_obj = self.pool.get('stock.move')
+    picking = self.browse(cr, uid, context.get('id1'))
+    move_ids = move_obj.search(cr, uid, [('picking_id','=',picking.id)])
+    move_obj.action_confirm(cr, uid, move_ids)
+    move_obj.force_assign(cr, uid, move_ids)
+    move_obj.action_cancel(cr, uid, move_ids)
+    assert picking.state == 'cancel',"Delivery order should be cancelled."
 
