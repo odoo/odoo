@@ -32,7 +32,7 @@ class outlook_installer(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         data = super(outlook_installer, self).default_get(cr, uid, fields, context=context)
         data['doc_file'] = 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_outlook.html'
-        file = open(addons.get_module_resource('outlook','plugin','openerp-outlook-addin.exe'), 'r')
+        file = open(addons.get_module_resource('outlook','static','openerp-outlook-plugin','OpenERPOutlookPluginSetup','Release','OpenERPOutlookPluginSetup.msi'), 'r')
         data['plugin_file'] = base64.encodestring(file.read())
         return data
 
@@ -47,21 +47,18 @@ class outlook_installer(osv.osv_memory):
 
     _defaults = {
         'outlook' : True,
-        'name' : 'Openerp-Outlook-Addin.exe',
+        'name' : 'OpenERPOutlookPlugin.msi',
         'doc_name' : 'Installation Guide to OpenERP Outlook Plug-in.doc',
         'description' : """
 System requirements:
-    1.  Python 2.6+.
-    2.  Python for Windows extensions (PyWin32); this module must be installed for the appropriate version of Python.
-    3.1 With MS Outlook 2007, install the package Collaboration Data Objects, version 1.2.1, http://www.microsoft.com/downloads/en/details.aspx?FamilyID=2714320D-C997-4DE1-986F-24F081725D36
-    3.2 With MS Outlook 2003, install the builtin Collaboration Data Objects(CDO) while installing Outlook.
+    1.  MS Outlook 2005 or above.
+    2.  MS .Net Framework 3.5 .
+    
 
 Plugin installation:
-    1.  Save the executable plug-in file.
+    1.  Save the msi plug-in file.
     2.  Close the Outlook application if it is open.
-    3.  Run the executable plug-in file, and follow the given instructions.
-
-Please refer to the README file for dependencies (external link: openobject-addons/outlook/README).
+    3.  Run the executable plug-in file (OpenERPOutlookPlugin.msi).
 """
         }
 outlook_installer()

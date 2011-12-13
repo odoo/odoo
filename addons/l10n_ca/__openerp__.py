@@ -19,11 +19,11 @@
 #
 ##############################################################################
 {
-    "name" : "Canada - English and French - Canadian Chart of Accounts",
+    "name" : "Canada - Accounting",
     "version" : "1.0",
     "author" : "Savoir-faire Linux",
     "website" : "http://www.savoirfairelinux.com",
-    "category" : "Localization/Account Charts",
+    "category" : "Localization",
     "description": """
 This is the module to manage the English and French - Canadian accounting chart in OpenERP.
 ===========================================================================================

@@ -21,7 +21,7 @@
 
 
 {
-    "name" : "Manufacturing Resource Planning",
+    "name" : "MRP",
     "version" : "1.1",
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",

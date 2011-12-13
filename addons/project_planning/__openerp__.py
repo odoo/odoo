@@ -21,10 +21,10 @@
 
 
 {
-    'name': 'Planning Management Module',
+    'name': 'Resources Planing',
     'version': '1.0',
     "category": "Project Management",
-    'complexity': "easy",
+    'complexity': "expert",
     'description': """Keep track of your planning
 This module helps you to manage your plannings.
 ===============================================

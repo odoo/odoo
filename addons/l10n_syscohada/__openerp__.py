@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-    "name" : "OHADA - The accounting chart ",
+    "name" : "OHADA - Accounting",
     "version" : "1.0",
     "author" : "Baamtu Senegal",
-    "category" : "Localization/Account Charts",
+    "category" : "Localization",
     "description": """This module implements the accounting chart for OHADA area.
     It allows any company or association to manage its financial accounting.
     Countries that use OHADA are the following:

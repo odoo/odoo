@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Membership',
+    'name': 'Membership Management',
     'version': '0.1',
     'category': 'Association',
     'description': """

@@ -381,11 +381,12 @@ class pos_order(osv.osv):
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
 
         if not inv_ids: return {}
+        
         mod_obj = self.pool.get('ir.model.data')
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         res_id = res and res[1] or False
         return {
-            'name': _('PoS Invoices'),
+            'name': _('Customer Invoice'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': res_id,
