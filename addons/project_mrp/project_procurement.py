@@ -29,7 +29,7 @@ class procurement_order(osv.osv):
         'sale_line_id': fields.many2one('sale.order.line', 'Sale order line')
     }
 
-    def check_produce_service(self, cr, uid, procurement, context=None):
+    def check_produce_service(self, cr, uid, procurement, context=None):    
         return True
 
     def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
@@ -43,7 +43,6 @@ class procurement_order(osv.osv):
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
         project_task = self.pool.get('project.task')
-        
         for procurement in self.browse(cr, uid, ids, context=context):
             project_id = False
             if procurement.product_id.project_id:
