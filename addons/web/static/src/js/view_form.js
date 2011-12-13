@@ -138,8 +138,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
     },
     on_record_loaded: function(record) {
-        var self = this,
-            deferred_stack = $.Deferred.queue();
+        var self = this, set_values = [];
         if (!record) {
             throw("Form: No record received");
         }
@@ -148,15 +147,12 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         _(this.fields).each(function (field, f) {
             field.reset();
             var result = field.set_value(self.datarecord[f] || false);
-            if (result && _.isFunction(result.promise)) {
-                deferred_stack.push(result);
-            }
+            set_values.push(result);
             $.when(result).then(function() {
                 field.validate();
             });
         });
-        deferred_stack.push('force resolution if no fields');
-        return deferred_stack.then(function() {
+        return $.when.apply(null, set_values).then(function() {
             if (!record.id) {
                 self.show_invalid = false;
                 // New record: Second pass in order to trigger the onchanges
@@ -2064,6 +2060,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.views = views;
 
         this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views);
+        this.viewmanager.template = 'One2Many.viewmanager';
         this.viewmanager.registry = openerp.web.views.clone({
             list: 'openerp.web.form.One2ManyListView',
             form: 'openerp.web.FormView',
@@ -2280,6 +2277,7 @@ openerp.web.form.One2ManyDataSet = openerp.web.BufferedDataSet.extend({
 });
 
 openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
+    _template: 'One2Many.listview',
     do_add_record: function () {
         if (this.options.editable) {
             this._super.apply(this, arguments);

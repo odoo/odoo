@@ -20,7 +20,7 @@ openerp.web.str_to_datetime = function(str) {
     if ( !res ) {
         throw new Error("'" + str + "' is not a valid datetime");
     }
-    var obj = Date.parse(res[1] + " GMT");
+    var obj = Date.parseExact(res[1] + " UTC", 'yyyy-MM-dd HH:mm:ss zzz');
     if (! obj) {
         throw new Error("'" + str + "' is not a valid datetime");
     }
@@ -43,7 +43,7 @@ openerp.web.str_to_date = function(str) {
     if ( !res ) {
         throw new Error("'" + str + "' is not a valid date");
     }
-    var obj = Date.parse(str);
+    var obj = Date.parseExact(str + ' UTC', 'yyyy-MM-dd zzz');
     if (! obj) {
         throw new Error("'" + str + "' is not a valid date");
     }
@@ -66,7 +66,7 @@ openerp.web.str_to_time = function(str) {
     if ( !res ) {
         throw new Error("'" + str + "' is not a valid time");
     }
-    var obj = Date.parse(res[1]);
+    var obj = Date.parseExact(res[1] + ' UTC', 'HH:mm:ss zzz');
     if (! obj) {
         throw new Error("'" + str + "' is not a valid time");
     }

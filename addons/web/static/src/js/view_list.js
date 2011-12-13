@@ -3,6 +3,7 @@ var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('list', 'openerp.web.ListView');
 openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView# */ {
+    _template: 'ListView',
     defaults: {
         // records can be selected one by one
         'selectable': true,
@@ -200,7 +201,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         this.setup_columns(this.fields_view.fields, grouped);
 
-        this.$element.html(QWeb.render("ListView", this));
+        this.$element.html(QWeb.render(this._template, this));
         // Head hook
         this.$element.find('.all-record-selector').click(function(){
             self.$element.find('.oe-record-selector input').prop('checked',
@@ -334,6 +335,8 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 };
                 if (modifiers['tree_invisible']) {
                     column.invisible = '1';
+                } else {
+                    delete column.invisible;
                 }
             } else {
                 column.modifiers_for = noop;
@@ -528,6 +531,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             return field.name === name;
         });
         if (!action) { return; }
+        if ('confirm' in action && !window.confirm(action.confirm)) {
+            return;
+        }
 
         var c = new openerp.web.CompoundContext();
         c.set_eval_context(_.extend({
@@ -1156,20 +1162,18 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     return column.id === group.grouped_on; });
                 try {
                     $group_column.html(openerp.web.format_cell(
-                        row_data, group_column, _t("Undefined")));
+                        row_data, group_column, _t("Undefined"), false));
                 } catch (e) {
                     $group_column.html(row_data[group_column.id].value);
                 }
-                if (!group.length) {
+                if (group.length && group.openable) {
+                    // Make openable if not terminal group & group_by_no_leaf
+                    $group_column.prepend('<span class="ui-icon ui-icon-triangle-1-e" style="float: left;">');
+                } else {
                     // Kinda-ugly hack: jquery-ui has no "empty" icon, so set
                     // wonky background position to ensure nothing is displayed
                     // there but the rest of the behavior is ui-icon's
-                    $group_column.prepend(
-                        '<span class="ui-icon" style="float: left; background-position: 150px 150px">');
-                } else if (group.openable) {
-                    // Make openable if not terminal group & group_by_no_leaf
-                    $group_column
-                        .prepend('<span class="ui-icon ui-icon-triangle-1-e" style="float: left;">');
+                    $group_column.prepend('<span class="ui-icon" style="float: left; background-position: 150px 150px">');
                 }
             }
             self.indent($group_column, group.level);
@@ -1186,14 +1190,8 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                         // do not do anything
                     } else if (column.id in group.aggregates) {
                         var value = group.aggregates[column.id];
-                        var format;
-                        if (column.type === 'integer') {
-                            format = "%.0f";
-                        } else if (column.type === 'float') {
-                            format = "%.2f";
-                        }
                         $('<td class="oe-number">')
-                            .text(_.str.sprintf(format, value))
+                            .html(openerp.web.format_value(value, column))
                             .appendTo($row);
                     } else {
                         $row.append('<td>');
@@ -1279,6 +1277,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
         list.$current.sortable({
             axis: 'y',
             items: '> tr[data-id]',
+            containment: 'parent',
             stop: function (event, ui) {
                 var to_move = list.records.get(ui.item.data('id')),
                     target_id = ui.item.prev().data('id'),

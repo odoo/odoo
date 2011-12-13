@@ -25,6 +25,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
              '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
              '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#ffc900' ];
         this.color_map = {};
+        this.last_search = [];
     },
     start: function() {
         this._super();
@@ -106,9 +107,12 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         scheduler.config.api_date = "%Y-%m-%d %H:%i";
         scheduler.config.multi_day = true; //Multi day events are not rendered in daily and weekly views
         scheduler.config.start_on_monday = true;
+        scheduler.config.time_step = 30;
         scheduler.config.scroll_hour = 8;
         scheduler.config.drag_resize = true;
         scheduler.config.drag_create = true;
+        scheduler.config.mark_now = true;
+        scheduler.config.day_date = '%l %j';
 
         scheduler.init('openerp_scheduler', null, this.mode || 'month');
 
@@ -119,8 +123,12 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         scheduler.attachEvent('onEventAdded', this.do_create_event);
         scheduler.attachEvent('onEventDeleted', this.do_delete_event);
         scheduler.attachEvent('onEventChanged', this.do_save_event);
-        scheduler.attachEvent('onDblClick', this.do_edit_event);
-        scheduler.attachEvent('onBeforeLightbox', this.do_edit_event);
+        scheduler.attachEvent('onClick', this.do_edit_event);
+        scheduler.attachEvent('onLightbox', this.do_edit_event);
+
+        scheduler.attachEvent('onViewChange', function(mode, date) {
+            self.$element.removeClass('oe_cal_day oe_cal_week oe_cal_month').addClass('oe_cal_' + mode);
+        });
 
         if (this.options.sidebar) {
             this.mini_calendar = scheduler.renderCalendar({
@@ -162,9 +170,6 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         for (var e = 0; e < events.length; e++) {
             var evt = events[e];
             if (!evt[this.date_start]) {
-                if (this.session.debug) {
-                    this.do_warn("Start date is not defined for event :", evt['id']);
-                }
                 break;
             }
 
@@ -285,6 +290,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             data = this.get_event_data(event_obj),
             index = this.dataset.get_id_index(event_id);
         if (index != null) {
+            event_id = this.dataset.ids[index];
             this.dataset.write(event_id, data, {}, function() {
                 self.refresh_minical();
             });
@@ -306,17 +312,23 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         var index = this.dataset.get_id_index(event_id);
         if (index !== null) {
             this.dataset.index = index;
-            this.form_dialog.form.do_show().then(function() {
-                self.form_dialog.open();
-            });
-            return false;
+            this.do_switch_view('page');
         } else if (scheduler.getState().mode === 'month') {
-            this.do_create_event_with_formdialog(event_id);
-            // TODO: check dhtmlxscheduler problem here. At this line, scheduler
-            // event 'onEventChanged' bound to this.do_save_event() won't be fired !;
-            return false;
+            var event_obj = scheduler.getEvent(event_id);
+            if (event_obj._length === 1) {
+                event_obj['start_date'].addHours(8);
+                event_obj['end_date'] = new Date(event_obj['start_date']);
+                event_obj['end_date'].addHours(1);
+            }
+            this.do_create_event_with_formdialog(event_id, event_obj);
+            // return false;
+            // Theorically, returning false should prevent the lightbox to open.
+            // It works, but then the scheduler is in a buggy state where drag'n drop
+            // related internal Event won't be fired anymore.
+            // I tried scheduler.editStop(event_id); but doesn't work either
+            // After losing one hour on this, here's a quick and very dirty fix :
+            $(".dhx_cancel_btn").click();
         }
-        return true;
     },
     get_event_data: function(event_obj) {
         var data = {
@@ -333,10 +345,14 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         return data;
     },
     do_search: function(domain, context, group_by) {
-        var self = this;
+        var self = this
+        if (!domain) {
+            this.do_search.apply(this, this.last_search);
+        } else {
+            this.last_search = [domain, context, group_by];
+        }
         scheduler.clearAll();
         $.when(this.has_been_loaded).then(function() {
-            // TODO: handle non-empty results.group_by with read_group
             self.dataset.read_slice(_.keys(self.fields), {
                 offset: 0,
                 limit: self.limit

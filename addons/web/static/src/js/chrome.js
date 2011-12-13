@@ -602,7 +602,7 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
      */
     do_login: function (db, login, password) {
         var self = this;
-        this.session.session_login(db, login, password, function() {
+        this.session.session_authenticate(db, login, password, function() {
             if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
                     if(self.remember_credentials) {
@@ -838,7 +838,6 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this._super(parent, element_id);
         this.secondary_menu_id = secondary_menu_id;
         this.$secondary_menu = $("#" + secondary_menu_id);
-        this.$secondary_menu.hide();
         this.menu = false;
         this.folded = false;
         if (window.localStorage) {
@@ -850,7 +849,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this.$secondary_menu.addClass(this.folded ? 'oe_folded' : 'oe_unfolded');
     },
     do_reload: function() {
-        this.rpc("/web/menu/load", {}, this.on_loaded);
+        return this.rpc("/web/menu/load", {}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.data = data;
@@ -912,9 +911,6 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         sub_menu_visible = $sub_menu.is(':visible');
         this.$secondary_menu.find('.oe_secondary_menu').hide();
 
-        if (this.$secondary_menu.hasClass('oe_folded')) {
-            this.$secondary_menu.show();
-        }
         $('.active', this.$element.add(this.$secondary_menu)).removeClass('active');
         $main_menu.add($clicked_menu).add($sub_menu).addClass('active');
 
@@ -1009,11 +1005,10 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.session.on_session_valid.add_last(this.header.do_update);
         this.session.on_session_invalid.add_last(this.header.do_update);
         this.session.on_session_valid.add_last(this.on_logged);
+        this.session.on_session_invalid.add_last(this.on_logged_out);
 
 
-        this.url_internal_hashchange = false;
-        this.url_external_hashchange = false;
-        jQuery(window).bind('hashchange', this.on_url_hashchange);
+        this._current_state = null;
 
     },
     start: function() {
@@ -1042,8 +1037,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         });
     },
     do_reload: function() {
-        this.session.session_restore();
-        this.menu.do_reload();
+        return $.when(this.session.session_restore(),this.menu.do_reload());
     },
     do_notify: function() {
         var n = this.notification;
@@ -1058,91 +1052,64 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         if(this.action_manager)
             this.action_manager.stop();
         this.action_manager = new openerp.web.ActionManager(this);
+        this.action_manager.do_push_state.add(this.do_push_state);
         this.action_manager.appendTo($("#oe_app"));
-        this.action_manager.do_url_set_hash.add_last(this.do_url_set_hash);
 
-        // if using saved actions, load the action and give it to action manager
-        var parameters = jQuery.deparam(jQuery.param.querystring());
-        if (parameters["s_action"] != undefined) {
-            var key = parseInt(parameters["s_action"], 10);
-            var self = this;
-            this.rpc("/web/session/get_session_action", {key:key}, function(action) {
-                self.action_manager.do_action(action);
-            });
-        } else if (openerp._modules_loaded) { // TODO: find better option than this
-            this.load_url_state()
+        if (openerp._modules_loaded) { // TODO: find better option than this
+            this.bind_hashchange();
         } else {
-            this.session.on_modules_loaded.add({
-                callback: $.proxy(this, 'load_url_state'),
+            this.session.on_modules_loaded.add({        // XXX what about a $.Deferred ?
+                callback: $.proxy(this, 'bind_hashchange'),
                 unique: true,
                 position: 'last'
             })
         }
     },
-    /**
-     * Loads state from URL if any, or checks if there is a home action and
-     * loads that, assuming we're at the index
-     */
-    load_url_state: function () {
-        var self = this;
-        // TODO: add actual loading if there is url state to unpack, test on window.location.hash
-        // not logged in
-        if (!this.session.uid) { return; }
-        var ds = new openerp.web.DataSetSearch(this, 'res.users');
-        ds.read_ids([this.session.uid], ['action_id'], function (users) {
-            var home_action = users[0].action_id;
-            if (!home_action) {
-                self.default_home();
-                return;
-            }
-            self.execute_home_action(home_action[0], ds);
-        })
+    on_logged_out: function() {
+        $(window).unbind('hashchange', this.on_hashchange);
+        this.do_push_state({},true);
+        if(this.action_manager)
+            this.action_manager.stop();
+        this.action_manager = null;
     },
-    default_home: function () {
-    },
-    /**
-     * Bundles the execution of the home action
-     *
-     * @param {Number} action action id
-     * @param {openerp.web.DataSet} dataset action executor
-     */
-    execute_home_action: function (action, dataset) {
-        var self = this;
-        this.rpc('/web/action/load', {
-            action_id: action,
-            context: dataset.get_context()
-        }, function (meh) {
-            var action = meh.result;
-            action.context = _.extend(action.context || {}, {
-                active_id: false,
-                active_ids: [false],
-                active_model: dataset.model
-            });
-            self.action_manager.do_action(action);
-        });
-    },
-    do_url_set_hash: function(url) {
-        if(!this.url_external_hashchange) {
-            this.url_internal_hashchange = true;
-            jQuery.bbq.pushState(url);
-        }
-    },
-    on_url_hashchange: function() {
-        if(this.url_internal_hashchange) {
-            this.url_internal_hashchange = false;
+    bind_hashchange: function() {
+        $(window).bind('hashchange', this.on_hashchange);
+
+        var state = $.bbq.getState(true);
+        if (! _.isEmpty(state)) {
+            $(window).trigger('hashchange');
         } else {
-            var url = jQuery.deparam.fragment();
-            this.url_external_hashchange = true;
-            this.action_manager.on_url_hashchange(url);
-            this.url_external_hashchange = false;
+            this.action_manager.do_action({type: 'ir.actions.client', tag: 'default_home'});
         }
+    },
+    on_hashchange: function(event) {
+        var state = event.getState(true);
+        if (!_.isEqual(this._current_state, state)) {
+            this.action_manager.do_load_state(state);
+        }
+        this._current_state = state;
+    },
+    do_push_state: function(state, overwrite) {
+        if (!overwrite) {
+            var hash = $.deparam.fragment(true);
+            state = _.extend({}, hash, state);
+        }
+        var url = '#' + $.param(state);
+        this._current_state = _.clone(state);
+        $.bbq.pushState(url);
     },
     on_menu_action: function(action) {
         this.action_manager.do_action(action);
     },
-    do_about: function() {
-    }
-
+    do_action: function(action) {
+        var self = this;
+        // TODO replace by client action menuclick 
+        if(action.type === "ir.ui.menu") {
+            this.do_reload().then(function () {
+                self.menu.on_menu_click(null, action.menu_id);
+            });
+        }
+    },
 });
 
 };

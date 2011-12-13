@@ -527,10 +527,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     session_is_valid: function() {
         return this.uid;
     },
-    session_login: function(db, login, password, success_callback) {
+    session_authenticate: function(db, login, password, success_callback) {
         var self = this;
-        var params = { db: db, login: login, password: password };
-        return this.rpc("/web/session/login", params, function(result) {
+        var base_location = document.location.protocol + '//' + document.location.host;
+        var params = { db: db, login: login, password: password, base_location: base_location };
+        return this.rpc("/web/session/authenticate", params, function(result) {
             _.extend(self, {
                 session_id: result.session_id,
                 uid: result.uid,
@@ -545,7 +546,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         //}).done(success_callback);
         });
     },
-    login: function() { this.session_login.apply(this, arguments); },
+    login: function() { this.session_authenticate.apply(this, arguments); },
     /**
      * Reloads uid and session_id from local storage, if they exist
      */
@@ -1065,6 +1066,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         }
         return false;
     },
+
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
@@ -1177,6 +1179,48 @@ openerp.web.qweb.format_text_node = function(s) {
 /** Setup default connection */
 openerp.connection = new openerp.web.Connection();
 openerp.web.qweb.default_dict['__debug__'] = openerp.connection.debug;
+
+$.Mutex = (function() {
+    function Mutex() {
+        this.def = $.Deferred().resolve();
+    };
+    Mutex.prototype.exec = function(action) {
+        var current = this.def;
+        var next = this.def = $.Deferred();
+        return current.pipe(function() {
+            return $.when(action()).always(function() {
+                next.resolve();
+            });
+        });
+    };
+    return Mutex;
+})();
+
+$.async_when = function() {
+    var async = false;
+    var def = $.Deferred();
+    $.when.apply($, arguments).then(function() {
+        var args = arguments;
+        var action = function() {
+            def.resolve.apply(def, args);
+        };
+        if (async)
+            action();
+        else
+            setTimeout(action, 0);
+    }, function() {
+        var args = arguments;
+        var action = function() {
+            def.reject.apply(def, args);
+        };
+        if (async)
+            action();
+        else
+            setTimeout(action, 0);
+    });
+    async = true;
+    return def;
+};
 
 };
 

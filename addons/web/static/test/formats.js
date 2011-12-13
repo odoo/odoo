@@ -1,5 +1,43 @@
 $(document).ready(function () {
     var openerp;
+
+    module('server-formats', {
+        setup: function () {
+            openerp = window.openerp.init();
+            window.openerp.web.core(openerp);
+            window.openerp.web.dates(openerp);
+        }
+    });
+    test('Parse server datetime', function () {
+        var date = openerp.web.str_to_datetime("2009-05-04 12:34:23");
+        deepEqual(
+            [date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
+             date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()],
+            [2009, 5 - 1, 4, 12, 34, 23]);
+        deepEqual(
+            [date.getFullYear(), date.getMonth(), date.getDate(),
+             date.getHours(), date.getMinutes(), date.getSeconds()],
+            [2009, 5 - 1, 4, 12 - (date.getTimezoneOffset() / 60), 34, 23]);
+
+        var date2 = openerp.web.str_to_datetime('2011-12-10 00:00:00');
+        deepEqual(
+            [date2.getUTCFullYear(), date2.getUTCMonth(), date2.getUTCDate(),
+             date2.getUTCHours(), date2.getUTCMinutes(), date2.getUTCSeconds()],
+            [2011, 12 - 1, 10, 0, 0, 0]);
+    });
+    test('Parse server date', function () {
+        var date = openerp.web.str_to_date("2009-05-04");
+        deepEqual(
+            [date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()],
+            [2009, 5 - 1, 4]);
+    });
+    test('Parse server time', function () {
+        var date = openerp.web.str_to_time("12:34:23");
+        deepEqual(
+            [date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()],
+            [12, 34, 23]);
+    });
+
     module('web-formats', {
         setup: function () {
             openerp = window.openerp.init();
@@ -126,5 +164,24 @@ $(document).ready(function () {
         openerp.web._t.database.parameters.grouping = [1, 2, -1];
         equal(openerp.web.format_value(106500, {type: 'integer'}),
               '106,50,0');
+    });
+    test('format_float', function () {
+        openerp.web._t.database.parameters.grouping = [3, 3, 3, 3];
+        equal(openerp.web.format_value(1000000, {type: 'float'}),
+              '1,000,000.00');
+        openerp.web._t.database.parameters.grouping = [3, 2, -1];
+        equal(openerp.web.format_value(106500, {type: 'float'}),
+              '1,06,500.00');
+        openerp.web._t.database.parameters.grouping = [1, 2, -1];
+        equal(openerp.web.format_value(106500, {type: 'float'}),
+              '106,50,0.00');
+
+        _.extend(openerp.web._t.database.parameters, {
+            grouping: [3, 0],
+            decimal_point: ',',
+            thousands_sep: '.'
+        });
+        equal(openerp.web.format_value(6000, {type: 'float'}),
+              '6.000,00');
     });
 });

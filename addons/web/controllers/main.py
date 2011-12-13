@@ -337,8 +337,16 @@ class Session(openerpweb.Controller):
     _cp_path = "/web/session"
 
     @openerpweb.jsonrequest
-    def login(self, req, db, login, password):
-        req.session.login(db, login, password)
+    def authenticate(self, req, db, login, password, base_location=None):
+        wsgienv = req.httprequest.environ
+        release = web.common.release
+        env = dict(
+            base_location=base_location,
+            HTTP_HOST=wsgienv['HTTP_HOST'],
+            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+            user_agent="%s / %s" % (release.name, release.version),
+        )
+        req.session.authenticate(db, login, password, env)
         ctx = req.session.get_context() if req.session._uid else {}
 
         return {
@@ -604,7 +612,7 @@ def fix_view_modes(action):
     :param dict action: an action descriptor
     :returns: nothing, the action is modified in place
     """
-    if 'views' not in action:
+    if not action.get('views'):
         generate_views(action)
 
     id_form = None

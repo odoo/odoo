@@ -119,7 +119,7 @@
                            equalTo="input[name=create_admin_pwd]"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Create"/></td>
+                <td colspan="2" align="right"><button>Create</button></td>
             </tr>
         </table>
     </form>
@@ -149,7 +149,7 @@
                 <td><input type="password" name="drop_pwd" class="required"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Drop"/></td>
+                <td colspan="2" align="right"><button>Drop</button></td>
             </tr>
         </table>
     </form>
@@ -181,7 +181,7 @@
                 <td><input type="password" name="backup_pwd" class="required"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Backup"/></td>
+                <td colspan="2" align="right"><button>Backup</button></td>
             </tr>
         </table>
     </form>
@@ -210,7 +210,7 @@
                 <td><input type="text" name="new_db" class="required"/></td>
             </tr>
         <tr>
-            <td colspan="2" align="right"><input type="submit" value="Restore"/></td>
+            <td colspan="2" align="right"><button>Restore</button></td>
             </tr>
         </table>
     </form>
@@ -241,7 +241,7 @@
                            equalTo="input[name=new_pwd]" minlength="1"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Change Password"/></td>
+                <td colspan="2" align="right"><button>Change Password</button></td>
             </tr>
         </table>
     </form>
@@ -290,7 +290,7 @@
                         <td></td>
                         <td>
                         	<button type="button" id="oe-db-config">Database</button>
-                            <button type="submit" name="submit">Login</button>
+                            <button name="submit">Login</button>
                         </td>
                     </tr>
                 </table>
@@ -413,7 +413,7 @@
     </div>
 </t>
 <t t-name="ViewManager">
-    <table class="view-manager-main-table">
+    <table class="view-manager-main-table" cellpadding="0" cellspacing="0">
     <tbody>
     <tr>
         <td class="view-manager-main-content">
@@ -464,9 +464,7 @@
             href="javascript: void(0)"> </a>
     </t>
     <t t-jquery="h2.oe_view_title" t-operation="after">
-        <button t-if="self.session.debug and self.flags.display_title !== false" class="oe_get_xml_view">
-            View#<span></span>
-        </button>
+        <select t-if="self.session.debug" class="oe_debug_view"/>
     </t>
     <t t-jquery=".oe-view-manager-header" t-operation="after">
         <div class="oe-view-manager-logs oe-folded">
@@ -475,6 +473,16 @@
             <a class="oe-remove-everything ui-icon ui-icon-closethick"/>
         </div>
     </t>
+</t>
+<t t-name="ViewManagerDebug">
+    <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
+    <option value="fvg"> - Fields View Get</option>
+    <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id"> - Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
+    <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id"> - Edit SearchView</option>
+    <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id"> - Edit Action</option>
+</t>
+<t t-extend="ViewManager" t-name="One2Many.viewmanager">
+    <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
 </t>
 
 <t t-name="Sidebar">
@@ -607,6 +615,18 @@
         </tr>
     </tfoot>
 </table>
+<t t-extend="ListView" t-name="One2Many.listview">
+    <t t-jquery="thead.ui-widget-header > tr:first">
+        this.removeAttr('t-if');
+    </t>
+    <t t-jquery="td.oe-actions">
+        this.removeAttr('t-if');
+        var $title = $(document.createElement('h3')).addClass('oe_view_title');
+        $title.append($(document.createElement('t')).attr(
+            't-esc', 'fields_view.arch.attrs.string'));
+        this.prepend($title);
+    </t>
+</t>
 <th t-name="Listview.navigation.button" t-if="options.pager !== false"
         class="oe-list-pager" t-att-colspan="columns_count">
     <button type="button" disabled="disabled"
@@ -863,14 +883,12 @@
         t-att-id="widget.element_id"
         t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
         style="width: 100%"
-    />
-    <img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='widget.session.server + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+    /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='widget.session.server + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
 </t>
 <t t-name="FieldChar.readonly">
     <div
         t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
-        style="width: 100%">
+        t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}">
     </div>
 </t>
 <t t-name="FieldURI.readonly">
@@ -910,18 +928,26 @@
         t-att-id="widget.element_id"
         t-attf-class="field_#{widget.type}"
         style="width: 100%"
+<<<<<<< TREE
     ></textarea>
     <img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='widget.session.server + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+=======
+    ></textarea><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
+>>>>>>> MERGE-SOURCE
 </t>
 <t t-name="web.datetimepicker">
     <div class="oe_datepicker_root">
+        <input type="text" size="1" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
         <input type="text" size="1" style="width: 100%"
             t-att-name="widget.name"
             t-attf-class="oe_datepicker_master field_#{widget.type_of_date}"
+<<<<<<< TREE
         />
         <img class="oe_input_icon oe_datepicker_trigger" t-att-src='widget.session.server + "/web/static/src/img/ui/field_calendar.png"'
+=======
+        /><img class="oe_input_icon oe_datepicker_trigger" src="/web/static/src/img/ui/field_calendar.png"
+>>>>>>> MERGE-SOURCE
              title="Select date" width="16" height="16" border="0"/>
-        <input type="text" size="1" class="oe_datepicker_container" disabled="disabled"/>
     </div>
 </t>
 <t t-name="FieldSelection">
@@ -1130,9 +1156,9 @@
     <form class="oe_forms">
         <t t-call="SearchView.render_lines"/>
         <div class="oe_search-view-buttons">
-            <input type="submit" value="Search"/>
-            <input type="reset" value="Clear"/>
-            <button class="oe_search-view-custom-filter-btn"><span>Advanced Filter</span></button>
+            <button>Search</button>
+            <button type="reset">Clear</button>
+            <button type="button" class="oe_search-view-custom-filter-btn"><span>Advanced Filter</span></button>
             <select class="oe_search-view-filters-management">
             </select>
         </div>
@@ -1172,7 +1198,7 @@
     <table class="oe-searchview-render-line" border="0" cellspacing="0" cellpadding="0"
            t-foreach="lines" t-as="line">
         <tr>
-            <td t-foreach="line" t-as="widget">
+            <td t-foreach="line" t-as="widget" class="oe_searchview_field">
                 <t t-raw="widget.render(defaults)"/>
             </td>
         </tr>
@@ -1198,7 +1224,7 @@
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">?</span>
     </label>
-    <div style="white-space: nowrap;">
+    <div>
         <input type="text" size="15" t-att-name="attrs.name"
                t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"
                t-att-id="element_id"
@@ -1213,7 +1239,7 @@
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">?</span>
     </label>
-    <div style="white-space: nowrap;">
+    <div>
         <span t-att-id="element_id"></span>
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
@@ -1225,7 +1251,7 @@
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">?</span>
     </label>
-    <div style="white-space: nowrap;">
+    <div>
         <select t-att-name="attrs.name" t-att-id="element_id"
                 t-att-autofocus="attrs.default_focus === '1' || undefined">
             <option t-if="prepend_empty"/>
@@ -1609,7 +1635,7 @@
                              minlength="1"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Change Password"/></td>
+                <td colspan="2" align="right"><button>Change Password</button></td>
             </tr>
         </table>
     </form>
