@@ -279,20 +279,29 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
     template: 'ConfigOverview',
     init: function (parent) {
         this._super(parent);
-        this.dataset = new openerp.web.DataSetSearch(
-                this, 'ir.actions.todo');
-        this.dataset.domain = [['type', '!=', 'automatic']];
+        this.user = _.extend(new openerp.web.DataSet(this, 'res.users'), {
+            index: 0,
+            ids: [this.session.uid]
+        });
+        this.dataset = new openerp.web.DataSetSearch(this, 'ir.actions.todo');
     },
     start: function () {
         this._super();
-        $.when(this.dataset.read_slice(['state', 'action_id', 'category_id']),
-               this.dataset.call('progress'))
-            .then(this.on_records_loaded);
-    },
-    on_records_loaded: function (read_response, progress_response) {
-        var records = read_response,
-           progress = progress_response[0];
+        var self = this;
+        return this.user.read_index(['groups_id']).pipe(function (record) {
+            var todos_filter = [
+                ['type', '!=', 'automatic'],
+                '|', ['groups_id', '=', false],
+                     ['groups_id', 'in', record['groups_id']]];
+            return $.when(
+                self.dataset.read_slice(['state', 'action_id', 'category_id'],{
+                        domain: todos_filter }),
+                self.dataset.call('progress').pipe(
+                        function (arg) { return arg; }, null))
+        }, null).then(this.on_records_loaded);
 
+    },
+    on_records_loaded: function (records, progress) {
         var grouped_todos = _(records).chain()
             .map(function (record) {
                 return {
