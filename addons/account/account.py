@@ -3006,7 +3006,7 @@ class account_financial_report(osv.osv):
         'account_ids': fields.many2many('account.account', 'account_account_financial_report', 'report_line_id', 'account_id', 'Accounts'),
         'display_detail': fields.selection([
             ('no_detail','No detail'),
-            ('only_detail','Display children flat'),
+            ('detail_flat','Display children flat'),
             ('detail_with_hierarchy','Display children with hierarchy')
             ], 'Display details'),
         'account_report_id':  fields.many2one('account.financial.report', 'Report Value'),
@@ -3016,7 +3016,7 @@ class account_financial_report(osv.osv):
 
     _defaults = {
         'type': 'sum',
-        'display_detail': 'only_detail',
+        'display_detail': 'detail_flat',
         'sign': 1,
     }
 

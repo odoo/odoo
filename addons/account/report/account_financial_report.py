@@ -70,7 +70,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 account_ids = account_obj.search(self.cr, self.uid, [('user_type','in', [x.id for x in report.account_type_ids])])
             if account_ids:
                 for account in account_obj.browse(self.cr, self.uid, account_ids, context=data['form']['used_context']):
-                    if report.display_detail == 'only_detail' and account.type == 'view':
+                    if report.display_detail == 'detail_flat' and account.type == 'view':
                         continue
                     flag = False
                     vals = {
