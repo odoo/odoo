@@ -1093,30 +1093,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         $.bbq.pushState(url);
     },
 
-    default_home: function () {
-    },
-    /**
-     * Bundles the execution of the home action
-     *
-     * @param {Number} action action id
-     * @param {openerp.web.DataSet} dataset action executor
-     */
-    execute_home_action: function (action, dataset) {
-        var self = this;
-        this.rpc('/web/action/load', {
-            action_id: action,
-            context: dataset.get_context()
-        }, function (meh) {
-            var action = meh.result;
-            action.context = _.extend(action.context || {}, {
-                active_id: false,
-                active_ids: [false],
-                active_model: dataset.model
-            });
-            self.action_manager.do_action(action);
-        });
-    },
-
     on_menu_action: function(action) {
         this.action_manager.do_action(action);
     },
