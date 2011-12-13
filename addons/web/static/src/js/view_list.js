@@ -1166,16 +1166,14 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 } catch (e) {
                     $group_column.html(row_data[group_column.id].value);
                 }
-                if (!group.length) {
+                if (group.length && group.openable) {
+                    // Make openable if not terminal group & group_by_no_leaf
+                    $group_column.prepend('<span class="ui-icon ui-icon-triangle-1-e" style="float: left;">');
+                } else {
                     // Kinda-ugly hack: jquery-ui has no "empty" icon, so set
                     // wonky background position to ensure nothing is displayed
                     // there but the rest of the behavior is ui-icon's
-                    $group_column.prepend(
-                        '<span class="ui-icon" style="float: left; background-position: 150px 150px">');
-                } else if (group.openable) {
-                    // Make openable if not terminal group & group_by_no_leaf
-                    $group_column
-                        .prepend('<span class="ui-icon ui-icon-triangle-1-e" style="float: left;">');
+                    $group_column.prepend('<span class="ui-icon" style="float: left; background-position: 150px 150px">');
                 }
             }
             self.indent($group_column, group.level);
