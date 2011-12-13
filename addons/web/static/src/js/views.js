@@ -24,7 +24,6 @@ session.web.ActionManager = session.web.Widget.extend({
         this.dialog = null;
         this.dialog_viewmanager = null;
         this.client_widget = null;
-        this.client_widget_name = null;
     },
     render: function() {
         return "<div id='"+this.element_id+"'></div>";
@@ -45,7 +44,6 @@ session.web.ActionManager = session.web.Widget.extend({
         if (this.client_widget) {
             this.client_widget.stop();
             this.client_widget = null;
-            this.client_widget_name = null;
         }
     },
 
@@ -152,7 +150,6 @@ session.web.ActionManager = session.web.Widget.extend({
     },
     ir_actions_client: function (action) {
         this.content_stop();
-        this.client_widget_name = action.tag;
         var ClientWidget = session.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
 
