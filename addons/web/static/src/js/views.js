@@ -46,35 +46,38 @@ session.web.ActionManager = session.web.Widget.extend({
             this.client_widget = null;
         }
     },
-    url_update: function(action) {
-        var url = {};
-        if(action.id)
-            url.action_id = action.id;
-        // this.url = {
-        //     "model": action.res_model,
-        //     "domain": action.domain,
-        // };
-        // action.res_model
-        // action.domain
-        // action.context
-        // after
-        // action.views
-        // action.res_id
-        // mode
-        // menu
-        this.do_url_set_hash(url);
+
+    do_push_state: function(state, overwrite) {
     },
-    do_url_set_hash: function(url) {
-    },
-    on_url_hashchange: function(url) {
-        var self = this;
-        if(url && url.action_id) {
-            self.rpc("/web/action/load", { action_id: url.action_id }, function(result) {
-                    self.do_action(result.result);
-                });
+
+    do_load_state: function(state) {
+        if (state.action_id) {
+            this.null_action();
+            this.do_action(state.action_id);
+        }
+        else if (state.model && state.id) {
+            // TODO implement it
+            //this.null_action();
+            // action = {}
+        }
+        else if (state.client_action) {
+            this.null_action();
+            this.ir_actions_client(state.client_action);
+        }
+
+        if (this.inner_viewmanager) {
+            this.inner_viewmanager.do_load_state(state);
         }
     },
+
     do_action: function(action, on_close) {
+        if (_.isNumber(action)) {
+            var self = this;
+            self.rpc("/web/action/load", { action_id: action }, function(result) {
+                self.do_action(result.result, on_close);
+            });
+            return;
+        }
         if (!action.type) {
             console.error("No type for action", action);
             return;
@@ -123,15 +126,12 @@ session.web.ActionManager = session.web.Widget.extend({
             this.dialog_stop();
             this.content_stop();
             this.inner_viewmanager = new session.web.ViewManagerAction(this, action);
+            this.inner_viewmanager.do_push_state.add(this.do_push_state);
             this.inner_viewmanager.appendTo(this.$element);
-            this.url_update(action);
+            if (action.id) {
+                this.do_push_state({action_id: action.id}, true);
+            }
         }
-        /* new window code
-            this.rpc("/web/session/save_session_action", { the_action : action}, function(key) {
-                var url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
-                window.open(url,'_blank');
-            });
-        */
     },
     ir_actions_act_window_close: function (action, on_closed) {
         if (!this.dialog && on_closed) {
@@ -152,6 +152,10 @@ session.web.ActionManager = session.web.Widget.extend({
         this.content_stop();
         var ClientWidget = session.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
+
+        var client_action = {tag: action.tag};
+        if (action.params) _.extend(client_action, {params: action.params});
+        this.do_push_state({client_action: client_action}, true);
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
@@ -272,7 +276,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             var container = $("#" + this.element_id + '_view_' + view_type);
             view_promise = controller.appendTo(container);
             this.views[view_type].controller = controller;
-            this.views[view_type].deferred.resolve();
+            this.views[view_type].deferred.resolve(view_type);
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
                 if (self.searchview && view.controller.searchable !== false) {
@@ -308,6 +312,8 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         });
         return view_promise;
     },
+
+
     /**
      * Returns to the view preceding the caller view in this manager's
      * navigation history (the navigation history is appended to via
@@ -458,6 +464,12 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
 
         var main_view_loaded = this._super();
 
+        _.each(_.keys(this.views), function(view_type) {
+            $.when(self.views[view_type].deferred).done(function(view_type) {
+                self.views[view_type].controller.do_push_state.add(self.do_push_state);
+            });
+        });
+
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
 
         this.$element.find('.oe_get_xml_view').click(function () {
@@ -531,8 +543,21 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             } else {
                 $search_prefix.remove();
             }
+
+            self.do_push_state({view_type: self.active_view});
         });
     },
+
+    do_push_state: function(state, overwrite) {
+    },
+
+    do_load_state: function(state) {
+        var self = this;
+        $.when(this.on_mode_switch(state.view_type, true)).done(function() {
+            self.views[self.active_view].controller.do_load_state(state);
+        });
+    },
+
     shortcut_check : function(view) {
         var self = this;
         var grandparent = this.widget_parent && this.widget_parent.widget_parent;
@@ -1098,6 +1123,12 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     },
     sidebar_context: function () {
         return $.Deferred().resolve({}).promise();
+    },
+
+    do_push_state: function(state, overwrite) {
+    },
+
+    do_load_state: function(state) {
     }
 });
 

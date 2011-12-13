@@ -985,6 +985,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         }
         return false;
     },
+
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
