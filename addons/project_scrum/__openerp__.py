@@ -24,7 +24,7 @@
     'name': 'Methodology: SCRUM',
     'version': '1.0',
     'category': 'Project Management',
-    'complexity': "easy",
+    'complexity': "normal",
     'description': """
 This module implements all concepts defined by the scrum project management methodology for IT companies.
 =========================================================================================================

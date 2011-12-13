@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Luxembourg - Plan Comptable Minimum Normalise',
+    'name': 'Luxembourg - Accounting',
     'version': '1.0',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 This is the base module to manage the accounting chart for Luxembourg.
 ======================================================================

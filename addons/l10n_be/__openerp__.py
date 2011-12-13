@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{   'name': 'Belgium - Plan Comptable Minimum Normalise',
+{   'name': 'Belgium - Accounting',
     'version': '1.1',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 This is the base module to manage the accounting chart for Belgium in OpenERP.
 ==============================================================================
