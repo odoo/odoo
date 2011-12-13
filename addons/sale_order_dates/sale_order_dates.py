@@ -25,9 +25,11 @@ from dateutil.relativedelta import relativedelta
 from osv import fields, osv
 
 class sale_order_dates(osv.osv):
+    """Add several date fields to Sale Orders, computed or user-entered"""
     _inherit = 'sale.order'
 
     def _get_effective_date(self, cr, uid, ids, name, arg, context=None):
+        """Read the shipping date from the related packings"""
         res = {}
         dates_list = []
         for order in self.browse(cr, uid, ids, context=context):
@@ -39,14 +41,23 @@ class sale_order_dates(osv.osv):
             else:
                 res[order.id] = False
         return res
+    
+    def _prepare_order_picking(self, cr, uid, order, *args):
+        """Take the requested date into account when creating the picking"""
+        picking_data = super(sale_order_dates, self)._prepare_order_picking(cr,
+                                                             uid, order, *args)
+        picking_data['date'] = order.requested_date
+        return picking_data
 
     def _get_commitment_date(self, cr, uid, ids, name, arg, context=None):
+        """Compute the commitment date"""
         res = {}
         dates_list = []
         for order in self.browse(cr, uid, ids, context=context):
             dates_list = []
             for line in order.order_line:
-                dt = datetime.strptime(order.date_order, '%Y-%m-%d') + relativedelta(days=line.delay or 0.0)
+                dt = (datetime.strptime(order.date_order, '%Y-%m-%d')
+                     + relativedelta(days=line.delay or 0.0) )
                 dt_s = dt.strftime('%Y-%m-%d')
                 dates_list.append(dt_s)
             if dates_list:
@@ -54,9 +65,14 @@ class sale_order_dates(osv.osv):
         return res
 
     _columns = {
-        'commitment_date': fields.function(_get_commitment_date, store=True, type='date', string='Commitment Date', help="Date on which delivery of products is to be made."),
-        'requested_date': fields.date('Requested Date', help="Date on which customer has requested for sales."),
-        'effective_date': fields.function(_get_effective_date, type='date', store=True, string='Effective Date',help="Date on which picking is created."),
+        'commitment_date': fields.function(_get_commitment_date, store=True,
+            type='date', string='Commitment Date',
+            help="Date by which the products must be delivered."),
+        'requested_date': fields.date('Requested Date',
+            help="Date by which the customer has requested the products to be delivered."),
+        'effective_date': fields.function(_get_effective_date, type='date',
+            store=True, string='Effective Date',
+            help="Date on which shipping is created."),
     }
 
 sale_order_dates()
