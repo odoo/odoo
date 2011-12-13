@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Base Contact',
+    'name': 'Contacts Management',
     'version': '1.0',
-    'category': 'Sales Management',
+    'category': 'Customer Relationship Management',
     'complexity': "expert",
     'description': """
 This module allows you to manage your contacts entirely.

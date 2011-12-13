@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Ideas Box',
+    'name': 'Ideas',
     'version': '0.1',
-    'category': 'Human Resources',
+    'category': 'Tools',
     'complexity': "easy",
     'description': """
 This module allows your user to easily and efficiently participate in enterprise innovation.
@@ -53,7 +53,6 @@ Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
         'test/test_idea.yml'
     ],
     'installable': True,
-    'application': True,
     'certificate': '0071515601309',
     'images': ['images/1_ideas.jpeg','images/2_idea_categories.jpeg','images/3_vote_idea.jpeg'],
 }

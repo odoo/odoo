@@ -56,7 +56,9 @@ system to store and search in your CV base.
     'demo_xml': [
         'hr_recruitment_demo.yml',
     ],
-    'test':['test/test_hr_recruitment.yml'],
+    'test':[
+            'test/recruitment_process.yml',
+            ],
     'installable': True,
     'active': False,
     'certificate' : '001073437025460275621',
