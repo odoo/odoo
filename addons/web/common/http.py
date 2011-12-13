@@ -146,11 +146,29 @@ class JsonRequest(WebRequest):
         assert self.jsonrequest.get('jsonrpc') == '2.0'
         self.init(self.jsonrequest.get("params", {}))
         response = {"jsonrpc": "2.0" }
-        return response
 
-    def _init_jsonp(self):
+        def build_response(response):
+            content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
+            return werkzeug.wrappers.Response(
+                content, headers=[('Content-Type', 'application/json'),
+                                  ('Content-Length', len(content))])
+
+        return response, build_response
+
+    def _init_jsonp(self, callback):
         self.init(self.jsonrequest)
-        return {}
+
+        def build_response(response):
+            content = "%s(%s);" % (\
+                        callback,
+                        simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder),
+                      )
+
+            return werkzeug.wrappers.Response(
+                content, headers=[('Content-Type', 'application/javascript'),
+                                  ('Content-Length', len(content))])
+
+        return {}, build_response
 
 
     def dispatch(self, controller, method):
@@ -196,29 +214,9 @@ class JsonRequest(WebRequest):
 
 
         if self.jsonrequest.get('jsonrpc') == '2.0':
-            response = self._init_jsonrpc2()
-
-            def build_response(response):
-                content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
-                return werkzeug.wrappers.Response(
-                    content, headers=[('Content-Type', 'application/json'),
-                                      ('Content-Length', len(content))])
-
-
+            response, build_response = self._init_jsonrpc2()
         elif jsonp_callback:
-
-            response = self._init_jsonp()
-
-            def build_response(response):
-                content = "%s(%s);" % (\
-                            jsonp_callback,
-                            simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder),
-                          )
-
-                return werkzeug.wrappers.Response(
-                    content, headers=[('Content-Type', 'application/javascript'),
-                                      ('Content-Length', len(content))])
-
+            response, build_response = self._init_jsonp(jsonp_callback)
         else:
             return werkzeug.exceptions.BadRequest()
 
@@ -439,9 +437,6 @@ class JSONP(Controller):
     @httprequest
     def post(self, req, request_id, params, callback):
         params = simplejson.loads(params, object_hook=nonliterals.non_literal_decoder)
-        params.update(
-            session_id=req.session.id,
-        )
         params['session_id'] = req.session.id
         req.session.jsonp_requests[request_id] = {
             'jsonp': callback,
