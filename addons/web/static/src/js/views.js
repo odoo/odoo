@@ -54,18 +54,17 @@ session.web.ActionManager = session.web.Widget.extend({
 
     do_load_state: function(state) {
         if (state.action_id) {
-            var run_action = (!this.inner_viewmanager) || this.inner_viewmanager.action.id !== state.action_id;
-            if (run_action) {
-                this.null_action();
-                this.do_action(state.action_id);
-            }
+            this.null_action();
+            this.do_action(state.action_id);
+        }
+        else if (state.model && state.id) {
+            // TODO implement it
+            //this.null_action();
+            // action = {}
         }
         else if (state.client_action) {
-            var run_client = (!this.client_widget) || this.client_widget_name !== state.client_action.tag;
-            if (run_client) {
-                this.null_action();
-                this.ir_actions_client(state.client_action);
-            }
+            this.null_action();
+            this.ir_actions_client(state.client_action);
         }
 
         if (this.inner_viewmanager) {
@@ -548,13 +547,8 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
     },
 
     do_load_state: function(state) {
-        var self = this,
-            defs = [];
-        if (state.view_type && state.view_type !== this.active_view) {
-            defs.push(this.on_mode_switch(state.view_type, true));
-        } 
-
-        $.when(defs).then(function() {
+        var self = this;
+        $.when(this.on_mode_switch(state.view_type, true)).done(function() {
             self.views[self.active_view].controller.do_load_state(state);
         });
     },
