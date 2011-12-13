@@ -107,9 +107,6 @@ the project form.</field>
         -->
         <menuitem id="menu_project_working_hours" parent="base.menu_project_management_time_tracking" action="hr_timesheet.act_hr_timesheet_line_evry1_all_form"/>
 
-        <menuitem id="menu_invoicing" name="Billing" parent="base.menu_main_pm" sequence="4"/>
-
-
         <record id="action_account_analytic_overdue" model="ir.actions.act_window">
             <field name="name">Customer Projects</field>
             <field name="res_model">account.analytic.account</field>
@@ -120,7 +117,7 @@ the project form.</field>
             <field name="search_view_id" ref="account_analytic_analysis.view_account_analytic_account_overdue_search"/>
             <field name="help">You will find here the contracts related to your customer projects in order to track the invoicing progress.</field>
         </record>
-        <menuitem id="menu_invoicing_contracts" parent="menu_invoicing" sequence="4"
+        <menuitem id="menu_invoicing_contracts" parent="menu_project_billing" sequence="4"
             action="account_analytic_analysis.action_account_analytic_overdue"/>
 
     </data>

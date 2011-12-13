@@ -24,7 +24,7 @@
     'version' : "1.0",
     'depends' : ["base", "share"],
     'author' : "OpenERP SA",
-    'category': 'Hidden',
+    'category': 'Portal',
     'description': """
 This module defines 'portals' to customize the access to your OpenERP database
 for external users.
@@ -45,7 +45,6 @@ module 'share'.
         'wizard/share_wizard_view.xml',
     ],
     'installable': True,
-    'certificate' : '',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

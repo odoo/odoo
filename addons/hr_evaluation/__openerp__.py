@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "HR Periodic Appraisals",
+    "name" : "Employee Appraisals",
     "version": "0.1",
     "author": "OpenERP SA",
     "category": "Human Resources",
@@ -54,6 +54,7 @@ in the form of pdf file. Implements a dashboard for My Current Evaluations
     "active": False,
     "installable": True,
     "certificate" : "00883207679172998429",
+    'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

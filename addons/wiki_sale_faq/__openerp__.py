@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Sale FAQ',
+    'name': 'Wiki: Sale FAQ',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'complexity': "easy",

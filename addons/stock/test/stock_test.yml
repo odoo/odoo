@@ -307,7 +307,6 @@
       }
     split_id = self.pool.get('stock.move.split').create(cr, uid, partial_datas, context={})
     split_move_data= {
-          'lot_id': split_id,
           'quantity': 10,
           'name': 'lot',
     }

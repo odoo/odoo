@@ -114,6 +114,7 @@ class project(osv.osv):
             if task.project_id: result[task.project_id.id] = True
         return result.keys()
 
+    #dead code
     def _get_project_work(self, cr, uid, ids, context=None):
         result = {}
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
@@ -360,7 +361,7 @@ def Project():
     working_days = %s
     resource = %s
 """       % (
-            project.id, 
+            project.id,
             project.date_start, working_days,
             '|'.join(['User_'+str(x) for x in puids])
         )
@@ -920,21 +921,24 @@ class task(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
-    def set_remaining_time_1(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'remaining_hours': 1.0}, context=context)
+    def set_remaining_time(self, cr, uid, ids, remaining_time=1.0, context=None):
+        for task in self.browse(cr, uid, ids, context=context):
+            if (task.state=='draft') or (task.planned_hours==0.0):
+                self.write(cr, uid, [task.id], {'planned_hours': remaining_time}, context=context)
+        self.write(cr, uid, ids, {'remaining_hours': remaining_time}, context=context)
         return True
+
+    def set_remaining_time_1(self, cr, uid, ids, context=None):
+        return self.set_remaining_time(cr, uid, ids, 1.0, context)
 
     def set_remaining_time_2(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'remaining_hours': 2.0}, context=context)
-        return True
+        return self.set_remaining_time(cr, uid, ids, 2.0, context)
 
     def set_remaining_time_5(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'remaining_hours': 5.0}, context=context)
-        return True
+        return self.set_remaining_time(cr, uid, ids, 5.0, context)
 
     def set_remaining_time_10(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'remaining_hours': 10.0}, context=context)
-        return True
+        return self.set_remaining_time(cr, uid, ids, 10.0, context)
 
     def set_kanban_state_blocked(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
@@ -979,6 +983,7 @@ class task(osv.osv):
             self.pool.get('project.task.history').create(cr, uid, {
                 'task_id': task.id,
                 'remaining_hours': task.remaining_hours,
+                'planned_hours': task.planned_hours,
                 'kanban_state': task.kanban_state,
                 'type_id': task.type_id.id,
                 'state': task.state,
@@ -1096,7 +1101,7 @@ class account_analytic_account(osv.osv):
         if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
             vals['child_ids'] = []
         return super(account_analytic_account, self).create(cr, uid, vals, context=context)
-    
+
     def unlink(self, cr, uid, ids, *args, **kwargs):
         project_obj = self.pool.get('project.project')
         analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
@@ -1158,7 +1163,8 @@ class project_task_history(osv.osv):
         'end_date': fields.function(_get_date, string='End Date', type="date", store={
             'project.task.history': (_get_related_date, None, 20)
         }),
-        'remaining_hours': fields.float('Remaining Hours', digits=(16,2)),
+        'remaining_hours': fields.float('Remaining Time', digits=(16,2)),
+        'planned_hours': fields.float('Planned Time', digits=(16,2)),
         'user_id': fields.many2one('res.users', 'Responsible'),
     }
     _defaults = {
@@ -1186,7 +1192,7 @@ class project_task_history_cumulative(osv.osv):
                     id as history_id,
                     date+generate_series(0, CAST((coalesce(end_date,DATE 'tomorrow')::date - date)AS integer)-1) as date,
                     task_id, type_id, user_id, kanban_state, state,
-                    remaining_hours
+                    remaining_hours, planned_hours
                 FROM
                     project_task_history
             ) as history

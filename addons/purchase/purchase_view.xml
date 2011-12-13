@@ -315,11 +315,10 @@
                     <field name="date_order" />
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field name="location_id"/>
-                    <field name="minimum_planned_date"/>
+                    <field name="minimum_planned_date" invisible="context.get('quotation_only', False)"/>
                     <field name="origin"/>
-                    <field name="invoiced_rate" widget="progressbar"/>
-                    <field name="shipped_rate" widget="progressbar"/>
+                    <field name="invoiced_rate" widget="progressbar" invisible="context.get('quotation_only', False)"/>
+                    <field name="shipped_rate" widget="progressbar" invisible="context.get('quotation_only', False)"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount"/>
                     <field name="amount_total" sum="Total amount"/>
                     <field name="state"/>

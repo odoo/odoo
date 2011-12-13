@@ -21,9 +21,9 @@
 ##############################################################################
 
 {
-    'name': 'Add the Timesheet support for Issue Management in Project Management',
+    'name': 'Timesheet on Issues',
     'version': '1.0',
-    'category': 'Hidden/Link',
+    "category": "Project Management",
     'description': """
 This module adds the Timesheet support for the Issues/Bugs Management in Project.
 =================================================================================
