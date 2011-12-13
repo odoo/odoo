@@ -24,7 +24,7 @@
     'name': 'Methodology: SCRUM',
     'version': '1.0',
     'category': 'Project Management',
-    'complexity': "easy",
+    'complexity': "normal",
     'description': """
 This module implements all concepts defined by the scrum project management methodology for IT companies.
 =========================================================================================================
@@ -65,7 +65,11 @@ More information on the methodology:
         "board_project_scrum_view.xml",
     ],
     'demo_xml': ['project_scrum_demo.xml'],
-    'test': ['test/project_scrum_report.yml'],
+    'test': ['test/backlog_process.yml',
+             'test/sprint_process.yml',
+             'test/cancel_backlog.yml',
+             'test/project_scrum_demo.yml',
+             ],
     'installable': True,
     'active': False,
     'certificate' : '00736750152003010781',

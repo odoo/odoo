@@ -1,0 +1,56 @@
+-
+  Customer interested in our product. so He send request by email to get more details.
+-
+  Mail script will be fetched him request from mail server. so I process that mail after read EML file 
+-
+  !python {model: mail.thread}: |
+    import addons
+    request_file = open(addons.get_module_resource('crm','test', 'customer_request.eml'),'rb')
+    request_message = request_file.read()
+    self.message_process(cr, uid, 'crm.lead', request_message)
+-
+  After getting the mail, I check details of new lead of that customer.
+-
+  !python {model: crm.lead}: |
+    lead_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    assert lead_ids and len(lead_ids), "Lead is not created after getting request"
+    lead = self.browse(cr, uid, lead_ids[0], context=context)
+    assert not lead.partner_id, "Customer should be a new"
+    assert lead.name == "Fournir votre devis avec le meilleur prix.", "Subject does not match"
+-
+  I reply him request with welcome message.
+-
+  !python {model: mail.compose.message}: |
+    lead_ids = self.pool.get('crm.lead').search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    context.update({'active_model': 'crm.lead','active_id': lead_ids[0]})
+    id = self.create(cr, uid, {'body_text': "Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci", 'email_from': 'sales@mycompany.com'}, context=context)
+    try:
+        self.send_mail(cr, uid, [id], context=context)
+    except:
+        pass
+-
+  Now, I convert him into customer and put into regular customer list.
+-
+  !python {model: crm.lead}: |
+    lead_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    self.convert_partner(cr, uid, lead_ids, context=context)
+-
+  Now, I search customer in regular customer list.
+-
+  !python {model: crm.lead}: |
+    partner_ids = self.message_partner_by_email(cr, uid, 'Mr. John Right <info@customer.com>')
+    assert partner_ids.get('partner_id'), "Customer is not found in regular customer list."
+-
+  I convert one phonecall request as a customer and put into regular customer list.
+-
+  !python {model: crm.phonecall}: |
+    self.convert_partner(cr, uid, [ref('crm.crm_case_phone06')], context=context)
+-
+  I check converted phonecall to partner.
+-
+  !python {model: res.partner}: |
+    partner_id = self.search(cr, uid, [('phonecall_ids', '=', ref('crm.crm_case_phone06'))])
+    assert partner_id, "Customer is not found in regular customer list."
+    data = self.browse(cr, uid, partner_id, context=context)[0]
+    assert data.user_id.id == ref("base.user_root"), "User not assign properly"
+    assert data.name == "Bad time", "User not assign properly"

@@ -83,8 +83,8 @@
                 <form string="Sales Receipt">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer"/>
-                        <field name="date" on_change="onchange_date(date, currency_id, amount, context)"/>
-                        <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, context)"/>
+                        <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
+                        <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
                         <field name="number"/>
                         <field name="name" colspan="2"/>
                         <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
@@ -168,7 +168,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type','in',['sale','sale_refund']), ('type','=','sale')]</field>
-            <field name="context">{'type':'sale'}</field>
+            <field name="context">{'default_type': 'sale', 'type': 'sale'}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
@@ -198,7 +198,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment'), ('partner_id','=',partner_id)]</field>
-            <field name="context">{'type':'payment', 'partner_id': partner_id, 'default_reference':reference}</field>
+            <field name="context">{'default_type':'payment', 'type':'payment', 'default_partner_id': partner_id, 'partner_id': partner_id, 'default_reference':reference}</field>
             <field name="view_id" ref="view_vendor_payment_form"/>
             <field name="target">current</field>
         </record>
@@ -210,8 +210,8 @@
                 <form string="Supplier Voucher">
                     <group col="6" colspan="4">
                         <field name="partner_id" domain="[('supplier','=',True)]" required="1" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"/>
-                        <field name="date" string="Bill Date" select="1" on_change="onchange_date(date, currency_id, amount, context)"/>
-                        <field name="journal_id" domain="[('type','in',['purchase','purchase_refund'])]" widget="selection" select="1" on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, context)"/>
+                        <field name="date" string="Bill Date" select="1" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
+                        <field name="journal_id" domain="[('type','in',['purchase','purchase_refund'])]" widget="selection" select="1" on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
                         <field name="number"/>
                         <field name="name" colspan="2"/>
                         <field name="reference" select="1"/>
@@ -287,7 +287,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type','in',['purchase','purchase_refund']), ('type','=','purchase')]</field>
-            <field name="context">{'type':'purchase'}</field>
+            <field name="context">{'default_type': 'purchase', 'type': 'purchase'}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>
             <field name="target">current</field>

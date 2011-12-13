@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Email Subsystem',
+    'name': 'Emails Management',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Dependency',
     'complexity': "easy",
     'description': """
 A generic email subsystem with message storage and queuing

@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Auction Management',
+    'name': 'Auction Houses',
     'version': '1.0',
     'category': 'Specific Industry Applications',
     'complexity': "normal",
@@ -68,6 +68,7 @@ The dashboard for auction includes:
              ],
 
     'installable': True,
+    'auction': True,
     'active': False,
     'certificate': '0039333102717',
     'images': ['images/auction1.jpeg','images/auction2.jpeg','images/auction3.jpeg'],

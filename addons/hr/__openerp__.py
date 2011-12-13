@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Human Resources",
+    "name": "Employee Address Book",
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Human Resources",
@@ -54,7 +54,10 @@ You can manage:
         'hr_demo.xml',
         'hr_department_demo.xml',
     ],
-    'test': ['test/test_hr.yml'],
+    'test': [
+             'test/open2recruit2close_job.yml',
+             'test/hr_demo.yml',
+             ],
     'installable': True,
     'active': False,
     'certificate': '0086710558965',

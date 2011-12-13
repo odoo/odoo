@@ -30,10 +30,10 @@ class account_bank_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
         seq = 0
         if 'line_ids' in vals:
+            new_line_ids = []
             for line in vals['line_ids']:
                 seq += 1
                 line[2]['sequence'] = seq
-                vals[seq - 1] = line
         return super(account_bank_statement, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):

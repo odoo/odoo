@@ -21,11 +21,11 @@
 #
 ##############################################################################
 {
-    "name" : "Poland - Chart of Accounts",
+    "name" : "Poland - Accounting",
     "version" : "1.0",
     "author" : "Grzegorz Grzelak (Cirrus)",
     "website": "http://www.cirrus.pl",
-    "category" : "Localization/Account Charts",
+    "category" : "Localization",
     "description": """
 This is the module to manage the accounting chart and taxes for Poland in OpenERP.
 ==================================================================================

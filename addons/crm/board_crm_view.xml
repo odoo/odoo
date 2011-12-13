@@ -62,10 +62,11 @@
 
           <record model="ir.actions.act_window" id="act_my_oppor">
               <field name="name">My Open Opportunities</field>
-               <field name="res_model">crm.lead</field>
-               <field name="view_type">form</field>
-               <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid),('state','=','open'), ('type', '=', 'opportunity')]</field>
+              <field name="res_model">crm.lead</field>
+              <field name="view_type">form</field>
+              <field name="view_mode">tree,form</field>
+              <field name="domain">[('user_id','=',uid),('state','=','open'), ('type', '=', 'opportunity')]</field>
+              <field name="context">{'default_user_id': uid, 'default_type': 'opportunity'}</field>
           </record>
 
         <record model="ir.actions.act_window.view" id="act_my_oppor_tree_view">
@@ -82,32 +83,14 @@
             <field name="act_window_id" ref="act_my_oppor"/>
         </record>
 
-          <record model="ir.actions.act_window" id="act_my_meetings">
-               <field name="name">My Meetings</field>
-               <field name="res_model">crm.meeting</field>
-               <field name="view_type">form</field>
-               <field name="view_mode">tree,form</field>
-               <field name="view_id" ref="crm.crm_case_tree_view_meet"/>
-            <field name="domain">[('user_id','=',uid),('state','not in',('cancel','done'))]</field>
-          </record>
-
           <record model="ir.actions.act_window" id="act_my_oppor_stage">
                <field name="name">Planned Revenue By Stage</field>
                <field name="res_model">crm.lead.report</field>
                <field name="view_type">form</field>
                <field name="view_mode">graph,tree,form</field>
                <field name="view_id" ref="view_report_crm_oppor_graph"/>
-               <field name="domain">['&amp;', '&amp;', ('user_id','=',uid), ('type', '=', 'opportunity'), '!' , '&amp;', ('state', '=', 'done'),  ('date_closed','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
+               <field name="domain">[('user_id','=',uid), ('type', '=', 'opportunity'), ('state','in',('draft','open','done','pending')), '!', '&amp;', ('state', '=', 'done'), ('date_closed','&gt;=',datetime.date.today().strftime('%Y-%m-01'))]</field>
                <field name="context">{'search_default_Stage':1}</field>
-          </record>
-
-          <record model="ir.actions.act_window" id="act_sales_pipeline">
-               <field name="name">My Win/Lost Ratio for The Last Year</field>
-               <field name="res_model">crm.lead.report</field>
-               <field name="view_type">form</field>
-               <field name="view_mode">graph,tree,form</field>
-               <field name="view_id" ref="view_crm_opportunity_user_graph1"/>
-               <field name="domain">['&amp;', ('user_id', '=', uid),'&amp;', ('state', '=', 'done') , '&amp;', ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%Y-%m-%d')), ('type', '=', 'opportunity')]</field>
           </record>
 
           <record model="ir.ui.view" id="board_crm_form">
@@ -116,19 +99,14 @@
                <field name="type">form</field>
                <field name="arch" type="xml">
                     <form string="Sales Dashboard">
-                         <board style="1-1">
+                         <board style="2-1">
                             <column>
-                                <action string="My Open Opportunities"
-                                    name="%(act_my_oppor)d"/>
-                                <action
-                                    string="My Meetings"
-                                    name="%(act_my_meetings)d"/>
+                                <action string="My Opportunities"
+                                    name="%(act_my_oppor)d" creatable="true"/>
                             </column>
                             <column>
                                 <action string="My Planned Revenues by Stage"
                                     name="%(act_my_oppor_stage)d"/>
-                                <action string="My Win/Lost Ratio"
-                                    name="%(act_sales_pipeline)d"/>
                             </column>
                     </board>
                 </form>

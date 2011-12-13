@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Expenses',
+    'name': 'Expenses Management',
     'version': '1.0',
     'category': 'Human Resources',
     'complexity': "easy",
@@ -69,5 +69,6 @@ re-invoice your customer's expenses if your work by project.
     'installable': True,
     'active': False,
     'certificate': '0062479841789',
+    'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

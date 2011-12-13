@@ -27,9 +27,9 @@ class pos_details(report_sxw.rml_parse):
     def _get_invoice(self,inv_id,user):
         res={}
         if inv_id:
-            self.cr.execute("select name from account_invoice as ac where id = %s", (inv_id,))
+            self.cr.execute("select number from account_invoice as ac where id = %s", (inv_id,))
             res = self.cr.fetchone()
-            return res[0]
+            return res[0] or 'Draft'
         else:
             return  ''
 

@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Indian Chart of Account",
+    "name": "India - Accounting",
     "version": "1.0",
     "description": """
 Indian Accounting : Chart of Account.
@@ -29,7 +29,7 @@ Indian Accounting : Chart of Account.
 Indian accounting chart and localization.
     """,
     "author": ['OpenERP SA', 'Axelor'],
-    "category": "Localization/Account Charts",
+    "category": "Localization",
     "depends": [
         "account",
         "account_chart"

@@ -322,3 +322,5 @@ BVRWebKitParser('report.invoice_web_bvr',
                'account.invoice', 
                'addons/l10n_ch/report/report_webkit_html.mako',
                parser=l10n_ch_report_webkit_html)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -578,3 +578,5 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
 ir_model_fields_anonymize_wizard()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

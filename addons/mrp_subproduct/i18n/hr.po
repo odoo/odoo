@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-08-03 08:08+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"PO-Revision-Date: 2011-12-12 10:52+0000\n"
+"Last-Translator: Tomislav Bosnjakovic <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:38+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-13 05:01+0000\n"
+"X-Generator: Launchpad (build 14458)\n"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
 msgid "Product"
-msgstr "Proizvod"
+msgstr "Artikl"
 
 #. module: mrp_subproduct
 #: sql_constraint:mrp.bom:0
@@ -28,6 +28,9 @@ msgid ""
 "You should install the mrp_subproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
+"Sve količine artikala moraju biti veće od 0.\n"
+"Morate instalirati modul mrp_subproduct ako želite dodatne artikle na "
+"sastavnici !"
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
@@ -37,13 +40,15 @@ msgstr "podproizvodi"
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Nalog za proizvodnju"
 
 #. module: mrp_subproduct
 #: model:ir.module.module,shortdesc:mrp_subproduct.module_meta_information
 msgid ""
 "MRP Sub Product - To produce several products from one production order"
 msgstr ""
+"MRP podproizvod - ZA proizvodnju više proizvoda iz jednog naloga za "
+"proizvodnju"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_qty:0
@@ -63,7 +68,7 @@ msgstr "Tip količine"
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "Sastavnica"
 
 #. module: mrp_subproduct
 #: model:ir.module.module,description:mrp_subproduct.module_meta_information
@@ -78,11 +83,20 @@ msgid ""
 "    A + B + C -> D + E\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul omogućuje proizvodnju više proizvoda iz jednog naloga za "
+"proizvodnju.\n"
+"Možete konfigurirati podproizvode u sastavnici.\n"
+"Bez ovog modula:\n"
+"    A + B + C -> D\n"
+"Sa ovim modulom:\n"
+"    A + B + C -> D + E\n"
+"    "
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
 msgid "Product UOM"
-msgstr "Jedinica mjere proizvoda"
+msgstr "JM proizvoda"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,bom_id:0
@@ -92,7 +106,7 @@ msgstr "Sastavnica"
 #. module: mrp_subproduct
 #: constraint:mrp.bom:0
 msgid "Error ! You can not create recursive BoM."
-msgstr ""
+msgstr "Greška ! Ne možete kreirati rekurzivne sastavnice."
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
@@ -102,22 +116,22 @@ msgstr "Podproizvodi"
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Variable"
-msgstr "Varijabla"
+msgstr "Promjenljiva"
 
 #. module: mrp_subproduct
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
-msgstr ""
+msgstr "Količina na nalogu ne smije biti negativna ili nula!"
 
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
 msgid "Sub Product"
-msgstr ""
+msgstr "Podproizvod"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Fixed"
-msgstr "Određeno"
+msgstr "Fiksno"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

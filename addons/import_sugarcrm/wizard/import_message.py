@@ -27,3 +27,5 @@ class import_message(osv.osv):
      _description = __doc__
      
 import_message()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Collaborative Note Pad',
+    'name': 'Collaborative Pads',
     'version': '2.0',
-    'category': 'Hidden',
+    "category": "Project Management",
     'complexity': "easy",
     'description': """
 Adds enhanced support for (Ether)Pad attachments in the web client.
@@ -27,3 +27,5 @@ Lets the company customize which Pad installation should be used to link to new 
     ],
     'images': ['static/src/img/pad_link_companies.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

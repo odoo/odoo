@@ -136,6 +136,7 @@
         </record>
 
         <act_window domain="[('partner_id', '=', active_id), ('email_from', '!=', False)]"
+            context="{'default_partner_id': active_id}"
             id="act_res_partner_emails" name="Emails"
             res_model="mail.message"
             src_model="res.partner"
