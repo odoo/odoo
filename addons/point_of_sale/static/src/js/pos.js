@@ -1161,6 +1161,23 @@ openerp.point_of_sale = function(db) {
         };
         return App;
     })();
+    
+    db.point_of_sale.SynchNotification = db.web.Widget.extend({
+        template: "pos-synch-notification",
+        init: function() {
+            this._super.apply(this, arguments);
+            this.nbr_pending = 0;
+        },
+        render_element: function() {
+            this._super.apply(this, arguments);
+            $('.oe_pos_synch-notification-button', this.$element).click(this.on_synch);
+        },
+        on_change_nbr_pending: function(nbr_pending) {
+            this.nbr_pending = nbr_pending;
+            this.render_element();
+        },
+        on_synch: function() {}
+    });
 
     db.web.client_actions.add('pos.ui', 'db.point_of_sale.PointOfSale');
     db.point_of_sale.PointOfSale = db.web.Widget.extend({
@@ -1172,6 +1189,10 @@ openerp.point_of_sale = function(db) {
                 throw "It is not possible to instantiate multiple instances "+
                     "of the point of sale at the same time.";
             pos = new Pos(this.session);
+            
+            this.synch_notification = new db.point_of_sale.SynchNotification(this);
+            this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
+            this.synch_notification.on_synch.add(_.bind(pos.flush, pos));
             
             pos.bind('change:pending_operations', this.changed_pending_operations, this);
             this.changed_pending_operations();
@@ -1192,7 +1213,7 @@ openerp.point_of_sale = function(db) {
         changed_pending_operations: function () {
             var operations = pos.get('pending_operations');
             var number = operations.length;
-            
+            this.synch_notification.on_change_nbr_pending(number);
         },
         try_close: function() {
             this.close();
