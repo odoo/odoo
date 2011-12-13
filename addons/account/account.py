@@ -771,7 +771,9 @@ class account_journal(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if not 'sequence_id' in vals or not vals['sequence_id']:
-            vals.update({'sequence_id': self.create_sequence(cr, uid, vals, context)})
+            # if we have the right to create a journal, we should be able to
+            # create it's sequence.
+            vals.update({'sequence_id': self.create_sequence(cr, 1, vals, context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
     def name_get(self, cr, user, ids, context=None):

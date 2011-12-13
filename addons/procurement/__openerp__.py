@@ -25,7 +25,7 @@
     "version" : "1.0",
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
-    "category" : "Warehouse Management",
+    "category" : "Hidden/Dependency",
     "depends" : ["base","process", "product", "stock"],
     "description": """
 This is the module for computing Procurements.

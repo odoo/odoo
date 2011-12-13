@@ -9,11 +9,10 @@
                 <form string="Manufacturing board">
                     <board style="2-1">
                         <column>
-                            <action name="%(mrp.mrp_production_action2)d" string="Next Production Orders" creatable="true"/>
                             <action name="%(procurement.procurement_exceptions)d" string="Procurements in Exception" domain="[('state','=','exception')]"/>
+                            <action name="%(mrp.mrp_production_action2)d" string="Next Production Orders" creatable="true"/>
                         </column>
                         <column>
-                            <action name="%(mrp.action_report_workcenter_load_tree)d" string="Work Center Future Load"/> <!--groups="base.group_extended"-->
                             <action name="%(mrp.action_report_in_out_picking_tree)d" string="Stock Value Variation"/>
                         </column>
                     </board>

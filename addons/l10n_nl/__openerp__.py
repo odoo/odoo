@@ -86,9 +86,9 @@
 #   Changed naming of 7020 and 7030 to Kostprijs omzet xxxx
 
 {
-    "name" : "Netherlands - Grootboek en BTW rekeningen",
+    "name" : "Netherlands - Accounting",
     "version" : "1.5",
-    "category": "Localization/Account Charts",
+    "category": "Localization",
     "description": """
 This is the module to manage the accounting chart for Netherlands in OpenERP.
 =============================================================================

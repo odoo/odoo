@@ -1,0 +1,45 @@
+-
+  In order to test the process of Timebox in Project Management module,
+  I set my task from Daily to Weekly Timebox through Plannify Timebox
+-
+  !record {model: project.timebox.fill.plan, id: plan_id}:
+    task_ids: [project.project_task_10]
+    timebox_id: timebox_daily
+    timebox_to_id: timebox_weekly
+-
+  I set the task from Daily Timebox to Weekly Timebox
+-
+  !python {model: project.timebox.fill.plan}: |
+    self.process(cr, uid, [ref("plan_id")])
+-
+  I check task is set to Weekly Timebox
+-
+  !assert {model: project.task, id: project.project_task_10, string: Task should be set to weekly timebox}:
+     - timebox_id.id == ref("timebox_weekly")
+-
+  I Empty the Weekly Timebox
+-
+  !python {model: project.timebox.empty}: |
+      self._empty(cr, uid,  {"active_model": "project.gtd.timebox",
+      "active_ids":[ref("timebox_weekly")],
+      "active_id": ref("timebox_weekly"),
+      })
+-
+  I check task 'Develop Module in Sale Management' is no more in Weekly Timebox
+-
+  !assert {model: project.task, id: project.project_task_10 , string: Task is not in Weekly Timebox }:
+     - timebox_id.id != ref("timebox_weekly")
+-
+  I set Previous Timebox on task
+-
+  !python {model: project.task}: |
+     previous_timebox = self.prev_timebox(cr, uid, [ref("project.project_task_10")],
+     {'active_ids': [ref("project_gtd.menu_open_gtd_timebox_tree")],})
+     assert previous_timebox == True, "I set Previous Timebox on task"
+-
+  I set Next Timebox on task
+-
+  !python {model: project.task}: |
+      next_timebox = self.next_timebox(cr, uid, [ref("project.project_task_10")],
+      {'active_ids': [ref("project_gtd.menu_open_gtd_timebox_tree")],})
+      assert next_timebox == True, "I set Next Timebox on task"

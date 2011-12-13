@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Project Specs as PADs',
+    'name': 'Specifications on PADs',
     'version': '1.0',
     "category": "Project Management",
     'complexity': "easy",

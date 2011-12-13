@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Auction Management',
+    'name': 'Auction Houses',
     'version': '1.0',
     'category': 'Specific Industry Applications',
     'complexity': "normal",
