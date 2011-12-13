@@ -20,9 +20,10 @@ openerp.web.embed = function(session) {
     
     session.web.EmbedClient = session.web.Widget.extend({
         template: 'EmptyComponent',
-        init: function(action_id) {
+        init: function(action_id, options) {
             this._super();
             this.action_id = action_id;
+            this.options = options || {};
             this.am = new session.web.ActionManager();
         },
 
@@ -39,7 +40,7 @@ openerp.web.embed = function(session) {
                     action_buttons : false,
                     sidebar : false
                     //pager : false
-                }, action.flags || {});
+                }, self.options, action.flags || {});
 
                 self.am.do_action(action);
             });
