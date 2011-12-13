@@ -638,9 +638,7 @@ form: module.record_id""" % (xml_id,)
                     action_mode, = cr.fetchone()
                 if action_type=='tree':
                     values['icon'] = 'STOCK_INDENT'
-                elif action_mode and ( action_mode.startswith('tree') 
-                                       or  action_mode.startswith('kanban') 
-                                       or  action_mode.startswith('gantt')):
+                elif action_mode and ( action_mode.startswith(('tree','kanban','gantt'))): 
                     values['icon'] = 'STOCK_JUSTIFY_FILL'
                 elif action_mode and action_mode.startswith('graph'):
                     values['icon'] = 'terp-graph'
