@@ -102,6 +102,7 @@ session.web.ActionManager = session.web.Widget.extend({
         this.content_stop();
     },
     ir_actions_act_window: function (action, on_close) {
+        var self = this;
         if (_(['base.module.upgrade', 'base.setup.installer'])
                 .contains(action.res_model)) {
             var old_close = on_close;
@@ -125,12 +126,13 @@ session.web.ActionManager = session.web.Widget.extend({
         } else  {
             this.dialog_stop();
             this.content_stop();
+            this.inner_action = action;
             this.inner_viewmanager = new session.web.ViewManagerAction(this, action);
-            this.inner_viewmanager.do_push_state.add(this.do_push_state);
+            this.inner_viewmanager.do_push_state.add(function(state,overwrite) {
+                state['action_id'] = action.id;
+                self.do_push_state(state,true);
+            });
             this.inner_viewmanager.appendTo(this.$element);
-            if (action.id) {
-                this.do_push_state({action_id: action.id}, true);
-            }
         }
     },
     ir_actions_act_window_close: function (action, on_closed) {
