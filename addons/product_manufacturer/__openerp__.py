@@ -18,7 +18,7 @@
 #
 ##############################################################################
 {
-    "name" : "Products Attributes & Manufacturers",
+    "name" : "Products Manufacturers",
     "version" : "1.0",
     "author" : "OpenERP SA",
     'category': 'Purchase Management',

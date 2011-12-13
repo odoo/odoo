@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Timesheets',
+    'name': 'Timesheets Validation',
     'version': '1.0',
     'category': 'Human Resources',
     'description': """

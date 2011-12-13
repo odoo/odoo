@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Attendance',
+    'name': 'Attendances',
     'version': '1.1',
     'category': 'Human Resources',
     'complexity': "easy",

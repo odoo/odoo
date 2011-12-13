@@ -21,7 +21,7 @@
 
 
 {
-    "name" : "Marketing Campaign, demo data",
+    "name" : "Marketing Campaign - Demo",
     "version" : "1.0",
     "depends" : ["marketing_campaign",
                  "crm",
