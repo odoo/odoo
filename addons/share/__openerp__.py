@@ -22,11 +22,11 @@
 
 
 {
-    "name" : "Web Share",
+    "name" : "Share any Document",
     "version" : "2.0",
     "depends" : ["base", "mail"],
     "author" : "OpenERP SA",
-    "category": 'Hidden',
+    "category": 'Tools',
     'complexity': "easy",
     "description": """
 This module adds generic sharing tools to your current OpenERP database.

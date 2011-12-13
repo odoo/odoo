@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Base Setup',
+    'name': 'Initial Setup Tools',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Dependency',
     'complexity': "easy",
     'description': """
 This module helps to configure the system at the installation of a new database.

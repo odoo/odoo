@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Event',
+    'name': 'Events Organisation',
     'version': '0.1',
-    'category': 'Hidden',
+    'category': 'Tools',
     'complexity': "easy",
     'description': """
 Organization and management of Events.

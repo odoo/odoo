@@ -274,23 +274,6 @@
 
 
     # ------------------------------------------------------
-    # Project
-    # ------------------------------------------------------
-
-        <record id="project.view_project_user_form1" model="ir.ui.view">
-            <field name="name">Project Resource Calendar View</field>
-            <field name="model">project.project</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="project.edit_project"/>
-            <field name="arch" type="xml">
-                <field name="effective_hours" position="after">
-                    <field name="resource_calendar_id"/>
-                </field>
-
-            </field>
-       </record>
-
-    # ------------------------------------------------------
     # Project Task
     # ------------------------------------------------------
 

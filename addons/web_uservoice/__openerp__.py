@@ -21,7 +21,7 @@
 {
     'name': 'Receive User Feedback',
     'version': '2.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'complexity': "easy",
     'description': """
 Add Feedback button in header.
