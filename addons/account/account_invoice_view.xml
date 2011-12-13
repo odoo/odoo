@@ -362,13 +362,13 @@
                         <separator orientation="vertical"/>
                         <filter name="unpaid" icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                         <separator orientation="vertical"/>
-                        <field name="number"/>
+                        <field name="number"
+                            string="Reference"
+                            filter_domain="['|', ('number','ilike',self),('origin','ilike',self)]"/>
                         <field name="partner_id"/>
                         <field name="user_id" widget="selection" string="Salesman">
-                        <filter domain="[('user_id','=',uid)]" help="My invoices" icon="terp-personal" />
+                            <filter domain="[('user_id','=',uid)]" help="My invoices" icon="terp-personal" />
                         </field>
-                        <field name="origin"/>
-                        <field name="amount_total"/>
                     </group>
                     <newline/>
                     <group>

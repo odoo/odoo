@@ -84,7 +84,6 @@
                 <tree string="Sales Orders" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
                     <field name="name"/>
                     <field name="date_order"/>
-                    <field name="client_order_ref" groups="base.group_extended"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="picked_rate" widget="progressbar"/>
@@ -259,7 +258,8 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sales Order ready to be invoiced"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
+                    <field name="name"
+                        filter_domain="['|', ('name','ilike',self),('client_order_ref','ilike',self)]"/>
                     <field name="partner_id"/>
                     <field name="user_id">
                         <filter domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal"/>

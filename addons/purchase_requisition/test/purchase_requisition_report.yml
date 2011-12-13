@@ -1,8 +1,0 @@
--
-  In order to test the PDF reports defined on Purchase Requisition, we will print a Requisition report
-- 
-  !python {model: purchase.requisition}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.purchase.requisition').create(cr, uid, [ref('purchase_requisition.order_purchase_requisition1')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'purchase_requisition-purchase_requisition_report.'+format), 'wb+').write(data)

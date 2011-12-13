@@ -102,6 +102,7 @@ Dashboard for Sales Manager that includes:
     ],
     'installable': True,
     'active': False,
+    'application': True,
     'certificate': '0058103601429',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

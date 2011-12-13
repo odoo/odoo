@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Inventory Management",
+    "name" : "Warehouse Management",
     "version" : "1.1",
     "author" : "OpenERP SA",
     'complexity': "easy",

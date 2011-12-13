@@ -25,7 +25,7 @@
     "version" : "1.1",
     "depends" : ["base", "base_setup"],
     "author" : "OpenERP SA",
-    "category": 'Marketing',
+    "category": 'Hidden/Dependency',
     'complexity': "expert",
     "description": """
 Menu for Marketing.

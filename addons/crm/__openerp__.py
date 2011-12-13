@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Customer Relationship Management',
+    'name': 'CRM',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'complexity': "easy",
