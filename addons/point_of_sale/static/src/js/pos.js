@@ -703,13 +703,12 @@ openerp.point_of_sale = function(db) {
         changeSelectedOrder: function() {
             this.currentOrderLines.unbind();
             this.bindOrderLineEvents();
-            return this.render_element();
+            this.render_element();
         },
         bindOrderLineEvents: function() {
             this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
             this.currentOrderLines.bind('add', this.addLine, this);
-            this.currentOrderLines.bind('change', this.render_element, this);
-            return this.currentOrderLines.bind('remove', this.render, this);
+            this.currentOrderLines.bind('remove', this.render_element, this);
         },
         addLine: function(newLine) {
             var line = new OrderlineWidget(null, {
@@ -718,7 +717,7 @@ openerp.point_of_sale = function(db) {
                     numpadState: this.numpadState
             });
             line.appendTo(this.$element);
-            return this.updateSummary();
+            this.updateSummary();
         },
         render_element: function() {
             this.$element.empty();
@@ -730,7 +729,7 @@ openerp.point_of_sale = function(db) {
                 });
                 line.appendTo(this.$element);
             }, this));
-            return this.updateSummary();
+            this.updateSummary();
         },
         updateSummary: function() {
             var currentOrder, tax, total, totalTaxExcluded;
@@ -740,7 +739,7 @@ openerp.point_of_sale = function(db) {
             tax = currentOrder.getTax();
             $('#subtotal').html(totalTaxExcluded.toFixed(2)).hide().fadeIn();
             $('#tax').html(tax.toFixed(2)).hide().fadeIn();
-            return $('#total').html(total.toFixed(2)).hide().fadeIn();
+            $('#total').html(total.toFixed(2)).hide().fadeIn();
         },
     });
     /*
