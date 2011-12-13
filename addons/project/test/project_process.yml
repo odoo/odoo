@@ -17,8 +17,7 @@
   I check project details after convert from template.
 -
   !assert {model: project.project, id: project_integrate_openerp, severity: error, string: Project should be active}:
-       - state == "open"
-
+    - state == "open"
 -
   I put project in pending.
 -
@@ -28,7 +27,7 @@
   I check state after put in pending.
 -
   !assert {model: project.project, id: project_integrate_openerp, severity: error, string: Project should be in pending state}:
-       - state == "pending"
+    - state == "pending"
 -
   I re-open the project.
 -
@@ -38,7 +37,7 @@
   I check state after reopen.
 -
   !assert {model: project.project, id: project_integrate_openerp, severity: error, string: Project should be open.}:
-       - state == "open"
+    - state == "open"
 -
   I close the project.
 -
@@ -48,7 +47,7 @@
   I check state after closed.
 -
   !assert {model: project.project, id: project_integrate_openerp, severity: error, string: Project should be close.}:
-       - state == "close"
+    - state == "close"
 -
   I set project into template.
 -
@@ -59,6 +58,11 @@
 -
   !python {model: project.project}: |
     self.schedule_tasks(cr, uid, [ref("project_integrate_openerp")], context=context)
+-
+  I copy the tasks of project.
+-
+  !python {model: project.project}: |
+    self.template_copy(cr, uid, ref("project_integrate_openerp"))
 -
   I cancel Project.
 -

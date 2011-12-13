@@ -62,6 +62,7 @@ Dashboard for project members that includes:
         'project_demo.xml',
     ],
     'test':[
+        'test/project_demo.yml',
         'test/project_process.yml',
         'test/task_process.yml',
     ],
