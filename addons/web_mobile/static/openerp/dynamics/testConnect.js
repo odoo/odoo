@@ -3,7 +3,7 @@ var ip = '';
 var USER = '';
 var PWD = '';
 SESSION = new oe.base.Session('DEBUG');
-SESSION.session_login(db,USER,PWD, initLogin);
+SESSION.login(db,USER,PWD, initLogin);
 
 function initLogin() {
 	// Le premier argument de la fonction -> référence à une fonction python.

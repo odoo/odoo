@@ -485,10 +485,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     session_is_valid: function() {
         return this.uid;
     },
-    session_login: function(db, login, password, success_callback) {
+    session_authenticate: function(db, login, password, success_callback) {
         var self = this;
-        var params = { db: db, login: login, password: password };
-        return this.rpc("/web/session/login", params, function(result) {
+        var base_location = document.location.protocol + '//' + document.location.host;
+        var params = { db: db, login: login, password: password, base_location: base_location };
+        return this.rpc("/web/session/authenticate", params, function(result) {
             _.extend(self, {
                 session_id: result.session_id,
                 uid: result.uid,
@@ -501,7 +502,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             return true;
         }).then(success_callback);
     },
-    login: function() { this.session_login.apply(this, arguments); },
+    login: function() { this.session_authenticate.apply(this, arguments); },
     /**
      * Reloads uid and session_id from local storage, if they exist
      */
