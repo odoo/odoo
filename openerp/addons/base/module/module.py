@@ -331,8 +331,8 @@ class module(osv.osv):
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
-        config = pool.get('res.config').next(cr, uid, [], context=context)
-        if config:
+        config = pool.get('res.config').next(cr, uid, [], context=context) or {}
+        if config.get('type') not in ('ir.actions.reload', 'ir.actions.act_window_close'):
             return config
 
         menu_ids = self.root_menus(cr,uid,ids,context)
