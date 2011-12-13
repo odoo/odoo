@@ -1099,10 +1099,10 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.action_manager.do_action(action);
     },
     do_action: function(action) {
+        var self = this;
         if(action.type === "ir.ui.menu") {
-            console.log(action);
             this.do_reload().then(function () {
-                this.rpc('/web/menu/action', {'menu_id': action.menu_id}, this.menu.on_menu_action_loaded);
+                self.menu.on_menu_click(null, action.menu_id);
             });
         }
     },
