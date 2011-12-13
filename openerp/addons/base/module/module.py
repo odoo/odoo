@@ -330,6 +330,11 @@ class module(osv.osv):
         self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+
+        config = pool.get('res.config').next(cr, uid, [], context=context)
+        if config:
+            return config
+
         menu_ids = self.root_menus(cr,uid,ids,context)
         if menu_ids:
             action = {
