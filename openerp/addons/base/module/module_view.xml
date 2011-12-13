@@ -49,9 +49,7 @@
                         <field name="name"
                             filter_domain="['|', ('name','ilike',self), ('shortdesc','ilike',self)]"
                             string="Name"/>
-                        <field name="name"
-                            filter_domain="[('description','ilike',self)]"
-                            string="Keywords"/>
+                        <field name="description" string="Keywords"/>
                     </group>
                </search>
             </field>
