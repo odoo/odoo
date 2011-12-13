@@ -334,6 +334,8 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 };
                 if (modifiers['tree_invisible']) {
                     column.invisible = '1';
+                } else {
+                    delete column.invisible;
                 }
             } else {
                 column.modifiers_for = noop;
