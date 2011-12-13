@@ -23,6 +23,8 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv
+from tools.translate import _
+from tools import DEFAULT_SERVER_DATE_FORMAT
 
 class sale_order_dates(osv.osv):
     """Add several date fields to Sale Orders, computed or user-entered"""
@@ -56,13 +58,48 @@ class sale_order_dates(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             dates_list = []
             for line in order.order_line:
-                dt = (datetime.strptime(order.date_order, '%Y-%m-%d')
+                dt = (datetime.strptime(order.date_order,
+                                        DEFAULT_SERVER_DATE_FORMAT)
                      + relativedelta(days=line.delay or 0.0) )
-                dt_s = dt.strftime('%Y-%m-%d')
+                dt_s = dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
                 dates_list.append(dt_s)
             if dates_list:
                 res[order.id] = min(dates_list)
         return res
+
+    def onchange_requested_date(self, cr, uid, ids, requested_date,
+                                commitment_date, context=None):
+        """Warn if the requested dates is sooner than the commitment date"""
+        if requested_date < commitment_date:
+            lang = self.pool.get("res.users").browse(cr, uid, uid,
+                                                 context=context).context_lang
+            if lang:
+                lang_ids = self.pool.get('res.lang').search(cr, uid,
+                                                     [('code', '=', lang)])
+                date_format = self.pool.get("res.lang").browse(cr, uid,
+                                    lang_ids, context=context)[0].date_format
+                # Parse the dates...
+                req_date_formated = datetime.strptime(requested_date,
+                                                  DEFAULT_SERVER_DATE_FORMAT)
+                com_date_formated = datetime.strptime(commitment_date,
+                                                  DEFAULT_SERVER_DATE_FORMAT)
+                # ... and reformat them according to the user's language
+                req_date_formated = req_date_formated.strftime(date_format)
+                com_date_formated = com_date_formated.strftime(date_format)
+            else:
+                req_date_formated = requested_date
+                com_date_formated = commitment_date
+            print lang, req_date_formated, com_date_formated
+            return {'warning': {
+                'title': _('Requested date is too soon!'),
+                'message': _("The date requested by the customer (%s) is "
+                             "sooner than the commitment date (%s). You may be "
+                             "unable to honor the customer's request." % 
+                                 (req_date_formated, com_date_formated))
+                }
+            }
+        else:
+            return {}
 
     _columns = {
         'commitment_date': fields.function(_get_commitment_date, store=True,
