@@ -322,7 +322,7 @@ openerp.point_of_sale = function(db) {
         Paymentline.prototype.exportAsJSON = function() {
             var result;
             result = {
-                name: "Payment line",
+                name: db.web.datetime_to_str(new Date()),
                 statement_id: this.get('id'),
                 account_id: (this.get('account_id'))[0],
                 journal_id: (this.get('journal_id'))[0],
