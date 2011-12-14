@@ -152,6 +152,7 @@ session.web.ActionManager = session.web.Widget.extend({
     },
     ir_actions_client: function (action) {
         this.content_stop();
+        this.dialog_stop();
         var ClientWidget = session.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
 

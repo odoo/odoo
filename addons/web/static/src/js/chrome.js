@@ -663,7 +663,7 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
             self.$content.remove();
             if (!self.session.uid)
                 return;
-            var func = new openerp.web.Model(self.session, "res.users").get_func("read");
+            var func = new openerp.web.Model("res.users").get_func("read");
             return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
                 self.$content = $(QWeb.render("Header-content", {widget: self, user: res}));
                 self.$content.appendTo(self.$element);
