@@ -121,18 +121,6 @@ class res_partner_address(osv.osv):
     _name = 'res.partner.address'
     _inherits = { 'res.partner.location' : 'location_id' }
 
-    def _get_use_existing_address(self, cr, uid, ids, fieldnames, args, context=None):
-        result = dict.fromkeys(ids, 0)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = 0
-        return result
-
-    def _set_use_existing_address(self, cr, uid, ids, field, value, arg, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-
-        return True
-
     _columns = {
         'location_id' : fields.many2one('res.partner.location', 'Location'),
         'location2_id' : fields.many2one('res.partner.location', 'Location'),
@@ -146,9 +134,6 @@ class res_partner_address(osv.osv):
         'date_stop': fields.date('Date Stop', help="Last date of job"),
         'state': fields.selection([('past', 'Past'),('current', 'Current')], \
                                   'State', required=True, help="Status of Address"),
-        'use_existing_address' : fields.function(_get_use_existing_address, type="boolean",
-                                                 fnct_inv=_set_use_existing_address, 
-                                                 string='Use Existing Address'),
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -169,7 +154,7 @@ class res_partner_address(osv.osv):
     def create(self, cr, uid, values, context=None):
         record_id = super(res_partner_address, self).create(cr, uid, values, context=context)
         record = self.browse(cr, uid, record_id, context=context)
-        if not record.partner_id:
+        if not record.partner_id and record.location2_id and record.location2_id.partner_id:
             record.write({'partner_id' : record.location2_id.partner_id.id}, context=context)
         return record_id
 

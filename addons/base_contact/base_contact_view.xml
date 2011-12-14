@@ -242,6 +242,25 @@
 
     <!-- Views for Addresses -->
 
+    <record model="ir.ui.view" id="view_partner_location_tree">
+        <field name="name">res.partner.location.tree</field>
+        <field name="model">res.partner.location</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Locations">
+                <field name="type" />
+                <field name="street"/>
+                <field name="street2"/>
+                <field name="zip"/>
+                <field name="city"/>
+                <field name="country_id" />
+                <field name="state_id"/>
+                <field name="phone"/>
+                <field name="fax"/>
+            </tree>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="view_partner_address_form_inherited0">
         <field name='name'>res.partner.address.form.inherited0</field>
         <field name='model'>res.partner.address</field>
@@ -257,12 +276,11 @@
                 <group colspan="6" col="2">
                     <field name="title" />
                     <field name="contact_id" />
-                    <field name="contact_firstname" />
-                    <field name="contact_name" />
                 </group>
             </field>
             <field name="partner_id" position="replace">
                 <field name='partner_id' select='1'/>
+                <!-- <field name="location_id" domain="[('partner_id', '=', partner_id)]"/> -->
                 <field name='type' select='2' invisible="1"/>
                 <field name="function" />
             </field>
