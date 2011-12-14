@@ -89,21 +89,11 @@ class WebRequest(object):
         self.config = config
         self.session = None
 
-    def init_session(self, session_id):
-        if self.session:
-            assert self.session.id == session_id
-            return
-
-        self.session_id = session_id or uuid.uuid4().hex
-        self.session = self.httpsession.setdefault(self.session_id, session.OpenERPSession(self.session_id))
-        self.session.config = self.config
-
     def init(self, params):
         self.params = dict(params)
-
-        # OpenERP session setup
-        session_id = self.params.pop("session_id", None)
-        self.init_session(session_id)
+        self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
+        self.session = self.httpsession.setdefault(self.session_id, session.OpenERPSession(self.session_id))
+        self.session.config = self.config
         self.context = self.params.pop('context', None)
         self.debug = self.params.pop('debug', False) != False
 
@@ -140,37 +130,6 @@ class JsonRequest(WebRequest):
            "id": null}
 
     """
-
-
-    def _init_jsonrpc2(self):
-        assert self.jsonrequest.get('jsonrpc') == '2.0'
-        self.init(self.jsonrequest.get("params", {}))
-        response = {"jsonrpc": "2.0" }
-
-        def build_response(response):
-            content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
-            return werkzeug.wrappers.Response(
-                content, headers=[('Content-Type', 'application/json'),
-                                  ('Content-Length', len(content))])
-
-        return response, build_response
-
-    def _init_jsonp(self, callback):
-        self.init(self.jsonrequest)
-
-        def build_response(response):
-            content = "%s(%s);" % (\
-                        callback,
-                        simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder),
-                      )
-
-            return werkzeug.wrappers.Response(
-                content, headers=[('Content-Type', 'application/javascript'),
-                                  ('Content-Length', len(content))])
-
-        return {}, build_response
-
-
     def dispatch(self, controller, method):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
 
@@ -179,54 +138,36 @@ class JsonRequest(WebRequest):
 
         :returns: an utf8 encoded JSON-RPC2 or JSONP reply
         """
+        method = self.httprequest.method
+        args = self.httprequest.args
+        jsonp = args.get('jsonp', False)
 
-        requestf = self.httprequest.stream
-        direct_json_request = None
-        jsonp_callback = None
-        rid = None
-        if requestf:
-            direct_json_request = requestf.read()
-
-        if not direct_json_request:
-            params = self.httprequest.args
-            direct_json_request = params.get('r')
-            jsonp_callback = params.get('callback')
-
-        if direct_json_request:
-            try:
-                self.jsonrequest = simplejson.loads(direct_json_request, object_hook=nonliterals.non_literal_decoder)
-            except Exception, e:
-                _logger.exception(e)
-                return werkzeug.exceptions.BadRequest(e)
+        if jsonp and args.get('r'):
+            # jsonp method GET
+            requestf = StringIO.StringIO(args.get('r'))
+        elif jsonp and method == 'POST':
+            # jsonp 2 steps step1 POST: save call
+            self.init(args)
+            req.session.jsonp_requests[args.get('id')] = self.httprequest.form['r']
+            headers=[('Content-Type', 'text/plain; charset=utf-8')]
+            r = werkzeug.wrappers.Response(request_id, headers=headers)
+            return r
+        elif args['jsonp'] and args.get('id'):
+            # jsonp 2 steps step2 GET: run and return result
+            self.init(args)
+            requestf = StringIO.StringIO(self.session.jsonp_requests.pop(args.get(id), ""))
         else:
-            # no direct json request, try to get it from jsonp POST request
-            params = self.httprequest.args
-            rid = params.get('rid')
-            session_id = params.get('sid')
-            if session_id:
-                self.init_session(session_id)
-                stored_request = self.session.jsonp_requests.pop(rid, {})
-            else:
-                stored_request = {}
+            # regular jsonrpc2
+            requestf = self.httprequest.stream
+            self.init(self.jsonrequest.get("params", {}))
 
-            jsonp_callback = stored_request.get('jsonp')
-            self.jsonrequest = stored_request.get('params', {})
-
-
-        if self.jsonrequest.get('jsonrpc') == '2.0':
-            response, build_response = self._init_jsonrpc2()
-        elif jsonp_callback:
-            response, build_response = self._init_jsonp(jsonp_callback)
-        else:
-            return werkzeug.exceptions.BadRequest()
-
+        response = {"jsonrpc": "2.0" }
         error = None
-        if not rid:
-            rid = self.jsonrequest.get('id')
         try:
+            self.jsonrequest = simplejson.loads(direct_json_request, object_hook=nonliterals.non_literal_decoder)
+            self.init(self.jsonrequest.get("params", {}))
             if _logger.isEnabledFor(logging.DEBUG):
                 _logger.debug("[%s] --> %s.%s\n%s", rid, controller.__class__.__name__, method.__name__, pprint.pformat(self.jsonrequest))
-            response['id'] = rid
             response["result"] = method(controller, self, **self.params)
         except openerplib.AuthenticationError:
             error = {
@@ -249,8 +190,6 @@ class JsonRequest(WebRequest):
                 }
             }
         except Exception:
-            logging.getLogger(__name__ + '.JSONRequest.dispatch').exception\
-                ("An error occured while handling a json request")
             error = {
                 'code': 300,
                 'message': "OpenERP WebClient Error",
@@ -262,11 +201,18 @@ class JsonRequest(WebRequest):
         if error:
             response["error"] = error
             _logger.error("[%s] <--\n%s", rid, pprint.pformat(response))
-
         elif _logger.isEnabledFor(logging.DEBUG):
             _logger.debug("[%s] <--\n%s", rid, pprint.pformat(response))
 
-        return build_response(response)
+        if jsonp:
+            mime = 'application/javascript'
+            body = "%s(%s);" % (jsonp, simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder),)
+        else:
+            mime = 'application/json'
+            body = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
+
+        r = werkzeug.wrappers.Response(body, headers=[('Content-Type', mime), ('Content-Length', len(body))])
+        return r
 
 def jsonrequest(f):
     """ Decorator marking the decorated method as being a handler for a
@@ -430,29 +376,12 @@ class ControllerType(type):
 class Controller(object):
     __metaclass__ = ControllerType
 
-
-class JSONP(Controller):
-    _cp_path = '/web/jsonp'
-
-    @httprequest
-    def post(self, req, request_id, params, callback):
-        params = simplejson.loads(params, object_hook=nonliterals.non_literal_decoder)
-        params['session_id'] = req.session.id
-        req.session.jsonp_requests[request_id] = {
-            'jsonp': callback,
-            'params': params,
-            'id': request_id,
-        }
-
-        headers=[('Content-Type', 'text/plain; charset=utf-8')]
-        response = werkzeug.wrappers.Response(request_id, headers=headers)
-        return response
+class Proxy(Controller):
+    _cp_path = '/web/proxy'
 
     @jsonrequest
-    def static_proxy(self, req, path):
+    def load(self, req, path):
         #req.config.socket_port
-        
-
         #if not re.match('^/[^/]+/static/.*', path):
         #    return werkzeug.exceptions.BadRequest()
 
