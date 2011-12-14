@@ -80,7 +80,7 @@ openerp.point_of_sale = function(db) {
             }, this));
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
                 this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
-                this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name']),
+                this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'], [['state', '=', 'open']]),
                 this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
                 this.get_currency())
                 .then(this.build_tree);
@@ -1226,6 +1226,15 @@ openerp.point_of_sale = function(db) {
                 pos.app = new App(self.$element);
                 $('.oe_toggle_secondary_menu').hide();
                 $('.oe_footer').hide();
+                
+                if (pos.store.get('account.bank.statement').length === 0)
+                    return new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
+                            _.bind(function(res) {
+                        return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
+                            var action = result.result;
+                            this.do_action(action);
+                        }, this));
+                    }, this));
             }, this));
         },
         render: function() {
@@ -1264,12 +1273,12 @@ openerp.point_of_sale = function(db) {
             }, this));
         },
         close: function() {
-            new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
+            return new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
                     _.bind(function(res) {
-                this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
+                return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
                     var action = result.result;
-                    this.do_action(action)
-                    this.do_action({type: 'ir.actions.client', tag: 'default_home'});
+                    action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'default_home'}});
+                    this.do_action(action);
                 }, this));
             }, this));
         },
