@@ -1144,7 +1144,7 @@ label.error {
 .openerp .oe_form_readonly {
 
 }
-.openerp .oe_form_readonly .field_char, .openerp .oe_form_readonly .field_int, .openerp .oe_form_readonly .field_float, .openerp .oe_form_readonly .field_email, .openerp .oe_form_readonly .field_date, .openerp .oe_form_readonly .field_selection, .openerp .oe_forms_readonly .oe_form_field_many2one{
+.openerp .oe_form_readonly .oe_form_frame_cell .field_text, .openerp .oe_form_readonly .field_char, .openerp .oe_form_readonly .field_int, .openerp .oe_form_readonly .field_float, .openerp .oe_form_readonly .field_email, .openerp .oe_form_readonly .field_date, .openerp .oe_form_readonly .field_selection, .openerp .oe_forms_readonly .oe_form_field_many2one{
     padding: 3px 2px 2px 2px;
     background-color: white;
     height:17px;
@@ -1154,10 +1154,11 @@ label.error {
     background-color: white;
     height:17px;
 }
-.openerp .oe_form_readonly .oe_form_field_many2one {
+.openerp .oe_form_readonly .oe_form_field_many2one div {
     background-color:white;
-    height:17px;
-    margin:1px;
+    height:18px;
+    margin-bottom:1px;
+    padding: 0px 2px 5px 2px;
 }
 
 .openerp .oe_form_readonly .oe_form_field_text div.field_text {
@@ -1371,6 +1372,7 @@ label.error {
 
 .openerp .oe_view_manager_menu_tips blockquote div {
     text-align: right;
+    margin-right:10px;
 }
 
 .openerp .oe_view_manager_menu_tips blockquote div button {
@@ -1760,6 +1762,22 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-before {
 ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     border-color: rgba(0,0,0,0);
     border-left-color: #B5B9FF;
+}
+.openerp ul.oe-arrow-list li:first-child span:first-child{
+    -webkit-border-top-left-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-bottom-left-radius: 3px;
+}
+.openerp ul.oe-arrow-list li:last-child span:last-child{
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topright: 3px;
+    border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -moz-border-radius-bottomright: 3px;
+    border-bottom-right-radius: 3px;
 }
 .openerp .oe_view_editor {
     border-collapse: collapse;
