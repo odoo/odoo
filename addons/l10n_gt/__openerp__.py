@@ -33,7 +33,7 @@
 #
 
 {
-    'name': 'Guatemala - Plan contable general',
+    'name': 'Guatemala - Accounting',
     'version': '3.0',
     'category': 'Localization/Account Charts',
     'description': """

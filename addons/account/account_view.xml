@@ -326,6 +326,7 @@
         <menuitem
             name="Unrealized Gain or Loss"
             action="action_account_gain_loss"
+            groups="account.group_account_user"
             id="menu_unrealized_gains_losses"
             parent="account.menu_multi_currency"/>
 
@@ -2486,6 +2487,9 @@
             <field eval="5" name="sequence"/>
             <field name="code">
 act_window_ids = pool.get('ir.actions.act_window').search(cr, uid,[('name', 'in', ('Accounting Chart Configuration', 'Generate Chart of Accounts from a Chart Template'))], context=context)
+ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_account_configuration_installer')
+if ref:
+    act_window_ids += [ref[1]]
 todo_ids = pool.get('ir.actions.todo').search(cr, uid, [('action_id', 'in', act_window_ids)], context=context)
 pool.get('ir.actions.todo').write(cr, uid, todo_ids, {'state':'open'}, context=context)
 action = pool.get('res.config').next(cr, uid, [], context)

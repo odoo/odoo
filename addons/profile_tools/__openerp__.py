@@ -25,7 +25,7 @@
     "version" : "1.0",
     "depends" : ["base", "base_setup"],
     "author" : "OpenERP SA",
-    "category" : "Tools",
+    "category" : "Hidden/Dependency",
     'complexity': "easy",
     "description": """
 Installer for extra Hidden like lunch, survey, idea, share, etc.

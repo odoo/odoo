@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Human Resources",
+    "name": "Employee Address Book",
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Human Resources",
