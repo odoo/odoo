@@ -198,7 +198,7 @@ class account_asset_asset(osv.osv):
             res.setdefault(id, 0.0)
         return res
 
-    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
+    def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
         val = {}
         if company_id:
             company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
