@@ -52,8 +52,7 @@
                             <form string="Functions and Addresses">
                                <group colspan="4" col="4">
                                    <field name="function"/>
-                                   <field name="name" on_change="onchange_name(name,address_id)"/> 
-                                   <field name="address_id"/>                                   
+                                   <field name="name" />
                                    <field name="date_start" />
                                    <field name="date_stop" />
                                    <field name="state" />
@@ -69,7 +68,6 @@
                             <tree string="Functions and Addresses">
                                 <field name="function"/>
                                 <field name="name" on_change="onchange_partner(name)"/> 
-								<field name="address_id" attrs="{'required': [('name', '!=', False)]}" on_change="onchange_address(address_id)"/>
                                 <field name="phone"/>
                                 <field name="fax"/>
                                 <field name="email"/>
@@ -244,19 +242,6 @@
 
     <!-- Views for Addresses -->
 
-    <record model="ir.ui.view" id="view_partner_address_tree_inherited1">
-        <field name="name">Partner addresses inherited</field>
-        <field name="model">res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_tree"/>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <field name="name" position="replace">
-                <field name="name" />
-                <field name='job_ids' string='# of Contacts'/>
-            </field>
-        </field>
-    </record>
-
     <record model="ir.ui.view" id="view_partner_address_form_inherited0">
         <field name='name'>res.partner.address.form.inherited0</field>
         <field name='model'>res.partner.address</field>
@@ -271,6 +256,7 @@
                 <separator string="Contact" colspan="6" />
                 <group colspan="6" col="2">
                     <field name="title" />
+                    <field name="contact_id" />
                     <field name="contact_firstname" />
                     <field name="contact_name" />
                 </group>
@@ -278,7 +264,6 @@
             <field name="partner_id" position="replace">
                 <field name='partner_id' select='1'/>
                 <field name='type' select='2' invisible="1"/>
-                <field name='job_id' invisible="1"/>
                 <field name="function" />
             </field>
         </field>

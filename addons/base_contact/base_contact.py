@@ -71,6 +71,13 @@ class res_partner_contact(osv.osv):
         else:
             ids = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, ids, context=context)
+
+    def name_get(self, cr, uid, ids, context=None):
+        return [
+            (obj.id, " ".join(filter(None, [obj.first_name, obj.name])),)
+            for obj in self.browse(cr, uid, ids, context=context)
+        ]
+
     
 res_partner_contact()
 
@@ -87,7 +94,7 @@ class res_partner_location(osv.osv):
     _name = 'res.partner.location'
     _inherit = 'res.partner.address'
     _columns = {
-        'job_ids': fields.one2many('res.partner.address', 'location_id', 'Contacts'),
+        'job_ids': fields.one2many('res.partner.address', 'location2_id', 'Contacts'),
     }
 
     def _auto_init(self, cr, context=None):
@@ -114,24 +121,57 @@ class res_partner_address(osv.osv):
     _name = 'res.partner.address'
     _inherits = { 'res.partner.location' : 'location_id' }
 
+    def _get_use_existing_address(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict.fromkeys(ids, 0)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = 0
+        return result
+
+    def _set_use_existing_address(self, cr, uid, ids, field, value, arg, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+        return True
+
     _columns = {
         'location_id' : fields.many2one('res.partner.location', 'Location'),
-        'contact_id' : fields.many2one('res.partner.contact', 'Contact'),
+        'location2_id' : fields.many2one('res.partner.location', 'Location'),
+        'contact_id' : fields.many2one('res.partner.contact', 'Contact', required=True),
 
-        'contact_firstname' : fields.related('contact_id', 'first_name', type='char', size=64, string='FirstName'),
-        'name' : fields.related('contact_id', 'name', type='char', size='64', string="LastName"),
+        'partner_id' : fields.many2one('res.partner', 'Partner'),
+        'contact_firstname' : fields.related('contact_id', 'first_name', type='char', size=64, string='Firstname'),
+        'contact_name' : fields.related('contact_id', 'name', type='char', size='64', string="Lastname"),
         'function': fields.char('Partner Function', size=64, help="Function of this contact with this partner"),
         'date_start': fields.date('Date Start',help="Start date of job(Joining Date)"),
         'date_stop': fields.date('Date Stop', help="Last date of job"),
         'state': fields.selection([('past', 'Past'),('current', 'Current')], \
                                   'State', required=True, help="Status of Address"),
+        'use_existing_address' : fields.function(_get_use_existing_address, type="boolean",
+                                                 fnct_inv=_set_use_existing_address, 
+                                                 string='Use Existing Address'),
     }
+
+    def name_get(self, cr, uid, ids, context=None):
+        result = []
+
+        append_call = result.append
+        for obj in self.browse(cr, uid, ids, context=context):
+            append_call((obj.id, "%s, %s" % (obj.contact_id.name_get()[0][1], obj.location_id.name_get()[0][1],)))
+        return result
+
 
     _description ='Contact Partner Function'
 
     _defaults = {
         'state': 'current',
     }
+
+    def create(self, cr, uid, values, context=None):
+        record_id = super(res_partner_address, self).create(cr, uid, values, context=context)
+        record = self.browse(cr, uid, record_id, context=context)
+        if not record.partner_id:
+            record.write({'partner_id' : record.location2_id.partner_id.id}, context=context)
+        return record_id
 
     def _auto_init(self, cr, context=None):
         def column_exists(column):
@@ -145,7 +185,39 @@ class res_partner_address(osv.osv):
         super(res_partner_address, self)._auto_init(cr, context)
 
         if not exists:
-            cr.execute("UPDATE res_partner_address SET location_id = id")
+            cr.execute("UPDATE res_partner_address SET location_id = id, location2_id = id")
+
+            contact_proxy = self.pool.get('res.partner.contact')
+            uid = 1
+
+            cr.execute("SELECT id, name, mobile, country_id, partner_id, phone, email, street, street2, city, company_id, state_id, zip, location_id \
+                       FROM res_partner_address \
+                       WHERE contact_id IS NULL AND name IS NOT NULL AND location_id IS NOT NULL")
+            for item in cr.fetchall():
+
+                values = {
+                    'name' : item[1],
+                    'mobile' : item[2],
+                    'country_id' : item[3],
+                    'phone' : item[5],
+                    'email' : item[6],
+                    'company_id' : item[10],
+                }
+
+                contact_id = contact_proxy.create(cr, uid, values, context=context)
+                values = {
+                    'street' : item[7],
+                    'street2' : item[8],
+                    'city' : item[9],
+                    'country_id' : item[3],
+                    'company_id' : item[10],
+                    'state_id' : item[11],
+                    'zip' : item[12],
+                }
+                location_id = self.pool.get('res.partner.location').create(cr, uid, values, context=context)
+
+                cr.execute("UPDATE res_partner_address SET location_id = %s, contact_id = %s, partner_id = %s WHERE id = %s",
+                           (location_id, contact_id, item[4], item[0],))
 
 res_partner_address()
 
