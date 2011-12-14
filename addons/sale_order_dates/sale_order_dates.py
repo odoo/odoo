@@ -19,19 +19,31 @@
 #
 ##############################################################################
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv
 from tools.translate import _
-from tools import DEFAULT_SERVER_DATE_FORMAT
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 class sale_order_dates(osv.osv):
     """Add several date fields to Sale Orders, computed or user-entered"""
     _inherit = 'sale.order'
-
+    
+    def _order_line_move_date(self, cr, uid, line):
+        """Compute the expected date from the requested date, not the order date"""
+        order=line.order_id
+        if order and order.requested_date:
+            date_planned = datetime.strptime(order.requested_date,
+                                             DEFAULT_SERVER_DATE_FORMAT)
+            date_planned -= timedelta(days=order.company_id.security_lead)
+            return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        else:
+            return super(sale_order_dates, self)._order_line_move_date(cr, uid, line)
+        
     def _get_effective_date(self, cr, uid, ids, name, arg, context=None):
         """Read the shipping date from the related packings"""
+        # XXX would be better if it returned the date the picking was processed
         res = {}
         dates_list = []
         for order in self.browse(cr, uid, ids, context=context):
@@ -43,13 +55,6 @@ class sale_order_dates(osv.osv):
             else:
                 res[order.id] = False
         return res
-    
-    def _prepare_order_picking(self, cr, uid, order, *args):
-        """Take the requested date into account when creating the picking"""
-        picking_data = super(sale_order_dates, self)._prepare_order_picking(cr,
-                                                             uid, order, *args)
-        picking_data['date'] = order.requested_date
-        return picking_data
 
     def _get_commitment_date(self, cr, uid, ids, name, arg, context=None):
         """Compute the commitment date"""
@@ -70,7 +75,8 @@ class sale_order_dates(osv.osv):
     def onchange_requested_date(self, cr, uid, ids, requested_date,
                                 commitment_date, context=None):
         """Warn if the requested dates is sooner than the commitment date"""
-        if requested_date < commitment_date:
+        if (requested_date and commitment_date
+                           and requested_date < commitment_date):
             lang = self.pool.get("res.users").browse(cr, uid, uid,
                                                  context=context).context_lang
             if lang:
@@ -104,12 +110,22 @@ class sale_order_dates(osv.osv):
     _columns = {
         'commitment_date': fields.function(_get_commitment_date, store=True,
             type='date', string='Commitment Date',
-            help="Date by which the products must be delivered."),
+            help="Date by which the products is sure to be delivered. This is "
+                 "a date that you can promise to the customer, based on the "
+                 "Product Lead Times."),
         'requested_date': fields.date('Requested Date',
-            help="Date by which the customer has requested the products to be delivered."),
+            help="Date by which the customer has requested the items to be "
+                 "delivered.\n"
+                 "When this Order gets confirmed, the Delivery Order's "
+                 "expected date will be computed based on this date and the "
+                 "Company's Security Delay.\n"
+                 "Leave this field empty if you want the Delivery Order to be "
+                 "processed as soon as possible. In that case the expected "
+                 "date will be computed using the default method: based on "
+                 "the Product Lead Times and the Company's Security Delay."),
         'effective_date': fields.function(_get_effective_date, type='date',
             store=True, string='Effective Date',
-            help="Date on which shipping is created."),
+            help="Date on which the first Delivery Order was created."),
     }
 
 sale_order_dates()
