@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Invoice on Analytic Lines',
+    'name': 'Invoice on Timesheets',
     'version': '1.0',
     'category': 'Sales Management',
     'description': """Generate your Invoices from Expenses, Timesheet Entries, ...
