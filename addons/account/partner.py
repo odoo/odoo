@@ -187,6 +187,15 @@ class res_partner(osv.osv):
         'last_reconciliation_date': fields.datetime('Latest Reconciliation Date', help='Date on which the partner accounting entries were reconciled last time')
     }
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        default = default.copy()
+        default['ref_companies'] = []
+        return super(res_partner, self).copy(cr, uid, id, default, context=context)
+
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
