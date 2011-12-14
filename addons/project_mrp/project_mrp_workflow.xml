@@ -4,7 +4,7 @@
         <record id="trans_make_done_done2" model="workflow.transition">
             <field name="act_from" ref="procurement.act_make_done"/>
             <field name="act_to" ref="procurement.act_done"/>
-            <field name="condition">check_task_done()</field>
+            <field name="condition">action_check_finished()</field>
             <field name="trigger_model">project.task</field>
             <field name="trigger_expr_id">task_id and [task_id.id] or []</field>
         </record>

@@ -28,6 +28,10 @@ class procurement_order(osv.osv):
         'task_id': fields.many2one('project.task', 'Task'),
         'sale_line_id': fields.many2one('sale.order.line', 'Sale order line')
     }
+
+    def action_check_finished(self, cr, uid, ids):
+        res = super(procurement_order, self).action_check_finished(cr, uid, ids)
+        return res and self.check_task_done(cr, uid, ids)
     
     def check_task_done(self, cr, uid, ids, context=None):
         """ Checks if task is done or not.
