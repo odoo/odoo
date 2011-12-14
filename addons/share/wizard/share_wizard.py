@@ -200,6 +200,7 @@ class share_wizard(osv.osv_memory):
                 wizard_data.write({'result_line_ids': [(0,0,new_line)]})
                 continue
             new_pass = generate_random_pass()
+            context.update({'noshortcut':True})
             user_id = user_obj.create(cr, UID_ROOT, {
                     'login': new_user,
                     'password': new_pass,
@@ -208,7 +209,7 @@ class share_wizard(osv.osv_memory):
                     'groups_id': [(6,0,[group_id])],
                     'share': True,
                     'company_id': current_user.company_id.id
-            })
+            },context)
             new_line = { 'user_id': user_id,
                          'password': new_pass,
                          'newly_created': True}
