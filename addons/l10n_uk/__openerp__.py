@@ -22,7 +22,7 @@
 {
     'name': 'UK - Accounting',
     'version': '1.0',
-    'category': 'Localization',
+    'category': 'Localization/Account Charts',
     'description': """This is the latest UK OpenERP localisation necesary to run OpenERP accounting for UK SME's with:
     - a CT600-ready chart of accounts
     - VAT100-ready tax structure

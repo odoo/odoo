@@ -26,7 +26,7 @@
     "name" : "Venezuela - Accounting",
     "version" : "1.0",
     "author" : ['OpenERP SA', "Netquatro"],
-    "category" : "Localization",
+    "category" : "Localization/Account Charts",
     "description":
 '''
 This is the module to manage the accounting chart for Venezuela in OpenERP.
