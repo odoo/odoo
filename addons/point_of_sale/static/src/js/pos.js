@@ -1264,7 +1264,14 @@ openerp.point_of_sale = function(db) {
             }, this));
         },
         close: function() {
-            this.do_action({type: 'ir.actions.client', tag: 'default_home'});
+            new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
+                    _.bind(function(res) {
+                this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
+                    var action = result.result;
+                    this.do_action(action)
+                    this.do_action({type: 'ir.actions.client', tag: 'default_home'});
+                }, this));
+            }, this));
         },
         stop: function() {
             $('.oe_footer').show();
