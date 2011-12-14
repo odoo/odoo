@@ -916,6 +916,8 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
 
         if (!(this.folded && manual)) {
             this.do_show_secondary($sub_menu, $main_menu);
+        } else {
+            this.do_show_secondary();
         }
 
         if ($main_menu != $clicked_menu) {
@@ -941,8 +943,15 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         }
         return false;
     },
+    do_hide_secondary: function() {
+        this.$secondary_menu.hide();
+    },
     do_show_secondary: function($sub_menu, $main_menu) {
         var self = this;
+        this.$secondary_menu.show();
+        if (!arguments.length) {
+            return;
+        }
         if (this.folded) {
             var css = $main_menu.position(),
                 fold_width = this.$secondary_menu.width() + 2,

@@ -149,10 +149,11 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             view_mode = action_attrs.view_mode;
 
         if (action_attrs.context) {
-            action.context = action_attrs.context;
+            action.context = _.extend((action.context || {}), action_attrs.context);
         }
         if (action_attrs.domain) {
-            action.domain = action_attrs.domain;
+            action.domain = action.domain || [];
+            action.domain.unshift.apply(action.domain, action_attrs.domain);
         }
         var action_orig = _.extend({ flags : {} }, action);
 
@@ -397,8 +398,8 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.Widget.extend({
         this._super(parent);
     },
     start: function() {
-        // TODO menu hide
         var self = this;
+        openerp.webclient.menu.do_hide_secondary();
         var domain = [['application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
         var ds = new openerp.web.DataSetSearch(this, 'ir.module.module',{},domain);
         ds.read_slice(['id'], {}, function(result) {

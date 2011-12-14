@@ -727,11 +727,9 @@ label.error {
     padding: 10px 0 10px 0;
     vertical-align:middle;
 }
-.openerp .oe_search-view-custom-filter-btn span {
-    background: url(/web/static/src/img/icons/gtk-add.png) repeat-y;
-    padding-left: 18px;
+.openerp .oe_search-view-filters-management {
+    float: right;
 }
-
 .openerp .oe_search-view-filters-management, .openerp .oe_search-view-custom-filter-btn {
     float:right;
 }
@@ -1192,7 +1190,11 @@ label.error {
 .openerp .oe_forms select{
     padding-top: 2px;
 }
-
+.openerp .oe_forms input[disabled],
+.openerp .oe_forms select[disabled],
+.openerp .oe_forms textarea[disabled]{
+    background: #E0E0E0;
+}
 .openerp .oe_forms textarea {
     resize:vertical;
 }

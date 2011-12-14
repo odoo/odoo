@@ -619,8 +619,8 @@ openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
         var $e = $(e.target);
         if ($e.val() != '') {
             this.$element.find('form.oe-binary-form').submit();
-            $e.parent().find('input[type=file]').attr('disabled', 'true');
-            $e.parent().find('button').attr('disabled', 'true').find('img, span').toggle();
+            $e.parent().find('input[type=file]').prop('disabled', true);
+            $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
         }
     },
     on_attachment_delete: function(e) {
@@ -1094,13 +1094,9 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         this.check_disable();
     },
     check_disable: function() {
-        if (this.readonly || this.force_disabled || !this.view.is_interactible_record()) {
-            this.$element.find("button").attr("disabled", "disabled");
-            this.$element.find("button").css("color", "grey");
-        } else {
-            this.$element.find("button").removeAttr("disabled");
-            this.$element.find("button").css("color", "");
-        }
+        var disabled = (this.readonly || this.force_disabled || !this.view.is_interactible_record());
+        this.$element.find('button').prop('disabled', disabled);
+        this.$element.find("button").css('color', disabled ? 'grey' : '');
     }
 });
 
@@ -1268,7 +1264,7 @@ openerp.web.form.FieldChar = openerp.web.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.find('input').attr('disabled', this.readonly);
+        this.$element.find('input').prop('disabled', this.readonly);
     },
     set_value_from_ui: function() {
         this.value = openerp.web.parse_value(this.$element.find('input').val(), this);
@@ -1392,7 +1388,7 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
     },
     set_readonly: function(readonly) {
         this.readonly = readonly;
-        this.$input.attr('disabled', this.readonly);
+        this.$input.prop('disabled', this.readonly);
         this.$element.find('img.oe_datepicker_trigger').toggleClass('oe_input_icon_disabled', readonly);
     },
     is_valid: function(required) {
@@ -1479,7 +1475,7 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.find('textarea').attr('disabled', this.readonly);
+        this.$element.find('textarea').prop('disabled', this.readonly);
     },
     set_value_from_ui: function() {
         this.value = openerp.web.parse_value(this.$element.find('textarea').val(), this);
@@ -1516,7 +1512,7 @@ openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.find('input').attr('disabled', this.readonly);
+        this.$element.find('input').prop('disabled', this.readonly);
     },
     focus: function() {
         this.$element.find('input').focus();
@@ -1599,7 +1595,7 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.find('select').attr('disabled', this.readonly);
+        this.$element.find('select').prop('disabled', this.readonly);
     },
     validate: function() {
         var value = this.values[this.$element.find('select')[0].selectedIndex];
@@ -1948,7 +1944,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$input.attr('disabled', this.readonly);
+        this.$input.prop('disabled', this.readonly);
     }
 });
 
@@ -2905,7 +2901,7 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
     update_dom: function() {
         this._super.apply(this, arguments);
         this.$element.find('.oe-binary-file-set, .oe-binary-file-clear').toggle(!this.readonly);
-        this.$element.find('input[type=text]').attr('disabled', this.readonly);
+        this.$element.find('input[type=text]').prop('disabled', this.readonly);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
