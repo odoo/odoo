@@ -177,19 +177,20 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         graph_data = _(graph_data).sortBy(function (point) {
             return point[self.abscissa] + '[[--]]' + point[self.group_field];
         });
-
-        if (this.chart == 'bar') {
-            return this.schedule_bar(graph_data);
+        if (this.chart == 'bar' || 'line' || 'area') {
+            return this.schedule_bar_line_area(graph_data);
         } else if (this.chart == "pie") {
             return this.schedule_pie(graph_data);
         }
     },
-
-    schedule_bar: function(results) {
+    schedule_bar_line_area: function(results) {
         var self = this;
-        var group_list, view_chart;
+        var group_list,
+        view_chart = (self.chart == 'line')?'line':(self.chart == 'area')?'area':'';
         if (!this.group_field) {
-            view_chart = (this.orientation === 'horizontal') ? 'barH' : 'bar';
+            if (self.chart == 'bar'){
+                view_chart = (this.orientation === 'horizontal') ? 'barH' : 'bar';
+            }
             group_list = _(this.columns).map(function (column, index) {
                 return {
                     group: column.name,
@@ -202,7 +203,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             // value) and stacked bar charts (basically the same but with the
             // columns on top of one another instead of side by side), but it
             // does not handle clustered stacked bar charts
-            if (this.columns.length > 1) {
+            if (self.chart == 'bar' && (this.columns.length > 1)) {
                 this.$element.text(
                     'OpenERP Web does not support combining grouping and '
                   + 'multiple columns in graph at this time.');
@@ -211,8 +212,10 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             }
             // transform series for clustered charts into series for stacked
             // charts
-            view_chart = (this.orientation === 'horizontal')
-                    ? 'stackedBarH' : 'stackedBar';
+            if (self.chart == 'bar'){
+                view_chart = (this.orientation === 'horizontal')
+                        ? 'stackedBarH' : 'stackedBar';
+            }
             group_list = _(results).chain()
                     .pluck(this.group_field)
                     .uniq()
@@ -253,7 +256,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         };
 
         var x_axis, y_axis;
-        if (self.orientation == 'horizontal') {
+        if (self.chart == 'bar' && self.orientation == 'horizontal') {
             x_axis = ordinate_description;
             y_axis = abscissa_description;
         } else {
@@ -266,11 +269,12 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                 return;
             }
             self.renderer = null;
-            var bar_chart = new dhtmlXChart({
+            var charts = new dhtmlXChart({
                 view: view_chart,
-                container: self.element_id+"-barchart",
+                container: self.element_id+"-"+self.chart+"chart",
                 value:"#"+group_list[0].group+"#",
-                gradient: "3d",
+                gradient: (self.chart == "bar") ? "3d" : "light",
+                alpha: (self.chart == "area") ? 0.6 : 1,
                 border: false,
                 width: 1024,
                 tooltip:{
@@ -278,7 +282,15 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                         self.abscissa, group_list[0].text, group_list[0].group)
                 },
                 radius: 0,
-                color:group_list[0].color,
+                color: (self.chart != "line") ? group_list[0].color : "",
+                item: (self.chart == "line") ? {
+                            borderColor: group_list[0].color,
+                            color: "#000000"
+                        } : "",
+                line: (self.chart == "line") ? {
+                            color: group_list[0].color,
+                            width: 3
+                        } : "",
                 origin:0,
                 xAxis: x_axis,
                 yAxis: y_axis,
@@ -296,23 +308,32 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     }
                 }
             });
+
             for (var m = 1; m<group_list.length;m++){
                 var column = group_list[m];
                 if (column.group === self.group_field) { continue; }
-                bar_chart.addSeries({
+                charts.addSeries({
                     value: "#"+column.group+"#",
                     tooltip:{
                         template: _.str.sprintf("#%s#, %s=#%s#",
                             self.abscissa, column.text, column.group)
                     },
-                    color: column.color
+                    color: (self.chart != "line") ? column.color : "",
+                    item: (self.chart == "line") ? {
+                            borderColor: column.color,
+                            color: "#000000"
+                        } : "",
+                    line: (self.chart == "line") ? {
+                            color: column.color,
+                            width: 3
+                        } : ""
                 });
             }
-            bar_chart.parse(results, "json");
-            self.$element.find("#"+self.element_id+"-barchart").height(
-                self.$element.find("#"+self.element_id+"-barchart").height()+50);
-            bar_chart.attachEvent("onItemClick", function(id) {
-                self.open_list_view(bar_chart.get(id));
+            charts.parse(results, "json");
+            self.$element.find("#"+self.element_id+"-"+self.chart+"chart").height(
+                self.$element.find("#"+self.element_id+"-"+self.chart+"chart").height()+50);
+            charts.attachEvent("onItemClick", function(id) {
+                self.open_list_view(charts.get(id));
             });
         };
         if (this.renderer) {
