@@ -1098,7 +1098,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this._current_state = state;
     },
     do_push_state: function(state) {
-        console.log('dopushstate', state);
         var url = '#' + $.param(state);
         this._current_state = _.clone(state);
         $.bbq.pushState(url);

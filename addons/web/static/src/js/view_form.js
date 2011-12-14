@@ -125,7 +125,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         } else {
             promise = this.dataset.read_index(_.keys(this.fields_view.fields)).pipe(this.on_record_loaded);
         }
-        this._super();
+        this.$element.show();
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
