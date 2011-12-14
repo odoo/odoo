@@ -619,6 +619,9 @@
     <t t-jquery="thead.ui-widget-header > tr:first">
         this.removeAttr('t-if');
     </t>
+
+    <t t-jquery="tfoot &gt; tr:last-child" t-operation="replace"/>
+
     <t t-jquery="td.oe-actions">
         this.removeAttr('t-if');
         var $title = $(document.createElement('h3')).addClass('oe_view_title');
