@@ -3777,10 +3777,6 @@ class BaseModel(object):
                     if readonly[0][0] >= 1:
                         edit = True
                         break
-                    elif readonly[0][0] == 0:
-                        edit = False
-                    else:
-                        edit = False
 
                 if not edit:
                     vals.pop(field)
