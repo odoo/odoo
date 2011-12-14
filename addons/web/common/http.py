@@ -2,6 +2,7 @@
 #----------------------------------------------------------
 # OpenERP Web HTTP layer
 #----------------------------------------------------------
+import StringIO
 import ast
 import contextlib
 import functools
@@ -159,7 +160,6 @@ class JsonRequest(WebRequest):
         else:
             # regular jsonrpc2
             requestf = self.httprequest.stream
-            self.init(self.jsonrequest.get("params", {}))
 
         response = {"jsonrpc": "2.0" }
         error = None
