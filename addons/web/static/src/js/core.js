@@ -375,6 +375,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         } 
         var hostname = _.str.sprintf('%s//%s', location.protocol, location.host);
         this.server = _.str.rtrim((!server) ? hostname : server, '/');
+        openerp.web.qweb.default_dict['_s'] = this.server
         this.rpc_mode = (this.server == hostname) ? "oe-json" : "oe-jsonp";
         this.session_id = false;
         this.uid = false;
