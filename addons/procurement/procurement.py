@@ -176,6 +176,9 @@ class procurement_order(osv.osv):
         """
         res = False
         for procurement in self.browse(cr, uid, ids, context=context):
+            product = procurement.product_id
+            if product.type == 'service':
+                res = True
             if procurement.move_id and procurement.move_id.state == 'done':
                 res = True
         return res
@@ -273,7 +276,7 @@ class procurement_order(osv.osv):
                     if supplier.id == user.company_id.partner_id.id:
                         res = True
                 res = False
-            if procurement.product_id.type=='service':
+            if product.type=='service':
                 res = res and self.check_produce_service(cr, uid, procurement, context)
             else:
                 res = res and self.check_produce_product(cr, uid, procurement, context)

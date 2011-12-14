@@ -44,4 +44,4 @@
     procurement_ids = self.search(cr, uid, [('sale_line_id', '=', ref('line_services'))])
     assert procurement_ids, "Procurement is not generated for Service Order Line."
     procurement = self.browse(cr, uid, procurement_ids[0], context=context)
-    assert procurement.state , "Procurement should be closed."
+    assert procurement.state == 'done' , "Procurement should be closed."

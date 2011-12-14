@@ -28,6 +28,19 @@ class procurement_order(osv.osv):
         'task_id': fields.many2one('project.task', 'Task'),
         'sale_line_id': fields.many2one('sale.order.line', 'Sale order line')
     }
+    
+    def check_task_done(self, cr, uid, ids, context=None):
+        """ Checks if task is done or not.
+        @return: True or False.
+        """
+        res = False
+        for procurement in self.browse(cr, uid, ids, context=context):
+            product = procurement.product_id
+            if product.type<>'service':
+                res = True
+            if procurement.task_id and procurement.task_id.state in ('done', 'cancelled'):
+                res = True
+        return res
 
     def check_produce_service(self, cr, uid, procurement, context=None):    
         return True

@@ -1,10 +1,12 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record model="workflow.transition" id="procurement.trans_produce_service_make_done">
-            <field name="act_from" ref="procurement.act_produce_service"/>
-            <field name="act_to" ref="procurement.act_make_done"/>
-            <field name="signal">subflow.done</field>
+        <record id="trans_make_done_done2" model="workflow.transition">
+            <field name="act_from" ref="procurement.act_make_done"/>
+            <field name="act_to" ref="procurement.act_done"/>
+            <field name="condition">check_task_done()</field>
+            <field name="trigger_model">project.task</field>
+            <field name="trigger_expr_id">task_id and [task_id.id] or []</field>
         </record>
     </data>
 </openerp>
