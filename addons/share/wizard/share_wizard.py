@@ -43,38 +43,6 @@ RANDOM_PASS_CHARACTERS = 'aaaabcdeeeefghjkmnpqrstuvwxyzAAAABCDEEEEFGHJKLMNPQRSTU
 def generate_random_pass():
     return ''.join(random.sample(RANDOM_PASS_CHARACTERS,10))
 
-
-# Utils for introspecting the ORM - could be moved to server someday
-class column_info(object):
-    """Struct containing details about an osv column, either one local to
-       its model, or one inherited via _inherits.
-
-       :attr name: name of the column
-       :attr column: column instance, subclass of osv.fields.column
-       :attr parent_model: if the column is inherited, name of the model
-                           that contains it, None for local columns.
-       :attr parent_column: the name of the column containing the m2o
-                            relationship to the parent model that contains
-                            this column, None for local columns.
-    """
-    def __init__(self, name, column, parent_model=None, parent_column=None):
-        self.name = name
-        self.column = column
-        self.parent_model = parent_model
-        self.parent_column = parent_column
-
-def get_column_infos(osv_model):
-    """Returns a dict mapping all fields names (direct fields and
-       inherited field via _inherits) to a ``column_info`` struct
-       giving detailed columns """
-    result = {}
-    for k, (parent,m2o,col) in osv_model._inherit_fields.iteritems():
-        result[k] = column_info(k, col, parent, m2o)
-    for k, v in osv_model._columns.iteritems():
-        result[k] = column_info(k,v)
-    return result
-
-
 class share_wizard(osv.osv_memory):
     _logger = logging.getLogger('share.wizard')
     _name = 'share.wizard'
@@ -321,7 +289,7 @@ class share_wizard(osv.osv_memory):
         models = [x[1].model for x in relation_fields]
         model_obj = self.pool.get('ir.model')
         model_osv = self.pool.get(model.model)
-        for colinfo in get_column_infos(model_osv).itervalues():
+        for colinfo in model_osv._all_columns.itervalues():
             coldef = colinfo.column
             coltype = coldef._type
             relation_field = None
@@ -331,7 +299,7 @@ class share_wizard(osv.osv_memory):
                 relation_osv = self.pool.get(coldef._obj)
                 if coltype == 'one2many':
                     # don't record reverse path if it's not a real m2o (that happens, but rarely)
-                    dest_model_ci = get_column_infos(relation_osv)
+                    dest_model_ci = relation_osv._all_columns
                     reverse_rel = coldef._fields_id
                     if reverse_rel in dest_model_ci and dest_model_ci[reverse_rel].column._type == 'many2one':
                         relation_field = ('%s.%s'%(reverse_rel, suffix)) if suffix else reverse_rel
@@ -339,7 +307,7 @@ class share_wizard(osv.osv_memory):
                 for parent in relation_osv._inherits:
                     if parent not in models:
                         parent_model = self.pool.get(parent)
-                        parent_colinfos = get_column_infos(parent_model)
+                        parent_colinfos = parent_model._all_columns
                         parent_model_browse = model_obj.browse(cr, UID_ROOT,
                                                                model_obj.search(cr, UID_ROOT, [('model','=',parent)]))[0]
                         if relation_field and coldef._fields_id in parent_colinfos:
