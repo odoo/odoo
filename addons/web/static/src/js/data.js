@@ -811,7 +811,7 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
 });
 
 openerp.web.Model = openerp.web.CallbackEnabled.extend({
-    init: function(_, model_name) {
+    init: function(model_name) {
         this._super();
         this.model_name = model_name;
     },
