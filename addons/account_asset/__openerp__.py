@@ -34,7 +34,9 @@
     ],
     "demo_xml" : [ 'account_asset_demo.xml'
     ],
-    'test': ['test/account_asset.yml',
+    'test': ['account_asset_demo.yml',
+             'test/account_asset.yml',
+             'test/account_asset_wizard.yml',
              ],
     "update_xml" : [
         "security/account_asset_security.xml",
