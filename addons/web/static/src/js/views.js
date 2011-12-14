@@ -200,7 +200,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
      * @param dataset
      * @param views
      */
-    init: function(parent, dataset, views) {
+    init: function(parent, dataset, views, flags) {
         this._super(parent);
         this.model = dataset ? dataset.model : undefined;
         this.dataset = dataset;
@@ -208,7 +208,7 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         this.active_view = null;
         this.views_src = _.map(views, function(x) {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
-        this.flags = this.flags || {};
+        this.flags = flags || {};
         this.registry = session.web.views;
         this.views_history = [];
     },
@@ -415,19 +415,10 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         // dataset initialization will take the session from ``this``, so if we
         // do not have it yet (and we don't, because we've not called our own
         // ``_super()``) rpc requests will blow up.
-        this._super(parent, null, action.views);
-        this.session = parent.session;
-        this.action = action;
-        var dataset = new session.web.DataSetSearch(this, action.res_model, action.context, action.domain);
-        if (action.res_id) {
-            dataset.ids.push(action.res_id);
-            dataset.index = 0;
-        }
-        this.dataset = dataset;
-        this.flags = this.action.flags || {};
+        var flags = action.flags || {};
         if (action.res_model == 'board.board' && action.view_mode === 'form') {
             // Special case for Dashboards
-            _.extend(this.flags, {
+            _.extend(flags, {
                 views_switcher : false,
                 display_title : false,
                 search_view : false,
@@ -436,6 +427,15 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                 action_buttons : false
             });
         }
+        this._super(parent, null, action.views, flags);
+        this.session = parent.session;
+        this.action = action;
+        var dataset = new session.web.DataSetSearch(this, action.res_model, action.context, action.domain);
+        if (action.res_id) {
+            dataset.ids.push(action.res_id);
+            dataset.index = 0;
+        }
+        this.dataset = dataset;
 
         // setup storage for session-wise menu hiding
         if (this.session.hidden_menutips) {
