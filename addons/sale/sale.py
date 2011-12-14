@@ -706,6 +706,16 @@ class sale_order(osv.osv):
             'property_ids': [(6, 0, [x.id for x in line.property_ids])],
             'company_id': order.company_id.id,
         }
+        
+    def _order_line_move_date(self, cr, uid, line):
+        """Compute the Stock Move date for the Sale Order Line"""
+        date_planned = datetime.strptime(line.order_id.date_order,
+                                         DEFAULT_SERVER_DATE_FORMAT)
+        # XXX shouldn't this be a timedelta() instead of a relativedelta()?
+        date_planned += relativedelta(days=line.delay or 0.0)
+        date_planned -= timedelta(days=line.order_id.company_id.security_lead)
+        return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, *args):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
@@ -778,8 +788,7 @@ class sale_order(osv.osv):
             if line.state == 'done':
                 continue
 
-            date_planned = datetime.strptime(order.date_order, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=line.delay or 0.0)
-            date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            date_planned = self._order_line_move_date(cr, uid, line)
 
             if line.product_id:
                 if line.product_id.product_tmpl_id.type in ('product', 'consu'):
