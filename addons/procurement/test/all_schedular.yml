@@ -14,7 +14,7 @@
     name: OP/000008
     product_id: product.product_product_pc2
     product_max_qty: 15.0
-    product_min_qty: 5.0
+    product_min_qty: 1.0
     product_uom: product.product_uom_kgm
     qty_multiple: 1
     warehouse_id: stock.warehouse0
@@ -28,20 +28,26 @@
     
     context.update({'active_model': 'product.product','active_id':ref('product.product_product_pc2')})
     values = mk_procure.default_get(cr, uid, ['qty','product_id','uom_id','warehouse_id','date_planned'], context)
-    values.update({'warehouse_id': ref('base.main_company'),'uom_id': ref('product.product_uom_unit'),'qty': 5})
-    
+    values.update({'warehouse_id': ref('base.main_company'),'uom_id': ref('product.product_uom_unit'),'qty': 1})
     ids = mk_procure.create(cr, uid, values, context)
     procurement = mk_procure.make_procurement(cr, uid, [ids], context)
-    if product.virtual_available >= 5.0:
-      proc_id = procurement.get('res_id')
-      procurements = procur_order.browse(cr, uid, [proc_id])[0]
-      obj = self.pool.get('procurement.orderpoint.compute')
-      val = obj.default_get(cr, uid, ['automatic'], context)
-      val.update({'automatic': True})
-      new_id = obj.create(cr, uid, val, context)
-      a = obj.procure_calculation(cr, uid, [proc_id], context)
-      print a
-    else:
-      pass
-      
-      
+    
+    assert product.virtual_available >= 1.0,'Virtual stock should be updated'
+    
+    proc_id = procurement.get('res_id')
+    procurements = procur_order.browse(cr, uid, [proc_id])[0]
+    assert procurements.product_id.id == ref('product.product_product_pc2'),"Product is not correspond."
+    assert procurements.product_qty >= 1,"Product Quantity is not correspond."
+    assert procurements.state == 'confirmed',"Procurement state should be 'Confirmed'."
+    assert procurements.product_uom.id == ref('product.product_uom_unit'),"Product's UOM is not correspond."
+    context.update({'proc': proc_id})
+-
+  I Compute Minimum Stock.
+-
+  !python {model: procurement.orderpoint.compute}: |
+    proc_id = context.get('proc')
+    context.update({'active_model':'procurement.order','active_id':proc_id})
+    values = self.default_get(cr, uid, ['automatic'], context)
+    values.update({'automatic':True})
+    ids = self.create(cr, uid, values, context)
+    self.procure_calculation(cr, uid, [ids], context)
