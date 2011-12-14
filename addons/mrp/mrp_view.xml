@@ -522,6 +522,7 @@
             <field name="res_model">mrp.bom</field>
             <field name="domain">[('id','=',active_id)]</field>
             <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
             <field name="view_id" ref="mrp_bom_tree_view"/>
         </record>
         <record id="ir_BOM_structure" model="ir.values">
@@ -776,7 +777,7 @@
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">
-                            <field name="user_id"/> 
+                            <field name="user_id"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="priority" groups="base.group_extended"/>
                             <newline/>
@@ -972,7 +973,7 @@
                </data>
             </field>
         </record>
-        
+
         <act_window
             context="{'search_default_product_id': [active_id]}"
             id="act_product_manufacturing_open"
@@ -980,13 +981,14 @@
             view_id="mrp_production_tree_view"
             res_model="mrp.production"
             src_model="product.product"/>
-            
+
         <act_window
             id="action_product_bom_structure"
             name="Product BoM Structure"
             domain="[('product_id', '=', active_id),('bom_id','=',False)]"
             context="{'default_product_id': active_id}"
             view_type="tree"
+            view_mode="tree"
             view_id="mrp_bom_tree_view"
             res_model="mrp.bom"
             src_model="product.product"
