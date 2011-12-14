@@ -79,6 +79,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             self.compute_aggregates();
         });
 
+        this.no_leaf = false;
     },
     /**
      * Retrieves the view's number of records per page (|| section)
@@ -473,6 +474,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (_.isEmpty(group_by) && !context['group_by_no_leaf']) {
             group_by = null;
         }
+        this.no_leaf = !!context['group_by_no_leaf'];
 
         this.reload_view(!!group_by, context).then(
             $.proxy(this, 'reload_content'));
