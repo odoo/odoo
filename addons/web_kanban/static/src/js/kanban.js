@@ -258,12 +258,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             });
         }
     },
-    do_show: function () {
-        this.$element.show();
-    },
-    do_hide: function () {
-        this.$element.hide();
-    },
     compute_groups_width: function() {
         var unfolded = 0;
         _.each(this.groups, function(group) {
