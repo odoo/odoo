@@ -20,6 +20,7 @@ session.web.ActionManager = session.web.Widget.extend({
     identifier_prefix: "actionmanager",
     init: function(parent) {
         this._super(parent);
+        this.inner_action = null;
         this.inner_viewmanager = null;
         this.dialog = null;
         this.dialog_viewmanager = null;
@@ -46,10 +47,14 @@ session.web.ActionManager = session.web.Widget.extend({
             this.client_widget = null;
         }
     },
-
-    do_push_state: function(state, overwrite) {
+    do_push_state: function(state) {
+        if (this.widget_parent && this.widget_parent.do_push_state) {
+            if (this.inner_action && this.inner_action.id) {
+                state['action_id'] = this.inner_action.id;
+            }
+            this.widget_parent.do_push_state(state);
+        }
     },
-
     do_load_state: function(state) {
         if (state.action_id) {
             this.null_action();
@@ -69,7 +74,6 @@ session.web.ActionManager = session.web.Widget.extend({
             this.inner_viewmanager.do_load_state(state);
         }
     },
-
     do_action: function(action, on_close) {
         if (_.isNumber(action)) {
             var self = this;
@@ -128,10 +132,6 @@ session.web.ActionManager = session.web.Widget.extend({
             this.content_stop();
             this.inner_action = action;
             this.inner_viewmanager = new session.web.ViewManagerAction(this, action);
-            this.inner_viewmanager.do_push_state.add(function(state,overwrite) {
-                state['action_id'] = action.id;
-                self.do_push_state(state,true);
-            });
             this.inner_viewmanager.appendTo(this.$element);
         }
     },
@@ -155,10 +155,6 @@ session.web.ActionManager = session.web.Widget.extend({
         this.dialog_stop();
         var ClientWidget = session.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
-
-        var client_action = {tag: action.tag};
-        if (action.params) _.extend(client_action, {params: action.params});
-        this.do_push_state({client_action: client_action}, true);
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
@@ -315,8 +311,6 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         });
         return view_promise;
     },
-
-
     /**
      * Returns to the view preceding the caller view in this manager's
      * navigation history (the navigation history is appended to via
@@ -392,7 +386,8 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
     /**
      * Called by children view after executing an action
      */
-    on_action_executed: function () {},
+    on_action_executed: function () {
+    },
     display_title: function () {
         var view = this.views[this.active_view];
         if (view) {
@@ -466,12 +461,6 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         searchview_loaded = this.setup_search_view(searchview_id || false, search_defaults);
 
         var main_view_loaded = this._super();
-
-        _.each(_.keys(this.views), function(view_type) {
-            $.when(self.views[view_type].deferred).done(function(view_type) {
-                self.views[view_type].controller.do_push_state.add(self.do_push_state);
-            });
-        });
 
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
 
@@ -585,21 +574,20 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             } else {
                 $search_prefix.remove();
             }
-
-            self.do_push_state({view_type: self.active_view});
         });
     },
-
-    do_push_state: function(state, overwrite) {
+    do_push_state: function(state) {
+        if (this.widget_parent && this.widget_parent.do_push_state) {
+            state["view_type"] = this.active_view;
+            this.widget_parent.do_push_state(state);
+        }
     },
-
     do_load_state: function(state) {
         var self = this;
         $.when(this.on_mode_switch(state.view_type, true)).done(function() {
             self.views[self.active_view].controller.do_load_state(state);
         });
     },
-
     shortcut_check : function(view) {
         var self = this;
         var grandparent = this.widget_parent && this.widget_parent.widget_parent;
@@ -1067,9 +1055,17 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     },
     do_show: function () {
         this.$element.show();
+        this.do_push_state({});
     },
     do_hide: function () {
         this.$element.hide();
+    },
+    do_push_state: function(state) {
+        if (this.widget_parent && this.widget_parent.do_push_state) {
+            this.widget_parent.do_push_state(state);
+        }
+    },
+    do_load_state: function(state) {
     },
     /**
      * Switches to a specific view type
@@ -1153,10 +1149,6 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     sidebar_context: function () {
         return $.Deferred().resolve({}).promise();
     },
-    do_push_state: function(state, overwrite) {
-    },
-    do_load_state: function(state) {
-    }
 });
 
 session.web.json_node_to_xml = function(node, human_readable, indent) {
