@@ -1,0 +1,60 @@
+-
+  In order to test the process of "Employee Expenses" by processing the expenses, I confirm Expense Bill of an employee for September month. 
+-
+  !workflow {model: hr.expense.expense, action: confirm, ref: sep_expenses}
+-
+  I check that state is 'Confirm'.
+-
+  !assert {model: hr.expense.expense, id: sep_expenses, severity: error, string: Expense should be in Confirm state}:
+    - state == 'confirm'
+-
+  I approve the September expenses.
+-
+  !workflow {model: hr.expense.expense, action: validate, ref: sep_expenses}
+-
+  I check that state is 'Approved'
+-
+  !assert {model: hr.expense.expense, id: sep_expenses, severity: error, string: Expense should be in Approved state}:
+    - state == 'accepted'
+-
+  I make Invoice for the expense.
+-
+  !python {model: hr.expense.expense}: |
+    self.invoice(cr, uid, [ref('sep_expenses')])
+-
+  I check invoice details.
+-
+  !python {model: hr.expense.expense}: |
+    sep_expenses = self.browse(cr, uid, ref("sep_expenses"), context=context)
+    assert sep_expenses.state == 'invoiced', "Expense should be in 'Invoiced' state."
+    assert sep_expenses.invoice_id, "Expense should have link of Invoice."
+    assert sep_expenses.invoice_id.currency_id == sep_expenses.currency_id,"Invoice currency is not correspond with supplier invoice currency"
+    assert sep_expenses.invoice_id.origin == sep_expenses.name,"Invoice origin is not correspond with supplier invoice"
+    assert sep_expenses.invoice_id.type == 'in_invoice', "Invoice type is not supplier invoice"
+    assert sep_expenses.invoice_id.amount_total == sep_expenses.amount,"Invoice total amount is not correspond with supplier invoice total"
+    assert len(sep_expenses.invoice_id.invoice_line) == len(sep_expenses.line_ids),"Lines of Invoice and supplier invoice Line are not correspond"
+    #TODO: check invoice line details with Expenses lines
+-
+  I pay the expenses.
+-
+  !python {model: hr.expense.expense}: |
+    self.expense_paid(cr, uid, [ref('sep_expenses')])
+-
+  I check that state of expenses is 'Paid'.
+-
+  !assert {model: hr.expense.expense, id: sep_expenses, severity: error, string: Expense should be in Paid state}:
+    - state == 'paid'
+-
+  I duplicate the expenses and cancel duplicated.
+-
+  !python {model: hr.expense.expense}: |
+    duplicate_id = self.copy(cr, uid, ref('sep_expenses'), context=context)
+    self.expense_canceled(cr, uid, [duplicate_id])
+-
+  I print a report of the expenses.
+- 
+  !python {model: hr.expense.expense}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.hr.expense').create(cr, uid, [ref('hr_expense.sep_expenses')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'hr_expense-report.'+format), 'wb+').write(data)

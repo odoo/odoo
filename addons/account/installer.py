@@ -24,6 +24,7 @@ import time
 import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+from os.path import join as opj
 
 from tools.translate import _
 from osv import fields, osv
@@ -111,6 +112,11 @@ class account_installer(osv.osv_memory):
             context = {}
         fy_obj = self.pool.get('account.fiscalyear')
         for res in self.read(cr, uid, ids, context=context):
+            if 'charts' in res and res['charts'] == 'configurable':
+                #load generic chart of account
+                fp = tools.file_open(opj('account', 'configurable_account_chart.xml'))
+                tools.convert_xml_import(cr, 'account', fp, {}, 'init', True, None)
+                fp.close()
             if 'date_start' in res and 'date_stop' in res:
                 f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'][0])], context=context)
                 if not f_ids:

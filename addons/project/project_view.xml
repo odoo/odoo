@@ -378,6 +378,7 @@
                                                         type="object" class="oe_kanban_button"><t t-esc="time[0]"/></a
                                                     ><b t-if="time[1]" class="oe_kanban_button oe_kanban_button_active"><t t-esc="Math.round(hours)"/></b
                                                 ></t>
+                                                <a name="do_open" states="draft" string="Validate planned time and open task" type="object" class="oe_kanban_button oe_kanban_button_active">!</a>
                                             </span>
                                         </div>
                                         <div class="oe_kanban_clear"/>
