@@ -712,7 +712,7 @@ class share_wizard(osv.osv_memory):
                 body += _("The documents have been automatically added to your current OpenERP documents.\n")
                 body += _("You may use your current login (%s) and password to view them.\n") % result_line.user_id.login
             body += "\n\n"
-            body += user.signature
+            body += (user.signature or '')
             body += "\n\n"
             body += "--\n"
             body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
@@ -728,7 +728,7 @@ class share_wizard(osv.osv_memory):
         # force direct delivery, as users expect instant notification
         mail_message.send(cr, uid, msg_ids, context=context)
         self._logger.info('%d share notification(s) sent.', len(msg_ids))
-share_wizard()
+
 
 class share_result_line(osv.osv_memory):
     _name = 'share.wizard.result.line'
@@ -753,6 +753,5 @@ class share_result_line(osv.osv_memory):
     _defaults = {
         'newly_created': True,
     }
-share_result_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
