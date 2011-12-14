@@ -102,9 +102,10 @@ openerp.web.page = function (openerp) {
             this._super(s[2]);
         }
     });
-    openerp.web.page.FieldBooleanReadonly = openerp.web.page.FieldCharReadonly.extend({
-        set_value: function (value) {
-            this._super(value ? '\u2611' : '\u2610');
+    openerp.web.page.FieldBooleanReadonly = openerp.web.form.FieldBoolean.extend({
+        update_dom: function() {
+            this._super.apply(this, arguments);
+            this.$element.find('input').prop('disabled', true);
         }
     });
     openerp.web.page.FieldSelectionReadonly = openerp.web.page.FieldReadonly.extend({
