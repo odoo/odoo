@@ -1,0 +1,89 @@
+
+-
+  In order to test the process of supplier invoice, I enter the amount for a total of invoice
+-
+  !python {model: account.invoice}: |
+     self.write(cr, uid, [ref('account.demo_invoice_0')], {'check_total': 14})
+-
+  In order to test account move line of journal, I check that there is no move attached to the invoice at draft
+-
+  !python {model: account.invoice}: |
+    invoice = self.browse(cr, uid, ref("account.demo_invoice_0"))
+    assert (not invoice.move_id), "Move wrongly created at draft"
+-
+  I perform action to change the state of invoice to "open" 
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: account.demo_invoice_0}
+-
+  I check that the invoice state is now "Open"
+-
+  !assert {model: account.invoice, id: account.demo_invoice_0}:
+    - state == 'open'
+
+-
+  In order to test the process of payment order and payment line 
+-
+  I create a record for payment order
+-
+  !record {model: payment.order.create, id: payment_order_create_0}:
+    duedate: !eval time.strftime('%Y-%m-%d')
+
+-
+  I perform a action to search the entries for create a payment line
+-
+  !python {model: payment.order.create}: |
+    self.search_entries(cr, uid, [ref("payment_order_create_0")], {"lang": "en_US",
+      "active_model": "payment.order", "active_ids": [ref("account_payment.payment_order_1")],
+      "tz": False, "active_id": ref("account_payment.payment_order_1"), })
+
+-
+  In order to make entries in payment line, I create a entries
+-
+  !python {model: payment.order.create}: |
+    invoice = self.pool.get('account.invoice').browse(cr, uid, ref("account.demo_invoice_0"))
+    move_line = invoice.move_id.line_id[0]
+    self.write(cr, uid, [ref("payment_order_create_0")], {'entries': [(6,0,[move_line.id])]})
+    self.create_payment(cr, uid, [ref("payment_order_create_0")], {"lang": "en_US",
+      "active_model": "payment.order", "active_ids": [ref("account_payment.payment_order_1")],
+      "tz": False, "active_id": ref("account_payment.payment_order_1"), })
+
+-
+  I check a payment line is created with proper data
+-
+  !python {model: payment.order}: |
+    invoice = self.pool.get('account.invoice').browse(cr, uid, ref("account.demo_invoice_0"))
+    payment = self.browse(cr, uid, ref("account_payment.payment_order_1"))
+    payment_line = payment.line_ids[0]
+    
+    assert payment_line.move_line_id, "move line is not created in payment line"
+    assert invoice.move_id.name == payment_line.ml_inv_ref.number, "invoice reference number is not same created"
+    assert invoice.partner_id == payment_line.partner_id, "partner is not same created"
+    assert invoice.date_due == payment_line.ml_maturity_date, "due date is not same created"
+    assert invoice.amount_total == payment_line.amount, "payment amount is not same created"
+
+-
+  I perform action to change the state of payment order to "confirmed"
+-
+  !workflow {model: payment.order, action: open, ref: account_payment.payment_order_1}
+-
+  I check that Payment order is now "Confirmed"
+-
+  !assert {model: payment.order, id: account_payment.payment_order_1}:
+    - state == 'open'
+-
+  I perform action to change the state of payment order to "done"
+-
+  !python {model: payment.order}: |
+    self.set_done(cr, uid, [ref("account_payment.payment_order_1")])
+-
+  I check that Payment order is now "done"
+-
+  !assert {model: payment.order, id: account_payment.payment_order_1}:
+    - state == 'done'
+
+-
+  I check a payment order is done with proper data
+-
+  !python {model: payment.order}: |
+    payment = self.browse(cr, uid, ref("account_payment.payment_order_1"))
+    assert payment.date_done, "date is not created after done payment order"

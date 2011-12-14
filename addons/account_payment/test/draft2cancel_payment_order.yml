@@ -1,0 +1,21 @@
+-
+  In order to test the process of payment order
+-
+  I perform action to change the state of payment order to "confirmed"
+-
+  !workflow {model: payment.order, action: open, ref: account_payment.payment_order_1}
+-
+  I check that Payment order is now "Confirmed"
+-
+  !assert {model: payment.order, id: account_payment.payment_order_1}:
+    - state == 'open'
+-
+  In order to not payment line so I perform action to change the state of payment order to "cancel"
+-
+  !python {model: payment.order}: |
+    self.set_to_draft(cr, uid, [ref("account_payment.payment_order_1")])
+-
+  I check that Payment order is now "draft"
+-
+  !assert {model: payment.order, id: account_payment.payment_order_1}:
+    - state == 'draft'

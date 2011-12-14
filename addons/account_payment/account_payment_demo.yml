@@ -1,0 +1,19 @@
+-
+  !record {model: res.partner.bank, id: partner_bank_1}:
+    name: Reserve Bank
+    acc_number: 00987654321
+    partner_id: base.res_partner_agrolait
+    bank: base.res_bank_1
+    state: bank
+
+-
+  !record {model: payment.mode, id: payment_mode_1}:
+    name: Direct Payment
+    journal: account.bank_journal
+    bank_id: account_payment.partner_bank_1
+
+-
+  !record {model: payment.order, id: payment_order_1}:
+    mode: account_payment.payment_mode_1
+    user_id: base.user_root
+    date_prefered: now
