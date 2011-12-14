@@ -20,7 +20,7 @@
     assert applicant.state == "draft"
     assert len(resume_ids), "Resume does not attached."
 -
-  I Refuse applicant for the Recruitment.
+  I refuse applicant for the Recruitment.
 -
   !python {model: hr.applicant}: |
     self.case_close(cr, uid, [ref("hr_case_programmer")])
@@ -34,7 +34,6 @@
   I assign the Job position to the applicant
 -
   !python {model: hr.applicant}: |
-    context.update({'active_model': 'hr.applicant', 'active_id': ref("hr_case_programmer"), 'active_ids': [ref("hr_case_programmer")], 'survey_id': ref("survey_job_0")})
     self.write(cr, uid, [ref('hr_case_programmer')], {'job_id':ref('hr.job_jr_appli')})
 -
   I start communication with applicant, first schedule phonecall.
@@ -89,33 +88,30 @@
 -
   !python {model: hr.applicant}: |
      self.case_close_with_emp(cr, uid, [ref('hr_case_programmer')])
-     context.update({'active_model': 'hr.applicant', 'active_ids': [ref("hr_recruitment.hr_case_programmer")], 'active_id': ref("hr_recruitment.hr_case_programmer")})
 -
   I check that applicant is "Hired".
 -
   !assert {model: hr.applicant, id: hr_case_programmer}:
     - state == 'done'
 -
-  I Not give Employeement to Hired Aplicant till.
+  I do not give employment to the hired the applicant.
 -
   !python {model: hired.employee}: |
     context.update({'active_model': 'hr.applicant', 'active_ids': [ref("hr_recruitment.hr_case_programmer")], 'active_id': ref("hr_recruitment.hr_case_programmer")})
     emp_id = self.create(cr, uid, {}, context=context)
     self.case_close(cr, uid, [emp_id], context=context)
 -
-  Now I give Employeement to Hired Applicant .
+  Now I give employment to hired applicant .
 -
   !python {model: hr.applicant}: |
+     hired_emp_obj = self.pool.get('hired.employee')
      self.case_reset(cr, uid, [ref("hr_case_programmer")])
      self.case_open(cr, uid, [ref("hr_case_programmer")])
      context.update({'active_model': 'hr.applicant', 'active_ids': [ref("hr_recruitment.hr_case_programmer")], 'active_id': ref("hr_recruitment.hr_case_programmer")})
+     emp_hr_id = hired_emp_obj.create(cr, uid, {}, context=context)
+     hired_emp_obj.case_close_with_emp(cr, uid, [emp_hr_id], context=context)
 -
-  !python {model: hired.employee}: |
-    context.update({'active_model': 'hr.applicant', 'active_ids': [ref("hr_recruitment.hr_case_programmer")], 'active_id': ref("hr_recruitment.hr_case_programmer")})
-    emp_hr_id = self.create(cr, uid, {}, context=context)
-    self.case_close_with_emp(cr, uid, [emp_hr_id], context=context)
--
-  Now Hired Employee want to be a Partner of Company.
+  Now hired employee want to be a partner of company.
 -
   !record {model: hr.recruitment.partner.create, id: hr_recruitment_partner_id1 }:
 -

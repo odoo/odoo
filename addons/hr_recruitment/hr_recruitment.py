@@ -365,7 +365,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         self.write(cr, uid, [res_id], vals, context)
         return res_id
 
-    # Dead Code
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
