@@ -2055,7 +2055,9 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         });
         this.views = views;
 
-        this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views);
+        this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views, {
+            action_buttons : false
+        });
         this.viewmanager.template = 'One2Many.viewmanager';
         this.viewmanager.registry = openerp.web.views.clone({
             list: 'openerp.web.form.One2ManyListView',
@@ -2083,7 +2085,6 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 controller.on_pager_action.add_first(function() {
                     self.save_any_view();
                 });
-                controller.$element.find(".oe_form_button_save").hide();
             } else if (view_type == "graph") {
                 self.reload_current_view()
             }
