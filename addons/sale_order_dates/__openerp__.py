@@ -46,7 +46,9 @@ You can add the following additional dates to a sale order:
     ],
     'demo_xml': [
     ],
-    'test': [],
+    'test': [
+        'test/requested_date.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate' : '00867497685972962845',

@@ -105,7 +105,6 @@ class sale_order_dates(osv.osv):
             else:
                 req_date_formated = requested_date
                 com_date_formated = commitment_date
-            print lang, req_date_formated, com_date_formated
             return {'warning': {
                 'title': _('Requested date is too soon!'),
                 'message': _("The date requested by the customer (%s) is "

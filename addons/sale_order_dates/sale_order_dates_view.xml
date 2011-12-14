@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <field name="create_date" position="after">
-                    <field name="requested_date" on_change="onchange_requested_date(requested_date, commitment_date, context=context)"/>
+                    <field name="requested_date" on_change="onchange_requested_date(requested_date, commitment_date)"/>
                 </field>
                 <field name="date_confirm" position="after">
                     <field name="commitment_date"/>
