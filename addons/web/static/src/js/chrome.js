@@ -1112,6 +1112,48 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
 });
 
+
+openerp.currentScript = function() {
+    var currentScript = document.currentScript;
+    if (!currentScript) {
+        var sc = document.getElementsByTagName('script');
+        currentScript = sc[sc.length-1];
+    }
+    return currentScript;
+};
+
+openerp.web.EmbeddedClient = openerp.web.Widget.extend({
+    template: 'EmptyComponent',
+    init: function(action_id, options) {
+        this._super();
+        // TODO take the xmlid of a action instead of its id 
+        this.action_id = action_id;
+        this.options = options || {};
+        this.am = new openerp.web.ActionManager(this);
+    },
+
+    start: function() {
+        var self = this;
+
+        this.am.appendTo(this.$element.addClass('openerp'));
+
+        return this.rpc("/web/action/load", { action_id: this.action_id }, function(result) {
+            var action = result.result;
+            action.flags = _.extend({
+                //views_switcher : false,
+                search_view : false,
+                action_buttons : false,
+                sidebar : false
+                //pager : false
+            }, self.options, action.flags || {});
+
+            self.am.do_action(action);
+        });
+    },
+
+});
+
+
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
