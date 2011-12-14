@@ -175,6 +175,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (self.default_focus_field && !self.embedded_view) {
                 self.default_focus_field.focus();
             }
+            if (record.id) {
+                self.do_push_state({id:record.id});
+            }
         });
     },
     on_form_changed: function() {

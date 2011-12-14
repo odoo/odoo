@@ -20,6 +20,7 @@ session.web.ActionManager = session.web.Widget.extend({
     identifier_prefix: "actionmanager",
     init: function(parent) {
         this._super(parent);
+        this.action = null;
         this.inner_viewmanager = null;
         this.dialog = null;
         this.dialog_viewmanager = null;
@@ -47,7 +48,15 @@ session.web.ActionManager = session.web.Widget.extend({
         }
     },
 
-    do_push_state: function(state, overwrite) {
+    do_push_state: function(state) {
+        if (this.wiget_parent && this.widget_parent.do_push_state) {
+            if (this.action.id) {
+                state = _.extend({}, state || {}, {
+                    action_id: this.action.id,
+                });
+            }
+            this.widget_parent.do_push_state(state);
+        }
     },
 
     do_load_state: function(state) {
@@ -95,6 +104,7 @@ session.web.ActionManager = session.web.Widget.extend({
             console.error("Action manager can't handle action of type " + action.type, action);
             return;
         }
+        this.action = action;
         return this[type](action, on_close);
     },
     null_action: function() {
@@ -128,10 +138,6 @@ session.web.ActionManager = session.web.Widget.extend({
             this.content_stop();
             this.inner_action = action;
             this.inner_viewmanager = new session.web.ViewManagerAction(this, action);
-            this.inner_viewmanager.do_push_state.add(function(state,overwrite) {
-                state['action_id'] = action.id;
-                self.do_push_state(state,true);
-            });
             this.inner_viewmanager.appendTo(this.$element);
         }
     },
@@ -154,10 +160,6 @@ session.web.ActionManager = session.web.Widget.extend({
         this.content_stop();
         var ClientWidget = session.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
-
-        var client_action = {tag: action.tag};
-        if (action.params) _.extend(client_action, {params: action.params});
-        this.do_push_state({client_action: client_action}, true);
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
@@ -466,12 +468,6 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
 
         var main_view_loaded = this._super();
 
-        _.each(_.keys(this.views), function(view_type) {
-            $.when(self.views[view_type].deferred).done(function(view_type) {
-                self.views[view_type].controller.do_push_state.add(self.do_push_state);
-            });
-        });
-
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
 
         this.$element.find('.oe_debug_view').change(this.on_debug_changed);
@@ -584,12 +580,16 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             } else {
                 $search_prefix.remove();
             }
-
-            self.do_push_state({view_type: self.active_view});
         });
     },
 
-    do_push_state: function(state, overwrite) {
+    do_push_state: function(state) {
+        if (this.wiget_parent && this.widget_parent.do_push_state) {
+            state = _.extend({}, state || {}, {
+                view_type: this.active_view
+            });
+            this.widget_parent.do_push_state(state);
+        }
     },
 
     do_load_state: function(state) {
@@ -1146,11 +1146,12 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         return $.Deferred().resolve({}).promise();
     },
 
-    do_push_state: function(state, overwrite) {
+    do_push_state: function(state) {
+        if (this.wiget_parent && this.widget_parent.do_push_state) {
+            this.widget_parent.do_push_state(state);
+        }
     },
 
-    do_load_state: function(state) {
-    }
 });
 
 session.web.json_node_to_xml = function(node, human_readable, indent) {
