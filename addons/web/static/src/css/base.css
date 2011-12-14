@@ -560,6 +560,10 @@ label.error {
     color: #252424;
     text-shadow: white 0 1px 0;
 }
+.openerp div[id^="notebook"] .oe_view_title {
+    font-size:85%;
+    padding-bottom:4px;
+}
 
 /* View Manager */
 .openerp .oe_vm_switch {
@@ -828,6 +832,10 @@ label.error {
 
 .openerp .oe-listview table tbody td {
     border-bottom: 1px solid #E3E3E3;
+}
+
+.openerp .oe-listview td.oe-actions { 
+    border-bottom:none;
 }
 
 .openerp .oe-listview .oe-record-selector {
@@ -1324,7 +1332,10 @@ label.error {
 .openerp .oe-view-manager-header {
     overflow: auto;
     background: url("/web/static/src/img/sep-a.gif") 0 100% repeat-x;
-    margin-bottom:6px;
+    margin:6px 0 6px 2px;
+}
+.openerp div[id^="notebook"] .oe-view-manager-header { /* Trick: remove the background when element is in a formular */
+    background: none;
 }
 .openerp .oe-view-manager-header h2 {
     float: left;
@@ -1760,7 +1771,7 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 }
 
 .openerp .oe_vm_switch {
-    margin:2px 10px 0px 0px;
+    margin:2px 0 0 0;
 }
 
 .openerp .oe_vm_switch button {
@@ -1778,7 +1789,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 }
 .openerp .oe_vm_switch button[data-view-type="list"]:active,
 .openerp .oe_vm_switch button[data-view-type="list"]:hover,
-.openerp .oe_vm_switch button[data-view-type="list"]:focus {
+.openerp .oe_vm_switch button[data-view-type="list"]:focus,
+.openerp .oe_vm_switch button[data-view-type="list"][disabled="disabled"] {
     background-position:0px -21px;
 }
 .openerp .oe_vm_switch button[data-view-type="form"] {
@@ -1786,7 +1798,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 }
 .openerp .oe_vm_switch button[data-view-type="form"]:active,
 .openerp .oe_vm_switch button[data-view-type="form"]:hover,
-.openerp .oe_vm_switch button[data-view-type="form"]:focus {
+.openerp .oe_vm_switch button[data-view-type="form"]:focus,
+.openerp .oe_vm_switch button[data-view-type="form"][disabled="disabled"] {
     background-position:-22px  -21px;
 }
 .openerp .oe_vm_switch button[data-view-type="graph"] {
@@ -1794,7 +1807,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 }
 .openerp .oe_vm_switch button[data-view-type="graph"]:active,
 .openerp .oe_vm_switch button[data-view-type="graph"]:hover,
-.openerp .oe_vm_switch button[data-view-type="graph"]:focus {
+.openerp .oe_vm_switch button[data-view-type="graph"]:focus,
+.openerp .oe_vm_switch button[data-view-type="graph"][disabled="disabled"] {
     background-position:-44px -21px;
 }
 .openerp .oe_vm_switch button[data-view-type="gantt"] {
@@ -1802,7 +1816,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 }
 .openerp .oe_vm_switch button[data-view-type="gantt"]:active,
 .openerp .oe_vm_switch button[data-view-type="gantt"]:hover,
-.openerp .oe_vm_switch button[data-view-type="gantt"]:focus {
+.openerp .oe_vm_switch button[data-view-type="gantt"]:focus,
+.openerp .oe_vm_switch button[data-view-type="gantt"][disabled="disabled"] {
     background-position:-66px -21px;
 }
 .openerp .oe_vm_switch button[data-view-type="calendar"] {
@@ -1810,7 +1825,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 }
 .openerp .oe_vm_switch button[data-view-type="calendar"]:active,
 .openerp .oe_vm_switch button[data-view-type="calendar"]:hover,
-.openerp .oe_vm_switch button[data-view-type="calendar"]:focus {
+.openerp .oe_vm_switch button[data-view-type="calendar"]:focus,
+.openerp .oe_vm_switch button[data-view-type="calendar"][disabled="disabled"]{
     background-position:-88px -21px;
 }
 .openerp .oe_vm_switch button[data-view-type="kanban"] {
@@ -1818,7 +1834,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 }
 .openerp .oe_vm_switch button[data-view-type="kanban"]:active,
 .openerp .oe_vm_switch button[data-view-type="kanban"]:hover,
-.openerp .oe_vm_switch button[data-view-type="kanban"]:focus {
+.openerp .oe_vm_switch button[data-view-type="kanban"]:focus,
+.openerp .oe_vm_switch button[data-view-type="kanban"][disabled="disabled"] {
     background-position:-110px -21px;
 }
 
@@ -1827,7 +1844,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 }
 .openerp .oe_vm_switch button[data-view-type="diagram"]:active,
 .openerp .oe_vm_switch button[data-view-type="diagram"]:hover,
-.openerp .oe_vm_switch button[data-view-type="diagram"]:focus {
+.openerp .oe_vm_switch button[data-view-type="diagram"]:focus,
+.openerp .oe_vm_switch button[data-view-type="diagram"][disabled="disabled"] {
     background-position:0px -21px;
 }
 
@@ -1847,3 +1865,4 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 .openerp .oe-list-pager button[data-pager-action="last"], .openerp .oe_form_pager button[data-pager-action="last"] {
     background: url("/web/static/src/img/pager_last.png") no-repeat scroll center center transparent;
 }
+
