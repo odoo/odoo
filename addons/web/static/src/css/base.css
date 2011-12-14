@@ -18,6 +18,10 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
     padding: 0 8px 8px 8px;
 }
 
+.openerp .oe_form_frame_cell .view-manager-main-content {
+    padding: 0;
+}
+
 .oe_box {
     border: 1px solid #aaf;
     padding: 2px;
@@ -1142,21 +1146,28 @@ label.error {
 .openerp .oe_form_readonly {
 
 }
-.openerp .oe_form_readonly .field_char, .openerp .oe_form_readonly .oe_form_field_email  {
-    padding-top: 4px;
+.openerp .oe_form_readonly .field_char, .openerp .oe_form_readonly .field_int, .openerp .oe_form_readonly .field_float, .openerp .oe_form_readonly .field_email, .openerp .oe_form_readonly .field_date, .openerp .oe_form_readonly .field_selection, .openerp .oe_forms_readonly .oe_form_field_many2one{
+    padding: 3px 2px 2px 2px;
     background-color: white;
+    height:17px;
 }
-
-.openerp .oe_form_readonly .field_selection {
-    padding-top: 2px;
+.openerp .oe_form_readonly .field_datetime {
+    padding: 1px 2px 2px 2px;
     background-color: white;
+    height:17px;
+}
+.openerp .oe_form_readonly .oe_form_field_many2one {
+    background-color:white;
+    height:17px;
+    margin:1px;
 }
 
 .openerp .oe_form_readonly .oe_form_field_text div.field_text {
     white-space: pre-wrap;
 }
-
-
+.openerp .oe_form_readonly .oe_form_frame_cell .field_text  {
+    min-height:100px;
+}
 /* Inputs */
 .openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms textarea {
     -moz-box-sizing: border-box;
@@ -1334,12 +1345,14 @@ label.error {
     background: url("/web/static/src/img/sep-a.gif") 0 100% repeat-x;
     margin:6px 0 6px 2px;
 }
-.openerp div[id^="notebook"] .oe-view-manager-header { /* Trick: remove the background when element is in a formular */
+.openerp .oe_form_frame_cell .oe-view-manager-header { /* Trick: remove the background when element is in a formular */
     background: none;
 }
+
 .openerp .oe-view-manager-header h2 {
     float: left;
 }
+
 .openerp .oe_view_manager_menu_tips blockquote {
     display: none;
     font-size: 85%;
