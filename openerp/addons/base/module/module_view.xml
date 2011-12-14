@@ -41,8 +41,8 @@
             <field name="arch" type="xml">
                 <search string="Search modules">
                     <group col='10' colspan='4'>
-                        <filter icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
-                        <filter icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
+                        <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
+                        <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
 
                         <separator orientation="vertical"/>
                         <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
@@ -78,6 +78,7 @@
                         <h4><a type="edit"><field name="shortdesc"/></a></h4>
                         <p>
                            <field name="category_id"/><br/>
+                           <field name="name"/><br/>
                            <span t-if="record.complexity.raw_value == 'Expert'" class="oe_label oe_warning">Complex</span>
                          </p>
                         <button type="object" name="button_immediate_install" states="uninstalled" class="button">Install</button>
@@ -196,6 +197,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">['!', ('category_id.parent_id','child_of','Hidden')]</field>
+            <field name="context">{'search_default_app':1}</field>
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help">You can install new modules in order to activate new features, menu, reports or data in your OpenERP instance. To install some modules, click on the button "Install" from the form view and then click on "Start Upgrade".</field>
         </record>
