@@ -573,7 +573,7 @@
             <th t-att-colspan="columns_count">
                 <table>
                     <tr>
-                        <td t-if="options.action_buttons !== false" class="oe-actions">
+                        <td t-if="!no_leaf and options.action_buttons !== false" class="oe-actions">
                             <button type="button" class="oe-list-add"
                                     t-if="options.addable">
                                 <t t-esc="options.addable"/>
@@ -634,7 +634,7 @@
         this.prepend($title);
     </t>
 </t>
-<th t-name="Listview.navigation.button" t-if="options.pager !== false"
+<th t-name="Listview.navigation.button" t-if="!no_leaf and options.pager !== false"
         class="oe-list-pager" t-att-colspan="columns_count">
     <button type="button" disabled="disabled"
             data-pager-action="first">First</button>
