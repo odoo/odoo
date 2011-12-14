@@ -125,14 +125,14 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         } else {
             promise = this.dataset.read_index(_.keys(this.fields_view.fields)).pipe(this.on_record_loaded);
         }
-        this.$element.show();
+        this._super();
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
         return promise;
     },
     do_hide: function () {
-        this.$element.hide();
+        this._super();
         if (this.sidebar) {
             this.sidebar.$element.hide();
         }

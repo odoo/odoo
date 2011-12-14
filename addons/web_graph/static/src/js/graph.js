@@ -37,12 +37,6 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         }
         this._super();
     },
-    do_show: function () {
-        this.$element.show();
-    },
-    do_hide: function () {
-        this.$element.hide();
-    },
     start: function() {
         var self = this;
         this._super();
