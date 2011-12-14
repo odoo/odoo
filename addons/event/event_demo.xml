@@ -61,6 +61,8 @@
         <field eval="time.strftime('%Y-%m-01 23:05:15')" name="date_end"/>
 		<field name="product_id" ref="event_product_0"/>
 		<field name="unit_price">68.00</field>
+		<field name="mail_auto_registr">True</field>
+		<field name="mail_auto_confirm">True</field>
 		<field name="user_id" ref="base.user_root"/>
 		<field name="register_max">500</field>
 		<field name="type" ref="event_type_1"/>
@@ -74,9 +76,9 @@
 		<field name="unit_price">24.00</field>
 		<field name="type" ref="event_type_1"/>
 		<field name="user_id" ref="base.user_root"/>
+		<field name="register_min">50</field>
 		<field name="register_max">350</field>
 	</record>
-    <function model="event.event" name="button_confirm" eval="[ref('event_1')]"/>
 	<record id="event_2" model="event.event">
 		<field name="name">Conference on ERP Buisness</field>
         <field eval="time.strftime('%Y-%m-05 14:00:00')" name="date_begin"/>
@@ -92,7 +94,7 @@
 		<field name="mail_confirm">Thanks for registration. The conference will begin at 2 PM and will be given by Mr. Pinckaers.</field>
 	</record>
     <function model="event.event" name="button_confirm" eval="[ref('event_2')]"/>
-    <function model="event.event" name="button_done" eval="[ref('event_2')]"/>
+    <function model="event.event" name="button_confirm" eval="[ref('event_2')]"/>
 
 <!-- Demo data for Event Registration-->
 	<record id="reg_1_1" model="event.registration">
@@ -126,5 +128,16 @@
 
 	 <function model="event.registration" name="check_confirm" eval="[ref('reg_0_1')]"/> 
 
+    <record id="reg_0_2" model="event.registration">
+        <field name="event_id" ref="event_2"/>
+        <field name="partner_id" ref="base.res_partner_c2c"/>
+        <field name="partner_invoice_id" ref="base.res_partner_c2c"/>
+        <field name="nb_register">5</field>
+        <field name="event_product">Ticket for Conference</field>
+        <field name="unit_price">20</field>
+    </record>
+    
+    <function model="event.registration" name="check_confirm" eval="[ref('reg_0_2')]"/>
+    
 	</data>
 </openerp>

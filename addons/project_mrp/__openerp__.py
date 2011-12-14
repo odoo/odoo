@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Automatic task creation from procurement lines',
+    'name': 'Create Tasks on SO',
     'version': '1.0',
-    'category': 'Hidden/Link',
+    "category": "Project Management",
     'complexity': "easy",
     'description': """
 Automatically creates project tasks from procurement lines

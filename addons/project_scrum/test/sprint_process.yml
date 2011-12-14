@@ -53,7 +53,7 @@
     ctx.update({'active_model': 'project.scrum.meeting', 'active_id': ref("scrum_meeting_0"), 'active_ids': [ref("scrum_meeting_0")]})
     vals = self.default_get(cr, uid , [], context=ctx)
     try:
-        new_id = self.create(cr, uid, {'email_to': 'xyz@mycompany.com', 'subject': 'test'})
+        new_id = self.create(cr, uid, {'email_from': 'test@openerp.com', 'email_to': 'xyz@mycompany.com', 'subject': 'test'})
         self.send_mail(cr, uid, [new_id], context=ctx)
     except Exception, e:
         pass

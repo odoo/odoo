@@ -46,6 +46,7 @@ class crm_claim(crm.crm_case, osv.osv):
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Claim Subject', size=128, required=True),
+        'active': fields.boolean('Active'),
         'action_next': fields.char('Next Action', size=200),
         'date_action_next': fields.datetime('Next Action Date'),
         'description': fields.text('Description'),
@@ -95,6 +96,7 @@ class crm_claim(crm.crm_case, osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'active': lambda *a: 1
     }
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
@@ -129,8 +131,6 @@ class crm_claim(crm.crm_case, osv.osv):
             if l.state == 'draft':
                 message = _("The claim '%s' has been opened.") % l.name
                 self.log(cr, uid, l.id, message)
-                value = {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')}
-                self.write(cr, uid, [l.id], value)
                 stage_id = self.stage_find(cr, uid, l.section_id.id or False, [('sequence','>',0)])
                 if stage_id:
                     self.stage_set(cr, uid, [l.id], stage_id)

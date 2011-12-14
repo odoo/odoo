@@ -86,10 +86,10 @@ class mrp_production_workcenter_line(osv.osv):
     _order = "sequence, date_planned"
 
     _columns = {
-       'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Cancelled'),('done','Finished')],'State', readonly=True,
+       'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pending'),('cancel','Cancelled'),('done','Finished')],'State', readonly=True,
                                  help="* When a work order is created it is set in 'Draft' state.\n" \
                                        "* When user sets work order in start mode that time it will be set in 'In Progress' state.\n" \
-                                       "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pause' state.\n" \
+                                       "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' state.\n" \
                                        "* When the user cancels the work order it will be set in 'Canceled' state.\n" \
                                        "* When order is completely processed that time it is set in 'Finished' state."),
        'date_start_date': fields.function(_get_date_date, string='Start Date', type='date'),
@@ -551,6 +551,13 @@ class mrp_operations_operation(osv.osv):
         self.pool.get('mrp.production.workcenter.line').write(cr, uid, wc_op_id, line_vals, context=context)
 
         return super(mrp_operations_operation, self).create(cr, uid, vals, context=context)
+
+    def initialize_workflow_instance(self, cr, uid, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        line_ids = self.pool.get('mrp.production.workcenter.line').search(cr, uid, [], context=context)
+        for line_id in line_ids:
+            wf_service.trg_create(uid, 'mrp.production.workcenter.line', line_id, cr)
+        return True
 
     _columns={
         'production_id':fields.many2one('mrp.production','Production',required=True),

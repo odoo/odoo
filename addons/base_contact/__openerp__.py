@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Base Contact',
+    'name': 'Contacts Management',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Customer Relationship Management',
     'complexity': "expert",
     'description': """
 This module allows you to manage your contacts entirely.
@@ -45,7 +45,6 @@ Pay attention that this module converts the existing addresses into "addresses +
     'depends': ['base','process'],
     'init_xml': [],
     'update_xml': [
-        'security/base_contact_security.xml',
         'security/ir.model.access.csv',
         'base_contact_view.xml',
         'base_contact_installer_view.xml',

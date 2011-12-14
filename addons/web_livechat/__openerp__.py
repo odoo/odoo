@@ -21,7 +21,7 @@
 {
     'name': 'Live Chat Support',
     'version': '2.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'complexity': "easy",
     'description': """
 Enable live chat support for those who have a maintenance contract.
