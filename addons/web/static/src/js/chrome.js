@@ -1053,7 +1053,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         if(this.action_manager)
             this.action_manager.stop();
         this.action_manager = new openerp.web.ActionManager(this);
-        this.action_manager.do_push_state.add(this.do_push_state);
         this.action_manager.appendTo($("#oe_app"));
 
         if (openerp._modules_loaded) { // TODO: find better option than this
@@ -1068,7 +1067,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     on_logged_out: function() {
         $(window).unbind('hashchange', this.on_hashchange);
-        this.do_push_state({},true);
+        this.do_push_state({});
         if(this.action_manager)
             this.action_manager.stop();
         this.action_manager = null;
@@ -1090,11 +1089,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         }
         this._current_state = state;
     },
-    do_push_state: function(state, overwrite) {
-        if (!overwrite) {
-            var hash = $.deparam.fragment(true);
-            state = _.extend({}, hash, state);
-        }
+    do_push_state: function(state) {
         var url = '#' + $.param(state);
         this._current_state = _.clone(state);
         $.bbq.pushState(url);

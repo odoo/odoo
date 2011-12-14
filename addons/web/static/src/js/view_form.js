@@ -125,7 +125,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         } else {
             promise = this.dataset.read_index(_.keys(this.fields_view.fields)).pipe(this.on_record_loaded);
         }
-        this._super();
+        this.$element.show();
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
@@ -174,6 +174,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
             if (self.default_focus_field && !self.embedded_view) {
                 self.default_focus_field.focus();
+            }
+            if (record.id) {
+                self.do_push_state({id:record.id});
             }
         });
     },
