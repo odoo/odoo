@@ -124,6 +124,7 @@ class sale_order_dates(osv.osv):
                  "a date that you can promise to the customer, based on the "
                  "Product Lead Times."),
         'requested_date': fields.date('Requested Date',
+            readonly=True, states={'draft': [('readonly', False)]},
             help="Date by which the customer has requested the items to be "
                  "delivered.\n"
                  "When this Order gets confirmed, the Delivery Order's "
