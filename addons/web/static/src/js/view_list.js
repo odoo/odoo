@@ -402,13 +402,13 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         }, this));
     },
     do_show: function () {
-        this.$element.show();
+        this._super();
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
     },
     do_hide: function () {
-        this.$element.hide();
+        this._super();
         if (this.sidebar) {
             this.sidebar.$element.hide();
         }
