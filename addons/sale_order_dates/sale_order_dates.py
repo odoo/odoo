@@ -29,6 +29,16 @@ from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 class sale_order_dates(osv.osv):
     """Add several date fields to Sale Orders, computed or user-entered"""
     _inherit = 'sale.order'
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        """Don't copy the requested date along with the Sale Order"""
+        if default is None:
+            default = {}
+        else:
+            default = default.copy()
+        default['requested_date'] = False
+        return super(sale_order_dates, self).copy(cr, uid, id, default=default,
+                                            context=context)
     
     def _order_line_move_date(self, cr, uid, line):
         """Compute the expected date from the requested date, not the order date"""
