@@ -112,7 +112,7 @@ class res_partner_location(osv.osv):
             last_sequence = cr.fetchone()[0]
 
             cr.execute("INSERT INTO res_partner_location SELECT * FROM res_partner_address")
-            cr.execute("ALTER SEQUENCE " + self._sequence + " RESTART WITH " + str(last_sequence))
+            cr.execute("ALTER SEQUENCE " + self._sequence + " RESTART WITH " + str(last_sequence + 10))
 
 
 res_partner_location()
