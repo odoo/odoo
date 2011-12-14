@@ -20,7 +20,7 @@ session.web.ActionManager = session.web.Widget.extend({
     identifier_prefix: "actionmanager",
     init: function(parent) {
         this._super(parent);
-        this.action = null;
+        this.inner_action = null;
         this.inner_viewmanager = null;
         this.dialog = null;
         this.dialog_viewmanager = null;
@@ -47,18 +47,14 @@ session.web.ActionManager = session.web.Widget.extend({
             this.client_widget = null;
         }
     },
-
     do_push_state: function(state) {
-        if (this.wiget_parent && this.widget_parent.do_push_state) {
-            if (this.action.id) {
-                state = _.extend({}, state || {}, {
-                    action_id: this.action.id,
-                });
+        if (this.widget_parent && this.widget_parent.do_push_state) {
+            if (this.inner_action && this.inner_action.id) {
+                state['action_id'] = this.inner_action.id;
             }
             this.widget_parent.do_push_state(state);
         }
     },
-
     do_load_state: function(state) {
         if (state.action_id) {
             this.null_action();
@@ -78,7 +74,6 @@ session.web.ActionManager = session.web.Widget.extend({
             this.inner_viewmanager.do_load_state(state);
         }
     },
-
     do_action: function(action, on_close) {
         if (_.isNumber(action)) {
             var self = this;
@@ -104,7 +99,6 @@ session.web.ActionManager = session.web.Widget.extend({
             console.error("Action manager can't handle action of type " + action.type, action);
             return;
         }
-        this.action = action;
         return this[type](action, on_close);
     },
     null_action: function() {
@@ -317,8 +311,6 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         });
         return view_promise;
     },
-
-
     /**
      * Returns to the view preceding the caller view in this manager's
      * navigation history (the navigation history is appended to via
@@ -394,7 +386,8 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
     /**
      * Called by children view after executing an action
      */
-    on_action_executed: function () {},
+    on_action_executed: function () {
+    },
     display_title: function () {
         var view = this.views[this.active_view];
         if (view) {
@@ -583,23 +576,18 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             }
         });
     },
-
     do_push_state: function(state) {
-        if (this.wiget_parent && this.widget_parent.do_push_state) {
-            state = _.extend({}, state || {}, {
-                view_type: this.active_view
-            });
+        if (this.widget_parent && this.widget_parent.do_push_state) {
+            state["view_type"] = this.active_view;
             this.widget_parent.do_push_state(state);
         }
     },
-
     do_load_state: function(state) {
         var self = this;
         $.when(this.on_mode_switch(state.view_type, true)).done(function() {
             self.views[self.active_view].controller.do_load_state(state);
         });
     },
-
     shortcut_check : function(view) {
         var self = this;
         var grandparent = this.widget_parent && this.widget_parent.widget_parent;
@@ -1067,9 +1055,17 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     },
     do_show: function () {
         this.$element.show();
+        this.do_push_state({});
     },
     do_hide: function () {
         this.$element.hide();
+    },
+    do_push_state: function(state) {
+        if (this.widget_parent && this.widget_parent.do_push_state) {
+            this.widget_parent.do_push_state(state);
+        }
+    },
+    do_load_state: function(state) {
     },
     /**
      * Switches to a specific view type
@@ -1152,13 +1148,6 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     },
     sidebar_context: function () {
         return $.Deferred().resolve({}).promise();
-    },
-    do_push_state: function(state) {
-        if (this.wiget_parent && this.widget_parent.do_push_state) {
-            this.widget_parent.do_push_state(state);
-        }
-    },
-    do_load_state: function(state) {
     }
 });
 
