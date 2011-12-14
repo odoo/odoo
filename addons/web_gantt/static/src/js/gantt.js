@@ -459,14 +459,6 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         }
     },
 
-    do_show: function () {
-        this.$element.show();
-    },
-
-    do_hide: function () {
-        this.$element.hide();
-    },
-
     convert_str_date: function (str) {
         if (typeof str == 'string') {
             if (str.length == 19) {

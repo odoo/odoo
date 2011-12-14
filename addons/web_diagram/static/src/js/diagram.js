@@ -298,14 +298,6 @@ openerp.web.DiagramView = openerp.web.View.extend({
         }
         $pager.find('span.oe_pager_index').html(index);
         $pager.find('span.oe_pager_count').html(this.dataset.count);
-    },
-
-    do_show: function () {
-        this.$element.show();
-    },
-
-    do_hide: function () {
-        this.$element.hide();
     }
 });
 };

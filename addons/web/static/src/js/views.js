@@ -1065,19 +1065,26 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         this.embedded_view = embedded_view;
         this.options.sidebar = false;
     },
+    do_show: function () {
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
+    },
     /**
      * Switches to a specific view type
      *
      * @param {String} view view type to switch to
      */
-    do_switch_view: function(view) { },
+    do_switch_view: function(view) { 
+    },
     /**
      * Cancels the switch to the current view, switches to the previous one
      */
-    do_prev_view: function () { },
+    do_prev_view: function () { 
+    },
     do_search: function(view) {
     },
-
     set_common_sidebar_sections: function(sidebar) {
         sidebar.add_default_sections();
     },
@@ -1146,10 +1153,8 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     sidebar_context: function () {
         return $.Deferred().resolve({}).promise();
     },
-
     do_push_state: function(state, overwrite) {
     },
-
     do_load_state: function(state) {
     }
 });
