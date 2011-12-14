@@ -689,7 +689,7 @@ class share_wizard(osv.osv_memory):
             raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
 
         # TODO: also send an HTML version of this mail
-        emails_sent = 0
+        msg_ids = []
         for result_line in wizard_data.result_line_ids:
             email_to = result_line.user_id.user_email
             subject = wizard_data.name
@@ -718,16 +718,16 @@ class share_wizard(osv.osv_memory):
             body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
 
-            if mail_message.schedule_with_attach(cr, uid,
-                                                 user.user_email,
-                                                 [email_to],
-                                                 subject,
-                                                 body,
-                                                 model='share.wizard'):
-                emails_sent += 1
-            else:
-                self._logger.warning('Failed to send share notification from %s to %s, ignored', user.user_email, email_to)
-        self._logger.info('%s share notification(s) successfully sent.', emails_sent)
+            msg_ids.append(mail_message.schedule_with_attach(cr, uid,
+                                                       user.user_email,
+                                                       [email_to],
+                                                       subject,
+                                                       body,
+                                                       model='share.wizard',
+                                                       context=context))
+        # force direct delivery, as users expect instant notification
+        mail_message.send(cr, uid, msg_ids, context=context)
+        self._logger.info('%d share notification(s) sent.', len(msg_ids))
 share_wizard()
 
 class share_result_line(osv.osv_memory):
