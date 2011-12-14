@@ -1232,7 +1232,7 @@ openerp.point_of_sale = function(db) {
             }, this));
         },
         close: function() {
-            this.stop();
+            this.do_action({type: 'ir.actions.client', tag: 'default_home'});
         },
         stop: function() {
             $('.oe_footer').show();
