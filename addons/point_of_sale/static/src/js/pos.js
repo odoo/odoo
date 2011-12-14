@@ -1191,12 +1191,11 @@ openerp.point_of_sale = function(db) {
             });
 
             this.$element.find('#steps').buttonset();
-            
-            $('.oe_toggle_secondary_menu').hide();
-            $('.oe_footer').hide();
 
             return pos.ready.then( function() {
                 pos.app = new App(self.$element);
+                $('.oe_toggle_secondary_menu').hide();
+                $('.oe_footer').hide();
             });
         },
         changed_pending_operations: function () {
