@@ -818,9 +818,9 @@ class share_wizard(osv.osv_memory):
             <script type="text/javascript">
                 (function() {
                     var session = new openerp.init(%(init)s);
-                    var target = session.util.currentScript();
+                    var target = session.currentScript();
                     session.connection.connect(%(server)s, %(dbname)s, %(login)s, %(password)s, function() {
-                        var client = new session.web.EmbedClient(%(action)d%(options)s);
+                        var client = new session.web.EmbeddedClient(%(action)d%(options)s);
                         client.insertAfter(target);
                     });
                 })();
