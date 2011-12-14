@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Basic Calendar Functionality",
+    "name" : "Calendar Layer",
     "version" : "1.0",
     "depends" : ["base", "mail"],
     'complexity': "easy",
@@ -32,9 +32,12 @@ It supports:
     - Calendar of events
     - Alerts (create requests)
     - Recurring events
-    - Invitations to people""",
+    - Invitations to people
+
+If you need to manage your meetings, you should install the CRM module.
+    """,
     "author" : "OpenERP SA",
-    'category': 'Hidden',
+    'category': 'Hidden/Dependency',
     'website': 'http://www.openerp.com',
     "init_xml" : [
         'base_calendar_data.xml'

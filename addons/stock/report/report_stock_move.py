@@ -128,15 +128,12 @@ class report_stock_move(osv.osv):
                         LEFT JOIN product_uom pu ON (sm.product_uom=pu.id)
                           LEFT JOIN product_uom pu2 ON (sm.product_uom=pu2.id)
                         LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
-                        LEFT JOIN stock_location sl ON (sm.location_id = sl.id)
-
                     GROUP BY
                         sm.id,sp.type, sm.date,sm.address_id,
                         sm.product_id,sm.state,sm.product_uom,sm.date_expected,
                         sm.product_id,pt.standard_price, sm.picking_id, sm.product_qty,
                         sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id,pu.factor,pt.categ_id, sp.stock_journal_id)
                     AS al
-
                     GROUP BY
                         al.out_qty,al.in_qty,al.curr_year,al.curr_month,
                         al.curr_day,al.curr_day_diff,al.curr_day_diff1,al.curr_day_diff2,al.dp,al.location_id,al.location_dest_id,

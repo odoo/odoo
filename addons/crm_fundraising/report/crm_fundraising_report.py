@@ -97,6 +97,7 @@ class crm_fundraising_report(osv.osv):
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
                 from
                     crm_fundraising c
+                where c.active = 'true'
                 group by to_char(c.date, 'YYYY'), to_char(c.date, 'MM'),\
                      c.state, c.user_id,c.section_id,c.categ_id,type_id,c.partner_id,c.company_id,
                      c.create_date,to_char(c.date, 'YYYY-MM-DD')

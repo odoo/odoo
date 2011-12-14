@@ -5,6 +5,10 @@
         This Demo data file Human Resources, Phases and Resources,Tasks allocation and  also run scheduling of phase and tasks.
         -->
 
+        <record id="project.project_integrate_openerp" model="project.project">
+            <field name="resource_calendar_id" ref="resource.timesheet_group1"/>
+        </record>
+
         <!-- Project Phases -->
 
         <record id="project_phase_1" model="project.phase">
@@ -13,6 +17,7 @@
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="1" name="sequence"/>
             <field name="duration">30</field>
+            <field name="constraint_date_start" eval="time.strftime('%Y-%m-01 10:00:00')"></field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
@@ -37,9 +42,9 @@
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
         <function model="project.phase" name="set_open" eval="[ref('project_phase_3')]"/>
-        
+
         <record id="project_phase_4" model="project.phase">
-            <field eval="[(6, 0, [ref('project_phase_2')])]" name="previous_phase_ids"/>
+            <field eval="[(6, 0, [ref('project_phase_3')])]" name="previous_phase_ids"/>
             <field name="name">Development and Integration</field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="4" name="sequence"/>
@@ -60,7 +65,7 @@
             <field eval="[(6, 0, [ref('project_phase_5')])]" name="previous_phase_ids"/>
             <field name="name">Deployement and Training</field>
             <field name="product_uom" ref="product.uom_day"/>
-            <field eval="5" name="sequence"/>
+            <field eval="6" name="sequence"/>
             <field name="duration">10</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>

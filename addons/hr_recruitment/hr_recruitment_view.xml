@@ -17,7 +17,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
         <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
-        <field name="context">{'object_id':'hr.applicant'}</field>
+        <field name="context" eval="{'object_id': ref('model_hr_applicant')}"/>
     </record>
     # ------------------------------------------------------
     # Stage
@@ -145,7 +145,7 @@
                        <group colspan="4">
                            <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                        </group>
-                       <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
+                       <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
                             <tree string="History">
                                 <field name="display_text" string="History Information"/>
                                 <field name="email_from" invisible="1"/>
@@ -155,32 +155,6 @@
                                     context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
                                     icon="terp-mail-replied" type="action" />
                             </tree>
-                            <form string="History">
-                                <group col="4" colspan="4">
-                                    <field name="email_from"/>
-                                    <field name="date"/>
-                                    <field name="email_to" widget="char" size="512"/>
-                                    <field name="email_cc" widget="char" size="512"/>
-                                    <field name="subject" colspan="4" widget="char" size="512"/>
-                                </group>
-                                <notebook colspan="4">
-                                    <page string="Details">
-                                        <group attrs="{'invisible': [('email_from', '=', False)]}">
-                                            <field name="body_text" colspan="4" nolabel="1" height="250"/>
-                                            <button colspan="4" string="Reply"
-                                                name="%(mail.action_email_compose_message_wizard)d"
-                                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                                icon="terp-mail-replied" type="action"/>
-                                        </group>
-                                        <group attrs="{'invisible': [('email_from', '!=', False)]}">
-                                            <field name="display_text" colspan="4" nolabel="1"  height="250"/>
-                                        </group>
-                                    </page>
-                                    <page string="Attachments">
-                                        <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
-                                    </page>
-                                </notebook>
-                            </form>
                         </field>
                         <button string="Add Internal Note"
                                 name="%(crm.action_crm_add_note)d"
@@ -278,9 +252,9 @@
         </field>
     </record>
 
-	<!-- hr Applicant Kanban View -->
+    <!-- hr Applicant Kanban View -->
 
-	<record model="ir.ui.view" id="hr_kanban_view_applicant">
+    <record model="ir.ui.view" id="hr_kanban_view_applicant">
         <field name="name">Hr Applicants kanban</field>
         <field name="model">hr.applicant</field>
         <field name="type">kanban</field>
@@ -290,47 +264,70 @@
                 <field name="state"/>
                 <field name="priority"/>
                 <field name="survey"/>
+                <field name="user_id"/>
+                <field name="user_email"/>
                 <templates>
+                    <t t-name="partner-infos">
+                        <div t-if="record.partner_phone.raw_value">
+                            Phone: <field name="partner_phone"/>
+                        </div>
+                        <div t-if="record.partner_mobile.raw_value">
+                            Mobile: <field name="partner_mobile"/>
+                        </div>
+                    </t>
                     <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
-                        <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                        <t t-if="record.priority.raw_value == 1" t-set="border">oe_kanban_color_red</t>
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
                             <div class="oe_kanban_box oe_kanban_color_border">
-                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                    <div class="oe_kanban_title1">
-                                        <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority" />
-                                        <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                <tr>
+                                    <td align="left" valign="middle" class="oe_kanban_title" tooltip="partner-infos">
                                         <field name="partner_name"/>
-                                    </div>
-                                </div>
+                                        <t t-if="!record.partner_name.raw_value">
+                                            <field name="email_from"/>
+                                        </t>
+                                    </td>
+                                    <td valign="top" width="22"><img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/></td>
+                                </tr>
+                                </table>
                                 <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                    <table class="oe_kanban_table">
-                                        <tr>
-                                            <td>
-                                                <div class="oe_kanban_right oe_kanban_small">
-                                                    <field name="user_id"/>
-                                                </div>
-                                                <div class="oe_kanban_title2">
-                                                    <field name="job_id"/>
-                                                    <t t-if="record.priority.raw_value == 0"></t>
-                                                    <t t-if="record.priority.raw_value == 5">(Not Good)</t>
-                                                    <t t-if="record.priority.raw_value == 4">(On Average)</t>
-                                                    <t t-if="record.priority.raw_value == 3">(Good)</t>
-                                                    <t t-if="record.priority.raw_value == 2">(Very Good)</t>
-                                                    <t t-if="record.priority.raw_value == 1">(Excellent)</t>
-                                                </div>
-                                                <div class="oe_kanban_title3">
-                                                    <field name="type_id"/>
-                                                </div>
-                                                <div class="oe_kanban_title3">
-                                                    <i><field name="date_action"/><field name="title_action"/></i>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div style="white-space: nowrap">
+                                        <field name="job_id"/>
+                                        <t t-if="!record.job_id.raw_value">
+                                            <field name="name"/>
+                                        </t>
+                                        <span class="oe_kanban_highlight">
+                                            <t t-set="priority" t-value="record.priority.raw_value || 5"/>
+                                            <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
+                                                <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
+                                            </a>
+                                            <a type="object" name="set_priority" args="['5']" t-if="priority lte 3">
+                                                <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                            </a>
+                                            <a type="object" name="set_priority" args="['2']">
+                                                <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                            </a>
+                                            <a type="object" name="set_priority" args="['1']">
+                                                <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div t-if="record.type_id.raw_value or record.source_id.raw_value">
+                                        <span t-if="record.type_id.raw_value" class="oe_kanban_highlight oe_kanban_button" style="font-size: 100%%">
+                                            <field name="type_id"/>
+                                        </span>
+                                        <span t-if="record.source_id.raw_value" class="oe_kanban_highlight oe_kanban_button" style="font-size: 100%%">
+                                            <field name="source_id"/>
+                                        </span>
+                                    </div>
+                                    <div t-if="record.date_action.raw_value or record.title_action.raw_value">
+                                        <i t-if="record.date_action.raw_value"><field name="date_action"/> :</i> <field name="title_action"/>
+                                    </div>
                                 </div>
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left">
                                         <a string="Edit" icon="gtk-edit" type="edit"/>
+                                        <a string="Delete" icon="gtk-close" type="delete"/>
                                         <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
                                         <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
@@ -338,8 +335,8 @@
                                         <a t-if="record.survey.raw_value" name="action_print_survey" type="object" string="Print Interview" icon="gtk-print" />
                                     </div>
                                     <div class="oe_kanban_right">
-                                        <a name="case_open" string="Open" states="pending,draft" type="object" icon="kanban-apply" />
-                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
+                                        <a name="case_open" string="In Progress" states="draft,pending" type="object" icon="kanban-apply"/>
+                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause"/>
                                     </div>
                                     <br class="oe_kanban_clear"/>
                                 </div>

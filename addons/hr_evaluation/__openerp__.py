@@ -20,14 +20,14 @@
 ##############################################################################
 
 {
-    "name" : "HR Periodic Appraisals",
+    "name" : "Employee Appraisals",
     "version": "0.1",
     "author": "OpenERP SA",
     "category": "Human Resources",
     'complexity': "easy",
     "website": "http://www.openerp.com",
     "images": ["images/hr_evaluation_analysis.jpeg","images/hr_evaluation.jpeg"],
-    "depends": ["hr",'hr_recruitment','survey'],
+    "depends": ["hr","base_calendar","survey"],
     "description": """
 Ability to create employees evaluation.
 =======================================
@@ -54,6 +54,7 @@ in the form of pdf file. Implements a dashboard for My Current Evaluations
     "active": False,
     "installable": True,
     "certificate" : "00883207679172998429",
+    'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

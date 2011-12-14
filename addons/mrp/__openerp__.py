@@ -21,7 +21,7 @@
 
 
 {
-    "name" : "Manufacturing Resource Planning",
+    "name" : "MRP",
     "version" : "1.1",
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
@@ -101,6 +101,7 @@ Dashboard provided by this module:
 
     ],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '0032052481373',
 }
