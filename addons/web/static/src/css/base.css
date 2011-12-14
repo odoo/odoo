@@ -822,8 +822,11 @@ label.error {
     border-bottom: 1px solid #E3E3E3;
 }
 
-.openerp .oe-listview .oe-record-selector {
+.openerp .oe-listview .oe-record-selector, .openerp .oe-listview .oe-record-edit-link {
     border-bottom: 1px solid #E3E3E3;
+}
+.openerp .oe-listview .oe-record-edit-link {
+    cursor: pointer;
 }
 
 .openerp .oe-listview .oe-field-cell {
@@ -1193,6 +1196,7 @@ label.error {
 }
 .openerp .oe_datepicker_root {
     display: inline-block;
+    width: 100%;
 }
 .openerp .oe_forms.oe_frame .oe_datepicker_root {
     width: 100%;
