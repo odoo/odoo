@@ -21,7 +21,7 @@
         <field name="parent_id" eval="0">
             <value search="[('type','=','view')]" model="account.account"/>
         </field>
-        <field name="user_type" ref="account.account_type_root"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
     </record>
 
     <record model="account.account" id="auction_expense_view">
@@ -32,13 +32,13 @@
         <field name="parent_id" eval="0">
             <value search="[('type','=','view')]" model="account.account"/>
         </field>
-        <field name="user_type" ref="account.account_type_expense"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
     </record>
 
     <record model="account.account" id="auction_income">
         <field name="name">Auction Adjudications</field>
         <field name="code">A7x*</field>
-        <field name="user_type" ref="account.account_type_income"/> 
+        <field name="user_type" ref="account.data_account_type_income"/> 
         <field name="type">other</field>
         <field name="currency_id" search="[('name','=','EUR')]"/>
         <field name="parent_id" eval="auction_income_view"/>
@@ -47,7 +47,7 @@
     <record model="account.account" id="auction_expense">
         <field name="name">Auction Adjudication Expenses</field>
         <field name="code">A6x*</field>
-        <field name="user_type" ref="account.account_type_expense"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="type">other</field>
         <field name="currency_id" search="[('name','=','EUR')]"/>
         <field name="parent_id" eval="auction_expense_view"/>
