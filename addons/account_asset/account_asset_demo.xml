@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <openerp>
     <data noupdate="1">
-        <!-- 
+        <!--
             Asset Category Demo
         -->
 
@@ -33,13 +33,12 @@
             <field name="method_number">3</field>
         </record>
 
-        <!-- 
+        <!--
             Assets Demo
-        -->        
+        -->
 
         <record id="account_asset_asset_vehicles0" model="account.asset.asset">
             <field eval="2000.0" name="salvage_value"/>
-            <field name="state">draft</field>
             <field eval="12" name="method_period"/>
             <field eval="10" name="method_number"/>
             <field name="name">CEO's Car</field>
@@ -56,7 +55,7 @@
             <field name="category_id" ref="account_asset_category_fixedassets0"/>
             <field name="parent_id" ref="account_asset_asset_vehicles0"/>
         </record>
-        
+
         <record id="account_asset_asset_office0" model="account.asset.asset">
             <field eval="1" name="prorata"/>
             <field eval="100000.0" name="salvage_value"/>
@@ -68,6 +67,6 @@
             <field eval="500000.0" name="purchase_value"/>
             <field name="category_id" ref="account_asset_category_fixedassets0"/>
         </record>
-       
+
     </data>
 </openerp>
