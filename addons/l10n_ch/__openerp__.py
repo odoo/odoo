@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Switzerland - localization with 2011 taxes",
+    "name" : "Switzerland - Accounting",
     "description" :  """
 Swiss localisation :
  - DTA generation for a lot of payment types

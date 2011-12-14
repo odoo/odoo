@@ -62,8 +62,9 @@ Dashboard for project members that includes:
         'project_demo.xml',
     ],
     'test':[
-        'test/test_project.yml',
-        'test/test_project_delegation.yml',
+        'test/project_demo.yml',
+        'test/project_process.yml',
+        'test/task_process.yml',
     ],
     'installable': True,
     'active': False,

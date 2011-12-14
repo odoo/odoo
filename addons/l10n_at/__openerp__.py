@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-    "name" : "Austria - Chart of Accounts",
+    "name" : "Austria - Accounting",
     "version" : "1.0",
     "author" : "conexus.at",
-	"website" : "http://www.conexus.at",
+    "website" : "http://www.conexus.at",
     "category" : "Localization/Account Charts",
     "depends" : ["account_chart", 'base_vat'],
     "description": "This module provides the standard Accounting Chart for Austria which is based on the Template from BMF.gv.at. Please keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.",
