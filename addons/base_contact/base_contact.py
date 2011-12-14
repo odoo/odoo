@@ -121,9 +121,29 @@ class res_partner_address(osv.osv):
     _name = 'res.partner.address'
     _inherits = { 'res.partner.location' : 'location_id' }
 
+    def _get_use_existing_address(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = int(obj.location_id)
+        return result
+
+    def _set_use_existing_address(self, cr, uid, ids, name, value, arg, context=None):
+        return True
+
+    def default_get(self, cr, uid, fieldnames, context=None):
+        result = super(res_partner_address, self).default_get(cr, uid, fieldnames, context=context)
+        result.update({ 'use_existing_address' : False, })
+        return result
+
     _columns = {
         'location_id' : fields.many2one('res.partner.location', 'Location'),
         'location2_id' : fields.many2one('res.partner.location', 'Location'),
+
+        'use_existing_address' : fields.function(_get_use_existing_address,
+                                             fnct_inv=_set_use_existing_address,
+                                             type='boolean',
+                                             string='Use Existing Address'),
+
         'contact_id' : fields.many2one('res.partner.contact', 'Contact', required=True),
 
         'partner_id' : fields.many2one('res.partner', 'Partner'),
@@ -137,12 +157,10 @@ class res_partner_address(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context=None):
-        result = []
-
-        append_call = result.append
-        for obj in self.browse(cr, uid, ids, context=context):
-            append_call((obj.id, "%s, %s" % (obj.contact_id.name_get()[0][1], obj.location_id.name_get()[0][1],)))
-        return result
+        return [
+            ((obh.id, "%s, %s" % (obj.contact_id.name_get()[0][1], obj.location_id.name_get()[0][1],)))
+            for obj in self.browse(cr, uid, ids, context=context)
+        ]
 
 
     _description ='Contact Partner Function'
@@ -152,11 +170,42 @@ class res_partner_address(osv.osv):
     }
 
     def create(self, cr, uid, values, context=None):
+
         record_id = super(res_partner_address, self).create(cr, uid, values, context=context)
         record = self.browse(cr, uid, record_id, context=context)
+
+        write_values = dict()
+        if values['partner_id'] and record.location_id:
+            record.location_id.write({'partner_id' : values['partner_id']}, context=context)
+            write_values['location2_id'] = record.location_id.id
+
         if not record.partner_id and record.location2_id and record.location2_id.partner_id:
-            record.write({'partner_id' : record.location2_id.partner_id.id}, context=context)
+            write_values['partner_id'] = record.location2_id.partner_id.id
+
+        if write_values:
+            record.write(write_values, context=context)
+
         return record_id
+
+    def on_change_use_existing_address(self, cr, uid, ids, use_existing_address, context=None):
+        #FIELDS = {
+        #    False : ['location_id'],
+        #    True: ['street', 'street2', 'city', 'country_id', 'state_id', 'phone', 'mobile', 'fax', 'email', 'zip'],
+        #}
+        #return {'value': dict((keyword, False) for keyword in FIELDS[use_existing_address])}
+        values = { }
+
+        if not use_existing_address:
+            nested_values = {
+                'location_id' : False
+            }
+        else:
+            nested_values = dict(
+                (keyword, False)
+                for keyword in ['street', 'street2', 'city', 'country_id', 'state_id', 'phone', 'mobile', 'fax', 'email', 'zip']
+            )
+        values.update(nested_values)
+        return {'value': values}
 
     def _auto_init(self, cr, context=None):
         def column_exists(column):
