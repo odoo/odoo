@@ -154,11 +154,16 @@ class procurement_order(osv.osv):
             return {'value': v}
         return {}
 
-    def check_product(self, cr, uid, ids):
+    def check_product(self, cr, uid, ids, context=None):
         """ Checks product type.
         @return: True or False
         """
-        return all(procurement.product_id.type in ('product', 'consu') for procurement in self.browse(cr, uid, ids))
+        res = False
+        for procurement in self.browse(cr, uid, ids, context=context):
+            product = procurement.product_id
+            if product.type in ('product', 'consu'):
+                res = True
+        return res
 
     def check_move_cancel(self, cr, uid, ids, context=None):
         """ Checks if move is cancelled or not.

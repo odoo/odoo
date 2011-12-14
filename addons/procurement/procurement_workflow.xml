@@ -183,6 +183,7 @@
         <record id="trans_produce_make_done" model="workflow.transition">
             <field name="act_from" ref="act_produce_check"/>
             <field name="act_to" ref="procurement.act_make_done"/>
+            <field name="condition">check_product()</field>
         </record>
         <record id="trans_produce_service_make_done" model="workflow.transition">
             <field name="act_from" ref="act_produce_service"/>
