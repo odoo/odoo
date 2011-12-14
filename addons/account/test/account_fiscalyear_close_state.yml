@@ -1,31 +1,8 @@
-
 -
-  In order to check the Close a Fiscal Year wizard in OpenERP I first create a Fiscalyear
--
-  !record {model: account.fiscalyear, id: account_fiscalyear_fiscalyear0}:
-    code: !eval "'FY%s'% (datetime.now().year+1)"
-    company_id: base.main_company
-    date_start: !eval "'%s-01-01' %(datetime.now().year+1)"
-    date_stop: !eval "'%s-12-31' %(datetime.now().year+1)"
-    name: !eval "'Fiscal Year %s' %(datetime.now().year+1)"
--
-  I create monthly Periods for this fiscalyear
--
-  !python {model: account.fiscalyear}: |
-    self.create_period(cr, uid, [ref("account_fiscalyear_fiscalyear0")], {"lang":
-      'en_US', "active_model": "ir.ui.menu", "active_ids": [ref("account.menu_action_account_fiscalyear_form")],
-      "tz": False, "active_id": ref("account.menu_action_account_fiscalyear_form"),
-      })
--
-  I check that the fiscalyear state is "Draft"
--
-  !assert {model: account.fiscalyear, id: account_fiscalyear_fiscalyear0, string: Fiscal Year is in Draft state}:
-    - state == 'draft'
--
-  I run the Close a Fiscalyear wizard to close this fiscalyear
+  I run the Close a Fiscalyear wizard to close the demo fiscalyear
 -
   !record {model: account.fiscalyear.close.state, id: account_fiscalyear_close_state_0}:
-    fy_id: account_fiscalyear_fiscalyear0
+    fy_id: data_fiscalyear
 -
   I clicked on Close States Button to close fiscalyear
 
@@ -37,9 +14,6 @@
 -
   I check that the fiscalyear state is now "Done"
 -
-  !assert {model: account.fiscalyear, id: account_fiscalyear_fiscalyear0, string: Fiscal Year is in Done state}:
+  !assert {model: account.fiscalyear, id: data_fiscalyear, string: Fiscal Year is in Done state}:
     - state == 'done'
-
-
-
 

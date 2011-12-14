@@ -20,7 +20,7 @@
 #
 ##############################################################################
 {
-    "name" : "Mexico - Chart of Account",
+    "name" : "Mexico - Accounting",
     "version" : "1.0",
     "author" : "RelTek Mexico",
     "category" : "Localization/Account Charts",

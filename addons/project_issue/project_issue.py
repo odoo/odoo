@@ -48,6 +48,13 @@ class project_issue(crm.crm_case, osv.osv):
     _order = "priority, create_date desc"
     _inherit = ['mail.thread']
 
+    def write(self, cr, uid, ids, vals, context=None):
+        #Update last action date everytime the user change the stage, the state or send a new email
+        logged_fields = ['type_id', 'state', 'message_ids']
+        if any([field in vals for field in logged_fields]):
+            vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
+        return super(project_issue, self).write(cr, uid, ids, vals, context)
+
     def case_open(self, cr, uid, ids, *args):
         """
         @param self: The object pointer
@@ -305,7 +312,7 @@ class project_issue(crm.crm_case, osv.osv):
                 'name': bug.name,
                 'partner_id': bug.partner_id.id,
                 'description':bug.description,
-                'date': bug.date,
+                'date_deadline': bug.date,
                 'project_id': bug.project_id.id,
                 'priority': bug.priority,
                 'user_id': bug.user_id.id,
@@ -480,7 +487,6 @@ project_issue()
 class project(osv.osv):
     _inherit = "project.project"
     _columns = {
-        'resource_calendar_id' : fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256)
     }

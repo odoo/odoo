@@ -92,3 +92,5 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
 report_sxw.report_sxw('report.account.financial.report', 'account.financial.report',
     'addons/account/report/account_financial_report.rml', parser=report_account_common, header='internal')
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -72,12 +72,13 @@ class project_phase(osv.osv):
              if phase['date_start'] and phase['date_end'] and phase['date_start'] > phase['date_end']:
                  return False
          return True
-
+    #dead code
     def _get_default_uom_id(self, cr, uid):
        model_data_obj = self.pool.get('ir.model.data')
        model_data_id = model_data_obj._get_id(cr, uid, 'product', 'uom_hour')
        return model_data_obj.read(cr, uid, [model_data_id], ['res_id'])[0]['res_id']
 
+    #dead code
     def _compute_progress(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         if not ids:
@@ -270,3 +271,5 @@ class project_task(osv.osv):
         'phase_id': fields.many2one('project.phase', 'Project Phase'),
     }
 project_task()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

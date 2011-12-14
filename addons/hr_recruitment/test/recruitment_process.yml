@@ -1,0 +1,67 @@
+-
+  In Order to test process of Recruitment,
+-
+  Applicant interested in job position. so He send resume by email.
+-
+  !python {model: mail.thread}: |
+    import addons
+    request_file = open(addons.get_module_resource('hr_recruitment','test', 'resume.eml'),'rb')
+    request_message = request_file.read()
+    self.message_process(cr, uid, 'hr.applicant', request_message)
+-
+  After getting the mail, I check details of new applicant.
+-
+  !python {model: hr.applicant}: |
+    applicant_ids = self.search(cr, uid, [('email_from','=', 'Mr. Richard Anderson <Richard_Anderson@yahoo.com>')])
+    assert applicant_ids, "Applicant is not created after getting the mail"
+    applicant = self.browse(cr, uid, applicant_ids[0], context=context)
+    resume_ids = self.pool.get('ir.attachment').search(cr, uid, [('datas_fname','=','resume.doc'),('res_model','=',self._name),('res_id','=',applicant.id)])
+    assert applicant.name == "Application for the post of Jr.application Programmer.", "Subject does not match"
+    assert applicant.state == "draft"
+    assert len(resume_ids), "Resume does not attached."
+-
+  I assign the Job position to the applicant
+-
+  !python {model: hr.applicant}: |
+    self.write(cr, uid, [ref('hr_case_programmer')], {'job_id':ref('hr.job_jr_appli')})
+-
+  I open applicant for the Recruitment
+-
+
+  !python {model: hr.applicant}: |
+    self.case_open(cr, uid, [ref("hr_case_programmer")])
+-
+  I start communication with applicant, first schedule phonecall.
+-
+  !python {model: hr.recruitment.job2phonecall}: |
+     self.make_phonecall(cr, uid, [ref('hr_case_programmer')])
+-
+  I schedule meeting with applicant for interview.
+-
+  !python {model: hr.applicant}: |
+     self.action_makeMeeting(cr, uid, [ref('hr_case_programmer')])
+-
+  Applicant fillup the answer of the interview quetion.
+-
+  !python {model: survey.question.wiz}: |
+    ctx = context.copy()
+    ctx.update({'active_model': 'hr.applicant', 'active_id': ref("hr_case_programmer"), 'active_ids': [ref("hr_case_programmer")], 'survey_id': ref("survey_job_0")})
+    self.fields_view_get(cr, uid, ref("survey.view_survey_question_message"),"form", context=ctx)
+    vals = self.default_get(cr, uid , [], context=ctx)
+    self.create(cr, uid, vals, context=ctx)
+    self.action_new_page(cr, uid, [ref("survey_job_0")], context=ctx)
+-
+  I print Applicant fill up the interview quetion
+-
+  !python {model: hr.applicant}: |
+    self.action_print_survey(cr, uid, [ref('hr_case_programmer')])
+-
+  On a successful interview with the applicant, I hired employee.
+-
+  !python {model: hr.applicant}: |
+     self.case_close_with_emp(cr, uid, [ref('hr_case_programmer')])
+-
+  I check that applicant is "Hired".
+-
+  !assert {model: hr.applicant, id: hr_case_programmer}:
+    - state == 'done'

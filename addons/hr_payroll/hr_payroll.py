@@ -298,6 +298,14 @@ class hr_payslip(osv.osv):
                     context=context).company_id.id,
     }
 
+    def _check_dates(self, cr, uid, ids, context=None):
+        for payslip in self.browse(cr, uid, ids, context=context):
+            if payslip.date_from > payslip.date_to:
+                return False
+        return True
+
+    _constraints = [(_check_dates, "Payslip 'Date From' must be before 'Date To'.", ['date_from', 'date_to'])]  
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -926,6 +934,10 @@ class hr_payslip_line(osv.osv):
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Payroll')),
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Payroll')),
         'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Payroll'),store=True ),
+    }
+
+    _defaults = {
+        'quantity': 1.0,
     }
 
 hr_payslip_line()

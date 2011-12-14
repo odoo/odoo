@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Fetchmail for CRM Claim",
+    "name" : "eMail Gateway for CRM Claim",
     "version" : "1.0",
     "depends" : ["fetchmail", "crm_claim"],
     "author" : "OpenERP SA",
-    "category": 'Hidden/Link',
+    'category': 'Hidden/Links',
     "description": """
     """,
     'website': 'http://www.openerp.com',
@@ -37,3 +37,5 @@
     'installable': True,
     'active': False,
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

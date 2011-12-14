@@ -207,7 +207,7 @@ class account_invoice(osv.osv):
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Invoice. \
             \n* The \'Pro-forma\' when invoice is in Pro-forma state,invoice does not have an invoice number. \
             \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \
-            \n* The \'Paid\' state is set automatically when invoice is paid.\
+            \n* The \'Paid\' state is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled. \
             \n* The \'Cancelled\' state is used when user cancel invoice.'),
         'date_invoice': fields.date('Invoice Date', readonly=True, states={'draft':[('readonly',False)]}, select=True, help="Keep empty to use the current date"),
         'date_due': fields.date('Due Date', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]}, select=True,
@@ -251,13 +251,13 @@ class account_invoice(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'check_total': fields.float('Total', digits_compute=dp.get_precision('Account'), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
+        'check_total': fields.float('Verification Total', digits_compute=dp.get_precision('Account'), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
         'reconciled': fields.function(_reconciled, string='Paid/Reconciled', type='boolean',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50), # Check if we can remove ?
                 'account.move.line': (_get_invoice_from_line, None, 50),
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
-            }, help="The Journal Entry of the invoice have been totally reconciled with one or several Journal Entries of payment."),
+            }, help="It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment."),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
             help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Partner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines, type='many2many', relation='account.move.line', string='Entry Lines'),
@@ -286,6 +286,9 @@ class account_invoice(osv.osv):
         'internal_number': False,
         'user_id': lambda s, cr, u, c: u,
     }
+    _sql_constraints = [
+        ('number_uniq', 'unique(number, company_id)', 'Invoice Number must be unique per Company!'),
+    ]
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         journal_obj = self.pool.get('account.journal')
@@ -607,15 +610,15 @@ class account_invoice(osv.osv):
             res[r[0]].append( r[1] )
         return res
 
-    def copy(self, cr, uid, id, default={}, context=None):
-        if context is None:
-            context = {}
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
         default.update({
             'state':'draft',
             'number':False,
             'move_id':False,
             'move_name':False,
             'internal_number': False,
+            'period_id': False,
         })
         if 'date_invoice' not in default:
             default.update({
@@ -795,6 +798,7 @@ class account_invoice(osv.osv):
         """Creates invoice related analytics and financial move lines"""
         ait_obj = self.pool.get('account.invoice.tax')
         cur_obj = self.pool.get('res.currency')
+        period_obj = self.pool.get('account.period')
         context = {}
         for inv in self.browse(cr, uid, ids):
             if not inv.journal_id.sequence_id:
@@ -919,14 +923,13 @@ class account_invoice(osv.osv):
                 'line_id': line,
                 'journal_id': journal_id,
                 'date': date,
-                'type': entry_type,
                 'narration':inv.comment
             }
             period_id = inv.period_id and inv.period_id.id or False
+            ctx.update({'company_id': inv.company_id.id})
             if not period_id:
-                period_ids = self.pool.get('account.period').search(cr, uid, [('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d')), ('company_id', '=', inv.company_id.id)])
-                if period_ids:
-                    period_id = period_ids[0]
+                period_ids = period_obj.find(cr, uid, inv.date_invoice, context=ctx)
+                period_id = period_ids and period_ids[0] or False
             if period_id:
                 move['period_id'] = period_id
                 for i in line:
@@ -1077,7 +1080,8 @@ class account_invoice(osv.osv):
             del line['invoice_id']
             for field in ('company_id', 'partner_id', 'account_id', 'product_id',
                           'uos_id', 'account_analytic_id', 'tax_code_id', 'base_code_id'):
-                line[field] = line.get(field, False) and line[field][0]
+                if line.get(field):
+                    line[field] = line[field][0]
             if 'invoice_line_tax_id' in line:
                 line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
         return map(lambda x: (0,0,x), lines)
@@ -1205,7 +1209,7 @@ class account_invoice(osv.osv):
         l2['name'] = name
 
         lines = [(0, 0, l1), (0, 0, l2)]
-        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date, 'type': entry_type}
+        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
         move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
 
         line_ids = []
@@ -1638,12 +1642,7 @@ class res_partner(osv.osv):
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-
-        if context is None:
-            context = {}
-
+        default = default or {}
         default.update({'invoice_ids' : []})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 

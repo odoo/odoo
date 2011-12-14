@@ -28,7 +28,6 @@
 
         <record model="ir.values" id="scrum_backlog_merge_values">
             <field name="model_id" ref="model_project_scrum_product_backlog" />
-            <field name="object" eval="1" />
             <field name="name">Merge Backlogs</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_scrum_backlog_merge'))" />

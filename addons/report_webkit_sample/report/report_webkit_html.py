@@ -15,3 +15,5 @@ report_sxw.report_sxw('report.webkitaccount.invoice',
                        'account.invoice', 
                        'addons/report_webkit_sample/report/report_webkit_html.mako',
                        parser=report_webkit_html)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

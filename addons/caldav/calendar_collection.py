@@ -86,3 +86,5 @@ class calendar_collection(osv.osv):
         return self.get_schedule_inbox_URL(cr, uid, ids, context=context)
     
 calendar_collection()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

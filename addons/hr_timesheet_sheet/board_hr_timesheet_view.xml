@@ -40,8 +40,8 @@
             <field name="inherit_id" ref="hr.board_hr_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/hpaned/child2" position="inside">
-                    <action colspan="4" height="220" name="%(action_week_attendance_graph)d" string="My Total Attendance By Week" />
+                <xpath expr="/form/board/column[2]" position="inside">
+                    <action name="%(action_week_attendance_graph)d" string="My Total Attendance By Week"/>
                 </xpath>
             </field>
         </record>

@@ -21,7 +21,7 @@
 
 
 {
-    'name'      : 'Sales Contract Management',
+    'name'      : 'Contracts Management',
     'version'   : '1.1',
     'category'  : 'Sales Management',
     'complexity': "normal",

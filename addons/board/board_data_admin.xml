@@ -139,7 +139,6 @@
                     <board style="2-1">
                         <column>
                             <action name="%(board_config_overview)d" string="Configuration Overview"/>
-                            <action name="%(action_latest_activities_tree)d" string="Latest Activities" />
                         </column>
                         <column>
                             <action name="%(action_user_connection_tree)d" string="Users" />
@@ -158,7 +157,7 @@
         </record>
 
         <!-- bind adminitration dashboard to the root administration -->
-        <menuitem id="base.menu_administration" icon="terp-administration"  name="Administration" sequence="50" action="open_board_administration_form"/>
+        <menuitem id="base.menu_administration" icon="terp-administration"  name="Settings" sequence="50" action="open_board_administration_form"/>
 
         <!-- add a menu item in adminitration/reporting/dashboards -->
         <menuitem id="base.menu_reporting" name="Reporting" parent="base.menu_administration" sequence="11" groups="base.group_extended"/>

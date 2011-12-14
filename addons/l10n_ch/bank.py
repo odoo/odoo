@@ -77,3 +77,5 @@ class ResPartnerBank(osv.osv):
         'The BVR adherent number must be unique !')]
 
 ResPartnerBank()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -30,7 +30,7 @@ The decimal precision is configured per company.
     "author": "OpenERP SA",
     "version": "0.1",
     "depends": ["base"],
-    "category" : "Hidden",
+    "category" : "Hidden/Dependency",
     'complexity': "easy",
     "init_xml": [],
     "update_xml": [
@@ -44,3 +44,5 @@ The decimal precision is configured per company.
 }
 
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
