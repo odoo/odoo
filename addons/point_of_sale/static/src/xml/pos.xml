@@ -50,15 +50,15 @@
                     <ul id="amounts">
                         <li>
                             Subtotal:
-                            <span id="subtotal">0</span> €
+                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <span id="subtotal">0</span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
                         </li>
                         <li>
                             Tax:
-                            <span id="tax">0</span> €
+                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <span id="tax">0</span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
                         </li>
                         <li>
                             Total:
-                            <span id="total">0</span> €
+                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <span id="total">0</span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
                         </li>
                     </ul>
                     <div id="paypad"></div>
@@ -103,11 +103,11 @@
                             <table>
                                 <tr>
                                     <td class="paymentline-type">Paid:</td>
-                                    <td class="paymentline-amount pos-rigth-align"><span id="payment-paid-total"></span> €</td>
+                                    <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <td class="paymentline-amount pos-rigth-align"><span id="payment-paid-total"></span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/></td>
                                 </tr>
                                 <tr>
                                     <td class="paymentline-type">Change:</td>
-                                    <td class="paymentline-amount pos-rigth-align"><span id="payment-remaining"></span> €</td>
+                                    <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <td class="paymentline-amount pos-rigth-align"><span id="payment-remaining"></span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/></td>
                                 </tr>
                             </table>
                         </div>
@@ -173,8 +173,7 @@
             <div class="product-img">
                 <img t-att-src="'data:image/gif;base64,'+ img" />
                 <span class="price-tag">
-                    <t t-esc="list_price"/>
-                    €
+                    <t t-esc="format_amount(list_price)"/>
                 </span>
             </div>
             <div class="product-name">
@@ -187,8 +186,7 @@
             <t t-esc="name"/>
         </td>
         <td>
-            <t t-esc="list_price.toFixed(2)"/>
-            €
+            <t t-esc="format_amount(list_price.toFixed(2))"/>
         </td>
         <td>
             <t t-esc="discount.toFixed(2)"/>
@@ -197,8 +195,7 @@
             <t t-esc="quantity.toFixed(0)"/>
         </td>
         <td>
-            <t t-esc="(list_price * (1 - discount/100) * quantity).toFixed(2)"/>
-            €
+            <t t-esc="format_amount((list_price * (1 - discount/100) * quantity).toFixed(2))"/>
         </td>
     </t>
     <t t-name="pos-paymentline-template">
@@ -217,7 +214,7 @@
             <t t-esc="name"/>
         </td>
         <td class="receiptline-amount">
-            <t t-esc="(list_price * (1 - discount/100) * quantity).toFixed(2)"/> €
+            <t t-esc="format_amount((list_price * (1 - discount/100) * quantity).toFixed(2))"/>
         </td>
     </t>
     <t t-name="pos-payment-button-template">
@@ -244,9 +241,21 @@
                         <table id="receiptlines"></table>
                         <br />
                         <table>
-                            <tr><td>Total:</td><td class="pos-rigth-align"><span id="receipt-summary-total"></span> €</td></tr>
-                            <tr><td>Tax:</td><td class="pos-rigth-align"><span id="receipt-summary-tax"></span> €</td></tr>
-                            <tr><td>Change:</td><td class="pos-rigth-align"><span id="receipt-summary-change"></span> €</td></tr>
+                            <tr><td>Total:</td><td class="pos-rigth-align">
+                                <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                <span id="receipt-summary-total"></span>
+                                <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                </td></tr>
+                            <tr><td>Tax:</td><td class="pos-rigth-align">
+                                <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                <span id="receipt-summary-tax"></span>
+                                <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                </td></tr>
+                            <tr><td>Change:</td><td class="pos-rigth-align">
+                                <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                <span id="receipt-summary-change"></span>
+                                <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                </td></tr>
                         </table>
                     </div>
                 </div>

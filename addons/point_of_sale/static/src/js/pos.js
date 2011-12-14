@@ -22,7 +22,16 @@ openerp.point_of_sale = function(db) {
     QWeb.add_template("/point_of_sale/static/src/xml/pos.xml");
     var qweb_template = function(template) {
         return function(ctx) {
-            return QWeb.render(template, ctx);
+            return QWeb.render(template, _.extend({}, ctx,{
+                'currency': pos.get('currency'),
+                'format_amount': function(amount) {
+                    if (pos.get('currency').position == 'after') {
+                        return amount + ' ' + pos.get('currency').symbol;
+                    } else {
+                        return pos.get('currency').symbol + ' ' + amount;
+                    }
+                },
+                }));
         };
     };
     var _t = db.web._t;
@@ -65,10 +74,15 @@ openerp.point_of_sale = function(db) {
             this.bind('change:pending_operations', _.bind(function(unused, val) {
                 this.store.set('pending_operations', val);
             }, this));
+            this.set({'currency': this.store.get('currency', {symbol: '$', position: 'after'})});
+            this.bind('change:currency', _.bind(function(unused, val) {
+                this.store.set('currency', val);
+            }, this));
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
                 this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
                 this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name']),
-                this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']))
+                this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
+                this.get_currency())
                 .then(this.build_tree);
         },
         fetch: function(osvModel, fields, domain) {
@@ -78,6 +92,20 @@ openerp.point_of_sale = function(db) {
             return dataSetSearch.read_slice(fields, 0).then(function(result) {
                 return self.store.set(osvModel, result);
             });
+        },
+        get_currency: function() {
+            return new db.web.Model("sale.shop").get_func("search_read")([]).pipe(function(result) {
+                var company_id = result[0]['company_id'][0];
+                return new db.web.Model("res.company").get_func("read")(company_id, ['currency_id']).pipe(function(result) {
+                    var currency_id = result['currency_id'][0]
+                    return new db.web.Model("res.currency").get_func("read")([currency_id],
+                            ['symbol', 'position']).pipe(function(result) {
+                        return result[0];
+                    });
+                });
+            }).then(_.bind(function(currency) {
+                this.set({'currency': currency});
+            }, this));
         },
         push: function(osvModel, record) {
             var ops = _.clone(this.get('pending_operations'));
@@ -1170,33 +1198,38 @@ openerp.point_of_sale = function(db) {
 
     db.web.client_actions.add('pos.ui', 'db.point_of_sale.PointOfSale');
     db.point_of_sale.PointOfSale = db.web.Widget.extend({
-        template: "PointOfSale",
-        start: function() {
-            var self = this;
+        init: function() {
+            this._super.apply(this, arguments);
 
             if (pos)
                 throw "It is not possible to instantiate multiple instances "+
                     "of the point of sale at the same time.";
             pos = new Pos(this.session);
-            
-            this.synch_notification = new db.point_of_sale.SynchNotification(this);
-            this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
-            this.synch_notification.on_synch.add(_.bind(pos.flush, pos));
-            
-            pos.bind('change:pending_operations', this.changed_pending_operations, this);
-            this.changed_pending_operations();
-            
-            this.$element.find("#loggedas button").click(function() {
-                self.try_close();
-            });
+        },
+        start: function() {
+            var self = this;
+            return pos.ready.then(_.bind(function() {
+                this.render_element();
+                this.synch_notification = new db.point_of_sale.SynchNotification(this);
+                this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
+                this.synch_notification.on_synch.add(_.bind(pos.flush, pos));
+                
+                pos.bind('change:pending_operations', this.changed_pending_operations, this);
+                this.changed_pending_operations();
+                
+                this.$element.find("#loggedas button").click(function() {
+                    self.try_close();
+                });
+    
+                this.$element.find('#steps').buttonset();
 
-            this.$element.find('#steps').buttonset();
-
-            return pos.ready.then( function() {
                 pos.app = new App(self.$element);
                 $('.oe_toggle_secondary_menu').hide();
                 $('.oe_footer').hide();
-            });
+            }, this));
+        },
+        render: function() {
+            return qweb_template("PointOfSale")();
         },
         changed_pending_operations: function () {
             this.synch_notification.on_change_nbr_pending(pos.get('pending_operations').length);
