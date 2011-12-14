@@ -155,6 +155,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         var ext = new openerp.web.search.ExtendedSearch(this, this.model);
         lines.push([ext]);
         this.inputs.push(ext);
+        this.extended_search = ext;
 
         var render = QWeb.render("SearchView", {
             'view': data.fields_view['arch'],
@@ -163,7 +164,6 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         });
 
         this.$element.html(render);
-        this.$element.find(".oe_search-view-custom-filter-btn").click(ext.on_activate);
 
         var f = this.$element.find('form');
         this.$element.find('form')
@@ -199,6 +199,9 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         var select = this.$element.find(".oe_search-view-filters-management");
         var val = select.val();
         switch(val) {
+        case 'advanced_filter':
+            this.extended_search.on_activate();
+            break;
         case 'add_to_dashboard':
             this.on_add_to_dashboard();
             break;
