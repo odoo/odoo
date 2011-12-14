@@ -39,11 +39,10 @@
 -
   I start communication with applicant, first schedule phonecall.
 -
-  !record {model: hr.recruitment.job2phonecall, id: hr_recruitment_job2phonecall_id1 }:
--
   !python {model: hr.recruitment.job2phonecall}: |
      context.update({'active_model': 'hr.applicant', 'active_id': ref("hr_case_programmer"), 'active_ids': [ref("hr_case_programmer")], 'survey_id': ref("survey_job_0")})
-     self.make_phonecall(cr, uid, [ref('hr_recruitment_job2phonecall_id1')], context=context)
+     id = self.create(cr, uid, {}, context=context)
+     self.make_phonecall(cr, uid, [id], context=context)
 -
   I schedule meeting with applicant for interview.
 -
