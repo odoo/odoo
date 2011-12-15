@@ -812,12 +812,13 @@ class account_invoice(osv.osv):
             if not inv.date_invoice:
                 self.write(cr, uid, [inv.id], {'date_invoice':time.strftime('%Y-%m-%d')})
             company_currency = inv.company_id.currency_id.id
-            context.update({'lang': inv.partner_id.lang})
+            ctx = context.copy()
+            ctx.update({'lang': inv.partner_id.lang})
             # create the analytical lines
             # one move line per invoice line
-            iml = self._get_analytic_lines(cr, uid, inv.id, context=context)
+            iml = self._get_analytic_lines(cr, uid, inv.id, context=ctx)
             # check if taxes are all computed
-            compute_taxes = ait_obj.compute(cr, uid, inv.id, context=context)
+            compute_taxes = ait_obj.compute(cr, uid, inv.id, context=ctx)
             self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
 
             if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
@@ -835,7 +836,7 @@ class account_invoice(osv.osv):
                     raise osv.except_osv(_('Error !'), _("Can not create the invoice !\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount."))
 
             # one move line per tax line
-            iml += ait_obj.move_line_get(cr, uid, inv.id, context=context)
+            iml += ait_obj.move_line_get(cr, uid, inv.id, context=ctx)
 
             entry_type = ''
             if inv.type in ('in_invoice', 'in_refund'):
@@ -864,10 +865,10 @@ class account_invoice(osv.osv):
             if totlines:
                 res_amount_currency = total_currency
                 i = 0
-                context.update({'date': inv.date_invoice})
+                ctx.update({'date': inv.date_invoice})
                 for t in totlines:
                     if inv.currency_id.id != company_currency:
-                        amount_currency = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, t[1], context=context)
+                        amount_currency = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, t[1], context=ctx)
                     else:
                         amount_currency = False
 
@@ -926,9 +927,9 @@ class account_invoice(osv.osv):
                 'narration':inv.comment
             }
             period_id = inv.period_id and inv.period_id.id or False
-            context.update({'company_id': inv.company_id.id})
+            ctx.update({'company_id': inv.company_id.id})
             if not period_id:
-                period_ids = period_obj.find(cr, uid, inv.date_invoice, context=context)
+                period_ids = period_obj.find(cr, uid, inv.date_invoice, context=ctx)
                 period_id = period_ids and period_ids[0] or False
             if period_id:
                 move['period_id'] = period_id
