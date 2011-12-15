@@ -342,183 +342,6 @@ openerp.web.CallbackEnabled = openerp.web.Class.extend(/** @lends openerp.web.Ca
     }
 });
 
-$.ajaxSetup({
-    converters: {
-        "json oe-jsonp": true,
-        "json oe-json": true,
-    }
-});
-
-// common preconditions checks
-$.ajaxPrefilter("oe-json oe-jsonp", function(options, originalOptions, jqXHR) {
-    if (!$.isPlainObject(options.openerp)) {
-        console.error(options.openerp);
-        $.error('"openerp" option is required.');
-    }
-    
-    if (!$.isPlainObject(options.data)) {
-        $.error('data must not be serialized');
-    }
-    options.processData = false;
-});
-    
-$.ajaxPrefilter("oe-json", function(options, originalOptions, jqXHR) {
-    options.data = JSON.stringify({
-        jsonrpc: '2.0',
-        method: 'call',
-        params: options.data,
-        id: _.uniqueId('browser-client-')
-    });
-
-    return 'json';
-});
-
-$.ajaxPrefilter("oe-jsonp", function(options, originalOptions, jqXHR) {
-    
-    options.crossDomain = true;
-
-    var data = null;
-    if (options.data) {
-        data = $.param({r:JSON.stringify(options.data)});
-    }
-
-
-    
-        var max_url_length = options.max_url_length || 1000,
-            absolute_url, full_url;
-    /*     
-        var r_has_protocol = /^https?:\/\//,
-            r_absolute_internal = /^\/[^\/]/;   // starts with / (but not //)
-
-        
-        if (r_has_protocol.test(options.url)) {
-            if (!_(options.url).startsWith(options.openerp.server + '/')) {
-                $.error('can only contact openerp.server');
-            }
-            absolute_url = options.url;
-        } else if (r_absolute_internal.test(options.url)) {
-            absolute_url = options.openerp.server + options.url;
-        } else {    // relative url
-            var parts = document.location.pathname.split('/');
-            parts.pop();
-            parts.push(options.url);
-            absolute_url = options.openerp.server + parts.join('/');
-        }
-    // */
-
-    var absolute_url = options.openerp.get_absolute_url(options.url);
-
-        /// now, made the same url changes that jQuery will do...
-        var rquery = /\?/,
-            rts = /([?&])_=[^&]*/;
-
-        full_url = absolute_url;
-        if (data) {
-            full_url += (rquery.test(full_url) ? "&" : "?") + data;
-        }
-
-        // Add anti-cache in url if needed
-        if (!options.cache) {
-            var ts = $.now(),
-                // try replacing _= if it is there
-                ret = full_url.replace(rts, "$1_=" + ts);
-
-            // if nothing was replaced, add timestamp to the end
-            full_url = ret + ((ret === full_url) ? (rquery.test(full_url) ? "&" : "?") + "_=" + ts : "");
-        }
-        
-        options.url = absolute_url;
-
-        if (full_url.length < max_url_length) {
-            options.type = "GET";
-            options.data = data;
-            return "jsonp";  // classic jsonp query...
-        }
-});
-
-$.ajaxTransport("oe-jsonp", function(options, originalOptions, jqXHR) {
-
-        var $iframe = null;
-        var $form = $('<form>')
-                        .attr('method', 'POST')
-                        .attr('enctype', "multipart/form-data")
-                        .attr('action', options.openerp.server + "/web/jsonp/post")
-                        .hide()
-                        .appendTo($('body'))
-                        ;
-
-        function cleanUp() {
-            if ($iframe) {
-                $iframe.unbind("load").attr("src", "javascript:false;").remove();
-            }
-            $form.remove();
-        }
-        
-        return {
-            
-            send: function(headers, completeCallback) {
-        
-                var ifid = _.uniqueId('oe_jsonp_iframe_');
-                var request_id = _.uniqueId('browser-client-');
-                var oe_callback = _.uniqueId('oe_callback_');
-
-                window[oe_callback] = function(result) {
-                    completeCallback(200, 'success', {json: result});
-                };
-
-
-                var display = options.openerp.debug ? 'block' : 'none';
-                $iframe = $(_.str.sprintf("<iframe src='javascript:false;' name='%s' id='%s' style='display:%s'></iframe>", ifid, ifid, display));
-
-
-                // the first bind is fired up when the iframe is added to the DOM
-                $iframe.bind('load', function() {
-                    // the second bind is fired up when the result of the form submission is received
-                    $iframe.unbind('load').bind('load', function() {
-                        // we cannot access the content of remote iframe.
-                        // but we don't care, we try to get the result in any cases
-
-                        $.ajax({
-                            type: "GET",
-                            url: options.url,
-                            dataType: 'jsonp', 
-                            jsonp: false,   // do not append callback=? argument on query string
-                            jsonpCallback: oe_callback,
-                            data: {
-                                sid: options.openerp.session_id,
-                                rid: request_id,
-                            },
-                        }).always(function() {
-                            cleanUp();
-                        });
-
-                    });
-
-
-                    // now that the iframe can receive data, we fill and submit the form
-                    var params = JSON.stringify(options.data);
-
-                    $form
-                        .append($('<input type="hidden" name="session_id" />').attr('value', options.openerp.session_id))
-                        .append($('<input type="hidden" name="request_id" />').attr('value', request_id))
-                        .append($('<input type="hidden" name="params" />').attr('value', params))
-                        .append($('<input type="hidden" name="callback" />').attr('value', oe_callback))
-                        .submit()
-                        ;
-
-                });
-                
-                $form.attr('target', ifid)  // set the iframe as target of the form
-                     .after($iframe);       // append the iframe to the DOM (will trigger the first load)
-                     
-            },
-            abort: function() {
-                cleanUp();
-            },
-        };
-
-});
-
 openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.web.Connection# */{
     /**
      * @constructs openerp.web.Connection
@@ -529,26 +352,17 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      */
     init: function() {
         this._super();
-        this.server = null;
-        this.debug = ($.deparam($.param.querystring()).debug != undefined);
         // TODO: session should have an optional name indicating that they'll
         //       be saved to (and revived from) cookies
         this.name = openerp._session_id;
     },
-    bind: function(server, continuation) {
-
-        if(_.isFunction(server)) {
-            continuation = server;
-            server = null;
-        }
-
-        if (this.server) {
-            throw new Error("Connection already bound to " + this.server);
-        } 
-        var hostname = _.str.sprintf('%s//%s', location.protocol, location.host);
-        this.server = _.str.rtrim((!server) ? hostname : server, '/');
-        openerp.web.qweb.default_dict['_s'] = this.server
-        this.rpc_mode = (this.server == hostname) ? "oe-json" : "oe-jsonp";
+    bind: function(host, protocol) {
+        this.host = (host == undefined) ? location.host : host;
+        this.protocol = (protocol == undefined) ? location.protocol : protocol;
+        this.prefix = this.protocol + '//' + this.host;
+        openerp.web.qweb.default_dict['_s'] = this.prefix
+        this.rpc_mode = (host == location.host) ? "json" : "jsonp";
+        this.debug = (window.location.search.indexOf('?debug') !== -1);
         this.session_id = false;
         this.uid = false;
         this.username = false;
@@ -561,12 +375,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.shortcuts = [];
         this.active_id = null;
         this.do_load_qweb(['/web/webclient/qweb'], continuation);
-    },
-    connect: function(server, db, login, password, continuation) {
-        var self = this;
-        this.bind(server, function() {
-            self.login(db, login, password, continuation);
-        });
     },
     /**
      * Executes an RPC call, registering the provided callbacks.
@@ -583,79 +391,130 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      */
     rpc: function(url, params, success_callback, error_callback) {
         var self = this;
+        // url can be an $.ajax option object
+        if (_.isString(url)) {
+            url = { url: url };
+        }
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
         if (this.debug)
             params.debug = 1;
-
+        var payload = {
+            jsonrpc: '2.0',
+            method: 'call',
+            params: params,
+            id: _.uniqueId('oe-')
+        };
         // Call using the rpc_mode
         var deferred = $.Deferred();
-        this.rpc_ajax(url, params)
-            .then(function () {deferred.resolve.apply(deferred, arguments);},
-                  function(error) {deferred.reject(error, $.Event());});
-        return deferred.fail(function() {
+        this.on_rpc_request();
+        this.rpc_json(url, payload).then(
+            function (response, textStatus, jqXHR) {
+                self.on_rpc_response();
+                if (!response.error) {
+                    deferred.resolve(response["result"], textStatus, jqXHR);
+                } else if (response.error.data.type === "session_invalid") {
+                    self.uid = false;
+                    self.on_session_invalid(function() {
+                        self.rpc(url, payload.params,
+                            function() { deferred.resolve.apply(deferred, arguments); },
+                            function() { deferred.reject.apply(deferred, arguments); });
+                    });
+                } else {
+                    deferred.reject(response.error, $.Event());
+                }
+            },
+            function(jqXHR, textStatus, errorThrown) {
+                self.on_rpc_response();
+                var error = {
+                    code: -32098,
+                    message: "XmlHttpRequestError " + errorThrown,
+                    data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
+                };
+                deferred.reject(error, $.Event());
+            });
+        // Allow deferred user to disable on_rpc_error in fail
+        deferred.fail(function() {
             deferred.fail(function(error, event) {
                 if (!event.isDefaultPrevented()) {
                     self.on_rpc_error(error, event);
                 }
             });
         }).then(success_callback, error_callback).promise();
+        return deferred;
     },
     /**
      * Raw JSON-RPC call
      *
      * @returns {jQuery.Deferred} ajax-webd deferred object
      */
-    rpc_ajax: function(url, payload) {
+    rpc_json: function(url, payload) {
         var self = this;
-        this.on_rpc_request();
-        // url can be an $.ajax option object
-        if (_.isString(url)) {
-            url = {
-                url: url
-            }
-        }
         var ajax = _.extend({
             type: "POST",
-            url: url,
-            dataType: this.rpc_mode,
+            dataType: 'json',
             contentType: 'application/json',
-            data: payload,
+            data: JSON.stringify(payload),
             processData: false,
-            openerp: _.extend({}, this),    // need a plainObject
         }, url);
-        var deferred = $.Deferred();
-        $.ajax(ajax).done(function(response, textStatus, jqXHR) {
-            self.on_rpc_response();
-            if (!response.error) {
-                deferred.resolve(response["result"], textStatus, jqXHR);
-                return;
+        return $.ajax(ajax);
+    },
+    rpc_jsonp: function(url, payload) {
+        var self = this;
+        var ajax = _.extend({
+            type: "GET",
+            dataType: 'jsonp', 
+            jsonp: 'jsonp',
+            cache: false,
+            data: {
+                session_id: this.session_id,
+                id: payload.id,
             }
-            if (response.error.data.type !== "session_invalid") {
-                deferred.reject(response.error);
-                return;
-            }
-            self.uid = false;
-            self.on_session_invalid(function() {    // retry
-                self.rpc(url, payload,
-                    function() {
-                        deferred.resolve.apply(deferred, arguments);
-                    },
-                    function(error, event) {
-                        event.preventDefault();
-                        deferred.reject.apply(deferred, arguments);
-                    });
-            });
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            self.on_rpc_response();
-            var error = {
-                code: -32098,
-                message: "XmlHttpRequestError " + errorThrown,
-                data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
+        }, url);
+        var payload_str = JSON.stringify(payload);
+        var payload_url = $.param({r:payload_str});
+        if(playload_url.length < 2000) {
+            // Direct json request
+            ajax.data.r = payload_str;
+            return $.ajax(ajax);
+        } else {
+            // Indirect json request
+            var ifid = _.uniqueId('oe_rpc_iframe_');
+            var display = options.openerp.debug ? 'block' : 'none';
+            var $iframe = $(_.str.sprintf("<iframe src='javascript:false;' name='%s' id='%s' style='display:%s'></iframe>", ifid, ifid, display));
+            var $form = $('<form>')
+                        .attr('method', 'POST')
+                        .attr('target', ifid)
+                        .attr('enctype', "multipart/form-data")
+                        .attr('action', ajax.url)
+                        .append($('<input type="hidden" name="r" />').attr('value', payload_str))
+                        .hide()
+                        .appendTo($('body'));
+            var cleanUp = function() {
+                if ($iframe) {
+                    $iframe.unbind("load").attr("src", "javascript:false;").remove();
+                }
+                $form.remove();
             };
-            deferred.reject(error);
-        });
-        return deferred.promise();
+            var deferred = $.Deferred();
+            // the first bind is fired up when the iframe is added to the DOM
+            $iframe.bind('load', function() {
+                // the second bind is fired up when the result of the form submission is received
+                $iframe.unbind('load').bind('load', function() {
+                    $.ajax(ajax).always(function() {
+                        cleanUp();
+                    }).then(
+                        function() { deferred.resolve.apply(deferred, arguments); },
+                        function() { deferred.reject.apply(deferred, arguments); }
+                    );
+                });
+                // now that the iframe can receive data, we fill and submit the form
+                $form.submit();
+            });
+            // append the iframe to the DOM (will trigger the first load)
+            $form.after($iframe);
+            return deffered;
+        }
     },
     on_rpc_request: function() {
     },
@@ -687,14 +546,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 username: result.login
             });
             self.session_save();
-
             self.on_session_valid(success_callback);
             return true;
-        //}).done(success_callback);
         });
-    },
-    login: function() {
-        this.session_authenticate.apply(this, arguments);
     },
     /**
      * Reloads uid and session_id from local storage, if they exist

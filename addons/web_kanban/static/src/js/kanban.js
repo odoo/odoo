@@ -106,7 +106,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                         node.children = [{
                             tag: 'img',
                             attrs: {
-                                src: openerp.connection.server + '/web/static/src/img/icons/' + node.attrs['data-icon'] + '.png',
+                                src: openerp.connection.prefix + '/web/static/src/img/icons/' + node.attrs['data-icon'] + '.png',
                                 width: '16',
                                 height: '16'
                             }
@@ -524,7 +524,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     },
     kanban_image: function(model, field, id) {
         id = id || '';
-        return openerp.connection.server + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+        return openerp.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
     },
     kanban_text_ellipsis: function(s, size) {
         size = size || 160;

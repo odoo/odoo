@@ -1013,7 +1013,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     start: function() {
         this._super.apply(this, arguments);
         var self = this;
-        openerp.connection.bind(function() {
+        openerp.connection.bind("",function() {
             var params = {};
             if(jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
                 self.$element.addClass("kitten-mode-activated");
@@ -1102,7 +1102,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         }
     },
 });
-
 
 openerp.currentScript = function() {
     var currentScript = document.currentScript;
