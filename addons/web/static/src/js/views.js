@@ -1067,7 +1067,6 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     },
     do_show: function () {
         this.$element.show();
-        this.do_push_state({});
     },
     do_hide: function () {
         this.$element.hide();
