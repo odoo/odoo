@@ -31,7 +31,7 @@ import socket
 import sys
 import threading
 import traceback
-
+import openerp
 import openerp.netsvc as netsvc
 import openerp.tiny_socket as tiny_socket
 import openerp.tools as tools
@@ -66,11 +66,11 @@ class TinySocketClientThread(threading.Thread):
                 break
             except Exception, e:
                 try:
-                    new_e = Exception(tools.exception_to_unicode(e)) # avoid problems of pickeling
-                    tb = getattr(e, 'traceback', sys.exc_info())
-                    tb_s = "".join(traceback.format_exception(*tb))
+                    valid_exception = Exception(netrpc_handle_exception_legacy(e)) 
+                    valid_traceback = getattr(e, 'traceback', sys.exc_info())
+                    formatted_traceback = "".join(traceback.format_exception(*valid_traceback))
                     logging.getLogger('web-services').debug("netrpc: communication-level exception", exc_info=True)
-                    ts.mysend(new_e, exception=True, traceback=tb_s)
+                    ts.mysend(valid_exception, exception=True, traceback=formatted_traceback)
                     break
                 except Exception, ex:
                     #terminate this channel if we can't properly send back the error
@@ -85,7 +85,17 @@ class TinySocketClientThread(threading.Thread):
 
     def stop(self):
         self.running = False
-
+        
+def netrpc_handle_exception_legacy(e):
+    if isinstance(e, openerp.osv.osv.except_osv):
+        return 'warning -- ' + e.name + '\n\n' + e.value
+    if isinstance(e, openerp.exceptions.Warning):
+        return 'warning -- Warning\n\n' + str(e)
+    if isinstance(e, openerp.exceptions.AccessError):
+        return 'warning -- AccessError\n\n' + str(e)
+    if isinstance(e, openerp.exceptions.AccessDenied):
+        return 'AccessDenied ' + str(e)
+    return openerp.tools.exception_to_unicode(e)
 
 class TinySocketServerThread(threading.Thread,netsvc.Server):
     def __init__(self, interface, port, secure=False):
