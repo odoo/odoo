@@ -50,12 +50,14 @@
             <field name="wkf_id" ref="wkf_procurement"/>
             <field name="name">produce_check</field>
         </record>
+        <!-- act_produce_service should be move in project_mrp module. -->
         <record id="act_produce_service" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
             <field name="name">produce_service</field>
             <field name="kind">function</field>
             <field name="action">action_produce_assign_service()</field>
         </record>
+
         <record id="act_make_done" model="workflow.activity">
             <field name="wkf_id" ref="wkf_procurement"/>
             <field name="name">ready</field>
@@ -163,11 +165,7 @@
             <field name="act_to" ref="act_produce_check"/>
             <field name="condition">check_produce()</field>
         </record>
-        <record id="trans_product_check_produce_service" model="workflow.transition">
-            <field name="act_from" ref="act_produce_check"/>
-            <field name="act_to" ref="act_produce_service"/>
-            <field name="condition">not check_product()</field>
-        </record>
+        
         <record id="trans_make_to_stock_make_done" model="workflow.transition">
             <field name="act_from" ref="act_make_to_stock"/> <!-- TOFIX: If product is service product and procure method is 'make_to_stock', procurement is closed without generated service -->
             <field name="act_to" ref="act_make_done"/>
@@ -175,20 +173,30 @@
             <field name="trigger_model" eval="False"/>
             <field name="trigger_expr_id" eval="False"/>
         </record>
+        <!-- TOFIX: Without installing 'mrp' module,  If product is produce(mto), procurement never close (Its gone in idle) so sale order never close and also invoice never created if post paid invoice. solution of this issue is below, just add one transition from act_produce_check to act_make_done -->
+        <!--
+        <record id="trans_produce_make_done" model="workflow.transition">
+            <field name="act_from" ref="act_produce_check"/>
+            <field name="act_to" ref="procurement.act_make_done"/>
+            <field name="condition">check_product()</field>
+        </record> -->
+
+        <!-- TOFIX: service related transition should be move into project_mrp module. -->
+        <record id="trans_product_check_produce_service" model="workflow.transition">
+            <field name="act_from" ref="act_produce_check"/>
+            <field name="act_to" ref="act_produce_service"/>
+            <field name="condition">not check_product()</field>
+        </record>
         <record id="trans_produce_service_cancel" model="workflow.transition">
             <field name="act_from" ref="act_produce_service"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">subflow.cancel</field>
         </record>
-        <record id="trans_produce_make_done" model="workflow.transition">
-            <field name="act_from" ref="act_produce_check"/>
-            <field name="act_to" ref="procurement.act_make_done"/>
-            <field name="condition">check_product()</field>
-        </record>
         <record id="trans_produce_service_make_done" model="workflow.transition">
             <field name="act_from" ref="act_produce_service"/>
             <field name="act_to" ref="act_make_done"/>
         </record>
+
         <record id="trans_make_done_done" model="workflow.transition">
             <field name="act_from" ref="act_make_done"/>
             <field name="act_to" ref="act_done"/>
