@@ -592,6 +592,10 @@ label.error {
 }
 .openerp .filter_label.enabled, .openerp .filter_icon.enabled {
     background: #aaa;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    -o-box-shadow: none;
+    -box-shadow: none;
 }
 .openerp .filter_icon {
     height: 22px;
@@ -617,20 +621,32 @@ label.error {
 .openerp .filter_label_group button:first-child {
     -webkit-border-top-left-radius: 7px;
     -webkit-border-bottom-left-radius: 7px;
+    -webkit-border-top-right-radius: 0;
+    -webkit-border-bottom-right-radius: 0;
     -moz-border-radius-topleft: 7px;
     -moz-border-radius-bottomleft: 7px;
+    -moz-border-radius-topright: 0;
+    -moz-border-radius-bottomright: 0;
     border-top-left-radius: 7px;
     border-bottom-left-radius: 7px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     border-right: none;
 }
 .openerp .filter_label_group button {
     border-right: none;
 }
 .openerp .filter_label_group button:last-child {
+    -webkit-border-top-left-radius: 0;
+    -webkit-border-bottom-left-radius: 0;
     -webkit-border-top-right-radius: 7px;
     -webkit-border-bottom-right-radius: 7px;
+    -moz-border-radius-topleft: 0;
+    -moz-border-radius-bottomleft: 0;
     -moz-border-radius-topright: 7px;
     -moz-border-radius-bottomright: 7px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
     border-top-right-radius: 7px;
     border-bottom-right-radius: 7px;
     border-right: 1px solid #999;
@@ -1725,7 +1741,6 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
   font-weight: 550;
   font-size: 12px;
   padding: 3px 10px;
-  min-width: 50px;
   text-align: center;
   background: #d8d8d8, none;
   -o-background-size: 100% 100%;
@@ -1800,7 +1815,6 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
   font-weight: 550;
   font-size: 12px;
   padding: 3px 10px;
-  min-width: 50px;
   -moz-box-shadow: none !important, 0 0 0 transparent;
   -webkit-box-shadow: none !important, 0 0 0 transparent;
   -o-box-shadow: none !important, 0 0 0 transparent;
