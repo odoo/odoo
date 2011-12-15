@@ -828,8 +828,11 @@ class users_view(osv.osv):
                 selected = values.pop(f)
                 if selected:
                     add.append(selected)
-        # remove groups in 'remove' and add groups in 'add'
-        values['groups_id'] = [(3, id) for id in remove] + [(4, id) for id in add]
+        # update values *only* if groups are being modified, otherwise
+        # we introduce spurious changes that might break the super.write() call.
+        if add or remove:
+            # remove groups in 'remove' and add groups in 'add'
+            values['groups_id'] = [(3, id) for id in remove] + [(4, id) for id in add]
 
     def default_get(self, cr, uid, fields, context=None):
         group_fields, fields = partition(is_reified_group, fields)
