@@ -724,6 +724,7 @@ class orm_template(object):
                 id = int(id)
                 obj_model = self.pool.get(model_name)
                 dom = [('id', '=', id)]
+                if obj_model._columns.get('active'):
                     dom.append(('active', 'in', ['True','False']))
                 ids = obj_model.search(cr, uid, dom, context=context)
                 if not len(ids):
