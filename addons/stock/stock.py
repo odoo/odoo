@@ -1360,6 +1360,11 @@ class stock_production_lot(osv.osv):
                 name = '%s [%s]' % (name, record['ref'])
             res.append((record['id'], name))
         return res
+    
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        ids = self.search(cr, user, [('prefix',operator,name)]+ args, limit=limit, context=context)
+        result = self.name_get(cr, user, ids, context=context)
+        return result
 
     _name = 'stock.production.lot'
     _description = 'Production lot'
