@@ -1,5 +1,5 @@
 -
-  I make direct opportunity for Customer.
+  I make direct opportunity for customer.
 -
   !python {model: crm.partner2opportunity}: |
     context.update({'active_model': 'res.partner', 'active_ids': [ref("base.res_partner_9")]})
@@ -39,12 +39,12 @@
     res_id = self.create(cr, uid, {'name': "vos chances sont fusionnés en un seul"}, context=context)
     self.action_schedule(cr, uid, [res_id], context=context)
 - 
-  I schedule Meeting on this phonecall.
+  I schedule meeting on this phonecall.
 -
   !python {model: crm.phonecall}: |
     self.action_make_meeting(cr, uid, [ref("crm.crm_case_phone06")])
 -
-  I set Phone call to Not Held.
+  I set phone call to not held.
 -
   !python {model: crm.phonecall}: |
     self.case_pending(cr, uid, [ref("crm.crm_case_phone06")])
@@ -54,7 +54,7 @@
   !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call held.}:
     - state == "pending"
 -
-  I Cancelled the Phone call. 
+  I cancelled the phone call. 
 -
   !python {model: crm.phonecall}: |
     self.case_cancel(cr, uid, [ref("crm.crm_case_phone06")])
@@ -64,17 +64,17 @@
   !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call held.}:
     - state == "cancel"
 -
-  I Reset the Phone call. 
+  I reset the phone call. 
 -
   !python {model: crm.phonecall}: |
     self.case_reset(cr, uid, [ref("crm.crm_case_phone06")])
 -
-  I check that the phone call is Reset or Not  
+  I check that the phone call is reset or not  
 -
   !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call held.}:
     - state == "open"
 -
-  I setting Phone call to Held (Done).
+  I setting phone call to held (done).
 -
   !python {model: crm.phonecall}: |
     self.case_close(cr, uid, [ref("crm.crm_case_phone06")])
