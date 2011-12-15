@@ -53,33 +53,23 @@
     mk_procure = self.pool.get('make.procurement')
     procur_order = self.pool.get('procurement.order')
     product = self.browse(cr, uid, ref('product.product_product_cpu2'))
-    
+
     context.update({'active_model': 'product.product','active_id':ref('product.product_product_cpu2')})
     values = mk_procure.default_get(cr, uid, ['qty','product_id','uom_id','warehouse_id','date_planned'], context)
     values.update({'warehouse_id': ref('base.main_company'),'uom_id': ref('product.product_uom_unit'),'qty': 5})
-    
+
     ids = mk_procure.create(cr, uid, values, context)
     procurement = mk_procure.make_procurement(cr, uid, [ids], context)
     assert product.virtual_available == 20.0,'Virtual stock should be updated'
-    
+
     proc_id = procurement.get('res_id')
-    procurements = procur_order.browse(cr, uid, [proc_id])
-    for procurement in procurements:
+    for procurement in procur_order.browse(cr, uid, [proc_id]):
       if procurement.state == 'confirmed':
         assert procurement.state == 'confirmed',"Procurement state should be 'Confirmed'."
         assert procurement.product_id.id == ref('product.product_product_cpu2'),"Product is not correspond."
         assert procurement.product_qty == 5,"Product Quantity is not correspond."
         assert procurement.product_uom.id == ref('product.product_uom_unit'),"Product's UOM is not correspond."
     context.update({'proc': proc_id})
--
-  I compute minimum stock .
--
-  !python {model: procurement.orderpoint.compute}: |
-    proc_id = context.get('proc')
-    context.update({'active_model':'procurement.order','active_id':proc_id, 'automatic':True})
-    values = self.default_get(cr, uid, ['automatic'], context)
-    ids = self.create(cr, uid, values, context)
-    self.procure_calculation(cr, uid, [ids], context)
 -
   I run the scheduler.
 -
@@ -92,4 +82,13 @@
     proc_id = context.get('proc')
     proc = self.browse(cr, uid, [proc_id])[0]
     assert proc.state == 'ready' or 'exception',"Procurement should be in Ready or Exception state"
+-
+  I compute minimum stock .
+-
+  !python {model: procurement.orderpoint.compute}: |
+    proc_id = context.get('proc')
+    context.update({'active_model':'procurement.order','active_id':proc_id, 'automatic':True})
+    values = self.default_get(cr, uid, ['automatic'], context)
+    ids = self.create(cr, uid, values, context)
+    self.procure_calculation(cr, uid, [ids], context)
 
