@@ -1685,9 +1685,7 @@ ul.oe-arrow-list li {
 ul.oe-arrow-list li span {
     vertical-align: top;
     display: inline-block;
-    border-width:1em;
-    border-style:solid;
-    border-color: #DEDEDE;
+    border: 1em solid #DEDEDE;
     line-height:0em;
 }
 ul.oe-arrow-list .oe-arrow-list-before {
@@ -1737,102 +1735,99 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     display: block;
 }
 
-/***********/
 /* Buttons */
-/***********/
-
 .openerp a.button:link,
 .openerp a.button:visited,
 .openerp button {
-  display: inline-block;
-  border: 1px solid #ababab;
-  color: #404040;
-  font-size: 12px;
-  padding: 3px 10px;
-  text-align: center;
-  -o-background-size: 100% 100%;
-  -moz-background-size: 100% 100%;
-  -webkit-background-size: auto auto !important;
-  background-size: 100% 100%;
-  background: #d8d8d8 none;
-  background: none, -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
-  background: none, -webkit-linear-gradient(#efefef, #d8d8d8);
-  background: none, -moz-linear-gradient(#efefef, #d8d8d8);
-  background: none, -o-linear-gradient(top, #efefef, #d8d8d8);
-  background: none, -khtml-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -o-border-radius: 3px;
-  -ms-border-radius: 3px;
-  border-radius: 3px;
-  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-  -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-  -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-  -webkit-font-smoothing: antialiased;
-  outline: none;
+    display: inline-block;
+    border: 1px solid #ababab;
+    color: #404040;
+    font-size: 12px;
+    padding: 3px 10px;
+    text-align: center;
+    -o-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -webkit-background-size: auto auto !important;
+    background-size: 100% 100%;
+    background: #d8d8d8 none;
+    background: none, -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
+    background: none, -webkit-linear-gradient(#efefef, #d8d8d8);
+    background: none, -moz-linear-gradient(#efefef, #d8d8d8);
+    background: none, -o-linear-gradient(top, #efefef, #d8d8d8);
+    background: none, -khtml-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    -webkit-font-smoothing: antialiased;
+    outline: none;
 }
 
 .openerp a.button:hover,
 .openerp button:hover {
-  -o-background-size: 100% 100%;
-  -moz-background-size: 100% 100%;
-  -webkit-background-size: auto auto !important;
-  background-size: 100% 100%;
-  background: #e3e3e3 none;
-  background: none, -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
-  background: none, -webkit-linear-gradient(#f6f6f6, #e3e3e3);
-  background: none, -moz-linear-gradient(#f6f6f6, #e3e3e3);
-  background: none, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
-  background: none, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
-  cursor: pointer;
+    -o-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -webkit-background-size: auto auto !important;
+    background-size: 100% 100%;
+    background: #e3e3e3 none;
+    background: none, -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    background: none, -webkit-linear-gradient(#f6f6f6, #e3e3e3);
+    background: none, -moz-linear-gradient(#f6f6f6, #e3e3e3);
+    background: none, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
+    background: none, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    cursor: pointer;
 }
 
 .openerp a.button:focus,
 .openerp button:focus {
-  border: 1px solid #80bfff;
-  -o-background-size: 100% 100%;
-  -moz-background-size: 100% 100%;
-  -webkit-background-size: auto auto !important;
-  background-size: 100% 100%;
-  background: #e3e3e3, none;
-  background: none, -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
-  background: none, -webkit-linear-gradient(#f6f6f6, #e3e3e3);
-  background: none, -moz-linear-gradient(#f6f6f6, #e3e3e3);
-  background: none, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
-  background: none, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
-  -moz-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-  -webkit-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-  -o-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-  box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    border: 1px solid #80bfff;
+    -o-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -webkit-background-size: auto auto !important;
+    background-size: 100% 100%;
+    background: #e3e3e3, none;
+    background: none, -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    background: none, -webkit-linear-gradient(#f6f6f6, #e3e3e3);
+    background: none, -moz-linear-gradient(#f6f6f6, #e3e3e3);
+    background: none, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
+    background: none, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    -moz-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    -webkit-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    -o-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
 }
 
 .openerp a.button:active,
 .openerp a.button.active,
 .openerp button:active,
 .openerp button.active {
-  background: #e3e3e3;
-  background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
-  background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f;
-  background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
-  -moz-box-shadow: none, 0 0 0 transparent;
-  -webkit-box-shadow: none, 0 0 0 transparent;
-  -o-box-shadow: none, 0 0 0 transparent;
-  box-shadow: none, 0 0 0 transparent;
+    background: #e3e3e3;
+    background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
+    background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f;
+    background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
+    -moz-box-shadow: none, 0 0 0 transparent;
+    -webkit-box-shadow: none, 0 0 0 transparent;
+    -o-box-shadow: none, 0 0 0 transparent;
+    box-shadow: none, 0 0 0 transparent;
 }
 
 .openerp a.button.disabled,
 .openerp button:disabled {
-  background: #efefef !important;
-  border: 1px solid #d1d1d1 !important;
-  font-size: 12px;
-  padding: 3px 10px;
-  -moz-box-shadow: none !important, 0 0 0 transparent;
-  -webkit-box-shadow: none !important, 0 0 0 transparent;
-  -o-box-shadow: none !important, 0 0 0 transparent;
-  box-shadow: none !important, 0 0 0 transparent;
-  color: #aaaaaa !important;
-  cursor: default;
-  text-shadow: 0 1px 1px white !important;
+    background: #efefef !important;
+    border: 1px solid #d1d1d1 !important;
+    font-size: 12px;
+    padding: 3px 10px;
+    -moz-box-shadow: none !important, 0 0 0 transparent;
+    -webkit-box-shadow: none !important, 0 0 0 transparent;
+    -o-box-shadow: none !important, 0 0 0 transparent;
+    box-shadow: none !important, 0 0 0 transparent;
+    color: #aaaaaa !important;
+    cursor: default;
+    text-shadow: 0 1px 1px white !important;
 }
