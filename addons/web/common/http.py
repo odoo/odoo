@@ -9,7 +9,6 @@ import logging
 import urllib
 import os
 import pprint
-#import re
 import sys
 import threading
 import traceback

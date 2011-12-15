@@ -1014,7 +1014,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this._super.apply(this, arguments);
         var self = this;
         openerp.connection.bind(function() {
-       
             var params = {};
             if(jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
                 self.$element.addClass("kitten-mode-activated");
@@ -1022,8 +1021,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.$element.html(QWeb.render("Interface", params));
             openerp.connection.session_restore();
 
-
-            // TODO nivification of menu Widget !!!
             self.menu = new openerp.web.Menu(self, "oe_menu", "oe_secondary_menu");
             self.menu.on_action.add(self.on_menu_action);
 
