@@ -60,10 +60,8 @@ class procurement_order(osv.osv):
 
     def _get_project(self, cr, uid, procurement, context=None):
         project_project = self.pool.get('project.project')
-        project = None
-        if procurement.product_id.project_id:
-            project = procurement.product_id.project_id
-        elif procurement.sale_line_id:
+        project = procurement.product_id.project_id
+        if not project and procurement.sale_line_id:
             analytic_account = procurement.sale_line_id.order_id.project_id
             if analytic_account:
                 project_ids = project_project.search(cr, uid, [('analytic_account_id', '=', account_id)])
