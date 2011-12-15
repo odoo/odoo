@@ -1089,7 +1089,7 @@ class stock_picking(osv.osv):
                     'uos_id': uos_id,
                     'product_id': move_line.product_id.id,
                     'account_id': account_id,
-                    'price_unit': price_unit,
+                    'price_unit': move_line.price_unit,
                     'discount': discount,
                     'quantity': move_line.product_uos_qty or move_line.product_qty,
                     'invoice_line_tax_id': [(6, 0, tax_ids)],
@@ -1256,7 +1256,7 @@ class stock_picking(osv.osv):
                             'picking_id' : new_picking,
                             'state': 'assigned',
                             'move_dest_id': False,
-                            'price_unit': move.price_unit,
+                            'price_unit': product_price,
                     }
                     prodlot_id = prodlot_ids[move.id]
                     if prodlot_id:
