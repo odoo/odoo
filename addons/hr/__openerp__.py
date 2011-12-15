@@ -52,7 +52,6 @@ You can manage:
     ],
     'demo_xml': [
         'hr_demo.xml',
-        'hr_department_demo.xml',
     ],
     'test': [
              'test/open2recruit2close_job.yml',
