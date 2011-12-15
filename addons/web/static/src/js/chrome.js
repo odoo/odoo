@@ -956,13 +956,16 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             $sub_menu.css(css);
             $sub_menu.mouseenter(function() {
                 clearTimeout($sub_menu.data('timeoutId'));
+                $sub_menu.data('timeoutId', null);
+                return false;
             }).mouseleave(function(evt) {
                 var timeoutId = setTimeout(function() {
-                    if (self.folded) {
-                        $sub_menu.hide();
+                    if (self.folded && $sub_menu.data('timeoutId')) {
+                        $sub_menu.hide().unbind('mouseenter').unbind('mouseleave');
                     }
                 }, self.float_timeout);
                 $sub_menu.data('timeoutId', timeoutId);
+                return false;
             });
         }
         $sub_menu.show();
@@ -988,6 +991,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
      * @param element_id
      */
     init: function(element_id) {
+        var self = this;
         this._super(null, element_id);
         openerp.webclient = this;
 
@@ -1015,8 +1019,11 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         var self = this;
         openerp.connection.bind("",function() {
             var params = {};
-            if(jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
-                self.$element.addClass("kitten-mode-activated");
+            if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
+                this.$element.addClass("kitten-mode-activated");
+                this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
+                    self.$element.toggleClass('clark-gable');
+                });
             }
             self.$element.html(QWeb.render("Interface", params));
             openerp.connection.session_restore();

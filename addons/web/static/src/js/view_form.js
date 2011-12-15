@@ -2909,13 +2909,18 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        var show_value = (value != null && value !== false) ? value : '';
+        var show_value;
+        if (this.node.attrs.filename) {
+            show_value = this.view.datarecord[this.node.attrs.filename] || '';
+        } else {
+            show_value = (value != null && value !== false) ? value : '';
+        }
         this.$element.find('input').eq(0).val(show_value);
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
         this.value = file_base64;
         this.binary_value = true;
-        var show_value = this.human_filesize(size);
+        var show_value = name + " (" + this.human_filesize(size) + ")";
         this.$element.find('input').eq(0).val(show_value);
         this.set_filename(name);
     },

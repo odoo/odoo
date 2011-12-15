@@ -285,7 +285,7 @@ class Database(openerpweb.Controller):
             params['db_lang'],
             params['create_admin_pwd']
         )
-        
+
         try:
             return req.session.proxy("db").create(*create_attrs)
         except xmlrpclib.Fault, e:
@@ -1196,7 +1196,7 @@ class Binary(openerpweb.Controller):
                         }
                     </script>"""
             data = ufile.read()
-            args = [ufile.content_length, ufile.filename,
+            args = [len(data), ufile.filename,
                     ufile.content_type, base64.b64encode(data)]
         except Exception, e:
             args = [False, e.message]

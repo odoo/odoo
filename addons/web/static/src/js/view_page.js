@@ -200,6 +200,27 @@ openerp.web.page = function (openerp) {
     openerp.web.page.FieldOne2ManyReadonly = openerp.web.form.FieldOne2Many.extend({
         force_readonly: true
     });
+    openerp.web.page.FieldBinaryFileReadonly = openerp.web.form.FieldBinary.extend({
+        template: 'FieldURI.readonly',
+        start: function() {
+            this._super.apply(this, arguments);
+            var self = this;
+            this.$element.find('a').click(function() {
+                if (self.value) {
+                    self.on_save_as();
+                }
+                return false;
+            });
+        },
+        set_value: function(value) {
+            this._super.apply(this, arguments);
+            this.$element.find('a').show(!!value);
+            if (value) {
+                var show_value = _t("Download") + " " + (this.view.datarecord[this.node.attrs.filename] || '');
+                this.$element.find('a').text(show_value);
+            }
+        }
+    });
     openerp.web.page.readonly = openerp.web.form.widgets.clone({
         'frame': 'openerp.web.page.WidgetFrameReadonly',
         'char': 'openerp.web.page.FieldCharReadonly',
@@ -218,6 +239,7 @@ openerp.web.page = function (openerp) {
         'boolean': 'openerp.web.page.FieldBooleanReadonly',
         'float': 'openerp.web.page.FieldCharReadonly',
         'integer': 'openerp.web.page.FieldCharReadonly',
-        'float_time': 'openerp.web.page.FieldCharReadonly'
+        'float_time': 'openerp.web.page.FieldCharReadonly',
+        'binary': 'openerp.web.page.FieldBinaryFileReadonly',
     });
 };
