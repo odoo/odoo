@@ -956,13 +956,16 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             $sub_menu.css(css);
             $sub_menu.mouseenter(function() {
                 clearTimeout($sub_menu.data('timeoutId'));
+                $sub_menu.data('timeoutId', null);
+                return false;
             }).mouseleave(function(evt) {
                 var timeoutId = setTimeout(function() {
-                    if (self.folded) {
-                        $sub_menu.hide();
+                    if (self.folded && $sub_menu.data('timeoutId')) {
+                        $sub_menu.hide().unbind('mouseenter').unbind('mouseleave');
                     }
                 }, self.float_timeout);
                 $sub_menu.data('timeoutId', timeoutId);
+                return false;
             });
         }
         $sub_menu.show();
