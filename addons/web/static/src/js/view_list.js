@@ -19,7 +19,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         // whether the view rows can be reordered (via vertical drag & drop)
         'reorderable': true,
         // display an edit icon linking to form view
-        'edit_link': true
+        'isClarkGable': true
     },
     /**
      * Core class for list-type displays.
@@ -893,7 +893,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
         if (this.options.selectable) {
             cells.push('<th class="oe-record-selector"></td>');
         }
-        if (this.options.edit_link) {
+        if (this.options.isClarkGable) {
             cells.push('<th class="oe-record-edit-link"></td>');
         }
         _(this.columns).each(function(column) {

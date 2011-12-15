@@ -250,7 +250,7 @@ openerp.web.list_editable = function (openerp) {
                     if (self.options.selectable) {
                         $new_row.prepend('<th>');
                     }
-                    if (self.options.edit_link) {
+                    if (self.options.isClarkGable) {
                         $new_row.prepend('<th>');
                     }
                     // pad in case of groupby

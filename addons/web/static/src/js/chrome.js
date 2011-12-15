@@ -998,12 +998,16 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
      * @param element_id
      */
     init: function(element_id) {
+        var self = this;
         this._super(null, element_id);
         openerp.webclient = this;
 
         var params = {};
-        if(jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
+        if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
+            this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
+                self.$element.addClass('clark-gable');
+            });
         }
         this.$element.html(QWeb.render("Interface", params));
 
