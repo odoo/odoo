@@ -2,7 +2,8 @@
  * OpenERP Web chrome
  *---------------------------------------------------------*/
 openerp.web.chrome = function(openerp) {
-var QWeb = openerp.web.qweb;
+var QWeb = openerp.web.qweb,
+    _t = openerp.web._t;
 
 openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Notification# */{
     template: 'Notification',
@@ -157,11 +158,9 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
     on_managed_error: function(error) {
         $('<div>' + QWeb.render('DialogWarning', {error: error}) + '</div>').dialog({
             title: "OpenERP " + _.str.capitalize(error.type),
-            buttons: {
-                Ok: function() {
-                    $(this).dialog("close");
-                }
-            }
+            buttons: [
+                {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+            ]
         });
     },
     on_traceback: function(error) {
@@ -172,11 +171,9 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
             height: '90%',
             min_width: '800px',
             min_height: '600px',
-            buttons: {
-                Ok: function() {
-                    $(this).dialog("close");
-                }
-            }
+            buttons: [
+                {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+            ]
         }).start();
         dialog.$element.html(QWeb.render('DialogTraceback', {error: error}));
     }
@@ -368,11 +365,9 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
         return $('<div>').dialog({
             modal: true,
             title: error.title,
-            buttons: {
-                Ok: function() {
-                    $(this).dialog("close");
-                }
-            }
+            buttons: [
+                {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+            ]
         }).html(error.error);
     },
     do_create: function() {
@@ -680,7 +675,7 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
         self.rpc("/web/webclient/version_info", {}).then(function(res) {
             var $help = $(QWeb.render("About-Page", {version_info: res}));
             $help.dialog({autoOpen: true,
-                modal: true, width: 960, title: "About"});
+                modal: true, width: 960, title: _t("About")});
         });
     },
     shortcut_load :function(){
@@ -760,25 +755,22 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
         });
         this.dialog = new openerp.web.Dialog(this,{
             modal: true,
-            title: 'Preferences',
+            title: _t("Preferences"),
             width: 600,
             height: 500,
-            buttons: {
-                "Change password": function(){
-                    self.change_password();
-            },
-                Cancel: function(){
-                     $(this).dialog('destroy');
-            },
-                Save: function(){
-                    var inner_viewmanager = action_manager.inner_viewmanager;
-                    inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
-                    .then(function() {
-                        self.dialog.stop();
-                        window.location.reload();
-                    });
+            buttons: [
+                {text: _t("Change password"), click: function(){ self.change_password(); }},
+                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
+                {text: _t("Save"), click: function(){
+                        var inner_viewmanager = action_manager.inner_viewmanager;
+                        inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
+                        .then(function() {
+                            self.dialog.stop();
+                            window.location.reload();
+                        });
+                    }
                 }
-            }
+            ]
         });
        this.dialog.start().open();
        action_manager.appendTo(this.dialog);
@@ -789,7 +781,7 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
         var self = this;
         this.dialog = new openerp.web.Dialog(this,{
             modal : true,
-            title : 'Change Password',
+            title: _t("Change Password"),
             width : 'auto',
             height : 'auto'
         });
@@ -814,11 +806,9 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
         return $('<div>').dialog({
             modal: true,
             title: error.title,
-            buttons: {
-                Ok: function() {
-                    $(this).dialog("close");
-                }
-            }
+            buttons: [
+                {text: _("Ok"), click: function() { $(this).dialog("close"); }}
+            ]
         }).html(error.error);
     },
     on_logout: function() {

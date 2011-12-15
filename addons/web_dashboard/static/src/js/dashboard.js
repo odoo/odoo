@@ -1,5 +1,6 @@
 openerp.web_dashboard = function(openerp) {
-var QWeb = openerp.web.qweb;
+var QWeb = openerp.web.qweb,
+    _t = openerp.web._t;
 
 if (!openerp.web_dashboard) {
     /** @namespace */
@@ -59,7 +60,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         };
         var $dialog = $('<div>').dialog({
                             modal: true,
-                            title: 'Edit Layout',
+                            title: _t("Edit Layout"),
                             width: 'auto',
                             height: 'auto'
                         }).html(QWeb.render('DashBoard.layouts', qdict));

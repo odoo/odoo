@@ -337,11 +337,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         if (!_.isEmpty(result.warning)) {
             $(QWeb.render("DialogWarning", result.warning)).dialog({
                 modal: true,
-                buttons: {
-                    Ok: function() {
-                        $(this).dialog("close");
-                    }
-                }
+                buttons: [
+                    {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+                ]
             });
         }
         if (result.domain) {
@@ -1053,18 +1051,20 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
                 var dialog = $('<div>' + self.node.attrs.confirm + '</div>').dialog({
                     title: _t('Confirm'),
                     modal: true,
-                    buttons: {
-                        Ok: function() {
-                            self.on_confirmed().then(function() {
-                                def.resolve();
-                            });
-                            $(this).dialog("close");
+                    buttons: [
+                        {text: _t("Ok"), click: function() {
+                                self.on_confirmed().then(function() {
+                                    def.resolve();
+                                });
+                                $(this).dialog("close");
+                            }
                         },
-                        Cancel: function() {
-                            def.resolve();
-                            $(this).dialog("close");
+                        {text: _t("Cancel"), click: function() {
+                                def.resolve();
+                                $(this).dialog("close");
+                            }
                         }
-                    }
+                    ]
                 });
                 return def.promise();
             } else {
