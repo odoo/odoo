@@ -58,15 +58,22 @@ class procurement_order(osv.osv):
             planned_hours = procurement.product_qty
         return planned_hours
 
+    def _get_project(self, cr, uid, procurement, context=None):
+        project_project = self.pool.get('project.project')
+        project = None
+        if procurement.product_id.project_id:
+            project = procurement.product_id.project_id
+        elif procurement.sale_line_id:
+            analytic_account = procurement.sale_line_id.order_id.project_id
+            if analytic_account:
+                project_ids = project_project.search(cr, uid, [('analytic_account_id', '=', account_id)])
+                project = project_project.browse(cr, uid, project_ids[0], context=context)
+        return project
+
     def action_produce_assign_service(self, cr, uid, ids, context=None):
         project_task = self.pool.get('project.task')
         for procurement in self.browse(cr, uid, ids, context=context):
-            project_id = False
-            if procurement.product_id.project_id:
-                project_id = procurement.product_id.project_id.id
-            elif procurement.sale_line_id:
-                project_id = procurement.sale_line_id.order_id.project_id.id
-            
+            project = self._get_project(cr, uid, procurement, context=context)
             planned_hours = self._convert_qty_company_hours(cr, uid, procurement, context=context)
             task_id = project_task.create(cr, uid, {
                 'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
@@ -77,7 +84,7 @@ class procurement_order(osv.osv):
                 'notes': procurement.note,
                 'procurement_id': procurement.id,
                 'description': procurement.note,
-                'project_id':  project_id,
+                'project_id':  project and project.id or False,
                 'company_id': procurement.company_id.id,
             },context=context)
             self.write(cr, uid, [procurement.id], {'task_id':task_id, 'state': 'running'}, context=context)
