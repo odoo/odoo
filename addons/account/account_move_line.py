@@ -1249,6 +1249,8 @@ class account_move_line(osv.osv):
             if len(period_candidate_ids) != 1:
                 raise osv.except_osv(_('Encoding error'), _('No period found or period given is ambigous.'))
             context['period_id'] = period_candidate_ids[0][0]
+        if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
+            context['journal_id'] = context.get('search_default_journal_id')            
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
         move_id = vals.get('move_id', False)
         journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
