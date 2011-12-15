@@ -23,7 +23,7 @@
 #
 ##############################################################################
 {
-    "name" : "Venezuela -Chart of Account",
+    "name" : "Venezuela - Accounting",
     "version" : "1.0",
     "author" : ['OpenERP SA', "Netquatro"],
     "category" : "Localization/Account Charts",

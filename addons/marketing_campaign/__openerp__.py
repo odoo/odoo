@@ -60,7 +60,6 @@ Note: If you need demo data, you can install the marketing_campaign_crm_demo mod
     'demo_xml': [
     ],
     'installable': True,
-    'application': True,
     'active': False,
     'certificate' : '00421723279617928365',
     'images': ['images/campaign.png', 'images/campaigns.jpeg','images/email_account.jpeg','images/email_templates.jpeg','images/segments.jpeg'],

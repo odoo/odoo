@@ -9,22 +9,8 @@
             <field name="arch" type="xml">
             <xpath expr="/form/board/column/action[@string='My Quotations']" position="before">
                 <action name="%(crm.act_my_oppor)d"
-                     string="My Open Opportunities"
+                     string="My Opportunities"
                      />
-                     <!--groups="base.group_sale_salesman,base.group_sale_manager"-->
-            </xpath>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="board_crm_form_inherit_replace2">
-            <field name="name">board.crm.form.inherit.replace1</field>
-            <field name="model">board.board</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="sale.board_sales_form"/>
-            <field name="arch" type="xml">
-            <xpath expr="/form/board/column/action[@string='My Quotations']" position="after">
-                <action name="%(crm.act_my_meetings)d"
-                     string="My Meetings"/>
             </xpath>
             </field>
         </record>
@@ -39,7 +25,6 @@
                 <action name="%(crm.act_my_oppor_stage)d"
                      string="My Planned Revenues by Stage"
                      />
-                     <!--groups="base.group_sale_salesman,base.group_sale_manager"-->
             </xpath>
             </field>
         </record>

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {
-    "name" : "Canada - English and French - Canadian Chart of Accounts",
+    "name" : "Canada - Accounting",
     "version" : "1.0",
     "author" : "Savoir-faire Linux",
     "website" : "http://www.savoirfairelinux.com",

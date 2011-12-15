@@ -26,18 +26,31 @@
             <field name="arch" type="xml">
                 <graph string="Project Tasks" type="bar">
                     <field name="date"/>
+                    <field name="planned_hours" operator="+"/>
+                    <field name="type_id" group="True"/>
+                </graph>
+            </field>
+        </record>
+        <record id="view_task_history_burndown_graph" model="ir.ui.view">
+            <field name="name">project.task.history.burndown.graph</field>
+            <field name="model">project.task.history.burndown</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Burndown Chart of Tasks" type="bar">
+                    <field name="date"/>
                     <field name="remaining_hours" operator="+"/>
                     <field name="type_id" group="True"/>
                 </graph>
             </field>
         </record>
 
+
         <record id="view_task_history_search" model="ir.ui.view">
             <field name="name">project.task.history.cumulative.search</field>
             <field name="model">project.task.history.cumulative</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-               <search string="Task's Cumulative Flow">
+               <search string="Task's Analysis">
                     <group>
                         <filter name="open" string="In Progress" domain="[('state','in',('open','draft'))]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
@@ -69,11 +82,26 @@
             <field name="res_model">project.task.history.cumulative</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="view_id" ref="view_task_history_graph"/>
             <field eval="False" name="filter"/>
-            <field name="context">{"search_default_open":1, "search_default_this_month": 1}</field>
+            <field name="context">{"search_default_open":1, "search_default_this_month": 1, "search_default_project_id": project_id}</field>
         </record>
         <menuitem action="action_view_task_history_cumulative"
             id="menu_action_view_task_history_cumulative"
+            parent="project_report_task" />
+
+
+        <record id="action_view_task_history_burndown" model="ir.actions.act_window">
+            <field name="name">Burndown Chart</field>
+            <field name="res_model">project.task.history.cumulative</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="view_id" ref="view_task_history_burndown_graph"/>
+            <field eval="False" name="filter"/>
+            <field name="context">{"search_default_open":1, "search_default_this_month": 1, "search_default_project_id": project_id}</field>
+        </record>
+        <menuitem action="action_view_task_history_burndown"
+            id="menu_action_view_task_history_burndown"
             parent="project_report_task" />
 
 

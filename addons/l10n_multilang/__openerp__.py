@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-    "name" : "Multi language Chart of Accounts",
+    "name" : "Multi Language Chart of Accounts",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Localization/Account Charts',
+    "category": 'Hidden/Dependency',
     "description": """
     * Multi language support for Chart of Accounts, Taxes, Tax Codes , Journals, Accounting Templates,
         Analytic Chart of Accounts and Analytic Journals.

@@ -326,6 +326,7 @@
         <menuitem
             name="Unrealized Gain or Loss"
             action="action_account_gain_loss"
+            groups="account.group_account_user"
             id="menu_unrealized_gains_losses"
             parent="account.menu_multi_currency"/>
 
@@ -786,7 +787,6 @@
                     <group col="2" colspan="2">
                         <separator string="Reporting Configuration" colspan="4"/>
                         <field name="report_type" select="2"/>
-                        <field name="sign" />                        
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Closing Method" colspan="4"/>
@@ -2486,6 +2486,9 @@
             <field eval="5" name="sequence"/>
             <field name="code">
 act_window_ids = pool.get('ir.actions.act_window').search(cr, uid,[('name', 'in', ('Accounting Chart Configuration', 'Generate Chart of Accounts from a Chart Template'))], context=context)
+ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_account_configuration_installer')
+if ref:
+    act_window_ids += [ref[1]]
 todo_ids = pool.get('ir.actions.todo').search(cr, uid, [('action_id', 'in', act_window_ids)], context=context)
 pool.get('ir.actions.todo').write(cr, uid, todo_ids, {'state':'open'}, context=context)
 action = pool.get('res.config').next(cr, uid, [], context)
@@ -2777,10 +2780,14 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         <field name="parent_id"/>
                         <field name="sequence"/>
                         <field name="type"/>
+                        <field name="sign"/>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Report" attrs="{'invisible': [('state','!=','confirm')]}">
-                            <field name="display_detail" attrs="{'invisible': [('type','!=','accounts')]}"/>
+                    <notebook colspan="6">
+                        <page string="Report">
+                            <group colspan="4" col="4">
+                                <field name="display_detail" attrs="{'invisible': [('type','not in',['accounts','account_type'])]}"  colspan="2"/>
+                                <label string="" colspan="2"/>
+                            </group>
                             <newline/>
                             <field name="account_ids" nolabel="1" colspan="6" attrs="{'invisible': [('type', '!=', 'accounts')]}"/>
                             <newline/>
@@ -2788,9 +2795,6 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <newline/>
                             <field name="account_type_ids" nolabel="1" attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
                             <newline/>
-                        </page>
-                        <page string="Notes" attrs="{'invisible': [('state','!=','confirm')]}">
-                            <field name="note" nolabel="1" colspan="4"/>
                         </page>
                     </notebook>
                 </form>
