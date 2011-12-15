@@ -840,7 +840,7 @@ session.web.Sidebar = session.web.Widget.extend({
 });
 
 session.web.TranslateDialog = session.web.Dialog.extend({
-    dialog_title: _t("Translations"),
+    dialog_title: {toString: function () { return _t("Translations"); }},
     init: function(view) {
         // TODO fme: should add the language to fields_view_get because between the fields view get
         // and the moment the user opens the translation dialog, the user language could have been changed
