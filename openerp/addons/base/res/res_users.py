@@ -698,9 +698,6 @@ def partition(f, xs):
 class groups_view(osv.osv):
     _inherit = 'res.groups'
 
-    # this defines a domain for searching all groups in get_groups_by_application()
-    groups_by_application_domain = []
-
     def create(self, cr, uid, values, context=None):
         res = super(groups_view, self).create(cr, uid, values, context)
         self.update_user_groups_view(cr, uid, context)
@@ -754,6 +751,9 @@ class groups_view(osv.osv):
             view = False
         return view
 
+    def get_application_groups(self, cr, uid, domain=None, context=None):
+        return self.search(cr, uid, domain or [])
+
     def get_groups_by_application(self, cr, uid, context=None):
         """ return all groups classified by application (module category), as a list of pairs:
                 [(app, kind, [group, ...]), ...],
@@ -774,7 +774,7 @@ class groups_view(osv.osv):
             return None
 
         # classify all groups by application
-        gids = self.search(cr, uid, self.groups_by_application_domain)
+        gids = self.get_application_groups(cr, uid, context=context)
         by_app, others = {}, []
         for g in self.browse(cr, uid, gids, context):
             if g.category_id:
