@@ -168,13 +168,11 @@ class crm_lead(crm_case, osv.osv):
         if context is None: context={}
         if not isinstance(ids, list):
           ids = [ids]
-        for lead in self.browse(cr,uid,ids,context=None):
+        for lead in self.browse(cr, uid, ids, context=context):
            msg_ids = [msg.id for msg in lead.message_ids]
            if msg_ids:
                self.pool.get('mailgate.message').unlink(cr, uid, msg_ids, context)
         return super(crm_lead, self).unlink(cr, uid, ids, context)
-
-    
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
