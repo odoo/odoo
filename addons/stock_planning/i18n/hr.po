@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-15 06:59+0000\n"
-"X-Generator: Launchpad (build 14487)\n"
+"X-Launchpad-Export-Date: 2011-11-30 06:47+0000\n"
+"X-Generator: Launchpad (build 14404)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -33,9 +33,9 @@ msgid ""
 "selected calculation is made for input, stock and output location of "
 "warehouse."
 msgstr ""
-"Check to calculate stock location of selected warehouse only. If not "
-"selected calculation is made for input, stock and output location of "
-"warehouse."
+"Označite za kalkulaciju lokacije zalihe samo za odabrano skladište. Ako nije "
+"označeno, izvršava se kalkulacija za ulaznu lokaciju, lokaciju zalihe i "
+"izlaznu lokaciju skladišta."
 
 #. module: stock_planning
 #: field:stock.planning,maximum_op:0
@@ -90,8 +90,9 @@ msgid ""
 "Warehouse which forecasts will concern. If during stock planning you will "
 "need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
-"Skladište predviđanja. Ako vam je tijekom planiranja zalihe potrebno "
-"predviđanje prodaje za sva skladišta odaberite bilo koje skladište sada."
+"Tiče se skladišta sa predviđanjem zalihe. Ako vam je tijekom planiranja "
+"zalihe potrebno predviđanje prodaje za sva skladišta odaberite skladište "
+"sada."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_left:0
@@ -121,7 +122,7 @@ msgstr "Kreiraj stavke predviđanja"
 #. module: stock_planning
 #: help:stock.planning,outgoing:0
 msgid "Quantity of all confirmed outgoing moves in calculated Period."
-msgstr "Količina svih potvrđenih izlaznih prijenosa u periodu kalkulacije"
+msgstr "Količina svih potvrđenih prijenosa izlaza u periodu kalkulacije"
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -136,7 +137,7 @@ msgstr "Kreiraj dnevne periode"
 #: field:stock.sale.forecast,company_id:0
 #: field:stock.sale.forecast.createlines,company_id:0
 msgid "Company"
-msgstr "Organizacija"
+msgstr "Tvrtka"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:640
@@ -154,7 +155,9 @@ msgstr ""
 msgid ""
 "All sales forecasts for selected Warehouse of selected Product during "
 "selected Period."
-msgstr "Sve prognoze prodaje za skladište, proizvod i period."
+msgstr ""
+"Sva predviđanja prodaje za odabrano skladište odabranog proizvoda za vrijeme "
+"odabranog perioda."
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_period_creatlines
@@ -199,7 +202,7 @@ msgstr "Stanje trenutnog perioda"
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Monthly Periods"
-msgstr "Stvori mjesečna razdoblja"
+msgstr "Kreiraj mjesečne periode"
 
 #. module: stock_planning
 #: help:stock.planning,supply_warehouse_id:0
@@ -227,13 +230,13 @@ msgstr "Svi proizvodi sa predviđanjem"
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Periods :"
-msgstr "Razdoblja:"
+msgstr "Periodi:"
 
 #. module: stock_planning
 #: help:stock.planning,already_in:0
 msgid ""
 "Quantity which is already picked up to this warehouse in current period."
-msgstr "Količina koja je primljena u skladište u trenutnom periodu."
+msgstr "Količina već poslana u ovo skladište za trenutni period."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:644
@@ -270,7 +273,7 @@ msgstr "Simulacija zalihe"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning_createlines
 msgid "stock.planning.createlines"
-msgstr "zaliha.plairanje.createlines"
+msgstr "stock.planning.createlines"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_before:0
@@ -296,7 +299,7 @@ msgstr "Period5 ovog korisnika"
 #. module: stock_planning
 #: help:stock.planning,history:0
 msgid "History of procurement or internal supply of this planning line."
-msgstr "Povijest nabava ili internih nabava za ovu stavku planiranja."
+msgstr "Povijest nabave ili unutarnje opskrbe za ovu stavku planiranja."
 
 #. module: stock_planning
 #: help:stock.planning,company_forecast:0
@@ -304,7 +307,7 @@ msgid ""
 "All sales forecasts for whole company (for all Warehouses) of selected "
 "Product during selected Period."
 msgstr ""
-"Sva predviđanja prodaje na nivou organizacije (sva skladišta) za odabrani "
+"Sva predviđanja prodaje za cijelu tvrtku (za sva skladišta) za odabrani "
 "proizvod tijekom odabranog perioda."
 
 #. module: stock_planning
@@ -350,7 +353,7 @@ msgstr "Pick lista "
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Create"
-msgstr "Stvori"
+msgstr "Kreiraj"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_planning_form
@@ -426,7 +429,7 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.sale.forecast,analyze_company:0
 msgid "Check this box to see the sales for whole company."
-msgstr "Označite kućicu da vidite prodaju za cijelu organizaciju."
+msgstr "Označite kućicu da vidite prodaju za cijelu tvrtku."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,name:0
@@ -436,7 +439,7 @@ msgstr "Naziv"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Search Stock Planning"
-msgstr "Traži planiranje zalihe"
+msgstr "Pretraži planiranje zalihe"
 
 #. module: stock_planning
 #: field:stock.planning,incoming_before:0
@@ -447,7 +450,7 @@ msgstr "Prethodno očekivani ulaz"
 #: field:stock.planning.createlines,product_categ_id:0
 #: field:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category"
-msgstr "Grupa proizvoda"
+msgstr "Kategorija proizvoda"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:621
@@ -550,12 +553,12 @@ msgstr "Napomena: Ne duplicira postojeće stavke koje ste već kreirali."
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Stock and Sales Period"
-msgstr "Skladišno i prodajno razdoblje"
+msgstr "Period zalihe i prodaje"
 
 #. module: stock_planning
 #: field:stock.planning,company_forecast:0
 msgid "Company Forecast"
-msgstr "Predviđanje za organizaciju"
+msgstr "Predviđanje za tvrtku"
 
 #. module: stock_planning
 #: help:stock.planning,product_uom:0
@@ -584,7 +587,7 @@ msgstr "Predviđanja prodaje:"
 #: field:stock.period,name:0
 #: field:stock.period.createlines,name:0
 msgid "Period Name"
-msgstr "Naziv Perioda"
+msgstr "Naziv perioda"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,user_id:0
@@ -594,33 +597,33 @@ msgstr "Kreirao/Potvrdio"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Internal Supply"
-msgstr "Interna nabava"
+msgstr "Unutarnja opskrba"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_company:0
 msgid "This Company Period4"
-msgstr "Period4 ove organizacije"
+msgstr "Period4 ove tvtke"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
 msgid "This Company Period5"
-msgstr "Period5 ove organizacije"
+msgstr "Period5 ove tvtke"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_company:0
 msgid "This Company Period2"
-msgstr "Period2 ove organizacije"
+msgstr "Period2 ove tvtke"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_company:0
 msgid "This Company Period3"
-msgstr "Period3 ove organizacije"
+msgstr "Period3 ove tvtke"
 
 #. module: stock_planning
 #: field:stock.period,date_start:0
 #: field:stock.period.createlines,date_start:0
 msgid "Start Date"
-msgstr "Početni datum"
+msgstr "Datum početka"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:642
@@ -644,8 +647,9 @@ msgid ""
 "Planning will be created for products from Product Category selected by this "
 "field. This field is ignored when you check \"All Forecasted Product\" box."
 msgstr ""
-"Planiranje će se kreirati za proizvode iz odabrane grupe. Ovo polje se ne "
-"koristi kada je označeno  \"Svi proizvodi predviđanja\"."
+"Planiranje će se kreirati za proizvode iz kategorije odabrane u ovom polju. "
+"Ovo polje se ne koristi kada je označena kućica  \"Svi proizvodi "
+"predviđanja\"."
 
 #. module: stock_planning
 #: field:stock.planning,planned_outgoing:0
@@ -660,7 +664,7 @@ msgstr "Po odjelu:"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecast"
-msgstr "Prognoza"
+msgstr "Predviđanje"
 
 #. module: stock_planning
 #: selection:stock.period,state:0
@@ -672,7 +676,7 @@ msgstr "Nacrt"
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Closed"
-msgstr "Zatvoren"
+msgstr "Zatvoreno"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -705,8 +709,8 @@ msgid ""
 msgstr ""
 "Unesite planiranu izlaznu količinu odabranog proizvoda iz odabranog "
 "skladišta za unijeti period. Za planiranje ove vrijednosti pogledajte "
-"potvrđeni izlaz ili predviđanja prodaje. Ova vrijednost bi trebala biti ista "
-"ili veća od potvrđenog izlaza."
+"Potvrđeni izlaz ili Predviđanja prodaja. Ova vrijednost bi trebala biti ista "
+"ili veća od Potvrđenog izlaza."
 
 #. module: stock_planning
 #: model:ir.module.module,description:stock_planning.module_meta_information
@@ -1232,7 +1236,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_id:0
 msgid "Period4"
-msgstr "Razdoblje4"
+msgstr "Period4"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:642
@@ -1244,7 +1248,7 @@ msgstr "    Već ušlo: "
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_id:0
 msgid "Period2"
-msgstr "Razdoblje2"
+msgstr "Period2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_id:0
@@ -1284,7 +1288,7 @@ msgstr "Opći podaci"
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_sale_forecast_form
 msgid "Sales Forecast"
-msgstr "Prognoza prodaje"
+msgstr "Predviđanje prodaje"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1316,7 +1320,7 @@ msgstr "Povijest prodaje"
 #. module: stock_planning
 #: field:stock.planning,supply_warehouse_id:0
 msgid "Source Warehouse"
-msgstr "Izvorno skladište"
+msgstr "Početno skladište"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_qty:0
@@ -1331,7 +1335,7 @@ msgstr "Zaliha"
 #. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
 msgid "Stock Supply Location"
-msgstr "Lokacija nabave"
+msgstr "Lokacija zalihe"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_stop:0
@@ -1350,7 +1354,7 @@ msgid ""
 "selected Warehouse and Period. Product Category field will be ignored."
 msgstr ""
 "Označite ovu kućicu da kreirate planiranje za sve proizvode koji koriste "
-"predviđanje za odabrano skladište i period. Polje grupe proizvoda se "
+"predviđanje za odabrano skladište i period. Polje kategorije proizvoda se "
 "ignorira."
 
 #. module: stock_planning
@@ -1363,7 +1367,7 @@ msgstr "Već ušlo"
 #: field:stock.planning,product_uos_categ:0
 #: field:stock.sale.forecast,product_uom_categ:0
 msgid "Product UoM Category"
-msgstr "Kategorija JM"
+msgstr "Kategorija JM proizvoda"
 
 #. module: stock_planning
 #: field:stock.planning,incoming:0
@@ -1398,12 +1402,12 @@ msgstr "Određuje proizvode na koje se odnosi ovo predviđanje."
 #. module: stock_planning
 #: selection:stock.planning,state:0
 msgid "Done"
-msgstr "Izvršeno"
+msgstr "Završeno"
 
 #. module: stock_planning
 #: field:stock.period.createlines,period_ids:0
 msgid "Periods"
-msgstr "Razdoblja"
+msgstr "Periodi"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:638
@@ -1429,18 +1433,18 @@ msgstr "Zatvori"
 #: view:stock.sale.forecast:0
 #: selection:stock.sale.forecast,state:0
 msgid "Validated"
-msgstr "Provjereno"
+msgstr "Potvrđen"
 
 #. module: stock_planning
 #: view:stock.period:0
 #: selection:stock.period,state:0
 msgid "Open"
-msgstr "Otvoreno"
+msgstr "Otvori"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy quantities from last Stock and Sale Forecast."
-msgstr "Kopiraj količine iz prethodnog predviđanja zalihe i prodaje."
+msgstr "Kopiray količine iz prethodnog predviđanja zalihe i prodaje."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_dept:0
@@ -1480,7 +1484,7 @@ msgstr "Period3 ovog skladišta"
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
 msgid "Confirmed Out"
-msgstr "Potvrđeni izlaz"
+msgstr "potvrđen izlaz"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
@@ -1490,7 +1494,7 @@ msgstr "Odgovoran"
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Default UOM"
-msgstr "Uobičajena JM"
+msgstr "Predefinirana JM"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_warehouse:0
@@ -1505,7 +1509,7 @@ msgstr "Period5 ovog skladišta"
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Current"
-msgstr "Trenutno"
+msgstr "Trenutni"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
@@ -1588,7 +1592,7 @@ msgstr "Povijest nabave"
 #. module: stock_planning
 #: help:stock.period.createlines,date_start:0
 msgid "Starting date for planning period."
-msgstr "Početni datum za period planiranja."
+msgstr "početni datum za period planiranja."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:641
@@ -1600,7 +1604,7 @@ msgstr "    Očekivan ulaz: "
 #. module: stock_planning
 #: field:stock.sale.forecast,analyze_company:0
 msgid "Per Company"
-msgstr "Po organizaciji"
+msgstr "Po tvrtki:"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_left:0
@@ -1617,13 +1621,14 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.planning,incoming:0
 msgid "Quantity of all confirmed incoming moves in calculated Period."
-msgstr "Količina svih potvrđenih prijenosa ulaza u periodu kalkulacije."
+msgstr ""
+"Količina svih potvrđenih prijenosa ulaza pripada periodu kalkulacije."
 
 #. module: stock_planning
 #: field:stock.period,date_stop:0
 #: field:stock.period.createlines,date_stop:0
 msgid "End Date"
-msgstr "Završni Datum"
+msgstr "Datum završetka"
 
 #. module: stock_planning
 #: help:stock.planning,stock_supply_location:0
@@ -1639,7 +1644,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "No Requisition"
-msgstr "Bez zahtjevnica"
+msgstr "Bez rekvizicije"
 
 #. module: stock_planning
 #: help:stock.planning,minimum_op:0
@@ -1684,7 +1689,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uom:0
 msgid "Product UoM"
-msgstr "JM Proizvoda"
+msgstr "JM proizvoda"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:627
@@ -1715,7 +1720,8 @@ msgstr "Odobri"
 msgid ""
 "Period for this planning. Requisition will be created for beginning of the "
 "period."
-msgstr "Period ovog planiranja. Nabava će se kreirati za početak perioda."
+msgstr ""
+"Period ovog planiranja. Rekvizicija će se kreirati za početak perioda."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1739,7 +1745,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_id:0
 msgid "Period5"
-msgstr "Razdoblje5"
+msgstr "Period5"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_createlines_form
@@ -1763,7 +1769,7 @@ msgstr "Period zalihe i prodaje"
 #. module: stock_planning
 #: help:stock.sale.forecast,user_id:0
 msgid "Shows who created this forecast, or who validated."
-msgstr "Shows who created this prognoza, or who validated."
+msgstr "Pokazuje tko je kreirao ovo predviđanje, ili tko ga je potvrdio."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:644

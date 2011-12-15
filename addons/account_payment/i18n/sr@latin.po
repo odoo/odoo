@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-15 06:13+0000\n"
-"X-Generator: Launchpad (build 14487)\n"
+"X-Launchpad-Export-Date: 2011-11-30 05:59+0000\n"
+"X-Generator: Launchpad (build 14404)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled date if fixed"
-msgstr "Zakazani datum ako je fiksiran"
+msgstr "Zakazani datum ako je fiskno"
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -30,7 +30,7 @@ msgstr "Valuta partnera"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Set to draft"
-msgstr "Postavi kao pripremu"
+msgstr "Postavi za obradu"
 
 #. module: account_payment
 #: help:payment.order,mode:0
@@ -41,7 +41,7 @@ msgstr "Odaberite način plaćanja koji će biti primenjen."
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr "Grupiši po..."
+msgstr "Grupirano po"
 
 #. module: account_payment
 #: model:ir.module.module,description:account_payment.module_meta_information
@@ -52,11 +52,6 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
-"\n"
-"Ovaj modul omogućava:\n"
-"*efikasniji način za upravljanje isplaćivanja faktura\n"
-"*osnovni mehanizam za lako obrađivanje automatizovanih načina isplate\n"
-"    "
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -103,7 +98,7 @@ msgstr "Zeljeni Datum"
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr "Slobodno"
+msgstr "slobodno"
 
 #. module: account_payment
 #: field:payment.order.create,entries:0
@@ -113,18 +108,18 @@ msgstr "Stavke"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Used Account"
-msgstr "Korišteni nalog"
+msgstr "Koristeni Nalog"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
-msgstr "Krajnji rok"
+msgstr "Datum dospeća"
 
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr "Ne možete da napravite poteznu liniju na zatvorenim računima."
+msgstr ""
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -140,7 +135,7 @@ msgstr "_Dodaj u nalog za plaćanje"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr "Ispunjavanje sadržaja fakture"
+msgstr "Ispuna sadrzaja fakture"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -151,12 +146,12 @@ msgstr "Iznos"
 #. module: account_payment
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Pogrešna vrednost kredita ili debita u ulazu računa !"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Total in Company Currency"
-msgstr "Ukupno u valuti preduzeća"
+msgstr "Ukupno u valuti preduzeca"
 
 #. module: account_payment
 #: selection:payment.order,state:0
@@ -177,7 +172,7 @@ msgstr "Referenca"
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
-msgstr "Red plaćanja mora biti jedinstven!"
+msgstr ""
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -217,7 +212,7 @@ msgstr "Efektivni datum fakture"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Execution Type"
-msgstr "Tip Izvršavanja"
+msgstr "Tip Izuzetka"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -234,7 +229,7 @@ msgstr "Stanje"
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Transaction Information"
-msgstr "Informacije o transakciji"
+msgstr "Informacije Transakcije"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
@@ -262,8 +257,8 @@ msgid ""
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
 msgstr ""
-"Odaberite opciju za nalog za plaćanje: \"Fiksirano\" znači datum naveden s "
-"Vaše strane. \"Direktno\" znači direktno izvršenje. \"Datum odgode\" znači "
+"Odaberite opciju za nalog za plaćanje: \"Fiksno\" znači datum naveden od "
+"vaše strane. \"Direktno\" znači direktno izvršenje. \"Datum odgode\" znači "
 "zakazan datum izvršenja."
 
 #. module: account_payment
@@ -285,12 +280,12 @@ msgstr "Datum izvršenja"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr "Dnevnik banke ili keša za način plaćanja"
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
-msgstr "Fiksirani datum"
+msgstr "Fiksni datum"
 
 #. module: account_payment
 #: field:payment.line,info_partner:0
@@ -306,12 +301,12 @@ msgstr "Ciljni račun"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr "Pretraži naloge za plaćanje"
+msgstr "Pretrazi naloge za placanje"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
-msgstr "Napravljeno"
+msgstr "Kreirano"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -326,17 +321,17 @@ msgstr "Ukupni iznos valute"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Make Payments"
-msgstr "Izvršite plaćanja"
+msgstr "Napravite plaćanja"
 
 #. module: account_payment
 #: field:payment.line,state:0
 msgid "Communication Type"
-msgstr "Tip komunikacije"
+msgstr "Tip Komunikacije"
 
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
 msgid "Payment Management"
-msgstr "Upravljanje plaćanjem"
+msgstr "Menadzment Plaćanja"
 
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
@@ -346,7 +341,7 @@ msgstr "Red Izvoda iz Banke"
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Due date"
-msgstr "Krajnji rok"
+msgstr "Krajnji Rok"
 
 #. module: account_payment
 #: field:account.invoice,amount_to_pay:0
@@ -390,7 +385,7 @@ msgstr "Način plaćanja"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr "Datum valute"
+msgstr "Datum"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -411,23 +406,23 @@ msgstr "Priprema"
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr "Naredna poruka komunikacije."
+msgstr "Nasljedna poruka komunikacije."
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "No partner defined on entry line"
-msgstr "Partner nije definisan na redu stavke"
+msgstr "Partner nije definisan"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
 msgid "Address of the Ordering Customer."
-msgstr "Adresa naručitelja."
+msgstr "Adresa kupca naručitelja."
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr "Popuni sadržaj:"
+msgstr "Popuni sadrzaj:"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -437,7 +432,7 @@ msgstr "Ukupno potražuje"
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr "Odaberite datum ako ste odabrali fiksirani željeni datum"
+msgstr "Odaberite datum ako ste odabrali fiksni željeni datum"
 
 #. module: account_payment
 #: field:payment.order,user_id:0
@@ -453,12 +448,12 @@ msgstr "Redovi plaćanja"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr "Stavke dnevnika"
+msgstr "Sadrzaj Dnevnika"
 
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr "Preduzeće mora biti isto za sve vezane račune i periode."
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -491,12 +486,12 @@ msgstr "Ukupno:"
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation date"
-msgstr "Datum pravljenja"
+msgstr "Datum kreiranja"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "ADD"
-msgstr "DODAJ"
+msgstr "Dodaj"
 
 #. module: account_payment
 #: view:account.bank.statement:0
@@ -516,22 +511,22 @@ msgstr "Iznos u valuti preduzeca"
 #. module: account_payment
 #: help:payment.line,partner_id:0
 msgid "The Ordering Customer"
-msgstr "Naručitelj"
+msgstr "Kupac naručitelj"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr "Izvrši plaćanje naloga"
+msgstr "Izvrsi placanje naloga"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Invoice Ref"
-msgstr "Ref. fakture"
+msgstr "Referenca fakture"
 
 #. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
-msgstr "Vaš poziv na broj"
+msgstr "Vaše veze"
 
 #. module: account_payment
 #: field:payment.order,mode:0
@@ -577,7 +572,7 @@ msgstr "Otkaži"
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
-msgstr "Informacije"
+msgstr "Informacija"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -587,10 +582,6 @@ msgid ""
 "that should be done, keep track of all payment orders and mention the "
 "invoice reference and the partner the payment should be done for."
 msgstr ""
-"Nalog za plaćanje je zahtev za plaćanje od strane Vašeg preduzeća za isplatu "
-"faktura nabavke ili kupaca. Ovde možete snimiti sve naloge za plaćanje na "
-"čekanju, pratite sve naloge za plaćanje i pomenete poziv na broj za datu "
-"fakturu i kom partneru treba izvršiti isplatu."
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -615,12 +606,12 @@ msgstr "Komunikacija 2"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank account"
-msgstr "Ciljni bankovni račun"
+msgstr "Destinacioni bankovni račun"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr "Jeste li sigurni da želite da izvršite isplatu?"
+msgstr "Jeste li sigurni da zelite da izvrsite isplatu?"
 
 #. module: account_payment
 #: view:payment.mode:0
@@ -642,7 +633,7 @@ msgstr "Potvrdi plaćanja"
 #: field:payment.line,company_currency:0
 #: report:payment.order:0
 msgid "Company Currency"
-msgstr "Valuta preduzeća"
+msgstr "Valuta preduzeca"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.menu_main_payment
@@ -654,7 +645,7 @@ msgstr "Isplata"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr "Isplata  Faktura / Plaćanje"
+msgstr "Isplata  Faktura / Placanje"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -667,13 +658,13 @@ msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
 msgstr ""
-"Koristi se kao poruka između naručioca i date kompanije. Prikazuje ' Šta "
-"želite reći kupcu o ovoj narudžbini?'"
+"Koristi se kao poruka izmedju narucioca i date kompanije. Objasnjava ' Sta "
+"ste to hteli reci kupcu o ovoj narudzbi?'"
 
 #. module: account_payment
 #: field:payment.mode,name:0
 msgid "Name"
-msgstr "Naziv"
+msgstr "Ime"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -684,7 +675,7 @@ msgstr "Bankovni račun"
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Entry Information"
-msgstr "Informacije o unosu"
+msgstr "Unos Informacije"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
@@ -705,7 +696,7 @@ msgstr "Ukupno"
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr "Izvrši placanje"
+msgstr "Izvrsi placanje"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
@@ -716,7 +707,7 @@ msgstr "Partner"
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr "Popuni plaćanje"
+msgstr "Popuni Placanje"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
@@ -726,9 +717,4 @@ msgstr "Bankovni račun za način plaćanja"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr "Ne možete napraviti poteznu liniju na računu po viđenju"
-
-#~ msgid ""
-#~ "You can not create move line on receivable/payable account without partner"
-#~ msgstr ""
-#~ "Ne možete napraviti poteznu liniju na primaćem/platežnom računu bez partnera"
+msgstr ""
