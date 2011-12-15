@@ -907,7 +907,7 @@ class account_invoice(osv.osv):
             date = inv.date_invoice or time.strftime('%Y-%m-%d')
             part = inv.partner_id.id
 
-            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context={})),iml)
+            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context=context)),iml)
 
             line = self.group_lines(cr, uid, iml, line, inv)
 
