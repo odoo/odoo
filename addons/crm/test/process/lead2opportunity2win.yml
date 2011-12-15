@@ -46,13 +46,13 @@
     ids = self.search(cr, uid, [('opportunity_id', '=', ref('crm_case_qrecorp0'))])
     assert len(ids), 'phonecall is not scheduled'
 -
-  Now I schedule Meeting with Customer.
+  Now I schedule meeting with customer.
 -
   !python {model: crm.lead}: |
     self.action_makeMeeting(cr, uid, [ref('crm_case_qrecorp0')])
 
 -
-  After communicated  with customer, I put some notes with Contract details.
+  After communicated  with customer, I put some notes with contract details.
 -
   !python {model: crm.add.note}: |
     context.update({'active_model': 'crm.lead', 'active_id': ref('crm_case_qrecorp0')})
@@ -64,7 +64,7 @@
   !python {model: crm.lead}: |
     self.case_mark_won(cr, uid, [ref("crm_case_qrecorp0")])
 -
-  I check details of the opportunity After won the opportunity.
+  I check details of the opportunity after won the opportunity.
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
@@ -79,7 +79,7 @@
     id = self.create(cr, uid, {'user_ids': [ref('base.user_root')], 'section_id': ref('crm.section_sales_department')}, context=context)
     self.mass_convert(cr, uid, [id], context=context)
 -
-  Now I check First lead converted on opportunity.
+  Now I check first lead converted on opportunity.
 -
   !python {model: crm.lead}: |
     opp = self.browse(cr, uid, ref('crm_case_employee0'))
@@ -88,7 +88,7 @@
     assert opp.partner_id.name == "Agrolait", 'Partner missmatch!'
     assert opp.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
 -
-  Then check for Second lead converted on opportunity.
+  Then check for second lead converted on opportunity.
 -
   !python {model: crm.lead}: |
     opp = self.browse(cr, uid, ref('crm_case_electonicgoodsdealer0'))
@@ -96,13 +96,13 @@
     assert opp.type == 'opportunity', 'Lead is not converted to opportunity!'
     assert opp.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
 -
-  I confirm  Review needs Meeting.
+  I confirm review needs meeting.
 -
   !python {model: crm.meeting}: |
     context.update({'active_model': 'crm.meeting'}) 
     self.case_open(cr, uid, [ref('crm.crm_case_reviewneeds0')])
 -
-  I Invite a user for Meeting.
+  I invite a user for meeting.
 -
   !python {model: calendar.attendee}: |
     meeting_id = self.create(cr, uid, {'user_id': ref('base.user_root'), 'email': 'user@meeting.com' })
