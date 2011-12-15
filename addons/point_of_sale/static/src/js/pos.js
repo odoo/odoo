@@ -940,81 +940,39 @@ openerp.point_of_sale = function(db) {
             $('#payment-remaining').html(remaining);
         },
     });
-    /*
-     "Receipt" step.
-     */
-    var ReceiptLineWidget = db.web.Widget.extend({
-        tag_name: 'tr',
-        template_fct: qweb_template('pos-receiptline-template'),
-        init: function(parent, options) {
-            this._super(parent);
-            this.model = options.model;
-            this.model.bind('change', this.render_element, this);
-        },
-        render_element: function() {
-            this.$element.addClass('receiptline');
-            this.$element.html(this.template_fct(this.model.toJSON()));
-        },
-    });
     var ReceiptWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
             this.shop = options.shop;
+        },
+        start: function() {
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
-            this.bindOrderLineEvents();
-            this.bindPaymentLineEvents();
-        },
-        finishOrder: function() {
-            this.shop.get('selectedOrder').destroy();
-        },
-        receiptLineList: function() {
-            return this.$element.find('#receiptlines');
-        },
-        bindOrderLineEvents: function() {
-            this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
-            this.currentOrderLines.bind('add', this.addReceiptLine, this);
-            this.currentOrderLines.bind('change', this.render_element, this);
-            this.currentOrderLines.bind('remove', this.render_element, this);
-        },
-        bindPaymentLineEvents: function() {
-            this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
-            this.currentPaymentLines.bind('all', this.updateReceiptSummary, this);
-        },
-        changeSelectedOrder: function() {
-            this.currentOrderLines.unbind();
-            this.bindOrderLineEvents();
-            this.currentPaymentLines.unbind();
-            this.bindPaymentLineEvents();
-            this.render_element();
-        },
-        addReceiptLine: function(newOrderItem) {
-            var x = new ReceiptLineWidget(null, {
-                    model: newOrderItem
-            });
-            x.appendTo(this.receiptLineList());
-            this.updateReceiptSummary();
+            this.changeSelectedOrder();
         },
         render_element: function() {
             this.$element.html(qweb_template('pos-receipt-view'));
             $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
-            this.currentOrderLines.each(_.bind( function(orderItem) {
-                var x = new ReceiptLineWidget(null, {
-                        model: orderItem
-                });
-                x.appendTo(this.receiptLineList());
-            }, this));
-            this.updateReceiptSummary();
         },
-        updateReceiptSummary: function() {
-            var change, currentOrder, tax, total;
-            currentOrder = this.shop.get('selectedOrder');
-            total = currentOrder.getTotal();
-            tax = currentOrder.getTax();
-            change = currentOrder.getPaidTotal() - total;
-            $('#receipt-summary-tax').html(tax.toFixed(2));
-            $('#receipt-summary-total').html(total.toFixed(2));
-            $('#receipt-summary-change').html(change.toFixed(2));
+        finishOrder: function() {
+            this.shop.get('selectedOrder').destroy();
+        },
+        changeSelectedOrder: function() {
+            if (this.currentOrderLines)
+                this.currentOrderLines.unbind();
+            this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
+            this.currentOrderLines.bind('add', this.refresh, this);
+            this.currentOrderLines.bind('change', this.refresh, this);
+            this.currentOrderLines.bind('remove', this.refresh, this);
+            if (this.currentPaymentLines)
+                this.currentPaymentLines.unbind();
+            this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
+            this.currentPaymentLines.bind('all', this.refresh, this);
+            this.refresh();
+        },
+        refresh: function() {
+            this.currentOrder = this.shop.get('selectedOrder');
+            $('.pos-receipt-container', this.$element).html(qweb_template('pos-ticket')({widget:this}));
         },
     });
     var OrderButtonWidget = db.web.Widget.extend({

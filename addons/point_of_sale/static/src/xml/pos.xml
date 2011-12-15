@@ -206,17 +206,6 @@
             <input type="text" t-att-value="amount.toFixed(2)" />
         </td>
     </t>
-    <t t-name="pos-receiptline-template">
-        <td class="receiptline-quantity pos-rigth-align">
-            <t t-esc="quantity.toFixed(0)"/>
-        </td>
-        <td class="receiptline-name">
-            <t t-esc="name"/>
-        </td>
-        <td class="receiptline-amount">
-            <t t-esc="format_amount((list_price * (1 - discount/100) * quantity).toFixed(2))"/>
-        </td>
-    </t>
     <t t-name="pos-payment-button-template">
         <button class="payment-button" t-att-cash-register-id="id">
             <t t-esc="name"/>
@@ -232,35 +221,43 @@
             <header><h2>Receipt</h2></header>
             <div class="pos-step-container">
                 <div class="pos-receipt-container">
-                    <div class="pos-sale-ticket">
-                        OpenERP Point of Sale<br />
-                        <br />
-                        <div class="pos-rigth-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
-                            Date.CultureInfo.formatPatterns.longTime)"/></div>
-                        <br />
-                        <table id="receiptlines"></table>
-                        <br />
-                        <table>
-                            <tr><td>Total:</td><td class="pos-rigth-align">
-                                <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
-                                <span id="receipt-summary-total"></span>
-                                <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
-                                </td></tr>
-                            <tr><td>Tax:</td><td class="pos-rigth-align">
-                                <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
-                                <span id="receipt-summary-tax"></span>
-                                <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
-                                </td></tr>
-                            <tr><td>Change:</td><td class="pos-rigth-align">
-                                <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
-                                <span id="receipt-summary-change"></span>
-                                <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
-                                </td></tr>
-                        </table>
-                    </div>
                 </div>
                 <button id="pos-finish-order">Next Order</button>
             </div>
+        </div>
+    </t>
+    <t t-name="pos-ticket">
+        <div class="pos-sale-ticket">
+            OpenERP Point of Sale<br />
+            <br />
+            <div class="pos-rigth-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
+                Date.CultureInfo.formatPatterns.longTime)"/></div>
+            <br />
+            <table id="receiptlines">
+                <tr t-foreach="widget.currentOrderLines.toArray()" t-as="order" class="receiptline">
+                    <td class="receiptline-quantity pos-rigth-align">
+                        <t t-esc="order.get('quantity').toFixed(0)"/>
+                    </td>
+                    <td class="receiptline-name">
+                        <t t-esc="order.get('name')"/>
+                    </td>
+                    <td class="receiptline-amount">
+                        <t t-esc="format_amount((order.get('list_price') * (1 - order.get('discount')/100) * order.get('quantity')).toFixed(2))"/>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table>
+                <tr><td>Total:</td><td class="pos-rigth-align">
+                    <t t-esc="format_amount(widget.currentOrder.getTotal().toFixed(2))"/>
+                    </td></tr>
+                <tr><td>Tax:</td><td class="pos-rigth-align">
+                    <t t-esc="format_amount(widget.currentOrder.getTax().toFixed(2))"/>
+                    </td></tr>
+                <tr><td>Change:</td><td class="pos-rigth-align">
+                    <t t-esc="format_amount((widget.currentOrder.getPaidTotal() - widget.currentOrder.getTotal()).toFixed(2))"/>
+                    </td></tr>
+            </table>
         </div>
     </t>
 </templates>
