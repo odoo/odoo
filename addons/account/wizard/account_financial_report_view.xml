@@ -40,6 +40,24 @@
              <field name="target">new</field>
        </record>
 
+      <menuitem
+            parent="account.menu_finance_legal_statement"
+            id="final_accounting_reports"
+            name="Accounting Reports"/>
+
+      <menuitem icon="STOCK_PRINT"
+                name="Profit And Loss"
+                action="account.action_account_report"
+                id="menu_account_pl_report"
+                parent="final_accounting_reports"/>
+
+      <menuitem icon="STOCK_PRINT"
+            name="Balance Sheet"
+            action="account.action_account_report"
+            groups="group_account_user,group_account_manager"
+            id="menu_account_bs_report"
+            parent="final_accounting_reports"/>
+
        <menuitem icon="STOCK_PRINT"
             name="Financial Report"
             action="action_account_report"
