@@ -723,10 +723,10 @@ class orm_template(object):
             if mode=='.id':
                 id = int(id)
                 obj_model = self.pool.get(model_name)
+                dom = [('id', '=', id)]
                 if obj_model._columns.get('active'):
-                    ids = obj_model.search(cr, uid, [('id', '=', int(id)),('active','in',['True','False'])], context=context)
-                else:
-                    ids = obj_model.search(cr, uid, [('id', '=', int(id))], context=context)
+                    dom.append(('active', 'in', ['True','False']))
+                ids = obj_model.search(cr, uid, dom, context=context)
                 if not len(ids):
                     raise Exception(_("Database ID doesn't exist: %s : %s") %(model_name, id))
             elif mode=='id':
