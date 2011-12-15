@@ -362,7 +362,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         //       be saved to (and revived from) cookies
         this.name = openerp._session_id;
     },
-
     bind: function(server, continuation) {
 
         if(_.isFunction(server)) {
@@ -390,37 +389,12 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.active_id = null;
         this.do_load_qweb(['/web/webclient/qweb'], continuation);
     },
-
     connect: function(server, db, login, password, continuation) {
         var self = this;
         this.bind(server, function() {
             self.login(db, login, password, continuation);
         });
     },
-
-    get_absolute_url: function(path) {
-        var absolute_url,
-            r_has_protocol = /^https?:\/\//,
-            r_absolute_internal = /^\/[^\/]/;   // starts with / (but not //)
-
-        
-        if (r_has_protocol.test(path)) {
-            if (!_.str.startsWith(path, this.server + '/')) {
-                $.error('can only contact openerp.server');
-            }
-            absolute_url = path;
-        } else if (r_absolute_internal.test(path)) {
-            absolute_url = this.server + path;
-        } else {    // relative url
-            // XXX is it correct to mix document.location and this.server ??
-            var parts = document.location.pathname.split('/');
-            parts.pop();
-            parts.push(path);
-            absolute_url = this.server + parts.join('/');
-        }
-        return absolute_url;
-    },
-
     /**
      * Executes an RPC call, registering the provided callbacks.
      *
@@ -454,7 +428,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             });
         }).then(success_callback, error_callback).promise();
     },
-
     /**
      * Raw JSON-RPC call
      *
@@ -521,7 +494,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      * The session is validated either by login or by restoration of a previous session
      */
     on_session_valid: function(continuation) {
-        this.load_modules(continuation);
+        this.load_modules().then(function() { continuation() } );
     },
     on_session_invalid: function(continuation) {
     },
@@ -547,7 +520,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         //}).done(success_callback);
         });
     },
-    login: function() { this.session_authenticate.apply(this, arguments); },
+    login: function() {
+        this.session_authenticate.apply(this, arguments);
+    },
     /**
      * Reloads uid and session_id from local storage, if they exist
      */
@@ -628,17 +603,12 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
     /**
      * Load additional web addons of that instance and init them
-     * FIXME do all actions in sync...
      */
-    load_modules: function(continuation) {
+    load_modules: function() {
         var self = this;
-        
-        this.module_loading.done(continuation);
-        //if (this.module_loading.state() !== "pending") {
-        if (this.module_loading.isResolved() || this.module_loading.isRejected()) {
-            return;
+        if(openerp._modules_loaded) {
+            return $.when();
         }
-
         this.rpc('/web/session/modules', {}, function(result) {
             self.module_list = result;
             var lang = self.user_context.lang;
@@ -649,37 +619,17 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 var file_list = ["/web/static/lib/datejs/globalization/" +
                     self.user_context.lang.replace("_", "-") + ".js"
                 ];
-
-                /*
-                self.rpc('/web/webclient/qweblist', {mods: modules}, self.do_load_qweb);
-                self.rpc('/web/webclient/csslist', {mods: modules}, self.do_load_css);
-                self.rpc('/web/webclient/jslist', {mods: modules}, function(files) {
-                    self.do_load_js(file_list.concat(files));
-                });
-                openerp._modules_loaded = true;
-                // */
-                
-                self.rpc('/web/webclient/qweblist', {mods: modules}, function(files) {
-                    self.do_load_qweb(files, function() {
-                        // once qweb files are loaded...
-                        self.rpc('/web/webclient/csslist', {mods: modules}, function(files) {
-                            self.do_load_css(files, function() {
-                                // once css files are loaded
-                                self.rpc('/web/webclient/jslist', {mods: modules}, function(files) {
-                                    self.do_load_js(file_list.concat(files), function() {
-                                        self.on_modules_loaded();
-                                        self.module_loading.resolve();
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
-            
+                return $.when(
+                    self.rpc('/web/webclient/qweblist', {mods: modules}, self.do_load_qweb),
+                    self.rpc('/web/webclient/csslist', {mods: modules}, self.do_load_css),
+                    self.rpc('/web/webclient/jslist', {mods: modules}, function(files) {
+                        self.do_load_js(file_list.concat(files)); 
+                    })
+                );
             });
         });
     },
-    do_load_css: function (files, callback) {
+    do_load_css: function (files) {
         var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
@@ -688,9 +638,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 'type': 'text/css'
             }));
         });
-        if (callback) { callback(); }
     },
-    do_load_js: function(files, callback) {
+    do_load_js: function(files) {
         var self = this;
         if(files.length != 0) {
             var file = files.shift();
@@ -706,21 +655,18 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             var head = document.head || document.getElementsByTagName('head')[0];
             head.appendChild(tag);
         } else {
-            if (callback) { callback(); }
+            self.on_modules_loaded();
         }
     },
-    do_load_qweb: function(files, callback) {
+    do_load_qweb: function(files) {
         var self = this;
-        
         if (files.length != 0) {
             var file = files.shift();
-            self.rpc('/web/jsonp/static_proxy', {path: file}, function(xml) {
+            self.rpc('/web/proxy/load', {path: file}, function(xml) {
                 openerp.web.qweb.add_template(_.str.trim(xml));
                 self.do_load_qweb(files, callback);
             });
-        } else {
-            if (callback) { callback(); }
-        }
+        } 
     },
     on_modules_loaded: function() {
         for(var j=0; j<this.module_list.length; j++) {
@@ -1150,6 +1096,7 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
     }
 });
 
+/** Configure blockui */
 if ($.blockUI) {
     $.blockUI.defaults.baseZ = 1100;
     $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
@@ -1181,6 +1128,7 @@ openerp.web.qweb.format_text_node = function(s) {
 openerp.connection = new openerp.web.Connection();
 openerp.web.qweb.default_dict['__debug__'] = openerp.connection.debug;
 
+/** Jquery extentions */
 $.Mutex = (function() {
     function Mutex() {
         this.def = $.Deferred().resolve();

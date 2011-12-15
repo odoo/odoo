@@ -242,6 +242,21 @@ class WebClient(openerpweb.Controller):
             "version": web.common.release.version
         }
 
+class Proxy(openerpweb.Controller):
+    _cp_path = '/web/proxy'
+
+    @jsonrequest
+    def load(self, req, path):
+        #req.config.socket_port
+        #if not re.match('^/[^/]+/static/.*', path):
+        #    return werkzeug.exceptions.BadRequest()
+
+        env = req.httprequest.environ
+        port = env['SERVER_PORT']
+
+        o = urllib.urlopen('http://127.0.0.1:%s%s' % (port, path))
+        return o.read()
+
 class Database(openerpweb.Controller):
     _cp_path = "/web/database"
 

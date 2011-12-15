@@ -2,7 +2,6 @@
 #----------------------------------------------------------
 # OpenERP Web HTTP layer
 #----------------------------------------------------------
-import StringIO
 import ast
 import contextlib
 import functools
@@ -88,12 +87,12 @@ class WebRequest(object):
         self.httpresponse = None
         self.httpsession = request.session
         self.config = config
-        self.session = None
 
     def init(self, params):
         self.params = dict(params)
+        # OpenERP session setup
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
-        self.session = self.httpsession.setdefault(self.session_id, session.OpenERPSession(self.session_id))
+        self.session = self.httpsession.setdefault(self.session_id, session.OpenERPSession())
         self.session.config = self.config
         self.context = self.params.pop('context', None)
         self.debug = self.params.pop('debug', False) != False
@@ -142,11 +141,10 @@ class JsonRequest(WebRequest):
         method = self.httprequest.method
         args = self.httprequest.args
         jsonp = args.get('jsonp', False)
+        requestf = None
+        request = None
 
-        if jsonp and args.get('r'):
-            # jsonp method GET
-            requestf = StringIO.StringIO(args.get('r'))
-        elif jsonp and method == 'POST':
+        if jsonp and method == 'POST':
             # jsonp 2 steps step1 POST: save call
             self.init(args)
             req.session.jsonp_requests[args.get('id')] = self.httprequest.form['r']
@@ -156,7 +154,10 @@ class JsonRequest(WebRequest):
         elif args['jsonp'] and args.get('id'):
             # jsonp 2 steps step2 GET: run and return result
             self.init(args)
-            requestf = StringIO.StringIO(self.session.jsonp_requests.pop(args.get(id), ""))
+            request = self.session.jsonp_requests.pop(args.get(id), "")
+        elif jsonp and args.get('r'):
+            # jsonp method GET
+            request = args.get('r')
         else:
             # regular jsonrpc2
             requestf = self.httprequest.stream
@@ -164,10 +165,15 @@ class JsonRequest(WebRequest):
         response = {"jsonrpc": "2.0" }
         error = None
         try:
-            self.jsonrequest = simplejson.loads(direct_json_request, object_hook=nonliterals.non_literal_decoder)
+            # Read POST content or POST Form Data named "request"
+            if requestf:
+                self.jsonrequest = simplejson.load(requestf, object_hook=nonliterals.non_literal_decoder)
+            else:
+                self.jsonrequest = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
             self.init(self.jsonrequest.get("params", {}))
             if _logger.isEnabledFor(logging.DEBUG):
-                _logger.debug("[%s] --> %s.%s\n%s", rid, controller.__class__.__name__, method.__name__, pprint.pformat(self.jsonrequest))
+                _logger.debug("--> %s.%s\n%s", controller.__class__.__name__, method.__name__, pprint.pformat(self.jsonrequest))
+            response['id'] = self.jsonrequest.get('id')
             response["result"] = method(controller, self, **self.params)
         except openerplib.AuthenticationError:
             error = {
@@ -375,21 +381,6 @@ class ControllerType(type):
 
 class Controller(object):
     __metaclass__ = ControllerType
-
-class Proxy(Controller):
-    _cp_path = '/web/proxy'
-
-    @jsonrequest
-    def load(self, req, path):
-        #req.config.socket_port
-        #if not re.match('^/[^/]+/static/.*', path):
-        #    return werkzeug.exceptions.BadRequest()
-
-        env = req.httprequest.environ
-        port = env['SERVER_PORT']
-
-        o = urllib.urlopen('http://127.0.0.1:%s%s' % (port, path))
-        return o.read()
 
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
