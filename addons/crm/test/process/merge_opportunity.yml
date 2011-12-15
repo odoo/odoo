@@ -17,7 +17,6 @@
 -
   !python {model: crm.lead}: |
     opportunity_ids = self.search(cr, uid, [('partner_id','=', ref("base.res_partner_9"))])
-    context.update({'active_model': 'crm.lead','active_ids': opportunity_ids})
 -
   !record {model: crm.merge.opportunity, id: opportunity_merge_id }:
 -

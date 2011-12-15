@@ -5,7 +5,6 @@
 -
    !python {model: crm.lead}: |
      self.case_open(cr, uid, [ref("crm_case_qrecorp0")])
-     context.update({'active_model': 'crm.lead','active_ids': [ref("crm_case_qrecorp0")]})
 - 
   I check lead state is "Open". 
 -
