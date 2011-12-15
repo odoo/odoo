@@ -1,5 +1,6 @@
 openerp.web_dashboard = function(openerp) {
-var QWeb = openerp.web.qweb;
+var QWeb = openerp.web.qweb,
+    _t = openerp.web._t;
 
 if (!openerp.web_dashboard) {
     /** @namespace */
@@ -59,7 +60,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         };
         var $dialog = $('<div>').dialog({
                             modal: true,
-                            title: 'Edit Layout',
+                            title: _t("Edit Layout"),
                             width: 'auto',
                             height: 'auto'
                         }).html(QWeb.render('DashBoard.layouts', qdict));
@@ -149,12 +150,13 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             view_mode = action_attrs.view_mode;
 
         if (action_attrs.context) {
-            action.context = action_attrs.context;
+            action.context = _.extend((action.context || {}), action_attrs.context);
         }
         if (action_attrs.domain) {
-            action.domain = action_attrs.domain;
+            action.domain = action.domain || [];
+            action.domain.unshift.apply(action.domain, action_attrs.domain);
         }
-        var action_orig = _.extend({}, action);
+        var action_orig = _.extend({ flags : {} }, action);
 
         if (view_mode && view_mode != action.view_mode) {
             var action_view_mode = action.view_mode.split(',');
@@ -195,7 +197,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             var action_id = parseInt(action_attrs.creatable, 10);
             $action.parent().find('button.oe_dashboard_button_create').click(function() {
                 if (isNaN(action_id)) {
-                    action.flags.default_view = 'form';
+                    action_orig.flags.default_view = 'form';
                     self.do_action(action_orig);
                 } else {
                     self.rpc('/web/action/load', {
@@ -397,8 +399,8 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.Widget.extend({
         this._super(parent);
     },
     start: function() {
-        // TODO menu hide
         var self = this;
+        openerp.webclient.menu.do_hide_secondary();
         var domain = [['application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
         var ds = new openerp.web.DataSetSearch(this, 'ir.module.module',{},domain);
         ds.read_slice(['id'], {}, function(result) {

@@ -12,7 +12,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         // whether the column headers should be displayed
         'header': true,
         // display addition button, with that label
-        'addable': _t("Create"),
+        'addable': {toString: function () { return _t("Create"); }},
         // whether the list view can be sorted, note that once a view has been
         // sorted it can not be reordered anymore
         'sortable': true,
@@ -79,6 +79,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             self.compute_aggregates();
         });
 
+        this.no_leaf = false;
     },
     /**
      * Retrieves the view's number of records per page (|| section)
@@ -401,13 +402,13 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         }, this));
     },
     do_show: function () {
-        this.$element.show();
+        this._super();
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
     },
     do_hide: function () {
-        this.$element.hide();
+        this._super();
         if (this.sidebar) {
             this.sidebar.$element.hide();
         }
@@ -473,6 +474,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (_.isEmpty(group_by) && !context['group_by_no_leaf']) {
             group_by = null;
         }
+        this.no_leaf = !!context['group_by_no_leaf'];
 
         this.reload_view(!!group_by, context).then(
             $.proxy(this, 'reload_content'));

@@ -483,6 +483,10 @@
 </t>
 <t t-extend="ViewManager" t-name="One2Many.viewmanager">
     <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
+
+    <t t-jquery=".oe-view-manager-header">
+        this.attr('t-if', 'views.length != 1');
+    </t>
 </t>
 
 <t t-name="Sidebar">
@@ -569,7 +573,7 @@
             <th t-att-colspan="columns_count">
                 <table>
                     <tr>
-                        <td t-if="options.action_buttons !== false" class="oe-actions">
+                        <td t-if="!no_leaf and options.action_buttons !== false" class="oe-actions">
                             <button type="button" class="oe-list-add"
                                     t-if="options.addable">
                                 <t t-esc="options.addable"/>
@@ -619,6 +623,9 @@
     <t t-jquery="thead.ui-widget-header > tr:first">
         this.removeAttr('t-if');
     </t>
+
+    <t t-jquery="tfoot &gt; tr:last-child" t-operation="replace"/>
+
     <t t-jquery="td.oe-actions">
         this.removeAttr('t-if');
         var $title = $(document.createElement('h3')).addClass('oe_view_title');
@@ -627,7 +634,7 @@
         this.prepend($title);
     </t>
 </t>
-<th t-name="Listview.navigation.button" t-if="options.pager !== false"
+<th t-name="Listview.navigation.button" t-if="!no_leaf and options.pager !== false"
         class="oe-list-pager" t-att-colspan="columns_count">
     <button type="button" disabled="disabled"
             data-pager-action="first">First</button>
@@ -1148,7 +1155,6 @@
         <div class="oe_search-view-buttons">
             <button>Search</button>
             <button type="reset">Clear</button>
-            <button type="button" class="oe_search-view-custom-filter-btn"><span>Advanced Filter</span></button>
             <select class="oe_search-view-filters-management">
             </select>
         </div>
@@ -1162,6 +1168,7 @@
         </t>
     </optgroup>
     <optgroup label="-- Actions --">
+        <option value="advanced_filter">Advanced Filter</option>
         <option value="save_filter">Save Filter</option>
         <option value="add_to_dashboard">Add to Dashboard</option>
         <option value="manage_filters">Manage Filters</option>

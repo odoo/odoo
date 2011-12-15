@@ -31,7 +31,7 @@ function jsonp(form, attributes, callback) {
 
 openerp.web.DataImport = openerp.web.Dialog.extend({
     template: 'ImportDataView',
-    dialog_title: "Import Data",
+    dialog_title: {toString: function () { return _t("Import Data"); }},
     init: function(parent, dataset){
         var self = this;
         this._super(parent, {});
