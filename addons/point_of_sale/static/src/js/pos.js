@@ -70,20 +70,27 @@ openerp.point_of_sale = function(db) {
             this.flush_mutex = new $.Mutex();
             this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
-            this.set({'pending_operations': this.store.get('pending_operations', [])});
-            this.bind('change:pending_operations', _.bind(function(unused, val) {
-                this.store.set('pending_operations', val);
-            }, this));
-            this.set({'currency': this.store.get('currency', {symbol: '$', position: 'after'})});
-            this.bind('change:currency', _.bind(function(unused, val) {
-                this.store.set('currency', val);
+            var attributes = {
+                'pending_operations': [],
+                'currency': {symbol: '$', position: 'after'},
+                'shop': {},
+                'company': {},
+                'user': {},
+            };
+            _.each(attributes, _.bind(function(def, attr) {
+                var to_set = {};
+                to_set[attr] = this.store.get(attr, def);
+                this.set(to_set);
+                this.bind('change:' + attr, _.bind(function(unused, val) {
+                    this.store.set(attr, val);
+                }, this));
             }, this));
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
                 this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
                 this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'], [['state', '=', 'open']]),
                 this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
-                this.get_currency())
-                .then(this.build_tree);
+                this.get_app_data())
+                .pipe(_.bind(this.build_tree, this));
         },
         fetch: function(osvModel, fields, domain) {
             var dataSetSearch;
@@ -93,19 +100,23 @@ openerp.point_of_sale = function(db) {
                 return self.store.set(osvModel, result);
             });
         },
-        get_currency: function() {
-            return new db.web.Model("sale.shop").get_func("search_read")([]).pipe(function(result) {
+        get_app_data: function() {
+            var self = this;
+            return $.when(new db.web.Model("sale.shop").get_func("search_read")([]).pipe(function(result) {
+                self.set({'shop': result[0]});
                 var company_id = result[0]['company_id'][0];
-                return new db.web.Model("res.company").get_func("read")(company_id, ['currency_id']).pipe(function(result) {
+                return new db.web.Model("res.company").get_func("read")(company_id, ['currency_id', 'name', 'phone']).pipe(function(result) {
+                    self.set({'company': result});
                     var currency_id = result['currency_id'][0]
                     return new db.web.Model("res.currency").get_func("read")([currency_id],
                             ['symbol', 'position']).pipe(function(result) {
-                        return result[0];
+                        self.set({'currency': result[0]});
+                        
                     });
                 });
-            }).then(_.bind(function(currency) {
-                this.set({'currency': currency});
-            }, this));
+            }), new db.web.Model("res.users").get_func("read")(this.session.uid, ['name']).pipe(function(result) {
+                self.set({'user': result});
+            }));
         },
         push: function(osvModel, record) {
             var ops = _.clone(this.get('pending_operations'));
@@ -945,6 +956,9 @@ openerp.point_of_sale = function(db) {
             this._super(parent);
             this.model = options.model;
             this.shop = options.shop;
+            this.user = pos.get('user');
+            this.company = pos.get('company');
+            this.shop_obj = pos.get('shop');
         },
         start: function() {
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);

@@ -228,13 +228,13 @@
     </t>
     <t t-name="pos-ticket">
         <div class="pos-sale-ticket">
-            Your missing company<br />
-            Phone: Your missing phone<br />
-            User: Your missing user<br />
-            Shop: The missing shop<br />
-            <br />
             <div class="pos-rigth-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
                 Date.CultureInfo.formatPatterns.longTime)"/></div>
+            <br />
+            <t t-esc="widget.company.name"/><br />
+            Phone: <t t-esc="widget.company.phone || ''"/><br />
+            User: <t t-esc="widget.user.name"/><br />
+            Shop: <t t-esc="widget.shop_obj.name"/><br />
             <br />
             <table>
                 <tr t-foreach="widget.currentOrderLines.toArray()" t-as="order">
