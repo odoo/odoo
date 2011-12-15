@@ -37,13 +37,20 @@ res_payterm()
 
 class res_partner_category(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
+        """Return the categories' names with all their parent's names
+        
+        The normal name_get behavior can be force by setting 
+        short_category_name=True in the context.""" 
         if not len(ids):
             return []
+        if context is None:
+            context = {}
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
             name = record['name']
-            if record['parent_id']:
+            if record['parent_id'] and not context.get('short_category_name',
+                                                       False):
                 name = record['parent_id'][1]+' / '+name
             res.append((record['id'], name))
         return res

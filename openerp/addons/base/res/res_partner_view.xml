@@ -505,7 +505,7 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban</field>
-            <field name="context">{"search_default_customer":1}</field>
+            <field name="context">{"search_default_customer":1, 'short_category_name': True}</field>
             <field name="search_view_id" ref="view_res_partner_filter"/>
             <field name="help">A customer is an entity you do business with, like a company or an organization. A customer can have several contacts or addresses which are the people working for this company. You can use the history tab, to follow all transactions related to a customer: sales order, emails, opportunities, claims, etc. If you use the email gateway, the Outlook or the Thunderbird plugin, don't forget to register emails to each contact so that the gateway will automatically attach incoming emails to the right partner.</field>
         </record>
