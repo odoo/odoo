@@ -228,32 +228,49 @@
     </t>
     <t t-name="pos-ticket">
         <div class="pos-sale-ticket">
-            OpenERP Point of Sale<br />
+            Your missing company<br />
+            Phone: Your missing phone<br />
+            User: Your missing user<br />
+            Shop: The missing shop<br />
             <br />
             <div class="pos-rigth-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
                 Date.CultureInfo.formatPatterns.longTime)"/></div>
             <br />
-            <table id="receiptlines">
-                <tr t-foreach="widget.currentOrderLines.toArray()" t-as="order" class="receiptline">
-                    <td class="receiptline-quantity pos-rigth-align">
-                        <t t-esc="order.get('quantity').toFixed(0)"/>
-                    </td>
-                    <td class="receiptline-name">
+            <table>
+                <tr t-foreach="widget.currentOrderLines.toArray()" t-as="order">
+                    <td>
                         <t t-esc="order.get('name')"/>
                     </td>
-                    <td class="receiptline-amount">
+                    <td class="pos-rigth-align">
+                        <t t-esc="order.get('quantity').toFixed(0)"/>
+                    </td>
+                    <td class="pos-rigth-align">
                         <t t-esc="format_amount((order.get('list_price') * (1 - order.get('discount')/100) * order.get('quantity')).toFixed(2))"/>
                     </td>
                 </tr>
             </table>
             <br />
             <table>
-                <tr><td>Total:</td><td class="pos-rigth-align">
-                    <t t-esc="format_amount(widget.currentOrder.getTotal().toFixed(2))"/>
-                    </td></tr>
                 <tr><td>Tax:</td><td class="pos-rigth-align">
                     <t t-esc="format_amount(widget.currentOrder.getTax().toFixed(2))"/>
                     </td></tr>
+                <tr><td>Total:</td><td class="pos-rigth-align">
+                    <t t-esc="format_amount(widget.currentOrder.getTotal().toFixed(2))"/>
+                    </td></tr>
+            </table>
+            <br />
+            <table>
+                <tr t-foreach="widget.currentPaymentLines.toArray()" t-as="pline">
+                    <td>
+                        <t t-esc="pline.get('journal_id')[1]"/>
+                    </td>
+                    <td class="pos-rigth-align">
+                        <t t-esc="format_amount((pline.getAmount()).toFixed(2))"/>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table>
                 <tr><td>Change:</td><td class="pos-rigth-align">
                     <t t-esc="format_amount((widget.currentOrder.getPaidTotal() - widget.currentOrder.getTotal()).toFixed(2))"/>
                     </td></tr>
