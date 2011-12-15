@@ -510,9 +510,10 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
     },
     set_ids: function (ids) {
         this.ids = ids;
-        if (this.index !== null) {
-            this.index = this.index <= this.ids.length - 1 ?
-                this.index : (this.ids.length > 0 ? this.length - 1 : 0);
+        if (ids.length === 0) {
+            this.index = null;
+        } else if (this.index >= ids.length - 1) {
+            this.index = ids.length - 1;
         }
     },
     unlink: function(ids) {
