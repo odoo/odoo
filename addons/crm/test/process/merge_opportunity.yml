@@ -51,7 +51,7 @@
 -
   I check that the phone call is in 'Not Held' state. 
 -
-  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call Helded}:
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call held.}:
     - state == "pending"
 -
   I Cancelled the Phone call. 
@@ -61,7 +61,7 @@
 -
   I check that the phone call is in 'Cancelled' state.
 -
-  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call Helded}:
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call held.}:
     - state == "cancel"
 -
   I Reset the Phone call. 
@@ -71,7 +71,7 @@
 -
   I check that the phone call is Reset or Not  
 -
-  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call Helded}:
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call held.}:
     - state == "open"
 -
   I setting Phone call to Held (Done).
@@ -81,5 +81,5 @@
 -
   I check that the phone call is in 'Held' state.
 -
-  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call Helded}:
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call held.}:
     - state == "done"
