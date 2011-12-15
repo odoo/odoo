@@ -3,7 +3,7 @@
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product.product_product_cpu2'))
-    assert product.virtual_available < 5.0,'Virtual stock have more quantities. so, not possible to check minimum stock rule process'
+    assert product.virtual_available <= 0.0,'Virtual stock have more quantities. so, not possible to check minimum stock rule process'
 -
   I create minimum stock rule for product CPU2.
 -
@@ -19,6 +19,15 @@
     qty_multiple: 1
     warehouse_id: stock.warehouse0
 -
+  I update product quantity and check the stock moves are properly done or not.
+-
+  !python {model: product.product}: |
+    change_qty = self.pool.get('stock.change.product.qty')
+    product = self.browse(cr, uid, ref('product.product_product_cpu2'))
+    ids = change_qty.create(cr, uid, {'location_id' : ref('stock.stock_location_stock'), 'new_quantity': 4, 'product_id': product.id})
+    change_qty.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
+    assert product.qty_available == 4,"Product quantity is not updated."
+-
   I run the scheduler.
 -
   !python {model: procurement.order}: |
@@ -29,11 +38,58 @@
   !python {model: procurement.order}: |
     proc_ids = self.search(cr, uid, [('product_id','=', ref('product.product_product_cpu2'))])
     assert proc_ids, 'No Procurement created.'
-    proc_order = self.browse(cr, uid, proc_ids)
-    assert proc_order[0].product_qty == 15.0,"Procurement product quantity is not corresponded."
+    proc_order = self.browse(cr, uid, proc_ids)[0]
+    assert proc_order.product_qty == 11.0,"Procurement product quantity is not corresponded."
 -
   I check product quantity.
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product.product_product_cpu2'))
-    assert product.virtual_available >= 5.0,"After run the scheduler product's virtual stock is not updated."
+    assert product.virtual_available == 15.0,"After run the scheduler product's virtual stock is not updated."
+-
+  For test the Procurement Request wizard, Again I have to update product quantity.
+-
+  !python {model: product.product}: |
+    mk_procure = self.pool.get('make.procurement')
+    procur_order = self.pool.get('procurement.order')
+    product = self.browse(cr, uid, ref('product.product_product_cpu2'))
+    
+    context.update({'active_model': 'product.product','active_id':ref('product.product_product_cpu2')})
+    values = mk_procure.default_get(cr, uid, ['qty','product_id','uom_id','warehouse_id','date_planned'], context)
+    values.update({'warehouse_id': ref('base.main_company'),'uom_id': ref('product.product_uom_unit'),'qty': 5})
+    
+    ids = mk_procure.create(cr, uid, values, context)
+    procurement = mk_procure.make_procurement(cr, uid, [ids], context)
+    assert product.virtual_available == 20.0,'Virtual stock should be updated'
+    
+    proc_id = procurement.get('res_id')
+    procurements = procur_order.browse(cr, uid, [proc_id])
+    for procurement in procurements:
+      if procurement.state == 'confirmed':
+        assert procurement.state == 'confirmed',"Procurement state should be 'Confirmed'."
+        assert procurement.product_id.id == ref('product.product_product_cpu2'),"Product is not correspond."
+        assert procurement.product_qty == 5,"Product Quantity is not correspond."
+        assert procurement.product_uom.id == ref('product.product_uom_unit'),"Product's UOM is not correspond."
+    context.update({'proc': proc_id})
+-
+  I compute minimum stock .
+-
+  !python {model: procurement.orderpoint.compute}: |
+    proc_id = context.get('proc')
+    context.update({'active_model':'procurement.order','active_id':proc_id, 'automatic':True})
+    values = self.default_get(cr, uid, ['automatic'], context)
+    ids = self.create(cr, uid, values, context)
+    self.procure_calculation(cr, uid, [ids], context)
+-
+  I run the scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
+-
+  I check the current state of procurement.
+-
+  !python {model: procurement.order}: |
+    proc_id = context.get('proc')
+    proc = self.browse(cr, uid, [proc_id])[0]
+    assert proc.state == 'ready' or 'exception',"Procurement should be in Ready or Exception state"
+
