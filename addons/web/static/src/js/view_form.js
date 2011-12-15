@@ -140,7 +140,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_record_loaded: function(record) {
         var self = this, set_values = [];
         if (!record) {
-            throw("Form: No record received");
+            throw new Error("Form: No record received");
         }
         this.datarecord = record;
 
@@ -629,7 +629,7 @@ openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
     on_attachment_delete: function(e) {
         var self = this, $e = $(e.currentTarget);
         var name = _.str.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
-        if (confirm("Do you really want to delete the attachment " + name + " ?")) {
+        if (confirm(_.sprintf(_t("Do you really want to delete the attachment %s?"), name))) {
             this.rpc('/web/dataset/unlink', {
                 model: 'ir.attachment',
                 ids: [parseInt($e.attr('data-id'))]
@@ -1051,7 +1051,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
             if (self.node.attrs.confirm) {
                 var def = $.Deferred();
                 var dialog = $('<div>' + self.node.attrs.confirm + '</div>').dialog({
-                    title: 'Confirm',
+                    title: _t('Confirm'),
                     modal: true,
                     buttons: {
                         Ok: function() {
@@ -2374,7 +2374,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
     load_view: function() {
         var self = this;
         this.list_view = new openerp.web.form.Many2ManyListView(this, this.dataset, false, {
-                    'addable': self.is_readonly() ? null : 'Add',
+                    'addable': self.is_readonly() ? null : _t("Add"),
                     'deletable': self.is_readonly() ? false : true,
                     'selectable': self.multi_selection
             });

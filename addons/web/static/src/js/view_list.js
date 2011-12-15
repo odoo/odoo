@@ -12,7 +12,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         // whether the column headers should be displayed
         'header': true,
         // display addition button, with that label
-        'addable': _t("Create"),
+        'addable': {toString: function () { return _t("Create"); }},
         // whether the list view can be sorted, note that once a view has been
         // sorted it can not be reordered anymore
         'sortable': true,
