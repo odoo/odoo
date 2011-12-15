@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+
+        <!-- Requests Links -->
+        <record id="req_link_project" model="res.request.link">
+            <field name="name">Project</field>
+            <field name="object">project.project</field>
+        </record>
+
+        <record id="req_link_task" model="res.request.link">
+            <field name="name">Project task</field>
+            <field name="object">project.task</field>
+        </record>
+
         <!-- Resource: project.project -->
         <record id="all_projects_account" model="account.analytic.account">
             <field name="name">Projects</field>
