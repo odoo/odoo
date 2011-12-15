@@ -821,7 +821,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                         throw "Could not find id in dataset"
                     }
                     var view;
-                    if ($(e.toElement).is('.oe-record-edit-link-img')) {
+                    if ($(e.target).is('.oe-record-edit-link-img')) {
                         view = 'form';
                     }
                     self.row_clicked(e, view);
