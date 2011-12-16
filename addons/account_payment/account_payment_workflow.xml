@@ -26,12 +26,11 @@ write({'state':'open'})</field>
             <field name="wkf_id" ref="wkf_payment_order"/>
             <field name="action">write({'state':'done'})</field>
             <field name="kind">function</field>
-            <field name="flow_stop">True</field>
         </record>
         <record id="act_cancel" model="workflow.activity">
             <field name="name">cancel</field>
             <field name="wkf_id" ref="wkf_payment_order"/>
-            <field name="action">write({'state':'cancel'})</field>
+            <field name="action">action_cancel()</field>
             <field name="kind">function</field>
             <field name="flow_stop">True</field>
         </record>
@@ -55,6 +54,11 @@ write({'state':'open'})</field>
         </record>
         <record id="trans_open_cancel" model="workflow.transition">
             <field name="act_from" ref="act_open"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">cancel</field>
+        </record>
+        <record id="trans_done_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_done"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">cancel</field>
         </record>
