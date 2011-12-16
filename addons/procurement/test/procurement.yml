@@ -1,11 +1,7 @@
 -
-  For test the procurement module, First I have to check current product quantity.
+  For test the procurement process, First I have to apply a minimum stock rule on product
 -
-  !python {model: product.product}: |
-    product = self.browse(cr, uid, ref('product.product_product_cpu2'))
-    assert product.virtual_available <= 0.0,'Virtual stock have more quantities. so, not possible to check minimum stock rule process'
--
-  I create minimum stock rule for product CPU2.
+  I create minimum stock rule for product.
 -
   !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op0}:
     company_id: base.main_company
@@ -19,21 +15,23 @@
     qty_multiple: 1
     warehouse_id: stock.warehouse0
 -
-  I update product quantity and check the stock moves are properly done or not.
+  Check product quantity and update it, if needed for apply a minimum stock rule.
 -
   !python {model: product.product}: |
-    change_qty = self.pool.get('stock.change.product.qty')
     product = self.browse(cr, uid, ref('product.product_product_cpu2'))
-    ids = change_qty.create(cr, uid, {'location_id' : ref('stock.stock_location_stock'), 'new_quantity': 4, 'product_id': product.id})
-    change_qty.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
+    if product.virtual_available < 5.0:
+      change_qty = self.pool.get('stock.change.product.qty')
+      ids = change_qty.create(cr, uid, {'location_id' : ref('stock.stock_location_stock'), 'new_quantity': 4, 'product_id': product.id})
+      change_qty.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
     assert product.qty_available == 4,"Product quantity is not updated."
+    assert product.virtual_available < 5.0,'Virtual stock have more quantities.'
 -
   I run the scheduler.
 -
   !python {model: procurement.order}: |
     self.run_scheduler(cr, uid)
 -
-  I check that procurement order created.
+  I check that procurement order is based on minimum stock rule.
 -
   !python {model: procurement.order}: |
     proc_ids = self.search(cr, uid, [('product_id','=', ref('product.product_product_cpu2'))])
@@ -83,7 +81,7 @@
     proc = self.browse(cr, uid, [proc_id])[0]
     assert proc.state == 'ready' or 'exception',"Procurement should be in Ready or Exception state"
 -
-  I compute minimum stock .
+  I compute minimum stock.
 -
   !python {model: procurement.orderpoint.compute}: |
     proc_id = context.get('proc')
@@ -91,4 +89,3 @@
     values = self.default_get(cr, uid, ['automatic'], context)
     ids = self.create(cr, uid, values, context)
     self.procure_calculation(cr, uid, [ids], context)
-

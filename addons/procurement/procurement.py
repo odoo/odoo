@@ -457,21 +457,6 @@ class procurement_order(osv.osv):
         return res
 
 procurement_order()
-# Dead Code
-# =========
-#class StockPicking(osv.osv):
-#    _inherit = 'stock.picking'
-#    def test_finished(self, cursor, user, ids):
-#        wf_service = netsvc.LocalService("workflow")
-#        res = super(StockPicking, self).test_finished(cursor, user, ids)
-#        for picking in self.browse(cursor, user, ids):
-#            for move in picking.move_lines:
-#                if move.state == 'done':
-#                    for procurement in move.procurements:
-#                        wf_service.trg_validate(user, 'procurement.order',
-#                                procurement.id, 'button_check', cursor)
-#        return res
-#StockPicking()
 
 class stock_warehouse_orderpoint(osv.osv):
     """
