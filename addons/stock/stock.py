@@ -1361,10 +1361,16 @@ class stock_production_lot(osv.osv):
             res.append((record['id'], name))
         return res
     
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
-        ids = self.search(cr, user, [('prefix',operator,name)]+ args, limit=limit, context=context)
-        result = self.name_get(cr, user, ids, context=context)
-        return result
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        args = args or []
+        ids = []
+        if name:
+            ids = self.search(cr, uid, [('prefix', operator, name)] + args, limit=limit, context=context or {})
+            if not ids:
+                ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context or {})
+        else:
+            ids = self.search(cr, uid, args, limit=limit, context=context or {})
+        return self.name_get(cr, uid, ids, context or {})
 
     _name = 'stock.production.lot'
     _description = 'Production lot'
