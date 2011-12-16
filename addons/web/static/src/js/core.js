@@ -629,7 +629,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     self.rpc('/web/webclient/csslist', {mods: modules}, self.do_load_css),
                     self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb),
                     self.rpc('/web/webclient/jslist', {mods: modules}).pipe(function(files) {
-                        self.do_load_js(file_list.concat(files)); 
+                        return self.do_load_js(file_list.concat(files)); 
                     })
                 ).then(function() {
                     self.ready.resolve();
