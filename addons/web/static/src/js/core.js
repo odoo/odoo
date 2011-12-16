@@ -385,6 +385,14 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.ready = $.Deferred();
         return this.session_init();
     },
+
+    /**
+     * Called when a rpc call fail due to an invalid session.
+     * By default, it's a noop
+     */
+    on_session_invalid: function(retry_callback) {
+    },
+
     /**
      * Executes an RPC call, registering the provided callbacks.
      *
