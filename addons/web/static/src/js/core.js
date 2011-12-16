@@ -558,6 +558,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             return deferred;
         });
     },
+
+    is_valid: function() {
+        return !!this.uid;
+    },
+
     /**
      * The session is validated either by login or by restoration of a previous session
      */
