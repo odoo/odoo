@@ -808,7 +808,6 @@ class share_wizard(osv.osv_memory):
         if search:
             js_options['search_view'] = True
 
-        
         js_options_str = (', ' + simplejson.dumps(js_options)) if js_options else ''
 
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default=None, context=context)
@@ -817,12 +816,7 @@ class share_wizard(osv.osv_memory):
         return """
             <script type="text/javascript">
                 (function() {
-                    var session = new openerp.init(%(init)s);
-                    var target = session.currentScript();
-                    session.connection.connect(%(server)s, %(dbname)s, %(login)s, %(password)s, function() {
-                        var client = new session.web.EmbeddedClient(%(action)d%(options)s);
-                        client.insertAfter(target);
-                    });
+                    new openerp.init(%(init)s).embed(%(server)s, %(dbname)s, %(login)s, %(password)s,%(action)d%(options)s);
                 })();
             </script>
         """ % {
