@@ -1294,13 +1294,16 @@ class Export(View):
 
         records = []
         for field_name, field in fields_sequence:
-            if import_compat and (exclude and field_name in exclude):
-                continue
-            if import_compat and field.get('readonly'):
-                # If none of the field's states unsets readonly, skip the field
-                if all(dict(attrs).get('readonly', True)
-                       for attrs in field.get('states', {}).values()):
+            if import_compat:
+                if exclude and field_name in exclude:
                     continue
+                if 'function' in field:
+                    continue
+                if field.get('readonly'):
+                    # If none of the field's states unsets readonly, skip the field
+                    if all(dict(attrs).get('readonly', True)
+                           for attrs in field.get('states', {}).values()):
+                        continue
 
             id = prefix + (prefix and '/'or '') + field_name
             name = parent_name + (parent_name and '/' or '') + field['string']

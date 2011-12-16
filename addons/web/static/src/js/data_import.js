@@ -111,7 +111,11 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             });
         }
         _(fields).each(function (field, field_name) {
-            if (field_name === 'id') { return; }
+            // Ignore spec for id field
+            // Don't import function fields (function and related)
+            if (field_name === 'id' || 'function' in field) {
+                return;
+            }
             var f = {
                 id: field_name,
                 name: field_name,
