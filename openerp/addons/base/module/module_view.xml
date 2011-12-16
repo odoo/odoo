@@ -52,6 +52,11 @@
                             filter_domain="['|', ('name','ilike',self), ('shortdesc','ilike',self)]"
                             string="Name"/>
                         <field name="description" string="Keywords"/>
+                        <field name="category_id">
+                            <filter name="no_hidden" help="Hide technical modules"
+                                    icon="STOCK_REMOVE" groups="base.group_no_one"
+                                    domain="['!', ('category_id.parent_id','child_of','Hidden')]"/>
+                        </field>
                     </group>
                </search>
             </field>
@@ -196,8 +201,7 @@
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">['!', ('category_id.parent_id','child_of','Hidden')]</field>
-            <field name="context">{'search_default_app':1}</field>
+            <field name="context">{'search_default_app':1, 'search_default_no_hidden': 1}</field>
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help">You can install new modules in order to activate new features, menu, reports or data in your OpenERP instance. To install some modules, click on the button "Install" from the form view and then click on "Start Upgrade".</field>
         </record>
