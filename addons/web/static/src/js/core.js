@@ -1128,12 +1128,26 @@ if ($.blockUI) {
 
 /** Configure default qweb */
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
+/**
+ * Lazy translation function, only performs the translation when actually
+ * printed (e.g. inserted into a template)
+ *
+ * Useful when defining translatable strings in code evaluated before the
+ * translation database is loaded, as class attributes or at the top-level of
+ * an OpenERP Web module
+ *
+ * @param {String} s string to translate
+ * @returns {Object} lazy translation object
+ */
+openerp.web._lt = function (s) {
+    return {toString: function () { return openerp.web._t(s); }}
+};
 openerp.web.qweb = new QWeb2.Engine();
 openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
 openerp.web.qweb.default_dict = {
     '_' : _,
     '_t' : openerp.web._t
-}
+};
 openerp.web.qweb.format_text_node = function(s) {
     // Note that 'this' is the Qweb Node of the text
     var translation = this.node.parentNode.attributes['t-translation'];

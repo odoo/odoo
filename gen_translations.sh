@@ -47,7 +47,7 @@ then
     extract_module web_rpc
 elif [ -n "$2" ]
 then
-    ./npybabel.py extract -F babel.cfg -o $2 -k _t --no-default-keywords $1
+    ./npybabel.py extract -F babel.cfg -o $2 -k _t -k _lt --no-default-keywords $1
 else
     usage
 fi

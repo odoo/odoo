@@ -4,10 +4,11 @@
 
 openerp.web_diagram = function (openerp) {
 var QWeb = openerp.web.qweb,
-      _t = openerp.web._t;
+      _t = openerp.web._t,
+     _lt = openerp.web._lt;
 openerp.web.views.add('diagram', 'openerp.web.DiagramView');
 openerp.web.DiagramView = openerp.web.View.extend({
-    display_name: {toString: function () { return _t('Diagram'); }},
+    display_name: _lt('Diagram'),
     searchable: false,
     init: function(parent, dataset, view_id, options) {
         this._super(parent);

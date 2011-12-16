@@ -4,11 +4,11 @@
 
 openerp.web.view_tree = function(openerp) {
 var QWeb = openerp.web.qweb,
-      _t = openerp.web._t;
+      _lt = openerp.web._lt;
 
 openerp.web.views.add('tree', 'openerp.web.TreeView');
 openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# */{
-    display_name: {toString: function () { return _t('Tree'); }},
+    display_name: _lt('Tree'),
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
