@@ -4,22 +4,25 @@ openerp.share = function(instance) {
 function launch_wizard(self, view) {
         var action = view.widget_parent.action;
         var Share = new instance.web.DataSet(self, 'share.wizard', view.dataset.get_context());
-        var domain = view.dataset.domain;
-
+        var domain = new instance.web.CompoundDomain(view.dataset.domain);
         if (view.fields_view.type == 'form') {
             domain = new instance.web.CompoundDomain(domain, [['id', '=', view.datarecord.id]]);
         }
-
-        Share.create({
-            name: action.name,
-            domain: domain,
-            action_id: action.id,
-            view_type: view.fields_view.type,
-        }, function(result) {
-            var share_id = result.result;
-            var step1 = Share.call('go_step_1', [[share_id],], function(result) {
-                var action = result;
-                self.do_action(action);
+        self.rpc('/web/session/eval_domain_and_context', {
+            domains: [domain],
+            contexts: [view.dataset.context]
+        }, function (result) {
+            Share.create({
+                name: action.name,
+                domain: result.domain,
+                action_id: action.id,
+                view_type: view.fields_view.type,
+            }, function(result) {
+                var share_id = result.result;
+                var step1 = Share.call('go_step_1', [[share_id],], function(result) {
+                    var action = result;
+                    self.do_action(action);
+                });
             });
         });
 }

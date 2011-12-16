@@ -130,6 +130,43 @@ account_payment_term_line()
 class account_account_type(osv.osv):
     _name = "account.account.type"
     _description = "Account Type"
+
+    def _get_current_report_type(self, cr, uid, ids, name, arg, context=None):
+        obj_data = self.pool.get('ir.model.data')
+        obj_financial_report = self.pool.get('account.financial.report') 
+        res = {}
+        financial_report_ref = {
+            'asset': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_assets0')[1], context=context),
+            'liability': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_liability0')[1], context=context),
+            'income': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_income0')[1], context=context),
+            'expense': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_expense0')[1], context=context),
+        }
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = 'none'
+            for key, financial_report in financial_report_ref.items():
+                list_ids = [x.id for x in financial_report.account_type_ids]
+                if record.id in list_ids:
+                    res[record.id] = key
+        return res
+
+    def _save_report_type(self, cr, uid, account_type_id, field_name, field_value, arg, context=None):
+        obj_data = self.pool.get('ir.model.data')
+        obj_financial_report = self.pool.get('account.financial.report') 
+        #unlink if it exists somewhere in the financial reports related to BS or PL
+        financial_report_ref = {
+            'asset': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_assets0')[1], context=context),
+            'liability': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_liability0')[1], context=context),
+            'income': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_income0')[1], context=context),
+            'expense': obj_financial_report.browse(cr, uid, obj_data.get_object_reference(cr, uid, 'account','account_financial_report_expense0')[1], context=context),
+        }
+        for key, financial_report in financial_report_ref.items():
+            list_ids = [x.id for x in financial_report.account_type_ids]
+            if account_type_id in list_ids:
+                obj_financial_report.write(cr, uid, [financial_report.id], {'account_type_ids': [(3, account_type_id)]})
+        #write it in the good place
+        if field_value != 'none':
+            return obj_financial_report.write(cr, uid, [financial_report_ref[field_value].id], {'account_type_ids': [(4, account_type_id)]})
+
     _columns = {
         'name': fields.char('Account Type', size=64, required=True, translate=True),
         'code': fields.char('Code', size=32, required=True),
@@ -139,19 +176,16 @@ class account_account_type(osv.osv):
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'sign': fields.selection([(-1, 'Reverse balance sign'), (1, 'Preserve balance sign')], 'Sign on Reports', required=True, help='For accounts that are typically more debited than credited and that you would like to print as negative amounts in your reports, you should reverse the sign of the balance; e.g.: Expense account. The same applies for  accounts that are typically more credited than debited and that you would like to print as positive amounts in your reports; e.g.: Income account.'),
-        'report_type':fields.selection([
-            ('none','/'),
-            ('income','Profit & Loss (Income Accounts)'),
-            ('expense','Profit & Loss (Expense Accounts)'),
-            ('asset','Balance Sheet (Asset Accounts)'),
-            ('liability','Balance Sheet (Liability Accounts)')
-        ],'P&L / BS Category', select=True, readonly=False, help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
+        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category', 
+            selection= [('none','/'),
+                        ('income', _('Profit & Loss (Income account)')),
+                        ('expense', _('Profit & Loss (Expense account)')),
+                        ('asset', _('Balance Sheet (Asset account)')),
+                        ('liability', _('Balance Sheet (Liability account)'))], help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
         'note': fields.text('Description'),
     }
     _defaults = {
         'close_method': 'none',
-        'sign': 1,
         'report_type': 'none',
     }
     _order = "code"
@@ -2912,6 +2946,7 @@ class account_financial_report(osv.osv):
         return res
 
     def _get_balance(self, cr, uid, ids, name, args, context=None):
+        account_obj = self.pool.get('account.account')
         res = {}
         res_all = {}
         for report in self.browse(cr, uid, ids, context=context):
@@ -2921,6 +2956,12 @@ class account_financial_report(osv.osv):
             elif report.type == 'accounts':
                 # it's the sum of balance of the linked accounts
                 for a in report.account_ids:
+                    balance += a.balance
+            elif report.type == 'account_type':
+                # it's the sum of balance of the leaf accounts with such an account type
+                report_types = [x.id for x in report.account_type_ids]
+                account_ids = account_obj.search(cr, uid, [('user_type','in', report_types), ('type','!=','view')], context=context)
+                for a in account_obj.browse(cr, uid, account_ids, context=context):
                     balance += a.balance
             elif report.type == 'account_report' and report.account_report_id:
                 # it's the amount of the linked report
@@ -2944,7 +2985,6 @@ class account_financial_report(osv.osv):
         'parent_id': fields.many2one('account.financial.report', 'Parent'),
         'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
         'sequence': fields.integer('Sequence'),
-        'note': fields.text('Notes'),
         'balance': fields.function(_get_balance, 'Balance'),
         'level': fields.function(_get_level, string='Level', store=True, type='integer'),
         'type': fields.selection([
@@ -2954,13 +2994,20 @@ class account_financial_report(osv.osv):
             ('account_report','Report Value'),
             ],'Type'),
         'account_ids': fields.many2many('account.account', 'account_account_financial_report', 'report_line_id', 'account_id', 'Accounts'),
-        'display_detail': fields.boolean('Display details', help='Display every account with its balance instead of the sum.'),
+        'display_detail': fields.selection([
+            ('no_detail','No detail'),
+            ('detail_flat','Display children flat'),
+            ('detail_with_hierarchy','Display children with hierarchy')
+            ], 'Display details'),
         'account_report_id':  fields.many2one('account.financial.report', 'Report Value'),
         'account_type_ids': fields.many2many('account.account.type', 'account_account_financial_report_type', 'report_id', 'account_type_id', 'Account Types'),
+        'sign': fields.selection([(-1, 'Reverse balance sign'), (1, 'Preserve balance sign')], 'Sign on Reports', required=True, help='For accounts that are typically more debited than credited and that you would like to print as negative amounts in your reports, you should reverse the sign of the balance; e.g.: Expense account. The same applies for accounts that are typically more credited than debited and that you would like to print as positive amounts in your reports; e.g.: Income account.'),
     }
 
     _defaults = {
         'type': 'sum',
+        'display_detail': 'detail_flat',
+        'sign': 1,
     }
 
 account_financial_report()

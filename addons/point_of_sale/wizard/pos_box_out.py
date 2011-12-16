@@ -75,7 +75,7 @@ class pos_box_out(osv.osv_memory):
         res_obj = self.pool.get('res.users')
         for data in  self.read(cr, uid, ids, context=context):
             curr_company = res_obj.browse(cr, uid, uid, context=context).company_id.id
-            statement_id = statement_obj.search(cr, uid, [('journal_id', '=', data['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid), ('state', '=', 'open')], context=context)
+            statement_ids = statement_obj.search(cr, uid, [('journal_id', '=', data['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid), ('state', '=', 'open')], context=context)
             monday = (datetime.today() + relativedelta(weekday=0)).strftime('%Y-%m-%d')
             sunday = (datetime.today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')
             done_statmt = statement_obj.search(cr, uid, [('date', '>=', monday+' 00:00:00'), ('date', '<=', sunday+' 23:59:59'), ('journal_id', '=', data['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid)], context=context)
@@ -85,21 +85,11 @@ class pos_box_out(osv.osv_memory):
             acc_id = product.property_account_income
             if not acc_id:
                 raise osv.except_osv(_('Error !'), _('please check that account is set to %s')%(product.name))
-            if not statement_id:
+            if not statement_ids:
                 raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
-            if statement_id:
-                statement_id = statement_id[0]
-            if not statement_id:
-                statement_id = statement_obj.create(cr, uid, {
-                                    'date': time.strftime('%Y-%m-%d 00:00:00'),
-                                    'journal_id': data['journal_id'],
-                                    'company_id': curr_company,
-                                    'user_id': uid,
-                                }, context=context)
-            vals['statement_id'] = statement_id
+            vals['statement_id'] = statement_ids[0]
             vals['journal_id'] = data['journal_id']
-            if acc_id:
-                vals['account_id'] = acc_id.id
+            vals['account_id'] = acc_id.id
             amount = data['amount'] or 0.0
             if data['amount'] > 0:
                 amount = -data['amount']

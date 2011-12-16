@@ -12,6 +12,9 @@
             <field ref="base.res_partner_address_8" name="partner_invoice_id"/>
             <field ref="base.res_partner_address_8" name="partner_shipping_id"/>
             <field ref="base.res_partner_address_8" name="partner_order_id"/>
+            <field name="order_policy">picking</field>
+            <field name="invoice_quantity">procurement</field> 
+            <field name="note">Invoice after delivery</field>          
         </record>
 
         <!--Resource: sale.order.line-->
@@ -19,9 +22,9 @@
         <record id="line" model="sale.order.line">
             <field name="order_id" ref="order"/>
             <field name="name">New server config + material</field>
-            <field model="product.product" name="product_id" search="[]"/>
-            <field model="product.uom" name="product_uom" search="[]"/>
-            <field name="price_unit">123</field>
+            <field name="product_id" ref="product.product_product_mb1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">123.20</field>
             <field name="type">make_to_stock</field>
         </record>
 
@@ -30,20 +33,20 @@
             <field name="name">[PC1] Basic PC</field>
             <field name="product_id" ref="product.product_product_pc1"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">450</field>
+            <field name="price_unit">450.50</field>
             <field name="product_uom_qty">3</field>
             <field name="product_uos_qty">3</field>
             <field name="type">make_to_stock</field>
         </record>
         <record id="line13" model="sale.order.line">
             <field name="order_id" ref="order"/>
-            <field name="name">[PC1] Basic PC</field>
-            <field name="product_id" ref="product.product_product_pc1"/>
+            <field name="name">[PC3] Medium PC</field>
+            <field name="product_id" ref="product.product_product_pc3"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">450</field>
-            <field name="product_uom_qty">3</field>
-            <field name="product_uos_qty">3</field>
+            <field name="price_unit">900</field>
+            <field name="product_uom_qty">5</field>
             <field name="type">make_to_stock</field>
+            <field name="delay">1</field>
         </record>
         <record id="line12" model="sale.order.line">
             <field name="order_id" ref="order"/>
@@ -66,6 +69,9 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_9"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_9"/>
             <field name="partner_order_id" ref="base.res_partner_address_9"/>
+            <field name="invoice_quantity">order</field>
+            <field name="order_policy">postpaid</field>
+            
         </record>
 
         <!--Resource: sale.order.line-->
@@ -99,6 +105,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_8"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_8"/>
             <field name="partner_order_id" ref="base.res_partner_address_8"/>
+            <field name="order_policy">prepaid</field>
         </record>
         <record id="line5" model="sale.order.line">
             <field name="order_id" ref="order3"/>
@@ -120,7 +127,6 @@
             <field name="type">make_to_order</field>
             <field name="delay">7</field>
         </record>
-        <workflow action="order_confirm" model="sale.order" ref="order3"/>
 
         <!--Resource: sale.order-->
         
@@ -176,6 +182,16 @@
             <field name="type">make_to_order</field>
             <field name="delay">15</field>
         </record>
+        <record id="line52" model="sale.order.line">
+            <field name="order_id" ref="order5"/>
+            <field name="name">[CPU1] Processor AMD Athlon XP 1800+</field>
+            <field name="product_id" ref="product.product_product_cpu1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">75</field>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uos_qty">3</field>
+            <field name="type">make_to_stock</field>
+        </record>
         <workflow action="order_confirm" model="sale.order" ref="order5"/>
 
         <!--Resource: sale.order-->
@@ -228,7 +244,7 @@
             <field name="name">[MB1] Mainboard ASUStek A7N8X</field>
             <field name="product_id" ref="product.product_product_mb1"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_uom_qty">4</field>
+            <field name="product_uom_qty">15</field>
             <field name="price_unit">250</field>
             <field name="type">make_to_order</field>
             <field name="delay">15</field>
@@ -238,13 +254,12 @@
             <field name="name">[MB2] Mainboard ASUStek A7V8X-X</field>
             <field name="product_id" ref="product.product_product_mb2"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_uom_qty">4</field>
+            <field name="product_uom_qty">5</field>
             <field name="price_unit">500</field>
             <field name="type">make_to_order</field>
             <field name="delay">15</field>
         </record>
-        <workflow action="order_confirm" model="sale.order" ref="order7"/>
-        <workflow action="manual_invoice" model="sale.order" ref="order7"/>
+        
         <!-- Run all schedulers -->
         <function model="procurement.order" name="run_scheduler"/>
 
@@ -257,8 +272,9 @@
             <field name="type">service</field>
             <field name="list_price">150.0</field>
             <field name="standard_price">100.0</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="supply_method">produce</field>
+            <field name="uom_id" ref="product.uom_day"/>
+            <field name="uom_po_id" ref="product.uom_day"/>
         </record>
 
     <record id="base.user_demo" model="res.users">
