@@ -185,9 +185,7 @@ class account_asset_asset(osv.osv):
         return self.write(cr, uid, ids, {'state': 'close'}, context=context)
 
     def set_to_draft(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {
-            'state':'draft'
-        }, context)
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT
