@@ -138,9 +138,10 @@ class JsonRequest(WebRequest):
         :returns: an utf8 encoded JSON-RPC2 or JSONP reply
         """
         args = self.httprequest.args
-        jsonp = args.get('jsonp', False)
+        jsonp = args.get('jsonp')
         requestf = None
         request = None
+        print "ARGS",args
 
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
@@ -149,13 +150,13 @@ class JsonRequest(WebRequest):
             headers=[('Content-Type', 'text/plain; charset=utf-8')]
             r = werkzeug.wrappers.Response(request_id, headers=headers)
             return r
+        elif jsonp and args.get('r'):
+            # jsonp method GET
+            request = args.get('r')
         elif jsonp and args.get('id'):
             # jsonp 2 steps step2 GET: run and return result
             self.init(args)
             request = self.session.jsonp_requests.pop(args.get(id), "")
-        elif jsonp and args.get('r'):
-            # jsonp method GET
-            request = args.get('r')
         else:
             # regular jsonrpc2
             requestf = self.httprequest.stream
@@ -167,6 +168,7 @@ class JsonRequest(WebRequest):
             if requestf:
                 self.jsonrequest = simplejson.load(requestf, object_hook=nonliterals.non_literal_decoder)
             else:
+                print "CACA",request
                 self.jsonrequest = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
             self.init(self.jsonrequest.get("params", {}))
             if _logger.isEnabledFor(logging.DEBUG):

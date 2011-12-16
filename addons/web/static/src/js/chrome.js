@@ -1123,6 +1123,7 @@ openerp.web.EmbeddedClient = openerp.web.Widget.extend({
 });
 
 openerp.web.embed = function (origin, dbname, login, key, action, options) {
+    // TODO insert <link rel="stylesheet" href="origin +'/web/webclient/css'"> into dom head
     var currentScript = document.currentScript;
     if (!currentScript) {
         var sc = document.getElementsByTagName('script');
@@ -1130,10 +1131,11 @@ openerp.web.embed = function (origin, dbname, login, key, action, options) {
     }
     openerp.connection.bind(origin).then(function () {
         openerp.connection.session_authenticate(dbname, login, key).then(function () {
-            var client = new session.web.EmbeddedClient(action_id, options);
+            var client = new openerp.web.EmbeddedClient(action, options);
             client.insertAfter(currentScript);
         });
     });
+
 }
 
 };

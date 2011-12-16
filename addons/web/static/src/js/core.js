@@ -480,7 +480,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         }, url);
         var payload_str = JSON.stringify(payload);
         var payload_url = $.param({r:payload_str});
-        if(playload_url.length < 2000) {
+        if(payload_url.length < 2000) {
             // Direct jsonp request
             ajax.data.r = payload_str;
             return $.ajax(ajax);
