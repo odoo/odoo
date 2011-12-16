@@ -54,7 +54,7 @@ def py2exe_options():
                     "skip_archive": 1,
                     "optimize": 2,
                     "dist_dir": 'dist',
-                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "email", "encodings", "imaplib", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber" "vobject", "xml", "xml", "xml.dom", "xml.xpath", "yaml", ],
+                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "email", "encodings", "imaplib", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber", "vobject", "xml", "xml", "xml.dom", "xml.xpath", "yaml", ],
                     "excludes" : ["Tkconstants","Tkinter","tcl"],
                 }
             }
