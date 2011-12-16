@@ -774,7 +774,7 @@ class share_wizard(osv.osv_memory):
         return """
 <script type="text/javascript" src="http://localhost:8069/web/webclient/js"></script>
 <script type="text/javascript">
-    new openerp.init(%(init)s).embed(%(server)s, %(dbname)s, %(login)s, %(password)s,%(action)d%(options)s);
+    new openerp.init(%(init)s).web.embed(%(server)s, %(dbname)s, %(login)s, %(password)s,%(action)d%(options)s);
 </script> """ % {
             'init': simplejson.dumps(openerp.conf.server_wide_modules),
             'server': simplejson.dumps(base_url),
