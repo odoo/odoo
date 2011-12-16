@@ -10,14 +10,13 @@
 -
   I create new lead to check record rule.
 -
-  !record {model: crm.lead, id: crm_lead_test_rules_id }:
-    name: 'test leads Ruels'
+  !record {model: crm.lead, id: crm_lead_test_rules_id}:
+    name: 'Test lead rules'
     user_id: base.user_root
     partner_id: base.res_partner_asus
 -
   I check record rule is apply and responsible is changed.
 -
   !python {model: crm.lead}: |
-    user = self.browse(cr, uid, ref('crm_lead_test_rules_id'))
-    demo_user = self.pool.get("res.users").browse(cr, uid, ref('base.user_demo'))
-    assert user.user_id.id == demo_user.id, "Responsible is Not changed." 
+    lead_user = self.browse(cr, uid, ref('crm_lead_test_rules_id'))
+    assert lead_user.user_id.id == ref('base.user_demo'), "Responsible of lead is not changed." 
