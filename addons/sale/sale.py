@@ -701,9 +701,6 @@ class sale_order(osv.osv):
             'location_id': order.shop_id.warehouse_id.lot_stock_id.id,
             'procure_method': line.type,
             'move_id': move_id,
-            # Added by mrp, but mrp is not a dependency, this will trigger a warning
-            # if mrp is not installed.
-            'property_ids': [(6, 0, [x.id for x in line.property_ids])],
             'company_id': order.company_id.id,
         }
 
