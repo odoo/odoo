@@ -37,6 +37,7 @@ class OpenERPSession(object):
         self.context = {}
         self.contexts_store = {}
         self.domains_store = {}
+        self.jsonp_requests = {}     # FIXME use a LRU
         
     def __getstate__(self):
         state = dict(self.__dict__)

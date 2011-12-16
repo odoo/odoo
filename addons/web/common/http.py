@@ -6,11 +6,12 @@ import ast
 import contextlib
 import functools
 import logging
-import urllib
 import os
 import pprint
 import sys
+import threading
 import traceback
+import urllib
 import uuid
 import xmlrpclib
 
@@ -128,17 +129,37 @@ class JsonRequest(WebRequest):
            "id": null}
 
     """
-
-    def dispatch(self, controller, method, requestf=None, request=None):
-        """ Calls the method asked for by the JSON-RPC2 request
+    def dispatch(self, controller, method):
+        """ Calls the method asked for by the JSON-RPC2 or JSONP request
 
         :param controller: the instance of the controller which received the request
         :param method: the method which received the request
-        :param requestf: a file-like object containing an encoded JSON-RPC2 request
-        :param request: a JSON-RPC2 request
 
-        :returns: an utf8 encoded JSON-RPC2 reply
+        :returns: an utf8 encoded JSON-RPC2 or JSONP reply
         """
+        args = self.httprequest.args
+        jsonp = args.get('jsonp', False)
+        requestf = None
+        request = None
+
+        if jsonp and self.httprequest.method == 'POST':
+            # jsonp 2 steps step1 POST: save call
+            self.init(args)
+            req.session.jsonp_requests[args.get('id')] = self.httprequest.form['r']
+            headers=[('Content-Type', 'text/plain; charset=utf-8')]
+            r = werkzeug.wrappers.Response(request_id, headers=headers)
+            return r
+        elif jsonp and args.get('id'):
+            # jsonp 2 steps step2 GET: run and return result
+            self.init(args)
+            request = self.session.jsonp_requests.pop(args.get(id), "")
+        elif jsonp and args.get('r'):
+            # jsonp method GET
+            request = args.get('r')
+        else:
+            # regular jsonrpc2
+            requestf = self.httprequest.stream
+
         response = {"jsonrpc": "2.0" }
         error = None
         try:
@@ -188,10 +209,16 @@ class JsonRequest(WebRequest):
 
         if _logger.isEnabledFor(logging.DEBUG):
             _logger.debug("<--\n%s", pprint.pformat(response))
-        content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
-        return werkzeug.wrappers.Response(
-            content, headers=[('Content-Type', 'application/json'),
-                              ('Content-Length', len(content))])
+
+        if jsonp:
+            mime = 'application/javascript'
+            body = "%s(%s);" % (jsonp, simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder),)
+        else:
+            mime = 'application/json'
+            body = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
+
+        r = werkzeug.wrappers.Response(body, headers=[('Content-Type', mime), ('Content-Length', len(body))])
+        return r
 
 def jsonrequest(f):
     """ Decorator marking the decorated method as being a handler for a
@@ -205,8 +232,7 @@ def jsonrequest(f):
     """
     @functools.wraps(f)
     def json_handler(controller, request, config):
-        return JsonRequest(request, config).dispatch(
-            controller, f, requestf=request.stream)
+        return JsonRequest(request, config).dispatch(controller, f)
     json_handler.exposed = True
     return json_handler
 
@@ -281,17 +307,19 @@ STORES = {}
 
 @contextlib.contextmanager
 def session_context(request, storage_path, session_cookie='sessionid'):
-    session_store = STORES.get(storage_path)
+    session_store, session_lock = STORES.get(storage_path, (None, None))
     if not session_store:
         session_store = werkzeug.contrib.sessions.FilesystemSessionStore(
             storage_path)
-        STORES[storage_path] = session_store
+        session_lock = threading.Lock()
+        STORES[storage_path] = session_store, session_lock
 
     sid = request.cookies.get(session_cookie)
-    if sid:
-        request.session = session_store.get(sid)
-    else:
-        request.session = session_store.new()
+    with session_lock:
+        if sid:
+            request.session = session_store.get(sid)
+        else:
+            request.session = session_store.new()
 
     try:
         yield request.session
@@ -300,32 +328,42 @@ def session_context(request, storage_path, session_cookie='sessionid'):
         # either by login process or by HTTP requests without an OpenERP
         # session id, and are generally noise
         for key, value in request.session.items():
-            if isinstance(value, session.OpenERPSession) and not value._uid:
+            if (isinstance(value, session.OpenERPSession) 
+                and not value._uid
+                and not value.jsonp_requests
+            ):
+                _logger.info('remove session %s: %r', key, value.jsonp_requests)
                 del request.session[key]
 
-        # FIXME: remove this when non-literals disappear
-        if sid:
-            # Re-load sessions from storage and merge non-literal
-            # contexts and domains (they're indexed by hash of the
-            # content so conflicts should auto-resolve), otherwise if
-            # two requests alter those concurrently the last to finish
-            # will overwrite the previous one, leading to loss of data
-            # (a non-literal is lost even though it was sent to the
-            # client and client errors)
-            #
-            # note that domains_store and contexts_store are append-only (we
-            # only ever add items to them), so we can just update one with the
-            # other to get the right result, if we want to merge the
-            # ``context`` dict we'll need something smarter
-            in_store = session_store.get(sid)
-            for k, v in request.session.iteritems():
-                stored = in_store.get(k)
-                if stored and isinstance(v, session.OpenERPSession)\
-                        and v != stored:
-                    v.contexts_store.update(stored.contexts_store)
-                    v.domains_store.update(stored.domains_store)
+        with session_lock:
+            if sid:
+                # Re-load sessions from storage and merge non-literal
+                # contexts and domains (they're indexed by hash of the
+                # content so conflicts should auto-resolve), otherwise if
+                # two requests alter those concurrently the last to finish
+                # will overwrite the previous one, leading to loss of data
+                # (a non-literal is lost even though it was sent to the
+                # client and client errors)
+                #
+                # note that domains_store and contexts_store are append-only (we
+                # only ever add items to them), so we can just update one with the
+                # other to get the right result, if we want to merge the
+                # ``context`` dict we'll need something smarter    
+                in_store = session_store.get(sid)
+                for k, v in request.session.iteritems():
+                    stored = in_store.get(k)
+                    if stored and isinstance(v, session.OpenERPSession)\
+                            and v != stored:
+                        v.contexts_store.update(stored.contexts_store)
+                        v.domains_store.update(stored.domains_store)
+                        v.jsonp_requests.update(stored.jsonp_requests)
 
-        session_store.save(request.session)
+                # add missing keys
+                for k, v in in_store.iteritems():
+                    if k not in request.session:
+                        request.session[k] = v
+
+            session_store.save(request.session)
 
 #----------------------------------------------------------
 # OpenERP Web Module/Controller Loading and URL Routing

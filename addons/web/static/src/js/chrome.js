@@ -629,9 +629,6 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
             callback: continuation || function() {}
         });
     },
-    on_logout: function() {
-        this.session.logout();
-    }
 });
 
 openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
@@ -995,47 +992,52 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this._super(null, element_id);
         openerp.webclient = this;
 
-        var params = {};
-        if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
-            this.$element.addClass("kitten-mode-activated");
-            this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
-                self.$element.toggleClass('clark-gable');
-            });
-        }
-        this.$element.html(QWeb.render("Interface", params));
-
         this.notification = new openerp.web.Notification(this);
         this.loading = new openerp.web.Loading(this);
         this.crashmanager =  new openerp.web.CrashManager();
 
         this.header = new openerp.web.Header(this);
         this.login = new openerp.web.Login(this);
-        this.header.on_logout.add(this.login.on_logout);
+        this.header.on_logout.add(this.on_logout);
         this.header.on_action.add(this.on_menu_action);
 
-        this.session.on_session_invalid.add(this.login.do_ask_login);
-        this.session.on_session_valid.add_last(this.header.do_update);
-        this.session.on_session_invalid.add_last(this.header.do_update);
-        this.session.on_session_valid.add_last(this.on_logged);
-        this.session.on_session_invalid.add_last(this.on_logged_out);
-
-        this.menu = new openerp.web.Menu(this, "oe_menu", "oe_secondary_menu");
-        this.menu.on_action.add(this.on_menu_action);
-
         this._current_state = null;
-
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.notification.prependTo(this.$element);
-        this.loading.appendTo($('#oe_loading'));
-        this.header.appendTo($("#oe_header"));
-        this.session.start();
-        this.login.appendTo($('#oe_login'));
-        this.menu.start();
+        var self = this;
+        this.session.bind().then(function() {
+            var params = {};
+            if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
+                this.$element.addClass("kitten-mode-activated");
+                this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
+                    self.$element.toggleClass('clark-gable');
+                });
+            }
+            self.$element.html(QWeb.render("Interface", params));
+            self.menu = new openerp.web.Menu(self, "oe_menu", "oe_secondary_menu");
+            self.menu.on_action.add(self.on_menu_action);
+
+            self.notification.prependTo(self.$element);
+            self.loading.appendTo($('#oe_loading'));
+            self.header.appendTo($("#oe_header"));
+            self.login.appendTo($('#oe_login'));
+            self.menu.start();
+            self.login.on_login_invalid();
+        });
+        this.session.ready.then(function() {
+            self.login.on_login_valid();
+            self.header.do_update();
+            self.menu.do_reload();
+            if(self.action_manager)
+                self.action_manager.stop();
+            self.action_manager = new openerp.web.ActionManager(this);
+            self.action_manager.appendTo($("#oe_app"));
+            self.bind_hashchange();
+        });
     },
     do_reload: function() {
-        return $.when(this.session.session_restore(),this.menu.do_reload());
+        return $.when(this.session.session_init(),this.menu.do_reload());
     },
     do_notify: function() {
         var n = this.notification;
@@ -1045,24 +1047,10 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         var n = this.notification;
         n.warn.apply(n, arguments);
     },
-    on_logged: function() {
-        this.menu.do_reload();
-        if(this.action_manager)
-            this.action_manager.stop();
-        this.action_manager = new openerp.web.ActionManager(this);
-        this.action_manager.appendTo($("#oe_app"));
-
-        if (openerp._modules_loaded) { // TODO: find better option than this
-            this.bind_hashchange();
-        } else {
-            this.session.on_modules_loaded.add({        // XXX what about a $.Deferred ?
-                callback: $.proxy(this, 'bind_hashchange'),
-                unique: true,
-                position: 'last'
-            })
-        }
-    },
-    on_logged_out: function() {
+    on_logout: function() {
+        this.session.session_logout();
+        this.login.on_login_invalid();
+        this.header.do_update();
         $(window).unbind('hashchange', this.on_hashchange);
         this.do_push_state({});
         if(this.action_manager)
@@ -1104,6 +1092,47 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         }
     },
 });
+
+openerp.currentScript = function() {
+    var currentScript = document.currentScript;
+    if (!currentScript) {
+        var sc = document.getElementsByTagName('script');
+        currentScript = sc[sc.length-1];
+    }
+    return currentScript;
+};
+
+openerp.web.EmbeddedClient = openerp.web.Widget.extend({
+    template: 'EmptyComponent',
+    init: function(action_id, options) {
+        this._super();
+        // TODO take the xmlid of a action instead of its id 
+        this.action_id = action_id;
+        this.options = options || {};
+        this.am = new openerp.web.ActionManager(this);
+    },
+
+    start: function() {
+        var self = this;
+
+        this.am.appendTo(this.$element.addClass('openerp'));
+
+        return this.rpc("/web/action/load", { action_id: this.action_id }, function(result) {
+            var action = result.result;
+            action.flags = _.extend({
+                //views_switcher : false,
+                search_view : false,
+                action_buttons : false,
+                sidebar : false
+                //pager : false
+            }, self.options, action.flags || {});
+
+            self.am.do_action(action);
+        });
+    },
+
+});
+
 
 };
 
