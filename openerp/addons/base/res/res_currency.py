@@ -24,7 +24,7 @@ import netsvc
 from osv import fields, osv
 import tools
 
-from tools.misc import currency, float_round, float_is_zero, float_compare
+from tools import float_round, float_is_zero, float_compare
 from tools.translate import _
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
