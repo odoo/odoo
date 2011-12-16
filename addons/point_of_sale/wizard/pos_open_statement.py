@@ -75,16 +75,9 @@ class pos_open_statement(osv.osv_memory):
         form_id = form_res and form_res[1] or False
         search_id = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_pos_open_cash_statement_filter')
 
-        return {
-            'domain': "[('id', 'in',[ "+','.join(map(str,st_ids))+"])]",
-            'name': _('Open Cash Registers'),
-            'view_type': 'form',
-            'view_mode': 'tree, form',
-            'search_view_id': search_id and search_id[1] or False ,
-            'res_model': 'account.bank.statement',
-            'views': [(tree_id, 'tree'), (form_id, 'form')],
-            'context': {},
-            'type': 'ir.actions.act_window'
+        return  {
+            'type': 'ir.actions.client',
+            'tag': 'pos.ui',
         }
 pos_open_statement()
 

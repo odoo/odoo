@@ -25,6 +25,10 @@ from tools.translate import _
 class pos_close_statement(osv.osv_memory):
     _name = 'pos.close.statement'
     _description = 'Close Statements'
+    
+    def cancel_wizard(self, cr, uid, ids, context=None):
+        if context.get('cancel_action'):
+            return context['cancel_action']
 
     def close_statement(self, cr, uid, ids, context=None):
         """
@@ -35,6 +39,7 @@ class pos_close_statement(osv.osv_memory):
              @param context: A standard dictionary
              @return : Blank Dictionary
         """
+        context = context or {}
         mod_obj = self.pool.get('ir.model.data')
         statement_obj = self.pool.get('account.bank.statement')
         journal_obj = self.pool.get('account.journal')

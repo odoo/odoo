@@ -1852,23 +1852,41 @@ class stock_move(osv.osv):
                     result[m.picking_id].append( (m, dest) )
         return result
 
-    def _create_chained_picking(self, cr, uid, pick_name, picking, ptype, move, context=None):
-        res_obj = self.pool.get('res.company')
+    def _prepare_chained_picking(self, cr, uid, picking_name, picking, picking_type, moves_todo, context=None):
+        """Prepare the definition (values) to create a new chained picking.
+
+           :param str picking_name: desired new picking name
+           :param browse_record picking: source picking (being chained to)
+           :param str picking_type: desired new picking type
+           :param list moves_todo: specification of the stock moves to be later included in this
+               picking, in the form::
+
+                   [[move, (dest_location, auto_packing, chained_delay, chained_journal,
+                                  chained_company_id, chained_picking_type)],
+                    ...
+                   ]
+
+               See also :meth:`stock_location.chained_location_get`.
+        """
+        res_company = self.pool.get('res.company')
+        return {
+                    'name': picking_name,
+                    'origin': tools.ustr(picking.origin or ''),
+                    'type': picking_type,
+                    'note': picking.note,
+                    'move_type': picking.move_type,
+                    'auto_picking': moves_todo[0][1][1] == 'auto',
+                    'stock_journal_id': moves_todo[0][1][3],
+                    'company_id': moves_todo[0][1][4] or res_company._company_default_get(cr, uid, 'stock.company', context=context),
+                    'address_id': picking.address_id.id,
+                    'invoice_state': 'none',
+                    'date': picking.date,
+                }
+
+    def _create_chained_picking(self, cr, uid, picking_name, picking, picking_type, moves_todo, context=None):
         picking_obj = self.pool.get('stock.picking')
-        pick_id= picking_obj.create(cr, uid, {
-                                'name': pick_name,
-                                'origin': tools.ustr(picking.origin or ''),
-                                'type': ptype,
-                                'note': picking.note,
-                                'move_type': picking.move_type,
-                                'auto_picking': move[0][1][1] == 'auto',
-                                'stock_journal_id': move[0][1][3],
-                                'company_id': move[0][1][4] or res_obj._company_default_get(cr, uid, 'stock.company', context=context),
-                                'address_id': picking.address_id.id,
-                                'invoice_state': 'none',
-                                'date': picking.date,
-                            })
-        return pick_id
+        return picking_obj.create(cr, uid, self._prepare_chained_picking(cr, uid, picking_name, picking, picking_type, moves_todo, context=context))
+
     def create_chained_picking(self, cr, uid, moves, context=None):
         res_obj = self.pool.get('res.company')
         location_obj = self.pool.get('stock.location')

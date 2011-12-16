@@ -610,15 +610,15 @@ class account_invoice(osv.osv):
             res[r[0]].append( r[1] )
         return res
 
-    def copy(self, cr, uid, id, default={}, context=None):
-        if context is None:
-            context = {}
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
         default.update({
             'state':'draft',
             'number':False,
             'move_id':False,
             'move_name':False,
             'internal_number': False,
+            'period_id': False,
         })
         if 'date_invoice' not in default:
             default.update({
@@ -1642,12 +1642,7 @@ class res_partner(osv.osv):
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-
-        if context is None:
-            context = {}
-
+        default = default or {}
         default.update({'invoice_ids' : []})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
