@@ -67,13 +67,17 @@ class product_product(osv.osv):
             context = {}
 
         new_price = datas.get('new_price', 0.0)
-        stock_output_acc = datas.get('stock_output_account', False)
-        stock_input_acc = datas.get('stock_input_account', False)
+        stock_price_diff_account = datas.get('stock_price_diff_account',False)
         journal_id = datas.get('stock_journal', False)
         product_obj=self.browse(cr, uid, ids, context=context)[0]
         account_variation = product_obj.categ_id.property_stock_variation
         account_variation_id = account_variation and account_variation.id or False
         if not account_variation_id: raise osv.except_osv(_('Error!'), _('Variation Account is not specified for Product Category: %s') % (product_obj.categ_id.name))
+        if not stock_price_diff_account:
+            stock_price_diff_account = product_obj.categ_id.property_account_creditor_price_difference_categ and product_obj.categ_id.property_account_creditor_price_difference_categ.id or False
+        if not stock_price_diff_account:
+            raise osv.except_osv(_('Error!'),_('There is no price diffrent account defined ' \
+                            'for this product: "%s" (id: %d)') % (product_obj.name, product_obj.id,))
         move_ids = []
         loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
         for rec_id in ids:
@@ -111,22 +115,10 @@ class product_product(osv.osv):
 
 
                     if diff > 0:
-                        if not stock_input_acc:
-                            stock_input_acc = product.product_tmpl_id.\
-                                property_stock_account_input.id
-                        if not stock_input_acc:
-                            stock_input_acc = product.categ_id.\
-                                    property_stock_account_input_categ.id
-                        if not stock_input_acc:
-                            raise osv.except_osv(_('Error!'),
-                                    _('There is no stock input account defined ' \
-                                            'for this product: "%s" (id: %d)') % \
-                                            (product.name,
-                                                product.id,))
                         amount_diff = qty * diff
                         move_line_obj.create(cr, uid, {
                                     'name': product.name,
-                                    'account_id': stock_input_acc,
+                                    'account_id': stock_price_diff_account,
                                     'debit': amount_diff,
                                     'move_id': move_id,
                                     })
@@ -137,22 +129,10 @@ class product_product(osv.osv):
                                     'move_id': move_id
                                     })
                     elif diff < 0:
-                        if not stock_output_acc:
-                            stock_output_acc = product.product_tmpl_id.\
-                                property_stock_account_output.id
-                        if not stock_output_acc:
-                            stock_output_acc = product.categ_id.\
-                                    property_stock_account_output_categ.id
-                        if not stock_output_acc:
-                            raise osv.except_osv(_('Error!'),
-                                    _('There is no stock output account defined ' \
-                                            'for this product: "%s" (id: %d)') % \
-                                            (product.name,
-                                                product.id,))
                         amount_diff = qty * -diff
                         move_line_obj.create(cr, uid, {
                                         'name': product.name,
-                                        'account_id': stock_output_acc,
+                                        'account_id': stock_price_diff_account,
                                         'credit': amount_diff,
                                         'move_id': move_id
                                     })
