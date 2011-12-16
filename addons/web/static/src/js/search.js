@@ -715,8 +715,13 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
     init: function (view_section, field, view) {
         this._super(view);
         this.attrs = _.extend({}, field, view_section.attrs);
-        this.filters = new openerp.web.search.FilterGroup(_.map(
+        this.filters = new openerp.web.search.FilterGroup(_.compact(_.map(
             view_section.children, function (filter_node) {
+                if (filter_node.attrs.modifiers) {
+                    var modifiers = filter_node.attrs.modifiers = JSON.parse(
+                            filter_node.attrs.modifiers);
+                    if (modifiers.invisible) { return; }
+                }
                 if (filter_node.attrs.string &&
                         typeof console !== 'undefined' && console.debug) {
                     console.debug("Filter-in-field with a 'string' attribute "
@@ -725,7 +730,7 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
                 delete filter_node.attrs.string;
                 return new openerp.web.search.Filter(
                     filter_node, view);
-        }), view);
+        })), view);
         this.make_id('input', field.type, this.attrs.name);
     },
     start: function () {
