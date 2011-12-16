@@ -111,6 +111,9 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
             }
         });
 
+        // TODO store open nodes in url ?...
+        this.do_push_state({});
+
         if (!this.fields_view.arch.attrs.colors) {
             return;
         }
