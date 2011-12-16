@@ -72,7 +72,7 @@
 -
   I check that the phone call is reset or not.
 -
-  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call is reset.}:
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call is not reset.}:
     - state == "open"
 -
   I set phone call to held (done).
@@ -82,5 +82,5 @@
 -
   I check that the phone call is in 'Held' state.
 -
-  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call held.}:
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call is not held.}:
     - state == "done"
