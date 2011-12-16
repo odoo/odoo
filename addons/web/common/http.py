@@ -6,12 +6,12 @@ import ast
 import contextlib
 import functools
 import logging
-import urllib
 import os
 import pprint
 import sys
 import threading
 import traceback
+import urllib
 import uuid
 import xmlrpclib
 
@@ -137,20 +137,19 @@ class JsonRequest(WebRequest):
 
         :returns: an utf8 encoded JSON-RPC2 or JSONP reply
         """
-        method = self.httprequest.method
         args = self.httprequest.args
         jsonp = args.get('jsonp', False)
         requestf = None
         request = None
 
-        if jsonp and method == 'POST':
+        if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             self.init(args)
             req.session.jsonp_requests[args.get('id')] = self.httprequest.form['r']
             headers=[('Content-Type', 'text/plain; charset=utf-8')]
             r = werkzeug.wrappers.Response(request_id, headers=headers)
             return r
-        elif args['jsonp'] and args.get('id'):
+        elif jsonp and args.get('id'):
             # jsonp 2 steps step2 GET: run and return result
             self.init(args)
             request = self.session.jsonp_requests.pop(args.get(id), "")
@@ -195,6 +194,8 @@ class JsonRequest(WebRequest):
                 }
             }
         except Exception:
+            logging.getLogger(__name__ + '.JSONRequest.dispatch').exception\
+                ("An error occured while handling a json request")
             error = {
                 'code': 300,
                 'message': "OpenERP WebClient Error",
@@ -205,9 +206,9 @@ class JsonRequest(WebRequest):
             }
         if error:
             response["error"] = error
-            _logger.error("[%s] <--\n%s", rid, pprint.pformat(response))
-        elif _logger.isEnabledFor(logging.DEBUG):
-            _logger.debug("[%s] <--\n%s", rid, pprint.pformat(response))
+
+        if _logger.isEnabledFor(logging.DEBUG):
+            _logger.debug("<--\n%s", pprint.pformat(response))
 
         if jsonp:
             mime = 'application/javascript'

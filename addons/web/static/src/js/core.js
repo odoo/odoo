@@ -352,11 +352,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      */
     init: function() {
         this._super();
-        // TODO: session should have an optional name indicating that they'll
-        //       be saved to (and revived from) cookies
+        // TODO: session store in cookie should be optional
         this.name = openerp._session_id;
     },
     bind: function(host, protocol) {
+        var self = this;
         this.host = (host == undefined) ? location.host : host;
         this.protocol = (protocol == undefined) ? location.protocol : protocol;
         this.prefix = this.protocol + '//' + this.host;
@@ -368,13 +368,13 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.username = false;
         this.user_context= {};
         this.db = false;
-        this.module_loading = $.Deferred();
         this.module_list = [];
         this.module_loaded = {"web": true};
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
-        this.do_load_qweb(['/web/webclient/qweb'], continuation);
+        this.ready = $.Deferred();
+        return this.session_restore();
     },
     /**
      * Executes an RPC call, registering the provided callbacks.
@@ -523,73 +523,51 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     on_rpc_error: function(error) {
     },
     /**
+     * Init a session, reloads from cookie, if it exists
+     */
+    session_restore: function () {
+        var self = this;
+        // TODO: session store in cookie should be optional
+        this.session_id = this.get_cookie('session_id');
+        return this.rpc("/web/session/get_session_info", {}).pipe(function(result) {
+            // If immediately follows a login (triggered by trying to restore
+            // an invalid session or no session at all), refresh session data
+            // (should not change, but just in case...)
+            _.extend(self, {
+                db: result.db,
+                username: result.login,
+                uid: result.uid,
+                user_context: result.context
+            });
+            var deferred = self.do_load_qweb(['/web/webclient/qweb']);
+            if(self.uid) {
+                return deferred.then(self.load_modules());
+            }
+            return deferred;
+        });
+    },
+    /**
      * The session is validated either by login or by restoration of a previous session
      */
-    on_session_valid: function(continuation) {
-        this.load_modules().then(function() { continuation() } );
-    },
-    on_session_invalid: function(continuation) {
-    },
-    session_is_valid: function() {
-        return this.uid;
-    },
-    session_authenticate: function(db, login, password, success_callback) {
+    session_authenticate: function(db, login, password) {
         var self = this;
         var base_location = document.location.protocol + '//' + document.location.host;
         var params = { db: db, login: login, password: password, base_location: base_location };
-        return this.rpc("/web/session/authenticate", params, function(result) {
+        return this.rpc("/web/session/authenticate", params).pipe(function(result) {
             _.extend(self, {
                 session_id: result.session_id,
-                uid: result.uid,
-                user_context: result.context,
                 db: result.db,
-                username: result.login
+                username: result.login,
+                uid: result.uid,
+                user_context: result.context
             });
-            self.session_save();
-            self.on_session_valid(success_callback);
-            return true;
+            // TODO: session store in cookie should be optional
+            self.set_cookie('session_id', this.session_id);
+            return self.load_modules();
         });
     },
-    /**
-     * Reloads uid and session_id from local storage, if they exist
-     */
-    session_restore: function (continuation) {
-        var self = this;
-        this.session_id = this.get_cookie('session_id');
-        return this.rpc("/web/session/get_session_info", {}).then(function(result) {
-            // If immediately follows a login (triggered by trying to restore
-            // an invalid session or no session at all), refresh session data
-            // (should not change, but just in case...) but should not call
-            // on_session_valid again as it triggers reloading the menu
-            var already_logged = self.uid;
-            _.extend(self, {
-                uid: result.uid,
-                user_context: result.context,
-                db: result.db,
-                username: result.login
-            });
-            if (!already_logged) {
-                if (self.uid) {
-                    self.on_session_valid(continuation);
-                } else {
-                    self.on_session_invalid(continuation);
-                }
-            }
-        }, function() {
-            self.on_session_invalid(continuation);
-        });
-    },
-    /**
-     * Saves the session id and uid locally
-     */
-    session_save: function () {
-        this.set_cookie('session_id', this.session_id);
-    },
-    logout: function() {
+    session_logout: function() {
         this.set_cookie('session_id', '');
-        this.reload_client();
-    },
-    reload_client: function() {
         window.location.reload();
     },
     /**
@@ -640,19 +618,21 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             self.module_list = result;
             var lang = self.user_context.lang;
             var params = { mods: ["web"].concat(result), lang: lang};
-            self.rpc('/web/webclient/translations',params).then(function(transs) {
+            self.rpc('/web/webclient/translations',params).pipe(function(transs) {
                 openerp.web._t.database.set_bundle(transs);
                 var modules = self.module_list.join(',');
                 var file_list = ["/web/static/lib/datejs/globalization/" +
                     self.user_context.lang.replace("_", "-") + ".js"
                 ];
                 return $.when(
-                    self.rpc('/web/webclient/qweblist', {mods: modules}, self.do_load_qweb),
                     self.rpc('/web/webclient/csslist', {mods: modules}, self.do_load_css),
-                    self.rpc('/web/webclient/jslist', {mods: modules}, function(files) {
+                    self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb),
+                    self.rpc('/web/webclient/jslist', {mods: modules}).pipe(function(files) {
                         self.do_load_js(file_list.concat(files)); 
                     })
-                );
+                ).then(function() {
+                    self.ready.resolve();
+                });
             });
         });
     },
@@ -660,7 +640,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
-                'href': self.get_absolute_url(file),
+                'href': self.get_url(file),
                 'rel': 'stylesheet',
                 'type': 'text/css'
             }));
@@ -668,32 +648,39 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
     do_load_js: function(files) {
         var self = this;
+        var d = $.Deferred();
         if(files.length != 0) {
             var file = files.shift();
             var tag = document.createElement('script');
             tag.type = 'text/javascript';
-            tag.src = self.get_absolute_url(file);
+            tag.src = self.get_url(file);
             tag.onload = tag.onreadystatechange = function() {
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
                 tag.onload_done = true;
-                self.do_load_js(files, callback);
+                self.do_load_js(files).then(function () {
+                    d.resolve();
+                });
             };
             var head = document.head || document.getElementsByTagName('head')[0];
             head.appendChild(tag);
         } else {
             self.on_modules_loaded();
+            d.resolve();
         }
+        return d;
     },
     do_load_qweb: function(files) {
         var self = this;
         if (files.length != 0) {
             var file = files.shift();
-            self.rpc('/web/proxy/load', {path: file}, function(xml) {
+            return self.rpc('/web/proxy/load', {path: file}).pipe(function(xml) {
                 openerp.web.qweb.add_template(_.str.trim(xml));
-                self.do_load_qweb(files, callback);
+                return self.do_load_qweb(files);
             });
-        } 
+        } else {
+            return $.when();
+        }
     },
     on_modules_loaded: function() {
         for(var j=0; j<this.module_list.length; j++) {
@@ -728,6 +715,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      * @param {Function} [options.error] callback in case of request error, provided with the error body
      * @param {Function} [options.complete] called after both ``success`` and ``error` callbacks have executed
      */
+    get_url: function (file) {
+        return this.prefix + file;
+    },
     get_file: function (options) {
         // need to detect when the file is done downloading (not used
         // yet, but we'll need it to fix the UI e.g. with a throbber

@@ -1004,20 +1004,12 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.header.on_logout.add(this.login.on_logout);
         this.header.on_action.add(this.on_menu_action);
 
-        this.session.on_session_invalid.add(this.login.do_ask_login);
-        this.session.on_session_valid.add_last(this.header.do_update);
-        this.session.on_session_invalid.add_last(this.header.do_update);
-        this.session.on_session_valid.add_last(this.on_logged);
-        this.session.on_session_invalid.add_last(this.on_logged_out);
-
-
         this._current_state = null;
-
     },
     start: function() {
         this._super.apply(this, arguments);
         var self = this;
-        openerp.connection.bind("",function() {
+        this.session.bind().then(function() {
             var params = {};
             if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
                 this.$element.addClass("kitten-mode-activated");
@@ -1026,17 +1018,25 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
                 });
             }
             self.$element.html(QWeb.render("Interface", params));
-            openerp.connection.session_restore();
-
             self.menu = new openerp.web.Menu(self, "oe_menu", "oe_secondary_menu");
             self.menu.on_action.add(self.on_menu_action);
-
 
             self.notification.prependTo(self.$element);
             self.loading.appendTo($('#oe_loading'));
             self.header.appendTo($("#oe_header"));
             self.login.appendTo($('#oe_login'));
             self.menu.start();
+            self.login.on_login_invalid();
+        });
+        this.session.ready.then(function() {
+            self.login.on_login_valid();
+            self.header.do_update();
+            self.menu.do_reload();
+            if(self.action_manager)
+                self.action_manager.stop();
+            self.action_manager = new openerp.web.ActionManager(this);
+            self.action_manager.appendTo($("#oe_app"));
+            self.bind_hashchange();
         });
     },
     do_reload: function() {
@@ -1050,24 +1050,8 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         var n = this.notification;
         n.warn.apply(n, arguments);
     },
-    on_logged: function() {
-        this.menu.do_reload();
-        if(this.action_manager)
-            this.action_manager.stop();
-        this.action_manager = new openerp.web.ActionManager(this);
-        this.action_manager.appendTo($("#oe_app"));
-
-        if (openerp._modules_loaded) { // TODO: find better option than this
-            this.bind_hashchange();
-        } else {
-            this.session.on_modules_loaded.add({        // XXX what about a $.Deferred ?
-                callback: $.proxy(this, 'bind_hashchange'),
-                unique: true,
-                position: 'last'
-            })
-        }
-    },
-    on_logged_out: function() {
+    on_loggued_out: function() {
+        this.header.do_update();
         $(window).unbind('hashchange', this.on_hashchange);
         this.do_push_state({});
         if(this.action_manager)

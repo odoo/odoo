@@ -10,6 +10,7 @@ import os
 import re
 import simplejson
 import time
+import urllib2
 import xmlrpclib
 import zlib
 from xml.etree import ElementTree
@@ -245,7 +246,7 @@ class WebClient(openerpweb.Controller):
 class Proxy(openerpweb.Controller):
     _cp_path = '/web/proxy'
 
-    @jsonrequest
+    @openerpweb.jsonrequest
     def load(self, req, path):
         #req.config.socket_port
         #if not re.match('^/[^/]+/static/.*', path):
@@ -254,7 +255,7 @@ class Proxy(openerpweb.Controller):
         env = req.httprequest.environ
         port = env['SERVER_PORT']
 
-        o = urllib.urlopen('http://127.0.0.1:%s%s' % (port, path))
+        o = urllib2.urlopen('http://127.0.0.1:%s%s' % (port, path))
         return o.read()
 
 class Database(openerpweb.Controller):
