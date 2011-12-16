@@ -106,13 +106,6 @@ class share_wizard(osv.osv_memory):
             result[this.id] = this.share_url_template() % data
         return result
 
-    def _embed_head(self, cr, uid, ids, _fn, _args, context=None):
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
-        head = """
-        <link rel="stylesheet" href="%s/web/webclient/css">
-        <script type="text/javascript" src="%s/web/webclient/js"></script>
-        """ % (base_url, base_url)
-        return dict.fromkeys(ids, head)
 
     def _embed_code(self, cr, uid, ids, _fn, _args, context=None):
         result = dict.fromkeys(ids, '')
@@ -137,7 +130,6 @@ class share_wizard(osv.osv_memory):
         'name': fields.char('Share Title', size=64, required=True, help="Title for the share (displayed to users as menu and shortcut name)"),
         'message': fields.text("Personal Message", help="An optional personal message, to be included in the e-mail notification."),
 
-        'embed_head': fields.function(_embed_head, type='text'),
         'embed_code': fields.function(_embed_code, type='text'),
         'embed_option_title': fields.boolean("Display title"),
         'embed_option_search': fields.boolean('Display search view'),
@@ -768,7 +760,7 @@ class share_wizard(osv.osv_memory):
         js_options = {}
         title = options['title'] if 'title' in options else wizard.embed_option_title
         search = (options['search'] if 'search' in options else wizard.embed_option_search) if wizard.access_mode != 'readonly' else False
-        
+
         if not title:
             js_options['display_title'] = False
         if search:
@@ -780,12 +772,10 @@ class share_wizard(osv.osv_memory):
         user = wizard.result_line_ids[0]
 
         return """
-            <script type="text/javascript">
-                (function() {
-                    new openerp.init(%(init)s).embed(%(server)s, %(dbname)s, %(login)s, %(password)s,%(action)d%(options)s);
-                })();
-            </script>
-        """ % {
+<script type="text/javascript" src="http://localhost:8069/web/webclient/js"></script>
+<script type="text/javascript">
+    new openerp.init(%(init)s).embed(%(server)s, %(dbname)s, %(login)s, %(password)s,%(action)d%(options)s);
+</script> """ % {
             'init': simplejson.dumps(openerp.conf.server_wide_modules),
             'server': simplejson.dumps(base_url),
             'dbname': simplejson.dumps(cr.dbname),
