@@ -1031,7 +1031,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.menu.do_reload();
             if(self.action_manager)
                 self.action_manager.stop();
-            self.action_manager = new openerp.web.ActionManager(this);
+            self.action_manager = new openerp.web.ActionManager(self);
             self.action_manager.appendTo($("#oe_app"));
             self.bind_hashchange();
         });
