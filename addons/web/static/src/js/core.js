@@ -254,14 +254,16 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      * Retrieves the object matching the provided key string.
      *
      * @param {String} key the key to fetch the object for
+     * @param {Boolean} [silent_error=false] returns undefined if the key or object is not found, rather than throwing an exception
      * @returns {Class} the stored class, to initialize
      *
      * @throws {openerp.web.KeyNotFound} if the object was not in the mapping
      * @throws {openerp.web.ObjectNotFound} if the object path was invalid
      */
-    get_object: function (key) {
+    get_object: function (key, silent_error) {
         var path_string = this.map[key];
         if (path_string === undefined) {
+            if (silent_error) { return void 'nooo'; }
             throw new openerp.web.KeyNotFound(key);
         }
 
@@ -272,6 +274,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
             object_match = object_match[path[i]];
 
             if (object_match === undefined) {
+                if (silent_error) { return void 'noooooo'; }
                 throw new openerp.web.ObjectNotFound(path_string);
             }
         }

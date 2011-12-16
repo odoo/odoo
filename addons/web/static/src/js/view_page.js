@@ -5,6 +5,7 @@ openerp.web.page = function (openerp) {
     openerp.web.views.add('page', 'openerp.web.PageView');
     openerp.web.PageView = openerp.web.FormView.extend({
         form_template: "PageView",
+        display_name: {toString: function () { return _t('Page'); }},
         init: function () {
             this._super.apply(this, arguments);
             this.registry = openerp.web.page.readonly;

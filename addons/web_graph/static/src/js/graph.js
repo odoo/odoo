@@ -12,9 +12,11 @@ var COLOR_PALETTE = [
     '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f', '#f57900',
     '#cc0000', '#d400a8'];
 
-var QWeb = openerp.web.qweb;
+var QWeb = openerp.web.qweb,
+      _t = openerp.web._t;
 openerp.web.views.add('graph', 'openerp.web_graph.GraphView');
 openerp.web_graph.GraphView = openerp.web.View.extend({
+    display_name: {toString: function () { return _t('Graph'); }},
 
     init: function(parent, dataset, view_id, options) {
         this._super(parent);

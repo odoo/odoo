@@ -13,6 +13,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     readonly : false,
     form_template: "FormView",
     identifier_prefix: 'formview-',
+    display_name: {toString: function () { return _t('Form'); }},
     /**
      * @constructs openerp.web.FormView
      * @extends openerp.web.View

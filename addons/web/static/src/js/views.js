@@ -210,7 +210,18 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         this.dataset = dataset;
         this.searchview = null;
         this.active_view = null;
-        this.views_src = _.map(views, function(x) {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
+        this.views_src = _.map(views, function(x) {
+            if (x instanceof Array) {
+                var View = session.web.views.get_object(x[1], true);
+                return {
+                    view_id: x[0],
+                    view_type: x[1],
+                    label: View ? View.prototype.display_name : (void 'nope')
+                };
+            } else {
+                return x;
+            }
+        });
         this.views = {};
         this.flags = flags || {};
         this.registry = session.web.views;
@@ -967,6 +978,8 @@ session.web.TranslateDialog = session.web.Dialog.extend({
 
 session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     template: "EmptyComponent",
+    // name displayed in view switchers
+    display_name: '',
     set_default_options: function(options) {
         this.options = options || {};
         _.defaults(this.options, {

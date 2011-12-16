@@ -424,7 +424,7 @@
                 <div class="oe_vm_switch">
                     <t t-if="views.length != 1" t-foreach="views" t-as="view">
                         <button type="button" t-att-data-view-type="view.view_type">
-                            <t t-esc="view.view_type"/>
+                            <t t-esc="view.label || view.view_type"/>
                         </button>
                     </t>
                 </div>
