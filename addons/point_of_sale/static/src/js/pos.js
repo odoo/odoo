@@ -556,7 +556,8 @@ openerp.point_of_sale = function(db) {
         },
         reset: function() {
             return this.set({
-                buffer: "0"
+                buffer: "0",
+                mode: "quantity"
             });
         },
         updateTarget: function() {
@@ -580,6 +581,8 @@ openerp.point_of_sale = function(db) {
             this.state = options.state;
         },
         start: function() {
+            this.state.bind('change:mode', this.changedMode, this);
+            this.changedMode();
             this.$element.find('button#numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
             this.$element.find('button#numpad-minus').click(_.bind(this.clickSwitchSign, this));
             this.$element.find('button.number-char').click(_.bind(this.clickAppendNewChar, this));
@@ -597,12 +600,14 @@ openerp.point_of_sale = function(db) {
             return this.state.appendNewChar(newChar);
         },
         clickChangeMode: function(event) {
-            var newMode;
-            $('.selected-mode').removeClass('selected-mode');
-            $(event.currentTarget).addClass('selected-mode');
-            newMode = event.currentTarget.attributes['data-mode'].nodeValue;
+            var newMode = event.currentTarget.attributes['data-mode'].nodeValue;
             return this.state.changeMode(newMode);
-        }
+        },
+        changedMode: function() {
+            var mode = this.state.get('mode');
+            $('.selected-mode').removeClass('selected-mode');
+            $(_.str.sprintf('.mode-button[data-mode="%s"]', mode), this.$element).addClass('selected-mode');
+        },
     });
     /*
      Gives access to the payment methods (aka. 'cash registers')
