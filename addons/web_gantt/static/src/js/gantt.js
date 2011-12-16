@@ -6,6 +6,7 @@ var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('gantt', 'openerp.web_gantt.GanttView');
 openerp.web_gantt.GanttView = openerp.web.View.extend({
+    display_name: {toString: function () { return _t('Gantt'); }},
 
     init: function(parent, dataset, view_id) {
         this._super(parent);
@@ -457,14 +458,6 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                 }
             }
         }
-    },
-
-    do_show: function () {
-        this.$element.show();
-    },
-
-    do_hide: function () {
-        this.$element.hide();
     },
 
     convert_str_date: function (str) {

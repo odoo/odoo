@@ -116,7 +116,7 @@ openerp.web.list_editable = function (openerp) {
     openerp.web.ListView.List.include(/** @lends openerp.web.ListView.List# */{
         row_clicked: function (event) {
             if (!this.options.editable) {
-                return this._super(event);
+                return this._super.apply(this, arguments);
             }
             this.edit_record($(event.currentTarget).data('id'));
         },
@@ -248,7 +248,10 @@ openerp.web.list_editable = function (openerp) {
                       .end()
                       .find('td:last').removeClass('oe-field-cell').end();
                     if (self.options.selectable) {
-                        $new_row.prepend('<td>');
+                        $new_row.prepend('<th>');
+                    }
+                    if (self.options.isClarkGable) {
+                        $new_row.prepend('<th>');
                     }
                     // pad in case of groupby
                     _(self.columns).each(function (column) {

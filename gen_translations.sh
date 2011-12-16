@@ -38,7 +38,6 @@ then
     extract_module web
     extract_module web_calendar
     extract_module web_dashboard
-    extract_module web_default_home
     extract_module web_diagram
     extract_module web_gantt
     extract_module web_graph

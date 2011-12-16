@@ -254,7 +254,7 @@ openerp.web.format_cell = function (row_data, column, value_if_empty, process_mo
     if (column.tag === 'button') {
         return [
             '<button type="button" title="', column.string || '', '">',
-                '<img src="/web/static/src/img/icons/', column.icon, '.png"',
+                '<img src="', openerp.connection.prefix, '/web/static/src/img/icons/', column.icon, '.png"',
                     ' alt="', column.string || '', '"/>',
             '</button>'
         ].join('')

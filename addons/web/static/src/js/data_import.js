@@ -31,7 +31,7 @@ function jsonp(form, attributes, callback) {
 
 openerp.web.DataImport = openerp.web.Dialog.extend({
     template: 'ImportDataView',
-    dialog_title: "Import Data",
+    dialog_title: {toString: function () { return _t("Import Data"); }},
     init: function(parent, dataset){
         var self = this;
         this._super(parent, {});
@@ -111,7 +111,11 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             });
         }
         _(fields).each(function (field, field_name) {
-            if (field_name === 'id') { return; }
+            // Ignore spec for id field
+            // Don't import function fields (function and related)
+            if (field_name === 'id' || 'function' in field) {
+                return;
+            }
             var f = {
                 id: field_name,
                 name: field_name,

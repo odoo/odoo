@@ -7,6 +7,7 @@ var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('calendar', 'openerp.web_calendar.CalendarView');
 openerp.web_calendar.CalendarView = openerp.web.View.extend({
+    display_name: {toString: function () { return _t('Calendar'); }},
 // Dhtmlx scheduler ?
     init: function(parent, dataset, view_id, options) {
         this._super(parent);
@@ -289,7 +290,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             form.show_invalid = false;
             _.each(['date_start', 'date_stop', 'date_delay'], function(field) {
                 var field_name = self[field];
-                if (field_name) {
+                if (field_name && form.fields[field_name]) {
                     field = form.fields[field_name];
                     field.set_value(data[field_name]);
                     field.dirty = true;
@@ -394,7 +395,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         });
     },
     do_hide: function () {
-        this.$element.hide();
+        this._super();
         if (this.sidebar) {
             this.sidebar.$element.hide();
         }

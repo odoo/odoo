@@ -6,6 +6,7 @@ openerp.web.views.add('kanban', 'openerp.web_kanban.KanbanView');
 
 openerp.web_kanban.KanbanView = openerp.web.View.extend({
     template: "KanbanView",
+    display_name: {toString: function () { return _t('Kanban'); }},
     default_nr_columns: 3,
     init: function (parent, dataset, view_id, options) {
         this._super(parent);
@@ -106,7 +107,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                         node.children = [{
                             tag: 'img',
                             attrs: {
-                                src: '/web/static/src/img/icons/' + node.attrs['data-icon'] + '.png',
+                                src: openerp.connection.prefix + '/web/static/src/img/icons/' + node.attrs['data-icon'] + '.png',
                                 width: '16',
                                 height: '16'
                             }
@@ -257,12 +258,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }
-    },
-    do_show: function () {
-        this.$element.show();
-    },
-    do_hide: function () {
-        this.$element.hide();
     },
     compute_groups_width: function() {
         var unfolded = 0;
@@ -530,7 +525,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     },
     kanban_image: function(model, field, id) {
         id = id || '';
-        return '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+        return openerp.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
     },
     kanban_text_ellipsis: function(s, size) {
         size = size || 160;
