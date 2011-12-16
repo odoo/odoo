@@ -180,7 +180,7 @@ class project_phase(osv.osv):
                 'months': 'm', 'month':'month', 'm':'m',
                 'weeks': 'w', 'week': 'w', 'w':'w',
                 'hours': 'H', 'hour': 'H', 'h':'H',
-            }.get(phase.product_uom.name.lower(), "h")
+            }.get(phase.product_uom.name.lower(), "H")
             duration = str(phase.duration) + duration_uom
             result += '''
     def Phase_%s():
