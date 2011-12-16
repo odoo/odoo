@@ -48,7 +48,7 @@ def py2exe_options():
     if os.name == 'nt':
         import py2exe
         return {
-            "console" : [ { "script": "openerp-server", "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))], }],
+            "console" : [ { "script": "openerp-server", "icon_resources": [(1, join("install","openerp-icon.ico"))], }],
             'options' : {
                 "py2exe": {
                     "skip_archive": 1,
