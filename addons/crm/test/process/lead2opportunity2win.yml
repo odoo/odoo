@@ -13,9 +13,10 @@
 -
   I create partner from lead. 
 -
-  !record {model: crm.lead2partner, id: crm_lead2partner_id1 }:
+  !record {model: crm.lead2partner, id: crm_lead2partner_id1, context: '{"active_model": "crm.lead", "active_ids": [ref("crm_case_qrecorp0")]}'}:
 -
    !python {model: crm.lead2partner}: |
+     context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_qrecorp0')], 'active_id': ref('crm_case_qrecorp0')})
      self.make_partner(cr, uid ,[ref("crm_lead2partner_id1")], context=context)
 -
   I convert lead into opportunity for exiting customer.
