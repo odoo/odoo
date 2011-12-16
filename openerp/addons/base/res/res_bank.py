@@ -139,7 +139,7 @@ class res_partner_bank(osv.osv):
         'state': fields.selection(_bank_type_get, 'Bank Account Type', required=True,
             change_default=True),
         'sequence': fields.integer('Sequence'),
-        'footer': fields.boolean("Display on Reports")
+        'footer': fields.boolean("Display on Reports", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
     }
     _defaults = {
         'owner_name': lambda obj, cursor, user, context: obj._default_value(
@@ -190,7 +190,7 @@ class res_partner_bank(osv.osv):
             res.append((val.id, result))
         return res
 
-    def onchange_company_id(self, cr, uid, ids, company_id, context={}):
+    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
         result = {}
         if company_id:
             c = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
@@ -201,7 +201,7 @@ class res_partner_bank(osv.osv):
                 result = r
         return result
 
-    def onchange_bank_id(self, cr, uid, ids, bank_id, context={}):
+    def onchange_bank_id(self, cr, uid, ids, bank_id, context=None):
         result = {}
         if bank_id:
             bank = self.pool.get('res.bank').browse(cr, uid, bank_id, context=context)
@@ -210,7 +210,7 @@ class res_partner_bank(osv.osv):
         return {'value': result}
 
 
-    def onchange_partner_id(self, cr, uid, id, partner_id, context={}):
+    def onchange_partner_id(self, cr, uid, id, partner_id, context=None):
         result = {}
         if partner_id:
             part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
@@ -224,4 +224,4 @@ class res_partner_bank(osv.osv):
 
 res_partner_bank()
 
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

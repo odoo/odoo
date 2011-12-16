@@ -638,7 +638,7 @@ form: module.record_id""" % (xml_id,)
                     action_mode, = cr.fetchone()
                 if action_type=='tree':
                     values['icon'] = 'STOCK_INDENT'
-                elif action_mode and action_mode.startswith('tree'):
+                elif action_mode and action_mode.startswith(('tree','kanban','gantt')):
                     values['icon'] = 'STOCK_JUSTIFY_FILL'
                 elif action_mode and action_mode.startswith('graph'):
                     values['icon'] = 'terp-graph'
@@ -999,3 +999,5 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
     obj.parse(doc.getroot())
     return True
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

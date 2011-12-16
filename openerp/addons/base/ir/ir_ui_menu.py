@@ -208,7 +208,6 @@ class ir_ui_menu(osv.osv):
                 'name': 'Menuitem',
                 'model': self._name,
                 'value': value,
-                'object': True,
                 'key': 'action',
                 'key2': 'tree_but_open',
                 'res_id': menu_id,

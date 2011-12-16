@@ -218,6 +218,11 @@ def get_module_resource(module, *args):
         return resource_path
     return False
 
+def get_module_icon(module):
+    iconpath = ['static', 'src', 'img', 'icon.png']
+    if get_module_resource(module, *iconpath):
+        return ('/' + module + '/') + '/'.join(iconpath)
+    return '/base/'  + '/'.join(iconpath)
 
 def load_information_from_description_file(module):
     """
@@ -231,35 +236,32 @@ def load_information_from_description_file(module):
     if terp_file:
         info = {}
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
-            terp_f = tools.file_open(terp_file)
-            try:
-                info = eval(terp_f.read())
-            except Exception:
-                logger.notifyChannel('modules', netsvc.LOG_ERROR,
-                    'module %s: exception while evaluating file %s' %
-                    (module, terp_file))
-                raise
-            finally:
-                terp_f.close()
-            # TODO the version should probably be mandatory
-            info.setdefault('version', '0')
-            info.setdefault('category', 'Uncategorized')
-            info.setdefault('depends', [])
-            info.setdefault('author', '')
-            info.setdefault('website', '')
-            info.setdefault('name', False)
-            info.setdefault('description', '')
-            info.setdefault('complexity', 'normal')
-            info['certificate'] = info.get('certificate') or None
-            info['web'] = info.get('web') or False
-            info['license'] = info.get('license') or 'AGPL-3'
-            info.setdefault('installable', True)
-            info.setdefault('active', False)
-            # If the following is provided, it is called after the module is --loaded.
-            info.setdefault('post_load', None)
-            for kind in ['data', 'demo', 'test',
-                'init_xml', 'update_xml', 'demo_xml']:
-                info.setdefault(kind, [])
+            # default values for descriptor
+            info = {
+                'active': False,
+                'application': False,
+                'author': '',
+                'category': 'Uncategorized',
+                'certificate': None,
+                'complexity': 'normal',
+                'depends': [],
+                'description': '',
+                'icon': get_module_icon(module),
+                'installable': True,
+                'license': 'AGPL-3',
+                'name': False,
+                'post_load': None,
+                'version': '0.0.0',
+                'web': False,
+                'website': '',
+            }
+            info.update(itertools.izip(
+                'depends data demo test init_xml update_xml demo_xml'.split(),
+                iter(list, None)))
+
+            with tools.file_open(terp_file) as terp_f:
+                info.update(eval(terp_f.read()))
+
             return info
 
     #TODO: refactor the logger in this file to follow the logging guidelines

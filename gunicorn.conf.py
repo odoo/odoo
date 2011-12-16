@@ -15,3 +15,5 @@ conf = openerp.tools.config
 conf['addons_path'] = '/home/openerp/repos/addons/trunk-xmlrpc'
 conf['static_http_document_root'] = '/tmp'
 #conf['log_level'] = 10 # 10 is DEBUG
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

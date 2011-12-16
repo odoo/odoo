@@ -28,6 +28,7 @@ from email import Encoders
 import logging
 import re
 import smtplib
+import threading
 
 from osv import osv
 from osv import fields
@@ -380,6 +381,11 @@ class ir_mail_server(osv.osv):
         email_bcc = message['Bcc']
         smtp_to_list = filter(None, tools.flatten(map(extract_rfc2822_addresses,[email_to, email_cc, email_bcc])))
         assert smtp_to_list, "At least one valid recipient address should be specified for outgoing emails (To/Cc/Bcc)"
+
+        # Do not actually send emails in testing mode!
+        if getattr(threading.currentThread(), 'testing', False):
+            _logger.log(logging.TEST, "skip sending email in test mode")
+            return message['Message-Id']
 
         # Get SMTP Server Details from Mail Server
         mail_server = None

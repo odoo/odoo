@@ -51,7 +51,6 @@ import pickle
 import re
 import simplejson
 import time
-import traceback
 import types
 import warnings
 from lxml import etree
@@ -1213,7 +1212,6 @@ class BaseModel(object):
         if not context:
             context = {}
         fields = map(fix_import_export_id_paths, fields)
-        logger = netsvc.Logger()
         ir_model_data_obj = self.pool.get('ir.model.data')
 
         # mode: id (XML id) or .id (database id) or False for name_get
@@ -1291,7 +1289,7 @@ class BaseModel(object):
                 # ID of the record using a XML ID
                 if field_name == 'id':
                     try:
-                        data_res_id = _get_id(model_name, line[i], current_module, 'id')
+                        data_res_id = _get_id(model_name, line[i], current_module)
                     except ValueError:
                         pass
                     xml_id = line[i]
@@ -1364,42 +1362,43 @@ class BaseModel(object):
 
                 row[field_name] = res or False
 
-            result = (row, nbrmax, warning, data_res_id, xml_id)
-            return result
+            return row, nbrmax, warning, data_res_id, xml_id
 
         fields_def = self.fields_get(cr, uid, context=context)
 
-        if config.get('import_partial', False) and filename:
-            data = pickle.load(file(config.get('import_partial')))
-
         position = 0
-        while position<len(datas):
-            res = {}
+        if config.get('import_partial') and filename:
+            with open(config.get('import_partial'), 'rb') as partial_import_file:
+                data = pickle.load(partial_import_file)
+                position = data.get(filename, 0)
 
+        while position<len(datas):
             (res, position, warning, res_id, xml_id) = \
                     process_liness(self, datas, [], current_module, self._name, fields_def, position=position)
             if len(warning):
                 cr.rollback()
-                return (-1, res, 'Line ' + str(position) +' : ' + '!\n'.join(warning), '')
+                return -1, res, 'Line ' + str(position) +' : ' + '!\n'.join(warning), ''
 
             try:
                 ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, mode=mode, xml_id=xml_id,
                      noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
-                return (-1, res, 'Line ' + str(position) + ' : ' + tools.ustr(e), '')
+                return -1, res, 'Line ' + str(position) + ' : ' + tools.ustr(e), ''
 
-            if config.get('import_partial', False) and filename and (not (position%100)):
-                data = pickle.load(file(config.get('import_partial')))
+            if config.get('import_partial') and filename and (not (position%100)):
+                with open(config.get('import_partial'), 'rb') as partial_import:
+                    data = pickle.load(partial_import)
                 data[filename] = position
-                pickle.dump(data, file(config.get('import_partial'), 'wb'))
+                with open(config.get('import_partial'), 'wb') as partial_import:
+                    pickle.dump(data, partial_import)
                 if context.get('defer_parent_store_computation'):
                     self._parent_store_compute(cr)
                 cr.commit()
 
         if context.get('defer_parent_store_computation'):
             self._parent_store_compute(cr)
-        return (position, 0, 0, 0)
+        return position, 0, 0, 0
 
     def get_invalid_fields(self, cr, uid):
         return list(self._invalids)
@@ -2358,6 +2357,75 @@ class BaseModel(object):
         except AttributeError:
             pass
 
+
+    def _read_group_fill_results(self, cr, uid, domain, groupby, groupby_list, aggregated_fields,
+                                 read_group_result, read_group_order=None, context=None):
+        """Helper method for filling in empty groups for all possible values of
+           the field being grouped by"""
+
+        # self._group_by_full should map groupable fields to a method that returns
+        # a list of all aggregated values that we want to display for this field,
+        # in the form of a m2o-like pair (key,label).
+        # This is useful to implement kanban views for instance, where all columns
+        # should be displayed even if they don't contain any record.
+
+        # Grab the list of all groups that should be displayed, including all present groups 
+        present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
+        all_groups = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
+                                                  read_group_order=read_group_order,
+                                                  access_rights_uid=openerp.SUPERUSER_ID,
+                                                  context=context)
+
+        result_template = dict.fromkeys(aggregated_fields, False)
+        result_template.update({groupby + '_count':0})
+        if groupby_list and len(groupby_list) > 1:
+            result_template.update(__context={'group_by': groupby_list[1:]})
+
+        # Merge the left_side (current results as dicts) with the right_side (all
+        # possible values as m2o pairs). Both lists are supposed to be using the
+        # same ordering, and can be merged in one pass.
+        result = []
+        known_values = {}
+        def append_left(left_side):
+            grouped_value = left_side[groupby] and left_side[groupby][0]
+            if not grouped_value in known_values:
+                result.append(left_side)
+                known_values[grouped_value] = left_side
+            else:
+                count_attr = groupby + '_count'
+                known_values[grouped_value].update({count_attr: left_side[count_attr]})
+        def append_right(right_side):
+            grouped_value = right_side[0]
+            if not grouped_value in known_values:
+                line = dict(result_template)
+                line.update({
+                    groupby: right_side,
+                    '__domain': [(groupby,'=',grouped_value)] + domain,
+                })
+                result.append(line)
+                known_values[grouped_value] = line
+        while read_group_result or all_groups:
+            left_side = read_group_result[0] if read_group_result else None
+            right_side = all_groups[0] if all_groups else None
+            assert left_side is None or left_side[groupby] is False \
+                 or isinstance(left_side[groupby], (tuple,list)), \
+                'M2O-like pair expected, got %r' % left_side[groupby]
+            assert right_side is None or isinstance(right_side, (tuple,list)), \
+                'M2O-like pair expected, got %r' % right_side
+            if left_side is None:
+                append_right(all_groups.pop(0))
+            elif right_side is None:
+                append_left(read_group_result.pop(0))
+            elif left_side[groupby] == right_side:
+                append_left(read_group_result.pop(0))
+                all_groups.pop(0) # discard right_side
+            elif not left_side[groupby] or not left_side[groupby][0]:
+                # left side == "Undefined" entry, not present on right_side
+                append_left(read_group_result.pop(0))
+            else:
+                append_right(all_groups.pop(0))
+        return result
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
@@ -2407,7 +2475,6 @@ class BaseModel(object):
 
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fget = self.fields_get(cr, uid, fields)
-        float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
         flist = ''
         group_count = group_by = groupby
         if groupby:
@@ -2423,17 +2490,17 @@ class BaseModel(object):
                 raise except_orm(_('Invalid group_by'),
                                  _('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.')%(groupby,))
 
-
-        fields_pre = [f for f in float_int_fields if
-                   f == self.CONCURRENCY_CHECK_FIELD
-                or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
-        for f in fields_pre:
-            if f not in ['id', 'sequence']:
-                group_operator = fget[f].get('group_operator', 'sum')
-                if flist:
-                    flist += ', '
-                qualified_field = '"%s"."%s"' % (self._table, f)
-                flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
+        aggregated_fields = [
+            f for f in fields
+            if f not in ('id', 'sequence')
+            if fget[f]['type'] in ('integer', 'float')
+            if (f in self._columns and getattr(self._columns[f], '_classic_write'))]
+        for f in aggregated_fields:
+            group_operator = fget[f].get('group_operator', 'sum')
+            if flist:
+                flist += ', '
+            qualified_field = '"%s"."%s"' % (self._table, f)
+            flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
 
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
@@ -2452,7 +2519,8 @@ class BaseModel(object):
             alldata[r['id']] = r
             del r['id']
 
-        data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=orderby or groupby, context=context)
+        order = orderby or groupby
+        data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=order, context=context)
         # the IDS of records that have groupby field value = False or '' should be sorted too
         data_ids += filter(lambda x:x not in data_ids, alldata.keys())
         data = self.read(cr, uid, data_ids, groupby and [groupby] or ['id'], context=context)
@@ -2478,22 +2546,10 @@ class BaseModel(object):
             del d['id']
 
         if groupby and groupby in self._group_by_full:
-            gids = map(lambda x: x[groupby][0], data)
-            stages = self._group_by_full[groupby](self, cr, uid, gids, domain, context)
-            # as both lists are sorted in the same way, we can merge in one pass
-            pos = 0
-            while stages and ((pos<len(data)) or (pos<len(stages))):
-                if (pos<len(data)) and (data[pos][groupby][0] == stages[pos][0]):
-                    pos+=1
-                    continue
-                val = dict(map(lambda x: (x, False), fields))
-                val.update({
-                    groupby: stages[pos],
-                    '__domain': [(groupby, '=', stages[pos][0])]+domain,
-                    groupby+'_count': 0L,
-                    '__context': {'group_by': groupby_list[1:]}
-                })
-                data.insert(pos, val)
+            data = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
+                                                 aggregated_fields, data, read_group_order=order,
+                                                 context=context)
+
         return data
 
     def _inherits_join_add(self, current_table, parent_model_name, query):
@@ -3825,6 +3881,7 @@ class BaseModel(object):
             for id in ids:
                 result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
 
+        unknown_fields = updend[:]
         for table in self._inherits:
             col = self._inherits[table]
             nids = []
@@ -3837,9 +3894,14 @@ class BaseModel(object):
             for val in updend:
                 if self._inherit_fields[val][0] == table:
                     v[val] = vals[val]
+                    unknown_fields.remove(val)
             if v:
                 self.pool.get(table).write(cr, user, nids, v, context)
 
+        if unknown_fields:
+            self.__logger.warn(
+                'No such field(s) in model %s: %s.',
+                self._name, ', '.join(unknown_fields))
         self._validate(cr, user, ids, context)
 
         # TODO: use _order to set dest at the right position and not first node of parent
@@ -3962,14 +4024,20 @@ class BaseModel(object):
                 tocreate[v] = {'id': vals[self._inherits[v]]}
         (upd0, upd1, upd2) = ('', '', [])
         upd_todo = []
+        unknown_fields = []
         for v in vals.keys():
-            if v in self._inherit_fields:
+            if v in self._inherit_fields and v not in self._columns:
                 (table, col, col_detail, original_parent) = self._inherit_fields[v]
                 tocreate[table][v] = vals[v]
                 del vals[v]
             else:
                 if (v not in self._inherit_fields) and (v not in self._columns):
                     del vals[v]
+                    unknown_fields.append(v)
+        if unknown_fields:
+            self.__logger.warn(
+                'No such field(s) in model %s: %s.',
+                self._name, ', '.join(unknown_fields))
 
         # Try-except added to filter the creation of those records whose filds are readonly.
         # Example : any dashboard which has all the fields readonly.(due to Views(database views))

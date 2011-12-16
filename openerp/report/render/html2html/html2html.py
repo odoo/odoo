@@ -93,3 +93,5 @@ def parseString(node, localcontext = {}):
     root = r.url_modify(root)
     return root
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

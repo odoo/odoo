@@ -22,11 +22,8 @@
 
 import logging
 from functools import partial
-from xml.sax.saxutils import quoteattr
 
-import simplejson
 import pytz
-from lxml import etree
 
 import netsvc
 import pooler
@@ -40,20 +37,43 @@ import openerp.exceptions
 
 class groups(osv.osv):
     _name = "res.groups"
-    _order = 'name'
     _description = "Access Groups"
+    _rec_name = 'full_name'
+
+    def _get_full_name(self, cr, uid, ids, field, arg, context=None):
+        res = {}
+        for g in self.browse(cr, uid, ids, context):
+            if g.category_id:
+                res[g.id] = '%s / %s' % (g.category_id.name, g.name)
+            else:
+                res[g.id] = g.name
+        return res
+
     _columns = {
-        'name': fields.char('Group Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', size=64, required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
             'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
-        'comment' : fields.text('Comment',size=250),
+        'comment' : fields.text('Comment', size=250, translate=True),
+        'category_id': fields.many2one('ir.module.category', 'Application', select=True),
+        'full_name': fields.function(_get_full_name, type='char', string='Group Name'),
     }
+
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'The name of the group must be unique !')
+        ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique !')
     ]
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        # add explicit ordering if search is sorted on full_name
+        if order and order.startswith('full_name'):
+            ids = super(groups, self).search(cr, uid, args, context=context)
+            gs = self.browse(cr, uid, ids, context)
+            gs.sort(key=lambda g: g.full_name, reverse=order.endswith('DESC'))
+            gs = gs[offset:offset+limit] if limit else gs[offset:]
+            return map(int, gs)
+        return super(groups, self).search(cr, uid, args, offset, limit, order, context, count)
 
     def copy(self, cr, uid, id, default=None, context=None):
         group_name = self.read(cr, uid, [id], ['name'])[0]['name']
@@ -206,6 +226,7 @@ class users(osv.osv):
         return dict.fromkeys(ids, '')
 
     _columns = {
+        'id': fields.integer('ID'),
         'name': fields.char('User Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
                                  " and most listings"),
@@ -239,7 +260,7 @@ class users(osv.osv):
                                 selection=[('simple','Simplified'),('extended','Extended')],
                                 string='Interface', help="OpenERP offers a simplified and an extended user interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier to use. You can switch to the other interface from the User/Preferences menu at any time."),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
-        'date': fields.datetime('Last Connection', readonly=True),
+        'date': fields.datetime('Latest Connection', readonly=True),
     }
 
     def on_change_company_id(self, cr, uid, ids, company_id):
@@ -521,29 +542,67 @@ class users(osv.osv):
 
 users()
 
+
+
 #
 # Extension of res.groups and res.users with a relation for "implied" or 
 # "inherited" groups.  Once a user belongs to a group, it automatically belongs
 # to the implied groups (transitively).
 #
 
+class cset(object):
+    """ A cset (constrained set) is a set of elements that may be constrained to
+        be a subset of other csets.  Elements added to a cset are automatically
+        added to its supersets.  Cycles in the subset constraints are supported.
+    """
+    def __init__(self, xs):
+        self.supersets = set()
+        self.elements = set(xs)
+    def subsetof(self, other):
+        if other is not self:
+            self.supersets.add(other)
+            other.update(self.elements)
+    def update(self, xs):
+        xs = set(xs) - self.elements
+        if xs:      # xs will eventually be empty in case of a cycle
+            self.elements.update(xs)
+            for s in self.supersets:
+                s.update(xs)
+    def __iter__(self):
+        return iter(self.elements)
+
+def concat(ls):
+    """ return the concatenation of a list of iterables """
+    res = []
+    for l in ls: res.extend(l)
+    return res
+
+
+
 class groups_implied(osv.osv):
     _inherit = 'res.groups'
+
+    def _get_trans_implied(self, cr, uid, ids, field, arg, context=None):
+        "computes the transitive closure of relation implied_ids"
+        memo = {}           # use a memo for performance and cycle avoidance
+        def computed_set(g):
+            if g not in memo:
+                memo[g] = cset(g.implied_ids)
+                for h in g.implied_ids:
+                    computed_set(h).subsetof(memo[g])
+            return memo[g]
+
+        res = {}
+        for g in self.browse(cr, 1, ids, context):
+            res[g.id] = map(int, computed_set(g))
+        return res
+
     _columns = {
         'implied_ids': fields.many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
             string='Inherits', help='Users of this group automatically inherit those groups'),
+        'trans_implied_ids': fields.function(_get_trans_implied,
+            type='many2many', relation='res.groups', string='Transitively inherits'),
     }
-
-    def get_closure(self, cr, uid, ids, context=None):
-        "return the closure of ids, i.e., all groups recursively implied by ids"
-        closure = set()
-        todo = self.browse(cr, 1, ids)
-        while todo:
-            g = todo.pop()
-            if g.id not in closure:
-                closure.add(g.id)
-                todo.extend(g.implied_ids)
-        return list(closure)
 
     def create(self, cr, uid, values, context=None):
         users = values.pop('users', None)
@@ -556,26 +615,12 @@ class groups_implied(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         res = super(groups_implied, self).write(cr, uid, ids, values, context)
         if values.get('users') or values.get('implied_ids'):
-            # add implied groups (to all users of each group)
+            # add all implied groups (to all users of each group)
             for g in self.browse(cr, uid, ids):
-                gids = self.get_closure(cr, uid, [g.id], context)
-                users = [(4, u.id) for u in g.users]
-                super(groups_implied, self).write(cr, uid, gids, {'users': users}, context)
+                gids = map(int, g.trans_implied_ids)
+                vals = {'users': [(4, u.id) for u in g.users]}
+                super(groups_implied, self).write(cr, uid, gids, vals, context)
         return res
-
-    def get_maximal(self, cr, uid, ids, context=None):
-        "return the maximal element among the group ids"
-        max_set, max_closure = set(), set()
-        for gid in ids:
-            if gid not in max_closure:
-                closure = set(self.get_closure(cr, uid, [gid], context))
-                max_set -= closure          # remove implied groups from max_set
-                max_set.add(gid)            # gid is maximal
-                max_closure |= closure      # update closure of max_set
-        if len(max_set) > 1:
-            log = logging.getLogger('res.groups')
-            log.warning('Groups %s are maximal among %s, only one expected.', max_set, ids)
-        return bool(max_set) and max_set.pop()
 
 groups_implied()
 
@@ -596,13 +641,10 @@ class users_implied(osv.osv):
         res = super(users_implied, self).write(cr, uid, ids, values, context)
         if values.get('groups_id'):
             # add implied groups for all users
-            groups_obj = self.pool.get('res.groups')
-            for u in self.browse(cr, uid, ids):
-                old_gids = map(int, u.groups_id)
-                new_gids = groups_obj.get_closure(cr, uid, old_gids, context)
-                if len(old_gids) != len(new_gids):
-                    values = {'groups_id': [(6, 0, new_gids)]}
-                    super(users_implied, self).write(cr, uid, [u.id], values, context)
+            for user in self.browse(cr, uid, ids):
+                gs = set(concat([g.trans_implied_ids for g in user.groups_id]))
+                vals = {'groups_id': [(4, g.id) for g in gs]}
+                super(users_implied, self).write(cr, uid, [user.id], vals, context)
         return res
 
 users_implied()
@@ -612,56 +654,16 @@ users_implied()
 #
 # Extension of res.groups and res.users for the special groups view in the users
 # form.  This extension presents groups with selection and boolean widgets:
-# - Groups named as "App/Name" (corresponding to root menu "App") are presented
-#   per application, with one boolean and selection field each.  The selection
-#   field defines a role "Name" for the given application.
-# - Groups named as "Stuff/Name" are presented as boolean fields and grouped
-#   under sections "Stuff".
-# - The remaining groups are presented as boolean fields and grouped in a
+# - Groups are shown by application, with boolean and/or selection fields.
+#   Selection fields typically defines a role "Name" for the given application.
+# - Uncategorized groups are presented as boolean fields and grouped in a
 #   section "Others".
 #
-
-class groups_view(osv.osv):
-    _inherit = 'res.groups'
-
-    def get_classified(self, cr, uid, context=None):
-        """ classify all groups by prefix; return a pair (apps, others) where
-            - both are lists like [("App", [("Name", browse_group), ...]), ...];
-            - apps is sorted in menu order;
-            - others are sorted in alphabetic order;
-            - groups not like App/Name are at the end of others, under _('Others')
-        """
-        # sort groups by implication, with implied groups first
-        groups = self.browse(cr, uid, self.search(cr, uid, []), context)
-        groups.sort(key=lambda g: set(self.get_closure(cr, uid, [g.id], context)))
-        
-        # classify groups depending on their names
-        classified = {}
-        for g in groups:
-            # split() returns 1 or 2 elements, so names[-2] is prefix or None
-            names = [None] + [s.strip() for s in g.name.split('/', 1)]
-            classified.setdefault(names[-2], []).append((names[-1], g))
-        
-        # determine the apps (that correspond to root menus, in order)
-        menu_obj = self.pool.get('ir.ui.menu')
-        menu_ids = menu_obj.search(cr, uid, [('parent_id','=',False)], context={'ir.ui.menu.full_list': True})
-        apps = []
-        for m in menu_obj.browse(cr, uid, menu_ids, context):
-            if m.name in classified:
-                # application groups are already sorted by implication
-                apps.append((m.name, classified.pop(m.name)))
-        
-        # other groups
-        others = sorted(classified.items(), key=lambda pair: pair[0])
-        if others and others[0][0] is None:
-            others.append((_('Others'), others.pop(0)[1]))
-        for sec, groups in others:
-            groups.sort(key=lambda pair: pair[0])
-        
-        return (apps, others)
-
-groups_view()
-
+# The user form view is modified by an inherited view (base.user_groups_view);
+# the inherited view replaces the field 'groups_id' by a set of reified group
+# fields (boolean or selection fields).  The arch of that view is regenerated
+# each time groups are changed.
+#
 # Naming conventions for reified groups fields:
 # - boolean field 'in_group_ID' is True iff
 #       ID is in 'groups_id'
@@ -677,133 +679,211 @@ def name_selection_groups(ids): return 'sel_groups_' + '_'.join(map(str, ids))
 def is_boolean_group(name): return name.startswith('in_group_')
 def is_boolean_groups(name): return name.startswith('in_groups_')
 def is_selection_groups(name): return name.startswith('sel_groups_')
-def is_field_group(name):
+def is_reified_group(name):
     return is_boolean_group(name) or is_boolean_groups(name) or is_selection_groups(name)
 
 def get_boolean_group(name): return int(name[9:])
 def get_boolean_groups(name): return map(int, name[10:].split('_'))
 def get_selection_groups(name): return map(int, name[11:].split('_'))
 
-def encode(s): return s.encode('utf8') if isinstance(s, unicode) else s
 def partition(f, xs):
     "return a pair equivalent to (filter(f, xs), filter(lambda x: not f(x), xs))"
     yes, nos = [], []
     for x in xs:
-        if f(x):
-            yes.append(x)
-        else:
-            nos.append(x)
+        (yes if f(x) else nos).append(x)
     return yes, nos
+
+
+
+class groups_view(osv.osv):
+    _inherit = 'res.groups'
+
+    def create(self, cr, uid, values, context=None):
+        res = super(groups_view, self).create(cr, uid, values, context)
+        self.update_user_groups_view(cr, uid, context)
+        return res
+
+    def write(self, cr, uid, ids, values, context=None):
+        res = super(groups_view, self).write(cr, uid, ids, values, context)
+        self.update_user_groups_view(cr, uid, context)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(groups_view, self).unlink(cr, uid, ids, context)
+        self.update_user_groups_view(cr, uid, context)
+        return res
+
+    def update_user_groups_view(self, cr, uid, context=None):
+        # the view with id 'base.user_groups_view' inherits the user form view,
+        # and introduces the reified group fields
+        view = self.get_user_groups_view(cr, uid, context)
+        if view:
+            xml = u"""<?xml version="1.0" encoding="utf-8"?>
+<!-- GENERATED AUTOMATICALLY BY GROUPS -->
+<field name="groups_id" position="replace">
+%s
+%s
+</field>
+"""
+            xml1, xml2 = [], []
+            xml1.append('<separator string="%s" colspan="4"/>' % _('Applications'))
+            for app, kind, gs in self.get_groups_by_application(cr, uid, context):
+                if kind == 'selection':
+                    # application name with a selection field
+                    field_name = name_selection_groups(map(int, gs))
+                    xml1.append('<field name="%s"/>' % field_name)
+                    xml1.append('<newline/>')
+                else:
+                    # application separator with boolean fields
+                    app_name = app and app.name or _('Other')
+                    xml2.append('<separator string="%s" colspan="4"/>' % app_name)
+                    for g in gs:
+                        field_name = name_boolean_group(g.id)
+                        xml2.append('<field name="%s"/>' % field_name)
+            view.write({'arch': xml % ('\n'.join(xml1), '\n'.join(xml2))})
+        return True
+
+    def get_user_groups_view(self, cr, uid, context=None):
+        try:
+            view = self.pool.get('ir.model.data').get_object(cr, 1, 'base', 'user_groups_view', context)
+            assert view and view._table_name == 'ir.ui.view'
+        except Exception:
+            view = False
+        return view
+
+    def get_application_groups(self, cr, uid, domain=None, context=None):
+        return self.search(cr, uid, domain or [])
+
+    def get_groups_by_application(self, cr, uid, context=None):
+        """ return all groups classified by application (module category), as a list of pairs:
+                [(app, kind, [group, ...]), ...],
+            where app and group are browse records, and kind is either 'boolean' or 'selection'.
+            Applications are given in sequence order.  If kind is 'selection', the groups are
+            given in reverse implication order.
+        """
+        def linearized(gs):
+            gs = set(gs)
+            # determine sequence order: a group should appear after its implied groups
+            order = dict.fromkeys(gs, 0)
+            for g in gs:
+                for h in gs.intersection(g.trans_implied_ids):
+                    order[h] -= 1
+            # check whether order is total, i.e., sequence orders are distinct
+            if len(set(order.itervalues())) == len(gs):
+                return sorted(gs, key=lambda g: order[g])
+            return None
+
+        # classify all groups by application
+        gids = self.get_application_groups(cr, uid, context=context)
+        by_app, others = {}, []
+        for g in self.browse(cr, uid, gids, context):
+            if g.category_id:
+                by_app.setdefault(g.category_id, []).append(g)
+            else:
+                others.append(g)
+        # build the result
+        res = []
+        apps = sorted(by_app.iterkeys(), key=lambda a: a.sequence or 0)
+        for app in apps:
+            gs = linearized(by_app[app])
+            if gs:
+                res.append((app, 'selection', gs))
+            else:
+                res.append((app, 'boolean', by_app[app]))
+        if others:
+            res.append((False, 'boolean', others))
+        return res
+
+groups_view()
 
 class users_view(osv.osv):
     _inherit = 'res.users'
 
-    def _process_values_groups(self, cr, uid, values, context=None):
-        """ transform all reified group fields into a 'groups_id', adding 
-            also the implied groups """
-        add, rem = [], []
-        for k in values.keys():
-            if is_boolean_group(k):
-                if values.pop(k):
-                    add.append(get_boolean_group(k))
-                else:
-                    rem.append(get_boolean_group(k))
-            elif is_boolean_groups(k):
-                if not values.pop(k):
-                    rem.extend(get_boolean_groups(k))
-            elif is_selection_groups(k):
-                gid = values.pop(k)
-                if gid:
-                    rem.extend(get_selection_groups(k))
-                    add.append(gid)
-        if add or rem:
-            # remove groups in 'rem' and add groups in 'add'
-            gdiff = [(3, id) for id in rem] + [(4, id) for id in add]
-            values.setdefault('groups_id', []).extend(gdiff)
-        return True
-
     def create(self, cr, uid, values, context=None):
-        self._process_values_groups(cr, uid, values, context)
+        self._set_reified_groups(values)
         return super(users_view, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
-        self._process_values_groups(cr, uid, values, context)
+        self._set_reified_groups(values)
         return super(users_view, self).write(cr, uid, ids, values, context)
+
+    def _set_reified_groups(self, values):
+        """ reflect reified group fields in values['groups_id'] """
+        if 'groups_id' in values:
+            # groups are already given, ignore group fields
+            for f in filter(is_reified_group, values.iterkeys()):
+                del values[f]
+            return
+
+        add, remove = [], []
+        for f in values.keys():
+            if is_boolean_group(f):
+                target = add if values.pop(f) else remove
+                target.append(get_boolean_group(f))
+            elif is_boolean_groups(f):
+                if not values.pop(f):
+                    remove.extend(get_boolean_groups(f))
+            elif is_selection_groups(f):
+                remove.extend(get_selection_groups(f))
+                selected = values.pop(f)
+                if selected:
+                    add.append(selected)
+        # update values *only* if groups are being modified, otherwise
+        # we introduce spurious changes that might break the super.write() call.
+        if add or remove:
+            # remove groups in 'remove' and add groups in 'add'
+            values['groups_id'] = [(3, id) for id in remove] + [(4, id) for id in add]
+
+    def default_get(self, cr, uid, fields, context=None):
+        group_fields, fields = partition(is_reified_group, fields)
+        fields1 = (fields + ['groups_id']) if group_fields else fields
+        values = super(users_view, self).default_get(cr, uid, fields1, context)
+        self._get_reified_groups(group_fields, values)
+        return values
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         if not fields:
-            group_fields, fields = [], self.fields_get(cr, uid, context).keys()
-        else:
-            group_fields, fields = partition(is_field_group, fields)
-        if group_fields:
-            group_obj = self.pool.get('res.groups')
-            fields.append('groups_id')
-            # read the normal fields (and 'groups_id')
-            res = super(users_view, self).read(cr, uid, ids, fields, context, load)
-            records = res if isinstance(res, list) else [res]
-            for record in records:
-                # get the field 'groups_id' and insert the group_fields
-                groups = set(record['groups_id'])
-                for f in group_fields:
-                    if is_boolean_group(f):
-                        record[f] = get_boolean_group(f) in groups
-                    elif is_boolean_groups(f):
-                        record[f] = not groups.isdisjoint(get_boolean_groups(f))
-                    elif is_selection_groups(f):
-                        selected = groups.intersection(get_selection_groups(f))
-                        record[f] = group_obj.get_maximal(cr, uid, selected, context)
-            return res
-        return super(users_view, self).read(cr, uid, ids, fields, context, load)
+            fields = self.fields_get(cr, uid, context=context).keys()
+        group_fields, fields = partition(is_reified_group, fields)
+        fields.append('groups_id')
+        res = super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
+        for values in (res if isinstance(res, list) else [res]):
+            self._get_reified_groups(group_fields, values)
+        return res
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
-                context=None, toolbar=False, submenu=False):
-        # in form views, transform 'groups_id' into reified group fields
-        res = super(users_view, self).fields_view_get(cr, uid, view_id, view_type,
-                context, toolbar, submenu)
-        if view_type == 'form':
-            root = etree.fromstring(encode(res['arch']))
-            nodes = root.xpath("//field[@name='groups_id']")
-            if nodes:
-                # replace node by the reified group fields
-                fields = res['fields']
-                elems = []
-                apps, others = self.pool.get('res.groups').get_classified(cr, uid, context)
-                # create section Applications
-                elems.append('<separator colspan="6" string="%s"/>' % _('Applications'))
-                for app, groups in apps:
-                    ids = [g.id for name, g in groups]
-                    app_name = name_boolean_groups(ids)
-                    sel_name = name_selection_groups(ids)
-                    selection = [(g.id, name) for name, g in groups]
-                    fields[app_name] = {'type': 'boolean', 'string': app}
-                    tips = [name + ': ' + (g.comment or '') for name, g in groups]
-                    if tips:
-                        fields[app_name].update(help='\n'.join(tips))
-                    fields[sel_name] = {'type': 'selection', 'string': 'Group', 'selection': selection}
-                    attrs = {'invisible': [('%s' % app_name, '=', False)]}
-                    elems.append("""
-                        <field name="%(app)s"/>
-                        <field name="%(sel)s" nolabel="1" colspan="2"
-                            attrs=%(attrs)s modifiers=%(json_attrs)s/>
-                        <newline/>
-                        """ % {'app': app_name, 'sel': sel_name,
-                               'attrs': quoteattr(str(attrs)),
-                               'json_attrs': quoteattr(simplejson.dumps(attrs))})
-                # create other sections
-                for sec, groups in others:
-                    elems.append('<separator colspan="6" string="%s"/>' % sec)
-                    for gname, g in groups:
-                        name = name_boolean_group(g.id)
-                        fields[name] = {'type': 'boolean', 'string': gname}
-                        if g.comment:
-                            fields[name].update(help=g.comment)
-                        elems.append('<field name="%s"/>' % name)
-                    elems.append('<newline/>')
-                # replace xml node by new arch
-                new_node = etree.fromstring('<group col="6">' + ''.join(elems) + '</group>')
-                for node in nodes:
-                    node.getparent().replace(node, new_node)
-                res['arch'] = etree.tostring(root)
+    def _get_reified_groups(self, fields, values):
+        """ compute the given reified group fields from values['groups_id'] """
+        gids = set(values.get('groups_id') or [])
+        for f in fields:
+            if is_boolean_group(f):
+                values[f] = get_boolean_group(f) in gids
+            elif is_boolean_groups(f):
+                values[f] = not gids.isdisjoint(get_boolean_groups(f))
+            elif is_selection_groups(f):
+                selected = [gid for gid in get_selection_groups(f) if gid in gids]
+                values[f] = selected and selected[-1] or False
+
+    def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
+        res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access)
+        # add reified groups fields
+        for app, kind, gs in self.pool.get('res.groups').get_groups_by_application(cr, uid, context):
+            if kind == 'selection':
+                # selection group field
+                tips = ['%s: %s' % (g.name, g.comment or '') for g in gs]
+                res[name_selection_groups(map(int, gs))] = {
+                    'type': 'selection',
+                    'string': app and app.name or _('Other'),
+                    'selection': [(g.id, g.name) for g in gs],
+                    'help': '\n'.join(tips),
+                }
+            else:
+                # boolean group fields
+                for g in gs:
+                    res[name_boolean_group(g.id)] = {
+                        'type': 'boolean',
+                        'string': g.name,
+                        'help': g.comment,
+                    }
         return res
 
 users_view()
