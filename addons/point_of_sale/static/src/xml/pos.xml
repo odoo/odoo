@@ -97,17 +97,35 @@
                     <header><h2>Payment</h2></header>
                     <div class="pos-step-container">
                         <div class="pos-payment-container">
-                            <span id="payment-due-total" class="payment-due pos-rigth-align"></span>
+                            <br />
+                            <table>
+                                <tr>
+                                    <td class="paymentline-type">Total:</td>
+                                    <td class="paymentline-amount pos-rigth-align">
+                                        <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                        <span id="payment-due-total"></span>
+                                        <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                    </td>
+                                </tr>
+                            </table>
                             <table id="paymentlines">
                             </table>
                             <table>
                                 <tr>
                                     <td class="paymentline-type">Paid:</td>
-                                    <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <td class="paymentline-amount pos-rigth-align"><span id="payment-paid-total"></span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/></td>
+                                    <td class="paymentline-amount pos-rigth-align">
+                                        <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                        <span id="payment-paid-total"></span>
+                                        <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="paymentline-type">Change:</td>
-                                    <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <td class="paymentline-amount pos-rigth-align"><span id="payment-remaining"></span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/></td>
+                                    <td class="paymentline-amount pos-rigth-align">
+                                        <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                        <span id="payment-remaining"></span>
+                                        <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
