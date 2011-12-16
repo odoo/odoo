@@ -68,7 +68,11 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         rows.push(row);
         var filters = [];
         _.each(items, function (item) {
-            if (item.attrs.invisible === '1') { return; }
+            if (item.attrs.modifiers) {
+                var modifiers = item.attrs.modifiers = JSON.parse(
+                        item.attrs.modifiers);
+                if (modifiers.invisible) { return; }
+            }
             if (filters.length && item.tag !== 'filter') {
                 row.push(
                     new openerp.web.search.FilterGroup(
