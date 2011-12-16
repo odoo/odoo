@@ -154,11 +154,11 @@ class procurement_order(osv.osv):
             return {'value': v}
         return {}
 
-    def check_product(self, cr, uid, ids):
+    def check_product(self, cr, uid, ids, context=None):
         """ Checks product type.
         @return: True or False
         """
-        return all(procurement.product_id.type in ('product', 'consu') for procurement in self.browse(cr, uid, ids))
+        return all(proc.product_id.type in ('product', 'consu') for proc in self.browse(cr, uid, ids, context=context))
 
     def check_move_cancel(self, cr, uid, ids, context=None):
         """ Checks if move is cancelled or not.
@@ -174,9 +174,9 @@ class procurement_order(osv.osv):
         """ Checks if move is done or not.
         @return: True or False.
         """
-        if not context:
-            context = {}
-        return all(not procurement.move_id or procurement.move_id.state == 'done' for procurement in self.browse(cr, uid, ids, context=context))
+        return all(proc.product_id.type == 'service' or (proc.move_id and proc.move_id.state == 'done') \
+                    for proc in self.browse(cr, uid, ids, context=context))
+
     #
     # This method may be overrided by objects that override procurement.order
     # for computing their own purpose
@@ -258,26 +258,25 @@ class procurement_order(osv.osv):
 
     def check_produce(self, cr, uid, ids, context=None):
         """ Checks product type.
-        @return: True or Product Id.
+        @return: True or False
         """
-        res = True
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for procurement in self.browse(cr, uid, ids, context=context):
-            if procurement.product_id.product_tmpl_id.supply_method <> 'produce':
-                partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  procurement.product_id.seller_ids if partner_id])
-                if partner_list:
-                    partner = partner_list and partner_list[0] and partner_list[0][1] and partner_list[0][1].name or False
-                    if user.company_id and user.company_id.partner_id:
-                        if partner.id == user.company_id.partner_id.id:
-                            return True
+            product = procurement.product_id
+            #TOFIX: if product type is 'service' but supply_method is 'buy'.
+            if product.supply_method <> 'produce':
+                supplier = product.seller_id
+                if supplier and user.company_id and user.company_id.partner_id:
+                    if supplier.id == user.company_id.partner_id.id:
+                        continue
                 return False
-            if procurement.product_id.product_tmpl_id.type=='service':
-                res = res and self.check_produce_service(cr, uid, procurement, context)
+            if product.type=='service':
+                res = self.check_produce_service(cr, uid, procurement, context)
             else:
-                res = res and self.check_produce_product(cr, uid, procurement, context)
+                res = self.check_produce_product(cr, uid, procurement, context)
             if not res:
                 return False
-        return res
+        return True
 
     def check_buy(self, cr, uid, ids):
         """ Checks product type.
