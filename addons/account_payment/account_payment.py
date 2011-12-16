@@ -23,6 +23,7 @@ import time
 
 from osv import osv, fields
 import netsvc
+from tools.translate import _
 
 class payment_mode(osv.osv):
     _name= 'payment.mode'
@@ -108,6 +109,7 @@ class payment_order(osv.osv):
         self.write(cr, uid, ids, {'state': 'draft'})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
+            wf_service.trg_delete(uid, 'payment.order', id, cr)
             wf_service.trg_create(uid, 'payment.order', id, cr)
         return True
 
@@ -118,6 +120,16 @@ class payment_order(osv.osv):
             if not order['reference']:
                 reference = ir_seq_obj.get(cr, uid, 'payment.order')
                 self.write(cr, uid, order['id'], {'reference':reference})
+        return True
+    
+    def action_cancel(self, cr, uid, ids, *args):
+        for order in self.browse(cr, uid, ids):
+            for line in order.line_ids:
+                if line.bank_statement_line_id:
+                    raise osv.except_osv(_('Warning !'),
+                    _('Payment order line "%s" is already imported in Bank statement "%s".')\
+                    %(line.name, line.bank_statement_line_id.statement_id.name,))
+        self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
     def set_done(self, cr, uid, ids, *args):
