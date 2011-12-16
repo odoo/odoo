@@ -68,11 +68,6 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         rows.push(row);
         var filters = [];
         _.each(items, function (item) {
-            if (item.attrs.modifiers) {
-                var modifiers = item.attrs.modifiers = JSON.parse(
-                        item.attrs.modifiers);
-                if (modifiers.invisible) { return; }
-            }
             if (filters.length && item.tag !== 'filter') {
                 row.push(
                     new openerp.web.search.FilterGroup(
@@ -588,6 +583,7 @@ openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.
     init: function (view) {
         this._super(view);
         this.view.inputs.push(this);
+        this.style = undefined;
     },
     get_context: function () {
         throw new Error(
@@ -596,6 +592,16 @@ openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.
     get_domain: function () {
         throw new Error(
             "get_domain not implemented for widget " + this.attrs.type);
+    },
+    load_attrs: function (attrs) {
+        if (attrs.modifiers) {
+            attrs.modifiers = JSON.parse(attrs.modifiers);
+            attrs.invisible = attrs.modifiers.invisible || false;
+            if (attrs.invisible) {
+                this.style = 'display: none;'
+            }
+        }
+        this.attrs = attrs;
     }
 });
 openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends openerp.web.search.FilterGroup# */{
@@ -656,7 +662,7 @@ openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.w
      */
     init: function (node, view) {
         this._super(view);
-        this.attrs = node.attrs;
+        this.load_attrs(node.attrs);
         this.classes = [this.attrs.string ? 'filter_label' : 'filter_icon'];
         this.make_id('filter', this.attrs.name);
     },
@@ -714,14 +720,9 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
      */
     init: function (view_section, field, view) {
         this._super(view);
-        this.attrs = _.extend({}, field, view_section.attrs);
+        this.load_attrs(_.extend({}, field, view_section.attrs));
         this.filters = new openerp.web.search.FilterGroup(_.compact(_.map(
             view_section.children, function (filter_node) {
-                if (filter_node.attrs.modifiers) {
-                    var modifiers = filter_node.attrs.modifiers = JSON.parse(
-                            filter_node.attrs.modifiers);
-                    if (modifiers.invisible) { return; }
-                }
                 if (filter_node.attrs.string &&
                         typeof console !== 'undefined' && console.debug) {
                     console.debug("Filter-in-field with a 'string' attribute "

@@ -1210,6 +1210,7 @@
         t-att-id="element_id"
         t-att-title="attrs.help"
         t-att-class="classes.join(' ')"
+        t-att-style="style"
         t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined">
     <img t-att-src="_s + '/web/static/src/img/icons/' + (attrs.icon || 'gtk-home') + '.png'" width="16" height="16"/>
     <br t-if="attrs.string"/>
@@ -1222,11 +1223,12 @@
 <t t-name="SearchView.field">
     <label t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
            t-att-title="attrs.help"
-           t-att-for="element_id">
+           t-att-for="element_id"
+           t-att-style="style">
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">?</span>
     </label>
-    <div>
+    <div t-att-style="style">
         <input type="text" size="15" t-att-name="attrs.name"
                t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"
                t-att-id="element_id"
@@ -1237,11 +1239,12 @@
 <t t-name="SearchView.date">
     <label t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
            t-att-title="attrs.help"
-           t-att-for="element_id">
+           t-att-for="element_id"
+           t-att-style="style">
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">?</span>
     </label>
-    <div>
+    <div t-att-style="style">
         <span t-att-id="element_id"></span>
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
@@ -1249,11 +1252,12 @@
 <t t-name="SearchView.field.selection">
     <label t-att-title="attrs.help"
            t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
-           t-att-for="element_id">
+           t-att-for="element_id"
+           t-att-style="style">
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">?</span>
     </label>
-    <div>
+    <div t-att-style="style">
         <select t-att-name="attrs.name" t-att-id="element_id"
                 t-att-autofocus="attrs.default_focus === '1' || undefined">
             <option t-if="prepend_empty"/>
