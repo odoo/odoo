@@ -355,18 +355,23 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      */
     init: function() {
         this._super();
+        this.server = null;
+        this.debug = ($.deparam($.param.querystring()).debug != undefined);
         // TODO: session store in cookie should be optional
         this.name = openerp._session_id;
     },
-    bind: function(host, protocol) {
-        var self = this;
-        this.host = (host == undefined) ? location.host : host;
-        this.protocol = (protocol == undefined) ? location.protocol : protocol;
-        this.prefix = this.protocol + '//' + this.host;
-        openerp.web.qweb.default_dict['_s'] = this.prefix
-        this.rpc_mode = (this.host == location.host) ? "json" : "jsonp";
-        this.rpc_function = (this.host == location.host) ? this.rpc_json : this.rpc_jsonp;
-        this.debug = (window.location.search.indexOf('?debug') !== -1);
+    bind: function(server) {
+        if (this.server) {
+            throw new Error("Connection already bound to " + this.server);
+        } 
+        
+        var hostname = _.str.sprintf('%s//%s', location.protocol, location.host);
+        this.server = _.str.rtrim((!server) ? hostname : server, '/');
+        openerp.web.qweb.default_dict['_s'] = this.server;
+        this.rpc_function = (this.server == hostname) ? this.rpc_json : this.rpc_jsonp;
+
+        this.prefix = this.server;  // make al happy
+
         this.session_id = false;
         this.uid = false;
         this.username = false;
