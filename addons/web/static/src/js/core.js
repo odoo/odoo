@@ -563,7 +563,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 user_context: result.context
             });
             // TODO: session store in cookie should be optional
-            self.set_cookie('session_id', this.session_id);
+            self.set_cookie('session_id', self.session_id);
             return self.load_modules();
         });
     },

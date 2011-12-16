@@ -629,9 +629,6 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
             callback: continuation || function() {}
         });
     },
-    on_logout: function() {
-        this.session.logout();
-    }
 });
 
 openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
@@ -1001,7 +998,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
 
         this.header = new openerp.web.Header(this);
         this.login = new openerp.web.Login(this);
-        this.header.on_logout.add(this.login.on_logout);
+        this.header.on_logout.add(this.on_logout);
         this.header.on_action.add(this.on_menu_action);
 
         this._current_state = null;
@@ -1050,7 +1047,9 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         var n = this.notification;
         n.warn.apply(n, arguments);
     },
-    on_loggued_out: function() {
+    on_logout: function() {
+        this.session.session_logout();
+        this.login.on_login_invalid();
         this.header.do_update();
         $(window).unbind('hashchange', this.on_hashchange);
         this.do_push_state({});
