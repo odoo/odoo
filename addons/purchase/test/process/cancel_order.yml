@@ -5,13 +5,6 @@
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase4}
 -
-  I changed Expected Date to Next Day.
--
-  !python {model: purchase.order}: |
-    import datetime
-    next_day = (datetime.date.today()+datetime.timedelta(days=1))
-    self.write(cr, uid, [ref("order_purchase4")], {'minimum_planned_date': next_day})
--
   I check the "Approved" status  after confirmed RFQ.
 -
   !assert {model: purchase.order, id: order_purchase4}:

@@ -1,14 +1,4 @@
 -
-  I create the Default invoicing control method "Based on Purchase Order Lines".
--
-  !record {model: purchase.config.wizard, id: invoice_control}:
-    default_method: manual
--
-  I set the Default invoicing control method "Based on Purchase Order Lines".
--
-  !python {model: purchase.config.wizard}: |
-    self.execute(cr, uid, [ref('invoice_control')])
--
    In order to test the flow, I start it from confirmed purchase order.
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase6}
@@ -21,6 +11,16 @@
     context.update({'active_model': 'purchase.order', 'active_ids': [ref("order_purchase6")]})
     for purchase_line in purchase_order.order_line:
         invoice_line_obj.makeInvoices(cr, uid, purchase_line.id, context=context)
-        assert len(purchase_order.invoice_ids) == 1, "Invoice should be generated."
-        assert purchase_line.invoiced == True
-        assert len(purchase_line.invoice_lines) == 1, "Invoice line should be generated."
+-
+  I check the invoice of order.
+-
+   !python {model: purchase.order}: |
+     purchase_order = self.browse(cr, uid, ref("order_purchase6"))
+     for purchase_line in purchase_order.order_line:
+       assert len(purchase_order.invoice_ids) == 1, "Invoice should be generated."
+-
+  I create the Default invoicing control method "Based on Purchase Order Lines".
+-
+  !python {model: purchase.config.wizard}: |
+    new_id = self.create(cr ,uid, {'default_method': 'manual'})
+    self.execute(cr, uid, [new_id])
