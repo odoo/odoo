@@ -360,18 +360,13 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         // TODO: session store in cookie should be optional
         this.name = openerp._session_id;
     },
-    bind: function(server) {
-        if (this.server) {
-            throw new Error("Connection already bound to " + this.server);
-        } 
-        
-        var hostname = _.str.sprintf('%s//%s', location.protocol, location.host);
-        this.server = _.str.rtrim((!server) ? hostname : server, '/');
-        openerp.web.qweb.default_dict['_s'] = this.server;
-        this.rpc_function = (this.server == hostname) ? this.rpc_json : this.rpc_jsonp;
-
-        this.prefix = this.server;  // make al happy
-
+    bind: function(origin) {
+        var window_origin = location.protocol+"//"+location.host;
+        this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
+        this.prefix = this.origin;
+        this.server = this.origin; // keep chs happy
+        openerp.web.qweb.default_dict['_s'] = this.origin;
+        this.rpc_function = (this.origin == window_origin) ? this.rpc_json : this.rpc_jsonp;
         this.session_id = false;
         this.uid = false;
         this.username = false;
@@ -385,14 +380,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.ready = $.Deferred();
         return this.session_init();
     },
-
-    /**
-     * Called when a rpc call fail due to an invalid session.
-     * By default, it's a noop
-     */
-    on_session_invalid: function(retry_callback) {
-    },
-
     /**
      * Executes an RPC call, registering the provided callbacks.
      *
@@ -566,11 +553,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             return deferred;
         });
     },
-
-    is_valid: function() {
+    session_is_valid: function() {
         return !!this.uid;
     },
-
     /**
      * The session is validated either by login or by restoration of a previous session
      */
@@ -594,6 +579,12 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     session_logout: function() {
         this.set_cookie('session_id', '');
         window.location.reload();
+    },
+    /**
+     * Called when a rpc call fail due to an invalid session.
+     * By default, it's a noop
+     */
+    on_session_invalid: function(retry_callback) {
     },
     /**
      * Fetches a cookie stored by an openerp session

@@ -598,7 +598,7 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
     do_login: function (db, login, password) {
         var self = this;
         this.session.session_authenticate(db, login, password).then(function() {
-            if(self.session.is_valid()) {
+            if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
                     if(self.remember_credentials) {
                         localStorage.setItem('last_db_login_success', db);
