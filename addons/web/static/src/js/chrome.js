@@ -1123,7 +1123,11 @@ openerp.web.EmbeddedClient = openerp.web.Widget.extend({
 });
 
 openerp.web.embed = function (origin, dbname, login, key, action, options) {
-    // TODO insert <link rel="stylesheet" href="origin +'/web/webclient/css'"> into dom head
+    $('head').append($('<link>', {
+        'rel': 'stylesheet',
+        'type': 'text/css',
+        'href': origin +'/web/webclient/css'
+    }));
     var currentScript = document.currentScript;
     if (!currentScript) {
         var sc = document.getElementsByTagName('script');
