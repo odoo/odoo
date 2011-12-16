@@ -39,7 +39,6 @@ It adds sales name and sales Reference on production order.
     'depends': ['mrp', 'sale'],
     'init_xml': [],
     'update_xml': [
-        'security/sale_mrp_security.xml',
         'security/ir.model.access.csv',
         'sale_mrp_view.xml',
     ],
