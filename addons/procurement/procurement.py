@@ -63,7 +63,6 @@ mrp_property()
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
-
     _columns= {
         'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
     }
@@ -482,7 +481,7 @@ class StockPicking(osv.osv):
                 if move.state == 'done' and move.procurements:
                     for procurement in move.procurements:
                         wf_service.trg_validate(user, 'procurement.order',
-                                procurement.id, 'button_check', cursor)
+                            procurement.id, 'button_check', cursor)
         return res
 
 StockPicking()
