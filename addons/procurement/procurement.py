@@ -158,12 +158,7 @@ class procurement_order(osv.osv):
         """ Checks product type.
         @return: True or False
         """
-        res = False
-        for procurement in self.browse(cr, uid, ids, context=context):
-            product = procurement.product_id
-            if product.type in ('product', 'consu'):
-                res = True
-        return res
+        return all(proc.product_id.type in ('product', 'consu') for proc in self.browse(cr, uid, ids, context=context))
 
     def check_move_cancel(self, cr, uid, ids, context=None):
         """ Checks if move is cancelled or not.
@@ -179,14 +174,9 @@ class procurement_order(osv.osv):
         """ Checks if move is done or not.
         @return: True or False.
         """
-        res = False
-        for procurement in self.browse(cr, uid, ids, context=context):
-            product = procurement.product_id
-            if product.type == 'service':
-                res = True
-            if procurement.move_id and procurement.move_id.state == 'done':
-                res = True
-        return res
+        return all(proc.product_id.type == 'service' or (proc.move_id and proc.move_id.state == 'done') \
+                    for proc in self.browse(cr, uid, ids, context=context))
+
     #
     # This method may be overrided by objects that override procurement.order
     # for computing their own purpose
@@ -268,9 +258,8 @@ class procurement_order(osv.osv):
 
     def check_produce(self, cr, uid, ids, context=None):
         """ Checks product type.
-        @return: True or Product Id.
+        @return: True or False
         """
-        res = True
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for procurement in self.browse(cr, uid, ids, context=context):
             product = procurement.product_id
@@ -279,15 +268,15 @@ class procurement_order(osv.osv):
                 supplier = product.seller_id
                 if supplier and user.company_id and user.company_id.partner_id:
                     if supplier.id == user.company_id.partner_id.id:
-                        res = True
-                res = False
+                        continue
+                return False
             if product.type=='service':
-                res = res and self.check_produce_service(cr, uid, procurement, context)
+                res = self.check_produce_service(cr, uid, procurement, context)
             else:
-                res = res and self.check_produce_product(cr, uid, procurement, context)
+                res = self.check_produce_product(cr, uid, procurement, context)
             if not res:
                 return False
-        return res
+        return True
 
     def check_buy(self, cr, uid, ids):
         """ Checks product type.

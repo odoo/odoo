@@ -37,14 +37,8 @@ class procurement_order(osv.osv):
         """ Checks if task is done or not.
         @return: True or False.
         """
-        res = False
-        for procurement in self.browse(cr, uid, ids, context=context):
-            product = procurement.product_id
-            if product.type<>'service':
-                res = True
-            if procurement.task_id and procurement.task_id.state in ('done', 'cancelled'):
-                res = True
-        return res
+        return all(proc.product_id.type != 'service' or (proc.task_id and proc.task_id.state in ('done', 'cancelled')) \
+                    for proc in self.browse(cr, uid, ids, context=context))
 
     def check_produce_service(self, cr, uid, procurement, context=None):    
         return True
@@ -62,10 +56,11 @@ class procurement_order(osv.osv):
         project_project = self.pool.get('project.project')
         project = procurement.product_id.project_id
         if not project and procurement.sale_line_id:
-            analytic_account = procurement.sale_line_id.order_id.project_id
-            if analytic_account:
-                project_ids = project_project.search(cr, uid, [('analytic_account_id', '=', account_id)])
-                project = project_project.browse(cr, uid, project_ids[0], context=context)
+            # find the project corresponding to the analytic account of the sale order
+            account = procurement.sale_line_id.order_id.project_id
+            project_ids = project_project.search(cr, uid, [('analytic_account_id', '=', account.id)])
+            projects = project_project.browse(cr, uid, project_ids, context=context)
+            project = projects and projects[0] or False
         return project
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
@@ -85,7 +80,7 @@ class procurement_order(osv.osv):
                 'project_id':  project and project.id or False,
                 'company_id': procurement.company_id.id,
             },context=context)
-            self.write(cr, uid, [procurement.id], {'task_id':task_id, 'state': 'running'}, context=context)
+            self.write(cr, uid, [procurement.id], {'task_id': task_id, 'state': 'running'}, context=context)
         return task_id
 
 procurement_order()
