@@ -16,6 +16,7 @@
     import netsvc
     wf_service = netsvc.LocalService("workflow")
     pick_id = context.get('id2')
+    self.cancel_assign(cr, uid, [pick_id])
     picking = self.browse(cr, uid, pick_id, context=context)
     wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
     assert picking.state == 'cancel',"Delivery order should be cancelled."

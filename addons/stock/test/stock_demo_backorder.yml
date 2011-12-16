@@ -5,6 +5,11 @@
 -
   !python {model: stock.picking}: |
     self.draft_force_assign(cr, uid, [ref('stock.stock_picking_1')], {})
+    self.draft_validate(cr, uid, [ref('stock.stock_picking_1')], {})
+    try:
+      self.action_assign(cr, uid, [ref('stock.stock_picking_1')], {})
+    except:
+      pass
     self.force_assign(cr, uid, [ref('stock.stock_picking_1')], {})
 -
   I add a new move line in the delivery order.
@@ -66,3 +71,4 @@
       assert move.state == 'done',"Stock move of %s picking should be in 'Done' state"%(move.picking_id.name)
     for move in stock.browse(cr, uid, assign_move):
      assert move.state == 'assigned' or 'draft',"Stock move of %s picking should be in 'Available' state"%(move.picking_id.name)
+
