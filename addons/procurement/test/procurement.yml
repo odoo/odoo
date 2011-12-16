@@ -81,11 +81,12 @@
     proc = self.browse(cr, uid, [proc_id])[0]
     assert proc.state == 'ready' or 'exception',"Procurement should be in Ready or Exception state"
 -
+  I create a record for procurement orde point with automatic option.
+-
+  !record {model: procurement.orderpoint.compute, id: proc_copute_auto}:
+    automatic: True
+-
   I compute minimum stock.
 -
   !python {model: procurement.orderpoint.compute}: |
-    proc_id = context.get('proc')
-    context.update({'active_model':'procurement.order','active_id':proc_id, 'automatic':True})
-    values = self.default_get(cr, uid, ['automatic'], context)
-    ids = self.create(cr, uid, values, context)
-    self.procure_calculation(cr, uid, [ids], context)
+    self.procure_calculation(cr, uid, [ref('proc_copute_auto')], context)
