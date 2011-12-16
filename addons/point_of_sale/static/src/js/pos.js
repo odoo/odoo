@@ -509,7 +509,8 @@ openerp.point_of_sale = function(db) {
         },
         initialize: function(options) {
             this.shop = options.shop;
-            return this.shop.bind('change:selectedOrder', this.reset, this);
+            this.shop.bind('change:selectedOrder', this.changedSelectedOrder, this);
+            this.changedSelectedOrder();
         },
         appendNewChar: function(newChar) {
             var oldBuffer;
@@ -527,7 +528,7 @@ openerp.point_of_sale = function(db) {
                     buffer: (this.get('buffer')) + newChar
                 });
             }
-            return this.updateTarget();
+            this.updateTarget();
         },
         deleteLastChar: function() {
             var tempNewBuffer;
@@ -538,7 +539,7 @@ openerp.point_of_sale = function(db) {
             this.set({
                 buffer: tempNewBuffer
             });
-            return this.updateTarget();
+            this.updateTarget();
         },
         switchSign: function() {
             var oldBuffer;
@@ -546,16 +547,25 @@ openerp.point_of_sale = function(db) {
             this.set({
                 buffer: oldBuffer[0] === '-' ? oldBuffer.substr(1) : "-" + oldBuffer
             });
-            return this.updateTarget();
+            this.updateTarget();
         },
         changeMode: function(newMode) {
-            return this.set({
+            this.set({
                 buffer: "0",
                 mode: newMode
             });
         },
+        changedSelectedOrder: function() {
+            if (this.currentSaleOrder) {
+                this.currentSaleOrder.unbind();
+                this.currentSaleOrder.get('orderLines').unbind();
+            }
+            this.currentSaleOrder = this.shop.get('selectedOrder');
+            this.currentSaleOrder.get('orderLines').bind('add', this.reset, this);
+            this.reset();
+        },
         reset: function() {
-            return this.set({
+            this.set({
                 buffer: "0",
                 mode: "quantity"
             });
