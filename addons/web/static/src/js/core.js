@@ -361,7 +361,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.protocol = (protocol == undefined) ? location.protocol : protocol;
         this.prefix = this.protocol + '//' + this.host;
         openerp.web.qweb.default_dict['_s'] = this.prefix
-        this.rpc_mode = (host == location.host) ? "json" : "jsonp";
+        this.rpc_mode = (this.host == location.host) ? "json" : "jsonp";
+        this.rpc_function = (this.host == location.host) ? this.rpc_json : this.rpc_jsonp;
         this.debug = (window.location.search.indexOf('?debug') !== -1);
         this.session_id = false;
         this.uid = false;
@@ -403,12 +404,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             jsonrpc: '2.0',
             method: 'call',
             params: params,
-            id: _.uniqueId('oe-')
+            id: _.uniqueId('r')
         };
-        // Call using the rpc_mode
         var deferred = $.Deferred();
         this.on_rpc_request();
-        this.rpc_json(url, payload).then(
+        this.rpc_function(url, payload).then(
             function (response, textStatus, jqXHR) {
                 self.on_rpc_response();
                 if (!response.error) {
@@ -462,32 +462,35 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
     rpc_jsonp: function(url, payload) {
         var self = this;
+        // extracted from payload to set on the url
+        var data = {
+            session_id: this.session_id,
+            id: payload.id,
+        };
+        url.url = this.get_url(url.url);
         var ajax = _.extend({
             type: "GET",
             dataType: 'jsonp', 
             jsonp: 'jsonp',
             cache: false,
-            data: {
-                session_id: this.session_id,
-                id: payload.id,
-            }
+            data: data
         }, url);
         var payload_str = JSON.stringify(payload);
         var payload_url = $.param({r:payload_str});
         if(playload_url.length < 2000) {
-            // Direct json request
+            // Direct jsonp request
             ajax.data.r = payload_str;
             return $.ajax(ajax);
         } else {
-            // Indirect json request
-            var ifid = _.uniqueId('oe_rpc_iframe_');
+            // Indirect jsonp request
+            var ifid = _.uniqueId('oe_rpc_iframe');
             var display = options.openerp.debug ? 'block' : 'none';
             var $iframe = $(_.str.sprintf("<iframe src='javascript:false;' name='%s' id='%s' style='display:%s'></iframe>", ifid, ifid, display));
             var $form = $('<form>')
                         .attr('method', 'POST')
                         .attr('target', ifid)
                         .attr('enctype', "multipart/form-data")
-                        .attr('action', ajax.url)
+                        .attr('action', ajax.url + '?' + $.param(data))
                         .append($('<input type="hidden" name="r" />').attr('value', payload_str))
                         .hide()
                         .appendTo($('body'));
@@ -514,7 +517,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             });
             // append the iframe to the DOM (will trigger the first load)
             $form.after($iframe);
-            return deffered;
+            return deferred;
         }
     },
     on_rpc_request: function() {
@@ -696,6 +699,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             }
         }
     },
+    get_url: function (file) {
+        return this.prefix + file;
+    },
     /**
      * Cooperative file download implementation, for ajaxy APIs.
      *
@@ -716,9 +722,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      * @param {Function} [options.error] callback in case of request error, provided with the error body
      * @param {Function} [options.complete] called after both ``success`` and ``error` callbacks have executed
      */
-    get_url: function (file) {
-        return this.prefix + file;
-    },
     get_file: function (options) {
         // need to detect when the file is done downloading (not used
         // yet, but we'll need it to fix the UI e.g. with a throbber
