@@ -374,7 +374,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.shortcuts = [];
         this.active_id = null;
         this.ready = $.Deferred();
-        return this.session_restore();
+        return this.session_init();
     },
     /**
      * Executes an RPC call, registering the provided callbacks.
@@ -415,6 +415,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     deferred.resolve(response["result"], textStatus, jqXHR);
                 } else if (response.error.data.type === "session_invalid") {
                     self.uid = false;
+                    // TODO deprecate or use a deferred on login.do_ask_login()
                     self.on_session_invalid(function() {
                         self.rpc(url, payload.params,
                             function() { deferred.resolve.apply(deferred, arguments); },
@@ -525,7 +526,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     /**
      * Init a session, reloads from cookie, if it exists
      */
-    session_restore: function () {
+    session_init: function () {
         var self = this;
         // TODO: session store in cookie should be optional
         this.session_id = this.get_cookie('session_id');
