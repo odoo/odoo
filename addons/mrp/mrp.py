@@ -498,13 +498,10 @@ class mrp_production(osv.osv):
     ]
 
     def unlink(self, cr, uid, ids, context=None):
-        unlink_ids = []
-        for production in self.read(cr, uid, ids, ['state'], context=context):
-            if production['state'] in ['draft','cancel']:
-                unlink_ids.append(production['id'])
-            else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a manufacturing order in the state \'%s\'!') % production['state'])
-        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+        for production in self.browse(cr, uid, ids, context=context):
+            if production.state not in ('draft', 'cancel'):
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a manufacturing order in state \'%s\'') % production.state)
+        return super(mrp_production, self).unlink(cr, uid, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
