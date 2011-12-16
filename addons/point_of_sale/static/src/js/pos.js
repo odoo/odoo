@@ -502,21 +502,16 @@ openerp.point_of_sale = function(db) {
      The numpad handles both the choice of the property currently being modified
      (quantity, price or discount) and the edition of the corresponding numeric value.
      */
-    var NumpadState = (function() {
-        __extends(NumpadState, Backbone.Model);
-        function NumpadState() {
-            NumpadState.__super__.constructor.apply(this, arguments);
-        }
-
-        NumpadState.prototype.defaults = {
+    var NumpadState = Backbone.Model.extend({
+        defaults: {
             buffer: "0",
             mode: "quantity"
-        };
-        NumpadState.prototype.initialize = function(options) {
+        },
+        initialize: function(options) {
             this.shop = options.shop;
             return this.shop.bind('change:selectedOrder', this.reset, this);
-        };
-        NumpadState.prototype.appendNewChar = function(newChar) {
+        },
+        appendNewChar: function(newChar) {
             var oldBuffer;
             oldBuffer = this.get('buffer');
             if (oldBuffer === '0') {
@@ -533,8 +528,8 @@ openerp.point_of_sale = function(db) {
                 });
             }
             return this.updateTarget();
-        };
-        NumpadState.prototype.deleteLastChar = function() {
+        },
+        deleteLastChar: function() {
             var tempNewBuffer;
             tempNewBuffer = (this.get('buffer')).slice(0, -1) || "0";
             if (isNaN(tempNewBuffer)) {
@@ -544,27 +539,27 @@ openerp.point_of_sale = function(db) {
                 buffer: tempNewBuffer
             });
             return this.updateTarget();
-        };
-        NumpadState.prototype.switchSign = function() {
+        },
+        switchSign: function() {
             var oldBuffer;
             oldBuffer = this.get('buffer');
             this.set({
                 buffer: oldBuffer[0] === '-' ? oldBuffer.substr(1) : "-" + oldBuffer
             });
             return this.updateTarget();
-        };
-        NumpadState.prototype.changeMode = function(newMode) {
+        },
+        changeMode: function(newMode) {
             return this.set({
                 buffer: "0",
                 mode: newMode
             });
-        };
-        NumpadState.prototype.reset = function() {
+        },
+        reset: function() {
             return this.set({
                 buffer: "0"
             });
-        };
-        NumpadState.prototype.updateTarget = function() {
+        },
+        updateTarget: function() {
             var bufferContent, params;
             bufferContent = this.get('buffer');
             if (bufferContent && !isNaN(bufferContent)) {
@@ -572,9 +567,8 @@ openerp.point_of_sale = function(db) {
                 params[this.get('mode')] = parseFloat(bufferContent);
                 return (this.shop.get('selectedOrder')).selected.set(params);
             }
-        };
-        return NumpadState;
-    })();
+        },
+    });
     /*
      ---
      Views
