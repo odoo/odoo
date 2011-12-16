@@ -20,9 +20,9 @@
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product.product_product_cpu2'))
     if product.virtual_available < 5.0:
-      change_qty = self.pool.get('stock.change.product.qty')
-      ids = change_qty.create(cr, uid, {'location_id' : ref('stock.stock_location_stock'), 'new_quantity': 4, 'product_id': product.id})
-      change_qty.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
+        change_qty = self.pool.get('stock.change.product.qty')
+        id = change_qty.create(cr, uid, {'location_id' : ref('stock.stock_location_stock'), 'new_quantity': 4, 'product_id': product.id})
+        change_qty.change_product_qty(cr, uid, [id], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
     assert product.qty_available == 4,"Product quantity is not updated."
     assert product.virtual_available < 5.0,'Virtual stock have more quantities.'
 -
@@ -53,20 +53,18 @@
     product = self.browse(cr, uid, ref('product.product_product_cpu2'))
 
     context.update({'active_model': 'product.product','active_id':ref('product.product_product_cpu2')})
-    values = mk_procure.default_get(cr, uid, ['qty','product_id','uom_id','warehouse_id','date_planned'], context)
-    values.update({'warehouse_id': ref('base.main_company'),'uom_id': ref('product.product_uom_unit'),'qty': 5})
-
-    ids = mk_procure.create(cr, uid, values, context)
-    procurement = mk_procure.make_procurement(cr, uid, [ids], context)
-    assert product.virtual_available == 20.0,'Virtual stock should be updated'
+    values = {'warehouse_id': ref('base.main_company'), 'uom_id': ref('product.product_uom_unit'), 'qty': 5}
+    id = mk_procure.create(cr, uid, values, context)
+    procurement = mk_procure.make_procurement(cr, uid, [id], context)
+    assert product.virtual_available == 20.0, 'Virtual stock should be updated'
 
     proc_id = procurement.get('res_id')
     for procurement in procur_order.browse(cr, uid, [proc_id]):
-      if procurement.state == 'confirmed':
-        assert procurement.state == 'confirmed',"Procurement state should be 'Confirmed'."
-        assert procurement.product_id.id == ref('product.product_product_cpu2'),"Product is not correspond."
-        assert procurement.product_qty == 5,"Product Quantity is not correspond."
-        assert procurement.product_uom.id == ref('product.product_uom_unit'),"Product's UOM is not correspond."
+        if procurement.state == 'confirmed':
+            assert procurement.state == 'confirmed',"Procurement state should be 'Confirmed'."
+            assert procurement.product_id.id == ref('product.product_product_cpu2'),"Product is not correspond."
+            assert procurement.product_qty == 5,"Product Quantity is not correspond."
+            assert procurement.product_uom.id == ref('product.product_uom_unit'),"Product's UOM is not correspond."
     context.update({'proc': proc_id})
 -
   I run the scheduler.
@@ -80,12 +78,11 @@
     proc_id = context.get('proc')
     proc = self.browse(cr, uid, [proc_id])[0]
     assert proc.state == 'ready' or 'exception',"Procurement should be in Ready or Exception state"
-#TO FIX : process of procure_calculation not propar.
-#-
-#  !record {model: procurement.orderpoint.compute, id: proc_copute_auto}:
-#    automatic: True
-#-
-#  I compute minimum stock.
-#-
-#  !python {model: procurement.orderpoint.compute}: |
-#    self.procure_calculation(cr, uid, [ref('proc_copute_auto')], context)
+-
+  I compute minimum stock.
+-
+  !python {model: procurement.orderpoint.compute}: |
+    proc_id = context.get('proc')
+    context.update({'active_model': 'procurement.order', 'active_id': proc_id})
+    id = self.create(cr, uid, {'automatic': True}, context)
+    self.procure_calculation(cr, uid, [id], context)
