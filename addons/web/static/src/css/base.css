@@ -549,6 +549,7 @@ label.error {
     color: #666666;
 }
 
+
 /* Main Application */
 .openerp .oe-main-content,
 .openerp .oe-application {
@@ -1198,6 +1199,24 @@ label.error {
     min-width: 90px;
     color: #1f1f1f;
 }
+
+.openerp input[type="text"].field_email {
+    border-right:none;
+    -webkit-border-top-right-radius: 0px;
+    -webkit-border-bottom-right-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+    -moz-border-radius-bottomleft: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+.openerp .mail_button {
+    -webkit-border-top-left-radius: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+    -moz-border-radius-bottomleft: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}   
 /* vertically recentering filter management select tag */
 .openerp select.oe_search-view-filters-management { 
     margin-top:2px;
@@ -1632,9 +1651,16 @@ label.error {
     padding-right: 20px;
     white-space: nowrap;
 }
+
 .openerp .oe_forms .oe-m2o input[type="text"] {
     padding-right: 20px;
     padding-top: 2px;
+    -webkit-border-top-right-radius: 0px;
+    -webkit-border-bottom-right-radius: 0px;
+    -moz-border-radius-topright: 0px;
+    -moz-border-radius-bottomright: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
 }
 .openerp .oe-m2o-drop-down-button {
     margin-left: -23px;
@@ -1643,6 +1669,32 @@ label.error {
 .openerp .oe-m2o-cm-button img {
     margin-bottom: -4px;
     cursor: pointer;
+}
+.openerp .oe-m2o input  {
+    border-right: none;
+    margin-right: 0px !important;
+    padding-bottom: 2px !important;
+}
+.openerp .oe-m2o-cm-button {
+    border: 1px solid #999;
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -moz-border-radius-topright: 3px;
+    -moz-border-radius-bottomright: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background-color:#eee;
+    background: #e3e3e3, none;
+    background: none, -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    background: none, -webkit-linear-gradient(#f6f6f6, #e3e3e3);
+    background: none, -moz-linear-gradient(#f6f6f6, #e3e3e3);
+    background: none, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
+    background: none, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    margin:0;
+    padding:0 0 2px 0;
+}
+.openerp .oe-m2o-cm-button img {
+    padding:2px 2px 0px 2px;
 }
 .openerp .oe-m2o-disabled-cm {
     color: grey;
