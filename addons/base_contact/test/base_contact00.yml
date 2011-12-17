@@ -4,18 +4,6 @@
     *contacts working at several addresses (possibly for different partners),
     *contacts with possibly different functions for each of its job's addresses
 -  |
-   In order to assign language to contacts first I will create Language FR
-   (Remove)
-- 
-    !record {model: res.lang, id: res_lang_french0}:
-      code: fr_BE
-      date_format: '%m/%d/%Y'
-      decimal_point: '.'
-      direction: ltr
-      grouping: '[]'
-      name: French
-      time_format: '%H:%M:%S'
--  |
    In order to check contacts first I will create contact unrelated to a partner
 - 
     !record {model: res.partner.contact, id: res_partner_contact_williams0}:
@@ -25,9 +13,6 @@
             - email: lwilliams@mydomain.com
               function: PA
               phone: (+32).10.45.18.77
-              sequence_contact: 1
-              state: current
-        lang_id: res_lang_french0
         mobile: (+32).10.45.18.77
         name: Williams
 -   |
@@ -42,53 +27,12 @@
               type: default
               zip: '2324324'
               job_ids:
-                - address_id: res_partner_address_1
-                  function: CEO
+                - function: CEO
                   contact_id: res_partner_contact_williams0
-                  sequence_partner: 2
-                  state: current
-        lang: fr_BE
-        name: Laura's Company
+        name: Lauras Company
         ref: LC
-
--   |
+- 
     Now I will check that the new job is assigned properly to contact or not
 -
     !assert {model: res.partner.contact, id: res_partner_contact_williams0}:
-        - len(job_ids) >= 2
--   |
-    In order to check contacts working at several addresses for different partners
-    I will create contact with 2 different addresses
-- 
-  !record {model: res.partner.contact, id: res_partner_contact_pauwels0}:
-        country_id: base.be
-        first_name: Nicolas
-        job_ids:
-          - address_id: base.res_partner_address_1
-            function: CTO
-            state: current
-          - address_id: base.res_partner_address_3000
-            function: CEO
-            state: current
-        lang_id: res_lang_french0
-        mobile: (+32).23.44.32.12
-        name: Pauwels
-
--   |
-    In order to check one contact working at one partner with different functions
-    I will create contact with 2 different jobs with different function but the same address
-- 
-  !record {model: res.partner.contact, id: res_partner_contact_mortier0}:
-    country_id: base.be
-    first_name: Christina
-    job_ids:
-      - address_id: base.res_partner_address_1
-        function: CEO
-        state: past
-      - address_id: base.res_partner_address_1
-        function: CTO
-        state: current
-    lang_id: base_contact.res_lang_french0
-    mobile: (+32).10.45.18.77
-    name: Mortier
-
+        - len(job_ids) == 2

@@ -47,7 +47,6 @@ Pay attention that this module converts the existing addresses into "addresses +
     'update_xml': [
         'security/ir.model.access.csv',
         'base_contact_view.xml',
-        'base_contact_installer_view.xml',
         'process/base_contact_process.xml'
     ],
     'demo_xml': ['base_contact_demo.xml'],

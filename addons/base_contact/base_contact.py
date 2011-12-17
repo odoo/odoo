@@ -20,33 +20,13 @@
 ##############################################################################
 
 from osv import fields, osv
+import addons
 
 class res_partner_contact(osv.osv):
     """ Partner Contact """
 
     _name = "res.partner.contact"
     _description = "Contact"
-
-    def _main_job(self, cr, uid, ids, fields, arg, context=None):
-        """
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of partner contact’s IDs
-            @fields: Get Fields
-            @param context: A standard dictionary for contextual values
-            @param arg: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...]. """
-        res = dict.fromkeys(ids, False)
-
-        res_partner_job_obj = self.pool.get('res.partner.job')
-        all_job_ids = res_partner_job_obj.search(cr, uid, [])
-        all_job_names = dict(zip(all_job_ids, res_partner_job_obj.name_get(cr, uid, all_job_ids, context=context)))
-
-        for contact in self.browse(cr, uid, ids, context=context):
-            if contact.job_ids:
-                res[contact.id] = all_job_names.get(contact.job_ids[0].id, False)
-
-        return res
 
     _columns = {
         'name': fields.char('Last Name', size=64, required=True),
@@ -55,53 +35,32 @@ class res_partner_contact(osv.osv):
         'title': fields.many2one('res.partner.title','Title'),
         'website': fields.char('Website', size=120),
         'lang_id': fields.many2one('res.lang', 'Language'),
-        'job_ids': fields.one2many('res.partner.job', 'contact_id', 'Functions and Addresses'),
+        'job_ids': fields.one2many('res.partner.address', 'contact_id', 'Functions and Addresses'),
         'country_id': fields.many2one('res.country','Nationality'),
         'birthdate': fields.date('Birth Date'),
         'active': fields.boolean('Active', help="If the active field is set to False,\
                  it will allow you to hide the partner contact without removing it."),
-        'partner_id': fields.related('job_ids', 'address_id', 'partner_id', type='many2one',\
+        'partner_id': fields.related('job_ids', 'location_id', 'partner_id', type='many2one',\
                          relation='res.partner', string='Main Employer'),
         'function': fields.related('job_ids', 'function', type='char', \
                                  string='Main Function'),
-        'job_id': fields.function(_main_job, type='many2one',\
-                                 relation='res.partner.job', string='Main Job'),
         'email': fields.char('E-Mail', size=240),
         'comment': fields.text('Notes', translate=True),
-        'photo': fields.binary('Image'),
+        'photo': fields.binary('Photo'),
 
     }
+
+    def _get_photo(self, cr, uid, context=None):
+        photo_path = addons.get_module_resource('base_contact', 'images', 'photo.png')
+        return open(photo_path, 'rb').read().encode('base64')
+
     _defaults = {
+        'photo' : _get_photo,
         'active' : lambda *a: True,
     }
 
     _order = "name,first_name"
 
-    def name_get(self, cr, user, ids, context=None):
-
-        """ will return name and first_name.......
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param user: the current user’s ID for security checks,
-            @param ids: List of create menu’s IDs
-            @return: name and first_name
-            @param context: A standard dictionary for contextual values
-        """
-
-        if not len(ids):
-            return []
-        res = []
-        for contact in self.browse(cr, user, ids, context=context):
-            _contact = ""
-            if contact.title:
-                _contact += "%s "%(contact.title.name)
-            _contact += contact.name or ""
-            if contact.name and contact.first_name:
-                _contact += " "
-            _contact += contact.first_name or ""
-            res.append((contact.id, _contact))
-        return res
-    
     def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=None):
         if not args:
             args = []
@@ -112,151 +71,154 @@ class res_partner_contact(osv.osv):
         else:
             ids = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, ids, context=context)
-    
+
+    def name_get(self, cr, uid, ids, context=None):
+        return [
+            (obj.id, " ".join(filter(None, [obj.first_name, obj.name])),)
+            for obj in self.browse(cr, uid, ids, context=context)
+        ]
+
 res_partner_contact()
 
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    _columns = {
+        'address': fields.one2many('res.partner.location', 'partner_id', 'Address')
+    }
+res_partner()
+
+class res_partner_location(osv.osv):
+    _name = 'res.partner.location'
+    _inherit = 'res.partner.address'
+    _columns = {
+        'job_ids': fields.one2many('res.partner.address', 'location_id', 'Contacts'),
+    }
+    def _auto_init(self, cr, context=None):
+        def table_exists(view_name):
+            cr.execute('SELECT count(relname) FROM pg_class WHERE relname = %s', (view_name,))
+            value = cr.fetchone()[0]
+            return bool(value == 1)
+
+        exists = table_exists(self._table)
+        super(res_partner_location, self)._auto_init(cr, context)
+
+        if not exists:
+            sequence_name = self.pool.get('res.partner.address')._sequence
+            cr.execute("SELECT last_value FROM " + sequence_name)
+            last_sequence = cr.fetchone()[0]
+            cr.execute("INSERT INTO res_partner_location SELECT * FROM res_partner_address")
+            cr.execute("ALTER SEQUENCE " + self._sequence + " RESTART WITH " + str(last_sequence + 10))
+
+    def name_get(self, cr, uid, ids, context=None):
+        return [
+            ((obj.id, "%s, %s" % (obj.city, obj.country_id and obj.country_id.name or '')))
+            for obj in self.browse(cr, uid, ids, context=context)
+        ]
+
+res_partner_location()
 
 class res_partner_address(osv.osv):
-
-    #overriding of the name_get defined in base in order to remove the old contact name
-    def name_get(self, cr, user, ids, context=None):
-        """
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param user: the current user,
-            @param ids: List of partner address’s IDs
-            @param context: A standard dictionary for contextual values
-        """
-
-        if not len(ids):
-            return []
-        res = []
-        if context is None: 
-            context = {}
-        for r in self.read(cr, user, ids, ['zip', 'city', 'partner_id', 'street']):
-            if context.get('contact_display', 'contact')=='partner' and r['partner_id']:
-                res.append((r['id'], r['partner_id'][1]))
-            else:
-                addr = str('')
-                addr += "%s %s %s" % (r.get('street', '') or '', r.get('zip', '') \
-                                    or '', r.get('city', '') or '')
-                res.append((r['id'], addr.strip() or '/'))
-        return res
-
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
-        if not args:
-            args=[]
-        ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
-        jobs = self.pool.get('res.partner.job')
-        if name:
-            job_ids = jobs.search(cr, user, [('contact_id', operator, name)] + args, limit=limit, context=context)
-            for job in jobs.browse(cr, user, job_ids):
-                ids += [job.address_id.id]
-        return self.name_get(cr, user, ids, context)
-
     _name = 'res.partner.address'
-    _inherit = 'res.partner.address'
-    _description ='Partner Address'
+    _inherits = { 'res.partner.location' : 'location_id' }
+
+    def _get_use_existing_address(self, cr, uid, ids, fieldnames, args, context=None):
+        return dict(map(lambda x: (x, False), ids))
+
+    def _set_use_existing_address(self, cr, uid, ids, name, value, arg, context=None):
+        return True
+
+    def _default_location_id(self, cr, uid, context=None):
+        context = context or {}
+        if not context.get('default_partner_id',False):
+            return False
+        ids = self.pool.get('res.partner.location').search(cr, uid, [('partner_id','=',context['default_partner_id'])], context=context)
+        return ids and ids[0] or False
+
+    def _default_existing_get(self, cr, uid, context=None):
+        return bool(self._default_location_id(cr, uid, context))
 
     _columns = {
-        'job_id': fields.related('job_ids','contact_id','job_id',type='many2one',\
-                         relation='res.partner.job', string='Main Job'),
-        'job_ids': fields.one2many('res.partner.job', 'address_id', 'Contacts'),
-    }
-res_partner_address()
+        'location_id' : fields.many2one('res.partner.location', 'Location'),
+        'use_existing_address' : fields.function(_get_use_existing_address,
+                                             fnct_inv=_set_use_existing_address,
+                                             type='boolean',
+                                             string='Link to Existing Address'),
 
-class res_partner_job(osv.osv):
-    def name_get(self, cr, uid, ids, context=None):
-        """
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param user: the current user,
-            @param ids: List of partner address’s IDs
-            @param context: A standard dictionary for contextual values
-        """
-        if context is None:
-            context = {}
+        'contact_id' : fields.many2one('res.partner.contact', 'Contact'),
 
-        if not ids:
-            return []
-        res = []
+        # come modules are doing SQL reports on those fields (crm)
+        'country_id': fields.related('location_id', 'country_id', type='many2one', string='Country', store=True, relation='res.country'),
+        'company_id': fields.related('location_id', 'company_id', type='many2one', string='Company', store=True, relation='res.company'),
 
-        jobs = self.browse(cr, uid, ids, context=context)
-
-        contact_ids = [rec.contact_id.id for rec in jobs]
-        contact_names = dict(self.pool.get('res.partner.contact').name_get(cr, uid, contact_ids, context=context))
-
-        for r in jobs:
-            function_name = r.function
-            funct = function_name and (", " + function_name) or ""
-            res.append((r.id, contact_names.get(r.contact_id.id, '') + funct))
-
-        return res
-
-    _name = 'res.partner.job'
-    _description ='Contact Partner Function'
-    _order = 'sequence_contact'
-
-    _columns = {
-        'name': fields.related('address_id', 'partner_id', type='many2one',\
-                     relation='res.partner', string='Partner', help="You may\
-                     enter Address first,Partner will be linked automatically if any."),
-        'address_id': fields.many2one('res.partner.address', 'Address', \
-                        help='Address which is linked to the Partner'), # TO Correct: domain=[('partner_id', '=', name)]
-        'contact_id': fields.many2one('res.partner.contact','Contact', required=True, ondelete='cascade'),
+        # Do not use the one of the location, each job position has it's phone
+        'phone': fields.char('Phone', size=64),
+        'fax': fields.char('Fax', size=64),
+        'email': fields.char('E-Mail', size=240),
         'function': fields.char('Partner Function', size=64, help="Function of this contact with this partner"),
-        'sequence_contact': fields.integer('Contact Seq.',help='Order of\
-                     importance of this address in the list of addresses of the linked contact'),
-        'sequence_partner': fields.integer('Partner Seq.',help='Order of importance\
-                 of this job title in the list of job title of the linked partner'),
-        'email': fields.char('E-Mail', size=240, help="Job E-Mail"),
-        'phone': fields.char('Phone', size=64, help="Job Phone no."),
-        'fax': fields.char('Fax', size=64, help="Job FAX no."),
-        'extension': fields.char('Extension', size=64, help='Internal/External extension phone number'),
-        'other': fields.char('Other', size=64, help='Additional phone field'),
-        'date_start': fields.date('Date Start',help="Start date of job(Joining Date)"),
-        'date_stop': fields.date('Date Stop', help="Last date of job"),
-        'state': fields.selection([('past', 'Past'),('current', 'Current')], \
-                                'State', required=True, help="Status of Address"),
+
+        #'partner_id' : fields.related('location_id', 'partner_id', type="many2one", relation='res.partner', string='Partner'),
+        'contact_firstname' : fields.related('contact_id', 'first_name', type='char', size=64, string='Firstname'),
+        'contact_name' : fields.related('contact_id', 'name', type='char', size=64, string="Lastname"),
+        'name' : fields.related('contact_id', 'name', type='char', size=64, string="Lastname", store=True),
     }
+
+    def name_get(self, cr, uid, ids, context=None):
+        return [
+            ((obj.id, "%s, %s" % (obj.contact_id.name_get()[0][1], obj.location_id.name_get()[0][1],)))
+            for obj in self.browse(cr, uid, ids, context=context)
+        ]
+
 
     _defaults = {
-        'sequence_contact' : lambda *a: 0,
-        'state': lambda *a: 'current',
+        'use_existing_address': _default_existing_get,
+        'location_id': _default_location_id
     }
-    
-    def onchange_name(self, cr, uid, ids, address_id='', name='', context=None):    
-        return {'value': {'address_id': address_id}, 'domain':{'partner_id':'name'}}     
-    
-    def onchange_partner(self, cr, uid, _, partner_id, context=None):
-        """
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user,
-            @param _: List of IDs,
-            @partner_id : ID of the Partner selected,
-            @param context: A standard dictionary for contextual values
-        """
-        return {'value': {'address_id': False}}
 
-    def onchange_address(self, cr, uid, _, address_id, context=None):
-        """
-            @@param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user,
-            @param _: List of IDs,
-            @address_id : ID of the Address selected,
-            @param context: A standard dictionary for contextual values
-        """
-        partner_id = False
-        if address_id:
-            address = self.pool.get('res.partner.address')\
-                        .browse(cr, uid, address_id, context=context)
-            partner_id = address.partner_id.id
-        return {'value': {'name': partner_id}}
-    
-res_partner_job()
+    def _auto_init(self, cr, context=None):
+        def column_exists(column):
+            cr.execute("select count(attname) from pg_attribute where attrelid = \
+                       (select oid from pg_class where relname = %s) \
+                       and attname = %s", (self._table, column,))
+            value = cr.fetchone()[0]
+            return bool(value == 1)
 
+        exists = column_exists('location_id')
+        super(res_partner_address, self)._auto_init(cr, context)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        if not exists:
+            contact_proxy = self.pool.get('res.partner.contact')
+            uid = 1
+            cr.execute("SELECT id, name, mobile, country_id, partner_id, phone, email, street, street2, city, company_id, state_id, zip, location_id \
+                       FROM res_partner_address")
+            for item in cr.fetchall():
+                values = {
+                    'name' : item[1] or '/',
+                    'mobile' : item[2],
+                    'country_id' : item[3],
+                    'phone' : item[5],
+                    'email' : item[6],
+                    'company_id' : item[10],
+                }
+
+                contact_id = contact_proxy.create(cr, uid, values, context=context)
+                values = {
+                    'street' : item[7],
+                    'street2' : item[8],
+                    'city' : item[9],
+                    'country_id' : item[3],
+                    'company_id' : item[10],
+                    'state_id' : item[11],
+                    'zip' : item[12],
+                }
+                location_id = self.pool.get('res.partner.location').create(cr, uid, values, context=context)
+                cr.execute("UPDATE res_partner_address SET location_id = %s, contact_id = %s, partner_id = %s WHERE id = %s",
+                           (location_id, contact_id, item[4], item[0],))
+
+    def default_get(self, cr, uid, fields=[], context=None):
+        context = context or {}
+        if 'default_type' in context:
+            del context['default_type']
+        return super(res_partner_address, self).default_get(cr, uid, fields, context)
+
+res_partner_address()
 

@@ -141,45 +141,8 @@
         </record>
 
 
-        <!-- Create the addresses -->
-        <record id="base.main_address" model="res.partner.address">
-            <field eval="&quot;&quot;&quot;Grand-Rosière&quot;&quot;&quot;" name="city"/>
-            <field eval="&quot;&quot;&quot;+32.81.73.35.01&quot;&quot;&quot;" name="fax"/>
-            <field eval="&quot;&quot;&quot;1367&quot;&quot;&quot;" name="zip"/>
-            <!-- The partner associated with the main company should not have a country specified in the demo data,
-                 as it may conflicts with the accounting installing chart wizard. This wizard will indeed try to
-                 install the localization module accordingly to this variable automatically. Thus, in demo data,
-                 everyone would have the belgian chart of account by default, what should be avoided. -->
-            <!-- <field name="country_id" ref="base.be"/> --> 
-            <field eval="&quot;&quot;&quot;+32.81.81.37.00&quot;&quot;&quot;" name="phone"/>
-            <field eval="&quot;&quot;&quot;Chaussée de Namur, 40&quot;&quot;&quot;" name="street"/>
-        </record>
-        <record id="res_partner_address_0" model="res.partner.address">
-            <field eval="&quot;&quot;&quot;Louvain-La-Neuve&quot;&quot;&quot;" name="city"/>
-            <field eval="&quot;&quot;&quot;1348&quot;&quot;&quot;" name="zip"/>
-            <field eval="&quot;&quot;&quot;contact&quot;&quot;&quot;" name="type"/>
-            <!-- The partner associated with the main company should not have a country specified in the demo data,
-                 as it may conflicts with the accounting installing chart wizard. This wizard will indeed try to
-                 install the localization module accordingly to this variable automatically. Thus, in demo data,
-                 everyone would have the belgian chart of account by default, what should be avoided. -->
-            <!-- <field name="country_id" ref="base.be"/> -->
-            <field eval="&quot;&quot;&quot;rue du pré, 115&quot;&quot;&quot;" name="street"/>
-            <field eval="1" name="active"/>
-        </record>
-        <record id="res_partner_address_1" model="res.partner.address">
-            <field eval="&quot;&quot;&quot;Charleroi&quot;&quot;&quot;" name="city"/>
-            <field eval="&quot;&quot;&quot;6000&quot;&quot;&quot;" name="zip"/>
-            <field eval="&quot;&quot;&quot;contact&quot;&quot;&quot;" name="type"/>
-            <!-- The partner associated with the main company should not have a country specified in the demo data,
-                 as it may conflicts with the accounting installing chart wizard. This wizard will indeed try to
-                 install the localization module accordingly to this variable automatically. Thus, in demo data,
-                 everyone would have the belgian chart of account by default, what should be avoided. -->
-            <!-- <field name="country_id" ref="base.be"/> -->
-            <field eval="&quot;&quot;&quot;Boulevars Tirou, 32&quot;&quot;&quot;" name="street"/>
-            <field eval="1" name="active"/>
-        </record>
-
         <!-- Create the jobs -->
+        <!--
         <record id="res_partner_job_0" model="res.partner.job">
             <field name="address_id" ref="base.res_partner_address_1"/>
             <field name="function">Salesman</field>
@@ -334,5 +297,6 @@
             <field name="function">CEO</field>
             <field name="sequence_contact">1</field>
         </record>
+        -->
     </data>
 </openerp>
