@@ -325,7 +325,11 @@ class pos_order(osv.osv):
         }
         return abs
 
+    def action_invoice_state(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'invoiced'}, context=context)
+
     def action_invoice(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
         product_obj = self.pool.get('product.product')
@@ -341,7 +345,7 @@ class pos_order(osv.osv):
 
             acc = order.partner_id.property_account_receivable.id
             inv = {
-                'name': 'Invoice from POS: '+order.name,
+                'name': order.name,
                 'origin': order.name,
                 'account_id': acc,
                 'journal_id': order.sale_journal.id or None,
@@ -379,6 +383,7 @@ class pos_order(osv.osv):
                     and [(6, 0, inv_line['invoice_line_tax_id'])] or []
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
+            wf_service.trg_validate(uid, 'pos.order', order.id, 'invoice', cr)
 
         if not inv_ids: return {}
         

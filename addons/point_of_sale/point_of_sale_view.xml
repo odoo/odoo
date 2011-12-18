@@ -16,8 +16,8 @@
                     <group col="7" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}"/>
-                        <button name="invoice" string="Invoice" icon="gtk-apply" type="workflow" states="paid" attrs="{'invisible': ['|',('partner_id','=',False),('state','&lt;&gt;','paid')]}"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
+                        <button name="action_invoice" string="Invoice" icon="gtk-apply" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sale Order">
@@ -587,9 +587,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                  <field name="categ_id" position="after">
-                      <field name="pos_categ_id"/>
-                  </field>
+                  <group name="status" position="after">
+                      <group colspan="2" col="2" name="pos">
+                          <separator string="Point-of-Sale" colspan="2"/>
+                          <field name="pos_categ_id"/>
+                      </group>
+                  </group>
             </field>
         </record>
 
