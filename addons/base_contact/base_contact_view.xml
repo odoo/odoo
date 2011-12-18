@@ -135,11 +135,12 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <separator string="Postal Address" position="after">
-                <field name="location_id"/>
+                <field name="location_id" on_change="onchange_location_id(location_id)"/>
             </separator>
             <xpath expr="//field[@string='Contact Name']" position="replace">
                 <field name="contact_id"/>
             </xpath>
+            <field name="title" position="replace"/>
         </field>
     </record>
 

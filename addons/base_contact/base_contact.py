@@ -79,10 +79,12 @@ class res_partner_contact(osv.osv):
         return self.name_get(cr, uid, ids, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
-        return [
-            (obj.id, obj.name)
-            for obj in self.browse(cr, uid, ids, context=context)
-        ]
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = obj.name or '/'
+            if obj.partner_id:
+                result[obj.id] = result[obj.id] + ', ' + obj.partner_id.name
+        return result.items()
 
     def _auto_init(self, cr, context=None):
         def table_exists(view_name):
@@ -105,7 +107,6 @@ class res_partner_contact(osv.osv):
             cr.execute("alter table res_partner_address add contact_id int references res_partner_contact")
             cr.execute("update res_partner_address set contact_id=id")
             cr.execute("select setval('res_partner_contact_id_seq', (select max(id)+1 from res_partner_contact))")
-
 
 res_partner_contact()
 
@@ -160,7 +161,7 @@ class res_partner_location(osv.osv):
             if obj.city: res.append(obj.city)
             if obj.country_id: res.append(obj.country_id.name_get()[0][1])
             result[obj.id] = ', '.join(res)
-        return result
+        return result.items()
 
 res_partner_location()
 
@@ -188,7 +189,7 @@ class res_partner_address(osv.osv):
         }}
 
     _columns = {
-        'location_id' : fields.many2one('res.partner.location', 'Location', required=True),
+        'location_id' : fields.many2one('res.partner.location', 'Location'),
         'contact_id' : fields.many2one('res.partner.contact', 'Contact'),
 
         # fields from location
@@ -208,16 +209,33 @@ class res_partner_address(osv.osv):
         'name' : fields.related('contact_id', 'name', type='char', size=64, string="Contact Name", store=True),
         'title' : fields.related('contact_id', 'title', type='many2one', relation='res.partner.title', string="Title", store=True),
     }
+    def create(self, cr, uid, data, context={}):
+        if not data.get('location_id', False):
+            loc_id = self.pool.get('res.partner.location').create(cr, uid, {
+                'street': data.get('street',''),
+                'street2': data.get('street2',''),
+                'zip': data.get('zip',''),
+                'city': data.get('city',''),
+                'country_id': data.get('country_id',False),
+                'state_id': data.get('state_id',False)
+            }, context=context)
+            data['location_id'] = loc_id
+        result = super(res_partner_address, self).create(cr, uid, data, context=context)
+        return result
 
     def name_get(self, cr, uid, ids, context=None):
         result = {}
         for rec in self.browse(cr,uid, ids, context=context):
             res = []
-            for obj in [rec.partner_id, rec.contact_id, rec.location_id]:
-                if obj:
-                    res.append(obj.name_get()[0][1])
+            if rec.partner_id:
+                res.append(rec.partner_id.name_get()[0][1])
+            if rec.contact_id and rec.contact_id.name:
+                res.append(rec.contact_id.name)
+            if rec.location_id:
+                if rec.location_id.city: res.append(rec.location_id.city)
+                if rec.location_id.country_id: res.append(rec.location_id.country_id.name_get()[0][1])
             result[rec.id] = ', '.join(res)
-        return result
+        return result.items()
 
     _defaults = {
         'location_id': _default_location_id
