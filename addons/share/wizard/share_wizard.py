@@ -176,10 +176,24 @@ class share_wizard(osv.osv_memory):
         'embed_option_search': True,
     }
 
+    def go_step_1_link(self, cr, uid, ids, context=None):
+        dummy, step1_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step1_form_link')
+        return {
+            'name': _('Link or embed your documents'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'share.wizard',
+            'view_id': False,
+            'res_id': ids[0],
+            'views': [(step1_form_view_id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new'
+        }
+
     def go_step_1(self, cr, uid, ids, context=None):
         dummy, step1_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step1_form')
         return {
-            'name': _('Grant instant access to your documents'),
+            'name': _('Share your documents by email'),
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'share.wizard',

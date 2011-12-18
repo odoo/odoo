@@ -1,7 +1,8 @@
 
 openerp.share = function(instance) {
 
-function launch_wizard(self, view) {
+function launch_wizard(self, view, button) {
+        var button = button || 'go_step_1';
         var action = view.widget_parent.action;
         var Share = new instance.web.DataSet(self, 'share.wizard', view.dataset.get_context());
         var domain = new instance.web.CompoundDomain(view.dataset.domain);
@@ -19,7 +20,7 @@ function launch_wizard(self, view) {
                 view_type: view.fields_view.type,
             }, function(result) {
                 var share_id = result.result;
-                var step1 = Share.call('go_step_1', [[share_id],], function(result) {
+                var step1 = Share.call(button, [[share_id],], function(result) {
                     var action = result;
                     self.do_action(action);
                 });
@@ -46,8 +47,13 @@ instance.web.Sidebar = instance.web.Sidebar.extend({
 instance.web.ViewManagerAction.include({
     start: function() {
         var self = this;
+        self.$element.find('a.oe-share_link').click(self.on_click_share_link);
         self.$element.find('a.oe-share').click(self.on_click_share);
         return this._super.apply(this, arguments);
+    },
+    on_click_share_link: function(e) {
+        e.preventDefault();
+        launch_wizard(this, this.views[this.active_view].controller,'go_step_1_link');
     },
     on_click_share: function(e) {
         e.preventDefault();
