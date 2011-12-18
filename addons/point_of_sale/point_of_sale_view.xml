@@ -609,6 +609,20 @@
         </record>
 
         <!-- Categories tree view -->
+        <record id="pos_category_form_view" model="ir.ui.view">
+            <field name="name">pos.category.form</field>
+            <field name="model">pos.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="PoS Categories">
+                    <group colspan="4" col="6">
+                        <field name="name"/>
+                        <field name="parent_id"/>
+                        <field name="sequence"/>
+                    </group>
+                </form>
+            </field>
+        </record>
         <record id="pos_category_tree_view" model="ir.ui.view">
             <field name="name">pos.category.tree</field>
             <field name="model">pos.category</field>
@@ -616,7 +630,8 @@
             <field name="field_parent" eval="False"/>
             <field name="arch" type="xml">
                 <tree string="PoS Categories">
-                    <field name="name"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="complete_name"/>
                 </tree>
             </field>
         </record>

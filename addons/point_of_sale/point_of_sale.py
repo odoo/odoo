@@ -682,10 +682,44 @@ pos_order_line()
 
 class pos_category(osv.osv):
     _name = 'pos.category'
-    _inherit = 'product.category'
+    _description = "PoS Category"
+    _order = "sequence, name"
+    def _check_recursion(self, cr, uid, ids, context=None):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from pos_category where id IN %s',(tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
+    ]
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
     _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('pos.category','Parent Category', select=True),
-        'child_id': fields.one2many('pos.category', 'parent_id', string='Child Categories'),
+        'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
     }
 pos_category()
 
