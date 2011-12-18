@@ -93,7 +93,9 @@
 		            </field>
                   </group>
 		          <group colspan="4" col="1" attrs="{'invisible':[('user_type','!=','embedded')]}">
-		            <separator string="Insert the following snippet where you want to display the OpenERP action"/>
+		            <separator string="Use this link"/>
+		            <field name="share_root_url" nolabel="1"/>
+		            <separator string="Or insert the following code where you want to embed your documents"/>
 		            <group col="4" string="Options">
 			            <field name="embed_option_title" on_change="onchange_embed_options(embed_option_title, embed_option_search)"/>
 			            <field name="embed_option_search" on_change="onchange_embed_options(embed_option_title, embed_option_search)" attrs="{'invisible':[('access_mode','=','readonly')]}"/>
