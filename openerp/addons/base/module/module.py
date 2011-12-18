@@ -318,7 +318,20 @@ class module(osv.osv):
         return demo
 
     def button_install(self, cr, uid, ids, context=None):
+        model_obj = self.pool.get('ir.model.data')
         self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+
+        categ = model_obj.get_object(cr, uid, 'base', 'module_category_hidden_links', context=context)
+        todo = []
+        for mod in categ.module_ids:
+            if mod.state=='uninstalled':
+                ok = True
+                for dep in mod.dependencies_id:
+                    ok = ok and (dep.state in ('to install','installed'))
+                if ok:
+                    todo.append(mod.id)
+        if todo:
+            self.button_install(cr, uid, todo, context=context)
         return dict(ACTION_DICT, name=_('Install'))
 
     def button_immediate_install(self, cr, uid, ids, context=None):
@@ -329,7 +342,7 @@ class module(osv.osv):
         :returns: next res.config item to execute
         :rtype: dict[str, object]
         """
-        self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+        self.button_install(cr, uid, ids, context=context)
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
