@@ -19,15 +19,14 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Contacts Management',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'complexity': "expert",
     'description': """
-This module allows you to manage your contacts entirely.
-========================================================
+This module allows you to manage your contacts
+==============================================
 
 It lets you define:
     * contacts unrelated to a partner,
