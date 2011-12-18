@@ -578,13 +578,7 @@ class event_registration(osv.osv):
         if not contact:
             return data
         addr_obj = self.pool.get('res.partner.address')
-        job_obj = self.pool.get('res.partner.job')
-
-        if partner:
-            partner_addresses = addr_obj.search(cr, uid, [('partner_id', '=', partner)])
-            job_ids = job_obj.search(cr, uid, [('contact_id', '=', contact), ('address_id', 'in', partner_addresses)])
-            if job_ids:
-                data['email_from'] = job_obj.browse(cr, uid, job_ids[0]).email
+        data['email_from'] = addr_obj.browse(cr, uid, contact).email
         return {'value': data}
 
     def onchange_event(self, cr, uid, ids, event_id, partner_invoice_id):
@@ -636,7 +630,6 @@ class event_registration(osv.osv):
         @param event_id: Event ID
         @param partner_invoice_id: Partner Invoice ID
         """
-        job_obj = self.pool.get('res.partner.job')
         res_obj = self.pool.get('res.partner')
 
         data = {}
@@ -648,14 +641,10 @@ class event_registration(osv.osv):
         d = self.onchange_partner_invoice_id(cr, uid, ids, event_id, part)
         # this updates the dictionary
         data.update(d['value'])
-        addr = res_obj.address_get(cr, uid, [part])
+        addr = res_obj.address_get(cr, uid, [part]).get('default', False)
         if addr:
-            if addr.has_key('default'):
-                job_ids = job_obj.search(cr, uid, [('address_id', '=', addr['default'])])
-                if job_ids:
-                    data['contact_id'] = job_obj.browse(cr, uid, job_ids[0]).contact_id.id
-                    d = self.onchange_contact_id(cr, uid, ids, data['contact_id'], part)
-                    data.update(d['value'])
+            d = self.onchange_contact_id(cr, uid, ids, addr, part)
+            data.update(d['value'])
         return {'value': data}
 
     def onchange_partner_invoice_id(self, cr, uid, ids, event_id, partner_invoice_id):
