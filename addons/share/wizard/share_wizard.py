@@ -82,8 +82,7 @@ class share_wizard(osv.osv_memory):
 
     def _user_type_selection(self, cr, uid, context=None):
         """Selection values may be easily overridden/extended via inheritance"""
-        return [('emails','List of emails'),
-		('embedded', 'Anyone on a website')]
+        return [('embedded', 'Direct link or embed code'), ('emails','Emails'), ]
 
     """Override of create() to auto-compute the action name"""
     def create(self, cr, uid, values, context=None):
@@ -106,6 +105,40 @@ class share_wizard(osv.osv_memory):
             result[this.id] = this.share_url_template() % data
         return result
 
+    def _generate_embedded_code(self, wizard, options=None):
+        cr = wizard._cr
+        uid = wizard._uid
+        context = wizard._context
+        if options is None:
+            options = {}
+
+        js_options = {}
+        title = options['title'] if 'title' in options else wizard.embed_option_title
+        search = (options['search'] if 'search' in options else wizard.embed_option_search) if wizard.access_mode != 'readonly' else False
+
+        if not title:
+            js_options['display_title'] = False
+        if search:
+            js_options['search_view'] = True
+
+        js_options_str = (', ' + simplejson.dumps(js_options)) if js_options else ''
+
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default=None, context=context)
+        user = wizard.result_line_ids[0]
+
+        return """
+<script type="text/javascript" src="http://localhost:8069/web/webclient/js"></script>
+<script type="text/javascript">
+    new openerp.init(%(init)s).web.embed(%(server)s, %(dbname)s, %(login)s, %(password)s,%(action)d%(options)s);
+</script> """ % {
+            'init': simplejson.dumps(openerp.conf.server_wide_modules),
+            'server': simplejson.dumps(base_url),
+            'dbname': simplejson.dumps(cr.dbname),
+            'login': simplejson.dumps(user.login),
+            'password': simplejson.dumps(user.password),
+            'action': user.user_id.action_id.id,
+            'options': js_options_str,
+        }
 
     def _embed_code(self, cr, uid, ids, _fn, _args, context=None):
         result = dict.fromkeys(ids, '')
@@ -113,13 +146,12 @@ class share_wizard(osv.osv_memory):
             result[this.id] = self._generate_embedded_code(this)
         return result
 
-
     _columns = {
         'action_id': fields.many2one('ir.actions.act_window', 'Action to share', required=True,
                 help="The action that opens the screen containing the data you wish to share."),
         'view_type': fields.char('Current View Type', size=32, required=True),
         'domain': fields.char('Domain', size=256, help="Optional domain for further data filtering"),
-        'user_type': fields.selection(lambda s, *a, **k: s._user_type_selection(*a, **k),'Users to share with', required=True,
+        'user_type': fields.selection(lambda s, *a, **k: s._user_type_selection(*a, **k),'Sharing method', required=True,
                      help="Select the type of user(s) you would like to share data with."),
         'new_users': fields.text("Emails"),
         'access_mode': fields.selection([('readonly','Can view'),('readwrite','Can edit')],'Access Mode', required=True,
@@ -136,7 +168,7 @@ class share_wizard(osv.osv_memory):
     }
     _defaults = {
         'view_type': 'tree',
-        'user_type' : 'emails',
+        'user_type' : 'embedded',
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
         'access_mode': 'readonly',
@@ -176,7 +208,7 @@ class share_wizard(osv.osv_memory):
         current_user = user_obj.browse(cr, UID_ROOT, uid, context=context)
         created_ids = []
         existing_ids = []
-	if wizard_data.user_type == 'emails':
+        if wizard_data.user_type == 'emails':
             for new_user in (wizard_data.new_users or '').split('\n'):
                 # Ignore blank lines
                 new_user = new_user.strip()
@@ -204,10 +236,10 @@ class share_wizard(osv.osv_memory):
                              'newly_created': True}
                 wizard_data.write({'result_line_ids': [(0,0,new_line)]})
                 created_ids.append(user_id)
-	
-	elif wizard_data.user_type == 'embedded':
-	    new_login = 'embedded-%s' % (uuid.uuid4().hex,)
-	    new_pass = generate_random_pass()
+
+        elif wizard_data.user_type == 'embedded':
+            new_login = 'embedded-%s' % (uuid.uuid4().hex,)
+            new_pass = generate_random_pass()
             user_id = user_obj.create(cr, UID_ROOT, {
                 'login': new_login,
                 'password': new_pass,
@@ -712,7 +744,7 @@ class share_wizard(osv.osv_memory):
         msg_ids = []
         for result_line in wizard_data.result_line_ids:
             email_to = result_line.user_id.user_email
-	    if not email_to:
+            if not email_to:
                 continue
             subject = wizard_data.name
             body = _("Hello,")
@@ -749,41 +781,6 @@ class share_wizard(osv.osv_memory):
         # force direct delivery, as users expect instant notification
         mail_message.send(cr, uid, msg_ids, context=context)
         self._logger.info('%d share notification(s) sent.', len(msg_ids))
-
-    def _generate_embedded_code(self, wizard, options=None):
-        cr = wizard._cr
-        uid = wizard._uid
-        context = wizard._context
-        if options is None:
-            options = {}
-
-        js_options = {}
-        title = options['title'] if 'title' in options else wizard.embed_option_title
-        search = (options['search'] if 'search' in options else wizard.embed_option_search) if wizard.access_mode != 'readonly' else False
-
-        if not title:
-            js_options['display_title'] = False
-        if search:
-            js_options['search_view'] = True
-
-        js_options_str = (', ' + simplejson.dumps(js_options)) if js_options else ''
-
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default=None, context=context)
-        user = wizard.result_line_ids[0]
-
-        return """
-<script type="text/javascript" src="http://localhost:8069/web/webclient/js"></script>
-<script type="text/javascript">
-    new openerp.init(%(init)s).web.embed(%(server)s, %(dbname)s, %(login)s, %(password)s,%(action)d%(options)s);
-</script> """ % {
-            'init': simplejson.dumps(openerp.conf.server_wide_modules),
-            'server': simplejson.dumps(base_url),
-            'dbname': simplejson.dumps(cr.dbname),
-            'login': simplejson.dumps(user.login),
-            'password': simplejson.dumps(user.password),
-            'action': user.user_id.action_id.id,
-            'options': js_options_str,
-        }
 
     def onchange_embed_options(self, cr, uid, ids, opt_title, opt_search, context=None):
         wizard = self.browse(cr, uid, ids[0], context)

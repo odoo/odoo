@@ -30,8 +30,8 @@
             <field name="arch" type="xml">
                 <form string="Grant instant access to your documents">
                     <group name="groups_group" colspan="4" col="4">
-	                    <separator colspan="4" string="Who do you want to share with?"/>
-	                    <field name="user_type" />
+                        <separator colspan="4" string="How do you want to share it ?"/>
+                        <field name="user_type" />
                     </group>
                     <group colspan="4" name="emails_group" attrs="{'invisible':[('user_type','!=','emails')]}">
                         <separator colspan="4" string="Share with these people (one e-mail per line)"/>
