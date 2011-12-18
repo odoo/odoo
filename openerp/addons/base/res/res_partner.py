@@ -235,7 +235,7 @@ class res_partner(osv.osv):
         address_obj = self.pool.get('res.partner.address')
         address_ids = address_obj.search(cr, uid, [('partner_id', 'in', ids)])
         address_rec = address_obj.read(cr, uid, address_ids, ['type'])
-        res = list(tuple(addr.values()) for addr in address_rec)
+        res = list((addr['type'],addr['id']) for addr in address_rec)
         adr = dict(res)
         # get the id of the (first) default address if there is one,
         # otherwise get the id of the first address in the list
