@@ -168,7 +168,6 @@ class JsonRequest(WebRequest):
             if requestf:
                 self.jsonrequest = simplejson.load(requestf, object_hook=nonliterals.non_literal_decoder)
             else:
-                print "CACA",request
                 self.jsonrequest = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
             self.init(self.jsonrequest.get("params", {}))
             if _logger.isEnabledFor(logging.DEBUG):
