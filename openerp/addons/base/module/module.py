@@ -189,6 +189,7 @@ class module(osv.osv):
         'published_version': fields.char('Published Version', size=64, readonly=True),
 
         'url': fields.char('URL', size=128, readonly=True),
+        'sequence': fields.integer('Sequence'),
         'dependencies_id': fields.one2many('ir.module.module.dependency',
             'module_id', 'Dependencies', readonly=True),
         'state': fields.selection([
@@ -222,11 +223,12 @@ class module(osv.osv):
 
     _defaults = {
         'state': 'uninstalled',
+        'sequence': 100,
         'demo': False,
         'license': 'AGPL-3',
         'complexity': 'normal',
     }
-    _order = 'name'
+    _order = 'sequence,name'
 
     def _name_uniq_msg(self, cr, uid, ids, context=None):
         return _('The name of the module must be unique !')
@@ -250,10 +252,10 @@ class module(osv.osv):
                         _('You try to remove a module that is installed or will be installed'))
             mod_names.append(mod['name'])
         #Removing the entry from ir_model_data
-        ids_meta = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'module_meta_information'), ('module', 'in', mod_names)])
+        #ids_meta = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'module_meta_information'), ('module', 'in', mod_names)])
 
-        if ids_meta:
-            self.pool.get('ir.model.data').unlink(cr, uid, ids_meta, context)
+        #if ids_meta:
+        #    self.pool.get('ir.model.data').unlink(cr, uid, ids_meta, context)
 
         return super(module, self).unlink(cr, uid, ids, context=context)
 
