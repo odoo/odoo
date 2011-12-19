@@ -96,6 +96,9 @@ class share_wizard(osv.osv_memory):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
         if base_url:
             base_url += '/?db=%(dbname)s&login=%(login)s'
+            extra = context and context.get('share_url_template_extra_arguments')
+            if extra:
+                base_url += '&' + '&'.join('%s=%%(%s)s' % (x,x) for x in extra)
         return base_url
 
     def _share_root_url(self, cr, uid, ids, _fieldname, _args, context=None):
@@ -147,6 +150,19 @@ class share_wizard(osv.osv_memory):
             result[this.id] = self._generate_embedded_code(this)
         return result
 
+    def _embed_url(self, cr, uid, ids, _fn, _args, context=None):
+        if context is None:
+            context = {}
+        result = dict.fromkeys(ids, '')
+        for this in self.browse(cr, uid, ids, context=context):
+            if this.result_line_ids:
+                ctx = dict(context, share_url_template_extra_arguments=['key'])
+                user = this.result_line_ids[0]
+                data = dict(dbname=cr.dbname, login=user.login, key=user.password)
+                result[this.id] = this.share_url_template(context=ctx) % data
+        return result
+
+
     _columns = {
         'action_id': fields.many2one('ir.actions.act_window', 'Action to share', required=True,
                 help="The action that opens the screen containing the data you wish to share."),
@@ -166,6 +182,7 @@ class share_wizard(osv.osv_memory):
         'embed_code': fields.function(_embed_code, type='text'),
         'embed_option_title': fields.boolean("Display title"),
         'embed_option_search': fields.boolean('Display search view'),
+        'embed_url': fields.function(_embed_url, string='Share URL', type='char', size=512, readonly=True),
     }
     _defaults = {
         'view_type': 'tree',
