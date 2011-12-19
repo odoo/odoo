@@ -1,29 +1,20 @@
 -
-  I Create new limit amount from Configure Limit Amount for Purchase wizard.
+  I set new limit amount from  Configure Limit Amount for Purchase .
 -
   !record {model: purchase.double.validation.installer, id: purchase_double_validation_installer_1}:
     limit_amount: 3000
 -
-  I set the Limit Amount.
--
   !python {model: purchase.double.validation.installer}: |
     self.execute(cr, uid, [ref("purchase_double_validation_installer_1")])
--
-  I Test for purchase double validation in which Total > = Limit Amount.
--
-  !python {model: purchase.order}: |
-    installer_amount = self.pool.get('purchase.double.validation.installer').browse(cr, uid, ref("purchase_double_validation_installer_1"))
-    purchase_order = self.browse(cr, uid, ref("order_purchase11"))
-    assert purchase_order.amount_total >= installer_amount.limit_amount ,"Total is Less then the Limit Amount"
 -
   In order to test the flow, I confirmed the purchase order.
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase11}
 -
-  I check that the order which was initially in the draft state has transmit to confirm state for double validation.
+  I check that the order which was initially in the draft state has transmit to confirm state for double validation it should not an Approve state.
 -
-  !assert {model: purchase.order, id: order_purchase11, severity: error, string: Purchase Order should be in Confirmed state.}:
-    - state == 'confirmed'
+  !assert {model: purchase.order, id: order_purchase11, severity: error, string: Purchase Order should not be in Approved state.}:
+    - state != 'approved'
 -
   I Approved the purchase order.
 -
@@ -33,13 +24,6 @@
 -
   !assert {model: purchase.order, id: order_purchase11, severity: error, string: Purchase Order should be in Approved state.}:
     - state == 'approved'
--
-  Test for purchase double validation in which Total < = Limit Amount.
--
-  !python {model: purchase.order}: |
-    installer_amount = self.pool.get('purchase.double.validation.installer').browse(cr, uid, ref("purchase_double_validation_installer_1"))
-    purchase_order = self.browse(cr, uid, ref("order_purchase12"))
-    assert purchase_order.amount_total <= installer_amount.limit_amount ,"Total is Greater then the Limit Amount"
 -
   I confirmed the purchase order of amount of less than Limit amount.
 -

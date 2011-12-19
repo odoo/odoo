@@ -1,5 +1,5 @@
 -
-   In order to test the flow, I start it from confirmed purchase order.
+   I confirm purchase order which has invoicing control method "Based on Purchase Order Lines".
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase6}
 -
@@ -19,7 +19,7 @@
      for purchase_line in purchase_order.order_line:
        assert len(purchase_order.invoice_ids) == 1, "Invoice should be generated."
 -
-  I create the Default invoicing control method "Based on Purchase Order Lines".
+  I set the default invoicing control method "Based on Purchase Order Lines".
 -
   !python {model: purchase.config.wizard}: |
     new_id = self.create(cr ,uid, {'default_method': 'manual'})
