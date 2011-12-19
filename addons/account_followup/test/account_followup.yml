@@ -4,8 +4,7 @@
   !workflow {model: account.invoice, action: invoice_open, ref: account.demo_invoice_0}
 -
   !record {model: account.followup.print, id: account_followup_print_0}:
-    date: !eval time.strftime('%Y-%m-%d')
-    followup_id: account_followup.demo_followup1
+    {}
 -
   I select the followup to send it to the partner.
 -
