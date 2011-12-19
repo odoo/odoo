@@ -1901,85 +1901,105 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     margin:2px 0 0 0;
 }
 
-.openerp .oe_vm_switch button {
+.openerp .oe_vm_switch_form,
+.openerp .oe_vm_switch_page,
+.openerp .oe_vm_switch_list,
+.openerp .oe_vm_switch_graph,
+.openerp .oe_vm_switch_gantt,
+.openerp .oe_vm_switch_calendar,
+.openerp .oe_vm_switch_kanban,
+.openerp .oe_vm_switch_diagram {
     background: url("/web/static/src/img/views-icons-a.png") repeat-x scroll left top transparent;
     overflow: hidden;
     width: 22px;
     height: 21px;
     border: none;
+    background-position: 0px 0px;
 }
 
-.openerp .oe_vm_switch button {
-    background-position:0px 0px;
-}
-.openerp .oe_vm_switch button[data-view-type="list"] {
-    background-position:0px 0px;
-}
-.openerp .oe_vm_switch button[data-view-type="list"]:active,
-.openerp .oe_vm_switch button[data-view-type="list"]:hover,
-.openerp .oe_vm_switch button[data-view-type="list"]:focus,
-.openerp .oe_vm_switch button[data-view-type="list"][disabled="disabled"] {
-    background-position:0px -21px;
-}
-.openerp .oe_vm_switch button[data-view-type="form"] {
-    background-position:-22px 0px;
-}
-.openerp .oe_vm_switch button[data-view-type="form"]:active,
-.openerp .oe_vm_switch button[data-view-type="form"]:hover,
-.openerp .oe_vm_switch button[data-view-type="form"]:focus,
-.openerp .oe_vm_switch button[data-view-type="form"][disabled="disabled"] {
-    background-position:-22px -21px;
-}
-.openerp .oe_vm_switch button[data-view-type="graph"] {
-    background-position:-44px 0px;
-}
-.openerp .oe_vm_switch button[data-view-type="graph"]:active,
-.openerp .oe_vm_switch button[data-view-type="graph"]:hover,
-.openerp .oe_vm_switch button[data-view-type="graph"]:focus,
-.openerp .oe_vm_switch button[data-view-type="graph"][disabled="disabled"] {
-    background-position:-44px -21px;
-}
-.openerp .oe_vm_switch button[data-view-type="gantt"] {
-    background-position:-66px 0px;
-}
-.openerp .oe_vm_switch button[data-view-type="gantt"]:active,
-.openerp .oe_vm_switch button[data-view-type="gantt"]:hover,
-.openerp .oe_vm_switch button[data-view-type="gantt"]:focus,
-.openerp .oe_vm_switch button[data-view-type="gantt"][disabled="disabled"] {
-    background-position:-66px -21px;
-}
-.openerp .oe_vm_switch button[data-view-type="calendar"] {
-    background-position:-88px 0px;
-}
-.openerp .oe_vm_switch button[data-view-type="calendar"]:active,
-.openerp .oe_vm_switch button[data-view-type="calendar"]:hover,
-.openerp .oe_vm_switch button[data-view-type="calendar"]:focus,
-.openerp .oe_vm_switch button[data-view-type="calendar"][disabled="disabled"]{
-    background-position:-88px -21px;
-}
-.openerp .oe_vm_switch button[data-view-type="kanban"] {
-    background-position:-110px 0px;
-}
-.openerp .oe_vm_switch button[data-view-type="kanban"]:active,
-.openerp .oe_vm_switch button[data-view-type="kanban"]:hover,
-.openerp .oe_vm_switch button[data-view-type="kanban"]:focus,
-.openerp .oe_vm_switch button[data-view-type="kanban"][disabled="disabled"] {
-    background-position:-110px -21px;
+.openerp .oe_vm_switch_form span,
+.openerp .oe_vm_switch_page span,
+.openerp .oe_vm_switch_list span,
+.openerp .oe_vm_switch_graph span,
+.openerp .oe_vm_switch_gantt span,
+.openerp .oe_vm_switch_calendar span,
+.openerp .oe_vm_switch_kanban span,
+.openerp .oe_vm_switch_diagram span {
+    display: none;
 }
 
-.openerp .oe_vm_switch button[data-view-type="diagram"] {
-    background-position:0px 0px;
+.openerp .oe_vm_switch_list {
+    background-position: 0px 0px;
 }
-.openerp .oe_vm_switch button[data-view-type="diagram"]:active,
-.openerp .oe_vm_switch button[data-view-type="diagram"]:hover,
-.openerp .oe_vm_switch button[data-view-type="diagram"]:focus,
-.openerp .oe_vm_switch button[data-view-type="diagram"][disabled="disabled"] {
-    background-position:0px -21px;
+.openerp .oe_vm_switch_list:active,
+.openerp .oe_vm_switch_list:hover,
+.openerp .oe_vm_switch_list:focus,
+.openerp .oe_vm_switch_list[disabled="disabled"] {
+    background-position: 0px -21px;
+}
+
+.openerp .oe_vm_switch_form {
+    background-position: -22px 0px;
+}
+.openerp .oe_vm_switch_form:active,
+.openerp .oe_vm_switch_form:hover,
+.openerp .oe_vm_switch_form:focus,
+.openerp .oe_vm_switch_form[disabled="disabled"] {
+    background-position: -22px -21px;
+}
+
+.openerp .oe_vm_switch_graph {
+    background-position: -44px 0px;
+}
+.openerp .oe_vm_switch_graph:active,
+.openerp .oe_vm_switch_graph:hover,
+.openerp .oe_vm_switch_graph:focus,
+.openerp .oe_vm_switch_graph[disabled="disabled"] {
+    background-position: -44px -21px;
+}
+
+.openerp .oe_vm_switch_gantt {
+    background-position: -66px 0px;
+}
+.openerp .oe_vm_switch_gantt:active,
+.openerp .oe_vm_switch_gantt:hover,
+.openerp .oe_vm_switch_gantt:focus,
+.openerp .oe_vm_switch_gantt[disabled="disabled"] {
+    background-position: -66px -21px;
+}
+
+.openerp .oe_vm_switch_calendar {
+    background-position: -88px 0px;
+}
+.openerp .oe_vm_switch_calendar:active,
+.openerp .oe_vm_switch_calendar:hover,
+.openerp .oe_vm_switch_calendar:focus,
+.openerp .oe_vm_switch_calendar[disabled="disabled"] {
+    background-position: -88px -21px;
+}
+.openerp .oe_vm_switch_kanban {
+    background-position: -110px 0px;
+}
+.openerp .oe_vm_switch_kanban:active,
+.openerp .oe_vm_switch_kanban:hover,
+.openerp .oe_vm_switch_kanban:focus,
+.openerp .oe_vm_switch_kanban[disabled="disabled"] {
+    background-position: -110px -21px;
+}
+
+.openerp .oe_vm_switch_diagram {
+    background-position: 0px 0px;
+}
+.openerp .oe_vm_switch_diagram:active,
+.openerp .oe_vm_switch_diagram:hover,
+.openerp .oe_vm_switch_diagram:focus,
+.openerp .oe_vm_switch_diagram[disabled="disabled"] {
+    background-position: 0px -21px;
 }
 
 .openerp .oe-list-pager button[disabled="disabled"], .openerp .oe_form_pager button[disabled="disabled"] {
     opacity:0.5;
-	filter:alpha(opacity=50); /* For IE8 and earlier */ 
+    filter:alpha(opacity=50); /* For IE8 and earlier */ 
 }
 .openerp .oe-list-pager button[data-pager-action="first"], .openerp .oe_form_pager button[data-pager-action="first"] {
     background: url("/web/static/src/img/pager_first.png") no-repeat scroll center center transparent;
