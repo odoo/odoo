@@ -572,7 +572,7 @@ openerp.point_of_sale = function(db) {
     var NumpadWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
-            this.state = options.state;
+            this.state = new NumpadState();
         },
         start: function() {
             this.state.bind('change:mode', this.changedMode, this);
@@ -718,10 +718,18 @@ openerp.point_of_sale = function(db) {
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
-            this.numpadState = options.numpadState;
-            this.numpadState.bind('setValue', this.setValue, this);
+            this.setNumpadState(options.numpadState);
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindOrderLineEvents();
+        },
+        setNumpadState: function(numpadState) {
+        	if (this.numpadState) {
+        		this.numpadState.unbind('setValue', this.setValue);
+        	}
+        	this.numpadState = numpadState;
+        	if (this.numpadState) {
+        		this.numpadState.bind('setValue', this.setValue, this);
+        	}
         },
         setValue: function(val) {
         	var param = {};
@@ -754,7 +762,7 @@ openerp.point_of_sale = function(db) {
         		reset = true;
         	}
         	this.currentSelected = this.shop.get('selectedOrder').selected;
-        	if (reset)
+        	if (reset && this.numpadState)
         		this.numpadState.reset();
         },
         render_element: function() {
@@ -1048,7 +1056,6 @@ openerp.point_of_sale = function(db) {
 
             (this.shop.get('orders')).bind('add', this.orderAdded, this);
             (this.shop.get('orders')).add(new Order);
-            this.numpadState = new NumpadState({});
             this.productListView = new ProductListWidget(null, {
                 shop: this.shop
             });
@@ -1061,9 +1068,12 @@ openerp.point_of_sale = function(db) {
             this.paypadView.$element = $('#paypad');
             this.paypadView.render_element();
             this.paypadView.start();
+            this.numpadView = new NumpadWidget(null);
+            this.numpadView.$element = $('#numpad');
+            this.numpadView.start();
             this.orderView = new OrderWidget(null, {
                 shop: this.shop,
-                numpadState: this.numpadState
+                numpadState: this.numpadView.state,
             });
             this.orderView.$element = $('#current-order-content');
             this.orderView.start();
@@ -1077,11 +1087,6 @@ openerp.point_of_sale = function(db) {
                 shop: this.shop,
             });
             this.receiptView.replace($('#receipt-screen'));
-            this.numpadView = new NumpadWidget(null, {
-                state: this.numpadState
-            });
-            this.numpadView.$element = $('#numpad');
-            this.numpadView.start();
             this.stepsView = new StepsWidget(null, {shop: this.shop});
             this.stepsView.$element = $('#steps');
             this.stepsView.start();
