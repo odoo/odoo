@@ -174,6 +174,8 @@ class pos_order(osv.osv):
         move_obj = self.pool.get('stock.move')
 
         for order in self.browse(cr, uid, ids, context=context):
+            if not order.state=='draft':
+                continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_id = picking_obj.create(cr, uid, {
                 'origin': order.name,
