@@ -132,18 +132,21 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
 
     do_show: function () {
-        var promise;
-        if (this.dataset.index === null) {
-            // null index means we should start a new record
-            promise = this.on_button_new();
-        } else {
-            promise = this.dataset.read_index(_.keys(this.fields_view.fields)).pipe(this.on_record_loaded);
-        }
-        this.$element.show();
-        if (this.sidebar) {
-            this.sidebar.$element.show();
-        }
-        return promise;
+        var self = this,
+            deferred = $.Deferred();
+        this.has_been_loaded.then(function() {
+            if (self.dataset.index === null) {
+                // null index means we should start a new record
+                deferred.pipe(self.on_button_new());
+            } else {
+                deferred.pipe(self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded));
+            }
+            self.$element.show();
+            if (self.sidebar) {
+                self.sidebar.$element.show();
+            }
+        });
+        return deferred;
     },
     do_hide: function () {
         this._super();
