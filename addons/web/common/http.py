@@ -425,6 +425,7 @@ class Root(object):
             if not os.path.exists(options.session_storage):
                 os.mkdir(options.session_storage, 0700)
             self.session_storage = options.session_storage
+        _logger.debug('HTTP sessions stored in: %s', self.session_storage)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
