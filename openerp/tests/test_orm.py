@@ -1,9 +1,10 @@
 import os
 import unittest2
+
 import openerp
 
 UID = 1
-DB = os.environ['OPENERP_DATABASE']
+DB = openerp.tools.config['db_name']
 
 CREATE = lambda values: (0, False, values)
 UPDATE = lambda id, values: (1, id, values)
@@ -13,14 +14,13 @@ LINK_TO = lambda id: (4, id, False)
 DELETE_ALL = lambda: (5, False, False)
 REPLACE_WITH = lambda ids: (6, False, ids)
 
-def setUpModule():
-    openerp.tools.config['addons_path'] = os.environ['OPENERP_ADDONS_PATH']
-
 class TestO2MSerialization(unittest2.TestCase):
+
     def setUp(self):
         self.cr = openerp.modules.registry.RegistryManager.get(DB).db.cursor()
         self.partner = openerp.modules.registry.RegistryManager.get(DB)['res.partner']
         self.address = openerp.modules.registry.RegistryManager.get(DB)['res.partner.address']
+
     def tearDown(self):
         self.cr.rollback()
         self.cr.close()
@@ -173,3 +173,5 @@ class TestO2MSerialization(unittest2.TestCase):
             self.partner.resolve_o2m_commands_to_record_dicts(
                 self.cr, UID, 'address', [REPLACE_WITH([42])], ['name'])
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

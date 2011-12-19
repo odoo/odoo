@@ -166,7 +166,7 @@ class YamlInterpreter(object):
             self.logger.log(logging.ERROR, 'id: %s is to long (max: 64)', id)
 
     def get_id(self, xml_id):
-        if xml_id is False:
+        if xml_id is False or xml_id is None:
             return False
         #if not xml_id:
         #    raise YamlImportException("The xml_id should be a non empty string.")
@@ -302,8 +302,9 @@ class YamlInterpreter(object):
 
     def create_osv_memory_record(self, record, fields):
         model = self.get_model(record.model)
-        record_dict = self._create_record(model, fields, False)
-        id_new=model.create(self.cr, self.uid, record_dict, context=self.context)
+        context = self.get_context(record, self.eval_context)
+        record_dict = self._create_record(model, fields)
+        id_new = model.create(self.cr, self.uid, record_dict, context=context)
         self.id_map[record.id] = int(id_new)
         return record_dict
 

@@ -210,7 +210,7 @@ class report_graph(report.interface.report_int):
         else:
             return (False, False, False)
 
-    def create(self, cr, uid, ids, data, context={}):
+    def create(self, cr, uid, ids, data, context=None):
         self.obj = report_graph_instance(cr, uid, ids, data)
         return (self.obj.get(), 'pdf')
 

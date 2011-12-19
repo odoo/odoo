@@ -98,7 +98,7 @@ class res_partner_title(osv.osv):
     _order = 'name'
 res_partner_title()
 
-def _lang_get(self, cr, uid, context={}):
+def _lang_get(self, cr, uid, context=None):
     obj = self.pool.get('res.lang')
     ids = obj.search(cr, uid, [], context=context)
     res = obj.read(cr, uid, ids, ['code', 'name'], context)
@@ -142,7 +142,9 @@ class res_partner(osv.osv):
         'color': fields.integer('Color Index'),
     }
 
-    def _default_category(self, cr, uid, context={}):
+    def _default_category(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'category_id' in context and context['category_id']:
             return [context['category_id']]
         return []
@@ -155,8 +157,10 @@ class res_partner(osv.osv):
         'color': 0,
     }
 
-    def copy(self, cr, uid, id, default={}, context={}):
-        name = self.read(cr, uid, [id], ['name'])[0]['name']
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        name = self.read(cr, uid, [id], ['name'], context)[0]['name']
         default.update({'name': name+ _(' (copy)'), 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
@@ -181,10 +185,12 @@ class res_partner(osv.osv):
 
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         if not len(ids):
             return []
-        if context and context.get('show_ref'):
+        if context.get('show_ref'):
             rec_name = 'ref'
         else:
             rec_name = 'name'
@@ -223,11 +229,13 @@ class res_partner(osv.osv):
             ids = ids[16:]
         return True
 
-    def address_get(self, cr, uid, ids, adr_pref=['default']):
+    def address_get(self, cr, uid, ids, adr_pref=None):
+        if adr_pref is None:
+            adr_pref = ['default']
         address_obj = self.pool.get('res.partner.address')
         address_ids = address_obj.search(cr, uid, [('partner_id', 'in', ids)])
         address_rec = address_obj.read(cr, uid, address_ids, ['type'])
-        res = list(tuple(addr.values()) for addr in address_rec)
+        res = list((addr['type'],addr['id']) for addr in address_rec)
         adr = dict(res)
         # get the id of the (first) default address if there is one,
         # otherwise get the id of the first address in the list
@@ -307,7 +315,7 @@ class res_partner_address(osv.osv):
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner.address', context=c),
     }
 
-    def name_get(self, cr, user, ids, context={}):
+    def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
         if not len(ids):
@@ -347,6 +355,32 @@ class res_partner_address(osv.osv):
 
     def get_city(self, cr, uid, id):
         return self.browse(cr, uid, id).city
+
+    def _display_address(self, cr, uid, address, context=None):
+        '''
+        The purpose of this function is to build and return an address formatted accordingly to the
+        standards of the country where it belongs.
+
+        :param address: browse record of the res.partner.address to format
+        :returns: the address formatted in a display that fit its country habits (or the default ones
+            if not country is specified)
+        :rtype: string
+        '''
+        # get the address format
+        address_format = address.country_id and address.country_id.address_format or \
+                                         '%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s' 
+        # get the information that will be injected into the display format
+        args = {
+            'state_code': address.state_id and address.state_id.code or '',
+            'state_name': address.state_id and address.state_id.name or '',
+            'country_code': address.country_id and address.country_id.code or '',
+            'country_name': address.country_id and address.country_id.name or '',
+        }
+        address_field = ['title', 'street', 'street2', 'zip', 'city']
+        for field in address_field :
+            args[field] = getattr(address, field) or ''
+
+        return address_format % args
 
 res_partner_address()
 
