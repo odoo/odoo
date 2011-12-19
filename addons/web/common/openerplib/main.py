@@ -291,7 +291,7 @@ class Service(object):
         """
         self.connector = connector
         self.service_name = service_name
-        self.__logger = _getChildLogger(_getChildLogger(_logger, 'service'),service_name)
+        self.__logger = _getChildLogger(_getChildLogger(_logger, 'service'),service_name or "")
         
     def __getattr__(self, method):
         """
@@ -407,7 +407,7 @@ class Model(object):
         """
         self.connection = connection
         self.model_name = model_name
-        self.__logger = _getChildLogger(_getChildLogger(_logger, 'object'), model_name)
+        self.__logger = _getChildLogger(_getChildLogger(_logger, 'object'), model_name or "")
 
     def __getattr__(self, method):
         """

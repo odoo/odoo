@@ -1,10 +1,11 @@
 openerp.web.list = function (openerp) {
-var _t = openerp.web._t;
+var _t = openerp.web._t,
+   _lt = openerp.web._lt;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('list', 'openerp.web.ListView');
 openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView# */ {
     _template: 'ListView',
-    display_name: {toString: function () { return _t('List'); }},
+    display_name: _lt('List'),
     defaults: {
         // records can be selected one by one
         'selectable': true,
@@ -13,7 +14,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         // whether the column headers should be displayed
         'header': true,
         // display addition button, with that label
-        'addable': {toString: function () { return _t("Create"); }},
+        'addable': _lt("Create"),
         // whether the list view can be sorted, note that once a view has been
         // sorted it can not be reordered anymore
         'sortable': true,

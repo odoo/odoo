@@ -1,12 +1,13 @@
 openerp.web_kanban = function (openerp) {
 
-var _t = openerp.web._t;
+var _t = openerp.web._t,
+   _lt = openerp.web._lt;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('kanban', 'openerp.web_kanban.KanbanView');
 
 openerp.web_kanban.KanbanView = openerp.web.View.extend({
     template: "KanbanView",
-    display_name: {toString: function () { return _t('Kanban'); }},
+    display_name: _lt('Kanban'),
     default_nr_columns: 3,
     init: function (parent, dataset, view_id, options) {
         this._super(parent);

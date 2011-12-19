@@ -252,14 +252,18 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
     },
     previous: function () {
         this.index -= 1;
-        if (this.index < 0) {
+        if (!this.ids.length) {
+            this.index = null;
+        } else if (this.index < 0) {
             this.index = this.ids.length - 1;
         }
         return this;
     },
     next: function () {
         this.index += 1;
-        if (this.index >= this.ids.length) {
+        if (!this.ids.length) {
+            this.index = null;
+        } else if (this.index >= this.ids.length) {
             this.index = 0;
         }
         return this;

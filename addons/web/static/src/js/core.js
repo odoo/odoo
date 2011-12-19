@@ -355,18 +355,18 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      */
     init: function() {
         this._super();
+        this.server = null;
+        this.debug = ($.deparam($.param.querystring()).debug != undefined);
         // TODO: session store in cookie should be optional
         this.name = openerp._session_id;
     },
-    bind: function(host, protocol) {
-        var self = this;
-        this.host = (host == undefined) ? location.host : host;
-        this.protocol = (protocol == undefined) ? location.protocol : protocol;
-        this.prefix = this.protocol + '//' + this.host;
-        openerp.web.qweb.default_dict['_s'] = this.prefix
-        this.rpc_mode = (this.host == location.host) ? "json" : "jsonp";
-        this.rpc_function = (this.host == location.host) ? this.rpc_json : this.rpc_jsonp;
-        this.debug = (window.location.search.indexOf('?debug') !== -1);
+    bind: function(origin) {
+        var window_origin = location.protocol+"//"+location.host;
+        this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
+        this.prefix = this.origin;
+        this.server = this.origin; // keep chs happy
+        openerp.web.qweb.default_dict['_s'] = this.origin;
+        this.rpc_function = (this.origin == window_origin) ? this.rpc_json : this.rpc_jsonp;
         this.session_id = false;
         this.uid = false;
         this.username = false;
@@ -480,7 +480,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         }, url);
         var payload_str = JSON.stringify(payload);
         var payload_url = $.param({r:payload_str});
-        if(playload_url.length < 2000) {
+        if(payload_url.length < 2000) {
             // Direct jsonp request
             ajax.data.r = payload_str;
             return $.ajax(ajax);
@@ -553,6 +553,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             return deferred;
         });
     },
+    session_is_valid: function() {
+        return !!this.uid;
+    },
     /**
      * The session is validated either by login or by restoration of a previous session
      */
@@ -576,6 +579,12 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     session_logout: function() {
         this.set_cookie('session_id', '');
         window.location.reload();
+    },
+    /**
+     * Called when a rpc call fail due to an invalid session.
+     * By default, it's a noop
+     */
+    on_session_invalid: function(retry_callback) {
     },
     /**
      * Fetches a cookie stored by an openerp session
@@ -1128,12 +1137,26 @@ if ($.blockUI) {
 
 /** Configure default qweb */
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
+/**
+ * Lazy translation function, only performs the translation when actually
+ * printed (e.g. inserted into a template)
+ *
+ * Useful when defining translatable strings in code evaluated before the
+ * translation database is loaded, as class attributes or at the top-level of
+ * an OpenERP Web module
+ *
+ * @param {String} s string to translate
+ * @returns {Object} lazy translation object
+ */
+openerp.web._lt = function (s) {
+    return {toString: function () { return openerp.web._t(s); }}
+};
 openerp.web.qweb = new QWeb2.Engine();
 openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
 openerp.web.qweb.default_dict = {
     '_' : _,
     '_t' : openerp.web._t
-}
+};
 openerp.web.qweb.format_text_node = function(s) {
     // Note that 'this' is the Qweb Node of the text
     var translation = this.node.parentNode.attributes['t-translation'];

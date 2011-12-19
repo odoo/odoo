@@ -138,9 +138,10 @@ class JsonRequest(WebRequest):
         :returns: an utf8 encoded JSON-RPC2 or JSONP reply
         """
         args = self.httprequest.args
-        jsonp = args.get('jsonp', False)
+        jsonp = args.get('jsonp')
         requestf = None
         request = None
+        print "ARGS",args
 
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
@@ -149,13 +150,13 @@ class JsonRequest(WebRequest):
             headers=[('Content-Type', 'text/plain; charset=utf-8')]
             r = werkzeug.wrappers.Response(request_id, headers=headers)
             return r
+        elif jsonp and args.get('r'):
+            # jsonp method GET
+            request = args.get('r')
         elif jsonp and args.get('id'):
             # jsonp 2 steps step2 GET: run and return result
             self.init(args)
             request = self.session.jsonp_requests.pop(args.get(id), "")
-        elif jsonp and args.get('r'):
-            # jsonp method GET
-            request = args.get('r')
         else:
             # regular jsonrpc2
             requestf = self.httprequest.stream
@@ -352,11 +353,11 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                 in_store = session_store.get(sid)
                 for k, v in request.session.iteritems():
                     stored = in_store.get(k)
-                    if stored and isinstance(v, session.OpenERPSession)\
-                            and v != stored:
+                    if stored and isinstance(v, session.OpenERPSession):
                         v.contexts_store.update(stored.contexts_store)
                         v.domains_store.update(stored.domains_store)
-                        v.jsonp_requests.update(stored.jsonp_requests)
+                        jsonp = getattr(v, 'jsonp_requests', {})
+                        jsonp.update(stored.jsonp_requests)
 
                 # add missing keys
                 for k, v in in_store.iteritems():
@@ -424,6 +425,7 @@ class Root(object):
             if not os.path.exists(options.session_storage):
                 os.mkdir(options.session_storage, 0700)
             self.session_storage = options.session_storage
+        _logger.debug('HTTP sessions stored in: %s', self.session_storage)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request

@@ -3,11 +3,12 @@
  *---------------------------------------------------------*/
 
 openerp.web_calendar = function(openerp) {
-var _t = openerp.web._t;
+var _t = openerp.web._t,
+   _lt = openerp.web._lt;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('calendar', 'openerp.web_calendar.CalendarView');
 openerp.web_calendar.CalendarView = openerp.web.View.extend({
-    display_name: {toString: function () { return _t('Calendar'); }},
+    display_name: _lt('Calendar'),
 // Dhtmlx scheduler ?
     init: function(parent, dataset, view_id, options) {
         this._super(parent);

@@ -597,7 +597,7 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
      */
     do_login: function (db, login, password) {
         var self = this;
-        this.session.session_authenticate(db, login, password, function() {
+        this.session.session_authenticate(db, login, password).then(function() {
             if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
                     if(self.remember_credentials) {
@@ -1031,7 +1031,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.menu.do_reload();
             if(self.action_manager)
                 self.action_manager.stop();
-            self.action_manager = new openerp.web.ActionManager(this);
+            self.action_manager = new openerp.web.ActionManager(self);
             self.action_manager.appendTo($("#oe_app"));
             self.bind_hashchange();
         });
@@ -1093,15 +1093,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
 });
 
-openerp.currentScript = function() {
-    var currentScript = document.currentScript;
-    if (!currentScript) {
-        var sc = document.getElementsByTagName('script');
-        currentScript = sc[sc.length-1];
-    }
-    return currentScript;
-};
-
 openerp.web.EmbeddedClient = openerp.web.Widget.extend({
     template: 'EmptyComponent',
     init: function(action_id, options) {
@@ -1114,9 +1105,7 @@ openerp.web.EmbeddedClient = openerp.web.Widget.extend({
 
     start: function() {
         var self = this;
-
         this.am.appendTo(this.$element.addClass('openerp'));
-
         return this.rpc("/web/action/load", { action_id: this.action_id }, function(result) {
             var action = result.result;
             action.flags = _.extend({
@@ -1133,6 +1122,25 @@ openerp.web.EmbeddedClient = openerp.web.Widget.extend({
 
 });
 
+openerp.web.embed = function (origin, dbname, login, key, action, options) {
+    $('head').append($('<link>', {
+        'rel': 'stylesheet',
+        'type': 'text/css',
+        'href': origin +'/web/webclient/css'
+    }));
+    var currentScript = document.currentScript;
+    if (!currentScript) {
+        var sc = document.getElementsByTagName('script');
+        currentScript = sc[sc.length-1];
+    }
+    openerp.connection.bind(origin).then(function () {
+        openerp.connection.session_authenticate(dbname, login, key).then(function () {
+            var client = new openerp.web.EmbeddedClient(action, options);
+            client.insertAfter(currentScript);
+        });
+    });
+
+}
 
 };
 

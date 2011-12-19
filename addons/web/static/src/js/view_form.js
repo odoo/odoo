@@ -1,6 +1,7 @@
 openerp.web.form = function (openerp) {
 
-var _t = openerp.web._t;
+var _t = openerp.web._t,
+   _lt = openerp.web._lt;
 var QWeb = openerp.web.qweb;
 
 openerp.web.views.add('form', 'openerp.web.FormView');
@@ -13,7 +14,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     readonly : false,
     form_template: "FormView",
     identifier_prefix: 'formview-',
-    display_name: {toString: function () { return _t('Form'); }},
+    display_name: _lt('Form'),
     /**
      * @constructs openerp.web.FormView
      * @extends openerp.web.View

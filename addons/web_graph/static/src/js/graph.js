@@ -13,10 +13,10 @@ var COLOR_PALETTE = [
     '#cc0000', '#d400a8'];
 
 var QWeb = openerp.web.qweb,
-      _t = openerp.web._t;
+     _lt = openerp.web._lt;
 openerp.web.views.add('graph', 'openerp.web_graph.GraphView');
 openerp.web_graph.GraphView = openerp.web.View.extend({
-    display_name: {toString: function () { return _t('Graph'); }},
+    display_name: _lt('Graph'),
 
     init: function(parent, dataset, view_id, options) {
         this._super(parent);
