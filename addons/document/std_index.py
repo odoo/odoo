@@ -95,9 +95,15 @@ class DocIndex(indexer):
         return ['.doc']
 
     def _doIndexFile(self,fname):
-        pop = Popen(['antiword', fname], shell=False, stdout=PIPE)
-        (data, _) = pop.communicate()
-        return _to_unicode(data)
+        try:
+            pop = Popen(['antiword', fname], shell=False, stdout=PIPE)
+            (data, _) = pop.communicate()
+            return _to_unicode(data)
+        except:
+            import netsvc
+            logger = netsvc.Logger()
+            logger.notifyChannel("document", netsvc.LOG_ERROR, 'Please install Antiword package(MS Word reader): sudo apt-get install antiword')
+            return False
     
 cntIndex.register(DocIndex())
 
