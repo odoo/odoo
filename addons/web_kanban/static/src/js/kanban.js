@@ -1,11 +1,13 @@
 openerp.web_kanban = function (openerp) {
 
-var _t = openerp.web._t;
+var _t = openerp.web._t,
+   _lt = openerp.web._lt;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('kanban', 'openerp.web_kanban.KanbanView');
 
 openerp.web_kanban.KanbanView = openerp.web.View.extend({
     template: "KanbanView",
+    display_name: _lt('Kanban'),
     default_nr_columns: 3,
     init: function (parent, dataset, view_id, options) {
         this._super(parent);
@@ -106,7 +108,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                         node.children = [{
                             tag: 'img',
                             attrs: {
-                                src: '/web/static/src/img/icons/' + node.attrs['data-icon'] + '.png',
+                                src: openerp.connection.prefix + '/web/static/src/img/icons/' + node.attrs['data-icon'] + '.png',
                                 width: '16',
                                 height: '16'
                             }
@@ -257,12 +259,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }
-    },
-    do_show: function () {
-        this.$element.show();
-    },
-    do_hide: function () {
-        this.$element.hide();
     },
     compute_groups_width: function() {
         var unfolded = 0;
@@ -429,7 +425,9 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             var $action = $(this),
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);
-            if (typeof self[method] === 'function') {
+            if (_.str.startsWith(type, 'switch_')) {
+                self.view.do_switch_view(type.substr(7));
+            } else if (typeof self[method] === 'function') {
                 self[method]($action);
             } else {
                 self.do_warn("Kanban: no action for type : " + type);
@@ -528,14 +526,17 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     },
     kanban_image: function(model, field, id) {
         id = id || '';
-        return '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+        return openerp.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
     },
     kanban_text_ellipsis: function(s, size) {
         size = size || 160;
         if (!s) {
             return '';
+        } else if (s.length <= size) {
+            return s;
+        } else {
+            return s.substr(0, size) + '...';
         }
-        return s.substr(0, size) + '...';
     }
 });
 };

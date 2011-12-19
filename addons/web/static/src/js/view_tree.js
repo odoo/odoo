@@ -3,10 +3,12 @@
  *---------------------------------------------------------*/
 
 openerp.web.view_tree = function(openerp) {
-var QWeb = openerp.web.qweb;
+var QWeb = openerp.web.qweb,
+      _lt = openerp.web._lt;
 
 openerp.web.views.add('tree', 'openerp.web.TreeView');
 openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# */{
+    display_name: _lt('Tree'),
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
@@ -110,6 +112,9 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
                 $select.change();
             }
         });
+
+        // TODO store open nodes in url ?...
+        this.do_push_state({});
 
         if (!this.fields_view.arch.attrs.colors) {
             return;

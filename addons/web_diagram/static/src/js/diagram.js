@@ -3,9 +3,12 @@
  *---------------------------------------------------------*/
 
 openerp.web_diagram = function (openerp) {
-var QWeb = openerp.web.qweb;
+var QWeb = openerp.web.qweb,
+      _t = openerp.web._t,
+     _lt = openerp.web._lt;
 openerp.web.views.add('diagram', 'openerp.web.DiagramView');
 openerp.web.DiagramView = openerp.web.View.extend({
+    display_name: _lt('Diagram'),
     searchable: false,
     init: function(parent, dataset, view_id, options) {
         this._super(parent);
@@ -203,19 +206,18 @@ openerp.web.DiagramView = openerp.web.View.extend({
         var dialog = new openerp.web.Dialog(this, {
             width: 800,
             height: 600,
-            buttons : {
-                Cancel : function() {
-                    $(this).dialog('destroy');
-                },
-                Save : function() {
-                    var form_view = action_manager.inner_viewmanager.views.form.controller;
+            buttons : [
+                {text: _t("Cancel"), click: function() { $(this).dialog('destroy'); }},
+                {text: _t("Save"), click: function() {
+                        var form_view = action_manager.inner_viewmanager.views.form.controller;
 
-                    form_view.do_save(function() {
-                        self.dataset.read_index(_.keys(self.fields_view.fields), self.on_diagram_loaded);
-                    });
-                    $(this).dialog('destroy');
+                        form_view.do_save(function() {
+                            self.dataset.read_index(_.keys(self.fields_view.fields), self.on_diagram_loaded);
+                        });
+                        $(this).dialog('destroy');
+                    }
                 }
-            }
+            ]
         }).start().open();
         action_manager.appendTo(dialog.$element);
         action_manager.do_action({
@@ -298,14 +300,6 @@ openerp.web.DiagramView = openerp.web.View.extend({
         }
         $pager.find('span.oe_pager_index').html(index);
         $pager.find('span.oe_pager_count').html(this.dataset.count);
-    },
-
-    do_show: function () {
-        this.$element.show();
-    },
-
-    do_hide: function () {
-        this.$element.hide();
     }
 });
 };

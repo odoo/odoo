@@ -1,13 +1,14 @@
 openerp.web.page = function (openerp) {
-    var _t = openerp.web._t;
-    var QWeb = openerp.web.qweb;
+    var _t = openerp.web._t,
+       _lt = openerp.web._lt;
 
     openerp.web.views.add('page', 'openerp.web.PageView');
     openerp.web.PageView = openerp.web.FormView.extend({
         form_template: "PageView",
+        display_name: _lt('Page'),
         init: function () {
             this._super.apply(this, arguments);
-            this.registry = openerp.web.form.readonly;
+            this.registry = openerp.web.page.readonly;
         },
         on_loaded: function(data) {
             this._super(data);
@@ -55,10 +56,17 @@ openerp.web.page = function (openerp) {
             return def.promise();
         }
     });
-    openerp.web.form.FieldReadonly = openerp.web.form.Field.extend({
+
+    /** @namespace */
+    openerp.web.page = {};
+
+    openerp.web.page.WidgetFrameReadonly = openerp.web.form.WidgetFrame.extend({
+        template: 'WidgetFrame.readonly'
+    });
+    openerp.web.page.FieldReadonly = openerp.web.form.Field.extend({
 
     });
-    openerp.web.form.FieldCharReadonly = openerp.web.form.FieldReadonly.extend({
+    openerp.web.page.FieldCharReadonly = openerp.web.page.FieldReadonly.extend({
         template: 'FieldChar.readonly',
         init: function(view, node) {
             this._super(view, node);
@@ -74,7 +82,7 @@ openerp.web.page = function (openerp) {
             return show_value;
         }
     });
-    openerp.web.form.FieldURIReadonly = openerp.web.form.FieldCharReadonly.extend({
+    openerp.web.page.FieldURIReadonly = openerp.web.page.FieldCharReadonly.extend({
         template: 'FieldURI.readonly',
         scheme: null,
         set_value: function (value) {
@@ -84,10 +92,10 @@ openerp.web.page = function (openerp) {
                     .text(displayed);
         }
     });
-    openerp.web.form.FieldEmailReadonly = openerp.web.form.FieldURIReadonly.extend({
+    openerp.web.page.FieldEmailReadonly = openerp.web.page.FieldURIReadonly.extend({
         scheme: 'mailto'
     });
-    openerp.web.form.FieldUrlReadonly = openerp.web.form.FieldURIReadonly.extend({
+    openerp.web.page.FieldUrlReadonly = openerp.web.page.FieldURIReadonly.extend({
         set_value: function (value) {
             var s = /(\w+):(.+)/.exec(value);
             if (!s || !(s[1] === 'http' || s[1] === 'https')) { return; }
@@ -95,12 +103,13 @@ openerp.web.page = function (openerp) {
             this._super(s[2]);
         }
     });
-    openerp.web.form.FieldBooleanReadonly = openerp.web.form.FieldCharReadonly.extend({
-        set_value: function (value) {
-            this._super(value ? '\u2611' : '\u2610');
+    openerp.web.page.FieldBooleanReadonly = openerp.web.form.FieldBoolean.extend({
+        update_dom: function() {
+            this._super.apply(this, arguments);
+            this.$element.find('input').prop('disabled', true);
         }
     });
-    openerp.web.form.FieldSelectionReadonly = openerp.web.form.FieldReadonly.extend({
+    openerp.web.page.FieldSelectionReadonly = openerp.web.page.FieldReadonly.extend({
         template: 'FieldChar.readonly',
         init: function(view, node) {
             // lifted straight from r/w version
@@ -123,7 +132,7 @@ openerp.web.page = function (openerp) {
             this.$element.find('div').text(option ? option[1] : this.values[0][1]);
         }
     });
-    openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldURIReadonly.extend({
+    openerp.web.page.FieldMany2OneReadonly = openerp.web.page.FieldURIReadonly.extend({
         set_value: function (value) {
             value = value || null;
             this.invalid = false;
@@ -142,7 +151,7 @@ openerp.web.page = function (openerp) {
                             res_model: self.field.relation,
                             res_id: self.value[0],
                             context: self.build_context(),
-                            views: [[false, 'form']],
+                            views: [[false, 'page'], [false, 'form']],
                             target: 'current'
                         });
                         return false;
@@ -168,29 +177,70 @@ openerp.web.page = function (openerp) {
             }
         }
     });
-    
-    openerp.web.form.FieldMany2ManyReadonly = openerp.web.form.FieldMany2Many.extend({
+    openerp.web.page.FieldReferenceReadonly = openerp.web.page.FieldMany2OneReadonly.extend({
+        set_value: function (value) {
+            if (!value) {
+                return this._super(null);
+            }
+            var reference = value.split(',');
+            this.field.relation = reference[0];
+            var id = parseInt(reference[1], 10);
+            return this._super(id);
+        },
+        get_value: function () {
+            if (!this.value) {
+                return null;
+            }
+            return _.str.sprintf('%s,%d', this.field.relation, this.value[0]);
+        }
+    });
+
+    openerp.web.page.FieldMany2ManyReadonly = openerp.web.form.FieldMany2Many.extend({
         force_readonly: true
     });
-    openerp.web.form.FieldOne2ManyReadonly = openerp.web.form.FieldOne2Many.extend({
+    openerp.web.page.FieldOne2ManyReadonly = openerp.web.form.FieldOne2Many.extend({
         force_readonly: true
     });
-    openerp.web.form.readonly = openerp.web.form.widgets.clone({
-        'char': 'openerp.web.form.FieldCharReadonly',
-        'email': 'openerp.web.form.FieldEmailReadonly',
-        'url': 'openerp.web.form.FieldUrlReadonly',
-        'text': 'openerp.web.form.FieldCharReadonly',
-        'text_wiki' : 'openerp.web.form.FieldCharReadonly',
-        'date': 'openerp.web.form.FieldCharReadonly',
-        'datetime': 'openerp.web.form.FieldCharReadonly',
-        'selection' : 'openerp.web.form.FieldSelectionReadonly',
-        'many2one': 'openerp.web.form.FieldMany2OneReadonly',
-        'many2many' : 'openerp.web.form.FieldMany2ManyReadonly',
-        'one2many' : 'openerp.web.form.FieldOne2ManyReadonly',
-        'one2many_list' : 'openerp.web.form.FieldOne2ManyReadonly',
-        'boolean': 'openerp.web.form.FieldBooleanReadonly',
-        'float': 'openerp.web.form.FieldCharReadonly',
-        'integer': 'openerp.web.form.FieldCharReadonly',
-        'float_time': 'openerp.web.form.FieldCharReadonly'
+    openerp.web.page.FieldBinaryFileReadonly = openerp.web.form.FieldBinary.extend({
+        template: 'FieldURI.readonly',
+        start: function() {
+            this._super.apply(this, arguments);
+            var self = this;
+            this.$element.find('a').click(function() {
+                if (self.value) {
+                    self.on_save_as();
+                }
+                return false;
+            });
+        },
+        set_value: function(value) {
+            this._super.apply(this, arguments);
+            this.$element.find('a').show(!!value);
+            if (value) {
+                var show_value = _t("Download") + " " + (this.view.datarecord[this.node.attrs.filename] || '');
+                this.$element.find('a').text(show_value);
+            }
+        }
+    });
+    openerp.web.page.readonly = openerp.web.form.widgets.clone({
+        'frame': 'openerp.web.page.WidgetFrameReadonly',
+        'char': 'openerp.web.page.FieldCharReadonly',
+        'email': 'openerp.web.page.FieldEmailReadonly',
+        'url': 'openerp.web.page.FieldUrlReadonly',
+        'text': 'openerp.web.page.FieldCharReadonly',
+        'text_wiki' : 'openerp.web.page.FieldCharReadonly',
+        'date': 'openerp.web.page.FieldCharReadonly',
+        'datetime': 'openerp.web.page.FieldCharReadonly',
+        'selection' : 'openerp.web.page.FieldSelectionReadonly',
+        'many2one': 'openerp.web.page.FieldMany2OneReadonly',
+        'many2many' : 'openerp.web.page.FieldMany2ManyReadonly',
+        'one2many' : 'openerp.web.page.FieldOne2ManyReadonly',
+        'one2many_list' : 'openerp.web.page.FieldOne2ManyReadonly',
+        'reference': 'openerp.web.page.FieldReferenceReadonly',
+        'boolean': 'openerp.web.page.FieldBooleanReadonly',
+        'float': 'openerp.web.page.FieldCharReadonly',
+        'integer': 'openerp.web.page.FieldCharReadonly',
+        'float_time': 'openerp.web.page.FieldCharReadonly',
+        'binary': 'openerp.web.page.FieldBinaryFileReadonly',
     });
 };

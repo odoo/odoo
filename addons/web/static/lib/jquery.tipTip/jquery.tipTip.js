@@ -20,6 +20,9 @@
  */
 
 (function($){
+    $.tipTipClear = function() {
+        $("#tiptip_holder").remove();
+    }
 	$.fn.tipTip = function(options) {
 		var defaults = { 
 			activation: "hover",

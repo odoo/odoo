@@ -37,6 +37,7 @@ class OpenERPSession(object):
         self.context = {}
         self.contexts_store = {}
         self.domains_store = {}
+        self.jsonp_requests = {}     # FIXME use a LRU
         
     def __getstate__(self):
         state = dict(self.__dict__)
@@ -58,8 +59,9 @@ class OpenERPSession(object):
         self._login = login
         self._password = password
 
-    def login(self, db, login, password):
-        uid = self.proxy('common').login(db, login, password)
+    def authenticate(self, db, login, password, env):
+        # TODO use the openerplib API once it exposes authenticate()
+        uid = self.proxy('common').authenticate(db, login, password, env)
         self.bind(db, uid, login, password)
         
         if uid: self.get_context()

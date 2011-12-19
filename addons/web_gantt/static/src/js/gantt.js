@@ -2,10 +2,12 @@
  * OpenERP web_gantt
  *---------------------------------------------------------*/
 openerp.web_gantt = function (openerp) {
-var _t = openerp.web._t;
+var _t = openerp.web._t,
+   _lt = openerp.web._lt;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('gantt', 'openerp.web_gantt.GanttView');
 openerp.web_gantt.GanttView = openerp.web.View.extend({
+    display_name: _lt('Gantt'),
 
     init: function(parent, dataset, view_id) {
         this._super(parent);
@@ -457,14 +459,6 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                 }
             }
         }
-    },
-
-    do_show: function () {
-        this.$element.show();
-    },
-
-    do_hide: function () {
-        this.$element.hide();
     },
 
     convert_str_date: function (str) {

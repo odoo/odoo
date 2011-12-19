@@ -123,7 +123,7 @@
                            equalTo="input[name=create_admin_pwd]"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Create"/></td>
+                <td colspan="2" align="right"><button>Create</button></td>
             </tr>
         </table>
     </form>
@@ -153,7 +153,7 @@
                 <td><input type="password" name="drop_pwd" class="required"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Drop"/></td>
+                <td colspan="2" align="right"><button>Drop</button></td>
             </tr>
         </table>
     </form>
@@ -185,7 +185,7 @@
                 <td><input type="password" name="backup_pwd" class="required"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Backup"/></td>
+                <td colspan="2" align="right"><button>Backup</button></td>
             </tr>
         </table>
     </form>
@@ -214,7 +214,7 @@
                 <td><input type="text" name="new_db" class="required"/></td>
             </tr>
         <tr>
-            <td colspan="2" align="right"><input type="submit" value="Restore"/></td>
+            <td colspan="2" align="right"><button>Restore</button></td>
             </tr>
         </table>
     </form>
@@ -245,7 +245,7 @@
                            equalTo="input[name=new_pwd]" minlength="1"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Change Password"/></td>
+                <td colspan="2" align="right"><button>Change Password</button></td>
             </tr>
         </table>
     </form>
@@ -270,7 +270,7 @@
     <form class="oe_forms">
         <fieldset>
             <legend style="">
-                <img src="/web/static/src/img/stock_person.png" alt="" />
+                <img t-att-src='_s + "/web/static/src/img/stock_person.png"' alt="" />
             </legend>
             <div class="oe_box2">
                 <table align="center" cellspacing="2px" cellpadding="0">
@@ -294,7 +294,7 @@
                         <td></td>
                         <td>
                         	<button type="button" id="oe-db-config">Database</button>
-                            <button type="submit" name="submit">Login</button>
+                            <button name="submit">Login</button>
                         </td>
                     </tr>
                 </table>
@@ -310,7 +310,7 @@
             <tbody>
             <tr>
                 <td>
-                    <img src="/web/static/src/img/product.png"/>
+                    <img t-att-src='_s + "/web/static/src/img/product.png"'/>
                 </td>
                 <td>
                     <strong>Full featured</strong><br />
@@ -319,7 +319,7 @@
             </tr>
             <tr>
                 <td>
-                    <img src="/web/static/src/img/accessories-archiver.png"/>
+                    <img t-att-src='_s + "/web/static/src/img/accessories-archiver.png"'/>
                 </td>
                 <td>
                     <strong>Open Source</strong><br />
@@ -328,7 +328,7 @@
             </tr>
             <tr>
                 <td>
-                    <img src="/web/static/src/img/partner.png" />
+                    <img t-att-src='_s + "/web/static/src/img/partner.png"' />
                 </td>
                 <td>
                     <strong>User Friendly</strong><br />
@@ -356,13 +356,13 @@
     <div class="header_corner">
         <ul class="block">
             <li>
-                <a t-att-href="'/' + widget.qs" title="Home" class="home"><img src="/web/static/src/img/header-home.png" width="16" height="16" border="0"/></a>
+                <a t-att-href="'/' + widget.qs" title="Home" class="home"><img t-att-src='_s + "/web/static/src/img/header-home.png"' width="16" height="16" border="0"/></a>
             </li>
             <li class="preferences">
-                <a href="javascript:void(0)" title="Preferences" class="preferences"><img src="/web/static/src/img/header-preferences.png" width="16" height="16" border="0"/></a>
+                <a href="javascript:void(0)" title="Preferences" class="preferences"><img t-att-src='_s + "/web/static/src/img/header-preferences.png"' width="16" height="16" border="0"/></a>
             </li>
             <li>
-                <a href="javascript:void(0)" title="About" class="about"><img src="/web/static/src/img/header-about.png" width="16" height="16" border="0"/></a>
+                <a href="javascript:void(0)" title="About" class="about"><img t-att-src='_s + "/web/static/src/img/header-about.png"' width="16" height="16" border="0"/></a>
             </li>
         </ul>
         <div class="block">
@@ -417,7 +417,7 @@
     </div>
 </t>
 <t t-name="ViewManager">
-    <table class="view-manager-main-table">
+    <table class="view-manager-main-table" cellpadding="0" cellspacing="0">
     <tbody>
     <tr>
         <td class="view-manager-main-content">
@@ -428,7 +428,7 @@
                 <div class="oe_vm_switch">
                     <t t-if="views.length != 1" t-foreach="views" t-as="view">
                         <button type="button" t-att-data-view-type="view.view_type">
-                            <t t-esc="view.view_type"/>
+                            <t t-esc="view.label || view.view_type"/>
                         </button>
                     </t>
                 </div>
@@ -464,13 +464,11 @@
         </tr>
     </t>
     <t t-jquery="h2.oe_view_title" t-operation="prepend">
-        <a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
+        <a t-if="self.flags.display_title !== false" class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
             href="javascript: void(0)"> </a>
     </t>
     <t t-jquery="h2.oe_view_title" t-operation="after">
-        <button t-if="self.session.debug" class="oe_get_xml_view">
-            View#<span></span>
-        </button>
+        <select t-if="self.session.debug" class="oe_debug_view"/>
     </t>
     <t t-jquery=".oe-view-manager-header" t-operation="after">
         <div class="oe-view-manager-logs oe-folded">
@@ -478,6 +476,20 @@
             <a class="oe-more-logs" href="#">More…</a>
             <a class="oe-remove-everything ui-icon ui-icon-closethick"/>
         </div>
+    </t>
+</t>
+<t t-name="ViewManagerDebug">
+    <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
+    <option value="fvg"> - Fields View Get</option>
+    <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id"> - Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
+    <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id"> - Edit SearchView</option>
+    <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id"> - Edit Action</option>
+</t>
+<t t-extend="ViewManager" t-name="One2Many.viewmanager">
+    <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
+
+    <t t-jquery=".oe-view-manager-header">
+        this.attr('t-if', 'views.length != 1');
     </t>
 </t>
 
@@ -559,13 +571,13 @@
 </tr>
 
 <table t-name="ListView" class="oe-listview-content">
-    <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
+    <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0) + (options.isClarkGable ? 1 : 0)"/>
     <thead class="ui-widget-header">
         <tr t-if="options.action_buttons !== false or options.pager !== false">
             <th t-att-colspan="columns_count">
                 <table>
                     <tr>
-                        <td t-if="options.action_buttons !== false" class="oe-actions">
+                        <td t-if="!no_leaf and options.action_buttons !== false" class="oe-actions">
                             <button type="button" class="oe-list-add"
                                     t-if="options.addable">
                                 <t t-esc="options.addable"/>
@@ -588,6 +600,7 @@
             </t>
             <th t-if="options.selectable" width="1"  >
                 <input type="checkbox" class="all-record-selector"/> </th>
+            <th t-if="options.isClarkGable" width="1"> </th>
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
                     t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
@@ -601,6 +614,7 @@
     <tfoot class="ui-widget-header">
         <tr>
             <td t-if="options.selectable"/>
+            <td t-if="options.isClarkGable"/>
             <td t-foreach="aggregate_columns" t-as="column" class="oe-list-footer oe-number"
                 t-att-data-field="column.id" t-att-title="column.label">
             </td>
@@ -611,7 +625,22 @@
         </tr>
     </tfoot>
 </table>
-<th t-name="Listview.navigation.button" t-if="options.pager !== false"
+<t t-extend="ListView" t-name="One2Many.listview">
+    <t t-jquery="thead.ui-widget-header > tr:first">
+        this.removeAttr('t-if');
+    </t>
+
+    <t t-jquery="tfoot &gt; tr:last-child" t-operation="replace"/>
+
+    <t t-jquery="td.oe-actions">
+        this.removeAttr('t-if');
+        var $title = $(document.createElement('h3')).addClass('oe_view_title');
+        $title.append($(document.createElement('t')).attr(
+            't-esc', 'fields_view.arch.attrs.string'));
+        this.prepend($title);
+    </t>
+</t>
+<th t-name="Listview.navigation.button" t-if="!no_leaf and options.pager !== false"
         class="oe-list-pager" t-att-colspan="columns_count">
     <button type="button" disabled="disabled"
             data-pager-action="first">First</button>
@@ -642,6 +671,9 @@
     </t>
     <th t-if="options.selectable" class="oe-record-selector" width="1">
         <input t-att-type="options.radio? 'radio': 'checkbox'" name ="radiogroup" t-att-checked="options.select_view_id == record.get('id')? true: null"/>
+    </th>
+    <th t-if="options.isClarkGable" class="oe-record-edit-link" width="1">
+        <img src="/web/static/src/img/pencil.gif" width="12" height="12" class="oe-record-edit-link-img"/>
     </th>
     <t t-foreach="columns" t-as="column">
         <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
@@ -696,7 +728,7 @@
                 <input type="hidden" name="model" t-att-value="view.dataset.model"/>
                 <input type="hidden" name="id" t-att-value="view.datarecord.id"/>
                 <button class="button" type="button">
-                    <img src="/web/static/src/img/throbber.gif" width="16" height="16" style="display: none"/>
+                    <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16" style="display: none"/>
                     <span>Add</span>
                 </button>
                 <input type="file" class="oe-binary-file" name="ufile" title="Add attachment"
@@ -708,14 +740,14 @@
     <br style="clear: both"/>
     <ul class="oe-sidebar-attachments-items">
         <li t-foreach="attachments" t-as="attachment">
-            <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="'/web/binary/saveas?session_id='
+            <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="_s + '/web/binary/saveas?session_id='
                 + session.session_id + '&amp;model=ir.attachment&amp;id=' + attachment.id
                 + '&amp;field=datas&amp;fieldname=name&amp;t=' + (new Date().getTime())"/>
             <a class="oe-sidebar-attachments-link" t-att-href="attachment.url" target="_blank">
                 <t t-esc="attachment.name"/>
             </a>
             <a href="#" class="oe-sidebar-attachment-delete" t-att-data-id="attachment.id" t-attf-title="Delete the attachment #{attachment.name}">
-                <img src="/web/static/src/img/attachments-close.png" width="15" height="15" border="0"/>
+                <img t-att-src='_s + "/web/static/src/img/attachments-close.png"' width="15" height="15" border="0"/>
             </a>
         </li>
     </ul>
@@ -730,7 +762,6 @@
         <t t-foreach="row" t-as="td">
             <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
                 t-att-width="td.width"
-                t-att-nowrap="td.nowrap or td.is_field_m2o? 'true' : undefined"
                 t-att-valign="td.table ? 'top' : undefined"
                 t-attf-class="oe_form_frame_cell #{td.classname} #{td.element_class}"
             >
@@ -867,29 +898,27 @@
         t-att-name="widget.name"
         t-att-id="widget.element_id"
         t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
-        t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
-    />
-    <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
+        style="width: 100%"
+    /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
 </t>
 <t t-name="FieldChar.readonly">
     <div
         t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
-        t-attf-style="width: #{widget.field.translate ? '99' : '100'}%">
+        t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}">
     </div>
 </t>
 <t t-name="FieldURI.readonly">
-    <a href="#">#</a>
+    <a href="#" class="oe_form_uri">#</a>
 </t>
 <t t-name="FieldEmail">
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
-        <td width="100%">
+        <td width="100%" style="position: relative">
             <t t-call="FieldChar"/>
         </td>
         <td width="16">
             <button type="button" class="button" title="Send an e-mail with your default e-mail client">
-                <img src="/web/static/src/img/icons/terp-mail-message-new.png"/>
+                <img t-att-src='_s + "/web/static/src/img/icons/terp-mail-message-new.png"'/>
             </button>
         </td>
     </tr>
@@ -898,12 +927,12 @@
 <t t-name="FieldUrl">
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
-        <td width="100%">
+        <td width="100%" style="position: relative">
             <t t-call="FieldChar"/>
         </td>
         <td width="16">
             <button type="button" class="button" title="Open this resource">
-                <img src="/web/static/src/img/icons/gtk-ok.png"/>
+                <img t-att-src='_s + "/web/static/src/img/icons/gtk-ok.png"'/>
             </button>
         </td>
     </tr>
@@ -914,19 +943,17 @@
         t-att-name="widget.name"
         t-att-id="widget.element_id"
         t-attf-class="field_#{widget.type}"
-        t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
-    ></textarea>
-    <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
+        style="width: 100%"
+    ></textarea><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
 </t>
 <t t-name="web.datetimepicker">
     <div class="oe_datepicker_root">
+        <input type="text" size="1" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
         <input type="text" size="1" style="width: 100%"
             t-att-name="widget.name"
             t-attf-class="oe_datepicker_master field_#{widget.type_of_date}"
-        />
-        <img class="oe_input_icon oe_datepicker_trigger" src="/web/static/src/img/ui/field_calendar.png"
+        /><img class="oe_input_icon oe_datepicker_trigger" t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
              title="Select date" width="16" height="16" border="0"/>
-        <input type="text" size="1" class="oe_datepicker_container" disabled="disabled"/>
     </div>
 </t>
 <t t-name="FieldSelection">
@@ -945,9 +972,9 @@
         <input type="text" size="1" style="width: 100%;"
                 t-att-id="widget.element_id"/>
         <span class="oe-m2o-drop-down-button">
-            <img src="/web/static/src/img/down-arrow.png" /></span>
+            <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
         <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
-            <img src="/web/static/src/img/icons/gtk-index.png"/></span>
+            <img t-att-src='_s + "/web/static/src/img/icons/gtk-index.png"'/></span>
         <div t-att-id="widget.cm_id" class="contextMenu" style="display:none">
         </div>
     </div>
@@ -998,7 +1025,7 @@
     <table cellpadding="0" cellspacing="0" border="0">
     <tr>
         <td align="center">
-            <img src="/web/static/src/img/placeholder.png" class="oe-binary-image"
+            <img t-att-src='_s + "/web/static/src/img/placeholder.png"' class="oe-binary-image"
                 t-att-border="widget.readonly ? 0 : 1"
                 t-att-id="widget.element_id + '_field'"
                 t-att-name="widget.name"
@@ -1020,7 +1047,7 @@
                                 <input type="hidden" name="session_id" value=""/>
                                 <input type="hidden" name="callback" t-att-value="widget.iframe"/>
                                 <button class="button" type="button" title="Set Image">
-                                    <img src="/web/static/src/img/icons/STOCK_DIRECTORY.png"/>
+                                    <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 </button>
                                 <input type="file" class="oe-binary-file" name="ufile"/>
                             </form>
@@ -1028,14 +1055,14 @@
                     </td>
                     <td>
                         <button class="button oe-binary-file-clear" type="button" title="Clear">
-                            <img src="/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+                            <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
                         </button>
                     </td>
                 </tr>
                 </table>
             </div>
             <div class="oe-binary-progress" style="display: none">
-                <img src="/web/static/src/img/throbber.gif" width="16" height="16"/>
+                <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
             </div>
             <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
@@ -1047,7 +1074,7 @@
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
         <td width="100%">
-            <input type="text" size="1"
+            <input type="text" size="1" readonly="readonly"
                 t-att-name="widget.name"
                 t-att-id="widget.element_id + '_field'"
                 t-attf-class="field_#{widget.type}" style="width: 100%"
@@ -1063,7 +1090,7 @@
                             <input type="hidden" name="session_id" value=""/>
                             <input type="hidden" name="callback" t-att-value="widget.iframe"/>
                             <button class="button" type="button" title="Set Image">
-                                <img src="/web/static/src/img/icons/STOCK_DIRECTORY.png"/>
+                                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 <span>Select</span>
                             </button>
                             <input type="file" class="oe-binary-file" name="ufile"/>
@@ -1072,13 +1099,13 @@
                 </td>
                 <td>
                     <button class="button oe-binary-file-save" type="button" title="Save As">
-                        <img src="/web/static/src/img/icons/gtk-save.png"/>
+                        <img t-att-src='_s + "/web/static/src/img/icons/gtk-save.png"'/>
                         <span>Save As</span>
                     </button>
                 </td>
                 <td>
                     <button class="button oe-binary-file-clear" type="button" title="Clear">
-                        <img src="/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+                        <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
                         <span>Clear</span>
                     </button>
                 </td>
@@ -1086,7 +1113,7 @@
             </table>
         </td>
         <td class="oe-binary-progress" style="display: none" nowrap="true">
-            <img src="/web/static/src/img/throbber.gif" width="16" height="16"/>
+            <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
             <b>Uploading ...</b>
             <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
         </td>
@@ -1095,7 +1122,7 @@
 </t>
 <t t-name="WidgetButton">
     <button type="button" class="oe_button">
-        <img t-if="widget.node.attrs.icon" t-att-src="'/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
+        <img t-if="widget.node.attrs.icon" t-att-src="_s + '/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
 </t>
@@ -1135,9 +1162,8 @@
     <form class="oe_forms">
         <t t-call="SearchView.render_lines"/>
         <div class="oe_search-view-buttons">
-            <input type="submit" value="Search"/>
-            <input type="reset" value="Clear"/>
-            <button class="oe_search-view-custom-filter-btn"><span>Advanced Filter</span></button>
+            <button>Search</button>
+            <button type="reset">Clear</button>
             <select class="oe_search-view-filters-management">
             </select>
         </div>
@@ -1151,6 +1177,7 @@
         </t>
     </optgroup>
     <optgroup label="-- Actions --">
+        <option value="advanced_filter">Advanced Filter</option>
         <option value="save_filter">Save Filter</option>
         <option value="add_to_dashboard">Add to Dashboard</option>
         <option value="manage_filters">Manage Filters</option>
@@ -1177,7 +1204,7 @@
     <table class="oe-searchview-render-line" border="0" cellspacing="0" cellpadding="0"
            t-foreach="lines" t-as="line">
         <tr>
-            <td t-foreach="line" t-as="widget">
+            <td t-foreach="line" t-as="widget" class="oe_searchview_field">
                 <t t-raw="widget.render(defaults)"/>
             </td>
         </tr>
@@ -1187,8 +1214,9 @@
         t-att-id="element_id"
         t-att-title="attrs.help"
         t-att-class="classes.join(' ')"
+        t-att-style="style"
         t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined">
-    <img t-att-src="'/web/static/src/img/icons/' + (attrs.icon || 'gtk-home') + '.png'" width="16" height="16"/>
+    <img t-att-src="_s + '/web/static/src/img/icons/' + (attrs.icon || 'gtk-home') + '.png'" width="16" height="16"/>
     <br t-if="attrs.string"/>
     <t t-esc="attrs.string"/>
 </button>
@@ -1199,11 +1227,12 @@
 <t t-name="SearchView.field">
     <label t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
            t-att-title="attrs.help"
-           t-att-for="element_id">
+           t-att-for="element_id"
+           t-att-style="style">
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">?</span>
     </label>
-    <div style="white-space: nowrap;">
+    <div t-att-style="style">
         <input type="text" size="15" t-att-name="attrs.name"
                t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"
                t-att-id="element_id"
@@ -1214,11 +1243,12 @@
 <t t-name="SearchView.date">
     <label t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
            t-att-title="attrs.help"
-           t-att-for="element_id">
+           t-att-for="element_id"
+           t-att-style="style">
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">?</span>
     </label>
-    <div style="white-space: nowrap;">
+    <div t-att-style="style">
         <span t-att-id="element_id"></span>
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
@@ -1226,11 +1256,12 @@
 <t t-name="SearchView.field.selection">
     <label t-att-title="attrs.help"
            t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
-           t-att-for="element_id">
+           t-att-for="element_id"
+           t-att-style="style">
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">?</span>
     </label>
-    <div style="white-space: nowrap;">
+    <div t-att-style="style">
         <select t-att-name="attrs.name" t-att-id="element_id"
                 t-att-autofocus="attrs.default_focus === '1' || undefined">
             <option t-if="prepend_empty"/>
@@ -1335,7 +1366,7 @@
 <t t-name="DialogWarning">
     <table cellspacing="0" cellpadding="0" border="0" class="oe-dialog-warning">
     <tr>
-        <td><img src="/web/static/src/img/warning.png" class="oe-dialog-icon"/></td>
+        <td><img t-att-src='_s + "/web/static/src/img/warning.png"' class="oe-dialog-icon"/></td>
         <td>
             <p>
                 <t t-js="d">
@@ -1430,6 +1461,7 @@
      -->
     <t t-jquery="&gt; :first" t-operation="before">
         <td t-if="edited and !options.selectable" class="oe-listview-padding"/>
+        <td t-if="edited and !options.isClarkGable" class="oe-listview-padding"/>
     </t>
     <t t-jquery="&gt; :last" t-operation="after">
         <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
@@ -1446,10 +1478,8 @@
             .replaceAll(this)
             .after($(document.createElement('td')).append(
                 $(document.createElement('button')).attr({
-                    'class': 'oe-edit-row-save', 'type': 'button'}).text('Save')))
-            .before($(document.createElement('td')).append(
-                $(document.createElement('button')).attr({
-                    'class': 'oe-edit-row-cancel', 'type': 'button'}).text('Cancel')))
+                    'class': 'oe-edit-row-save', 'type': 'button'})
+                  .html(' ')))
             .unwrap();
     </t>
 </t>
@@ -1593,7 +1623,7 @@
                 <td valign="top" align="left" style="cursor: pointer;" width="18">
                     <t t-if="field.children">
                         <t t-if="(field.id).split('/').length != 3">
-                            <img t-att-id="'parentimg-' + field.id" src="/web/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                            <img t-att-id="'parentimg-' + field.id" t-att-src='_s + "/web/static/src/img/expand.gif"' width="16" height="16" border="0"/>
                         </t>
                     </t>
                 </td>
@@ -1645,7 +1675,7 @@
                              minlength="1"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="Change Password"/></td>
+                <td colspan="2" align="right"><button>Change Password</button></td>
             </tr>
         </table>
     </form>
@@ -1709,7 +1739,7 @@
         <tr>
             <td t-foreach="records[0]" t-as="column">
                 <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe-m2o-drop-down-button">
-                        <img src="/web/static/src/img/down-arrow.png" /></span>
+                        <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
             </td>
         </tr>
         <tr t-foreach="records" t-as="record" class="oe_import_grid-row">

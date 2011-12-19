@@ -2,7 +2,6 @@ body.openerp {
     padding: 0;
     margin: 0;
     height: 100%;
-    min-width: 1000px;
     overflow-y: scroll;
     font-size: 80%;
     font-family: Ubuntu, Helvetica, sans-serif;
@@ -359,7 +358,7 @@ label.error {
     position: absolute;
     z-index: 100;
     border: 4px solid #585858;
-    border: 4px solid rgba(88, 88, 88, .5);
+    border-color: rgba(88, 88, 88, .5);
     border-radius: 4px;
     min-width: 200px;
 }
@@ -570,8 +569,16 @@ label.error {
 }
 
 /* SearchView */
+.openerp .oe_searchview_field > div {
+    position: relative;
+    white-space: nowrap;
+}
+.openerp .oe_searchview_field .oe_input_icon {
+    top: auto;
+    bottom: 3px;
+}
+
 .openerp .filter_label, .openerp .filter_icon {
-    border-left-width: 0;
     background: #F0F0F0;
     border: 1px solid #999;
     background: -moz-linear-gradient(top, #F0F0F0 0%, #C0C0C0 100%);
@@ -592,6 +599,10 @@ label.error {
 }
 .openerp .filter_label.enabled, .openerp .filter_icon.enabled {
     background: #aaa;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    -o-box-shadow: none;
+    box-shadow: none;
 }
 .openerp .filter_icon {
     height: 22px;
@@ -614,6 +625,13 @@ label.error {
     padding-right: 0.4em;
     white-space: nowrap;
 }
+
+.openerp .filter_label_group button {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    border-right: none;
+}
 .openerp .filter_label_group button:first-child {
     -webkit-border-top-left-radius: 7px;
     -webkit-border-bottom-left-radius: 7px;
@@ -621,9 +639,6 @@ label.error {
     -moz-border-radius-bottomleft: 7px;
     border-top-left-radius: 7px;
     border-bottom-left-radius: 7px;
-    border-right: none;
-}
-.openerp .filter_label_group button {
     border-right: none;
 }
 .openerp .filter_label_group button:last-child {
@@ -641,12 +656,12 @@ label.error {
 .openerp .filter_label_group button.filter_icon:first-child {
     border-left: solid 1px #999;
     margin-left: -7px;
-    -webkit-border-top-left-radius: 0px;
-    -webkit-border-bottom-left-radius: 0px;
-    -moz-border-radius-topleft: 0px;
-    -moz-border-radius-bottomleft: 0px;
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
+    -webkit-border-top-left-radius: 0;
+    -webkit-border-bottom-left-radius: 0;
+    -moz-border-radius-topleft: 0;
+    -moz-border-radius-bottomleft: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .openerp .searchview_group_string {
@@ -709,11 +724,9 @@ label.error {
 .openerp .oe_search-view-buttons {
     padding: 10px 0 10px 0;
 }
-.openerp .oe_search-view-custom-filter-btn span {
-    background: url(/web/static/src/img/icons/gtk-add.png) repeat-y;
-    padding-left: 18px;
+.openerp .oe_search-view-filters-management {
+    float: right;
 }
-
 .openerp .searchview_extended_add_proposition span {
     font-size: 0.9em;
     background: url(/web/static/src/img/icons/gtk-add.png) repeat-y;
@@ -768,12 +781,16 @@ label.error {
     padding: 1px 2px;
 }
 
-.openerp .oe-record-delete button{
+.openerp .oe-record-delete button,
+.openerp button.oe-edit-row-save {
     border: none;
     height: 12px;
     width: 12px;
     background: url("/web/static/src/img/iconset-b-remove.png") no-repeat scroll center center transparent;
     cursor: pointer;
+}
+.openerp button.oe-edit-row-save {
+    background-image: url('/web/static/src/img/icons/save-document.png');
 }
 
 /* Could use :not selectors if they were supported by MSIE8... */
@@ -812,8 +829,11 @@ label.error {
     border-bottom: 1px solid #E3E3E3;
 }
 
-.openerp .oe-listview .oe-record-selector {
+.openerp .oe-listview .oe-record-selector, .openerp .oe-listview .oe-record-edit-link {
     border-bottom: 1px solid #E3E3E3;
+}
+.openerp .oe-listview .oe-record-edit-link {
+    cursor: pointer;
 }
 
 .openerp .oe-listview .oe-field-cell {
@@ -952,13 +972,17 @@ label.error {
     background: #f9f9f9;
 }
 /* Unedit Form */
-.openerp .field_char, .openerp .field_date, .openerp .field_float, .openerp .oe_form_field_many2one a {
+.openerp .field_char,
+.openerp .field_date,
+.openerp .field_float,
+.openerp .field_selection,
+.openerp a.oe_form_uri {
     vertical-align: middle;
     padding-top: 3px;
     font-size: 90%;
     color: #222;
 }
-.openerp .oe_form_field_many2one a {
+.openerp a.oe_form_uri {
     color: #9A0404;
     line-height: 12px;
 }
@@ -969,7 +993,7 @@ label.error {
 
 .openerp .oe_form_frame_cell input[type="checkbox"] {
     margin-top: 3px;
-    vertical-align: center;
+    vertical-align: middle;
 }
 .openerp .oe_form_frame_cell .input[type="text"] {
     padding-bottom: 1px;
@@ -1002,6 +1026,7 @@ label.error {
 .openerp td.oe_form_frame_cell {
     padding: 2px;
     position: relative;
+    white-space: nowrap;
 }
 .openerp td.oe_form_field_boolean {
     padding-top: 4px;
@@ -1061,6 +1086,7 @@ label.error {
 
 .openerp .oe_forms label.oe_label, .openerp .oe_forms label.oe_label_help {
     margin: 4px 0 0 3px;
+    white-space: nowrap;
 }
 .openerp .oe_forms .searchview_group_content label.oe_label, .openerp .searchview_group_content .oe_forms label.oe_label_help { /* making a distinction between labels in search view and other labels */
     margin: 3px 0 0 3px;
@@ -1085,6 +1111,13 @@ label.error {
 }
 .openerp .oe_forms .oe_form_paragraph {
     margin: 3px 0 0 0;
+    white-space: normal;
+}
+
+.openerp .oe_form_field_one2many .oe-actions h3.oe_view_title,
+.openerp .oe_form_field_one2many_list .oe-actions h3.oe_view_title{
+    display: inline;
+    margin: 0 0.5em 0 0;
 }
 
 /* Uneditable Form View */
@@ -1099,6 +1132,10 @@ label.error {
 .openerp .oe_form_readonly .field_selection {
     padding-top: 2px;
     background-color: white;
+}
+
+.openerp .oe_form_readonly .oe_form_field_text div.field_text {
+    white-space: pre-wrap;
 }
 
 
@@ -1121,7 +1158,11 @@ label.error {
 .openerp .oe_forms select{
     padding-top: 2px;
 }
-
+.openerp .oe_forms input[disabled],
+.openerp .oe_forms select[disabled],
+.openerp .oe_forms textarea[disabled]{
+    background: #E0E0E0;
+}
 .openerp .oe_forms textarea {
     resize:vertical;
 }
@@ -1151,23 +1192,17 @@ label.error {
     vertical-align: top;
 }
 .openerp .oe_input_icon {
-    position: absolute;
     cursor: pointer;
-    right: 5px;
-    top: 3px;
-    z-index: 2;
+    margin: 3px 0 0 -21px;
+    vertical-align: top;
 }
 .openerp .oe_datepicker_container {
-    position: absolute;
-    top: 0;
-    right: 0;
     display: none;
 }
 .openerp .oe_datepicker_root {
-    position: relative;
     display: inline-block;
 }
-.openerp .oe_forms.oe_frame .oe_datepicker_root {
+.openerp .oe_form_frame_cell .oe_datepicker_root {
     width: 100%;
 }
 .openerp .oe_input_icon_disabled {
@@ -1177,13 +1212,6 @@ label.error {
     filter:alpha(opacity=50);
     right: 5px;
     top: 3px;
-}
-.openerp img.oe_field_translate {
-    margin-left: -21px;
-    vertical-align: top;
-    cursor: pointer;
-    position: relative;
-    top: 4px;
 }
 .openerp .oe_trad_field.touched {
     border: 1px solid green !important;
@@ -1445,6 +1473,9 @@ label.error {
     border-right-width: 0;
     border-left-width: 0;
 }
+.openerp .view-manager-main-sidebar h2 {
+    border-top-width: 0;
+}
 
 .openerp .view-manager-main-sidebar ul {
     list-style-type: none;
@@ -1461,6 +1492,7 @@ label.error {
 .openerp .toggle-sidebar {
     cursor: pointer;
     border: 1px solid #D2CFCF;
+    border-top-width: 0;
     display: block;
     background: url(/web/static/src/img/toggle-a-bg.png);
     width: 21px;
@@ -1482,6 +1514,10 @@ label.error {
 
 .openerp.kitten-mode-activated .main_table {
     background: url(http://placekitten.com/g/1500/800) repeat;
+}
+.openerp.kitten-mode-activated.clark-gable .main_table {
+    background: url(http://amigrave.com/ClarkGable.jpg);
+    background-size: 100%;
 }
 
 .openerp.kitten-mode-activated .header {
@@ -1659,9 +1695,7 @@ ul.oe-arrow-list li {
 ul.oe-arrow-list li span {
     vertical-align: top;
     display: inline-block;
-    border-width:1em;
-    border-style:solid;
-    border-color: #DEDEDE;
+    border: 1em solid #DEDEDE;
     line-height:0em;
 }
 ul.oe-arrow-list .oe-arrow-list-before {
@@ -1749,4 +1783,101 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 /* for Alignment center */
 .centeralign{
     text-align:center;
+}
+/* Buttons */
+.openerp a.button:link,
+.openerp a.button:visited,
+.openerp button {
+    display: inline-block;
+    border: 1px solid #ababab;
+    color: #404040;
+    font-size: 12px;
+    padding: 3px 10px;
+    text-align: center;
+    -o-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -webkit-background-size: auto auto !important;
+    background-size: 100% 100%;
+    background: #d8d8d8 none;
+    background: none, -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
+    background: none, -webkit-linear-gradient(#efefef, #d8d8d8);
+    background: none, -moz-linear-gradient(#efefef, #d8d8d8);
+    background: none, -o-linear-gradient(top, #efefef, #d8d8d8);
+    background: none, -khtml-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    -webkit-font-smoothing: antialiased;
+    outline: none;
+}
+
+.openerp a.button:hover,
+.openerp button:hover {
+    -o-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -webkit-background-size: auto auto !important;
+    background-size: 100% 100%;
+    background: #e3e3e3 none;
+    background: none, -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    background: none, -webkit-linear-gradient(#f6f6f6, #e3e3e3);
+    background: none, -moz-linear-gradient(#f6f6f6, #e3e3e3);
+    background: none, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
+    background: none, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    cursor: pointer;
+}
+
+.openerp a.button:focus,
+.openerp button:focus {
+    border: 1px solid #80bfff;
+    -o-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -webkit-background-size: auto auto !important;
+    background-size: 100% 100%;
+    background: #e3e3e3, none;
+    background: none, -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    background: none, -webkit-linear-gradient(#f6f6f6, #e3e3e3);
+    background: none, -moz-linear-gradient(#f6f6f6, #e3e3e3);
+    background: none, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
+    background: none, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    -moz-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    -webkit-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    -o-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+}
+
+.openerp a.button:active,
+.openerp a.button.active,
+.openerp button:active,
+.openerp button.active {
+    background: #e3e3e3;
+    background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
+    background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f;
+    background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
+    -moz-box-shadow: none, 0 0 0 transparent;
+    -webkit-box-shadow: none, 0 0 0 transparent;
+    -o-box-shadow: none, 0 0 0 transparent;
+    box-shadow: none, 0 0 0 transparent;
+}
+
+.openerp a.button.disabled,
+.openerp button:disabled {
+    background: #efefef !important;
+    border: 1px solid #d1d1d1 !important;
+    font-size: 12px;
+    padding: 3px 10px;
+    -moz-box-shadow: none !important, 0 0 0 transparent;
+    -webkit-box-shadow: none !important, 0 0 0 transparent;
+    -o-box-shadow: none !important, 0 0 0 transparent;
+    box-shadow: none !important, 0 0 0 transparent;
+    color: #aaaaaa !important;
+    cursor: default;
+    text-shadow: 0 1px 1px white !important;
+>>>>>>> MERGE-SOURCE
 }

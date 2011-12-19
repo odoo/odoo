@@ -10,6 +10,7 @@ import os
 import re
 import simplejson
 import time
+import urllib2
 import xmlrpclib
 import zlib
 from xml.etree import ElementTree
@@ -103,6 +104,7 @@ class WebClient(openerpweb.Controller):
             addons = self.server_wide_modules(req)
         else:
             addons = addons.split(',')
+        r = []
         for addon in addons:
             manifest = openerpweb.addons_manifest.get(addon, None)
             if not manifest:
@@ -112,7 +114,8 @@ class WebClient(openerpweb.Controller):
             globlist = manifest.get(key, [])
             for pattern in globlist:
                 for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    yield path, path[len(addons_path):]
+                    r.append( (path, path[len(addons_path):]))
+        return r
 
     def manifest_list(self, req, mods, extension):
         if not req.debug:
@@ -240,6 +243,21 @@ class WebClient(openerpweb.Controller):
             "version": web.common.release.version
         }
 
+class Proxy(openerpweb.Controller):
+    _cp_path = '/web/proxy'
+
+    @openerpweb.jsonrequest
+    def load(self, req, path):
+        #req.config.socket_port
+        #if not re.match('^/[^/]+/static/.*', path):
+        #    return werkzeug.exceptions.BadRequest()
+
+        env = req.httprequest.environ
+        port = env['SERVER_PORT']
+
+        o = urllib2.urlopen('http://127.0.0.1:%s%s' % (port, path))
+        return o.read()
+
 class Database(openerpweb.Controller):
     _cp_path = "/web/database"
 
@@ -268,7 +286,7 @@ class Database(openerpweb.Controller):
             params['db_lang'],
             params['create_admin_pwd']
         )
-        
+
         try:
             return req.session.proxy("db").create(*create_attrs)
         except xmlrpclib.Fault, e:
@@ -335,8 +353,16 @@ class Session(openerpweb.Controller):
     _cp_path = "/web/session"
 
     @openerpweb.jsonrequest
-    def login(self, req, db, login, password):
-        req.session.login(db, login, password)
+    def authenticate(self, req, db, login, password, base_location=None):
+        wsgienv = req.httprequest.environ
+        release = web.common.release
+        env = dict(
+            base_location=base_location,
+            HTTP_HOST=wsgienv['HTTP_HOST'],
+            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+            user_agent="%s / %s" % (release.name, release.version),
+        )
+        req.session.authenticate(db, login, password, env)
         ctx = req.session.get_context() if req.session._uid else {}
 
         return {
@@ -349,7 +375,6 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def get_session_info(self, req):
-        req.session.assert_valid(force=True)
         return {
             "uid": req.session._uid,
             "context": req.session.get_context() if req.session._uid else False,
@@ -602,7 +627,7 @@ def fix_view_modes(action):
     :param dict action: an action descriptor
     :returns: nothing, the action is modified in place
     """
-    if 'views' not in action:
+    if not action.get('views'):
         generate_views(action)
 
     id_form = None
@@ -1171,7 +1196,7 @@ class Binary(openerpweb.Controller):
                         }
                     </script>"""
             data = ufile.read()
-            args = [ufile.content_length, ufile.filename,
+            args = [len(data), ufile.filename,
                     ufile.content_type, base64.b64encode(data)]
         except Exception, e:
             args = [False, e.message]
@@ -1269,13 +1294,16 @@ class Export(View):
 
         records = []
         for field_name, field in fields_sequence:
-            if import_compat and (exclude and field_name in exclude):
-                continue
-            if import_compat and field.get('readonly'):
-                # If none of the field's states unsets readonly, skip the field
-                if all(dict(attrs).get('readonly', True)
-                       for attrs in field.get('states', {}).values()):
+            if import_compat:
+                if exclude and field_name in exclude:
                     continue
+                if 'function' in field:
+                    continue
+                if field.get('readonly'):
+                    # If none of the field's states unsets readonly, skip the field
+                    if all(dict(attrs).get('readonly', True)
+                           for attrs in field.get('states', {}).values()):
+                        continue
 
             id = prefix + (prefix and '/'or '') + field_name
             name = parent_name + (parent_name and '/' or '') + field['string']
