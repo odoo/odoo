@@ -9,7 +9,7 @@
     date: !eval time.strftime('%Y-%m-%d')
     followup_id: account_followup.demo_followup1
 -
-  I perform action to continue followup.
+  I continue followup.
 -
   !python {model: account.followup.print}: |
     self.do_continue(cr, uid, [ref("account_followup_print_0")], {"lang": 'en_US',
@@ -28,17 +28,7 @@
       - base.res_partner_desertic_hispafuentes
     partner_lang: 1
 -
-  I perform action to print followups reports.
--
-  !python {model: account.followup.print.all}: |
-    import time
-    self.do_print(cr, uid, [ref("account_followup_print_all_0")], {"lang": 'en_US',
-      "active_model": "ir.ui.menu", "active_ids": [ref("account_followup.account_followup_print_menu")],
-      "tz": False, "date": time.strftime('%Y-%m-%d'), "followup_id": ref("account_followup.demo_followup1"), "active_id": ref("account_followup.account_followup_print_menu"),
-      "company_id": ref('base.main_company'),
-      })
--
-  I perform action to send a mail to partner.
+  I send a mail to partner.
 -
   !python {model: account.followup.print.all}: |
     import time
