@@ -441,6 +441,7 @@ class Root(object):
         """
         request = werkzeug.wrappers.Request(environ)
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
+        request.app = self
 
         if request.path == '/':
             params = urllib.urlencode(request.args)
