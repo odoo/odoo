@@ -462,6 +462,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             data: JSON.stringify(payload),
             processData: false,
         }, url);
+        if (this.synch)
+        	ajax.async = false;
         return $.ajax(ajax);
     },
     rpc_jsonp: function(url, payload) {
@@ -479,6 +481,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             cache: false,
             data: data
         }, url);
+        if (this.synch)
+        	ajax.async = false;
         var payload_str = JSON.stringify(payload);
         var payload_url = $.param({r:payload_str});
         if(payload_url.length < 2000) {
@@ -805,7 +809,16 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             }
         };
         timer = setTimeout(waitLoop, CHECK_INTERVAL);
-    }
+    },
+    synchronized_mode: function(to_execute) {
+    	var synch = this.synch;
+    	this.synch = true;
+    	try {
+    		return to_execute();
+    	} finally {
+    		this.synch = synch;
+    	}
+    },
 });
 
 /**
@@ -1218,6 +1231,15 @@ $.async_when = function() {
     });
     async = true;
     return def;
+};
+
+// special tweak for the web client
+var old_async_when = $.async_when;
+$.async_when = function() {
+	if (openerp.connection.synch)
+		return $.when.apply(this, arguments);
+	else
+		return old_async_when.apply(this, arguments);
 };
 
 };

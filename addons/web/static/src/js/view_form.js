@@ -2221,27 +2221,27 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 return commands['delete'](x.id);}));
     },
     save_any_view: function() {
-        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
-            this.viewmanager.views[this.viewmanager.active_view] &&
-            this.viewmanager.views[this.viewmanager.active_view].controller) {
-            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
-            if (this.viewmanager.active_view === "form") {
-                var res = $.when(view.do_save());
-                // it seems line there are some cases when this happens
-                /*if (!res.isResolved() && !res.isRejected()) {
-                    console.warn("Asynchronous get_value() is not supported in form view.");
-                }*/
-                return res;
-            } else if (this.viewmanager.active_view === "list") {
-                var res = $.when(view.ensure_saved());
-                // it seems line there are some cases when this happens
-                /*if (!res.isResolved() && !res.isRejected()) {
-                    console.warn("Asynchronous get_value() is not supported in list view.");
-                }*/
-                return res;
-            }
-        }
-        return false;
+    	return this.session.synchronized_mode(_.bind(function() {
+	        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
+	            this.viewmanager.views[this.viewmanager.active_view] &&
+	            this.viewmanager.views[this.viewmanager.active_view].controller) {
+	            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+	            if (this.viewmanager.active_view === "form") {
+	                var res = $.when(view.do_save());
+	                if (!res.isResolved() && !res.isRejected()) {
+	                    console.warn("Asynchronous get_value() is not supported in form view.");
+	                }
+	                return res;
+	            } else if (this.viewmanager.active_view === "list") {
+	                var res = $.when(view.ensure_saved());
+	                if (!res.isResolved() && !res.isRejected()) {
+	                    console.warn("Asynchronous get_value() is not supported in list view.");
+	                }
+	                return res;
+	            }
+	        }
+	        return false;
+	    }, this));
     },
     is_valid: function() {
         this.validate();
