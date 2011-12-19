@@ -581,14 +581,14 @@ class account_move_line(osv.osv):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'view':
-                return False
+                raise osv.except_osv(_('Error :'), _('You can not create move line on view account %s %s') % (l.account_id.code, l.account_id.name))
         return True
 
     def _check_no_closed(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'closed':
-                return False
+                raise osv.except_osv(_('Error :'), _('You can not create move line on closed account %s %s') % (l.account_id.code, l.account_id.name))
         return True
 
     def _check_company_id(self, cr, uid, ids, context=None):
