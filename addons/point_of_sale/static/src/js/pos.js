@@ -507,11 +507,6 @@ openerp.point_of_sale = function(db) {
             buffer: "0",
             mode: "quantity"
         },
-        initialize: function(options) {
-            this.shop = options.shop;
-            this.shop.bind('change:selectedOrder', this.changedSelectedOrder, this);
-            this.changedSelectedOrder();
-        },
         appendNewChar: function(newChar) {
             var oldBuffer;
             oldBuffer = this.get('buffer');
@@ -555,15 +550,6 @@ openerp.point_of_sale = function(db) {
                 mode: newMode
             });
         },
-        changedSelectedOrder: function() {
-            if (this.currentSaleOrder) {
-                this.currentSaleOrder.unbind();
-                this.currentSaleOrder.get('orderLines').unbind();
-            }
-            this.currentSaleOrder = this.shop.get('selectedOrder');
-            this.currentSaleOrder.get('orderLines').bind('add', this.reset, this);
-            this.reset();
-        },
         reset: function() {
             this.set({
                 buffer: "0",
@@ -574,9 +560,7 @@ openerp.point_of_sale = function(db) {
             var bufferContent, params;
             bufferContent = this.get('buffer');
             if (bufferContent && !isNaN(bufferContent)) {
-                params = {};
-                params[this.get('mode')] = parseFloat(bufferContent);
-                return (this.shop.get('selectedOrder')).selected.set(params);
+            	this.trigger('setValue', parseFloat(bufferContent));
             }
         },
     });
@@ -709,14 +693,12 @@ openerp.point_of_sale = function(db) {
                 return this.$element.remove();
             }, this));
             this.order = options.order;
-            this.numpadState = options.numpadState;
         },
         start: function() {
             this.$element.click(_.bind(this.clickHandler, this));
         },
         clickHandler: function() {
-            this.numpadState.reset();
-            return this.select();
+            this.select();
         },
         render_element: function() {
             this.select();
@@ -727,16 +709,24 @@ openerp.point_of_sale = function(db) {
         select: function() {
             $('tr.selected').removeClass('selected');
             this.$element.addClass('selected');
-            return this.order.selected = this.model;
+            this.order.selected = this.model;
+            this.on_selected();
         },
+        on_selected: function() {},
     });
     var OrderWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
             this.numpadState = options.numpadState;
+            this.numpadState.bind('setValue', this.setValue, this);
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindOrderLineEvents();
+        },
+        setValue: function(val) {
+        	var param = {};
+        	param[this.numpadState.get('mode')] = val;
+        	this.shop.get('selectedOrder').selected.set(param);
         },
         changeSelectedOrder: function() {
             this.currentOrderLines.unbind();
@@ -751,20 +741,30 @@ openerp.point_of_sale = function(db) {
         addLine: function(newLine) {
             var line = new OrderlineWidget(null, {
                     model: newLine,
-                    order: this.shop.get('selectedOrder'),
-                    numpadState: this.numpadState
+                    order: this.shop.get('selectedOrder')
             });
+            line.on_selected.add(_.bind(this.selectedLine, this));
+            this.selectedLine();
             line.appendTo(this.$element);
             this.updateSummary();
+        },
+        selectedLine: function() {
+        	var reset = false;
+        	if (this.currentSelected !== this.shop.get('selectedOrder').selected) {
+        		reset = true;
+        	}
+        	this.currentSelected = this.shop.get('selectedOrder').selected;
+        	if (reset)
+        		this.numpadState.reset();
         },
         render_element: function() {
             this.$element.empty();
             this.currentOrderLines.each(_.bind( function(orderLine) {
                 var line = new OrderlineWidget(null, {
                         model: orderLine,
-                        order: this.shop.get('selectedOrder'),
-                        numpadState: this.numpadState
+                        order: this.shop.get('selectedOrder')
                 });
+            	line.on_selected.add(_.bind(this.selectedLine, this));
                 line.appendTo(this.$element);
             }, this));
             this.updateSummary();
@@ -1048,9 +1048,7 @@ openerp.point_of_sale = function(db) {
 
             (this.shop.get('orders')).bind('add', this.orderAdded, this);
             (this.shop.get('orders')).add(new Order);
-            this.numpadState = new NumpadState({
-                shop: this.shop
-            });
+            this.numpadState = new NumpadState({});
             this.productListView = new ProductListWidget(null, {
                 shop: this.shop
             });
