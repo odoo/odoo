@@ -10,6 +10,13 @@ openerp.web.page = function (openerp) {
             this._super.apply(this, arguments);
             this.registry = openerp.web.page.readonly;
         },
+        reload: function () {
+            if (this.dataset.index == null) {
+                this.do_prev_view();
+                return $.Deferred().reject().promise();
+            }
+            return this._super();
+        },
         on_loaded: function(data) {
             this._super(data);
             this.$form_header.find('button.oe_form_button_edit').click(this.on_button_edit);
