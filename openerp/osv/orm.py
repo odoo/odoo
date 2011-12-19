@@ -335,8 +335,8 @@ class browse_record(object):
         cache.setdefault(table._name, {})
         self._data = cache[table._name]
 
-        if not (id and isinstance(id, (int, long,))):
-            raise BrowseRecordError(_('Wrong ID for the browse record, got %r, expected an integer.') % (id,))
+#        if not (id and isinstance(id, (int, long,))):
+#            raise BrowseRecordError(_('Wrong ID for the browse record, got %r, expected an integer.') % (id,))
 #        if not table.exists(cr, uid, id, context):
 #            raise BrowseRecordError(_('Object %s does not exists') % (self,))
 
