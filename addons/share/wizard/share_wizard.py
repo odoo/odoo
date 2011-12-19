@@ -127,11 +127,12 @@ class share_wizard(osv.osv_memory):
         user = wizard.result_line_ids[0]
 
         return """
-<script type="text/javascript" src="http://localhost:8069/web/webclient/js"></script>
+<script type="text/javascript" src="%(base_url)s/web/webclient/js"></script>
 <script type="text/javascript">
     new openerp.init(%(init)s).web.embed(%(server)s, %(dbname)s, %(login)s, %(password)s,%(action)d%(options)s);
 </script> """ % {
             'init': simplejson.dumps(openerp.conf.server_wide_modules),
+            'base_url': base_url or '',
             'server': simplejson.dumps(base_url),
             'dbname': simplejson.dumps(cr.dbname),
             'login': simplejson.dumps(user.login),
