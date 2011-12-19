@@ -33,3 +33,13 @@
    inventory = self.browse(cr, uid, [ref('stock_physical_inventory0')])[0]
    self.action_done(cr,uid,[inventory.id])
    assert inventory.state == 'done',"Inventory should be in 'Done' state"
+-
+  I cancel the Inventory.
+-
+  !python {model: stock.inventory}: |
+   self.action_cancel_inventary(cr,uid,[ref('stock_physical_inventory0')])
+-
+  I change inventory state to Draft.
+-
+  !python {model: stock.inventory}: |
+    self.action_cancel_draft(cr,uid,[ref('stock_physical_inventory0')])

@@ -41,6 +41,8 @@
   !python {model: stock.move}: |
     ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_ice'))])
     assert [x.state for x in self.browse(cr, uid, ids) if x.state == 'done'], 'Stock moves should be done!'
+    context = {"default_location_dest_id": ref("stock.stock_location_shop0"), "active_model":"stock.move", "search_default_receive": 1, 'product_receive': True, "default_location_id": ref("stock.stock_location_suppliers"),"active_ids":ids, "active_id":ids[0]}
+    self.action_partial_move(cr, uid , ids, context)
 -
   I check stock moves of product.
 -

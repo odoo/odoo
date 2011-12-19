@@ -1,6 +1,9 @@
 -
   In order to test partial delivery and back orders, I select delivery order and check process on it.
 -
+  !record {model: stock.picking, id: stock_picking_1}:
+    invoice_state: '2binvoiced'
+-
   I confirm the Delivery order and make it available .
 -
   !python {model: stock.picking}: |
@@ -20,6 +23,11 @@
     location_dest_id: stock.stock_location_customers
     location_id: stock.stock_location_stock
     picking_id: stock_picking_1
+-
+  Now, check the product availability for newly created move.
+-
+  !python {model: stock.move}: |
+    self.action_assign(cr, uid, [ref('stock_move_3')])
 -
   I make partial delivery for the delivery order.
 -
@@ -43,6 +51,16 @@
         'wizard_id': result
     }, {})
     self.pool.get('stock.partial.picking').do_partial(cr, uid, [result], {})
+
+-
+  I Create Invoice for this picking.
+-
+  !python {model: stock.invoice.onshipping}: |
+    ctx = {"active_model":"stock.picking", "active_ids": [ref("stock.stock_picking_1")], "active_id":ref("stock.stock_picking_1"), "search_default_available": 1, "inv_type": "in_invoice" , "contact_display": "partner_address", }
+    context = ctx
+    invoice_line_id = self.create(cr, uid,{}, context)
+    self.open_invoice(cr, uid, [invoice_line_id], context)
+    self._get_journal_id(cr, uid, context)
 -
   I check the backorder and its moves.
 -
@@ -58,7 +76,21 @@
         else:
             assert line.product_qty == 0.0, "Wrong quantity for %s back order" % (line.product_id.code,)
 -
-  After the partial picking of delivery order, I check the backorder and stock moves.
+  I check the backorder.
+-
+  !python {model: stock.picking}: |
+    pick = self.browse(cr, uid, ref('stock.stock_picking_1'))
+    stock = self.pool.get('stock.move')
+    assert pick.state == 'assigned',"After partial picking the remaining product's delivery order must be in 'Ready to process' state"
+    assert pick.backorder_id.state == 'done',"The backorder state should be 'Done'"
+    done_move = stock.search(cr, uid, [('picking_id','=',pick.backorder_id.id)])
+    assign_move = stock.search(cr, uid, [('picking_id','=',pick.id)])
+    for move in stock.browse(cr, uid, done_move):
+      assert move.state == 'done',"Stock move of %s picking should be in 'Done' state"%(move.picking_id.name)
+    for move in stock.browse(cr, uid, assign_move):
+     assert move.state == 'assigned' or 'draft',"Stock move of %s picking should be in 'Available' state"%(move.picking_id.name)
+-
+  After the partial picking of delivery order, I check the stock moves.
 -
   !python {model: stock.picking}: |
     pick = self.browse(cr, uid, ref('stock.stock_picking_1'))

@@ -4,11 +4,11 @@
   I create two delivery orders to check cancel process with two different ways.
 -
   !python {model: stock.picking}: |
-    stock = self.pool.get('stock.move')
     context.update({'active_id':ref('stock.stock_picking_1')})
     id1 = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
     id2 = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
-    context.update({'id1': id1,'id2': id2})
+    id3 = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
+    context.update({'id1': id1,'id2': id2, 'id3': id3})
 -
   I cancel a delivery order which is in draft state.
 -
@@ -18,6 +18,7 @@
     pick_id = context.get('id2')
     self.cancel_assign(cr, uid, [pick_id])
     picking = self.browse(cr, uid, pick_id, context=context)
+    self.allow_cancel(cr, uid, [pick_id], context= None)
     wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
     assert picking.state == 'cancel',"Delivery order should be cancelled."
 -
@@ -33,4 +34,15 @@
     move_obj.force_assign(cr, uid, move_ids)
     move_obj.action_cancel(cr, uid, move_ids)
     assert picking.state == 'cancel',"Delivery order should be cancelled."
-
+-
+  Now I delete the stock move.
+-
+  !python {model: stock.move}: |
+    picking = self.pool.get('stock.picking').browse(cr, uid, context.get('id3'))
+    move_id = self.search(cr, uid, [('picking_id','=',picking.id)])[0]
+    self.unlink(cr, uid, [move_id])    
+-
+  Now I delete the picking.
+-
+  !python {model: stock.picking}: |
+    self.unlink(cr, uid, [context.get('id3')])
