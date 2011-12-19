@@ -1417,7 +1417,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             for groupname in groupby:
                 if re.get(groupname + "_count"):
                     del re[groupname + "_count"]
-            re.get('__context').update({'virtual_id' : virtual_id})
+            re.get('__context', {}).update({'virtual_id' : virtual_id})
         return res
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
