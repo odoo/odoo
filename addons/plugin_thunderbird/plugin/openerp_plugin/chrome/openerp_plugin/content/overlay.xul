@@ -12,12 +12,7 @@
 <menubar id="mail-menubar" >
     <menu insertafter="messageMenu" id="menu_openerp" label="&openerpMenu.label;" accesskey="&openerpMenu.accesskey;"> 
         <menupopup id="taskPopup">
-            <menuitem id="tiny-plugin3" label="&tinyplugin;"
-                      oncommand="window.open('chrome://openerp_plugin/content/config.xul', '', 'chrome', 'resizable=yes');"
-                      image="&menuicon.settings;"
-                      class="menuitem-iconic"
-                      tooltiptext="&pluginconfig.value;"
-                      />
+                      <!--
             <menuseparator/>
             <menuitem id="tiny-plugin4" label="&tinypluginconfig;"
                       oncommand="check(searchmail);"
@@ -25,7 +20,7 @@
                       class="menuitem-iconic"
                       tooltiptext="&pluginconfigvalue.value;"
                       />
-            <menuseparator/>
+            <menuseparator/>-->
             <menuitem id="tiny-openpartner" label="&openpartner.value;"
                       oncommand="check(open_partner);"
                       image="&menuicon.value;"
@@ -39,13 +34,18 @@
                       class="menuitem-iconic"
                       tooltiptext="&opendocumenttooltip.value;"
                       />
-            
+            <menuitem id="tiny-plugin3" label="&tinyplugin;"
+                      oncommand="window.open('chrome://openerp_plugin/content/config.xul', '', 'chrome', 'resizable=yes');"
+                      image="&menuicon.settings;"
+                      class="menuitem-iconic"
+                      tooltiptext="&pluginconfig.value;"
+                      />
         </menupopup>
     </menu>
 </menubar>
 
 
-
+<!--
 <toolbarpalette id="MailToolbarPalette">
     <toolbarbutton id="GA-button"
         class="toolbarbutton-1"
@@ -53,12 +53,12 @@
         label= "Push"
         oncommand="check(searchmail);" />
 </toolbarpalette> 
-
+-->
 <toolbarpalette id="MailToolbarPalette">
     <toolbarbutton id="GA-button2"
         class="toolbarbutton-1"
         image="&partnericon.value;"
-        label= "Partner"
+        label= "Contact"
         oncommand="check(open_partner);"
           />
 </toolbarpalette>
@@ -66,7 +66,7 @@
     <toolbarbutton id="GA-button3"
         class="toolbarbutton-1"
         image="&imagearchive.value;"
-        label= "Document"
+        label= "Documents"
         oncommand="check(open_document);"  />
 </toolbarpalette> 
 
