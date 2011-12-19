@@ -873,7 +873,7 @@ class users_view(osv.osv):
                 res[name_selection_groups(map(int, gs))] = {
                     'type': 'selection',
                     'string': app and app.name or _('Other'),
-                    'selection': [(g.id, g.name) for g in gs],
+                    'selection': [(False, '')] + [(g.id, g.name) for g in gs],
                     'help': '\n'.join(tips),
                 }
             else:
