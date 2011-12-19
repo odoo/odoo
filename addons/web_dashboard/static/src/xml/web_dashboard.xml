@@ -1,13 +1,13 @@
 <template>
 <t t-name="DashBoard">
     <div class="oe-dashboard-links">
-        <button type="button" class="button oe-dashboard-link-reset" t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
-            <img src="/web/static/src/img/icons/STOCK_GOTO_FIRST.png" width="16" height="16"/>
-            <span>Reset</span>
+        <button type="button" class="button oe-dashboard-link-reset" title="Reset Layout.." t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
+            <img src="/web_dashboard/static/src/img/layout_2-1.png" width="16" height="16"/>
+            <span> Reset Layout </span>
         </button>
-        <button type="button" class="button oe-dashboard-link-change_layout">
-            <img src="/web/static/src/img/icons/gtk-edit.png" width="16" height="16"/>
-            <span>Change layout</span>
+        <button type="button" class="button oe-dashboard-link-change_layout" title="Change Layout..">
+            <img src="/web_dashboard/static/src/img/layout_1-1-1.png" width="16" height="16"/>
+            <span> Change Layout </span>
         </button>
     </div>
     <table t-att-data-layout="node.attrs.style" t-attf-class="oe-dashboard oe-dashboard-layout_#{node.attrs.style}" cellspacing="0" cellpadding="0" border="0">
