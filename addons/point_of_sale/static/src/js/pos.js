@@ -882,7 +882,9 @@ openerp.point_of_sale = function(db) {
         start: function () {
             this.$element.addClass('paymentline');
             $('input', this.$element).keyup(_.bind(this.changeAmount, this));
+            $('.delete-payment-line', this.$element).click(this.on_delete);
         },
+        on_delete: function() {},
         changeAmount: function(event) {
             var newAmount;
             newAmount = event.currentTarget.value;
@@ -929,6 +931,7 @@ openerp.point_of_sale = function(db) {
         bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
             this.currentPaymentLines.bind('add', this.addPaymentLine, this);
+            this.currentPaymentLines.bind('remove', this.render_element, this);
             this.currentPaymentLines.bind('all', this.updatePaymentSummary, this);
         },
         bindOrderLineEvents: function() {
@@ -946,17 +949,18 @@ openerp.point_of_sale = function(db) {
             var x = new PaymentlineWidget(null, {
                     model: newPaymentLine
                 });
+            x.on_delete.add(_.bind(this.deleteLine, this, x));
             x.appendTo(this.paymentLineList());
         },
         render_element: function() {
             this.paymentLineList().empty();
             this.currentPaymentLines.each(_.bind( function(paymentLine) {
-                var x = new PaymentlineWidget(null, {
-                    model: paymentLine
-                });
-                this.paymentLineList().append(x);
+                this.addPaymentLine(paymentLine);
             }, this));
             this.updatePaymentSummary();
+        },
+        deleteLine: function(lineWidget) {
+        	this.currentPaymentLines.remove([lineWidget.model]);
         },
         updatePaymentSummary: function() {
             var currentOrder, dueTotal, paidTotal, remaining, remainingAmount;
