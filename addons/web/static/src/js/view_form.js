@@ -273,7 +273,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             var splitted = field.split('.');
             if (splitted.length > 1 && _.str.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
                 if (parent_fields === null) {
-                    parent_fields = self.dataset.parent_view.get_fields_values();
+                    parent_fields = self.dataset.parent_view.get_fields_values([self.dataset.child_name]);
                 }
                 var p_val = parent_fields[_.str.trim(splitted[1])];
                 if (p_val !== undefined) {
@@ -531,9 +531,12 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.reload_lock = this.reload_lock.pipe(act, act);
         return this.reload_lock;
     },
-    get_fields_values: function() {
+    get_fields_values: function(blacklist) {
+    	blacklist = blacklist || [];
         var values = {};
         _.each(this.fields, function(value, key) {
+        	if (_.include(blacklist, key))
+        		return;
             var val = value.get_value();
             values[key] = val;
         });
@@ -567,7 +570,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         return true;
     },
     sidebar_context: function () {
-        return this.do_save().pipe($.proxy(this, 'get_fields_values'));
+        return this.do_save().pipe(_.bind(function() {return this.get_fields_values();}, this));
     }
 });
 openerp.web.FormDialog = openerp.web.Dialog.extend({
@@ -808,8 +811,11 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
             active_id: active_id || false,
             active_ids: active_id ? [active_id] : [],
             active_model: a_dataset.model,
-            parent: a_dataset.parent_view ? a_dataset.parent_view.get_fields_values() : {}
+            parent: {}
         });
+        if (a_dataset.parent_view) {
+        	fields_values.parent = a_dataset.parent_view.get_fields_values([a_dataset.child_name]);
+        }
         return fields_values;
     },
     _build_eval_context: function() {
@@ -2033,6 +2039,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.dataset = new openerp.web.form.One2ManyDataSet(this, this.field.relation);
         this.dataset.o2m = this;
         this.dataset.parent_view = this.view;
+        this.dataset.child_name = this.name;
+        //this.dataset.child_name = 
         this.dataset.on_change.add_last(function() {
             self.on_ui_change();
         });
@@ -2315,6 +2323,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
                     return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
                 },
                 parent_view: self.o2m.view,
+                child_name: self.o2m.name,
                 form_view_options: {'not_interactible_on_create':true}
             }, self.o2m.build_domain(), self.o2m.build_context());
             pop.on_select_elements.add_last(function() {
@@ -2329,6 +2338,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
             auto_write: false,
             alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
             parent_view: self.o2m.view,
+            child_name: self.o2m.name,
             read_function: function() {
                 return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
             },
@@ -2488,6 +2498,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
      * - alternative_form_view
      * - create_function (defaults to a naive saving behavior)
      * - parent_view
+     * - child_name
      * - form_view_options
      * - list_view_options
      * - read_function
@@ -2523,6 +2534,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         };
         this.dataset.read_function = this.options.read_function;
         this.dataset.parent_view = this.options.parent_view;
+        this.dataset.child_name = this.options.child_name;
         this.dataset.on_default_get.add(this.on_default_get);
         if (this.options.initial_view == "search") {
             self.rpc('/web/session/eval_domain_and_context', {
@@ -2601,12 +2613,14 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         var self = this;
         var wdataset = new openerp.web.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
+        wdataset.child_name = this.options.child_name;
         return wdataset.create.apply(wdataset, arguments);
     },
     write_row: function() {
         var self = this;
         var wdataset = new openerp.web.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
+        wdataset.child_name = this.options.child_name;
         return wdataset.write.apply(wdataset, arguments);
     },
     on_select_elements: function(element_ids) {
@@ -2695,6 +2709,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
      * - auto_write (default true)
      * - read_function
      * - parent_view
+     * - child_name
      * - form_view_options
      * - readonly
      */
@@ -2717,6 +2732,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         this.dataset.ids = [this.row_id];
         this.dataset.index = 0;
         this.dataset.parent_view = this.options.parent_view;
+        this.dataset.child_name = this.options.child_name;
         this.setup_form_view();
     },
     on_write: function(id, data) {
@@ -2725,6 +2741,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         var self = this;
         var wdataset = new openerp.web.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
+        wdataset.child_name = this.options.child_name;
         wdataset.write(id, data, {}, function(r) {
             self.on_write_completed();
         });
