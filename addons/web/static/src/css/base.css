@@ -1154,10 +1154,20 @@ label.error {
 .openerp .oe_form_readonly {
 
 }
-.openerp .oe_form_readonly .oe_form_frame_cell .field_text, .openerp .oe_form_readonly .field_char, .openerp .oe_form_readonly .field_int, .openerp .oe_form_readonly .field_float, .openerp .oe_form_readonly .field_email, .openerp .oe_form_readonly .field_date, .openerp .oe_form_readonly .field_selection, .openerp .oe_forms_readonly .oe_form_field_many2one{
+.openerp .oe_form_readonly .oe_form_frame_cell .field_text,
+.openerp .oe_form_readonly .field_char,
+.openerp .oe_form_readonly .field_int,
+.openerp .oe_form_readonly .field_float,
+.openerp .oe_form_readonly .field_email,
+.openerp .oe_form_readonly .field_date,
+.openerp .oe_form_readonly .field_selection,
+.openerp .oe_forms_readonly .oe_form_field_many2one {
     padding: 3px 2px 2px 2px;
     background-color: white;
-    height:17px;
+    height: 17px;
+}
+.openerp .oe_form_readonly .oe_form_frame_cell .field_text {
+    height: auto;
 }
 .openerp .oe_form_readonly .field_datetime {
     padding: 1px 2px 2px 2px;
