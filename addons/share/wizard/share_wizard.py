@@ -220,6 +220,8 @@ class share_wizard(osv.osv_memory):
            ignored, existing ones."""
         user_obj = self.pool.get('res.users')
         current_user = user_obj.browse(cr, UID_ROOT, uid, context=context)
+        # modify context to disable shortcuts when creating share users
+        context['noshortcut'] = True
         created_ids = []
         existing_ids = []
         if wizard_data.user_type == 'emails':
@@ -244,7 +246,7 @@ class share_wizard(osv.osv_memory):
                         'groups_id': [(6,0,[group_id])],
                         'share': True,
                         'company_id': current_user.company_id.id
-                })
+                }, context)
                 new_line = { 'user_id': user_id,
                              'password': new_pass,
                              'newly_created': True}
@@ -261,7 +263,7 @@ class share_wizard(osv.osv_memory):
                 'groups_id': [(6,0,[group_id])],
                 'share': True,
                 'company_id': current_user.company_id.id
-            })
+            }, context)
             new_line = { 'user_id': user_id,
                          'password': new_pass,
                          'newly_created': True}
