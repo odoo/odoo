@@ -1,15 +1,13 @@
 -
-  In order to test account followup module in OpenERP, I perform action to change the state of invoice to "open".
+  In order to test account followup module in OpenERP, I change the state of invoice to "open".
 -
   !workflow {model: account.invoice, action: invoice_open, ref: account.demo_invoice_0}
--
-  I create a send followup record.
 -
   !record {model: account.followup.print, id: account_followup_print_0}:
     date: !eval time.strftime('%Y-%m-%d')
     followup_id: account_followup.demo_followup1
 -
-  I continue followup.
+  I select the followup to send it to the partner.
 -
   !python {model: account.followup.print}: |
     self.do_continue(cr, uid, [ref("account_followup_print_0")], {"lang": 'en_US',
@@ -28,7 +26,7 @@
       - base.res_partner_desertic_hispafuentes
     partner_lang: 1
 -
-  I send a mail to partner.
+  I send a followup mail to partner.
 -
   !python {model: account.followup.print.all}: |
     import time
