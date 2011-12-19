@@ -5,8 +5,8 @@
 
     <t t-extend="ViewManagerAction">
         <t t-jquery=".oe-shortcut-toggle" t-operation="after">
-            <a class="oe-share_link" href="#share_link" title="Link or embed"><img src="/share/static/src/img/share.png"/></a>
-            <a class="oe-share" href="#share" title="Share by email"><img src="/share/static/src/img/share.png"/></a>
+            <a class="oe-share_link" href="#share_link" title="Link or embed"><img att-src='_s + "/share/static/src/img/share.png"'/></a>
+            <a class="oe-share" href="#share" title="Share by email"><img att-src='_s + "/share/static/src/img/share.png"'/></a>
         </t>
     </t>
 
