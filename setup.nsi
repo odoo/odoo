@@ -104,12 +104,12 @@ Var MUI_TEMP
 Var STARTMENU_FOLDER
 
 !define MUI_ABORTWARNING
-!define MUI_ICON ".\pixmaps\openerp-icon.ico"
+!define MUI_ICON ".\install\openerp-icon.ico"
 
-!define MUI_WELCOMEFINISHPAGE_BITMAP ".\pixmaps\openerp-intro.bmp"
-!define MUI_UNWELCOMEFINISHPAGE_BITMAP ".\pixmaps\openerp-intro.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP ".\install\openerp-intro.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP ".\install\openerp-intro.bmp"
 !define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP ".\pixmaps\openerp-slogan.bmp"
+!define MUI_HEADERIMAGE_BITMAP ".\install\openerp-slogan.bmp"
 !define MUI_HEADERIMAGE_BITMAP_NOSTRETCH
 !define MUI_HEADER_TRANSPARENT_TEXT ""
 
