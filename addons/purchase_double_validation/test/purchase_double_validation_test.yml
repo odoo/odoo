@@ -41,7 +41,7 @@
     purchase_order = self.browse(cr, uid, ref("order_purchase12"))
     assert purchase_order.amount_total <= installer_amount.limit_amount ,"Total is Greater then the Limit Amount"
 -
-  I confirmed the purchase order.
+  I confirmed the purchase order of amount of less than Limit amount.
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase12}
 -
