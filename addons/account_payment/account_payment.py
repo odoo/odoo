@@ -68,7 +68,7 @@ class payment_order(osv.osv):
     _rec_name = 'reference'
     _order = 'id desc'
 
-#TODO:REMOVE this function is not used 
+    #dead code
     def get_wizard(self, type):
         logger = netsvc.Logger()
         logger.notifyChannel("warning", netsvc.LOG_WARNING,
@@ -236,7 +236,7 @@ class payment_line(osv.osv):
                         break
         return result
 
-    #TODO:REMOVE this function is not used 
+    #dead code
     def select_by_name(self, cr, uid, ids, name, args, context=None):
         if not ids: return {}
         partner_obj = self.pool.get('res.partner')

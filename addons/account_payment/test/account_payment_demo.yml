@@ -1,0 +1,18 @@
+-
+  !record {model: res.company, id: company_1}:
+    name: TinyERP
+-
+  !record {model: payment.mode, id: payment_mode_1}:
+    company_id: company_1
+#-
+#  call onchange.
+#-
+  #!python {model: payment.order}: |
+    #pay_line_obj = self.pool.get('payment.line')
+    #invoice = self.pool.get('account.invoice').browse(cr, uid, ref("account.demo_invoice_0"))
+    #payment = self.browse(cr, uid, ref("payment_order_1"))
+    #payment_line = payment.line_ids[0]
+    #pay_line_obj.onchange_move_line(cr, uid, [payment_line.id] ,invoice.move_id.line_id[0].id ,payment.mode, payment.date_prefered, payment.date_scheduled, payment_line.currency, payment_line.company_currency, context)
+    #pay_line_obj.onchange_amount(cr, uid, [payment_line.id] , payment_line.amount_currency, payment_line.currency.id, payment_line.company_currency.id, context)
+    #pay_line_obj.onchange_partner(cr, uid, [payment_line.id] , ref("base.res_partner_maxtor"), payment.mode, context)
+#-

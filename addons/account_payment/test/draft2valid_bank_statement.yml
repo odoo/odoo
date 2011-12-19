@@ -10,59 +10,43 @@
     journal_id: account.bank_journal
     name: /
     period_id: account.period_10
-
 -
-   In order to make entries in bank statement line, I import payment order lines
+   In order to make entries in bank statement line, I import payment order lines.
 -
   !python {model: account.payment.populate.statement}: |
-    payment = self.pool.get('payment.order').browse(cr, uid, ref("account_payment.payment_order_1"))
+    payment = self.pool.get('payment.order').browse(cr, uid, ref("payment_order_1"))
     payment_line = payment.line_ids[0]
     import_payment_id = self.create(cr, uid, {'lines': [(6,0,[payment_line.id])]})
-    self.populate_statement(cr, uid, [import_payment_id], {"lang": "en_US", "tz": False, "statement_id": ref("account_bank_statement_1"), "active_model": "account.bank.statement", "journal_type": "cash", "active_ids": [ref("account_bank_statement_1")], "active_id": ref("account_bank_statement_1")})
-
+    self.populate_statement(cr, uid, [import_payment_id], {"statement_id": ref("account_bank_statement_1"),
+      "active_model": "account.bank.statement", "journal_type": "cash",
+      "active_id": ref("account_bank_statement_1")})
 -
-  I check that payment line is import successfully in bank statement line
+  I check that payment line is import successfully in bank statement line.
 -
   !python {model: account.bank.statement}: |
     bank = self.browse(cr, uid, ref("account_bank_statement_1"))
-    assert bank.line_ids, "bank statement line is not created"
-
+    assert bank.line_ids, "bank statement line is not created."
 -
   I modify the bank statement and set the Closing Balance.
 -
   !record {model: account.bank.statement, id: account_bank_statement_1}:
     balance_end_real: -14.0
-
 -
-  I perform action to confirm the bank statement.
+  I confirm the bank statement.
 -
   !python {model: account.bank.statement}: |
     self.button_confirm_bank(cr, uid, [ref("account_bank_statement_1")])
 -
-  I check that bank statement state is now "Closed"
+  I check that bank statement state is now "Confirm"
 -
   !assert {model: account.bank.statement, id: account_bank_statement_1}:
     - state == 'confirm'
 -
-  I check that move lines created for bank statement
+  I check that move lines created for bank statement.
 -
   !python {model: account.bank.statement}: |
     bank = self.browse(cr, uid, ref("account_bank_statement_1"))
     move_line = bank.move_line_ids[0]
-    
-    assert bank.move_line_ids, "Move lines not created for bank statement"
-    assert move_line.state == 'valid', "Move state is not valid"
--
-  I check that the payment is created with proper data in supplier invoice
--
-  !python {model: account.invoice}: |
-    invoice = self.browse(cr, uid, ref("account.demo_invoice_0"))
-    payment_line =  invoice.payment_ids[0]
-    
-    assert invoice.state == 'paid', "invoice state is not paid"
-    assert invoice.reconciled == True, "invoice reconcile is not True"
-    assert invoice.residual == 0.0, "invoice residua amount is not filly paid"
-    assert payment_line, "payment line not created for paid invoice"
-    assert payment_line.debit == invoice.amount_total and payment_line.credit == 0.0, "proper amount is not debit to payment account "
-    assert payment_line.reconcile_id, "reconcile is not created for paid invoice"
-    
+
+    assert bank.move_line_ids, "Move lines not created for bank statement."
+    assert move_line.state == 'valid', "Move state is not valid."
