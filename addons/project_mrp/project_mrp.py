@@ -31,10 +31,10 @@ class project_task(osv.osv):
     }
 
     def _validate_subflows(self, cr, uid, ids):
+        wf_service = netsvc.LocalService("workflow")
         for task in self.browse(cr, uid, ids):
             if task.procurement_id:
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'procurement.order', task.procurement_id.id, 'subflow.done', cr)
+                wf_service.trg_write(uid, 'procurement.order', task.procurement_id.id, cr)
 
     def do_close(self, cr, uid, ids, *args, **kwargs):
         res = super(project_task, self).do_close(cr, uid, ids, *args, **kwargs)

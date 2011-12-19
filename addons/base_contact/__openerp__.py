@@ -19,15 +19,14 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Contacts Management',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'complexity': "expert",
     'description': """
-This module allows you to manage your contacts entirely.
-========================================================
+This module allows you to manage your contacts
+==============================================
 
 It lets you define:
     * contacts unrelated to a partner,
@@ -47,7 +46,6 @@ Pay attention that this module converts the existing addresses into "addresses +
     'update_xml': [
         'security/ir.model.access.csv',
         'base_contact_view.xml',
-        'base_contact_installer_view.xml',
         'process/base_contact_process.xml'
     ],
     'demo_xml': ['base_contact_demo.xml'],
