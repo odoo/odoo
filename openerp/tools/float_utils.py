@@ -58,9 +58,11 @@ def float_round(value, precision_digits=None, precision_rounding=None):
 
 def float_is_zero(value, precision_digits=None, precision_rounding=None):
     """Returns true if ``value`` is small enough to be treated as
-       zero at the given precision.
+       zero at the given precision (smaller than the given *epsilon*).
        Precision must be given by ``precision_digits`` or ``precision_rounding``,
-       not both!
+       not both! Here the precision (``10**-precision_digits`` or
+       ``precision_rounding``) is used as the zero *epsilon*: values smaller
+       than that are considered to be zero.  
 
        Warning: ``float_is_zero(value1-value2)`` is not always equivalent to 
        ``float_compare(value1,value2) == 0``, as the former will round after
@@ -74,25 +76,28 @@ def float_is_zero(value, precision_digits=None, precision_rounding=None):
        :param float value: value to compare with currency's zero
        :return: True if ``value`` is considered 0
     """
-    rounding_factor = _float_check_precision(precision_digits=precision_digits,
+    epsilon = _float_check_precision(precision_digits=precision_digits,
                                              precision_rounding=precision_rounding)
-    return abs(float_round(value, precision_rounding=rounding_factor)) < rounding_factor
+    return abs(float_round(value, precision_rounding=epsilon)) < epsilon
 
 def float_compare(value1, value2, precision_digits=None, precision_rounding=None):
     """Compare ``value1`` and ``value2`` after rounding them according to the
        given precision. A value is considered lower/greater than another value
        if their rounded value is different. This is not the same as having a
        non-zero difference!
-
-       For example 1.432 and 1.431 are equal at 2 digits precision,
-       so this method would return 0
-       However 0.006 and 0.002 are considered different (returns 1) because
-       they respectively round to 0.01 and 0.0, even though
-       0.006-0.002 = 0.004 which would be considered zero at 2 digits precision.
-
-
        Precision must be given by ``precision_digits`` or ``precision_rounding``,
        not both!
+
+       Example: 1.432 and 1.431 are equal at 2 digits precision,
+       so this method would return 0
+       However 0.006 and 0.002 are considered different (method returns 1) because
+       they respectively round to 0.01 and 0.0, even though 0.006-0.002 = 0.004
+       which would be considered zero at 2 digits precision.
+
+       Warning: ``float_is_zero(value1-value2)`` is not always equivalent to 
+       ``float_compare(value1,value2) == 0``, as the former will round after
+       computing the difference, while the latter will round before, giving
+       different results for e.g. 0.006 and 0.002 at 2 digits precision. 
 
        :param int precision_digits: number of decimal digits to round to.
        :param float precision_rounding: decimal number representing the minimum
