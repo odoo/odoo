@@ -170,7 +170,7 @@ class crm_lead(crm_case, osv.osv):
             domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
-        'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner that will be created while converting the into opportunity', select=1),
+        'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner that will be created while converting the lead into opportunity', select=1),
         'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
         'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
