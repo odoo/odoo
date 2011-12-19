@@ -38,9 +38,9 @@ class plugin_handler(osv.osv_memory):
                 (model_name, res_id, url, name_get) 
         """
         mail_message_obj = self.pool.get('mail.message')
-        model = False
+        model = ""
         res_id = 0
-        url = False
+        url = ""
         name = ""
         msg = mail_message_obj.parse_message(email)
         references = [msg.get('message-id')]

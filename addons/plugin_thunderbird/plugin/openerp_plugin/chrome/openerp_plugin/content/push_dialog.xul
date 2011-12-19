@@ -1,0 +1,19 @@
+<?xml version="1.0"?>  
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>  
+<!-- Extremely recommended to keep this css include!! -->  
+<window id="rootWnd" title="Register Online!"   onload="load_contact_dialog();" 
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">  
+    <script type="text/javascript" src="chrome://openerp_plugin/content/js/tiny_xmlrpc.js"></script>
+    <script type="text/javascript" src="chrome://openerp_plugin/content/js/tools.js"></script>
+    <script type="text/javascript" src="chrome://openerp_plugin/content/js/dialog.js"></script>
+	<vbox>  
+    	<hbox>  
+        	<label value="Message" id="message_label"/>  
+        </hbox>  
+        <hbox>  
+        	<button label="Cancel" accesskey="c" oncommand="window.close();"/>
+        	<button id="push_new" label="Push Email" accesskey="a" oncommand="window.open('chrome://openerp_plugin/content/push.xul', '', 'chrome', resizable='yes');"/>
+        	<button id="open" label="Open Document" accesskey="c" oncommand="window.close();"/>
+        </hbox>  
+    </vbox>  
+</window>  
