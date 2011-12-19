@@ -710,7 +710,7 @@ class sale_order(osv.osv):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
         output_id = order.shop_id.warehouse_id.lot_output_id.id
         return {
-            'name': line.name[:64],
+            'name': line.name[:250],
             'picking_id': picking_id,
             'product_id': line.product_id.id,
             'date': date_planned,
