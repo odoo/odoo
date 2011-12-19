@@ -685,7 +685,7 @@ class sale_order(osv.osv):
                 return False
             return canceled
 
-    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, *args):
+    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
         return {
             'name': line.name,
             'origin': order.name,
@@ -706,7 +706,7 @@ class sale_order(osv.osv):
             'company_id': order.company_id.id,
         }
 
-    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, *args):
+    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
         output_id = order.shop_id.warehouse_id.lot_output_id.id
         return {
@@ -733,7 +733,7 @@ class sale_order(osv.osv):
             'price_unit': line.product_id.standard_price or 0.0
         }
 
-    def _prepare_order_picking(self, cr, uid, order, *args):
+    def _prepare_order_picking(self, cr, uid, order, context=None):
         pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
         return {
             'name': pick_name,
@@ -771,7 +771,7 @@ class sale_order(osv.osv):
                                 self.pool.get('procurement.order').write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
         return True
 
-    def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, *args):
+    def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, context=None):
         """Create the required procurements to supply sale order lines, also connecting
         the procurements to appropriate stock moves in order to bring the goods to the
         sale order's requested location.
@@ -805,13 +805,13 @@ class sale_order(osv.osv):
             if line.product_id:
                 if line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     if not picking_id:
-                        picking_id = picking_obj.create(cr, uid, self._prepare_order_picking(cr, uid, order, *args))
-                    move_id = move_obj.create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, *args))
+                        picking_id = picking_obj.create(cr, uid, self._prepare_order_picking(cr, uid, order, context))
+                    move_id = move_obj.create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, context))
                 else:
                     # a service has no stock move
                     move_id = False
 
-                proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, *args))
+                proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context))
                 proc_ids.append(proc_id)
                 line.write({'procurement_id': proc_id})
                 self.ship_recreate(cr, uid, order, line, move_id, proc_id)
@@ -836,9 +836,9 @@ class sale_order(osv.osv):
         order.write(val)
         return True
 
-    def action_ship_create(self, cr, uid, ids, *args):
-        for order in self.browse(cr, uid, ids, context={}):
-            self._create_pickings_and_procurements(cr, uid, order, order.order_line, None, *args)
+    def action_ship_create(self, cr, uid, ids, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            self._create_pickings_and_procurements(cr, uid, order, order.order_line, None, context)
         return True
 
     def action_ship_end(self, cr, uid, ids, context=None):
