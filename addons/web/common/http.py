@@ -141,7 +141,6 @@ class JsonRequest(WebRequest):
         jsonp = args.get('jsonp')
         requestf = None
         request = None
-        print "ARGS",args
 
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
