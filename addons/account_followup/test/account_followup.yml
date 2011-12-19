@@ -1,8 +1,8 @@
 -
   In order to test account followup module in OpenERP, I change the state of invoice to "open".
 -
-  !python {model: account.invoice}: |
-    self.write(cr, uid, [ref("account.demo_invoice_0")], {"check_total": 14.0})
+  !record {model: account.invoice, id: account.demo_invoice_0}:
+    check_total: 14.0
 -
   !workflow {model: account.invoice, action: invoice_open, ref: account.demo_invoice_0}
 -
