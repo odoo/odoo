@@ -1,5 +1,6 @@
+
 -
-  In order to test the PDF reports defined on a stock, we will print a Stock Overviewall(children) report
+  In order to test the PDF reports defined on a stock, I print a Stock Overviewall(children) report.
 -
   !python {model: stock.location}: |
     import netsvc, tools, os
@@ -7,7 +8,7 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-overviewall'+format), 'wb+').write(data)
 -
-  In order to test the PDF reports defined on stock inventory, we will print a Stock Inventory Move report
+  In order to test the PDF reports defined on stock inventory, I print a Stock Inventory Move report.
 -
   !python {model: stock.inventory}: |
     import netsvc, tools, os
@@ -15,7 +16,7 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-stock_inventory_move.'+format), 'wb+').write(data)
 -
-  In order to test the PDF reports defined on a stock, we will print a Stock Overview report
+  In order to test the PDF reports defined on a stock, I print a stock overview report.
 -
   !python {model: stock.location}: |
     import netsvc, tools, os
@@ -23,18 +24,19 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-overview'+format), 'wb+').write(data)
 -
-  In order to test the PDF reports defined on a stock, we will print a Stock Picking List report
+  In order to test the PDF reports defined on a stock, I print a Delivery order List report.
 -
   !python {model: stock.picking}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.stock.picking.list').create(cr, uid, [ref('stock.stock_picking_0')], {}, {})
+    (data, format) = netsvc.LocalService('report.stock.picking.list').create(cr, uid, [ref('stock.stock_picking_1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-picking_list'+format), 'wb+').write(data)
 -
-  In order to test the PDF reports defined on a Stock, we will print Product Stock Report
+  In order to test the PDF reports defined on a stock, I print product stock Report.
 -
   !python {model: product.product}: |
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.stock.product.history').create(cr, uid, [ref('product.product_product_pc1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-product_stock_report.'+format), 'wb+').write(data)
+

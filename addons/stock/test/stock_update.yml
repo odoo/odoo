@@ -1,0 +1,92 @@
+-
+  I update the current stock of the product.
+-
+  I assign the location.
+-
+  !record {model: stock.warehouse, id: stock.warehouse0}:
+    lot_stock_id: cold_location_1
+-
+  I create stock production lot for product.
+-
+  !record {model: stock.production.lot, id: stock_production_lot0}:
+    product_id: product.product_product_ice
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    name: 0000001
+-
+  I update product quantity and check the stock moves are properly done or not.
+-
+  !python {model: product.product}: |
+    change_qty = self.pool.get('stock.change.product.qty')
+    product = self.browse(cr, uid, ref('product.product_product_ice'))
+    ids = change_qty.create(cr, uid, {'location_id' : ref('cold_location_1'), 'new_quantity': 5, 'product_id': product.id, 'prodlot_id': ref('stock.stock_production_lot0')})
+    change_qty.change_product_qty(cr, uid, [ids], {'active_model':'product.product', 'active_id': product.id, 'active_ids':[product.id]})
+    assert product.qty_available == 5,"Product quantity is not updated."
+-
+  I trace the stock production lot for product.
+-
+  !python {model: stock.production.lot }: |
+    self.action_traceability(cr,uid,[ref('stock_production_lot0')], {'lang': 'en_US', 'tz': False, 'active_model': 'ir.ui.menu', 'field': '', 'type': ''})
+-
+  I check that physical inventory created.
+-
+  !python {model: stock.inventory.line}: |
+    ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_ice'))])
+    inventory = self.browse(cr, uid, ids)[0]
+    assert inventory.product_qty == 5,'Product quantity is not corresponding.'
+    assert inventory.location_id.id == ref('cold_location_1'), 'Location is not corresponding.'
+    assert inventory.state == 'done', "State should be in 'Done' state."
+-
+  I check that stock moves created.
+-
+  !python {model: stock.move}: |
+    ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_ice'))])
+    assert [x.state for x in self.browse(cr, uid, ids) if x.state == 'done'], 'Stock moves should be done!'
+    context = {"default_location_dest_id": ref("stock.stock_location_shop0"), "active_model":"stock.move", "search_default_receive": 1, 'product_receive': True, "default_location_id": ref("stock.stock_location_suppliers"),"active_ids":ids, "active_id":ids[0]}
+    self.action_partial_move(cr, uid , ids, context)
+-
+  I check stock moves of product.
+-
+  !python {model: stock.move}: |
+    ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_ice'))])
+    for move in self.browse(cr, uid, ids):
+      assert move.product_qty >= 1,"Product is not corresponding."
+      if move.location_id.id == ref('stock_physical_inventory0'):
+        assert move.location_dest_id.id == ref('convenience_location_stock'),"Destination location must be 'Convenient Store'"
+      if move.location_id.id == ref('convenience_location_stock'):
+        assert move.location_dest_id.id == ref('cold_location_1'),"Destination location must be 'Cold Storage' because the source location is 'Convenient Store'"
+      if move.location_id.id == ref('cold_location_1'):
+        assert move.location_dest_id.id == ref('stock_location_customers'),"Destination location must be 'Customers' because the source location is 'Cold Storage'"
+-
+  I create a move and scrap some quantities from it.
+-
+  !python {model: stock.move.scrap}: |
+    ids = self.pool.get('stock.move').search(cr, uid, [('product_id','=',ref('product.product_product_ice')),('location_dest_id','=',ref('stock_location_customers'))])
+    self.pool.get('stock.move').browse(cr, uid, ids)[0]
+    context = {'active_model':'stock.move', 'active_id':ids[0],'active_ids': ids}
+    values = self.default_get(cr, uid, ['location_id','product_id','product_uom','product_qty'], context)
+    scrap_ids = self.create(cr, uid, values)
+    self.move_scrap(cr, uid, [scrap_ids], context)
+-
+  I check scraped move details.
+-
+  !python {model: stock.move}: |
+    ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_ice')),('location_dest_id','=',ref('stock_location_customers'))])
+    for scrap_move in self.browse(cr, uid, ids):
+      if scrap_move.product_qty == 5.0 and scrap_move.location_dest_id == ref('stock_location_scrapped'):
+        assert scrap_move.state == 'done',"The scraped move should be in 'Done' state."
+-
+  I split a move in to different quantities.
+-
+  !python {model: stock.move }: |
+    import time
+    ids = self.pool.get('stock.move').search(cr, uid, [('product_id','=',ref('product.product_product_ice')),('location_dest_id','=',ref('stock_location_customers'))])
+    old_move=self.browse(cr,uid,ids)[0]
+    context = {'active_model': 'stock.move','active_id':ids[0],'active_ids': ids}
+    tracking_id = self.pool.get('stock.tracking').create(cr, uid, {'name': '0000007', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
+    self.write(cr, uid, ids, {'tracking_id': tracking_id})
+    split_obj=self.pool.get('stock.split.into')
+    split_id = split_obj.create(cr, uid, {'quantity': 1 })
+    split_obj.split(cr, uid, [split_id], context)
+    all_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_ice'))])
+    new_move=self.browse(cr,uid,all_ids)[-1]
+    assert not old_move.tracking_id == new_move.tracking_id,"After spliting the move, new move should be created with new pack."

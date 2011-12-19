@@ -1,0 +1,48 @@
+-
+  In order to test the cancel process in stock, I test by cancelling the delivery order.
+-
+  I create two delivery orders to check cancel process with two different ways.
+-
+  !python {model: stock.picking}: |
+    context.update({'active_id':ref('stock.stock_picking_1')})
+    id1 = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
+    id2 = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
+    id3 = self.copy(cr, uid, ref('stock.stock_picking_1'), context)
+    context.update({'id1': id1,'id2': id2, 'id3': id3})
+-
+  I cancel a delivery order which is in draft state.
+-
+  !python {model: stock.picking}: |
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    pick_id = context.get('id2')
+    self.cancel_assign(cr, uid, [pick_id])
+    picking = self.browse(cr, uid, pick_id, context=context)
+    self.allow_cancel(cr, uid, [pick_id], context= None)
+    wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
+    assert picking.state == 'cancel',"Delivery order should be cancelled."
+-
+  Now, I cancel all related stock moves of another delivery order so automatically delivery order goes to cancelled state.
+-
+  !python {model: stock.picking}: |
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    move_obj = self.pool.get('stock.move')
+    picking = self.browse(cr, uid, context.get('id1'))
+    move_ids = move_obj.search(cr, uid, [('picking_id','=',picking.id)])
+    move_obj.action_confirm(cr, uid, move_ids)
+    move_obj.force_assign(cr, uid, move_ids)
+    move_obj.action_cancel(cr, uid, move_ids)
+    assert picking.state == 'cancel',"Delivery order should be cancelled."
+-
+  Now I delete the stock move.
+-
+  !python {model: stock.move}: |
+    picking = self.pool.get('stock.picking').browse(cr, uid, context.get('id3'))
+    move_id = self.search(cr, uid, [('picking_id','=',picking.id)])[0]
+    self.unlink(cr, uid, [move_id])    
+-
+  Now I delete the picking.
+-
+  !python {model: stock.picking}: |
+    self.unlink(cr, uid, [context.get('id3')])
