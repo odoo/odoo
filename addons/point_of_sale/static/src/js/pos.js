@@ -729,6 +729,7 @@ openerp.point_of_sale = function(db) {
         	this.numpadState = numpadState;
         	if (this.numpadState) {
         		this.numpadState.bind('setValue', this.setValue, this);
+        		this.numpadState.reset();
         	}
         },
         setValue: function(val) {
@@ -1073,7 +1074,6 @@ openerp.point_of_sale = function(db) {
             this.numpadView.start();
             this.orderView = new OrderWidget(null, {
                 shop: this.shop,
-                numpadState: this.numpadView.state,
             });
             this.orderView.$element = $('#current-order-content');
             this.orderView.start();
@@ -1090,6 +1090,8 @@ openerp.point_of_sale = function(db) {
             this.stepsView = new StepsWidget(null, {shop: this.shop});
             this.stepsView.$element = $('#steps');
             this.stepsView.start();
+            this.shop.bind('change:selectedOrder', this.changedSelectedOrder, this);
+            this.changedSelectedOrder();
         },
         createNewOrder: function() {
             var newOrder;
@@ -1107,6 +1109,23 @@ openerp.point_of_sale = function(db) {
             });
             newOrderButton.appendTo($('#orders'));
             newOrderButton.selectOrder();
+        },
+        changedSelectedOrder: function() {
+        	if (this.currentOrder) {
+        		this.currentOrder.unbind('change:step', this.changedStep);
+        	}
+        	this.currentOrder = this.shop.get('selectedOrder');
+        	this.currentOrder.bind('change:step', this.changedStep, this);
+        	this.changedStep();
+        },
+        changedStep: function() {
+        	var step = this.currentOrder.get('step');
+        	this.orderView.setNumpadState(null);
+        	if (step === 'products') {
+        		this.orderView.setNumpadState(this.numpadView.state);
+        	} else if (step === 'payment') {
+        		//todo
+        	}
         },
     });
     var App = (function() {
