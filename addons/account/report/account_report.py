@@ -205,12 +205,12 @@ class report_account_type_sales(osv.osv):
     _description = "Report of the Sales by Account Type"
     _auto = False
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True, select=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'period_id': fields.many2one('account.period', 'Force Period', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
-        'amount_total': fields.float('Total', readonly=True, select=True),
+        'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),

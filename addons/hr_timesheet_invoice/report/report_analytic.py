@@ -67,9 +67,9 @@ class report_account_analytic_line_to_invoice(osv.osv):
     _description = "Analytic lines to invoice report"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True, select=True),
-        'product_id':fields.many2one('product.product', 'Product', readonly=True, select=True),
-        'account_id':fields.many2one('account.analytic.account', 'Analytic account', readonly=True, select=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'product_id':fields.many2one('product.product', 'Product', readonly=True),
+        'account_id':fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
         'product_uom_id':fields.many2one('product.uom', 'UoM', readonly=True),
         'unit_amount': fields.float('Units', readonly=True),
         'sale_price': fields.float('Sale price', readonly=True, digits_compute=dp.get_precision('Sale Price')),

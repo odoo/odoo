@@ -27,8 +27,8 @@ class report_timesheet_line(osv.osv):
     _description = "Timesheet Line"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True, select=True),
-        'user_id': fields.many2one('res.users', 'User', readonly=True, select=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
         'date': fields.date('Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
@@ -81,8 +81,8 @@ class report_timesheet_user(osv.osv):
     _description = "Timesheet per day"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True, select=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True, select=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'user_id':fields.many2one('res.users', 'User', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'cost': fields.float('Cost', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
@@ -114,9 +114,9 @@ class report_timesheet_account(osv.osv):
     _description = "Timesheet per account"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True, select=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True, select=True),
-        'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, select=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),

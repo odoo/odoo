@@ -32,7 +32,7 @@ class purchase_report(osv.osv):
     _auto = False
     _columns = {
         'date': fields.date('Order Date', readonly=True, help="Date on which this document has been created"),
-        'name': fields.char('Year',size=64,required=False, readonly=True, select=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'state': fields.selection([('draft', 'Request for Quotation'),
                                     ('wait', 'Waiting'),
@@ -58,7 +58,7 @@ class purchase_report(osv.osv):
         'delay':fields.float('Days to Validate', digits=(16,2), readonly=True),
         'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
-        'price_total': fields.float('Total Price', readonly=True, select=True),
+        'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
         'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
