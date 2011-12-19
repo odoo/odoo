@@ -969,6 +969,25 @@ openerp.point_of_sale = function(db) {
             remaining = remainingAmount > 0 ? 0 : (-remainingAmount).toFixed(2);
             $('#payment-remaining').html(remaining);
         },
+        setNumpadState: function(numpadState) {
+        	if (this.numpadState) {
+        		this.numpadState.unbind('setValue', this.setValue);
+        		this.numpadState.unbind('change:mode', this.setNumpadMode);
+        	}
+        	this.numpadState = numpadState;
+        	if (this.numpadState) {
+        		this.numpadState.bind('setValue', this.setValue, this);
+        		this.numpadState.bind('change:mode', this.setNumpadMode, this);
+        		this.numpadState.reset();
+        		this.setNumpadMode();
+        	}
+        },
+    	setNumpadMode: function() {
+    		this.numpadState.set({mode: 'payment'});
+    	},
+        setValue: function(val) {
+        	this.currentPaymentLines.last().set({amount: val});
+        },
     });
     var ReceiptWidget = db.web.Widget.extend({
         init: function(parent, options) {
@@ -1121,10 +1140,11 @@ openerp.point_of_sale = function(db) {
         changedStep: function() {
         	var step = this.currentOrder.get('step');
         	this.orderView.setNumpadState(null);
+        	this.paymentView.setNumpadState(null);
         	if (step === 'products') {
         		this.orderView.setNumpadState(this.numpadView.state);
         	} else if (step === 'payment') {
-        		//todo
+        		this.paymentView.setNumpadState(this.numpadView.state);
         	}
         },
     });
