@@ -1200,7 +1200,7 @@ label.error {
     color: #1f1f1f;
 }
 
-.openerp input[type="text"].field_email {
+.openerp input[type="text"].field_email, .openerp input[type="text"].field_url  {
     border-right:none;
     -webkit-border-top-right-radius: 0px;
     -webkit-border-bottom-right-radius: 0px;
@@ -1209,7 +1209,7 @@ label.error {
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
-.openerp .mail_button {
+.openerp .mail_button, .openerp .url_button {
     -webkit-border-top-left-radius: 0px;
     -webkit-border-bottom-left-radius: 0px;
     -moz-border-radius-topleft: 0px;
@@ -1648,8 +1648,9 @@ label.error {
 }
 
 .openerp .oe-m2o {
-    padding-right: 20px;
+    padding-right: 22px;
     white-space: nowrap;
+    height:22px;
 }
 
 .openerp .oe_forms .oe-m2o input[type="text"] {
@@ -1684,17 +1685,19 @@ label.error {
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     background-color:#eee;
-    background: #e3e3e3, none;
-    background: none, -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
-    background: none, -webkit-linear-gradient(#f6f6f6, #e3e3e3);
-    background: none, -moz-linear-gradient(#f6f6f6, #e3e3e3);
-    background: none, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
-    background: none, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    background: url("/web/static/src/img/icons/STOCK_JUMP_TO.png") no-repeat scroll center center, -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    background: url("/web/static/src/img/icons/STOCK_JUMP_TO.png") no-repeat scroll center center, -webkit-linear-gradient(#f6f6f6, #e3e3e3);
+    background: url("/web/static/src/img/icons/STOCK_JUMP_TO.png") no-repeat scroll center center, -moz-linear-gradient(#f6f6f6, #e3e3e3);
+    background: url("/web/static/src/img/icons/STOCK_JUMP_TO.png") no-repeat scroll center center, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
+    background: url("/web/static/src/img/icons/STOCK_JUMP_TO.png") no-repeat scroll center center, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    vertical-align:top;
     margin:0;
     padding:0 0 2px 0;
+    width: 22px;
+    height: 22px;
 }
 .openerp .oe-m2o-cm-button img {
-    padding:2px 2px 0px 2px;
+    padding:2px 2px 0px 2px; 
 }
 .openerp .oe-m2o-disabled-cm {
     color: grey;

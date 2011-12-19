@@ -930,7 +930,7 @@
             <t t-call="FieldChar"/>
         </td>
         <td width="16">
-            <button type="button" class="button" title="Open this resource">
+            <button type="button" class="button url_button" title="Open this resource">
                 <img t-att-src='_s + "/web/static/src/img/icons/gtk-ok.png"'/>
             </button>
         </td>
@@ -972,8 +972,7 @@
                 t-att-id="widget.element_id"/>
         <span class="oe-m2o-drop-down-button">
             <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
-        <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
-            <img t-att-src='_s + "/web/static/src/img/icons/STOCK_JUMP_TO.png"'/></span>
+        <button class="oe-m2o-cm-button" t-att-id="widget.name + '_open'"></button>
         <div t-att-id="widget.cm_id" class="contextMenu" style="display:none">
         </div>
     </div>
