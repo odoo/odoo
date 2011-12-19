@@ -120,7 +120,7 @@
                     <field name="number"/>
                     <field name="partner_id" groups="base.group_user"/>
                     <field name="reference" invisible="1"/>
-                    <field name="name"/>
+                    <field name="name" invisible="1"/>
                     <field name="journal_id" invisible="1"/>
                     <field name="period_id" invisible="1" groups="account.group_account_user"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -269,15 +269,13 @@
                     <newline/>
                     <field name="date_invoice"/>
                     <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_account_user" widget="selection"/>
-                    <group colspan="2" col="1" groups="account.group_account_user">
-                        <label align="0.0" string="(keep empty to use the current period)"/>
-                    </group>
+                    <field name="payment_term" widget="selection"/>
+                    <newline/>
+                    <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]" name="account_id" groups="account.group_account_user"/>
+                    <field name="name" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">
-                            <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]" name="account_id" groups="account.group_account_user"/>
-                            <field name="name"/>
-                            <field name="payment_term" widget="selection"/>
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}"/>
                             <group col="1" colspan="2">
                                 <field name="tax_line" nolabel="1">
