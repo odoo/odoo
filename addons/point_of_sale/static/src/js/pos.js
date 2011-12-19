@@ -877,29 +877,32 @@ openerp.point_of_sale = function(db) {
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
-            this.model.bind('change', this.render_element, this);
-        },
-        start: function () {
-            this.$element.addClass('paymentline');
-            $('input', this.$element).keyup(_.bind(this.changeAmount, this));
-            $('.delete-payment-line', this.$element).click(this.on_delete);
+            this.model.bind('change', this.changedAmount, this);
         },
         on_delete: function() {},
         changeAmount: function(event) {
             var newAmount;
             newAmount = event.currentTarget.value;
             if (newAmount && !isNaN(newAmount)) {
-                return this.model.set({
-                    amount: parseFloat(newAmount)
+            	this.amount = parseFloat(newAmount);
+                this.model.set({
+                    amount: this.amount,
                 });
             }
         },
+        changedAmount: function() {
+        	if (this.amount !== this.model.get('amount'))
+        		this.render_element();
+        },
         render_element: function() {
+        	this.amount = this.model.get('amount');
             this.$element.html(this.template_fct({
                 name: (this.model.get('journal_id'))[1],
-                amount: this.model.get('amount')
+                amount: this.amount,
             }));
-            return this;
+            this.$element.addClass('paymentline');
+            $('input', this.$element).keyup(_.bind(this.changeAmount, this));
+            $('.delete-payment-line', this.$element).click(this.on_delete);
         },
     });
     var PaymentWidget = db.web.Widget.extend({
