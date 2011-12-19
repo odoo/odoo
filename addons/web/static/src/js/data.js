@@ -689,7 +689,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
         this.on_change();
         var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({result: true});}, 0);
+        $.async_when().then(function () {to_return.resolve({result: true});});
         return to_return.promise();
     },
     reset_ids: function(ids) {
@@ -788,7 +788,7 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
         } else {
             console.warn("trying to create a record using default proxy dataset behavior");
             var to_return = $.Deferred().then(callback);
-            setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
+            $.async_when().then(function () {to_return.resolve({"result": undefined});});
             return to_return.promise();
         }
     },
@@ -800,7 +800,7 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
         } else {
             console.warn("trying to write a record using default proxy dataset behavior");
             var to_return = $.Deferred().then(callback);
-            setTimeout(function () {to_return.resolve({"result": true});}, 0);
+            $.async_when().then(function () {to_return.resolve({"result": true});});
             return to_return.promise();
         }
     },
@@ -809,7 +809,7 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
         this.on_unlink(ids);
         console.warn("trying to unlink a record using default proxy dataset behavior");
         var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({"result": true});}, 0);
+        $.async_when().then(function () {to_return.resolve({"result": true});});
         return to_return.promise();
     },
     on_unlink: function(ids) {}

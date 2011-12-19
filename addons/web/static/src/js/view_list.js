@@ -1276,7 +1276,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
         var options = { offset: page * limit, limit: limit };
         //TODO xmo: investigate why we need to put the setTimeout
-        setTimeout(function() {dataset.read_slice(fields, options , function (records) {
+        $.async_when().then(function() {dataset.read_slice(fields, options , function (records) {
             // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
             if (self.records.length) {
                 self.records.reset(null, {silent: true});
@@ -1299,7 +1299,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             self.records.add(records, {silent: true});
             list.render();
             d.resolve(list);
-        });}, 0);
+        });});
         return d.promise();
     },
     setup_resequence_rows: function (list, dataset) {
@@ -1341,9 +1341,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     //        Accounting > Taxes > Taxes, child tax accounts)
                     //        when synchronous (without setTimeout)
                     (function (dataset, id, seq) {
-                        setTimeout(function () {
+                        $.async_when().then(function () {
                             dataset.write(id, {sequence: seq});
-                        }, 0);
+                        });
                     }(dataset, record.get('id'), seq));
                     record.set('sequence', seq);
                 }

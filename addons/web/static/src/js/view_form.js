@@ -60,7 +60,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         if (this.embedded_view) {
             var def = $.Deferred().then(this.on_loaded);
             var self = this;
-            setTimeout(function() {def.resolve(self.embedded_view);}, 0);
+            $.async_when().then(function() {def.resolve(self.embedded_view);});
             return def.promise();
         } else {
             var context = new openerp.web.CompoundContext(this.dataset.get_context());
@@ -1734,7 +1734,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                         return true;
                     }, menuStyle: {width: "200px"}
                 });
-                setTimeout(function() {self.$menu_btn.trigger(e);}, 0);
+                $.async_when().then(function() {self.$menu_btn.trigger(e);});
             });
         });
         var ctx_callback = function(e) {init_context_menu_def.resolve(e); e.preventDefault()};
@@ -1918,7 +1918,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 real_set_value(data[0]);
             }).fail(function() {self.tmp_value = undefined;});
         } else {
-            setTimeout(function() {real_set_value(value);}, 0);
+            $.async_when().then(function() {real_set_value(value);});
         }
     },
     get_value: function() {
@@ -2110,13 +2110,13 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.viewmanager.on_mode_switch.add_first(function(n_mode, b, c, d, e) {
             $.when(self.save_any_view()).then(function() {
                 if(n_mode === "list")
-                    setTimeout(function() {self.reload_current_view();}, 0);
+                    $.async_when().then(function() {self.reload_current_view();});
             });
         });
         this.is_setted.then(function() {
-            setTimeout(function () {
+            $.async_when().then(function () {
                 self.viewmanager.appendTo(self.$element);
-            }, 0);
+            });
         });
         return def;
     },
@@ -2402,9 +2402,9 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
             self.initial_is_loaded.resolve();
             loaded.resolve();
         });
-        setTimeout(function () {
+        $.async_when().then(function () {
             self.list_view.appendTo($("#" + self.list_id));
-        }, 0);
+        });
         return loaded;
     },
     reload_content: function() {
