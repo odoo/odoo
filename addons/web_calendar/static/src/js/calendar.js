@@ -423,6 +423,11 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
         this.form.appendTo(this.$element);
         this.form.on_created.add_last(this.on_form_dialog_saved);
         this.form.on_saved.add_last(this.on_form_dialog_saved);
+        
+        var self = this;
+        this.form.on_button_cancel.add_last(function() {
+            self.close();
+        });
     },
     on_form_dialog_saved: function() {
         var id = this.dataset.ids[this.dataset.index];
