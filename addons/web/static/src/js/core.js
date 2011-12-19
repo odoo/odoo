@@ -643,11 +643,12 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 ];
                 return $.when(
                     self.rpc('/web/webclient/csslist', {mods: modules}, self.do_load_css),
-                    self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb),
-                    self.rpc('/web/webclient/jslist', {mods: modules}).pipe(function(files) {
+                    self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb)
+                ).pipe(function() {
+                    return self.rpc('/web/webclient/jslist', {mods: modules}).pipe(function(files) {
                         return self.do_load_js(file_list.concat(files)); 
-                    })
-                ).then(function() {
+                    });
+                }).then(function() {
                     self.ready.resolve();
                 });
             });
