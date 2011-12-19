@@ -1216,7 +1216,12 @@ label.error {
     -moz-border-radius-bottomleft: 0px;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
-}   
+    margin-right:-1px;
+}
+
+.openerp .mail_button img, .openerp .url_button img {
+    vertical-align:top;
+}
 /* vertically recentering filter management select tag */
 .openerp select.oe_search-view-filters-management { 
     margin-top:2px;
@@ -1676,8 +1681,14 @@ label.error {
     margin-right: 0px !important;
     padding-bottom: 2px !important;
 }
-.openerp .oe-m2o-cm-button {
+.openerp .oe-m2o-cm-button, .openerp .oe-m2o-cm-button:active, .openerp .oe-m2o-cm-button:hover {
     border: 1px solid #999;
+    -webkit-border-top-left-radius: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+    -moz-border-radius-bottomleft: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
     -webkit-border-top-right-radius: 3px;
     -webkit-border-bottom-right-radius: 3px;
     -moz-border-radius-topright: 3px;
@@ -1695,9 +1706,6 @@ label.error {
     padding:0 0 2px 0;
     width: 22px;
     height: 22px;
-}
-.openerp .oe-m2o-cm-button img {
-    padding:2px 2px 0px 2px; 
 }
 .openerp .oe-m2o-disabled-cm {
     color: grey;
