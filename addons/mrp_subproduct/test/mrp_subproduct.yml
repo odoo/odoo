@@ -30,21 +30,21 @@
 -
   I confirm the production order.
 -
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo0}
+  !python {model: mrp.production}: |
+    self.action_confirm(cr, uid, [ref('mrp_production_mo0')])
 -
   I check production order state.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref('mrp_production_mo0'))
-    assert order.state == 'confirm' or 'ready', 'Production order state should be in confirm or ready state.'
+    assert order.state == 'confirmed','Production order state should be in confirm state.'
 -
   Now I check the stock moves for the subproduct I created in the bill of material.
   This move is created automatically when I confirmed the production order.
 -
   !python {model: stock.move}: |
     move_id = self.search(cr, uid, [('product_id','=',ref('product.product_product_woodentable0'))])
-    #assert move_id, 'No moves are created !'
-
+    assert move_id, 'No moves are created !'
 -
   I want to start the production so I force the reservation of products.
 -
@@ -58,7 +58,7 @@
 -
   !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo0}
 -
-  I consume and produce the Production of products.
+  I consume and produce the production of products.
 -
   I create record for selecting mode and quantity of products to produce.
 -
@@ -73,7 +73,7 @@
       False, "search_default_Current": 1, "active_model": "mrp.production", "active_ids":
       [ref("mrp_production_mo0")], "active_id": ref("mrp_production_mo0"), })
 -
-  I see that stock moves of Wood and Nails including Wooden Table are done now.
+  I see that stock moves of Cabinet including Wooden Table are done now.
 -
   !python {model: stock.move}: |
     move_ids = self.search(cr, uid, [('product_id','in',[ref("product.product_product_arm"),ref("product.product_product_sidepanel0")])])
