@@ -1,4 +1,8 @@
+
+
 //xmlrpc request handler for list of search object exist in database or not.
+
+
 var DocumentTypeHandler = {
     onResult: function(client, context, result) {
         netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
@@ -43,6 +47,7 @@ function getDocumentType(){
     var strmethod = get_rpc_string(xmlRpcClient, 'document_type');
     xmlRpcClient.asyncCall(DocumentTypeHandler,null,'execute',[strDbName,struid,strpass,strobj,strmethod], 5);
 }
+
 
 /**
  * Return the current operation :
@@ -141,7 +146,7 @@ var pushHandler = {
         var message = result.QueryInterface(Components.interfaces.nsISupportsCString);
         log_message(message)
         alert(message)
-	    window.close("chrome://openerp_plugin/content/push.xul", "", "chrome");
+
     },
     
     onFault: function (client, ctxt, fault) {
@@ -155,6 +160,7 @@ var pushHandler = {
 
 
 function push() {
+    window.close();
 	var model_name = document.getElementById('menu_model_list').selectedItem.value;
 	var res_id = 0;
 	if(getOperation() == "add") {
