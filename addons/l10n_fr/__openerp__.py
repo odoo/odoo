@@ -37,7 +37,7 @@ This is the module to manage the accounting chart for France in OpenERP.
 
 Credits: Sistheo Zeekom CrysaLEAD
 """,
-    "depends" : ['base', 'account', 'account_chart', 'base_vat', 'l10n_fr_rib'],
+    "depends" : ['base_iban', 'account', 'account_chart', 'base_vat', 'l10n_fr_rib'],
     "init_xml" : [],
     "update_xml" : [
         "fr_report_demo.xml",
