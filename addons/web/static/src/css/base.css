@@ -88,12 +88,6 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
 .openerp .login {
     display: none;
 }
-.openerp .login form {
-    float: left;
-    width: 420px;
-    margin-left: 40px;
-    margin-bottom: 60px;
-}
 .openerp .login fieldset {
     padding-bottom: 5px;
     min-width: 100px;
@@ -133,19 +127,27 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
 }
 .openerp .login .login_error_message {
     display: none;
-    background-color: #9A0404;
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    color: white;
+    background-color: #b41616;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    filter: alpha(opacity=95);
+    -khtml-opacity: 0.95;
+    -moz-opacity: 0.95;
+    color: #eee;
     font-size: 16px;
-    font-weight: bold;
-    padding: 5px;
-    margin-top: 5px;
+    padding: 8px 12px;
+    margin-top: 15px;
+    text-align: center;
+}
+.openerp .login .login_invalid {
     text-align: center;
 }
 .openerp .login .login_invalid .login_error_message {
-    display: block;
+    display: inline-block;
 }
 
 .openerp.login-mode .login-container {
@@ -157,6 +159,8 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
 .openerp.login-mode .menu,
 .openerp.login-mode .secondary_menu,
 .openerp.login-mode .oe-application,
+.openerp.login-mode .oe_footer,
+.openerp.login-mode .header,
 .openerp.login-mode .db_options_row {
     display: none;
 }
@@ -1840,4 +1844,155 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     color: #aaaaaa !important;
     cursor: default;
     text-shadow: 0 1px 1px white !important;
+}
+
+/* Login page */
+
+#oe_login {
+    padding: 0;
+    margin: 0;
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
+    background: url("/web/static/src/img/pattern.png") repeat;
+    color: #eee;
+    font-size: 14px;
+    height: 100%;
+}
+
+#oe_login ul, ol {
+    padding: 0;
+    margin: 0;
+}
+
+#oe_login li {
+    list-style-type: none;
+    padding-bottom: 4px;
+}
+
+#oe_login a {
+    color: #eee;
+    text-decoration: none;
+}
+
+#oe_login button {
+    float: right;
+    display: inline-block;
+    cursor: pointer;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
+    border: 1px solid #222222;
+    color: white;
+    margin: 0;
+    background: #600606;
+    background: -moz-linear-gradient(#b92020, #600606);
+    background: -webkit-gradient(linear, left top, left bottom, from(#b92020), to(#600606));
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(155, 155, 155, 0.4) inset;
+    -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+}
+
+#oe_login input, #oe_login select {
+    width: 250px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    padding: 5px 6px;
+    border: 1px solid #999999;
+    background: whitesmoke;
+    -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    -box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+#oe_login .dbpane {
+    position: fixed;
+    top: 0;
+    right: 8px;
+    padding: 6px 12px 0px;
+    color: #eee;
+    border: solid 1px #333;
+    background: #101010;
+    filter: alpha(opacity=95);
+    -khtml-opacity: 0.95;
+    -moz-opacity: 0.95;
+    opacity: 0.95;
+    -moz-border-radius: 0 0 8px 8px;
+    -webkit-border-radius: 0 0 8px 8px;
+    border-radius: 0 0 8px 8px;
+}
+
+#oe_login .bottom {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-shadow: 0 1px 1px #999999;
+    background: #600606;
+    background: -moz-linear-gradient(#b41616, #600606);
+    background: -webkit-gradient(linear, left top, left bottom, from(#b41616), to(#600606));
+}
+
+#oe_login .pane {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -160px -166px;
+    border: solid 1px #333333;
+    background: #101010;
+    padding: 20px 32px;
+    text-align: left;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    -moz-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+    -webkit-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+    -box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+    filter: alpha(opacity=95);
+    -khtml-opacity: 0.95;
+    -moz-opacity: 0.95;
+    opacity: 0.95;
+}
+
+#oe_login .pane h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+#oe_login #logo {
+    position: absolute;
+    top: -70px;
+    left: 0;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#oe_login .footer {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+#oe_login .footer a {
+    font-size: 13px;
+    margin: 0 8px;
+}
+
+#oe_login .footer a:hover {
+    text-decoration: underline;
+}
+
+#oe_login .openerp {
+    font-weight: bold;
+    font-family: serif;
+    font-size: 16px;
 }
