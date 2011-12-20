@@ -19,6 +19,16 @@
 #
 ##############################################################################
 
+import logging
+import math
+from decimal import Decimal, ROUND_HALF_UP
+
+# When a number crosses this threshold, significant decimal
+# digits may be lost when trying to render the float value, due to
+# Python's float implementation.
+# e.g. str(10060000.45556) == '10060000.4556' => lost 1 digit!
+SIGNIFICANT_DIGITS_SCALE_LIMIT = math.log(10**12, 2) # 10**12 ~= 2**39.86
+
 def _float_check_precision(precision_digits=None, precision_rounding=None):
     assert (precision_digits is not None or precision_rounding is not None) and \
         not (precision_digits and precision_rounding),\
@@ -51,10 +61,39 @@ def float_round(value, precision_digits=None, precision_rounding=None):
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
                                              precision_rounding=precision_rounding)
-    if rounding_factor == 0: return 0.0
-
-    # Then round to integer wrt. rounding factor
-    return round(value / rounding_factor) * rounding_factor
+    if rounding_factor == 0 or value == 0: return 0.0
+    # scale up by rounding_factor, in order to implement rounding to arbitrary
+    # `units` or 'rounding_factors'.
+    # Example: if rounding_factor is 0.5, 1.3 should round to 1.5
+    # So we'll do this:  scaled_value = 1.3 / 0.5 = 2.6
+    #                    int_rounded = round(2.6) = 3
+    #                    result = 3 * 0.5 = 1.5  
+    # Also, .5 is a binary fraction, so this automatically solves some tricky
+    # cases when rounding_factor is a negative power of 10. E.g 2.6745 is
+    # difficult to round to 0.001 because it does not have an exact IEEE754
+    # representation, but  2674.5 is simple to round to 2675 because both
+    # are exactly represented.
+    scaled_value = value / rounding_factor
+    # Despite the advantage of rounding to .5 binary fractions, we still need
+    # to add a small epsilon value to take care of cases where the float repr
+    # is slightly too far below .5 to properly round *up* automatically.
+    # That epsilon needs to be scaled according to the order of magnitude of
+    # the value. (Credit: discussed with several community members on bug 882036)
+    epsilon_scale = math.log(abs(scaled_value), 2)
+    frac_part, _ = math.modf(scaled_value)
+    if frac_part and epsilon_scale > SIGNIFICANT_DIGITS_SCALE_LIMIT:
+        print 'Float rounding of %r to %r precision requires too many '\
+                     'significant digits, a loss of precision may occur in the '\
+                     'least significant digits' % (value,rounding_factor) 
+        logging.getLogger('float_utils')\
+            .warning('Float rounding of %r to %r precision requires too many '
+                     'significant digits, a loss of precision may occur in the '
+                     'least significant digits', value, rounding_factor)
+    epsilon = 2**(epsilon_scale-50)
+    scaled_value += cmp(scaled_value,0) * epsilon
+    rounded_value = round(scaled_value)
+    result = rounded_value * rounding_factor
+    return result
 
 def float_is_zero(value, precision_digits=None, precision_rounding=None):
     """Returns true if ``value`` is small enough to be treated as
@@ -115,3 +154,43 @@ def float_compare(value1, value2, precision_digits=None, precision_rounding=None
     delta = value1 - value2
     if float_is_zero(delta, precision_rounding=rounding_factor): return 0
     return -1 if delta < 0.0 else 1
+
+
+
+
+
+if __name__ == "__main__":
+
+    import time
+    start = time.time()
+    count = 0
+    errors = 0
+
+    def try_round(amount, expected, precision_digits=3):
+        global count, errors; count += 1
+        result = float_round(amount, precision_digits=precision_digits)
+        if str(result) != expected:
+            errors += 1
+            print '###!!! Rounding error: got %s or %s, expected %s' % (str(result), repr(result), expected)
+
+    # Extended float range test, inspired by Cloves Almeida's test on bug #882036.
+    fractions = [.0, .015, .01499, .675, .67499, .4555, .4555, .45555]
+    expecteds = ['.0', '.02', '.01', '.68', '.67', '.46', '.456', '.4556']
+    precisions = [2, 2, 2, 2, 2, 2, 3, 4]
+    for magnitude in range(5):
+        for i in xrange(len(fractions)):
+            frac, exp, prec = fractions[i], expecteds[i], precisions[i]
+            for sign in [-1,1]:
+                for x in xrange(0,10000,17):
+                    n = x * 10**magnitude
+                    f = sign * (n + frac)
+                    f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp 
+                    try_round(f, f_exp, precision_digits=prec)
+
+    stop = time.time()
+
+    # Micro-bench results:
+    # 47130 round calls in 0.422306060791 secs, with Python 2.6.7 on Core i3 x64
+    # with decimal:
+    # 47130 round calls in 6.612248100021 secs, with Python 2.6.7 on Core i3 x64
+    print count, " round calls, ", errors, "errors, done in ", (stop-start), 'secs'

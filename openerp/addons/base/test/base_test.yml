@@ -205,10 +205,27 @@
         try_round(-2.6744, '-2.674')
         try_round(0.0004, '0.0')
         try_round(-0.0004, '-0.0')
-        #try_round(357.4555, '357.456')
-        #try_round(-357.4555, '-357.456')
+        try_round(357.4555, '357.456')
+        try_round(-357.4555, '-357.456')
         try_round(457.4554, '457.455')
         try_round(-457.4554, '-457.455')
+
+        # Extended float range test, inspired by Cloves Almeida's test on bug #882036.
+        fractions = [.0, .015, .01499, .675, .67499, .4555, .4555, .45555]
+        expecteds = ['.0', '.02', '.01', '.68', '.67', '.46', '.456', '.4556']
+        precisions = [2, 2, 2, 2, 2, 2, 3, 4]
+        # We can't go higher than 12 significant digits with a fractional part, so
+        # that means max magnitude = 5 with precision 4 if sample values (x) go up to 10000
+        # because that gives 5 + 4 + 4 = 13 significant digits.
+        for magnitude in range(5):
+            for i in xrange(len(fractions)):
+                frac, exp, prec = fractions[i], expecteds[i], precisions[i]
+                for sign in [-1,1]:
+                    for x in xrange(0,10000,34):
+                        n = x * 10**magnitude
+                        f = sign * (n + frac)
+                        f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp 
+                        try_round(f, f_exp, precision_digits=prec)
 
 
         def try_zero(amount, expected, float_is_zero=float_is_zero):
