@@ -647,7 +647,7 @@ openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
     on_attachment_delete: function(e) {
         var self = this, $e = $(e.currentTarget);
         var name = _.str.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
-        if (confirm(_.sprintf(_t("Do you really want to delete the attachment %s?"), name))) {
+        if (confirm(_.str.sprintf(_t("Do you really want to delete the attachment %s?"), name))) {
             this.rpc('/web/dataset/unlink', {
                 model: 'ir.attachment',
                 ids: [parseInt($e.attr('data-id'))]
