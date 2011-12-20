@@ -1922,7 +1922,8 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             self._change_int_ext_value(rval);
         };
         if (value && !(value instanceof Array)) {
-            var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
+            // name_get in a m2o does not use the context of the field
+            var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
             dataset.name_get([value], function(data) {
                 real_set_value(data[0]);
             }).fail(function() {self.tmp_value = undefined;});
