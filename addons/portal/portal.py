@@ -99,7 +99,6 @@ class portal(osv.osv):
         """ create a parent menu for the given portals """
         menu_obj = self.pool.get('ir.ui.menu')
         ir_data = self.pool.get('ir.model.data')
-        ir_value = self.pool.get('ir.values')
         menu_root = self._res_xml_id(cr, uid, 'portal', 'portal_menu')
         for p in self.browse(cr, uid, ids, context):
             # create a menuitem under 'portal.portal_menu'
@@ -111,12 +110,13 @@ class portal(osv.osv):
             menu_id = menu_obj.create(cr, uid, menu_values, context)
             # set the parent_menu_id to item_id
             self.write(cr, uid, [p.id], {'parent_menu_id': menu_id}, context)
+            menu_values.pop('parent_id')
+            menu_values.pop('groups_id')
             menu_values.update({'model': 'ir.ui.menu',
                          'module': 'portal',
                          'res_id': menu_id,
                          'noupdate': 'True'})
             data_id = ir_data.create(cr, uid, menu_values, context)
-            value_id = ir_value.create(cr, uid, menu_values, context)
         return True
 
     def _assign_menu(self, cr, uid, ids, context=None):
