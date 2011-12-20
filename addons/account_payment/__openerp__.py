@@ -54,8 +54,6 @@ This module provides :
              'test/account_payment_demo.yml',
              'test/draft2cancel_payment_order.yml',
              'test/draft2done_payment_order.yml',
-             'test/account_payment_order_wiz.yml',
-             'test/draft2valid_bank_statement.yml',
              'test/account_payment_report.yml'
     ],
     'installable': True,
