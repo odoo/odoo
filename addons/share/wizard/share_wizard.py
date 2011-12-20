@@ -95,10 +95,13 @@ class share_wizard(osv.osv_memory):
         # NOTE: take _ids in parameter to allow usage through browse_record objects
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
         if base_url:
-            base_url += '/?db=%(dbname)s&login=%(login)s'
+            base_url += '/web/webclient/login?db=%(dbname)s&login=%(login)s'
             extra = context and context.get('share_url_template_extra_arguments')
             if extra:
                 base_url += '&' + '&'.join('%s=%%(%s)s' % (x,x) for x in extra)
+            hash_ = context and context.get('share_url_template_hash_arguments')
+            if hash_:
+                base_url += '#' + '&'.join('%s=%%(%s)s' % (x,x) for x in hash_)
         return base_url
 
     def _share_root_url(self, cr, uid, ids, _fieldname, _args, context=None):
@@ -156,9 +159,10 @@ class share_wizard(osv.osv_memory):
         result = dict.fromkeys(ids, '')
         for this in self.browse(cr, uid, ids, context=context):
             if this.result_line_ids:
-                ctx = dict(context, share_url_template_extra_arguments=['key'])
+                ctx = dict(context, share_url_template_extra_arguments=['key'],
+                                    share_url_template_hash_arguments=['action_id'])
                 user = this.result_line_ids[0]
-                data = dict(dbname=cr.dbname, login=user.login, key=user.password)
+                data = dict(dbname=cr.dbname, login=user.login, key=user.password, action_id=this.action_id.id)
                 result[this.id] = this.share_url_template(context=ctx) % data
         return result
 
