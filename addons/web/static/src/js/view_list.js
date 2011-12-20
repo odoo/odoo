@@ -326,7 +326,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         var field_to_column = function (field) {
             var name = field.attrs.name;
             var column = _.extend({id: name, tag: field.tag},
-                    field.attrs, fields[name]);
+                    fields[name], field.attrs);
             // modifiers computer
             if (column.modifiers) {
                 var modifiers = JSON.parse(column.modifiers);
