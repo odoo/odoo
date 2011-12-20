@@ -189,6 +189,7 @@ class module(osv.osv):
         'published_version': fields.char('Published Version', size=64, readonly=True),
 
         'url': fields.char('URL', size=128, readonly=True),
+        'sequence': fields.integer('Sequence'),
         'dependencies_id': fields.one2many('ir.module.module.dependency',
             'module_id', 'Dependencies', readonly=True),
         'state': fields.selection([
@@ -222,11 +223,12 @@ class module(osv.osv):
 
     _defaults = {
         'state': 'uninstalled',
+        'sequence': 100,
         'demo': False,
         'license': 'AGPL-3',
         'complexity': 'normal',
     }
-    _order = 'name'
+    _order = 'sequence,name'
 
     def _name_uniq_msg(self, cr, uid, ids, context=None):
         return _('The name of the module must be unique !')
@@ -250,10 +252,10 @@ class module(osv.osv):
                         _('You try to remove a module that is installed or will be installed'))
             mod_names.append(mod['name'])
         #Removing the entry from ir_model_data
-        ids_meta = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'module_meta_information'), ('module', 'in', mod_names)])
+        #ids_meta = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'module_meta_information'), ('module', 'in', mod_names)])
 
-        if ids_meta:
-            self.pool.get('ir.model.data').unlink(cr, uid, ids_meta, context)
+        #if ids_meta:
+        #    self.pool.get('ir.model.data').unlink(cr, uid, ids_meta, context)
 
         return super(module, self).unlink(cr, uid, ids, context=context)
 
@@ -316,7 +318,20 @@ class module(osv.osv):
         return demo
 
     def button_install(self, cr, uid, ids, context=None):
+        model_obj = self.pool.get('ir.model.data')
         self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+
+        categ = model_obj.get_object(cr, uid, 'base', 'module_category_hidden_links', context=context)
+        todo = []
+        for mod in categ.module_ids:
+            if mod.state=='uninstalled':
+                ok = True
+                for dep in mod.dependencies_id:
+                    ok = ok and (dep.state in ('to install','installed'))
+                if ok:
+                    todo.append(mod.id)
+        if todo:
+            self.button_install(cr, uid, todo, context=context)
         return dict(ACTION_DICT, name=_('Install'))
 
     def button_immediate_install(self, cr, uid, ids, context=None):
@@ -327,7 +342,7 @@ class module(osv.osv):
         :returns: next res.config item to execute
         :rtype: dict[str, object]
         """
-        self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+        self.button_install(cr, uid, ids, context=context)
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 

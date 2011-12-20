@@ -31,23 +31,13 @@
 
 !define PUBLISHER 'OpenERP S.A.'
 
-!ifndef MAJOR_VERSION
-    !define MAJOR_VERSION '6'
+!ifndef VERSION
+    !define VERSION '0'
 !endif
-!ifndef MINOR_VERSION
-    !define MINOR_VERSION '0'
-!endif
-!ifndef REVISION_VERSION
-    !define REVISION_VERSION '0'
-!endif
-!ifndef BUILD_VERSION
-    !define VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION_VERSION}"
-!else
-    !define VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION_VERSION}-${BUILD_VERSION}"
-!endif
+#!define VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION_VERSION}"
 
 !define PRODUCT_NAME "OpenERP Server"
-!define DISPLAY_NAME "${PRODUCT_NAME} ${MAJOR_VERSION}.${MINOR_VERSION}"
+!define DISPLAY_NAME "${PRODUCT_NAME} ${VERSION}"
 
 !define UNINSTALL_REGISTRY_ROOT HKLM
 !define UNINSTALL_REGISTRY_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${DISPLAY_NAME}"
@@ -68,7 +58,7 @@ ShowInstDetails show
 
 XPStyle on
 
-InstallDir "$PROGRAMFILES\OpenERP ${MAJOR_VERSION}.${MINOR_VERSION}\Server"
+InstallDir "$PROGRAMFILES\OpenERP ${VERSION}"
 InstallDirRegKey HKCU "${REGISTRY_KEY}" ""
 
 BrandingText '${PRODUCT_NAME} ${VERSION}'
@@ -104,12 +94,12 @@ Var MUI_TEMP
 Var STARTMENU_FOLDER
 
 !define MUI_ABORTWARNING
-!define MUI_ICON ".\pixmaps\openerp-icon.ico"
+!define MUI_ICON ".\install\openerp-icon.ico"
 
-!define MUI_WELCOMEFINISHPAGE_BITMAP ".\pixmaps\openerp-intro.bmp"
-!define MUI_UNWELCOMEFINISHPAGE_BITMAP ".\pixmaps\openerp-intro.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP ".\install\openerp-intro.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP ".\install\openerp-intro.bmp"
 !define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP ".\pixmaps\openerp-slogan.bmp"
+!define MUI_HEADERIMAGE_BITMAP ".\install\openerp-slogan.bmp"
 !define MUI_HEADERIMAGE_BITMAP_NOSTRETCH
 !define MUI_HEADER_TRANSPARENT_TEXT ""
 
@@ -162,9 +152,9 @@ LangString DESC_FinishPage_Link ${LANG_FRENCH} "Contactez OpenERP pour un Parten
 LangString WARNING_HostNameIsEmpty ${LANG_FRENCH} "L'adresse pour la connection au serveur PostgreSQL est vide"
 LangString WARNING_UserNameIsEmpty ${LANG_FRENCH} "Le nom d'utilisateur pour la connection au serveur PostgreSQL est vide"
 LangString WARNING_PasswordIsEmpty ${LANG_FRENCH} "Le mot de passe pour la connection au serveur PostgreSQL est vide"
-LangString WARNING_PortIsWrong ${LANG_FRENCH} "Le port pour la connection au serveur PostgreSQL est erroné (défaut: 5432)"
+LangString WARNING_PortIsWrong ${LANG_FRENCH} "Le port pour la connection au serveur PostgreSQL est erron? (d?faut: 5432)"
 LangString DESC_PostgreSQLPage ${LANG_FRENCH} "Configurez les informations de connection pour le serveur PostgreSQL"
-LangString DESC_PostgreSQL_Hostname ${LANG_FRENCH} "Hôte"
+LangString DESC_PostgreSQL_Hostname ${LANG_FRENCH} "H?te"
 LangString DESC_PostgreSQL_Port ${LANG_FRENCH} "Port"
 LangString DESC_PostgreSQL_Username ${LANG_FRENCH} "Utilisateur"
 LangString DESC_PostgreSQL_Password ${LANG_FRENCH} "Mot de passe"
@@ -175,7 +165,7 @@ Section -StopService
 SectionEnd
 
 Section OpenERP_Server SectionOpenERP_Server
-    SetOutPath '$INSTDIR'
+    SetOutPath '$INSTDIR\server'
 
     File /r "dist\*"
 
@@ -187,14 +177,16 @@ Section OpenERP_Server SectionOpenERP_Server
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
         ;Create shortcuts
         CreateDirectory "$SMPROGRAMS\$STARTMENU_FOLDER"
-        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\OpenERP Server.lnk" "$INSTDIR\openerp-server.exe"
-        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Start service.lnk" "$INSTDIR\service\start.bat"
-        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Stop service.lnk" "$INSTDIR\service\stop.bat"
-        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Edit config.lnk" "notepad.exe" "$INSTDIR\openerp-server.conf"
-        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\View log.lnk" "notepad.exe" "$INSTDIR\openerp-server.log"
-        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" "$INSTDIR\uninstall.exe"
-        !insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Forum" "http://www.openerp.com/forum"
-        !insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Translation" "https://translations.launchpad.net/openobject"
+;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\OpenERP Server.lnk" "$INSTDIR\openerp-server.exe"
+;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Start service.lnk" "$INSTDIR\service\start.bat"
+;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Stop service.lnk" "$INSTDIR\service\stop.bat"
+;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Edit config.lnk" "notepad.exe" "$INSTDIR\openerp-server.conf"
+;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\View log.lnk" "notepad.exe" "$INSTDIR\openerp-server.log"
+;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\OpenERP.lnk" "start" "http://127.0.0.1:8069/"
+;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" "$INSTDIR\uninstall.exe"
+;        !insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Forum" "http://www.openerp.com/forum"
+;        !insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Translation" "https://translations.launchpad.net/openobject"
+        !insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\OpenERP" "http://127.0.0.1:8069/"
     !insertmacro MUI_STARTMENU_WRITE_END
 
 
@@ -206,13 +198,13 @@ Section OpenERP_Server SectionOpenERP_Server
     FileClose $9
 
 # If there is a previous install of the OpenERP Server, keep the login/password from the config file
-    WriteIniStr "$INSTDIR\openerp-server.conf" "options" "db_host" $TextPostgreSQLHostname
-    WriteIniStr "$INSTDIR\openerp-server.conf" "options" "db_user" $TextPostgreSQLUsername
-    WriteIniStr "$INSTDIR\openerp-server.conf" "options" "db_password" $TextPostgreSQLPassword
-    WriteIniStr "$INSTDIR\openerp-server.conf" "options" "db_port" $TextPostgreSQLPort
-    WriteIniStr "$INSTDIR\openerp-server.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_host" $TextPostgreSQLHostname
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_user" $TextPostgreSQLUsername
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_password" $TextPostgreSQLPassword
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_port" $TextPostgreSQLPort
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
 
-    nsExec::Exec '"$INSTDIR\openerp-server.exe" --stop-after-init --logfile "$INSTDIR\openerp-server.log" -s'
+    nsExec::Exec '"$INSTDIR\server\openerp-server.exe" --stop-after-init --logfile "$INSTDIR\server\openerp-server.log" -s'
     nsExec::Exec '"$INSTDIR\service\OpenERPServerService.exe" -auto -install'
 SectionEnd
 
@@ -225,15 +217,15 @@ Section -Post
     WriteRegExpandStr HKLM "${UNINSTALL_REGISTRY_KEY}" "UninstallString" "$INSTDIR\Uninstall.exe"
     WriteRegExpandStr HKLM "${UNINSTALL_REGISTRY_KEY}" "InstallLocation" "$INSTDIR"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "DisplayName" "${DISPLAY_NAME}"
-    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "DisplayVersion" "${MAJOR_VERSION}.${MINOR_VERSION}"
+    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "DisplayVersion" "${VERSION}"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "Publisher" "${PUBLISHER}"
-    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "Version" "${VERSION}"
-    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "VersionMajor" "${MAJOR_VERSION}.${MINOR_VERSION}"
-    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "VersionMinor" "${REVISION_VERSION}"
-    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "HelpLink" "support@openerp.com"
-    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "HelpTelephone" "+32.81.81.37.00"
-    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "URLInfoAbout" "http://www.openerp.com"
-    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "Contact" "sales@openerp.com"
+;    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "Version" "${VERSION}"
+;    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "VersionMajor" "${MAJOR_VERSION}.${MINOR_VERSION}"
+;    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "VersionMinor" "${REVISION_VERSION}"
+;    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "HelpLink" "support@openerp.com"
+;    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "HelpTelephone" "+32.81.81.37.00"
+;    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "URLInfoAbout" "http://www.openerp.com"
+;    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "Contact" "sales@openerp.com"
     WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "NoModify" "1"
     WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "NoRepair" "1"
     WriteUninstaller "$INSTDIR\Uninstall.exe"

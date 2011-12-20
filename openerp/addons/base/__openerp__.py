@@ -34,6 +34,7 @@
         'base_data.xml',
         'security/base_security.xml',
         'base_menu.xml',
+        'base_module_meta.xml',
         'res/res_security.xml',
         'res/res_config.xml',
         'data/res.country.state.csv'

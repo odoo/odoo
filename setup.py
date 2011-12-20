@@ -38,11 +38,16 @@ def data():
         else:
             d[k]=[v]
     r = d.items()
+    if os.name == 'nt':
+        r.append(("Microsoft.VC90.CRT", glob.glob('C:\Microsoft.VC90.CRT\*.*')))
     return r
 
 def gen_manifest():
     file_list="\n".join(data())
     open('MANIFEST','w').write(file_list)
+
+if os.name == 'nt':
+    sys.path.append("C:\Microsoft.VC90.CRT")
 
 def py2exe_options():
     if os.name == 'nt':
@@ -54,7 +59,7 @@ def py2exe_options():
                     "skip_archive": 1,
                     "optimize": 2,
                     "dist_dir": 'dist',
-                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "email", "encodings", "imaplib", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber" "vobject", "xml", "xml", "xml.dom", "xml.xpath", "yaml", ],
+                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "email", "encodings", "imaplib", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber", "vobject", "xml", "xml.dom", "yaml", ],
                     "excludes" : ["Tkconstants","Tkinter","tcl"],
                 }
             }
