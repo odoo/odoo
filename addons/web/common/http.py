@@ -355,8 +355,10 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                     if stored and isinstance(v, session.OpenERPSession):
                         v.contexts_store.update(stored.contexts_store)
                         v.domains_store.update(stored.domains_store)
-                        jsonp = getattr(v, 'jsonp_requests', {})
-                        jsonp.update(stored.jsonp_requests)
+                        if not hasattr(v, 'jsonp_requests'):
+                            v.jsonp_requests = {}
+                        v.jsonp_requests.update(getattr(
+                            stored, 'jsonp_requests', {}))
 
                 # add missing keys
                 for k, v in in_store.iteritems():
