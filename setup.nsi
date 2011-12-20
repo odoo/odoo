@@ -58,7 +58,7 @@ ShowInstDetails show
 
 XPStyle on
 
-InstallDir "$PROGRAMFILES\OpenERP ${VERSION}\Server"
+InstallDir "$PROGRAMFILES\OpenERP ${VERSION}"
 InstallDirRegKey HKCU "${REGISTRY_KEY}" ""
 
 BrandingText '${PRODUCT_NAME} ${VERSION}'
@@ -165,7 +165,7 @@ Section -StopService
 SectionEnd
 
 Section OpenERP_Server SectionOpenERP_Server
-    SetOutPath '$INSTDIR'
+    SetOutPath '$INSTDIR\server'
 
     File /r "dist\*"
 
@@ -198,13 +198,13 @@ Section OpenERP_Server SectionOpenERP_Server
     FileClose $9
 
 # If there is a previous install of the OpenERP Server, keep the login/password from the config file
-    WriteIniStr "$INSTDIR\openerp-server.conf" "options" "db_host" $TextPostgreSQLHostname
-    WriteIniStr "$INSTDIR\openerp-server.conf" "options" "db_user" $TextPostgreSQLUsername
-    WriteIniStr "$INSTDIR\openerp-server.conf" "options" "db_password" $TextPostgreSQLPassword
-    WriteIniStr "$INSTDIR\openerp-server.conf" "options" "db_port" $TextPostgreSQLPort
-    WriteIniStr "$INSTDIR\openerp-server.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_host" $TextPostgreSQLHostname
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_user" $TextPostgreSQLUsername
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_password" $TextPostgreSQLPassword
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_port" $TextPostgreSQLPort
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
 
-    nsExec::Exec '"$INSTDIR\openerp-server.exe" --stop-after-init --logfile "$INSTDIR\openerp-server.log" -s'
+    nsExec::Exec '"$INSTDIR\server\openerp-server.exe" --stop-after-init --logfile "$INSTDIR\server\openerp-server.log" -s'
     nsExec::Exec '"$INSTDIR\service\OpenERPServerService.exe" -auto -install'
 SectionEnd
 
