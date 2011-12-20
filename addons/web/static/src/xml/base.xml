@@ -918,7 +918,7 @@
 <t t-name="FieldEmail">
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
-        <td width="100%" style="position: relative">
+        <td width="100%">
             <t t-call="FieldChar"/>
         </td>
         <td width="16">
@@ -932,7 +932,7 @@
 <t t-name="FieldUrl">
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
-        <td width="100%" style="position: relative">
+        <td width="100%">
             <t t-call="FieldChar"/>
         </td>
         <td width="16">
@@ -973,15 +973,22 @@
     </select>
 </t>
 <t t-name="FieldMany2One">
-    <div class="oe-m2o">
-        <input type="text" size="1" style="width: 100%;"
-                t-att-id="widget.element_id"/>
-        <span class="oe-m2o-drop-down-button">
-            <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
-        <button class="oe-m2o-cm-button" t-att-id="widget.name + '_open'"></button>
-        <div t-att-id="widget.cm_id" class="contextMenu" style="display:none">
-        </div>
-    </div>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%" valign="top">
+            <t t-call="FieldChar"/>
+            <span class="oe-m2o-drop-down-button">
+                <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
+        </td>
+        <td>
+            <button class="oe_button oe_field_button oe-m2o-cm-button" t-att-id="widget.name + '_open'">
+                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
+            </button>
+            <div t-att-id="widget.cm_id" class="contextMenu" style="display:none">
+            </div>
+        </td>
+    </tr>
+    </table>
 </t>
 <t t-name="FieldMany2One.context_menu">
     <ul>

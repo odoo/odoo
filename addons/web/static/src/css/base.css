@@ -1215,14 +1215,16 @@ label.error {
     color: #1f1f1f;
 }
 
-.openerp input[type="text"].field_binary,
-.openerp input[type="text"].field_email,
-.openerp input[type="text"].field_url  {
-    border-right:none;
+.openerp .oe_forms input.field_many2one,
+.openerp .oe_forms input.field_binary,
+.openerp .oe_forms input.field_binary,
+.openerp .oe_forms input.field_email,
+.openerp .oe_forms input.field_url  {
+    border-right: none;
     -webkit-border-top-right-radius: 0px;
     -webkit-border-bottom-right-radius: 0px;
-    -moz-border-radius-topleft: 0px;
-    -moz-border-radius-bottomleft: 0px;
+    -moz-border-radius-topright: 0px;
+    -moz-border-radius-bottomright: 0px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
@@ -1671,27 +1673,10 @@ label.error {
     border-color: #828282;
 }
 
-.openerp .oe-m2o {
-    padding-right: 22px;
-    white-space: nowrap;
-    height:22px;
-}
-
-.openerp .oe_forms .oe-m2o input[type="text"] {
-    padding-right: 20px;
-    padding-top: 2px;
-    -webkit-border-top-right-radius: 0px;
-    -webkit-border-bottom-right-radius: 0px;
-    -moz-border-radius-topright: 0px;
-    -moz-border-radius-bottomright: 0px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-}
 .openerp .oe-m2o-drop-down-button {
-    margin-left: -23px;
+    margin-left: -24px;
 }
-.openerp .oe-m2o-drop-down-button img,
-.openerp .oe-m2o-cm-button img {
+.openerp .oe-m2o-drop-down-button img {
     margin-bottom: -4px;
     cursor: pointer;
 }
@@ -1699,32 +1684,6 @@ label.error {
     border-right: none;
     margin-right: 0px !important;
     padding-bottom: 2px !important;
-}
-.openerp .oe-m2o-cm-button, .openerp .oe-m2o-cm-button:active, .openerp .oe-m2o-cm-button:hover {
-    border: 1px solid #999;
-    -webkit-border-top-left-radius: 0px;
-    -webkit-border-bottom-left-radius: 0px;
-    -moz-border-radius-topleft: 0px;
-    -moz-border-radius-bottomleft: 0px;
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-    -webkit-border-top-right-radius: 3px;
-    -webkit-border-bottom-right-radius: 3px;
-    -moz-border-radius-topright: 3px;
-    -moz-border-radius-bottomright: 3px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    background-color:#eee;
-    background: url("/web/static/src/img/icons/STOCK_JUMP_TO.png") no-repeat scroll center center, -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
-    background: url("/web/static/src/img/icons/STOCK_JUMP_TO.png") no-repeat scroll center center, -webkit-linear-gradient(#f6f6f6, #e3e3e3);
-    background: url("/web/static/src/img/icons/STOCK_JUMP_TO.png") no-repeat scroll center center, -moz-linear-gradient(#f6f6f6, #e3e3e3);
-    background: url("/web/static/src/img/icons/STOCK_JUMP_TO.png") no-repeat scroll center center, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
-    background: url("/web/static/src/img/icons/STOCK_JUMP_TO.png") no-repeat scroll center center, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
-    vertical-align:top;
-    margin:0;
-    padding:0 0 2px 0;
-    width: 22px;
-    height: 22px;
 }
 .openerp .oe-m2o-disabled-cm {
     color: grey;
