@@ -45,10 +45,10 @@
     ctx = {'active_model':'survey', 'active_id': ref('survey_Initial_partner_feedback'), 'active_ids': [ref('survey_Initial_partner_feedback')]}
     self.fields_view_get(cr, uid, ref("survey.view_survey_question_message"),"form", context=ctx)
     values = self.default_get(cr, uid, ['name'], ctx)
-    ids = self.create(cr, uid, {str(ref("survey_initial_question_company_name")) +"_single" :'Tiny' , str(ref("survey_initial_question_company_size")) + "_selection" : int(ref("survey.survey_initial_question_company_size_51")), }, context)
-    self.action_next(cr, uid, [ids], context)
-    ids = self.create(cr, uid, {str(ref("survey_initial_question_contract_customers")) + "_selection" : int(ref("survey_initial_answer_sometimes")), str(ref("survey_initial_question_sell_to_your_customers")) + "_selection" : int(ref("survey_initial_answer_maintenance_contract")), }, context)
-    self.action_next(cr, uid, [ids], context)
+    id = self.create(cr, uid, {str(ref("survey_initial_question_company_name")) +"_single" :'Tiny' , str(ref("survey_initial_question_company_size")) + "_selection" : int(ref("survey.survey_initial_question_company_size_51")), }, context)
+    self.action_next(cr, uid, [id], context)
+    id = self.create(cr, uid, {str(ref("survey_initial_question_contract_customers")) + "_selection" : int(ref("survey_initial_answer_sometimes")), str(ref("survey_initial_question_sell_to_your_customers")) + "_selection" : int(ref("survey_initial_answer_maintenance_contract")), }, context)
+    self.action_next(cr, uid, [id], context)
 -
   I print the answers of the survey.
 -
@@ -87,13 +87,13 @@
 -
   I set the value in "Total start survey" field.
 -
-  !python {model: survey}: |
-    ids = self.write(cr, uid, ref("survey_Initial_partner_feedback"), {'tot_start_survey' : 1}, context)
+  !record {model: survey, id: survey_Initial_partner_feedback}:
+    tot_start_survey: 1
 -
   I set the survey in Cancel state.
 -
   !python {model: survey}: |
-      sur = self.survey_cancel(cr, uid, [ref("survey_Initial_partner_feedback")], context)
+    self.survey_cancel(cr, uid, [ref("survey_Initial_partner_feedback")], context)
 -
   I check state of survey is cancel or not.
 -
@@ -103,7 +103,7 @@
   I set the survey in close state.
 -
   !python {model: survey}: |
-      sur = self.survey_close(cr, uid, [ref("survey_Initial_partner_feedback")], context)
+    self.survey_close(cr, uid, [ref("survey_Initial_partner_feedback")], context)
 -
   I check state of Survey is close or not.
 -

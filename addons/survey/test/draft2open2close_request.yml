@@ -4,7 +4,9 @@
   !record {model: survey.request, id: survey_request_1}:
     survey_id: survey_Initial_partner_feedback
     user_id: base.user_demo
-    state: draft
+-
+  !assert {model: survey.request, id: survey_request_1, string: Survey Request should be in draft state}:
+    - state == 'draft'
 -
   I set Survey Request for the survey in waiting state.
 -
