@@ -96,6 +96,7 @@ var openPartnerHandler = {
         open_url(res[URL])
         
         
+        
     },
     onFault: function (client, ctxt, fault) {
 		log_message(fault);
