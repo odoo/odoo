@@ -50,9 +50,10 @@
         <field name="arch" type="xml">
             <search string="Recruitment Analysis">
                 <group>
-                    <filter icon="terp-go-year" string="Year"
+                    <filter icon="terp-go-year" string="Year" name="year"
                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
                         help="Recruitment performed in current year"/>
+                    <separator orientation="vertical"/>	
                     <filter icon="terp-go-month" string="Month"
                         name="month"
                         domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
@@ -126,7 +127,7 @@
         <field name="res_model">hr.recruitment.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_department':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_department':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
     <menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="10" groups="base.group_hr_manager,base.group_hr_user"/>

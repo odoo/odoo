@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-    "name" : "Cancel Entries",
+    "name" : "Cancel Journal Entries",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Hidden',
+    "category": 'Accounting & Finance',
     'complexity': "normal",
     "description": """
 Allows cancelling accounting entries.

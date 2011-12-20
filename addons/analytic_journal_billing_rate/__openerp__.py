@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Analytic Journal Billing Rate, Define the default invoicing rate for a specific journal',
+    'name': 'Billing Rates on Contracts',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales Management',
     'description': """
 This module allows you to define what is the default invoicing rate for a specific journal on a given account.
 ==============================================================================================================

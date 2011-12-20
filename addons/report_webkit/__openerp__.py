@@ -84,7 +84,7 @@ TODO
     "version" : "0.9",
     "depends" : ["base"],
     "author" : "Camptocamp",
-    "category": "Hidden", # i.e a technical module, not shown in Application install menu
+    "category": "Reporting", # i.e a technical module, not shown in Application install menu
     "url": "http://http://www.camptocamp.com/",
     "data": [ "security/ir.model.access.csv",
               "data.xml",
@@ -98,3 +98,5 @@ TODO
     "certificate" : "001159699313338995949",
     'images': ['images/companies_webkit.jpeg','images/header_html.jpeg','images/header_img.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

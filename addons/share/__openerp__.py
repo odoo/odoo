@@ -22,11 +22,11 @@
 
 
 {
-    "name" : "Web Share",
+    "name" : "Share any Document",
     "version" : "2.0",
     "depends" : ["base", "mail"],
     "author" : "OpenERP SA",
-    "category": 'Hidden',
+    "category": 'Tools',
     'complexity': "easy",
     "description": """
 This module adds generic sharing tools to your current OpenERP database.
@@ -56,6 +56,9 @@ synchronization with other companies, etc.
     'certificate' : '001301246528927038493',
     'js': ['static/src/js/share.js'],
     'css': ['static/src/css/share.css'],
+    'qweb' : [
+        "static/src/xml/*.xml",
+    ],
     'images': ['images/share_wizard.jpeg','images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
 }
 

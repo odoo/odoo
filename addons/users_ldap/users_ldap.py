@@ -52,7 +52,8 @@ class CompanyLDAP(osv.osv):
             args = []
         cr.execute("""
             SELECT id, company, ldap_server, ldap_server_port, ldap_binddn,
-                   ldap_password, ldap_filter, ldap_base, "user", create_user
+                   ldap_password, ldap_filter, ldap_base, "user", create_user,
+                   ldap_tls
             FROM res_company_ldap
             WHERE ldap_server != '' """ + id_clause + """ ORDER BY sequence
         """, args)
@@ -69,7 +70,11 @@ class CompanyLDAP(osv.osv):
 
         uri = 'ldap://%s:%d' % (conf['ldap_server'],
                                 conf['ldap_server_port'])
-        return ldap.initialize(uri)
+
+        connection = ldap.initialize(uri)
+        if conf['ldap_tls']:
+            connection.start_tls_s()
+        return connection
 
     def authenticate(self, conf, login, password):
         """
@@ -213,6 +218,10 @@ class CompanyLDAP(osv.osv):
             help="Model used for user creation"),
         'create_user': fields.boolean('Create user',
             help="Create the user if not in database"),
+        'ldap_tls': fields.boolean('Use TLS',
+            help="Request secure TLS/SSL encryption when connecting to the LDAP server. "
+                 "This option requires a server with STARTTLS enabled, "
+                 "otherwise all authentication attempts will fail."),
     }
     _defaults = {
         'ldap_server': '127.0.0.1',

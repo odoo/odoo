@@ -151,16 +151,26 @@ class hr_holidays(osv.osv):
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0 !"),
     ]
 
-    def _create_resource_leave(self, cr, uid, vals, context=None):
+    def _create_resource_leave(self, cr, uid, leaves, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
         obj_res_leave = self.pool.get('resource.calendar.leaves')
-        return obj_res_leave.create(cr, uid, vals, context=context)
+        for leave in leaves:
+            vals = {
+                'name': leave.name,
+                'date_from': leave.date_from,
+                'holiday_id': leave.id,
+                'date_to': leave.date_to,
+                'resource_id': leave.employee_id.resource_id.id,
+                'calendar_id': leave.employee_id.resource_id.calendar_id.id
+            }
+            obj_res_leave.create(cr, uid, vals, context=context)
+        return True
 
-    def _remove_resouce_leave(self, cr, uid, ids, context=None):
+    def _remove_resource_leave(self, cr, uid, ids, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays cancel/removed'''
         obj_res_leave = self.pool.get('resource.calendar.leaves')
         leave_ids = obj_res_leave.search(cr, uid, [('holiday_id', 'in', ids)], context=context)
-        return obj_res_leave.unlink(cr, uid, leave_ids)
+        return obj_res_leave.unlink(cr, uid, leave_ids, context=context)
 
     def onchange_type(self, cr, uid, ids, holiday_type):
         result = {'value': {'employee_id': False}}
@@ -252,13 +262,14 @@ class hr_holidays(osv.osv):
                     'name': record.name,
                     'categ_id': record.holiday_status_id.categ_id.id,
                     'duration': record.number_of_days_temp * 8,
-                    'note': record.notes,
+                    'description': record.notes,
                     'user_id': record.user_id.id,
                     'date': record.date_from,
                     'end_date': record.date_to,
                     'date_deadline': record.date_to,
                 }
                 case_id = meeting_obj.create(cr, uid, vals)
+                self._create_resource_leave(cr, uid, [record], context=context)
                 self.write(cr, uid, ids, {'case_id': case_id})
             elif record.holiday_type == 'category':
                 emp_ids = obj_emp.search(cr, uid, [('category_ids', 'child_of', [record.category_id.id])])
@@ -313,6 +324,7 @@ class hr_holidays(osv.osv):
             for request in record.linked_request_ids or []:
                 wf_service.trg_validate(uid, 'hr.holidays', request.id, 'cancel', cr)
 
+        self._remove_resource_leave(cr, uid, ids, context=context)
         return True
 
     def check_holidays(self, cr, uid, ids, context=None):

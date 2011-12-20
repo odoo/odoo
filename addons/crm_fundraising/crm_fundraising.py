@@ -112,3 +112,5 @@ class crm_fundraising(crm.crm_case, osv.osv):
     }
 
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

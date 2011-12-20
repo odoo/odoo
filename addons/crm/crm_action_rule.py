@@ -125,7 +125,7 @@ class base_action_rule(osv.osv):
         """Gets available states for crm"""
         res = super(base_action_rule, self).state_get(cr, uid, context=context)
         return res + crm.AVAILABLE_STATES
-
+    # Dead Code
     def priority_get(self, cr, uid, context=None):
         res = super(base_action_rule, self).priority_get(cr, uid, context=context)
         return res + crm.AVAILABLE_PRIORITIES

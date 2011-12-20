@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Stock No Auto-Picking',
+    'name': 'Picking Before Manufacturing',
     'version': '1.0',
-    'category': 'Hidden',
+    "category" : "Warehouse Management",
     'description': """
 This module allows an intermediate picking process to provide raw materials to production orders.
 =================================================================================================

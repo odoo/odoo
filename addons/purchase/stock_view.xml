@@ -31,7 +31,7 @@
             res_model="stock.picking"
             groups="base.group_extended"
             src_model="purchase.order"
-            context="{'contact_display': 'partner'}" />
+            context="{'default_purchase_id': active_id, 'contact_display': 'partner'}" />
        
         <record id="action_picking_in_tree_view" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -104,15 +104,15 @@
         </record>
  
         <record id="action_picking_tree4_picking_to_invoice" model="ir.actions.act_window">
-            <field name="name">On Incoming Shipments</field>
+            <field name="name">Based on receptions</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','in')]</field>
-            <field name="context">{'contact_display': 'partner_address',"search_default_done":1, "search_default_to_invoice":1}</field>
+            <field name="context">{"default_type": "in", "contact_display": "partner_address", "search_default_done": 1, "search_default_to_invoice": 1}</field>
             <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
-            <field name="help">Create invoice from reception of products. If you selected this invoice control method in the purchase order, all receptions done are available here to be invoiced.</field>
+            <field name="help">If you set the Invoicing Control on a purchase order as "Based on receptions", you can track here all the product receptions and create invoices for those receptions.</field>
        </record>
 
         <menuitem action="action_picking_tree4_picking_to_invoice"

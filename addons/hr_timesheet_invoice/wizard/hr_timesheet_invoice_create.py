@@ -27,43 +27,18 @@ from tools.translate import _
 ## Create an invoice based on selected timesheet lines
 #
 
-#
-# TODO: check unit of measure !!!
-#
-class hr_timesheet_invoice_create(osv.osv_memory):
+class account_analytic_line(osv.osv):
+    _inherit = "account.analytic.line"
 
-    _name = 'hr.timesheet.invoice.create'
-    _description = 'Create invoice from timesheet'
-    _columns = {
-        'date': fields.boolean('Date', help='The real date of each work will be displayed on the invoice'),
-        'time': fields.boolean('Time spent', help='The time of each work done will be displayed on the invoice'),
-        'name': fields.boolean('Description', help='The detail of each work done will be displayed on the invoice'),
-        'price': fields.boolean('Cost', help='The cost of each work done will be displayed on the invoice. You probably don\'t want to check this'),
-        'product': fields.many2one('product.product', 'Product', help='Complete this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost.'),
-    }
-
-    _defaults = {
-         'date': lambda *args: 1,
-         'name': lambda *args: 1
-    }
-
-    def view_init(self, cr, uid, fields, context=None):
-        """
-        This function checks for precondition before wizard executes
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-        """
-        analytic_obj = self.pool.get('account.analytic.line')
-        data = context and context.get('active_ids', [])
-        for analytic in analytic_obj.browse(cr, uid, data, context=context):
-            if analytic.invoice_id:
-                     raise osv.except_osv(_('Warning !'), _("Invoice is already linked to some of the analytic line(s)!"))
-
-    def do_create(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
+    #
+    # data = {
+    #   'date': boolean
+    #   'time': boolean
+    #   'name': boolean
+    #   'price': boolean
+    #   'product': many2one id
+    # }
+    def invoice_cost_create(self, cr, uid, ids, data={}, context=None):
         analytic_account_obj = self.pool.get('account.analytic.account')
         res_partner_obj = self.pool.get('res.partner')
         account_payment_term_obj = self.pool.get('account.payment.term')
@@ -77,11 +52,9 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         invoices = []
         if context is None:
             context = {}
-        result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-        data = self.read(cr, uid, ids, [], context=context)[0]
 
         account_ids = {}
-        for line in self.pool.get('account.analytic.line').browse(cr, uid, context['active_ids'], context=context):
+        for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
             account_ids[line.account_id.id] = True
 
         account_ids = account_ids.keys() #data['accounts']
@@ -127,7 +100,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
                         "AND id IN %s AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id,to_invoice,product_uom_id", (account.id, tuple(context['active_ids']),))
+                    "GROUP BY product_id,to_invoice,product_uom_id", (account.id, tuple(ids),))
 
             for product_id, factor_id, qty, uom in cr.fetchall():
                 product = product_obj.browse(cr, uid, product_id, context2)
@@ -135,7 +108,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     raise osv.except_osv(_('Error'), _('At least one line has no product !'))
                 factor_name = ''
                 factor = invoice_factor_obj.browse(cr, uid, factor_id, context2)
-                if not data['product']:
+                if not data.get('product', False):
                     if factor.customer_name:
                         factor_name = product.name+' - '+factor.customer_name
                     else:
@@ -148,7 +121,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                 ctx.update({'uom':uom})
                 if account.pricelist_id:
                     pl = account.pricelist_id.id
-                    price = pro_price_obj.price_get(cr,uid,[pl], data['product'] or product_id, qty or 1.0, account.partner_id.id, context=ctx)[pl]
+                    price = pro_price_obj.price_get(cr,uid,[pl], data.get('product', False) or product_id, qty or 1.0, account.partner_id.id, context=ctx)[pl]
                 else:
                     price = 0.0
 
@@ -164,7 +137,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     'invoice_line_tax_id': [(6,0,tax )],
                     'invoice_id': last_invoice,
                     'name': factor_name,
-                    'product_id': data['product'] or product_id,
+                    'product_id': data.get('product',product_id),
                     'invoice_line_tax_id': [(6,0,tax)],
                     'uos_id': uom,
                     'account_id': account_id,
@@ -174,37 +147,76 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                 #
                 # Compute for lines
                 #
-                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id IN %s AND product_id=%s and to_invoice=%s ORDER BY account_analytic_line.date", (account.id, tuple(context['active_ids']), product_id, factor_id))
+                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id IN %s AND product_id=%s and to_invoice=%s ORDER BY account_analytic_line.date", (account.id, tuple(ids), product_id, factor_id))
 
                 line_ids = cr.dictfetchall()
                 note = []
                 for line in line_ids:
                     # set invoice_line_note
                     details = []
-                    if data['date']:
+                    if data.get('date', False):
                         details.append(line['date'])
-                    if data['time']:
+                    if data.get('time', False):
                         if line['product_uom_id']:
                             details.append("%s %s" % (line['unit_amount'], product_uom_obj.browse(cr, uid, [line['product_uom_id']],context2)[0].name))
                         else:
                             details.append("%s" % (line['unit_amount'], ))
-                    if data['name']:
+                    if data.get('name', False):
                         details.append(line['name'])
                     note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
 
                 curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '',note))
                 invoice_line_obj.create(cr, uid, curr_line, context=context)
-                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(context['active_ids'])))
+                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
 
             invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
+        return invoices
 
+#
+# TODO: check unit of measure !!!
+#
+
+class hr_timesheet_invoice_create(osv.osv_memory):
+
+    _name = 'hr.timesheet.invoice.create'
+    _description = 'Create invoice from timesheet'
+    _columns = {
+        'date': fields.boolean('Date', help='The real date of each work will be displayed on the invoice'),
+        'time': fields.boolean('Time spent', help='The time of each work done will be displayed on the invoice'),
+        'name': fields.boolean('Description', help='The detail of each work done will be displayed on the invoice'),
+        'price': fields.boolean('Cost', help='The cost of each work done will be displayed on the invoice. You probably don\'t want to check this'),
+        'product': fields.many2one('product.product', 'Product', help='Complete this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost.'),
+    }
+
+    _defaults = {
+         'date': lambda *args: 1,
+         'name': lambda *args: 1
+    }
+
+    def view_init(self, cr, uid, fields, context=None):
+        """
+        This function checks for precondition before wizard executes
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+        """
+        analytic_obj = self.pool.get('account.analytic.line')
+        data = context and context.get('active_ids', [])
+        for analytic in analytic_obj.browse(cr, uid, data, context=context):
+            if analytic.invoice_id:
+                     raise osv.except_osv(_('Warning !'), _("Invoice is already linked to some of the analytic line(s)!"))
+
+    def do_create(self, cr, uid, ids, context=None):
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        invs = self.pool.get('account.analytic.line').invoice_cost_create(cr, uid, context['active_ids'], data, context=context)
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-
         mod_ids = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')], context=context)[0]
         res_id = mod_obj.read(cr, uid, mod_ids, ['res_id'], context=context)['res_id']
         act_win = act_obj.read(cr, uid, res_id, [], context=context)
-        act_win['domain'] = [('id','in',invoices),('type','=','out_invoice')]
+        act_win['domain'] = [('id','in',invs),('type','=','out_invoice')]
         act_win['name'] = _('Invoices')
         return act_win
 

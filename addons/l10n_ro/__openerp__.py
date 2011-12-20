@@ -20,7 +20,7 @@
 #
 ##############################################################################
 {
-    "name" : "Romania - Chart of Accounts",
+    "name" : "Romania - Accounting",
     "version" : "1.1",
     "author" : "filsys",
     "website": "http://www.filsystem.ro",

@@ -22,17 +22,18 @@
 import time
 from osv import fields, osv
 from tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+import decimal_precision as dp
 
 class stock_partial_picking_line(osv.TransientModel):
     _name = "stock.partial.picking.line"
     _rec_name = 'product_id'
     _columns = {
         'product_id' : fields.many2one('product.product', string="Product", required=True, ondelete='CASCADE'),
-        'quantity' : fields.float("Quantity", required=True),
+        'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product UoM'), required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, ondelete='CASCADE'),
         'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot', ondelete='CASCADE'),
-        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete='CASCADE'),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, ondelete='CASCADE'),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete='CASCADE', domain = [('usage','<>','view')]),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, ondelete='CASCADE',domain = [('usage','<>','view')]),
         'move_id' : fields.many2one('stock.move', "Move", ondelete='CASCADE'),
         'wizard_id' : fields.many2one('stock.partial.picking', string="Wizard", ondelete='CASCADE'),
         'update_cost': fields.boolean('Need cost update'),
@@ -88,7 +89,7 @@ class stock_partial_picking(osv.osv_memory):
     def _partial_move_for(self, cr, uid, move):
         partial_move = {
             'product_id' : move.product_id.id,
-            'quantity' : move.state == 'assigned' and move.product_qty or 0,
+            'quantity' : move.state in ('assigned','new') and move.product_qty or 0,
             'product_uom' : move.product_uom.id,
             'prodlot_id' : move.prodlot_id.id,
             'move_id' : move.id,
@@ -121,7 +122,7 @@ class stock_partial_picking(osv.osv_memory):
                                                     'location_dest_id' : move.location_dest_id.id,
                                                     'picking_id': partial.picking_id.id
                                                     },context=context)
-                stock_move.action_done(cr, uid, [move_id], context)
+                stock_move.action_confirm(cr, uid, [move_id], context)
             partial_data['move%s' % (move_id)] = {
                 'product_id': move.product_id.id,
                 'product_qty': move.quantity,

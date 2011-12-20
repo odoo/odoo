@@ -147,7 +147,7 @@
       id = self.create(cr, uid, {'survey_id': ref("survey_partner_0")}) 
       self.action_next(cr, uid, [id], context)
 -
-    Give answer of the first and second page in "Partner Feedback" suvey.
+    Give answer of the first and second page in "Partner Feedback" survey.
 -
     !python {model: survey.question.wiz}: |
       ids = self.create(cr, uid, {str(ref("survey_p_question_0")) +"_single" :'Tiny' , str(ref("survey_p_question_1")) + "_selection" :int(ref("survey_p_1_1"))}, context)

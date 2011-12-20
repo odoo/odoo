@@ -1,8 +1,12 @@
 <openerp>
     <data>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_sale_salesman,base.group_sale_manager"/>
+        <menuitem icon="terp-partner"
+            id="base.menu_base_partner" name="Sales"
+            sequence="0" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
-        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
+        <menuitem id="base.menu_sales" name="Sales"
+            parent="base.menu_base_partner" sequence="1"
+            />
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
 
@@ -80,7 +84,6 @@
                 <tree string="Sales Orders" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
                     <field name="name"/>
                     <field name="date_order"/>
-                    <field name="client_order_ref" groups="base.group_extended"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="picked_rate" widget="progressbar"/>
@@ -109,7 +112,7 @@
                     <notebook colspan="5">
                         <page string="Sales Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_order_id" on_change="onchange_partner_order_id(partner_order_id, partner_invoice_id, partner_shipping_id)"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
@@ -136,7 +139,7 @@
                                             <field name="price_unit"/>
 
                                             <field groups="product.group_uos" name="product_uos_qty"/>
-                                            <field groups="product.group_uos" name="product_uos"/>
+                                            <field groups="product.group_uos" name="product_uos" nolabel="1"/>
                                             <newline/>
                                             <field name="product_packaging"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}" on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)"
@@ -162,7 +165,8 @@
                                             <field name="delay"/>
                                             <field name="th_weight"/>
                                             <field name="address_allotment_id"/>
-                                            <field name="property_ids" colspan="4"/>
+                                            <separator colspan="4" string="Properties"/>
+                                            <field name="property_ids" colspan="4" nolabel="1"/>
                                         </page>
                                         <page string="History" groups="base.group_extended">
                                             <separator colspan="4" string="Invoice Lines"/>
@@ -174,8 +178,10 @@
                                 </form>
                                 <tree string="Sales Order Lines">
                                     <field colspan="4" name="name"/>
-                                    <field name="product_uom_qty" string="Qty"/>
+                                    <field name="product_uom_qty" string="Qty(UoM)"/>
                                     <field name="product_uom" string="UoM"/>
+                                    <field groups="product.group_uos" name="product_uos_qty" string="Qty(UoS)"/>
+                                    <field groups="product.group_uos" name="product_uos" string="UoS"/>
                                     <field name="discount"/>
                                     <field name="price_unit"/>
                                     <field name="price_subtotal"/>
@@ -253,7 +259,8 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sales Order ready to be invoiced"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
+                    <field name="name"
+                        filter_domain="['|', ('name','ilike',self),('client_order_ref','ilike',self)]"/>
                     <field name="partner_id"/>
                     <field name="user_id">
                         <filter domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal"/>
@@ -485,8 +492,8 @@
             src_model="product.product"
             groups="base.group_sale_salesman"/>
 
-        <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5" groups="-base.group_extended"/>
-        <menuitem id="menu_invoicing_sales_order_lines" parent="menu_invoiced" action="action_order_line_tree2" sequence="2" groups="base.group_no_one"/>
+        <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5" groups="-base.group_extended"/>
+        <menuitem id="menu_invoicing_sales_order_lines" parent="base.menu_invoiced" action="action_order_line_tree2" sequence="2" groups="base.group_no_one"/>
 
         <!-- configartion view -->
 

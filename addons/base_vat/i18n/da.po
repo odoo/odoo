@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2009-11-17 08:50+0000\n"
-"Last-Translator: SmartWi <kurt@smartwi.net>\n"
+"PO-Revision-Date: 2011-11-08 10:58+0000\n"
+"Last-Translator: OpenERP Danmark / Mikhael Saxtorph <Unknown>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:05+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-11-10 04:57+0000\n"
+"X-Generator: Launchpad (build 14263)\n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:87
@@ -24,6 +24,8 @@ msgid ""
 "The Vat does not seems to be correct. You should have entered something like "
 "this %s"
 msgstr ""
+"Momsen ser ikke ud til at være korrekt. Der skulle være indtastet noget "
+"svarende til dette %s"
 
 #. module: base_vat
 #: model:ir.module.module,description:base_vat.module_meta_information
@@ -38,22 +40,31 @@ msgid ""
 "countries.\n"
 "    "
 msgstr ""
+"\n"
+"    Aktiverer CVR-nr. (momsnr.) for kontakten. Checker gyldigheden af CVR-"
+"nr. (momsnr.)\n"
+"\n"
+"    Dette modul bruger metoder beskrevet på http://sima-pc.com/nif.php for "
+"at\n"
+"    checke gyldigheden af CVR-nr. (momsnr.) tilknyttet kontakter i EU-"
+"landene.\n"
+"    "
 
 #. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
-msgstr ""
+msgstr "Moms grundlag - Til at checke CVR-nr. (momsnr.)  gyldighed"
 
 #. module: base_vat
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Fejl! Man kan ikke oprette rekursuve associerede medlemmer."
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:88
 #, python-format
 msgid "The VAT is invalid, It should begin with the country code"
-msgstr ""
+msgstr "CVR-nr. (momsnr.) er ugyldigt. Det skal starte med landekode."
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -61,16 +72,18 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
+"Afkryds dette felt, hvis kontakten er momsregistreret. Det bruges til "
+"momsbestemmelser."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
-msgstr "Moms bestemmelser"
+msgstr "Momsbestemmelser"
 
 #~ msgid "VAT"
 #~ msgstr "Moms"

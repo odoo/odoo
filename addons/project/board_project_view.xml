@@ -81,16 +81,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="My Board">
-                    <hpaned>
-                        <child1>
-                            <action colspan="4"  height="100" name="%(my_open_tasks_action)d" string="My Open Tasks" width="510"/>
-                            <action colspan="4"  height="100" name="%(action_view_delegate_task_tree)d" string="My Delegated Tasks" width="510"/>
-                        </child1>
-                        <child2>
-                            <action colspan="4"  height="100" name="%(project.action_project_vs_planned_total_hours_graph)d" string="My Projects: Planned vs Total Hours" />
-                            <action colspan="4"  height="100" name="%(project.action_project_vs_remaining_hours_graph)d" string="My Remaining Hours by Project" />
-                        </child2>
-                    </hpaned>
+                    <board style="2-1">
+                        <column>
+                            <action name="%(my_open_tasks_action)d" string="My Open Tasks" creatable="true"/>
+                            <action name="%(action_view_delegate_task_tree)d" string="My Delegated Tasks"/>
+                        </column>
+                        <column>
+                            <action name="%(project.action_project_vs_remaining_hours_graph)d" string="My Remaining Hours by Project"/>
+                        </column>
+                    </board>
                 </form>
             </field>
         </record>

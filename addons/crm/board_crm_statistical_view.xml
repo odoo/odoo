@@ -78,31 +78,22 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Statistics Dashboard">
-                    <hpaned>
-                        <child1>
-                            <action
-                                string="Opportunities by Categories"
-                                name="%(act_oppor_categ)d"
-                                colspan="4"
-                                height="200"
-                                width="250"/>
+                    <board style="1-1">
+                        <column>
+                            <action string="Opportunities by Categories"
+                                name="%(act_oppor_categ)d"/>
 
-                            <action
-                                string="Opportunities by Stage"
-                                name="%(act_opportunity_stage)d"
-                                height="200"
-                                colspan="4"/>
+                            <action string="Opportunities by Stage"
+                                name="%(act_opportunity_stage)d"/>
 
-                        </child1>
-                        <child2>
+                        </column>
+                        <column>
 
-                            <action
-                                string="Planned Revenue by Stage and User"
-                                name="%(act_oppor_stage_user)d"
-                                colspan="4"/>
+                            <action string="Planned Revenue by Stage and User"
+                                name="%(act_oppor_stage_user)d"/>
 
-                        </child2>
-                    </hpaned>
+                        </column>
+                    </board>
                 </form>
             </field>
         </record>

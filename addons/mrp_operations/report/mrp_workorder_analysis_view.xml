@@ -48,8 +48,10 @@
                 <search string="Search">
                   <group>
                         <filter icon="terp-go-year" string="Year"
+                                name="year"
                                 domain="[('year','=',time.strftime('%%Y'))]"
                                 help="Work orders made during current year"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-go-month" string="Month"
                                 name="month"
                                 domain="[('month','=',time.strftime('%%m'))]"
@@ -91,7 +93,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_report_mrp_workorder_tree"/>
             <field name="search_view_id" ref="view_report_mrp_workorder_filter"/>
-            <field name="context">{'search_default_Workcenter': 1,'search_default_month':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_Workcenter': 1,'search_default_year':1,'search_default_month':1,'group_by_no_leaf':1,'group_by':[]}</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_report_mrp_workorder_tree">

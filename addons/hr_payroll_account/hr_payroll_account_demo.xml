@@ -81,7 +81,7 @@
             <field name="name">Bank Current Account</field>
             <field ref="account.cas" name="parent_id"/>
             <field name="type">liquidity</field>
-            <field name="user_type" ref="account.account_type_asset"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
         </record>
 
         <record id="a_salary_expense" model="account.account">
@@ -89,7 +89,7 @@
             <field name="name">Salary Expenses</field>
             <field ref="account.ovr" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account.account_type_expense"/>
+            <field name="user_type" ref="account.data_account_type_expense"/>
         </record>
 
         <record id="a_creditors" model="account.account">
@@ -98,7 +98,7 @@
             <field ref="account.cli" name="parent_id"/>
             <field name="type">payable</field>
             <field eval="True" name="reconcile"/>
-            <field name="user_type" ref="account.account_type_payable"/>
+            <field name="user_type" ref="account.data_account_type_payable"/>
         </record>
 
 

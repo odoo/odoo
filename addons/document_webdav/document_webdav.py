@@ -128,3 +128,4 @@ class dav_file_property(osv.osv):
 dav_file_property()
 
 #eof
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -52,15 +52,14 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group>
-                           <filter string="  Year  " icon="terp-go-year"
+                        <filter string="Year" icon="terp-go-year" name="year"
                                domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                                help="Phone calls made in current year"/>
-
-                       <filter string="   Month   " icon="terp-go-month" name="This Month"
+                        <separator orientation="vertical" />
+                        <filter string="Month" icon="terp-go-month" name="This Month"
                            domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                            help="Phone calls made in current month"/>
-
-                       <filter icon="terp-go-month" string="    Month-1    " 
+                        <filter icon="terp-go-month" string="Month-1"
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Phone calls made in last month"/>
                         <separator orientation="vertical" />
@@ -135,7 +134,7 @@
             <field name="res_model">crm.phonecall.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{"search_default_year":1,"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_phonecall_tree"/>
             <field name="search_view_id" ref="view_report_crm_phonecall_filter"/>
             <field name="help">From this report, you can analyse the performance of your sales team, based on their phone calls. You can group or filter the information according to several criteria and drill down the information, by adding more groups in the report.</field>

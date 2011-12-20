@@ -88,7 +88,7 @@ class job2phonecall(osv.osv_memory):
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-
+        new_phonecall_id = []
         for job in job_case_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             #TODO: Take other info from job
             new_phonecall_id = phonecall_case_obj.create(cr, uid, {

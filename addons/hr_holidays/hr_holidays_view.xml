@@ -59,7 +59,7 @@
                 <form string="Leave Request">
                     <group col="8" colspan="4">
                     <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-                    <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" groups="base.group_hr_manager"/>
+                    <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" string="Mode" groups="base.group_hr_manager"/>
                     <group attrs="{'invisible':[('holiday_type','=','employee')]}">
                         <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft')]}"/>
                         </group>
@@ -104,7 +104,7 @@
             <form string="Allocation Request">
                 <group col="8" colspan="4">
                     <field name="name"/>
-                    <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" string="Allocation Category" groups="base.group_hr_manager"/>
+                    <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" string="Allocation Mode" groups="base.group_hr_manager"/>
                         <group attrs="{'invisible':[('holiday_type','=','category')]}">
                         <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')]}"/>
                         </group>
@@ -285,8 +285,8 @@
             <field name="name">Requests Approve</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="context">{'search_default_approve':1,"search_default_department_id": department_id}</field>
-            <field name="domain">[('type','=','add')]</field>
+            <field name="context">{'default_type': 'add', 'search_default_approve':1,"search_default_department_id": department_id}</field>
+            <field name="domain">[('type','=','remove')]</field>
             <field name="view_id" ref="edit_holiday_new"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
@@ -397,7 +397,6 @@
                     <field name="max_leaves"/>
                     <field name="leaves_taken"/>
                     <field name="remaining_leaves"/>
-                    <field name="limit"/>
                 </tree>
             </field>
         </record>

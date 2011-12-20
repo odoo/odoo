@@ -40,7 +40,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'project.issue')]</field>
-            <field name="context">{'object_id':'project.issue'}</field>
+            <field name="context" eval="{'object_id': ref('model_project_issue')}"/>
         </record>
 
         <menuitem action="project_issue_categ_action" name="Categories" id="menu_project_issue_category_act" parent="menu_project_confi" />
@@ -58,7 +58,7 @@
                         <field name="user_id"/>
                         <field name="version_id" colspan="2" widget="selection"/>
                         <group colspan="2" col="4">
-                            <field name="type_id" string="Resolution" />
+                            <field name="type_id" string="Stages" />
                             <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                             <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                         </group>
@@ -66,7 +66,7 @@
                     <notebook colspan="4">
                         <page string="General">
                             <group col="2" colspan="2">
-                            <separator colspan="2" string="Communication"/>
+                            <separator colspan="2" string="Contact Information"/>
                             <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)"/>
                             <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
                             <field name="email_from"/>
@@ -96,7 +96,7 @@
                             <group colspan="4">
                             <field colspan="4" name="email_cc" string="Global CC" widget="url"/>
                             </group>
-                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
                                     <field name="email_from" invisible="1"/>
@@ -106,32 +106,6 @@
                                         context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
                                         icon="terp-mail-replied" type="action" />
                                 </tree>
-                                <form string="History">
-                                    <group col="4" colspan="4">
-                                        <field name="email_from"/>
-                                        <field name="date"/>
-                                        <field name="email_to" widget="char" size="512"/>
-                                        <field name="email_cc" widget="char" size="512"/>
-                                        <field name="subject" colspan="4" widget="char" size="512"/>
-                                    </group>
-                                    <notebook colspan="4">
-                                        <page string="Details">
-                                            <group attrs="{'invisible': [('email_from', '=', False)]}">
-                                                <field name="body_text" colspan="4" nolabel="1" height="250"/>
-                                                <button colspan="4" string="Reply"
-                                                    name="%(mail.action_email_compose_message_wizard)d"
-                                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                                    icon="terp-mail-replied" type="action"/>
-                                            </group>
-                                            <group attrs="{'invisible': [('email_from', '!=', False)]}">
-                                                <field name="display_text" colspan="4" nolabel="1"  height="250"/>
-                                            </group>
-                                        </page>
-                                        <page string="Attachments">
-                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
-                                        </page>
-                                    </notebook>
-                                </form>
                             </field>
                            <separator colspan="4"/>
                             <button string="Add Internal Note"
@@ -183,7 +157,7 @@
                     <field name="partner_id" groups="base.group_extended"/>
                     <field name="project_id" />
                     <field name="priority" string="Priority"/>
-                    <field name="type_id" widget="selection" readonly="1" string="Resolution" />
+                    <field name="type_id" widget="selection" readonly="1" string="Stages" />
                     <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                     <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                     <field name="version_id" widget="selection"/>
@@ -197,6 +171,7 @@
                     <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
                     <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                     <field name="categ_id" invisible="1"/>
+                    <field name="task_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -209,7 +184,7 @@
                 <search string="Issue Tracker Search">
                     <group>
                         <filter string="New" icon="terp-document-new" name="draft" domain="[('state','=','draft')]" help="New Issues"/>
-                        <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
+                        <filter string="To Do" name="todo" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
                         <field name="name" string="Issue / Partner" filter_domain="['|', '|', ('partner_id','ilike',self), ('email_from','ilike',self), ('name','ilike',self)]"/>
@@ -273,44 +248,36 @@
                 <field name="state"/>
                 <field name="priority"/>
                 <field name="user_email"/>
+                <field name="user_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
                         <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                             <div class="oe_kanban_box oe_kanban_color_border">
-                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                    <table class="oe_kanban_table">
-                                        <tr>
-                                            <td class="oe_kanban_title1" align="left" valign="middle">
-                                                <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority" />
-                                                <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
-                                                <field name="name"/>
-                                            </td>
-                                            <td valign="top" width="22">
-                                                <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar"/>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
+                                <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                <tr>
+                                    <td align="left" valign="middle" width="16">
+                                        <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
+                                        <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                    </td>
+                                    <td align="left" valign="middle" class="oe_kanban_title">
+                                        <field name="name"/>
+                                    </td>
+                                    <td valign="top" width="22">
+                                        <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>
+                                    </td>
+                                </tr>
+                                </table>
                                 <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                    <table class="oe_kanban_table">
-                                        <tr>
-                                            <td>
-                                                <div class="oe_kanban_right oe_kanban_small">
-                                                    <field name="user_id"/>
-                                                </div>
-                                                <div class="oe_kanban_title2">
-                                                    <field name="partner_id"/>
-                                                </div>
-                                                <div class="oe_kanban_title3">
-                                                    <field name="project_id"/>
-                                                </div>
-                                                <div class="oe_kanban_title3">
-                                                    <i><field name="version_id"/></i>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div t-if="record.partner_id.raw_value">
+                                        <field name="partner_id"/>
+                                    </div>
+                                    <div t-if="record.project_id.raw_value">
+                                        <field name="project_id"/>
+                                    </div>
+                                    <div t-if="record.version_id.raw_value">
+                                        <i><field name="version_id"/></i>
+                                    </div>
                                 </div>
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left">
@@ -322,11 +289,11 @@
                                         <a string="Convert To Task" name="convert_issue_task" icon="gtk-index" type="object"/>
                                     </div>
                                     <div class="oe_kanban_right">
-                                        <a name="case_open" string="Open" states="draft,pending" type="object" icon="lead-stage-won" />
-                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="lead-stage-pending"/>
-                                        <a name="case_close" string="Close" states="open,draft,pending" type="object" icon="lead-stage-lost"/>
+                                        <a name="case_open" string="Open" states="draft,pending" type="object" icon="kanban-apply" />
+                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause"/>
+                                        <a name="case_close" string="Close" states="open,draft,pending" type="object" icon="kanban-stop"/>
                                     </div>
-                                    <br class="oe_kanban_clear"/>
+                                    <div class="oe_kanban_clear"/>
                                 </div>
                             </div>
                         </div>
@@ -396,19 +363,6 @@
     # ------------------------------------------------------
     # Project
     # ------------------------------------------------------
-
-        <record id="project.view_project_resource_form1" model="ir.ui.view">
-            <field name="name">Project Resource Calendar View</field>
-            <field name="model">project.project</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="project.edit_project"/>
-            <field name="arch" type="xml">
-                <field name="priority" position="after">
-                    <field name="resource_calendar_id"/>
-                </field>
-
-            </field>
-       </record>
 
         <record id="view_project_form_inherited" model="ir.ui.view">
             <field name="name">project.project.form.inherited</field>

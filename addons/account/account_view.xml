@@ -171,8 +171,8 @@
                         <field name="user_type" select="1"/>
                         <field name="active" groups="base.group_extended" />
                         <newline/>
-                        <field name="debit" invisible="context.get('config_invisible', True)"/>
-                        <field name="credit" invisible="context.get('config_invisible', True)"/>
+                        <field name="debit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
+                        <field name="credit" invisible="context.get('config_invisible', True)" attrs="{'readonly':[('type','=','view')]}"/>
                         <field name="balance" invisible="context.get('config_invisible', True)"/>
                     </group>
                     <notebook colspan="4">
@@ -303,6 +303,9 @@
                 <tree string="Unrealized Gains and losses">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="user_type" invisible="1"/>
+                    <field name="type" invisible="1"/>
                     <field name="currency_id"/>
                     <field name="exchange_rate"/>
                     <field name="foreign_balance"/>
@@ -326,6 +329,7 @@
         <menuitem
             name="Unrealized Gain or Loss"
             action="action_account_gain_loss"
+            groups="account.group_account_user"
             id="menu_unrealized_gains_losses"
             parent="account.menu_multi_currency"/>
 
@@ -786,7 +790,6 @@
                     <group col="2" colspan="2">
                         <separator string="Reporting Configuration" colspan="4"/>
                         <field name="report_type" select="2"/>
-                        <field name="sign" />                        
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Closing Method" colspan="4"/>
@@ -1235,8 +1238,8 @@
                     </group>
                     <newline/>
                     <group>
-                        <field name="journal_id" widget="selection" context="{'journal_id':self, 'visible_id':self, 'normal_view':False}"/>
-                        <field name="period_id" context="{'period_id':self, 'search_default_period_id':self}"/>
+                        <field name="journal_id" widget="selection" context="{'journal_id':self}"/>
+                        <field name="period_id" context="{'period_id':self}"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -1306,7 +1309,6 @@
             <field name="model">account.account</field>
             <field name="name">Open Journal Items</field>
             <field eval="'ir.actions.act_window,%d'%action_move_line_select" name="value"/>
-            <field eval="True" name="object"/>
         </record>
         <!--
     Account.Entry Edition
@@ -1584,7 +1586,12 @@
             context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1, 'default_account_id': active_id}"
             src_model="account.account"/>
 
-        <act_window domain="[('reconcile_id', '=', active_id)]" id="act_account_acount_move_line_reconcile_open" name="Reconciled entries" res_model="account.move.line" src_model="account.move.reconcile"/>
+        <act_window
+            domain="[('reconcile_id', '=', active_id)]"
+            id="act_account_acount_move_line_reconcile_open"
+            name="Reconciled entries"
+            res_model="account.move.line"
+            src_model="account.move.reconcile"/>
 
 
         <!--
@@ -1626,7 +1633,7 @@
                 <tree string="Journal Entry Model Line" editable="bottom">
                     <field name="sequence"/>
                     <field name="name"/>
-                    <field name="account_id"/>
+                    <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation'), ('company_id', '=', parent.company_id)]"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="partner_id"/>
                     <field name="debit"/>
@@ -1645,12 +1652,12 @@
                 <form string="Journal Entry Model Line">
                     <field colspan="4" name="name" select="1"/>
                     <field name="sequence"/>
-                    <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                    <field name="account_id" domain="[('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation'), ('company_id', '=', parent.company_id)]"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="partner_id"/>
                     <field name="debit" select="1"/>
                     <field name="credit" select="1"/>
-                     <field name="quantity"/>
+                    <field name="quantity"/>
                     <field name="date_maturity"/>
                 </form>
             </field>
@@ -1749,18 +1756,18 @@
             <field name="arch" type="xml">
                 <form string="Payment Term">
                     <group>
-	                    <group colspan="2" col="4">
-	                        <field name="name" select="1"/>
-	                        <separator string="Amount Computation" colspan="4"/>
-	                        <field name="value" colspan="4"/>
-	                        <field name="value_amount" colspan="4" attrs="{'readonly':[('value','=','balance')]}"/>
-	                    </group>
-	                    <group colspan="2" col="4">
-	                        <field name="sequence"/>
-	                        <separator string="Due Date Computation" colspan="4"/>
-	                        <field name="days" colspan="4"/>
-	                        <field name="days2" colspan="4"/>
-	                    </group>
+                        <group colspan="2" col="4">
+                            <field name="name" select="1"/>
+                            <separator string="Amount Computation" colspan="4"/>
+                            <field name="value" colspan="4"/>
+                            <field name="value_amount" colspan="4" attrs="{'readonly':[('value','=','balance')]}"/>
+                        </group>
+                        <group colspan="2" col="4">
+                            <field name="sequence"/>
+                            <separator string="Due Date Computation" colspan="4"/>
+                            <field name="days" colspan="4"/>
+                            <field name="days2" colspan="4"/>
+                        </group>
                     </group>
                     <newline/>
                     <separator string="Example" colspan="4"/>
@@ -2017,7 +2024,6 @@
             <field name="model">account.tax.code</field>
             <field name="name">Tax Details</field>
             <field eval="'ir.actions.act_window,%d'%action_tax_code_line_open" name="value"/>
-            <field eval="True" name="object"/>
         </record>
 
 
@@ -2039,7 +2045,14 @@
            res_model="account.move.line"
            src_model="account.journal"/>
 
-        <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id], 'default_partner_id': active_id}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner" groups="base.group_extended"/>
+        <act_window
+            context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
+            domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]"
+            id="act_account_partner_account_move_all"
+            name="Receivables &amp; Payables"
+            res_model="account.move.line"
+            src_model="res.partner"
+            groups="base.group_extended"/>
 
         <act_window context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner" groups="account.group_account_user"/>
 
@@ -2104,6 +2117,7 @@
 
                             <field name="currency_id"/>
                             <field name="reconcile"/>
+                            <field name="chart_template_id"/>
                             <separator string="Default taxes" colspan="4"/>
                             <field name="tax_ids" colspan="4" nolabel="1"/>
                         </page>
@@ -2174,9 +2188,13 @@
                 <form string="Chart of Accounts Template">
                     <group>
                     <field name="name"/>
-                    <field name="account_root_id"/>
-                    <field name="bank_account_view_id"/>
-                    <field name="tax_code_root_id"/>
+                    <field name="account_root_id" attrs="{'required': [('parent_id', '=', False)]}"/>
+                    <field name="bank_account_view_id" attrs="{'required': [('parent_id', '=', False)]}"/>
+                    <field name="tax_code_root_id" attrs="{'required': [('parent_id', '=', False)]}"/>
+                    <field name="parent_id" />
+                    <!--<field name="code_digits" />-->
+                    <field name="visible" />
+                    <field name="complete_tax_set" />
                     </group>
                     <field name="tax_template_ids" colspan="4" readonly="1" nolabel="1"/>
                     <separator string="Properties" colspan="4"/>
@@ -2260,7 +2278,9 @@
                         <field name="chart_template_id"/>
                         <field name="type"/>
                         <field name="type_tax_use"/>
-                        <field name="price_include"/>
+                        <group colspan="2" col="4">
+                            <field name="price_include"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Tax Definition">
@@ -2427,10 +2447,13 @@
                 <group string="res_config_contents" position="replace">
                     <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                     <field name ="code_digits" groups="account.group_account_user"/>
-                    <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)"/>
-                    <field name ="seq_journal" groups="account.group_account_user"/>
-                    <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
-                    <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                    <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
+                    <field name ="seq_journal" groups="base.group_extended"/>
+                    <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
+                    <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                    <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
+                    <field name ="purchase_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
+                    <field name ="complete_tax_set" invisible="1"/>
                     <newline/> <!-- extended view because the web UI is not good for one2many -->
                     <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list" groups="account.group_account_user">
                         <form string="Bank Information">
@@ -2466,6 +2489,9 @@
             <field eval="5" name="sequence"/>
             <field name="code">
 act_window_ids = pool.get('ir.actions.act_window').search(cr, uid,[('name', 'in', ('Accounting Chart Configuration', 'Generate Chart of Accounts from a Chart Template'))], context=context)
+ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_account_configuration_installer')
+if ref:
+    act_window_ids += [ref[1]]
 todo_ids = pool.get('ir.actions.todo').search(cr, uid, [('action_id', 'in', act_window_ids)], context=context)
 pool.get('ir.actions.todo').write(cr, uid, todo_ids, {'state':'open'}, context=context)
 action = pool.get('res.config').next(cr, uid, [], context)
@@ -2757,10 +2783,14 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         <field name="parent_id"/>
                         <field name="sequence"/>
                         <field name="type"/>
+                        <field name="sign"/>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Report" attrs="{'invisible': [('state','!=','confirm')]}">
-                            <field name="display_detail" attrs="{'invisible': [('type','!=','accounts')]}"/>
+                    <notebook colspan="6">
+                        <page string="Report">
+                            <group colspan="4" col="4">
+                                <field name="display_detail" attrs="{'invisible': [('type','not in',['accounts','account_type'])]}"  colspan="2"/>
+                                <label string="" colspan="2"/>
+                            </group>
                             <newline/>
                             <field name="account_ids" nolabel="1" colspan="6" attrs="{'invisible': [('type', '!=', 'accounts')]}"/>
                             <newline/>
@@ -2768,9 +2798,6 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <newline/>
                             <field name="account_type_ids" nolabel="1" attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
                             <newline/>
-                        </page>
-                        <page string="Notes" attrs="{'invisible': [('state','!=','confirm')]}">
-                            <field name="note" nolabel="1" colspan="4"/>
                         </page>
                     </notebook>
                 </form>

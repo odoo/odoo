@@ -296,13 +296,14 @@ class event_registration(osv.osv):
         return res
 
     _columns = {
+        'id': fields.integer('ID'),
         'name': fields.char('Summary', size=124,  readonly=True, states={'draft': [('readonly', False)]}),
         'email_cc': fields.text('CC', size=252, readonly=False, states={'done': [('readonly', True)]}, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'nb_register': fields.integer('Quantity', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Number of Registrations or Tickets"),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
         "partner_invoice_id": fields.many2one('res.partner', 'Partner Invoiced', readonly=True, states={'draft': [('readonly', False)]}),
-        "contact_id": fields.many2one('res.partner.contact', 'Partner Contact', readonly=False, states={'done': [('readonly', True)]}), #TODO: filter only the contacts that have a function into the selected partner_id
+        "contact_id": fields.many2one('res.partner.address', 'Partner Contact', readonly=False, states={'done': [('readonly', True)]}), #TODO: filter only the contacts that have a function into the selected partner_id
         "unit_price": fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Sale Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Sale Price'), store=True),
         "badge_ids": fields.one2many('event.registration.badge', 'registration_id', 'Badges', readonly=False, states={'done': [('readonly', True)]}),
@@ -381,7 +382,7 @@ class event_registration(osv.osv):
         inv_lines_pool = self.pool.get('account.invoice.line')
         inv_pool = self.pool.get('account.invoice')
         product_pool = self.pool.get('product.product')
-        contact_pool = self.pool.get('res.partner.contact')
+        contact_pool = self.pool.get('res.partner.address')
         if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
@@ -577,13 +578,7 @@ class event_registration(osv.osv):
         if not contact:
             return data
         addr_obj = self.pool.get('res.partner.address')
-        job_obj = self.pool.get('res.partner.job')
-
-        if partner:
-            partner_addresses = addr_obj.search(cr, uid, [('partner_id', '=', partner)])
-            job_ids = job_obj.search(cr, uid, [('contact_id', '=', contact), ('address_id', 'in', partner_addresses)])
-            if job_ids:
-                data['email_from'] = job_obj.browse(cr, uid, job_ids[0]).email
+        data['email_from'] = addr_obj.browse(cr, uid, contact).email
         return {'value': data}
 
     def onchange_event(self, cr, uid, ids, event_id, partner_invoice_id):
@@ -635,7 +630,6 @@ class event_registration(osv.osv):
         @param event_id: Event ID
         @param partner_invoice_id: Partner Invoice ID
         """
-        job_obj = self.pool.get('res.partner.job')
         res_obj = self.pool.get('res.partner')
 
         data = {}
@@ -647,14 +641,10 @@ class event_registration(osv.osv):
         d = self.onchange_partner_invoice_id(cr, uid, ids, event_id, part)
         # this updates the dictionary
         data.update(d['value'])
-        addr = res_obj.address_get(cr, uid, [part])
+        addr = res_obj.address_get(cr, uid, [part]).get('default', False)
         if addr:
-            if addr.has_key('default'):
-                job_ids = job_obj.search(cr, uid, [('address_id', '=', addr['default'])])
-                if job_ids:
-                    data['contact_id'] = job_obj.browse(cr, uid, job_ids[0]).contact_id.id
-                    d = self.onchange_contact_id(cr, uid, ids, data['contact_id'], part)
-                    data.update(d['value'])
+            d = self.onchange_contact_id(cr, uid, ids, addr, part)
+            data.update(d['value'])
         return {'value': data}
 
     def onchange_partner_invoice_id(self, cr, uid, ids, event_id, partner_invoice_id):

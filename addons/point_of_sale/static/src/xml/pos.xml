@@ -25,7 +25,8 @@
                 </div>
             </div>
             <div id="loggedas">
-                <button>Back</button>
+                <span class="oe_pos_synch-notification"></span>
+                <button>Close</button>
             </div>
         </div>
         <div id="content">
@@ -49,15 +50,15 @@
                     <ul id="amounts">
                         <li>
                             Subtotal:
-                            <span id="subtotal">0</span> €
+                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <span id="subtotal">0</span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
                         </li>
                         <li>
                             Tax:
-                            <span id="tax">0</span> €
+                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <span id="tax">0</span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
                         </li>
                         <li>
                             Total:
-                            <span id="total">0</span> €
+                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/> <span id="total">0</span> <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
                         </li>
                     </ul>
                     <div id="paypad"></div>
@@ -65,7 +66,7 @@
                         <button class="input-button number-char">1</button>
                         <button class="input-button number-char">2</button>
                         <button class="input-button number-char">3</button>
-                        <button class="mode-button selected-mode" data-mode='quantity'>Qty</button>
+                        <button class="mode-button" data-mode='quantity'>Qty</button>
                         <br />
                         <button class="input-button number-char">4</button>
                         <button class="input-button number-char">5</button>
@@ -88,22 +89,43 @@
                 </footer>
             </div>
             <div id="rightpane">
-                <div id="products-screen" class="step-screen selected-step"></div>
+                <div id="products-screen" class="step-screen selected-step">
+                    <div id="products-screen-categories"/>
+                    <ol id="products-screen-ol" class="product-list"></ol>
+                </div>
                 <div id="payment-screen" class="step-screen" style="display:none">
                     <header><h2>Payment</h2></header>
                     <div class="pos-step-container">
                         <div class="pos-payment-container">
-                            <span id="payment-due-total" class="payment-due pos-rigth-align"></span>
+                            <br />
+                            <table>
+                                <tr>
+                                    <td class="paymentline-type">Total:</td>
+                                    <td class="paymentline-amount pos-rigth-align">
+                                        <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                        <span id="payment-due-total"></span>
+                                        <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                    </td>
+                                </tr>
+                            </table>
                             <table id="paymentlines">
                             </table>
                             <table>
                                 <tr>
                                     <td class="paymentline-type">Paid:</td>
-                                    <td class="paymentline-amount pos-rigth-align"><span id="payment-paid-total"></span> €</td>
+                                    <td class="paymentline-amount pos-rigth-align">
+                                        <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                        <span id="payment-paid-total"></span>
+                                        <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="paymentline-type">Change:</td>
-                                    <td class="paymentline-amount pos-rigth-align"><span id="payment-remaining"></span> €</td>
+                                    <td class="paymentline-amount pos-rigth-align">
+                                        <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
+                                        <span id="payment-remaining"></span>
+                                        <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -114,31 +136,20 @@
                         </div>
                     </div>
                 </div>
-                <div id="receipt-screen" class="step-screen" style="display:none">
-                    <header><h2>Receipt</h2></header>
-                    <div class="pos-step-container">
-                        <div class="pos-receipt-container">
-                            <div class="pos-sale-ticket">
-                                OpenERP Point of Sale<br />
-                                <br />
-                                <div class="pos-rigth-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
-                                    Date.CultureInfo.formatPatterns.longTime)"/></div>
-                                <br />
-                                <table id="receiptlines"></table>
-                                <br />
-                                <table>
-                                    <tr><td>Total:</td><td class="pos-rigth-align"><span id="receipt-summary-total"></span> €</td></tr>
-                                    <tr><td>Tax:</td><td class="pos-rigth-align"><span id="receipt-summary-tax"></span> €</td></tr>
-                                    <tr><td>Change:</td><td class="pos-rigth-align"><span id="receipt-summary-change"></span> €</td></tr>
-                                </table>
-                            </div>
-                        </div>
-                        <button id="pos-finish-order">Next Order</button>
-                    </div>
-                </div>
+                <span id="receipt-screen"></span>
             </div>
         </div>
     </div>
+    </t>
+    <t t-name="pos-synch-notification">
+        <span>
+        <a t-if="widget.nbr_pending &gt; 0" href="javascript:void(0)" class="oe_pos_synch-notification-button">
+            <t t-esc="widget.nbr_pending"/> pending orders
+        </a>
+        </span>
+    </t>
+    <t t-name="pos-close-warning">
+        <div>There are pending operations that could not be saved into the database, are you sure you want to exit?</div>
     </t>
     <t t-name="pos-category-template">
         <header>
@@ -180,8 +191,7 @@
             <div class="product-img">
                 <img t-att-src="'data:image/gif;base64,'+ img" />
                 <span class="price-tag">
-                    <t t-esc="list_price"/>
-                    €
+                    <t t-esc="format_amount(list_price)"/>
                 </span>
             </div>
             <div class="product-name">
@@ -194,8 +204,7 @@
             <t t-esc="name"/>
         </td>
         <td>
-            <t t-esc="list_price.toFixed(2)"/>
-            €
+            <t t-esc="format_amount(list_price.toFixed(2))"/>
         </td>
         <td>
             <t t-esc="discount.toFixed(2)"/>
@@ -204,8 +213,7 @@
             <t t-esc="quantity.toFixed(0)"/>
         </td>
         <td>
-            <t t-esc="(list_price * (1 - discount/100) * quantity).toFixed(2)"/>
-            €
+            <t t-esc="format_amount((list_price * (1 - discount/100) * quantity).toFixed(2))"/>
         </td>
     </t>
     <t t-name="pos-paymentline-template">
@@ -214,17 +222,7 @@
         </td>
         <td class="paymentline-amount pos-rigth-align">
             <input type="text" t-att-value="amount.toFixed(2)" />
-        </td>
-    </t>
-    <t t-name="pos-receiptline-template">
-        <td class="receiptline-quantity pos-rigth-align">
-            <t t-esc="quantity.toFixed(0)"/>
-        </td>
-        <td class="receiptline-name">
-            <t t-esc="name"/>
-        </td>
-        <td class="receiptline-amount">
-            <t t-esc="(list_price * (1 - discount/100) * quantity).toFixed(2)"/> €
+            <a href='javascript:void(0)' class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></a>
         </td>
     </t>
     <t t-name="pos-payment-button-template">
@@ -236,5 +234,70 @@
     <t t-name="pos-order-selector-button-template">
         <button class="select-order">Order</button>
         <button class="close-order">X</button>
+    </t>
+    <t t-name="pos-receipt-view">
+        <div id="receipt-screen" class="step-screen" style="display:none">
+            <header><h2>Receipt</h2></header>
+            <div class="pos-step-container">
+                <div class="pos-receipt-container">
+                </div>
+                <div class='receipt-buttons'>
+	                <button id="print-the-ticket">
+	                    Print</button>
+	                <button id="pos-finish-order">Next Order</button>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="pos-ticket">
+        <div class="pos-sale-ticket">
+            <div class="pos-rigth-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
+                Date.CultureInfo.formatPatterns.longTime)"/></div>
+            <br />
+            <t t-esc="widget.company.name"/><br />
+            Phone: <t t-esc="widget.company.phone || ''"/><br />
+            User: <t t-esc="widget.user.name"/><br />
+            Shop: <t t-esc="widget.shop_obj.name"/><br />
+            <br />
+            <table>
+                <tr t-foreach="widget.currentOrderLines.toArray()" t-as="order">
+                    <td>
+                        <t t-esc="order.get('name')"/>
+                    </td>
+                    <td class="pos-rigth-align">
+                        <t t-esc="order.get('quantity').toFixed(0)"/>
+                    </td>
+                    <td class="pos-rigth-align">
+                        <t t-esc="format_amount((order.get('list_price') * (1 - order.get('discount')/100) * order.get('quantity')).toFixed(2))"/>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table>
+                <tr><td>Tax:</td><td class="pos-rigth-align">
+                    <t t-esc="format_amount(widget.currentOrder.getTax().toFixed(2))"/>
+                    </td></tr>
+                <tr><td>Total:</td><td class="pos-rigth-align">
+                    <t t-esc="format_amount(widget.currentOrder.getTotal().toFixed(2))"/>
+                    </td></tr>
+            </table>
+            <br />
+            <table>
+                <tr t-foreach="widget.currentPaymentLines.toArray()" t-as="pline">
+                    <td>
+                        <t t-esc="pline.get('journal_id')[1]"/>
+                    </td>
+                    <td class="pos-rigth-align">
+                        <t t-esc="format_amount((pline.getAmount()).toFixed(2))"/>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table>
+                <tr><td>Change:</td><td class="pos-rigth-align">
+                    <t t-esc="format_amount((widget.currentOrder.getPaidTotal() - widget.currentOrder.getTotal()).toFixed(2))"/>
+                    </td></tr>
+            </table>
+        </div>
     </t>
 </templates>

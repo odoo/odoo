@@ -25,3 +25,5 @@ urlparse.uses_netloc.append('caldav')
 urlparse.uses_netloc.append('caldavs')
 
 #EOF
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

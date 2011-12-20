@@ -18,7 +18,7 @@
 #
 ##############################################################################
 {
-    'name': 'Ecuador - Accounting Chart',
+    'name': 'Ecuador - Accounting',
     'version': '1.1',
     'category': 'Localization/Account Charts',
     'description': """
@@ -47,3 +47,5 @@ Accounting chart and localization for Ecuador.
     'certificate' : '001226484516187330589',
     'images': ['images/config_chart_l10n_ec.jpeg','images/l10n_ec_chart.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

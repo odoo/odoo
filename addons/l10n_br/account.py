@@ -124,15 +124,6 @@ class account_tax(osv.osv):
 
 account_tax()
 
-class account_journal(osv.osv):
-    _inherit = "account.journal"
-
-    _columns = {
-                'internal_sequence': fields.many2one('ir.sequence', 'Internal Sequence'),
-    }
-
-account_journal()
-
 class wizard_multi_charts_accounts(osv.osv_memory):
 
     _inherit = 'wizard.multi.charts.accounts'
@@ -175,3 +166,5 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 obj_acc_tax.write(cr, uid, tax.id, {'domain': tax.tax_code_id.domain,'tax_discount': tax.tax_code_id.tax_discount})
         
 wizard_multi_charts_accounts()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
