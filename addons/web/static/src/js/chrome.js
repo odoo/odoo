@@ -1016,7 +1016,11 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.header.appendTo($("#oe_header"));
             self.login.appendTo($('#oe_login'));
             self.menu.start();
-            self.login.on_login_invalid();
+            if(self.session.session_is_valid()) {
+                self.login.on_login_valid();
+            } else {
+                self.login.on_login_invalid();
+            }
         });
         this.session.ready.then(function() {
             self.login.on_login_valid();
