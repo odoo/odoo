@@ -141,13 +141,6 @@ class res_partner(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
     }
-    def name_create(self, cr, uid, name, context=None):
-        # name_create disabled for usability reasons - users should always use the form view.
-        # still possible by calling create() directly
-        # TODO: remove this and disable name_create at view level when it becomes possible
-        raise osv.except_osv(_('Warning'),
-                             _("Quick creation is not available for partners, please use the normal form"))
-
     def _default_category(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -320,13 +313,6 @@ class res_partner_address(osv.osv):
         'active': lambda *a: 1,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner.address', context=c),
     }
-    def name_create(self, cr, uid, name, context=None):
-        # name_create disabled for usability reasons - users should always use the Partner form view.
-        # still possible by calling create() directly
-        # TODO: remove this and disable name_create at view level when it becomes possible
-        raise osv.except_osv(_('Warning'),
-                             _("Quick creation is not available for addresses and contacts, please use the normal form"))
-
     def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
