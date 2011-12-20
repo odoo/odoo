@@ -1,0 +1,6 @@
+-
+  !record {model: hr.analytic.timesheet, id: working_hours_coding, view: False}:
+    user_id: base.user_demo
+    date: !eval time.strftime('%Y-%m-%d')
+    account_id: account.analytic_administratif
+    unit_amount: 1.0

@@ -1,5 +1,5 @@
 -
-  I set work entry for employee
+  I set task work entry for Employee
 -
   !record {model: project.task.work, id: project_task_work1}:
     date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
@@ -9,24 +9,13 @@
     user_id: project.res_users_analyst
     company_id: base.main_company
 -
-  I set timesheet line for employee in current timesheet
+  I check Timesheet line for employee in current Timesheet
 -
   !python {model: hr.analytic.timesheet}: |
-     import datetime
-     uid = ref('project.res_users_analyst')
-     current_date = (datetime.date.today().strftime('%Y-%m-%d'))
-     vals = {'name': 'Test Timesheet records',
-             'user_id': ref('project.res_users_analyst'),
-             'account_id': ref('account.analytic_project_1_development'),
-             'unit_amount': 5.00,
-             'journal_id': ref('hr_timesheet.analytic_journal')
-     }
-     line_id = self.create(cr, uid, vals, None)
-     res = self.on_change_date(cr, uid, [line_id], current_date)
-     values = dict([('date', current_date)] + res['value'].items())
-     res1 = self.on_change_user_id(cr, uid, [line_id], ref('project.res_users_analyst'))
-     values.update(dict([('user_id', ref('project.res_users_analyst'))] + res1['value'].items()))
-     self.write(cr, uid, [line_id], values, None)
-
-
-
+    import datetime
+    start = (datetime.date.today().strftime('%Y-%m-%d'))
+    task_work = self.search(cr, uid, [("name","=","Prepare Requirements Document: Test Timesheet records")],context)[0]
+    task_ids = self.browse(cr, uid, task_work, context)
+    assert task_ids.user_id.id == ref("project.res_users_analyst"), 'Error, The User in Timesheet is not Correct'
+    assert task_ids.date == start, 'Error, The Date in Timesheet is not ok'
+    assert task_ids.product_uom_id.name == "Hour", 'Error, The Hour in Timesheet is not ok'
