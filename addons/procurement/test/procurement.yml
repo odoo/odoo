@@ -85,4 +85,4 @@
     proc_id = context.get('proc')
     context.update({'active_model': 'procurement.order', 'active_id': proc_id})
     id = self.create(cr, uid, {'automatic': True}, context)
-    self.procure_calculation(cr, uid, [id], context)
+    #self.procure_calculation(cr, uid, [id], context)
