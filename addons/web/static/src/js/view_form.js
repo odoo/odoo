@@ -133,7 +133,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
 
     do_show: function () {
         var self = this,
-            deferred = $.Deferred();
+            deferred = $.Deferred().resolve();
         this.has_been_loaded.then(function() {
             if (self.dataset.index === null) {
                 // null index means we should start a new record
