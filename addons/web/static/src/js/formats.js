@@ -253,13 +253,15 @@ openerp.web.format_cell = function (row_data, column, value_if_empty, process_mo
     if (attrs.invisible) { return ''; }
     if (column.tag === 'button') {
         return [
-            '<button type="button" title="', column.string || '', '">',
+            '<button type="button" title="', column.string || '', '" ',
+                (isNaN(row_data["id"].value)
+                    && openerp.web.BufferedDataSet.virtual_id_regex.test(row_data["id"].value))
+                    ?'disabled="disabled"':'','>',
                 '<img src="', openerp.connection.prefix, '/web/static/src/img/icons/', column.icon, '.png"',
                     ' alt="', column.string || '', '"/>',
             '</button>'
         ].join('')
     }
-
     if (!row_data[column.id]) {
         return value_if_empty === undefined ? '' : value_if_empty;
     }

@@ -557,6 +557,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Function} callback should be called after the action is executed, if non-null
      */
     do_button_action: function (name, id, callback) {
+        var self = this;
         var action = _.detect(this.columns, function (field) {
             return field.name === name;
         });
@@ -575,7 +576,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             c.add(action.context);
         }
         action.context = c;
-        this.do_execute_action(action, this.dataset, id, callback);
+        this.do_execute_action(action, this.dataset, id, function(){
+            self.o2m.view.reload();
+        });
     },
     /**
      * Handles the activation of a record (clicking on it)
