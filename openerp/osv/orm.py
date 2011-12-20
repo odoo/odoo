@@ -2479,10 +2479,13 @@ class BaseModel(object):
         group_count = group_by = groupby
         if groupby:
             if fget.get(groupby):
-                if fget[groupby]['type'] in ('date', 'datetime'):
-                    flist = "to_char(%s,'yyyy-mm') as %s " % (qualified_groupby_field, groupby)
-                    groupby = "to_char(%s,'yyyy-mm')" % (qualified_groupby_field)
-                    qualified_groupby_field = groupby
+                groupby_type = fget[groupby]['type']
+                if groupby_type in ('date', 'datetime'):
+                    qualified_groupby_field = "to_char(%s,'yyyy-mm')" % qualified_groupby_field
+                    flist = "%s as %s " % (qualified_groupby_field, groupby)
+                elif groupby_type == 'boolean':
+                    qualified_groupby_field = "coalesce(%s,false)" % qualified_groupby_field
+                    flist = "%s as %s " % (qualified_groupby_field, groupby)
                 else:
                     flist = qualified_groupby_field
             else:
