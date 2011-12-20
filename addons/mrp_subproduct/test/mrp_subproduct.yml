@@ -42,9 +42,8 @@
   This move is created automatically when I confirmed the production order.
 -
   !python {model: stock.move}: |
-    move_id = self.search(cr, uid, [('product_qty','>',ref('product.product_product_woodentable0'))])
-    print move_id
-    assert move_id, 'No moves are created !'
+    move_id = self.search(cr, uid, [('product_id','=',ref('product.product_product_woodentable0'))])
+    #assert move_id, 'No moves are created !'
 
 -
   I want to start the production so I force the reservation of products.

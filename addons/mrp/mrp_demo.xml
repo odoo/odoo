@@ -11,7 +11,7 @@
             <field name="code">ASML - HOUR</field>
             <field name="name">Costing Account For Hours of Assembly.</field>
         </record>
-    
+
         <record id="account_assembly_cycle" model="account.analytic.account">
             <field name="type">normal</field>
             <field name="code">ASML - Cycle</field>
@@ -31,8 +31,8 @@
             <field name="name">Assembly Service Cost</field>
             <field name="categ_id" ref="product.product_category_assembly"/>
         </record>
-        
-        
+
+
         <!--
     Resource: mrp.workcenter
     -->
@@ -209,7 +209,7 @@
             <field name="hour_nbr">1</field>
             <field name="sequence">10</field>
         </record>
-        
+
         <record id="mrp_routing_workcenter_4" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_1"/>
             <field name="workcenter_id" ref="mrp_workcenter_1"/>
@@ -582,7 +582,7 @@
             <field name="bom_id" ref="mrp_bom_kit1"/>
             <field model="product.product" name="product_id" ref="product.product_product_24"/>
         </record>
-        
+
         <record id="mrp_bom_41" model="mrp.bom">
             <field name="name">Regular processor config</field>
             <field name="sequence">111</field>
@@ -627,12 +627,12 @@
             <field name="product_qty">1.0</field>
             <field name="type">normal</field>
             <field name="bom_id" ref="mrp_bom_arm1"/>
-            <field model="product.product" name="product_id" ref="product.product_product_sidepanel0"/>     
+            <field model="product.product" name="product_id" ref="product.product_product_sidepanel0"/>
         </record>
         <!--
     Resource: mrp.bom new EVV
     -->
-    
+
     <record id="mrp_bom_defaultbomforshelfofcm0" model="mrp.bom">
         <field name="name">Default BOM for Shelf of 100cm</field>
         <field name="code">SHE100</field>
@@ -677,7 +677,7 @@
        <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
        <field name="product_qty">1.0</field>
        <field name="name">Rear panel SHE100</field>
-       <field name="type">phantom</field> 
+       <field name="type">phantom</field>
     </record>
 
     <record id="mrp_bom_shelf0" model="mrp.bom">
@@ -687,11 +687,11 @@
        <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
        <field name="product_qty">3.0</field>
        <field name="name">RCK100</field>
-       <field name="type">phantom</field> 
+       <field name="type">phantom</field>
     </record>
 
     <!--
-        BOMs for 1 RCK100 PCE 
+        BOMs for 1 RCK100 PCE
                     Product Ref     Qty	UoM  Type of BoM
                     SPAN100 	    1 	PCE  phantom
                     METC000 	    4 	PCE  normal
@@ -721,7 +721,7 @@
        <field name="name">METC000</field>
     </record>
     <!--
-    Bill of Materials for 1 SPAN100 PCE 
+    Bill of Materials for 1 SPAN100 PCE
                     Product Code 	Quantity 	Unit of Measure
                     WOOD010 	    0.083 	    m
     -->
@@ -741,9 +741,9 @@
        <field name="name">WOOD010</field>
     </record>
     <!-- BoMs for 1 Assembly Section PCE
-            Product Ref. 	Qty 	UoM 	
-                LIN40 	     0.25 	    Meter 	
-                
+            Product Ref. 	Qty 	UoM
+                LIN40 	     0.25 	    Meter
+
     -->
     <record id="mrp_bom_assemblysection1" model="mrp.bom">
         <field name="name">Assembly Section</field>
@@ -752,7 +752,7 @@
         <field name="product_uom" ref="product.product_uom_unit"/>
         <field name="product_qty">1.0</field>
         <field name="routing_id" ref="mrp.mrp_routing_0"/>
-        
+
     </record>
 
     <record id="mrp_bom_woodlintelm0" model="mrp.bom">
@@ -764,7 +764,7 @@
        <field name="name">Wood Lintel 0.25m</field>
     </record>
     <!--
-    Bill of Materials for 1 RPAN100 PCE 
+    Bill of Materials for 1 RPAN100 PCE
                     Product Code 	Quantity 	Unit of Measure
                     WOOD002 	    0.25 	    m
     -->
@@ -800,8 +800,8 @@
              RPAN200 	     1 	    PCE 	normal
              PROFIL          4      PCE     normal
              SIDEPAN         2      PCE     normal
-             METC000         12     PCE     normal 
-             RCK200 	     3 	    PCE 	normal   
+             METC000         12     PCE     normal
+             RCK200 	     3 	    PCE 	normal
     -->
     <record id="mrp_bom_rearpanelarm2" model="mrp.bom">
        <field name="sequence">147</field>
@@ -882,7 +882,7 @@
         <field name="bom_id" ref="mrp_bom_defaultbomforkitshelfofcm0"/>
     </record>
 
-    
+
 
    <record id="product.product_uom_dozen" model="product.uom">
             <field name="category_id" ref="product.product_uom_categ_unit"/>
@@ -901,7 +901,7 @@
         <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm0"/>
     </record>
 
-    
+
 
    <record id="product_uom_categ_fluid" model="product.uom.categ">
         <field name="name">Fluid</field>
@@ -1010,7 +1010,7 @@
        <field name="qty_multiple">1</field>
        <field name="warehouse_id" ref="stock.warehouse0"/>
        <field name="location_id" ref="stock.stock_location_stock"/>
-        
+
     </record>
     <record id="stock_rule_sugar" model="stock.warehouse.orderpoint">
        <field name="product_id" ref="product_sugar"/>
@@ -1030,7 +1030,7 @@
         <field name="bom_id" ref="mrp_bom_orangejuice"/>
         <field name="product_qty">100.00</field>
     </record>
-    
+
     <record id="product_shirt" model="product.product">
         <field name="categ_id" ref="product.cat1"/>
         <field name="name">Shirt</field>
@@ -1096,7 +1096,7 @@
        <field name="type">normal</field>
        <field name="bom_id" ref="mrp_bom_shirt"/>
     </record>
-      
+
     <record id="stock_shirt_buttons" model="stock.warehouse.orderpoint">
        <field name="product_id" ref="product_buttons"/>
        <field name="product_uom" ref="product.product_uom_unit"/>
@@ -1123,7 +1123,7 @@
         <field name="routing_id" ref="mrp.mrp_routing_0"/>
     </record>
     <workflow action="button_confirm" model="mrp.production" ref="mrp_production_order1"/>
-    
+
     <!-- Run Scheduler -->
     <function model="procurement.order" name="run_scheduler"/>
     </data>
