@@ -47,7 +47,7 @@ setup(
     install_requires=[
         "Babel >= 0.9.6",
         "simplejson >= 2.0.9",
-        "python-dateutil >= 1.4.1 < 2",
+        "python-dateutil >= 1.4.1, < 2",
         "pytz",
         "werkzeug == 0.7",
     ],
