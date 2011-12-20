@@ -45,7 +45,7 @@ import openerp
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.translate import _
-from openerp.tools import float_round
+from openerp.tools import float_round, float_repr
 
 def _symbol_set(symb):
     if symb == None or symb == False:
@@ -240,7 +240,8 @@ class float(_column):
         if self.digits_compute:
             self.digits = self.digits_compute(cr)
             precision, scale = self.digits
-            self._symbol_set = ('%s', lambda x: str(float_round(__builtin__.float(x or 0.0), precision_digits=scale)))
+            self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0), precision_digits=scale),
+                                                           precision_digits=scale))
 
 class date(_column):
     _type = 'date'
@@ -994,7 +995,8 @@ class function(_column):
         if self.digits_compute:
             self.digits = self.digits_compute(cr)
             precision, scale = self.digits
-            self._symbol_set = ('%s', lambda x: str(float_round(__builtin__.float(x or 0.0), precision_digits=scale)))
+            self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0), precision_digits=scale),
+                                                           precision_digits=scale))
 
     def search(self, cr, uid, obj, name, args, context=None):
         if not self._fnct_search:
