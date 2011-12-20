@@ -17,6 +17,7 @@ from xml.etree import ElementTree
 from cStringIO import StringIO
 
 import babel.messages.pofile
+import werkzeug.utils
 
 import web.common
 openerpweb = web.common.http
@@ -199,6 +200,14 @@ class WebClient(openerpweb.Controller):
             'init': 'new s.web.WebClient("oe").start();',
         }
         return r
+
+    @openerpweb.httprequest
+    def login(self, req, db, login, key):
+        req.session.authenticate(db, login, key, {})
+        redirect = werkzeug.utils.redirect('/web/webclient/home', 303)
+        cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
+        redirect.set_cookie('session0|session_id', cookie_val)
+        return redirect
 
     @openerpweb.jsonrequest
     def translations(self, req, mods, lang):

@@ -532,15 +532,6 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
                 this.selected_password = localStorage.getItem('last_password_login_success');
             }
         }
-        
-        var qs = jQuery.deparam(jQuery.param.querystring());
-        if (qs.db) {
-            this.selected_db = qs.db;
-        }
-        if (qs.login) {
-            this.selected_login = qs.login;
-        }
-
     },
     start: function() {
         var self = this;
@@ -580,7 +571,9 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         this.$element.closest(".openerp").removeClass("login-mode");
     },
     on_submit: function(ev) {
-        ev.preventDefault();
+        if(ev) {
+            ev.preventDefault();
+        }
         var $e = this.$element;
         var db = $e.find("form [name=db]").val();
         var login = $e.find("form input[name=login]").val();
