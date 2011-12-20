@@ -213,7 +213,10 @@ class product_category(osv.osv):
     _description = "Product Category"
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
-        'complete_name': fields.function(_name_get_fnc, type="char", string='Name',size=256, store=True),
+        'complete_name': fields.function(_name_get_fnc, type="char", string='Name',size=256, 
+                store={
+                    'product.category': (lambda self, cr, uid, ids, c={}: ids, ['name','parent_id'], 10),
+                   }),
         'parent_id': fields.many2one('product.category','Parent Category', select=True),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
