@@ -49,10 +49,23 @@ function getDocumentType(){
  *  add or create
  */
 function getOperation() {
-	var operation = document.getElementById('operation').value;
+	var operation = document.getElementById('operation').selectedItem;
 	return operation.value	
 }
 
+function changeForm() {
+	
+	var hidden = false
+	
+	if(getOperation() == "create") {
+		hidden = true
+	}
+	document.getElementById('label_box').hidden = hidden
+	document.getElementById('listSearchBox').hidden = hidden
+	document.getElementById('lblsearch').hidden = hidden
+	document.getElementById('txtvalueobj').hidden = hidden
+	document.getElementById('search_button').hidden = hidden
+}
 
 
 
