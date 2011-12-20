@@ -313,17 +313,18 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             .filter('[data-view-type="' + view_type + '"]')
             .attr('disabled', true);
 
-        for (var view_name in this.views) {
-            if (!this.views.hasOwnProperty(view_name)) { continue; }
-            if (this.views[view_name].controller) {
-                if (view_name === view_type) {
-                    $.when(view_promise).then(this.views[view_name].controller.do_show);
-                } else {
-                    this.views[view_name].controller.do_hide();
-                }
-            }
-        }
         $.when(view_promise).then(function () {
+            _.each(_.keys(self.views), function(view_name) {
+                var controller = self.views[view_name].controller;
+                if (controller) {
+                    if (view_name === view_type) {
+                        controller.do_show();
+                    } else {
+                        controller.do_hide();
+                    }
+                }
+            });
+
             self.$element.find('.oe_view_title_text:first').text(
                     self.display_title());
         });
@@ -604,7 +605,11 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var self = this,
             defs = [];
         if (state.view_type && state.view_type !== this.active_view) {
-            defs.push(this.on_mode_switch(state.view_type, true));
+            defs.push(
+                this.views[this.active_view].deferred.pipe(function() {
+                    return self.on_mode_switch(state.view_type, true);
+                })
+            );
         } 
 
         $.when(defs).then(function() {
