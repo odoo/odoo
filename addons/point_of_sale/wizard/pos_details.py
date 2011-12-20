@@ -30,7 +30,7 @@ class pos_details(osv.osv_memory):
     _columns = {
         'date_start': fields.date('Date Start', required=True),
         'date_end': fields.date('Date End', required=True),
-        'user_ids': fields.many2many('res.users', 'sale_user_rel_details', 'user_id', 'uid', 'Salesman'),
+        'user_ids': fields.many2many('res.users', 'pos_details_report_user_rel', 'user_id', 'wizard_id', 'Salesmen'),
     }
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-%m-%d'),
