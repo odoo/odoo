@@ -764,7 +764,7 @@ label.error {
     padding-left: 18px;
 }
 /* List */
-.openerp .oe-listview table {
+.openerp table.oe-listview-content {
     clear: right;
     width: 100%;
     border-spacing: 0;
@@ -789,7 +789,7 @@ label.error {
     background: none;
 }
 
-.openerp .oe-listview td,
+.openerp .oe-listview > table > tbody > tr > td,
 .openerp .oe-listview th {
     vertical-align: middle;
     text-align: left;
@@ -809,7 +809,7 @@ label.error {
 }
 
 /* Could use :not selectors if they were supported by MSIE8... */
-.openerp .oe-listview tbody td {
+.openerp .oe-listview > table > tbody > tr > td {
     border-left: 1px solid #dadada; /*currently commenting to test with no vertical lines in list view*/
 }
 .openerp .oe-listview tbody td:first-child,
@@ -840,12 +840,12 @@ label.error {
     vertical-align: middle;
 }
 
-.openerp .oe-listview table tbody td {
+.openerp .oe-listview > table > tbody > tr > td {
     border-bottom: 1px solid #E3E3E3;
 }
 
 
-.openerp .oe-listview td.oe-actions { 
+.openerp .oe-listview td.oe-actions {
     border-bottom:none;
 }
 
@@ -867,12 +867,16 @@ label.error {
 .openerp .oe-listview .oe-field-cell progress {
     width: 100%;
 }
-.openerp .oe-listview .oe-field-cell button {
+.openerp .oe-listview .oe-field-cell.oe-button button,
+.openerp .oe-listview .oe_form_button button {
     margin: 0;
     padding: 0;
     border: none;
     background: none;
     width: 16px;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
 }
 .openerp .oe-listview .oe-field-cell button:active {
     opacity: 0.5;
