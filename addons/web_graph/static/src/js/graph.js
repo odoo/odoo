@@ -173,7 +173,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         graph_data = _(graph_data).sortBy(function (point) {
             return point[self.abscissa] + '[[--]]' + point[self.group_field];
         });
-        if (this.chart == 'bar' || 'line' || 'area') {
+        if (_.include(['bar','line','area'],this.chart)) {
             return this.schedule_bar_line_area(graph_data);
         } else if (this.chart == "pie") {
             return this.schedule_pie(graph_data);
