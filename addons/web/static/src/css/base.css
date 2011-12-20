@@ -898,15 +898,20 @@ label.error {
     color: #555;
 }
 
-.openerp .oe-list-pager > *, .openerp .oe_form_pager *, .openerp .oe_pager_separator  {
-   line-height:17px;
-   width:12px;
-   height:17px;
+.openerp .oe_button.oe_button_pager,
+.openerp .oe-list-pager > span,
+.openerp .oe_form_pager > span {
+   line-height: 17px;
+   height: 17px;
    cursor: pointer;
-   color:gray;
-   font-weight:bold;
-   vertical-align:middle;
-   border:0;
+   color: gray;
+   font-weight: bold;
+   vertical-align: middle;
+}
+.openerp .oe_button.oe_button_pager,
+.openerp .oe_button.oe_button_pager:disabled {
+    padding: 0 3px 0 3px;
+    margin: 0;
 }
 .openerp .oe-listview .oe-group-name {
     padding-right: 1em;
@@ -1999,23 +2004,6 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 .openerp .oe_vm_switch_diagram:focus,
 .openerp .oe_vm_switch_diagram[disabled="disabled"] {
     background-position: 0px -21px;
-}
-
-.openerp .oe-list-pager button[disabled="disabled"], .openerp .oe_form_pager button[disabled="disabled"] {
-    opacity:0.5;
-    filter:alpha(opacity=50); /* For IE8 and earlier */ 
-}
-.openerp .oe-list-pager button[data-pager-action="first"], .openerp .oe_form_pager button[data-pager-action="first"] {
-    background: url("/web/static/src/img/pager_first.png") no-repeat scroll center center transparent;
-}
-.openerp .oe-list-pager button[data-pager-action="previous"], .openerp .oe_form_pager button[data-pager-action="previous"] {
-    background: url("/web/static/src/img/pager_left.png") no-repeat scroll center center transparent;
-}
-.openerp .oe-list-pager button[data-pager-action="next"], .openerp .oe_form_pager button[data-pager-action="next"] {
-    background: url("/web/static/src/img/pager_right.png") no-repeat scroll center center transparent;
-}
-.openerp .oe-list-pager button[data-pager-action="last"], .openerp .oe_form_pager button[data-pager-action="last"] {
-    background: url("/web/static/src/img/pager_last.png") no-repeat scroll center center transparent;
 }
 
 /* Buttons */

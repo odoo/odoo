@@ -226,6 +226,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     do_update_pager: function(hide_index) {
         var $pager = this.$form_header.find('div.oe_form_pager');
         var index = hide_index ? '-' : this.dataset.index + 1;
+        $pager.find('button').prop('disabled', this.dataset.ids.length < 2)
         $pager.find('span.oe_pager_index').html(index);
         $pager.find('span.oe_pager_count').html(this.dataset.ids.length);
     },

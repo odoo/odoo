@@ -567,6 +567,24 @@
     </td>
 </tr>
 
+<t t-name="ViewPager">
+    <button class="oe_button oe_button_pager" type="button" data-pager-action="first">
+        <img t-att-src='_s + "/web/static/src/img/pager_first.png"'/>
+    </button>
+    <button class="oe_button oe_button_pager" type="button" data-pager-action="previous">
+        <img t-att-src='_s + "/web/static/src/img/pager_previous.png"'/>
+    </button>
+
+    <t t-raw="__content__"/>
+
+    <button class="oe_button oe_button_pager" type="button" data-pager-action="next">
+        <img t-att-src='_s + "/web/static/src/img/pager_next.png"'/>
+    </button>
+    <button class="oe_button oe_button_pager" type="button" data-pager-action="last">
+        <img t-att-src='_s + "/web/static/src/img/pager_last.png"'/>
+    </button>
+</t>
+
 <table t-name="ListView" class="oe-listview-content">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0) + (options.isClarkGable ? 1 : 0)"/>
     <thead class="ui-widget-header">
@@ -639,18 +657,10 @@
 </t>
 <th t-name="Listview.navigation.button" t-if="!no_leaf and options.pager !== false"
         class="oe-list-pager" t-att-colspan="columns_count">
-    <button type="button" disabled="disabled"
-            data-pager-action="first"></button>
-    <button type="button" disabled="disabled"
-            data-pager-action="previous"></button>
-
-    <span class="oe-pager-state">
-    </span>
-
-    <button type="button" disabled="disabled"
-            data-pager-action="next"></button>
-    <button type="button" disabled="disabled"
-            data-pager-action="last"></button>
+    <t t-call="ViewPager">
+        <span class="oe-pager-state">
+        </span>
+    </t>
 </th>
 <t t-name="ListView.rows" t-foreach="records.length" t-as="index">
     <t t-call="ListView.row">
@@ -696,13 +706,9 @@
             <button type="button" class="oe_button oe_form_button_cancel">Cancel</button>
         </div>
         <div class="oe_form_pager" t-if="widget.options.pager !== false">
-            <button type="button" data-pager-action="first"></button>
-            <button type="button" data-pager-action="previous"></button>
-
-            <span class="oe_pager_index">0</span><span class="oe_pager_separator"> / </span><span class="oe_pager_count">0</span>
-
-            <button type="button" data-pager-action="next"></button>
-            <button type="button" data-pager-action="last"></button>
+            <t t-call="ViewPager">
+                <span class="oe_pager_index">0</span><span class="oe_pager_separator"> / </span><span class="oe_pager_count">0</span>
+            </t>
         </div>
     </div>
     <t t-raw="frame.render()"/>
