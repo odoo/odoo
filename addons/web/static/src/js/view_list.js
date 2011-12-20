@@ -302,7 +302,11 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             last = first + limit;
         }
         this.$element.find('span.oe-pager-state').empty().text(_.str.sprintf(
-            "[%d to %d] of %d", first + 1, last, total));
+            _t("[%(first_record)d to %(last_record)d] of %(records_count)d"), {
+                first_record: first + 1,
+                last_record: last,
+                records_count: total
+            }));
 
         this.$element
             .find('button[data-pager-action=first], button[data-pager-action=previous]')
@@ -463,7 +467,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }));
         this.do_push_state({
             page: this.page,
-            limit: this._limit,
+            limit: this._limit
         });
         return reloaded.promise();
     },
@@ -1287,7 +1291,10 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 var pages = Math.ceil(dataset.ids.length / limit);
                 self.$row
                     .find('.oe-pager-state')
-                        .text(_.str.sprintf('%d/%d', page + 1, pages))
+                        .text(_.str.sprintf(_t("%(page)d/%(page_count)d"), {
+                            page: page + 1,
+                            page_count: pages
+                        }))
                     .end()
                     .find('button[data-pager-action=previous]')
                         .attr('disabled', page === 0)
