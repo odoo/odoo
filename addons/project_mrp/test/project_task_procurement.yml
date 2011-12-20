@@ -1,83 +1,48 @@
-- |
-  In order to test project_mrp module with OpenERP I create a sale order
-  with product type 'service' so when procurement runs one task is created for
-  the project associated with my sale order.
 -
-  I create record for a service type product.
+  In order to test process to generate task automatic from procurement, I confirm sale order to sale service product.
 -
-  !record {model: product.product, id: product_product_partnerstraining0, view: False}:
-    categ_id: product.product_category_7
-    cost_method: standard
-    mes_type: fixed
-    name: Partners Training
-    procure_method: make_to_order
-    supply_method: produce
-    type: service
-    uom_id: product.uom_day
-    uom_po_id: product.uom_day
-    warranty: 0.0
-- |
-  I create a sale order for product Partners Training which has type 'Service',
-  and select the appropriate Analytic Account matching my project.
-- 
-  !record {model: sale.order, id: sale_order_so0}:
-    date_order: !eval time.strftime('%Y-%m-%d')
-    invoice_quantity: order
-    name: TESTSO006
-    order_policy: manual
-    partner_id: base.res_partner_asus
-    partner_invoice_id: base.res_partner_address_tang
-    partner_order_id: base.res_partner_address_tang
-    partner_shipping_id: base.res_partner_address_tang
-    order_line:
-      - state: draft
-        delay: 7.0
-        name: Partners Training
-        price_unit: 1.0
-        product_id: product_product_partnerstraining0
-        product_uom: product.uom_day
-        product_uom_qty: 5.0
-        type: make_to_order
-    picking_policy: direct
-    pricelist_id: product.list0
-    shop_id: sale.shop
-    user_id: base.user_demo
-
-- I select the Analytic Account for my project on the sale order 
-- 
-  !python {model: sale.order}: |
-    acc_id = self.pool.get('project.project').browse(cr, uid,
-        ref('project.project_integrate_openerp')).analytic_account_id.id
-    self.write(cr, uid, ref('sale_order_so0'), {'project_id': acc_id})
+  !workflow {model: sale.order, action: order_confirm, ref: sale.order7}
 -
-  I confirm this sale order.
--
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so0}
--
-  I check the procurements.
+  I run the scheduler.
 -
   !python {model: procurement.order}: |
-    orderline_obj = self.pool.get('sale.order.line')
-    line_ids = orderline_obj.search(cr, uid, [('order_id','=', ref('sale_order_so0'))])
-    orders = orderline_obj.browse(cr, uid, line_ids)
-    proc_ids = map(lambda x: x.procurement_id.id, orders)
-    assert proc_ids, 'No Procurements!'
+    self.run_scheduler(cr, uid)
 -
-  The scheduler runs.
+  Now I check that task details after run procurement
 -
-  !function {model: procurement.order, name: run_scheduler}:
-    - model: procurement.order
-      search: "[]"
+  !python {model: procurement.order}: |
+    from datetime import datetime
+    procurement_ids = self.search(cr, uid, [('sale_line_id', '=', ref('line_services'))])
+    assert procurement_ids, "Procurement is not generated for Service Order Line."
+    procurement = self.browse(cr, uid, procurement_ids[0], context=context)
+    assert procurement.state != 'done' , "Procurement should not be closed."
+    task = procurement.task_id
+    assert task, "Task is not generated."
+    # check whether task project either is the product's project, or corresponds to the analytic account of sale order
+    project = task.project_id
+    if procurement.product_id.project_id:
+        assert project == procurement.product_id.project_id, "Project does not correspond."
+    elif procurement.sale_line_id:
+        account = procurement.sale_line_id.order_id.project_id
+        assert (not project and not account) or project.analytic_account_id == account, "Project does not correspond."
+    planned_hours = self._convert_qty_company_hours(cr, uid, procurement, context=context)
+    assert task.planned_hours == planned_hours, 'Planned Hours do not correspond.'
+    assert datetime.strptime(task.date_deadline, '%Y-%m-%d') == datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S'), 'Deadline does not correspond.'
+    if procurement.product_id.product_manager:
+        assert task.user_id.id == procurement.product_id.product_manager.id, 'Allocated Person does not correspond with Service Product Manager.'
+    assert task.description == procurement.note, "Task description does not correspond."
 -
-  Now I check that one task is created for my sale order, in the desired project
+  I close that task.
 -
   !python {model: project.task}: |
-    order_obj = self.pool.get('sale.order')
-    order = order_obj.browse(cr, uid, ref('sale_order_so0'))
-    # planned_hours == 40 because default company project UOM is hours, and
-    # product was sold as 5.0 days.
-    task_id = self.search(cr, uid, [('name', '=', order.name+":Partners Training"),
-                                    ('project_id','=', ref('project.project_integrate_openerp')),
-                                    ('planned_hours','=', 40.0),
-                                    ('state','=','draft')])
-    assert task_id, 'Expected Task not found!'
+    task_ids = self.search(cr, uid, [('sale_line_id', '=', ref('line_services'))])
+    assert task_ids, "Task is not generated for Service Order Line."
+    self.do_close(cr, uid, task_ids, context=context)
+-
+  I check procurement of Service Order Line after closed task.
+-
+  !python {model: procurement.order}: |
+    procurement_ids = self.search(cr, uid, [('sale_line_id', '=', ref('line_services'))])
+    assert procurement_ids, "Procurement is not generated for Service Order Line."
+    procurement = self.browse(cr, uid, procurement_ids[0], context=context)
+    assert procurement.state == 'done' , "Procurement should be closed."

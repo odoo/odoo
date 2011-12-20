@@ -100,7 +100,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_mrp_property_search"/>
-            <field name="help">The Properties in OpenERP are used to select the right bill of materials for manufacturing a product when you have different ways of building the same product. You can assign several properties to each Bill of Materials. When a sales person creates a sales order, he can relate it to several properties and OpenERP will automatically select the BoM to use according the the needs.</field>
+            <field name="help">The Properties in OpenERP are used to select the right bill of materials for manufacturing a product when you have different ways of building the same product. You can assign several properties to each Bill of Materials. When a sales person creates a sales order, he can relate it to several properties and OpenERP will automatically select the BoM to use according the needs.</field>
         </record>
         <menuitem name="Master Bill of Materials"
             id="menu_mrp_property"
@@ -317,7 +317,7 @@
             <field name="arch" type="xml">
                 <form string="Bill of Material">
                     <group colspan="4" col="6">
-                        <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" select="1"/>
                         <field name="name" select="1"/>
                         <field name="code" select="1" string="Reference" groups="base.group_extended"/>
                         <newline/>
@@ -407,7 +407,7 @@
                             <field name="product_efficiency" groups="base.group_extended"/>
                             <separator string="Properties" colspan="4"/>
                             <newline/>
-                            <field colspan="4" name="property_ids" nolabel="2" groups="base.group_extended"/>
+                            <field colspan="4" name="property_ids" nolabel="1" groups="base.group_extended"/>
                         </page>
                     </notebook>
                 </form>

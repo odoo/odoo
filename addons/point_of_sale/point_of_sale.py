@@ -174,6 +174,8 @@ class pos_order(osv.osv):
         move_obj = self.pool.get('stock.move')
 
         for order in self.browse(cr, uid, ids, context=context):
+            if not order.state=='draft':
+                continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_id = picking_obj.create(cr, uid, {
                 'origin': order.name,
@@ -325,7 +327,11 @@ class pos_order(osv.osv):
         }
         return abs
 
+    def action_invoice_state(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'invoiced'}, context=context)
+
     def action_invoice(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
         product_obj = self.pool.get('product.product')
@@ -341,7 +347,7 @@ class pos_order(osv.osv):
 
             acc = order.partner_id.property_account_receivable.id
             inv = {
-                'name': 'Invoice from POS: '+order.name,
+                'name': order.name,
                 'origin': order.name,
                 'account_id': acc,
                 'journal_id': order.sale_journal.id or None,
@@ -379,6 +385,7 @@ class pos_order(osv.osv):
                     and [(6, 0, inv_line['invoice_line_tax_id'])] or []
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
+            wf_service.trg_validate(uid, 'pos.order', order.id, 'invoice', cr)
 
         if not inv_ids: return {}
         
@@ -682,10 +689,44 @@ pos_order_line()
 
 class pos_category(osv.osv):
     _name = 'pos.category'
-    _inherit = 'product.category'
+    _description = "PoS Category"
+    _order = "sequence, name"
+    def _check_recursion(self, cr, uid, ids, context=None):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from pos_category where id IN %s',(tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
+    ]
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
     _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('pos.category','Parent Category', select=True),
-        'child_id': fields.one2many('pos.category', 'parent_id', string='Child Categories'),
+        'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
     }
 pos_category()
 

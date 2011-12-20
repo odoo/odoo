@@ -303,6 +303,9 @@
                 <tree string="Unrealized Gains and losses">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="user_type" invisible="1"/>
+                    <field name="type" invisible="1"/>
                     <field name="currency_id"/>
                     <field name="exchange_rate"/>
                     <field name="foreign_balance"/>
@@ -787,7 +790,6 @@
                     <group col="2" colspan="2">
                         <separator string="Reporting Configuration" colspan="4"/>
                         <field name="report_type" select="2"/>
-                        <field name="sign" />                        
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Closing Method" colspan="4"/>
@@ -2781,10 +2783,14 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         <field name="parent_id"/>
                         <field name="sequence"/>
                         <field name="type"/>
+                        <field name="sign"/>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Report" attrs="{'invisible': [('state','!=','confirm')]}">
-                            <field name="display_detail" attrs="{'invisible': [('type','!=','accounts')]}"/>
+                    <notebook colspan="6">
+                        <page string="Report">
+                            <group colspan="4" col="4">
+                                <field name="display_detail" attrs="{'invisible': [('type','not in',['accounts','account_type'])]}"  colspan="2"/>
+                                <label string="" colspan="2"/>
+                            </group>
                             <newline/>
                             <field name="account_ids" nolabel="1" colspan="6" attrs="{'invisible': [('type', '!=', 'accounts')]}"/>
                             <newline/>
@@ -2792,9 +2798,6 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <newline/>
                             <field name="account_type_ids" nolabel="1" attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
                             <newline/>
-                        </page>
-                        <page string="Notes" attrs="{'invisible': [('state','!=','confirm')]}">
-                            <field name="note" nolabel="1" colspan="4"/>
                         </page>
                     </notebook>
                 </form>

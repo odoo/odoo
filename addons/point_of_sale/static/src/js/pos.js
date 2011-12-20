@@ -22,62 +22,134 @@ openerp.point_of_sale = function(db) {
     QWeb.add_template("/point_of_sale/static/src/xml/pos.xml");
     var qweb_template = function(template) {
         return function(ctx) {
-            return QWeb.render(template, ctx);
+            return QWeb.render(template, _.extend({}, ctx,{
+                'currency': pos.get('currency'),
+                'format_amount': function(amount) {
+                    if (pos.get('currency').position == 'after') {
+                        return amount + ' ' + pos.get('currency').symbol;
+                    } else {
+                        return pos.get('currency').symbol + ' ' + amount;
+                    }
+                },
+                }));
         };
     };
+    var _t = db.web._t;
 
     /*
      Local store access. Read once from localStorage upon construction and persist on every change.
      There should only be one store active at any given time to ensure data consistency.
      */
-    var Store = (function() {
-        function Store() {
-            var store;
-            store = localStorage['pos'];
-            this.data = (store && JSON.parse(store)) || {};
-        }
-
-        Store.prototype.get = function(key) {
+    var Store = db.web.Class.extend({
+        init: function() {
+            this.data = {};
+        },
+        get: function(key, _default) {
+            if (this.data[key] === undefined) {
+                var stored = localStorage['oe_pos_' + key];
+                if (stored)
+                    this.data[key] = JSON.parse(stored);
+                else
+                    return _default;
+            }
             return this.data[key];
-        };
-        Store.prototype.set = function(key, value) {
+        },
+        set: function(key, value) {
             this.data[key] = value;
-            return localStorage['pos'] = JSON.stringify(this.data);
-        };
-        return Store;
-    })();
+            localStorage['oe_pos_' + key] = JSON.stringify(value);
+        },
+    });
     /*
      Gets all the necessary data from the OpenERP web client (session, shop data etc.)
      */
-    var Pos = (function() {
-        function Pos(session) {
+    var Pos = Backbone.Model.extend({
+        initialize: function(session, attributes) {
+            Backbone.Model.prototype.initialize.call(this, attributes);
+            this.store = new Store();
+            this.ready = $.Deferred();
+            this.flush_mutex = new $.Mutex();
             this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
+            var attributes = {
+                'pending_operations': [],
+                'currency': {symbol: '$', position: 'after'},
+                'shop': {},
+                'company': {},
+                'user': {},
+            };
+            _.each(attributes, _.bind(function(def, attr) {
+                var to_set = {};
+                to_set[attr] = this.store.get(attr, def);
+                this.set(to_set);
+                this.bind('change:' + attr, _.bind(function(unused, val) {
+                    this.store.set(attr, val);
+                }, this));
+            }, this));
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
                 this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
-                this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name']),
-                this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']))
-                .then(this.build_tree);
-        }
-
-        Pos.prototype.ready = $.Deferred();
-        Pos.prototype.store = new Store;
-        Pos.prototype.fetch = function(osvModel, fields, domain) {
+                this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
+                    [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
+                this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
+                this.get_app_data())
+                .pipe(_.bind(this.build_tree, this));
+        },
+        fetch: function(osvModel, fields, domain) {
             var dataSetSearch;
             var self = this;
-            var callback = function(result) {
-                return self.store.set(osvModel, result);
-            };
             dataSetSearch = new db.web.DataSetSearch(this, osvModel, {}, domain);
-            return dataSetSearch.read_slice(fields, 0).then(callback);
-        };
-        Pos.prototype.push = function(osvModel, record, callback, errorCallback) {
-            var dataSet;
-            dataSet = new db.web.DataSet(this, osvModel, null);
-            return dataSet.create(record, callback, errorCallback);
-        };
-        Pos.prototype.categories = {};
-        Pos.prototype.build_tree = function() {
+            return dataSetSearch.read_slice(fields, 0).then(function(result) {
+                return self.store.set(osvModel, result);
+            });
+        },
+        get_app_data: function() {
+            var self = this;
+            return $.when(new db.web.Model("sale.shop").get_func("search_read")([]).pipe(function(result) {
+                self.set({'shop': result[0]});
+                var company_id = result[0]['company_id'][0];
+                return new db.web.Model("res.company").get_func("read")(company_id, ['currency_id', 'name', 'phone']).pipe(function(result) {
+                    self.set({'company': result});
+                    var currency_id = result['currency_id'][0]
+                    return new db.web.Model("res.currency").get_func("read")([currency_id],
+                            ['symbol', 'position']).pipe(function(result) {
+                        self.set({'currency': result[0]});
+                        
+                    });
+                });
+            }), new db.web.Model("res.users").get_func("read")(this.session.uid, ['name']).pipe(function(result) {
+                self.set({'user': result});
+            }));
+        },
+        push: function(osvModel, record) {
+            var ops = _.clone(this.get('pending_operations'));
+            ops.push({model: osvModel, record: record});
+            this.set({pending_operations: ops});
+            return this.flush();
+        },
+        flush: function() {
+            return this.flush_mutex.exec(_.bind(function() {
+                return this._int_flush();
+            }, this));
+        },
+        _int_flush : function() {
+            var ops = this.get('pending_operations');
+            if (ops.length === 0)
+                return $.when();
+            var op = ops[0];
+            var dataSet = new db.web.DataSet(this, op.model, null);
+            /* we prevent the default error handler and assume errors
+             * are a normal use case, except we stop the current iteration
+             */
+            return dataSet.create(op.record).fail(function(unused, event) {
+                event.preventDefault();
+            }).pipe(_.bind(function() {
+                console.debug('saved 1 record');
+                var ops2 = this.get('pending_operations');
+                this.set({'pending_operations': _.without(ops2, op)});
+                return this._int_flush();
+            }, this), function() {return $.when()});
+        },
+        categories: {},
+        build_tree: function() {
             var c, id, _i, _len, _ref, _ref2;
             _ref = this.store.get('pos.category');
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -124,14 +196,14 @@ openerp.point_of_sale = function(db) {
                 }).call(this)
             };
             return this.ready.resolve();
-        };
-        Pos.prototype.build_ancestors = function(parent) {
+        },
+        build_ancestors: function(parent) {
             if (parent != null) {
                 this.current_category.ancestors.unshift(parent);
                 return this.build_ancestors(this.categories[parent].parent);
             }
-        };
-        Pos.prototype.build_subtree = function(category) {
+        },
+        build_subtree: function(category) {
             var c, _i, _len, _ref, _results;
             _ref = category.children;
             _results = [];
@@ -141,9 +213,8 @@ openerp.point_of_sale = function(db) {
                 _results.push(this.build_subtree(this.categories[c]));
             }
             return _results;
-        };
-        return Pos;
-    })();
+        }
+    });
 
     /* global variable */
     var pos;
@@ -210,26 +281,28 @@ openerp.point_of_sale = function(db) {
      To add more of the same product, just update the quantity accordingly.
      The Order also contains payment information.
      */
-    var Orderline = (function() {
-        __extends(Orderline, Backbone.Model);
-        function Orderline() {
-            Orderline.__super__.constructor.apply(this, arguments);
-        }
-
-        Orderline.prototype.defaults = {
+    var Orderline = Backbone.Model.extend({
+        defaults: {
             quantity: 1,
             list_price: 0,
             discount: 0
-        };
-        Orderline.prototype.incrementQuantity = function() {
+        },
+        initialize: function(attributes) {
+            Backbone.Model.prototype.initialize.apply(this, arguments);
+            this.bind('change:quantity', function(unused, qty) {
+                if (qty == 0)
+                    this.trigger('killme');
+            }, this);
+        },
+        incrementQuantity: function() {
             return this.set({
                 quantity: (this.get('quantity')) + 1
             });
-        };
-        Orderline.prototype.getTotal = function() {
+        },
+        getTotal: function() {
             return (this.get('quantity')) * (this.get('list_price')) * (1 - (this.get('discount')) / 100);
-        };
-        Orderline.prototype.exportAsJSON = function() {
+        },
+        exportAsJSON: function() {
             var result;
             result = {
                 qty: this.get('quantity'),
@@ -238,18 +311,11 @@ openerp.point_of_sale = function(db) {
                 product_id: this.get('id')
             };
             return result;
-        };
-        return Orderline;
-    })();
-    var OrderlineCollection = (function() {
-        __extends(OrderlineCollection, Backbone.Collection);
-        function OrderlineCollection() {
-            OrderlineCollection.__super__.constructor.apply(this, arguments);
-        }
-
-        OrderlineCollection.prototype.model = Orderline;
-        return OrderlineCollection;
-    })();
+        },
+    });
+    var OrderlineCollection = Backbone.Collection.extend({
+        model: Orderline,
+    });
     /*
      Every PaymentLine has all the attributes of the corresponding CashRegister.
      */
@@ -268,7 +334,7 @@ openerp.point_of_sale = function(db) {
         Paymentline.prototype.exportAsJSON = function() {
             var result;
             result = {
-                name: "Payment line",
+                name: db.web.datetime_to_str(new Date()),
                 statement_id: this.get('id'),
                 account_id: (this.get('account_id'))[0],
                 journal_id: (this.get('journal_id'))[0],
@@ -324,9 +390,13 @@ openerp.point_of_sale = function(db) {
             var existing;
             existing = (this.get('orderLines')).get(product.id);
             if (existing != null) {
-                return existing.incrementQuantity();
+                existing.incrementQuantity();
             } else {
-                return (this.get('orderLines')).add(new Orderline(product.toJSON()));
+                var line = new Orderline(product.toJSON());
+                this.get('orderLines').add(line);
+                line.bind('killme', function() {
+                    this.get('orderLines').remove(line);
+                }, this);
             }
         };
         Order.prototype.addPaymentLine = function(cashRegister) {
@@ -432,21 +502,12 @@ openerp.point_of_sale = function(db) {
      The numpad handles both the choice of the property currently being modified
      (quantity, price or discount) and the edition of the corresponding numeric value.
      */
-    var NumpadState = (function() {
-        __extends(NumpadState, Backbone.Model);
-        function NumpadState() {
-            NumpadState.__super__.constructor.apply(this, arguments);
-        }
-
-        NumpadState.prototype.defaults = {
+    var NumpadState = Backbone.Model.extend({
+        defaults: {
             buffer: "0",
             mode: "quantity"
-        };
-        NumpadState.prototype.initialize = function(options) {
-            this.shop = options.shop;
-            return this.shop.bind('change:selectedOrder', this.reset, this);
-        };
-        NumpadState.prototype.appendNewChar = function(newChar) {
+        },
+        appendNewChar: function(newChar) {
             var oldBuffer;
             oldBuffer = this.get('buffer');
             if (oldBuffer === '0') {
@@ -462,9 +523,9 @@ openerp.point_of_sale = function(db) {
                     buffer: (this.get('buffer')) + newChar
                 });
             }
-            return this.updateTarget();
-        };
-        NumpadState.prototype.deleteLastChar = function() {
+            this.updateTarget();
+        },
+        deleteLastChar: function() {
             var tempNewBuffer;
             tempNewBuffer = (this.get('buffer')).slice(0, -1) || "0";
             if (isNaN(tempNewBuffer)) {
@@ -473,38 +534,36 @@ openerp.point_of_sale = function(db) {
             this.set({
                 buffer: tempNewBuffer
             });
-            return this.updateTarget();
-        };
-        NumpadState.prototype.switchSign = function() {
+            this.updateTarget();
+        },
+        switchSign: function() {
             var oldBuffer;
             oldBuffer = this.get('buffer');
             this.set({
                 buffer: oldBuffer[0] === '-' ? oldBuffer.substr(1) : "-" + oldBuffer
             });
-            return this.updateTarget();
-        };
-        NumpadState.prototype.changeMode = function(newMode) {
-            return this.set({
+            this.updateTarget();
+        },
+        changeMode: function(newMode) {
+            this.set({
                 buffer: "0",
                 mode: newMode
             });
-        };
-        NumpadState.prototype.reset = function() {
-            return this.set({
-                buffer: "0"
+        },
+        reset: function() {
+            this.set({
+                buffer: "0",
+                mode: "quantity"
             });
-        };
-        NumpadState.prototype.updateTarget = function() {
+        },
+        updateTarget: function() {
             var bufferContent, params;
             bufferContent = this.get('buffer');
             if (bufferContent && !isNaN(bufferContent)) {
-                params = {};
-                params[this.get('mode')] = parseFloat(bufferContent);
-                return (this.shop.get('selectedOrder')).selected.set(params);
+            	this.trigger('setValue', parseFloat(bufferContent));
             }
-        };
-        return NumpadState;
-    })();
+        },
+    });
     /*
      ---
      Views
@@ -513,9 +572,11 @@ openerp.point_of_sale = function(db) {
     var NumpadWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
-            this.state = options.state;
+            this.state = new NumpadState();
         },
         start: function() {
+            this.state.bind('change:mode', this.changedMode, this);
+            this.changedMode();
             this.$element.find('button#numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
             this.$element.find('button#numpad-minus').click(_.bind(this.clickSwitchSign, this));
             this.$element.find('button.number-char').click(_.bind(this.clickAppendNewChar, this));
@@ -533,12 +594,14 @@ openerp.point_of_sale = function(db) {
             return this.state.appendNewChar(newChar);
         },
         clickChangeMode: function(event) {
-            var newMode;
-            $('.selected-mode').removeClass('selected-mode');
-            $(event.currentTarget).addClass('selected-mode');
-            newMode = event.currentTarget.attributes['data-mode'].nodeValue;
+            var newMode = event.currentTarget.attributes['data-mode'].nodeValue;
             return this.state.changeMode(newMode);
-        }
+        },
+        changedMode: function() {
+            var mode = this.state.get('mode');
+            $('.selected-mode').removeClass('selected-mode');
+            $(_.str.sprintf('.mode-button[data-mode="%s"]', mode), this.$element).addClass('selected-mode');
+        },
     });
     /*
      Gives access to the payment methods (aka. 'cash registers')
@@ -617,7 +680,7 @@ openerp.point_of_sale = function(db) {
      Shopping carts.
      */
     var OrderlineWidget = db.web.Widget.extend({
-        tagName: 'tr',
+        tag_name: 'tr',
         template_fct: qweb_template('pos-orderline-template'),
         init: function(parent, options) {
             this._super(parent);
@@ -630,14 +693,12 @@ openerp.point_of_sale = function(db) {
                 return this.$element.remove();
             }, this));
             this.order = options.order;
-            this.numpadState = options.numpadState;
         },
         start: function() {
             this.$element.click(_.bind(this.clickHandler, this));
         },
         clickHandler: function() {
-            this.numpadState.reset();
-            return this.select();
+            this.select();
         },
         render_element: function() {
             this.select();
@@ -648,48 +709,74 @@ openerp.point_of_sale = function(db) {
         select: function() {
             $('tr.selected').removeClass('selected');
             this.$element.addClass('selected');
-            return this.order.selected = this.model;
+            this.order.selected = this.model;
+            this.on_selected();
         },
+        on_selected: function() {},
     });
     var OrderWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
-            this.numpadState = options.numpadState;
+            this.setNumpadState(options.numpadState);
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindOrderLineEvents();
+        },
+        setNumpadState: function(numpadState) {
+        	if (this.numpadState) {
+        		this.numpadState.unbind('setValue', this.setValue);
+        	}
+        	this.numpadState = numpadState;
+        	if (this.numpadState) {
+        		this.numpadState.bind('setValue', this.setValue, this);
+        		this.numpadState.reset();
+        	}
+        },
+        setValue: function(val) {
+        	var param = {};
+        	param[this.numpadState.get('mode')] = val;
+        	this.shop.get('selectedOrder').selected.set(param);
         },
         changeSelectedOrder: function() {
             this.currentOrderLines.unbind();
             this.bindOrderLineEvents();
-            return this.render_element();
+            this.render_element();
         },
         bindOrderLineEvents: function() {
             this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
             this.currentOrderLines.bind('add', this.addLine, this);
-            this.currentOrderLines.bind('change', this.render_element, this);
-            return this.currentOrderLines.bind('remove', this.render, this);
+            this.currentOrderLines.bind('remove', this.render_element, this);
         },
         addLine: function(newLine) {
             var line = new OrderlineWidget(null, {
                     model: newLine,
-                    order: this.shop.get('selectedOrder'),
-                    numpadState: this.numpadState
+                    order: this.shop.get('selectedOrder')
             });
+            line.on_selected.add(_.bind(this.selectedLine, this));
+            this.selectedLine();
             line.appendTo(this.$element);
-            return this.updateSummary();
+            this.updateSummary();
+        },
+        selectedLine: function() {
+        	var reset = false;
+        	if (this.currentSelected !== this.shop.get('selectedOrder').selected) {
+        		reset = true;
+        	}
+        	this.currentSelected = this.shop.get('selectedOrder').selected;
+        	if (reset && this.numpadState)
+        		this.numpadState.reset();
         },
         render_element: function() {
             this.$element.empty();
             this.currentOrderLines.each(_.bind( function(orderLine) {
                 var line = new OrderlineWidget(null, {
                         model: orderLine,
-                        order: this.shop.get('selectedOrder'),
-                        numpadState: this.numpadState
+                        order: this.shop.get('selectedOrder')
                 });
+            	line.on_selected.add(_.bind(this.selectedLine, this));
                 line.appendTo(this.$element);
             }, this));
-            return this.updateSummary();
+            this.updateSummary();
         },
         updateSummary: function() {
             var currentOrder, tax, total, totalTaxExcluded;
@@ -699,7 +786,7 @@ openerp.point_of_sale = function(db) {
             tax = currentOrder.getTax();
             $('#subtotal').html(totalTaxExcluded.toFixed(2)).hide().fadeIn();
             $('#tax').html(tax.toFixed(2)).hide().fadeIn();
-            return $('#total').html(total.toFixed(2)).hide().fadeIn();
+            $('#total').html(total.toFixed(2)).hide().fadeIn();
         },
     });
     /*
@@ -790,27 +877,32 @@ openerp.point_of_sale = function(db) {
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
-            this.model.bind('change', this.render_element, this);
+            this.model.bind('change', this.changedAmount, this);
         },
-        start: function () {
-            this.$element.addClass('paymentline');
-            $('input', this.$element).keyup(_.bind(this.changeAmount, this));
-        },
+        on_delete: function() {},
         changeAmount: function(event) {
             var newAmount;
             newAmount = event.currentTarget.value;
             if (newAmount && !isNaN(newAmount)) {
-                return this.model.set({
-                    amount: parseFloat(newAmount)
+            	this.amount = parseFloat(newAmount);
+                this.model.set({
+                    amount: this.amount,
                 });
             }
         },
+        changedAmount: function() {
+        	if (this.amount !== this.model.get('amount'))
+        		this.render_element();
+        },
         render_element: function() {
+        	this.amount = this.model.get('amount');
             this.$element.html(this.template_fct({
                 name: (this.model.get('journal_id'))[1],
-                amount: this.model.get('amount')
+                amount: this.amount,
             }));
-            return this;
+            this.$element.addClass('paymentline');
+            $('input', this.$element).keyup(_.bind(this.changeAmount, this));
+            $('.delete-payment-line', this.$element).click(this.on_delete);
         },
     });
     var PaymentWidget = db.web.Widget.extend({
@@ -831,16 +923,18 @@ openerp.point_of_sale = function(db) {
         validateCurrentOrder: function() {
             var callback, currentOrder;
             currentOrder = this.shop.get('selectedOrder');
-            callback = _.bind(function() {
+            $('button#validate-order', this.$element).attr('disabled', 'disabled');
+            pos.push('pos.order', currentOrder.exportAsJSON()).then(_.bind(function() {
+                $('button#validate-order', this.$element).removeAttr('disabled');
                 return currentOrder.set({
                     validated: true
                 });
-            }, this);
-            pos.push('pos.order', currentOrder.exportAsJSON(), callback);
+            }, this));
         },
         bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
             this.currentPaymentLines.bind('add', this.addPaymentLine, this);
+            this.currentPaymentLines.bind('remove', this.render_element, this);
             this.currentPaymentLines.bind('all', this.updatePaymentSummary, this);
         },
         bindOrderLineEvents: function() {
@@ -858,17 +952,18 @@ openerp.point_of_sale = function(db) {
             var x = new PaymentlineWidget(null, {
                     model: newPaymentLine
                 });
+            x.on_delete.add(_.bind(this.deleteLine, this, x));
             x.appendTo(this.paymentLineList());
         },
         render_element: function() {
             this.paymentLineList().empty();
             this.currentPaymentLines.each(_.bind( function(paymentLine) {
-                var x = new PaymentlineWidget(null, {
-                    model: paymentLine
-                });
-                this.paymentLineList().append(x);
+                this.addPaymentLine(paymentLine);
             }, this));
             this.updatePaymentSummary();
+        },
+        deleteLine: function(lineWidget) {
+        	this.currentPaymentLines.remove([lineWidget.model]);
         },
         updatePaymentSummary: function() {
             var currentOrder, dueTotal, paidTotal, remaining, remainingAmount;
@@ -881,21 +976,24 @@ openerp.point_of_sale = function(db) {
             remaining = remainingAmount > 0 ? 0 : (-remainingAmount).toFixed(2);
             $('#payment-remaining').html(remaining);
         },
-    });
-    /*
-     "Receipt" step.
-     */
-    var ReceiptLineWidget = db.web.Widget.extend({
-        tag_name: 'tr',
-        template_fct: qweb_template('pos-receiptline-template'),
-        init: function(parent, options) {
-            this._super(parent);
-            this.model = options.model;
-            this.model.bind('change', this.render_element, this);
+        setNumpadState: function(numpadState) {
+        	if (this.numpadState) {
+        		this.numpadState.unbind('setValue', this.setValue);
+        		this.numpadState.unbind('change:mode', this.setNumpadMode);
+        	}
+        	this.numpadState = numpadState;
+        	if (this.numpadState) {
+        		this.numpadState.bind('setValue', this.setValue, this);
+        		this.numpadState.bind('change:mode', this.setNumpadMode, this);
+        		this.numpadState.reset();
+        		this.setNumpadMode();
+        	}
         },
-        render_element: function() {
-            this.$element.addClass('receiptline');
-            this.$element.html(this.template_fct(this.model.toJSON()));
+    	setNumpadMode: function() {
+    		this.numpadState.set({mode: 'payment'});
+    	},
+        setValue: function(val) {
+        	this.currentPaymentLines.last().set({amount: val});
         },
     });
     var ReceiptWidget = db.web.Widget.extend({
@@ -903,60 +1001,38 @@ openerp.point_of_sale = function(db) {
             this._super(parent);
             this.model = options.model;
             this.shop = options.shop;
+            this.user = pos.get('user');
+            this.company = pos.get('company');
+            this.shop_obj = pos.get('shop');
+        },
+        start: function() {
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
-            this.bindOrderLineEvents();
-            this.bindPaymentLineEvents();
-        },
-        finishOrder: function() {
-            this.shop.get('selectedOrder').destroy();
-        },
-        receiptLineList: function() {
-            return this.$element.find('#receiptlines');
-        },
-        bindOrderLineEvents: function() {
-            this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
-            this.currentOrderLines.bind('add', this.addReceiptLine, this);
-            this.currentOrderLines.bind('change', this.render_element, this);
-            this.currentOrderLines.bind('remove', this.render_element, this);
-        },
-        bindPaymentLineEvents: function() {
-            this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
-            this.currentPaymentLines.bind('all', this.updateReceiptSummary, this);
-        },
-        changeSelectedOrder: function() {
-            this.currentOrderLines.unbind();
-            this.bindOrderLineEvents();
-            this.currentPaymentLines.unbind();
-            this.bindPaymentLineEvents();
-            this.render_element();
-        },
-        addReceiptLine: function(newOrderItem) {
-            var x = new ReceiptLineWidget(null, {
-                    model: newOrderItem
-            });
-            x.appendTo(this.receiptLineList());
-            this.updateReceiptSummary();
+            this.changeSelectedOrder();
         },
         render_element: function() {
             this.$element.html(qweb_template('pos-receipt-view'));
             $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
-            this.currentOrderLines.each(_.bind( function(orderItem) {
-                var x = new ReceiptLineWidget(null, {
-                        model: orderItem
-                });
-                x.appendTo(this.receiptLineList());
-            }, this));
-            this.updateReceiptSummary();
+            $('button#print-the-ticket', this.$element).click(function(){window.print();});
         },
-        updateReceiptSummary: function() {
-            var change, currentOrder, tax, total;
-            currentOrder = this.shop.get('selectedOrder');
-            total = currentOrder.getTotal();
-            tax = currentOrder.getTax();
-            change = currentOrder.getPaidTotal() - total;
-            $('#receipt-summary-tax').html(tax.toFixed(2));
-            $('#receipt-summary-total').html(total.toFixed(2));
-            $('#receipt-summary-change').html(change.toFixed(2));
+        finishOrder: function() {
+            this.shop.get('selectedOrder').destroy();
+        },
+        changeSelectedOrder: function() {
+            if (this.currentOrderLines)
+                this.currentOrderLines.unbind();
+            this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
+            this.currentOrderLines.bind('add', this.refresh, this);
+            this.currentOrderLines.bind('change', this.refresh, this);
+            this.currentOrderLines.bind('remove', this.refresh, this);
+            if (this.currentPaymentLines)
+                this.currentPaymentLines.unbind();
+            this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
+            this.currentPaymentLines.bind('all', this.refresh, this);
+            this.refresh();
+        },
+        refresh: function() {
+            this.currentOrder = this.shop.get('selectedOrder');
+            $('.pos-receipt-container', this.$element).html(qweb_template('pos-ticket')({widget:this}));
         },
     });
     var OrderButtonWidget = db.web.Widget.extend({
@@ -1008,9 +1084,6 @@ openerp.point_of_sale = function(db) {
 
             (this.shop.get('orders')).bind('add', this.orderAdded, this);
             (this.shop.get('orders')).add(new Order);
-            this.numpadState = new NumpadState({
-                shop: this.shop
-            });
             this.productListView = new ProductListWidget(null, {
                 shop: this.shop
             });
@@ -1023,9 +1096,11 @@ openerp.point_of_sale = function(db) {
             this.paypadView.$element = $('#paypad');
             this.paypadView.render_element();
             this.paypadView.start();
+            this.numpadView = new NumpadWidget(null);
+            this.numpadView.$element = $('#numpad');
+            this.numpadView.start();
             this.orderView = new OrderWidget(null, {
                 shop: this.shop,
-                numpadState: this.numpadState
             });
             this.orderView.$element = $('#current-order-content');
             this.orderView.start();
@@ -1039,14 +1114,11 @@ openerp.point_of_sale = function(db) {
                 shop: this.shop,
             });
             this.receiptView.replace($('#receipt-screen'));
-            this.numpadView = new NumpadWidget(null, {
-                state: this.numpadState
-            });
-            this.numpadView.$element = $('#numpad');
-            this.numpadView.start();
             this.stepsView = new StepsWidget(null, {shop: this.shop});
             this.stepsView.$element = $('#steps');
             this.stepsView.start();
+            this.shop.bind('change:selectedOrder', this.changedSelectedOrder, this);
+            this.changedSelectedOrder();
         },
         createNewOrder: function() {
             var newOrder;
@@ -1064,6 +1136,24 @@ openerp.point_of_sale = function(db) {
             });
             newOrderButton.appendTo($('#orders'));
             newOrderButton.selectOrder();
+        },
+        changedSelectedOrder: function() {
+        	if (this.currentOrder) {
+        		this.currentOrder.unbind('change:step', this.changedStep);
+        	}
+        	this.currentOrder = this.shop.get('selectedOrder');
+        	this.currentOrder.bind('change:step', this.changedStep, this);
+        	this.changedStep();
+        },
+        changedStep: function() {
+        	var step = this.currentOrder.get('step');
+        	this.orderView.setNumpadState(null);
+        	this.paymentView.setNumpadState(null);
+        	if (step === 'products') {
+        		this.orderView.setNumpadState(this.numpadView.state);
+        	} else if (step === 'payment') {
+        		this.paymentView.setNumpadState(this.numpadView.state);
+        	}
         },
     });
     var App = (function() {
@@ -1103,7 +1193,7 @@ openerp.point_of_sale = function(db) {
                 s = $(this).val().toLowerCase();
                 if (s) {
                     m = products.filter( function(p) {
-                        return p.name.toLowerCase().indexOf(s);
+                        return p.name.toLowerCase().indexOf(s) != -1;
                     });
                     $('.search-clear').fadeIn();
                 } else {
@@ -1120,29 +1210,109 @@ openerp.point_of_sale = function(db) {
         };
         return App;
     })();
+    
+    db.point_of_sale.SynchNotification = db.web.Widget.extend({
+        template: "pos-synch-notification",
+        init: function() {
+            this._super.apply(this, arguments);
+            this.nbr_pending = 0;
+        },
+        render_element: function() {
+            this._super.apply(this, arguments);
+            $('.oe_pos_synch-notification-button', this.$element).click(this.on_synch);
+        },
+        on_change_nbr_pending: function(nbr_pending) {
+            this.nbr_pending = nbr_pending;
+            this.render_element();
+        },
+        on_synch: function() {}
+    });
 
     db.web.client_actions.add('pos.ui', 'db.point_of_sale.PointOfSale');
     db.point_of_sale.PointOfSale = db.web.Widget.extend({
-        template: "PointOfSale",
-        start: function() {
-            var self = this;
-            this.$element.find("#loggedas button").click(function() {
-                self.stop();
-            });
+        init: function() {
+            this._super.apply(this, arguments);
 
             if (pos)
                 throw "It is not possible to instantiate multiple instances "+
                     "of the point of sale at the same time.";
             pos = new Pos(this.session);
+        },
+        start: function() {
+            var self = this;
+            return pos.ready.then(_.bind(function() {
+                this.render_element();
+                this.synch_notification = new db.point_of_sale.SynchNotification(this);
+                this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
+                this.synch_notification.on_synch.add(_.bind(pos.flush, pos));
+                
+                pos.bind('change:pending_operations', this.changed_pending_operations, this);
+                this.changed_pending_operations();
+                
+                this.$element.find("#loggedas button").click(function() {
+                    self.try_close();
+                });
+    
+                this.$element.find('#steps').buttonset();
 
-            this.$element.find('#steps').buttonset();
-            
-            $('.oe_toggle_secondary_menu').hide();
-            $('.oe_footer').hide();
-
-            return pos.ready.then( function() {
                 pos.app = new App(self.$element);
-            });
+                $('.oe_toggle_secondary_menu').hide();
+                $('.oe_footer').hide();
+                
+                if (pos.store.get('account.bank.statement').length === 0)
+                    return new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
+                            _.bind(function(res) {
+                        return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
+                            var action = result.result;
+                            this.do_action(action);
+                        }, this));
+                    }, this));
+            }, this));
+        },
+        render: function() {
+            return qweb_template("PointOfSale")();
+        },
+        changed_pending_operations: function () {
+            this.synch_notification.on_change_nbr_pending(pos.get('pending_operations').length);
+        },
+        try_close: function() {
+            pos.flush().then(_.bind(function() {
+                var close = _.bind(this.close, this);
+                if (pos.get('pending_operations').length > 0) {
+                    var confirm = false;
+                    $(QWeb.render('pos-close-warning')).dialog({
+                        resizable: false,
+                        height:160,
+                        modal: true,
+                        title: "Warning",
+                        buttons: {
+                            "Yes": function() {
+                                confirm = true;
+                                $( this ).dialog( "close" );
+                            },
+                            "No": function() {
+                                $( this ).dialog( "close" );
+                            }
+                        },
+                        close: function() {
+                            if (confirm)
+                                close();
+                        }
+                    });
+                } else {
+                    close();
+                }
+            }, this));
+        },
+        close: function() {
+            return new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
+                    _.bind(function(res) {
+                return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
+                    var action = result.result;
+                    action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'default_home'}});
+                    this.do_action(action);
+                }, this));
+            }, this));
         },
         stop: function() {
             $('.oe_footer').show();
