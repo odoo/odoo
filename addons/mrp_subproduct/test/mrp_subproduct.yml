@@ -49,10 +49,7 @@
   I want to start the production so I force the reservation of products.
 -
   !python {model: mrp.production}: |
-    self.force_production(cr, uid, [ref("mrp_production_mo0")], {"lang": "en_US", "tz": False,
-      "search_default_Current": 1, "active_model": "ir.ui.menu", "active_ids":
-      [ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),
-      })
+    self.force_production(cr, uid, [ref("mrp_production_mo0")], {"active_ids":[ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),})
 -
   I start the production.
 -
@@ -69,9 +66,7 @@
   I finish the production order.
 -
   !python {model: mrp.product.produce}: |
-    self.do_produce(cr, uid, [ref("mrp_product_produce0")], {"lang": "en_US", "tz":
-      False, "search_default_Current": 1, "active_model": "mrp.production", "active_ids":
-      [ref("mrp_production_mo0")], "active_id": ref("mrp_production_mo0"), })
+    self.do_produce(cr, uid, [ref("mrp_product_produce0")], {"active_model": "mrp.production", "active_ids":[ref("mrp_production_mo0")], "active_id": ref("mrp_production_mo0")})
 -
   I see that stock moves of Cabinet including Wooden Table are done now.
 -
@@ -79,3 +74,4 @@
     move_ids = self.search(cr, uid, [('product_id','in',[ref("product.product_product_arm"),ref("product.product_product_sidepanel0")])])
     moves = self.browse(cr, uid, move_ids)
     assert all(move.state == 'done' for move in moves), 'Moves are not done!'
+
