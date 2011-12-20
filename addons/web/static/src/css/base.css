@@ -1210,7 +1210,9 @@ label.error {
     color: #1f1f1f;
 }
 
-.openerp input[type="text"].field_email, .openerp input[type="text"].field_url  {
+.openerp input[type="text"].field_binary,
+.openerp input[type="text"].field_email,
+.openerp input[type="text"].field_url  {
     border-right:none;
     -webkit-border-top-right-radius: 0px;
     -webkit-border-bottom-right-radius: 0px;
@@ -1219,7 +1221,7 @@ label.error {
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
-.openerp .mail_button, .openerp .url_button {
+.openerp .oe_button.oe_field_button {
     -webkit-border-top-left-radius: 0px;
     -webkit-border-bottom-left-radius: 0px;
     -moz-border-radius-topleft: 0px;
@@ -1227,10 +1229,12 @@ label.error {
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
     margin-right:-1px;
+    height: 22px;
 }
 
-.openerp .mail_button img, .openerp .url_button img {
-    vertical-align:top;
+.openerp .oe_form_field_email button img,
+.openerp .oe_form_field_url button img {
+    vertical-align: top;
 }
 /* vertically recentering filter management select tag */
 .openerp select.oe_search-view-filters-management { 
@@ -1255,7 +1259,7 @@ label.error {
 .openerp .oe_forms input.field_datetime {
     min-width: 11em;
 }
-.openerp .oe_forms .oe_button {
+.openerp .oe_forms .oe_form_button .oe_button {
     color: #4c4c4c;
     white-space: nowrap;
     min-width: 100%;
@@ -2015,9 +2019,9 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 }
 
 /* Buttons */
-.openerp a.button:link,
-.openerp a.button:visited,
-.openerp button {
+.openerp .oe_button:link,
+.openerp .oe_button:visited,
+.openerp .oe_button {
     display: inline-block;
     border: 1px solid #ababab;
     color: #404040;
@@ -2048,8 +2052,7 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     outline: none;
 }
 
-.openerp a.button:hover,
-.openerp button:hover {
+.openerp .oe_button:hover {
     -o-background-size: 100% 100%;
     -moz-background-size: 100% 100%;
     -webkit-background-size: auto auto !important;
@@ -2063,8 +2066,7 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     cursor: pointer;
 }
 
-.openerp a.button:focus,
-.openerp button:focus {
+.openerp .oe_button:focus {
     border: 1px solid #80bfff;
     -o-background-size: 100% 100%;
     -moz-background-size: 100% 100%;
@@ -2082,10 +2084,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
 }
 
-.openerp a.button:active,
-.openerp a.button.active,
-.openerp button:active,
-.openerp button.active {
+.openerp .oe_button:active,
+.openerp .oe_button.active {
     background: #e3e3e3;
     background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
     background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f;
@@ -2096,8 +2096,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     box-shadow: none, 0 0 0 transparent;
 }
 
-.openerp a.button.disabled,
-.openerp button:disabled {
+.openerp .oe_button.disabled,
+.openerp .oe_button:disabled {
     background: #efefef !important;
     border: 1px solid #d1d1d1 !important;
     font-size: 12px;
