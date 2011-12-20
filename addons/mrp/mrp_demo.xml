@@ -329,10 +329,18 @@
             <field model="product.product" name="product_id" ref="product.product_product_cpu3"/>
         </record>
 
+        <record id="mrp_bom_arm1" model="mrp.bom">
+            <field name="name">ARM100 + Subproduct</field>
+            <field name="sequence">40</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">1.0</field>
+            <field model="product.product" name="product_id" ref="product.product_product_arm" />
+        </record>
+
         <record id="mrp_bom_kit3" model="mrp.bom">
             <field name="code">KIT</field>
             <field name="name">Kit Keyboard + Mouse</field>
-            <field name="sequence">40</field>
+            <field name="sequence">42</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
             <field name="type">phantom</field>
@@ -602,7 +610,6 @@
             <field name="bom_id" ref="mrp_bom_9"/>
             <field model="product.product" name="product_id" ref="product.product_product_tow1"/>
         </record>
-
         <record id="mrp_bom_kit2" model="mrp.bom">
             <field name="code">KIT</field>
             <field name="sequence">118</field>
@@ -613,7 +620,15 @@
             <field name="bom_id" ref="mrp_bom_9"/>
             <field model="product.product" name="product_id" ref="product.product_product_26"/>
         </record>
-        
+        <record id="mrp_bom_34" model="mrp.bom">
+            <field name="name">SIDEPAN</field>
+            <field name="sequence">121</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">1.0</field>
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_arm1"/>
+            <field model="product.product" name="product_id" ref="product.product_product_sidepanel0"/>     
+        </record>
         <!--
     Resource: mrp.bom new EVV
     -->
