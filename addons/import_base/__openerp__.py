@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Base framework for module that need to import complex data',
+    'name': 'Framework for complex import',
     'version': '0.9',
-    'category': 'Hidden',
+    'category': 'Hidden/Dependency',
     'description': """
         This module provide a class import_framework to help importing 
         complex data from other software
@@ -37,3 +37,5 @@
     'installable': True,
     'active': False,
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

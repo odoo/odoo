@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- add the fields for French RIB to the partner form (subform)-->
+		<record id="view_partner_rib1_form" model="ir.ui.view">
+			<field name="name">res.partner.form.rib1.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="acc_number" position="before">
+					<newline />
+					<field name="bank_code" />
+					<field name="office" />
+					<newline />
+				</field>
+			</field>
+		</record>
+		<record id="view_partner_rib2_form" model="ir.ui.view">
+			<field name="name">res.partner.form.rib2.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="acc_number" position="after">
+					<field name="key" />
+				</field>
+			</field>
+		</record>
+		
+		<!-- add the bank code-->
+		<record id="view_res_bank_form" model="ir.ui.view">
+			<field name="name">res.bank.form.rib.inherit</field>
+			<field name="model">res.bank</field>
+			<field name="inherit_id" ref="base.view_res_bank_form" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="bic" position="before">
+					<field name="rib_code" />
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>

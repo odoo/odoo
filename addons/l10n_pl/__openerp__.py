@@ -21,7 +21,7 @@
 #
 ##############################################################################
 {
-    "name" : "Poland - Chart of Accounts",
+    "name" : "Poland - Accounting",
     "version" : "1.0",
     "author" : "Grzegorz Grzelak (Cirrus)",
     "website": "http://www.cirrus.pl",

@@ -18,7 +18,7 @@
 #
 ##############################################################################
 {
-    "name" : "中国会计科目表",
+    "name" : "中国会计科目表 - Accounting",
     "version" : "1.0",
     "category": "Localization/Account Charts",
     "author" : "openerp-china.org",

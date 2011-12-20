@@ -1,0 +1,14 @@
+-
+  I try to delete In progress order and check Error Message.
+-
+  !python {model: sale.order}: |
+    try:
+        self.unlink(cr, uid, [ref("order")])
+    except Exception,e:
+        pass
+-
+  I make duplicate order and delete.
+-
+  !python {model: sale.order}: |
+    id = self.copy(cr, uid, ref('order'))
+    self.unlink(cr, uid, [id])

@@ -57,20 +57,6 @@
                 </field>
             </field>
         </record>
-        
-        <record id="view_project_caldav_task_form2" model="ir.ui.view">
-            <field name="name">project.task.caldav.form2</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_form2" />
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <field name="progress" position="after">
-                    <!--     Recurrency of task not well implemented for now, remove the option-->     
-                     <field name="recurrency" invisible="1"/>
-                     <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"/>                    
-                </field>
-            </field>
-        </record>
 
         <record id="view_project_caldav_task_form3" model="ir.ui.view">
             <field name="name">project.task.caldav.form3</field>

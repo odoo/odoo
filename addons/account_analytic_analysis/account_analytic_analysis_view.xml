@@ -16,14 +16,14 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <group name="invoice_stats" position="inside">
-                    <field name="hours_qtt_non_invoiced"/>
-                    <field name="ca_to_invoice"/>
+                    <field name="hours_qtt_non_invoiced" attrs="{'invisible': [('to_invoice','=',0)]}"/>
+                    <field name="ca_to_invoice" attrs="{'invisible': [('to_invoice','=',0)]}"/>
                     <label string="" colspan="1"/>
                     <button
                         name="%(hr_timesheet_invoice.action_hr_timesheet_invoice_create_final)d"
                         string="Create Invoice"
                         type="action"
-                        attrs="{'readonly':[('ca_to_invoice','=',0.0)]}"
+                        attrs="{'readonly':[('ca_to_invoice','=',0.0)], 'invisible': [('to_invoice','=',0)]}"
                         icon="gtk-go-forward"/>
                 </group>
             </field>
@@ -107,23 +107,6 @@
                     <field name="last_invoice_date"/>
                     <field name="ca_to_invoice"/>
                 </field>
-            </field>
-        </record>
-
-        <record id="view_account_analytic_simplified" model="ir.ui.view">
-            <field name="name">account.analytic.account.simplified.tree</field>
-            <field name="model">account.analytic.account</field>
-            <field name="type">tree</field>
-            <field eval="20" name="priority"/>
-            <field name="arch" type="xml">
-                <tree string="Analytic accounts">
-                    <field name="code"/>
-                    <field name="complete_name"/>
-                    <field name="hours_qtt_non_invoiced"/>
-                    <field name="remaining_hours"/>
-                    <field name="ca_to_invoice"/>
-                    <field name="last_invoice_date"/>
-                </tree>
             </field>
         </record>
 

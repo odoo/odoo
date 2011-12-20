@@ -131,7 +131,7 @@ class account_asset_asset(osv.osv):
         if asset.prorata:
             undone_dotation_number += 1
         return undone_dotation_number
-    
+
     def compute_depreciation_board(self, cr, uid, ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
@@ -141,7 +141,7 @@ class account_asset_asset(osv.osv):
             old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
-            
+
             amount_to_depr = residual_amount = asset.value_residual
             if asset.prorata:
                 depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
@@ -198,6 +198,16 @@ class account_asset_asset(osv.osv):
             res.setdefault(id, 0.0)
         return res
 
+    def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
+        val = {}
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
+            if company.currency_id.company_id and company.currency_id.company_id.id != company_id:
+                val['currency_id'] = False
+            else:
+                val['currency_id'] = company.currency_id.id
+        return {'value': val}
+
     _columns = {
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
         'name': fields.char('Asset', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -224,7 +234,7 @@ class account_asset_asset(osv.osv):
         'method_end': fields.date('Ending Date', readonly=True, states={'draft':[('readonly',False)]}),
         'method_progress_factor': fields.float('Degressive Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual Value'),
-        'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, 
+        'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]},
                                   help="Choose the method to use to compute the dates and number of depreciation lines.\n"\
                                        "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
                                        "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
@@ -246,7 +256,7 @@ class account_asset_asset(osv.osv):
         'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.asset',context=context),
     }
-    
+
     def _check_recursion(self, cr, uid, ids, context=None, parent=None):
         return super(account_asset_asset, self)._check_recursion(cr, uid, ids, context=context, parent=parent)
 
@@ -295,7 +305,7 @@ class account_asset_asset(osv.osv):
         result = []
         period_obj = self.pool.get('account.period')
         depreciation_obj = self.pool.get('account.asset.depreciation.line')
-        period = period_obj.browse(cr, uid, period_id, context=context) 
+        period = period_obj.browse(cr, uid, period_id, context=context)
         depreciation_ids = depreciation_obj.search(cr, uid, [('asset_id', 'in', ids), ('depreciation_date', '<', period.date_stop), ('depreciation_date', '>', period.date_start), ('move_check', '=', False)], context=context)
         return depreciation_obj.create_move(cr, uid, depreciation_ids, context=context)
 
@@ -394,7 +404,7 @@ class account_asset_depreciation_line(osv.osv):
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
             created_move_ids.append(move_id)
             if can_close:
-                asset_obj.write(cr, uid, [line.asset_id.id], {'state': 'close'}, context=context)                
+                asset_obj.write(cr, uid, [line.asset_id.id], {'state': 'close'}, context=context)
         return created_move_ids
 
 account_asset_depreciation_line()
@@ -416,7 +426,7 @@ class account_asset_history(osv.osv):
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date': fields.date('Date', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
-        'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True, 
+        'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True,
                                   help="The method to use to compute the dates and number of depreciation lines.\n"\
                                        "Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
                                        "Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
@@ -430,7 +440,7 @@ class account_asset_history(osv.osv):
         'date': lambda *args: time.strftime('%Y-%m-%d'),
         'user_id': lambda self, cr, uid, ctx: uid
     }
-    
+
 account_asset_history()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

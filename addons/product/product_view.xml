@@ -56,7 +56,7 @@
                     <field name="virtual_available"/>
                     <field name="lst_price"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="standard_price"/>
+                    <field name="standard_price" groups="base.group_extended"/>
                     <field name="state" groups="base.group_extended"/>
                     <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 </tree>
@@ -100,9 +100,10 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Base Prices" colspan="2"/>
-                                <field groups="base.group_extended" name="cost_method"/>
-                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                 <field name="list_price"/>
+                                <field groups="base.group_extended" name="cost_method"/>
+                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"
+                                    groups="base.group_extended"/>
                                 <newline/>
                                 <field name="price_margin" groups="product.group_product_variant"/>
                                 <field name="price_extra" groups="product.group_product_variant"/>
@@ -194,53 +195,42 @@
                 </form>
             </field>
         </record>
-        
+
         <!-- Product Kanban View  -->
         <record model="ir.ui.view" id="product_kanban_view">
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
             <field name="type">kanban</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="type">
+                <kanban>
                     <field name="color"/>
                     <field name="type"/>
                     <field name="product_image"/>
                     <field name="list_price"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.type.raw_value)"/>
-                            <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                            <t t-if="record.type.raw_value!='service' and record.qty_available.raw_value lte 0" t-set="border">oe_kanban_color_red</t>
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
                                 <div class="oe_kanban_box oe_kanban_color_border">
-                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle oe_kanban_title1">
+                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle oe_kanban_title">
                                         <field name="name"/>
                                     </div>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                        <table class="oe_kanban_table">
-                                            <tr>
-                                                <td valign="top" width="48">
-                                                    <img t-att-src="kanban_image('product.product', 'product_image', record.id.value)" width="48"/>
-                                                </td>
-                                                <td>
-                                                    <div class="oe_kanban_title2">
-                                                        <t t-if="record.type.raw_value=='service'">No Stock</t>
-                                                        <t t-if="record.type.raw_value!='service'">
-                                                            <div><field name="qty_available"/> On Hand , <field name="virtual_available"/> Available</div>
-                                                            <div>
-                                                                <t t-if="record.list_price.raw_value!=0">Public Price : <field name="lst_price"/> ,</t>
-                                                                Cost : <field name="standard_price"/>
-                                                            </div>
-                                                        </t>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                        <img t-att-src="kanban_image('product.product', 'product_image', record.id.value)" width="48" style="float: left; padding: 0 4px 4px 0"/>
+                                        <div t-if="record.type.raw_value == 'service'">No Stock</div>
+                                        <t t-if="record.type.raw_value != 'service'">
+                                            <div>Stock: <field name="qty_available"/> on hand, <field name="virtual_available"/> available</div>
+                                            <div t-if="record.list_price.raw_value != 0">Public Price: <field name="lst_price"/></div>
+                                            <div>Cost : <field name="standard_price"/></div>
+                                        </t>
+                                        <div class="oe_kanban_clear"/>
                                     </div>
                                     <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                         <div class="oe_kanban_left">
                                             <a string="Edit" icon="gtk-edit" type="edit"/>
                                             <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                         </div>
-                                        <br class="oe_kanban_clear"/>
+                                        </div>
+                                        <div class="oe_kanban_clear"/>
                                     </div>
                                 </div>
                             </div>
@@ -648,8 +638,9 @@
 
                             <group colspan="2" col="2">
                                 <separator string="Base Prices" colspan="2"/>
-                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                 <field name="list_price"/>
+                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"
+                                    groups="base.group_extended"/>
                                 <field groups="base.group_extended" name="cost_method"/>
                             </group>
 

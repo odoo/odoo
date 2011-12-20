@@ -55,17 +55,20 @@ Dashboard for project members that includes:
         "res_partner_view.xml",
         "report/project_report_view.xml",
         "board_project_view.xml",
-        'board_project_manager_view.xml'
+        'board_project_manager_view.xml',
+        'report/project_cumulative.xml'
     ],
     'demo_xml': [
         'project_demo.xml',
     ],
     'test':[
-        'test/test_project.yml',
-        'test/test_project_delegation.yml',
+        'test/project_demo.yml',
+        'test/project_process.yml',
+        'test/task_process.yml',
     ],
     'installable': True,
     'active': False,
+    'application': True,
     'certificate': '0075116868317',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

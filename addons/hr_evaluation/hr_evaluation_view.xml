@@ -365,7 +365,7 @@
         </record>
 
         <record id="view_evaluation_calendar" model="ir.ui.view">
-            <field name="name">Interview Request</field>
+            <field name="name">Interview Requests</field>
             <field name="model">hr.evaluation.interview</field>
             <field name="type">calendar</field>
             <field name="arch" type="xml">
@@ -379,9 +379,9 @@
             <field name="name">Interview Requests</field>
             <field name="res_model">hr.evaluation.interview</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="view_hr_evaluation_interview_form"/>
+            <field name="view_id" eval="False"/>
             <field name="domain">[('is_evaluation' ,'=', True)]</field>
-            <field name="context">{"search_default_todo":1,"search_default_user_id":uid}</field>
+            <field name="context">{'default_is_evaluation': True, "search_default_todo":1,"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
             <field name="help">Interview Requests are generated automatically by OpenERP according to an employee's Appraisal Plan. Each user receives automatic emails and requests to evaluate their colleagues periodically.</field>
         </record>

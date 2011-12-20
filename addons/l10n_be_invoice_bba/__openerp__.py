@@ -21,11 +21,11 @@
 ##############################################################################
 
 {
-    'name': 'Add support for Belgian structured communication to Invoices',
+    'name': 'Belgium - Structured Communication',
     'version': '1.2',
     'license': 'AGPL-3',
     'author': 'Noviat',
-    'category' : 'Localization/Accounting',
+    'category' : 'Localization',
     'description': """
     
 Belgian localisation for in- and outgoing invoices (prereq to account_coda):
@@ -53,3 +53,5 @@ A 'random' Structured Communication will generated if no algorithm is specified 
     ],
     'active': False,
     'installable': True,}
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

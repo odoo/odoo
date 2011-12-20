@@ -482,11 +482,13 @@ class product_template(osv.osv):
         'property_stock_account_input': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Input Account', view_load=True,
-            help='When doing real-time inventory valuation, counterpart Journal Items for all incoming stock moves will be posted in this account. If not set on the product, the one from the product category is used.'),
+            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used."),
         'property_stock_account_output': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Output Account', view_load=True,
-            help='When doing real-time inventory valuation, counterpart Journal Items for all outgoing stock moves will be posted in this account. If not set on the product, the one from the product category is used.'),
+            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
     }
 
 product_template()
@@ -502,11 +504,15 @@ class product_category(osv.osv):
         'property_stock_account_input_categ': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Input Account', view_load=True,
-            help='When doing real-time inventory valuation, counterpart Journal Items for all incoming stock moves will be posted in this account. This is the default value for all products in this category, it can also directly be set on each product.'),
+            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
+                 "can also directly be set on each product"),
         'property_stock_account_output_categ': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Output Account', view_load=True,
-            help='When doing real-time inventory valuation, counterpart Journal Items for all outgoing stock moves will be posted in this account. This is the default value for all products in this category, it can also directly be set on each product.'),
+            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
+                 "can also directly be set on each product"),
         'property_stock_valuation_account_id': fields.property('account.account',
             type='many2one',
             relation='account.account',

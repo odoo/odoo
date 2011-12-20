@@ -262,7 +262,7 @@
                     <group col="6" colspan="4">
                         <field name="employee_id" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
                         <field name="number"/>
-                        <field name="date_from"/>
+                        <field name="date_from" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
                         <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]" on_change="onchange_contract_id(date_from, date_to, employee_id, contract_id)"/>
                         <field name="struct_id" groups="base.group_extended" attrs="{'required':[('contract_id','&lt;&gt;',False)]}"/>
                         <field name="date_to"/>
@@ -759,13 +759,14 @@
 
         <act_window name="Payslip Computation Details"
         	domain="[('slip_id', '=', active_id)]"
+        	context="{'default_slip_id': active_id}"
         	res_model="hr.payslip.line"
         	src_model="hr.payslip"
         	id="act_payslip_lines"/>
 
         <act_window name="Payslip Lines"
         	domain="[('register_id', '=', active_id)]"
-        	context="{'search_default_register_id': 1}"
+        	context="{'default_register_id': active_id, 'search_default_register_id': 1}"
         	res_model="hr.payslip.line"
         	src_model="hr.contribution.register"
         	id="act_contribution_reg_payslip_lines"/>

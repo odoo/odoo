@@ -312,9 +312,10 @@ class project_issue(crm.crm_case, osv.osv):
                 'name': bug.name,
                 'partner_id': bug.partner_id.id,
                 'description':bug.description,
-                'date': bug.date,
+                'date_deadline': bug.date,
                 'project_id': bug.project_id.id,
-                'priority': bug.priority,
+                # priority must be in ['0','1','2','3','4'], while bug.priority is in ['1','2','3','4','5']
+                'priority': str(int(bug.priority) - 1),
                 'user_id': bug.user_id.id,
                 'planned_hours': 0.0,
             })
@@ -487,7 +488,6 @@ project_issue()
 class project(osv.osv):
     _inherit = "project.project"
     _columns = {
-        'resource_calendar_id' : fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256)
     }

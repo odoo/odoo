@@ -108,7 +108,7 @@
         <field name="view_mode">tree,form,calendar,graph</field>
         <field eval="False" name="view_id"/>
         <field name="domain">[('type','=','in_invoice')]</field>
-        <field name="context">{'type':'in_invoice', 'journal_type': 'purchase', 'search_default_draft': 1}</field>
+        <field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase', 'search_default_draft': 1}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
             <field name="help">Use this menu to control the invoices to be received from your supplier. OpenERP pregenerates draft invoices from your purchase orders or receptions, according to your settings. Once you receive a supplier invoice, you can match it with the draft invoice and validate it.</field>
     </record>
@@ -172,7 +172,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Purchase Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1}" />
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}" />
                             <field name="partner_address_id"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="origin" groups="base.group_extended"/>
@@ -315,11 +315,10 @@
                     <field name="date_order" />
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field name="location_id"/>
-                    <field name="minimum_planned_date"/>
+                    <field name="minimum_planned_date" invisible="context.get('quotation_only', False)"/>
                     <field name="origin"/>
-                    <field name="invoiced_rate" widget="progressbar"/>
-                    <field name="shipped_rate" widget="progressbar"/>
+                    <field name="invoiced_rate" widget="progressbar" invisible="context.get('quotation_only', False)"/>
+                    <field name="shipped_rate" widget="progressbar" invisible="context.get('quotation_only', False)"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount"/>
                     <field name="amount_total" sum="Total amount"/>
                     <field name="state"/>

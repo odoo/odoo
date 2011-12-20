@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Invoice on analytic lines',
+    'name': 'Invoice on Timesheets',
     'version': '1.0',
-    'category': 'Hidden/Link',
+    'category': 'Sales Management',
     'description': """Generate your Invoices from Expenses, Timesheet Entries, ...
 Module to generate invoices based on costs (human resources, expenses, ...).
 ============================================================================
