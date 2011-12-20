@@ -33,6 +33,8 @@ class order(report_sxw.rml_parse):
             'get_tax': self._get_tax,
             'get_product_code': self._get_product_code,
         })
+
+    #dead code
     def _get_line_tax(self, line_obj):
         self.cr.execute("SELECT tax_id FROM purchase_order_taxe WHERE order_line_id=%s", (line_obj.id))
         res = self.cr.fetchall() or None
@@ -44,7 +46,8 @@ class order(report_sxw.rml_parse):
             tax_ids = res[0]
         res = [tax.name for tax in pooler.get_pool(self.cr.dbname).get('account.tax').browse(self.cr, self.uid, tax_ids)]
         return ",\n ".join(res)
-    
+
+    #dead code
     def _get_tax(self, order_obj):
         self.cr.execute("SELECT DISTINCT tax_id FROM purchase_order_taxe, purchase_order_line, purchase_order \
             WHERE (purchase_order_line.order_id=purchase_order.id) AND (purchase_order.id=%s)", (order_obj.id))
@@ -73,6 +76,8 @@ class order(report_sxw.rml_parse):
                     'base':base,
                     'amount':base*tax.amount})
         return res
+
+    #dead code
     def _get_product_code(self, product_id, partner_id):
         product_obj=pooler.get_pool(self.cr.dbname).get('product.product')
         return product_obj._product_code(self.cr, self.uid, [product_id], name=None, arg=None, context={'partner_id': partner_id})[product_id]
