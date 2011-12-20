@@ -63,6 +63,14 @@ class hr_attendance(osv.osv):
         'employee_id': _employee_get,
     }
 
+    def write(self, cr, uid, ids, vals, context=None):
+        current_attendance_data = self.browse(cr, uid, ids, context=context)[0]
+        obj_attendance_ids = self.search(cr, uid, [('employee_id', '=', current_attendance_data.employee_id.id)], context=context)
+        if obj_attendance_ids[0] != ids[0]:
+            if ('name' in vals) or ('action' in vals):
+                raise osv.except_osv(_('Warning !'), _('You can not modify existing entries. To modify the entry , remove the prior entries.'))
+        return super(hr_attendance, self).write(cr, uid, ids, vals, context=context)
+
     def _altern_si_so(self, cr, uid, ids, context=None):
         current_attendance_data = self.browse(cr, uid, ids, context=context)[0]
         obj_attendance_ids = self.search(cr, uid, [('employee_id', '=', current_attendance_data.employee_id.id)], context=context)
@@ -70,13 +78,13 @@ class hr_attendance(osv.osv):
         hr_attendance_data = self.browse(cr, uid, obj_attendance_ids, context=context)
 
         for old_attendance in hr_attendance_data:
-            if old_attendance.employee_id.id == current_attendance_data['employee_id'].id:
-                if old_attendance.action == current_attendance_data['action']:
-                    return False
-                elif old_attendance.name >= current_attendance_data['name']:
-                    return False
-                else:
-                    return True
+            if old_attendance.action == current_attendance_data['action']:
+                return False
+            elif old_attendance.name >= current_attendance_data['name']:
+                return False
+            else:
+                return True
+        # First entry in the system must not be 'sign_out'
         if current_attendance_data['action'] == 'sign_out':
             return False
         return True
