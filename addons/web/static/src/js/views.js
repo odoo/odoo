@@ -621,7 +621,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var grandparent = this.widget_parent && this.widget_parent.widget_parent;
         // display shortcuts if on the first view for the action
         var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        if (!(grandparent instanceof session.web.WebClient) ||
+        if (!this.action.name ||
             !(view.view_type === this.views_src[0].view_type
                 && view.view_id === this.views_src[0].view_id)) {
             $shortcut_toggle.hide();
