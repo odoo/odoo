@@ -1132,7 +1132,7 @@ openerp.web.embed = function (origin, dbname, login, key, action, options) {
         currentScript = sc[sc.length-1];
     }
     openerp.connection.bind(origin).then(function () {
-        openerp.connection.session_authenticate(dbname, login, key).then(function () {
+        openerp.connection.session_authenticate(dbname, login, key, true).then(function () {
             var client = new openerp.web.EmbeddedClient(action, options);
             client.insertAfter(currentScript);
         });
