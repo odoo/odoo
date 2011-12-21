@@ -416,6 +416,23 @@
     <table class="view-manager-main-table" cellpadding="0" cellspacing="0">
     <tbody>
     <tr>
+            <td class="oe_view_manager_menu_tips" colspan="2">
+                <blockquote t-if="self.action.help and !self.flags.low_profile
+                                 and !(self.action.id in self.session.hidden_menutips)">
+                    <p><t t-esc="self.action.help"/></p>
+                    <div>
+                        <button type="button" name="hide">Hide this tip</button>
+                        <button type="button" name="disable">Disable all tips</button>
+                    </div>
+                </blockquote>
+            </td>
+            <td rowspan="3" class="view-manager-main-sidebar" height="100%">
+            <t t-foreach="views" t-as="view">
+                <div t-attf-id="#{prefix}_sidebar_#{view.view_type}" class="sidebar-main-div closed-sidebar" style="display: none"/>
+            </t>
+        </td>
+    </tr>
+    <tr>
         <td class="view-manager-main-content">
             <div class="oe-view-manager-header">
                 <h2 class="oe_view_title" t-if="self.flags.display_title !== false">
@@ -435,11 +452,7 @@
                 <div t-attf-id="#{prefix}_view_#{view.view_type}"/>
             </t>
         </td>
-        <td class="view-manager-main-sidebar" height="100%">
-            <t t-foreach="views" t-as="view">
-                <div t-attf-id="#{prefix}_sidebar_#{view.view_type}" class="sidebar-main-div closed-sidebar" style="display: none"/>
-            </t>
-        </td>
+       
     </tr>
     </tbody>
     </table>
@@ -447,18 +460,7 @@
 
 <t t-extend="ViewManager" t-name="ViewManagerAction">
     <t t-jquery=".view-manager-main-table tbody" t-operation="prepend">
-        <tr>
-            <td class="oe_view_manager_menu_tips" colspan="2">
-                <blockquote t-if="self.action.help and !self.flags.low_profile
-                                 and !(self.action.id in self.session.hidden_menutips)">
-                    <p><t t-esc="self.action.help"/></p>
-                    <div>
-                        <button type="button" name="hide">Hide this tip</button>
-                        <button type="button" name="disable">Disable all tips</button>
-                    </div>
-                </blockquote>
-            </td>
-        </tr>
+        <!-- was here before -->
     </t>
     <t t-jquery="h2.oe_view_title" t-operation="prepend">
         <a t-if="self.flags.display_title !== false" class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
