@@ -95,7 +95,13 @@ class share_wizard(osv.osv_memory):
         # NOTE: take _ids in parameter to allow usage through browse_record objects
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
         if base_url:
-            base_url += '/?db=%(dbname)s&login=%(login)s'
+            base_url += '/web/webclient/login?db=%(dbname)s&login=%(login)s'
+            extra = context and context.get('share_url_template_extra_arguments')
+            if extra:
+                base_url += '&' + '&'.join('%s=%%(%s)s' % (x,x) for x in extra)
+            hash_ = context and context.get('share_url_template_hash_arguments')
+            if hash_:
+                base_url += '#' + '&'.join('%s=%%(%s)s' % (x,x) for x in hash_)
         return base_url
 
     def _share_root_url(self, cr, uid, ids, _fieldname, _args, context=None):
@@ -127,11 +133,12 @@ class share_wizard(osv.osv_memory):
         user = wizard.result_line_ids[0]
 
         return """
-<script type="text/javascript" src="http://localhost:8069/web/webclient/js"></script>
+<script type="text/javascript" src="%(base_url)s/web/webclient/js"></script>
 <script type="text/javascript">
     new openerp.init(%(init)s).web.embed(%(server)s, %(dbname)s, %(login)s, %(password)s,%(action)d%(options)s);
 </script> """ % {
             'init': simplejson.dumps(openerp.conf.server_wide_modules),
+            'base_url': base_url or '',
             'server': simplejson.dumps(base_url),
             'dbname': simplejson.dumps(cr.dbname),
             'login': simplejson.dumps(user.login),
@@ -145,6 +152,20 @@ class share_wizard(osv.osv_memory):
         for this in self.browse(cr, uid, ids, context=context):
             result[this.id] = self._generate_embedded_code(this)
         return result
+
+    def _embed_url(self, cr, uid, ids, _fn, _args, context=None):
+        if context is None:
+            context = {}
+        result = dict.fromkeys(ids, '')
+        for this in self.browse(cr, uid, ids, context=context):
+            if this.result_line_ids:
+                ctx = dict(context, share_url_template_extra_arguments=['key'],
+                                    share_url_template_hash_arguments=['action_id'])
+                user = this.result_line_ids[0]
+                data = dict(dbname=cr.dbname, login=user.login, key=user.password, action_id=this.action_id.id)
+                result[this.id] = this.share_url_template(context=ctx) % data
+        return result
+
 
     _columns = {
         'action_id': fields.many2one('ir.actions.act_window', 'Action to share', required=True,
@@ -165,6 +186,7 @@ class share_wizard(osv.osv_memory):
         'embed_code': fields.function(_embed_code, type='text'),
         'embed_option_title': fields.boolean("Display title"),
         'embed_option_search': fields.boolean('Display search view'),
+        'embed_url': fields.function(_embed_url, string='Share URL', type='char', size=512, readonly=True),
     }
     _defaults = {
         'view_type': 'tree',
@@ -220,6 +242,8 @@ class share_wizard(osv.osv_memory):
            ignored, existing ones."""
         user_obj = self.pool.get('res.users')
         current_user = user_obj.browse(cr, UID_ROOT, uid, context=context)
+        # modify context to disable shortcuts when creating share users
+        context['noshortcut'] = True
         created_ids = []
         existing_ids = []
         if wizard_data.user_type == 'emails':
@@ -244,7 +268,7 @@ class share_wizard(osv.osv_memory):
                         'groups_id': [(6,0,[group_id])],
                         'share': True,
                         'company_id': current_user.company_id.id
-                })
+                }, context)
                 new_line = { 'user_id': user_id,
                              'password': new_pass,
                              'newly_created': True}
@@ -261,7 +285,7 @@ class share_wizard(osv.osv_memory):
                 'groups_id': [(6,0,[group_id])],
                 'share': True,
                 'company_id': current_user.company_id.id
-            })
+            }, context)
             new_line = { 'user_id': user_id,
                          'password': new_pass,
                          'newly_created': True}

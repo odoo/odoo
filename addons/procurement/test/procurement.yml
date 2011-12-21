@@ -78,11 +78,12 @@
     proc_id = context.get('proc')
     proc = self.browse(cr, uid, [proc_id])[0]
     assert proc.state == 'ready' or 'exception',"Procurement should be in Ready or Exception state"
--
-  I compute minimum stock.
--
-  !python {model: procurement.orderpoint.compute}: |
-    proc_id = context.get('proc')
-    context.update({'active_model': 'procurement.order', 'active_id': proc_id})
-    id = self.create(cr, uid, {'automatic': True}, context)
-    self.procure_calculation(cr, uid, [id], context)
+#-
+#  I compute minimum stock.
+#  [Note.  Commented out because it spawns a thread that may query the db after tests have been reverted.]
+#-
+#  !python {model: procurement.orderpoint.compute}: |
+#    proc_id = context.get('proc')
+#    context.update({'active_model': 'procurement.order', 'active_id': proc_id})
+#    id = self.create(cr, uid, {'automatic': True}, context)
+#    self.procure_calculation(cr, uid, [id], context)

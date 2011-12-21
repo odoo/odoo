@@ -34,8 +34,11 @@
     ],
     "demo_xml" : [ 'account_asset_demo.xml'
     ],
-    'test': ['test/account_asset.yml',
-             ],
+    'test': [
+        'test/account_asset_demo.yml',
+        'test/account_asset.yml',
+        'test/account_asset_wizard.yml',
+    ],
     "update_xml" : [
         "security/account_asset_security.xml",
         "security/ir.model.access.csv",
@@ -45,7 +48,6 @@
         "account_asset_view.xml",
         "account_asset_invoice_view.xml",
         "report/account_asset_report_view.xml",
-
     ],
     "active": False,
     "installable": True,

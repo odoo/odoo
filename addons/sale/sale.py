@@ -710,7 +710,7 @@ class sale_order(osv.osv):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
         output_id = order.shop_id.warehouse_id.lot_output_id.id
         return {
-            'name': line.name[:64],
+            'name': line.name[:250],
             'picking_id': picking_id,
             'product_id': line.product_id.id,
             'date': date_planned,
@@ -771,6 +771,11 @@ class sale_order(osv.osv):
                                 self.pool.get('procurement.order').write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
         return True
 
+    def _get_date_planned(self, cr, uid, order, line, start_date, *args):
+        date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=line.delay or 0.0)    
+        date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return date_planned
+
     def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, *args):
         """Create the required procurements to supply sale order lines, also connecting
         the procurements to appropriate stock moves in order to bring the goods to the
@@ -799,8 +804,7 @@ class sale_order(osv.osv):
             if line.state == 'done':
                 continue
 
-            date_planned = datetime.strptime(order.date_order, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=line.delay or 0.0)
-            date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            date_planned = self._get_date_planned(cr, uid, order, line, order.date_order, *args)
 
             if line.product_id:
                 if line.product_id.product_tmpl_id.type in ('product', 'consu'):

@@ -57,6 +57,7 @@ class hr_expense_expense(osv.osv):
 
     _name = "hr.expense.expense"
     _description = "Expense"
+    _order = "id desc"
     _columns = {
         'name': fields.char('Description', size=128, required=True),
         'id': fields.integer('Sheet ID', readonly=True),

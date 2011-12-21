@@ -70,20 +70,28 @@ openerp.point_of_sale = function(db) {
             this.flush_mutex = new $.Mutex();
             this.build_tree = _.bind(this.build_tree, this);
             this.session = session;
-            this.set({'pending_operations': this.store.get('pending_operations', [])});
-            this.bind('change:pending_operations', _.bind(function(unused, val) {
-                this.store.set('pending_operations', val);
-            }, this));
-            this.set({'currency': this.store.get('currency', {symbol: '$', position: 'after'})});
-            this.bind('change:currency', _.bind(function(unused, val) {
-                this.store.set('currency', val);
+            var attributes = {
+                'pending_operations': [],
+                'currency': {symbol: '$', position: 'after'},
+                'shop': {},
+                'company': {},
+                'user': {},
+            };
+            _.each(attributes, _.bind(function(def, attr) {
+                var to_set = {};
+                to_set[attr] = this.store.get(attr, def);
+                this.set(to_set);
+                this.bind('change:' + attr, _.bind(function(unused, val) {
+                    this.store.set(attr, val);
+                }, this));
             }, this));
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
                 this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
-                this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'], [['state', '=', 'open']]),
+                this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
+                    [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
                 this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
-                this.get_currency())
-                .then(this.build_tree);
+                this.get_app_data())
+                .pipe(_.bind(this.build_tree, this));
         },
         fetch: function(osvModel, fields, domain) {
             var dataSetSearch;
@@ -93,19 +101,23 @@ openerp.point_of_sale = function(db) {
                 return self.store.set(osvModel, result);
             });
         },
-        get_currency: function() {
-            return new db.web.Model("sale.shop").get_func("search_read")([]).pipe(function(result) {
+        get_app_data: function() {
+            var self = this;
+            return $.when(new db.web.Model("sale.shop").get_func("search_read")([]).pipe(function(result) {
+                self.set({'shop': result[0]});
                 var company_id = result[0]['company_id'][0];
-                return new db.web.Model("res.company").get_func("read")(company_id, ['currency_id']).pipe(function(result) {
+                return new db.web.Model("res.company").get_func("read")(company_id, ['currency_id', 'name', 'phone']).pipe(function(result) {
+                    self.set({'company': result});
                     var currency_id = result['currency_id'][0]
                     return new db.web.Model("res.currency").get_func("read")([currency_id],
                             ['symbol', 'position']).pipe(function(result) {
-                        return result[0];
+                        self.set({'currency': result[0]});
+                        
                     });
                 });
-            }).then(_.bind(function(currency) {
-                this.set({'currency': currency});
-            }, this));
+            }), new db.web.Model("res.users").get_func("read")(this.session.uid, ['name']).pipe(function(result) {
+                self.set({'user': result});
+            }));
         },
         push: function(osvModel, record) {
             var ops = _.clone(this.get('pending_operations'));
@@ -490,21 +502,12 @@ openerp.point_of_sale = function(db) {
      The numpad handles both the choice of the property currently being modified
      (quantity, price or discount) and the edition of the corresponding numeric value.
      */
-    var NumpadState = (function() {
-        __extends(NumpadState, Backbone.Model);
-        function NumpadState() {
-            NumpadState.__super__.constructor.apply(this, arguments);
-        }
-
-        NumpadState.prototype.defaults = {
+    var NumpadState = Backbone.Model.extend({
+        defaults: {
             buffer: "0",
             mode: "quantity"
-        };
-        NumpadState.prototype.initialize = function(options) {
-            this.shop = options.shop;
-            return this.shop.bind('change:selectedOrder', this.reset, this);
-        };
-        NumpadState.prototype.appendNewChar = function(newChar) {
+        },
+        appendNewChar: function(newChar) {
             var oldBuffer;
             oldBuffer = this.get('buffer');
             if (oldBuffer === '0') {
@@ -520,9 +523,9 @@ openerp.point_of_sale = function(db) {
                     buffer: (this.get('buffer')) + newChar
                 });
             }
-            return this.updateTarget();
-        };
-        NumpadState.prototype.deleteLastChar = function() {
+            this.updateTarget();
+        },
+        deleteLastChar: function() {
             var tempNewBuffer;
             tempNewBuffer = (this.get('buffer')).slice(0, -1) || "0";
             if (isNaN(tempNewBuffer)) {
@@ -531,38 +534,36 @@ openerp.point_of_sale = function(db) {
             this.set({
                 buffer: tempNewBuffer
             });
-            return this.updateTarget();
-        };
-        NumpadState.prototype.switchSign = function() {
+            this.updateTarget();
+        },
+        switchSign: function() {
             var oldBuffer;
             oldBuffer = this.get('buffer');
             this.set({
                 buffer: oldBuffer[0] === '-' ? oldBuffer.substr(1) : "-" + oldBuffer
             });
-            return this.updateTarget();
-        };
-        NumpadState.prototype.changeMode = function(newMode) {
-            return this.set({
+            this.updateTarget();
+        },
+        changeMode: function(newMode) {
+            this.set({
                 buffer: "0",
                 mode: newMode
             });
-        };
-        NumpadState.prototype.reset = function() {
-            return this.set({
-                buffer: "0"
+        },
+        reset: function() {
+            this.set({
+                buffer: "0",
+                mode: "quantity"
             });
-        };
-        NumpadState.prototype.updateTarget = function() {
+        },
+        updateTarget: function() {
             var bufferContent, params;
             bufferContent = this.get('buffer');
             if (bufferContent && !isNaN(bufferContent)) {
-                params = {};
-                params[this.get('mode')] = parseFloat(bufferContent);
-                return (this.shop.get('selectedOrder')).selected.set(params);
+            	this.trigger('setValue', parseFloat(bufferContent));
             }
-        };
-        return NumpadState;
-    })();
+        },
+    });
     /*
      ---
      Views
@@ -571,9 +572,11 @@ openerp.point_of_sale = function(db) {
     var NumpadWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
-            this.state = options.state;
+            this.state = new NumpadState();
         },
         start: function() {
+            this.state.bind('change:mode', this.changedMode, this);
+            this.changedMode();
             this.$element.find('button#numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
             this.$element.find('button#numpad-minus').click(_.bind(this.clickSwitchSign, this));
             this.$element.find('button.number-char').click(_.bind(this.clickAppendNewChar, this));
@@ -591,12 +594,14 @@ openerp.point_of_sale = function(db) {
             return this.state.appendNewChar(newChar);
         },
         clickChangeMode: function(event) {
-            var newMode;
-            $('.selected-mode').removeClass('selected-mode');
-            $(event.currentTarget).addClass('selected-mode');
-            newMode = event.currentTarget.attributes['data-mode'].nodeValue;
+            var newMode = event.currentTarget.attributes['data-mode'].nodeValue;
             return this.state.changeMode(newMode);
-        }
+        },
+        changedMode: function() {
+            var mode = this.state.get('mode');
+            $('.selected-mode').removeClass('selected-mode');
+            $(_.str.sprintf('.mode-button[data-mode="%s"]', mode), this.$element).addClass('selected-mode');
+        },
     });
     /*
      Gives access to the payment methods (aka. 'cash registers')
@@ -688,14 +693,12 @@ openerp.point_of_sale = function(db) {
                 return this.$element.remove();
             }, this));
             this.order = options.order;
-            this.numpadState = options.numpadState;
         },
         start: function() {
             this.$element.click(_.bind(this.clickHandler, this));
         },
         clickHandler: function() {
-            this.numpadState.reset();
-            return this.select();
+            this.select();
         },
         render_element: function() {
             this.select();
@@ -706,16 +709,33 @@ openerp.point_of_sale = function(db) {
         select: function() {
             $('tr.selected').removeClass('selected');
             this.$element.addClass('selected');
-            return this.order.selected = this.model;
+            this.order.selected = this.model;
+            this.on_selected();
         },
+        on_selected: function() {},
     });
     var OrderWidget = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
-            this.numpadState = options.numpadState;
+            this.setNumpadState(options.numpadState);
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindOrderLineEvents();
+        },
+        setNumpadState: function(numpadState) {
+        	if (this.numpadState) {
+        		this.numpadState.unbind('setValue', this.setValue);
+        	}
+        	this.numpadState = numpadState;
+        	if (this.numpadState) {
+        		this.numpadState.bind('setValue', this.setValue, this);
+        		this.numpadState.reset();
+        	}
+        },
+        setValue: function(val) {
+        	var param = {};
+        	param[this.numpadState.get('mode')] = val;
+        	this.shop.get('selectedOrder').selected.set(param);
         },
         changeSelectedOrder: function() {
             this.currentOrderLines.unbind();
@@ -730,20 +750,30 @@ openerp.point_of_sale = function(db) {
         addLine: function(newLine) {
             var line = new OrderlineWidget(null, {
                     model: newLine,
-                    order: this.shop.get('selectedOrder'),
-                    numpadState: this.numpadState
+                    order: this.shop.get('selectedOrder')
             });
+            line.on_selected.add(_.bind(this.selectedLine, this));
+            this.selectedLine();
             line.appendTo(this.$element);
             this.updateSummary();
+        },
+        selectedLine: function() {
+        	var reset = false;
+        	if (this.currentSelected !== this.shop.get('selectedOrder').selected) {
+        		reset = true;
+        	}
+        	this.currentSelected = this.shop.get('selectedOrder').selected;
+        	if (reset && this.numpadState)
+        		this.numpadState.reset();
         },
         render_element: function() {
             this.$element.empty();
             this.currentOrderLines.each(_.bind( function(orderLine) {
                 var line = new OrderlineWidget(null, {
                         model: orderLine,
-                        order: this.shop.get('selectedOrder'),
-                        numpadState: this.numpadState
+                        order: this.shop.get('selectedOrder')
                 });
+            	line.on_selected.add(_.bind(this.selectedLine, this));
                 line.appendTo(this.$element);
             }, this));
             this.updateSummary();
@@ -847,27 +877,32 @@ openerp.point_of_sale = function(db) {
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
-            this.model.bind('change', this.render_element, this);
+            this.model.bind('change', this.changedAmount, this);
         },
-        start: function () {
-            this.$element.addClass('paymentline');
-            $('input', this.$element).keyup(_.bind(this.changeAmount, this));
-        },
+        on_delete: function() {},
         changeAmount: function(event) {
             var newAmount;
             newAmount = event.currentTarget.value;
             if (newAmount && !isNaN(newAmount)) {
-                return this.model.set({
-                    amount: parseFloat(newAmount)
+            	this.amount = parseFloat(newAmount);
+                this.model.set({
+                    amount: this.amount,
                 });
             }
         },
+        changedAmount: function() {
+        	if (this.amount !== this.model.get('amount'))
+        		this.render_element();
+        },
         render_element: function() {
+        	this.amount = this.model.get('amount');
             this.$element.html(this.template_fct({
                 name: (this.model.get('journal_id'))[1],
-                amount: this.model.get('amount')
+                amount: this.amount,
             }));
-            return this;
+            this.$element.addClass('paymentline');
+            $('input', this.$element).keyup(_.bind(this.changeAmount, this));
+            $('.delete-payment-line', this.$element).click(this.on_delete);
         },
     });
     var PaymentWidget = db.web.Widget.extend({
@@ -899,6 +934,7 @@ openerp.point_of_sale = function(db) {
         bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
             this.currentPaymentLines.bind('add', this.addPaymentLine, this);
+            this.currentPaymentLines.bind('remove', this.render_element, this);
             this.currentPaymentLines.bind('all', this.updatePaymentSummary, this);
         },
         bindOrderLineEvents: function() {
@@ -916,17 +952,18 @@ openerp.point_of_sale = function(db) {
             var x = new PaymentlineWidget(null, {
                     model: newPaymentLine
                 });
+            x.on_delete.add(_.bind(this.deleteLine, this, x));
             x.appendTo(this.paymentLineList());
         },
         render_element: function() {
             this.paymentLineList().empty();
             this.currentPaymentLines.each(_.bind( function(paymentLine) {
-                var x = new PaymentlineWidget(null, {
-                    model: paymentLine
-                });
-                this.paymentLineList().append(x);
+                this.addPaymentLine(paymentLine);
             }, this));
             this.updatePaymentSummary();
+        },
+        deleteLine: function(lineWidget) {
+        	this.currentPaymentLines.remove([lineWidget.model]);
         },
         updatePaymentSummary: function() {
             var currentOrder, dueTotal, paidTotal, remaining, remainingAmount;
@@ -939,21 +976,24 @@ openerp.point_of_sale = function(db) {
             remaining = remainingAmount > 0 ? 0 : (-remainingAmount).toFixed(2);
             $('#payment-remaining').html(remaining);
         },
-    });
-    /*
-     "Receipt" step.
-     */
-    var ReceiptLineWidget = db.web.Widget.extend({
-        tag_name: 'tr',
-        template_fct: qweb_template('pos-receiptline-template'),
-        init: function(parent, options) {
-            this._super(parent);
-            this.model = options.model;
-            this.model.bind('change', this.render_element, this);
+        setNumpadState: function(numpadState) {
+        	if (this.numpadState) {
+        		this.numpadState.unbind('setValue', this.setValue);
+        		this.numpadState.unbind('change:mode', this.setNumpadMode);
+        	}
+        	this.numpadState = numpadState;
+        	if (this.numpadState) {
+        		this.numpadState.bind('setValue', this.setValue, this);
+        		this.numpadState.bind('change:mode', this.setNumpadMode, this);
+        		this.numpadState.reset();
+        		this.setNumpadMode();
+        	}
         },
-        render_element: function() {
-            this.$element.addClass('receiptline');
-            this.$element.html(this.template_fct(this.model.toJSON()));
+    	setNumpadMode: function() {
+    		this.numpadState.set({mode: 'payment'});
+    	},
+        setValue: function(val) {
+        	this.currentPaymentLines.last().set({amount: val});
         },
     });
     var ReceiptWidget = db.web.Widget.extend({
@@ -961,60 +1001,38 @@ openerp.point_of_sale = function(db) {
             this._super(parent);
             this.model = options.model;
             this.shop = options.shop;
+            this.user = pos.get('user');
+            this.company = pos.get('company');
+            this.shop_obj = pos.get('shop');
+        },
+        start: function() {
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
-            this.bindOrderLineEvents();
-            this.bindPaymentLineEvents();
-        },
-        finishOrder: function() {
-            this.shop.get('selectedOrder').destroy();
-        },
-        receiptLineList: function() {
-            return this.$element.find('#receiptlines');
-        },
-        bindOrderLineEvents: function() {
-            this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
-            this.currentOrderLines.bind('add', this.addReceiptLine, this);
-            this.currentOrderLines.bind('change', this.render_element, this);
-            this.currentOrderLines.bind('remove', this.render_element, this);
-        },
-        bindPaymentLineEvents: function() {
-            this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
-            this.currentPaymentLines.bind('all', this.updateReceiptSummary, this);
-        },
-        changeSelectedOrder: function() {
-            this.currentOrderLines.unbind();
-            this.bindOrderLineEvents();
-            this.currentPaymentLines.unbind();
-            this.bindPaymentLineEvents();
-            this.render_element();
-        },
-        addReceiptLine: function(newOrderItem) {
-            var x = new ReceiptLineWidget(null, {
-                    model: newOrderItem
-            });
-            x.appendTo(this.receiptLineList());
-            this.updateReceiptSummary();
+            this.changeSelectedOrder();
         },
         render_element: function() {
             this.$element.html(qweb_template('pos-receipt-view'));
             $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
-            this.currentOrderLines.each(_.bind( function(orderItem) {
-                var x = new ReceiptLineWidget(null, {
-                        model: orderItem
-                });
-                x.appendTo(this.receiptLineList());
-            }, this));
-            this.updateReceiptSummary();
+            $('button#print-the-ticket', this.$element).click(function(){window.print();});
         },
-        updateReceiptSummary: function() {
-            var change, currentOrder, tax, total;
-            currentOrder = this.shop.get('selectedOrder');
-            total = currentOrder.getTotal();
-            tax = currentOrder.getTax();
-            change = currentOrder.getPaidTotal() - total;
-            $('#receipt-summary-tax').html(tax.toFixed(2));
-            $('#receipt-summary-total').html(total.toFixed(2));
-            $('#receipt-summary-change').html(change.toFixed(2));
+        finishOrder: function() {
+            this.shop.get('selectedOrder').destroy();
+        },
+        changeSelectedOrder: function() {
+            if (this.currentOrderLines)
+                this.currentOrderLines.unbind();
+            this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
+            this.currentOrderLines.bind('add', this.refresh, this);
+            this.currentOrderLines.bind('change', this.refresh, this);
+            this.currentOrderLines.bind('remove', this.refresh, this);
+            if (this.currentPaymentLines)
+                this.currentPaymentLines.unbind();
+            this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
+            this.currentPaymentLines.bind('all', this.refresh, this);
+            this.refresh();
+        },
+        refresh: function() {
+            this.currentOrder = this.shop.get('selectedOrder');
+            $('.pos-receipt-container', this.$element).html(qweb_template('pos-ticket')({widget:this}));
         },
     });
     var OrderButtonWidget = db.web.Widget.extend({
@@ -1066,9 +1084,6 @@ openerp.point_of_sale = function(db) {
 
             (this.shop.get('orders')).bind('add', this.orderAdded, this);
             (this.shop.get('orders')).add(new Order);
-            this.numpadState = new NumpadState({
-                shop: this.shop
-            });
             this.productListView = new ProductListWidget(null, {
                 shop: this.shop
             });
@@ -1081,9 +1096,11 @@ openerp.point_of_sale = function(db) {
             this.paypadView.$element = $('#paypad');
             this.paypadView.render_element();
             this.paypadView.start();
+            this.numpadView = new NumpadWidget(null);
+            this.numpadView.$element = $('#numpad');
+            this.numpadView.start();
             this.orderView = new OrderWidget(null, {
                 shop: this.shop,
-                numpadState: this.numpadState
             });
             this.orderView.$element = $('#current-order-content');
             this.orderView.start();
@@ -1097,14 +1114,11 @@ openerp.point_of_sale = function(db) {
                 shop: this.shop,
             });
             this.receiptView.replace($('#receipt-screen'));
-            this.numpadView = new NumpadWidget(null, {
-                state: this.numpadState
-            });
-            this.numpadView.$element = $('#numpad');
-            this.numpadView.start();
             this.stepsView = new StepsWidget(null, {shop: this.shop});
             this.stepsView.$element = $('#steps');
             this.stepsView.start();
+            this.shop.bind('change:selectedOrder', this.changedSelectedOrder, this);
+            this.changedSelectedOrder();
         },
         createNewOrder: function() {
             var newOrder;
@@ -1122,6 +1136,24 @@ openerp.point_of_sale = function(db) {
             });
             newOrderButton.appendTo($('#orders'));
             newOrderButton.selectOrder();
+        },
+        changedSelectedOrder: function() {
+        	if (this.currentOrder) {
+        		this.currentOrder.unbind('change:step', this.changedStep);
+        	}
+        	this.currentOrder = this.shop.get('selectedOrder');
+        	this.currentOrder.bind('change:step', this.changedStep, this);
+        	this.changedStep();
+        },
+        changedStep: function() {
+        	var step = this.currentOrder.get('step');
+        	this.orderView.setNumpadState(null);
+        	this.paymentView.setNumpadState(null);
+        	if (step === 'products') {
+        		this.orderView.setNumpadState(this.numpadView.state);
+        	} else if (step === 'payment') {
+        		this.paymentView.setNumpadState(this.numpadView.state);
+        	}
         },
     });
     var App = (function() {

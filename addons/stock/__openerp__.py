@@ -91,6 +91,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
     'application': True,
     'active': False,
     'certificate': '0055421559965',
+    "css": [ 'static/src/css/stock.css' ],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

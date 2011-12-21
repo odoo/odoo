@@ -174,6 +174,8 @@ class pos_order(osv.osv):
         move_obj = self.pool.get('stock.move')
 
         for order in self.browse(cr, uid, ids, context=context):
+            if not order.state=='draft':
+                continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_id = picking_obj.create(cr, uid, {
                 'origin': order.name,
@@ -735,7 +737,6 @@ class product_product(osv.osv):
         'expense_pdt': fields.boolean('PoS Cash Output', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
         'img': fields.binary('Product Image, must be 50x50', help="Use an image size of 50x50."),
         'pos_categ_id': fields.many2one('pos.category','PoS Category',
-            domain="[('type','=','normal')]",
             help="If you want to sell this product through the point of sale, select the category it belongs to.")
     }
 product_product()
