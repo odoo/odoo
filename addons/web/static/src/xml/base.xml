@@ -837,9 +837,7 @@
     <div class="oe_tooltip_string" t-if="widget.string">
         <t t-esc="widget.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
     </div>
-    <p t-if="widget.help" class="oe_tooltip_help">
-        <t t-esc="widget.help"/>
-    </p>
+    <p t-if="widget.help" class="oe_tooltip_help"><t t-esc="widget.help"/></p>
     <ul t-if="debug" class="oe_tooltip_technical">
         <li data-item="field" t-if="widget.name">
             <span class="oe_tooltip_technical_title">Field:</span>

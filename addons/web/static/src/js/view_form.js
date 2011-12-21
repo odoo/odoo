@@ -790,7 +790,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         trigger = trigger || this.$element;
         options = _.extend({
                 delay: 1000,
-                maxWidth: openerp.connection.debug ? '300px' : '200px',
+                maxWidth: '500px',
                 content: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
