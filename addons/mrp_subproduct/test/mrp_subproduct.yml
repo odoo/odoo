@@ -35,16 +35,15 @@
 -
   I check production order state.
 -
-  !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref('mrp_production_mo0'))
-    assert order.state == 'confirmed','Production order state should be in confirm state.'
+  !assert {model: mrp.production, id: mrp_production_mo0, severity: error, string: Production order should be in state confirmed}:
+    - state == 'confirmed'
 -
   Now I check the stock moves for the subproduct I created in the bill of material.
   This move is created automatically when I confirmed the production order.
 -
   !python {model: stock.move}: |
-    move_id = self.search(cr, uid, [('product_id','=',ref('product.product_product_woodentable0'))])
-    assert move_id, 'No moves are created !'
+    move_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_woodentable0'))])
+    assert move_ids, 'No moves are created !'
 -
   I want to start the production so I force the reservation of products.
 -
@@ -74,4 +73,3 @@
     move_ids = self.search(cr, uid, [('product_id','in',[ref("product.product_product_arm"),ref("product.product_product_sidepanel0")])])
     moves = self.browse(cr, uid, move_ids)
     assert all(move.state == 'done' for move in moves), 'Moves are not done!'
-
