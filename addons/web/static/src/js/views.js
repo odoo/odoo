@@ -864,7 +864,10 @@ session.web.Sidebar = session.web.Widget.extend({
                     additional_context);
                 result.result.flags = result.result.flags || {};
                 result.result.flags.new_window = true;
-                self.do_action(result.result);
+                self.do_action(result.result, function () {
+                    // reload view
+                    self.widget_parent.reload();
+                });
             });
         });
     },
@@ -1188,7 +1191,14 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     on_sidebar_view_log: function() {
     },
     sidebar_context: function () {
-        return $.Deferred().resolve({}).promise();
+        return $.when();
+    },
+    /**
+     * Asks the view to reload itself, if the reloading is asynchronous should
+     * return a {$.Deferred} indicating when the reloading is done.
+     */
+    reload: function () {
+        return $.when();
     }
 });
 

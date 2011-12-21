@@ -471,6 +471,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         });
         return reloaded.promise();
     },
+    reload: function () {
+        return this.reload_content();
+    },
 
     do_load_state: function(state) {
         var reload = false;
