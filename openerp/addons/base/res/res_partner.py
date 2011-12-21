@@ -36,9 +36,20 @@ class res_payterm(osv.osv):
 res_payterm()
 
 class res_partner_category(osv.osv):
+
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
+        """Return the categories' display name, including their direct
+           parent by default.
+
+        :param dict context: the ``partner_category_display`` key can be
+                             used to select the short version of the
+                             category name (without the direct parent),
+                             when set to ``'short'``. The default is
+                             the long version.""" 
+        if context is None:
+            context = {}
+        if context.get('partner_category_display') == 'short':
+            return super(res_partner_category, self).name_get(cr, uid, ids, context=context)
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
