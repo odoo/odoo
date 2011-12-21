@@ -1,7 +1,5 @@
 -
-  In order to test attendance process in OpenERP, At the time of login,
--
-  I will use "Sign In/Sign Out" wizard for attendances.
+  In order to test attendance process in OpenERP, at the time of login, I use "Sign In/Sign Out" wizard for attendances.
 -
   !record {model: hr.sign.in.out, id: employee_sign_in}:
     name: Antoine Philippe
@@ -11,10 +9,10 @@
 -
   !python {model: hr.sign.in.out}: |
     obj_attendance = self.pool.get('hr.employee')
-    emp_id = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Antoine Philippe")])
-    if emp_id:
-      employee = obj_attendance.read(cr, uid, emp_id)[0]
-      self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_id[0]})
+    emp_ids = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Antoine Philippe")])
+    if emp_ids:
+      employee = obj_attendance.read(cr, uid, emp_ids)[0]
+      self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_ids[0]})
       self.si_check(cr, uid, [ref("employee_sign_in")])
 -
   I check that Employee is "Present".
@@ -26,10 +24,10 @@
 -
   !python {model: hr.sign.in.out}: |
     obj_attendance = self.pool.get('hr.employee')
-    emp_id = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Antoine Philippe")])
-    if emp_id:
-        employee = obj_attendance.read(cr, uid, emp_id)[0]
-        self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_id[0]})
+    emp_ids = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Antoine Philippe")])
+    if emp_ids:
+        employee = obj_attendance.read(cr, uid, emp_ids)[0]
+        self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_ids[0]})
         self.si_check(cr, uid, [ref("employee_sign_in")])
 -
   I select Last Sign Out date.
@@ -42,10 +40,10 @@
 -
   !python {model: hr.sign.in.out.ask}: |
     obj_attendance = self.pool.get('hr.employee')
-    emp_id = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Antoine Philippe")])
-    if emp_id:
-        employee = obj_attendance.read(cr, uid, emp_id)[0]
-        self.write(cr, uid, [ref('hr_sign_in_out_ask_Antoine_Philippe')], {'emp_id': emp_id[0]})
+    emp_ids = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Antoine Philippe")])
+    if emp_ids:
+        employee = obj_attendance.read(cr, uid, emp_ids)[0]
+        self.write(cr, uid, [ref('hr_sign_in_out_ask_Antoine_Philippe')], {'emp_id': emp_ids[0]})
 -
   Finally i check the employee is present.
 -
