@@ -3087,6 +3087,32 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     }
 });
 
+openerp.web.form.WidgetHtml = openerp.web.form.Widget.extend({
+    render: function () {
+        var $root = $('<div class="oe_form_html_view">');
+        this.render_children(this, $root);
+        return $root.html();
+    },
+    render_children: function (object, $into) {
+        var self = this,
+            fields = this.view.fields_view.fields;
+        _(object.children).each(function (child) {
+            if (typeof child === 'string') {
+                $into.text(child);
+            } else if (child.tag === 'field') {
+                $into.append(
+                    new (self.view.registry.get_object('frame'))(
+                        self.view, {tag: 'ueule', attrs: {}, children: [child] })
+                            .render());
+            } else {
+                var $child = $(document.createElement(child.tag))
+                        .attr(child.attrs)
+                        .appendTo($into);
+                self.render_children(child, $child);
+            }
+        });
+    }
+});
 
 
 /**
@@ -3120,7 +3146,8 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'progressbar': 'openerp.web.form.FieldProgressBar',
     'image': 'openerp.web.form.FieldBinaryImage',
     'binary': 'openerp.web.form.FieldBinaryFile',
-    'statusbar': 'openerp.web.form.FieldStatus'
+    'statusbar': 'openerp.web.form.FieldStatus',
+    'html': 'openerp.web.form.WidgetHtml'
 });
 
 
