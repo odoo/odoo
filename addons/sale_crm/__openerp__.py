@@ -22,7 +22,7 @@
 {
     'name': 'Opportunity to Quotation',
     'version': '1.0',
-    'category': 'Hidden/Link',
+    'category': 'Hidden/Links',
     'complexity': "easy",
     'description': """
 This module adds a shortcut on one or several opportunity cases in the CRM.

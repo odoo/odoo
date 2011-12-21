@@ -114,13 +114,6 @@ class project(osv.osv):
             if task.project_id: result[task.project_id.id] = True
         return result.keys()
 
-    #dead code
-    def _get_project_work(self, cr, uid, ids, context=None):
-        result = {}
-        for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
-            if work.task_id and work.task_id.project_id: result[work.task_id.project_id.id] = True
-        return result.keys()
-
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:
@@ -880,14 +873,24 @@ class task(osv.osv):
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         return True
 
+
+    def _delegate_task_attachments(self, cr, uid, task_id, delegated_task_id, context=None):
+        attachment = self.pool.get('ir.attachment')
+        attachment_ids = attachment.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', task_id)], context=context)
+        new_attachment_ids = []
+        for attachment_id in attachment_ids:
+            new_attachment_ids.append(attachment.copy(cr, uid, attachment_id, default={'res_id': delegated_task_id}, context=context))
+        return new_attachment_ids
+        
+
     def do_delegate(self, cr, uid, ids, delegate_data={}, context=None):
         """
         Delegate Task to another users.
         """
         assert delegate_data['user_id'], _("Delegated User should be specified")
-        delegrated_tasks = {}
+        delegated_tasks = {}
         for task in self.browse(cr, uid, ids, context=context):
-            delegrated_task_id = self.copy(cr, uid, task.id, {
+            delegated_task_id = self.copy(cr, uid, task.id, {
                 'name': delegate_data['name'],
                 'project_id': delegate_data['project_id'] and delegate_data['project_id'][0] or False,
                 'user_id': delegate_data['user_id'] and delegate_data['user_id'][0] or False,
@@ -898,6 +901,7 @@ class task(osv.osv):
                 'child_ids': [],
                 'work_ids': []
             }, context=context)
+            self._delegate_task_attachments(cr, uid, task.id, delegated_task_id, context=context)
             newname = delegate_data['prefix'] or ''
             task.write({
                 'remaining_hours': delegate_data['planned_hours_me'],
@@ -911,8 +915,8 @@ class task(osv.osv):
             
             message = _("The task '%s' has been delegated to %s.") % (delegate_data['name'], delegate_data['user_id'][1])
             self.log(cr, uid, task.id, message)
-            delegrated_tasks[task.id] = delegrated_task_id
-        return delegrated_tasks
+            delegated_tasks[task.id] = delegated_task_id
+        return delegated_tasks
 
     def do_pending(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'pending'}, context=context)

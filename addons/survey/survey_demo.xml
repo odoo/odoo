@@ -6,6 +6,155 @@
             <field eval="[(4, ref('base.group_tool_user')),(4, ref('base.group_survey_user'))]" name="groups_id"/>
         </record>
 
+        <!-- Initial Partner Feedback Demo data -->
+        <record model="survey" id="survey_Initial_partner_feedback">
+            <field name="title">Initial Partner Feedback</field>
+            <field name="responsible_id" ref="base.user_root"/>
+            <field name="max_response_limit">20</field>
+            <field name="type" ref="survey_type2"/>
+            <field name="state">open</field>
+            <field name="tot_comp_survey">1</field>
+            <field name="tot_start_survey">1</field>
+            <field name="response_user">5</field>
+            <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+           </record>
+
+        <record id="survey_page_initial_who_are_you" model="survey.page">
+            <field name="title">Who are you?</field>
+            <field name="survey_id" ref="survey_Initial_partner_feedback" />
+            <field eval="1" name="sequence"/>
+        </record>
+
+        <record id="survey_initial_question_company_name" model="survey.question">
+            <field name="question">What is your company's name?</field>
+            <field name="page_id" ref="survey_page_initial_who_are_you" />
+            <field name="type">single_textbox</field>
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field eval="1" name="sequence"/>
+            <field name="in_visible_answer_type">1</field>
+        </record>
+
+        <record id="survey_initial_question_company_size" model="survey.question">
+            <field name="question">What is your company's size?</field>
+            <field name="page_id" ref="survey_page_initial_who_are_you" />
+            <field name="type">multiple_choice_only_one_ans</field>
+            <field eval="2" name="sequence"/>
+            <field name="in_visible_answer_type">1</field>
+        </record>
+
+        <record id="survey_initial_question_company_size_1" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">1 - 10</field>
+            <field name="question_id" ref="survey_initial_question_company_size" />
+            <field eval="1" name="sequence"/>
+        </record>
+        <record id="survey_initial_question_company_size_11" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">11 - 50</field>
+            <field name="question_id" ref="survey_initial_question_company_size" />
+            <field eval="2" name="sequence"/>
+        </record>
+        <record id="survey_initial_question_company_size_51" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">51 - 100</field>
+            <field name="question_id" ref="survey_initial_question_company_size" />
+            <field eval="3" name="sequence"/>
+        </record>
+        <record id="survey_initial_question_company_size_101" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">101 - 250</field>
+            <field name="question_id" ref="survey_initial_question_company_size" />
+            <field name="sequence" eval="4"/>
+        </record>
+        <record id="survey_initial_question_company_size_251" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">251 - 500</field>
+            <field name="question_id" ref="survey_initial_question_company_size" />
+            <field name="sequence" eval="5"/>
+        </record>
+        <record id="survey_initial_question_company_size_501" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">501 - 1000</field>
+            <field name="question_id" ref="survey_initial_question_company_size" />
+            <field name="sequence" eval="6"/>
+        </record>
+        <record id="survey_initial_question_company_size_1000" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">> 1000</field>
+            <field name="question_id" ref="survey_initial_question_company_size" />
+            <field name="sequence" eval="7"/>
+        </record>
+        <record id="survey_initial_question_company_size" model="survey.question">
+            <field eval="True" name="is_require_answer"/>
+        </record>
+
+        <record id="survey_initial_page_Contracts" model="survey.page">
+            <field name="title">Contracts</field>
+            <field name="survey_id" ref="survey_Initial_partner_feedback" />
+            <field name="sequence" eval="2"/>
+        </record>
+
+        <record id="survey_initial_question_sell_to_your_customers" model="survey.question">
+            <field name="in_visible_answer_type">1</field>
+            <field name="question">Which maintenance contract do you sell to your customers?</field>
+            <field name="page_id" ref="survey_initial_page_Contracts" />
+            <field name="type">multiple_choice_only_one_ans</field>
+            <field eval="1" name="sequence"/>
+        </record>
+
+        <record id="survey_initial_answer_maintenance_contract" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">OpenERP maintenance contract</field>
+            <field name="question_id" ref="survey_initial_question_sell_to_your_customers" />
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="survey_initial_answer_buy_an_openerp_one" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">Your own contract, but you buy an OpenERP one</field>
+            <field name="question_id" ref="survey_initial_question_sell_to_your_customers" />
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="survey_initial_answer_buying_an_openerp" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">Your own contract without buying an OpenERP one</field>
+            <field name="question_id" ref="survey_initial_question_sell_to_your_customers" />
+            <field name="sequence" eval="3"/>
+        </record>
+
+        <record id="survey_initial_question_contract_customers" model="survey.question">
+            <field name="in_visible_answer_type">1</field>
+            <field name="question">When do you propose a maintenance contract to your customers?</field>
+            <field name="page_id" ref="survey_initial_page_Contracts" />
+            <field name="type">multiple_choice_only_one_ans</field>
+            <field name="comment_field_type">text</field>
+            <field name="comment_label">Why?</field>
+            <field eval="2" name="sequence"/>
+            <field name="is_comment_require">True</field>
+        </record>
+
+        <record id="survey_initial_answer_very_integration" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">With each integration</field>
+            <field name="question_id" ref="survey_initial_question_contract_customers" />
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="survey_initial_answer_sometimes" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">Sometimes</field>
+            <field name="question_id" ref="survey_initial_question_contract_customers" />
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="survey_initial_answer_never" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">Never... </field>
+            <field name="question_id" ref="survey_initial_question_contract_customers" />
+            <field name="sequence" eval="3"/>
+        </record>
+        <record id="survey_initial_question_contract_customers" model="survey.question">
+            <field eval="True" name="is_require_answer"/>
+        </record>
+
         <!--  Partner Feedback Demo data -->
         <record model="survey" id="survey_partner_feedback">
             <field name="title">OpenERP Partner Feedback</field>

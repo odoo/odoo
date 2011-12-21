@@ -1,0 +1,57 @@
+-
+  In order to test process of issue tracking in OpenERP, I Open the Issue.
+-
+  !python {model: project.issue}: |
+    self.case_open(cr, uid, [ref("crm_case_buginaccountsmodule0")])
+- 
+  I check state of Issue after opened it.
+- 
+  !assert {model: project.issue, id: crm_case_buginaccountsmodule0, severity: error, string: Issue should be in open state}:
+    - state == 'open'       
+- 
+  Now I put Issue in pending due to need more information.
+- 
+  !python {model: project.issue}: |
+    self.case_pending(cr, uid, [ref("crm_case_buginaccountsmodule0")])
+- 
+  I check state after put in pending.
+-  
+  !assert {model: project.issue, id: crm_case_buginaccountsmodule0, severity: error, string: Issue should be in pending state}:
+    - state == 'pending'
+-
+  I send mail to get more details.
+-
+  !python {model: mail.compose.message }: |
+    ctx = context.copy()
+    ctx.update({'active_model': 'project.issue', 'active_id': ref("crm_case_buginaccountsmodule0"), 'active_ids': [ref("crm_case_buginaccountsmodule0")]})
+    vals = self.default_get(cr, uid , [], context=ctx)
+    try:
+        new_id = self.create(cr, uid, {'email_from': 'support@mycompany.com','email_to': 'Robert_Adersen@yahoo.com', 'subject': 'Regarding error in account module we nees more details'})
+        self.send_mail(cr, uid, [new_id], context=ctx)
+    except Exception, e:
+        pass  
+-
+  After getting sufficient details, I re-open Issue from pending state.
+-
+  !python {model: project.issue}: |
+    self.case_open(cr, uid, [ref("crm_case_buginaccountsmodule0")])
+-
+  I check state of Issue after re-opened.
+-
+  !assert {model: project.issue, id: crm_case_buginaccountsmodule0, severity: error, string: Issue should be in open state}:
+    - state == 'open'   
+-
+  I create Task for Issue.
+-
+  !python {model: project.issue}: |
+    self.convert_issue_task(cr, uid, [ref("crm_case_buginaccountsmodule0")])
+-
+  I close Issue after resolving it
+-
+  !python {model: project.issue}: |
+    self.case_close(cr, uid, [ref("crm_case_buginaccountsmodule0")])
+-  
+  I Check state of Issue after closed.
+- 
+  !assert {model: project.issue, id: crm_case_buginaccountsmodule0, severity: error, string: Issue should be in done state}:
+    - state == 'done'

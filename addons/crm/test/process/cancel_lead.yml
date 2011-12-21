@@ -29,12 +29,12 @@
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in pending state}:
     - state == "pending"
 -
-  I Escalate the Lead to Parent Team.
+  I escalate the lead to parent team.
 -
   !python {model: crm.lead}: |
     self.case_escalate(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  I check lead escalate to Parent Team.
+  I check lead escalate to parent team.
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Escalate lead to parent team}:
     - section_id.name == "Sales Department"

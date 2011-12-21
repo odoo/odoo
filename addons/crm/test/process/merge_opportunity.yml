@@ -1,5 +1,5 @@
 -
-  I make direct opportunity for Customer.
+  I make direct opportunity for customer.
 -
   !python {model: crm.partner2opportunity}: |
     context.update({'active_model': 'res.partner', 'active_ids': [ref("base.res_partner_9")]})
@@ -13,13 +13,18 @@
     res_id = self.create(cr, uid, {'name': "Quoi de prix de votre autre service?", 'partner_id': ref("base.res_partner_9")}, context=context)
     self.make_opportunity(cr, uid, [res_id], context=context)
 -
- Now I merge all opportunities of customer.
+  Now I merge all opportunities of customer.
 -
   !python {model: crm.lead}: |
     opportunity_ids = self.search(cr, uid, [('partner_id','=', ref("base.res_partner_9"))])
-    self.merge_opportunity(cr, uid, opportunity_ids, context=context)
+    context.update({'active_model': 'crm.lead', 'active_ids': opportunity_ids, 'active_id': opportunity_ids[0]})
 -
-  I check for merged opportunities for customer.
+  !record {model: crm.merge.opportunity, id: opportunity_merge_id }:
+-
+  !python {model: crm.merge.opportunity}: |
+    self.action_merge(cr, uid, [ref("opportunity_merge_id")], context=context)
+-
+  I check for merged opportunities for customer. 
 -
   !python {model: crm.lead}: |
     merge_id = self.search(cr, uid, [('partner_id','=', ref("base.res_partner_9"))])
@@ -31,21 +36,51 @@
   Now I schedule another phonecall to customer after merged.
 -
   !python {model: crm.phonecall2phonecall}: |
-    context.update({'active_model': 'crm.phonecall', 'active_ids': [ref("crm.crm_case_phone06")]})
+    context.update({'active_model': 'crm.phonecall', 'active_ids': [ref("crm.crm_case_phone06")], 'active_id': ref("crm.crm_case_phone06")})
     res_id = self.create(cr, uid, {'name': "vos chances sont fusionnés en un seul"}, context=context)
     self.action_schedule(cr, uid, [res_id], context=context)
 - 
-  I schedule Meeting on this phonecall.
+  I schedule meeting on this phonecall.
 -
   !python {model: crm.phonecall}: |
     self.action_make_meeting(cr, uid, [ref("crm.crm_case_phone06")])
 -
-  I setting Phone call to Held (Done).
+  I set phone call to not held.
+-
+  !python {model: crm.phonecall}: |
+    self.case_pending(cr, uid, [ref("crm.crm_case_phone06")])
+-
+  I check that the phone call is in 'Not Held' state. 
+-
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call held.}:
+    - state == "pending"
+-
+  I cancelled the phone call. 
+-
+  !python {model: crm.phonecall}: |
+    self.case_cancel(cr, uid, [ref("crm.crm_case_phone06")])
+-
+  I check that the phone call is in 'Cancelled' state.
+-
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call is not cancelled.}:
+    - state == "cancel"
+-
+  I reset the phone call. 
+-
+  !python {model: crm.phonecall}: |
+    self.case_reset(cr, uid, [ref("crm.crm_case_phone06")])
+-
+  I check that the phone call is reset or not.
+-
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call is not reset.}:
+    - state == "open"
+-
+  I set phone call to held (done).
 -
   !python {model: crm.phonecall}: |
     self.case_close(cr, uid, [ref("crm.crm_case_phone06")])
 -
   I check that the phone call is in 'Held' state.
 -
-  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call Helded}:
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call is not held.}:
     - state == "done"
