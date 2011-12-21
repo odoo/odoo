@@ -1,9 +1,6 @@
 -
-  !record {model: res.company, id: company_1}:
-    name: TinyERP
--
   !record {model: payment.mode, id: payment_mode_1}:
-    company_id: company_1
+    company_id: base.main_company
 -
   !record {model: payment.order, id: payment_order_2}:
     mode: payment_mode_1
