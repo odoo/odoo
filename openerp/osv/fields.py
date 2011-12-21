@@ -239,8 +239,10 @@ class float(_column):
     def digits_change(self, cr):
         if self.digits_compute:
             self.digits = self.digits_compute(cr)
+        if self.digits:
             precision, scale = self.digits
-            self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0), precision_digits=scale),
+            self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0),
+                                                                       precision_digits=scale),
                                                            precision_digits=scale))
 
 class date(_column):
@@ -992,11 +994,14 @@ class function(_column):
             self._symbol_set = integer._symbol_set
 
     def digits_change(self, cr):
-        if self.digits_compute:
-            self.digits = self.digits_compute(cr)
-            precision, scale = self.digits
-            self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0), precision_digits=scale),
-                                                           precision_digits=scale))
+        if self._type == 'float':
+            if self.digits_compute:
+                self.digits = self.digits_compute(cr)
+            if self.digits:
+                precision, scale = self.digits
+                self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0),
+                                                                           precision_digits=scale),
+                                                               precision_digits=scale))
 
     def search(self, cr, uid, obj, name, args, context=None):
         if not self._fnct_search:
