@@ -36,14 +36,12 @@ class sale_order(osv.osv):
             result['value']['carrier_id'] = dtype
         return result
 
-    def action_ship_create(self, cr, uid, ids, *args):
-        result = super(sale_order, self).action_ship_create(cr, uid, ids, *args)
-        for order in self.browse(cr, uid, ids, context={}):
-            pids = [ x.id for x in order.picking_ids]
-            self.pool.get('stock.picking').write(cr, uid, pids, {
-                'carrier_id':order.carrier_id.id,
-            })
+    def _prepare_order_picking(self, cr, uid, order, context=None):
+        result = super(sale_order, self)._prepare_order_picking(cr, uid, order, context=context)
+        result.update(carrier_id=order.carrier_id.id)
         return result
+
+
 sale_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
