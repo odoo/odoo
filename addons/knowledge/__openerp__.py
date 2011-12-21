@@ -25,7 +25,7 @@
     "version" : "1.0",
     "depends" : ["base","base_setup"],
     "author" : "OpenERP SA",
-    'category': 'Knowledge Management',
+    'category': 'Hidden/Dependency',
     'complexity': "easy",
     "description": """
 Installer for knowledge-based Hidden.

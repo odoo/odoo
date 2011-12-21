@@ -314,7 +314,8 @@ class project_issue(crm.crm_case, osv.osv):
                 'description':bug.description,
                 'date_deadline': bug.date,
                 'project_id': bug.project_id.id,
-                'priority': bug.priority,
+                # priority must be in ['0','1','2','3','4'], while bug.priority is in ['1','2','3','4','5']
+                'priority': str(int(bug.priority) - 1),
                 'user_id': bug.user_id.id,
                 'planned_hours': 0.0,
             })

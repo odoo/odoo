@@ -57,10 +57,10 @@ performing those tasks.
     ],
     'demo_xml': ['project_gtd_demo.xml'],
     'test':[
-        'test/gtd_test.yml'
+         'test/task_timebox.yml'
     ],
     'installable': True,
-    'core': True,
+    'application': True,
     'active': False,
     'certificate': '0043525236301',
 }

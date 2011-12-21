@@ -57,6 +57,7 @@ class hr_expense_expense(osv.osv):
 
     _name = "hr.expense.expense"
     _description = "Expense"
+    _order = "id desc"
     _columns = {
         'name': fields.char('Description', size=128, required=True),
         'id': fields.integer('Sheet ID', readonly=True),
@@ -87,6 +88,7 @@ class hr_expense_expense(osv.osv):
             \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
     }
     _defaults = {
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'draft',
         'employee_id': _employee_get,

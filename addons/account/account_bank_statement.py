@@ -34,8 +34,6 @@ class account_bank_statement(osv.osv):
             for line in vals['line_ids']:
                 seq += 1
                 line[2]['sequence'] = seq
-                new_line_ids += tuple(line)
-            vals['line_ids'] = new_line_ids
         return super(account_bank_statement, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):

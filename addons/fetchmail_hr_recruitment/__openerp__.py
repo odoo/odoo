@@ -24,7 +24,7 @@
     "version" : "1.0",
     "depends" : ["fetchmail", "hr_recruitment"],
     "author" : "OpenERP SA",
-    "category": "Human Resources",
+    "category": "Hidden/Links",
     "description": """
     """,
     'website': 'http://www.openerp.com',

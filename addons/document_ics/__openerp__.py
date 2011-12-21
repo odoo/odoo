@@ -23,7 +23,7 @@
 {
     'name': 'iCal Support',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Knowledge Management',
     'complexity': "normal",
     'description': """
 Allows to synchronise calendars with others applications.

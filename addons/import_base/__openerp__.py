@@ -22,7 +22,7 @@
 {
     'name': 'Framework for complex import',
     'version': '0.9',
-    'category': 'Tools',
+    'category': 'Hidden/Dependency',
     'description': """
         This module provide a class import_framework to help importing 
         complex data from other software

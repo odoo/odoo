@@ -58,7 +58,7 @@
             <field name="name">For OpenERP Discovery Day on May 2010</field>
         </record>
 
-            <record id="email_template_3" model="email.template">
+        <record id="email_template_3" model="email.template">
             <field name="subject">Thanks for subscribing to the OpenERP Discovery Day</field>
             <field name="email_to">info@tinyerp.com</field>
             <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
@@ -72,7 +72,7 @@
             <field name="name">For OpenERP Discovery Day</field>
         </record>
 
-             <record id="email_template_4" model="email.template">
+        <record id="email_template_4" model="email.template">
             <field name="subject">Thanks for buying the OpenERP book</field>
             <field name="email_to">info@tinyerp.com</field>
             <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
@@ -91,7 +91,6 @@
             <field name="email_to">info@tinyerp.com</field>
             <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
             <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
-            <field name="model_id" ref="crm.model_crm_lead"/>
             <field eval="0" name="user_signature"/>
             <field name="body_text">Hello, We have very good offer that might suit you.
             For our gold partners,We are arranging free technical training on june,2010.
@@ -157,6 +156,7 @@
         <record id="marketing_campaign_openerpondemandfreetrial0" model="marketing.campaign">
             <field name="name">OpenERP OnDemand Free Trial 2010</field>
             <field name="object_id" ref="crm.model_crm_lead"/>
+            <field name="mode">active</field>
             <field name="partner_field_id" ref="crm.field_crm_lead_partner_id"/>
         </record>
 

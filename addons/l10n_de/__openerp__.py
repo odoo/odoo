@@ -121,7 +121,7 @@
 
 
 {
-    "name" : "Deutschland - SKR03 and SKR04",
+    "name" : "Deutschland - Accounting",
     "version" : "1.0",
     "author" : "openbig.org",
     "website" : "http://www.openbig.org",

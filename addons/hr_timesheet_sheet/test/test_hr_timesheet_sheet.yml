@@ -1,89 +1,61 @@
 -
-  In order to test hr_timesheet_sheet module in OpenERP, I create timesheet and check validation process done by manager.
+  In order to test hr_timesheet_sheet module in OpenERP,
+  I create Timesheet and check validation process done by manager.
 -
-  I  create a new employee "Mark Johnson".
+  I assign this product(Service on Timesheet) and journal(Timesheet Journal) to employee "Quentin Paolino"
 -
-  !record {model: hr.employee, id: hr_employee_employee0}:
-    address_home_id: base.res_partner_address_1
-    gender: male
-    marital: single
-    name: Mark Johnson
-    user_id: base.user_demo
-
+  !record {model: hr.employee, id: hr.employee2}:
+    product_id: product.product_consultant
+    journal_id: hr_timesheet.analytic_journal
 -
-  I create new Timesheet journal for employee.
+  I create my current timesheet for employee "Quentin Paolinon".
 -
-  !record {model: account.analytic.journal, id: analytic_journal}:
-    code: TS
-    name: Timesheet Journal
-    type: general
-
--
-  I create a new product "Consultancy - Senior Developer".
--
-  !record {model: product.product, id: product_consultant}:
-    categ_id: product.product_category_10
-    default_code: DEV
-    list_price: 75.0
-    name: Consultancy - Senior Developer
-    procure_method: make_to_order
-    purchase_ok: False
-    standard_price: 30.0
-    supply_method: produce
-    type: service
-    uom_id: product.uom_hour
-    uom_po_id: product.uom_hour
-
--
-  I assign this product and journal to  "Mark Johnson"
--
-  !record {model: hr.employee, id: hr_employee_employee0}:
-    product_id: product_consultant
-    journal_id: analytic_journal
-
--
-  I create my current timesheet for "Mark Johnson".
-- 
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     date_current: !eval time.strftime('%Y-%m-%d')
     date_from: !eval time.strftime('%Y-%m-01')
-    name: !eval time.strftime('%U') 
+    name: Quentin Paolinon
     state: new
     user_id: base.user_demo
-    employee_id: 'hr_employee_employee0'
+    employee_id: 'hr.employee2'
 -
   Now, at the time of login, I create Attendances and perform "Sign In" action.
 -
-  !python {model: hr_timesheet_sheet.sheet}:
+  !python {model: hr_timesheet_sheet.sheet}: |
     self.sign_in(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {})
+    task_work = self.search(cr, uid, [("name","=","Quentin Paolinon")],context)[0]
+    task_ids = self.browse(cr, uid, task_work, context)
+    assert task_ids.state == "draft", "I State In Timesheet"
 -
   I want to check attendance and work of yesterday. I click on <- button.
 -
   !python {model: hr_timesheet_sheet.sheet}: |
-     self.date_previous(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
+    date_prev = self.date_previous(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
+    assert date_prev == True, "I See Previous Date Timesheet"
 -
   Then I click on "Today" button to fill today's timesheet.
 -
   !python {model: hr_timesheet_sheet.sheet}: |
-     self.date_today(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
--
-  I want to go to a particular date and see attendance then I select the date and click on "Go to:" button.
--
-  !python {model: hr_timesheet_sheet.sheet}: |
-     self.button_dummy(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
+    date_to = self.date_today(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
+    assert date_to == True, "I See Today Date Timesheet"
 -
   I can also move to next day by clicking on -> button.
 -
   !python {model: hr_timesheet_sheet.sheet}: |
-     self.date_next(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
+    date_next = self.date_next(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
+    assert date_next == True, "I See Next Date Timesheet"
+-
+  I want to go to a particular date and see attendance then I select the date and click on "Go to:" button.
+-
+  !python {model: hr_timesheet_sheet.sheet}: |
+    button_dumy = self.button_dummy(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
+    assert button_dumy == True, "I See Particular Date Attendance"
 -
   At the time of logout, I create attendance and perform "Sign Out".
 -
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
-    employee_id: 'hr_employee_employee0'
+    employee_id: 'hr.employee2'
     name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(min(23,datetime.now().hour+2),min(59,datetime.now().minute+1),min(59,datetime.now().second+1))
-
 -
   I create Timesheet Entry for time spend on today work.
 -
@@ -94,27 +66,23 @@
         name: 'Develop yaml for hr module'
         unit_amount: 3.00
         amount: -90.00
-        product_id: product_consultant
+        product_id: product.product_consultant
         general_account_id: account.a_expense
         user_id: base.user_root
         journal_id: hr_timesheet.analytic_journal
-
 -
-  I confirm my timesheet at end of period by click on "Confirm" button,
-   if the difference between timesheet hour and attendance hour is more than 1 hour it will give message.
+  I confirm my Timesheet at end of period by click on "Confirm" button,
+  if the difference between Timesheet hour and attendance hour is more than 1 hour it will give message.
 -
   !python {model: hr_timesheet_sheet.sheet}: |
         uid = ref('base.user_root')
         import netsvc
         try:
-            self.button_confirm(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {"lang": 'en_US', "active_ids":
-              [ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form")], "tz": False, "active_model":
-              "ir.ui.menu", "department_id": False, "section_id": False, "search_default_my_timesheet":
-              1, "search_default_user_id": 1, "project_id": False, "active_id": ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"),
+            self.button_confirm(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {"active_ids":
+              [ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form")],"active_id": ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"),
               })
         except:
             pass
-
 -
   I Modified the timesheet record and make the difference less than 1 hour.
 -
@@ -125,31 +93,26 @@
         name: 'Develop yaml for hr module'
         unit_amount: 2.0
         amount: -90.00
-        product_id: product_consultant
+        product_id: product.product_consultant
         general_account_id: account.a_expense
         user_id: base.user_root
         journal_id: hr_timesheet.analytic_journal
-
 -
   I tried again to confirm the timesheet after modification.
 -
   !python {model: hr_timesheet_sheet.sheet}: |
         uid = ref('base.user_root')
-        self.button_confirm(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {"lang": 'en_US', "active_ids":
-          [ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form")], "tz": False, "active_model":
-          "ir.ui.menu", "department_id": False, "section_id": False, "search_default_my_timesheet":
-          1, "search_default_user_id": 1, "project_id": False, "active_id": ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"),
+        self.button_confirm(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {"active_ids":
+          [ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form")],"active_id": ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"),
           })
-
 -
   This time timesheet confirmed successfully.
-   I check that state is "Confirmed".
+  I check that state is "Confirmed".
 -
   !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
-      - state == 'confirm'
+    - state == 'confirm'
 -
   The manager will accept This request by click on "Accept" button.
-
 -
   !python {model: hr_timesheet_sheet.sheet}: |
     self.write(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {'state': 'done'})
@@ -157,5 +120,4 @@
   I check that state is "Done".
 -
   !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
-      - state == 'done'
-
+    - state == 'done'

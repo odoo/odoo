@@ -27,12 +27,11 @@ class stock_move(osv.osv):
         'sale_line_id': fields.many2one('sale.order.line', 'Sales Order Line', ondelete='set null', select=True, readonly=True),
     }
 
-    def _create_chained_picking(self, cr, uid, pick_name, picking, ptype, move, context=None):
-        res = super(stock_move, self)._create_chained_picking(cr, uid, pick_name, picking, ptype, move, context=context)
+    def _prepare_chained_picking(self, cr, uid, picking_name, picking, picking_type, moves_todo, context=None):
+        values = super(stock_move, self)._prepare_chained_picking(cr, uid, picking_name, picking, picking_type, moves_todo, context=context)
         if picking.sale_id:
-            self.pool.get('stock.picking').write(cr, uid, [res], {'sale_id': picking.sale_id.id})
-        return res
-stock_move()
+            values['sale_id'] = picking.sale_id.id
+        return values
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
@@ -195,8 +194,5 @@ class stock_picking(osv.osv):
                         'invoice_lines': [(6, 0, [invoice_line_id])],
                     })
         return result
-
-stock_picking()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
