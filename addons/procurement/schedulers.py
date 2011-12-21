@@ -147,6 +147,17 @@ class procurement_order(osv.osv):
                     pass
         return {}
 
+    def _prepare_automatic_op_procurement(self, cr, uid, product, warehouse, location_id, context=None):
+        return {'name': _('Automatic OP: %s') % (product.name,),
+                'origin': _('SCHEDULER'),
+                'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                'product_id': product.id,
+                'product_qty': -product.virtual_available,
+                'product_uom': product.uom_id.id,
+                'location_id': location_id,
+                'company_id': warehouse.company_id.id,
+                'procure_method': 'make_to_order',}
+
     def create_automatic_op(self, cr, uid, context=None):
         """
         Create procurement of  virtual stock < 0
@@ -173,34 +184,26 @@ class procurement_order(osv.osv):
                 if product.virtual_available >= 0.0:
                     continue
 
-                newdate = datetime.today()
                 if product.supply_method == 'buy':
                     location_id = warehouse.lot_input_id.id
                 elif product.supply_method == 'produce':
                     location_id = warehouse.lot_stock_id.id
                 else:
                     continue
-                proc_id = proc_obj.create(cr, uid, {
-                    'name': _('Automatic OP: %s') % (product.name,),
-                    'origin': _('SCHEDULER'),
-                    'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
-                    'product_id': product.id,
-                    'product_qty': -product.virtual_available,
-                    'product_uom': product.uom_id.id,
-                    'location_id': location_id,
-                    'company_id': warehouse.company_id.id,
-                    'procure_method': 'make_to_order',
-                    })
+                proc_id = proc_obj.create(cr, uid,
+                                          self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
+                                          context=context)
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
+        return True
 
     def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
         date_planned = start_date + \
                        relativedelta(days=orderpoint.product_id.seller_delay or 0.0)
-        date_planned = date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_planned = date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
         return date_planned
 
-    def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, date_planned, product_qty, procure_method='make_to_order', context=None):
+    def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, date_planned, product_qty, context=None):
         return {'name': orderpoint.name,
                 'date_planned': date_planned,
                 'product_id': orderpoint.product_id.id,
@@ -208,7 +211,7 @@ class procurement_order(osv.osv):
                 'company_id': orderpoint.company_id.id,
                 'product_uom': orderpoint.product_uom.id,
                 'location_id': orderpoint.location_id.id,
-                'procure_method': procure_method,
+                'procure_method': 'make_to_order',
                 'origin': orderpoint.name}
 
     def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
