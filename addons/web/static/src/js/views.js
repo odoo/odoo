@@ -555,7 +555,10 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                         view_mode : 'form',
                         target : 'new',
                         flags : {
-                            action_buttons : true
+                            action_buttons : true,
+                            form : {
+                                resize_textareas : true
+                            }
                         }
                     };
                 if (id) {

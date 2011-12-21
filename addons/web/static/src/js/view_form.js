@@ -22,6 +22,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      * @param {openerp.web.Session} session the current openerp session
      * @param {openerp.web.DataSet} dataset the dataset this view will work with
      * @param {String} view_id the identifier of the OpenERP view object
+     * @param {Object} options
+     *                  - sidebar : [true|false]
+     *                  - resize_textareas : [true|false|max_height]
      *
      * @property {openerp.web.Registry} registry=openerp.web.form.widgets widgets registry for this form view instance
      */
@@ -1501,11 +1504,16 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('textarea').change(this.on_ui_change);
+        this.resized = false;
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
         var show_value = openerp.web.format_value(value, this, '');
         this.$element.find('textarea').val(show_value);
+        if (!this.resized && this.view.options.resize_textareas) {
+            this.do_resize(this.view.options.resize_textareas);
+            this.resized = true;
+        }
     },
     update_dom: function() {
         this._super.apply(this, arguments);
@@ -1526,6 +1534,29 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
     },
     focus: function() {
         this.$element.find('textarea').focus();
+    },
+    do_resize: function(max_height) {
+        max_height = parseInt(max_height, 10);
+        var $input = this.$element.find('textarea'),
+            $div = $('<div style="position: absolute; z-index: 1000; top: 0"/>').width($input.width()),
+            new_height;
+        $div.text($input.val());
+        _.each('font-family,font-size,white-space'.split(','), function(style) {
+            $div.css(style, $input.css(style));
+        });
+        $div.appendTo($('body'));
+        new_height = $div.height();
+        if (new_height < 90) {
+            new_height = 90;
+        }
+        if (!isNaN(max_height) && new_height > max_height) {
+            new_height = max_height;
+        }
+        $div.remove();
+        $input.height(new_height);
+    },
+    reset: function() {
+        this.resized = false;
     }
 });
 
