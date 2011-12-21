@@ -11,3 +11,5 @@ class company_pad(osv.osv):
         'pad_url_template': 'http://ietherpad.com/%(db)s-%(model)s-%(id)d-%(salt)s-%(name)s'
     }
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

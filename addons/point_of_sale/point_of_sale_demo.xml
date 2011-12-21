@@ -66,7 +66,6 @@
         </record>
         <record id="pos_order_pos11" model="pos.order">
             <field name="sale_journal" ref="account.sales_journal"/>
-            <field eval="0" name="journal_entry"/>
             <field name="shop_id" ref="sale.shop"/>
             <field name="date_order" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="partner_id" ref="base.res_partner_agrolait"/>
@@ -76,7 +75,6 @@
             <field name="state">paid</field>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="name">POS/019</field>
-            <field name="price_type">tax_excluded</field>
             <field model="account.invoice" name="invoice_id" search="[('name', '=', u'Invoice from POS: POS/019')]"/>
             <field model="stock.picking" name="picking_id" search="[('name', '=', u'OUT/00019')]"/>
         </record>
@@ -106,7 +104,6 @@
     
         <record id="stock_picking_out0" model="stock.picking">
             <field name="origin">POS/019</field>
-            <field model="pos.order" name="pos_order" search="[('name', '=', u'POS/019')]"/>
             <field name="date_done" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="1" name="auto_picking"/>
             <field name="move_type">direct</field>
@@ -137,7 +134,6 @@
             <field name="name">Stock move (POS 12)</field>
             <field eval="[(6,0,[])]" name="move_history_ids2"/>
             <field name="product_id" ref="product.product_product_pc1"/>
-            <field name="date_planned" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field model="stock.picking" name="picking_id" search="[('name', '=', u'OUT/00019')]"/>
         </record>
@@ -157,7 +153,6 @@
             <field model="sale.shop" name="shop_id" search="[]"/>
             <field name="user_id" ref="base.user_root"/>
             <field model="res.partner" name="partner_id" search="[]"/>
-            <field name="price_type">tax_excluded</field>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
         </record>
         
@@ -165,7 +160,6 @@
             <field model="sale.shop" name="shop_id" search="[]"/>
             <field name="user_id" ref="base.user_root"/>
             <field model="res.partner" name="partner_id" search="[]"/>
-            <field name="price_type">tax_excluded</field>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
         </record>
         
@@ -173,11 +167,9 @@
         
         <record id="line1_pos" model="pos.order.line">
             <field name="order_id" ref="order_pos1"/>
-            <field name="date_planned" eval="time.strftime('%Y-%m-%d')"/>
             <field name="name">[PC3] Medium PC</field>
             <field name="product_id" ref="product.product_product_pc3"/>
             <field model="res.company" name="company_id" search="[]"/>
-            <field model="product.uom" name="product_uom" search="[]"/>
             <field name="price_unit">450</field>
             <field name="qty">2</field>
             <field name="notice">No Discount</field>
@@ -185,11 +177,9 @@
         
         <record id="line12_pos" model="pos.order.line">
             <field name="order_id" ref="order_pos1"/>
-            <field name="date_planned" eval="time.strftime('%Y-%m-%d')"/>
             <field name="name">[PC2] Basic+ PC (assembly on order)</field>
             <field name="product_id" ref="product.product_product_pc2"/>
             <field model="res.company" name="company_id" search="[]"/>
-            <field model="product.uom" name="product_uom" search="[]"/>
             <field name="price_unit">450</field>
             <field name="qty">2</field>
             <field name="notice">No Discount</field>
@@ -197,11 +187,9 @@
         
         <record id="line2_pos" model="pos.order.line">
             <field name="order_id" ref="order_pos2"/>
-            <field name="date_planned" eval="time.strftime('%Y-%m-%d')"/>
             <field name="name">[PC1] Basic PC</field>
             <field name="product_id" ref="product.product_product_pc1"/>
             <field model="res.company" name="company_id" search="[]"/>
-            <field model="product.uom" name="product_uom" search="[]"/>
             <field name="price_unit">450</field>
             <field name="qty">5</field>
             <field name="discount">0.10</field>

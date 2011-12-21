@@ -161,7 +161,7 @@ class account_analytic_account(osv.osv):
         'debit': fields.function(_debit_credit_bal_qtty, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
-        'quantity_max': fields.float('Maximum Quantity', help='Sets the higher limit of quantity of hours.'),
+        'quantity_max': fields.float('Maximum Time', help='Sets the higher limit of time to work on the contract.'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'contact_id': fields.many2one('res.partner.address', 'Contact'),
         'user_id': fields.many2one('res.users', 'Account Manager'),
@@ -242,6 +242,13 @@ class account_analytic_account(osv.osv):
             res['value']['partner_id'] = partner
         return res
 
+    def onchange_partner_id(self, cr, uid, ids, partner, context=None):
+        partner_obj = self.pool.get('res.partner')
+        if not partner:
+            return {'value':{'contact_id': False}}
+        address = partner_obj.address_get(cr, uid, [partner], ['contact'])
+        return {'value':{'contact_id': address['contact']}}
+
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
@@ -294,6 +301,17 @@ class account_analytic_line(osv.osv):
     }
 
     _order = 'date desc'
+    
+    def _check_no_view(self, cr, uid, ids, context=None):
+        analytic_lines = self.browse(cr, uid, ids, context=context)
+        for line in analytic_lines:
+            if line.account_id.type == 'view':
+                return False
+        return True
+    
+    _constraints = [
+        (_check_no_view, 'You can not create analytic line on view account.', ['account_id']),
+    ]    
 
 account_analytic_line()
 

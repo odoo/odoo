@@ -22,12 +22,16 @@ import logging
 import random
 import time
 from urllib import quote_plus
+import uuid
+
+import simplejson
 
 import tools
 from osv import osv, fields
 from osv import expression
 from tools.translate import _
 from tools.safe_eval import safe_eval
+import openerp
 
 FULL_ACCESS = ('perm_read', 'perm_write', 'perm_create', 'perm_unlink')
 READ_WRITE_ACCESS = ('perm_read', 'perm_write')
@@ -42,38 +46,6 @@ DOMAIN_ALL = [(1, '=', 1)]
 RANDOM_PASS_CHARACTERS = 'aaaabcdeeeefghjkmnpqrstuvwxyzAAAABCDEEEEFGHJKLMNPQRSTUVWXYZ23456789'
 def generate_random_pass():
     return ''.join(random.sample(RANDOM_PASS_CHARACTERS,10))
-
-
-# Utils for introspecting the ORM - could be moved to server someday
-class column_info(object):
-    """Struct containing details about an osv column, either one local to
-       its model, or one inherited via _inherits.
-
-       :attr name: name of the column
-       :attr column: column instance, subclass of osv.fields.column
-       :attr parent_model: if the column is inherited, name of the model
-                           that contains it, None for local columns.
-       :attr parent_column: the name of the column containing the m2o
-                            relationship to the parent model that contains
-                            this column, None for local columns.
-    """
-    def __init__(self, name, column, parent_model=None, parent_column=None):
-        self.name = name
-        self.column = column
-        self.parent_model = parent_model
-        self.parent_column = parent_column
-
-def get_column_infos(osv_model):
-    """Returns a dict mapping all fields names (direct fields and
-       inherited field via _inherits) to a ``column_info`` struct
-       giving detailed columns """
-    result = {}
-    for k, (parent,m2o,col) in osv_model._inherit_fields.iteritems():
-        result[k] = column_info(k, col, parent, m2o)
-    for k, v in osv_model._columns.iteritems():
-        result[k] = column_info(k,v)
-    return result
-
 
 class share_wizard(osv.osv_memory):
     _logger = logging.getLogger('share.wizard')
@@ -110,7 +82,7 @@ class share_wizard(osv.osv_memory):
 
     def _user_type_selection(self, cr, uid, context=None):
         """Selection values may be easily overridden/extended via inheritance"""
-        return [('emails','List of emails')]
+        return [('embedded', 'Direct link or embed code'), ('emails','Emails'), ]
 
     """Override of create() to auto-compute the action name"""
     def create(self, cr, uid, values, context=None):
@@ -123,7 +95,13 @@ class share_wizard(osv.osv_memory):
         # NOTE: take _ids in parameter to allow usage through browse_record objects
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
         if base_url:
-            base_url += '/?db=%(dbname)s&login=%(login)s'
+            base_url += '/web/webclient/login?db=%(dbname)s&login=%(login)s'
+            extra = context and context.get('share_url_template_extra_arguments')
+            if extra:
+                base_url += '&' + '&'.join('%s=%%(%s)s' % (x,x) for x in extra)
+            hash_ = context and context.get('share_url_template_hash_arguments')
+            if hash_:
+                base_url += '#' + '&'.join('%s=%%(%s)s' % (x,x) for x in hash_)
         return base_url
 
     def _share_root_url(self, cr, uid, ids, _fieldname, _args, context=None):
@@ -133,11 +111,68 @@ class share_wizard(osv.osv_memory):
             result[this.id] = this.share_url_template() % data
         return result
 
+    def _generate_embedded_code(self, wizard, options=None):
+        cr = wizard._cr
+        uid = wizard._uid
+        context = wizard._context
+        if options is None:
+            options = {}
+
+        js_options = {}
+        title = options['title'] if 'title' in options else wizard.embed_option_title
+        search = (options['search'] if 'search' in options else wizard.embed_option_search) if wizard.access_mode != 'readonly' else False
+
+        if not title:
+            js_options['display_title'] = False
+        if search:
+            js_options['search_view'] = True
+
+        js_options_str = (', ' + simplejson.dumps(js_options)) if js_options else ''
+
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default=None, context=context)
+        user = wizard.result_line_ids[0]
+
+        return """
+<script type="text/javascript" src="%(base_url)s/web/webclient/js"></script>
+<script type="text/javascript">
+    new openerp.init(%(init)s).web.embed(%(server)s, %(dbname)s, %(login)s, %(password)s,%(action)d%(options)s);
+</script> """ % {
+            'init': simplejson.dumps(openerp.conf.server_wide_modules),
+            'base_url': base_url or '',
+            'server': simplejson.dumps(base_url),
+            'dbname': simplejson.dumps(cr.dbname),
+            'login': simplejson.dumps(user.login),
+            'password': simplejson.dumps(user.password),
+            'action': user.user_id.action_id.id,
+            'options': js_options_str,
+        }
+
+    def _embed_code(self, cr, uid, ids, _fn, _args, context=None):
+        result = dict.fromkeys(ids, '')
+        for this in self.browse(cr, uid, ids, context=context):
+            result[this.id] = self._generate_embedded_code(this)
+        return result
+
+    def _embed_url(self, cr, uid, ids, _fn, _args, context=None):
+        if context is None:
+            context = {}
+        result = dict.fromkeys(ids, '')
+        for this in self.browse(cr, uid, ids, context=context):
+            if this.result_line_ids:
+                ctx = dict(context, share_url_template_extra_arguments=['key'],
+                                    share_url_template_hash_arguments=['action_id'])
+                user = this.result_line_ids[0]
+                data = dict(dbname=cr.dbname, login=user.login, key=user.password, action_id=this.action_id.id)
+                result[this.id] = this.share_url_template(context=ctx) % data
+        return result
+
+
     _columns = {
         'action_id': fields.many2one('ir.actions.act_window', 'Action to share', required=True,
                 help="The action that opens the screen containing the data you wish to share."),
+        'view_type': fields.char('Current View Type', size=32, required=True),
         'domain': fields.char('Domain', size=256, help="Optional domain for further data filtering"),
-        'user_type': fields.selection(lambda s, *a, **k: s._user_type_selection(*a, **k),'Users to share with', required=True,
+        'user_type': fields.selection(lambda s, *a, **k: s._user_type_selection(*a, **k),'Sharing method', required=True,
                      help="Select the type of user(s) you would like to share data with."),
         'new_users': fields.text("Emails"),
         'access_mode': fields.selection([('readonly','Can view'),('readwrite','Can edit')],'Access Mode', required=True,
@@ -147,18 +182,40 @@ class share_wizard(osv.osv_memory):
                                 help='Main access page for users that are granted shared access'),
         'name': fields.char('Share Title', size=64, required=True, help="Title for the share (displayed to users as menu and shortcut name)"),
         'message': fields.text("Personal Message", help="An optional personal message, to be included in the e-mail notification."),
+
+        'embed_code': fields.function(_embed_code, type='text'),
+        'embed_option_title': fields.boolean("Display title"),
+        'embed_option_search': fields.boolean('Display search view'),
+        'embed_url': fields.function(_embed_url, string='Share URL', type='char', size=512, readonly=True),
     }
     _defaults = {
-        'user_type' : 'emails',
+        'view_type': 'tree',
+        'user_type' : 'embedded',
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
         'access_mode': 'readonly',
+        'embed_option_title': True,
+        'embed_option_search': True,
     }
+
+    def go_step_1_link(self, cr, uid, ids, context=None):
+        dummy, step1_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step1_form_link')
+        return {
+            'name': _('Link or embed your documents'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'share.wizard',
+            'view_id': False,
+            'res_id': ids[0],
+            'views': [(step1_form_view_id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new'
+        }
 
     def go_step_1(self, cr, uid, ids, context=None):
         dummy, step1_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step1_form')
         return {
-            'name': _('Grant instant access to your documents'),
+            'name': _('Share your documents by email'),
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'share.wizard',
@@ -185,35 +242,56 @@ class share_wizard(osv.osv_memory):
            ignored, existing ones."""
         user_obj = self.pool.get('res.users')
         current_user = user_obj.browse(cr, UID_ROOT, uid, context=context)
+        # modify context to disable shortcuts when creating share users
+        context['noshortcut'] = True
         created_ids = []
         existing_ids = []
-        for new_user in (wizard_data.new_users or '').split('\n'):
-            # Ignore blank lines
-            new_user = new_user.strip()
-            if not new_user: continue
-            # Ignore the user if it already exists.
-            existing = user_obj.search(cr, UID_ROOT, [('login', '=', new_user)])
-            existing_ids.extend(existing)
-            if existing:
-                new_line = { 'user_id': existing[0],
-                             'newly_created': False}
+        if wizard_data.user_type == 'emails':
+            for new_user in (wizard_data.new_users or '').split('\n'):
+                # Ignore blank lines
+                new_user = new_user.strip()
+                if not new_user: continue
+                # Ignore the user if it already exists.
+                existing = user_obj.search(cr, UID_ROOT, [('login', '=', new_user)])
+                existing_ids.extend(existing)
+                if existing:
+                    new_line = { 'user_id': existing[0],
+                                 'newly_created': False}
+                    wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+                    continue
+                new_pass = generate_random_pass()
+                user_id = user_obj.create(cr, UID_ROOT, {
+                        'login': new_user,
+                        'password': new_pass,
+                        'name': new_user,
+                        'user_email': new_user,
+                        'groups_id': [(6,0,[group_id])],
+                        'share': True,
+                        'company_id': current_user.company_id.id
+                }, context)
+                new_line = { 'user_id': user_id,
+                             'password': new_pass,
+                             'newly_created': True}
                 wizard_data.write({'result_line_ids': [(0,0,new_line)]})
-                continue
+                created_ids.append(user_id)
+
+        elif wizard_data.user_type == 'embedded':
+            new_login = 'embedded-%s' % (uuid.uuid4().hex,)
             new_pass = generate_random_pass()
             user_id = user_obj.create(cr, UID_ROOT, {
-                    'login': new_user,
-                    'password': new_pass,
-                    'name': new_user,
-                    'user_email': new_user,
-                    'groups_id': [(6,0,[group_id])],
-                    'share': True,
-                    'company_id': current_user.company_id.id
-            })
+                'login': new_login,
+                'password': new_pass,
+                'name': new_login,
+                'groups_id': [(6,0,[group_id])],
+                'share': True,
+                'company_id': current_user.company_id.id
+            }, context)
             new_line = { 'user_id': user_id,
                          'password': new_pass,
                          'newly_created': True}
             wizard_data.write({'result_line_ids': [(0,0,new_line)]})
             created_ids.append(user_id)
+
         return created_ids, existing_ids
 
     def _create_shortcut(self, cr, uid, values, context=None):
@@ -273,21 +351,33 @@ class share_wizard(osv.osv_memory):
 
     def _shared_action_def(self, cr, uid, wizard_data, context=None):
         copied_action = wizard_data.action_id
+
+        if wizard_data.access_mode == 'readonly':
+            view_mode = wizard_data.view_type
+            view_id = copied_action.view_id.id if copied_action.view_id.type == wizard_data.view_type else False
+        else:
+            view_mode = copied_action.view_mode
+            view_id = copied_action.view_id.id
+
+
         action_def = {
             'name': wizard_data.name,
             'domain': copied_action.domain,
             'context': self._cleanup_action_context(wizard_data.action_id.context, uid),
             'res_model': copied_action.res_model,
-            'view_mode': copied_action.view_mode,
+            'view_mode': view_mode,
             'view_type': copied_action.view_type,
-            'search_view_id': copied_action.search_view_id.id,
-            'view_id': copied_action.view_id.id,
+            'search_view_id': copied_action.search_view_id.id if wizard_data.access_mode != 'readonly' else False,
+            'view_id': view_id,
+            'auto_search': True,
         }
         if copied_action.view_ids:
             action_def['view_ids'] = [(0,0,{'sequence': x.sequence,
                                             'view_mode': x.view_mode,
                                             'view_id': x.view_id.id })
-                                      for x in copied_action.view_ids]
+                                      for x in copied_action.view_ids
+                                      if (wizard_data.access_mode != 'readonly' or x.view_mode == wizard_data.view_type)
+                                     ]
         return action_def
 
     def _setup_action_and_shortcut(self, cr, uid, wizard_data, user_ids, make_home, context=None):
@@ -321,7 +411,7 @@ class share_wizard(osv.osv_memory):
         models = [x[1].model for x in relation_fields]
         model_obj = self.pool.get('ir.model')
         model_osv = self.pool.get(model.model)
-        for colinfo in get_column_infos(model_osv).itervalues():
+        for colinfo in model_osv._all_columns.itervalues():
             coldef = colinfo.column
             coltype = coldef._type
             relation_field = None
@@ -331,7 +421,7 @@ class share_wizard(osv.osv_memory):
                 relation_osv = self.pool.get(coldef._obj)
                 if coltype == 'one2many':
                     # don't record reverse path if it's not a real m2o (that happens, but rarely)
-                    dest_model_ci = get_column_infos(relation_osv)
+                    dest_model_ci = relation_osv._all_columns
                     reverse_rel = coldef._fields_id
                     if reverse_rel in dest_model_ci and dest_model_ci[reverse_rel].column._type == 'many2one':
                         relation_field = ('%s.%s'%(reverse_rel, suffix)) if suffix else reverse_rel
@@ -339,7 +429,7 @@ class share_wizard(osv.osv_memory):
                 for parent in relation_osv._inherits:
                     if parent not in models:
                         parent_model = self.pool.get(parent)
-                        parent_colinfos = get_column_infos(parent_model)
+                        parent_colinfos = parent_model._all_columns
                         parent_model_browse = model_obj.browse(cr, UID_ROOT,
                                                                model_obj.search(cr, UID_ROOT, [('model','=',parent)]))[0]
                         if relation_field and coldef._fields_id in parent_colinfos:
@@ -689,9 +779,11 @@ class share_wizard(osv.osv_memory):
             raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
 
         # TODO: also send an HTML version of this mail
-        emails_sent = 0
+        msg_ids = []
         for result_line in wizard_data.result_line_ids:
             email_to = result_line.user_id.user_email
+            if not email_to:
+                continue
             subject = wizard_data.name
             body = _("Hello,")
             body += "\n\n"
@@ -712,22 +804,27 @@ class share_wizard(osv.osv_memory):
                 body += _("The documents have been automatically added to your current OpenERP documents.\n")
                 body += _("You may use your current login (%s) and password to view them.\n") % result_line.user_id.login
             body += "\n\n"
-            body += user.signature
+            body += (user.signature or '')
             body += "\n\n"
             body += "--\n"
             body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
+            msg_ids.append(mail_message.schedule_with_attach(cr, uid,
+                                                       user.user_email,
+                                                       [email_to],
+                                                       subject,
+                                                       body,
+                                                       model='share.wizard',
+                                                       context=context))
+        # force direct delivery, as users expect instant notification
+        mail_message.send(cr, uid, msg_ids, context=context)
+        self._logger.info('%d share notification(s) sent.', len(msg_ids))
 
-            if mail_message.schedule_with_attach(cr, uid,
-                                                 user.user_email,
-                                                 [email_to],
-                                                 subject,
-                                                 body,
-                                                 model='share.wizard'):
-                emails_sent += 1
-            else:
-                self._logger.warning('Failed to send share notification from %s to %s, ignored', user.user_email, email_to)
-        self._logger.info('%s share notification(s) successfully sent.', emails_sent)
+    def onchange_embed_options(self, cr, uid, ids, opt_title, opt_search, context=None):
+        wizard = self.browse(cr, uid, ids[0], context)
+        options = dict(title=opt_title, search=opt_search)
+        return {'value': {'embed_code': self._generate_embedded_code(wizard, options)}}
+
 share_wizard()
 
 class share_result_line(osv.osv_memory):
@@ -753,4 +850,5 @@ class share_result_line(osv.osv_memory):
     _defaults = {
         'newly_created': True,
     }
-share_result_line()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

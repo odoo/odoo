@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Inventory Management",
+    "name" : "Warehouse Management",
     "version" : "1.1",
     "author" : "OpenERP SA",
     'complexity': "easy",
@@ -88,6 +88,10 @@ Thanks to the double entry management, the inventory controlling is powerful and
         'test/stock_demo_backorder.yml'
     ],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '0055421559965',
+    "css": [ 'static/src/css/stock.css' ],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

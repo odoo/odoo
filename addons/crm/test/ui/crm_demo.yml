@@ -1,0 +1,29 @@
+-
+  I create lead record to call of partner onchange, stage onchange and Mailing opt-in onchange method.
+-
+  !record {model: crm.lead, id: crm_case_shelvehouse}:
+    name: 'Need more info about your pc2'
+    partner_id: base.res_partner_theshelvehouse0
+    type: opportunity
+    stage_id: crm.stage_lead1
+    state: draft
+    optin: True
+-
+  I create lead record to call Mailing opt-out onchange method.
+-
+  !record {model: crm.lead, id: crm_case_mediapoleunits0}:
+    name: 'Need 20 Days of Consultancy'
+    type: opportunity
+    state: draft
+    optout: True
+-
+  I create phonecall record to call partner onchange method.
+-
+  !record {model: crm.phonecall, id: crm_case_phone05}:
+    name: 'Bad time'
+    partner_id: base.res_partner_5
+-
+  I setting next stage "New" for the lead.
+-
+  !python {model: crm.lead}: |
+    self.stage_next(cr, uid, [ref("crm_case_qrecorp0")], context={'stage_type': 'lead'})

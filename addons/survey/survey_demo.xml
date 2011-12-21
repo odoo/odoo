@@ -30,7 +30,6 @@
             <field name="page_id" ref="survey_page_who_are_you" />
             <field name="type">single_textbox</field>
             <field name="in_visible_rating_weight">1</field>
-            <field name="in_visible_menu_choice">1</field>
             <field eval="1" name="sequence"/>
             <field name="in_visible_answer_type">1</field>
         </record>
@@ -39,7 +38,6 @@
             <field name="question">What is your company's size?</field>
             <field name="page_id" ref="survey_page_who_are_you" />
             <field name="type">multiple_choice_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field eval="2" name="sequence"/>
             <field name="in_visible_answer_type">1</field>
         </record>
@@ -95,7 +93,6 @@
             <field name="question">Where are you located?</field>
             <field name="page_id" ref="survey_page_who_are_you" />
             <field name="type">multiple_choice_multiple_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field eval="3" name="sequence"/>
         </record>
         <record id="survey_question_company_size_Europ" model="survey.answer">
@@ -139,7 +136,6 @@
             <field name="question">When did you become an OpenERP official partner?</field>
             <field name="page_id" ref="survey_page_who_are_you" />
             <field name="type">multiple_choice_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field eval="4" name="sequence"/>
         </record>
         <record id="survey_question_company_size_2009" model="survey.answer">
@@ -181,7 +177,6 @@
             <field name="question">What kind of solutions do you sell to your customers? </field>
             <field name="page_id" ref="survey_page_who_are_you" />
             <field name="type">multiple_choice_multiple_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field eval="5" name="sequence"/>
         </record>
         <record id="survey_answer_specific_devlopments" model="survey.answer">
@@ -215,7 +210,6 @@
             <field name="question">What do you think about the partnership contract?</field>
             <field name="page_id" ref="survey_page_Contracts" />
             <field name="type">multiple_choice_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field eval="1" name="sequence"/>
         </record>
         <record id="survey_answer_Ambiguous" model="survey.answer">
@@ -253,7 +247,6 @@
             <field name="type">multiple_choice_only_one_ans</field>
             <field name="comment_field_type">text</field>
             <field name="comment_label">Why?</field>
-            <field name="in_visible_single_text">1</field>
             <field eval="2" name="sequence"/>
             <field name="is_comment_require">True</field>
         </record>
@@ -284,7 +277,7 @@
             <field name="question">Which maintenance contract do you sell to your customers.</field>
             <field name="page_id" ref="survey_page_Contracts" />
             <field name="type">multiple_choice_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
+            
             <field eval="3" name="sequence"/>
         </record>
         <record id="survey_answer_maintenance_contract" model="survey.answer">
@@ -320,7 +313,7 @@
             <field name="question">Give your opinion about Launchpad reporting :</field>
             <field name="page_id" ref="survey_page_communication" />
             <field name="type">matrix_of_choices_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
+            
             <field eval="2" name="sequence"/>
         </record>
         <record id="survey_answer_find_openobject_website1" model="survey.answer">
@@ -370,7 +363,7 @@
             <field name="question">Leads</field>
             <field name="page_id" ref="survey_page_communication" />
             <field name="type">matrix_of_choices_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
+            
         </record>
         <record id="survey_answer_find_openobject_website" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -420,7 +413,7 @@
             <field name="question">How is OpenERP SA's communication with partners about...</field>
             <field name="page_id" ref="survey_page_communication" />
             <field name="type">matrix_of_choices_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
+            
             <field eval="3" name="sequence"/>
         </record>
         <record id="survey_answer_Maintenance_contracts" model="survey.answer">
@@ -477,8 +470,6 @@
             <field name="question">In your opinion, how could OpenERP SA better communicate with partners and on which subjects?</field>
             <field name="page_id" ref="survey_page_communication" />
             <field name="type">comment</field>
-            <field name="in_visible_rating_weight">1</field>
-            <field name="in_visible_menu_choice">1</field>
             <field eval="4" name="sequence"/>
         </record>
 
@@ -506,8 +497,6 @@
             <field name="question">What is your company's name?</field>
             <field name="page_id" ref="survey_page_odoo_who_are_you" />
             <field name="type">single_textbox</field>
-            <field name="in_visible_rating_weight">1</field>
-            <field name="in_visible_menu_choice">1</field>
             <field name="sequence" eval="1"/>
         </record>
 
@@ -516,7 +505,7 @@
             <field name="question">What is your company's sector?</field>
             <field name="page_id" ref="survey_page_odoo_who_are_you" />
             <field name="type">multiple_choice_multiple_ans</field>
-            <field name="in_visible_single_text">1</field>
+            
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_question_Agriculture" model="survey.answer">
@@ -644,7 +633,6 @@
             <field name="question">Which activities do you plan to manage with Odoo ?</field>
             <field name="page_id" ref="survey_page_odoo_who_are_you" />
             <field name="type">multiple_choice_multiple_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_question_Customer_Relationship_Management" model="survey.answer">
@@ -706,7 +694,6 @@
             <field name="question">How did you discover Odoo ?</field>
             <field name="page_id" ref="survey_page_odoo_who_are_you" />
             <field name="type">multiple_choice_multiple_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="4"/>
         </record>
         <record id="survey_question_OpenERP_website" model="survey.answer">
@@ -762,7 +749,6 @@
             <field name="question">Why did you subscribe to Odoo?</field>
             <field name="page_id" ref="survey_page_odoo_Subscription_and_configuration" />
             <field name="type">multiple_choice_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_switch_to_online_offer1" model="survey.answer">
@@ -801,7 +787,6 @@
             <field name="question">How much time did you spend to configure the application?</field>
             <field name="page_id" ref="survey_page_odoo_Subscription_and_configuration" />
             <field name="type">matrix_of_choices_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_switch_to_online_offer" model="survey.answer">
@@ -872,7 +857,6 @@
             <field name="type">multiple_choice_only_one_ans</field>
             <field name="comment_field_type">text</field>
             <field name="comment_label">No...Why?</field>
-            <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="3"/>
             <field name="is_comment_require">True</field>
         </record>
@@ -902,7 +886,6 @@
             <field name="question">Which interface would you prefer to use?</field>
             <field name="page_id" ref="survey_page_odoo_using_odoo" />
             <field name="type">multiple_choice_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_web_interface" model="survey.answer">
@@ -932,7 +915,6 @@
             <field name="question">Give your opinion :</field>
             <field name="page_id" ref="survey_page_odoo_using_odoo" />
             <field name="type">matrix_of_choices_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_appropriately_structured" model="survey.answer">
@@ -958,8 +940,6 @@
             <field name="answer">Is the Control Center user-friendly?</field>
             <field name="question_id" ref="survey_question_odoo_give_your_opinion" />
             <field name="sequence" eval="4"/>
-            <field name="in_visible_rating_weight">1</field>
-            <field name="in_visible_menu_choice">1</field>
         </record>
         <record id="survey_column_no_opinion" model="survey.question.column.heading">
             <field name="title">No Opinion</field>
@@ -1002,9 +982,7 @@
             <field name="question">What do you think about ... </field>
             <field name="page_id" ref="survey_page_odoo_using_odoo" />
             <field name="type">matrix_of_choices_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field name="in_visible_rating_weight">1</field>
-            <field name="in_visible_menu_choice">1</field>
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_database_new_version" model="survey.answer">
@@ -1080,7 +1058,6 @@
             <field name="page_id" ref="survey_page_odoo_using_odoo" />
             <field name="type">single_textbox</field>
             <field name="in_visible_rating_weight">1</field>
-            <field name="in_visible_menu_choice">1</field>
             <field name="sequence" eval="2"/>
         </record>
 
@@ -1096,7 +1073,6 @@
             <field name="question">How often would you prefer to receive your prepaid bill?</field>
             <field name="page_id" ref="survey_page_odoo_the_offer" />
             <field name="type">multiple_choice_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_Monthly" model="survey.answer">
@@ -1128,7 +1104,6 @@
             <field name="type">multiple_choice_only_one_ans</field>
             <field name="comment_field_type">text</field>
             <field name="comment_label">Comment</field>
-            <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="2"/>
             <field name="is_comment_require">True</field>
         </record>
@@ -1153,7 +1128,6 @@
             <field name="question">How satisfied are you with Odoo's support services :</field>
             <field name="page_id" ref="survey_page_odoo_the_offer" />
             <field name="type">matrix_of_choices_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_answer_our_answer_is" model="survey.answer">
@@ -1209,7 +1183,7 @@
             <field name="question">Give your opinion about Odoo's</field>
             <field name="page_id" ref="survey_page_odoo_the_offer" />
             <field name="type">matrix_of_choices_only_one_ans</field>
-            <field name="in_visible_single_text">1</field>
+            
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_pricing_criteria" model="survey.answer">
@@ -1271,7 +1245,7 @@
             <field name="question">If you have any additional comments, write them here :</field>
             <field name="page_id" ref="survey_page_odoo_the_offer" />
             <field name="type">comment</field>
-            <field name="in_visible_single_text">1</field>
+            
             <field name="sequence" eval="2"/>
         </record>
      </data>
@@ -1346,7 +1320,6 @@
             <field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="validation_type"/>
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
-            <field name="in_visible_single_text">1</field>
         </record>
     </data>
     <data>
@@ -1366,7 +1339,6 @@
             <field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="validation_type"/>
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
-            <field name="in_visible_single_text">1</field>
         </record>
     </data>
     <data>
@@ -1386,7 +1358,6 @@
             <field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="validation_type"/>
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
-            <field name="in_visible_single_text">1</field>
         </record>
     </data>
 
@@ -1408,7 +1379,6 @@
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
             <field name="in_visible_rating_weight">1</field>
-            <field name="in_visible_menu_choice">1</field>
         </record>
     </data>
     <data>
@@ -1428,7 +1398,6 @@
             <field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="validation_type"/>
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
-            <field name="in_visible_single_text">1</field>
         </record>
     </data>
     <data>
@@ -1448,7 +1417,6 @@
             <field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="validation_type"/>
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
-            <field name="in_visible_single_text">1</field>
         </record>
     </data>
     <data>
@@ -1468,7 +1436,6 @@
             <field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="validation_type"/>
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
-            <field name="in_visible_single_text">1</field>
         </record>
     </data>
     <data>
@@ -1488,7 +1455,6 @@
             <field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="validation_type"/>
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
-            <field name="in_visible_single_text">1</field>
         </record>
     </data>
     <data>
@@ -1508,7 +1474,6 @@
             <field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="validation_type"/>
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
-            <field name="in_visible_single_text">1</field>
         </record>
     </data>
     <data>
@@ -1528,7 +1493,6 @@
             <field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="validation_type"/>
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
-            <field name="in_visible_single_text">1</field>
         </record>
     </data>
     <data>
@@ -1549,7 +1513,6 @@
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
             <field name="in_visible_rating_weight">1</field>
-            <field name="in_visible_menu_choice">1</field>
         </record>
     </data>
     <data>
@@ -1570,7 +1533,6 @@
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
             <field name="in_visible_rating_weight">1</field>
-            <field name="in_visible_menu_choice">1</field>
         </record>
     </data>
     <data>
@@ -1590,7 +1552,6 @@
             <field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="validation_type"/>
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
-            <field name="in_visible_single_text">1</field>
         </record>
     </data>
     <data>
@@ -1610,7 +1571,6 @@
             <field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="validation_type"/>
             <field eval="&quot;&quot;&quot;Other&quot;&quot;&quot;" name="comment_label"/>
             <field eval="0" name="allow_comment"/>
-            <field name="in_visible_single_text">1</field>
         </record>
     </data>
     <data>
@@ -2191,7 +2151,6 @@
             <field eval="1" name="req_ans"/>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field eval="0" name="make_comment_field"/>
-            <field eval="1" name="in_visible_menu_choice"/>
             <field eval="1" name="in_visible_answer_type"/>
             <field name="page_id" ref="survey_page_0_Community"/>
             <field name="required_type">at least</field>
@@ -2220,7 +2179,6 @@
             <field eval="1" name="req_ans"/>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field eval="0" name="make_comment_field"/>
-            <field eval="1" name="in_visible_menu_choice"/>
             <field eval="1" name="in_visible_answer_type"/>
             <field name="page_id" ref="survey_page_0_Community"/>
             <field name="required_type">at least</field>
@@ -2249,7 +2207,6 @@
             <field eval="1" name="req_ans"/>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field eval="0" name="make_comment_field"/>
-            <field eval="1" name="in_visible_menu_choice"/>
             <field eval="1" name="in_visible_answer_type"/>
             <field name="page_id" ref="survey_page_0_Community"/>
             <field name="required_type">at least</field>
@@ -2278,7 +2235,6 @@
             <field eval="1" name="req_ans"/>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field eval="0" name="make_comment_field"/>
-            <field eval="1" name="in_visible_menu_choice"/>
             <field eval="1" name="in_visible_answer_type"/>
             <field name="page_id" ref="survey_page_1_Community"/>
             <field name="required_type">at least</field>
@@ -2307,7 +2263,6 @@
             <field eval="1" name="req_ans"/>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field eval="0" name="make_comment_field"/>
-            <field eval="1" name="in_visible_menu_choice"/>
             <field eval="1" name="in_visible_answer_type"/>
             <field name="page_id" ref="survey_page_1_Community"/>
             <field name="required_type">at least</field>
@@ -2336,7 +2291,6 @@
             <field eval="1" name="req_ans"/>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field eval="0" name="make_comment_field"/>
-            <field eval="1" name="in_visible_menu_choice"/>
             <field eval="1" name="in_visible_answer_type"/>
             <field name="page_id" ref="survey_page_1_Community"/>
             <field name="required_type">at least</field>
@@ -2365,7 +2319,6 @@
             <field eval="1" name="req_ans"/>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field eval="0" name="make_comment_field"/>
-            <field eval="1" name="in_visible_menu_choice"/>
             <field eval="1" name="in_visible_answer_type"/>
             <field name="page_id" ref="survey_page_1_Community"/>
             <field name="required_type">at least</field>
@@ -2394,7 +2347,6 @@
             <field eval="1" name="req_ans"/>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field eval="0" name="make_comment_field"/>
-            <field eval="1" name="in_visible_menu_choice"/>
             <field eval="1" name="in_visible_answer_type"/>
             <field name="page_id" ref="survey_page_1_Community"/>
             <field name="required_type">at least</field>
@@ -2423,7 +2375,6 @@
             <field eval="1" name="req_ans"/>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field eval="0" name="make_comment_field"/>
-            <field eval="1" name="in_visible_menu_choice"/>
             <field eval="0" name="in_visible_answer_type"/>
             <field name="page_id" ref="survey_page_2_Community"/>
             <field name="required_type">at least</field>
@@ -2452,7 +2403,6 @@
             <field eval="1" name="req_ans"/>
             <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
             <field eval="0" name="make_comment_field"/>
-            <field eval="1" name="in_visible_menu_choice"/>
             <field eval="1" name="in_visible_answer_type"/>
             <field name="page_id" ref="survey_page_2_Community"/>
             <field name="required_type">at least</field>

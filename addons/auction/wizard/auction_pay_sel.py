@@ -55,3 +55,5 @@ class auction_pay_sel(osv.osv_memory):
             return {'type': 'ir.actions.act_window_close'}
 
 auction_pay_sel()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

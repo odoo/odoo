@@ -43,7 +43,7 @@ You have to create the print buttons by calling the wizard. For more details see
                     """,
     "version" : "0.9",
     "depends" : ["base", "account", "report_webkit"],
-    "category": "Hidden",
+    "category": "Reporting",
     "author" : "Camptocamp SA - NBessi",
     "url": "http://www.camptocamp.com/",
     "data": ["report_webkit_html_view.xml",
@@ -54,3 +54,5 @@ You have to create the print buttons by calling the wizard. For more details see
     "certificate" : "00436592682591421981",
     'images': ['images/webkit_invoice_report.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

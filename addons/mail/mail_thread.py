@@ -58,6 +58,14 @@ class mail_thread(osv.osv):
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', readonly=True),
     }
 
+    def message_capable_models(self, cr, uid, context=None):
+        ret_dict = {}
+        for model_name in self.pool.obj_list():
+            model = self.pool.get(model_name)
+            if 'mail.thread' in getattr(model, '_inherit', []):
+                ret_dict[model_name] = model._description        
+        return ret_dict
+
     def message_thread_followers(self, cr, uid, ids, context=None):
         """Returns a list of email addresses of the people following
            this thread, including the sender of each mail, and the

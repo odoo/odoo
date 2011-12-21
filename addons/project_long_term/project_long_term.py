@@ -73,11 +73,6 @@ class project_phase(osv.osv):
                  return False
          return True
 
-    def _get_default_uom_id(self, cr, uid):
-       model_data_obj = self.pool.get('ir.model.data')
-       model_data_id = model_data_obj._get_id(cr, uid, 'product', 'uom_hour')
-       return model_data_obj.read(cr, uid, [model_data_id], ['res_id'])[0]['res_id']
-
     def _compute_progress(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         if not ids:
@@ -179,7 +174,7 @@ class project_phase(osv.osv):
                 'months': 'm', 'month':'month', 'm':'m',
                 'weeks': 'w', 'week': 'w', 'w':'w',
                 'hours': 'H', 'hour': 'H', 'h':'H',
-            }.get(phase.product_uom.name.lower(), "h")
+            }.get(phase.product_uom.name.lower(), "H")
             duration = str(phase.duration) + duration_uom
             result += '''
     def Phase_%s():
@@ -270,3 +265,5 @@ class project_task(osv.osv):
         'phase_id': fields.many2one('project.phase', 'Project Phase'),
     }
 project_task()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

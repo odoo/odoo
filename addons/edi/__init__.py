@@ -32,3 +32,5 @@ except ImportError:
         """Could not load openerp-web section of EDI, EDI will not behave correctly
 
 To fix, launch openerp-web in embedded mode""")
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Membership',
+    'name': 'Membership Management',
     'version': '0.1',
-    'category': 'Hidden',
+    'category': 'Association',
     'description': """
 This module allows you to manage all operations for managing memberships.
 =========================================================================

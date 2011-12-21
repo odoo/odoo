@@ -21,9 +21,9 @@
 ##############################################################################
 
 {
-    "name" : "Automated E-Mails",
+    "name" : "E-Mail Templates",
     "version" : "1.1",
-    "author" : "Openlabs",
+    "author" : "OpenERP,OpenLabs",
     "website" : "http://openerp.com",
     "category" : "Marketing",
     'complexity': "expert",

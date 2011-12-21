@@ -125,9 +125,9 @@ class wiki_wiki2(osv.osv):
         'child_ids': fields.one2many('wiki.wiki', 'parent_id', 'Child Pages'),
     }
     _defaults = {
-        'toc': lambda *a: True,
-        'review': lambda *a: True,
-        'minor_edit': lambda *a: True,
+        'toc': True,
+        'review': True,
+        'minor_edit': True,
     }
 
     def onchange_group_id(self, cr, uid, ids, group_id, content, context=None):
