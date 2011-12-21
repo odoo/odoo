@@ -88,7 +88,6 @@ class hr_so_project(osv.osv_memory):
         return timesheet_obj.create(cr, uid, res, context=context)
 
     def sign_out_result_end(self, cr, uid, ids, context=None):
-        print""
         emp_obj = self.pool.get('hr.employee')
         for data in self.browse(cr, uid, ids, context=context):
             emp_id = data.emp_id.id

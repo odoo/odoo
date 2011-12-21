@@ -110,7 +110,7 @@
   I check that state is "Confirmed".
 -
   !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
-      - state == 'confirm'
+    - state == 'confirm'
 -
   The manager will accept This request by click on "Accept" button.
 -
@@ -120,4 +120,4 @@
   I check that state is "Done".
 -
   !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
-      - state == 'done'
+    - state == 'done'
