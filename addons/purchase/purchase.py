@@ -426,7 +426,7 @@ class purchase_order(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
-    def _prepare_order_picking(self, cr, uid, order, *args):
+    def _prepare_order_picking(self, cr, uid, order, context=None):
         return {
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
@@ -439,7 +439,7 @@ class purchase_order(osv.osv):
             'move_lines' : [],
         }
          
-    def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, *args):
+    def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None):
         return {
             'name': order.name + ': ' + (order_line.name or ''),
             'product_id': order_line.product_id.id,
@@ -460,7 +460,7 @@ class purchase_order(osv.osv):
             'price_unit': order_line.price_unit
         }
 
-    def _create_pickings(self, cr, uid, order, order_lines, picking_id=False, *args):
+    def _create_pickings(self, cr, uid, order, order_lines, picking_id=False, context=None):
         """Creates pickings and appropriate stock moves for given order lines, then
         confirms the moves, makes them available, and confirms the picking.
 
@@ -480,7 +480,7 @@ class purchase_order(osv.osv):
         :return: list of IDs of pickings used/created for the given order lines (usually just one)
         """
         if not picking_id: 
-            picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, *args))
+            picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
         todo_moves = []
         stock_move = self.pool.get('stock.move')
         wf_service = netsvc.LocalService("workflow")
@@ -488,7 +488,7 @@ class purchase_order(osv.osv):
             if not order_line.product_id:
                 continue
             if order_line.product_id.type in ('product', 'consu'):
-                move = stock_move.create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, *args))
+                move = stock_move.create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, context=context))
                 if order_line.move_dest_id:
                     order_line.move_dest_id.write({'location_id': order.location_id.id})
                 todo_moves.append(move)
@@ -497,10 +497,10 @@ class purchase_order(osv.osv):
         wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return [picking_id]
 
-    def action_picking_create(self,cr, uid, ids, *args):
+    def action_picking_create(self,cr, uid, ids, context=None):
         picking_ids = []
         for order in self.browse(cr, uid, ids):
-            picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, *args))
+            picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, context=context))
 
         # Must return one unique picking ID: the one to connect in the subflow of the purchase order.
         # In case of multiple (split) pickings, we should return the ID of the critical one, i.e. the
