@@ -24,6 +24,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from osv import osv
 from tools.translate import _
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 import tools
 import netsvc
 import pooler
@@ -193,6 +194,23 @@ class procurement_order(osv.osv):
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
 
+    def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
+        date_planned = start_date + \
+                       relativedelta(days=orderpoint.product_id.seller_delay or 0.0)
+        date_planned = date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return date_planned
+
+    def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, date_planned, product_qty, procure_method='make_to_order', context=None):
+        return {'name': orderpoint.name,
+                'date_planned': date_planned,
+                'product_id': orderpoint.product_id.id,
+                'product_qty': product_qty,
+                'company_id': orderpoint.company_id.id,
+                'product_uom': orderpoint.product_uom.id,
+                'location_id': orderpoint.location_id.id,
+                'procure_method': procure_method,
+                'origin': orderpoint.name}
+
     def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
             use_new_cursor=False, context=None, user_id=False):
         '''
@@ -238,8 +256,7 @@ class procurement_order(osv.osv):
                     if reste > 0:
                         qty += op.qty_multiple - reste
 
-                    newdate = datetime.today() + relativedelta(
-                            days = int(op.product_id.seller_delay))
+                    date_planned = self._get_orderpoint_date_planned(cr, uid, op, datetime.today(), context=context)
                     if qty <= 0:
                         continue
                     if op.product_id.type not in ('consu'):
@@ -258,17 +275,9 @@ class procurement_order(osv.osv):
                             qty = to_generate
 
                     if qty:
-                        proc_id = procurement_obj.create(cr, uid, {
-                            'name': op.name,
-                            'date_planned': newdate.strftime('%Y-%m-%d'),
-                            'product_id': op.product_id.id,
-                            'product_qty': qty,
-                            'company_id': op.company_id.id,
-                            'product_uom': op.product_uom.id,
-                            'location_id': op.location_id.id,
-                            'procure_method': 'make_to_order',
-                            'origin': op.name
-                        })
+                        proc_id = procurement_obj.create(cr, uid,
+                                                         self._prepare_orderpoint_procurement(cr, uid, op, date_planned, qty, context=context),
+                                                         context=context)
                         wf_service.trg_validate(uid, 'procurement.order', proc_id,
                                 'button_confirm', cr)
                         wf_service.trg_validate(uid, 'procurement.order', proc_id,
