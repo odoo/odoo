@@ -586,7 +586,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
 
             var $title = self.$element.find('.oe_view_title_text'),
                 $search_prefix = $title.find('span.oe_searchable_view');
-            if (controller.searchable !== false) {
+            if (controller.searchable !== false && self.flags.search_view !== false) {
                 if (!$search_prefix.length) {
                     $title.prepend('<span class="oe_searchable_view">' + _t("Search: ") + '</span>');
                 }
