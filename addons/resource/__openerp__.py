@@ -45,6 +45,10 @@ It also manages the leaves of every resource.
     ],
     'demo_xml': ['resource_demo.xml'
     ],
+    'test': [
+        'test/resource.yml',
+        'test/duplicate_resource.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '00746371192190459469',

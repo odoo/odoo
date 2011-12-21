@@ -3422,7 +3422,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
-        return True
+        return {'type' : 'ir.actions.act_window_close'}
 
     def _prepare_bank_journal(self, cr, uid, line, current_num, default_account_id, company_id, context=None):
         '''

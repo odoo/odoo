@@ -118,7 +118,7 @@ class crm_phonecall(crm_base, osv.osv):
         """Resets case as Todo
         """
         res = super(crm_phonecall, self).case_reset(cr, uid, ids, args, 'crm.phonecall')
-        self.write(cr, uid, ids, {'duration': 0.0})
+        self.write(cr, uid, ids, {'duration': 0.0, 'state':'open'})
         return res
 
 
