@@ -3065,10 +3065,10 @@ openerp.web.form.WidgetHtml = openerp.web.form.Widget.extend({
             if (typeof child === 'string') {
                 $into.text(child);
             } else if (child.tag === 'field') {
-                var type = fields[child.attrs.name] || {};
-                var widget = new (self.view.registry.get_any(
-                    [child.attrs.widget, type.type, child.tag])) (self.view, child);
-                $into.append(widget.render());
+                $into.append(
+                    new (self.view.registry.get_object('frame'))(
+                        self.view, {tag: 'ueule', attrs: {}, children: [child] })
+                            .render());
             } else {
                 var $child = $(document.createElement(child.tag))
                         .attr(child.attrs)
