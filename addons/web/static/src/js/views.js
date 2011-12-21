@@ -135,6 +135,9 @@ session.web.ActionManager = session.web.Widget.extend({
             this.dialog_viewmanager.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
+            if(action.menu_id) {
+                return this.widget_parent.do_action(action);
+            }
             this.dialog_stop();
             this.content_stop();
             this.inner_action = action;
@@ -313,17 +316,18 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             .filter('[data-view-type="' + view_type + '"]')
             .attr('disabled', true);
 
-        for (var view_name in this.views) {
-            if (!this.views.hasOwnProperty(view_name)) { continue; }
-            if (this.views[view_name].controller) {
-                if (view_name === view_type) {
-                    $.when(view_promise).then(this.views[view_name].controller.do_show);
-                } else {
-                    this.views[view_name].controller.do_hide();
-                }
-            }
-        }
         $.when(view_promise).then(function () {
+            _.each(_.keys(self.views), function(view_name) {
+                var controller = self.views[view_name].controller;
+                if (controller) {
+                    if (view_name === view_type) {
+                        controller.do_show();
+                    } else {
+                        controller.do_hide();
+                    }
+                }
+            });
+
             self.$element.find('.oe_view_title_text:first').text(
                     self.display_title());
         });
@@ -585,7 +589,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
 
             var $title = self.$element.find('.oe_view_title_text'),
                 $search_prefix = $title.find('span.oe_searchable_view');
-            if (controller.searchable !== false) {
+            if (controller.searchable !== false && self.flags.search_view !== false) {
                 if (!$search_prefix.length) {
                     $title.prepend('<span class="oe_searchable_view">' + _t("Search: ") + '</span>');
                 }
@@ -604,7 +608,11 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var self = this,
             defs = [];
         if (state.view_type && state.view_type !== this.active_view) {
-            defs.push(this.on_mode_switch(state.view_type, true));
+            defs.push(
+                this.views[this.active_view].deferred.pipe(function() {
+                    return self.on_mode_switch(state.view_type, true);
+                })
+            );
         } 
 
         $.when(defs).then(function() {
@@ -616,7 +624,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var grandparent = this.widget_parent && this.widget_parent.widget_parent;
         // display shortcuts if on the first view for the action
         var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        if (!(grandparent instanceof session.web.WebClient) ||
+        if (!this.action.name ||
             !(view.view_type === this.views_src[0].view_type
                 && view.view_id === this.views_src[0].view_id)) {
             $shortcut_toggle.hide();

@@ -17,6 +17,7 @@ from xml.etree import ElementTree
 from cStringIO import StringIO
 
 import babel.messages.pofile
+import werkzeug.utils
 
 import web.common
 openerpweb = web.common.http
@@ -200,6 +201,14 @@ class WebClient(openerpweb.Controller):
         }
         return r
 
+    @openerpweb.httprequest
+    def login(self, req, db, login, key):
+        req.session.authenticate(db, login, key, {})
+        redirect = werkzeug.utils.redirect('/web/webclient/home', 303)
+        cookie_val = urllib2.quote(simplejson.dumps(req.session_id))
+        redirect.set_cookie('session0|session_id', cookie_val)
+        return redirect
+
     @openerpweb.jsonrequest
     def translations(self, req, mods, lang):
         lang_model = req.session.model('res.lang')
@@ -248,15 +257,19 @@ class Proxy(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def load(self, req, path):
-        #req.config.socket_port
-        #if not re.match('^/[^/]+/static/.*', path):
-        #    return werkzeug.exceptions.BadRequest()
+        """ Proxies an HTTP request through a JSON request.
 
-        env = req.httprequest.environ
-        port = env['SERVER_PORT']
+        It is strongly recommended to not request binary files through this,
+        as the result will be a binary data blob as well.
 
-        o = urllib2.urlopen('http://127.0.0.1:%s%s' % (port, path))
-        return o.read()
+        :param req: OpenERP request
+        :param path: actual request path
+        :return: file content
+        """
+        from werkzeug.test import Client
+        from werkzeug.wrappers import BaseResponse
+
+        return Client(req.httprequest.app, BaseResponse).get(path).data
 
 class Database(openerpweb.Controller):
     _cp_path = "/web/database"

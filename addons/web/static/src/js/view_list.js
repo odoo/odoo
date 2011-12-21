@@ -302,7 +302,11 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             last = first + limit;
         }
         this.$element.find('span.oe-pager-state').empty().text(_.str.sprintf(
-            "[%d to %d] of %d", first + 1, last, total));
+            _t("[%(first_record)d to %(last_record)d] of %(records_count)d"), {
+                first_record: first + 1,
+                last_record: last,
+                records_count: total
+            }));
 
         this.$element
             .find('button[data-pager-action=first], button[data-pager-action=previous]')
@@ -326,7 +330,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         var field_to_column = function (field) {
             var name = field.attrs.name;
             var column = _.extend({id: name, tag: field.tag},
-                    field.attrs, fields[name]);
+                    fields[name], field.attrs);
             // modifiers computer
             if (column.modifiers) {
                 var modifiers = JSON.parse(column.modifiers);
@@ -463,7 +467,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }));
         this.do_push_state({
             page: this.page,
-            limit: this._limit,
+            limit: this._limit
         });
         return reloaded.promise();
     },
@@ -1134,7 +1138,12 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
     },
     open: function (point_insertion) {
         this.render().insertAfter(point_insertion);
-        this.make_paginator();
+
+        var no_subgroups = _(this.datagroup.group_by).isEmpty(),
+            records_terminated = !this.datagroup.context['group_by_no_leaf'];
+        if (no_subgroups && records_terminated) {
+            this.make_paginator();
+        }
     },
     close: function () {
         this.$row.children().last().empty();
@@ -1276,7 +1285,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
         var options = { offset: page * limit, limit: limit };
         //TODO xmo: investigate why we need to put the setTimeout
-        setTimeout(function() {dataset.read_slice(fields, options , function (records) {
+        $.async_when().then(function() {dataset.read_slice(fields, options , function (records) {
             // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
             if (self.records.length) {
                 self.records.reset(null, {silent: true});
@@ -1287,7 +1296,10 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 var pages = Math.ceil(dataset.ids.length / limit);
                 self.$row
                     .find('.oe-pager-state')
-                        .text(_.str.sprintf('%d/%d', page + 1, pages))
+                        .text(_.str.sprintf(_t("%(page)d/%(page_count)d"), {
+                            page: page + 1,
+                            page_count: pages
+                        }))
                     .end()
                     .find('button[data-pager-action=previous]')
                         .attr('disabled', page === 0)
@@ -1299,7 +1311,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             self.records.add(records, {silent: true});
             list.render();
             d.resolve(list);
-        });}, 0);
+        });});
         return d.promise();
     },
     setup_resequence_rows: function (list, dataset) {
@@ -1341,9 +1353,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     //        Accounting > Taxes > Taxes, child tax accounts)
                     //        when synchronous (without setTimeout)
                     (function (dataset, id, seq) {
-                        setTimeout(function () {
+                        $.async_when().then(function () {
                             dataset.write(id, {sequence: seq});
-                        }, 0);
+                        });
                     }(dataset, record.get('id'), seq));
                     record.set('sequence', seq);
                 }

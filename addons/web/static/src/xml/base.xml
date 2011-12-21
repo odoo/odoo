@@ -119,7 +119,7 @@
                            equalTo="input[name=create_admin_pwd]"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><button>Create</button></td>
+                <td colspan="2" align="right"><button class="oe_button">Create</button></td>
             </tr>
         </table>
     </form>
@@ -149,7 +149,7 @@
                 <td><input type="password" name="drop_pwd" class="required"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><button>Drop</button></td>
+                <td colspan="2" align="right"><button class="oe_button">Drop</button></td>
             </tr>
         </table>
     </form>
@@ -181,7 +181,7 @@
                 <td><input type="password" name="backup_pwd" class="required"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><button>Backup</button></td>
+                <td colspan="2" align="right"><button class="oe_button">Backup</button></td>
             </tr>
         </table>
     </form>
@@ -210,7 +210,7 @@
                 <td><input type="text" name="new_db" class="required"/></td>
             </tr>
         <tr>
-            <td colspan="2" align="right"><button>Restore</button></td>
+            <td colspan="2" align="right"><button class="oe_button">Restore</button></td>
             </tr>
         </table>
     </form>
@@ -241,7 +241,7 @@
                            equalTo="input[name=new_pwd]" minlength="1"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><button>Change Password</button></td>
+                <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
             </tr>
         </table>
     </form>
@@ -266,7 +266,7 @@
     <div class="bottom"> </div>
     <div class="login_error_message">Invalid username or password</div>
     <div class="pane">
-      <div id="logo"><img src="/web/static/src/img/logo2.png"/></div>
+      <div id="logo"><img src='/web/static/src/img/logo2.png'/></div>
       <form action="" method="post">
         <div class="dbpane" >
           Database: 
@@ -373,8 +373,9 @@
                 </h2>
                 <div class="oe_vm_switch">
                     <t t-if="views.length != 1" t-foreach="views" t-as="view">
-                        <button type="button" t-att-data-view-type="view.view_type">
-                            <t t-esc="view.label || view.view_type"/>
+
+                        <button type="button" t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="view.view_type">
+                            <span><t t-esc="view.label || view.view_type"/></span>
                         </button>
                     </t>
                 </div>
@@ -516,6 +517,24 @@
     </td>
 </tr>
 
+<t t-name="ViewPager">
+    <button class="oe_button oe_button_pager" type="button" data-pager-action="first">
+        <img t-att-src='_s + "/web/static/src/img/pager_first.png"'/>
+    </button>
+    <button class="oe_button oe_button_pager" type="button" data-pager-action="previous">
+        <img t-att-src='_s + "/web/static/src/img/pager_previous.png"'/>
+    </button>
+
+    <t t-raw="__content__"/>
+
+    <button class="oe_button oe_button_pager" type="button" data-pager-action="next">
+        <img t-att-src='_s + "/web/static/src/img/pager_next.png"'/>
+    </button>
+    <button class="oe_button oe_button_pager" type="button" data-pager-action="last">
+        <img t-att-src='_s + "/web/static/src/img/pager_last.png"'/>
+    </button>
+</t>
+
 <table t-name="ListView" class="oe-listview-content">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0) + (options.isClarkGable ? 1 : 0)"/>
     <thead class="ui-widget-header">
@@ -524,11 +543,11 @@
                 <table>
                     <tr>
                         <td t-if="!no_leaf and options.action_buttons !== false" class="oe-actions">
-                            <button type="button" class="oe-list-add"
+                            <button type="button" class="oe_button oe-list-add"
                                     t-if="options.addable">
                                 <t t-esc="options.addable"/>
                             </button>
-                            <button type="button" class="oe-list-delete"
+                            <button type="button" class="oe_button oe-list-delete"
                                     t-if="options.selectable and options.deletable">
                                 Delete
                             </button>
@@ -588,18 +607,10 @@
 </t>
 <th t-name="Listview.navigation.button" t-if="!no_leaf and options.pager !== false"
         class="oe-list-pager" t-att-colspan="columns_count">
-    <button type="button" disabled="disabled"
-            data-pager-action="first">First</button>
-    <button type="button" disabled="disabled"
-            data-pager-action="previous">&lt;</button>
-
-    <span class="oe-pager-state">
-    </span>
-
-    <button type="button" disabled="disabled"
-            data-pager-action="next">&gt;</button>
-    <button type="button" disabled="disabled"
-            data-pager-action="last">Last</button>
+    <t t-call="ViewPager">
+        <span class="oe-pager-state">
+        </span>
+    </t>
 </th>
 <t t-name="ListView.rows" t-foreach="records.length" t-as="index">
     <t t-call="ListView.row">
@@ -641,27 +652,23 @@
 <t t-name="FormView">
     <div class="oe_form_header">
         <div class="oe_form_buttons" t-if="widget.options.action_buttons !== false">
-            <button type="button" class="oe_form_button_save">Save</button>
-            <button type="button" class="oe_form_button_cancel">Cancel</button>
+            <button type="button" class="oe_button oe_form_button_save">Save</button>
+            <button type="button" class="oe_button oe_form_button_cancel">Cancel</button>
         </div>
         <div class="oe_form_pager" t-if="widget.options.pager !== false">
-            <button type="button" data-pager-action="first">First</button>
-            <button type="button" data-pager-action="previous">&lt;&lt;</button>
-
-            <span class="oe_pager_index">0</span> / <span class="oe_pager_count">0</span>
-
-            <button type="button" data-pager-action="next">&gt;&gt;</button>
-            <button type="button" data-pager-action="last">Last</button>
+            <t t-call="ViewPager">
+                <span class="oe_pager_index">0</span><span class="oe_pager_separator"> / </span><span class="oe_pager_count">0</span>
+            </t>
         </div>
     </div>
     <t t-raw="frame.render()"/>
 </t>
 <t t-name="PageView" t-extend="FormView">
     <t t-jquery=".oe_form_buttons" t-operation="inner">
-        <button type="button" class="oe_form_button_edit">Edit</button>
-        <button type="button" class="oe_form_button_create">Create</button>
-        <button type="button" class="oe_form_button_duplicate">Duplicate</button>
-        <button type="button" class="oe_form_button_delete">Delete</button>
+        <button type="button" class="oe_button oe_form_button_edit">Edit</button>
+        <button type="button" class="oe_button oe_form_button_create">Create</button>
+        <button type="button" class="oe_button oe_form_button_duplicate">Duplicate</button>
+        <button type="button" class="oe_button oe_form_button_delete">Delete</button>
     </t>
 </t>
 <t t-name="FormView.sidebar.attachments">
@@ -673,7 +680,7 @@
                 <input type="hidden" name="callback" t-attf-value="#{element_id}_iframe"/>
                 <input type="hidden" name="model" t-att-value="view.dataset.model"/>
                 <input type="hidden" name="id" t-att-value="view.datarecord.id"/>
-                <button class="button" type="button">
+                <button class="oe_button" type="button">
                     <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16" style="display: none"/>
                     <span>Add</span>
                 </button>
@@ -854,16 +861,18 @@
     </div>
 </t>
 <t t-name="FieldURI.readonly">
-    <a href="#" class="oe_form_uri">#</a>
+    <div>
+        <a href="#" class="oe_form_uri">#</a>
+    </div>
 </t>
 <t t-name="FieldEmail">
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
-        <td width="100%" style="position: relative">
+        <td width="100%">
             <t t-call="FieldChar"/>
         </td>
         <td width="16">
-            <button type="button" class="button" title="Send an e-mail with your default e-mail client">
+            <button class="oe_button oe_field_button" type="button" title="Send an e-mail with your default e-mail client">
                 <img t-att-src='_s + "/web/static/src/img/icons/terp-mail-message-new.png"'/>
             </button>
         </td>
@@ -873,11 +882,11 @@
 <t t-name="FieldUrl">
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
-        <td width="100%" style="position: relative">
+        <td width="100%">
             <t t-call="FieldChar"/>
         </td>
         <td width="16">
-            <button type="button" class="button" title="Open this resource">
+            <button class="oe_button oe_field_button" type="button" title="Open this resource">
                 <img t-att-src='_s + "/web/static/src/img/icons/gtk-ok.png"'/>
             </button>
         </td>
@@ -914,16 +923,22 @@
     </select>
 </t>
 <t t-name="FieldMany2One">
-    <div class="oe-m2o">
-        <input type="text" size="1" style="width: 100%;"
-                t-att-id="widget.element_id"/>
-        <span class="oe-m2o-drop-down-button">
-            <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
-        <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
-            <img t-att-src='_s + "/web/static/src/img/icons/gtk-index.png"'/></span>
-        <div t-att-id="widget.cm_id" class="contextMenu" style="display:none">
-        </div>
-    </div>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%" valign="top">
+            <t t-call="FieldChar"/>
+            <span class="oe-m2o-drop-down-button">
+                <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
+        </td>
+        <td>
+            <button class="oe_button oe_field_button oe-m2o-cm-button" t-att-id="widget.name + '_open'">
+                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
+            </button>
+            <div t-att-id="widget.cm_id" class="contextMenu" style="display:none">
+            </div>
+        </td>
+    </tr>
+    </table>
 </t>
 <t t-name="FieldMany2One.context_menu">
     <ul>
@@ -992,7 +1007,7 @@
                                 method="post" enctype="multipart/form-data" action="/web/binary/upload">
                                 <input type="hidden" name="session_id" value=""/>
                                 <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                                <button class="button" type="button" title="Set Image">
+                                <button class="oe_button" type="button" title="Set Image">
                                     <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 </button>
                                 <input type="file" class="oe-binary-file" name="ufile"/>
@@ -1000,7 +1015,7 @@
                         </div>
                     </td>
                     <td>
-                        <button class="button oe-binary-file-clear" type="button" title="Clear">
+                        <button class="oe_button oe-binary-file-clear" type="button" title="Clear">
                             <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
                         </button>
                     </td>
@@ -1035,7 +1050,7 @@
                             method="post" enctype="multipart/form-data" action="/web/binary/upload">
                             <input type="hidden" name="session_id" value=""/>
                             <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                            <button class="button" type="button" title="Set Image">
+                            <button class="oe_button oe_field_button" type="button" title="Set Image">
                                 <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 <span>Select</span>
                             </button>
@@ -1044,13 +1059,13 @@
                     </div>
                 </td>
                 <td>
-                    <button class="button oe-binary-file-save" type="button" title="Save As">
+                    <button class="oe_button oe-binary-file-save" type="button" title="Save As">
                         <img t-att-src='_s + "/web/static/src/img/icons/gtk-save.png"'/>
                         <span>Save As</span>
                     </button>
                 </td>
                 <td>
-                    <button class="button oe-binary-file-clear" type="button" title="Clear">
+                    <button class="oe_button oe-binary-file-clear" type="button" title="Clear">
                         <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
                         <span>Clear</span>
                     </button>
@@ -1108,8 +1123,8 @@
     <form class="oe_forms">
         <t t-call="SearchView.render_lines"/>
         <div class="oe_search-view-buttons">
-            <button>Search</button>
-            <button type="reset">Clear</button>
+            <button class="oe_button">Search</button>
+            <button class="oe_button" type="reset">Clear</button>
             <select class="oe_search-view-filters-management">
             </select>
         </div>
@@ -1248,7 +1263,7 @@
 <t t-name="SearchView.extended_search">
     <t t-call="SearchView.util.expand">
         <t t-set="expand" t-value="false"/>
-        <t t-set="label" t-value="'Advanced Filters'"/>
+        <t t-set="label">Advanced Filters</t>
         <t t-set="content">
             <div class="searchview_extended_groups_list">
             </div>
@@ -1349,18 +1364,18 @@
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
-    <button type="button" class="oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
-    <button type="button" class="oe_selectcreatepopup-search-close">Cancel</button>
+    <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
+    <button type="button" class="oe_button oe_selectcreatepopup-search-close">Cancel</button>
 </t>
 <t t-name="SelectCreatePopup.form.buttons">
     <t t-if="widget.options.disable_multiple_selection">
-        <button type="button" class="oe_selectcreatepopup-form-save">Save</button>
+        <button type="button" class="oe_button oe_selectcreatepopup-form-save">Save</button>
     </t>
     <t t-if="! widget.options.disable_multiple_selection">
-        <button type="button" class="oe_selectcreatepopup-form-save-new">Save &amp; New</button>
-        <button type="button" class="oe_selectcreatepopup-form-save">Save &amp; Close</button>
+        <button type="button" class="oe_button oe_selectcreatepopup-form-save-new">Save &amp; New</button>
+        <button type="button" class="oe_button oe_selectcreatepopup-form-save">Save &amp; Close</button>
     </t>
-    <button type="button" class="oe_selectcreatepopup-form-close">Cancel</button>
+    <button type="button" class="oe_button oe_selectcreatepopup-form-close">Cancel</button>
 </t>
 <t t-name="FormOpenPopup">
     <div t-att-id="element_id">
@@ -1368,8 +1383,8 @@
     </div>
 </t>
 <t t-name="FormOpenPopup.form.buttons">
-    <button type="button" class="oe_formopenpopup-form-save">Save</button>
-    <button type="button" class="oe_formopenpopup-form-close">Cancel</button>
+    <button type="button" class="oe_button oe_formopenpopup-form-save">Save</button>
+    <button type="button" class="oe_button oe_formopenpopup-form-close">Cancel</button>
 </t>
 <t t-extend="ListView.row">
     <!-- adds front & back padding to row being rendered after edition, if
@@ -1509,9 +1524,10 @@
             </div>
         </td>
         <td class="oe_export_fields_selector_center">
-            <button id="add_field">Add</button>
-            <button id="remove_field">Remove</button>
-            <button id="remove_all_field">Remove All</button>
+            <!-- TODO: replace ids by 'oe_*' classes -->
+            <button class="oe_button" id="add_field">Add</button>
+            <button class="oe_button" id="remove_field">Remove</button>
+            <button class="oe_button" id="remove_all_field">Remove All</button>
         </td>
         <td class="oe_export_fields_selector_right">
             <select name="fields_list" id="fields_list"
@@ -1558,7 +1574,7 @@
     <tr>
         <th><label>Save as:</label></th>
         <td><input size="10" type="text" id="savelist_name"/></td>
-        <td><button class="oe_export_button_export" id="add_export_list">Ok</button></td>
+        <td><button class="oe_button oe_export_button_export" id="add_export_list">Ok</button></td>
     </tr>
 </t>
 
@@ -1571,7 +1587,7 @@
             <option t-att-value="export.id"><t t-esc="export.name"/></option>
         </t>
     </select>
-    <button class="oe_export_button_export" id="delete_export_list" type="button">Delete</button>
+    <button class="oe_button oe_export_button_export" id="delete_export_list" type="button">Delete</button>
 </t>
 <t t-name="Change_Pwd">
     <form name="change_password_form" class="oe_forms" method="POST">
@@ -1592,7 +1608,7 @@
                              minlength="1"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><button>Change Password</button></td>
+                <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
             </tr>
         </table>
     </form>
