@@ -30,15 +30,15 @@
         <field name="arch" type="xml">
             <form string="Partner Contact">
                 <group colspan="4" col="6">
-                    <field name="title" select="1" widget="selection" domain="[('domain', '=', 'contact')]" size="0"/>
-                    <field name="name" select="1"/>
+                    <field name="last_name" select="1"/>
                     <field name="first_name" select="1"/>
+                    <field name="title" select="1" widget="selection" domain="[('domain', '=', 'contact')]" size="0"/>
                 </group>
                 <notebook colspan="4" >
-                    <page string="General">                        
+                    <page string="General">
                        <group colspan="4" col="4">
                             <group colspan="2" col="4">
-                                <separator string="Communication" colspan="4"/>
+                                <separator string="Personal Information" colspan="4"/>
                                 <field name="mobile"/>
                                 <field name="email"  widget="email"/>
                                 <field name="website"/>
@@ -47,54 +47,36 @@
                                 <separator string="Photo" colspan="4"/>
                                 <field name="photo" widget='image' nolabel="1"/>
                             </group>
-                       </group> 
+                       </group>
                        <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
                             <form string="Functions and Addresses">
-                               <group colspan="4" col="4">
-                                   <field name="sequence_contact" />
-                                   <field name="function"/>
-                                   <field name="name" on_change="onchange_name(name,address_id)"/> 
-                                   <field name="address_id"/>                                   
-                                   <field name="date_start" />
-                                   <field name="date_stop" />
-                                   <field name="state" />
-                                   
-                               </group>
-                                <separator string="Communication" colspan="4"/>
-                               <group colspan="4" col="4">
-                                   <field name="phone"/>
-                                   <field name="fax"/>
-                                   <field name="email" widget="email"/>
-                                   <field name="extension"/>
-                                   <field name="other"/>
-                               </group>
-                            </form>
-                            <tree string="Functions and Addresses">
-                                <field name="sequence_contact" string="Seq."/>
-                                <field name="function"/>
-                                <field name="name" on_change="onchange_partner(name)"/> 
-								<field name="address_id" attrs="{'required': [('name', '!=', False)]}" on_change="onchange_address(address_id)"/>
+                                <field name="location_id"/>
+                                <field name="function" />
+                                <separator string="Professional Info" colspan="4"/>
                                 <field name="phone"/>
                                 <field name="fax"/>
-                                <field name="extension"/>
-                                <field name="other"/>
+                                <field name="email" widget="email"/>
+                            </form>
+                            <tree string="Functions and Addresses">
+                                <field name="location_id"/>
+                                <field name="function"/>
+                                <field name="phone"/>
                                 <field name="email"/>
-                                <field name="state" />
                             </tree>
                         </field>
                     </page>
-                    <page string="Extra Information">                        
+                    <page string="Extra Information">
                         <field name="active"/>
                         <field name="lang_id" widget="selection"/>
-                        <field name="partner_id" invisible="1" select="1"/>                                
-                        <field name="function" invisible="1" />  
+                        <field name="partner_id" invisible="1" select="1"/>
+                        <field name="function" invisible="1" />
                         <field name="country_id"/>
                         <field name="birthdate"/>
                     </page>
                     <page string="Notes">
                         <field name="comment" nolabel="1"/>
                     </page>
-                    
+
                 </notebook>
             </form>
         </field>
@@ -108,8 +90,8 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Partner Contact">
-                <field name="name"/>
-                <field name="first_name"/>
+                <field name="name" string="First/Lastname"
+                    filter_domain="['|', ('firstname','ilike', self), ('lastname','ilike',self)]"/>
                 <field name="partner_id" string="Partner"/>
             </search>
         </field>
@@ -132,7 +114,7 @@
         <field name="name">Addresses</field>
     </record>
 
-    <!--    
+    <!--
     Contacts for Suppliers
     -->
     <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchases"
@@ -141,7 +123,7 @@
             parent="base.menu_purchase_root" sequence="3"/>
     <menuitem id="base.menu_procurement_management_supplier_name" name="Suppliers"
             parent="base.menu_procurement_management_supplier" action="base.action_partner_supplier_form" sequence="1"/>
-    <menuitem name="Contacts" id="menu_purchases_partner_contact_form" action="action_partner_contact_form" 
+    <menuitem name="Contacts" id="menu_purchases_partner_contact_form" action="action_partner_contact_form"
             parent = "base.menu_procurement_management_supplier" sequence="2"/>
 
     <!-- Views for Partners Form View -->
@@ -152,119 +134,45 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <field name="address" mode="form,tree" colspan="4" nolabel="1" select="1" position="replace">
-                <field name="address" mode="form,tree" colspan="4" nolabel="1" select="1">
-                    <form string="Address">
-                       <group  colspan="2" col="2">
-                           <separator string="Postal Address" colspan="2" col="2"/>
-                           <field name="type" />
-                           <field name="street"/>
-                           <field name="street2"/>
-                           <field name="zip"/>
-                           <field name="city"/>
-                           <field name="country_id" completion="1"/>
-                           <field name="state_id"/>
-                        </group>
-                        <group colspan="2" col="2">
-                           <separator string="Communication" colspan="2" col="2"/>
-                           <field name="phone"/>
-                           <field name="fax"/>
-                           <field name="email" widget="email"/>
-                        </group>
-                        <field name="job_ids" mode="tree,form" nolabel="1" colspan="4">
-                            <tree string="Contacts" editable="top">
-                                <field name="sequence_partner"/>
-                                <field name="contact_id"/>
-                                <field name="function"/>
-                                <field name="phone"/>
-                                <field name="fax"/>
-                                <field name="extension"/>
-                                <field name="other"/>
-                                <field name="email"/>
-                            </tree>
-                            <form string="Contacts">
-                            <group colspan="4" col="4">
-                                <field name="sequence_partner"/>
-                                <field name="contact_id"/>
-                                <field name="function"/>
-                            </group>
-                            <separator string="Communication" colspan="4"/>
-                            <group colspan="4" col="4">
-                                <field name="phone"/>
-                                <field name="fax"/>
-                                <field name="extension"/>
-                                <field name="other"/>
-                                <field name="email" widget="email"/>
-                            </group>
-                            </form>
-                        </field>
-                    </form>
-                    <tree string="Addresses">
-                        <field name="type"/>
-                        <field name="zip"/>
-                        <field name="city"/>
-                        <field name="country_id"/>
-                        <field name="phone"/>
-                        <field name="job_ids"/>
-                    </tree>
-                </field>
-            </field>
+            <separator string="Postal Address" position="after">
+                <field name="location_id" on_change="onchange_location_id(location_id)"/>
+            </separator>
+            <xpath expr="//field[@string='Contact Name']" position="replace">
+                <field name="contact_id"/>
+            </xpath>
+            <field name="title" position="replace"/>
+        </field>
+    </record>
+
+    <!-- Views for Addresses -->
+
+    <record model="ir.ui.view" id="view_partner_location_form">
+        <field name="name">res.partner.location.form</field>
+        <field name="model">res.partner.location</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Locations">
+                <field name="street" colspan="4"/>
+                <field name="street2" colspan="4"/>
+                <field name="zip"/>
+                <field name="city"/>
+                <field name="country_id" />
+                <field name="state_id"/>
+            </form>
         </field>
     </record>
 
 
-<!-- don't display the categories, since it is displayed in an other tab-->
-
-        <record model="ir.ui.view" id="view_partner_form_inherit2">
-            <field name="name">res.partner.form</field>
-            <field name="type">form</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <field name="category_id" position="replace">
-                </field>
-            </field>
-        </record>
-
-<!-- don't display the categories label-->
-
-        <record model="ir.ui.view" id="view_partner_form_inherit2bis">
-            <field name="name">res.partner.form</field>
-            <field name="type">form</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <separator colspan="4" string="Categories" position="replace"/>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_partner_form_inherit3">
-            <field name="name">res.partner.form</field>
-            <field name="type">form</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="Categories">
-                        <separator colspan="4" string="Categories"/>
-                        <field colspan="4" name="category_id" nolabel="1"/>
-                    </page>
-                </notebook>
-            </field>
-        </record>
-
-
-    <!-- Views for Addresses -->
-
-    <record model="ir.ui.view" id="view_partner_address_tree_inherited1">
-        <field name="name">Partner addresses inherited</field>
-        <field name="model">res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_tree"/>
+    <record model="ir.ui.view" id="view_partner_location_tree">
+        <field name="name">res.partner.location.tree</field>
+        <field name="model">res.partner.location</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <field name="name" position="replace">
-                <field name='job_ids' string='# of Contacts'/>
-            </field>
+            <tree string="Locations">
+                <field name="city"/>
+                <field name="country_id" />
+                <field name="state_id"/>
+            </tree>
         </field>
     </record>
 
@@ -274,151 +182,15 @@
         <field name="inherit_id" ref="base.view_partner_address_form1"/>
         <field name='type'>form</field>
         <field name='arch' type='xml'>
-            <field name="type" position="replace">
-            </field>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_partner_address_form_inherited1">
-        <field name='name'>res.partner.address.form.inherited1</field>
-        <field name='model'>res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_form1"/>
-        <field name='type'>form</field>
-        <field name='arch' type='xml'>
             <field name="name" position="replace">
-            </field>
-        </field>
-    </record>
-
-    <record id='view_partner_address_form_inherited2' model='ir.ui.view'>
-        <field name='name'>res.partner.address.form.inherited2</field>
-        <field name='model'>res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_form1"/>
-        <field name='type'>form</field>
-        <field name='arch' type='xml'>
-            <field name="title" position="replace">
-            </field>
-        </field>
-    </record>
-
-    <record id='view_partner_address_form_inherited3' model='ir.ui.view'>
-        <field name='name'>res.partner.address.form.inherited3</field>
-        <field name='model'>res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_form1"/>
-        <field name='type'>form</field>
-        <field name='arch' type='xml'>
-            <field name="function" position="replace">
-            </field>
-        </field>
-    </record>
-
-    <record id='view_partner_address_form_inherited4' model='ir.ui.view'>
-        <field name='name'>res.partner.address.form.inherited4</field>
-        <field name='model'>res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_form1"/>
-        <field name='type'>form</field>
-        <field name='arch' type='xml'>
-            <field name='mobile' position="replace">
-            </field>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_partner_address_form_inherited6">
-        <field name='name'>res.partner.address.form.inherited6</field>
-        <field name='model'>res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_form1"/>
-        <field name='type'>form</field>
-        <field name='arch' type='xml'>
-            <field name="partner_id" position="replace">
-                <field name='partner_id' select='1'/>
-                <field name='type' select='2'/>
-                <field name='job_id' invisible="1"/>
-            </field>
-        </field>
-    </record>
-
-    <record id="view_res_partner_address_filter" model="ir.ui.view">
-        <field name="name">res.partner.address.select</field>
-        <field name="model">res.partner.address</field>
-        <field name="type">search</field>
-        <field name="inherit_id" ref="base.view_res_partner_address_filter"/>
-        <field name="arch" type="xml">
-            <search string="Search Contact">
-                   <field name="job_ids"/>
-            </search>
-        </field>
-    </record>
-
-    <!-- Views for partner job Tree view  -->
-
-    <record model="ir.ui.view" id="view_partner_job_tree">
-        <field name="name">res.partner.job.tree</field>
-        <field name="model">res.partner.job</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Contact Functions">
                 <field name="contact_id"/>
-                <field name="function"/>
-                <field name="name"/>
-                <field name="address_id"/>
-                <field name="email"/>
-                <field name="phone"/>
-                <field name="fax"/>
-                <field name="extension"/>
-                <field name="state" />
-            </tree>
+            </field>
+            <separator string="Postal Address" position="after">
+                <field name="location_id" on_change="onchange_location_id(location_id)"/>
+            </separator>
+            <field name="title" position="replace"/>
         </field>
     </record>
-
-<!-- Views for partner job Form view  -->
-
-    <record model="ir.ui.view" id="view_partner_job_form">
-        <field name="name">res.partner.job.form</field>
-        <field name="model">res.partner.job</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Contact Functions">
-	             <field name="name" select="1" on_change="onchange_partner(name)"/>
-	             <field name="address_id" select="1" attrs="{'required': [('name', '!=', False)]}" on_change="onchange_address(address_id)"/>
-	             <field name="contact_id" select="1"/>
-	             <field name="function" select="1"/>
-	             <field name="email" widget="email"/>
-	             <field name="phone"/>
-	             <field name="fax"/>
-	             <field name="extension"/>
-	             <field name="sequence_contact" groups="base.group_user"/>
-	             <field name="sequence_partner" groups="base.group_user"/>
-	             <field name="date_start" groups="base.group_user"/>
-	             <field name="date_stop" groups="base.group_user"/>
-	             <field name="state" />
-            </form>
-        </field>
-    </record>
-
-    <!-- Menuitem for res.partner.job -->
-
-    <record model="ir.actions.act_window" id="action_res_partner_job">
-        <field name="name">Contact's Jobs</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">res.partner.job</field>
-        <field name="view_type">form</field>
-    </record>
-
-    <act_window domain="[('name', '=', active_id)]"
-        id="act_res_partner_jobs" name="Partner Contacts"
-        res_model="res.partner.job"
-        src_model="res.partner"
-        />
-
-    <!-- Act window defining a shorcut on partner address to open all his jobs -->
-
-    <act_window
-        id="act_res_partner_jobs" 
-        name="Open Jobs"
-        context="{'search_default_address_id': [active_id], 'default_address_id': active_id}"
-        res_model="res.partner.job"
-        src_model="res.partner.address"
-        />
 
 </data>
 </openerp>

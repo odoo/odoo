@@ -114,13 +114,6 @@ class project(osv.osv):
             if task.project_id: result[task.project_id.id] = True
         return result.keys()
 
-    #dead code
-    def _get_project_work(self, cr, uid, ids, context=None):
-        result = {}
-        for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
-            if work.task_id and work.task_id.project_id: result[work.task_id.project_id.id] = True
-        return result.keys()
-
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:

@@ -16,8 +16,8 @@
                     <group col="7" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}"/>
-                        <button name="invoice" string="Invoice" icon="gtk-apply" type="workflow" states="paid" attrs="{'invisible': ['|',('partner_id','=',False),('state','&lt;&gt;','paid')]}"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
+                        <button name="action_invoice" string="Invoice" icon="gtk-apply" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sale Order">
@@ -587,9 +587,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                  <field name="categ_id" position="after">
-                      <field name="pos_categ_id"/>
-                  </field>
+                  <group name="status" position="after">
+                      <group colspan="2" col="2" name="pos">
+                          <separator string="Point-of-Sale" colspan="2"/>
+                          <field name="pos_categ_id"/>
+                      </group>
+                  </group>
             </field>
         </record>
 
@@ -609,6 +612,20 @@
         </record>
 
         <!-- Categories tree view -->
+        <record id="pos_category_form_view" model="ir.ui.view">
+            <field name="name">pos.category.form</field>
+            <field name="model">pos.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="PoS Categories">
+                    <group colspan="4" col="6">
+                        <field name="name"/>
+                        <field name="parent_id"/>
+                        <field name="sequence"/>
+                    </group>
+                </form>
+            </field>
+        </record>
         <record id="pos_category_tree_view" model="ir.ui.view">
             <field name="name">pos.category.tree</field>
             <field name="model">pos.category</field>
@@ -616,7 +633,8 @@
             <field name="field_parent" eval="False"/>
             <field name="arch" type="xml">
                 <tree string="PoS Categories">
-                    <field name="name"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="complete_name"/>
                 </tree>
             </field>
         </record>
@@ -750,7 +768,7 @@
 
         <!-- use menuitem to add web_icon and web_icon_hover above -->
         <menuitem id="menu_point_root_touchscreen"
-            web_icon="images/pos.png" web_icon_hover="images/pos-hover.png"/>
+            web_icon="images/pos.png" web_icon_hover="images/pos-hover.png" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
 
     </data>
 </openerp>
