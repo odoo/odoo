@@ -35,7 +35,7 @@ class res_partner_contact(osv.osv):
         return result
 
     _columns = {
-        'name': fields.function(_name_get_full, string='Name', size=64, type="char", store=True),
+        'name': fields.function(_name_get_full, string='Name', size=64, type="char", store=True, select=True),
         'last_name': fields.char('Last Name', size=64, required=True),
         'first_name': fields.char('First Name', size=64),
         'mobile': fields.char('Mobile', size=64),
@@ -65,7 +65,7 @@ class res_partner_contact(osv.osv):
         'active' : lambda *a: True,
     }
 
-    _order = "name,first_name"
+    _order = "name"
 
     def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=None):
         if not args:

@@ -268,7 +268,7 @@ class hr_expense_line(osv.osv):
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
         'ref': fields.char('Reference', size=32),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of expense lines."),
+        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of expense lines."),
         }
     _defaults = {
         'unit_quantity': 1,

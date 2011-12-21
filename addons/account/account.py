@@ -169,7 +169,7 @@ class account_account_type(osv.osv):
 
     _columns = {
         'name': fields.char('Account Type', size=64, required=True, translate=True),
-        'code': fields.char('Code', size=32, required=True),
+        'code': fields.char('Code', size=32, required=True, select=True),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
 
  'None' means that nothing will be done.

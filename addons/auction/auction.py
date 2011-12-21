@@ -367,7 +367,7 @@ class auction_lots(osv.osv):
         'important':fields.boolean('To be Emphatized'),
         'product_id':fields.many2one('product.product', 'Product', required=True),
         'obj_desc': fields.text('Object Description'),
-        'obj_num': fields.integer('Catalog Number'),
+        'obj_num': fields.integer('Catalog Number', select=True),
         'obj_ret': fields.float('Price retired', help="Object Ret"),
         'obj_comm': fields.boolean('Commission'),
         'obj_price': fields.float('Adjudication price', help="Object Price"),
