@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    <record id="stock.stock_move_stockmvmrp0" model="stock.move">
+        <field name="product_id" ref="product.product_product_pc1"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+        <field name="name">[PC1] Basic PC</field>
+        <field name="location_dest_id" ref="stock.stock_location_14"/>
+    </record>
+    <record id="mrp_repair_rmrp0" model="mrp.repair">
+        <field name="name">RMA00004</field>
+        <field name="address_id" ref="base.res_partner_address_1"/>
+        <field name="guarantee_limit" eval="time.strftime('%Y-%m-%d')"/>        
+        <field name="invoice_method">after_repair</field>
+        <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
+        <field name="move_id" ref="stock.stock_move_stockmvmrp0"/>
+        <field name="location_dest_id" ref="stock.stock_location_14"/>
+        <field name="location_id" ref="stock.stock_location_14"/>
+        <field name="partner_id" ref="base.res_partner_9"/>
+        <field name="product_id" ref="product.product_product_pc1"/>
+    </record>
+    <record id="mrp_repair_line0" model="mrp.repair.line">
+        <field name="location_dest_id" ref="stock.location_production"/>
+        <field name="repair_id" ref="mrp_repair_rmrp0"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="name">[HDD1] HDD Seagate 7200.8 80GB</field>
+        <field name="price_unit">50.0</field>
+        <field name="product_id" ref="product.product_product_hdd1"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+        <field name="product_uom_qty">1.0</field>
+        <field name="state">draft</field>
+        <field name="to_invoice">1</field>
+        <field name="type">add</field>
+    </record>
+    <record id="mrp_repair_fee0" model="mrp.repair.fee">
+        <field name="name">HDD1 Seagate repair fees</field>
+        <field name="repair_id" ref="mrp_repair_rmrp0"/>
+        <field name="price_unit">50.0</field>
+        <field name="product_id" ref="product.product_product_hdd1"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+        <field name="product_uom_qty">1.0</field>
+    </record>
+    </data>
+</openerp>
