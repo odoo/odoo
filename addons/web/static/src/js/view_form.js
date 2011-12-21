@@ -2102,7 +2102,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.viewmanager.template = 'One2Many.viewmanager';
         this.viewmanager.registry = openerp.web.views.clone({
             list: 'openerp.web.form.One2ManyListView',
-            form: 'openerp.web.FormView',
+            form: 'openerp.web.form.One2ManyFormView',
             page: 'openerp.web.PageView'
         });
         var once = $.Deferred().then(function() {
@@ -2117,9 +2117,6 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 if (self.is_readonly())
                     controller.set_editable(false);
             } else if (view_type == "form" || view_type == 'page') {
-                if (view_type == 'page') {
-                    controller.$element.find(".oe_form_buttons").hide();
-                }
                 controller.on_record_loaded.add_last(function() {
                     once.resolve();
                 });
@@ -2363,6 +2360,14 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
                 self.o2m.reload_current_view();
             });
         });
+    }
+});
+
+openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
+    form_template: 'One2Many.formview',
+    on_loaded: function(data) {
+        this._super(data);
+        this.$form_header.find('button.oe_form_button_create').click(this.on_button_new);
     }
 });
 
