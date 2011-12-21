@@ -261,7 +261,7 @@ class account_invoice(osv.osv):
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
             help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Partner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines, type='many2many', relation='account.move.line', string='Entry Lines'),
-        'residual': fields.function(_amount_residual, digits_compute=dp.get_precision('Account'), string='Residual',
+        'residual': fields.function(_amount_residual, digits_compute=dp.get_precision('Account'), string='To Pay',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line','move_id'], 50),
                 'account.invoice.tax': (_get_invoice_tax, None, 50),
@@ -610,15 +610,15 @@ class account_invoice(osv.osv):
             res[r[0]].append( r[1] )
         return res
 
-    def copy(self, cr, uid, id, default={}, context=None):
-        if context is None:
-            context = {}
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
         default.update({
             'state':'draft',
             'number':False,
             'move_id':False,
             'move_name':False,
             'internal_number': False,
+            'period_id': False,
         })
         if 'date_invoice' not in default:
             default.update({
@@ -923,7 +923,6 @@ class account_invoice(osv.osv):
                 'line_id': line,
                 'journal_id': journal_id,
                 'date': date,
-                'type': entry_type,
                 'narration':inv.comment
             }
             period_id = inv.period_id and inv.period_id.id or False
@@ -1081,7 +1080,8 @@ class account_invoice(osv.osv):
             del line['invoice_id']
             for field in ('company_id', 'partner_id', 'account_id', 'product_id',
                           'uos_id', 'account_analytic_id', 'tax_code_id', 'base_code_id'):
-                line[field] = line.get(field, False) and line[field][0]
+                if line.get(field):
+                    line[field] = line[field][0]
             if 'invoice_line_tax_id' in line:
                 line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
         return map(lambda x: (0,0,x), lines)
@@ -1209,7 +1209,7 @@ class account_invoice(osv.osv):
         l2['name'] = name
 
         lines = [(0, 0, l1), (0, 0, l2)]
-        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date, 'type': entry_type}
+        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
         move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
 
         line_ids = []
@@ -1642,12 +1642,7 @@ class res_partner(osv.osv):
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-
-        if context is None:
-            context = {}
-
+        default = default or {}
         default.update({'invoice_ids' : []})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 

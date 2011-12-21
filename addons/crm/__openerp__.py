@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Customer & Supplier Relationship Management',
+    'name': 'CRM',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'complexity': "easy",
@@ -123,12 +123,14 @@ Creates a dashboard for CRM that includes:
             'test/process/lead2opportunity2win.yml',
             'test/process/merge_opportunity.yml',
             'test/process/cancel_lead.yml',
+            'test/process/action_rule.yml',
             'test/process/segmentation.yml',
             'test/ui/crm_demo.yml',
             'test/ui/duplicate_lead.yml',
             'test/ui/delete_lead.yml'
              ],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '0079056041421',
     'images': ['images/sale_crm_crm_dashboard.png', 'images/crm_dashboard.jpeg','images/leads.jpeg','images/meetings.jpeg','images/opportunities.jpeg','images/outbound_calls.jpeg','images/stages.jpeg'],

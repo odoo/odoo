@@ -52,7 +52,6 @@ Main features :
         'wizard/pos_close_statement.xml',
         'wizard/pos_box_entries.xml',
         'wizard/pos_payment_report_user_view.xml',
-        'wizard/pos_payment_report_date_view.xml',
         'wizard/pos_box_out.xml',
         'wizard/pos_sales_user.xml',
         'wizard/pos_receipt_view.xml',
@@ -79,6 +78,7 @@ Main features :
         'test/point_of_sale_report.yml'
     ],
     'installable': True,
+    'application': True,
     'certificate' : '001156338024966477869',
     # Web client
     'js': ['static/lib/backbone/backbone-0.5.3.js', 'static/src/js/pos.js'],

@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Common interface for CRM plugin (Thunderbird and Outlook)',
+    'name': 'CRM Plugins',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Dependency',
     'complexity': "easy",
     'description': """
 The common interface for pugin.
