@@ -2308,6 +2308,7 @@ class stock_move(osv.osv):
         @param context: context arguments
         @return: Scraped lines
         """
+        #quantity should in MOVE UOM
         if quantity <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide a positive quantity to scrap!'))
         res = []
@@ -2408,6 +2409,7 @@ class stock_move(osv.osv):
         @param context: context arguments
         @return: Consumed lines
         """
+        #quantity should in MOVE UOM
         if context is None:
             context = {}
         if quantity <= 0:
@@ -2673,7 +2675,7 @@ class stock_inventory(osv.osv):
             self.write(cr, uid, [inv.id], {'state':'draft'}, context=context)
         return True
 
-    def action_cancel_inventary(self, cr, uid, ids, context=None):
+    def action_cancel_inventory(self, cr, uid, ids, context=None):
         """ Cancels both stock move and inventory
         @return: True
         """

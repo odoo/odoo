@@ -1,0 +1,222 @@
+-
+  I confirm outgoing shipment of 130 kgm Ice-cream.
+-
+  !workflow {model: stock.picking, action: button_confirm, ref: outgoing_shipment}
+-
+  I check shipment details after confirmed.
+-
+  !python {model: stock.picking}: |
+    shipment = self.browse(cr, uid, ref("outgoing_shipment"))
+    assert shipment.state == "confirmed", "Shipment should be confirmed."
+    for move_line in shipment.move_ids:
+        assert move_line.state == "confirmed", "Move should be confirmed."
+
+-
+  Now I check vitual stock of Ice-cream after confirmed outgoing shipment.
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref('product_icecream'), context=context)
+    product.virtual_available == -30, "Vitual stock is not updated."
+
+-
+  I confirm incomming shipment of 50 kgm Ice-cream.
+-
+  !workflow {model: stock.picking, action: button_confirm, ref: incoming_shipment}
+-
+  I receive 40kgm Ice-cream so I make backorder of incomming shipment for 10 kgm.
+-
+  !python {model: stock.partial.picking}: |
+    context.update({'active_model': 'stock.picking', 'active_id': ref('incoming_shipment'), 'active_ids': [ref('incoming_shipment')]})
+-
+  !record {model: stock.partial.picking, id: partial_incomming}:
+    move_ids:
+        - quantity: 40
+          product_id: product_icecream
+          product_uom: product.product_uom_kgm
+          move_id: incomming_shipment_icecream
+          location_id: location_convenience_shop
+          location_dest_id: location_refrigerator
+-
+  !python {model: stock.partial.picking }: |
+    self.do_partial(cr, uid, [ref('partial_incomming')], context=context)
+-
+  I check backorder shipment after received partial shipment.
+-
+  !python {model: stock.picking}: |
+    shipment = self.browse(cr, uid, ref("incoming_shipment"))
+    assert shipment.backorder_id, "Backorder should be created after partial shipment."
+-
+  I return backorder shipment.
+-
+  !python {model: stock.return.picking}: |
+    shipment = self.browse(cr, uid, ref("incoming_shipment"))
+    context.update({'active_model': 'stock.picking', 'active_id': shipment.backorder_id.id, 'active_ids': [shipment.backorder_id.id]})
+-
+  !record {model: stock.return.picking, id: return_incomming}
+-
+  !python {model: stock.return.picking }: |
+    self.create_returns(cr, uid, [ref('return_incomming')], context=context)
+-
+  I cancel backorder shipment.
+-
+  !python {model: stock.picking}: |
+    shipment = self.browse(cr, uid, ref("incoming_shipment"))
+    shipment.backorder_id.action_cancel(context=context)
+-
+  I make invoice of incomming shipment.
+-
+  !python {model: stock.invoice.onshipping}: |
+    shipment = self.browse(cr, uid, ref("incoming_shipment"))
+    context.update({'active_model': 'stock.picking', 'active_id': shipment.id, 'active_ids': [shipment.id]})
+-
+  !record {model: stock.invoice.onshipping, id: invoice_incomming}
+-
+  !python {model: stock.invoice.onshipping }: |
+    self.create_invoice(cr, uid, [ref('invoice_incomming')], context=context)
+
+-
+  I check availabile stock after received incomming shipping.
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref('product_icecream'), context=context)
+    assert product.qty_available == 140, "Stock is not correspond."
+    assert product.virtual_available == 10, "Vitual stock is not correspond."
+
+-
+  I split incomming shipment into lots. each lot contain 10 kgm Ice-cream.
+-
+  !python {model: stock.move.split}: |
+    context.update({'active_model': 'stock.move', 'active_id': ref('incomming_shipment_icecream'), 'active_ids': [ref('incomming_shipment_icecream')]})
+-
+  !record {model: stock.move.split, id: split_lot_incomming}:
+    line_ids:
+        - name: incoming_lot0
+          quantity: 10
+        - name: incoming_lot1
+          quantity: 10
+        - name: incoming_lot2
+          quantity: 10
+        - name: incoming_lot3
+          quantity: 10
+        
+-
+ !python {model: stock.move.split }: |
+    self.split_lot(cr, uid, [ref('split_lot_incomming')], context=context)
+-
+  I consume 1 kgm ice-cream from each incoming lots into internal production.
+-
+  !python {model: stock.move.consume}: |
+    lot = self.pool.get(stock.move.split).browse(cr, uid, ref('split_lot_incomming'), context=context)
+    move_ids = self.pool.get('stock.move').search(cr, uid, [('prod_lot_id','in',[x.name for x in lot.line_ids])])
+    context.update({'active_model':'stock.move', 'active_id':move_ids[0],'active_ids': move_ids})
+-
+  !record {model: stock.move.consume, id: consume_lot_incomming}:
+    product_qty: 1
+    location_id: ref('location_production')
+-
+  !python {model: stock.move.consume}: |
+    self.do_move_consume(cr, uid, [ref('consume_lot_incomming')], context=context)
+-
+  I scrap 10 gm ice-cream from each incoming lots into scrap location.
+-
+  !python {model: stock.move.scrap}: |
+    lot = self.pool.get(stock.move.split).browse(cr, uid, ref('split_lot_incomming'), context=context)
+    move_ids = self.pool.get('stock.move').search(cr, uid, [('prod_lot_id','in',[x.name for x in lot.line_ids])])
+    context.update({'active_model':'stock.move', 'active_id':move_ids[0],'active_ids': move_ids})
+-
+  !record {model: stock.move.scrap, id: scrap_lot_incomming}:
+    product_qty: 0.010
+-
+  !python {model: stock.move.scrap}: |
+    self.move_scrap(cr, uid, [ref('scrap_lot_incomming')], context=context)
+-
+  I check scraped stock in scrap location and consume stock in production location.
+-
+  !python {model: stock.location}: |
+    ctx = {'product_id': ref('product_icecream')}
+    scrapped_location = self.browse(cr, uid, ref('stock_location_scrapped'), context=ctx)
+    assert scrapped_location.stock_real == 0.010*5, 'scraped stock is not correspond in scrap location.'
+    production_location = self.browse(cr, uid, ref('location_production'), context=ctx)
+    assert production_location.stock_real == 1*5, 'consume stock is not correspond in production location.'
+-
+  I check availabile stock after consumed and scraped.
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref('product_icecream'), context=context)
+    assert product.qty_available == 136, "Stock is not correspond."
+    assert product.virtual_available == 6, "Vitual stock is not correspond."
+-
+  I trace all incoming lots.
+-
+  !python {model: stock.production.lot }: |
+    lot = self.pool.get(stock.move.split).browse(cr, uid, ref('split_lot_incomming'), context=context)
+    lot_ids = self.search(cr, uid, [('name', 'in', [x.name for x in lot.line_ids])])
+    self.action_traceability(cr, uid, lot_ids, context=context)
+-
+  I check outgoing shipment after stock availablity.
+-
+  !python {model: stock.picking}: |
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_write(uid, 'stock.picking', ref("outgoing_shipment"), cr)
+    shipment = self.browse(cr, uid, ref("outgoing_shipment"), context=context)
+    assert shipment.state == "assigned", "Shipment should be assigned."
+    for move_line in shipment.move_ids:
+        assert move_line.state == "assigned", "Move should be assigned."
+-
+  I deliver 5kgm Ice-cream to customer so I make partial deliver
+-
+  !python {model: stock.partial.move}: |
+    context.update({'active_model': 'stock.move', 'active_id': ref('outgoing_shipment_icecream'), 'active_ids': [ref('outgoing_shipment_icecream')]})
+-
+  !record {model: stock.partial.move, id: partial_outgoing_icecream}:
+    move_ids:
+        - quantity: 5
+          product_id: product_icecream
+          product_uom: product.product_uom_kgm
+          move_id: outgoing_shipment_icecream
+          location_id: location_refrigerator
+          location_dest_id: location_delivery_counter
+-
+  !python {model: stock.partial.move }: |
+    self.do_partial(cr, uid, [ref('partial_outgoing_icecream')], context=context)
+
+-
+  I packing outgoing shipment into box per 10kgm with unique tracking lot.
+-
+  !python {model: stock.move}: |
+    stock_split = self.pool.get('stock.split.into')
+    move = self.browse(cr, uid, ref('outgoing_shipment_icecream'), context=context)
+    context.update({'active_model': 'stock.move', 'active_id': move.id, 'active_ids': [move.id]})
+    total_qty = move.product_qty
+    split_qty = 10
+    while(total_qty<=0):
+        split_id = stock_split.create(cr, uid, {'quantity': split_qty}, context=context)
+        stock_split.split(cr, uid, [split_id], context=context)
+        total_qty -= split_qty
+-
+  I deliver outgoing shipment.
+-
+  !python {model: stock.partial.picking}: |
+    context.update({'active_model': 'stock.picking', 'active_id': ref('outgoing_shipment'), 'active_ids': [ref('outgoing_shipment')]})
+-
+  !record {model: stock.partial.picking, id: partial_outgoing}
+-
+  !python {model: stock.partial.picking }: |
+    self.do_partial(cr, uid, [ref('partial_outgoing')], context=context)
+
+-
+  I check outgoing shipment after deliver.
+-
+  !python {model: stock.picking}: |
+    shipment = self.browse(cr, uid, ref("outgoing_shipment"), context=context)
+    assert shipment.state == "done", "Shipment should be closed."
+    for move_line in shipment.move_ids:
+        assert move_line.state == "done", "Move should be closed."
+-
+  I check availabile stock after deliver.
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref('product_icecream'), context=context)
+    assert product.qty_available == 6, "Stock is not correspond."
+    assert product.virtual_available == 6, "Vitual stock is not correspond."

@@ -9,14 +9,6 @@
         <!--
     Resource: stock.location
     -->
-        <record id="cold_location_1" model="stock.location">
-            <field name="name">Cold Storage</field>
-            <field name="location_id" ref="stock_location_suppliers"/>
-            <field name="chained_location_type">fixed</field>
-            <field name="chained_location_id" ref="stock_location_customers"/>
-            <field name="chained_auto_packing">auto</field>
-            <field name="usage">internal</field>
-        </record>
         <record id="stock_location_3" model="stock.location">
             <field name="name">IT Suppliers</field>
             <field name="location_id" ref="stock_location_suppliers"/>
@@ -50,14 +42,7 @@
             <field name="name">Shelf 1</field>
             <field name="location_id" ref="stock_location_stock"/>
         </record>
-        <record id="convenience_location_stock" model="stock.location">
-            <field name="name">Convenient Store</field>
-            <field name="location_id" ref="stock_location_company"/>
-            <field name="chained_auto_packing">auto</field>
-            <field name="chained_location_type">fixed</field>
-            <field name="usage">internal</field>
-            <field name="chained_location_id" ref="cold_location_1"/>
-        </record>
+        
 
         <!--
     Resource: stock.inventory
@@ -66,7 +51,6 @@
         <record id="stock_inventory_0" model="stock.inventory">
             <field name="name">Starting Inventory</field>
         </record>
-
         <!--
     Resource: stock.inventory.line
     -->
