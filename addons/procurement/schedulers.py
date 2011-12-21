@@ -203,9 +203,9 @@ class procurement_order(osv.osv):
         date_planned = date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
         return date_planned
 
-    def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, date_planned, product_qty, context=None):
+    def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, product_qty, context=None):
         return {'name': orderpoint.name,
-                'date_planned': date_planned,
+                'date_planned': self._get_orderpoint_date_planned(cr, uid, orderpoint, datetime.today(), context=context),
                 'product_id': orderpoint.product_id.id,
                 'product_qty': product_qty,
                 'company_id': orderpoint.company_id.id,
@@ -259,7 +259,6 @@ class procurement_order(osv.osv):
                     if reste > 0:
                         qty += op.qty_multiple - reste
 
-                    date_planned = self._get_orderpoint_date_planned(cr, uid, op, datetime.today(), context=context)
                     if qty <= 0:
                         continue
                     if op.product_id.type not in ('consu'):
@@ -279,7 +278,7 @@ class procurement_order(osv.osv):
 
                     if qty:
                         proc_id = procurement_obj.create(cr, uid,
-                                                         self._prepare_orderpoint_procurement(cr, uid, op, date_planned, qty, context=context),
+                                                         self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
                                                          context=context)
                         wf_service.trg_validate(uid, 'procurement.order', proc_id,
                                 'button_confirm', cr)
