@@ -49,8 +49,12 @@ session.web.ActionManager = session.web.Widget.extend({
     },
     do_push_state: function(state) {
         if (this.widget_parent && this.widget_parent.do_push_state) {
-            if (this.inner_action && this.inner_action.id) {
-                state['action_id'] = this.inner_action.id;
+            if (this.inner_action) {
+                if (this.inner_action.id) {
+                    state['action_id'] = this.inner_action.id;
+                } else {
+                    state['model'] = this.inner_action.res_model;
+                }
             }
             this.widget_parent.do_push_state(state);
         }
@@ -66,10 +70,15 @@ session.web.ActionManager = session.web.Widget.extend({
             }
         }
         else if (state.model && state.id) {
-            // TODO implement it
-            //this.null_action();
-            //action = {res_model: state.model, res_id: state.id};
-            //action_loaded = this.do_action(action);
+            // TODO handle context & domain ?
+            this.null_action();
+            action = {
+                res_model: state.model,
+                res_id: state.id,
+                type: 'ir.actions.act_window',
+                views: [[false, 'page'], [false, 'form']]
+            };
+            action_loaded = this.do_action(action);
         }
         else if (state.client_action) {
             this.null_action();
