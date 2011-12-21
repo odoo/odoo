@@ -1365,12 +1365,12 @@ class stock_production_lot(osv.osv):
         args = args or []
         ids = []
         if name:
-            ids = self.search(cr, uid, [('prefix', operator, name)] + args, limit=limit, context=context or {})
+            ids = self.search(cr, uid, [('prefix', operator, name)] + args, limit=limit, context=context)
             if not ids:
-                ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context or {})
+                ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context)
         else:
-            ids = self.search(cr, uid, args, limit=limit, context=context or {})
-        return self.name_get(cr, uid, ids, context or {})
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context)
 
     _name = 'stock.production.lot'
     _description = 'Production lot'
