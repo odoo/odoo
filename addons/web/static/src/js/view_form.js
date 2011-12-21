@@ -1270,7 +1270,14 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
     },
     reset: function() {
         this.dirty = false;
-    }
+    },
+    get_options: function() {
+        if (!this.options) {
+            var str = this.node.attrs.options || '{}';
+            this.options = JSON.parse(str);
+        }
+        return this.options;
+    },
 });
 
 openerp.web.form.FieldChar = openerp.web.form.Field.extend({
@@ -1865,14 +1872,20 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     },
     _quick_create: function(name) {
         var self = this;
-        var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
-        dataset.name_create(name, function(data) {
-            self._change_int_ext_value(data);
-        }).fail(function(error, event) {
-            event.preventDefault();
+        var slow_create = function() {
             self._change_int_value(null);
             self._search_create_popup("form", undefined, {"default_name": name});
-        });
+        }
+        if (self.get_options().quick_create === undefined || self.get_options().quick_create) {
+            var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
+            dataset.name_create(name, function(data) {
+                self._change_int_ext_value(data);
+            }).fail(function(error, event) {
+                event.preventDefault();
+                slow_create();
+            });
+        } else
+            slow_create();
     },
     // all search/create popup handling
     _search_create_popup: function(view, ids, context) {
