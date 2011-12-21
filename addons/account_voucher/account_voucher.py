@@ -368,8 +368,6 @@ class account_voucher(osv.osv):
 
         line_ids = resolve_o2m_operations(cr, uid, line_pool, line_ids, ["amount"], context)
 
-        total = 0.0
-        total_tax = 0.0
         for line in line_ids:
             line_amount = 0.0
             line_amount = line.get('amount',0.0)
@@ -830,8 +828,6 @@ class account_voucher(osv.osv):
         :return: mapping between fieldname and value of account move line to create
         :rtype: dict
         '''
-        move_line_obj = self.pool.get('account.move.line')
-        currency_obj = self.pool.get('res.currency')
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         debit = credit = 0.0
         # TODO: is there any other alternative then the voucher type ??
@@ -870,7 +866,6 @@ class account_voucher(osv.osv):
         :return: mapping between fieldname and value of account move to create
         :rtype: dict
         '''
-        move_obj = self.pool.get('account.move')
         seq_obj = self.pool.get('ir.sequence')
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         if voucher_brw.number:
@@ -1119,7 +1114,6 @@ class account_voucher(osv.osv):
         :return: mapping between fieldname and value of account move line to create
         :rtype: dict
         '''
-        move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
         move_line = {}
 
@@ -1181,9 +1175,6 @@ class account_voucher(osv.osv):
             context = {}
         move_pool = self.pool.get('account.move')
         move_line_pool = self.pool.get('account.move.line')
-        currency_pool = self.pool.get('res.currency')
-        tax_obj = self.pool.get('account.tax')
-        seq_obj = self.pool.get('ir.sequence')
         for voucher in self.browse(cr, uid, ids, context=context):
             if voucher.move_id:
                 continue
@@ -1213,7 +1204,7 @@ class account_voucher(osv.osv):
             # Create the writeoff line if needed
             ml_writeoff = self.writeoff_move_line_get(cr, uid, voucher.id, line_total, move_id, name, company_currency, current_currency, context)
             if ml_writeoff:
-                ml_writeoff_id = move_line_pool.create(cr, uid, ml_writeoff, context)
+                move_line_pool.create(cr, uid, ml_writeoff, context)
             # We post the voucher.
             self.write(cr, uid, [voucher.id], {
                 'move_id': move_id,

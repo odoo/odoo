@@ -12,13 +12,14 @@ class plugin_handler(osv.osv_memory):
 
     def _make_url(self, cr, uid, res_id, model, context=None):
         """
-            @param id: on which document the message is pushed
+            @param res_id: on which document the message is pushed
             @param model: name of the document linked with the mail
             @return url
         """
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
         if base_url:
-            base_url += '/?id=%s&model=%s'%(res_id,model)
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            base_url += '/web/webclient/login?db=%s&login=%s&key=%s#id=%s&model=%s' % (cr.dbname, user.login, user.password, res_id, model)
         return base_url
 
     def is_installed(self, cr, uid):

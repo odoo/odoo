@@ -169,6 +169,16 @@ function searchmail()
 }
 
 
+function url_for(model, id) {
+    var base = getWebServerURL(),
+        db = getDbName(),
+        login = getusername(),
+        password = getPassword();
+
+    return base + '/web/webclient/login?db='+db+'&login='+login+'&key='+password+'#model='+model+'&id='+id;
+    
+}
+
 var openPartnerHandler = {
     onResult: function(client, context, result) {
         netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
@@ -186,15 +196,11 @@ var openPartnerHandler = {
             } 
             if(strlSearchResult=="partner_id"){
                 partner_id = strlSearchResultValue;
-                weburl = getWebServerURL();
 
                 if (parseInt(partner_id) > 0){
-                    //Encode the url and form an url to have menu in webclient
-                    var encoded = encodeURIComponent("/openerp/form/view?model=res.partner&id="+partner_id)
-                    var t = weburl + "?next=" + encoded
                     var messenger = Components.classes["@mozilla.org/messenger;1"].createInstance();
                     messenger = messenger.QueryInterface(Components.interfaces.nsIMessenger);
-                    messenger.launchExternalURL(t);
+                    messenger.launchExternalURL(url_for('res.partner', partner_id));
                 }
                 else{
                     alert("Partner is not Available.");
@@ -298,7 +304,6 @@ var listDocumentHandler = {
         var res = result.QueryInterface(Components.interfaces.nsISupportsArray);
         res_id = res.QueryElementAt(1, Components.interfaces.nsISupportsPRInt32);
         model = res.QueryElementAt(0, Components.interfaces.nsISupportsCString); 
-        weburl = getWebServerURL();
         if(res_id==0)
         {
             alert("Document is not available.");
@@ -307,11 +312,9 @@ var listDocumentHandler = {
         else
         {
     
-            var encoded = encodeURIComponent("/openerp/form/view?model=" + model +"&id=" + res_id)
-            var t = weburl + "?next=" + encoded
             var messenger = Components.classes["@mozilla.org/messenger;1"].createInstance();
             messenger = messenger.QueryInterface(Components.interfaces.nsIMessenger);
-            messenger.launchExternalURL(t);
+            messenger.launchExternalURL(url_for(model, res_id));
         }
 
     },
