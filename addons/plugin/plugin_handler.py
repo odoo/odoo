@@ -12,13 +12,14 @@ class plugin_handler(osv.osv_memory):
 
     def _make_url(self, cr, uid, res_id, model, context=None):
         """
-            @param id: on which document the message is pushed
+            @param res_id: on which document the message is pushed
             @param model: name of the document linked with the mail
             @return url
         """
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
         if base_url:
-            base_url += '/?id=%s&model=%s'%(res_id,model)
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            base_url += '/web/webclient/login?db=%s&login=%s&key=%s#id=%s&model=%s' % (cr.dbname, user.login, user.password, res_id, model)
         return base_url
 
     def is_installed(self, cr, uid):
@@ -35,28 +36,27 @@ class plugin_handler(osv.osv_memory):
             @param email: email is a standard RFC2822 email message
             @return Dictionary which contain id and the model name of the document linked with the mail
                 if no document is found the id = 0
-                (model_name, res_id, name_get, url) 
+                (model_name, res_id, url, name_get) 
         """
         mail_message_obj = self.pool.get('mail.message')
         model = False
         res_id = 0
         url = False
         name = ""
-
         msg = mail_message_obj.parse_message(email)
         references = [msg.get('message-id')]
         refs =  msg.get('references',False)
         if refs:
             references.extend(refs.split())
-
         msg_ids = mail_message_obj.search(cr, uid, [('message_id','in',references)])
         if msg_ids:
             msg = mail_message_obj.browse(cr, uid, msg_ids[0])
             res_id = msg.res_id
             model = msg.model
             url = self._make_url(cr, uid, res_id, model)
-            name =  self.pool.get(model).name_get(cr, uid, res_id)[1]
-        return (model, res_id, url, name)
+            name =  self.pool.get(model).name_get(cr, uid, [res_id])[0][1]
+        return (model,res_id, url,name)
+
 
     def document_type(self, cr, uid, context=None):
         """
@@ -90,11 +90,8 @@ class plugin_handler(osv.osv_memory):
         """
         mail_message = self.pool.get('mail.message')
         model_obj = self.pool.get(model)
-        
         msg = mail_message.parse_message(email)
         message_id = msg.get('message-id')
-         
-        
         mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
         if message_id and mail_ids :
             mail_record = mail_message.browse(cr, uid, mail_ids)[0]
@@ -130,8 +127,7 @@ class plugin_handler(osv.osv_memory):
         return ('res.partner', partner_id, url)
 
     # Specific to outlook rfc822 is not available so we split in arguments headerd,body,attachemnts
-    def push_message_outlook(self, cr, uid, model, headers, body_text, body_html, attachments):
-        pass
+    def push_message_outlook(self, cr, uid, model, headers,res_id=0 ,body_text=False, body_html=False, attachments=False):
         # ----------------------------------------
         # solution 1
         # construct a fake rfc822 from the separated arguement
@@ -142,12 +138,23 @@ class plugin_handler(osv.osv_memory):
         # solution 2
         # use self.pushmessage only with header and body
         # add attachemnt yourself after
-
-        #ir_attachment_obj = self.pool.get('ir.attachment')
-        #attachment_ids = ir_attachment_obj.search(cr, uid, [('res_model', '=', data.get('res_model')), ('res_id', '=', data.get('res_id')), ('datas_fname', '=', data.get('datas_fname'))])
-        #if attachment_ids:
-        #    return attachment_ids[0]
-        #else:
-        #    vals = {"res_model": data.get('res_model'), "res_id": data.get('res_id'), "name": data.get('name'), "datas" : data.get('datas'), "datas_fname" : data.get('datas_fname')}
-        #    return ir_attachment_obj.create(cr, uid, vals)
-        #return (model, res_id, url, notify)
+        mail_message = self.pool.get('mail.message')        
+        ir_attachment_obj = self.pool.get('ir.attachment')
+        attach_ids = []
+        msg = mail_message.parse_message(headers)
+        message_id = msg.get('message-id')    
+        push_mail = self.push_message(cr, uid, model, headers, res_id)
+        res_id = push_mail[1]
+        model =  push_mail[0]            
+        for name in attachments.keys():
+            attachment_ids = ir_attachment_obj.search(cr, uid, [('res_model', '=', model), ('res_id', '=', res_id), ('datas_fname', '=', name)])
+            if attachment_ids:
+                attach_ids.append( attachment_ids[0])
+            else:
+                vals = {"res_model": model, "res_id": res_id, "name": name, "datas" :attachments[name], "datas_fname" : name}
+                attach_ids.append(ir_attachment_obj.create(cr, uid, vals))
+        mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
+        if mail_ids:
+            ids =  mail_message.write(cr, uid,mail_ids[0],{ 'attachment_ids': [(6, 0, attach_ids)],'body_text':body_text,'body_html':body_html})
+        url = self._make_url(cr, uid, res_id, model)
+        return (model, res_id, url)

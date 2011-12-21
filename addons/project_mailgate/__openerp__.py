@@ -21,7 +21,7 @@
 
 
 {
-    "name": "Tasks Mail Integration",
+    "name": "Tasks-Mail Integration",
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",

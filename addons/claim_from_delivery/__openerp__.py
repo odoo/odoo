@@ -18,10 +18,10 @@
 #
 ##############################################################################
 {
-    "name" : "Claim from Delivery",
+    "name" : "Claim on Deliveries",
     "version" : "1.0",
     "author" : "OpenERP SA",
-    'category': 'Sales Management',
+    "category" : "Warehouse Management",
     "depends" : ["base", "crm_claim", "stock"],
     "init_xml" : [],
     "demo_xml" : [],

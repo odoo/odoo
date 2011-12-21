@@ -1,0 +1,120 @@
+-
+  I compute the production order.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    order.action_compute(context=context)
+-
+  I check planned date in workcenter lines of production order.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    for line in order.workcenter_lines:
+        #TODO: to check start date of next line should be end of date of previous line.
+        assert line.date_planned, "Planned Start date is not computed: %s" %(line)
+        assert line.date_planned_end, "Planned End date is not computed: %s" %(line)
+
+-
+  I confirm the Production Order.
+-
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp.mrp_production_shelf100cm}
+-  
+  I run scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
+-
+  I forcefully close internal shipment.
+-
+  !python {model: mrp.production}: |
+    self.force_production(cr, uid, [ref("mrp.mrp_production_shelf100cm")])
+-
+  I start production.
+-
+  !workflow {model: mrp.production, action: button_produce, ref: mrp.mrp_production_shelf100cm}
+- 
+  Production start on first work center, so I start work operation on first work center.
+-
+  !python {model: mrp.production}: |
+    import netsvc
+    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_start_working', cr)
+-
+  Now I pause first work operation due to technical fault of work center.
+-
+  !python {model: mrp.production}: |
+    import netsvc
+    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_pause', cr)
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_resume', cr)
+-
+  I resume first work operation.
+-
+  !python {model: mrp.production}: |
+    import netsvc
+    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_resume', cr)
+    
+-
+  I cancel first work operation.
+-
+  !python {model: mrp.production}: |
+    import netsvc
+    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_cancel', cr)
+-
+  I reset first work operation and start after resolve techninal fault of work center.
+-
+  !python {model: mrp.production}: |
+    import netsvc
+    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_draft', cr)
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_start_working', cr)
+-
+  Now Finished work of first work operation so I close that operation.
+-
+  !python {model: mrp.production}: |
+    import netsvc
+    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_done', cr)
+-
+  Now I close other operations after start one by one.
+-
+  !python {model: mrp.production}: |
+    import netsvc
+    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    wf_service = netsvc.LocalService("workflow")
+    for work_line in order.workcenter_lines[1:]:
+        wf_service.trg_validate(uid, 'mrp.production.workcenter.line', work_line.id, 'button_start_working', cr)
+        wf_service.trg_validate(uid, 'mrp.production.workcenter.line', work_line.id, 'button_done', cr)
+
+-
+  I check that the production order is now done.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    print order.state
+    assert order.state == 'done', "Production should be closed after finished all operations."
+-
+  I print a Barcode Report of Operation line.
+-
+  !python {model: mrp_operations.operation.code}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.mrp.code.barcode').create(cr, uid, [ref('mrp_operations.mrp_op_1'),ref('mrp_operations.mrp_op_2'),ref('mrp_operations.mrp_op_3'),ref('mrp_operations.mrp_op_4'),ref('mrp_operations.mrp_op_5')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'mrp_operations-barcode_report.'+format), 'wb+').write(data)
+
+-
+  I print Workcenter's Barcode Report.
+-
+  !python {model: mrp.workcenter}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.mrp.wc.barcode').create(cr, uid, [ref('mrp.mrp_workcenter_0'),ref('mrp.mrp_workcenter_1')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'mrp_operations-workcenter_barcode_report.'+format), 'wb+').write(data)

@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Module Record',
+    'name': 'Record and Create Modules',
     'version': '1.0',
     'category': 'Tools',
     'description': """

@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Customer Relationship Management',
+    'name': 'CRM',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'complexity': "easy",
@@ -123,6 +123,7 @@ Creates a dashboard for CRM that includes:
             'test/process/lead2opportunity2win.yml',
             'test/process/merge_opportunity.yml',
             'test/process/cancel_lead.yml',
+            'test/process/action_rule.yml',
             'test/process/segmentation.yml',
             'test/ui/crm_demo.yml',
             'test/ui/duplicate_lead.yml',

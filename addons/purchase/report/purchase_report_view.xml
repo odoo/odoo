@@ -99,7 +99,7 @@
                     <filter string="Supplier" name="group_partner_id" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <filter string="Responsible" name="Responsible" icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <filter string="Validated by" icon="terp-personal" context="{'group_by':'validator'}"/>
- 					<separator orientation="vertical"/>
+                    <separator orientation="vertical"/>
                     <filter string="Product" name="group_product_id" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                     <filter string="Category" name="group_category_id" icon="terp-stock_symbol-selection" context="{'group_by':'category_id'}"/>
                     <filter string="Reference UOM" name="group_product_uom" icon="terp-mrp" context="{'group_by':'product_uom'}"/>
@@ -187,98 +187,5 @@
     </record>
     <menuitem action="action_stock_move_report_po" id="menu_action_stock_move_report_po" parent="base.next_id_73" sequence="8"/>
 
-    <record model="ir.ui.view" id="view_purchase_by_supplier_graph">
-            <field name="name">purchase.by.supplier.graph</field>
-            <field name="model">purchase.report</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Purchase by supplier" type="bar">
-                    <field name="partner_id"/>
-                    <field name="nbr" operator="+"/>
-                </graph>
-            </field>
-        </record>
-	<record id="action_purchase_by_supplier" model="ir.actions.act_window">
-        <field name="name">Purchase by supplier</field>
-        <field name="res_model">purchase.report</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree</field>
-        <field name="domain">[('state','=','done'),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
-        <field name="context">{'group_by_no_leaf':1,'group_by':['partner_id']}</field>
-        <field name="view_id" ref="view_purchase_by_supplier_graph"/>
-    </record>
-
-    <record model="ir.ui.view" id="view_total_price_by_product_by_state_graph">
-            <field name="name">total.price.by.product.by.state.graph</field>
-            <field name="model">purchase.report</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Total price by product by state" type="pie">
-                    <field name="product_id"/>
-                    <field name="price_total" operator="+"/>
-
-                </graph>
-            </field>
-        </record>
-	<record id="action_total_price_by_product_by_state" model="ir.actions.act_window">
-        <field name="name">Total price by product by state</field>
-        <field name="res_model">purchase.report</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
-        <field name="context">{'group_by_no_leaf':1,'group_by':['product_id','state']}</field>
-        <field name="view_id" ref="view_total_price_by_product_by_state_graph"/>
-    </record>
-
-    <record model="ir.ui.view" id="view_qty_per_product_graph">
-            <field name="name">qty.per.product.graph</field>
-            <field name="model">purchase.report</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Qty. per product" type="bar">
-                    <field name="product_id"/>
-                    <field name="quantity" operator="+"/>
-                </graph>
-            </field>
-        </record>
-	<record id="action_qty_per_product" model="ir.actions.act_window">
-        <field name="name">Qty. per product</field>
-        <field name="res_model">purchase.report</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree</field>
-        <field name="domain">[('state','=','done')]</field>
-        <field name="context">{'group_by_no_leaf':1,'group_by':['product_id']}</field>
-        <field name="view_id" ref="view_qty_per_product_graph"/>
-    </record>
-
-   	   <record model="ir.ui.view" id="view_po_per_month_tree">
-            <field name="name">qty.per.product.tree</field>
-            <field name="model">purchase.report</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Purchase order per month" >
-                    <field name="month"/>
-                    <field name="product_id" invisible="1"/>
-                    <field name="nbr" operator="+"/>
-                </tree>
-            </field>
-        </record>
-	<record id="action_po_per_month_tree" model="ir.actions.act_window">
-        <field name="name">Purchase order per month</field>
-        <field name="res_model">purchase.report</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree</field>
-        <field name="domain">[('date','&gt;',time.strftime('%Y-01-01 00:00:00')),('date','&lt;',time.strftime('%Y-12-31 23:59:59')),('state','=','done')]</field>
-		<field name="context">{'group_by_no_leaf':1,'group_by':['month','product_id']}</field>
-		<field name="view_id" ref="view_po_per_month_tree"/>
-    </record>
-
-  <record id="action_current_purchases" model="ir.actions.act_window">
-        <field name="name">Current purchases</field>
-        <field name="res_model">purchase.order</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('state','in',('draft','confirmed'))]</field>
-        <field name="view_id" ref="purchase.purchase_order_tree"/>
-      </record>
     </data>
 </openerp>

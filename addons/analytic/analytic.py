@@ -301,6 +301,17 @@ class account_analytic_line(osv.osv):
     }
 
     _order = 'date desc'
+    
+    def _check_no_view(self, cr, uid, ids, context=None):
+        analytic_lines = self.browse(cr, uid, ids, context=context)
+        for line in analytic_lines:
+            if line.account_id.type == 'view':
+                return False
+        return True
+    
+    _constraints = [
+        (_check_no_view, 'You can not create analytic line on view account.', ['account_id']),
+    ]    
 
 account_analytic_line()
 

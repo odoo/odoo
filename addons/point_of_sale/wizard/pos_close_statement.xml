@@ -15,7 +15,9 @@
                     <group col="4" colspan="4">
                         <group col="2" colspan="2"/>
                         <button icon='gtk-stop' special="cancel"
-                            string="No" />
+                            string="No" invisible="context.get('cancel_action')"/>
+                        <button icon='gtk-stop' type="object" name="cancel_wizard"
+                            string="No" invisible="not context.get('cancel_action')"/>
                         <button name="close_statement" string="Yes"
                              type="object" icon="gtk-ok"/>
                    </group>

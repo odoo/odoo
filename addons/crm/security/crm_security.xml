@@ -3,16 +3,19 @@
 <data noupdate="0">
 
     <record id="base.group_sale_salesman" model="res.groups">
-        <field name="name">Sales / User - Own Leads Only</field>
+        <field name="name">User - Own Leads Only</field>
+        <field name="category_id" ref="base.module_category_sales_management"/>
     </record>
 
     <record id="base.group_sale_salesman_all_leads" model="res.groups">
-        <field name="name">Sales / User - All Leads</field>
+        <field name="name">User - All Leads</field>
+        <field name="category_id" ref="base.module_category_sales_management"/>
         <field name="implied_ids" eval="[(4, ref('base.group_sale_salesman'))]"/>
     </record>
 
     <record id="base.group_sale_manager" model="res.groups">
-        <field name="name">Sales / Manager</field>
+        <field name="name">Manager</field>
+        <field name="category_id" ref="base.module_category_sales_management"/>
         <field name="implied_ids" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
     </record>
 
@@ -40,6 +43,13 @@
     <record model="ir.ui.menu" id="base.menu_base_config">
         <field eval="[(4, ref('base.group_sale_manager'))]" name="groups_id"/>
     </record>
-    
+
+    <record id="crm_meeting_global" model="ir.rule">
+        <field name="name">Hide Private Meetings</field>
+        <field ref="model_crm_meeting" name="model_id"/>
+        <field eval="1" name="global"/>
+        <field name="domain_force">['|',('user_id','=',user.id),('show_as','=','busy')]</field>
+    </record>
+
     </data>
 </openerp>

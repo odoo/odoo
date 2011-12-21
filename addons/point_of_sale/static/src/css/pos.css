@@ -16,7 +16,7 @@
     border-spacing: 0;
     border-collapse: collapse;
 }
-.point-of-sale td { 
+.point-of-sale td {
     border: 1px solid #e9eaec;
 }
 .point-of-sale input {
@@ -472,9 +472,41 @@
 .point-of-sale .pos-sale-ticket table td {
     border: 0;
 }
-.point-of-sale .pos-sale-ticket table td.receiptline-amount {
-    text-align: right;
-}
 .point-of-sale .pos-receipt-container {
     font-size: 0.75em;
 }
+
+.point-of-sale .oe_pos_synch-notification-button {
+    color: white;
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 2px 3px 2px 3px;
+    background-color: #D92A2A;
+}
+
+.receipt-buttons {
+	white-space: nowrap;
+}
+
+@media print {
+    #oe_header, #oe_menu, .point-of-sale #topheader, .point-of-sale #leftpane {
+        display: none;
+    }
+    .point-of-sale #content {
+        top: 0px;
+    }
+    .point-of-sale #rigthpane {
+        left: 0px;
+        background-color: white;
+    }
+    #receipt-screen header, #pos-finish-order {
+        display: none;
+    }
+    #receipt-screen {
+        text-align: left;
+    }
+    .pos-sale-ticket {
+        margin: 0;
+    }
+}
+

@@ -1,0 +1,86 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+        <record id="view_open_questionnaire_form" model="ir.ui.view">
+            <field name="name">Open Questionnaires</field>
+            <field name="model">open.questionnaire</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Questionnaires">
+                    <field name="questionnaire_id" required="1"/>
+                    <newline/>
+                    <separator string="" colspan="4"/>
+                    <group col="4" colspan="4">
+                        <group col="2" colspan="2"/>
+                        <button special="cancel" icon="gtk-cancel" string="Cancel"/>
+                        <button name="build_form" string="Open Questionnaire" icon="terp-camera_test" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_open_questionnaire">
+            <field name="name">Open Questionnaire</field>
+            <field name="res_model">open.questionnaire</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_open_questionnaire_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="open_questionnaire_form" model="ir.ui.view">
+            <field name="name">open.questionnaire.form</field>
+            <field name="model">open.questionnaire</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <separator colspan="4" string="Questionnaire"/>
+                    <field name="question_ans_ids" colspan="4" nolabel="1" mode="tree,form" width="550" height="200"/>
+                    <separator string="" colspan="4" />
+                    <label string="" colspan="2"/>
+                    <group col="2" colspan="2">
+                        <button icon='gtk-cancel' special="cancel" string="_Cancel" />
+                        <button name="questionnaire_compute" string="Save Data" icon="terp-stock_format-scientific" colspan="1" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_open_questionnaire_line_tree" model="ir.ui.view">
+            <field name="name">open.questionnaire.line.list</field>
+            <field name="model">open.questionnaire.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Questionnaire">
+                    <field name="question_id"/>
+                    <field name="answer_id" domain="[('question_id', '=', question_id)]"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_open_questionnaire_line_form" model="ir.ui.view">
+            <field name="name">open.questionnaire.line.form</field>
+            <field name="model">open.questionnaire.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Questionnaire">
+                    <field name="question_id"/>
+                    <field name="answer_id" domain="[('question_id', '=', question_id)]"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Questionnaire form view -->
+        <!--<act_window
+            context="{}"
+            id="act_open_questionnaire"
+            name="Using a Questionnaire"
+            res_model="open.questionnaire"
+            src_model="crm_profiling.questionnaire"
+            view_id="view_open_questionnaire_form"
+            target="new"
+            view_mode="form"/>-->
+
+    </data>
+</openerp>

@@ -581,14 +581,14 @@ class account_move_line(osv.osv):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'view':
-                return False
+                raise osv.except_osv(_('Error :'), _('You can not create move line on view account %s %s') % (l.account_id.code, l.account_id.name))
         return True
 
     def _check_no_closed(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'closed':
-                return False
+                raise osv.except_osv(_('Error :'), _('You can not create move line on closed account %s %s') % (l.account_id.code, l.account_id.name))
         return True
 
     def _check_company_id(self, cr, uid, ids, context=None):
@@ -1249,6 +1249,8 @@ class account_move_line(osv.osv):
             if len(period_candidate_ids) != 1:
                 raise osv.except_osv(_('Encoding error'), _('No period found or period given is ambigous.'))
             context['period_id'] = period_candidate_ids[0][0]
+        if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
+            context['journal_id'] = context.get('search_default_journal_id')            
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
         move_id = vals.get('move_id', False)
         journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
