@@ -116,7 +116,7 @@
                     <page string="General Informations">
                         <field colspan="4" name="inventory_line_id" nolabel="1" widget="one2many_list">
                             <tree string="Products" editable="bottom">
-                                <field colspan="4" domain="[('usage','=','internal')]" name="location_id"/>
+                                <field domain="[('usage','=','internal')]" name="location_id"/>
                                 <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
@@ -1616,8 +1616,8 @@
                     <group colspan="2" col="2">
                         <separator colspan="2" string="Move Information"/>
                         <field name="name" string="Reason"/>
-                        <field name="product_uos_qty" groups="product.group_uos"  on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" colspan="4"/>
-                        <field name="product_uos" groups="product.group_uos" colspan="4"/>
+                        <field name="product_uos_qty" groups="product.group_uos"  on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)"/>
+                        <field name="product_uos" groups="product.group_uos"/>
                     </group>
 
                     <group colspan="2" col="2">

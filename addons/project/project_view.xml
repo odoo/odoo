@@ -378,6 +378,7 @@
                                                         type="object" class="oe_kanban_button"><t t-esc="time[0]"/></a
                                                     ><b t-if="time[1]" class="oe_kanban_button oe_kanban_button_active"><t t-esc="Math.round(hours)"/></b
                                                 ></t>
+                                                <a name="do_open" states="draft" string="Validate planned time and open task" type="object" class="oe_kanban_button oe_kanban_button_active">!</a>
                                             </span>
                                         </div>
                                         <div class="oe_kanban_clear"/>
@@ -487,11 +488,6 @@
                         <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
                         <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
-                        <separator orientation="vertical"/>
-                        <filter name="edit"
-                            string="Edit" context="{'set_editable':True,'seq_visible': True}"
-                            icon="gtk-execute"
-                            groups="base.group_extended"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>

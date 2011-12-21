@@ -184,10 +184,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
     }
 
-    def _get_stage(self, cr, uid, context=None):
-        ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [], context=context)
-        return ids and ids[0] or False
-
     _defaults = {
         'active': lambda *a: 1,
         'user_id':  lambda self, cr, uid, context: uid,
@@ -413,14 +409,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         return res
 
     def case_close(self, cr, uid, ids, *args):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        @param *args: Give Tuple Value
-        """
-        employee_obj = self.pool.get('hr.employee')
         res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("Applicant '%s' is being hired.") % name
@@ -428,40 +416,32 @@ class hr_applicant(crm.crm_case, osv.osv):
         return res
 
     def case_close_with_emp(self, cr, uid, ids, *args):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        @param *args: Give Tuple Value
-        """
-        employee_obj = self.pool.get('hr.employee')
-        partner_obj = self.pool.get('res.partner')
-        address_id = False
-        applicant = self.browse(cr, uid, ids)[0]
-        if applicant.partner_id:
-            address_id = partner_obj.address_get(cr, uid, [applicant.partner_id.id], ['contact'])['contact']
-        if applicant.job_id:
-            self.pool.get('hr.job').write(cr, uid, [applicant.job_id.id], {'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
-            emp_id = employee_obj.create(cr,uid,{'name': applicant.partner_name or applicant.name,
-                                                 'job_id': applicant.job_id.id,
-                                                 'address_home_id': address_id,
-                                                 'department_id': applicant.department_id.id
-                                                 })
-        else:
-            raise osv.except_osv(_('Warning!'),_('You must define Applied Job for Applicant !'))
-        self.case_close(cr, uid, ids, *args)
+        hr_employee = self.pool.get('hr.employee')
+        model_data = self.pool.get('ir.model.data')
+        act_window = self.pool.get('ir.actions.act_window')
+        emp_id = False
+        for applicant in self.browse(cr, uid, ids):
+            address_id = False
+            if applicant.partner_id:
+                address_id = applicant.partner_id.address_get(['contact'])['contact']
+            if applicant.job_id:
+                applicant.job_id.write({'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
+                emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or applicant.name,
+                                                     'job_id': applicant.job_id.id,
+                                                     'address_home_id': address_id,
+                                                     'department_id': applicant.department_id.id
+                                                     })
+                self.case_close(cr, uid, [applicant.id], *args)
+            else:
+                raise osv.except_osv(_('Warning!'),_('You must define Applied Job for Applicant !'))
 
-        mod_obj = self.pool.get('ir.model.data')
-        act = mod_obj.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
-
-        act_obj = self.pool.get('ir.actions.act_window')
-        act_win = act_obj.read(cr, uid, act[1], [])
-
-        act_win['domain'] = [('id','=',emp_id)]
-        act_win['view_mode'] = 'form,tree'
-        act_win['res_id'] = emp_id
-        return act_win
+        
+        action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
+        dict_act_window = act_window.read(cr, uid, action_id, [])
+        if emp_id:
+            dict_act_window['res_id'] = emp_id
+        dict_act_window['view_mode'] = 'form,tree'
+        return dict_act_window
 
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as draft

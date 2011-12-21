@@ -1,0 +1,26 @@
+-
+  I cancel requisition.
+-
+  !python {model: purchase.requisition}: |
+    self.tender_cancel(cr, uid, [ref("requisition1")])
+-
+  I check requisition after cancelled.
+-
+  !assert {model: purchase.requisition, id: requisition1}:
+    - state == 'cancel'
+-
+  I reset requisition as "New".
+-
+  !python {model: purchase.requisition}: |
+    self.tender_reset(cr, uid, [ref('requisition1')])
+-
+  I duplicate requisition.
+-
+  !python {model: purchase.requisition}: |
+    self.copy(cr, uid, ref('requisition1'))
+-
+  I delete requisition.
+-
+  !python {model: purchase.order}: |
+    self.unlink(cr, uid, [ref("requisition1")])
+

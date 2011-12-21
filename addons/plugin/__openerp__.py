@@ -23,7 +23,7 @@
 {
     'name': 'CRM Plugins',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden/Dependency',
     'complexity': "easy",
     'description': """
 The common interface for pugin.

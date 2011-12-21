@@ -39,7 +39,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
              @return: A dictionary which of fields with values.
 
         """
-
+        if context is None: context = {}
         res = False
         invoices = {}
 

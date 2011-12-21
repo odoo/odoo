@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Thailand - Thai Chart of Accounts',
+    'name': 'Thailand - Accounting',
     'version': '1.0',
     'category': 'Localization/Account Charts',
     'description': """

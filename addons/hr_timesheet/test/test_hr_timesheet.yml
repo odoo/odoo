@@ -1,149 +1,51 @@
 -
   In order to test hr_timesheet Module in OpenERP, I make "Sign In/Sign Out for Project" to encode and
   track time spent on the different projects.
-
 -
-  I  create a new employee “Mark Johnson” to test Timesheet.
+  I create employee "Quentin Paolino" as "User".
 -
-  !record {model: hr.employee, id: hr_employee_employee0}:
-    address_home_id: base.res_partner_address_1
-    company_id: base.main_company
-    gender: male
-    marital: single
-    name: Mark Johnson
-    user_id: base.user_root
-
--
-  I create new user "test_timesheet_user1".
--
-  !record {model: res.users, id: test_timesheet_user1}:
-    company_id: base.main_company
-    context_lang: en_US
-    groups_id:
-      - base.group_hr_user
-      - base.group_user
-      - base.group_extended
-      - base.group_hr_manager
-    login: test_timesheet_user1
-    name: test_timesheet_user1
-    password: test_timesheet_user1
-
--
-  I create another new employee "Francline" as "test_timesheet_user1".
--
-  !record {model: hr.employee, id: hr_employee_fracline1}:
+  !record {model: hr.employee, id: hr.employee2}:
     address_home_id: base.res_partner_address_8
-    name: Francline
-    parent_id: 'hr_employee_employee0'
-    user_id: 'test_timesheet_user1'
-
--
-  I create a product as "Consultancy - Senior Developer".
--
-  !record {model: product.product, id: product_consultant}:
-    categ_id: product.product_category_10
-    default_code: DEV
-    list_price: 75.0
-    name: Consultancy - Senior Developer
-    procure_method: make_to_order
-    purchase_ok: False
-    standard_price: 30.0
-    supply_method: produce
-    type: service
-    uom_id: product.uom_hour
-    uom_po_id: product.uom_hour
-
--
-  I assigned product and journal to  "Mark Johnson"
--
-  !record {model: hr.employee, id: hr_employee_employee0}:
-    product_id: product_consultant
-    journal_id: analytic_journal
--
-  I assigned product and journal to "Francline".
--
-  !record {model: hr.employee, id: hr_employee_fracline1}:
-    product_id: product_consultant
-    journal_id: analytic_journal
--
-  I create attendance and perform "Sign In" action with proper reason.
--
-  !record {model: hr.attendance, id: hr_attendance_0}:
-    action: sign_in
-    employee_id: 'hr_employee_fracline1'
-    name: !eval (datetime.now()-timedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')
-
--
-  I create attendance and perform "Sign Out" action.
--
-  !record {model: hr.attendance, id: hr_attendance_1}:
-    action: sign_out
-    employee_id: 'hr_employee_fracline1'
-    name: !eval (datetime.now()-timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')
-
+    name: Quentin Paolino
+    parent_id: 'hr.employee3'
+    user_id: 'base.user_demo'
 -
   On "Sign In/Sign Out by Project" wizard i click on "Sign In/Sign Out" button of this wizard.
 -
   !python {model: hr.sign.in.project}: |
-    uid = ref('test_timesheet_user1')
-    self.check_state(cr, uid, [ref("hr_employee_fracline1")], {"active_ids": [ref("hr_timesheet.action_hr_timesheet_sign_in")]})
+    uid = ref('base.user_demo')
+    state_id = self.check_state(cr, uid, [ref("hr.employee2")], {"active_ids": [ref("hr_timesheet.action_hr_timesheet_sign_in")]})
+    assert state_id['name'] == 'Sign in / Sign out', "Check the process of sing-in/sing-out."
 -
   I select start date and Perform start work on project.
 -
   !python {model: hr.sign.in.project}: |
-      import time
-      uid = ref('test_timesheet_user1')
-      new_id = self.create(cr, uid, {'emp_id': ref('hr_employee_fracline1'), 'name': 'Francline', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})
-      self.sign_in_result(cr, uid, [new_id], context)
+    import time
+    uid = ref('base.user_demo')
+    new_id = self.create(cr, uid, {'emp_id': ref('hr.employee2'), 'name': 'Quentin Paolino',
+    'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'present'})
+    self.sign_in_result(cr, uid, [new_id], context)
 -
-  I create a timesheet line manually to check several default values. 
-  I also assign proper date and user for that line.
--
-  !python {model: hr.analytic.timesheet}: |
-     import time
-     uid = ref('test_timesheet_user1')
-     current_date = time.strftime('%Y-%m-%d')
-     vals = {'name': 'Worked on project',
-             'user_id': ref('test_timesheet_user1'),
-             'account_id': ref('account.analytic_project_1_development'),
-             'unit_amount': 5.00,
-             'journal_id': ref('analytic_journal')
-     }
-     line_id = self.create(cr, uid, vals, None)
-     res = self.on_change_date(cr, uid, [line_id], current_date)
-     values = dict([('date', current_date)] + res['value'].items())
-     res1 = self.on_change_user_id(cr, uid, [line_id], ref('base.user_root'))
-     values.update(dict([('user_id', ref('base.user_root'))] + res1['value'].items()))
-     self.write(cr, uid, [line_id], values, None)
--
-  To stop work I click on "Sign In/Sign Out" button of "Sign In/Sign Out by Project" wizard.
-  Which check state in hr attendace form for user.
--
-  !python {model: hr.sign.in.project}: |
-       uid = ref('test_timesheet_user1')
-       ids = self.search(cr, uid, [('emp_id', '=', ref('hr_employee_fracline1')),('name', '=', 'Francline')])
-       self.check_state(cr, uid, ids, {"active_ids": [ref("hr_timesheet.action_hr_timesheet_sign_in")]
-             })
--
-  I Create an analytic account "Project2".
--
-  !record {model: account.analytic.account, id: account_analytic_account_project0}:
-    company_id: base.main_company
-    name: Project2
-    parent_id: account.analytic_root
-    quantity_max: 0.0
-    state: open
-
--
-  My work for this project is over and I stop working by clicking on "Stop Work" button of this wizard.
+  I change my project "Thymbra" and I click on the "Change Work" button of this wizard
 -
   !python {model: hr.sign.out.project}: |
-       import time
-       from datetime import datetime, date, timedelta
-       uid = ref('test_timesheet_user1')
-       new_id = self.create(cr, uid, {'account_id': ref('account_analytic_account_project0'), 'analytic_amount': 7.0, 'date': (datetime.now()+timedelta(1)).strftime('%Y-%m-%d %H:%M:%S'), 'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module', 'name': 'Francline', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})
-       self.sign_out_result_end(cr, uid, [new_id], context)
-
-- |
-  I can see employee timesheet for particular month using "Employee Timesheet" report.
-
+    import time
+    from datetime import datetime, date, timedelta
+    uid = ref('base.user_demo')
+    new_id = self.create(cr, uid, {'account_id': ref('account.analytic_thymbra'),'analytic_amount': 7.0,
+    'date': (datetime.now()+timedelta(1)).strftime('%Y-%m-%d %H:%M:%S') ,
+    'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module',
+    'name': 'Quentin Paolino', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'action'})
+    self.sign_out_result(cr, uid, [new_id], context)
+-
+  My work for this project "Sednacom" is over and I stop working by clicking on "Stop Work" button of this wizard.
+-
+  !python {model: hr.sign.out.project}: |
+    import time
+    from datetime import datetime, date, timedelta
+    uid = ref('base.user_demo')
+    new_id = self.create(cr, uid, {'account_id': ref('account.analytic_sednacom'), 'analytic_amount': 7.0,
+    'date': (datetime.now()+timedelta(2)).strftime('%Y-%m-%d %H:%M:%S'),
+    'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module',
+    'name': 'Quentin Paolino', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})
+    self.sign_out_result_end(cr, uid, [new_id], context)

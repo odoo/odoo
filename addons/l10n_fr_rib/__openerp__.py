@@ -22,7 +22,7 @@
 {
     'name': 'French RIB Bank Details',
     'version': '1.0',
-    "category": 'Accounting & Finance',
+    "category": 'Hidden/Dependency',
     'description': '''
 This module lets users enter the banking details of Partners in the RIB format (French standard for bank accounts details).
 RIB Bank Accounts can be entered in the "Accounting" tab of the Partner form by specifying the account type "RIB". The four standard RIB fields will then become mandatory:

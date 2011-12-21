@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Luxembourg - Plan Comptable Minimum Normalise',
+    'name': 'Luxembourg - Accounting',
     'version': '1.0',
     'category': 'Localization/Account Charts',
     'description': """

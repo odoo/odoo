@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Stock No Auto-Picking',
+    'name': 'Picking Before Manufacturing',
     'version': '1.0',
     "category" : "Warehouse Management",
     'description': """

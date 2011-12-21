@@ -35,14 +35,6 @@ from osv.orm import browse_record, browse_null
 #
 class purchase_order(osv.osv):
 
-    def _calc_amount(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        res = {}
-        for order in self.browse(cr, uid, ids):
-            res[order.id] = 0
-            for oline in order.order_line:
-                res[order.id] += oline.price_unit * oline.product_qty
-        return res
-
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         cur_obj=self.pool.get('res.currency')
@@ -300,25 +292,6 @@ class purchase_order(osv.osv):
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
         return True
-    # Dead code:
-    def wkf_warn_buyer(self, cr, uid, ids):
-        self.write(cr, uid, ids, {'state' : 'wait', 'validator' : uid})
-        request = pooler.get_pool(cr.dbname).get('res.request')
-        for po in self.browse(cr, uid, ids):
-            managers = []
-            for oline in po.order_line:
-                manager = oline.product_id.product_manager
-                if manager and not (manager.id in managers):
-                    managers.append(manager.id)
-            for manager_id in managers:
-                request.create(cr, uid,{
-                       'name' : _("Purchase amount over the limit"),
-                       'act_from' : uid,
-                       'act_to' : manager_id,
-                       'body': _('Somebody has just confirmed a purchase with an amount over the defined limit'),
-                       'ref_partner_id': po.partner_id.id,
-                       'ref_doc1': 'purchase.order,%d' % (po.id,),
-                })
 
     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
         """Collects require data from purchase order line that is used to create invoice line 

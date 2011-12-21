@@ -34,8 +34,8 @@ class partner_event_registration(osv.osv_memory):
         'event_id': fields.many2one('event.event', 'Event'),
         'event_type': fields.many2one('event.type', 'Type', readonly=True),
         'unit_price': fields.float('Registration Cost', digits_compute=dp.get_precision('Sale Price')),
-        'start_date': fields.datetime('Start date', required=True, help="Beginning Date of Event", readonly=True),
-        'end_date': fields.datetime('Closing date', required=True, help="Closing Date of Event", readonly=True),
+        'start_date': fields.datetime('Start date', help="Beginning Date of Event", readonly=True),
+        'end_date': fields.datetime('Closing date', help="Closing Date of Event", readonly=True),
         'nb_register': fields.integer('Number of Registration'),
     }
     _defaults = {
@@ -48,21 +48,16 @@ class partner_event_registration(osv.osv_memory):
         """
         value = {}
         res_obj = self.pool.get('res.partner')
-        job_obj = self.pool.get('res.partner.job')
+        addr_obj = self.pool.get('res.partner.address')
         reg_obj = self.pool.get('event.registration')
         mod_obj = self.pool.get('ir.model.data')
 
         record_ids = context and context.get('active_ids', []) or []
         addr = res_obj.address_get(cr, uid, record_ids)
-        contact_id = False
         email = False
-        if addr.has_key('default'):
-                job_ids = job_obj.search(cr, uid, [('address_id', '=', addr['default'])], context=context)
-                if job_ids:
-                    contact = job_obj.browse(cr, uid, job_ids[0], context=context)
-                    if contact:
-                        contact_id = contact.contact_id.id
-                        email = contact.email
+        contact_id = addr.get('default', False)
+        if contact_id:
+            email = addr_obj.browse(cr, uid, contact_id, context=context).email
 
         result = mod_obj.get_object_reference(cr, uid, 'event', 'view_registration_search')
         res = result and result[1] or False
