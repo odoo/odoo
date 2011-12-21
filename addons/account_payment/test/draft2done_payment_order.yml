@@ -98,3 +98,12 @@
     self.populate_statement(cr, uid, [import_payment_id], {"statement_id": ref("account_bank_statement_1"),
       "active_model": "account.bank.statement", "journal_type": "cash",
       "active_id": ref("account_bank_statement_1")})
+-
+  I am checking whether the calculations of Owner Account and Destination Account are done correctly or not in payment line.
+-
+  !python {model: payment.line}: |
+    payment = self.pool.get('payment.order').browse(cr, uid, ref("payment_order_1"))
+    line_id = self.browse(cr, uid,payment.line_ids[0].id,context)
+    assert line_id.info_owner, "Owner Account not proper."
+    assert line_id.info_partner, "Destination Account not proper."
+    assert line_id.ml_inv_ref, "Invoice reference is not proper."
