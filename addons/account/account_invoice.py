@@ -804,20 +804,19 @@ class account_invoice(osv.osv):
         move_obj = self.pool.get('account.move')
         if context is None:
             context = {}
-        ctx = context.copy()
-        for inv in self.browse(cr, uid, ids, context=ctx):
+        for inv in self.browse(cr, uid, ids, context=context):
             if not inv.journal_id.sequence_id:
                 raise osv.except_osv(_('Error !'), _('Please define sequence on invoice journal'))
             if not inv.invoice_line:
                 raise osv.except_osv(_('No Invoice Lines !'), _('Please create some invoice lines.'))
             if inv.move_id:
                 continue
-
+            
+            ctx = context.copy()
+            ctx.update({'lang': inv.partner_id.lang})
             if not inv.date_invoice:
                 self.write(cr, uid, [inv.id], {'date_invoice':time.strftime('%Y-%m-%d')}, context=ctx)
             company_currency = inv.company_id.currency_id.id
-            ctx.update({'lang': inv.partner_id.lang})
-            
             # create the analytical lines
             # one move line per invoice line
             iml = self._get_analytic_lines(cr, uid, inv.id, context=ctx)
@@ -911,7 +910,7 @@ class account_invoice(osv.osv):
             date = inv.date_invoice or time.strftime('%Y-%m-%d')
             part = inv.partner_id.id
 
-            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context=context)),iml)
+            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context=ctx)),iml)
 
             line = self.group_lines(cr, uid, iml, line, inv)
 
@@ -940,7 +939,7 @@ class account_invoice(osv.osv):
                 for i in line:
                     i[2]['period_id'] = period_id
 
-            move_id = move_obj.create(cr, uid, move, context=context)
+            move_id = move_obj.create(cr, uid, move, context=ctx)
             new_move_name = move_obj.browse(cr, uid, move_id).name
             # make the invoice point to that move
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name}, context=ctx)
