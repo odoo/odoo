@@ -1271,12 +1271,12 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
     reset: function() {
         this.dirty = false;
     },
-    get_options: function() {
-        if (!this.options) {
+    get_definition_options: function() {
+        if (!this.definition_options) {
             var str = this.node.attrs.options || '{}';
-            this.options = JSON.parse(str);
+            this.definition_options = JSON.parse(str);
         }
-        return this.options;
+        return this.definition_options;
     },
 });
 
@@ -1876,7 +1876,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             self._change_int_value(null);
             self._search_create_popup("form", undefined, {"default_name": name});
         }
-        if (self.get_options().quick_create === undefined || self.get_options().quick_create) {
+        if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
             var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
             dataset.name_create(name, function(data) {
                 self._change_int_ext_value(data);
@@ -2098,9 +2098,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         });
         this.views = views;
 
-        this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views, {
-            action_buttons : false
-        });
+        this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views, {});
         this.viewmanager.template = 'One2Many.viewmanager';
         this.viewmanager.registry = openerp.web.views.clone({
             list: 'openerp.web.form.One2ManyListView',
