@@ -208,6 +208,17 @@ class project(osv.osv):
             message = _("The project '%s' has been opened.") % name
             self.log(cr, uid, id, message)
         return res
+    
+    def map_tasks(self,cr,uid,project_id,new_id,context=None):
+         #copy all the task manually
+        task_obj = self.pool.get('project.task')
+        proj = self.browse(cr, uid, project_id, context=context)
+        map_task_id = {}
+        for task in proj.tasks:
+            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {}, context=context)
+        self.write(cr, uid, new_id, {'tasks':[(6,0, map_task_id.values())]})
+        task_obj.duplicate_task(cr, uid, map_task_id, context=context)
+        return True
 
     def copy(self, cr, uid, id, default={}, context=None):
         if context is None:
@@ -216,29 +227,23 @@ class project(osv.osv):
         default = default or {}
         context['active_test'] = False
         default['state'] = 'open'
+        default['tasks'] = []
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
             default['name'] = proj.name + _(' (copy)')
 
         res = super(project, self).copy(cr, uid, id, default, context)
+        self.map_tasks(cr,uid,id,res,context)
         return res
 
 
     def template_copy(self, cr, uid, id, default={}, context=None):
-        task_obj = self.pool.get('project.task')
         proj = self.browse(cr, uid, id, context=context)
 
         default['tasks'] = [] #avoid to copy all the task automaticly
         res = self.copy(cr, uid, id, default=default, context=context)
 
-        #copy all the task manually
-        map_task_id = {}
-        for task in proj.tasks:
-            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {}, context=context)
-
-        self.write(cr, uid, res, {'tasks':[(6,0, map_task_id.values())]})
-        task_obj.duplicate_task(cr, uid, map_task_id, context=context)
-
+        self.map_tasks(cr,uid,id,res,context)
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
