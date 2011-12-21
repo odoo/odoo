@@ -15,10 +15,6 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         var self = this;
         this._super.apply(this, arguments);
         this.open({
-            modal: true,
-            width: '55%',
-            height: 'auto',
-            position: 'top',
             buttons : [
                 {text: _t("Close"), click: function() { self.close(); }},
                 {text: _t("Export To File"), click: function() { self.on_click_export_data(); }}
@@ -385,7 +381,7 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         });
     },
     close: function() {
-        $(this.$dialog).remove();
+        this.$element.remove();
         this._super();
     }
 });

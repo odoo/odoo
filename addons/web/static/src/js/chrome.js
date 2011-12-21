@@ -51,15 +51,19 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         this._super(parent);
         this.dialog_options = {
             modal: true,
-            width: 'auto',
+            destroy_on_close: true,
+            width: $(window).width() * (($(window).width() > 1024) ? 0.5 : 0.75),
             min_width: 0,
-            max_width: '100%',
+            max_width: '95%',
             height: 'auto',
             min_height: 0,
-            max_height: '100%',
+            max_height: '95%',
             autoOpen: false,
+            position: [false, 50],
+            autoResize : 'auto',
             buttons: {},
-            beforeClose: function () { self.on_close(); }
+            beforeClose: function () { self.on_close(); },
+            resizeStop: this.on_resized
         };
         for (var f in this) {
             if (f.substr(0, 10) == 'on_button_') {
@@ -77,7 +81,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         options.max_width = this.get_width(options.max_width || this.dialog_options.max_width);
         options.height = this.get_height(options.height || this.dialog_options.height);
         options.min_height = this.get_height(options.min_height || this.dialog_options.min_height);
-        options.max_height = this.get_height(options.max_height || this.dialog_options.max_width);
+        options.max_height = this.get_height(options.max_height || this.dialog_options.max_height);
 
         if (options.width !== 'auto') {
             if (options.width > options.max_width) options.width = options.max_width;
@@ -108,7 +112,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         }
     },
     start: function () {
-        this.$dialog = $(this.$element).dialog(this.dialog_options);
+        this.$element.dialog(this.dialog_options);
         this._super();
         return this;
     },
@@ -118,19 +122,26 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
             this.$element.html(this.render());
         }
         this.set_options(dialog_options);
-        this.$dialog.dialog(this.dialog_options).dialog('open');
+        this.$element.dialog(this.dialog_options).dialog('open');
         return this;
     },
     close: function() {
-        // Closes the dialog but leave it in a state where it could be opened again.
-        this.$dialog.dialog('close');
+        this.$element.dialog('close');
     },
     on_close: function() {
+        if (this.dialog_options.destroy_on_close) {
+            this.$element.dialog('destroy');
+        }
+    },
+    on_resized: function() {
+        if (openerp.connection.debug) {
+            console.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
+        }
     },
     stop: function () {
         // Destroy widget
         this.close();
-        this.$dialog.dialog('destroy');
+        this.$element.dialog('destroy');
         this._super();
     }
 });
@@ -167,10 +178,6 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
         var dialog = new openerp.web.Dialog(this, {
             title: "OpenERP " + _.str.capitalize(error.type),
             autoOpen: true,
-            width: '90%',
-            height: '90%',
-            min_width: '800px',
-            min_height: '600px',
             buttons: [
                 {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
             ]
@@ -744,10 +751,8 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
             });
         });
         this.dialog = new openerp.web.Dialog(this,{
-            modal: true,
             title: _t("Preferences"),
-            width: 600,
-            height: 500,
+            width: '700px',
             buttons: [
                 {text: _t("Change password"), click: function(){ self.change_password(); }},
                 {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
@@ -769,11 +774,9 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
 
     change_password :function() {
         var self = this;
-        this.dialog = new openerp.web.Dialog(this,{
-            modal : true,
+        this.dialog = new openerp.web.Dialog(this, {
             title: _t("Change Password"),
-            width : 'auto',
-            height : 'auto'
+            width : 'auto'
         });
         this.dialog.start().open();
         this.dialog.$element.html(QWeb.render("Change_Pwd", self));

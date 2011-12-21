@@ -21,7 +21,11 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.has_been_loaded = $.Deferred();
         this.creating_event_id = null;
         this.dataset_events = [];
-        this.form_dialog = new openerp.web_calendar.CalendarFormDialog(this, {}, this.options.action_views_ids.form, dataset);
+        this.form_dialog = new openerp.web_calendar.CalendarFormDialog(this, {
+                destroy_on_close: false,
+                width: '80%',
+                min_width: 850
+            }, this.options.action_views_ids.form, dataset);
         this.form_dialog.start();
         this.COLOR_PALETTE = ['#f57900', '#cc0000', '#d400a8', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
              '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
