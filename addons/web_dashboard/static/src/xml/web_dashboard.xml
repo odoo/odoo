@@ -111,12 +111,13 @@
 </t>
 
 <div t-name="web_dashboard.ApplicationInstaller">
-    <ul>
-        <li>Remember to bookmark this page.</li>
-        <li>Remember your login: <t t-esc="widget.session.username"/></li>
-        <li>Choose the first OpenERP Application you want to install..</li>
-    </ul>
-    <h3>Please choose the first application to install.</h3>
+    <div class="initial_welcome_message">
+        <ul>
+            <li>Remember to bookmark <a href="javascript:if(document.all) window.external.AddFavorite(location.href,document.title); else if(window.sidebar) window.sidebar.addPanel (document.title,location.href,'');">this page.</a></li>
+            <li>Remember your login: <t t-esc="widget.session.username"/></li>
+        </ul>
+        <h3>Please choose the first application to install.</h3>
+    </div>
     <div class="oe_installer" />
 </div>
 
