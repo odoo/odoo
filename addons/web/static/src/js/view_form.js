@@ -3070,7 +3070,8 @@ openerp.web.form.WidgetHtml = openerp.web.form.Widget.extend({
                     [child.attrs.widget, type.type, child.tag])) (self.view, child);
                 $into.append(widget.render());
             } else {
-                var $child = $(document.createElement(child.tag), child.attrs)
+                var $child = $(document.createElement(child.tag))
+                        .attr(child.attrs)
                         .appendTo($into);
                 self.render_children(child, $child);
             }
