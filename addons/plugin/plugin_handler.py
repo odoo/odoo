@@ -54,7 +54,7 @@ class plugin_handler(osv.osv_memory):
             res_id = msg.res_id
             model = msg.model
             url = self._make_url(cr, uid, res_id, model)
-            name =  self.pool.get(model).name_get(cr, uid, res_id)[0][1]
+            name =  self.pool.get(model).name_get(cr, uid, [res_id])[0][1]
         return (model,res_id, url,name)
 
 
