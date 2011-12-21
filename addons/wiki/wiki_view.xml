@@ -131,7 +131,7 @@
                         <field name="name" select="1" colspan="6"/>
                         <field name="group_id" string="Topic" select="1" on_change="onchange_group_id(group_id, text_area)"/>
                         <field name="parent_id" groups="base.group_extended" domain="[('group_id','=',group_id)]"/>
-                        <field name="section"/>                        
+                        <field name="section"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Content">
@@ -245,15 +245,15 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <act_window 
-            context="{'search_default_wiki_id': [active_id]}"
+        <act_window
+            context="{'search_default_wiki_id': [active_id], 'default_wiki_id': active_id}"
             id="act_wiki_wiki_history"
             name="Page History"
             res_model="wiki.wiki.history"
             src_model="wiki.wiki"/>
 
         <act_window
-            context="{'search_default_group_id': [active_id]}"
+            context="{'search_default_group_id': [active_id], 'default_group_id': active_id}"
             id="act_wiki_group_open"
             name="Search Page"
             res_model="wiki.wiki"

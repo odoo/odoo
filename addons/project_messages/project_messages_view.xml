@@ -98,7 +98,7 @@
 			<field name="help">An in-project messaging system allows for an efficient and trackable communication between project members. The messages are stored in the system and can be used for post analysis.</field>
         </record>
 
-        <act_window context="{'search_default_project_id': [active_id]}" id="act_project_messages" name="Messages" res_model="project.messages" src_model="project.project"/>
+        <act_window context="{'search_default_project_id': [active_id], 'default_project_id': active_id}" id="act_project_messages" name="Messages" res_model="project.messages" src_model="project.project"/>
 
          <!--Actions for deshboard -->
 
