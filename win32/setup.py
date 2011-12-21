@@ -28,7 +28,8 @@ setup(service=["OpenERPServerService"],
                                      "_imagingtk","PIL._imagingtk",
                                      "ImageTk", "PIL.ImageTk",
                                      "FixTk"],
-                         "compressed": 1}}
+                         "skip_archive": 1,
+                         "optimize": 2,}}
       )
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

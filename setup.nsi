@@ -160,7 +160,7 @@ LangString DESC_PostgreSQL_Username ${LANG_FRENCH} "Utilisateur"
 LangString DESC_PostgreSQL_Password ${LANG_FRENCH} "Mot de passe"
 
 Section -StopService
-    nsExec::Exec "net stop openerp-server-6.0"
+    nsExec::Exec "net stop openerp-server-6.1"
     sleep 2
 SectionEnd
 
@@ -186,7 +186,7 @@ Section OpenERP_Server SectionOpenERP_Server
 ;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" "$INSTDIR\uninstall.exe"
 ;        !insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Forum" "http://www.openerp.com/forum"
 ;        !insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Translation" "https://translations.launchpad.net/openobject"
-        !insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\OpenERP" "http://127.0.0.1:8069/"
+        !insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\OpenERP" "http://localhost:8069/"
     !insertmacro MUI_STARTMENU_WRITE_END
 
 
@@ -209,7 +209,7 @@ Section OpenERP_Server SectionOpenERP_Server
 SectionEnd
 
 Section -RestartServer
-    nsExec::Exec "net start openerp-server-6.0"
+    nsExec::Exec "net start openerp-server-6.1"
     sleep 2
 SectionEnd
 
@@ -222,10 +222,10 @@ Section -Post
 ;    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "Version" "${VERSION}"
 ;    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "VersionMajor" "${MAJOR_VERSION}.${MINOR_VERSION}"
 ;    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "VersionMinor" "${REVISION_VERSION}"
-;    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "HelpLink" "support@openerp.com"
-;    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "HelpTelephone" "+32.81.81.37.00"
-;    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "URLInfoAbout" "http://www.openerp.com"
-;    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "Contact" "sales@openerp.com"
+    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "HelpLink" "support@openerp.com"
+    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "HelpTelephone" "+32.81.81.37.00"
+    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "URLInfoAbout" "http://www.openerp.com"
+    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "Contact" "sales@openerp.com"
     WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "NoModify" "1"
     WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "NoRepair" "1"
     WriteUninstaller "$INSTDIR\Uninstall.exe"
@@ -233,7 +233,7 @@ SectionEnd
 
 Section "Uninstall"
     ; Stop the NT Service
-    nsExec::Exec "net stop openerp-server-6.0"
+    nsExec::Exec "net stop openerp-server-6.1"
     sleep 2
 
     ; Uninstall the OpenERP Service
