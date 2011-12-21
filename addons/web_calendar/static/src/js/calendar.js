@@ -419,6 +419,7 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
         this.view = view;
     },
     start: function() {
+        var self = this;
         this._super();
         this.form = new openerp.web.FormView(this, this.dataset, this.view_id, {
             sidebar: false,
@@ -427,6 +428,9 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
         this.form.appendTo(this.$element);
         this.form.on_created.add_last(this.on_form_dialog_saved);
         this.form.on_saved.add_last(this.on_form_dialog_saved);
+        this.form.on_button_cancel = function() {
+            self.close();
+        }
     },
     on_form_dialog_saved: function() {
         var id = this.dataset.ids[this.dataset.index];
