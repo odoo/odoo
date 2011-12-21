@@ -8,17 +8,8 @@
 	<script type="text/javascript" src="chrome://openerp_plugin/content/js/tiny_xmlrpc.js"></script>
 	<script type="text/javascript" src="chrome://openerp_plugin/content/js/tools.js"></script>
 	<script type="text/javascript" src="chrome://openerp_plugin/content/js/create.js"></script>
-	<!--<groupbox id="contact" >
-	  <hbox>
-	  	<label  align="right" id="partner"  value="&selectpartner.value;" width="90" class="text-prompt"/>
-	    <textbox id="txtselectpartner" readonly="true" value="" width="170"/>
-		<button label="&bsearch.label;" oncommand="window.open('chrome://openerp_plugin/content/selectpartner.xul', '', 'chrome', 'resizable=yes');" image="&imagesearch.value;"/> 
-	  </hbox>
-	</groupbox>-->
 	<groupbox id="information" >
-		<!--<separator class="groove-thin" orient="horizontal" width="90"/> -->
 		<caption label="Address Detail" />
-		<!--<separator class="groove-thin" orient="horizontal" width="90"/> -->
 		<grid flex="1">
   			<columns>
 				<column />
@@ -38,8 +29,8 @@
 	    <separator class="groove-thin" orient="horizontal" width="90"/> 
 	</groupbox>
 	<hbox align="right">
-  		<button label="&cancel.label;" image="&imagecancel.value;" oncommand="close();" />
-  		<button label="&ok.label;" image="&imageok.value;" oncommand="createContact();"/>
-  		<button label="link to a partner" image="&imageok.value;" oncommand="createContact();"/>
+  		<button label="cancel" image="&imagecancel.value;" oncommand="close();" />
+  		<button label="create partner" image="&imageok.value;" oncommand="createContact();"/>
+  		<button label="link to a partner" image="&imageok.value;" oncommand="window.open('chrome://openerp_plugin/content/selectpartner.xul', '', 'chrome', resizable='yes');"/>
 	</hbox>
 </window>

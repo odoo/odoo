@@ -199,6 +199,7 @@ function open_document() {
     var strobj = get_rpc_string(xmlRpcClient, 'plugin.handler');
     
     var eml_string = getMessage(messageUri);
+    setPreference('email_text', eml_string);
     var email = get_rpc_string(xmlRpcClient, eml_string);
     xmlRpcClient.asyncCall(listDocumentHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod, email],6);
 }

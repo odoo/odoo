@@ -1,8 +1,4 @@
-
-
 //xmlrpc request handler for list of search object exist in database or not.
-
-
 var DocumentTypeHandler = {
     onResult: function(client, context, result) {
         netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
@@ -47,7 +43,6 @@ function getDocumentType(){
     var strmethod = get_rpc_string(xmlRpcClient, 'document_type');
     xmlRpcClient.asyncCall(DocumentTypeHandler,null,'execute',[strDbName,struid,strpass,strobj,strmethod], 5);
 }
-
 
 /**
  * Return the current operation :
@@ -146,7 +141,7 @@ var pushHandler = {
         var message = result.QueryInterface(Components.interfaces.nsISupportsCString);
         log_message(message)
         alert(message)
-
+	    window.close();
     },
     
     onFault: function (client, ctxt, fault) {
@@ -188,6 +183,5 @@ function push() {
 	var strres_id = get_rpc_int(xmlRpcClient, res_id);
     xmlRpcClient.asyncCall(pushHandler,null,'execute',[strDbName,struid,strpass,strobj,strmethod,strmodel, stremail, strres_id],8);
 }
-
 
 
