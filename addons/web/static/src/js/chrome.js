@@ -1035,7 +1035,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         });
     },
     do_reload: function() {
-        return $.when(this.session.session_init(),this.menu.do_reload());
+        return this.session.session_init().pipe(_.bind(function() {this.menu.do_reload();}, this));
     },
     do_notify: function() {
         var n = this.notification;
