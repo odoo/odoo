@@ -1083,7 +1083,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     do_action: function(action) {
         var self = this;
         // TODO replace by client action menuclick 
-        if(action.type === "ir.ui.menu") {
+        if(action.menu_id) {
             this.do_reload().then(function () {
                 self.menu.on_menu_click(null, action.menu_id);
             });

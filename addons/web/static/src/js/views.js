@@ -135,6 +135,9 @@ session.web.ActionManager = session.web.Widget.extend({
             this.dialog_viewmanager.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
+            if(action.menu_id) {
+                return this.widget_parent.do_action(action);
+            }
             this.dialog_stop();
             this.content_stop();
             this.inner_action = action;
