@@ -50,7 +50,10 @@ in the form of pdf file. Implements a dashboard for My Current Evaluations
         'hr_evaluation_data.xml',
         'hr_evaluation_installer.xml',
     ],
-    "test": ["test/test_hr_evaluation.yml"],
+    "test": [
+        "test/test_hr_evaluation.yml",
+        "test/hr_evalution_demo.yml",
+    ],
     "active": False,
     "installable": True,
     "certificate" : "00883207679172998429",
