@@ -1746,42 +1746,45 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 }
 
 /* Dialog traceback cases */
-.expandcase {
-	background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat;
+.openerp .expandcase {
+    background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat;
     margin-top:10px;
 }
-.collapsecase {
-	background: transparent url(/web/static/src/img/collapse.gif) 0 50% no-repeat;
-	margin-top:10px;
+.openerp .collapsecase {
+    background: transparent url(/web/static/src/img/collapse.gif) 0 50% no-repeat;
+    margin-top:10px;
 }
-.case-head{
-	padding-left:18px;
-	margin-top:5px;
+.openerp .case-head{
+    padding-left:18px;
+    margin-top:5px;
 }
-.error-detail{
+.openerp .error-detail{
     display:none;
 }
-.error-fix{
-	border:1px solid #999999;
-	overflow:auto;
+.openerp .error-send{
+    display:block;
 }
-.fielddiv{
+.openerp .error-fix{
+    border:1px solid #999999;
+    overflow:auto;
+}
+.openerp .fielddiv{
     display:inline-block;
 }
-.fielddiv label{
-/*	width:20%; */
-	float:left;
-	text-align:right;
+.openerp .fielddiv label{
+    /*  width:20%; */
+    float:left;
+    text-align:right;
 }
-.fielddiv div{
-	width:79%;
+.openerp .fielddiv div{
+    width:79%;
 	float:right;
 }
-.fielddiv input[type=text],textarea{
-    width:80%;
+.openerp .fielddiv input[type=text],textarea{
+    width:200px;
 }
 /* for Alignment center */
-.centeralign{
+.openerp .centeralign{
     text-align:center;
 }
 /* Buttons */

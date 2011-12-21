@@ -57,9 +57,6 @@
         <td colspan="2">
             <div id="oe_footer" class="oe_footer">
                 <p class="oe_footer_powered">Powered by <a href="http://www.openerp.com">openerp.com</a>.
-                    <t t-if="contract !== full">
-                    This is a non supported version.
-                    </t>
                 </p>
             </div>
         </td>
@@ -1381,7 +1378,7 @@
     </table>
 </t>
 <t t-name="DialogTraceback">
-    <div>
+    <form>
         <div class="expandcase">
             <span class="case-head"><t t-esc="'Let me fix it'" /></span>
         </div>
@@ -1390,29 +1387,29 @@
             <hr/>
             <pre><t t-esc="error.data.debug"/></pre>
         </div>
-        <div id="case2" class="expandcase">
+        <!--div id="case2" class="expandcase">
             <span class="case-head"><a><t t-esc="'Fix it for me'" /></a></span>
-        </div>
-        <div class="error-detail">
+        </div-->
+        <div class="error-send">
             <div>
                 <div class="centeralign"><b>OpenERP Enterprise Contract.</b></div>
-                <div class="centeralign">Your request will be sent to OpenERP and OpenERP Enterprise team will reply you shortly.</div>
-                <div class="fielddiv">
+                <div><br/>Your request will be sent to OpenERP and OpenERP Enterprise team will reply you shortly.<br/></div>
+                <span class="fielddiv">
                     <label>Summary:</label><br/>
-                    <div><input id="issuename" type="text" size="15" /></div>
+                    <input id="issuename" type="text"/>
+                </span><br/><br/>
+                <div class="fielddiv">
+                    <label>Description:</label><br/>
+                    <textarea id="explanation" rows="6"></textarea>
                 </div><br/><br/>
                 <div class="fielddiv">
-                    <span><label>Description:</label></span><br/>
-                    <span><textarea id="explanation" rows="6" ></textarea></span>
-                </div><br/><br/>
-                <div class="fielddiv">
-                    <span><label>What you did:</label></span><br/>
-                    <span><textarea id="remark" rows="6" ></textarea></span>
+                    <label>What you did:</label><br/>
+                    <textarea id="remark" rows="6" ></textarea>
                 </div>
-                <div class="centeralign"><input type="button" value="Send To OpenERP Enterprise Team" /></div>
+                <div><br/><input type="button" value="Send To OpenERP Enterprise Team" id="button_send_error"/></div>
             </div>
         </div>
-    </div>
+    </form>
 </t>
 <t t-name="SelectCreatePopup">
     <div t-att-id="element_id">

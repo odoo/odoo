@@ -188,34 +188,29 @@ openerp.web.ServerError = openerp.web.Dialog.extend({
             ]
         }).start();
         dialog.$element.html(QWeb.render('DialogTraceback', {error: this.error}));
+
+        $('#button_send_error').click(function() {
+            var issuename = $('#issuename').val();
+            var explanation = $('#explanation').val();
+            var remark = $('#remark').val();
+
+            // Call the send method from server to send mail with details
+            new openerp.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('send', [self.error.data,explanation,remark,issuename]).then(function(result){
+    if (result === false) (
+        alert('There was a communication error.'))
+        console.log(arguments);
+    });
+        });
+
+        if (!self.session.has_pwc) {
+            $('.error-send').html('<span><a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">Unsupported/Community Version</a></span>');
+        }
+
         dialog.$element.find('.expandcase').each(function() {
             var $this = $(this);
-            $this.click( function() {
-                if ($this.attr('id') == "case2") {
-                    /* call the status method from the server to verify status of contract
-                       if status is full then contract is valid
-                       if status is none then contract is invalid
-                     */
-                    new openerp.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('status', []).then(function(res) {
-                        var hasacontract = res.status == "full";
-                        if (!hasacontract) {
-                            $this.find('a').attr({ href : 'http://www.openerp.com/support-or-publisher-warranty-contract',target: "_blank" });
-                            $this.find('a').css( 'text-decoration', 'none' );
-                        } else {
-                            $this.next().find('[type=button]').click( function() {
-                                var issuename = $('#issuename').val();
-                                var explanation = $('#explanation').val();
-                                var remark = $('#remark').val();
 
-                                // Call the send method from server to send mail with details
-                                new openerp.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('send', [self.error.data,explanation,remark,issuename]);
-                            });
-                            $this.next().toggle().prev().toggleClass("expandcase collapsecase");
-                        }
-                    });
-                } else {
-                    $this.next().toggle().prev().toggleClass("expandcase collapsecase");
-                }
+            $this.click( function() {
+                $this.next().toggle().prev().toggleClass("expandcase collapsecase");
             });
         });
     }
@@ -1080,6 +1075,10 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.action_manager = new openerp.web.ActionManager(self);
             self.action_manager.appendTo($("#oe_app"));
             self.bind_hashchange();
+            if (!self.session.has_pwc) {
+                self.$element.find('.oe_footer_powered').append('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">Unsupported/Community Version</a></span>');
+                $('title').html('OpenERP - Community Version');
+            }
         });
     },
     do_reload: function() {

@@ -370,7 +370,8 @@ class Session(openerpweb.Controller):
             "uid": req.session._uid,
             "context": ctx,
             "db": req.session._db,
-            "login": req.session._login
+            "login": req.session._login,
+            "has_pwc": req.session.has_pwc()
         }
 
     @openerpweb.jsonrequest
@@ -379,7 +380,8 @@ class Session(openerpweb.Controller):
             "uid": req.session._uid,
             "context": req.session.get_context() if req.session._uid else False,
             "db": req.session._db,
-            "login": req.session._login
+            "login": req.session._login,
+            "has_pwc": req.session.has_pwc()
         }
 
     @openerpweb.jsonrequest

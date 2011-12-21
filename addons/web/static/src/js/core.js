@@ -544,7 +544,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
-                user_context: result.context
+                user_context: result.context,
+                has_pwc: result.has_pwc
             });
             var deferred = self.do_load_qweb(['/web/webclient/qweb']);
             if(self.uid) {
@@ -569,7 +570,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
-                user_context: result.context
+                user_context: result.context,
+                has_pwc: result.has_pwc
             });
             // TODO: session store in cookie should be optional
             self.set_cookie('session_id', self.session_id);
