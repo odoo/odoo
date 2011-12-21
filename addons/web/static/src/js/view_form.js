@@ -1675,8 +1675,8 @@ openerp.web.form.dialog = function(content, options) {
     }, options || {});
     options.autoOpen = true;
     var dialog = new openerp.web.Dialog(null, options);
-    dialog.$dialog = $(content).dialog(dialog.dialog_options);
-    return dialog.$dialog;
+    dialog.$element = $(content).dialog(dialog.dialog_options);
+    return dialog.$element;
 };
 
 openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
