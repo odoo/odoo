@@ -741,11 +741,14 @@ label.error {
 .openerp .oe_search-view-filters-management, .openerp .oe_search-view-custom-filter-btn {
     float:right;
 }
-
+.openerp .searchview_extended_add_proposition {
+    text-decoration: none;
+}
 .openerp .searchview_extended_add_proposition span {
     font-size: 0.9em;
     background: url(/web/static/src/img/icons/gtk-add.png) repeat-y;
     padding-left: 18px;
+    color:#9A0404;
 }
 
 .openerp .searchview_extended_delete_group {
@@ -1214,8 +1217,13 @@ label.error {
 .openerp tr[id^="oe-editable-row"] select {
     margin-bottom:1px;
 }
+.openerp .searchview_extended_prop_value input.field_char {
+    height: 22px;
+    margin-bottom: 6px;
+    padding-top: 1px;
+}
 
-.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms textarea, .openerp tr[id^="oe-editable-row"] input {
+.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms textarea, .openerp tr[id^="oe-editable-row"] input, .searchview_extended_prop_value input.field_char {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -1469,13 +1477,13 @@ label.error {
     background: #fff;
     margin: 0.25em 0;
     font-size: 85%;
-    color: #4C4C4C;
+    color: #9A0404;
     position: relative;
     overflow: hidden;
 }
 .openerp .oe-view-manager-logs ul {
     margin: 0;
-    padding: 0 10px;
+    padding: 5px 10px;
     list-style: none;
 }
 .openerp .oe-view-manager-logs li:before {
