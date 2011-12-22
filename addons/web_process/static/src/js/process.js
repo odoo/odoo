@@ -48,13 +48,14 @@ openerp.web_process = function (openerp) {
                         self.process_title = res.name;
                         var subflow= {};
                         var process_subflow = [];
-                        self.process_subflows = _.all(res.nodes, function(x) {
-                            if (x.subflow != false) {
-                                if(!subflow[x.subflow [0]]){
-                                    subflow[x.subflow [0]] = true;
-                                    process_subflow.push(x);
+                        self.process_subflows = _.filter(res.nodes, function(x) {
+                            var a = _.uniq(_.map(_.pluck(res.nodes,'subflow'),function(subflow){return subflow[0]}));
+                               for(var i = 0;i< a.length;i++){
+                                   if(a[i] == x.subflow[0] && !subflow[x.subflow[0]]){
+                                      subflow[x.subflow[0]] = true;
+                                      process_subflow.push(x);
+                                    }
                                 }
-                            }
                             return process_subflow;
                         });
                         self.process_related = res.related;
