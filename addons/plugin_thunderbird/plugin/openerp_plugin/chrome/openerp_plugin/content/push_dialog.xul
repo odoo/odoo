@@ -13,7 +13,9 @@
         <hbox>  
         	<button label="Cancel" accesskey="c" oncommand="window.close();"/>
         	<button id="push_new" label="Push Email" accesskey="a" oncommand=" window.close();window.open('chrome://openerp_plugin/content/push.xul', '', 'chrome', resizable='yes');"/>
-        	<button id="open" label="Open Document" accesskey="c" oncommand="window.close();window.open('chrome://openerp_plugin/content/create_new.xul', '', 'chrome', resizable='yes');"/>
+        	<button id="open" label="Create Document" accesskey="c" oncommand="window.close();window.open('chrome://openerp_plugin/content/create_new.xul', '', 'chrome', resizable='yes');"/>
+        	<button id="opendocument" label="Open Document" accesskey="d" oncommand="check(open_document);"/>
+            <!-- link open document and show create or open but not both-->
         </hbox>  
     </vbox>  
 </window>  
