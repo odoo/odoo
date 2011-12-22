@@ -47,8 +47,9 @@ actions(Sign in/Sign out) performed by them.
         'wizard/hr_attendance_sign_in_out_view.xml',
     ],
     'demo_xml': ['hr_attendance_demo.xml'],
-    'test': ['test/test_hr_attendance.yml',
-             'test/hr_attendance_report.yml'
+    'test': [
+        'test/attendance_process.yml',
+        'test/hr_attendance_report.yml',
     ],
     'installable': True,
     'active': False,

@@ -93,7 +93,7 @@ class mrp_production_workcenter_line(osv.osv):
                                        "* When the user cancels the work order it will be set in 'Canceled' state.\n" \
                                        "* When order is completely processed that time it is set in 'Finished' state."),
        'date_start_date': fields.function(_get_date_date, string='Start Date', type='date'),
-       'date_planned': fields.datetime('Scheduled Date'),
+       'date_planned': fields.datetime('Scheduled Date', select=True),
        'date_planned_end': fields.function(_get_date_end, string='End Date', type='datetime'),
        'date_start': fields.datetime('Start Date'),
        'date_finished': fields.datetime('End Date'),
@@ -350,6 +350,7 @@ class mrp_production(osv.osv):
                     if l.production_id and (l.production_id.date_start < po.date_finished):
                         self.write(cr, uid, [l.production_id.id], {'date_start': po.date_finished})
                         break
+        return True
 
 
     def write(self, cr, uid, ids, vals, context=None, update=True, mini=True):
@@ -371,13 +372,13 @@ class mrp_production(osv.osv):
                 pass
         return result
 
-    def action_compute(self, cr, uid, ids, properties=[]):
+    def action_compute(self, cr, uid, ids, properties=[], context=None):
         """ Computes bills of material of a product and planned date of work order.
         @param properties: List containing dictionaries of properties.
         @return: No. of products.
         """
-        result = super(mrp_production, self).action_compute(cr, uid, ids, properties=properties)
-        self._compute_planned_workcenter(cr, uid, ids, context={})
+        result = super(mrp_production, self).action_compute(cr, uid, ids, properties=properties, context=context)
+        self._compute_planned_workcenter(cr, uid, ids, context=context)
         return result
 
 mrp_production()

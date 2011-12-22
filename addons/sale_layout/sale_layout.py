@@ -118,7 +118,7 @@ class sale_order_line(osv.osv):
                 ('line', 'Separator Line'),
                 ('break', 'Page Break'),]
             ,'Line Type', select=True, required=True),
-        'sequence': fields.integer('Line Sequence'),
+        'sequence': fields.integer('Line Sequence', select=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2)),
         'product_uom': fields.many2one('product.uom', 'Product UoM'),

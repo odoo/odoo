@@ -111,7 +111,7 @@
                     </group>
                     <notebook colspan="5">
                         <page string="Sales Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
+                            <field name="partner_id" options='{"quick_create": false}' on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id" on_change="onchange_partner_order_id(partner_order_id, partner_invoice_id, partner_shipping_id)"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended"/>
@@ -165,7 +165,8 @@
                                             <field name="delay"/>
                                             <field name="th_weight"/>
                                             <field name="address_allotment_id"/>
-                                            <field name="property_ids" colspan="4"/>
+                                            <separator colspan="4" string="Properties"/>
+                                            <field name="property_ids" colspan="4" nolabel="1"/>
                                         </page>
                                         <page string="History" groups="base.group_extended">
                                             <separator colspan="4" string="Invoice Lines"/>
