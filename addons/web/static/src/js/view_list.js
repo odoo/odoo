@@ -215,6 +215,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             $(self.groups).trigger(
                 'selected', [selection.ids, selection.records]);
         });
+
         this.$element.find('.oe-list-add')
                 .click(this.do_add_record)
                 .attr('disabled', grouped && this.options.editable);
@@ -233,7 +234,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 $this.append('<span class="ui-icon ui-icon-triangle-1-s">')
                      .siblings('.oe-sortable').find('span').remove();
             }
-            
+
             self.reload_content();
             
         });
@@ -274,8 +275,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                             self.reload_content();
                         })
                         .val(self._limit || 'NaN');
-                })
-                
+                });
         if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
@@ -474,7 +474,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             page: this.page,
             limit: this._limit
         });
-        
         return reloaded.promise();
     },
 

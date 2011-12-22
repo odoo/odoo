@@ -27,7 +27,7 @@ session.web.ActionManager = session.web.Widget.extend({
         this.client_widget = null;
     },
     render: function() {
-        return "<div id='"+this.element_id+"'></div>";
+        return "<div id='"+this.element_id+"' style='height:100%;'></div>";
     },
     dialog_stop: function () {
         if (this.dialog) {
