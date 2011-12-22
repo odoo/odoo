@@ -402,11 +402,8 @@ class hr_payslip(osv.osv):
     def verify_sheet(self, cr, uid, ids, context=None):
         move_pool = self.pool.get('account.move')
         movel_pool = self.pool.get('account.move.line')
-        exp_pool = self.pool.get('hr.expense.expense')
         fiscalyear_pool = self.pool.get('account.fiscalyear')
         period_pool = self.pool.get('account.period')
-        property_pool = self.pool.get('ir.property')
-        payslip_pool = self.pool.get('hr.payslip.line')
 
         for slip in self.browse(cr, uid, ids, context=context):
             if not slip.journal_id:
@@ -623,24 +620,7 @@ class hr_payslip(osv.osv):
             if not slip.period_id:
                 rec['period_id'] = period_id
 
-            dates = prev_bounds(slip.date)
-            exp_ids = exp_pool.search(cr, uid, [('date_valid','>=',dates[0]), ('date_valid','<=',dates[1]), ('state','=','invoiced')], context=context)
-            if exp_ids:
-                acc = property_pool.get(cr, uid, 'property_account_expense_categ', 'product.category')
-                for exp in exp_pool.browse(cr, uid, exp_ids, context=context):
-                    exp_res = {
-                        'name':exp.name,
-                        'amount_type':'fix',
-                        'type':'otherpay',
-                        'category_id':exp.category_id.id,
-                        'amount':exp.amount,
-                        'slip_id':slip.id,
-                        'account_id':acc
-                    }
-                    payslip_pool.create(cr, uid, exp_res, context=context)
-
             self.write(cr, uid, [slip.id], rec, context=context)
-
         return True
 
 hr_payslip()
