@@ -449,7 +449,30 @@ class event_registration(osv.osv):
         res = self.write(cr, uid, ids, values)
         self.message_append(cr, uid, ids, msg)
         return res
-
+    
+    # event uses add_note wizard from crm, which expects case_* methods
+    def case_open(self, cr, uid, ids, context=None):
+        self.do_open(cr, uid, ids, context)
+    
+    # event uses add_note wizard from crm, which expects case_* methods
+    def case_close(self, cr, uid, ids, context=None):
+        self.do_close(cr, uid, ids, context)
+    
+    # event uses add_note wizard from crm, which expects case_* methods
+    def case_cancel(self, cr, uid, ids, context=None):
+        """ Cancel Registration
+        """
+        self.message_append(cr, uid, ids, _('Cancel'))
+        return self.write(cr, uid, ids, {'state': 'cancel'})
+    
+    # event uses add_note wizard from crm, which expects case_* methods
+    def case_reset(self, cr, uid, ids, context=None):
+        pass
+    
+    # event uses add_note wizard from crm, which expects case_* methods
+    def case_pending(self, cr, uid, ids, context=None):
+        pass
+    
     def check_confirm(self, cr, uid, ids, context=None):
         """This Function Open Event Registration and send email to user.
         @param ids: List of Event registration's IDs
@@ -514,12 +537,8 @@ class event_registration(osv.osv):
             }
         return True
 
-    def button_reg_cancel(self, cr, uid, ids, *args):
-        """This Function Cancel Event Registration.
-        """
-        registrations = self.browse(cr, uid, ids)
-        self.message_append(cr, uid, registrations, _('Cancel'))
-        return self.write(cr, uid, ids, {'state': 'cancel'})
+    def button_reg_cancel(self, cr, uid, ids, context=None, *args):
+        return self.case_cancel(cr, uid, ids)
 
     def mail_user(self, cr, uid, ids, confirm=False, context=None):
         """
