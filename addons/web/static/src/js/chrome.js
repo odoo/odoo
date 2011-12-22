@@ -597,26 +597,29 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
      */
     do_login: function (db, login, password) {
         var self = this;
-        this.session.session_authenticate(db, login, password).then(function() {
-            if(self.session.session_is_valid()) {
-                if (self.has_local_storage) {
-                    if(self.remember_credentials) {
-                        localStorage.setItem('last_db_login_success', db);
-                        localStorage.setItem('last_login_login_success', login);
-                        if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
-                            localStorage.setItem('last_password_login_success', password);
-                        }
-                    } else {
-                        localStorage.setItem('last_db_login_success', '');
-                        localStorage.setItem('last_login_login_success', '');
-                        localStorage.setItem('last_password_login_success', '');
-                    }
-                }
-                self.on_login_valid();
-            } else {
+        this.session.on_session_invalid.add({
+            callback: function () {
                 self.$element.addClass("login_invalid");
                 self.on_login_invalid();
+            },
+            unique: true
+        });
+        this.session.session_authenticate(db, login, password).then(function() {
+            self.$element.removeClass("login_invalid");
+            if (self.has_local_storage) {
+                if(self.remember_credentials) {
+                    localStorage.setItem('last_db_login_success', db);
+                    localStorage.setItem('last_login_login_success', login);
+                    if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
+                        localStorage.setItem('last_password_login_success', password);
+                    }
+                } else {
+                    localStorage.setItem('last_db_login_success', '');
+                    localStorage.setItem('last_login_login_success', '');
+                    localStorage.setItem('last_password_login_success', '');
+                }
             }
+            self.on_login_valid();
         });
     },
     do_ask_login: function(continuation) {
@@ -628,7 +631,7 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
             unique: true,
             callback: continuation || function() {}
         });
-    },
+    }
 });
 
 openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
