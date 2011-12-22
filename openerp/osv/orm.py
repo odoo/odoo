@@ -551,6 +551,7 @@ FIELDS_TO_PGTYPES = {
     fields.datetime: 'timestamp',
     fields.binary: 'bytea',
     fields.many2one: 'int4',
+    fields.serialized: 'text',
 }
 
 def get_pg_type(f, type_override=None):
@@ -753,7 +754,11 @@ class BaseModel(object):
         for rec in cr.dictfetchall():
             cols[rec['name']] = rec
 
-        for (k, f) in self._columns.items():
+        ir_model_fields_obj = self.pool.get('ir.model.fields')
+
+        # sparse field should be created at the end, as it depends on its serialized field already existing
+        model_fields = sorted(self._columns.items(), key=lambda x: 1 if x[1]._type == 'sparse' else 0)
+        for (k, f) in model_fields:
             vals = {
                 'model_id': model_id,
                 'model': self._name,
@@ -768,7 +773,15 @@ class BaseModel(object):
                 'selectable': (f.selectable and 1) or 0,
                 'translate': (f.translate and 1) or 0,
                 'relation_field': (f._type=='one2many' and isinstance(f, fields.one2many)) and f._fields_id or '',
+                'serialization_field_id': None,
             }
+            if getattr(f, 'serialization_field', None):
+                # resolve link to serialization_field if specified by name
+                serialization_field_id = ir_model_fields_obj.search(cr, 1, [('model','=',vals['model']), ('name', '=', f.serialization_field)])
+                if not serialization_field_id:
+                    raise except_orm(_('Error'), _("Serialization field `%s` not found for sparse field `%s`!") % (f.serialization_field, k))
+                vals['serialization_field_id'] = serialization_field_id[0]
+
             # When its a custom field,it does not contain f.select
             if context.get('field_state', 'base') == 'manual':
                 if context.get('field_name', '') == k:
@@ -783,13 +796,13 @@ class BaseModel(object):
                 vals['id'] = id
                 cr.execute("""INSERT INTO ir_model_fields (
                     id, model_id, model, name, field_description, ttype,
-                    relation,view_load,state,select_level,relation_field, translate
+                    relation,view_load,state,select_level,relation_field, translate, serialization_field_id
                 ) VALUES (
-                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
                 )""", (
                     id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
                      vals['relation'], bool(vals['view_load']), 'base',
-                    vals['select_level'], vals['relation_field'], bool(vals['translate'])
+                    vals['select_level'], vals['relation_field'], bool(vals['translate']), vals['serialization_field_id']
                 ))
                 if 'module' in context:
                     name1 = 'field_' + self._table + '_' + k
@@ -806,12 +819,12 @@ class BaseModel(object):
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relation=%s,
-                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s
+                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field_id=%s
                         WHERE
                             model=%s AND name=%s""", (
                                 vals['model_id'], vals['field_description'], vals['ttype'],
                                 vals['relation'], bool(vals['view_load']),
-                                vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['model'], vals['name']
+                                vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
                             ))
                         break
         cr.commit()
@@ -1000,7 +1013,13 @@ class BaseModel(object):
                     #'select': int(field['select_level'])
                 }
 
-                if field['ttype'] == 'selection':
+                if field['serialization_field_id']:
+                    cr.execute('SELECT name FROM ir_model_fields WHERE id=%s', (field['serialization_field_id'],))
+                    attrs.update({'serialization_field': cr.fetchone()[0], 'type': field['ttype']})
+                    if field['ttype'] in ['many2one', 'one2many', 'many2many']:
+                        attrs.update({'relation': field['relation']})
+                    self._columns[field['name']] = fields.sparse(**attrs)
+                elif field['ttype'] == 'selection':
                     self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
                 elif field['ttype'] == 'reference':
                     self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)

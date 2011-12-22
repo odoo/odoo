@@ -49,6 +49,8 @@ CREATE TABLE ir_model_fields (
   primary key(id)
 );
 
+ALTER TABLE ir_model_fields ADD column serialization_field_id int references ir_model_fields on delete cascade;
+
 
 -------------------------------------------------------------------------
 -- Actions
