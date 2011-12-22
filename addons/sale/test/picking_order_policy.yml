@@ -110,18 +110,18 @@
     order = self.browse(cr, uid, ref("order"))
     assert order.invoice_ids, "Invoice is not created."
     ac = order.partner_id.property_account_receivable.id
-    journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)], limit=1)
+    journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)])
     for invoice in order.invoice_ids:
-      assert invoice.type == 'out_invoice',"Invoice should be Customer Invoice."
-      assert invoice.account_id.id == ac,"Invoice account is not correspond."
-      assert invoice.reference == order.client_order_ref or order.name,"Reference is not correspond."
-      assert invoice.partner_id.id == order.partner_id.id,"Customer is not correspond."
-      assert invoice.address_invoice_id.id == order.partner_invoice_id.id,"Invoice Address is not correspond."
-      assert invoice.currency_id.id == order.pricelist_id.currency_id.id, "Currency is not correspond."
-      assert invoice.comment == order.note or '',"Note is not correspond."
-      assert invoice.journal_id.id == journal_ids[0],"Sales Journal is not link on Invoice."
-      assert invoice.payment_term.id == order.payment_term.id, "Payment term is not correspond."
-      for so_line in order.order_line:
+        assert invoice.type == 'out_invoice',"Invoice should be Customer Invoice."
+        assert invoice.account_id.id == ac,"Invoice account is not correspond."
+        assert invoice.reference == order.client_order_ref or order.name,"Reference is not correspond."
+        assert invoice.partner_id.id == order.partner_id.id,"Customer is not correspond."
+        assert invoice.address_invoice_id.id == order.partner_invoice_id.id,"Invoice Address is not correspond."
+        assert invoice.currency_id.id == order.pricelist_id.currency_id.id, "Currency is not correspond."
+        assert invoice.comment == order.note or '',"Note is not correspond."
+        assert invoice.journal_id.id in journal_ids,"Sales Journal is not link on Invoice."
+        assert invoice.payment_term.id == order.payment_term.id, "Payment term is not correspond."
+    for so_line in order.order_line:
         inv_line = so_line.invoice_lines[0]
         ac = so_line.product_id.product_tmpl_id.property_account_income.id or so_line.product_id.categ_id.property_account_income_categ.id
         assert inv_line.product_id.id == so_line.product_id.id or False,"Product is not correspond"
