@@ -31,6 +31,7 @@ function createMenuItem(aLabel, aValue) {
     return item;
 }
 
+    
 function clear_search_box(element) {
 	var cmbSearchList = document.getElementById(element);
 	count = cmbSearchList.itemCount
