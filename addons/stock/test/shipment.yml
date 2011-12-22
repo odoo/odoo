@@ -76,7 +76,7 @@
         assert move_line.state == 'done', "Move line should be closed."
 
 -
-  I return last incomming shipment for 10 kgm Ice-cream).
+  I return last incomming shipment for 10 kgm Ice-cream.
 -
   !record {model: stock.return.picking, id: return_incomming}:
     invoice_state: none
@@ -193,7 +193,7 @@
     lot_ids = self.search(cr, uid, [('name', 'in', [x.name for x in lot.line_ids])])
     self.action_traceability(cr, uid, lot_ids, context=context)
 -
-  I check outgoing shipment after stock availablity in "Delivery Counter".
+  I check outgoing shipment after stock availablity in refrigerator.
 -
   !python {model: stock.picking}: |
     shipment = self.browse(cr, uid, ref("outgoing_shipment"), context=context)
