@@ -45,6 +45,7 @@ import openerp
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.translate import _
+from openerp.tools import float_round, float_repr
 
 def _symbol_set(symb):
     if symb == None or symb == False:
@@ -229,17 +230,20 @@ class float(_column):
     def __init__(self, string='unknown', digits=None, digits_compute=None, required=False, **args):
         _column.__init__(self, string=string, required=required, **args)
         self.digits = digits
+        # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
         if required:
             warnings.warn("Making a float field `required` has no effect, as NULL values are "
                           "automatically turned into 0.0", PendingDeprecationWarning, stacklevel=2)
 
-
     def digits_change(self, cr):
         if self.digits_compute:
-            t = self.digits_compute(cr)
-            self._symbol_set=('%s', lambda x: ('%.'+str(t[1])+'f') % (__builtin__.float(x or 0.0),))
-            self.digits = t
+            self.digits = self.digits_compute(cr)
+        if self.digits:
+            precision, scale = self.digits
+            self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0),
+                                                                       precision_digits=scale),
+                                                           precision_digits=scale))
 
 class date(_column):
     _type = 'date'
@@ -990,11 +994,14 @@ class function(_column):
             self._symbol_set = integer._symbol_set
 
     def digits_change(self, cr):
-        if self.digits_compute:
-            t = self.digits_compute(cr)
-            self._symbol_set=('%s', lambda x: ('%.'+str(t[1])+'f') % (__builtin__.float(x or 0.0),))
-            self.digits = t
-
+        if self._type == 'float':
+            if self.digits_compute:
+                self.digits = self.digits_compute(cr)
+            if self.digits:
+                precision, scale = self.digits
+                self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0),
+                                                                           precision_digits=scale),
+                                                               precision_digits=scale))
 
     def search(self, cr, uid, obj, name, args, context=None):
         if not self._fnct_search:
