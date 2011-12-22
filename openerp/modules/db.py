@@ -75,18 +75,18 @@ def initialize(cr):
 
         cr.execute('INSERT INTO ir_module_module \
                 (author, website, name, shortdesc, description, \
-                    category_id, state, certificate, web, license, complexity) \
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+                    category_id, state, certificate, web, license, complexity, application, icon) \
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
             info['author'],
             info['website'], i, info['name'],
             info['description'], category_id, state, info['certificate'],
             info['web'],
             info['license'],
-            info['complexity']))
+            info['complexity'], info['application'], info['icon']))
         id = cr.fetchone()[0]
         cr.execute('INSERT INTO ir_model_data \
             (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
-                'module_meta_information', 'ir.module.module', i, id, True))
+                'module_'+i, 'ir.module.module', 'base', id, True))
         dependencies = info['depends']
         for d in dependencies:
             cr.execute('INSERT INTO ir_module_module_dependency \

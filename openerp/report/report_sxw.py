@@ -170,6 +170,7 @@ class rml_parse(object):
             'setHtmlImage' : self.set_html_image,
             'strip_name' : self._strip_name,
             'time' : time,
+            'display_address': self.display_address,
             # more context members are setup in setCompany() below:
             #  - company_id
             #  - logo
@@ -313,6 +314,9 @@ class rml_parse(object):
                 res='%s %s'%(currency_obj.symbol, res)
         return res
 
+    def display_address(self, address_browse_record):
+        return self.pool.get('res.partner.address')._display_address(self.cr, self.uid, address_browse_record)
+
     def repeatIn(self, lst, name,nodes_parent=False):
         ret_lst = []
         for id in lst:
@@ -391,8 +395,12 @@ class report_sxw(report_rml, preprocess.report):
         return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context, fields_process=_fields_process)
 
     def create(self, cr, uid, ids, data, context=None):
+        if context is None:
+            context = {}
         if self.internal_header:
-            context.update({'internal_header':self.internal_header})
+            context.update(internal_header=self.internal_header)
+        # skip osv.fields.sanitize_binary_value() because we want the raw bytes in all cases
+        context.update(bin_raw=True)
         pool = pooler.get_pool(cr.dbname)
         ir_obj = pool.get('ir.actions.report.xml')
         report_xml_ids = ir_obj.search(cr, uid,
@@ -519,12 +527,13 @@ class report_sxw(report_rml, preprocess.report):
         context = context.copy()
         report_type = report_xml.report_type
         context['parents'] = sxw_parents
-
-        # if binary content was passed as unicode, we must
-        # re-encode it as a 8-bit string using the pass-through
-        # 'latin1' encoding, to restore the original byte values.
-        # See also osv.fields.sanitize_binary_value()
-        binary_report_content = report_xml.report_sxw_content.encode("latin1")
+        binary_report_content = report_xml.report_sxw_content
+        if isinstance(report_xml.report_sxw_content, unicode):
+            # if binary content was passed as unicode, we must
+            # re-encode it as a 8-bit string using the pass-through
+            # 'latin1' encoding, to restore the original byte values.
+            # See also osv.fields.sanitize_binary_value()
+            binary_report_content = report_xml.report_sxw_content.encode("latin1")
 
         sxw_io = StringIO.StringIO(binary_report_content)
         sxw_z = zipfile.ZipFile(sxw_io, mode='r')
@@ -656,3 +665,5 @@ class report_sxw(report_rml, preprocess.report):
         html = create_doc(mako_html,html_parser.localcontext)
         return (html,'html')
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

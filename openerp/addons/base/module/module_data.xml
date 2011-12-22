@@ -7,9 +7,9 @@
             <field name="visible" eval="0" />
         </record>
 
-        <record model="ir.module.category" id="module_category_hidden_link">
+        <record model="ir.module.category" id="module_category_hidden_links">
             <field name="parent_id" ref="module_category_hidden" />
-            <field name="name">Link</field>
+            <field name="name">Links</field>
             <field name="sequence">0</field>
             <field name="visible" eval="0" />
         </record>
@@ -114,13 +114,44 @@
             <field name="sequence">15</field>
         </record>
 
-<!--
-        <record id="ir_ui_view_sc_modules0" model="ir.ui.view_sc">
-            <field name="name">Modules</field>
-            <field name="resource">ir.ui.menu</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="res_id" ref="base.menu_module_tree"/>
+        <record model="ir.module.category" id="module_category_administration">
+            <field name="name">Administration</field>
+            <field name="sequence">100</field>
         </record>
--->
+
+        <record model="ir.module.category" id="module_category_usability">
+            <field name="name">Usability</field>
+            <field name="sequence">101</field>
+        </record>
+
+        <!-- add applications to base groups -->
+        <record model="res.groups" id="group_erp_manager">
+            <field name="category_id" ref="module_category_administration"/>
+        </record>
+        <record model="res.groups" id="group_system">
+            <field name="category_id" ref="module_category_administration"/>
+        </record>
+
+        <record model="res.groups" id="group_user">
+            <field name="category_id" ref="module_category_human_resources"/>
+        </record>
+
+        <record model="res.groups" id="group_multi_company">
+            <field name="category_id" ref="module_category_usability"/>
+        </record>
+        <record model="res.groups" id="group_extended">
+            <field name="category_id" ref="module_category_usability"/>
+        </record>
+        <record model="res.groups" id="group_no_one">
+            <field name="category_id" ref="module_category_usability"/>
+        </record>
+
+        <record model="res.groups" id="group_sale_salesman">
+            <field name="category_id" ref="module_category_sales_management"/>
+        </record>
+        <record model="res.groups" id="group_sale_manager">
+            <field name="category_id" ref="module_category_sales_management"/>
+        </record>
+
     </data>
 </openerp>

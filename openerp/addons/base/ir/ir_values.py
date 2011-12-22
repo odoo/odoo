@@ -457,3 +457,5 @@ class ir_values(osv.osv):
             def do_get(model,res_id):
                 return self.get_actions(cr, uid, action_slot=key2, model=model, res_id=res_id, context=context)
         return self._map_legacy_model_list(models, do_get, merge_results=True)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

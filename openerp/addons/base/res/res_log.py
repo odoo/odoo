@@ -41,7 +41,7 @@ class res_log(osv.osv):
     _order='create_date desc'
 
     _index_name = 'res_log_uid_read'
-    def _auto_init(self, cr, context={}):
+    def _auto_init(self, cr, context=None):
         super(res_log, self)._auto_init(cr, context)
         cr.execute('SELECT 1 FROM pg_indexes WHERE indexname=%s',
                    (self._index_name,))
@@ -76,3 +76,5 @@ class res_log(osv.osv):
         return result
 
 res_log()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -73,7 +73,7 @@ class configmanager(object):
         # Not exposed in the configuration file.
         self.blacklist_for_save = set(
             ['publisher_warranty_url', 'load_language', 'root_path',
-            'init', 'save', 'config', 'update'])
+            'init', 'save', 'config', 'update', 'stop_after_init'])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
         self.casts = {}
@@ -601,3 +601,5 @@ class configmanager(object):
 
 config = configmanager()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

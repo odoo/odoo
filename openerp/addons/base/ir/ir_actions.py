@@ -321,6 +321,13 @@ class act_window(osv.osv):
 
 act_window()
 
+VIEW_TYPES = [
+    ('tree', 'Tree'),
+    ('form', 'Form'),
+    ('graph', 'Graph'),
+    ('calendar', 'Calendar'),
+    ('gantt', 'Gantt'),
+    ('kanban', 'Kanban')]
 class act_window_view(osv.osv):
     _name = 'ir.actions.act_window.view'
     _table = 'ir_act_window_view'
@@ -329,12 +336,7 @@ class act_window_view(osv.osv):
     _columns = {
         'sequence': fields.integer('Sequence'),
         'view_id': fields.many2one('ir.ui.view', 'View'),
-        'view_mode': fields.selection((
-            ('tree', 'Tree'),
-            ('form', 'Form'),
-            ('graph', 'Graph'),
-            ('calendar', 'Calendar'),
-            ('gantt', 'Gantt')), string='View Type', required=True),
+        'view_mode': fields.selection(VIEW_TYPES, string='View Type', required=True),
         'act_window_id': fields.many2one('ir.actions.act_window', 'Action', ondelete='cascade'),
         'multi': fields.boolean('On Multiple Doc.',
             help="If set to true, the action will not be displayed on the right toolbar of a form view."),

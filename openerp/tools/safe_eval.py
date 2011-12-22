@@ -45,8 +45,8 @@ __all__ = ['test_expr', 'literal_eval', 'safe_eval', 'const_eval', 'ext_eval' ]
 _ALLOWED_MODULES = ['_strptime', 'time']
 
 _CONST_OPCODES = set(opmap[x] for x in [
-    'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP','POP_BLOCK','SETUP_LOOP',
-    'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
+    'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOPX',
+    'POP_BLOCK','SETUP_LOOP', 'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
     'LOAD_CONST', 'RETURN_VALUE', 'STORE_SUBSCR'] if x in opmap)
 
 _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
@@ -55,7 +55,11 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     'BINARY_DIVIDE', 'BINARY_FLOOR_DIVIDE', 'BINARY_TRUE_DIVIDE',
     'BINARY_MODULO', 'BINARY_ADD', 'BINARY_SUBTRACT', 'BINARY_SUBSCR',
     'BINARY_LSHIFT', 'BINARY_RSHIFT', 'BINARY_AND', 'BINARY_XOR',
-    'BINARY_OR'] if x in opmap))
+    'BINARY_OR', 'INPLACE_ADD', 'INPLACE_SUBTRACT', 'INPLACE_MULTIPLY',
+    'INPLACE_DIVIDE', 'INPLACE_REMAINDER', 'INPLACE_POWER',
+    'INPLACE_LEFTSHIFT', 'INPLACE_RIGHTSHIFT', 'INPLACE_AND',
+    'INPLACE_XOR','INPLACE_OR'
+    ] if x in opmap))
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'STORE_MAP', 'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
@@ -212,7 +216,13 @@ except ImportError:
             node_or_string = node_or_string.body
         return _convert(node_or_string)
 
-def _import(name, globals={}, locals={}, fromlist=[], level=-1):
+def _import(name, globals=None, locals=None, fromlist=None, level=-1):
+    if globals is None:
+        globals = {}
+    if locals is None:
+        locals = {}
+    if fromlist is None:
+        fromlist = []
     if name in _ALLOWED_MODULES:
         return __import__(name, globals, locals, level)
     raise ImportError(name)

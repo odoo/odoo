@@ -1016,10 +1016,10 @@ class function(_column):
                 result = (value, dict_names[value])
 
         if field_type == 'binary':
-            if context.get('bin_size', False):
+            if context.get('bin_size'):
                 # client requests only the size of binary fields
                 result = get_nice_size(value)
-            else:
+            elif not context.get('bin_raw'):
                 result = sanitize_binary_value(value)
 
         if field_type in ("integer","integer_big") and value > xmlrpclib.MAXINT:
@@ -1167,17 +1167,19 @@ class related(function):
     def _field_get2(self, cr, uid, obj, context=None):
         if self._relations:
             return
+        result = []
         obj_name = obj._name
         for i in range(len(self._arg)):
             f = obj.pool.get(obj_name).fields_get(cr, uid, [self._arg[i]], context=context)[self._arg[i]]
-            self._relations.append({
+            result.append({
                 'object': obj_name,
                 'type': f['type']
 
             })
             if f.get('relation',False):
                 obj_name = f['relation']
-                self._relations[-1]['relation'] = f['relation']
+                result[-1]['relation'] = f['relation']
+        self._relations = result
 
 
 class sparse(function):   

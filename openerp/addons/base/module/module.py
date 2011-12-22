@@ -40,7 +40,6 @@ from tools.translate import _
 
 from osv import fields, osv, orm
 
-
 ACTION_DICT = {
     'view_type': 'form',
     'view_mode': 'form',
@@ -71,12 +70,12 @@ class module_category(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char("Name", size=128, required=True, select=True),
+        'name': fields.char("Name", size=128, required=True, translate=True, select=True),
         'parent_id': fields.many2one('ir.module.category', 'Parent Application', select=True),
         'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Applications'),
         'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer'),
         'module_ids' : fields.one2many('ir.module.module', 'category_id', 'Modules'),
-        'description' : fields.text("Description"),
+        'description' : fields.text("Description", translate=True),
         'sequence' : fields.integer('Sequence'),
         'visible' : fields.boolean('Visible'),
     }
@@ -190,6 +189,7 @@ class module(osv.osv):
         'published_version': fields.char('Published Version', size=64, readonly=True),
 
         'url': fields.char('URL', size=128, readonly=True),
+        'sequence': fields.integer('Sequence'),
         'dependencies_id': fields.one2many('ir.module.module.dependency',
             'module_id', 'Dependencies', readonly=True),
         'state': fields.selection([
@@ -214,7 +214,8 @@ class module(osv.osv):
         'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta", store=True),
         'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
         'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
-        'web': fields.boolean('Has a web component', readonly=True),
+        'application': fields.boolean('Application', readonly=True),
+        'icon': fields.char('Icon URL', size=128),
         'complexity': fields.selection([('easy','Easy'), ('normal','Normal'), ('expert','Expert')],
             string='Complexity', readonly=True,
             help='Level of difficulty of module. Easy: intuitive and easy to use for everyone. Normal: easy to use for business experts. Expert: requires technical skills.'),
@@ -222,12 +223,12 @@ class module(osv.osv):
 
     _defaults = {
         'state': 'uninstalled',
+        'sequence': 100,
         'demo': False,
         'license': 'AGPL-3',
-        'web': False,
         'complexity': 'normal',
     }
-    _order = 'name'
+    _order = 'sequence,name'
 
     def _name_uniq_msg(self, cr, uid, ids, context=None):
         return _('The name of the module must be unique !')
@@ -251,10 +252,10 @@ class module(osv.osv):
                         _('You try to remove a module that is installed or will be installed'))
             mod_names.append(mod['name'])
         #Removing the entry from ir_model_data
-        ids_meta = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'module_meta_information'), ('module', 'in', mod_names)])
+        #ids_meta = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'module_meta_information'), ('module', 'in', mod_names)])
 
-        if ids_meta:
-            self.pool.get('ir.model.data').unlink(cr, uid, ids_meta, context)
+        #if ids_meta:
+        #    self.pool.get('ir.model.data').unlink(cr, uid, ids_meta, context)
 
         return super(module, self).unlink(cr, uid, ids, context=context)
 
@@ -317,9 +318,47 @@ class module(osv.osv):
         return demo
 
     def button_install(self, cr, uid, ids, context=None):
+        model_obj = self.pool.get('ir.model.data')
         self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+
+        categ = model_obj.get_object(cr, uid, 'base', 'module_category_hidden_links', context=context)
+        todo = []
+        for mod in categ.module_ids:
+            if mod.state=='uninstalled':
+                ok = True
+                for dep in mod.dependencies_id:
+                    ok = ok and (dep.state in ('to install','installed'))
+                if ok:
+                    todo.append(mod.id)
+        if todo:
+            self.button_install(cr, uid, todo, context=context)
         return dict(ACTION_DICT, name=_('Install'))
-        
+
+    def button_immediate_install(self, cr, uid, ids, context=None):
+        """ Installs the selected module(s) immediately and fully,
+        returns the next res.config action to execute
+
+        :param ids: identifiers of the modules to install
+        :returns: next res.config item to execute
+        :rtype: dict[str, object]
+        """
+        self.button_install(cr, uid, ids, context=context)
+        cr.commit()
+        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+
+        config = pool.get('res.config').next(cr, uid, [], context=context) or {}
+        if config.get('type') not in ('ir.actions.reload', 'ir.actions.act_window_close'):
+            return config
+
+        menu_ids = self.root_menus(cr,uid,ids,context)
+        if menu_ids:
+            action = {
+                'type': 'ir.ui.menu',
+                'menu_id': menu_ids[0],
+                'reload' : True,
+            }
+            return action
+        return False
 
     def button_install_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
@@ -397,12 +436,11 @@ class module(osv.osv):
             'website': terp.get('website', ''),
             'license': terp.get('license', 'AGPL-3'),
             'certificate': terp.get('certificate') or False,
-            'web': terp.get('web') or False,
             'complexity': terp.get('complexity', ''),
         }
 
     # update the list of available packages
-    def update_list(self, cr, uid, context={}):
+    def update_list(self, cr, uid, context=None):
         res = [0, 0] # [update, add]
 
         known_mods = self.browse(cr, uid, self.search(cr, uid, []))
@@ -570,113 +608,26 @@ class module(osv.osv):
                     logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
-    def list_web(self, cr, uid, context=None):
-        """ list_web(cr, uid, context) -> [(module_name, module_version)]
-        Lists all the currently installed modules with a web component.
+    def root_menus(self, cr, uid, ids, context=None):
+        """ Return root menu ids the menus created by the modules whose ids are
+        provided.
 
-        Returns a list of a tuple of addon names and addon versions.
+        :param list[int] ids: modules to get menus from
         """
-        return [
-            (module['name'], module['installed_version'])
-            for module in self.browse(cr, uid,
-                self.search(cr, uid,
-                    [('web', '=', True),
-                     ('state', 'in', ['installed','to upgrade','to remove'])],
-                    context=context),
-                context=context)]
-    def _web_dependencies(self, cr, uid, module, context=None):
-        for dependency in module.dependencies_id:
-            (parent,) = self.browse(cr, uid, self.search(cr, uid,
-                [('name', '=', dependency.name)], context=context),
-                                 context=context)
-            if parent.web:
-                yield parent.name
-            else:
-                self._web_dependencies(
-                    cr, uid, parent, context=context)
+        values = self.read(cr, uid, ids, ['name'], context=context)
+        module_names = [i['name'] for i in values]
 
-    def _translations_subdir(self, module):
-        """ Returns the path to the subdirectory holding translations for the
-        module files, or None if it can't find one
+        ids = self.pool.get('ir.model.data').search(cr, uid, [ ('model', '=', 'ir.ui.menu'), ('module', 'in', module_names) ], context=context)
+        values = self.pool.get('ir.model.data').read(cr, uid, ids, ['res_id'], context=context)
+        all_menu_ids = [i['res_id'] for i in values]
 
-        :param module: a module object
-        :type module: browse(ir.module.module)
-        """
-        subdir = addons.get_module_resource(module.name, 'po')
-        if subdir: return subdir
-        # old naming convention
-        subdir = addons.get_module_resource(module.name, 'i18n')
-        if subdir: return subdir
-        return None
-
-    def _add_translations(self, module, web_data):
-        """ Adds translation data to a zipped web module
-
-        :param module: a module descriptor
-        :type module: browse(ir.module.module)
-        :param web_data: zipped data of a web module
-        :type web_data: bytes
-        """
-        # cStringIO.StringIO is either read or write, not r/w
-        web_zip = StringIO.StringIO(web_data)
-        web_archive = zipfile.ZipFile(web_zip, 'a')
-
-        # get the contents of the i18n or po folder and move them to the
-        # po/messages subdirectory of the web module.
-        # The POT file will be incorrectly named, but that should not
-        # matter since the web client is not going to use it, only the PO
-        # files.
-        translations_file = cStringIO.StringIO(
-            addons.zip_directory(self._translations_subdir(module), False))
-        translations_archive = zipfile.ZipFile(translations_file)
-
-        for path in translations_archive.namelist():
-            web_path = os.path.join(
-                'web', 'po', 'messages', os.path.basename(path))
-            web_archive.writestr(
-                web_path,
-                translations_archive.read(path))
-
-        translations_archive.close()
-        translations_file.close()
-
-        web_archive.close()
-        try:
-            return web_zip.getvalue()
-        finally:
-            web_zip.close()
-
-    def get_web(self, cr, uid, names, context=None):
-        """ get_web(cr, uid, [module_name], context) -> [{name, depends, content}]
-
-        Returns the web content of all the named addons.
-
-        The toplevel directory of the zipped content is called 'web',
-        its final naming has to be managed by the client
-        """
-        modules = self.browse(cr, uid,
-            self.search(cr, uid, [('name', 'in', names)], context=context),
-                              context=context)
-        if not modules: return []
-        self.__logger.info('Sending web content of modules %s '
-                           'to web client', names)
-
-        modules_data = []
-        for module in modules:
-            web_data = addons.zip_directory(
-                addons.get_module_resource(module.name, 'web'), False)
-            if self._translations_subdir(module):
-                web_data = self._add_translations(module, web_data)
-            modules_data.append({
-                'name': module.name,
-                'version': module.installed_version,
-                'depends': list(self._web_dependencies(
-                    cr, uid, module, context=context)),
-                'content': base64.encodestring(web_data)
-            })
-        return modules_data
-
-module()
+        root_menu_ids = []
+        for menu in self.pool.get('ir.ui.menu').browse(cr, uid, all_menu_ids, context=context):
+            while menu.parent_id:
+                menu = menu.parent_id
+            if not menu.id in root_menu_ids:
+                root_menu_ids.append(menu.id)
+        return root_menu_ids
 
 class module_dependency(osv.osv):
     _name = "ir.module.module.dependency"
@@ -706,4 +657,5 @@ class module_dependency(osv.osv):
             ('unknown', 'Unknown'),
             ], string='State', readonly=True, select=True),
     }
-module_dependency()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

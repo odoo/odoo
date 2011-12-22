@@ -50,3 +50,5 @@ class wizard_screen(osv.osv_memory):
         'config_logo': _get_image
     }
 wizard_screen()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
