@@ -1756,7 +1756,14 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                         return;
                     }
                     var pop = new openerp.web.form.FormOpenPopup(self.view);
-                    pop.show_element(self.field.relation, self.value[0],self.build_context(), {});
+                    pop.show_element(
+                        self.field.relation,
+                        self.value[0],
+                        self.build_context(),
+                        {
+                            title: _t("Open: ") + (self.string || self.name)
+                        }
+                    );
                     pop.on_write_completed.add_last(function() {
                         self.set_value(self.value[0]);
                     });
@@ -1922,12 +1929,17 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     _search_create_popup: function(view, ids, context) {
         var self = this;
         var pop = new openerp.web.form.SelectCreatePopup(this);
-        pop.select_element(self.field.relation,{
+        pop.select_element(
+            self.field.relation,
+            {
+                title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + (this.string || this.name),
                 initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
                 initial_view: view,
                 disable_multiple_selection: true
-                }, self.build_domain(),
-                new openerp.web.CompoundContext(self.build_context(), context || {}));
+            },
+            self.build_domain(),
+            new openerp.web.CompoundContext(self.build_context(), context || {})
+        );
         pop.on_select_elements.add(function(element_ids) {
             var dataset = new openerp.web.DataSetStatic(self, self.field.relation, self.build_context());
             dataset.name_get([element_ids[0]], function(data) {
@@ -2351,22 +2363,27 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
             var self = this;
             var pop = new openerp.web.form.SelectCreatePopup(this);
             pop.on_default_get.add(self.dataset.on_default_get);
-            pop.select_element(self.o2m.field.relation,{
-                initial_view: "form",
-                alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
-                create_function: function(data, callback, error_callback) {
-                    return self.o2m.dataset.create(data).then(function(r) {
-                        self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
-                        self.o2m.dataset.on_change();
-                    }).then(callback, error_callback);
+            pop.select_element(
+                self.o2m.field.relation,
+                {
+                    title: _t("Create: ") + self.name,
+                    initial_view: "form",
+                    alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
+                    create_function: function(data, callback, error_callback) {
+                        return self.o2m.dataset.create(data).then(function(r) {
+                            self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
+                            self.o2m.dataset.on_change();
+                        }).then(callback, error_callback);
+                    },
+                    read_function: function() {
+                        return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
+                    },
+                    parent_view: self.o2m.view,
+                    form_view_options: {'not_interactible_on_create':true}
                 },
-                read_function: function() {
-                    return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
-                },
-                parent_view: self.o2m.view,
-                child_name: self.o2m.name,
-                form_view_options: {'not_interactible_on_create':true}
-            }, self.o2m.build_domain(), self.o2m.build_context());
+                self.o2m.build_domain(),
+                self.o2m.build_context()
+            );
             pop.on_select_elements.add_last(function() {
                 self.o2m.reload_current_view();
             });
@@ -2375,7 +2392,8 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
     do_activate_record: function(index, id) {
         var self = this;
         var pop = new openerp.web.form.FormOpenPopup(self.o2m.view);
-        pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(),{
+        pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
+            title: _t("Open: ") + self.name,
             auto_write: false,
             alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
             parent_view: self.o2m.view,
@@ -2506,9 +2524,14 @@ openerp.web.form.Many2ManyDataSet = openerp.web.DataSetStatic.extend({
 openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends openerp.web.form.Many2ManyListView# */{
     do_add_record: function () {
         var pop = new openerp.web.form.SelectCreatePopup(this);
-        pop.select_element(this.model, {},
+        pop.select_element(
+            this.model,
+            {
+                title: _t("Add: ") + this.name
+            },
             new openerp.web.CompoundDomain(this.m2m_field.build_domain(), ["!", ["id", "in", this.m2m_field.dataset.ids]]),
-            this.m2m_field.build_context());
+            this.m2m_field.build_context()
+        );
         var self = this;
         pop.on_select_elements.add(function(element_ids) {
             _.each(element_ids, function(element_id) {
@@ -2524,6 +2547,7 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends open
         var self = this;
         var pop = new openerp.web.form.FormOpenPopup(this);
         pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {
+            title: _t("Open: ") + this.name,
             readonly: this.widget_parent.is_readonly()
         });
         pop.on_write_completed.add_last(function() {
@@ -2563,9 +2587,12 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         this.initial_ids = this.options.initial_ids;
         this.created_elements = [];
         this.render_element();
-        openerp.web.form.dialog(this.$element, {close:function() {
-            self.check_exit();
-        }});
+        openerp.web.form.dialog(this.$element, {
+            close: function() {
+                self.check_exit();
+            },
+            title: options.title || ""
+        });
         this.start();
     },
     start: function() {
@@ -2768,10 +2795,12 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         this.context = context || {};
         this.options = _.defaults(options || {}, {"auto_write": true});
         this.render_element();
-        this.$element.dialog({title: '',
-                    modal: true,
-                    width: 960,
-                    height: 600});
+        this.$element.dialog({
+            title: options.title || '',
+            modal: true,
+            width: 960,
+            height: 600
+        });
         this.start();
     },
     start: function() {
