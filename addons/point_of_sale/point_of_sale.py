@@ -453,12 +453,9 @@ class pos_order(osv.osv):
 
                 # Search for the income account
                 if  line.product_id.property_account_income.id:
-                    income_account = line.\
-                                    product_id.property_account_income.id
-                elif line.product_id.categ_id.\
-                        property_account_income_categ.id:
-                    income_account = line.product_id.categ_id.\
-                                    property_account_income_categ.id
+                    income_account = line.product_id.property_account_income.id
+                elif line.product_id.categ_id.property_account_income_categ.id:
+                    income_account = line.product_id.categ_id.property_account_income_categ.id
                 else:
                     raise osv.except_osv(_('Error !'), _('There is no income '\
                         'account defined for this product: "%s" (id:%d)') \

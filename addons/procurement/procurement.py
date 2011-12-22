@@ -87,8 +87,8 @@ class procurement_order(osv.osv):
         'origin': fields.char('Source Document', size=64,
             help="Reference of the document that created this Procurement.\n"
             "This is automatically completed by OpenERP."),
-        'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
-        'date_planned': fields.datetime('Scheduled date', required=True),
+        'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True, select=True),
+        'date_planned': fields.datetime('Scheduled date', required=True, select=True),
         'date_close': fields.datetime('Date Closed'),
         'product_id': fields.many2one('product.product', 'Product', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True, states={'draft':[('readonly',False)]}, readonly=True),

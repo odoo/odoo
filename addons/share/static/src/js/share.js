@@ -1,8 +1,7 @@
 
 openerp.share = function(instance) {
 
-function launch_wizard(self, view, button) {
-        var button = button || 'go_step_1';
+function launch_wizard(self, view, user_type) {
         var action = view.widget_parent.action;
         var Share = new instance.web.DataSet(self, 'share.wizard', view.dataset.get_context());
         var domain = new instance.web.CompoundDomain(view.dataset.domain);
@@ -17,10 +16,11 @@ function launch_wizard(self, view, button) {
                 name: action.name,
                 domain: result.domain,
                 action_id: action.id,
+                user_type: user_type || 'embedded',
                 view_type: view.fields_view.type,
             }, function(result) {
                 var share_id = result.result;
-                var step1 = Share.call(button, [[share_id],], function(result) {
+                var step1 = Share.call('go_step_1', [[share_id],], function(result) {
                     var action = result;
                     self.do_action(action);
                 });
@@ -53,11 +53,11 @@ instance.web.ViewManagerAction.include({
     },
     on_click_share_link: function(e) {
         e.preventDefault();
-        launch_wizard(this, this.views[this.active_view].controller,'go_step_1_link');
+        launch_wizard(this, this.views[this.active_view].controller);
     },
     on_click_share: function(e) {
         e.preventDefault();
-        launch_wizard(this, this.views[this.active_view].controller);
+        launch_wizard(this, this.views[this.active_view].controller, 'emails');
     },
 });
 

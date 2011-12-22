@@ -93,7 +93,7 @@ class mrp_production_workcenter_line(osv.osv):
                                        "* When the user cancels the work order it will be set in 'Canceled' state.\n" \
                                        "* When order is completely processed that time it is set in 'Finished' state."),
        'date_start_date': fields.function(_get_date_date, string='Start Date', type='date'),
-       'date_planned': fields.datetime('Scheduled Date'),
+       'date_planned': fields.datetime('Scheduled Date', select=True),
        'date_planned_end': fields.function(_get_date_end, string='End Date', type='datetime'),
        'date_start': fields.datetime('Start Date'),
        'date_finished': fields.datetime('End Date'),

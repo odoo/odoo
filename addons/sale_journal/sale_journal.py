@@ -66,14 +66,10 @@ class sale(osv.osv):
     _columns = {
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type')
     }
-    def action_ship_create(self, cr, uid, ids, *args):
-        result = super(sale, self).action_ship_create(cr, uid, ids, *args)
-        obj_stock_pick = self.pool.get('stock.picking')
-        for order in self.browse(cr, uid, ids, context={}):
-            pids = [ x.id for x in order.picking_ids]
-            self.pool.get('stock.picking').write(cr, uid, pids, {
-                'invoice_type_id': order.invoice_type_id and order.invoice_type_id.id or False,
-            })
+
+    def _prepare_order_picking(self, cr, uid, order, context=None):
+        result = super(sale,self)._prepare_order_picking(cr, uid, order, context=context)
+        result.update(invoice_type_id=order.invoice_type_id and order.invoice_type_id.id or False)
         return result
 
     def onchange_partner_id(self, cr, uid, ids, part):

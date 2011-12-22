@@ -169,7 +169,7 @@ class account_account_type(osv.osv):
 
     _columns = {
         'name': fields.char('Account Type', size=64, required=True, translate=True),
-        'code': fields.char('Code', size=32, required=True),
+        'code': fields.char('Code', size=32, required=True, select=True),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
 
  'None' means that nothing will be done.
@@ -3422,7 +3422,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
-        return {'type' : 'ir.actions.act_window_close'}
+        action = {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'board.board',
+            'view_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'board_account_form')[1],
+            'menu_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'menu_finance')[1]
+        }
+        return action
 
     def _prepare_bank_journal(self, cr, uid, line, current_num, default_account_id, company_id, context=None):
         '''

@@ -184,6 +184,9 @@ class account_asset_asset(osv.osv):
     def set_to_close(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'close'}, context=context)
 
+    def set_to_draft(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT
                 l.asset_id as id, round(SUM(abs(l.debit-l.credit))) AS amount

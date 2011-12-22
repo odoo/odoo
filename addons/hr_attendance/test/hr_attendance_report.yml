@@ -2,19 +2,16 @@
  Print the HR Attendance Report By Month through the wizard
 -
   !python {model: hr.employee}: |
-    import time
-    ctx={}
-    ctx.update({'model': 'hr.employee','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')]})
-    data_dict = {}
     from tools import test_reports
+    ctx = {'model': 'hr.employee','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')]}
+    data_dict = {}
     test_reports.try_report_action(cr, uid, 'action_hr_attendance_month',wiz_data=data_dict, context=ctx, our_module='hr_attendance')
 -
   Print HR Attendance Error Report through the wizard
 -
   !python {model: hr.employee}: |
     import time
-    ctx={}
-    ctx.update({'model': 'hr.employee','active_ids': [ref('hr.employee1')]})
-    data_dict = {'init_date': time.strftime('%Y-01-01')}
     from tools import test_reports
+    ctx = {'model': 'hr.employee','active_ids': [ref('hr.employee1')]}
+    data_dict = {'init_date': time.strftime('%Y-01-01')}
     test_reports.try_report_action(cr, uid, 'action_hr_attendance_error',wiz_data=data_dict, context=ctx, our_module='hr_attendance')

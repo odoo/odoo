@@ -189,7 +189,7 @@ class share_wizard(osv.osv_memory):
         'embed_url': fields.function(_embed_url, string='Share URL', type='char', size=512, readonly=True),
     }
     _defaults = {
-        'view_type': 'tree',
+        'view_type': 'page',
         'user_type' : 'embedded',
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
@@ -198,33 +198,12 @@ class share_wizard(osv.osv_memory):
         'embed_option_search': True,
     }
 
-    def go_step_1_link(self, cr, uid, ids, context=None):
-        dummy, step1_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step1_form_link')
-        return {
-            'name': _('Link or embed your documents'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'share.wizard',
-            'view_id': False,
-            'res_id': ids[0],
-            'views': [(step1_form_view_id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new'
-        }
-
     def go_step_1(self, cr, uid, ids, context=None):
-        dummy, step1_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step1_form')
-        return {
-            'name': _('Share your documents by email'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'share.wizard',
-            'view_id': False,
-            'res_id': ids[0],
-            'views': [(step1_form_view_id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new'
-        }
+        model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
+        action = self.pool.get(model).read(cr, uid, res_id, context=context)
+        action['res_id'] = ids[0]
+        action.pop('context', '')
+        return action
 
     def _create_share_group(self, cr, uid, wizard_data, context=None):
         group_obj = self.pool.get('res.groups')
