@@ -757,8 +757,8 @@ class BaseModel(object):
         ir_model_fields_obj = self.pool.get('ir.model.fields')
 
         # sparse field should be created at the end, as it depends on its serialized field already existing
-        fields = sorted(self._columns.items(), key=lambda x: 1 if x[1]._type == 'sparse' else 0)
-        for (k, f) in fields:
+        model_fields = sorted(self._columns.items(), key=lambda x: 1 if x[1]._type == 'sparse' else 0)
+        for (k, f) in model_fields:
             vals = {
                 'model_id': model_id,
                 'model': self._name,
@@ -1019,7 +1019,7 @@ class BaseModel(object):
                     if field['ttype'] in ['many2one', 'one2many', 'many2many']:
                         attrs.update({'relation': field['relation']})
                     self._columns[field['name']] = fields.sparse(**attrs)
-                if field['ttype'] == 'selection':
+                elif field['ttype'] == 'selection':
                     self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
                 elif field['ttype'] == 'reference':
                     self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
