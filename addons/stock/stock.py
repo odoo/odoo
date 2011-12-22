@@ -2665,6 +2665,7 @@ class stock_inventory(osv.osv):
             message = _("Inventory '%s' is done.") %(inv.name)
             self.log(cr, uid, inv.id, message)
             self.write(cr, uid, [inv.id], {'state': 'confirm', 'move_ids': [(6, 0, move_ids)]})
+            self.pool.get('stock.move').action_confirm(cr, uid, move_ids, context=context)
         return True
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
