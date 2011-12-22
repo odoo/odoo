@@ -52,7 +52,6 @@ You can manage:
     ],
     'demo_xml': [
         'hr_demo.xml',
-        'hr_department_demo.xml',
     ],
     'test': [
              'test/open2recruit2close_job.yml',
@@ -62,5 +61,6 @@ You can manage:
     'application': True,
     'active': False,
     'certificate': '0086710558965',
+    "css": [ 'static/src/css/hr.css' ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
