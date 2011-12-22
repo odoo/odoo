@@ -45,6 +45,7 @@ import openerp
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.translate import _
+from openerp.tools import float_round, float_repr
 import json
 
 def _symbol_set(symb):
@@ -73,6 +74,9 @@ class _column(object):
     _symbol_f = _symbol_set
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = None
+
+    # used to hide a certain field type in the list of field types
+    _deprecated = False
 
     def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, **args):
         """
@@ -167,6 +171,7 @@ class integer_big(_column):
     _symbol_f = lambda x: int(x or 0)
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self,x: x or 0
+    _deprecated = True
 
     def __init__(self, string='unknown', required=False, **args):
         super(integer_big, self).__init__(string=string, required=required, **args)
@@ -230,17 +235,20 @@ class float(_column):
     def __init__(self, string='unknown', digits=None, digits_compute=None, required=False, **args):
         _column.__init__(self, string=string, required=required, **args)
         self.digits = digits
+        # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
         if required:
             warnings.warn("Making a float field `required` has no effect, as NULL values are "
                           "automatically turned into 0.0", PendingDeprecationWarning, stacklevel=2)
 
-
     def digits_change(self, cr):
         if self.digits_compute:
-            t = self.digits_compute(cr)
-            self._symbol_set=('%s', lambda x: ('%.'+str(t[1])+'f') % (__builtin__.float(x or 0.0),))
-            self.digits = t
+            self.digits = self.digits_compute(cr)
+        if self.digits:
+            precision, scale = self.digits
+            self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0),
+                                                                       precision_digits=scale),
+                                                           precision_digits=scale))
 
 class date(_column):
     _type = 'date'
@@ -270,6 +278,7 @@ class datetime(_column):
 
 class time(_column):
     _type = 'time'
+    _deprecated = True
     @staticmethod
     def now( *args):
         """ Returns the current time in a format fit for being a
@@ -343,6 +352,7 @@ class one2one(_column):
     _classic_read = False
     _classic_write = True
     _type = 'one2one'
+    _deprecated = True
 
     def __init__(self, obj, string='unknown', **args):
         warnings.warn("The one2one field doesn't work anymore", DeprecationWarning)
@@ -991,11 +1001,14 @@ class function(_column):
             self._symbol_set = integer._symbol_set
 
     def digits_change(self, cr):
-        if self.digits_compute:
-            t = self.digits_compute(cr)
-            self._symbol_set=('%s', lambda x: ('%.'+str(t[1])+'f') % (__builtin__.float(x or 0.0),))
-            self.digits = t
-
+        if self._type == 'float':
+            if self.digits_compute:
+                self.digits = self.digits_compute(cr)
+            if self.digits:
+                precision, scale = self.digits
+                self._symbol_set = ('%s', lambda x: float_repr(float_round(__builtin__.float(x or 0.0),
+                                                                           precision_digits=scale),
+                                                               precision_digits=scale))
 
     def search(self, cr, uid, obj, name, args, context=None):
         if not self._fnct_search:
@@ -1255,18 +1268,26 @@ class sparse(function):
             serialized = getattr(record, self.serialization_field)
             results[record.id] = {}
             for field_name in field_names:
-                if obj._columns[field_name]._type in ['one2many']:
-                    value = serialized.get(field_name, [])
-                else:
-                    results[record.id].update(field_name=value)
+                field_type = obj._columns[field_name]._type
+                value = serialized.get(field_name, False)
+                if field_type in ('one2many','many2many'):
+                    value = value or []
+                    if value:
+                        # filter out deleted records as superuser
+                        relation_obj = obj.pool.get(self.relation)
+                        value = relation_obj.exists(cr, openerp.SUPERUSER_ID, value)
+                if type(value) in (int,long) and field_type == 'many2one':
+                    relation_obj = obj.pool.get(self.relation)
+                    # check for deleted record as superuser
+                    if not relation_obj.exists(cr, openerp.SUPERUSER_ID, [value]):
+                        value = False
+                results[record.id][field_name] = value
         return results
 
     def __init__(self, serialization_field, **kwargs):
         self.serialization_field = serialization_field
         return super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', method=True, **kwargs)
      
-
-
 
 
 # ---------------------------------------------------------

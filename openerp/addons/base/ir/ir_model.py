@@ -21,6 +21,7 @@
 import logging
 import re
 import time
+import types
 
 from osv import fields,osv
 import netsvc
@@ -32,13 +33,12 @@ from tools.translate import _
 import pooler
 
 def _get_fields_type(self, cr, uid, context=None):
-    cr.execute('select distinct ttype,ttype from ir_model_fields')
-    field_types = cr.fetchall()
-    field_types_copy = field_types
-    for types in field_types_copy:
-        if not hasattr(fields,types[0]):
-            field_types.remove(types)
-    return field_types
+    return sorted([(k,k) for k,v in fields.__dict__.iteritems()
+                      if type(v) == types.TypeType
+                      if issubclass(v, fields._column)
+                      if v != fields._column
+                      if not v._deprecated
+                      if not issubclass(v, fields.function)])
 
 def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
     #pseudo-method used by fields.function in ir.model/ir.model.fields
@@ -207,7 +207,11 @@ class ir_model_fields(osv.osv):
         'view_load': fields.boolean('View Auto-Load'),
         'selectable': fields.boolean('Selectable'),
         'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the field is defined'),
-        'serialization_field_id': fields.many2one('ir.model.fields', 'Serialization Field', domain = "[('ttype','=','serialized')]", ondelete='cascade'),
+        'serialization_field_id': fields.many2one('ir.model.fields', 'Serialization Field', domain = "[('ttype','=','serialized')]",
+                                                  ondelete='cascade', help="If set, this field will be stored in the sparse "
+                                                                           "structure of the serialization field, instead "
+                                                                           "of having its own database column. This cannot be "
+                                                                           "changed after creation."),
     }
     _rec_name='field_description'
     _defaults = {
@@ -300,7 +304,7 @@ class ir_model_fields(osv.osv):
         if context and context.get('manual',False):
             vals['state'] = 'manual'
 
-        #For the moment renaming a sparse field or changing the storing system is not allowed. This will be done later
+        #For the moment renaming a sparse field or changing the storing system is not allowed. This may be done later
         if 'serialization_field_id' in vals or 'name' in vals:
             for field in self.browse(cr, user, ids, context=context):
                 if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
