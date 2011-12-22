@@ -65,6 +65,8 @@ class crm_partner2opportunity(osv.osv_memory):
             data.name,
             data.planned_revenue,
             data.probability,
+            partner_ids[0],
+            context=context,
         )
         opportunity_id = opportunity_ids[partner_ids[0]]
         return lead.redirect_opportunity_view(cr, uid, opportunity_id, context=context)
