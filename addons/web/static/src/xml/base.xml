@@ -1347,30 +1347,27 @@
 </t>
 <t t-name="DialogTraceback">
     <form>
-        <div class="expandcase">
-            <span class="case-head"><t t-esc="'Let me fix it'" /></span>
+        <div class="oe_expandcase">
+            <span class="oe_case_head"><t t-esc="'Let me fix it'" /></span>
         </div>
-        <div class="error-detail error-fix">
+        <div class="oe_error_detail oe_error_fix">
             <pre><t t-esc="error.message"/></pre>
             <hr/>
             <pre><t t-esc="error.data.debug"/></pre>
         </div>
-        <!--div id="case2" class="expandcase">
-            <span class="case-head"><a><t t-esc="'Fix it for me'" /></a></span>
-        </div-->
-        <div class="error-send">
+        <div class="oe_error_send">
             <div>
-                <div class="centeralign"><b>OpenERP Enterprise Contract.</b></div>
+                <div class="oe_centeralign"><b>OpenERP Enterprise Contract.</b></div>
                 <div><br/>Your request will be sent to OpenERP and OpenERP Enterprise team will reply you shortly.<br/></div>
-                <span class="fielddiv">
+                <span class="oe_fielddiv">
                     <label>Summary:</label><br/>
                     <input id="issuename" type="text"/>
                 </span><br/><br/>
-                <div class="fielddiv">
+                <div class="oe_fielddiv">
                     <label>Description:</label><br/>
                     <textarea id="explanation" rows="6"></textarea>
                 </div><br/><br/>
-                <div class="fielddiv">
+                <div class="oe_fielddiv">
                     <label>What you did:</label><br/>
                     <textarea id="remark" rows="6" ></textarea>
                 </div>

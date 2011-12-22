@@ -214,14 +214,14 @@ openerp.web.ServerError = openerp.web.Dialog.extend({
         });
 
         if (!self.session.has_pwc) {
-            $('.error-send').html('<span><a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">Unsupported/Community Version</a></span>');
+            $('.oe_error_send').html('<span><a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">Unsupported/Community Version</a></span>');
         }
 
-        dialog.$element.find('.expandcase').each(function() {
+        dialog.$element.find('.oe_expandcase').each(function() {
             var $this = $(this);
 
             $this.click( function() {
-                $this.next().toggle().prev().toggleClass("expandcase collapsecase");
+                $this.next().toggle().prev().toggleClass("oe_expandcase oe_collapsecase");
             });
         });
     }
