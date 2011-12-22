@@ -532,7 +532,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                      .find('ul').empty();
             return false;
         });
-
+        $res_logs.css('display','none');
         return manager_ready;
     },
     on_debug_changed: function (evt) {
@@ -586,8 +586,9 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             self.shortcut_check(self.views[view_type]);
 
             self.$element.find('.oe-view-manager-logs:first')
-                .addClass('oe-folded').removeClass('oe-has-more')
+                .addClass('oe-folded').removeClass('oe-has-more').css('display','none')
                 .find('ul').empty();
+            
 
             var controller = self.views[self.active_view].controller,
                 fvg = controller.fields_view,
@@ -684,7 +685,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var self = this,
             cutoff = 3,
             $logs = this.$element.find('.oe-view-manager-logs:first')
-                    .addClass('oe-folded'),
+                    .addClass('oe-folded').css('display', 'block'),
             $logs_list = $logs.find('ul').empty();
         $logs.toggleClass('oe-has-more', log_records.length > cutoff);
         _(log_records.reverse()).each(function (record) {
