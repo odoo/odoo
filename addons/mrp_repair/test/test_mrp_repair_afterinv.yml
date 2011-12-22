@@ -34,4 +34,3 @@
   !python {model: mrp.repair}: |
      repair_id = self.browse(cr, uid, [ref('mrp_repair_rmrp0')], context=context)[0]
      assert repair_id.invoice_id.id, _("No invoice exists for this repair order")
-
