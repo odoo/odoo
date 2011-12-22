@@ -105,6 +105,7 @@ session.web.ActionManager = session.web.Widget.extend({
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         action.flags = _.extend({
+            display_title: !popup,
             views_switcher : !popup,
             search_view : !popup,
             action_buttons : !popup,

@@ -27,6 +27,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             target: "current",
             limit: this.dataset.limit || 80,
             flags: {
+                display_title: false,
                 sidebar: false,
                 deletable: false,
                 views_switcher: false,
@@ -38,7 +39,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
         };
         this.view_edit_dialog = new openerp.web.Dialog(this, {
-            title: _t("ViewEditor"),
+            title: _.str.sprintf("Manage Views (%s)", this.model),
             width: 850,
             buttons: [
                 {text: _t("Create"), click: function() { self.on_create_view(); }},
