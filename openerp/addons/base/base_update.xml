@@ -257,6 +257,9 @@
                             </group>
                         </page>
                         <page string="Header/Footer" groups="base.group_extended">
+                            <group colspan="2" col="4">
+                               <field name="paper_format" on_change="onchange_paper_format(paper_format)"/>
+                            </group>
                             <field colspan="4" name="rml_header" nolabel="1"/>
                         </page>
                         <page string="Internal Header/Footer" groups="base.group_extended">
