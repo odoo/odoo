@@ -828,7 +828,8 @@ class procurement_order(osv.osv):
         po_vals.update({'order_line': [(0,0,line_vals)]})
         return self.pool.get('purchase.order').create(cr, uid, po_vals, context=context)
 
-    def _get_schedule_date(self, cr, uid, procurement_date_planned, company, context=None):
+    def _get_schedule_date(self, cr, uid, procurement, company, context=None):
+        procurement_date_planned = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
         schedule_date = (procurement_date_planned - relativedelta(days=company.po_lead))
         return schedule_date
 
@@ -868,8 +869,7 @@ class procurement_order(osv.osv):
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner_id, {'uom': uom_id})[pricelist_id]
 
-            procurement_date_planned = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
-            schedule_date = self._get_schedule_date(cr, uid, procurement_date_planned, company, context=context)
+            schedule_date = self._get_schedule_date(cr, uid, procurement, company, context=context)
             order_dates = self._get_order_dates(cr, uid, schedule_date, seller_delay, context=context)
 
             #Passing partner_id to context for purchase order line integrity of Line name
