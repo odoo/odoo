@@ -138,6 +138,27 @@
           <field name="name">Trainee</field>
       </record>
 
+    <!-- Employee categories -->
+
+      <record id="category_ranking" model="hr.employee.category">
+          <field name="name">Ranking</field>
+      </record>
+
+      <record id="category_ceo" model="hr.employee.category">
+          <field name="name">CEO</field>
+          <field name="parent_id" ref="category_ranking"/>
+      </record>
+
+      <record id="category_managers" model="hr.employee.category">
+          <field name="name">Executive Managers</field>
+          <field name="parent_id" ref="category_ranking"/>
+      </record>
+
+      <record id="category_employee" model="hr.employee.category">
+          <field name="name">Employees</field>
+          <field name="parent_id" ref="category_ranking"/>
+      </record>
+
     <!--Employees-->
 
       <record id="employee_fp" model="hr.employee">
@@ -145,6 +166,7 @@
           <field name="user_id" ref="base.user_fp"/>
           <field name="department_id" ref="dep_management"/>
           <field name="job_id" ref="hr.job_ceo"/>
+          <field name="category_ids" eval="[(6, 0, [ref('category_ceo')])]"/>
           <field name="work_location">Grand-Rosière</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">fp@openerp.com</field>
@@ -156,6 +178,7 @@
           <field name="user_id" ref="base.user_al"/>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_cto"/>
+          <field name="category_ids" eval="[(6, 0, [ref('category_managers')])]"/>
           <field name="work_location">Grand-Rosière</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">al@openerp.com</field>
@@ -167,6 +190,7 @@
           <field name="user_id" ref="base.user_mit"/>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_developer"/>
+          <field name="category_ids" eval="[(6, 0, [ref('category_employee')])]"/>
           <field name="work_location">Grand-Rosière</field>
           <field name="work_phone">+3281813700</field>
           <field name="mobile_phone">+32486571630</field>
@@ -179,6 +203,7 @@
           <field name="user_id" ref="base.user_niv"/>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_developer"/>
+          <field name="category_ids" eval="[(6, 0, [ref('category_employee')])]"/>
           <field name="work_location">Grand-Rosière</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">niv@openerp.com</field>
@@ -190,6 +215,7 @@
           <field name="user_id" ref="base.user_stw"/>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_developer"/>
+          <field name="category_ids" eval="[(6, 0, [ref('category_employee')])]"/>
           <field name="work_location">Grand-Rosière</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">stw@openerp.com</field>
@@ -201,6 +227,7 @@
           <field name="user_id" ref="base.user_chs"/>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_developer"/>
+          <field name="category_ids" eval="[(6, 0, [ref('category_employee')])]"/>
           <field name="work_location">Grand-Rosière</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">chs@openerp.com</field>
@@ -212,6 +239,7 @@
           <field name="user_id" ref="base.user_qdp"/>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_developer"/>
+          <field name="category_ids" eval="[(6, 0, [ref('category_employee')])]"/>
           <field name="work_location">Grand-Rosière</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">qdp@openerp.com</field>
@@ -222,6 +250,7 @@
           <field name="user_id" ref="base.user_fme"/>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_developer"/>
+          <field name="category_ids" eval="[(6, 0, [ref('category_employee')])]"/>
           <field name="work_location">Grand-Rosière</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">fme@openerp.com</field>
@@ -232,6 +261,7 @@
           <field name="user_id" ref="base.user_fpi"/>
           <field name="department_id" ref="dep_ps"/>
           <field name="job_id" ref="hr.job_consultant"/>
+          <field name="category_ids" eval="[(6, 0, [ref('category_employee')])]"/>
           <field name="work_location">Grand-Rosière</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">fpi@openerp.com</field>
@@ -243,6 +273,7 @@
           <field name="user_id" ref="base.user_jth"/>
           <field name="department_id" ref="dep_ps"/>
           <field name="job_id" ref="hr.job_consultant"/>
+          <field name="category_ids" eval="[(6, 0, [ref('category_employee')])]"/>
           <field name="work_location">Grand-Rosière</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">jth@openerp.com</field>
@@ -254,6 +285,7 @@
           <field name="user_id" ref="base.user_ngh"/>
           <field name="department_id" ref="dep_sales"/>
           <field name="job_id" ref="hr.job_marketing"/>
+          <field name="category_ids" eval="[(6, 0, [ref('category_employee')])]"/>
           <field name="work_location">Auderghem</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">ngh@openerp.com</field>
@@ -265,6 +297,7 @@
           <field name="user_id" ref="base.user_vad"/>
           <field name="department_id" ref="dep_administration"/>
           <field name="job_id" ref="hr.job_hrm"/>
+          <field name="category_ids" eval="[(6, 0, [ref('category_employee')])]"/>
           <field name="work_location">Grand-Rosière</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">vad@openerp.com</field>
