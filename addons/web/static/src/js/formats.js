@@ -158,16 +158,17 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
             var tmp = Number(value);
             if (!isNaN(tmp))
                 return tmp;
-            tmp = value.replace(openerp.web._t.database.parameters.decimal_point, ".");
-            var tmp2 = tmp;
+
+            var tmp2 = value;
             do {
                 tmp = tmp2;
                 tmp2 = tmp.replace(openerp.web._t.database.parameters.thousands_sep, "");
             } while(tmp !== tmp2);
-            tmp = Number(tmp);
-            if (isNaN(tmp))
+            var reformatted_value = tmp.replace(openerp.web._t.database.parameters.decimal_point, ".");
+            var parsed = Number(reformatted_value);
+            if (isNaN(parsed))
                 throw new Error(value + " is not a correct float");
-            return tmp;
+            return parsed;
         case 'float_time':
             var float_time_pair = value.split(":");
             if (float_time_pair.length != 2)
@@ -253,7 +254,7 @@ openerp.web.format_cell = function (row_data, column, value_if_empty, process_mo
     if (column.tag === 'button') {
         return [
             '<button type="button" title="', column.string || '', '">',
-                '<img src="/web/static/src/img/icons/', column.icon, '.png"',
+                '<img src="', openerp.connection.prefix, '/web/static/src/img/icons/', column.icon, '.png"',
                     ' alt="', column.string || '', '"/>',
             '</button>'
         ].join('')

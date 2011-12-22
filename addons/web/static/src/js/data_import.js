@@ -31,7 +31,7 @@ function jsonp(form, attributes, callback) {
 
 openerp.web.DataImport = openerp.web.Dialog.extend({
     template: 'ImportDataView',
-    dialog_title: "Import Data",
+    dialog_title: {toString: function () { return _t("Import Data"); }},
     init: function(parent, dataset){
         var self = this;
         this._super(parent, {});
@@ -65,10 +65,6 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         var self = this;
         this._super();
         this.open({
-            modal: true,
-            width: '70%',
-            height: 'auto',
-            position: 'top',
             buttons: [
                 {text: _t("Close"), click: function() { self.stop(); }},
                 {text: _t("Import File"), click: function() { self.do_import(); }, 'class': 'oe-dialog-import-button'}
@@ -111,7 +107,11 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             });
         }
         _(fields).each(function (field, field_name) {
-            if (field_name === 'id') { return; }
+            // Ignore spec for id field
+            // Don't import function fields (function and related)
+            if (field_name === 'id' || 'function' in field) {
+                return;
+            }
             var f = {
                 id: field_name,
                 name: field_name,
@@ -140,7 +140,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         });
     },
     toggle_import_button: function (newstate) {
-        this.$dialog.dialog('widget')
+        this.$element.dialog('widget')
                 .find('.oe-dialog-import-button')
                 .button('option', 'disabled', !newstate);
     },
@@ -183,6 +183,20 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.$element.find('#result').empty();
         var headers, result_node = this.$element.find("#result");
 
+        if (results['error']) {
+            result_node.append(QWeb.render('ImportView.error', {
+                'error': results['error']}));
+            this.$element.find('fieldset').removeClass('oe-closed');
+            return;
+        }
+        if (results['success']) {
+            if (this.widget_parent.widget_parent.active_view == "list") {
+                this.widget_parent.reload_content();
+            }
+            this.stop();
+            return;
+        }
+
         if (results['records']) {
             var lines_to_skip = parseInt(this.$element.find('#csv_skip').val(), 10),
                 with_headers = this.$element.find('#file_has_headers').prop('checked');
@@ -195,16 +209,6 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                           : results.records
             }));
             this.$element.find('fieldset').addClass('oe-closed');
-        } else if (results['error']) {
-            result_node.append(QWeb.render('ImportView.error', {
-                'error': results['error']}));
-            this.$element.find('fieldset').removeClass('oe-closed');
-        } else if (results['success']) {
-            if (this.widget_parent.widget_parent.active_view == "list") {
-                this.widget_parent.reload_content();
-            }
-            this.stop();
-            return;
         }
         this.$element.find('form').removeClass('oe-import-no-result');
 
@@ -344,7 +348,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         return true;
     },
     stop: function() {
-        $(this.$dialog).remove();
+        this.$element.remove();
         this._super();
     }
 });

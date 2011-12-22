@@ -64,7 +64,7 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
         var password = $e.find("div input[name=password]").val();
         //$e.hide();
         // Should hide then call callback
-        this.session.session_login(db, login, password, function() {
+        this.session.login(db, login, password, function() {
             if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
                     if(self.remember_creditentials) {
@@ -151,14 +151,6 @@ openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
                 $.mobile.changePage("#oe_menu", "slide", false, true);
             });
             self.$element.find('#content').find("a").click(self.on_clicked);
-            self.$element.find("[data-role=footer]").find('#preference').click(function(){
-                if(!$('#oe_options').html().length){
-                    this.options = new openerp.web_mobile.Options(self, "oe_options");
-                    this.options.start();
-                }else{
-                    $.mobile.changePage("#oe_options", "slide", false, true);
-                }
-            });
             $.mobile.changePage("#oe_shortcuts", "slide", false, true);
         });
     },
@@ -261,22 +253,6 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
         this.$element.html(this.render(v));
         this.$element.find("[data-role=header]").find("h1").html(this.data.name);
         this.$element.add(this.$secondary_menu).find('#content').find("a").click(this.on_menu_click);
-        this.$element.find("[data-role=footer]").find('#shrotcuts').click(function(){
-            if(!$('#oe_shortcuts').html().length){
-                this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
-                this.shortcuts.start();
-            }else{
-                $.mobile.changePage("#oe_shortcuts", "slide", false, true);
-            }
-        });
-        this.$element.find("[data-role=footer]").find('#preference').click(function(){
-            if(!$('#oe_options').html().length){
-                this.options = new openerp.web_mobile.Options(self, "oe_options");
-                this.options.start();
-            }else{
-                $.mobile.changePage("#oe_options", "slide", false, true);
-            }
-        });
         this.$element.find("[data-role=header]").find('#home').click(function(){
             $.mobile.changePage("#oe_menu", "slide", false, true);
         });
@@ -328,14 +304,6 @@ openerp.web_mobile.Options =  openerp.web.Widget.extend({
         var self = this;
         this.$element.html(this.render(this));
         this.$element.find("[data-role=header]").find('h1').html('Preference');
-        this.$element.find("[data-role=footer]").find('#shrotcuts').click(function(){
-            if(!$('#oe_shortcuts').html().length){
-                this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
-                this.shortcuts.start();
-            }else{
-                $.mobile.changePage("#oe_shortcuts", "slide", false, true);
-            }
-        });
         this.$element.find("[data-role=header]").find('#home').click(function(){
             $.mobile.changePage("#oe_menu", "slide", false, true);
         });

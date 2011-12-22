@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # EASY-INSTALL-ENTRY-SCRIPT: 'Babel==0.9.6','console_scripts','pybabel'
 __requires__ = 'Babel==0.9.6'
 import sys

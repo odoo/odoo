@@ -1,5 +1,6 @@
 openerp.web_process = function (openerp) {
-    var QWeb = openerp.web.qweb;
+    var QWeb = openerp.web.qweb,
+          _t = openerp.web._t;
     openerp.web.ViewManager.include({
         start: function() {
             this._super();
@@ -44,6 +45,7 @@ openerp.web_process = function (openerp) {
                 if(self.process_id) {
                     self.graph_get().done(function(res) {
                         self.process_notes = res.notes;
+                        self.process_title = res.name;
                         self.process_subflows = _.filter(res.nodes, function(x) {
                             return x.subflow != false;
                         });
@@ -245,9 +247,10 @@ openerp.web_process = function (openerp) {
                 transitions['active'] = src.active && !dst.gray;
                 process_graph.addEdge(src['name'], dst['name'], {directed : true});
             });
-
+            var width = $(document).width();
+            var height = $(document).height();
             var layouter = new Graph.Layout.Ordered(process_graph);
-            var render_process_graph = new Graph.Renderer.Raphael('process_canvas', process_graph, $('#process_canvas').width(), $('#process_canvas').height());
+            var render_process_graph = new Graph.Renderer.Raphael('process_canvas', process_graph, width, height);
         },
         jump_to_view: function(model, id) {
             var self = this;
@@ -272,20 +275,17 @@ openerp.web_process = function (openerp) {
             var action_manager = new openerp.web.ActionManager(this);
             var dialog = new openerp.web.Dialog(this, {
                 width: 800,
-                height: 600,
-                buttons : {
-                    Cancel : function() {
-                        $(this).dialog('destroy');
-                    },
-                    Save : function() {
+                buttons : [
+                    {text: _t("Cancel"), click: function() { $(this).dialog('destroy'); }},
+                    {text: _t("Save"), click: function() {
                         var form_view = action_manager.inner_viewmanager.views.form.controller;
 
                         form_view.do_save(function() {
                             self.initialize_process_view();
                         });
                         $(this).dialog('destroy');
-                    }
-                }
+                    }}
+                ]
             }).start().open();
 
             action_manager.appendTo(dialog.$element);
@@ -294,7 +294,6 @@ openerp.web_process = function (openerp) {
                 res_id: self.process_id,
                 views : [[false, 'form']],
                 type : 'ir.actions.act_window',
-                auto_search : false,
                 flags : {
                     search_view: false,
                     sidebar : false,

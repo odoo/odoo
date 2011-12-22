@@ -23,7 +23,12 @@
 }
 
 .openerp .dhx_cal_navline{
-    height:20px; position:absolute;z-index:3;width:750px;color:#2F3A48;
+    height:20px; 
+    position:absolute;
+    z-index:3;
+    width:750px;
+    color:#2F3A48;
+    background-color:#eee;
 }
 .openerp .dhx_cal_navline div{
     top:2px;
@@ -197,7 +202,7 @@
     line-height:17px;
     text-decoration:none;
     cursor:default;
-    border:1px dotted #8894A3;
+    /*border:1px dotted #8894A3;*/
     border-bottom:0px;
     background-color:white /*#F4F4F4;*/
 }
@@ -215,9 +220,9 @@
     font-size:0.8em;
     font-weight:bold;
     color:#3F3F3F;
-    border-bottom:1px dotted #8894A3;
+    /*border-bottom:1px dotted #8894A3;
     border-top:1px dotted #8894A3;
-    /*border-right:1px dotted #8894A3;z-index:2;*/
+    border-right:1px dotted #8894A3;z-index:2;*/
     overflow:hidden;
     background-color: white; /*#F4F4F4;*/
     text-shadow: 0 1px 0 white;
@@ -230,6 +235,10 @@
     overflow-y:auto;
     overflow-x:hidden;
 }
+.openerp .oe_cal_month .dhx_cal_data {
+    overflow-y: hidden;
+}
+
 
 .openerp .dhx_cal_data tr td {
     border-width:0px;
@@ -350,7 +359,7 @@
     cursor:pointer;
 }
 
-.openerp .dhx_cal_event .dhx_title{
+.openerp .dhx_cal_event .dhx_title {
     height:18px;
     border-bottom-style:solid;
     border-top-style:solid;
@@ -364,6 +373,10 @@
     font-size: 90%;
     -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-topright: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px;
 }
+.openerp .dhx_cal_event .dhx_title {
+    /* fp request: hide the title in weekly/daily views */
+    display: none;
+}
 
 .openerp .dhx_cal_event .dhx_body{
     border-width:0 1px 1px 1px;
@@ -371,6 +384,11 @@
     -moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; -moz-border-radius-bottomright: 3px; -webkit-border-bottom-right-radius: 3px; border-bottom-right-radius: 3px;
     font-size:90%;
     line-height:9px;
+}
+.openerp .dhx_cal_event .dhx_body {
+    /* fp request: hide the title in weekly/daily views */
+    -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-topright: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px;
+    padding-top: 4px;
 }
 
 .openerp .dhx_resize_denied .dhx_cal_event .dhx_footer{

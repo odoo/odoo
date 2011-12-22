@@ -26,7 +26,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             type: 'ir.actions.act_window',
             target: "current",
             limit: this.dataset.limit || 80,
-            auto_search: true,
             flags: {
                 sidebar: false,
                 deletable: false,
@@ -36,28 +35,17 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 pager: false,
                 radio: true,
                 select_view_id: self.parent.fields_view.view_id
-            },
+            }
         };
         this.view_edit_dialog = new openerp.web.Dialog(this, {
-            modal: true,
-            title: 'ViewEditor',
-            width: 750,
-            height: 500,
-            buttons: {
-                "Create": function(){
-                    self.on_create_view();
-                },
-                "Edit": function(){
-                    self.xml_element_id = 0;
-                    self.get_arch();
-                },
-                "Remove": function(){
-                    self.do_delete_view();
-                },
-                "Close": function(){
-                    self.view_edit_dialog.close();
-                }
-            },
+            title: _t("ViewEditor"),
+            width: 850,
+            buttons: [
+                {text: _t("Create"), click: function() { self.on_create_view(); }},
+                {text: _t("Edit"), click: function() { self.xml_element_id = 0; self.get_arch(); }},
+                {text: _t("Remove"), click: function() { self.do_delete_view(); }},
+                {text: _t("Close"), click: function() { self.view_edit_dialog.close(); }}
+            ]
         }).start().open();
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new openerp.web.ActionManager(this);
@@ -77,37 +65,32 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     on_create_view: function() {
         var self = this;
         this.create_view_dialog = new openerp.web.Dialog(this, {
-            modal: true,
-            title: _.str.sprintf("Create a view (%s)", self.model),
-            width: 500,
-            height: 400,
-            buttons: {
-                    "Save": function(){
-                        var view_values = {};
-                        var warn = false;
-                        _.each(self.create_view_widget, function(widget) {
-                            if (widget.is_invalid) {
-                                warn = true;
-                                return false;
-                            };
-                            if (widget.dirty && !widget.is_invalid) {
-                                view_values[widget.name] = widget.get_value();
-                            }
-                        });
-                        if (warn) {
-                            self.on_valid_create_view(self.create_view_widget);
-                        } else {
-                            $.when(self.do_save_view(view_values)).then(function() {
-                                self.create_view_dialog.close();
-                                var controller = self.action_manager.inner_viewmanager.views[self.action_manager.inner_viewmanager.active_view].controller;
-                                controller.reload_content();
-                            });
+            title: _.str.sprintf(_t("Create a view (%s)"), self.model),
+            buttons: [
+                {text: _t("Save"), click: function () {
+                    var view_values = {};
+                    var warn = false;
+                    _.each(self.create_view_widget, function(widget) {
+                        if (widget.is_invalid) {
+                            warn = true;
+                            return false;
                         }
-                    },
-                    "Cancel": function(){
-                        self.create_view_dialog.close();
+                        if (widget.dirty && !widget.is_invalid) {
+                            view_values[widget.name] = widget.get_value();
+                        }
+                    });
+                    if (warn) {
+                        self.on_valid_create_view(self.create_view_widget);
+                    } else {
+                        $.when(self.do_save_view(view_values)).then(function() {
+                            self.create_view_dialog.close();
+                            var controller = self.action_manager.inner_viewmanager.views[self.action_manager.inner_viewmanager.active_view].controller;
+                            controller.reload_content();
+                        });
                     }
-                }
+                }},
+                {text: _t("Cancel"), click: function () { self.create_view_dialog.close(); }}
+            ]
         });
         this.create_view_dialog.start().open();
         var view_widget = [{'name': 'view_name', 'string':'View Name', 'type': 'char', 'required': true, 'value' : this.model + '.custom_' + Math.round(Math.random() * 1000)},
@@ -375,12 +358,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         this.one_object = one_object;
         this.edit_xml_dialog = new openerp.web.Dialog(this, {
-            modal: true,
-            title: _.str.sprintf("View Editor %d - %s", self.main_view_id, self.model),
-            width: 750,
-            height: 500,
-            buttons: {
-                "Preview": function() {
+            title: _.str.sprintf(_t("View Editor %d - %s"), self.main_view_id, self.model),
+            height: '90%',
+            buttons: [
+                {text: _t("Preview"), click: function() {
                     var action = {
                         context: self.session.user_context,
                         res_model: self.model,
@@ -390,16 +371,16 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         flags: {
                             sidebar: false,
                             views_switcher: false,
-                            action_buttons: false,
-                        },
+                            action_buttons: false
+                        }
                     };
                     var action_manager = new openerp.web.ActionManager(self);
                     action_manager.do_action(action);
-                },
-                "Close": function(){
+                }},
+                {text: _t("Close"), click: function(){
                     self.edit_xml_dialog.close();
-                }
-            }
+                }}
+            ]
         }).start().open();
         var no_property_att = [];
         _.each(_PROPERTIES, function(val, key) {
@@ -764,18 +745,16 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     on_edit_node: function(properties){
         var self = this;
         this.edit_node_dialog = new openerp.web.Dialog(this,{
-            modal: true,
-            title: 'Properties',
-            width: 500,
-            height: 400,
-            buttons: {
-                "Update": function(){
+            title: _t("Properties"),
+            width: 450,
+            buttons: [
+                {text: _t("Update"), click: function () {
                     var warn = false, update_values = [];
                     _.each(self.edit_widget, function(widget) {
                         if (widget.is_invalid) {
                             warn = true;
                             return false;
-                        };
+                        }
                         if (widget.dirty && !widget.is_invalid) {
                             update_values.push([widget.name, widget.get_value()]);
                         }
@@ -786,11 +765,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         self.do_save_update_arch("update_node", update_values);
                         self.edit_node_dialog.close();
                     }
-                },
-                "Cancel": function(){
-                    self.edit_node_dialog.close();
-                }
-            }
+                }},
+                {text: _t("Cancel"), click: function () { self.edit_node_dialog.close(); }}
+            ]
         });
         this.edit_node_dialog.start().open();
         var _PROPERTIES_ATTRIBUTES = {
@@ -893,33 +870,31 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             {'name': 'position','selection': ['After','Before','Inside'], 'value': false, 'string': 'Position','type': 'selection'}];
         this.add_widget = [];
         this.add_node_dialog = new openerp.web.Dialog(this,{
-            modal: true,
-            title: 'Properties',
+            title: _t("Properties"),
             width: 450,
-            height: 190,
-            buttons: {
-                    "Update": function(){
-                        var check_add_node = true, values = {};
-                        _.each(self.add_widget, function(widget) {
-                            values[widget.name] = widget.get_value() || false;
-                        });
-                       (values.position == "Inside")?
-                        check_add_node =(_.include(_CHILDREN[properties[0]],values.node_type))?true:false:
-                        check_add_node =(_.include(_CHILDREN[properties[1]],values.node_type))?true:false;
-                        if(values.node_type == "field" &&  check_add_node )
-                            {check_add_node = (values.field_value != " ")?true:false;
-                        }
-                        if(check_add_node){
-                            var tag = (values.node_type == "field")?
-                            _.str.sprintf("<%s name='%s'> </%s>",values.node_type,values.field_value,values.node_type):
-                            _.str.sprintf("<%s> </%s>",values.node_type,values.node_type);
-                            self.do_save_update_arch("add_node", [tag, values.position]);
-                        }else{alert("Can't Update View");}
-                    },
-                    "Cancel": function(){
-                        self.add_node_dialog.close();
+            buttons: [
+                {text: _t("Update"), click: function() {
+                    var check_add_node = true, values = {};
+                    _.each(self.add_widget, function(widget) {
+                        values[widget.name] = widget.get_value() || false;
+                    });
+                   (values.position == "Inside")?
+                    check_add_node =(_.include(_CHILDREN[properties[0]],values.node_type))?true:false:
+                    check_add_node =(_.include(_CHILDREN[properties[1]],values.node_type))?true:false;
+                    if(values.node_type == "field" &&  check_add_node )
+                        {check_add_node = (values.field_value != " ")?true:false;
                     }
-           }
+                    if(check_add_node){
+                        var tag = (values.node_type == "field")?
+                        _.str.sprintf("<%s name='%s'> </%s>",values.node_type,values.field_value,values.node_type):
+                        _.str.sprintf("<%s> </%s>",values.node_type,values.node_type);
+                        self.do_save_update_arch("add_node", [tag, values.position]);
+                    } else {
+                        alert("Can't Update View");
+                    }
+                }},
+                {text: _t("Cancel"), click: function() { self.add_node_dialog.close(); }}
+            ]
         }).start().open();
         this.add_node_dialog.$element.append('<table id="rec_table"  style="width:420px" class="oe_forms"><tbody><tr></tbody></table>');
         var table_selector = self.add_node_dialog.$element.find('table[id=rec_table] tbody');
@@ -960,6 +935,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var action_manager = new openerp.web.ActionManager(self);
         $.when(action_manager.do_action(action)).then(function() {
             var controller = action_manager.dialog_viewmanager.views['form'].controller;
+            // TODO NIV: use page view
             controller.do_set_readonly.add_last(function(){
                 action_manager.stop();
                 new_fields_name = new openerp.web.DataSetSearch(self,'ir.model.fields', null, null);

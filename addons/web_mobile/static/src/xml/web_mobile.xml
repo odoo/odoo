@@ -72,7 +72,6 @@
             </li>
        </ul>
    </div>
-   <t t-call="Footer" />
 </t>
 
 <t t-name="Menu">
@@ -114,7 +113,6 @@
             </ul>
         </t>
     </div>
-     <t t-call="Footer" />
 </t>
 
 <t t-name="Options">
@@ -126,14 +124,13 @@
             </li>
         </ul>
     </div>
-    <t t-call="Footer" />
 </t>
 
 <t t-name="ListView">
     <t t-call="Header" />
     <div id="content" data-role="content">
         <t t-if="!(records.length>0)">
-            There is no records to show.
+            There are no records to show.
         </t>
         <t t-if="records.length>0">
             <ul data-role="listview" data-inset="true" data-theme="d" data-filter="true">
@@ -159,7 +156,6 @@
             </ul>
         </t>
     </div>
-    <t t-call="Footer" />
 </t>
 
 <t t-name="FormView">
@@ -283,7 +279,9 @@
                         </label>
                         <select t-att-id="field.attrs.name" data-native-menu="false">
                             <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
-                                <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
+                                <t t-if="opt[0] == values[field.attrs.name]">
+                                    <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
+                                </t>
                             </t>
                         </select>
                     </t>
@@ -292,35 +290,23 @@
                             <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
                             <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
                         </label>
-                        <select id="" data-native-menu="false" t-att-for="fields[field.attrs.name].relation">
-                            <t t-if="fields[field.attrs.name].selection">
-                                <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
-
-                                    <t t-if="values[field.attrs.name] and values[field.attrs.name]==opt[0]">
-                                        <option t-att-value="opt[0]" selected="true" ><t t-esc="opt[1]"/></option>
-                                    </t>
-                                    <t t-if="values[field.attrs.name] and values[field.attrs.name]!=opt[0]">
-                                        <option t-att-value="opt[0]" ><t t-esc="opt[1]"/></option>
-                                    </t>
-                                </t>
-                            </t>
-                            <t t-if="values[field.attrs.name] and !fields[field.attrs.name].selection">
-                                  <option t-att-value="values[field.attrs.name][0]" ><t t-esc="values[field.attrs.name][1]"/></option>
-                            </t>
-                        </select>
-                        <t t-if="fields[field.attrs.name].selection">
-                            <a id="formbutton" href="#" title="Form View"><img src="/web/static/src/img/icons/gtk-index.png" /></a>
-                        </t>
-                    </t>
-                    <t t-if="fields[field.attrs.name].type == 'one2many'">
                         <ul data-role="listview" data-inset="true" data-theme="d">
-                            <li data-theme="c" t-att-for="field.attrs.name" >
-                                <a href="">
-                                    <t t-esc="fields[field.attrs.name].string"/>
+                            <li id="m2o_btn" data-theme="c" t-att-for="fields[field.attrs.name].relation">
+                                <a id="formbutton" href="#" title="Form View" t-att-value="values[field.attrs.name][0]" t-att-name="values[field.attrs.name][1]">
+                                    <t t-esc="values[field.attrs.name][1]"/>
                                 </a>
                             </li>
                          </ul>
-                     </t>
+                    </t>
+                    <t t-if="fields[field.attrs.name].type == 'one2many' or fields[field.attrs.name].type == 'many2many' ">
+                        <ul data-role="listview" data-inset="true" data-theme="d">
+                            <li id="o2m_m2m" data-theme="c" t-att-for="field.attrs.name">
+                                <a href="#">
+                                    <t t-esc="fields[field.attrs.name].string"/>
+                                </a>
+                            </li>
+                        </ul>
+                    </t>
                 </div>
             </t>
             <t t-if="notebooks">
@@ -343,8 +329,5 @@
             </t>
         </form>
     </div>
-    <t t-if="temp_flag">
-        <t t-call="Footer" />
-    </t>
 </t>
 </templates>

@@ -252,26 +252,41 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
     },
     previous: function () {
         this.index -= 1;
-        if (this.index < 0) {
+        if (!this.ids.length) {
+            this.index = null;
+        } else if (this.index < 0) {
             this.index = this.ids.length - 1;
         }
         return this;
     },
     next: function () {
         this.index += 1;
-        if (this.index >= this.ids.length) {
+        if (!this.ids.length) {
+            this.index = null;
+        } else if (this.index >= this.ids.length) {
             this.index = 0;
         }
         return this;
     },
     select_id: function(id) {
-        var idx = _.indexOf(this.ids, id);
-        if (idx === -1) {
+        var idx = this.get_id_index(id);
+        if (idx === null) {
             return false;
         } else {
             this.index = idx;
             return true;
         }
+    },
+    get_id_index: function(id) {
+        for (var i=0, ii=this.ids.length; i<ii; i++) {
+            // Here we use type coercion because of the mess potentially caused by
+            // OpenERP ids fetched from the DOM as string. (eg: dhtmlxcalendar)
+            // OpenERP ids can be non-numeric too ! (eg: recursive events in calendar)
+            if (id == this.ids[i]) {
+                return i;
+            }
+        }
+        return null;
     },
     /**
      * Read records.
@@ -414,8 +429,8 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
         return this.rpc('/web/dataset/call', {
             model: this.model,
             method: method,
-            domain_id: domain_index || null,
-            context_id: context_index || null,
+            domain_id: domain_index == undefined ? null : domain_index,
+            context_id: context_index == undefined ? null : context_index,
             args: args || []
         }, callback, error_callback);
     },
@@ -433,7 +448,7 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
             model: this.model,
             method: method,
             domain_id: null,
-            context_id: 1,
+            context_id: args.length - 1,
             args: args || []
         }, callback, error_callback);
     },
@@ -499,9 +514,10 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
     },
     set_ids: function (ids) {
         this.ids = ids;
-        if (this.index !== null) {
-            this.index = this.index <= this.ids.length - 1 ?
-                this.index : (this.ids.length > 0 ? this.length - 1 : 0);
+        if (ids.length === 0) {
+            this.index = null;
+        } else if (this.index >= ids.length - 1) {
+            this.index = ids.length - 1;
         }
     },
     unlink: function(ids) {
@@ -673,7 +689,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
         this.on_change();
         var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({result: true});}, 0);
+        $.async_when().then(function () {to_return.resolve({result: true});});
         return to_return.promise();
     },
     reset_ids: function(ids) {
@@ -772,7 +788,7 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
         } else {
             console.warn("trying to create a record using default proxy dataset behavior");
             var to_return = $.Deferred().then(callback);
-            setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
+            $.async_when().then(function () {to_return.resolve({"result": undefined});});
             return to_return.promise();
         }
     },
@@ -784,7 +800,7 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
         } else {
             console.warn("trying to write a record using default proxy dataset behavior");
             var to_return = $.Deferred().then(callback);
-            setTimeout(function () {to_return.resolve({"result": true});}, 0);
+            $.async_when().then(function () {to_return.resolve({"result": true});});
             return to_return.promise();
         }
     },
@@ -793,14 +809,14 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
         this.on_unlink(ids);
         console.warn("trying to unlink a record using default proxy dataset behavior");
         var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({"result": true});}, 0);
+        $.async_when().then(function () {to_return.resolve({"result": true});});
         return to_return.promise();
     },
     on_unlink: function(ids) {}
 });
 
 openerp.web.Model = openerp.web.CallbackEnabled.extend({
-    init: function(_, model_name) {
+    init: function(model_name) {
         this._super();
         this.model_name = model_name;
     },
