@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<document filename="Partner VAT Intra.pdf">
+  <template pageSize="(595.0,842.0)" title="Partner VAT Intra" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="34.0" y1="28.0" width="530" height="786"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Table_General_Header">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="-1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="0,0" stop="-1,1"/>
+    </blockTableStyle>
+    <blockTableStyle id="table_content_header">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,1"/>
+    </blockTableStyle>
+    <blockTableStyle id="table_content_details">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="-1,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="table_total">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="-2,0" stop="-1,0"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="15" alignment="CENTER" />
+    <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_9" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_2" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <images/>
+  </stylesheet>
+  <story>
+    <para style="terp_header">Partner VAT Intra</para>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="175,175,175" style="Table_General_Header">
+      <tr>
+        <td>
+          <para style="terp_tblheader_General_Centre">Company Name</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General_Centre">VAT Number</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General_Centre">Partners without VAT</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="terp_default_Centre_9">[[ data['form']['company_name'] ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">[[ data['form']['company_vat'] ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">[[ data['form']['partner_wo_vat'] or '-']]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="200.0,130,80,100.0" style="table_content_header">
+      <tr>
+        <td>
+          <para style="terp_tblheader_General">Partner Name</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General">Partner VAT</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General">Tax Code</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General_Right">Amount</para>
+        </td>
+      </tr>
+    </blockTable>
+    <section>
+      <para style="terp_default_2">[[ repeatIn(data['form']['clientlist'],'l') ]]</para>
+      <blockTable colWidths="200.0,130,80,100.0" style="table_content_details">
+        <tr>
+          <td>
+            <para style="terp_default_9">[[ l['partner_name'] ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_9">[[ l['vat'] ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_9">[[ l['intra_code'] ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Right_9">[[ l['amount']/100 ]] [[ company.currency_id.symbol ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+    </section>
+    <blockTable colWidths="200.0,170,40,100.0" style="table_total">
+      <tr>
+        <td>
+          <para style="terp_default_9">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_default_9">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General_Right">Total:</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General_Right">[[ data['form']['amountsum']/100 ]] [[ company.currency_id.symbol ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="terp_default_2">
+      <font color="white"> </font>
+    </para>
+  </story>
+</document>
+
