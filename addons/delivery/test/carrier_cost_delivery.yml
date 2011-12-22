@@ -1,0 +1,14 @@
+-
+  IN order to test carrier cost on delivery,
+-
+  I add delivery cost in sale order.
+-
+  !python {model: delivery.sale.order}: |
+    new_id = self.create(cr ,uid ,{"carrier_id": ref("delivery_carrier")})
+    self.delivery_set(cr, uid, [new_id], {'active_id': ref("sale.order")})
+-
+  I check Delivery cost is added properly or not.
+-
+  !python {model: sale.order.line}: |
+    line_ids = self.search(cr, uid, [('order_id','=', ref('sale.order')), ('name','=','The Poste')])
+    assert len(line_ids), "Delivery cost is not Added"
