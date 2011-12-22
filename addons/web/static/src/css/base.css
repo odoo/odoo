@@ -1207,7 +1207,15 @@ label.error {
     min-height:100px;
 }
 /* Inputs */
-.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms textarea {
+.openerp tr[id^="oe-editable-row"] input { /* editable list input */
+    font-size: 110%;
+    height: 22px;
+}
+.openerp tr[id^="oe-editable-row"] select {
+    margin-bottom:1px;
+}
+
+.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms textarea, .openerp tr[id^="oe-editable-row"] input {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -1692,10 +1700,16 @@ label.error {
     margin-bottom: -4px;
     cursor: pointer;
 }
-.openerp .oe-m2o input  {
+.openerp .oe-m2o input, .openerp tr[id^="oe-editable-row"] input.field_many2one  {
     border-right: none;
     margin-right: 0px !important;
     padding-bottom: 2px !important;
+}
+.openerp tr[id^="oe-editable-row"] input.field_many2one  {
+    padding-top: 1px;
+}
+.openerp tr[id^="oe-editable-row"] input.field_many2one, .openerp tr[id^="oe-editable-row"] button {
+    margin-top: 2px;
 }
 .openerp .oe-m2o-disabled-cm {
     color: grey;
