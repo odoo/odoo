@@ -1347,32 +1347,29 @@
 </t>
 <t t-name="DialogTraceback">
     <form>
-        <div class="oe_expandcase">
-            <span class="oe_case_head"><t t-esc="'Let me fix it'" /></span>
-        </div>
+        <div class="oe_error_send">
+            <div>
+                <div class="oe_centeralign"><b>OpenERP Enterprise Contract.</b></div>
+                <div><br/>Your request will be sent to OpenERP and OpenERP Enterprise team will reply you shortly.<br/></div><br/>
+                <div>
+                    <label>Summary:</label><br/>
+                    <input id="issuename" type="text" class="oe_fielddiv"/>
+                </div><br/><br/>
+                <div>
+                    <label>Description:</label><br/>
+                    <textarea id="explanation" rows="6"></textarea>
+                </div><br/><br/>
+                <div>
+                    <label>What you did:</label><br/>
+                    <textarea id="remark" rows="6" ></textarea>
+                </div>
+                <div align="right"><br/><input type="button" value="Send To OpenERP Enterprise Team" id="button_send_error"/></div>
+            </div>
+        </div><br/>
         <div class="oe_error_detail oe_error_fix">
             <pre><t t-esc="error.message"/></pre>
             <hr/>
             <pre><t t-esc="error.data.debug"/></pre>
-        </div>
-        <div class="oe_error_send">
-            <div>
-                <div class="oe_centeralign"><b>OpenERP Enterprise Contract.</b></div>
-                <div><br/>Your request will be sent to OpenERP and OpenERP Enterprise team will reply you shortly.<br/></div>
-                <span class="oe_fielddiv">
-                    <label>Summary:</label><br/>
-                    <input id="issuename" type="text"/>
-                </span><br/><br/>
-                <div class="oe_fielddiv">
-                    <label>Description:</label><br/>
-                    <textarea id="explanation" rows="6"></textarea>
-                </div><br/><br/>
-                <div class="oe_fielddiv">
-                    <label>What you did:</label><br/>
-                    <textarea id="remark" rows="6" ></textarea>
-                </div>
-                <div><br/><input type="button" value="Send To OpenERP Enterprise Team" id="button_send_error"/></div>
-            </div>
         </div>
     </form>
 </t>

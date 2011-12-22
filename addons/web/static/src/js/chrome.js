@@ -214,16 +214,8 @@ openerp.web.ServerError = openerp.web.Dialog.extend({
         });
 
         if (!self.session.has_pwc) {
-            $('.oe_error_send').html('<span><a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">Unsupported/Community Version</a></span>');
+            $('.oe_error_send').html('<span>You have an unsupported version. <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">Click here</a> to get support & maintenance service.</span>');
         }
-
-        dialog.$element.find('.oe_expandcase').each(function() {
-            var $this = $(this);
-
-            $this.click( function() {
-                $this.next().toggle().prev().toggleClass("oe_expandcase oe_collapsecase");
-            });
-        });
     }
 });
 
