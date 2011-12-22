@@ -615,6 +615,8 @@ openerp.point_of_sale = function(db) {
             this.$element.find('button').click(_.bind(this.performPayment, this));
         },
         performPayment: function(event) {
+            if (this.shop.get('selectedOrder').get('step') === 'receipt')
+                return;
             var cashRegister, cashRegisterCollection, cashRegisterId;
             /* set correct view */
             this.shop.get('selectedOrder').set({'step': 'payment'});

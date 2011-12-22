@@ -64,6 +64,20 @@
             <field name="partner_id" ref="base.res_partner_agrolait"/>
             <field name="product_id" ref="product.product_product_pc1"/>
         </record>
+        <record id="stock_picking_out0" model="stock.picking">
+            <field name="origin">POS/019</field>
+            <field name="date_done" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field eval="1" name="auto_picking"/>
+            <field name="move_type">direct</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="note">POS notes </field>
+            <field name="state">done</field>
+            <field name="type">out</field>
+            <field name="min_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="invoice_state">none</field>
+            <field name="max_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
         <record id="pos_order_pos11" model="pos.order">
             <field name="sale_journal" ref="account.sales_journal"/>
             <field name="shop_id" ref="sale.shop"/>
@@ -76,7 +90,7 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="name">POS/019</field>
             <field model="account.invoice" name="invoice_id" search="[('name', '=', u'Invoice from POS: POS/019')]"/>
-            <field model="stock.picking" name="picking_id" search="[('name', '=', u'OUT/00019')]"/>
+            <field name="picking_id" ref="stock_picking_out0"/>
         </record>
         <record id="account_bank_statement_0" model="account.bank.statement">
             <field name="user_id" ref="base.user_root"/>
@@ -102,21 +116,6 @@
             
         </record>
     
-        <record id="stock_picking_out0" model="stock.picking">
-            <field name="origin">POS/019</field>
-            <field name="date_done" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field eval="1" name="auto_picking"/>
-            <field name="move_type">direct</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="note">POS notes </field>
-            <field name="state">done</field>
-            <field name="type">out</field>
-            <field name="min_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="name">OUT/00019</field>
-            <field name="invoice_state">none</field>
-            <field name="max_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
-        </record>
         <record id="stock_move_stockmovepos0" model="stock.move">
             <field name="origin">POS/019</field>
             <field eval="1.0" name="product_uos_qty"/>
@@ -135,7 +134,7 @@
             <field eval="[(6,0,[])]" name="move_history_ids2"/>
             <field name="product_id" ref="product.product_product_pc1"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
-            <field model="stock.picking" name="picking_id" search="[('name', '=', u'OUT/00019')]"/>
+            <field name="picking_id" ref="stock_picking_out0"/>
         </record>
         <record id="pos_order_line_orderline0" model="pos.order.line">
             <field name="notice">No Discount</field>

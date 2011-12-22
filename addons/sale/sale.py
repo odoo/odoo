@@ -1274,7 +1274,7 @@ class sale_order_line(osv.osv):
         res = self.product_id_change(cursor, user, ids, pricelist, product,
                 qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,
-                date_order=date_order)
+                date_order=date_order, context=context)
         if 'product_uom' in res['value']:
             del res['value']['product_uom']
         if not uom:
