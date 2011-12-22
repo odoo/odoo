@@ -86,8 +86,8 @@
 
 /* Base overwriting */
 .openerp .oe-dashboard .oe-listview-content, .openerp .oe-dashboard .ui-widget-header {
-    border:none !important;
-    padding:0px 3px;
+    border-right:none !important;
+    padding:0 3px;
 }
 
 /* Layouts */
@@ -278,7 +278,7 @@
     text-align: center;
 }
 .oe-static-home h1 {
-    margin: 0 0 0.3em
+    margin: 0 0 0.3em;
 }
 .oe-static-home-banner {
     display: inline-block;
@@ -318,7 +318,10 @@
 
 .openerp .oe_app_tiles h1, .openerp .oe_app_tiles h3 {
   margin: 16px 24px;
-  color: #555
+}
+
+.openerp .oe_app_tiles {
+  padding: 0 10px;
 }
 
 .openerp .oe_app_tiles li {
@@ -328,9 +331,9 @@
 
 .openerp .oe_app_tiles li img {
   display: block;
-  margin: 12px auto 16px;
-  height: 64px;
-  width: 64px;
+  margin: 0 auto;
+  height: 100px;
+  width: 100px;
 }
 .openerp .oe_app_tiles li img.hover {
     display: none;
@@ -342,14 +345,11 @@
     display: block;
 }
 
-.openerp .oe_app_tiles li div {
-  color: #555;
-}
-
 .openerp .oe_app_tiles li a {
   display: block;
   height: 120px;
   width: 194px;
+  color: #4C4C4C;
   border: 1px solid #f4f2f2;
   margin: 6px;
   padding: 12px;

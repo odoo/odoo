@@ -476,6 +476,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         });
         return reloaded.promise();
     },
+    reload: function () {
+        return this.reload_content();
+    },
 
     do_load_state: function(state) {
         var reload = false;
@@ -1143,7 +1146,12 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
     },
     open: function (point_insertion) {
         this.render().insertAfter(point_insertion);
-        this.make_paginator();
+
+        var no_subgroups = _(this.datagroup.group_by).isEmpty(),
+            records_terminated = !this.datagroup.context['group_by_no_leaf'];
+        if (no_subgroups && records_terminated) {
+            this.make_paginator();
+        }
     },
     close: function () {
         this.$row.children().last().empty();

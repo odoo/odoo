@@ -65,10 +65,6 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         var self = this;
         this._super();
         this.open({
-            modal: true,
-            width: '70%',
-            height: 'auto',
-            position: 'top',
             buttons: [
                 {text: _t("Close"), click: function() { self.stop(); }},
                 {text: _t("Import File"), click: function() { self.do_import(); }, 'class': 'oe-dialog-import-button'}
@@ -144,7 +140,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         });
     },
     toggle_import_button: function (newstate) {
-        this.$dialog.dialog('widget')
+        this.$element.dialog('widget')
                 .find('.oe-dialog-import-button')
                 .button('option', 'disabled', !newstate);
     },
@@ -352,7 +348,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         return true;
     },
     stop: function() {
-        $(this.$dialog).remove();
+        this.$element.remove();
         this._super();
     }
 });

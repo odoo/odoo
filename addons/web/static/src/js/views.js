@@ -28,6 +28,7 @@ session.web.ActionManager = session.web.Widget.extend({
     },
     render: function() {
         return "<div id='"+this.element_id+"' style='height:100%;'></div>";
+        return '<div id="' + this.element_id + '" style="height: 100%;"></div>';
     },
     dialog_stop: function () {
         if (this.dialog) {
@@ -49,8 +50,12 @@ session.web.ActionManager = session.web.Widget.extend({
     },
     do_push_state: function(state) {
         if (this.widget_parent && this.widget_parent.do_push_state) {
-            if (this.inner_action && this.inner_action.id) {
-                state['action_id'] = this.inner_action.id;
+            if (this.inner_action) {
+                if (this.inner_action.id) {
+                    state['action_id'] = this.inner_action.id;
+                } else {
+                    state['model'] = this.inner_action.res_model;
+                }
             }
             this.widget_parent.do_push_state(state);
         }
@@ -66,10 +71,15 @@ session.web.ActionManager = session.web.Widget.extend({
             }
         }
         else if (state.model && state.id) {
-            // TODO implement it
-            //this.null_action();
-            //action = {res_model: state.model, res_id: state.id};
-            //action_loaded = this.do_action(action);
+            // TODO handle context & domain ?
+            this.null_action();
+            action = {
+                res_model: state.model,
+                res_id: state.id,
+                type: 'ir.actions.act_window',
+                views: [[false, 'page'], [false, 'form']]
+            };
+            action_loaded = this.do_action(action);
         }
         else if (state.client_action) {
             this.null_action();
@@ -135,6 +145,9 @@ session.web.ActionManager = session.web.Widget.extend({
             this.dialog_viewmanager.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
+            if(action.menu_id) {
+                return this.widget_parent.do_action(action);
+            }
             this.dialog_stop();
             this.content_stop();
             this.inner_action = action;
@@ -543,7 +556,10 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                         view_mode : 'form',
                         target : 'new',
                         flags : {
-                            action_buttons : true
+                            action_buttons : true,
+                            form : {
+                                resize_textareas : true
+                            }
                         }
                     };
                 if (id) {
@@ -852,7 +868,10 @@ session.web.Sidebar = session.web.Widget.extend({
                     additional_context);
                 result.result.flags = result.result.flags || {};
                 result.result.flags.new_window = true;
-                self.do_action(result.result);
+                self.do_action(result.result, function () {
+                    // reload view
+                    self.widget_parent.reload();
+                });
             });
         });
     },
@@ -1176,7 +1195,14 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     on_sidebar_view_log: function() {
     },
     sidebar_context: function () {
-        return $.Deferred().resolve({}).promise();
+        return $.when();
+    },
+    /**
+     * Asks the view to reload itself, if the reloading is asynchronous should
+     * return a {$.Deferred} indicating when the reloading is done.
+     */
+    reload: function () {
+        return $.when();
     }
 });
 

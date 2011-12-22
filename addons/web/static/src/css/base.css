@@ -92,12 +92,6 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
 .openerp .login {
     display: none;
 }
-.openerp .login form {
-    float: left;
-    width: 420px;
-    margin-left: 40px;
-    margin-bottom: 60px;
-}
 .openerp .login fieldset {
     padding-bottom: 5px;
     min-width: 100px;
@@ -137,19 +131,27 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
 }
 .openerp .login .login_error_message {
     display: none;
-    background-color: #9A0404;
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    color: white;
+    background-color: #b41616;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    filter: alpha(opacity=95);
+    -khtml-opacity: 0.95;
+    -moz-opacity: 0.95;
+    color: #eee;
     font-size: 16px;
-    font-weight: bold;
-    padding: 5px;
-    margin-top: 5px;
+    padding: 8px 12px;
+    margin-top: 15px;
+    text-align: center;
+}
+.openerp .login .login_invalid {
     text-align: center;
 }
 .openerp .login .login_invalid .login_error_message {
-    display: block;
+    display: inline-block;
 }
 
 .openerp.login-mode .login-container {
@@ -161,6 +163,8 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
 .openerp.login-mode .menu,
 .openerp.login-mode .secondary_menu,
 .openerp.login-mode .oe-application,
+.openerp.login-mode .oe_footer,
+.openerp.login-mode .header,
 .openerp.login-mode .db_options_row {
     display: none;
 }
@@ -243,6 +247,9 @@ label.error {
     width: 100%;
     height: 100%;
     background: #f0eeee;
+}
+.openerp .oe-application {
+    height: 100%;
 }
 .openerp .oe-application-container {
     width: 100%;
@@ -551,8 +558,7 @@ label.error {
 
 
 /* Main Application */
-.openerp .oe-main-content,
-.openerp .oe-application {
+.openerp .oe-main-content {
     padding: 0;
     height: 100%;
 }
@@ -891,6 +897,10 @@ label.error {
     opacity: 0.75;
 }
 
+.openerp .oe-listview .oe-field-cell .oe-listview-button-disabled img {
+    opacity: 0.5;
+}
+
 .openerp .oe-listview th.oe-actions {
     text-align: left;
     white-space: nowrap;
@@ -922,6 +932,7 @@ label.error {
 .openerp .oe_button.oe_button_pager:disabled {
     padding: 0 3px 0 3px;
     margin: 0;
+    height: 17px;
 }
 .openerp .oe-listview .oe-group-name {
     padding-right: 1em;
@@ -1120,6 +1131,9 @@ label.error {
     color: #FD5;
     font-weight: bold;
     font-size: 13px;
+}
+.openerp .oe_tooltip_help {
+    white-space: pre-wrap;
 }
 .openerp .oe_tooltip_technical {
     padding: 0 0 4px 0;
@@ -1411,8 +1425,11 @@ label.error {
     border-spacing: 4px;
 }
 .openerp .ui-widget-header {
-    background-image: none;
-    background-color: white;
+    background: white none;
+}
+/* progress bars */
+.openerp .ui-progressbar .ui-widget-header {
+    background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
 }
 
 .openerp tfoot.ui-widget-header .oe-list-footer { /* adding some space to the footer */
@@ -1883,9 +1900,10 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     padding: 0;
     border-bottom: 1px solid #CFCCCC;
 }
-.openerp .oe_view_editor_row:hover{
+.openerp .oe_view_editor_row:hover {
     background-color: #F3F3F3;
 }
+
 .openerp .oe_view_editor_tree_grid{
     text-align: left;
     white-space: nowrap;
@@ -1897,6 +1915,12 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 }
 .openerp .oe_view_editor_tree_grid a {
     display: block;
+}
+
+.openerp .oe_applications_tiles {
+  color: #4C4C4C;
+  text-shadow: #EEE 0 1px 0;
+  margin: 0 20px;
 }
 
 .openerp .oe_vm_switch {
@@ -2090,4 +2114,155 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     color: #aaaaaa !important;
     cursor: default;
     text-shadow: 0 1px 1px white !important;
+}
+
+/* Login page */
+
+.login {
+    padding: 0;
+    margin: 0;
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
+    background: url("/web/static/src/img/pattern.png") repeat;
+    color: #eee;
+    font-size: 14px;
+    height: 100%;
+}
+
+.login ul, ol {
+    padding: 0;
+    margin: 0;
+}
+
+.login li {
+    list-style-type: none;
+    padding-bottom: 4px;
+}
+
+.login a {
+    color: #eee;
+    text-decoration: none;
+}
+
+.login button {
+    float: right;
+    display: inline-block;
+    cursor: pointer;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
+    border: 1px solid #222222;
+    color: white;
+    margin: 0;
+    background: #600606;
+    background: -moz-linear-gradient(#b92020, #600606);
+    background: -webkit-gradient(linear, left top, left bottom, from(#b92020), to(#600606));
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(155, 155, 155, 0.4) inset;
+    -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+}
+
+.login input, #oe_login select {
+    width: 250px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    padding: 5px 6px;
+    border: 1px solid #999999;
+    background: whitesmoke;
+    -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    -box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.login .dbpane {
+    position: fixed;
+    top: 0;
+    right: 8px;
+    padding: 6px 12px 0px;
+    color: #eee;
+    border: solid 1px #333;
+    background: #101010;
+    filter: alpha(opacity=95);
+    -khtml-opacity: 0.95;
+    -moz-opacity: 0.95;
+    opacity: 0.95;
+    -moz-border-radius: 0 0 8px 8px;
+    -webkit-border-radius: 0 0 8px 8px;
+    border-radius: 0 0 8px 8px;
+}
+
+.login .bottom {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-shadow: 0 1px 1px #999999;
+    background: #600606;
+    background: -moz-linear-gradient(#b41616, #600606);
+    background: -webkit-gradient(linear, left top, left bottom, from(#b41616), to(#600606));
+}
+
+.login .pane {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -160px -166px;
+    border: solid 1px #333333;
+    background: #101010;
+    padding: 20px 32px;
+    text-align: left;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    -moz-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+    -webkit-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+    -box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+    filter: alpha(opacity=95);
+    -khtml-opacity: 0.95;
+    -moz-opacity: 0.95;
+    opacity: 0.95;
+}
+
+.login .pane h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.login #logo {
+    position: absolute;
+    top: -70px;
+    left: 0;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.login .footer {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.login .footer a {
+    font-size: 13px;
+    margin: 0 8px;
+}
+
+.login .footer a:hover {
+    text-decoration: underline;
+}
+
+.login .openerp {
+    font-weight: bold;
+    font-family: serif;
+    font-size: 16px;
 }
