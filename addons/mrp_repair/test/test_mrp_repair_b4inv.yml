@@ -1,0 +1,30 @@
+-
+  Now test invoice type before repair.
+-
+  I Confirm Repair order For Invoice Type Before Repair.
+-
+  !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rmrp2}
+-
+  Repair order state to 'Ready'.
+-
+  !python {model: mrp.repair}: |
+    self.action_repair_ready(cr, uid, [ref('mrp_repair_rmrp2')], context=None)
+-
+  I click on "Create Invoice" button of this wizard to make invoice.
+-
+  !workflow {model: mrp.repair, action: action_invoice_create, ref: mrp_repair_rmrp2}
+-
+  I check that Invoice is created for this repair order.
+-
+  !python {model: mrp.repair}: |
+     repair_id = self.browse(cr, uid, [ref('mrp_repair_rmrp2')], context=context)[0]
+     assert repair_id.invoice_id.id, _("No invoice exists for this repair order.")
+-
+  I start the repairing process by click on "Start Repair" Button.
+-
+  !workflow {model: mrp.repair, action: action_repair_start, ref: mrp_repair_rmrp2}
+-
+  Repairing Process for product is Done and I End Repair process by click on "End Repair" button For Invoice Type b4repair.
+-
+  !workflow {model: mrp.repair, action: action_repair_end, ref: mrp_repair_rmrp2}
+
