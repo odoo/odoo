@@ -417,7 +417,8 @@ class hr_employee(osv.osv):
         'current_leave_state': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Status", type="selection",
             selection=[('draft', 'New'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
             ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')]),
-        'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status')
+        'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status'),
+        'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1)
     }
 
 hr_employee()

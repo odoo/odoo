@@ -140,7 +140,7 @@
                                 <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
                             </div>
                             <div class="oe_employee_details">
-                                <h4><a type="edit"><field name="name"/> (<field name="user_id"/>)</a></h4>
+                                <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
                                 <ul>
                                     <li t-if="record.department_id.raw_value"><field name="department_id"/></li>
                                     <li t-if="record.job_id.raw_value"><field name="job_id"/></li>

@@ -494,7 +494,7 @@
                 <field name="coach_id" position="after">
                     <field name="remaining_leaves"/>
                     <field name="current_leave_id"/>
-                    <field name="current_leave_state"/>
+                    <field name="current_leave_state" attrs="{'invisible':[('current_leave_id','=',False)]}"/>
                 </field>
             </field>
         </record>
