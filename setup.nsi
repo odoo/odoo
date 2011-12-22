@@ -177,20 +177,12 @@ Section OpenERP_Server SectionOpenERP_Server
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
         ;Create shortcuts
         CreateDirectory "$SMPROGRAMS\$STARTMENU_FOLDER"
-;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\OpenERP Server.lnk" "$INSTDIR\openerp-server.exe"
-;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Start service.lnk" "$INSTDIR\service\start.bat"
-;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Stop service.lnk" "$INSTDIR\service\stop.bat"
-;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Edit config.lnk" "notepad.exe" "$INSTDIR\openerp-server.conf"
-;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\View log.lnk" "notepad.exe" "$INSTDIR\openerp-server.log"
-;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\OpenERP.lnk" "start" "http://127.0.0.1:8069/"
-;        CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" "$INSTDIR\uninstall.exe"
-;        !insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Forum" "http://www.openerp.com/forum"
-;        !insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\Translation" "https://translations.launchpad.net/openobject"
         !insertmacro CreateInternetShortcut "$SMPROGRAMS\$STARTMENU_FOLDER\OpenERP" "http://localhost:8069/"
     !insertmacro MUI_STARTMENU_WRITE_END
 
 
     FileOpen $9 '$INSTDIR\install.log' w
+    FileWrite $9 "INSTDIR $INSTDIR$\r$\n"
     FileWrite $9 "Hostname $TextPostgreSQLHostname$\r$\n"
     FileWrite $9 "Port $TextPostgreSQLPort$\r$\n"
     FileWrite $9 "Username $TextPostgreSQLUsername$\r$\n"
@@ -214,7 +206,7 @@ Section -RestartServer
 SectionEnd
 
 Section -Post
-    WriteRegExpandStr HKLM "${UNINSTALL_REGISTRY_KEY}" "UninstallString" "$INSTDIR\Uninstall.exe"
+    WriteRegExpandStr HKLM "${UNINSTALL_REGISTRY_KEY}" "UninstallString" "$INSTDIR\server\Uninstall.exe"
     WriteRegExpandStr HKLM "${UNINSTALL_REGISTRY_KEY}" "InstallLocation" "$INSTDIR"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "DisplayName" "${DISPLAY_NAME}"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "DisplayVersion" "${VERSION}"
@@ -228,7 +220,7 @@ Section -Post
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "Contact" "sales@openerp.com"
     WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "NoModify" "1"
     WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "NoRepair" "1"
-    WriteUninstaller "$INSTDIR\Uninstall.exe"
+    WriteUninstaller "$INSTDIR\server\Uninstall.exe"
 SectionEnd
 
 Section "Uninstall"
@@ -240,19 +232,12 @@ Section "Uninstall"
     nsExec::Exec '"$INSTDIR\service\OpenERPServerService.exe" -remove'
     sleep 2
 
-    Rmdir /r "$INSTDIR"
+    Rmdir /r "$INSTDIR\service"
+    Rmdir /r "$INSTDIR\server"
 
     !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
 
-    Delete "$SMPROGRAMS\$MUI_TEMP\Forum.url"
-    Delete "$SMPROGRAMS\$MUI_TEMP\Translation.url"
-    Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
-    Delete "$SMPROGRAMS\$MUI_TEMP\OpenERP Server.lnk"
-    Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
-    Delete "$SMPROGRAMS\$MUI_TEMP\Start service.lnk"
-    Delete "$SMPROGRAMS\$MUI_TEMP\Stop service.lnk"
-    Delete "$SMPROGRAMS\$MUI_TEMP\Edit config.lnk"
-    Delete "$SMPROGRAMS\$MUI_TEMP\View log.lnk"
+    Delete "$SMPROGRAMS\$MUI_TEMP\OpenERP.url"
     ;
     ;Delete empty start menu parent diretories
     StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
