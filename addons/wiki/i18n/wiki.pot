@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16:14+0000\n"
-"PO-Revision-Date: 2011-01-11 11:16:14+0000\n"
+"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"PO-Revision-Date: 2011-12-22 18:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -97,8 +97,9 @@ msgid "Parent Menu"
 msgstr ""
 
 #. module: wiki
-#: help:wiki.wiki,group_id:0
-msgid "Topic, also called Wiki Group"
+#: code:addons/wiki/wizard/wiki_make_index.py:52
+#, python-format
+msgid "There is no section in this Page"
 msgstr ""
 
 #. module: wiki
@@ -129,20 +130,21 @@ msgid "Page Content"
 msgstr ""
 
 #. module: wiki
-#: code:addons/wiki/wiki.py:236
+#: code:addons/wiki/wiki.py:237
+#: code:addons/wiki/wizard/wiki_make_index.py:52
 #, python-format
 msgid "Warning !"
 msgstr ""
 
 #. module: wiki
-#: code:addons/wiki/wiki.py:236
+#: code:addons/wiki/wiki.py:237
 #, python-format
 msgid "There are no changes in revisions"
 msgstr ""
 
 #. module: wiki
-#: model:ir.module.module,shortdesc:wiki.module_meta_information
-msgid "Document Management - Wiki"
+#: help:wiki.wiki,section:0
+msgid "Use page section code like 1.2.1"
 msgstr ""
 
 #. module: wiki
@@ -203,8 +205,8 @@ msgid "Warning"
 msgstr ""
 
 #. module: wiki
-#: field:wiki.wiki,create_date:0
-msgid "Created on"
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
 msgstr ""
 
 #. module: wiki
@@ -235,11 +237,6 @@ msgid "Group Description"
 msgstr ""
 
 #. module: wiki
-#: help:wiki.wiki,section:0
-msgid "Use page section code like 1.2.1"
-msgstr ""
-
-#. module: wiki
 #: view:wiki.wiki.page.open:0
 msgid "Want to open a wiki page? "
 msgstr ""
@@ -260,23 +257,14 @@ msgid "Meta Information"
 msgstr ""
 
 #. module: wiki
-#: model:ir.module.module,description:wiki.module_meta_information
-msgid "\n"
-"The base module to manage documents(wiki)\n"
-"\n"
-"keep track for the wiki groups, pages, and history\n"
-"    "
+#: field:wiki.wiki,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: wiki
 #: view:wiki.groups:0
 #: view:wizard.wiki.history.show_diff:0
 msgid "Notes"
-msgstr ""
-
-#. module: wiki
-#: help:wiki.groups,home:0
-msgid "Required to select home page if display method is Home Page"
 msgstr ""
 
 #. module: wiki
@@ -339,6 +327,11 @@ msgstr ""
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Modification Information"
+msgstr ""
+
+#. module: wiki
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
 msgstr ""
 
 #. module: wiki
