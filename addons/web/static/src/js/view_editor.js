@@ -39,7 +39,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
         };
         this.view_edit_dialog = new openerp.web.Dialog(this, {
-            title: _.str.sprintf("Manage Views (%s)", this.model),
+            title: _t(_.str.sprintf("Manage Views (%s)", this.model)),
             width: 850,
             buttons: [
                 {text: _t("Create"), click: function() { self.on_create_view(); }},
