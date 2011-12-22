@@ -1,6 +1,7 @@
 openerp.web.search = function(openerp) {
 var QWeb = openerp.web.qweb,
-      _t =  openerp.web._t;
+      _t =  openerp.web._t,
+     _lt = openerp.web._lt;
 
 openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.SearchView# */{
     template: "EmptyComponent",
@@ -894,8 +895,8 @@ openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @
     init: function () {
         this._super.apply(this, arguments);
         this.attrs.selection = [
-            ['true', 'Yes'],
-            ['false', 'No']
+            ['true', _t("Yes")],
+            ['false', _t("No")]
         ];
     },
     /**
@@ -1193,7 +1194,7 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
      * @param field a field descriptor object (as returned by fields_get, augmented by the field name)
      */
     select_field: function(field) {
-        var _this = this;
+        var self = this;
         if(this.attrs.selected != null) {
             this.value.stop();
             this.value = null;
@@ -1220,9 +1221,9 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
             this.value.set_field(field);
         }
         _.each(this.value.operators, function(operator) {
-            var option = jQuery('<option>', {value: operator.value})
-                .text(operator.text)
-                .appendTo(_this.$element.find('.searchview_extended_prop_op'));
+            $('<option>', {value: operator.value})
+                .text(String(operator.text))
+                .appendTo(self.$element.find('.searchview_extended_prop_op'));
         });
         this.$element.find('.searchview_extended_prop_value').html(
             this.value.render({}));
@@ -1248,14 +1249,14 @@ openerp.web.search.ExtendedSearchProposition.Char = openerp.web.search.ExtendedS
     template: 'SearchView.extended_search.proposition.char',
     identifier_prefix: 'extended-search-proposition-char',
     operators: [
-        {value: "ilike", text: _t("contains")},
-        {value: "not ilike", text: _t("doesn't contain")},
-        {value: "=", text: _t("is equal to")},
-        {value: "!=", text: _t("is not equal to")},
-        {value: ">", text: _t("greater than")},
-        {value: "<", text: _t("less than")},
-        {value: ">=", text: _t("greater or equal than")},
-        {value: "<=", text: _t("less or equal than")}
+        {value: "ilike", text: _lt("contains")},
+        {value: "not ilike", text: _lt("doesn't contain")},
+        {value: "=", text: _lt("is equal to")},
+        {value: "!=", text: _lt("is not equal to")},
+        {value: ">", text: _lt("greater than")},
+        {value: "<", text: _lt("less than")},
+        {value: ">=", text: _lt("greater or equal than")},
+        {value: "<=", text: _lt("less or equal than")}
     ],
     get_value: function() {
         return this.$element.val();
@@ -1265,12 +1266,12 @@ openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.search.Exten
     template: 'SearchView.extended_search.proposition.empty',
     identifier_prefix: 'extended-search-proposition-datetime',
     operators: [
-        {value: "=", text: _t("is equal to")},
-        {value: "!=", text: _t("is not equal to")},
-        {value: ">", text: _t("greater than")},
-        {value: "<", text: _t("less than")},
-        {value: ">=", text: _t("greater or equal than")},
-        {value: "<=", text: _t("less or equal than")}
+        {value: "=", text: _lt("is equal to")},
+        {value: "!=", text: _lt("is not equal to")},
+        {value: ">", text: _lt("greater than")},
+        {value: "<", text: _lt("less than")},
+        {value: ">=", text: _lt("greater or equal than")},
+        {value: "<=", text: _lt("less or equal than")}
     ],
     get_value: function() {
         return this.datewidget.get_value();
@@ -1285,12 +1286,12 @@ openerp.web.search.ExtendedSearchProposition.Date = openerp.web.search.ExtendedS
     template: 'SearchView.extended_search.proposition.empty',
     identifier_prefix: 'extended-search-proposition-date',
     operators: [
-        {value: "=", text: _t("is equal to")},
-        {value: "!=", text: _t("is not equal to")},
-        {value: ">", text: _t("greater than")},
-        {value: "<", text: _t("less than")},
-        {value: ">=", text: _t("greater or equal than")},
-        {value: "<=", text: _t("less or equal than")}
+        {value: "=", text: _lt("is equal to")},
+        {value: "!=", text: _lt("is not equal to")},
+        {value: ">", text: _lt("greater than")},
+        {value: "<", text: _lt("less than")},
+        {value: ">=", text: _lt("greater or equal than")},
+        {value: "<=", text: _lt("less or equal than")}
     ],
     get_value: function() {
         return this.datewidget.get_value();
@@ -1305,12 +1306,12 @@ openerp.web.search.ExtendedSearchProposition.Integer = openerp.web.search.Extend
     template: 'SearchView.extended_search.proposition.integer',
     identifier_prefix: 'extended-search-proposition-integer',
     operators: [
-        {value: "=", text: _t("is equal to")},
-        {value: "!=", text: _t("is not equal to")},
-        {value: ">", text: _t("greater than")},
-        {value: "<", text: _t("less than")},
-        {value: ">=", text: _t("greater or equal than")},
-        {value: "<=", text: _t("less or equal than")}
+        {value: "=", text: _lt("is equal to")},
+        {value: "!=", text: _lt("is not equal to")},
+        {value: ">", text: _lt("greater than")},
+        {value: "<", text: _lt("less than")},
+        {value: ">=", text: _lt("greater or equal than")},
+        {value: "<=", text: _lt("less or equal than")}
     ],
     get_value: function() {
         try {
@@ -1321,18 +1322,18 @@ openerp.web.search.ExtendedSearchProposition.Integer = openerp.web.search.Extend
     }
 });
 openerp.web.search.ExtendedSearchProposition.Id = openerp.web.search.ExtendedSearchProposition.Integer.extend({
-    operators: [{value: "=", text: _t("is")}]
+    operators: [{value: "=", text: _lt("is")}]
 });
 openerp.web.search.ExtendedSearchProposition.Float = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.float',
     identifier_prefix: 'extended-search-proposition-float',
     operators: [
-        {value: "=", text: _t("is equal to")},
-        {value: "!=", text: _t("is not equal to")},
-        {value: ">", text: _t("greater than")},
-        {value: "<", text: _t("less than")},
-        {value: ">=", text: _t("greater or equal than")},
-        {value: "<=", text: _t("less or equal than")}
+        {value: "=", text: _lt("is equal to")},
+        {value: "!=", text: _lt("is not equal to")},
+        {value: ">", text: _lt("greater than")},
+        {value: "<", text: _lt("less than")},
+        {value: ">=", text: _lt("greater or equal than")},
+        {value: "<=", text: _lt("less or equal than")}
     ],
     get_value: function() {
         try {
@@ -1346,8 +1347,8 @@ openerp.web.search.ExtendedSearchProposition.Selection = openerp.web.search.Exte
     template: 'SearchView.extended_search.proposition.selection',
     identifier_prefix: 'extended-search-proposition-selection',
     operators: [
-        {value: "=", text: _t("is")},
-        {value: "!=", text: _t("is not")}
+        {value: "=", text: _lt("is")},
+        {value: "!=", text: _lt("is not")}
     ],
     set_field: function(field) {
         this.field = field;
@@ -1360,8 +1361,8 @@ openerp.web.search.ExtendedSearchProposition.Boolean = openerp.web.search.Extend
     template: 'SearchView.extended_search.proposition.boolean',
     identifier_prefix: 'extended-search-proposition-boolean',
     operators: [
-        {value: "=", text: _t("is true")},
-        {value: "!=", text: _t("is false")}
+        {value: "=", text: _lt("is true")},
+        {value: "!=", text: _lt("is false")}
     ],
     get_value: function() {
         return true;

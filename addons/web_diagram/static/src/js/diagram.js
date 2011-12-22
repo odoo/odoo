@@ -204,8 +204,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
             id = parseInt(id, 10);
         var action_manager = new openerp.web.ActionManager(this);
         var dialog = new openerp.web.Dialog(this, {
-            width: 800,
-            height: 600,
+            width: 850,
             buttons : [
                 {text: _t("Cancel"), click: function() { $(this).dialog('destroy'); }},
                 {text: _t("Save"), click: function() {

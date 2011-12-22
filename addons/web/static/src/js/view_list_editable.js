@@ -242,7 +242,7 @@ openerp.web.list_editable = function (openerp) {
                 self.edition_form.appendTo();
                 $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
                     // put in $.when just in case  FormView.on_loaded becomes asynchronous
-                    $new_row.find('td')
+                    $new_row.find('> td')
                           .addClass('oe-field-cell')
                           .removeAttr('width')
                       .end()
