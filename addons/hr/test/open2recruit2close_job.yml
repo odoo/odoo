@@ -24,7 +24,7 @@
   I assign the job position to a newly hired employee
 -
   !python {model: hr.employee}: |
-    self.write(cr, uid, [ref('niv')], {'job_id':ref('job_developer')})
+    self.write(cr, uid, [ref('employee_niv')], {'job_id':ref('job_developer')})
 -
   Now I dont want to recruit new employee for this position. so I mark it as Old.
 -
