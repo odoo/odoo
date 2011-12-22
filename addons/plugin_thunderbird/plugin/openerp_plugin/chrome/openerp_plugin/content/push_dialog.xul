@@ -1,11 +1,12 @@
 <?xml version="1.0"?>  
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>  
 <!-- Extremely recommended to keep this css include!! -->  
-<window id="rootWnd" title="push box"   onload="load_contact_dialog();" 
+<window id="rootWnd" title="push box"   onload="load_contact_dialog();load_document();" 
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">  
     <script type="text/javascript" src="chrome://openerp_plugin/content/js/tiny_xmlrpc.js"></script>
     <script type="text/javascript" src="chrome://openerp_plugin/content/js/tools.js"></script>
     <script type="text/javascript" src="chrome://openerp_plugin/content/js/dialog.js"></script>
+    <script type="text/javascript" src="chrome://openerp_plugin/content/js/overlay.js"></script>
 	<vbox>  
     	<hbox>  
         	<label value="Message" id="message_label"/>  
@@ -14,7 +15,7 @@
         	<button label="Cancel" accesskey="c" oncommand="window.close();"/>
         	<button id="push_new" label="Push Email" accesskey="a" oncommand=" window.close();window.open('chrome://openerp_plugin/content/push.xul', '', 'chrome', resizable='yes');"/>
         	<button id="open" label="Create Document" accesskey="c" oncommand="window.close();window.open('chrome://openerp_plugin/content/create_new.xul', '', 'chrome', resizable='yes');"/>
-        	<button id="opendocument" label="Open Document" accesskey="d" oncommand="check(open_document);"/>
+        	<button id="open_document" label="Open Document" accesskey="d" oncommand="check_document();"/>
             <!-- link open document and show create or open but not both-->
         </hbox>  
     </vbox>  
