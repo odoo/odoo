@@ -41,12 +41,11 @@
                 <form string="Account Board">
                     <board style="2-1">
                         <column>
-                            <action name="%(account.action_invoice_tree1)d" string="Customer Invoices to Approve" domain="[('state','in',('draft','proforma2')), ('type','=','out_invoice')]"/>
+                            <action name="%(account.action_invoice_tree1)d" creatable="true" string="Draft Customer Invoices" domain="[('state','in',('draft','proforma2')), ('type','=','out_invoice')]"/>
                             <action name="%(action_company_analysis_tree)d" string="Company Analysis"/>
                         </column>
                         <column>
                             <action name="%(action_treasory_graph)d" string="Treasury"/> <!--groups="account.group_account_manager,account.group_account_user"-->
-                            <action name="%(action_aged_receivable)d" string="Aged Receivables"/> <!--groups="account.group_account_manager,account.group_account_user"-->
                         </column>
                     </board>
                 </form>

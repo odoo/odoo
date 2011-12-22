@@ -1,0 +1,21 @@
+-
+  I set task work entry for Employee
+-
+  !record {model: project.task.work, id: project_task_work1}:
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    name: Test Timesheet records
+    task_id: project.project_task_1
+    hours: 20.0
+    user_id: project.res_users_analyst
+    company_id: base.main_company
+-
+  I check Timesheet line for employee in current Timesheet
+-
+  !python {model: hr.analytic.timesheet}: |
+    import datetime
+    start = (datetime.date.today().strftime('%Y-%m-%d'))
+    task_work = self.search(cr, uid, [("name","=","Prepare Requirements Document: Test Timesheet records")],context)[0]
+    task_ids = self.browse(cr, uid, task_work, context)
+    assert task_ids.user_id.id == ref("project.res_users_analyst"), 'Error, The User in Timesheet is not Correct'
+    assert task_ids.date == start, 'Error, The Date in Timesheet is not ok'
+    assert task_ids.product_uom_id.name == "Hour", 'Error, The Hour in Timesheet is not ok'

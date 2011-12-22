@@ -1,0 +1,50 @@
+-
+  In order to check Survey Request of the survey "Initial Partner Feedback" I create a Survey Request for survey "Initial Partner Feedback".
+-
+  !record {model: survey.request, id: survey_request_1}:
+    survey_id: survey_Initial_partner_feedback
+    user_id: base.user_demo
+-
+  !assert {model: survey.request, id: survey_request_1, string: Survey Request should be in draft state}:
+    - state == 'draft'
+-
+  I set Survey Request for the survey in waiting state.
+-
+  !python {model: survey.request}: |
+    self.survey_req_waiting_answer(cr, uid, [ref("survey_request_1")], context)
+-
+  I check that state of Survey Request for the survey is waiting or not.
+-
+  !assert {model: survey.request, id: survey_request_1, severity: error, string: Survey Request should be in waiting state}:
+    - state == 'waiting_answer'
+-
+  I cancel the Survey Request of the survey.
+-
+  !python {model: survey.request}: |
+    self.survey_req_cancel(cr, uid, [ref("survey_request_1")], context)
+-
+  I check that state of Survey Request of the survey is cancel or not.
+-
+  !assert {model: survey.request, id: survey_request_1, severity: error, string: Survey Request should be in cancel state}:
+    - state == 'cancel'
+-
+  I set Survey Request of the survey in draft state.
+-
+  !python {model: survey.request}: |
+    self.survey_req_draft(cr, uid, [ref("survey_request_1")], context)
+-
+  I check that state of Survey request of the survey is draft or not.
+-
+  !assert {model: survey.request, id: survey_request_1, severity: error, string: Survey Request should be in draft state}:
+    - state == 'draft'
+-
+  I set survey request of the survey in done state.
+-
+  !python {model: survey.request}: |
+    self.survey_req_waiting_answer(cr, uid, [ref("survey_request_1")], context)
+    self.survey_req_done(cr, uid, [ref("survey_request_1")], context)
+-
+  I check that state of Survey request of the survey is done or not.
+-
+  !assert {model: survey.request, id: survey_request_1, severity: error, string: Survey Request should be in done state}:
+    - state == 'done'

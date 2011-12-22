@@ -19,10 +19,10 @@
 #
 ##############################################################################
 {
-    "name" : "Accountant Access",
+    "name" : "Accounting and Finance",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Hidden',
+    "category": 'Accounting & Finance',
     'complexity': "normal",
     "description": """
 Accounting Access Rights.
@@ -45,6 +45,7 @@ user rights to Demo user.
     'test': [],
     'installable': True,
     'active': False,
+    'application': True,
     'certificate': '00395091383933390541',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

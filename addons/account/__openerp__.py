@@ -19,11 +19,11 @@
 #
 ##############################################################################
 {
-    "name" : "Accounting and Financial Management",
+    "name" : "eInvoicing",
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Accounting & Finance',
-    'complexity': "normal",
+    'complexity': "easy",
     "description": """
 Accounting and Financial Management.
 ====================================
@@ -104,6 +104,8 @@ module named account_voucher.
         'account_invoice_view.xml',
         'partner_view.xml',
         'data/account_data.xml',
+        'data/data_financial_report.xml',
+        'data/data_account_type.xml',
         'account_invoice_workflow.xml',
         'project/project_view.xml',
         'project/project_report.xml',
@@ -121,8 +123,6 @@ module named account_voucher.
         'ir_sequence_view.xml',
         'company_view.xml',
         'board_account_view.xml',
-        "wizard/account_report_profit_loss_view.xml",
-        "wizard/account_report_balance_sheet_view.xml",
         "edi/invoice_action_data.xml",
         "account_bank_view.xml",
         "account_pre_install.yml"

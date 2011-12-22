@@ -26,7 +26,7 @@ def _gen_cache_clear(method):
     def func(self, cr, *args, **kwargs):
         s = super(publisher_warranty_contract, self)
         r = getattr(s, method)(cr, *args, **kwargs)
-        self.is_livechat_enable.clear_cache(cr.dbname)
+        self.is_livechat_enable.clear_cache(self)
         return r
     return func
 
@@ -44,7 +44,7 @@ class publisher_warranty_contract(osv.osv):
 
     @cache(skiparg=3)
     def get_default_livechat_text(self, cr, uid):
-        return '<a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank"><img src="/web_livechat/static/src/img/busy.png"/>Support</a>'
+        return '<a href="#" target="_blank"><img src="/web_livechat/static/src/img/busy.png"/>Support</a>'
 
 publisher_warranty_contract()
 

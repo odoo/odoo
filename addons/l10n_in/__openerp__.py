@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Indian Chart of Account",
+    "name": "India - Accounting",
     "version": "1.0",
     "description": """
 Indian Accounting : Chart of Account.

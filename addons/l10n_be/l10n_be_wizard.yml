@@ -5,16 +5,15 @@
     type: automatic
 -
   !python {model: ir.actions.todo}: |
-    if self.browse(cr, uid, ref('l10n_be.config_call_account_template')).state=='open':
+    install_todo = self.browse(cr, uid, ref('l10n_be.config_call_account_template'))
+    if install_todo.state == 'open':
         wiz = self.pool.get('wizard.multi.charts.accounts')
         values = {
             'chart_template_id': ref('l10n_be.l10nbe_chart_template')
         }
         values.update(
-            wiz.onchange_chart_template_id(cr, uid, False, ref('l10n_be.l10nbe_chart_template')).get('values', {})
+            wiz.onchange_chart_template_id(cr, uid, False, ref('l10n_be.l10nbe_chart_template')).get('value', {})
         )
         wiz_id = wiz.create(cr, uid, values)
         wiz.execute(cr, uid, [wiz_id])
-        self.write(cr, uid, [ref('l10n_be.config_call_account_template')], {
-            'state': 'done'
-        })
+        install_todo.write({'state':'done'})

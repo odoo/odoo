@@ -1,0 +1,111 @@
+-
+  In order to check the survey module in OpenERP I use the survey "Initial Partner Feedback".
+-
+  I set the survey in Open state.
+-
+  !python {model: survey}: |
+    sur = self.survey_open(cr, uid, [ref("survey_Initial_partner_feedback")], context)
+-
+  I check state of survey is open or not.
+-
+  !assert {model: survey, id: survey_Initial_partner_feedback, severity: error, string: Survey should be in open state}:
+    - state == 'open'
+-
+  I check that the survey is reopened or not.
+-
+  !python {model: survey}: |
+    self.survey_cancel(cr, uid, [ref('survey_Initial_partner_feedback')],context)
+    self.survey_open(cr, uid, [ref('survey_Initial_partner_feedback')],context)
+-
+  I check that state of survey is open or not.
+-
+  !assert {model: survey, id: survey_Initial_partner_feedback, severity: error, string: Survey should be in open state}:
+    - state == 'open'
+-
+  I set the state of the survey open.
+-
+  !python {model: survey}: |
+    sur = self.survey_open(cr, uid, [ref("survey_Initial_partner_feedback")], context)
+-
+  In order to print the survey I click on Print.
+-
+  !python {model: survey.print}: |
+    id = self.create(cr, uid, {'survey_ids': [(6,0,[ref('survey.survey_Initial_partner_feedback')])]})
+    self.action_next(cr, uid, [id], context)
+-
+  In order to answer the survey I click on "Answer a Survey" wizard.
+-
+  !python {model: survey.name.wiz}: |
+    id = self.create(cr, uid, {'survey_id': ref("survey_Initial_partner_feedback")})
+    self.action_next(cr, uid, [id], context)
+-
+  I give the answer of the first and second page of the survey.
+-
+  !python {model: survey.question.wiz}: |
+    ctx = {'active_model':'survey', 'active_id': ref('survey_Initial_partner_feedback'), 'active_ids': [ref('survey_Initial_partner_feedback')]}
+    self.fields_view_get(cr, uid, ref("survey.view_survey_question_message"),"form", context=ctx)
+    values = self.default_get(cr, uid, ['name'], ctx)
+    id = self.create(cr, uid, {str(ref("survey_initial_question_company_name")) +"_single" :'Tiny' , str(ref("survey_initial_question_company_size")) + "_selection" : int(ref("survey.survey_initial_question_company_size_51")), }, context)
+    self.action_next(cr, uid, [id], context)
+    id = self.create(cr, uid, {str(ref("survey_initial_question_contract_customers")) + "_selection" : int(ref("survey_initial_answer_sometimes")), str(ref("survey_initial_question_sell_to_your_customers")) + "_selection" : int(ref("survey_initial_answer_maintenance_contract")), }, context)
+    self.action_next(cr, uid, [id], context)
+-
+  I print the answers of the survey.
+-
+  !python {model: survey.browse.answer}: |
+    id = self.create(cr, uid, {'survey_id': ref('survey.survey_Initial_partner_feedback')})
+    self.action_next(cr, uid, [id], context)
+-
+  I edit questions of the survey as per requirement.
+-
+  !python {model: survey.question.wiz}: |
+    name_wiz_obj = self.pool.get('survey.name.wiz')
+    id = name_wiz_obj.create(cr, uid, {'survey_id': ref("survey_Initial_partner_feedback")})
+    ctx = {'active_model':'survey', 'active_id': ref('survey_Initial_partner_feedback'), 'active_ids': [ref('survey_Initial_partner_feedback')], 'question_id': ref('survey_initial_question_company_name'), 'page_number': -1,'sur_name_id': id}
+    self.action_edit_question(cr, uid, [ref('survey_initial_question_company_name')], context = ctx)
+    self.action_delete_question(cr, uid, [ref('survey_initial_question_company_name')], context = ctx)
+    self.action_new_question(cr, uid, [], context = ctx)
+-
+  I edit Page of the survey as per requirement.
+-
+  !python {model: survey.question.wiz}: |
+    name_wiz_obj = self.pool.get('survey.name.wiz')
+    id = name_wiz_obj.create(cr, uid, {'survey_id': ref("survey_Initial_partner_feedback")})
+    ctx = {'active_model':'survey', 'active_id': ref('survey_Initial_partner_feedback'), 'active_ids': [ref('survey_Initial_partner_feedback')], 'page_id': ref('survey_initial_page_Contracts'), 'sur_name_id': id}
+    self.action_edit_page(cr, uid, [ref('survey_initial_page_Contracts')], context = ctx)
+    self.action_delete_page(cr, uid, [ref('survey_initial_page_Contracts')], context = ctx)
+    self.action_new_page(cr, uid, [], context = ctx)
+-
+  In order to send invitation to the users I click on "Send Invitation" wizard.
+-
+  !python {model: survey.send.invitation}: |
+    context = {'active_model':'survey', 'active_id': ref('survey_Initial_partner_feedback'), 'active_ids': [ref('survey_Initial_partner_feedback')]}
+    values = self.default_get(cr, uid, ['mail_from', 'mail_subject', 'send_mail_existing', 'mail_subject_existing', 'mail', 'partner_ids', 'send_mail'], context)
+    values['mail_from'] = 'Surveyor'
+    new_id = self.create(cr, uid, values)
+    self.action_send(cr, uid, [new_id], context)
+-
+  I set the value in "Total start survey" field.
+-
+  !record {model: survey, id: survey_Initial_partner_feedback}:
+    tot_start_survey: 1
+-
+  I set the survey in Cancel state.
+-
+  !python {model: survey}: |
+    self.survey_cancel(cr, uid, [ref("survey_Initial_partner_feedback")], context)
+-
+  I check state of survey is cancel or not.
+-
+  !assert {model: survey, id: survey_Initial_partner_feedback, severity: error, string: Survey should be in cancel state}:
+    - state == 'cancel'
+-
+  I set the survey in close state.
+-
+  !python {model: survey}: |
+    self.survey_close(cr, uid, [ref("survey_Initial_partner_feedback")], context)
+-
+  I check state of Survey is close or not.
+-
+  !assert {model: survey, id: survey_Initial_partner_feedback, severity: error, string: Survey should be in close state}:
+    - state == 'close'

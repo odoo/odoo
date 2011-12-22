@@ -57,7 +57,7 @@
                     <field name="sequence"/>
                     <field colspan="4" name="name" select="1"/>
                     <field name="product_id"/>
-                    <field name="product_tmpl_id" select="1"/>
+                    <field name="product_tmpl_id" select="1" groups="product.group_product_variant"/>
                     <field name="categ_id" select="1"/>
                     <field name="min_quantity"/>
                     <field name="base"/>
@@ -74,7 +74,7 @@
                     <separator colspan="4" string="Rules Test Match"/>
                     <field colspan="4" name="name" select="1"/>
                     <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
-                    <field name="product_tmpl_id" select="1"/>
+                    <field name="product_tmpl_id" select="1" groups="product.group_product_variant"/>
                     <field name="categ_id" select="1"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
@@ -166,7 +166,6 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="product_pricelist_view_search" />
             <field name="context">{"default_type":"sale", "search_default_type":"sale"}</field>
-            <field name="domain">[('type','=','sale')]</field>
             <field name="help">A price list contains rules to be evaluated in order to compute the purchase or sales price for all the partners assigned to a price list. Price lists have several versions (2010, 2011, Promotion of February 2010, etc.) and each version has several rules. Example: the customer price of a product category will be based on the supplier price multiplied by 1.80.</field>
         </record>
         <record id="product_pricelist_action_for_purchase" model="ir.actions.act_window">
@@ -177,7 +176,6 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="product_pricelist_view_search" />
             <field name="context">{"default_type":"purchase", "search_default_type":"purchase"}</field>
-            <field name="domain">[('type','=','purchase')]</field>
             <field name="help">A price list contains rules to be evaluated in order to compute the purchase or sales price for all the partners assigned to a price list. Price lists have several versions (2010, 2011, Promotion of February 2010, etc.) and each version has several rules. Example: the customer price of a product category will be based on the supplier price multiplied by 1.80.</field>
         </record>
         <menuitem

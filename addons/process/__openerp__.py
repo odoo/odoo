@@ -23,7 +23,7 @@
 {
     'name': 'Enterprise Process',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Dependency',
     'description': """
 This module shows the basic processes involved in the selected modules and in the sequence they occur.
 ======================================================================================================

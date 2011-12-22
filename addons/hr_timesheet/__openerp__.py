@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Human Resources (Timesheet encoding)',
+    'name': 'Timesheets',
     'version': '1.0',
-    'category': 'Hidden',
+    "category": "Human Resources",
     'complexity': "easy",
     'description': """
 This module implements a timesheet system.
@@ -56,9 +56,11 @@ to set up a management by affair.
         'hr_timesheet_installer.xml',
     ],
     'demo_xml': ['hr_timesheet_demo.xml'],
-    'test': ['test/test_hr_timesheet.yml',
-             'test/hr_timesheet_report.yml',
-             ],
+    'test': [
+        'test/test_hr_timesheet.yml',
+        'test/hr_timesheet_report.yml',
+        'test/hr_timesheet_demo.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '0071405533469',
