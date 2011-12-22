@@ -316,9 +316,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             .find('button[data-pager-action=last], button[data-pager-action=next]')
                 .attr('disabled', last === total);
                 
-        /* if(this.dataset.ids.length < this.limit()) {
+        if(this.dataset.ids.length < this.limit()) {
             this.$element.find('.oe-list-pager').css('display','none');
-        } */
+        } 
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
