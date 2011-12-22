@@ -215,7 +215,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             $(self.groups).trigger(
                 'selected', [selection.ids, selection.records]);
         });
-
         this.$element.find('.oe-list-add')
                 .click(this.do_add_record)
                 .attr('disabled', grouped && this.options.editable);
@@ -234,8 +233,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 $this.append('<span class="ui-icon ui-icon-triangle-1-s">')
                      .siblings('.oe-sortable').find('span').remove();
             }
-
+            
             self.reload_content();
+            
         });
 
         this.$element.find('.oe-list-pager')
@@ -274,7 +274,8 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                             self.reload_content();
                         })
                         .val(self._limit || 'NaN');
-                });
+                })
+                
         if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
@@ -314,6 +315,10 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             .end()
             .find('button[data-pager-action=last], button[data-pager-action=next]')
                 .attr('disabled', last === total);
+                
+        /* if(this.dataset.ids.length < this.limit()) {
+            this.$element.find('.oe-list-pager').css('display','none');
+        } */
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
@@ -469,6 +474,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             page: this.page,
             limit: this._limit
         });
+        
         return reloaded.promise();
     },
 

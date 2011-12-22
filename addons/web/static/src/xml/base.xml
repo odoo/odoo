@@ -427,7 +427,7 @@
                 </blockquote>
             </td>
             <td rowspan="3" class="view-manager-main-sidebar" height="100%">
-            <t t-foreach="views" t-as="view">
+                <t t-foreach="views" t-as="view">
                 <div t-attf-id="#{prefix}_sidebar_#{view.view_type}" class="sidebar-main-div closed-sidebar" style="display: none"/>
             </t>
         </td>
@@ -452,7 +452,8 @@
                 <div t-attf-id="#{prefix}_view_#{view.view_type}"/>
             </t>
         </td>
-       
+        <td>
+        </td>       
     </tr>
     </tbody>
     </table>
