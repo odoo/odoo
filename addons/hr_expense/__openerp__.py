@@ -62,12 +62,13 @@ re-invoice your customer's expenses if your work by project.
     'demo_xml': [
         'hr_expense_demo.xml',
         ],
-    'test': ['test/test_hr_expense.yml',
-             'test/hr_expense_report.yml',
+    'test': [
+             'test/expense_demo.yml',
+             'test/expense_process.yml',
              ],
     'installable': True,
     'active': False,
     'certificate': '0062479841789',
-    'core': True,
+    'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

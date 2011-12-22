@@ -196,9 +196,9 @@ class report_account_analytic_planning_line(osv.osv):
         return result
 
     _columns = {
-        'account_id': fields.many2one('account.analytic.account', 'Analytic account'),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic account', select=True),
         'planning_id': fields.many2one('report_account_analytic.planning', 'Planning', required=True, ondelete='cascade'),
-        'user_id': fields.many2one('res.users', 'User'),
+        'user_id': fields.many2one('res.users', 'User', select=True),
         'amount': fields.float('Quantity', required=True),
         'amount_unit': fields.many2one('product.uom', 'Qty UoM', required=True),
         'note': fields.text('Note', size=64),
@@ -541,8 +541,8 @@ WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
         return result
 
     _columns = {
-        'planning_id': fields.many2one('report_account_analytic.planning', 'Planning'),
-        'user_id': fields.many2one('res.users', 'User'),
+        'planning_id': fields.many2one('report_account_analytic.planning', 'Planning', select=True),
+        'user_id': fields.many2one('res.users', 'User', select=True),
         'manager_id': fields.many2one('res.users', 'Manager'),
         'account_id': fields.many2one('account.analytic.account', 'Account'),
         'sum_amount': fields.float('Planned Days', required=True),

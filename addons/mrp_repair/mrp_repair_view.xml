@@ -65,7 +65,8 @@
                                             <field name="invoiced"/>
                                         </group>
                                         <newline/>
-                                        <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                        <separator colspan="4" string="Taxes"/>
+                                        <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" nolabel="1"/>
                                         <separator colspan="4" string="States"/>
                                         <field name="state"/>
                                     </page>
@@ -137,7 +138,8 @@
                                             <field name="invoiced"/>
                                         </group>
                                         <newline/>
-                                        <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                        <separator colspan="4" string="Taxes"/>
+                                        <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" nolabel="1"/>
                                      </page>
                                      <page string="History" groups="base.group_extended">
                                         <field colspan="4" name="invoice_line_id" />

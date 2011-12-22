@@ -21,11 +21,11 @@
 ##############################################################################
 
 {
-    "name" : "Fetch Emails",
+    "name" : "Email Gateway",
     "version" : "1.0",
     "depends" : ["base", 'mail'],
     "author" : "OpenERP SA",
-    "category": 'Customer Relationship Management',
+    "category": 'Tools',
     "description": """
 Retrieve incoming email on POP / IMAP servers
 =============================================

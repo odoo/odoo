@@ -22,7 +22,7 @@
 {
     'name': 'Dashboards',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden/Dependency',
     'complexity': "normal",
     'description': """
 Lets the user create a custom dashboard.

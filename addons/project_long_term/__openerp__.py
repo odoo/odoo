@@ -43,14 +43,8 @@ Features
     "init_xml": [],
     "demo_xml": ["project_long_term_demo.xml"],
     "test": [
-          'test/test_schedule_phases_case1.yml',
-          'test/schedule_project_phases.yml',
-          'test/schedule_project_tasks.yml',
-          'test/test_schedule_phases_case2.yml',
-          'test/project_schedule_consecutive_day.yml',
-          'test/project_schedule_without_wroking_hour.yml',
-          'test/phase_constraint.yml',
-          'test/test_schedule_tasks_case1.yml',
+          'test/phase_process.yml',
+          'test/task_process.yml',
     ],
     "update_xml": [
         "security/ir.model.access.csv",
@@ -60,7 +54,6 @@ Features
         "wizard/project_compute_tasks_view.xml",
     ],
     'installable': True,
-    'core': True,
     'active': False,
     'certificate': '001227470751077315069',
 }

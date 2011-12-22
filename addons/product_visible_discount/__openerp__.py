@@ -18,7 +18,7 @@
 #
 ##############################################################################
 {
-    "name": "Visible Discounts on SO",
+    "name": "Prices Visible Discounts",
     "version": "1.0",
     "author": "OpenERP SA",
     'category': 'Sales Management',

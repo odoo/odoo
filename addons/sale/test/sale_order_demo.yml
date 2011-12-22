@@ -1,0 +1,14 @@
+-
+  In order to test process of the Sale Order, I create sale order
+-
+  !record {model: sale.order, id: order}:
+    partner_id: base.res_partner_agrolait
+    note: Invoice after delivery
+    payment_term: account.account_payment_term
+-
+  !record {model: sale.order.line, id: line}:
+    product_id: product.product_product_mb1
+    price_unit: 190.50
+    product_uom_qty: 8
+
+

@@ -46,7 +46,6 @@ user-wise as well as month wise.
                     ],
     'demo_xml'  : [],
     'installable': True,
-    'core': True,
     'active'    : False,
     'certificate': '0042927202589',
 }

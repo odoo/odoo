@@ -450,7 +450,8 @@
                     <field name="user_id"/>
 
                     <button string="Schedule/Log Call"
-                    name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action"/>
+                        name="%(opportunity2phonecall_act)d" icon="terp-call-start"
+                        type="action"/>
 
                     <field name="planned_revenue"/>
                     <field name="probability"/>
@@ -648,8 +649,8 @@
                     name="pending"
                     domain="[('state','=','pending')]"/>
                 <separator orientation="vertical"/>
-                <field name="name" string="Opportunity / Customer" filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
-                <field name="partner_id" string="Customer / Email" filter_domain="['|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]"/>
+                <field name="name" string="Opportunity / Customer"
+                    filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                 <field name="user_id">
                     <filter icon="terp-personal-"
                         domain="[('user_id','=', False)]"

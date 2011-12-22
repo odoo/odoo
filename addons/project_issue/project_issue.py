@@ -221,7 +221,7 @@ class project_issue(crm.crm_case, osv.osv):
         'date': fields.datetime('Date'),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'type_id': fields.many2one ('project.task.type', 'Stages', domain="[('project_ids', '=', project_id)]"),
         'project_id':fields.many2one('project.project', 'Project'),
@@ -314,7 +314,8 @@ class project_issue(crm.crm_case, osv.osv):
                 'description':bug.description,
                 'date_deadline': bug.date,
                 'project_id': bug.project_id.id,
-                'priority': bug.priority,
+                # priority must be in ['0','1','2','3','4'], while bug.priority is in ['1','2','3','4','5']
+                'priority': str(int(bug.priority) - 1),
                 'user_id': bug.user_id.id,
                 'planned_hours': 0.0,
             })

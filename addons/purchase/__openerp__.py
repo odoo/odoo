@@ -67,7 +67,7 @@ Dashboard for purchase management that includes:
         'test/process/run_scheduler.yml',
         'test/process/merge_order.yml',
         'test/process/edi_purchase_order.yml',
-        'test/process/real_time_valuation.yml',
+        'test/process/invoice_on_poline.yml',
         'test/ui/print_report.yml',
         'test/ui/duplicate_order.yml',
         'test/ui/delete_order.yml',
@@ -79,6 +79,6 @@ Dashboard for purchase management that includes:
     'installable': True,
     'active': False,
     'certificate': '0057234283549',
-    'core': True,
+    'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -8,6 +8,12 @@
             <field name="visibility">True</field>
         </record>
 
+        <record model="idea.category" id="idea_category_technical">
+            <field name="name">Technical</field>
+            <field name="summary">Technical Ideas</field>
+            <field name="visibility">True</field>
+        </record>
+
         <record model="idea.idea" id="idea_idea_one">
             <field name="name">TODO: Need to put a good idea on OpenERP</field>
             <field name="description">TODO: Need to put a good idea on OpenERP</field>
@@ -15,8 +21,16 @@
             <field name="visibility">True</field>
         </record>
 
+        <record model="idea.idea" id="idea_idea_two">
+            <field name="name">Technical  presentation for 1 hours in every day</field>
+            <field name="description">Technical  presentation for 1 hours in every day</field>
+            <field name="category_id" ref="idea_category_technical"/>
+            <field name="visibility">True</field>
+            <field name="state">open</field>
+        </record>
+
         <record id="base.user_demo" model="res.users">
-            <field name="groups_id" eval="[(4,ref('base.group_tool_user'))]"/> 
+            <field name="groups_id" eval="[(4,ref('base.group_tool_user'))]"/>
         </record>
     </data>
 </openerp>

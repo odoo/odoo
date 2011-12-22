@@ -1,91 +1,25 @@
 -
-  In order to test account followup module in OpenERP I create a FollowUp structure
+  In order to test account followup module in OpenERP, I change the state of invoice to "open".
 -
-  !record {model: res.company, id: ymltest_company_2}:
-        name: Acme 2
+  !record {model: account.invoice, id: account.demo_invoice_0}:
+    check_total: 14.0
 -
-  !record {model: account_followup.followup, id: account_followup_followup_testfollowups0}:
-    description: First letter after 15 net days, 30 net days and 45 days end of month levels.
-    company_id: ymltest_company_2
-    followup_line:
-      - delay: 15
-        name: 'level 0: 15 days'
-        sequence: 0
-        start: days
-        description: Dear %(partner_name)s,\n\nException made if there was a mistake
-          of ours, it seems that the following amount staid unpaid. Please, take appropriate
-          measures in order to carry out this payment in the next 1 days.\n\nWould your
-          payment have been carried out after this mail was sent, please consider the
-          present one as void. Do not hesitate to contact our accounting department at
-          (+32).10.68.94.39.\n\nBest Regards,\n
-      - delay: 30
-        name: 'level1: 30 days'
-        sequence: 1
-        start: days
-        description: Dear %(partner_name)s,\n\nException made if there was a mistake
-          of ours, it seems that the following amount staid unpaid. Please, take appropriate
-          measures in order to carry out this payment in the next 2 days.\n\nWould your
-          payment have been carried out after this mail was sent, please consider the
-          present one as void. Do not hesitate to contact our accounting department at
-          (+32).10.68.94.39.\n\nBest Regards,\n
-      - delay: 45
-        name: 'level 2: 45 days'
-        sequence: 2
-        start: days
-        description: Dear %(partner_name)s,\n\nException made if there was a mistake
-          of ours, it seems that the following amount staid unpaid. Please, take appropriate
-          measures in order to carry out this payment in the next 3 days.\n\nWould your
-          payment have been carried out after this mail was sent, please consider the
-          present one as void. Do not hesitate to contact our accounting department at
-          (+32).10.68.94.39.\n\nBest Regards,
-    name: My followups
-
+  !workflow {model: account.invoice, action: invoice_open, ref: account.demo_invoice_0}
 -
-  I create an invoice
--
-  !record {model: account.invoice, id: account_invoice_followup}:
-    account_id: account.a_recv
-    address_contact_id: base.res_partner_address_3000
-    address_invoice_id: base.res_partner_address_3000
-    company_id: base.main_company
-    currency_id: base.EUR
-    invoice_line:
-      - account_id: account.a_sale
-        name: '[PC1] Basic PC'
-        price_unit: 450.0
-        quantity: 1.0
-        product_id: product.product_product_pc1
-        uos_id: product.product_uom_unit
-    journal_id: account.sales_journal
-    partner_id: base.res_partner_desertic_hispafuentes
-    reference_type: none
-
-
--
-  I change the state of the invoice using create button
--
-  !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_followup}
-
--
-  I create a send followup record
+  I create a followup.
 -
   !record {model: account.followup.print, id: account_followup_print_0}:
-    date: !eval time.strftime('%Y-%m-%d')
-    followup_id: account_followup_followup_testfollowups0
-
-
+    {}
 -
-  I Select Followup and clicked on Continue Button
+  I select the followup to send it to the partner.
 -
   !python {model: account.followup.print}: |
     self.do_continue(cr, uid, [ref("account_followup_print_0")], {"lang": 'en_US',
       "active_model": "ir.ui.menu", "active_ids": [ref("account_followup.account_followup_print_menu")],
       "tz": False, "active_id": ref("account_followup.account_followup_print_menu"),
       })
-
-
 -
-  I select partners whom I want to send followups
+  I select partners whom I want to send followups.
 -
   !record {model: account.followup.print.all, id: account_followup_print_all_0}:
     email_body: 'Date : %(date)s\n\nDear %(partner_name)s,\n\nPlease find in attachment
@@ -95,15 +29,12 @@
     partner_ids:
       - base.res_partner_desertic_hispafuentes
     partner_lang: 1
-
-
 -
-  I clicked on Print Follow Ups to print Followups reports
+  I send a followup mail to partner.
 -
   !python {model: account.followup.print.all}: |
     import time
-    self.do_print(cr, uid, [ref("account_followup_print_all_0")], {"lang": 'en_US',
+    self.do_mail(cr, uid, [ref("account_followup_print_all_0")], {"lang": 'en_US',
       "active_model": "ir.ui.menu", "active_ids": [ref("account_followup.account_followup_print_menu")],
-      "tz": False, "date": time.strftime('%Y-%m-%d'), "followup_id": ref("account_followup_followup_testfollowups0"), "active_id": ref("account_followup.account_followup_print_menu"),
-      "company_id": ref('base.main_company'),
+      "tz": False, "date": time.strftime('%Y-%m-%d'), "followup_id": ref("account_followup.demo_followup1"), "active_id": ref("account_followup.account_followup_print_menu"),
       })
