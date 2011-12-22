@@ -2,50 +2,35 @@
   In order to test attendance process in OpenERP, at the time of login, I use "Sign In/Sign Out" wizard for attendances.
 -
   !record {model: hr.sign.in.out, id: employee_sign_in}:
-    name: Antoine Philippe
+    emp_id: hr.employee3
     state: absent
 -
-  I click on this wizard to login.
+  I click on "Sign In" button of this wizard.
 -
   !python {model: hr.sign.in.out}: |
-    obj_attendance = self.pool.get('hr.employee')
-    emp_ids = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Antoine Philippe")])
-    if emp_ids:
-      employee = obj_attendance.read(cr, uid, emp_ids)[0]
-      self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_ids[0]})
-      self.si_check(cr, uid, [ref("employee_sign_in")])
+    import time
+    from datetime import datetime, date, timedelta
+    employee = self.pool.get('hr.employee').read(cr, uid, [ref('hr.employee3')])[0]
+    self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': employee['id']})
+    self.si_check(cr, uid, [ref("employee_sign_in")])
+    attendance_obj = self.pool.get('hr.attendance')
+    attendance_id = attendance_obj.search(cr, uid, [('employee_id', '=', "Antoine Philippe")])
+    date = (datetime.now()+timedelta(seconds=-20)).strftime('%Y-%m-%d %H:%M:%S')
+    attendance_obj.write(cr, uid, attendance_id ,{'name': date})
 -
   I check that Employee is "Present".
 -
   !assert {model: hr.employee, id: hr.employee3, severity: error, string: Employee should be in present state}:
     - state == 'present'
 -
-  I click on "Sign In" button of this wizard, this will Open a new form which ask for Last Sign Out date.
+  I click on "Sign out" button of this wizard.
 -
   !python {model: hr.sign.in.out}: |
-    obj_attendance = self.pool.get('hr.employee')
-    emp_ids = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Antoine Philippe")])
-    if emp_ids:
-        employee = obj_attendance.read(cr, uid, emp_ids)[0]
-        self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_ids[0]})
-        self.si_check(cr, uid, [ref("employee_sign_in")])
+    employee = self.pool.get('hr.employee').read(cr, uid, [ref('hr.employee3')])[0]
+    self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': employee['id']})
+    self.so_check(cr, uid, [ref("employee_sign_in")])
 -
-  I select Last Sign Out date.
--
-  !record {model: hr.sign.in.out.ask, id: hr_sign_in_out_ask_Antoine_Philippe}:
-    last_time: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-    name: Antoine Philippe
--
-  Now I click on "Sign In" button of this wizard.
--
-  !python {model: hr.sign.in.out.ask}: |
-    obj_attendance = self.pool.get('hr.employee')
-    emp_ids = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Antoine Philippe")])
-    if emp_ids:
-        employee = obj_attendance.read(cr, uid, emp_ids)[0]
-        self.write(cr, uid, [ref('hr_sign_in_out_ask_Antoine_Philippe')], {'emp_id': emp_ids[0]})
--
-  Finally i check the employee is present.
+  I check that Employee is "absent".
 -
   !assert {model: hr.employee, id: hr.employee3, severity: error, string: Employee should be in present state}:
-    - state == 'present'
+    - state == 'absent'
