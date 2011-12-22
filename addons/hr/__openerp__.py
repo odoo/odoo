@@ -59,6 +59,7 @@ You can manage:
              'test/hr_demo.yml',
              ],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '0086710558965',
 }
