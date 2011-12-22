@@ -51,7 +51,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
     "init_xml" : [],
     "demo_xml" : [
         "stock_demo.xml",
-        "stock_demo2.xml",
+        "stock_demo.yml",
     ],
     "update_xml" : [
         "security/stock_security.xml",
@@ -82,7 +82,6 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "board_warehouse_view.xml",
     ],
     'test': [
-        'test/stock_demo.yml',
         'test/opening_stock.yml',
         'test/shipment.yml',
         'test/stock_report.yml',
