@@ -17,7 +17,7 @@
 -
   I check that Employee is "Present".
 -
-  !assert {model: hr.employee, id: hr.employee3, severity: error, string: Employee should be in present state}:
+  !assert {model: hr.employee, id: hr.employee_al, severity: error, string: Employee should be in present state}:
     - state == 'present'
 -
   I click on "Sign In" button of this wizard, this will Open a new form which ask for Last Sign Out date.
@@ -47,5 +47,5 @@
 -
   Finally i check the employee is present.
 -
-  !assert {model: hr.employee, id: hr.employee3, severity: error, string: Employee should be in present state}:
+  !assert {model: hr.employee, id: hr.employee_al, severity: error, string: Employee should be in present state}:
     - state == 'present'
