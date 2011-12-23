@@ -192,6 +192,7 @@ openerp.web.ServerError = openerp.web.Dialog.extend({
                 {
                     text: _t("Send to OpenERP Enterprise Team"), 
                     click: function() {
+                                $this = $(this);
                                 var issuename = $('#issuename').val();
                                 var explanation = $('#explanation').val();
                                 var remark = $('#remark').val();
@@ -200,7 +201,7 @@ openerp.web.ServerError = openerp.web.Dialog.extend({
                                     if (result === false) {
                                         alert('There was a communication error.')
                                     } else {
-                                        $(this).dialog('close');
+                                        $this.dialog('close');
                                     }
                                     console.log(arguments);
                                 });
