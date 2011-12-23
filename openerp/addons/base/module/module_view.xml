@@ -87,8 +87,8 @@
                              <field name="name"/><br/>
                              <span t-if="record.complexity.raw_value == 'Expert'" class="oe_label oe_warning">Complex</span>
                            </p>
-                          <button type="object" name="button_immediate_install" states="uninstalled" class="button">Install</button>
-                          <button t-if="installed" class="label" disabled="disabled">Installed</button>
+                          <button type="object" name="button_immediate_install" states="uninstalled" class="oe_button">Install</button>
+                          <button t-if="installed" class="oe_button" disabled="disabled">Installed</button>
                         </div>
                       </div>
                     </t>
