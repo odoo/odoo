@@ -21,7 +21,7 @@
 #
 ##############################################################################
 
-import datetime
+import datetime, time
 from itertools import groupby
 from operator import itemgetter
 
@@ -396,8 +396,29 @@ class hr_employee(osv.osv):
                 remaining[employee_id] = 0.0
         return remaining
 
+   def _get_leave_status(self, cr, uid, ids, name, args, context=None):
+        holidays_id = self.pool.get('hr.holidays').search(cr, uid, 
+           [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d %H:%M:%S')), 
+            ('date_to','>=',time.strftime('%Y-%m-%d %H:%M:%S')),('type','=','remove')],
+           context=context)
+        result = {}
+        for id in ids:
+            result[id] = {
+                'current_leave_state': False,
+                'current_leave_id': False
+            }
+        for holiday in self.pool.get('hr.holidays').browse(cr, uid, holidays_id, context=context):
+            result[holiday.employee_id.id]['current_leave_state'] = holiday.state
+            result[holiday.employee_id.id]['current_leave_id'] = holiday.holiday_status_id.id
+        return result
+
    _columns = {
         'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.'),
+        'current_leave_state': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Status", type="selection",
+            selection=[('draft', 'New'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
+            ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')]),
+        'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status'),
+        'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1)
     }
 
 hr_employee()

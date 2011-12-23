@@ -131,52 +131,33 @@
         <field name="model">hr.employee</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
+
             <kanban>
-                <field name="color"/>
                 <templates>
-                    <t t-name="employee_details">
-                        <ul class="oe_kanban_tooltip" t-if="record.job_id.raw_value">
-                            <li><b>Job:</b> <field name="job_id"/></li>
-                        </ul>
-                    </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
-                            <div class="oe_kanban_box oe_kanban_color_border">
-                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle oe_kanban_title" tooltip="employee_details">
-                                    <field name="name"/>
-                                </div>
-                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                    <img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" width="48" style="float: left;"/>
-                                    <span t-if="record.parent_id.raw_value" class="oe_kanban_highlight">
-                                        ❖ <field name="parent_id"/>
-                                    </span>
-                                    <span t-if="record.work_location.raw_value" class="oe_kanban_highlight">
-                                        ✜ <field name="work_location"/>
-                                    </span>
-                                    <span t-if="record.work_email.raw_value" class="oe_kanban_highlight">
-                                        ✉ <a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a>
-                                    </span>
-                                    <span t-if="record.mobile_phone.raw_value" class="oe_kanban_highlight">
-                                        ☎ <field name="mobile_phone"/>
-                                    </span>
-                                    <span t-if="record.work_phone.raw_value" class="oe_kanban_highlight">
-                                        ☏ <field name="work_phone"/>
-                                    </span>
-                                    <div class="oe_kanban_clear"/>
-                                </div>
-                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                    <div class="oe_kanban_left">
-                                        <a string="Edit" icon="gtk-edit" type="edit"/>
-                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                        <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
-                                    </div>
-                                    <div class="oe_kanban_clear"/>
-                                </div>
+                        <div class="oe_employee_vignette">
+                            <div class="oe_employee_image">
+                                <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
+                            </div>
+                            <div class="oe_employee_details">
+                                <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
+                                <ul>
+                                    <li t-if="record.department_id.raw_value"><field name="department_id"/></li>
+                                    <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
+                                    <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
+                                    <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
+                                    <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
+                                    <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
+                                </ul>
                             </div>
                         </div>
+                        <script>
+                            $('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
+                        </script>
                     </t>
                 </templates>
             </kanban>
+
         </field>
     </record>
         <record id="open_view_employee_tree" model="ir.actions.act_window">

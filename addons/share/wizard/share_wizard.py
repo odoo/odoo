@@ -71,15 +71,6 @@ class share_wizard(osv.osv_memory):
     def has_share(self, cr, uid, context=None):
         return self.has_group(cr, uid, module='share', group_xml_id='group_share_user', context=context)
 
-    def has_email(self, cr, uid, context=None):
-        return bool(self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email)
-
-    def view_init(self, cr, uid, fields_list, context=None):
-        if not self.has_email(cr, uid, context=context):
-            raise osv.except_osv(_('No e-mail address configured'),
-                                 _('You must configure your e-mail address in the user preferences before using the Share button.'))
-        return super(share_wizard, self).view_init(cr, uid, fields_list, context=context)
-
     def _user_type_selection(self, cr, uid, context=None):
         """Selection values may be easily overridden/extended via inheritance"""
         return [('embedded', 'Direct link or embed code'), ('emails','Emails'), ]
@@ -198,7 +189,14 @@ class share_wizard(osv.osv_memory):
         'embed_option_search': True,
     }
 
+    def has_email(self, cr, uid, context=None):
+        return bool(self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email)
+
     def go_step_1(self, cr, uid, ids, context=None):
+        user_type = self.browse(cr,uid,ids,context)[0].user_type
+        if user_type == 'emails' and not self.has_email(cr, uid, context=context):
+            raise osv.except_osv(_('No e-mail address configured'),
+                                 _('You must configure your e-mail address in the user preferences before using the Share button.'))
         model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
         action = self.pool.get(model).read(cr, uid, res_id, context=context)
         action['res_id'] = ids[0]
@@ -263,6 +261,7 @@ class share_wizard(osv.osv_memory):
                 'name': new_login,
                 'groups_id': [(6,0,[group_id])],
                 'share': True,
+                'menu_tips' : False,
                 'company_id': current_user.company_id.id
             }, context)
             new_line = { 'user_id': user_id,

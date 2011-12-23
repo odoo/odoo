@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14:34+0000\n"
-"PO-Revision-Date: 2011-01-11 11:14:34+0000\n"
+"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"PO-Revision-Date: 2011-12-22 18:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #. module: account_sequence
 #: constraint:account.move:0
-msgid "You cannot create entries on different periods/journals in the same move"
+msgid "You can not create more than one move per period on centralized journal"
 msgstr ""
 
 #. module: account_sequence
@@ -48,18 +48,6 @@ msgid "Increment Number"
 msgstr ""
 
 #. module: account_sequence
-#: model:ir.module.module,description:account_sequence.module_meta_information
-msgid "\n"
-"    This module maintains internal sequence number for accounting entries.\n"
-"    "
-msgstr ""
-
-#. module: account_sequence
-#: model:ir.module.module,shortdesc:account_sequence.module_meta_information
-msgid "Entries Sequence Numbering"
-msgstr ""
-
-#. module: account_sequence
 #: help:account.sequence.installer,number_increment:0
 msgid "The next number of the sequence will be incremented by this number"
 msgstr ""
@@ -70,8 +58,8 @@ msgid "Configure Your Account Sequence Application"
 msgstr ""
 
 #. module: account_sequence
-#: field:account.sequence.installer,progress:0
-msgid "Configuration Progress"
+#: view:account.sequence.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: account_sequence
@@ -82,6 +70,11 @@ msgstr ""
 #. module: account_sequence
 #: field:account.sequence.installer,company_id:0
 msgid "Company"
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
 msgstr ""
 
 #. module: account_sequence
@@ -122,12 +115,12 @@ msgstr ""
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
+msgid "The date of your Journal Entry is not in the defined period!"
 msgstr ""
 
 #. module: account_sequence
-#: constraint:account.move:0
-msgid "You cannot create more than one move per period on centralized journal"
+#: constraint:account.journal:0
+msgid "Configuration error! The currency chosen should be shared by the default accounts too."
 msgstr ""
 
 #. module: account_sequence
@@ -138,16 +131,6 @@ msgstr ""
 #. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
-msgstr ""
-
-#. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_sequence_installer
-msgid "account.sequence.installer"
-msgstr ""
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure"
 msgstr ""
 
 #. module: account_sequence
@@ -181,6 +164,11 @@ msgid "The name of the journal must be unique per company !"
 msgstr ""
 
 #. module: account_sequence
+#: constraint:account.move.line:0
+msgid "The selected account of your Journal Entry must receive a value in its secondary currency"
+msgstr ""
+
+#. module: account_sequence
 #: field:account.sequence.installer,prefix:0
 msgid "Prefix"
 msgstr ""
@@ -191,8 +179,8 @@ msgid "The code of the journal must be unique per company !"
 msgstr ""
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on receivable/payable account without partner"
+#: model:ir.model,name:account_sequence.model_account_sequence_installer
+msgid "account.sequence.installer"
 msgstr ""
 
 #. module: account_sequence

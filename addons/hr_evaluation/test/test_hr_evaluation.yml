@@ -103,6 +103,6 @@
   !python {model: hr.evaluation.report}: |
     import netsvc, tools, os, time
     ctx={}
-    data_dict={'state': 'done', 'rating': 2, 'employee_id': ref("hr.employee1")}
+    data_dict={'state': 'done', 'rating': 2, 'employee_id': ref("hr.employee_fp")}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'hr_evaluation_evaluation_0',wiz_data=data_dict, context=ctx, our_module='hr_evaluation')
