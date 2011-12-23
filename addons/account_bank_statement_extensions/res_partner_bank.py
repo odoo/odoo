@@ -20,7 +20,22 @@
 #
 ##############################################################################
 
-import account_coda
-import wizard
+from osv import osv, fields
+import netsvc
+from tools.translate import _
+logger=netsvc.Logger()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class res_partner_bank(osv.osv):
+    _inherit = 'res.partner.bank'
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('acc_number', operator, name)] + args, limit=limit)
+        else:
+            ids = self.search(cr, user, args, context=context, limit=limit)
+        return self.name_get(cr, user, ids, context=context)
+
+res_partner_bank()

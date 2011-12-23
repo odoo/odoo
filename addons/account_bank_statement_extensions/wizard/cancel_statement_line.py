@@ -20,7 +20,19 @@
 #
 ##############################################################################
 
-import account_coda
-import wizard
+import time
+from osv import osv, fields
+import netsvc
+from tools.translate import _
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class cancel_statement_line(osv.osv_memory):
+    _name = 'cancel.statement.line'
+    _description = 'Cancel selected statement lines'
+       
+    def cancel_lines(self, cr, uid, ids, context):       
+        line_ids = context['active_ids']
+        line_obj = self.pool.get('account.bank.statement.line')
+        line_obj.write(cr, uid, line_ids, {'state': 'draft'}, context=context)
+        return {}
+
+cancel_statement_line()

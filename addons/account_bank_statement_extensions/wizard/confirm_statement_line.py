@@ -20,7 +20,21 @@
 #
 ##############################################################################
 
-import account_coda
-import wizard
+import time
+from osv import osv, fields
+import netsvc
+from tools.translate import _
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class confirm_statement_line(osv.osv_memory):
+    _name = 'confirm.statement.line'
+    _description = 'Confirm selected statement lines'
+       
+    def confirm_lines(self, cr, uid, ids, context):       
+        line_ids = context['active_ids']
+        line_obj = self.pool.get('account.bank.statement.line')
+        line_obj.write(cr, uid, line_ids, {'state': 'confirm'}, context=context)
+        return {}
+
+confirm_statement_line()
+
+
