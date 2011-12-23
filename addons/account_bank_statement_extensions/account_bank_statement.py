@@ -2,9 +2,9 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    
+#
 #    Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
-# 
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -34,7 +34,7 @@ class account_bank_statement(osv.osv):
             context = {}
         # bypass obsolete statement line resequencing
         if vals.get('line_ids', False) or context.get('ebanking_import', False):
-            res = super(osv.osv, self).write(cr, uid, ids, vals, context=context)    
+            res = super(osv.osv, self).write(cr, uid, ids, vals, context=context)
         else: 
             res = super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
         return res
@@ -44,9 +44,9 @@ class account_bank_statement(osv.osv):
         for st in self.browse(cr, uid, ids, context=context):
             cr.execute("UPDATE account_bank_statement_line  \
                 SET state='confirm' WHERE id in %s ",
-                (tuple([x.id for x in st.line_ids]),))        
+                (tuple([x.id for x in st.line_ids]),))
         return True
-    
+
     def button_cancel(self, cr, uid, ids, context=None):
         super(account_bank_statement, self).button_cancel(cr, uid, ids, context=context)
         for st in self.browse(cr, uid, ids, context=context):
@@ -54,7 +54,7 @@ class account_bank_statement(osv.osv):
                 SET state='draft' WHERE id in %s ",
                 (tuple([x.id for x in st.line_ids]),))
         return True
-    
+
 account_bank_statement()
 
 class account_bank_statement_line_global(osv.osv):
@@ -67,8 +67,8 @@ class account_bank_statement_line_global(osv.osv):
         'parent_id': fields.many2one('account.bank.statement.line.global', 'Parent Code', ondelete='cascade'),
         'child_ids': fields.one2many('account.bank.statement.line.global', 'parent_id', 'Child Codes'),
         'type': fields.selection([
-            ('iso20022', 'ISO 20022'),        
-            ('coda', 'CODA'),                
+            ('iso20022', 'ISO 20022'),
+            ('coda', 'CODA'),
             ('manual', 'Manual'), 
             ], 'Type', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
@@ -82,7 +82,7 @@ class account_bank_statement_line_global(osv.osv):
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code must be unique !'),
     ]
-    
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
@@ -98,35 +98,35 @@ class account_bank_statement_line_global(osv.osv):
         else:
             ids = self.search(cr, user, args, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
-    
+
 account_bank_statement_line_global()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
     _columns = {
         'date': fields.date('Entry Date', required=True, states={'confirm': [('readonly', True)]}),
-        'val_date': fields.date('Valuta Date', states={'confirm': [('readonly', True)]}),   
+        'val_date': fields.date('Valuta Date', states={'confirm': [('readonly', True)]}),
         'globalisation_id': fields.many2one('account.bank.statement.line.global', 'Globalisation ID',
             states={'confirm': [('readonly', True)]}, 
             help="Code to identify transactions belonging to the same globalisation level within a batch payment"),
-        'globalisation_amount': fields.related('globalisation_id', 'amount', type='float', 
+        'globalisation_amount': fields.related('globalisation_id', 'amount', type='float',
             relation='account.bank.statement.line.global', string='Glob. Amount', readonly=True),
         'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
         'update_date': fields.date('Update Date', required=True, readonly=True),
-        'update_by': fields.many2one('res.users', 'Updated by', required=True, readonly=True),        
+        'update_by': fields.many2one('res.users', 'Updated by', required=True, readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed')],
             'State', required=True, readonly=True),    
         'counterparty_name': fields.char('Counterparty Name', size=35),
-        'counterparty_bic': fields.char('Counterparty BIC', size=11),                     
-        'counterparty_number': fields.char('Counterparty Number', size=34),   
-        'counterparty_currency': fields.char('Counterparty Currency', size=3), 
+        'counterparty_bic': fields.char('Counterparty BIC', size=11),
+        'counterparty_number': fields.char('Counterparty Number', size=34),
+        'counterparty_currency': fields.char('Counterparty Currency', size=3),
     }
     _defaults = {
         'update_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'update_by': lambda s, c, u, ctx: u,
         'state': 'draft',
     }
-    
+
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -141,3 +141,5 @@ class account_bank_statement_line(osv.osv):
         return super(account_bank_statement_line, self).write(cr, uid, ids, vals, context=context)
 
 account_bank_statement_line()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

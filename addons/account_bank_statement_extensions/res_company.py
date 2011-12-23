@@ -2,9 +2,9 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    
+#
 #    Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
-# 
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -34,3 +34,4 @@ class res_company(osv.osv):
 res_company()
 
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

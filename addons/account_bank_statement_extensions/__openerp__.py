@@ -27,7 +27,7 @@
     'category': 'Generic Modules/Accounting',
     'description': '''
 Module that extends the standard account_bank_statement_line object for improved e-banking support.
-    
+
 Adds
 - valuta date
 - batch payments
@@ -55,3 +55,4 @@ Adds
     'installable': True,
 }
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

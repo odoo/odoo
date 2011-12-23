@@ -2,9 +2,9 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    
+#
 #    Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
-# 
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -29,11 +29,11 @@ logger=netsvc.Logger()
 class bank_statement_balance_report(report_sxw.rml_parse):
 
     def set_context(self, objects, data, ids, report_type=None):
-        #logger.notifyChannel('addons.'+__name__, netsvc.LOG_WARNING, 'set_context, objects = %s, data = %s, ids = %s' % (objects, data, ids)) 
+        #logger.notifyChannel('addons.'+__name__, netsvc.LOG_WARNING, 'set_context, objects = %s, data = %s, ids = %s' % (objects, data, ids))
         cr = self.cr
         uid = self.uid
         context = self.context
- 
+
         cr.execute('SELECT s.name as s_name, s.date AS s_date, j.code as j_code, s.balance_end_real as s_balance ' \
                         'FROM account_bank_statement s ' \
                         'INNER JOIN account_journal j on s.journal_id = j.id ' \
@@ -43,7 +43,7 @@ class bank_statement_balance_report(report_sxw.rml_parse):
                                 'ON (s.journal_id = d.journal_id AND s.date = d.max_date) ' \
                         'ORDER BY j.code')
         lines = cr.dictfetchall()
-                         
+
         self.localcontext.update( {
             'lines': lines,
         })
@@ -58,7 +58,7 @@ class bank_statement_balance_report(report_sxw.rml_parse):
             'time': time,
         })
         self.context = context
-    
+
 report_sxw.report_sxw(
     'report.bank.statement.balance.report',
     'account.bank.statement',
@@ -67,3 +67,4 @@ report_sxw.report_sxw(
     header='internal'
 )
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
