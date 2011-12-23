@@ -1,14 +1,55 @@
 -
-  IN order to test carrier cost on delivery,
+  In order to test Carrier Cost on Delivery,
 -
-  I add delivery cost in sale order.
+  I Create Delivery Method.
+-
+  !record {model: delivery.carrier, id: delivery_carrier}:
+    use_detailed_pricelist: True
+-
+  I Set Delivery Method in Sale order.
+-
+  !record {model: sale.order, id: sale.order}:
+    carrier_id: delivery_carrier
+    partner_order_id: base.res_partner_address_8
+-
+  I add Delivery Cost in Sale order.
 -
   !python {model: delivery.sale.order}: |
     new_id = self.create(cr ,uid ,{"carrier_id": ref("delivery_carrier")})
-    self.delivery_set(cr, uid, [new_id], {'active_id': ref("sale.order")})
+    id = self.delivery_set(cr, uid, [new_id], {'active_ids': [ref("sale.order")]})
 -
   I check Delivery cost is added properly or not.
 -
   !python {model: sale.order.line}: |
     line_ids = self.search(cr, uid, [('order_id','=', ref('sale.order')), ('name','=','The Poste')])
     assert len(line_ids), "Delivery cost is not Added"
+
+    line_data = self.browse(cr ,uid ,line_ids[0] ,context)
+    assert line_data.price_subtotal == 10, "Added Delivey cost is wrong."
+-
+  I set max limit for Delivery cost of Sale order cost will more than max limet then Delivery cost will 0.0.
+-
+  !record {model: delivery.carrier, id: delivery_carrier}:
+    free_if_more_than: True
+    amount: 1000
+-
+  I Set Delivery Method in Sale order of cost of more than max limit.
+-
+  !record {model: sale.order, id: sale.order2}:
+    carrier_id: delivery_carrier
+    partner_order_id: base.res_partner_address_8
+-
+  I add Delivery Cost in Sale order.
+-
+  !python {model: delivery.sale.order}: |
+    new_id = self.create(cr ,uid ,{"carrier_id": ref("delivery_carrier")})
+    self.delivery_set(cr, uid, [new_id], {'active_ids': [ref("sale.order2")]})
+-
+  I check Delivery cost is added properly or not.
+-
+  !python {model: sale.order.line}: |
+    line_ids = self.search(cr, uid, [('order_id','=', ref('sale.order2')), ('name','=','The Poste')])
+    assert len(line_ids), "Delivery cost is not Added"
+
+    line_data = self.browse(cr ,uid ,line_ids[0] ,context)
+    #assert line_data.price_subtotal == 0, "Added Delivey cost is wrong."
