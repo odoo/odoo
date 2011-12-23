@@ -88,13 +88,13 @@ class account_bank_statement_line_global(osv.osv):
             args = []
         ids = []
         if name:
-            ids = self.search(cr, user, [('code', '=ilike', name)] + args, limit=limit)
+            ids = self.search(cr, user, [('code', 'ilike', name)] + args, limit=limit)
             if not ids:
                 ids = self.search(cr, user, [('name', operator, name)] + args, limit=limit)
             if not ids and len(name.split()) >= 2:
                 #Separating code and name for searching
                 operand1, operand2 = name.split(' ', 1) #name can contain spaces
-                ids = self.search(cr, user, [('code', '=like', operand1), ('name', operator, operand2)] + args, limit=limit)
+                ids = self.search(cr, user, [('code', 'like', operand1), ('name', operator, operand2)] + args, limit=limit)
         else:
             ids = self.search(cr, user, args, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
@@ -112,8 +112,6 @@ class account_bank_statement_line(osv.osv):
         'globalisation_amount': fields.related('globalisation_id', 'amount', type='float',
             relation='account.bank.statement.line.global', string='Glob. Amount', readonly=True),
         'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
-        'update_date': fields.date('Update Date', required=True, readonly=True),
-        'update_by': fields.many2one('res.users', 'Updated by', required=True, readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed')],
             'State', required=True, readonly=True),    
         'counterparty_name': fields.char('Counterparty Name', size=35),
@@ -122,8 +120,6 @@ class account_bank_statement_line(osv.osv):
         'counterparty_currency': fields.char('Counterparty Currency', size=3),
     }
     _defaults = {
-        'update_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'update_by': lambda s, c, u, ctx: u,
         'state': 'draft',
     }
 
@@ -131,14 +127,9 @@ class account_bank_statement_line(osv.osv):
         if context is None:
             context = {}
         if context.get('block_statement_line_delete', False):
-            raise osv.except_osv('Warning', _('Delete operation not allowed ! \
+            raise osv.except_osv(_('Warning'), _('Delete operation not allowed ! \
             Please go to the associated bank statement in order to delete and/or modify this bank statement line'))
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        vals['update_date'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        vals['update_by'] = uid
-        return super(account_bank_statement_line, self).write(cr, uid, ids, vals, context=context)
 
 account_bank_statement_line()
 
