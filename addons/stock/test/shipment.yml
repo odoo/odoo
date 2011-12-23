@@ -230,7 +230,7 @@
     context.update({'active_model': 'stock.move', 'active_id': move.id, 'active_ids': [move.id]})
     total_qty = move.product_qty
     split_qty = 10
-    while(total_qty<=0):
+    while(total_qty>0):
         split_id = stock_split.create(cr, uid, {'quantity': split_qty}, context=context)
         stock_split.split(cr, uid, [split_id], context=context)
         total_qty -= split_qty
