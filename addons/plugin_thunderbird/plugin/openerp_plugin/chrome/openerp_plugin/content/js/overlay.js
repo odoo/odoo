@@ -168,6 +168,8 @@ var listDocumentHandler = {
             setPreference('statutdoc', 'open');
             setPreference('urldoc', res[URL]);
         } 
+       setPreference('message_label',setPreference('subject'));// to have the subject to print on the push dialog       
+
     },
     onFault: function (client, ctxt, fault) {
 		log_message(fault);
