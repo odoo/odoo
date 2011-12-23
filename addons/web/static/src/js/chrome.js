@@ -175,18 +175,45 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
         });
     },
     on_traceback: function(error) {
-        this.servererror = new openerp.web.ServerError(error);
+        this.servererror = new openerp.web.ServerError(this,error);
         this.servererror.start();
     }
 });
 openerp.web.ServerError = openerp.web.Dialog.extend({
     template: 'DialogTraceback',
-    init: function(error) {
-        this._super();
+    init: function(parent, error) {
+        this._super(parent);
         this.error = error;
     },
     start: function() {
         var self = this;
+        if (self.session.has_pwc) {
+            var buttons = [
+                {
+                    text: _t("Send to OpenERP Enterprise Team"), 
+                    click: function() {
+                                var issuename = $('#issuename').val();
+                                var explanation = $('#explanation').val();
+                                var remark = $('#remark').val();
+                                // Call the send method from server to send mail with details
+                                new openerp.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('send', [self.error.data,explanation,remark,issuename]).then(function(result){
+                                    if (result === false) {
+                                        alert('There was a communication error.')
+                                    } else {
+                                        $(this).dialog('close');
+                                    }
+                                    console.log(arguments);
+                                });
+                            }
+                },
+                {
+                    text: _t("Dont send"), click: function() { $(this).dialog("close"); }
+                }
+            ]
+        } else {
+            var buttons = {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+        }
+
         var dialog = new openerp.web.Dialog(this, {
             title: "OpenERP " + _.str.capitalize(this.error.type),
             autoOpen: true,
@@ -194,28 +221,9 @@ openerp.web.ServerError = openerp.web.Dialog.extend({
             height: '50%',
             min_width: '800px',
             min_height: '600px',
-            buttons: [
-                {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
-            ]
+            buttons: buttons
         }).start();
-        dialog.$element.html(QWeb.render('DialogTraceback', {error: this.error}));
-
-        $('#button_send_error').click(function() {
-            var issuename = $('#issuename').val();
-            var explanation = $('#explanation').val();
-            var remark = $('#remark').val();
-
-            // Call the send method from server to send mail with details
-            new openerp.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('send', [self.error.data,explanation,remark,issuename]).then(function(result){
-            if (result === false) (
-                alert('There was a communication error.'))
-                console.log(arguments);
-            });
-        });
-
-        if (!self.session.has_pwc) {
-            $('.oe_error_send').html('<span>You have an unsupported version. <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">Click here</a> to get support & maintenance service.</span>');
-        }
+        dialog.$element.html(QWeb.render('DialogTraceback', {session: this.session, error: this.error}));
     }
 });
 
