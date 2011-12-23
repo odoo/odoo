@@ -8,15 +8,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-24 21:16+0000\n"
 "Last-Translator: Marco Dieckhoff <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:41+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:13+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: thunderbird
+#: field:thunderbird.installer,pdf_file:0
+msgid "Installation Manual"
+msgstr "Installationhandbuch"
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_partner
+msgid "Thunderbid Plugin Tools"
+msgstr "Thunderbird Plugin Anwendung"
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_installer
+msgid "thunderbird.installer"
+msgstr "thunderbird.installer"
+
+#. module: thunderbird
+#: field:thunderbird.installer,description:0
+msgid "Description"
+msgstr "Beschreibung"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "title"
+msgstr "Titel"
+
+#. module: thunderbird
+#: field:thunderbird.installer,config_logo:0
+msgid "Image"
+msgstr "Bild / Photo"
 
 #. module: thunderbird
 #: field:thunderbird.installer,plugin_file:0
@@ -25,13 +55,15 @@ msgid "Thunderbird Plug-in"
 msgstr "Thunderbird Plug-in"
 
 #. module: thunderbird
-#: help:thunderbird.installer,plugin_file:0
+#: view:thunderbird.installer:0
 msgid ""
-"Thunderbird plug-in file. Save as this file and install this plug-in in "
-"thunderbird."
+"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
+"attach it to any existing one in OpenERP or create a new one."
 msgstr ""
-"Thunderbird Plugin-Datei. Sichern Sie diese und installieren Sie diese in "
-"Thunderbird"
+"Das Plugin ermöglicht die Verlinkung einer EMail mit beliebigen OpenERP "
+"Belegen. Sie können hierzu entweder\r\n"
+"die EMail zu vorhandenen Objekten abspeichern oder wahlweise neue Objekte "
+"durch eine Email in OpenERP erstellen."
 
 #. module: thunderbird
 #: help:thunderbird.installer,thunderbird:0
@@ -49,56 +81,14 @@ msgstr ""
 "Die Dokumentationsdatei : Wie wird das Thunderbird Plugin installiert"
 
 #. module: thunderbird
-#: model:ir.model,name:thunderbird.model_email_server_tools
-msgid "Email Server Tools"
-msgstr "EMail Server HIlfsprogramme"
-
-#. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "_Close"
 msgstr "_Close"
 
 #. module: thunderbird
-#: field:thunderbird.installer,pdf_file:0
-msgid "Installation Manual"
-msgstr "Installationhandbuch"
-
-#. module: thunderbird
-#: field:thunderbird.installer,description:0
-msgid "Description"
-msgstr "Beschreibung"
-
-#. module: thunderbird
 #: view:thunderbird.installer:0
-msgid "title"
-msgstr "Titel"
-
-#. module: thunderbird
-#: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
-#: view:thunderbird.installer:0
-msgid "Thunderbird Plug-In"
-msgstr "Thunderbird Plug-In"
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid ""
-"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
-"attach it to any existing one in OpenERP or create a new one."
-msgstr ""
-"Das Plugin ermöglicht die Verlinkung einer EMail mit beliebigen OpenERP "
-"Belegen. Sie können hierzu entweder\r\n"
-"die EMail zu vorhandenen Objekten abspeichern oder wahlweise neue Objekte "
-"durch eine Email in OpenERP erstellen."
-
-#. module: thunderbird
-#: model:ir.module.module,shortdesc:thunderbird.module_meta_information
-msgid "Thunderbird Interface"
-msgstr "Thunderbird Schnittstelle"
-
-#. module: thunderbird
-#: model:ir.model,name:thunderbird.model_thunderbird_installer
-msgid "thunderbird.installer"
-msgstr "thunderbird.installer"
+msgid "Installation and Configuration Steps"
+msgstr "Installation und Konfigurationsschritte"
 
 #. module: thunderbird
 #: field:thunderbird.installer,name:0
@@ -107,72 +97,21 @@ msgid "File name"
 msgstr "Dateiname"
 
 #. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Installation and Configuration Steps"
-msgstr "Installation und Konfigurationsschritte"
-
-#. module: thunderbird
-#: field:thunderbird.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Konfiguration"
+#: help:thunderbird.installer,plugin_file:0
+msgid ""
+"Thunderbird plug-in file. Save as this file and install this plug-in in "
+"thunderbird."
+msgstr ""
+"Thunderbird Plugin-Datei. Sichern Sie diese und installieren Sie diese in "
+"Thunderbird"
 
 #. module: thunderbird
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
+#: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
 #: view:thunderbird.installer:0
-msgid "Thunderbird Plug-In Configuration"
-msgstr "Thunderbird Plug-In Konfiguration"
-
-#. module: thunderbird
-#: model:ir.model,name:thunderbird.model_thunderbird_partner
-msgid "Thunderbid Plugin Tools"
-msgstr "Thunderbird Plugin Anwendung"
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Configure"
-msgstr "Konfiguriere"
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Skip"
-msgstr "Überspringen"
-
-#. module: thunderbird
-#: field:thunderbird.installer,config_logo:0
-msgid "Image"
-msgstr "Bild / Photo"
-
-#. module: thunderbird
-#: model:ir.module.module,description:thunderbird.module_meta_information
-msgid ""
-"\n"
-"      This module is required for the thuderbird plug-in to work\n"
-"      properly.\n"
-"      The Plugin allows you archive email and its attachments to the "
-"selected \n"
-"      OpenERP objects. You can select a partner, a task, a project, an "
-"analytical\n"
-"      account,or any other object and attach selected mail as eml file in \n"
-"      attachment of selected record. You can create Documents for crm Lead,\n"
-"      HR Applicant and project issue from selected mails.\n"
-"\n"
-"      "
+msgid "Install Thunderbird Plug-In"
 msgstr ""
-"\n"
-"      Dieses Modul wird für die Verwendung des Thunderbird Plug-Ins "
-"benötigt.\n"
-"      Das Plug-In ermöglicht es, E-Mails und ihre Anhänge an verschiedene\n"
-"      OpenERP-Objekte anzuhängen. Sie können einen Partner, eine Aufgabe,\n"
-"      ein Projekt, eine analytisches Konto oder ein beliebiges anderes "
-"Objekt\n"
-"      auswählen und die ausgewählte E-Mail als EML-Datei in OpenERP "
-"anhängen.\n"
-"      Aus E-Mails heraus können Sie Dokumente für CRM Leads, Bewerbungen "
-"und\n"
-"      Problemstellungen in Projekten erzeugen.\n"
-"\n"
-"      "
 
 #~ msgid "Reference"
 #~ msgstr "Referenz"
@@ -204,9 +143,30 @@ msgstr ""
 #~ msgid "Sender"
 #~ msgstr "Absender"
 
+#~ msgid "Thunderbird Interface"
+#~ msgstr "Thunderbird Schnittstelle"
+
 #, python-format
 #~ msgid "Archive"
 #~ msgstr "Archiv"
 
 #~ msgid "Thunderbid mails"
 #~ msgstr "Thunderbid Mails"
+
+#~ msgid "Email Server Tools"
+#~ msgstr "EMail Server HIlfsprogramme"
+
+#~ msgid "Configure"
+#~ msgstr "Konfiguriere"
+
+#~ msgid "Thunderbird Plug-In"
+#~ msgstr "Thunderbird Plug-In"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Konfiguration"
+
+#~ msgid "Thunderbird Plug-In Configuration"
+#~ msgstr "Thunderbird Plug-In Konfiguration"
+
+#~ msgid "Skip"
+#~ msgstr "Überspringen"

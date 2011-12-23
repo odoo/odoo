@@ -7,16 +7,46 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-12-08 15:55+0000\n"
 "Last-Translator: Tomislav Bosnjakovic <Unknown>\n"
 "Language-Team: Vinteh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-09 04:46+0000\n"
-"X-Generator: Launchpad (build 14450)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:14+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 "Language: hr\n"
+
+#. module: thunderbird
+#: field:thunderbird.installer,pdf_file:0
+msgid "Installation Manual"
+msgstr "Priručnik za instalaciju"
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_partner
+msgid "Thunderbid Plugin Tools"
+msgstr "Alati Thunderbird plugina"
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_installer
+msgid "thunderbird.installer"
+msgstr ""
+
+#. module: thunderbird
+#: field:thunderbird.installer,description:0
+msgid "Description"
+msgstr "Opis"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "title"
+msgstr "Naziv"
+
+#. module: thunderbird
+#: field:thunderbird.installer,config_logo:0
+msgid "Image"
+msgstr "Slika"
 
 #. module: thunderbird
 #: field:thunderbird.installer,plugin_file:0
@@ -25,13 +55,15 @@ msgid "Thunderbird Plug-in"
 msgstr "Thunderbird Plug-in"
 
 #. module: thunderbird
-#: help:thunderbird.installer,plugin_file:0
+#: view:thunderbird.installer:0
 msgid ""
-"Thunderbird plug-in file. Save as this file and install this plug-in in "
-"thunderbird."
+"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
+"attach it to any existing one in OpenERP or create a new one."
 msgstr ""
-"Thunderbird plug-in datoteka. Snimi kako ovu datoteku i instaliraj ovaj plug-"
-"in u Thunderbird."
+"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
+"attach it to any existing one in OpenERP or create a new one.\r\n"
+"Ovaj plug-in omogućuje povezivanje vaših el. poruka sa OpenERP dokumentima. "
+"Možete dodjeliti neki postojeći u OpenERP-u ili kreirati novi."
 
 #. module: thunderbird
 #: help:thunderbird.installer,thunderbird:0
@@ -48,56 +80,14 @@ msgid "The documentation file :- how to install Thunderbird Plug-in."
 msgstr "Datoteka s dokumentacijom : Kako instalirati Thunderbird Plug-in."
 
 #. module: thunderbird
-#: model:ir.model,name:thunderbird.model_email_server_tools
-msgid "Email Server Tools"
-msgstr "Alati E-mail poslužitelja"
-
-#. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "_Close"
 msgstr "_Zatvori"
 
 #. module: thunderbird
-#: field:thunderbird.installer,pdf_file:0
-msgid "Installation Manual"
-msgstr "Priručnik za instalaciju"
-
-#. module: thunderbird
-#: field:thunderbird.installer,description:0
-msgid "Description"
-msgstr "Opis"
-
-#. module: thunderbird
 #: view:thunderbird.installer:0
-msgid "title"
-msgstr "Naziv"
-
-#. module: thunderbird
-#: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
-#: view:thunderbird.installer:0
-msgid "Thunderbird Plug-In"
-msgstr ""
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid ""
-"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
-"attach it to any existing one in OpenERP or create a new one."
-msgstr ""
-"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
-"attach it to any existing one in OpenERP or create a new one.\r\n"
-"Ovaj plug-in omogućuje povezivanje vaših el. poruka sa OpenERP dokumentima. "
-"Možete dodjeliti neki postojeći u OpenERP-u ili kreirati novi."
-
-#. module: thunderbird
-#: model:ir.module.module,shortdesc:thunderbird.module_meta_information
-msgid "Thunderbird Interface"
-msgstr "Sučelje Thunderbirda"
-
-#. module: thunderbird
-#: model:ir.model,name:thunderbird.model_thunderbird_installer
-msgid "thunderbird.installer"
-msgstr ""
+msgid "Installation and Configuration Steps"
+msgstr "Koraci instalacije i konfiguracije"
 
 #. module: thunderbird
 #: field:thunderbird.installer,name:0
@@ -106,70 +96,21 @@ msgid "File name"
 msgstr "Naziv datoteke"
 
 #. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Installation and Configuration Steps"
-msgstr "Koraci instalacije i konfiguracije"
-
-#. module: thunderbird
-#: field:thunderbird.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Napredak konfiguracije"
+#: help:thunderbird.installer,plugin_file:0
+msgid ""
+"Thunderbird plug-in file. Save as this file and install this plug-in in "
+"thunderbird."
+msgstr ""
+"Thunderbird plug-in datoteka. Snimi kako ovu datoteku i instaliraj ovaj plug-"
+"in u Thunderbird."
 
 #. module: thunderbird
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
+#: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
 #: view:thunderbird.installer:0
-msgid "Thunderbird Plug-In Configuration"
-msgstr "Konfiguracija Thunderbird plug-ina"
-
-#. module: thunderbird
-#: model:ir.model,name:thunderbird.model_thunderbird_partner
-msgid "Thunderbid Plugin Tools"
-msgstr "Alati Thunderbird plugina"
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Configure"
-msgstr "Podešavanje"
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Skip"
-msgstr "Preskoči"
-
-#. module: thunderbird
-#: field:thunderbird.installer,config_logo:0
-msgid "Image"
-msgstr "Slika"
-
-#. module: thunderbird
-#: model:ir.module.module,description:thunderbird.module_meta_information
-msgid ""
-"\n"
-"      This module is required for the thuderbird plug-in to work\n"
-"      properly.\n"
-"      The Plugin allows you archive email and its attachments to the "
-"selected \n"
-"      OpenERP objects. You can select a partner, a task, a project, an "
-"analytical\n"
-"      account,or any other object and attach selected mail as eml file in \n"
-"      attachment of selected record. You can create Documents for crm Lead,\n"
-"      HR Applicant and project issue from selected mails.\n"
-"\n"
-"      "
+msgid "Install Thunderbird Plug-In"
 msgstr ""
-"\n"
-"      Ovaj modul je nužan za ispravan rad Thunderbird plugina.\n"
-"      Plugin omogućava arhiviranje e-mailova i njihovih privitaka za "
-"odabrani objekt.\n"
-"      Možete izabrati partnera, zadatak, projekt, analitički račun, ili bilo "
-"koji drugi objekt \n"
-"      i pridružiti odabrani  e-mail ako eml datoteku  u privitku ili "
-"odabranom zapisu. \n"
-"      Možete kreirati dokumente za CRM kontakte ili projekte iz izabranih "
-"el. poruka.\n"
-"\n"
-"      "
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -201,8 +142,26 @@ msgstr ""
 #~ msgid "Archive"
 #~ msgstr "Arhiv"
 
+#~ msgid "Thunderbird Interface"
+#~ msgstr "Sučelje Thunderbirda"
+
 #~ msgid "Sender"
 #~ msgstr "Pošiljatelj"
 
 #~ msgid "Copy To"
 #~ msgstr "Kopiraj na"
+
+#~ msgid "Email Server Tools"
+#~ msgstr "Alati E-mail poslužitelja"
+
+#~ msgid "Configure"
+#~ msgstr "Podešavanje"
+
+#~ msgid "Skip"
+#~ msgstr "Preskoči"
+
+#~ msgid "Thunderbird Plug-In Configuration"
+#~ msgstr "Konfiguracija Thunderbird plug-ina"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Napredak konfiguracije"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-04-03 09:23+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:39+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:12+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:187
@@ -24,6 +24,12 @@ msgstr ""
 #, python-format
 msgid "Suggestion"
 msgstr "Vorschlag"
+
+#. module: base_module_quality
+#: model:ir.actions.act_window,name:base_module_quality.action_view_quality_save_report
+#: view:save.report:0
+msgid "Standard Entries"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/base_module_quality.py:100
@@ -38,11 +44,6 @@ msgid "Method Test"
 msgstr "Test Methodik"
 
 #. module: base_module_quality
-#: model:ir.module.module,shortdesc:base_module_quality.module_meta_information
-msgid "Base module quality - To check the quality of other modules"
-msgstr "Base module quality - Prüfen Sie die technische Qualität von Modulen"
-
-#. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:34
 #, python-format
 msgid ""
@@ -54,10 +55,9 @@ msgstr ""
 "Abhängigkeiten\n"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:127
-#, python-format
-msgid "O(n) or worst"
-msgstr "0(n) oder schlechter"
+#: view:save.report:0
+msgid " "
+msgstr ""
 
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
@@ -77,10 +77,9 @@ msgid "Speed Test"
 msgstr "Performancetest"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/terp_test/terp_test.py:54
-#, python-format
-msgid "The module does not contain the __openerp__.py file"
-msgstr "Das Modul beinhaltet keine __openerp__.py Datei"
+#: model:ir.model,name:base_module_quality.model_quality_check
+msgid "Module Quality Check"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:82
@@ -114,7 +113,7 @@ msgstr ""
 "eingehalten wird."
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/quality_save_report.py:46
+#: code:addons/base_module_quality/wizard/quality_save_report.py:39
 #, python-format
 msgid "No report to save!"
 msgstr "Kein Report zum Speichern!"
@@ -158,8 +157,9 @@ msgid "Save Report"
 msgstr "Bericht speichern"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/module_quality_check.py:46
-#: model:ir.actions.wizard,name:base_module_quality.create_quality_check_id
+#: code:addons/base_module_quality/wizard/module_quality_check.py:43
+#: model:ir.actions.act_window,name:base_module_quality.act_base_module_quality
+#: view:quality.check:0
 #, python-format
 msgid "Quality Check"
 msgstr "Qualitätsprüfung"
@@ -171,16 +171,27 @@ msgid "Not Efficient"
 msgstr "Nicht Effizient"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/quality_save_report.py:46
+#: code:addons/base_module_quality/wizard/quality_save_report.py:39
 #, python-format
 msgid "Warning"
 msgstr "Warnung"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/structure_test/structure_test.py:172
+#, python-format
+msgid "Feedback about structure of module"
+msgstr "Feedback über Modulestruktur"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:35
 #, python-format
 msgid "Unit Test"
 msgstr "Test Funktionen"
+
+#. module: base_module_quality
+#: view:quality.check:0
+msgid "Check"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:151
@@ -255,7 +266,13 @@ msgid "module.quality.detail"
 msgstr "module.quality.detail"
 
 #. module: base_module_quality
-#: wizard_field:quality_detail_save,init,module_file:0
+#: code:addons/base_module_quality/speed_test/speed_test.py:127
+#, python-format
+msgid "O(n) or worst"
+msgstr "0(n) oder schlechter"
+
+#. module: base_module_quality
+#: field:save.report,module_file:0
 msgid "Save report"
 msgstr "Speichere Bericht"
 
@@ -277,9 +294,9 @@ msgid "Result in %"
 msgstr "Ergebnis in %"
 
 #. module: base_module_quality
-#: wizard_view:quality_detail_save,init:0
-msgid "Standard entries"
-msgstr "Standard Buchung"
+#: view:quality.check:0
+msgid "This wizard will check module(s) quality"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:58
@@ -300,6 +317,12 @@ msgstr "Ergebnis"
 #: field:module.quality.detail,message:0
 msgid "Message"
 msgstr "Nachricht"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/terp_test/terp_test.py:54
+#, python-format
+msgid "The module does not contain the __openerp__.py file"
+msgstr "Das Modul beinhaltet keine __openerp__.py Datei"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
@@ -387,10 +410,10 @@ msgid "Error! Module is not properly loaded/installed"
 msgstr "Fehler ! Das Modul wurde nicht korrekt geladen / installiert"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:116
+#: code:addons/base_module_quality/speed_test/speed_test.py:115
 #, python-format
-msgid "Error in Read method: %s"
-msgstr "Fehler beim Lesen: %s"
+msgid "Error in Read method"
+msgstr "Fehler bei Lese (Read) Zugriff"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:138
@@ -419,21 +442,21 @@ msgid "Test Is Not Implemented"
 msgstr "Test wurde nicht implementiert"
 
 #. module: base_module_quality
+#: model:ir.model,name:base_module_quality.model_save_report
+msgid "Save Report of Quality"
+msgstr ""
+
+#. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:151
 #, python-format
 msgid "N"
 msgstr "N"
 
 #. module: base_module_quality
-#: model:ir.actions.wizard,name:base_module_quality.quality_detail_save
-msgid "Report Save"
-msgstr "Bericht speichern"
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/structure_test/structure_test.py:172
+#: code:addons/base_module_quality/workflow_test/workflow_test.py:143
 #, python-format
-msgid "Feedback about structure of module"
-msgstr "Feedback über Modulestruktur"
+msgid "Feed back About Workflow of Module"
+msgstr "Feedback über Workflow des Moduls"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:73
@@ -459,10 +482,10 @@ msgstr ""
 " "
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/workflow_test/workflow_test.py:143
+#: code:addons/base_module_quality/speed_test/speed_test.py:116
 #, python-format
-msgid "Feed back About Workflow of Module"
-msgstr "Feedback über Workflow des Moduls"
+msgid "Error in Read method: %s"
+msgstr "Fehler beim Lesen: %s"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:129
@@ -476,9 +499,14 @@ msgid "Done"
 msgstr "Erledigt"
 
 #. module: base_module_quality
-#: wizard_button:quality_detail_save,init,end:0
+#: view:quality.check:0
 msgid "Cancel"
 msgstr "Abbrechen"
+
+#. module: base_module_quality
+#: view:save.report:0
+msgid "Close"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:32
@@ -595,46 +623,6 @@ msgid "Tag Name"
 msgstr "Tag Bezeichnung"
 
 #. module: base_module_quality
-#: wizard_field:quality_detail_save,init,name:0
-msgid "File name"
-msgstr "Dateiname"
-
-#. module: base_module_quality
-#: model:ir.module.module,description:base_module_quality.module_meta_information
-msgid ""
-"\n"
-"The aim of this module is to check the quality of other modules.\n"
-"\n"
-"It defines a wizard on the list of modules in OpenERP, which allows you to\n"
-"evaluate them on different criteria such as: the respect of OpenERP coding\n"
-"standards, the speed efficiency...\n"
-"\n"
-"This module also provides generic framework to define your own quality "
-"test.\n"
-"For further info, coders may take a look into base_module_quality\\"
-"README.txt\n"
-"\n"
-"WARNING: This module can not work as a ZIP file, you must unzip it before\n"
-"using it, otherwise it may crash.\n"
-"    "
-msgstr ""
-"\n"
-"Der Zweck dieses Moduls ist es, die Qualität anderer Module zu überprüfen.\n"
-"\n"
-"Es stellt einen Assistenten auf Basis der Module in OpenERP zur Verfügung, "
-"der es Ihnen erlaubt, verschiedene Kriterien zu prüfen. Zum Beispiel: "
-"Einhaltung der Programmierrichtlinien von OpenERP, Effizienz des Codes...\n"
-"\n"
-"Das Modul stellt außerdem ein Framework zum erstellen eigener Tests zur "
-"Verfügung. Für weitere Informationen lesen Sie bitte  base_module_quality\\"
-"README.txt.\n"
-"\n"
-"\n"
-"Achtung: Dieses Modul kann nicht als ZIP-Datei funktionieren. Es muss vor "
-"der Benutzung entpackt werden, da es sonst Abstürzen kann.\n"
-"    "
-
-#. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
 msgid "module.quality.check"
 msgstr "module.quality.check"
@@ -657,7 +645,7 @@ msgid "Score (%)"
 msgstr "Punkte (%)"
 
 #. module: base_module_quality
-#: help:quality_detail_save,init,name:0
+#: help:save.report,name:0
 msgid "Save report as .html format"
 msgstr "Als HTML Bericht speichern"
 
@@ -690,6 +678,7 @@ msgstr "Zusammenfassung"
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:99
 #: code:addons/base_module_quality/structure_test/structure_test.py:172
+#: field:save.report,name:0
 #, python-format
 msgid "File Name"
 msgstr "Datei Name"
@@ -728,6 +717,18 @@ msgstr "Feedback über terp Datei des Moduls"
 
 #~ msgid "Base module quality"
 #~ msgstr "Basis Qualtitätsmodul"
+
+#~ msgid "File name"
+#~ msgstr "Dateiname"
+
+#~ msgid "Report Save"
+#~ msgstr "Bericht speichern"
+
+#~ msgid "Standard entries"
+#~ msgstr "Standard Buchung"
+
+#~ msgid "Base module quality - To check the quality of other modules"
+#~ msgstr "Base module quality - Prüfen Sie die technische Qualität von Modulen"
 
 #, python-format
 #~ msgid ""
@@ -785,10 +786,6 @@ msgstr "Feedback über terp Datei des Moduls"
 #~ "\"\""
 
 #, python-format
-#~ msgid "Error in Read method"
-#~ msgstr "Fehler bei Lese (Read) Zugriff"
-
-#, python-format
 #~ msgid ""
 #~ "\"\"This test uses Pylint and checks if the module satisfies the coding "
 #~ "standard of Python. See http://www.logilab.org/project/name/pylint for "
@@ -799,3 +796,36 @@ msgstr "Feedback über terp Datei des Moduls"
 #~ "Vergleichen Sie http://www.logilab.org/project/name/pylint für weitere "
 #~ "Details.\n"
 #~ " \"\""
+
+#~ msgid ""
+#~ "\n"
+#~ "The aim of this module is to check the quality of other modules.\n"
+#~ "\n"
+#~ "It defines a wizard on the list of modules in OpenERP, which allows you to\n"
+#~ "evaluate them on different criteria such as: the respect of OpenERP coding\n"
+#~ "standards, the speed efficiency...\n"
+#~ "\n"
+#~ "This module also provides generic framework to define your own quality "
+#~ "test.\n"
+#~ "For further info, coders may take a look into base_module_quality\\"
+#~ "README.txt\n"
+#~ "\n"
+#~ "WARNING: This module can not work as a ZIP file, you must unzip it before\n"
+#~ "using it, otherwise it may crash.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Der Zweck dieses Moduls ist es, die Qualität anderer Module zu überprüfen.\n"
+#~ "\n"
+#~ "Es stellt einen Assistenten auf Basis der Module in OpenERP zur Verfügung, "
+#~ "der es Ihnen erlaubt, verschiedene Kriterien zu prüfen. Zum Beispiel: "
+#~ "Einhaltung der Programmierrichtlinien von OpenERP, Effizienz des Codes...\n"
+#~ "\n"
+#~ "Das Modul stellt außerdem ein Framework zum erstellen eigener Tests zur "
+#~ "Verfügung. Für weitere Informationen lesen Sie bitte  base_module_quality\\"
+#~ "README.txt.\n"
+#~ "\n"
+#~ "\n"
+#~ "Achtung: Dieses Modul kann nicht als ZIP-Datei funktionieren. Es muss vor "
+#~ "der Benutzung entpackt werden, da es sonst Abstürzen kann.\n"
+#~ "    "

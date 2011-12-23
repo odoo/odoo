@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-18 08:13+0000\n"
 "Last-Translator: Jorge L Tupac-Yupanqui <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:54+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:26+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: project_caldav
 #: help:project.task,exdate:0
@@ -73,9 +73,9 @@ msgid "Public"
 msgstr "Público"
 
 #. module: project_caldav
-#: field:project.task,base_calendar_url:0
-msgid "Caldav URL"
-msgstr "URL de caldav"
+#: view:project.task:0
+msgid " "
+msgstr ""
 
 #. module: project_caldav
 #: selection:project.task,month_list:0
@@ -118,14 +118,9 @@ msgid "Last"
 msgstr "Último"
 
 #. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Days"
-msgstr "Días"
-
-#. module: project_caldav
-#: selection:project.task,freq:0
-msgid "No Repeat"
-msgstr "No repetir"
+#: view:project.task:0
+msgid "From"
+msgstr "De"
 
 #. module: project_caldav
 #: selection:project.task,rrule_type:0
@@ -154,11 +149,6 @@ msgid "Organizer"
 msgstr "Organizador"
 
 #. module: project_caldav
-#: help:project.task,edit_all:0
-msgid "Edit all Occurrences  of recurrent Meeting."
-msgstr "Editar todas las ocurrencias de la reunión recurrente."
-
-#. module: project_caldav
 #: field:project.task,sa:0
 msgid "Sat"
 msgstr "Sáb"
@@ -174,6 +164,11 @@ msgid "Sun"
 msgstr "Dom"
 
 #. module: project_caldav
+#: field:project.task,end_type:0
+msgid "Recurrence termination"
+msgstr ""
+
+#. module: project_caldav
 #: selection:project.task,select1:0
 msgid "Day of month"
 msgstr "Día del mes"
@@ -184,29 +179,24 @@ msgid "Location"
 msgstr "Ubicación"
 
 #. module: project_caldav
+#: selection:project.task,class:0
+msgid "Public for Employees"
+msgstr ""
+
+#. module: project_caldav
 #: view:project.task:0
 msgid "Mail TO"
 msgstr "Enviar correo a"
 
 #. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Weeks"
-msgstr "Semanas"
+#: field:project.task,exdate:0
+msgid "Exception Date/Times"
+msgstr "Fecha/horas excepción"
 
 #. module: project_caldav
-#: field:project.task,select1:0
-msgid "Option"
-msgstr "Opción"
-
-#. module: project_caldav
-#: selection:project.task,class:0
-msgid "Confidential"
-msgstr "Confidencial"
-
-#. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Hours"
-msgstr "Horas"
+#: field:project.task,base_calendar_url:0
+msgid "Caldav URL"
+msgstr "URL de caldav"
 
 #. module: project_caldav
 #: field:project.task,recurrent_uid:0
@@ -222,11 +212,6 @@ msgstr "Julio"
 #: field:project.task,th:0
 msgid "Thu"
 msgstr "Jue"
-
-#. module: project_caldav
-#: selection:project.task,end_type:0
-msgid "Forever"
-msgstr "Siempre"
 
 #. module: project_caldav
 #: help:project.task,count:0
@@ -285,11 +270,6 @@ msgid "Month"
 msgstr "Mes"
 
 #. module: project_caldav
-#: model:ir.module.module,shortdesc:project_caldav.module_meta_information
-msgid "CalDAV for task management"
-msgstr "CalDAV para la gestión de tareas"
-
-#. module: project_caldav
 #: field:project.task,vtimezone:0
 msgid "Timezone"
 msgstr "Zona horaria"
@@ -298,11 +278,6 @@ msgstr "Zona horaria"
 #: selection:project.task,rrule_type:0
 msgid "Weekly"
 msgstr "Cada semana"
-
-#. module: project_caldav
-#: field:project.task,edit_all:0
-msgid "Edit All"
-msgstr "Editar todo"
 
 #. module: project_caldav
 #: field:project.task,fr:0
@@ -321,18 +296,13 @@ msgstr "Regla recurrente"
 
 #. module: project_caldav
 #: view:project.task:0
-msgid "From"
-msgstr "De"
+msgid "End of recurrency"
+msgstr ""
 
 #. module: project_caldav
 #: view:project.task:0
 msgid "Reminder"
 msgstr "Recordar"
-
-#. module: project_caldav
-#: model:ir.module.module,description:project_caldav.module_meta_information
-msgid " Synchronize between Project task and Caldav Vtodo."
-msgstr " Sincroniza entre tareas de proyecto y Caldav Vtodo."
 
 #. module: project_caldav
 #: view:project.task:0
@@ -350,14 +320,14 @@ msgid "Monday"
 msgstr "Lunes"
 
 #. module: project_caldav
-#: selection:project.task,byday:0
-msgid "Third"
-msgstr "Tercero"
-
-#. module: project_caldav
 #: selection:project.task,month_list:0
 msgid "June"
 msgstr "Junio"
+
+#. module: project_caldav
+#: selection:project.task,end_type:0
+msgid "Number of repetitions"
+msgstr ""
 
 #. module: project_caldav
 #: field:project.task,write_date:0
@@ -380,19 +350,14 @@ msgid "January"
 msgstr "Enero"
 
 #. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Months"
-msgstr "Meses"
-
-#. module: project_caldav
 #: selection:project.task,week_list:0
 msgid "Wednesday"
 msgstr "Miércoles"
 
 #. module: project_caldav
 #: view:project.task:0
-msgid "Repeat Times"
-msgstr "Repeticiones"
+msgid "Choose day in the month where repeat the meeting"
+msgstr ""
 
 #. module: project_caldav
 #: selection:project.task,end_type:0
@@ -410,19 +375,9 @@ msgid "Recurrent ID date"
 msgstr "ID fecha recurrente"
 
 #. module: project_caldav
-#: field:project.task,freq:0
-msgid "Frequency"
-msgstr "Frecuencia"
-
-#. module: project_caldav
 #: help:project.task,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
 msgstr "Repetir cada (días/semana/mes/año)"
-
-#. module: project_caldav
-#: view:project.task:0
-msgid "of"
-msgstr "de"
 
 #. module: project_caldav
 #: selection:project.task,show_as:0
@@ -435,9 +390,10 @@ msgid "Repeat every"
 msgstr "Repetir cada"
 
 #. module: project_caldav
-#: selection:project.task,end_type:0
-msgid "Fix amout of times"
-msgstr "Cantidad fija de veces"
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
+"¡ Error ! La fecha final de la tarea debe ser mayor que la fecha de inicio"
 
 #. module: project_caldav
 #: field:project.task,recurrency:0
@@ -445,7 +401,6 @@ msgid "Recurrent"
 msgstr "Recurrente"
 
 #. module: project_caldav
-#: view:project.task:0
 #: field:project.task,rrule_type:0
 msgid "Recurrency"
 msgstr "Recurrencia"
@@ -480,22 +435,6 @@ msgstr ""
 "recurrente."
 
 #. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Years"
-msgstr "Años"
-
-#. module: project_caldav
-#: help:project.task,rrule:0
-msgid ""
-"Defines a rule or repeating pattern for recurring events\n"
-"e.g.: Every other month on the last Sunday of the month for 10 occurrences:  "
-"      FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
-msgstr ""
-"Define una regla o patrón repetitivo para eventos recurrentes.\n"
-"Por ejemplo: Para 10 ocurrencias cada último domingo de cada dos meses : "
-"FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
-
-#. module: project_caldav
 #: selection:project.task,month_list:0
 msgid "May"
 msgstr "Mayo"
@@ -507,8 +446,8 @@ msgstr "Asignar Tarea"
 
 #. module: project_caldav
 #: view:project.task:0
-msgid "Recurrency Rule"
-msgstr "Regla de recurrencia"
+msgid "Choose day where repeat the meeting"
+msgstr ""
 
 #. module: project_caldav
 #: selection:project.task,month_list:0
@@ -516,9 +455,9 @@ msgid "February"
 msgstr "Febrero"
 
 #. module: project_caldav
-#: field:project.task,exdate:0
-msgid "Exception Date/Times"
-msgstr "Fecha/horas excepción"
+#: selection:project.task,byday:0
+msgid "Third"
+msgstr "Tercero"
 
 #. module: project_caldav
 #: field:project.task,alarm_id:0
@@ -530,6 +469,11 @@ msgstr "Alarma"
 #: selection:project.task,month_list:0
 msgid "April"
 msgstr "Abril"
+
+#. module: project_caldav
+#: view:project.task:0
+msgid "Recurrency period"
+msgstr ""
 
 #. module: project_caldav
 #: field:project.task,week_list:0
@@ -547,6 +491,11 @@ msgid "The"
 msgstr "El"
 
 #. module: project_caldav
+#: field:project.task,select1:0
+msgid "Option"
+msgstr "Opción"
+
+#. module: project_caldav
 #: help:project.task,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
 msgstr "Configure una alarma en este momento, antes de que ocurra el evento"
@@ -560,11 +509,6 @@ msgstr "Privado"
 #: selection:project.task,byday:0
 msgid "Second"
 msgstr "Segundo"
-
-#. module: project_caldav
-#: field:project.task,end_type:0
-msgid "Way to end reccurency"
-msgstr "Forma de terminar recurrencia"
 
 #. module: project_caldav
 #: field:project.task,date:0
@@ -581,3 +525,66 @@ msgstr "Sábado"
 #: selection:project.task,byday:0
 msgid "Fifth"
 msgstr "Quinto"
+
+#~ msgid "Days"
+#~ msgstr "Días"
+
+#~ msgid "No Repeat"
+#~ msgstr "No repetir"
+
+#~ msgid "Confidential"
+#~ msgstr "Confidencial"
+
+#~ msgid "Weeks"
+#~ msgstr "Semanas"
+
+#~ msgid "Hours"
+#~ msgstr "Horas"
+
+#~ msgid "CalDAV for task management"
+#~ msgstr "CalDAV para la gestión de tareas"
+
+#~ msgid "Edit All"
+#~ msgstr "Editar todo"
+
+#~ msgid "Months"
+#~ msgstr "Meses"
+
+#~ msgid "Frequency"
+#~ msgstr "Frecuencia"
+
+#~ msgid "of"
+#~ msgstr "de"
+
+#~ msgid "Years"
+#~ msgstr "Años"
+
+#~ msgid ""
+#~ "Defines a rule or repeating pattern for recurring events\n"
+#~ "e.g.: Every other month on the last Sunday of the month for 10 occurrences:  "
+#~ "      FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
+#~ msgstr ""
+#~ "Define una regla o patrón repetitivo para eventos recurrentes.\n"
+#~ "Por ejemplo: Para 10 ocurrencias cada último domingo de cada dos meses : "
+#~ "FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
+
+#~ msgid " Synchronize between Project task and Caldav Vtodo."
+#~ msgstr " Sincroniza entre tareas de proyecto y Caldav Vtodo."
+
+#~ msgid "Recurrency Rule"
+#~ msgstr "Regla de recurrencia"
+
+#~ msgid "Repeat Times"
+#~ msgstr "Repeticiones"
+
+#~ msgid "Fix amout of times"
+#~ msgstr "Cantidad fija de veces"
+
+#~ msgid "Forever"
+#~ msgstr "Siempre"
+
+#~ msgid "Way to end reccurency"
+#~ msgstr "Forma de terminar recurrencia"
+
+#~ msgid "Edit all Occurrences  of recurrent Meeting."
+#~ msgstr "Editar todas las ocurrencias de la reunión recurrente."
