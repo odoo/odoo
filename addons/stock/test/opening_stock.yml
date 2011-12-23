@@ -33,35 +33,6 @@
     product = self.browse(cr, uid, ref('product_icecream'), context=context)
     assert product.qty_available == 10, "Stock is not updated."
 -
-  I fill inventory line.
-#-
-#  !python {model: stock.fill.inventory}: |
-#    context.update({'active_model': 'stock.inventory', 'active_id': ref('stock_inventory_icecream'), 'active_ids': [ref('stock_inventory_icecream')]})
-#-
-#  !record {model: stock.fill.inventory, id: fill_inventory}:
-#    location_id: location_refrigerator
-#    recursive: True
-#-
-#  !python {model: stock.fill.inventory }: |
-#    self.fill_inventory(cr, uid, [ref('fill_inventory')], context=context)
--
-  I split inventory line.
-#-
-#  !python {model: stock.inventory.line.split}: |
-#    context.update({'active_model': 'stock.inventory.line', 'active_id': ref('stock_inventory_line_icecream_lot0'), 'active_ids': [ref('stock_inventory_line_icecream_lot0')]})
-#-
-#  !record {model: stock.inventory.line.split, id: split_inventory_lot0}:
-#    use_exist: True
-#    line_exist_ids:
-#        - quantity: 10
-#          product_id: product_icecream
-#          prod_lot_id: lot_icecream_0
-#          product_uom: product.product_uom_kgm
-#          location_id: location_refrigerator
-#-
-#  !python {model: stock.inventory.line.split }: |
-#    self.split(cr, uid, [ref('split_inventory_lot0')], context=context)
--
   I merge inventory.
 -
   !python {model: stock.inventory.merge }: |
@@ -102,6 +73,33 @@
                 assert move_line.location_id.id == location_id, "Source location is not correspond."
                 assert move_line.location_dest_id.id == line.location_id.id, "Destination location is not correspond."
                 assert move_line.state == 'confirmed', "Move is not confirmed."
+-
+  I split inventory line.
+-
+  !python {model: stock.inventory.line.split}: |
+    context.update({'active_model': 'stock.inventory.line', 'active_id': ref('stock_inventory_line_icecream_lot0'), 'active_ids': [ref('stock_inventory_line_icecream_lot0')]})
+-
+  !record {model: stock.inventory.line.split, id: split_inventory_lot0}:
+    use_exist: True
+    line_exist_ids:
+        - quantity: 10
+          prodlot_id: lot_icecream_0
+-
+  !python {model: stock.inventory.line.split }: |
+    self.split_lot(cr, uid, [ref('split_inventory_lot0')], context=context)
+-
+  I fill inventory line.
+-
+  !python {model: stock.fill.inventory}: |
+    context.update({'active_model': 'stock.inventory', 'active_id': ref('stock_inventory_icecream'), 'active_ids': [ref('stock_inventory_icecream')]})
+-
+  !record {model: stock.fill.inventory, id: fill_inventory}:
+    location_id: location_refrigerator
+    recursive: True
+-
+  !python {model: stock.fill.inventory }: |
+    self.fill_inventory(cr, uid, [ref('fill_inventory')], context=context)
+
 -
   Now I check vitual stock of Ice-cream after confirmed physical inventory.
 -
