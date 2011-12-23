@@ -568,6 +568,7 @@ class configmanager(object):
                 p.set('options', opt, self.options[opt])
 
         for sec in sorted(self.misc.keys()):
+            p.add_section(sec)
             for opt in sorted(self.misc[sec].keys()):
                 p.set(sec,opt,self.misc[sec][opt])
 
