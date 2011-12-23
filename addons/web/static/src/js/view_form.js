@@ -2409,7 +2409,12 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
                 self.o2m.reload_current_view();
             });
         });
-    }
+    },
+    do_button_action: function (name, id, callback) {
+        var self = this;
+        var def = $.Deferred().then(callback).then(function() {self.o2m.view.reload();});
+        return this._super(name, id, _.bind(def.resolve, def));
+    },
 });
 
 openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({

@@ -73,7 +73,7 @@ session.web.ActionManager = session.web.Widget.extend({
         else if (state.model && state.id) {
             // TODO handle context & domain ?
             this.null_action();
-            action = {
+            var action = {
                 res_model: state.model,
                 res_id: state.id,
                 type: 'ir.actions.act_window',
@@ -146,7 +146,9 @@ session.web.ActionManager = session.web.Widget.extend({
             this.dialog.open();
         } else  {
             if(action.menu_id) {
-                return this.widget_parent.do_action(action);
+                return this.widget_parent.do_action(action, function () {
+                    session.webclient.menu.open_menu(action.menu_id);
+                });
             }
             this.dialog_stop();
             this.content_stop();

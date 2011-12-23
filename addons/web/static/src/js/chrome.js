@@ -835,7 +835,12 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this.$secondary_menu.addClass(this.folded ? 'oe_folded' : 'oe_unfolded');
     },
     do_reload: function() {
-        return this.rpc("/web/menu/load", {}, this.on_loaded);
+        var self = this;
+        return this.rpc("/web/menu/load", {}, this.on_loaded).then(function () {
+            if (self.current_menu) {
+                self.open_menu(self.current_menu);
+            }
+        });
     },
     on_loaded: function(data) {
         this.data = data;
@@ -856,6 +861,46 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             localStorage.setItem('oe_menu_folded', this.folded.toString());
         }
     },
+    /**
+     * Opens a given menu by id, as if a user had browsed to that menu by hand
+     * except does not trigger any event on the way
+     *
+     * @param {Number} menu_id database id of the terminal menu to select
+     */
+    open_menu: function (menu_id) {
+        this.$element.add(this.$secondary_menu).find('.active')
+                .removeClass('active');
+        this.$secondary_menu.find('> .oe_secondary_menu').hide();
+
+        var $primary_menu;
+        var $secondary_submenu = this.$secondary_menu.find(
+                'a[data-menu=' + menu_id +']');
+        if ($secondary_submenu.length) {
+            for(;;) {
+                if ($secondary_submenu.hasClass('leaf')) {
+                    $secondary_submenu.addClass('active');
+                } else if ($secondary_submenu.hasClass('submenu')) {
+                    $secondary_submenu.addClass('opened')
+                }
+                var $parent = $secondary_submenu.parent().show();
+                if ($parent.hasClass('oe_secondary_menu')) {
+                    var primary_id = $parent.data('menu-parent');
+                    $primary_menu = this.$element.find(
+                            'a[data-menu=' + primary_id + ']');
+                    break;
+                }
+                $secondary_submenu = $parent.prev();
+            }
+        } else {
+            $primary_menu = this.$element.find('a[data-menu=' + menu_id + ']');
+        }
+        if (!$primary_menu.length) {
+            return;
+        }
+        $primary_menu.addClass('active');
+        this.$secondary_menu.find(
+            'div[data-menu-parent=' + $primary_menu.data('menu') + ']').show();
+    },
     on_menu_click: function(ev, id) {
         id = id || 0;
         var $clicked_menu, manual = false;
@@ -873,6 +918,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         }
 
         if (this.do_menu_click($clicked_menu, manual) && id) {
+            this.current_menu = id;
             this.session.active_id = id;
             this.rpc('/web/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
         }
