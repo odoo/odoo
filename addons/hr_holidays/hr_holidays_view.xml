@@ -500,21 +500,22 @@
         </record>
 
         <record model="ir.ui.view" id="hr_kanban_view_employees_kanban">
-            <field name="name">HR - Employess Kanban</field>
+            <field name="name">HR - Employees Kanban with leave status</field>
             <field name="model">hr.employee</field>
-            <field name="type">kanban</field>
             <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
             <field name="arch" type="xml">
                 <xpath expr="//templates" position="before">
                     <field name="current_leave_state"/>
                     <field name="last_login"/>
                 </xpath>
-                <xpath expr="//ul" position="inside">
+                <xpath expr="//div[@class='oe_employee_details']/ul" position="inside">
                     <li t-if="record.current_leave_id.raw_value || record.last_login.raw_value">
-                        <span t-if="record.current_leave_id.raw_value" t-att-class="record.current_leave_state.raw_value==='new'?'oe_kanban_highlight oe_kanban_button':'oe_kanban_button oe_kanban_button_active'" style="font-size: 100%%">
-                            <field name="current_leave_id"/>, <field name="current_leave_state"/>
+                        <span t-if="record.current_leave_id.raw_value" t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_color_3':'oe_kanban_color_2'">
+                            <span class="oe_kanban_button" style="font-size: 100%%">
+                                <field name="current_leave_id"/>, <field name="current_leave_state"/>
+                            </span>
                         </span>
-                        <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_highlight oe_kanban_button" style="font-size: 100%%">
+                        <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
                             <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
                         </span>
                     </li>
