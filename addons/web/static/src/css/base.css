@@ -2138,9 +2138,7 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 
 .login input, #oe_login select {
     width: 250px;
-    margin-bottom: 10px;
     font-size: 14px;
-    padding: 5px 6px;
     border: 1px solid #999999;
     background: whitesmoke;
     -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
@@ -2151,11 +2149,20 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     border-radius: 3px;
 }
 
+.login input {
+    margin-bottom: 9px;
+    padding: 5px 6px;
+}
+
+#oe_login select {
+    padding: 1px;
+}
+
 .login .dbpane {
     position: fixed;
     top: 0;
     right: 8px;
-    padding: 6px 12px 0px;
+    padding: 8px;
     color: #eee;
     border: solid 1px #333;
     background: #101010;
@@ -2187,7 +2194,7 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     margin: -160px -166px;
     border: solid 1px #333333;
     background: #101010;
-    padding: 20px 32px;
+    padding: 22px 32px;
     text-align: left;
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
