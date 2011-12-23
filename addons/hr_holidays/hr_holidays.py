@@ -399,13 +399,13 @@ class hr_employee(osv.osv):
    def _get_leave_status(self, cr, uid, ids, name, args, context=None):
         holidays_id = self.pool.get('hr.holidays').search(cr, uid, 
            [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d %H:%M:%S')), 
-            ('date_to','>=',time.strftime('%Y-%m-%d %H:%M:%S')),('type','=','remove')],
+            ('date_to','>=',time.strftime('%Y-%m-%d %H:%M:%S')),('type','=','remove'),('state','not in',('cancel','refuse'))],
            context=context)
         result = {}
         for id in ids:
             result[id] = {
                 'current_leave_state': False,
-                'current_leave_id': False
+                'current_leave_id': False,
             }
         for holiday in self.pool.get('hr.holidays').browse(cr, uid, holidays_id, context=context):
             result[holiday.employee_id.id]['current_leave_state'] = holiday.state
