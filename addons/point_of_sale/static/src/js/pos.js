@@ -688,25 +688,30 @@ openerp.point_of_sale = function(db) {
             this._super(parent);
             this.model = options.model;
             this.model.bind('change', _.bind( function() {
-                this.$element.hide();
-                this.render_element();
+                this.refresh();
             }, this));
             this.model.bind('remove', _.bind( function() {
-                return this.$element.remove();
+                this.$element.remove();
             }, this));
             this.order = options.order;
         },
         start: function() {
             this.$element.click(_.bind(this.clickHandler, this));
+            this.refresh();
         },
         clickHandler: function() {
             this.select();
         },
         render_element: function() {
+            this.$element.html(this.template_fct(this.model.toJSON()));
             this.select();
-            return this.$element.html(this.template_fct(this.model.toJSON())).fadeIn(400, function() {
-                return $('#current-order').scrollTop($(this).offset().top);
-            });
+        },
+        refresh: function() {
+            this.render_element();
+            var heights = _.map(this.$element.prevAll(), function(el) {return $(el).outerHeight();});
+            heights.push($('#current-order thead').outerHeight());
+            var position = _.reduce(heights, function(memo, num){ return memo + num; }, 0);
+            $('#current-order').scrollTop(position);
         },
         select: function() {
             $('tr.selected').removeClass('selected');
