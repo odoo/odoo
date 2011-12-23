@@ -20,10 +20,7 @@
 #
 ##############################################################################
 
-import time
-from osv import osv, fields
-import netsvc
-from tools.translate import _
+from osv import osv
 
 class cancel_statement_line(osv.osv_memory):
     _name = 'cancel.statement.line'

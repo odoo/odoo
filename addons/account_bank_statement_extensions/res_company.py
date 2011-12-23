@@ -21,14 +21,11 @@
 ##############################################################################
 
 from osv import osv, fields
-import netsvc
-from tools.translate import _
-logger=netsvc.Logger()
 
 class res_company(osv.osv):
     _inherit = 'res.company'
     _columns = {
-        'bank_ids': fields.related('partner_id', 'bank_ids', type='one2many', relation='res.partner.bank', string='Company Banks'),                
+        'bank_ids': fields.related('partner_id', 'bank_ids', type='one2many', relation='res.partner.bank', string='Company Banks'),
     }
 
 res_company()

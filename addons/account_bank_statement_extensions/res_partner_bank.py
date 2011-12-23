@@ -20,10 +20,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import netsvc
-from tools.translate import _
-logger=netsvc.Logger()
+from osv import osv
 
 class res_partner_bank(osv.osv):
     _inherit = 'res.partner.bank'
