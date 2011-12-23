@@ -10,6 +10,7 @@ pref("extensions.tiny.password","admin");
 pref("extensions.tiny.senderemail","");
 pref("extensions.tiny.sendername","");
 pref("extensions.tiny.statutdoc","");// add to have a statut to hidde or not the button
+pref("extensions.tiny.message_label","");// add to message in push dialog
 pref("extensions.tiny.receiveremail","");
 pref("extensions.tiny.subject","");
 pref("extensions.tiny.receiveddate","");

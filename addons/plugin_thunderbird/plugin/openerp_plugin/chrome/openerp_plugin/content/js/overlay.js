@@ -162,16 +162,12 @@ var listDocumentHandler = {
         log_message("open document")
         window.open('chrome://openerp_plugin/content/push_dialog.xul', '', 'chrome', resizable='yes');
         if(res[RES_ID]==0) {
-            //alert("Document is not available.");
-            //document.getElementById('message_label').setAttribute('value', 'No document was found');
             setPreference('statutdoc','create');
-
         }
         else {
             setPreference('statutdoc', 'open');
-    		//open_url(res[URL]);
-        }        
-
+            setPreference('urldoc', res[URL]);
+        } 
     },
     onFault: function (client, ctxt, fault) {
 		log_message(fault);

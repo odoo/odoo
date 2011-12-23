@@ -40,7 +40,6 @@ function clear_search_box(element) {
 	}
 }
 
-
 function open_url(url) {
 	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
     messenger = messenger.QueryInterface(Components.interfaces.nsIMessenger);
