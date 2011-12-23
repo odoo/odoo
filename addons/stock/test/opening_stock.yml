@@ -82,7 +82,9 @@
   !record {model: stock.inventory.line.split, id: split_inventory_lot0}:
     use_exist: True
     line_exist_ids:
-        - quantity: 10
+        - quantity: 6
+          prodlot_id: lot_icecream_0
+        - quantity: 4
           prodlot_id: lot_icecream_0
 -
   !python {model: stock.inventory.line.split }: |
