@@ -1498,6 +1498,10 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             exdate = (data['exdate'] and (data['exdate'] + ',')  or '') + date_new
             self.write(cr, uid, [real_event_id], {'exdate': exdate})
             ids.remove(event_id)
+        for event in self.browse(cr, uid, ids, context=context):
+            if event.attendee_ids:
+                for attendee in event.attendee_ids:
+                    self.pool.get('calendar.attendee').unlink(cr, uid, attendee.id, context=context)
 
         res = super(calendar_event, self).unlink(cr, uid, ids, context=context)
         self.pool.get('res.alarm').do_alarm_unlink(cr, uid, ids, self._name)
