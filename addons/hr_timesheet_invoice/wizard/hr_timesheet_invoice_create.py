@@ -70,6 +70,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
             account_ids[line.account_id.id] = True
 
         account_ids = account_ids.keys() #data['accounts']
+        taxes = []
         for account in analytic_account_obj.browse(cr, uid, account_ids, context=context):
             partner = account.partner_id
             if (not partner) or not (account.pricelist_id):
@@ -136,8 +137,10 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     price = pro_price_obj.price_get(cr,uid,[pl], data['product'] or product_id, qty or 1.0, account.partner_id.id, context=ctx)[pl]
                 else:
                     price = 0.0
-
                 taxes = product.taxes_id
+                wiz_obj = self.browse(cr,uid,ids[0],context)
+                if wiz_obj.product and wiz_obj.product.taxes_id:
+                    taxes = wiz_obj.product.taxes_id
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
                 curr_line = {
