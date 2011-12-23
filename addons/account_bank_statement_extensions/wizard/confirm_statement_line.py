@@ -2,9 +2,9 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    
+#
 #    Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
-# 
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,7 +20,18 @@
 #
 ##############################################################################
 
-import account_coda
-import wizard
+from osv import osv
+
+class confirm_statement_line(osv.osv_memory):
+    _name = 'confirm.statement.line'
+    _description = 'Confirm selected statement lines'
+
+    def confirm_lines(self, cr, uid, ids, context):
+        line_ids = context['active_ids']
+        line_obj = self.pool.get('account.bank.statement.line')
+        line_obj.write(cr, uid, line_ids, {'state': 'confirm'}, context=context)
+        return {}
+
+confirm_statement_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

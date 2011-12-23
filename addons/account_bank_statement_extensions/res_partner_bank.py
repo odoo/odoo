@@ -2,9 +2,9 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    
+#
 #    Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
-# 
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,7 +20,20 @@
 #
 ##############################################################################
 
-import account_coda
-import wizard
+from osv import osv
 
+class res_partner_bank(osv.osv):
+    _inherit = 'res.partner.bank'
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('acc_number', operator, name)] + args, limit=limit)
+        else:
+            ids = self.search(cr, user, args, context=context, limit=limit)
+        return self.name_get(cr, user, ids, context=context)
+
+res_partner_bank()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
