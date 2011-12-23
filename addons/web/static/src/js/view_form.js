@@ -2160,6 +2160,9 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 if (self.is_readonly())
                     controller.set_editable(false);
             } else if (view_type == "form" || view_type == 'page') {
+                if (view_type == 'page' || self.is_readonly()) {
+                    $(".oe_form_buttons", controller.$element).children().remove();
+                }
                 controller.on_record_loaded.add_last(function() {
                     once.resolve();
                 });
