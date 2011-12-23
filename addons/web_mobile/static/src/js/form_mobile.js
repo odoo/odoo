@@ -103,6 +103,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                 }
                             });
                             $.mobile.changePage("#oe_list_"+relational+"_"+self.element_id, "slide", false, true);
+                            $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("a#list-id").find('span').addClass('desc');
                         }else{
                             $.mobile.changePage("#oe_list_"+relational+"_"+self.element_id, "slide", false, true);
                         }
