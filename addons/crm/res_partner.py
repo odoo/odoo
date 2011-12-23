@@ -68,7 +68,7 @@ class res_partner(osv.osv):
                 'categ_id' : categ_ids and categ_ids[0] or '',
                 'state' :'draft',
                 'type': 'opportunity'
-            })
+            }, context=context)
             opportunity_ids[partner_id] = opportunity_id
         return opportunity_ids
 res_partner()

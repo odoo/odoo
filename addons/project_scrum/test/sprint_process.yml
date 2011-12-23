@@ -34,7 +34,7 @@
   I create tasks from backlog "Automatic migration system" for sprint
 -
   !python {model: project.scrum.backlog.create.task}: |
-    new_id = self.create(cr, uid, {'user_id': ref("project.res_users_project_manager")})
+    new_id = self.create(cr, uid, {'user_id': ref("base.user_al")})
     task_obj = self.pool.get('project.task')
     backlog_obj = self.pool.get('project.scrum.product.backlog')
 
@@ -44,7 +44,7 @@
     assert len(task_ids), "Task not created"
     task = task_obj.browse(cr, uid, task_ids[0], context)
 
-    assert task.name == backlog_data.name and task.total_hours == backlog_data.expected_hours and  task.user_id and task.user_id.id == ref("project.res_users_project_manager"), 'Task not has been created'
+    assert task.name == backlog_data.name and task.total_hours == backlog_data.expected_hours and  task.user_id and task.user_id.id == ref("base.user_al"), 'Task not has been created'
 -
   I send email to scrum master with scrum meeting details.
 -

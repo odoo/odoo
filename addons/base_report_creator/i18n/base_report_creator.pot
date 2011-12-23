@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14:56+0000\n"
-"PO-Revision-Date: 2011-01-11 11:14:56+0000\n"
+"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"PO-Revision-Date: 2011-12-22 18:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgid "Graph Mode"
 msgstr ""
 
 #. module: base_report_creator
-#: code:addons/base_report_creator/base_report_creator.py:320
+#: code:addons/base_report_creator/base_report_creator.py:310
 #, python-format
 msgid "These is/are model(s) (%s) in selection which is/are not related to any other model"
 msgstr ""
@@ -116,7 +116,7 @@ msgid "Custom Reports"
 msgstr ""
 
 #. module: base_report_creator
-#: code:addons/base_report_creator/base_report_creator.py:320
+#: code:addons/base_report_creator/base_report_creator.py:310
 #, python-format
 msgid "No Related Models!!"
 msgstr ""
@@ -181,6 +181,7 @@ msgstr ""
 #: field:base_report_creator.report.fields,report_id:0
 #: field:base_report_creator.report.filter,report_id:0
 #: model:ir.model,name:base_report_creator.model_base_report_creator_report
+#: model:ir.model,name:base_report_creator.model_base_report_creator_report_result
 msgid "Report"
 msgstr ""
 
@@ -230,11 +231,6 @@ msgstr ""
 #: selection:base_report_creator.report.filter,condition:0
 #: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 msgid "AND"
-msgstr ""
-
-#. module: base_report_creator
-#: constraint:base_report_creator.report:0
-msgid "You can not display field which are not stored in Database."
 msgstr ""
 
 #. module: base_report_creator
@@ -359,7 +355,6 @@ msgstr ""
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-#: model:ir.module.module,shortdesc:base_report_creator.module_meta_information
 msgid "Report Creator"
 msgstr ""
 
@@ -423,6 +418,11 @@ msgstr ""
 #. module: base_report_creator
 #: field:base_report_creator.report,name:0
 msgid "Report Name"
+msgstr ""
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You can not display field which are not stored in database."
 msgstr ""
 
 #. module: base_report_creator
@@ -495,16 +495,5 @@ msgstr ""
 #: view:base_report_creator.report:0
 #: field:base_report_creator.report,filter_ids:0
 msgid "Filters"
-msgstr ""
-
-#. module: base_report_creator
-#: model:ir.module.module,description:base_report_creator.module_meta_information
-msgid "This module allows you to create any statistic\n"
-"report on several objects. It's a SQL query builder and browser\n"
-"for and users.\n"
-"\n"
-"After installing the module, it adds a menu to define custom report in\n"
-"the \"Dashboard\" menu.\n"
-""
 msgstr ""
 

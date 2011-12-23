@@ -2,7 +2,7 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="hr.employee4" model="hr.employee">
+        <record id="hr.employee_mit" model="hr.employee">
             <field name="address_home_id" ref="base.res_partner_address_1"/>
         </record>
 
@@ -47,7 +47,7 @@
         </record>
 
         <record id="sep_expenses" model="hr.expense.expense">
-            <field name="employee_id" ref="hr.employee4"/>
+            <field name="employee_id" ref="hr.employee_mit"/>
             <field name="name">September Expenses</field>
             <field name="date" eval="time.strftime('%Y-09-28')"/>
         </record>
