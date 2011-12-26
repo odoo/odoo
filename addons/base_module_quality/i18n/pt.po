@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-12-10 12:08+0000\n"
 "Last-Translator: Paulino Ascenção <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-11 05:36+0000\n"
-"X-Generator: Launchpad (build 14450)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:13+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:187
@@ -24,6 +24,12 @@ msgstr ""
 #, python-format
 msgid "Suggestion"
 msgstr "Sugestões"
+
+#. module: base_module_quality
+#: model:ir.actions.act_window,name:base_module_quality.action_view_quality_save_report
+#: view:save.report:0
+msgid "Standard Entries"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/base_module_quality.py:100
@@ -38,11 +44,6 @@ msgid "Method Test"
 msgstr "Método de Teste"
 
 #. module: base_module_quality
-#: model:ir.module.module,shortdesc:base_module_quality.module_meta_information
-msgid "Base module quality - To check the quality of other modules"
-msgstr ""
-
-#. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:34
 #, python-format
 msgid ""
@@ -51,10 +52,9 @@ msgid ""
 msgstr ""
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:127
-#, python-format
-msgid "O(n) or worst"
-msgstr "O(n) ou piores"
+#: view:save.report:0
+msgid " "
+msgstr ""
 
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
@@ -74,9 +74,8 @@ msgid "Speed Test"
 msgstr "Teste de Velocidade"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/terp_test/terp_test.py:54
-#, python-format
-msgid "The module does not contain the __openerp__.py file"
+#: model:ir.model,name:base_module_quality.model_quality_check
+msgid "Module Quality Check"
 msgstr ""
 
 #. module: base_module_quality
@@ -111,7 +110,7 @@ msgstr ""
 "utilizado pelo OpenERP."
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/quality_save_report.py:46
+#: code:addons/base_module_quality/wizard/quality_save_report.py:39
 #, python-format
 msgid "No report to save!"
 msgstr "Nenhum relatório para guardar !"
@@ -155,8 +154,9 @@ msgid "Save Report"
 msgstr "Guardar relatório"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/module_quality_check.py:46
-#: model:ir.actions.wizard,name:base_module_quality.create_quality_check_id
+#: code:addons/base_module_quality/wizard/module_quality_check.py:43
+#: model:ir.actions.act_window,name:base_module_quality.act_base_module_quality
+#: view:quality.check:0
 #, python-format
 msgid "Quality Check"
 msgstr "Verificação de Qualidade"
@@ -168,15 +168,26 @@ msgid "Not Efficient"
 msgstr "Não Eficiente"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/quality_save_report.py:46
+#: code:addons/base_module_quality/wizard/quality_save_report.py:39
 #, python-format
 msgid "Warning"
 msgstr "Aviso"
 
 #. module: base_module_quality
+#: code:addons/base_module_quality/structure_test/structure_test.py:172
+#, python-format
+msgid "Feedback about structure of module"
+msgstr "Resposta sobre a estrutura do módulo"
+
+#. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:35
 #, python-format
 msgid "Unit Test"
+msgstr ""
+
+#. module: base_module_quality
+#: view:quality.check:0
+msgid "Check"
 msgstr ""
 
 #. module: base_module_quality
@@ -252,7 +263,13 @@ msgid "module.quality.detail"
 msgstr "module.quality.detail"
 
 #. module: base_module_quality
-#: wizard_field:quality_detail_save,init,module_file:0
+#: code:addons/base_module_quality/speed_test/speed_test.py:127
+#, python-format
+msgid "O(n) or worst"
+msgstr "O(n) ou piores"
+
+#. module: base_module_quality
+#: field:save.report,module_file:0
 msgid "Save report"
 msgstr "Guardar o relatório"
 
@@ -274,9 +291,9 @@ msgid "Result in %"
 msgstr "Resultado em %"
 
 #. module: base_module_quality
-#: wizard_view:quality_detail_save,init:0
-msgid "Standard entries"
-msgstr "Movimentos Padrão"
+#: view:quality.check:0
+msgid "This wizard will check module(s) quality"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:58
@@ -297,6 +314,12 @@ msgstr "Resultado"
 #: field:module.quality.detail,message:0
 msgid "Message"
 msgstr "Mensagem"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/terp_test/terp_test.py:54
+#, python-format
+msgid "The module does not contain the __openerp__.py file"
+msgstr ""
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
@@ -374,10 +397,10 @@ msgid "Error! Module is not properly loaded/installed"
 msgstr ""
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:116
+#: code:addons/base_module_quality/speed_test/speed_test.py:115
 #, python-format
-msgid "Error in Read method: %s"
-msgstr ""
+msgid "Error in Read method"
+msgstr "Erro em Ler o método"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:138
@@ -406,21 +429,21 @@ msgid "Test Is Not Implemented"
 msgstr "Teste não foi implementado"
 
 #. module: base_module_quality
+#: model:ir.model,name:base_module_quality.model_save_report
+msgid "Save Report of Quality"
+msgstr ""
+
+#. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:151
 #, python-format
 msgid "N"
 msgstr "N"
 
 #. module: base_module_quality
-#: model:ir.actions.wizard,name:base_module_quality.quality_detail_save
-msgid "Report Save"
-msgstr "Guardar Relatório"
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/structure_test/structure_test.py:172
+#: code:addons/base_module_quality/workflow_test/workflow_test.py:143
 #, python-format
-msgid "Feedback about structure of module"
-msgstr "Resposta sobre a estrutura do módulo"
+msgid "Feed back About Workflow of Module"
+msgstr "Resposta sobre o fluxo de trabalho do módulo"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:73
@@ -443,10 +466,10 @@ msgid ""
 msgstr ""
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/workflow_test/workflow_test.py:143
+#: code:addons/base_module_quality/speed_test/speed_test.py:116
 #, python-format
-msgid "Feed back About Workflow of Module"
-msgstr "Resposta sobre o fluxo de trabalho do módulo"
+msgid "Error in Read method: %s"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:129
@@ -460,9 +483,14 @@ msgid "Done"
 msgstr "Concluido"
 
 #. module: base_module_quality
-#: wizard_button:quality_detail_save,init,end:0
+#: view:quality.check:0
 msgid "Cancel"
 msgstr "Cancelar"
+
+#. module: base_module_quality
+#: view:save.report:0
+msgid "Close"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:32
@@ -570,31 +598,6 @@ msgid "Tag Name"
 msgstr "Nome da Marca"
 
 #. module: base_module_quality
-#: wizard_field:quality_detail_save,init,name:0
-msgid "File name"
-msgstr "Nome do Ficheiro"
-
-#. module: base_module_quality
-#: model:ir.module.module,description:base_module_quality.module_meta_information
-msgid ""
-"\n"
-"The aim of this module is to check the quality of other modules.\n"
-"\n"
-"It defines a wizard on the list of modules in OpenERP, which allows you to\n"
-"evaluate them on different criteria such as: the respect of OpenERP coding\n"
-"standards, the speed efficiency...\n"
-"\n"
-"This module also provides generic framework to define your own quality "
-"test.\n"
-"For further info, coders may take a look into base_module_quality\\"
-"README.txt\n"
-"\n"
-"WARNING: This module can not work as a ZIP file, you must unzip it before\n"
-"using it, otherwise it may crash.\n"
-"    "
-msgstr ""
-
-#. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
 msgid "module.quality.check"
 msgstr "module.quality.check"
@@ -617,7 +620,7 @@ msgid "Score (%)"
 msgstr "Resultado (%)"
 
 #. module: base_module_quality
-#: help:quality_detail_save,init,name:0
+#: help:save.report,name:0
 msgid "Save report as .html format"
 msgstr "Guarde o relatório no formato .html"
 
@@ -650,6 +653,7 @@ msgstr "Resumo"
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:99
 #: code:addons/base_module_quality/structure_test/structure_test.py:172
+#: field:save.report,name:0
 #, python-format
 msgid "File Name"
 msgstr "Nome do Campo"
@@ -742,9 +746,8 @@ msgstr "resposta sobre o ficheiro terp do Módulo"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML Inválido para a Arquitectura de Vista !"
 
-#, python-format
-#~ msgid "Error in Read method"
-#~ msgstr "Erro em Ler o método"
+#~ msgid "Standard entries"
+#~ msgstr "Movimentos Padrão"
 
 #, python-format
 #~ msgid ""
@@ -757,6 +760,9 @@ msgstr "resposta sobre o ficheiro terp do Módulo"
 #~ "padrão do python. Ver http://www.logilab.org/project/name/pylint for further "
 #~ "info.\n"
 #~ " \"\""
+
+#~ msgid "Report Save"
+#~ msgstr "Guardar Relatório"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -776,3 +782,6 @@ msgstr "resposta sobre o ficheiro terp do Módulo"
 #~ "\"\"\n"
 #~ " Este teste verifica se o módulo satisfaz a estrutura tiny\n"
 #~ "\"\""
+
+#~ msgid "File name"
+#~ msgstr "Nome do Ficheiro"

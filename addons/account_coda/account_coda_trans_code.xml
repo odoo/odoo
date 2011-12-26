@@ -1,0 +1,1914 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- account.coda.trans.code -->
+        <record id="actcf_00" model="account.coda.trans.code">
+            <field name="code">00</field>
+            <field name="type">family</field>
+            <field name="description">Undefined transactions</field>
+        </record>
+        <record id="actcc_00_00" model="account.coda.trans.code">
+            <field name="code">00</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_00"/>
+            <field name="description">Undefined transaction</field>
+        </record>
+        <record id="actcc_00_33" model="account.coda.trans.code">
+            <field name="code">33</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_00"/>
+            <field name="description">Value correction</field>
+        </record>
+        <record id="actcc_00_35" model="account.coda.trans.code">
+            <field name="code">35</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_00"/>
+            <field name="description">Correction</field>
+        </record>
+        <record id="actcc_00_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_00"/>
+            <field name="description">Costs</field>
+        </record>
+        <record id="actcc_00_39" model="account.coda.trans.code">
+            <field name="code">39</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_00"/>
+            <field name="description">Cancellation of a transaction</field>
+        </record>
+        <record id="actcc_00_83" model="account.coda.trans.code">
+            <field name="code">83</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_00"/>
+            <field name="description">Value correction</field>
+        </record>
+        <record id="actcc_00_85" model="account.coda.trans.code">
+            <field name="code">85</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_00"/>
+            <field name="description">Correction</field>
+        </record>
+        <record id="actcc_00_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_00"/>
+            <field name="description">Costs refunded</field>
+        </record>
+        <record id="actcc_00_89" model="account.coda.trans.code">
+            <field name="code">89</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_00"/>
+            <field name="description">Cancellation of a transaction</field>
+        </record>
+        <record id="actcf_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">family</field>
+            <field name="description">Domestic or local SEPA credit transfers</field>
+        </record>
+        <record id="actcc_01_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Individual transfer order</field>
+            <field name="comment">Credit transfer given by the customer on paper or electronically, even if the execution date of this transfer is in the future. Domestic payments as well as euro payments meeting the requirements.</field>
+        </record>
+        <record id="actcc_01_02" model="account.coda.trans.code">
+            <field name="code">02</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Individual transfer order initiated by the bank</field>
+            <field name="comment">The bank takes the initiative for debiting the customer’s account.</field>
+        </record>
+        <record id="actcc_01_03" model="account.coda.trans.code">
+            <field name="code">03</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Standing order</field>
+            <field name="comment">Credit transfer for which the order has been given once and which is carried out again at regular intervals without any change.</field>
+        </record>
+        <record id="actcc_01_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Payment of wages, etc.</field>
+            <field name="comment">The principal will be debited for the total amount of the file entered.</field>
+        </record>
+        <record id="actcc_01_07" model="account.coda.trans.code">
+            <field name="code">07</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Collective transfer</field>
+            <field name="comment">The principal will be debited for the total amount of the file entered.</field>
+        </record>
+        <record id="actcc_01_09" model="account.coda.trans.code">
+            <field name="code">09</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Your semi-standing order</field>
+        </record>
+        <record id="actcc_01_11" model="account.coda.trans.code">
+            <field name="code">11</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Your semi-standing order – payment to employees</field>
+        </record>
+        <record id="actcc_01_13" model="account.coda.trans.code">
+            <field name="code">13</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Transfer from your account</field>
+            <field name="comment">Transfer from one account to another account of the same customer at the bank's or the customer's initiative (intracompany).</field>
+        </record>
+        <record id="actcc_01_15" model="account.coda.trans.code">
+            <field name="code">15</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Balance due insurance premium</field>
+        </record>
+        <record id="actcc_01_17" model="account.coda.trans.code">
+            <field name="code">17</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Financial centralisation</field>
+            <field name="comment">In case of centralisation by the bank, type 2 will be allotted to this transaction. This total can be followed by the detailed movement.</field>
+        </record>
+        <record id="actcc_01_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Costs</field>
+        </record>
+        <record id="actcc_01_39" model="account.coda.trans.code">
+            <field name="code">39</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Your issue circular cheque</field>
+            <field name="comment">To be used for issued circular cheques given in consignment</field>
+        </record>
+        <record id="actcc_01_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_01_50" model="account.coda.trans.code">
+            <field name="code">50</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Transfer in your favour</field>
+        </record>
+        <record id="actcc_01_51" model="account.coda.trans.code">
+            <field name="code">51</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Transfer in your favour – initiated by the bank</field>
+            <field name="comment">The bank takes the initiative for crediting the customer’s account.</field>
+        </record>
+        <record id="actcc_01_52" model="account.coda.trans.code">
+            <field name="code">52</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Payment in your favour</field>
+            <field name="comment">Payment by a third person</field>
+        </record>
+        <record id="actcc_01_54" model="account.coda.trans.code">
+            <field name="code">54</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Unexecutable transfer order</field>
+        </record>
+        <record id="actcc_01_60" model="account.coda.trans.code">
+            <field name="code">60</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Non-presented circular cheque</field>
+        </record>
+        <record id="actcc_01_62" model="account.coda.trans.code">
+            <field name="code">62</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Unpaid postal order</field>
+        </record>
+        <record id="actcc_01_64" model="account.coda.trans.code">
+            <field name="code">64</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Transfer to your account</field>
+            <field name="comment">Intracompany</field>
+        </record>
+        <record id="actcc_01_66" model="account.coda.trans.code">
+            <field name="code">66</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Financial centralization</field>
+            <field name="comment">In case of centralisation by the bank, type 2 will be allotted to this transaction. This total can be followed by the detailed movement.</field>
+        </record>
+        <record id="actcc_01_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Reimbursement of costs</field>
+        </record>
+        <record id="actcc_01_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_01"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_03" model="account.coda.trans.code">
+            <field name="code">03</field>
+            <field name="type">family</field>
+            <field name="description">Cheques</field>
+        </record>
+        <record id="actcc_03_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Payment of your cheque</field>
+        </record>
+        <record id="actcc_03_03" model="account.coda.trans.code">
+            <field name="code">03</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Your purchase by payment card</field>
+        </record>
+        <record id="actcc_03_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Payment of voucher</field>
+            <field name="comment">Payment of holiday pay, etc.</field>
+        </record>
+        <record id="actcc_03_07" model="account.coda.trans.code">
+            <field name="code">07</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Definitely unpaid cheque</field>
+        </record>
+        <record id="actcc_03_09" model="account.coda.trans.code">
+            <field name="code">09</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Unpaid voucher</field>
+        </record>
+        <record id="actcc_03_11" model="account.coda.trans.code">
+            <field name="code">11</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Department store cheque</field>
+        </record>
+        <record id="actcc_03_13" model="account.coda.trans.code">
+            <field name="code">13</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Eurocheque written out abroad</field>
+        </record>
+        <record id="actcc_03_15" model="account.coda.trans.code">
+            <field name="code">15</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Your purchase bank cheque</field>
+            <field name="comment">Cheque drawn by the bank on itself, usually with charges.</field>
+        </record>
+        <record id="actcc_03_17" model="account.coda.trans.code">
+            <field name="code">17</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Your certified cheque</field>
+            <field name="comment">Amount of the cheque; if any, charges receive code 37</field>
+        </record>
+        <record id="actcc_03_19" model="account.coda.trans.code">
+            <field name="code">19</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Settlement of credit cards</field>
+        </record>
+        <record id="actcc_03_35" model="account.coda.trans.code">
+            <field name="code">35</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Cash advance</field>
+        </record>
+        <record id="actcc_03_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Cheque-related costs</field>
+        </record>
+        <record id="actcc_03_38" model="account.coda.trans.code">
+            <field name="code">38</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Provisionally unpaid</field>
+        </record>
+        <record id="actcc_03_39" model="account.coda.trans.code">
+            <field name="code">39</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Provisionally unpaid due to other reason than manual presentation</field>
+        </record>
+        <record id="actcc_03_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_03_50" model="account.coda.trans.code">
+            <field name="code">50</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Credit of a payment via terminal</field>
+        </record>
+        <record id="actcc_03_52" model="account.coda.trans.code">
+            <field name="code">52</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">First credit of cheques, vouchers, luncheon vouchers, postal orders, credit under usual reserve</field>
+        </record>
+        <record id="actcc_03_56" model="account.coda.trans.code">
+            <field name="code">56</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Non-presented certified cheques</field>
+        </record>
+        <record id="actcc_03_58" model="account.coda.trans.code">
+            <field name="code">58</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Remittance of cheques, vouchers, etc. credit after collection</field>
+            <field name="comment">Also for vouchers, postal orders, anything but bills of exchange, acquittances, promissory notes, etc.</field>
+        </record>
+        <record id="actcc_03_60" model="account.coda.trans.code">
+            <field name="code">60</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Reversal of voucher</field>
+        </record>
+        <record id="actcc_03_62" model="account.coda.trans.code">
+            <field name="code">62</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Reversal of cheque</field>
+            <field name="comment">cheques debited on account, but debit cancelled afterwards for lack of cover (double debit/contra-entry of transaction 01 or 05)</field>
+        </record>
+        <record id="actcc_03_63" model="account.coda.trans.code">
+            <field name="code">63</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Second credit of unpaid cheque</field>
+        </record>
+        <record id="actcc_03_64" model="account.coda.trans.code">
+            <field name="code">64</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Reversal of settlement of credit card</field>
+        </record>
+        <record id="actcc_03_66" model="account.coda.trans.code">
+            <field name="code">66</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Remittance of cheque by your branch - credit under usual reserve</field>
+        </record>
+        <record id="actcc_03_68" model="account.coda.trans.code">
+            <field name="code">68</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Credit of a payment via electronic purse</field>
+        </record>
+        <record id="actcc_03_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Reimbursement of cheque-related costs</field>
+            <field name="comment">Overall amount, VAT included</field>
+        </record>
+        <record id="actcc_03_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_03"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_04" model="account.coda.trans.code">
+            <field name="code">04</field>
+            <field name="type">family</field>
+            <field name="description">Cards</field>
+        </record>
+        <record id="actcc_04_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Loading a GSM card</field>
+            <field name="comment">Debit customer who is loading</field>
+        </record>
+        <record id="actcc_04_02" model="account.coda.trans.code">
+            <field name="code">02</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Payment by means of a payment card within the Eurozone</field>
+            <field name="comment">Eurozone = countries which have the euro as their official currency</field>
+        </record>
+        <record id="actcc_04_03" model="account.coda.trans.code">
+            <field name="code">03</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Settlement credit cards</field>
+            <field name="comment">See annexe III : communication 124</field>
+        </record>
+        <record id="actcc_04_04" model="account.coda.trans.code">
+            <field name="code">04</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Cash withdrawal from an ATM</field>
+            <field name="comment">At home as well as abroad</field>
+        </record>
+        <record id="actcc_04_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Loading Proton</field>
+        </record>
+        <record id="actcc_04_06" model="account.coda.trans.code">
+            <field name="code">06</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Payment with tank card</field>
+        </record>
+        <record id="actcc_04_07" model="account.coda.trans.code">
+            <field name="code">07</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Payment by GSM</field>
+        </record>
+        <record id="actcc_04_08" model="account.coda.trans.code">
+            <field name="code">08</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Payment by means of a payment card outside the Eurozone</field>
+            <field name="comment">Eurozone = countries which have the euro as their official currency</field>
+        </record>
+        <record id="actcc_04_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Costs</field>
+            <field name="comment">Various costs for possessing or using a payment card</field>
+        </record>
+        <record id="actcc_04_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_04_50" model="account.coda.trans.code">
+            <field name="code">50</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Credit after a payment at a terminal</field>
+            <field name="comment">Except Proton</field>
+        </record>
+        <record id="actcc_04_51" model="account.coda.trans.code">
+            <field name="code">51</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Unloading Proton</field>
+        </record>
+        <record id="actcc_04_52" model="account.coda.trans.code">
+            <field name="code">52</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Loading GSM cards</field>
+            <field name="comment">Credit provider</field>
+        </record>
+        <record id="actcc_04_53" model="account.coda.trans.code">
+            <field name="code">53</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Cash deposit at an ATM</field>
+        </record>
+        <record id="actcc_04_55" model="account.coda.trans.code">
+            <field name="code">55</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Income from payments by GSM</field>
+        </record>
+        <record id="actcc_04_68" model="account.coda.trans.code">
+            <field name="code">68</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Credit after Proton payments</field>
+        </record>
+        <record id="actcc_04_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Reimbursement of costs</field>
+        </record>
+        <record id="actcc_04_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_04"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">family</field>
+            <field name="description">Direct debit</field>
+        </record>
+        <record id="actcc_05_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_05"/>
+            <field name="description">Payment</field>
+        </record>
+        <record id="actcc_05_03" model="account.coda.trans.code">
+            <field name="code">03</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_05"/>
+            <field name="description">Unpaid debt</field>
+        </record>
+        <record id="actcc_05_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_05"/>
+            <field name="description">Reimbursement</field>
+        </record>
+        <record id="actcc_05_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_05"/>
+            <field name="description">Costs</field>
+        </record>
+        <record id="actcc_05_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_05"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_05_50" model="account.coda.trans.code">
+            <field name="code">50</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_05"/>
+            <field name="description">Credit after collection</field>
+        </record>
+        <record id="actcc_05_52" model="account.coda.trans.code">
+            <field name="code">52</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_05"/>
+            <field name="description">Credit under usual reserve</field>
+        </record>
+        <record id="actcc_05_54" model="account.coda.trans.code">
+            <field name="code">54</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_05"/>
+            <field name="description">Reimbursement</field>
+        </record>
+        <record id="actcc_05_56" model="account.coda.trans.code">
+            <field name="code">56</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_05"/>
+            <field name="description">Unexecutable reimbursement</field>
+        </record>
+        <record id="actcc_05_58" model="account.coda.trans.code">
+            <field name="code">58</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_05"/>
+            <field name="description">Reversal</field>
+            <field name="comment">(cancellation of an undue debit of the debtor at the initiative of the financial institution or the debtor for lack of cover)</field>
+        </record>
+        <record id="actcc_05_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_05"/>
+            <field name="description">Reimbursement of costs</field>
+        </record>
+        <record id="actcc_05_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_05"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_07" model="account.coda.trans.code">
+            <field name="code">07</field>
+            <field name="type">family</field>
+            <field name="description">Domestic commercial paper</field>
+        </record>
+        <record id="actcc_07_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Payment commercial paper</field>
+            <field name="comment">Bills of exchange, acquittances, promissory notes; debit of the drawee</field>
+        </record>
+        <record id="actcc_07_03" model="account.coda.trans.code">
+            <field name="code">03</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Payment receipt card</field>
+        </record>
+        <record id="actcc_07_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Commercial paper claimed back</field>
+            <field name="comment">Bill claimed back at the drawer's request (bill claimed back before maturity date)</field>
+        </record>
+        <record id="actcc_07_06" model="account.coda.trans.code">
+            <field name="code">06</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Extension of maturity date</field>
+            <field name="comment">Costs chargeable to the remitter</field>
+        </record>
+        <record id="actcc_07_07" model="account.coda.trans.code">
+            <field name="code">07</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Unpaid commercial paper</field>
+            <field name="comment">Contra-entry of a direct credit or of a discount</field>
+        </record>
+        <record id="actcc_07_08" model="account.coda.trans.code">
+            <field name="code">08</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Payment in advance</field>
+            <field name="comment">Debit of the remitter when the drawee pays in advance directly to the remitter (regards bank acceptances)</field>
+        </record>
+        <record id="actcc_07_09" model="account.coda.trans.code">
+            <field name="code">09</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Agio on supplier's bill</field>
+            <field name="comment">Debit of the agios to the account of the drawee</field>
+        </record>
+        <record id="actcc_07_10" model="account.coda.trans.code">
+            <field name="code">10</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Renewal of agreed maturity date</field>
+        </record>
+        <record id="actcc_07_12" model="account.coda.trans.code">
+            <field name="code">12</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Safe custody</field>
+        </record>
+        <record id="actcc_07_14" model="account.coda.trans.code">
+            <field name="code">14</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Warrant fallen due</field>
+        </record>
+        <record id="actcc_07_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Costs related to commercial paper</field>
+            <field name="comment">If any, detail in the category (e.g. costs for presentation for acceptance, etc.)</field>
+        </record>
+        <record id="actcc_07_39" model="account.coda.trans.code">
+            <field name="code">39</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Return of an irregular bill of exchange</field>
+            <field name="comment">Debit of the drawer after credit under usual reserve or discount</field>
+        </record>
+        <record id="actcc_07_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_07_50" model="account.coda.trans.code">
+            <field name="code">50</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Remittance of commercial paper - credit after collection</field>
+            <field name="comment">Credit of the remitter</field>
+        </record>
+        <record id="actcc_07_52" model="account.coda.trans.code">
+            <field name="code">52</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Remittance of commercial paper - credit under usual reserve</field>
+        </record>
+        <record id="actcc_07_54" model="account.coda.trans.code">
+            <field name="code">54</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Remittance of commercial paper for discount</field>
+            <field name="comment">Among other things advances or promissory notes</field>
+        </record>
+        <record id="actcc_07_56" model="account.coda.trans.code">
+            <field name="code">56</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Remittance of supplier's bill with guarantee</field>
+        </record>
+        <record id="actcc_07_58" model="account.coda.trans.code">
+            <field name="code">58</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Remittance of supplier's bill without guarantee</field>
+        </record>
+        <record id="actcc_07_64" model="account.coda.trans.code">
+            <field name="code">64</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Warrant</field>
+        </record>
+        <record id="actcc_07_86" model="account.coda.trans.code">
+            <field name="code">86</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Payment after cession</field>
+        </record>
+        <record id="actcc_07_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Reimbursement of costs</field>
+        </record>
+        <record id="actcc_07_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_07"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_09" model="account.coda.trans.code">
+            <field name="code">09</field>
+            <field name="type">family</field>
+            <field name="description">Counter transactions</field>
+        </record>
+        <record id="actcc_09_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Cash withdrawal</field>
+            <field name="comment">Withdrawal by counter cheque or receipt; cash remitted by the bank clerk</field>
+        </record>
+        <record id="actcc_09_03" model="account.coda.trans.code">
+            <field name="code">03</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Cash withdrawal by card (ATM)</field>
+        </record>
+        <record id="actcc_09_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Purchase of foreign bank notes</field>
+        </record>
+        <record id="actcc_09_07" model="account.coda.trans.code">
+            <field name="code">07</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Purchase of gold/pieces</field>
+        </record>
+        <record id="actcc_09_09" model="account.coda.trans.code">
+            <field name="code">09</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Purchase of petrol coupons</field>
+        </record>
+        <record id="actcc_09_11" model="account.coda.trans.code">
+            <field name="code">11</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Your purchase of luncheon vouchers</field>
+        </record>
+        <record id="actcc_09_13" model="account.coda.trans.code">
+            <field name="code">13</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Cash withdrawal by your branch or agents</field>
+            <field name="comment">On the account of the head office</field>
+        </record>
+        <record id="actcc_09_15" model="account.coda.trans.code">
+            <field name="code">15</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Your purchase of lottery tickets</field>
+        </record>
+        <record id="actcc_09_17" model="account.coda.trans.code">
+            <field name="code">17</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Purchase of fiscal stamps</field>
+        </record>
+        <record id="actcc_09_19" model="account.coda.trans.code">
+            <field name="code">19</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Difference in payment</field>
+            <field name="comment">Used in case of payments accepted under reserve of count, result of overcrediting</field>
+        </record>
+        <record id="actcc_09_21" model="account.coda.trans.code">
+            <field name="code">21</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Cash withdrawal on card (PROTON)</field>
+        </record>
+        <record id="actcc_09_25" model="account.coda.trans.code">
+            <field name="code">25</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Purchase of traveller’s cheque</field>
+        </record>
+        <record id="actcc_09_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Costs</field>
+        </record>
+        <record id="actcc_09_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_09_50" model="account.coda.trans.code">
+            <field name="code">50</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Cash payment</field>
+            <field name="comment">For own account - the comment for the client is given in the communication; also for mixed payments (cash + cheques) - not to be communicated to the clients; for payments made by a third person: see family 01</field>
+        </record>
+        <record id="actcc_09_52" model="account.coda.trans.code">
+            <field name="code">52</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Payment night safe</field>
+        </record>
+        <record id="actcc_09_54" model="account.coda.trans.code">
+            <field name="code">54</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Your payment ATM</field>
+        </record>
+        <record id="actcc_09_56" model="account.coda.trans.code">
+            <field name="code">56</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Reserve</field>
+        </record>
+        <record id="actcc_09_58" model="account.coda.trans.code">
+            <field name="code">58</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Payment by your branch/agents</field>
+            <field name="comment">Takes priority over transaction 52 (hence a payment made by an agent in a night safe = 58 and not 52)</field>
+        </record>
+        <record id="actcc_09_60" model="account.coda.trans.code">
+            <field name="code">60</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Sale of foreign bank notes</field>
+        </record>
+        <record id="actcc_09_62" model="account.coda.trans.code">
+            <field name="code">62</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Sale of gold/pieces under usual reserve</field>
+        </record>
+        <record id="actcc_09_64" model="account.coda.trans.code">
+            <field name="code">64</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Your winning lottery ticket</field>
+        </record>
+        <record id="actcc_09_66" model="account.coda.trans.code">
+            <field name="code">66</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Repurchase of petrol coupons</field>
+        </record>
+        <record id="actcc_09_68" model="account.coda.trans.code">
+            <field name="code">68</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Difference in payment</field>
+            <field name="comment">In case of payment accepted under reserve of count; result of undercrediting - see also transaction 19</field>
+        </record>
+        <record id="actcc_09_70" model="account.coda.trans.code">
+            <field name="code">70</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Sale of traveller’s cheque</field>
+        </record>
+        <record id="actcc_09_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Reimbursement of costs</field>
+        </record>
+        <record id="actcc_09_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_09"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_11" model="account.coda.trans.code">
+            <field name="code">11</field>
+            <field name="type">family</field>
+            <field name="description">Securities</field>
+        </record>
+        <record id="actcc_11_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Purchase of securities</field>
+            <field name="comment">Purchase of domestic or foreign securities, including subscription rights, certificates, etc.</field>
+        </record>
+        <record id="actcc_11_02" model="account.coda.trans.code">
+            <field name="code">02</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Tenders</field>
+            <field name="comment">Payment to the bank on maturity date</field>
+        </record>
+        <record id="actcc_11_03" model="account.coda.trans.code">
+            <field name="code">03</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Subscription to securities</field>
+            <field name="comment">Bonds, shares, tap issues of CDs, with or without payment of interest, etc.</field>
+        </record>
+        <record id="actcc_11_04" model="account.coda.trans.code">
+            <field name="code">04</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Issues</field>
+        </record>
+        <record id="actcc_11_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Partial payment subscription</field>
+            <field name="comment">Debit of the subscriber for the complementary payment of partly-paid shares</field>
+        </record>
+        <record id="actcc_11_06" model="account.coda.trans.code">
+            <field name="code">06</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Share option plan – exercising an option</field>
+        </record>
+        <record id="actcc_11_09" model="account.coda.trans.code">
+            <field name="code">09</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Settlement of securities</field>
+            <field name="comment">For professionals (stockbrokers) only, whoever the issuer may be (Belgian or foreigner)</field>
+        </record>
+        <record id="actcc_11_11" model="account.coda.trans.code">
+            <field name="code">11</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Payable coupons/repayable securities</field>
+            <field name="comment">Debit of the issuer by the bank in charge of the financial service</field>
+        </record>
+        <record id="actcc_11_13" model="account.coda.trans.code">
+            <field name="code">13</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Your repurchase of issue</field>
+            <field name="comment">Unissued part (see 64)</field>
+        </record>
+        <record id="actcc_11_15" model="account.coda.trans.code">
+            <field name="code">15</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Interim interest on subscription</field>
+            <field name="comment">In case of subscription before the interest due date</field>
+        </record>
+        <record id="actcc_11_17" model="account.coda.trans.code">
+            <field name="code">17</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Management fee</field>
+        </record>
+        <record id="actcc_11_19" model="account.coda.trans.code">
+            <field name="code">19</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Regularisation costs</field>
+        </record>
+        <record id="actcc_11_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Costs</field>
+        </record>
+        <record id="actcc_11_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_11_50" model="account.coda.trans.code">
+            <field name="code">50</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Sale of securities</field>
+        </record>
+        <record id="actcc_11_51" model="account.coda.trans.code">
+            <field name="code">51</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Tender</field>
+            <field name="comment">Company issues paper in return for cash</field>
+        </record>
+        <record id="actcc_11_52" model="account.coda.trans.code">
+            <field name="code">52</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Payment of coupons from a deposit or settlement of coupons delivered over the counter - credit under usual reserve</field>
+            <field name="comment">Whatever the currency of the security</field>
+        </record>
+        <record id="actcc_11_56" model="account.coda.trans.code">
+            <field name="code">56</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Reserve</field>
+        </record>
+        <record id="actcc_11_58" model="account.coda.trans.code">
+            <field name="code">58</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Repayable securities from a deposit or delivered at the counter - credit under usual reserve</field>
+        </record>
+        <record id="actcc_11_62" model="account.coda.trans.code">
+            <field name="code">62</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Interim interest on subscription</field>
+            <field name="comment">When reimbursed separately to the subscriber</field>
+        </record>
+        <record id="actcc_11_64" model="account.coda.trans.code">
+            <field name="code">64</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Your issue</field>
+            <field name="comment">Amount paid to the issuer by the bank in charge of the placement (firm underwriting or not); also used for the payment in full of partly-paid shares, see transaction 05</field>
+        </record>
+        <record id="actcc_11_66" model="account.coda.trans.code">
+            <field name="code">66</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Retrocession of issue commission</field>
+            <field name="comment">For professionals such as insurances and stockbrokers</field>
+        </record>
+        <record id="actcc_11_68" model="account.coda.trans.code">
+            <field name="code">68</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Compensation for missing coupon</field>
+            <field name="comment">In case coupons attached to a purchased security are missing</field>
+        </record>
+        <record id="actcc_11_70" model="account.coda.trans.code">
+            <field name="code">70</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Settlement of securities</field>
+            <field name="comment">Only with stockbrokers when they deliver the securities to the bank</field>
+        </record>
+        <record id="actcc_11_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Reimbursement of costs</field>
+        </record>
+        <record id="actcc_11_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_11"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_13" model="account.coda.trans.code">
+            <field name="code">13</field>
+            <field name="type">family</field>
+            <field name="description">Credit</field>
+        </record>
+        <record id="actcc_13_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Short-term loan</field>
+            <field name="comment">Capital and/or interest (specified by the category)</field>
+        </record>
+        <record id="actcc_13_02" model="account.coda.trans.code">
+            <field name="code">02</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Long-term loan</field>
+        </record>
+        <record id="actcc_13_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Settlement of fixed advance</field>
+            <field name="comment">Full or partial reimbursement of a fixed advance at maturity date</field>
+        </record>
+        <record id="actcc_13_07" model="account.coda.trans.code">
+            <field name="code">07</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Your repayment instalment credits</field>
+            <field name="comment">Often by standing order or direct debit. In case of direct debit, family 13 is used.</field>
+        </record>
+        <record id="actcc_13_11" model="account.coda.trans.code">
+            <field name="code">11</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Your repayment mortgage loan</field>
+        </record>
+        <record id="actcc_13_13" model="account.coda.trans.code">
+            <field name="code">13</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Settlement of bank acceptances</field>
+        </record>
+        <record id="actcc_13_15" model="account.coda.trans.code">
+            <field name="code">15</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Your repayment hire-purchase and similar claims</field>
+            <field name="comment">Hire-purchase agreement under which the financial institution is the lessor</field>
+        </record>
+        <record id="actcc_13_19" model="account.coda.trans.code">
+            <field name="code">19</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Documentary import credits</field>
+        </record>
+        <record id="actcc_13_21" model="account.coda.trans.code">
+            <field name="code">21</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Other credit applications</field>
+        </record>
+        <record id="actcc_13_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Credit-related costs</field>
+        </record>
+        <record id="actcc_13_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_13_50" model="account.coda.trans.code">
+            <field name="code">50</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Settlement of instalment credit</field>
+        </record>
+        <record id="actcc_13_54" model="account.coda.trans.code">
+            <field name="code">54</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Fixed advance – capital and interest</field>
+        </record>
+        <record id="actcc_13_55" model="account.coda.trans.code">
+            <field name="code">55</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Fixed advance – interest only</field>
+        </record>
+        <record id="actcc_13_56" model="account.coda.trans.code">
+            <field name="code">56</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Subsidy</field>
+            <field name="comment">Interest or capital subsidy</field>
+        </record>
+        <record id="actcc_13_60" model="account.coda.trans.code">
+            <field name="code">60</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Settlement of mortgage loan</field>
+        </record>
+        <record id="actcc_13_62" model="account.coda.trans.code">
+            <field name="code">62</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Term loan</field>
+        </record>
+        <record id="actcc_13_68" model="account.coda.trans.code">
+            <field name="code">68</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Documentary export credits</field>
+        </record>
+        <record id="actcc_13_70" model="account.coda.trans.code">
+            <field name="code">70</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Settlement of discount bank acceptance</field>
+        </record>
+        <record id="actcc_13_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Reimbursement of costs</field>
+        </record>
+        <record id="actcc_13_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_13"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_30" model="account.coda.trans.code">
+            <field name="code">30</field>
+            <field name="type">family</field>
+            <field name="description">Various transactions</field>
+        </record>
+        <record id="actcc_30_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Spot purchase of foreign exchange</field>
+        </record>
+        <record id="actcc_30_03" model="account.coda.trans.code">
+            <field name="code">03</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Forward purchase of foreign exchange</field>
+        </record>
+        <record id="actcc_30_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Capital and/or interest term investment</field>
+        </record>
+        <record id="actcc_30_33" model="account.coda.trans.code">
+            <field name="code">33</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Value (date) correction</field>
+        </record>
+        <record id="actcc_30_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Costs</field>
+        </record>
+        <record id="actcc_30_39" model="account.coda.trans.code">
+            <field name="code">39</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Undefined transaction</field>
+        </record>
+        <record id="actcc_30_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_30_50" model="account.coda.trans.code">
+            <field name="code">50</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Spot sale of foreign exchange</field>
+        </record>
+        <record id="actcc_30_52" model="account.coda.trans.code">
+            <field name="code">52</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Forward sale of foreign exchange</field>
+        </record>
+        <record id="actcc_30_54" model="account.coda.trans.code">
+            <field name="code">54</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Capital and/or interest term investment</field>
+        </record>
+        <record id="actcc_30_55" model="account.coda.trans.code">
+            <field name="code">55</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Interest term investment</field>
+        </record>
+        <record id="actcc_30_83" model="account.coda.trans.code">
+            <field name="code">83</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Value (date) correction</field>
+        </record>
+        <record id="actcc_30_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Reimbursement of costs</field>
+        </record>
+        <record id="actcc_30_89" model="account.coda.trans.code">
+            <field name="code">89</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Undefined transaction</field>
+        </record>
+        <record id="actcc_30_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_30"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_35" model="account.coda.trans.code">
+            <field name="code">35</field>
+            <field name="type">family</field>
+            <field name="description">Closing (periodical settlements for interest, costs,…)</field>
+        </record>
+        <record id="actcc_35_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_35"/>
+            <field name="description">Closing</field>
+        </record>
+        <record id="actcc_35_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_35"/>
+            <field name="description">Costs</field>
+        </record>
+        <record id="actcc_35_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_35"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_35_50" model="account.coda.trans.code">
+            <field name="code">50</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_35"/>
+            <field name="description">Closing</field>
+        </record>
+        <record id="actcc_35_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_35"/>
+            <field name="description">Reimbursement of costs</field>
+        </record>
+        <record id="actcc_35_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_35"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_41" model="account.coda.trans.code">
+            <field name="code">41</field>
+            <field name="type">family</field>
+            <field name="description">International credit transfers - non-SEPA credit transfers</field>
+        </record>
+        <record id="actcc_41_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Transfer</field>
+        </record>
+        <record id="actcc_41_03" model="account.coda.trans.code">
+            <field name="code">03</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Standing order</field>
+        </record>
+        <record id="actcc_41_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Collective payments of wages</field>
+        </record>
+        <record id="actcc_41_07" model="account.coda.trans.code">
+            <field name="code">07</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Collective transfers</field>
+        </record>
+        <record id="actcc_41_13" model="account.coda.trans.code">
+            <field name="code">13</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Transfer from your account</field>
+            <field name="comment">Intracompany</field>
+        </record>
+        <record id="actcc_41_17" model="account.coda.trans.code">
+            <field name="code">17</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Financial centralisation (debit)</field>
+        </record>
+        <record id="actcc_41_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Costs relating to outgoing foreign transfers and non-SEPA transfers</field>
+        </record>
+        <record id="actcc_41_38" model="account.coda.trans.code">
+            <field name="code">38</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Costs relating to incoming foreign and non-SEPA transfers</field>
+        </record>
+        <record id="actcc_41_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_41_50" model="account.coda.trans.code">
+            <field name="code">50</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Transfer</field>
+        </record>
+        <record id="actcc_41_64" model="account.coda.trans.code">
+            <field name="code">64</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Transfer to your account</field>
+            <field name="comment">Intracompany</field>
+        </record>
+        <record id="actcc_41_66" model="account.coda.trans.code">
+            <field name="code">66</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Financial centralisation (credit)</field>
+        </record>
+        <record id="actcc_41_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Reimbursement of costs</field>
+        </record>
+        <record id="actcc_41_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_41"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_43" model="account.coda.trans.code">
+            <field name="code">43</field>
+            <field name="type">family</field>
+            <field name="description">Foreign cheques</field>
+        </record>
+        <record id="actcc_43_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_43"/>
+            <field name="description">Payment of a foreign cheque</field>
+            <field name="comment">Debit of a cheque in foreign currency or in EUR in favour of a foreigner</field>
+        </record>
+        <record id="actcc_43_07" model="account.coda.trans.code">
+            <field name="code">07</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_43"/>
+            <field name="description">Unpaid foreign cheque</field>
+            <field name="comment">Foreign cheque remitted for collection that returns unpaid</field>
+        </record>
+        <record id="actcc_43_15" model="account.coda.trans.code">
+            <field name="code">15</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_43"/>
+            <field name="description">Purchase of an international bank cheque</field>
+        </record>
+        <record id="actcc_43_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_43"/>
+            <field name="description">Costs relating to payment of foreign cheques</field>
+        </record>
+        <record id="actcc_43_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_43"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_43_52" model="account.coda.trans.code">
+            <field name="code">52</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_43"/>
+            <field name="description">Remittance of foreign cheque credit under usual reserve</field>
+        </record>
+        <record id="actcc_43_58" model="account.coda.trans.code">
+            <field name="code">58</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_43"/>
+            <field name="description">Remittance of foreign cheque credit after collection</field>
+        </record>
+        <record id="actcc_43_62" model="account.coda.trans.code">
+            <field name="code">62</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_43"/>
+            <field name="description">Reversal of cheques</field>
+        </record>
+        <record id="actcc_43_70" model="account.coda.trans.code">
+            <field name="code">70</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_43"/>
+            <field name="description">Purchase of traveller’s cheque</field>
+        </record>
+        <record id="actcc_43_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_43"/>
+            <field name="description">Reimbursement of costs</field>
+        </record>
+        <record id="actcc_43_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_43"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_47" model="account.coda.trans.code">
+            <field name="code">47</field>
+            <field name="type">family</field>
+            <field name="description">Foreign commercial paper</field>
+        </record>
+        <record id="actcc_47_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Payment of foreign bill</field>
+        </record>
+        <record id="actcc_47_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Bill claimed back</field>
+        </record>
+        <record id="actcc_47_06" model="account.coda.trans.code">
+            <field name="code">06</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Extension</field>
+        </record>
+        <record id="actcc_47_07" model="account.coda.trans.code">
+            <field name="code">07</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Unpaid foreign bill</field>
+        </record>
+        <record id="actcc_47_11" model="account.coda.trans.code">
+            <field name="code">11</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Payment documents abroad</field>
+            <field name="comment">Bills of lading</field>
+        </record>
+        <record id="actcc_47_13" model="account.coda.trans.code">
+            <field name="code">13</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Discount foreign supplier's bills</field>
+            <field name="comment">Debit customer, payment of agios, interest, exchange commission, etc.</field>
+        </record>
+        <record id="actcc_47_14" model="account.coda.trans.code">
+            <field name="code">14</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Warrant fallen due</field>
+        </record>
+        <record id="actcc_47_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Costs relating to the payment of a foreign bill</field>
+        </record>
+        <record id="actcc_47_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_47_50" model="account.coda.trans.code">
+            <field name="code">50</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Remittance of foreign bill credit after collection</field>
+        </record>
+        <record id="actcc_47_52" model="account.coda.trans.code">
+            <field name="code">52</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Remittance of foreign bill credit under usual reserve</field>
+        </record>
+        <record id="actcc_47_54" model="account.coda.trans.code">
+            <field name="code">54</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Discount abroad</field>
+        </record>
+        <record id="actcc_47_56" model="account.coda.trans.code">
+            <field name="code">56</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Remittance of guaranteed foreign supplier's bill</field>
+        </record>
+        <record id="actcc_47_58" model="account.coda.trans.code">
+            <field name="code">58</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Idem without guarantee</field>
+        </record>
+        <record id="actcc_47_60" model="account.coda.trans.code">
+            <field name="code">60</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Remittance of documents abroad - credit under usual reserve</field>
+        </record>
+        <record id="actcc_47_62" model="account.coda.trans.code">
+            <field name="code">62</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Remittance of documents abroad - credit after collection</field>
+        </record>
+        <record id="actcc_47_64" model="account.coda.trans.code">
+            <field name="code">64</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Warrant</field>
+        </record>
+        <record id="actcc_47_87" model="account.coda.trans.code">
+            <field name="code">87</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Reimbursement of costs</field>
+        </record>
+        <record id="actcc_47_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_47"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcf_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">family</field>
+            <field name="description">Foreign counter transactions</field>
+        </record>
+        <record id="actcc_49_03" model="account.coda.trans.code">
+            <field name="code">03</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_49"/>
+            <field name="description">ATM withdrawal</field>
+        </record>
+        <record id="actcf_80" model="account.coda.trans.code">
+            <field name="code">80</field>
+            <field name="type">family</field>
+            <field name="description">Separately charged costs and provisions</field>
+        </record>
+        <record id="actcc_80_01" model="account.coda.trans.code">
+            <field name="code">01</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Guarantee card charges</field>
+        </record>
+        <record id="actcc_80_02" model="account.coda.trans.code">
+            <field name="code">02</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Costs relating to electronic output</field>
+        </record>
+        <record id="actcc_80_03" model="account.coda.trans.code">
+            <field name="code">03</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Payment card charges</field>
+        </record>
+        <record id="actcc_80_04" model="account.coda.trans.code">
+            <field name="code">04</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Costs for holding a documentary cash credit</field>
+        </record>
+        <record id="actcc_80_05" model="account.coda.trans.code">
+            <field name="code">05</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Card charges</field>
+        </record>
+        <record id="actcc_80_06" model="account.coda.trans.code">
+            <field name="code">06</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Damage relating to bills and cheques</field>
+        </record>
+        <record id="actcc_80_07" model="account.coda.trans.code">
+            <field name="code">07</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Insurance costs</field>
+            <field name="comment">- insurance costs of account holders against fatal accidents - passing-on of several insurance costs</field>
+        </record>
+        <record id="actcc_80_08" model="account.coda.trans.code">
+            <field name="code">08</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Registering compensation for savings accounts</field>
+        </record>
+        <record id="actcc_80_09" model="account.coda.trans.code">
+            <field name="code">09</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Postage</field>
+            <field name="comment">Postage recouped to the debit of the customer (including forwarding charges)</field>
+        </record>
+        <record id="actcc_80_10" model="account.coda.trans.code">
+            <field name="code">10</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Purchase of Smartcard</field>
+        </record>
+        <record id="actcc_80_11" model="account.coda.trans.code">
+            <field name="code">11</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Costs for the safe custody of correspondence</field>
+            <field name="comment">Costs chargeable to clients who ask to have their correspondence kept at their disposal at the bank's counter</field>
+        </record>
+        <record id="actcc_80_12" model="account.coda.trans.code">
+            <field name="code">12</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Costs for opening a bank guarantee</field>
+        </record>
+        <record id="actcc_80_13" model="account.coda.trans.code">
+            <field name="code">13</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Renting of safes</field>
+            <field name="comment">Commission for renting a safe deposit box</field>
+        </record>
+        <record id="actcc_80_14" model="account.coda.trans.code">
+            <field name="code">14</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Handling costs instalment credit</field>
+        </record>
+        <record id="actcc_80_15" model="account.coda.trans.code">
+            <field name="code">15</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Night safe</field>
+            <field name="comment">Commission collected to the debit of the customer to whom the bank delivers a key which gives access to the night safe</field>
+        </record>
+        <record id="actcc_80_16" model="account.coda.trans.code">
+            <field name="code">16</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Bank confirmation to revisor or accountant</field>
+        </record>
+        <record id="actcc_80_17" model="account.coda.trans.code">
+            <field name="code">17</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Charge for safe custody</field>
+            <field name="comment">Collected for unsealed deposit of securities, and other parcels</field>
+        </record>
+        <record id="actcc_80_18" model="account.coda.trans.code">
+            <field name="code">18</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Trade information</field>
+        </record>
+        <record id="actcc_80_19" model="account.coda.trans.code">
+            <field name="code">19</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Special charge for safe custody</field>
+            <field name="comment">Collected for securities, gold, pass-books, etc. placed in safe custody</field>
+        </record>
+        <record id="actcc_80_20" model="account.coda.trans.code">
+            <field name="code">20</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Drawing up a certificate</field>
+        </record>
+        <record id="actcc_80_21" model="account.coda.trans.code">
+            <field name="code">21</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Pay-packet charges</field>
+            <field name="comment">Charges for preparing pay packets</field>
+        </record>
+        <record id="actcc_80_22" model="account.coda.trans.code">
+            <field name="code">22</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Management/custody</field>
+        </record>
+        <record id="actcc_80_23" model="account.coda.trans.code">
+            <field name="code">23</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Research costs</field>
+            <field name="comment">Costs charged for all kinds of research (information on past transactions, address retrieval, ...)</field>
+        </record>
+        <record id="actcc_80_24" model="account.coda.trans.code">
+            <field name="code">24</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Participation in and management of interest refund system</field>
+        </record>
+        <record id="actcc_80_25" model="account.coda.trans.code">
+            <field name="code">25</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Renting of direct debit box</field>
+            <field name="comment">Commission for the renting of boxes put at the disposal for the correspondence</field>
+        </record>
+        <record id="actcc_80_26" model="account.coda.trans.code">
+            <field name="code">26</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Travel insurance premium</field>
+        </record>
+        <record id="actcc_80_27" model="account.coda.trans.code">
+            <field name="code">27</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Subscription fee</field>
+            <field name="comment">For publications of the financial institution</field>
+        </record>
+        <record id="actcc_80_29" model="account.coda.trans.code">
+            <field name="code">29</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Information charges</field>
+            <field name="comment">Charges collected for: - commercial information - sundry information</field>
+        </record>
+        <record id="actcc_80_31" model="account.coda.trans.code">
+            <field name="code">31</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Writ service fee</field>
+            <field name="comment">E.g. for signing invoices</field>
+        </record>
+        <record id="actcc_80_33" model="account.coda.trans.code">
+            <field name="code">33</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Miscellaneous fees and commissions</field>
+            <field name="comment">Costs not specified otherwise, often with a manual communication (e.g. for collecting, ordering funds). VAT excluded = type 0 VAT included = type 3 (at least 3 articles)</field>
+        </record>
+        <record id="actcc_80_35" model="account.coda.trans.code">
+            <field name="code">35</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Costs</field>
+            <field name="comment">Costs charged for calculating the amount of the tax to be paid (e.g. Fiscomat).</field>
+        </record>
+        <record id="actcc_80_37" model="account.coda.trans.code">
+            <field name="code">37</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Access right to database</field>
+            <field name="comment">Fixed right, either one-off or periodical; for details, see &quot;categories&quot;</field>
+        </record>
+        <record id="actcc_80_39" model="account.coda.trans.code">
+            <field name="code">39</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Surety fee</field>
+            <field name="comment">Agios on guarantees given</field>
+        </record>
+        <record id="actcc_80_41" model="account.coda.trans.code">
+            <field name="code">41</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Research costs</field>
+        </record>
+        <record id="actcc_80_43" model="account.coda.trans.code">
+            <field name="code">43</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Printing of forms</field>
+        </record>
+        <record id="actcc_80_45" model="account.coda.trans.code">
+            <field name="code">45</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Documentary credit charges</field>
+        </record>
+        <record id="actcc_80_47" model="account.coda.trans.code">
+            <field name="code">47</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Charging fees for transactions</field>
+        </record>
+        <record id="actcc_80_49" model="account.coda.trans.code">
+            <field name="code">49</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+        <record id="actcc_80_99" model="account.coda.trans.code">
+            <field name="code">99</field>
+            <field name="type">code</field>
+            <field name="parent_id" ref="actcf_80"/>
+            <field name="description">Cancellation or correction</field>
+        </record>
+
+    </data>
+</openerp>

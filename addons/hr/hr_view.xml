@@ -126,6 +126,7 @@
              </field>
          </record>
         <!-- HR Kanban View  -->
+
     <record model="ir.ui.view" id="hr_kanban_view_employees">
         <field name="name">HR - Employess Kanban</field>
         <field name="model">hr.employee</field>
@@ -142,7 +143,6 @@
                             <div class="oe_employee_details">
                                 <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
                                 <ul>
-                                    <li t-if="record.department_id.raw_value"><field name="department_id"/></li>
                                     <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                     <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
                                     <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
