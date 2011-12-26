@@ -12,9 +12,7 @@
   I select the followup to send it to the partner.
 -
   !python {model: account.followup.print}: |
-    self.do_continue(cr, uid, [ref("account_followup_print_0")], {"lang": 'en_US',
-      "active_model": "ir.ui.menu", "active_ids": [ref("account_followup.account_followup_print_menu")],
-      "tz": False, "active_id": ref("account_followup.account_followup_print_menu"),
+    self.do_continue(cr, uid, [ref("account_followup_print_0")], {"active_ids": [ref("account_followup.account_followup_print_menu")], "active_id": ref("account_followup.account_followup_print_menu"),
       })
 -
   I select partners whom I want to send followups.
@@ -32,7 +30,5 @@
 -
   !python {model: account.followup.print.all}: |
     import time
-    self.do_mail(cr, uid, [ref("account_followup_print_all_0")], {"lang": 'en_US',
-      "active_model": "ir.ui.menu", "active_ids": [ref("account_followup.account_followup_print_menu")],
-      "tz": False, "date": time.strftime('%Y-%m-%d'), "followup_id": ref("account_followup.demo_followup1"), "active_id": ref("account_followup.account_followup_print_menu"),
+    self.do_mail(cr, uid, [ref("account_followup_print_all_0")], {"active_ids": [ref("account_followup.account_followup_print_menu")], "date": time.strftime('%Y-%m-%d'), "followup_id": ref("account_followup.demo_followup1"), "active_id": ref("account_followup.account_followup_print_menu"),
       })
