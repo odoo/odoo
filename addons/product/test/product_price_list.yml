@@ -22,6 +22,30 @@
     new_price = result[ref("product_product_pc1")].values()
     assert new_price[0] == 400,"PC1 sale price is not 400 with Discount."
 -
+  For special product pricelist, first I check "PC2" sale price is 750.
+-
+  !python {model: product.product}: |
+    prd_brw = self.browse(cr, uid, ref("product_product_pc2"))
+    assert prd_brw.list_price == 750,"PC2 sale price is not 750"
+-
+  Make new rule in "Default Public Pricelist Version" if product is "PC2" than 30 Rs off on sale price of product .
+-
+  !record {model: product.pricelist.item, id: pricelist_rules_for_pc2}:
+    name: Default Public Pricelist for PC2
+    min_quantity: 1
+    product_id: product.product_product_pc2
+    sequence: 1
+    base: 2
+    price_version_id: product.ver0
+    price_surcharge: 220
+-
+  I check sale price of PC2 is 720 by discount.
+-
+  !python {model: product.pricelist}: |
+    result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc2") ,5,ref("base.res_partner_desertic_hispafuentes"))])
+    new_price = result[ref("product_product_pc2")].values()
+    assert new_price[0] == 720,"PC1 sale price is not 720 with Discount."
+-
   Now I deactivate the old pricelist version.
 -
   !python {model: product.pricelist.version}: |
