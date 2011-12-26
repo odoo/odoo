@@ -1,5 +1,5 @@
 -
-    In order to test attendance process in OpenERP, I perform SignIn/SignOut for an employee.
+  In order to test attendance process in OpenERP, I perform SignIn/SignOut for an employee.
 -
   !record {model: hr.sign.in.out, id: employee_sign_in}:
     emp_id: hr.employee3
@@ -16,12 +16,12 @@
 -
   I check that Employee is "Present".
 -
-  !assert {model: hr.employee, id: hr.employee3, severity: error, string: Employee should be in present state}:
+  !assert {model: hr.employee, id: hr.employee_al, severity: error, string: Employee should be in present state}:
     - state == 'present'
 -
   After few seconds, employee sign's out.
 -
-  !python {model: hr.sign.in.out}: |
+  !python {model: hr.sign.in.out.ask}: |
     import time
     time.sleep(2)
     self.so_check(cr, uid, [ref("employee_sign_in")])

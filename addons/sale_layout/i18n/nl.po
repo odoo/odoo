@@ -7,44 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-18 08:20+0000\n"
 "Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:44+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:17+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: sale_layout
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
 msgid "Sub Total"
 msgstr "Subtotaal"
-
-#. module: sale_layout
-#: model:ir.module.module,description:sale_layout.module_meta_information
-msgid ""
-"\n"
-"    This module provides features to improve the layout of the Sales Order.\n"
-"\n"
-"    It gives you the possibility to\n"
-"        * order all the lines of a sales order\n"
-"        * add titles, comment lines, sub total lines\n"
-"        * draw horizontal lines and put page breaks\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"    Deze module biedt mogelijkheden om de layout van verkooporders te "
-"verbeteren.\n"
-"\n"
-"    Het geeft de mogelijkheid tot\n"
-"        * alle regels van een verkooporder sorteren\n"
-"        * titles, commentaar regels en subtotaal regels toevoegen\n"
-"        * horizontale lijnen en pagina overgangen toevoegen\n"
-"\n"
-"    "
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -62,9 +43,9 @@ msgid "Note"
 msgstr "Notitie"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Unit Price"
-msgstr "Stuksprijs"
+#: field:sale.order.line,layout_type:0
+msgid "Line Type"
+msgstr ""
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -82,14 +63,14 @@ msgid "Disc.(%)"
 msgstr "Krt. (%)"
 
 #. module: sale_layout
-#: field:sale.order.line,layout_type:0
-msgid "Layout Type"
-msgstr "Layoutsoort"
+#: report:sale.order.layout:0
+msgid "Unit Price"
+msgstr "Stuksprijs"
 
 #. module: sale_layout
 #: view:sale.order:0
-msgid "Seq."
-msgstr "Volgnr."
+msgid "Invoice Lines"
+msgstr "Factuurregels"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -102,19 +83,9 @@ msgid "Product"
 msgstr "Product"
 
 #. module: sale_layout
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "Orderreferentie moet uniek zijn!"
-
-#. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Description"
 msgstr "Omschrijving"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Manual Description"
-msgstr "Handmatige omschrijving"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -122,14 +93,9 @@ msgid "Our Salesman"
 msgstr "Onze verkoper"
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "Automatic Declaration"
-msgstr "Automatische melding"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Invoice Lines"
-msgstr "Factuurregels"
+#: report:sale.order.layout:0
+msgid "Tel. :"
+msgstr "Tel. :"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -162,14 +128,9 @@ msgid "Invoice address :"
 msgstr "Factuuradres:"
 
 #. module: sale_layout
-#: model:ir.module.module,shortdesc:sale_layout.module_meta_information
-msgid "Sale Order Layout"
-msgstr "Verkooporder layout"
-
-#. module: sale_layout
-#: selection:sale.order.line,layout_type:0
-msgid "Page Break"
-msgstr "Pagina-einde"
+#: report:sale.order.layout:0
+msgid "Fax :"
+msgstr "Fax :"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -187,6 +148,7 @@ msgid "Shipping address :"
 msgstr "Afleveradres :"
 
 #. module: sale_layout
+#: view:sale.order:0
 #: report:sale.order.layout:0
 msgid "Taxes"
 msgstr "BTW"
@@ -195,11 +157,6 @@ msgstr "BTW"
 #: report:sale.order.layout:0
 msgid "Net Total :"
 msgstr "Netto totaal :"
-
-#. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Tel. :"
-msgstr "Tel. :"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -215,11 +172,6 @@ msgstr "Betalingsconditie"
 #: view:sale.order:0
 msgid "History"
 msgstr "Geschiedenis"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Sale Order Lines"
-msgstr "Verkooporderregels"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -272,9 +224,9 @@ msgid "Taxes :"
 msgstr "Belastingen :"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Fax :"
-msgstr "Fax :"
+#: selection:sale.order.line,layout_type:0
+msgid "Page Break"
+msgstr "Pagina-einde"
 
 #. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order
@@ -300,3 +252,46 @@ msgstr "Verkooporderregel"
 #: view:sale.order:0
 msgid "Stock Moves"
 msgstr "Goederenstromen"
+
+#~ msgid "Layout Type"
+#~ msgstr "Layoutsoort"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module provides features to improve the layout of the Sales Order.\n"
+#~ "\n"
+#~ "    It gives you the possibility to\n"
+#~ "        * order all the lines of a sales order\n"
+#~ "        * add titles, comment lines, sub total lines\n"
+#~ "        * draw horizontal lines and put page breaks\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Deze module biedt mogelijkheden om de layout van verkooporders te "
+#~ "verbeteren.\n"
+#~ "\n"
+#~ "    Het geeft de mogelijkheid tot\n"
+#~ "        * alle regels van een verkooporder sorteren\n"
+#~ "        * titles, commentaar regels en subtotaal regels toevoegen\n"
+#~ "        * horizontale lijnen en pagina overgangen toevoegen\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid "Seq."
+#~ msgstr "Volgnr."
+
+#~ msgid "Automatic Declaration"
+#~ msgstr "Automatische melding"
+
+#~ msgid "Manual Description"
+#~ msgstr "Handmatige omschrijving"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Orderreferentie moet uniek zijn!"
+
+#~ msgid "Sale Order Layout"
+#~ msgstr "Verkooporder layout"
+
+#~ msgid "Sale Order Lines"
+#~ msgstr "Verkooporderregels"

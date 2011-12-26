@@ -6,21 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:45+0000\n"
 "PO-Revision-Date: 2011-09-05 06:39+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:53+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:26+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: lunch
-#: wizard_view:lunch.cashbox.clean,init:0
+#: view:lunch.cashbox.clean:0
 msgid "Reset cashbox"
 msgstr "Nulovat pokladnu"
+
+#. module: lunch
+#: view:report.lunch.amount:0
+msgid "Box amount in current year"
+msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_form
@@ -30,11 +35,12 @@ msgid "Lunch Orders"
 msgstr "Obědnávky obědů"
 
 #. module: lunch
-#: wizard_view:lunch.order.cancel,init:0
+#: view:lunch.order.cancel:0
 msgid "Are you sure you want to cancel this order ?"
 msgstr "Jste si jisti, že chcete zrušit tuto objednávku ?"
 
 #. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove_form
 #: model:ir.ui.menu,name:lunch.menu_lunch_cashmove_form
 msgid "Cash Moves"
 msgstr "Pohyby hotovosti"
@@ -56,24 +62,6 @@ msgstr "potvrdit objednávku"
 #: view:report.lunch.order:0
 msgid "    7 Days    "
 msgstr "    7 dnů    "
-
-#. module: lunch
-#: model:ir.module.module,description:lunch.module_meta_information
-msgid ""
-"\n"
-"    The base module to manage lunch\n"
-"\n"
-"    keep track for the Lunch Order ,Cash Moves ,CashBox ,Product.\n"
-"    Apply Different Category for the product.\n"
-"    "
-msgstr ""
-"\n"
-"    Základní modul pro správu obědů\n"
-"\n"
-"   udržuje přehled o Obědnávkách obědů, Pohybech hotovosti, Pokladně, "
-"Výrobcích.\n"
-"    Používá různé kategorie pro výrobky.\n"
-"    "
 
 #. module: lunch
 #: view:lunch.cashmove:0
@@ -100,10 +88,20 @@ msgid "Day"
 msgstr "Den"
 
 #. module: lunch
-#: model:ir.actions.wizard,name:lunch.wizard_id_cancel
-#: wizard_view:lunch.order.cancel,init:0
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_cancel
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_cancel_values
+#: model:ir.model,name:lunch.model_lunch_order_cancel
+#: view:lunch.order:0
+#: view:lunch.order.cancel:0
 msgid "Cancel Order"
 msgstr "Zrušit objednávku"
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_create_cashbox
+msgid ""
+"You can create on cashbox by employee if you want to keep track of the "
+"amount due by employee according to what have been ordered."
+msgstr ""
 
 #. module: lunch
 #: field:lunch.cashmove,amount:0
@@ -112,6 +110,7 @@ msgid "Amount"
 msgstr "Částka"
 
 #. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_product_form
 #: model:ir.ui.menu,name:lunch.menu_lunch_product_form
 #: view:lunch.product:0
 msgid "Products"
@@ -133,13 +132,13 @@ msgid "Lunch Orders Statistics"
 msgstr "Statistika obědnávek obědů"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove_form
 #: view:lunch.cashmove:0
 #: field:lunch.order,cashmove:0
 msgid "CashMove"
 msgstr "PohybyHotovosti"
 
 #. module: lunch
+#: view:lunch.order:0
 #: selection:lunch.order,state:0
 msgid "Confirmed"
 msgstr "Potvrzeno"
@@ -148,11 +147,6 @@ msgstr "Potvrzeno"
 #: view:lunch.order.confirm:0
 msgid "Confirm"
 msgstr "Potvrdit"
-
-#. module: lunch
-#: model:ir.module.module,shortdesc:lunch.module_meta_information
-msgid "Lunch Module"
-msgstr "Modul obědů"
 
 #. module: lunch
 #: view:lunch.order:0
@@ -165,12 +159,16 @@ msgid "State"
 msgstr "Stav"
 
 #. module: lunch
+#: selection:lunch.order,state:0
+msgid "New"
+msgstr ""
+
+#. module: lunch
 #: field:report.lunch.order,price_total:0
 msgid "Total Price"
 msgstr "Celková cena"
 
 #. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_report_amount_tree
 #: view:report.lunch.amount:0
 msgid "Box Amount by User"
 msgstr "Množství balení podle uživatele"
@@ -191,8 +189,15 @@ msgid "Description Order"
 msgstr "Popis objednávky"
 
 #. module: lunch
-#: model:ir.actions.wizard,name:lunch.lunch_order_confirm
-#: wizard_button:lunch.order.confirm,init,go:0
+#: view:report.lunch.amount:0
+msgid "Box amount in last month"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_confirm
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_confirm_values
+#: view:lunch.order:0
+#: view:lunch.order.confirm:0
 msgid "Confirm Order"
 msgstr "Potvrdit objednávku"
 
@@ -230,7 +235,7 @@ msgid " Product Categories "
 msgstr " Kategorie výrobku "
 
 #. module: lunch
-#: wizard_button:lunch.cashbox.clean,init,zero:0
+#: view:lunch.cashbox.clean:0
 msgid "Set to Zero"
 msgstr "Nastavit na nulu"
 
@@ -238,6 +243,11 @@ msgstr "Nastavit na nulu"
 #: model:ir.model,name:lunch.model_lunch_cashmove
 msgid "Cash Move"
 msgstr "Pohyb hotovosti"
+
+#. module: lunch
+#: view:report.lunch.order:0
+msgid "Tasks performed in last 365 days"
+msgstr ""
 
 #. module: lunch
 #: selection:report.lunch.amount,month:0
@@ -265,18 +275,20 @@ msgid "Month"
 msgstr "Měsíc"
 
 #. module: lunch
-#: wizard_field:lunch.order.confirm,init,confirm_cashbox:0
+#: field:lunch.order.confirm,confirm_cashbox:0
 msgid "Name of box"
 msgstr "Jméno balení"
 
 #. module: lunch
-#: wizard_button:lunch.order.cancel,init,cancel:0
+#: view:lunch.order.cancel:0
 msgid "Yes"
 msgstr "Ano"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_category
 #: view:lunch.category:0
+#: view:lunch.order:0
+#: field:lunch.order,category:0
 #: field:lunch.product,category_id:0
 msgid "Category"
 msgstr "Kategorie"
@@ -292,24 +304,29 @@ msgid "Product Categories"
 msgstr "Kategorie výrobku"
 
 #. module: lunch
-#: wizard_button:lunch.order.cancel,init,end:0
+#: view:lunch.cashbox.clean:0
+#: view:lunch.order.cancel:0
 msgid "No"
 msgstr "Ne"
 
 #. module: lunch
-#: wizard_view:lunch.order.confirm,init:0
+#: view:lunch.order.confirm:0
 msgid "Orders Confirmation"
 msgstr "Potvrzení objednávek"
 
 #. module: lunch
-#: wizard_view:lunch.cashbox.clean,init:0
+#: view:lunch.cashbox.clean:0
 msgid "Are you sure you want to reset this cashbox ?"
 msgstr "Jste si jisti, že chcete nulovat tuto pokladnu ?"
 
 #. module: lunch
-#: selection:lunch.order,state:0
-msgid "Draft"
-msgstr "Koncept"
+#: model:ir.actions.act_window,help:lunch.view_lunch_product_form_installer
+msgid ""
+"Define all products that the employees can order for the lunch time. If you "
+"order lunch at several places, you can use the product categories to split "
+"by supplier. It will be easier for the lunch manager to filter lunch orders "
+"by categories."
+msgstr ""
 
 #. module: lunch
 #: selection:report.lunch.amount,month:0
@@ -333,6 +350,7 @@ msgstr "Červen"
 #: field:lunch.cashmove,user_cashmove:0
 #: field:lunch.order,user_id:0
 #: field:report.lunch.amount,user_id:0
+#: field:report.lunch.order,user_id:0
 msgid "User Name"
 msgstr "Uživatelské jméno"
 
@@ -342,7 +360,7 @@ msgid "Sales Analysis"
 msgstr "Analýza prodeje"
 
 #. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_category_root_configuration
 msgid "Lunch"
 msgstr "Oběd"
 
@@ -353,6 +371,7 @@ msgid "User"
 msgstr "Uživatel"
 
 #. module: lunch
+#: view:lunch.cashmove:0
 #: field:lunch.order,date:0
 msgid "Date"
 msgstr "Datum"
@@ -376,6 +395,12 @@ msgid "January"
 msgstr "Leden"
 
 #. module: lunch
+#: field:lunch.cashmove,box:0
+#: field:report.lunch.amount,box:0
+msgid "Box Name"
+msgstr "Jméno balení"
+
+#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashbox_clean
 msgid "clean cashbox"
 msgstr "vyčistit pokladna"
@@ -397,19 +422,18 @@ msgid "Cashbox for Lunch "
 msgstr "Pokladna pro obědy "
 
 #. module: lunch
-#: model:ir.actions.wizard,name:lunch.wizard_clean_cashbox
+#: model:ir.actions.act_window,name:lunch.action_lunch_cashbox_clean
+#: model:ir.actions.act_window,name:lunch.action_lunch_cashbox_clean_values
 msgid "Set CashBox to Zero"
 msgstr "Nastavit pokladnu na nulu"
 
 #. module: lunch
-#: field:lunch.cashmove,box:0
-#: field:report.lunch.amount,box:0
-msgid "Box Name"
-msgstr "Jméno balení"
+#: view:lunch.product:0
+msgid "General Information"
+msgstr ""
 
 #. module: lunch
-#: wizard_button:lunch.cashbox.clean,init,end:0
-#: wizard_button:lunch.order.confirm,init,end:0
+#: view:lunch.order.confirm:0
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -419,18 +443,19 @@ msgid " Cashboxes "
 msgstr " Pokladny "
 
 #. module: lunch
-#: rml:lunch.order:0
+#: report:lunch.order:0
 msgid "Unit Price"
 msgstr "Cena za kus"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_product_form
 #: field:lunch.order,product:0
 msgid "Product"
 msgstr "Výrobek"
 
 #. module: lunch
-#: rml:lunch.order:0
+#: field:lunch.cashmove,name:0
+#: report:lunch.order:0
+#: view:lunch.product:0
 #: field:lunch.product,description:0
 msgid "Description"
 msgstr "Popis"
@@ -480,10 +505,9 @@ msgstr "Únor"
 
 #. module: lunch
 #: field:lunch.cashbox,name:0
-#: field:lunch.cashmove,name:0
 #: field:lunch.category,name:0
-#: rml:lunch.order:0
 #: field:lunch.product,name:0
+#: field:report.lunch.order,box_name:0
 msgid "Name"
 msgstr "Jméno"
 
@@ -491,6 +515,11 @@ msgstr "Jméno"
 #: view:lunch.cashmove:0
 msgid "Total amount"
 msgstr "Celková částka"
+
+#. module: lunch
+#: view:report.lunch.order:0
+msgid "Tasks performed in last 30 days"
+msgstr ""
 
 #. module: lunch
 #: view:lunch.category:0
@@ -505,7 +534,7 @@ msgstr "Pokladny"
 
 #. module: lunch
 #: view:lunch.category:0
-#: rml:lunch.order:0
+#: report:lunch.order:0
 #: view:lunch.order:0
 msgid "Order"
 msgstr "Objednávka"
@@ -517,6 +546,21 @@ msgstr "Objednávka"
 #: report:lunch.order:0
 msgid "Lunch Order"
 msgstr "Obědnávka obědu"
+
+#. module: lunch
+#: view:report.lunch.amount:0
+msgid "Box amount in current month"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.view_lunch_product_form_installer
+msgid "Define Your Lunch Products"
+msgstr ""
+
+#. module: lunch
+#: view:report.lunch.order:0
+msgid "Tasks during last 7 days"
+msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_report_lunch_amount_tree
@@ -545,3 +589,30 @@ msgstr "K potvrzení"
 #: field:report.lunch.order,year:0
 msgid "Year"
 msgstr "Rok"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_create_cashbox
+msgid "Create Lunch Cash Boxes"
+msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "    The base module to manage lunch\n"
+#~ "\n"
+#~ "    keep track for the Lunch Order ,Cash Moves ,CashBox ,Product.\n"
+#~ "    Apply Different Category for the product.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Základní modul pro správu obědů\n"
+#~ "\n"
+#~ "   udržuje přehled o Obědnávkách obědů, Pohybech hotovosti, Pokladně, "
+#~ "Výrobcích.\n"
+#~ "    Používá různé kategorie pro výrobky.\n"
+#~ "    "
+
+#~ msgid "Lunch Module"
+#~ msgstr "Modul obědů"
+
+#~ msgid "Draft"
+#~ msgstr "Koncept"

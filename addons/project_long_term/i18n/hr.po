@@ -7,25 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-12-12 09:44+0000\n"
 "Last-Translator: Tomislav Bosnjakovic <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-13 05:02+0000\n"
-"X-Generator: Launchpad (build 14458)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:24+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: project_long_term
-#: model:ir.module.module,shortdesc:project_long_term.module_meta_information
-msgid "Long Term Project Management"
-msgstr "Upravljanje dugotrajnim projektima"
-
-#. module: project_long_term
-#: view:project.compute.phases:0
-msgid "Compute Scheduling of Phases"
-msgstr "Izračunaj planiranje faza"
+#: model:ir.actions.act_window,name:project_long_term.act_project_phases
+msgid "Phases"
+msgstr "Faze"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -39,15 +34,20 @@ msgid "Project's Tasks"
 msgstr "Zadaci projekta"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_project_phases
-msgid "Phases"
-msgstr "Faze"
-
-#. module: project_long_term
 #: view:project.phase:0
-#: view:project.resource.allocation:0
+#: view:project.user.allocation:0
 msgid "Group By..."
 msgstr "Grupiraj po..."
+
+#. module: project_long_term
+#: field:project.phase,user_ids:0
+msgid "Assigned Users"
+msgstr ""
+
+#. module: project_long_term
+#: field:project.phase,progress:0
+msgid "Progress"
+msgstr ""
 
 #. module: project_long_term
 #: constraint:project.project:0
@@ -56,10 +56,9 @@ msgstr ""
 "Greška! Početni datum projekta mora biti manji od završnog datuma projekta."
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
-#: view:project.resource.allocation:0
-msgid "Resources Allocation"
-msgstr "Alokacija resursa"
+#: view:project.phase:0
+msgid "In Progress Phases"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -72,54 +71,9 @@ msgid "Schedule"
 msgstr "Zakaži"
 
 #. module: project_long_term
-#: model:ir.module.module,description:project_long_term.module_meta_information
-msgid ""
-"\n"
-"\n"
-"        Long Term Project management module that tracks planning, "
-"scheduling, resources allocation.\n"
-"        Mainly used with Big project management.\n"
-"            - Project Phases will be maintained by Manager of the project\n"
-"            - Compute Phase Scheduling: Compute start date and end date of "
-"the phases which are in draft,open and pending state of the project given.\n"
-"                                        If no project given then all the "
-"draft,open and pending state phases will be taken\n"
-"            - Compute Task Scheduling: This works same as the scheduler "
-"button on project.phase. It takes the project as argument and computes all "
-"the open,draft and pending tasks\n"
-"            - Schedule Tasks: All the tasks which are in draft,pending and "
-"open state are scheduled with taking the phase's start date\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"\n"
-"        Modul upravljanja dugotrajnim projektima prati planiranje, "
-"zakazivanje i alokaciju resursa.\n"
-"        Uglavnom se koristi s Upravljanjem velikim projektima.\n"
-"            - Faze projekta će održavati voditelj projekta\n"
-"            - Izračunaj zakaizivanje faza: Uzračunaj početni datum i završni "
-"datum faza koje su u statusu nacrt,otvoreno i na čekanju za odabrani "
-"projekt.\n"
-"                                        Ako nijeda projekt nije odabran tada "
-"će se uzeti sve faze u statusu nacrt, otvoreno i na čekanju \n"
-"            - Izračunaj zakazivanje zadatka: RAdi na isti način kao i gumb "
-"za zakazivanje na fazama projekta. Uzima projekt kao argument i računa sve "
-"zadatke u statusu nacrt, otvoreno i na čekanju.\n"
-"            - Zakaži zadatke: Svi azdaci u statusu nacrt, otvoreno i na "
-"čekanju se zakazuju uzimajući početni datum faze.\n"
-"\n"
-"    "
-
-#. module: project_long_term
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
 msgstr "Greška! Ne možete kreirati rekurzivne zadatke."
-
-#. module: project_long_term
-#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-msgid "Resource Allocations"
-msgstr "Alokacije resursa"
 
 #. module: project_long_term
 #: constraint:project.project:0
@@ -127,15 +81,31 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr "Greška! Ne možete dodjeliti eskalaciju istom projektu!"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:128
+#: code:addons/project_long_term/project_long_term.py:126
 #, python-format
 msgid "Day"
 msgstr "Dan"
 
 #. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_user_allocation
+msgid "Phase User Allocation"
+msgstr ""
+
+#. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_task
 msgid "Task"
 msgstr "Zadatak"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.act_project_phase
+msgid ""
+"A project can be split into the different phases. For each phase, you can "
+"define your users allocation, describe different tasks and link your phase "
+"to previous and next phases, add date constraints for the automated "
+"scheduling. Use the long term planning in order to planify your available "
+"users, convert your phases into a series of tasks when you start working on "
+"the project."
+msgstr ""
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -154,6 +124,14 @@ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
 msgstr "JM (Jedinica mjere) je mjerna jedinica za trajanje"
 
 #. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
+#: view:project.phase:0
+#: view:project.user.allocation:0
+msgid "Planning of Users"
+msgstr ""
+
+#. module: project_long_term
 #: help:project.phase,date_end:0
 msgid ""
 " It's computed by the scheduler according to the start date and the duration."
@@ -165,14 +143,14 @@ msgstr " Planer računa prema datumu početka i trajanju."
 #: field:project.compute.tasks,project_id:0
 #: view:project.phase:0
 #: field:project.phase,project_id:0
-#: view:project.resource.allocation:0
-#: field:project.resource.allocation,project_id:0
 #: view:project.task:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,project_id:0
 msgid "Project"
 msgstr "Projekt"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:50
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Error!"
 msgstr "Greška!"
@@ -183,19 +161,19 @@ msgid "Cancelled"
 msgstr "Poništeno"
 
 #. module: project_long_term
-#: help:project.resource.allocation,date_end:0
+#: help:project.user.allocation,date_end:0
 msgid "Ending Date"
 msgstr "Završni datum"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Planning"
-msgstr "Planiranje"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_end:0
 msgid "Deadline"
 msgstr "Krajnji rok"
+
+#. module: project_long_term
+#: selection:project.compute.phases,target_project:0
+msgid "Compute All My Projects"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -204,23 +182,15 @@ msgid "_Cancel"
 msgstr "_Otkaži"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
-#: model:ir.ui.menu,name:project_long_term.menu_compute_phase
-msgid "Compute Phase Scheduling"
-msgstr "Izračunaj zakazivanje faze"
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:190
+#: code:addons/project_long_term/project_long_term.py:141
 #, python-format
 msgid " (copy)"
 msgstr " (kopija)"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: view:project.resource.allocation:0
-#: field:project.resource.allocation,useability:0
-msgid "Availability"
-msgstr "Raspoloživost"
+#: view:project.user.allocation:0
+msgid "Project User Allocation"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -235,9 +205,15 @@ msgid "C_ompute"
 msgstr "I_zračunaj"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-msgid "Compute Scheduling of phases for all or specified project"
-msgstr "Izračunaj zakazivanje faza za sve ili pojedini projekt"
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "New"
+msgstr ""
+
+#. module: project_long_term
+#: help:project.phase,progress:0
+msgid "Computed based on related tasks"
+msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,product_uom:0
@@ -245,49 +221,23 @@ msgid "Duration UoM"
 msgstr "JM trajanja"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
-#: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
-msgid "Compute Task Scheduling"
-msgstr "Izračunaj zakazivanje zadataka"
-
-#. module: project_long_term
 #: field:project.phase,constraint_date_start:0
 msgid "Minimum Start Date"
 msgstr "Minimalni početni datum"
 
 #. module: project_long_term
-#: model:ir.model,name:project_long_term.model_project_resource_allocation
-#: view:project.phase:0
-#: view:project.resource.allocation:0
-msgid "Project Resource Allocation"
-msgstr "Alokacija resursa projekta"
-
-#. module: project_long_term
-#: view:project.compute.tasks:0
-msgid "Compute Scheduling of Task"
-msgstr "Izračunaj zakazivanje zadatka"
-
-#. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_project_resource
-#: model:ir.ui.menu,name:project_long_term.menu_pm_resources_project1
+#: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource
-#: view:project.resource.allocation:0
 msgid "Resources"
 msgstr "Resursi"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
-msgid ""
-"To schedule phases of all or a specified project. It then open a gantt "
-"view.\n"
-"\t           "
+#: view:project.phase:0
+msgid "My Projects"
 msgstr ""
-"Za zakazivanje faza svih ili pojedinog projekta. Nakon toga otvara Gantt "
-"pogled.\n"
-"\t           "
 
 #. module: project_long_term
-#: help:project.resource.allocation,date_start:0
+#: help:project.user.allocation,date_start:0
 msgid "Starting Date"
 msgstr "Početni datum"
 
@@ -298,14 +248,14 @@ msgstr "Vezani zadaci"
 
 #. module: project_long_term
 #: view:project.phase:0
-msgid "Dates"
-msgstr "Datumi"
+msgid "New Phases"
+msgstr ""
 
 #. module: project_long_term
-#: help:project.resource.allocation,useability:0
-msgid ""
-"Availability of this resource for this project phase in percentage (=50%)"
-msgstr "Raspoloživost tog resursa za tu fazu projekta u postotku (=50%)"
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
+#, python-format
+msgid "Please specify a project to schedule."
+msgstr ""
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_start:0
@@ -316,21 +266,6 @@ msgstr "prisili početak faze nakon ovog datuma"
 #: field:project.phase,task_ids:0
 msgid "Project Tasks"
 msgstr "Zadaci projekta"
-
-#. module: project_long_term
-#: field:project.phase,resource_ids:0
-msgid "Project Resources"
-msgstr "Resursi projekta"
-
-#. module: project_long_term
-#: view:project.schedule.tasks:0
-msgid "_Ok"
-msgstr "_U redu"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Schedule and Display info"
-msgstr "Zakaži i prikaži info"
 
 #. module: project_long_term
 #: help:project.phase,date_start:0
@@ -351,37 +286,15 @@ msgid "Phase start-date must be lower than phase end-date."
 msgstr "Početni datum faze mora biti manje od završnog datuma faze."
 
 #. module: project_long_term
-#: model:ir.model,name:project_long_term.model_project_schedule_tasks
-msgid "project.schedule.tasks"
-msgstr "project.schedule.tasks"
-
-#. module: project_long_term
-#: model:ir.actions.act_window,help:project_long_term.act_project_phase
-msgid ""
-"A project can be split into the different phases. For each phase, you can "
-"define your resources allocation, describe different tasks and link your "
-"phase to previous and next phases, add date constraints for the automated "
-"scheduling. Use the long term planning in order to planify your available "
-"human resources, convert your phases into a series of tasks when you start "
-"working on the project."
+#: view:project.phase:0
+msgid "Start Month"
 msgstr ""
-"Projekt je moguće podjeliti u različite faze. Za svaku fazu, možete "
-"definriati alokaciju resursa, opisati različite zadatke i povezati vašu fazu "
-"sa prethodnom i sljedećom fazom, dodati datumska ograničenja za automatsko "
-"zakazivanje. Koristite dugotrajno planiranje za vaše raspoložive ljudske "
-"resurse, pretvorite vaš faze u seriju zadataka nakon početka rada na "
-"projektu."
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
-#: field:project.resource.allocation,date_start:0
+#: field:project.user.allocation,date_start:0
 msgid "Start Date"
 msgstr "Početni datum"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Resource Allocation"
-msgstr "Alokacija resursa"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -389,10 +302,20 @@ msgid "force the phase to finish before this date"
 msgstr "prisili završetak faze prije ovog datuma"
 
 #. module: project_long_term
+#: help:project.phase,user_ids:0
+msgid ""
+"The ressources on the project can be computed automatically by the scheduler"
+msgstr ""
+
+#. module: project_long_term
 #: view:project.phase:0
-#: selection:project.phase,state:0
 msgid "Draft"
 msgstr "Nacrt"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Pending Phases"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -401,24 +324,10 @@ msgid "Pending"
 msgstr "Na čekanju"
 
 #. module: project_long_term
-#: field:project.resource.allocation,name:0
-msgid "unknown"
-msgstr "nepoznato"
-
-#. module: project_long_term
-#: field:project.resource.allocation,user_id:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,user_id:0
 msgid "User"
 msgstr "Korisnik"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Task Detail"
-msgstr "Pojedinosti o zadataku"
-
-#. module: project_long_term
-#: help:project.project,resource_calendar_id:0
-msgid "Timetable working hours to adjust the gantt diagram report"
-msgstr "Raspored radnih sati za prilagođavanje izvještaja Gantt dijagramom"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
@@ -468,21 +377,21 @@ msgid "Remaining Hours"
 msgstr "Preostali sati"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,responsible_id:0
-msgid "Responsible"
-msgstr "Odgovoran"
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
-#: field:project.project,resource_calendar_id:0
 msgid "Working Time"
 msgstr "Radno vrijeme"
 
 #. module: project_long_term
-#: view:project.phase:0
-msgid "Current"
-msgstr "Trenutni"
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
+#: model:ir.ui.menu,name:project_long_term.menu_compute_phase
+#: view:project.compute.phases:0
+msgid "Schedule Phases"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -490,29 +399,17 @@ msgid "Start Phase"
 msgstr "Početna faza"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:50
-#, python-format
-msgid "Please Specify Project to be schedule"
-msgstr "Molim navedite projekt za zakazivanje"
-
-#. module: project_long_term
 #: view:project.phase:0
-#: field:project.phase,total_hours:0
 msgid "Total Hours"
 msgstr "Ukupni sati"
 
 #. module: project_long_term
-#: view:project.schedule.tasks:0
-msgid "Task Scheduling completed successfully."
-msgstr "Zakazivanje zdataka uspješno završeno"
+#: view:project.user.allocation:0
+msgid "Users"
+msgstr ""
 
 #. module: project_long_term
-#: view:project.compute.tasks:0
-msgid "Compute Scheduling of Task for specified project."
-msgstr "Izračunaj zakazivanje zadataka za odabrani projekt"
-
-#. module: project_long_term
-#: view:project.resource.allocation:0
+#: view:project.user.allocation:0
 msgid "Phase"
 msgstr "Faza"
 
@@ -533,15 +430,9 @@ msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,date_end:0
-#: field:project.resource.allocation,date_end:0
+#: field:project.user.allocation,date_end:0
 msgid "End Date"
 msgstr "Završni Datum"
-
-#. module: project_long_term
-#: view:project.resource.allocation:0
-#: field:project.resource.allocation,resource_id:0
-msgid "Resource"
-msgstr "Resurs"
 
 #. module: project_long_term
 #: field:project.phase,name:0
@@ -554,38 +445,36 @@ msgid "Tasks Details"
 msgstr "Pojedinosti zadatka"
 
 #. module: project_long_term
-#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
-msgid "Working Period"
-msgstr "Razdoblje rada"
+#: field:project.phase,duration:0
+msgid "Duration"
+msgstr "Trajanje"
 
 #. module: project_long_term
-#: model:ir.model,name:project_long_term.model_resource_resource
-msgid "Resource Detail"
-msgstr "Pojedinosti resursa"
-
-#. module: project_long_term
-#: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
-msgid "Scheduling"
-msgstr "Zakazivanje"
+#: view:project.phase:0
+msgid "Project Users"
+msgstr ""
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
 #: view:project.phase:0
-#: field:project.resource.allocation,phase_id:0
 #: view:project.task:0
 #: field:project.task,phase_id:0
+#: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
 msgstr "Faza projekta"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
+msgid ""
+"To schedule phases of all or a specified project. It then open a gantt "
+"view.\n"
+"               "
+msgstr ""
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
 msgid "Project Compute Phases"
 msgstr "Izračun faza projekta"
-
-#. module: project_long_term
-#: field:project.schedule.tasks,msg:0
-msgid "Message"
-msgstr "Poruka"
 
 #. module: project_long_term
 #: constraint:project.phase:0
@@ -598,19 +487,14 @@ msgid "Sequence"
 msgstr "Sekvenca"
 
 #. module: project_long_term
-#: selection:project.compute.phases,target_project:0
-msgid "Compute All Projects"
-msgstr "Izračunaj sve projekte"
-
-#. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
 msgid "Resource Leaves"
 msgstr "Odsustva resursa"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.action_project_schedule_tasks
-#: view:project.phase:0
-#: view:project.schedule.tasks:0
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
+#: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
+#: view:project.compute.tasks:0
 msgid "Schedule Tasks"
 msgstr "Zakaži zadatke"
 
@@ -620,6 +504,128 @@ msgid "By default in days"
 msgstr "Predefinirano u danima"
 
 #. module: project_long_term
-#: field:project.phase,duration:0
-msgid "Duration"
-msgstr "Trajanje"
+#: view:project.phase:0
+#: field:project.phase,user_force_ids:0
+msgid "Force Assigned Users"
+msgstr ""
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
+msgid "Scheduling"
+msgstr "Zakazivanje"
+
+#~ msgid "Resources Allocation"
+#~ msgstr "Alokacija resursa"
+
+#~ msgid "Long Term Project Management"
+#~ msgstr "Upravljanje dugotrajnim projektima"
+
+#~ msgid "Compute Scheduling of Phases"
+#~ msgstr "Izračunaj planiranje faza"
+
+#~ msgid "Resource Allocations"
+#~ msgstr "Alokacije resursa"
+
+#~ msgid "Planning"
+#~ msgstr "Planiranje"
+
+#~ msgid "Availability"
+#~ msgstr "Raspoloživost"
+
+#~ msgid "Compute Phase Scheduling"
+#~ msgstr "Izračunaj zakazivanje faze"
+
+#~ msgid ""
+#~ "To schedule phases of all or a specified project. It then open a gantt "
+#~ "view.\n"
+#~ "\t           "
+#~ msgstr ""
+#~ "Za zakazivanje faza svih ili pojedinog projekta. Nakon toga otvara Gantt "
+#~ "pogled.\n"
+#~ "\t           "
+
+#~ msgid "Compute Scheduling of phases for all or specified project"
+#~ msgstr "Izračunaj zakazivanje faza za sve ili pojedini projekt"
+
+#~ msgid "Compute Scheduling of Task"
+#~ msgstr "Izračunaj zakazivanje zadatka"
+
+#~ msgid "Compute Task Scheduling"
+#~ msgstr "Izračunaj zakazivanje zadataka"
+
+#~ msgid "Project Resource Allocation"
+#~ msgstr "Alokacija resursa projekta"
+
+#~ msgid ""
+#~ "Availability of this resource for this project phase in percentage (=50%)"
+#~ msgstr "Raspoloživost tog resursa za tu fazu projekta u postotku (=50%)"
+
+#~ msgid "Schedule and Display info"
+#~ msgstr "Zakaži i prikaži info"
+
+#~ msgid "Project Resources"
+#~ msgstr "Resursi projekta"
+
+#~ msgid "_Ok"
+#~ msgstr "_U redu"
+
+#~ msgid "Dates"
+#~ msgstr "Datumi"
+
+#~ msgid "unknown"
+#~ msgstr "nepoznato"
+
+#~ msgid "project.schedule.tasks"
+#~ msgstr "project.schedule.tasks"
+
+#~ msgid "Resource Allocation"
+#~ msgstr "Alokacija resursa"
+
+#~ msgid ""
+#~ "A project can be split into the different phases. For each phase, you can "
+#~ "define your resources allocation, describe different tasks and link your "
+#~ "phase to previous and next phases, add date constraints for the automated "
+#~ "scheduling. Use the long term planning in order to planify your available "
+#~ "human resources, convert your phases into a series of tasks when you start "
+#~ "working on the project."
+#~ msgstr ""
+#~ "Projekt je moguće podjeliti u različite faze. Za svaku fazu, možete "
+#~ "definriati alokaciju resursa, opisati različite zadatke i povezati vašu fazu "
+#~ "sa prethodnom i sljedećom fazom, dodati datumska ograničenja za automatsko "
+#~ "zakazivanje. Koristite dugotrajno planiranje za vaše raspoložive ljudske "
+#~ "resurse, pretvorite vaš faze u seriju zadataka nakon početka rada na "
+#~ "projektu."
+
+#~ msgid "Timetable working hours to adjust the gantt diagram report"
+#~ msgstr "Raspored radnih sati za prilagođavanje izvještaja Gantt dijagramom"
+
+#~ msgid "Task Detail"
+#~ msgstr "Pojedinosti o zadataku"
+
+#~ msgid "Compute Scheduling of Task for specified project."
+#~ msgstr "Izračunaj zakazivanje zadataka za odabrani projekt"
+
+#~ msgid "Current"
+#~ msgstr "Trenutni"
+
+#, python-format
+#~ msgid "Please Specify Project to be schedule"
+#~ msgstr "Molim navedite projekt za zakazivanje"
+
+#~ msgid "Task Scheduling completed successfully."
+#~ msgstr "Zakazivanje zdataka uspješno završeno"
+
+#~ msgid "Responsible"
+#~ msgstr "Odgovoran"
+
+#~ msgid "Resource Detail"
+#~ msgstr "Pojedinosti resursa"
+
+#~ msgid "Resource"
+#~ msgstr "Resurs"
+
+#~ msgid "Message"
+#~ msgstr "Poruka"
+
+#~ msgid "Compute All Projects"
+#~ msgstr "Izračunaj sve projekte"

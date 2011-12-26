@@ -6,63 +6,48 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-01-01 13:29+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:05+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:03+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:87
+#: code:addons/base_vat/base_vat.py:125
 #, python-format
 msgid ""
-"The Vat does not seems to be correct. You should have entered something like "
-"this %s"
+"This VAT number does not seem to be valid.\n"
+"Note: the expected format is %s"
 msgstr ""
-"La partita IVA non sembra essere corretta. E' necessario inserire un valore "
-"simile a: %s"
 
 #. module: base_vat
-#: model:ir.module.module,description:base_vat.module_meta_information
-msgid ""
-"\n"
-"    Enable the VAT Number for the partner. Check the validity of that VAT "
-"Number.\n"
-"\n"
-"    This module follows the methods stated at http://sima-pc.com/nif.php "
-"for\n"
-"    checking the validity of VAT Number assigned to partners in European "
-"countries.\n"
-"    "
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
 msgstr ""
-"\n"
-"    Abilita la partita IVA per il partner. Controlla la validità del valore "
-"fornito.\n"
-"\n"
-"    Questo modulo segue i metofi definiti in http://sima-pc.com/nif.php per\n"
-"    controllare la validità del numero assegnato ai partner nei paesi "
-"europei.\n"
-"    "
-
-#. module: base_vat
-#: model:ir.module.module,shortdesc:base_vat.module_meta_information
-msgid "Base VAT - To check VAT number validity"
-msgstr "Base VAT - Per controllare la correttezza della Partita IVA"
 
 #. module: base_vat
 #: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Errore! Non è possibile creare membri associati ricorsivi."
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:88
-#, python-format
-msgid "The VAT is invalid, It should begin with the country code"
-msgstr "La partita IVA non è valida, deve cominciare con il \"codice paese\""
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: base_vat
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -79,6 +64,13 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: base_vat
+#: help:res.company,vat_check_vies:0
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr ""
+
+#. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
 msgstr "Soggetto a dichiarazione IVA"
@@ -93,3 +85,41 @@ msgstr "Soggetto a dichiarazione IVA"
 
 #~ msgid "VAT"
 #~ msgstr "Partita IVA"
+
+#, python-format
+#~ msgid "The VAT is invalid, It should begin with the country code"
+#~ msgstr "La partita IVA non è valida, deve cominciare con il \"codice paese\""
+
+#, python-format
+#~ msgid ""
+#~ "The Vat does not seems to be correct. You should have entered something like "
+#~ "this %s"
+#~ msgstr ""
+#~ "La partita IVA non sembra essere corretta. E' necessario inserire un valore "
+#~ "simile a: %s"
+
+#~ msgid "Base VAT - To check VAT number validity"
+#~ msgstr "Base VAT - Per controllare la correttezza della Partita IVA"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Enable the VAT Number for the partner. Check the validity of that VAT "
+#~ "Number.\n"
+#~ "\n"
+#~ "    This module follows the methods stated at http://sima-pc.com/nif.php "
+#~ "for\n"
+#~ "    checking the validity of VAT Number assigned to partners in European "
+#~ "countries.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Abilita la partita IVA per il partner. Controlla la validità del valore "
+#~ "fornito.\n"
+#~ "\n"
+#~ "    Questo modulo segue i metofi definiti in http://sima-pc.com/nif.php per\n"
+#~ "    controllare la validità del numero assegnato ai partner nei paesi "
+#~ "europei.\n"
+#~ "    "
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Errore! Non è possibile creare membri associati ricorsivi."
