@@ -85,12 +85,14 @@ class res_partner_bank(osv.osv):
         #overwrite to format the iban number correctly
         if (vals.get('state',False)=='iban') and vals.get('acc_number', False):
             vals['acc_number'] = _format_iban(vals['acc_number'])
+            vals['acc_number'] = _pretty_iban(vals['acc_number'])
         return super(res_partner_bank, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         #overwrite to format the iban number correctly
         if (vals.get('state',False)=='iban') and vals.get('acc_number', False):
             vals['acc_number'] = _format_iban(vals['acc_number'])
+            vals['acc_number'] = _pretty_iban(vals['acc_number'])
         return super(res_partner_bank, self).write(cr, uid, ids, vals, context)
 
     def check_iban(self, cr, uid, ids, context=None):

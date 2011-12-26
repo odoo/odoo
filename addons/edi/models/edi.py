@@ -601,7 +601,8 @@ class EDIMixin(object):
                           self._name, external_id, value)
             # also need_new_ext_id here, but already been set above
             model = self.pool.get(model)
-            res_id, name = model.name_create(cr, uid, value, context=context)
+            # should use name_create() but e.g. res.partner won't allow it at the moment 
+            res_id = model.create(cr, uid, {model._rec_name: value}, context=context)
             target = model.browse(cr, uid, res_id, context=context)
         if need_new_ext_id:
             ext_id_members = split_external_id(external_id)

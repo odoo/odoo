@@ -303,6 +303,9 @@
                 <tree string="Unrealized Gains and losses">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="user_type" invisible="1"/>
+                    <field name="type" invisible="1"/>
                     <field name="currency_id"/>
                     <field name="exchange_rate"/>
                     <field name="foreign_balance"/>
@@ -474,7 +477,7 @@
                                 <separator string="Company" colspan="4"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="user_id" groups="base.group_extended"/>
-                                <field name="currency"/>
+                                <field name="currency" groups="base.group_extended"/>
                             </group>
                             <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Validations" colspan="4"/>

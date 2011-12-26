@@ -82,7 +82,7 @@ class pos_box_out(osv.osv_memory):
             stat_done = statement_obj.browse(cr, uid, done_statmt, context=context)
             am = 0.0
             product = product_obj.browse(cr, uid, data['product_id'], context=context)
-            acc_id = product.property_account_income
+            acc_id = product.property_account_expense or product.categ_id.property_account_expense_categ
             if not acc_id:
                 raise osv.except_osv(_('Error !'), _('please check that account is set to %s')%(product.name))
             if not statement_ids:

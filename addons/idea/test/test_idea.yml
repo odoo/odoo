@@ -1,90 +1,42 @@
-- |
-  In order to test the Idea module in OpenERP, 
-  we will create a full flow, from the idea definition up to the votes and discussions on the idea.
-- |
-  Given that I have an Idea category "Technical".
-- 
-  !record {model: idea.category, id: idea_category_technical0}:
-    name: Technical
-- |
-  I create a New Idea of "Technical  presentation for 1 hours in every day" and specify category "Technical".
-- 
-  !record {model: idea.idea, id: idea_idea_0}: 
-    category_id: idea_category_technical0
-    created_date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-    description: I want that Technical presentation are arranged for 1 hours in every
-      day.\nso, on that presentation, we can know all things what improvement and development
-      are done in our company.\n\n\n\n\n
-    name: Technical  presentation for 1 hours in every day
-    user_id: base.user_root
-    
-- |
-  I check that the idea is in draft state.
 -
-  !assert {model: idea.idea, id: idea_idea_0}:
-    - state == 'draft'  
-    
-- |
-  I open this idea by clicking on the "Open" button.
-- 
-  !workflow {model: idea.idea, action: idea_open, ref: idea_idea_0}
-  
-- |
-  In order to check voting statistics in real systems I will create 2 new Users "test_idea_user1".
-- 
-  !record {model: res.users, id: test_idea_user1}: 
-    company_id: base.main_company
-    context_lang: en_US
-    login: test_idea_user1
-    name: Idea test user1
-    password: test_idea_user1
-    groups_id: [ base.group_tool_user, ]
-- |
-  And I will also create user2.    
-- 
-  !record {model: res.users, id: test_idea_user2}:
-    company_id: base.main_company
-    context_lang: en_US
-    login: test_idea_user2
-    name: Idea test user2
-    password: test_idea_user2
-    groups_id: [ base.group_tool_user, ]
-- |
-  In order to post vote I connect as test_idea_user1 and open the idea page
-  I click on  "Submit Vote" wizard  button and vote the idea as "Normal"
-    
-- 
-  !python {model: idea.post.vote}: |
-    uid2 = ref('test_idea_user1')
-    new_id = self.create(cr, uid2, {'vote': "50"}, {"active_ids": [ref("idea_idea_0")]})
-    self.do_vote(cr, uid2, [new_id], {"active_ids": [ref("idea_idea_0")]})
-    
-- |
-  To add other vote I connect as test_idea_user2 and open the idea page.
-  
-  I click on "Submit Vote" wizard button and vote the idea as "Very Good".
-   
-  and put comment "We can learn many things from technical presentation".
-  
+  In order to test the Idea module in OpenERP,
+-
+  I open the idea "Need to put a good idea on OpenERP".
+-
+  !workflow {model: idea.idea, action: idea_open, ref: idea_idea_one}
+-
+  I check that the idea's state is open.
+-
+  !assert {model: idea.idea, id: idea_idea_one}:
+    - state == 'open'
+-
+  I give vote the idea as "Very Good" and put comment "It will good for openERP feature".
 -
   !python {model: idea.post.vote}: |
-    uid2 = ref('test_idea_user2')
-    new_id = self.create(cr, uid2, {'vote': "100", 'note': 'We can learn many things from technical presentation'}, {"active_ids": [ref("idea_idea_0")]})
-    self.do_vote(cr, uid2, [new_id], {'active_ids': [ref('idea_idea_0')]})  
-        
-- |
-  I can see that the Average score changed in "Average score" field with value 75
+    new_id = self.create(cr, uid, {'vote': "100", 'note': 'It will good for openERP feature'}, {"active_ids": [ref("idea_idea_one")]})
+    self.do_vote(cr, uid, [new_id], {'active_ids': [ref('idea_idea_one')]})
 -
-  !record {model: idea.idea, id: idea_idea_0}: 
-    vote_avg: 75 
-        
-- |
-  I connect as Manager and  close this idea by click on "Close" button.
+  I check the Average score.
 -
-  !workflow {model: idea.idea, action: idea_close, ref: idea_idea_0}
-  
-- |
-  I check  that the idea's state is now Accepted
+  !assert {model: idea.idea, id: idea_idea_one}:
+    vote_avg: 100
 -
-  !assert {model: idea.idea, id: idea_idea_0}: 
-    - state == 'close'  
+  I Accept the idea of "Need to put a good idea on OpenERP".
+-
+  !workflow {model: idea.idea, action: idea_close, ref: idea_idea_one}
+-
+  I check that the idea's state is now Accepted.
+-
+  !assert {model: idea.idea, id: idea_idea_one}:
+    - state == 'close'
+-
+  I Refuse the idea of "Technical  presentation for 1 hours in every day".
+-
+  !workflow {model: idea.idea, action: idea_open, ref: idea_idea_two}
+-
+  !workflow {model: idea.idea, action: idea_cancel, ref: idea_idea_two}
+-
+  I check that the idea's state is now Refused.
+-
+  !assert {model: idea.idea, id: idea_idea_two}:
+    - state == 'cancel'

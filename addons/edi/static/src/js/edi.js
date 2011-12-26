@@ -1,7 +1,4 @@
 openerp.edi = function(openerp) {
-openerp.web.qweb.add_template("/edi/static/src/xml/edi.xml");
-openerp.web.qweb.add_template("/edi/static/src/xml/edi_account.xml");
-openerp.web.qweb.add_template("/edi/static/src/xml/edi_sale_purchase.xml");
 openerp.edi = {}
 
 openerp.edi.EdiView = openerp.web.Widget.extend({
@@ -9,15 +6,16 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         this._super();
         this.db = db;
         this.token = token;
-        this.session = new openerp.web.Connection();
+        this.session = openerp.connection;
         this.template = "EdiEmpty";
         this.content = "";
         this.sidebar = "";
     },
     start: function() {
         this._super();
+        var self = this;
         var param = {"db": this.db, "token": this.token};
-        this.rpc('/edi/get_edi_document', param, this.on_document_loaded, this.on_document_failed);
+        this.session.bind().then(self.rpc('/edi/get_edi_document', param, this.on_document_loaded, this.on_document_failed));
     },
     on_document_loaded: function(docs){
         this.doc = docs[0];
@@ -116,17 +114,18 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
         var params = {};
 
         this.template = "EdiImport";
-        this.session = new openerp.web.Connection();
+        this.session = openerp.connection;
         this.login = new openerp.web.Login(this);
         this.header = new openerp.web.Header(this);
         this.header.on_logout.add(this.login.on_logout);
     },
     start: function() {
-        this.session.on_session_invalid.add_last(this.do_ask_login)
-        this.session.on_session_valid.add_last(this.do_import);
-        this.header.appendTo($("#oe_header"));
-        this.session.start();
-        this.login.appendTo($('#oe_login'));
+        this.session.bind().then(function() {
+            this.session.on_session_invalid.add_last(this.do_ask_login)
+            this.header.appendTo($("#oe_header"));
+            this.login.appendTo($('#oe_login'));
+            this.do_import();
+        });
     },
     do_ask_login: function() {
         this.login.do_ask_login(this.do_import);

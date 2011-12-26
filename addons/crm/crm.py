@@ -154,7 +154,7 @@ class crm_case_categ(osv.osv):
     def _find_object_id(self, cr, uid, context=None):
         """Finds id for case object"""
         object_id = context and context.get('object_id', False) or False
-        ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
+        ids = self.pool.get('ir.model').search(cr, uid, [('id', '=', object_id)])
         return ids and ids[0] or False
 
     _defaults = {
@@ -468,12 +468,10 @@ class crm_case(crm_base):
         self._action(cr, uid, cases, state)
         return True
 
-    #DEAD Code
     def remind_partner(self, cr, uid, ids, context=None, attach=False):
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
 
-    #DEAD Code
     def remind_user(self, cr, uid, ids, context=None, attach=False, destination=True):
         mail_message = self.pool.get('mail.message')
         for case in self.browse(cr, uid, ids, context=context):

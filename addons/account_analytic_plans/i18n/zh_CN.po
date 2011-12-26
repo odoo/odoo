@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-10-30 13:46+0000\n"
 "Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:21+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:51+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -51,11 +51,6 @@ msgid "Analytic Plan"
 msgstr "辅助核算方案"
 
 #. module: account_analytic_plans
-#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
-msgid "Multiple-plans management in Analytic Accounting"
-msgstr "辅助核算会计的多方案管理"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
 #: view:account.crossovered.analytic:0
 #: field:account.crossovered.analytic,journal_ids:0
@@ -69,7 +64,7 @@ msgid "Analytic Plan Line"
 msgstr "辅助核算方案明细"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:60
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
 msgid "User Error"
 msgstr "用户错误"
@@ -100,9 +95,9 @@ msgid "Account2 Id"
 msgstr "项2 ID"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "项 ID"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -110,9 +105,11 @@ msgid "Amount"
 msgstr "金额"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Code"
-msgstr "代码"
+#: constraint:account.journal:0
+msgid ""
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -135,6 +132,16 @@ msgid "Bank Statement Line"
 msgstr "银行对账单明细"
 
 #. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid "Define your Analytic Plans"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "辅助核算项"
@@ -148,12 +155,6 @@ msgstr "每个公司的账簿编码必须唯一！"
 #: field:account.crossovered.analytic,ref:0
 msgid "Analytic Account Reference"
 msgstr "辅助核算项"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
@@ -179,11 +180,17 @@ msgstr "打印"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+#: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "百分比"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "项 ID"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #, python-format
 msgid "A model having this name and code already exists !"
 msgstr "该名称和代码的模块已存在！"
@@ -249,9 +256,11 @@ msgid "Start Date"
 msgstr "开始日期"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Company"
-msgstr "公司"
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry must receive a value in its "
+"secondary currency"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -274,8 +283,8 @@ msgid "To Date"
 msgstr "日期到"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:483
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "您必须定义这 '%s' 的辅助核算账簿！"
@@ -291,72 +300,14 @@ msgid "analytic.plan.create.model.action"
 msgstr "analytic.plan.create.model.action"
 
 #. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account :"
 msgstr "辅助核算项:"
-
-#. module: account_analytic_plans
-#: model:ir.module.module,description:account_analytic_plans.module_meta_information
-msgid ""
-"This module allows to use several analytic plans, according to the general "
-"journal,\n"
-"so that multiple analytic lines are created when the invoice or the entries\n"
-"are confirmed.\n"
-"\n"
-"For example, you can define the following analytic structure:\n"
-"  Projects\n"
-"      Project 1\n"
-"          SubProj 1.1\n"
-"          SubProj 1.2\n"
-"      Project 2\n"
-"  Salesman\n"
-"      Eric\n"
-"      Fabien\n"
-"\n"
-"Here, we have two plans: Projects and Salesman. An invoice line must\n"
-"be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-"Fabien. The amount can also be split. The following example is for\n"
-"an invoice that touches the two subproject and assigned to one salesman:\n"
-"\n"
-"Plan1:\n"
-"    SubProject 1.1 : 50%\n"
-"    SubProject 1.2 : 50%\n"
-"Plan2:\n"
-"    Eric: 100%\n"
-"\n"
-"So when this line of invoice will be confirmed, it will generate 3 analytic "
-"lines,\n"
-"for one account entry.\n"
-"The analytic plan validates the minimum and maximum percentage at the time "
-"of creation\n"
-"of distribution models.\n"
-"        "
-msgstr ""
-"此模块允许使用几个辅助核算方案生成账簿，以便在凭证或发票过账时生成多个辅助核算凭证行。\n"
-"例如，你有以下辅助核算结构：\n"
-"\n"
-"  项目\n"
-"    项目1\n"
-"      子项目1.1\n"
-"      子项目1.2\n"
-"  项目2\n"
-"  销售员\n"
-"    Eric\n"
-"    Fabien\n"
-"\n"
-"这里我们有两个方案：  项目和销售员。\n"
-"一个发票行需要根据两个方案相应辅助核算项生成明细：发票金额在项目间和销售员间分摊。\n"
-"\n"
-"分摊模型这样定义：\n"
-"方案1：\n"
-"  子项目1.1：50%\n"
-"  子项目1.2：50%\n"
-"方案2：\n"
-"  Eric：100%\n"
-"\n"
-"这样当这张发票过账后，会生成属于一个会计凭证行的3个辅助核算凭证行。\n"
-"在创建分摊模型时可以验证最大或最小分摊百分比。\n"
-"        "
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -389,6 +340,11 @@ msgid "Company must be same for its related account and period."
 msgstr "公司相关的科目必须和会计期间一致。"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "The date of your Journal Entry is not in the defined period!"
+msgstr ""
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
 msgstr "最小允许(%)"
@@ -399,7 +355,7 @@ msgid "Root account of this plan."
 msgstr "这方案的根辅助核算项"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
@@ -428,8 +384,8 @@ msgid "Print Crossovered Analytic"
 msgstr "打印交叉辅助核算"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:483
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "没辅助核算账簿！"
@@ -443,6 +399,11 @@ msgstr "银行对账单"
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
 msgstr "项3 ID"
+
+#. module: account_analytic_plans
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -466,7 +427,7 @@ msgid "Analytic Distribution Lines"
 msgstr "辅助核算分摊明细"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "The Total Should be Between %s and %s"
 msgstr "合计应该在 %s 和 %s 之间"
@@ -518,6 +479,11 @@ msgid "Journal"
 msgstr "账簿"
 
 #. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Code"
+msgstr "代码"
+
+#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
 msgid "analytic.plan.create.model"
 msgstr "analytic.plan.create.model"
@@ -533,6 +499,19 @@ msgid "Distribution Models"
 msgstr "分摊模型"
 
 #. module: account_analytic_plans
+#: model:ir.actions.act_window,help:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid ""
+"To setup a multiple analytic plans environment, you must define the root "
+"analytic accounts for each plan set. Then, you must attach a plan set to "
+"your account journals."
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr "公司"
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
 msgstr "序列"
@@ -543,7 +522,7 @@ msgid "The name of the journal must be unique per company !"
 msgstr "每个公司的账簿名称必须唯一！"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "Value Error"
 msgstr "错误的值"
@@ -565,6 +544,9 @@ msgstr "不能针对内部类型是视图的科目记账"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "无效XML视图结构!"
+
+#~ msgid "Multiple-plans management in Analytic Accounting"
+#~ msgstr "辅助核算会计的多方案管理"
 
 #~ msgid "OK"
 #~ msgstr "确定"
@@ -646,3 +628,64 @@ msgstr "不能针对内部类型是视图的科目记账"
 
 #~ msgid "Printing date:"
 #~ msgstr "打印日期:"
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+#~ msgstr ""
+#~ "此模块允许使用几个辅助核算方案生成账簿，以便在凭证或发票过账时生成多个辅助核算凭证行。\n"
+#~ "例如，你有以下辅助核算结构：\n"
+#~ "\n"
+#~ "  项目\n"
+#~ "    项目1\n"
+#~ "      子项目1.1\n"
+#~ "      子项目1.2\n"
+#~ "  项目2\n"
+#~ "  销售员\n"
+#~ "    Eric\n"
+#~ "    Fabien\n"
+#~ "\n"
+#~ "这里我们有两个方案：  项目和销售员。\n"
+#~ "一个发票行需要根据两个方案相应辅助核算项生成明细：发票金额在项目间和销售员间分摊。\n"
+#~ "\n"
+#~ "分摊模型这样定义：\n"
+#~ "方案1：\n"
+#~ "  子项目1.1：50%\n"
+#~ "  子项目1.2：50%\n"
+#~ "方案2：\n"
+#~ "  Eric：100%\n"
+#~ "\n"
+#~ "这样当这张发票过账后，会生成属于一个会计凭证行的3个辅助核算凭证行。\n"
+#~ "在创建分摊模型时可以验证最大或最小分摊百分比。\n"
+#~ "        "

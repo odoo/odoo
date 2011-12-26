@@ -10,6 +10,7 @@
             <field name="model">hr.expense.line</field>
             <field name="arch" type="xml">
                 <tree string="Expense Lines">
+                    <field name="sequence" invisible="1"/>
                     <field name="date_value"/>
                     <field name="name"/>
                     <field name="ref"/>
@@ -31,6 +32,7 @@
                     <field name="date"/>
                     <field name="user_id" invisible="1"/>
                     <field name="name"/>
+                    <field name="currency_id"/>
                     <field name="amount"/>
                     <field name="state"/>
                     <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>

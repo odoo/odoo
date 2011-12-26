@@ -54,7 +54,7 @@ class idea_category(osv.osv):
         'name': fields.char('Category', size=64, required=True),
         'complete_name': fields.function(_categ_name_get_fnc, type="char", string='Name'),
         'summary': fields.text('Summary'),
-        'parent_id': fields.many2one('idea.category', 'Parent Categories', ondelete='set null'),
+        'parent_id': fields.many2one('idea.category', 'Parent Categories', ondelete='set null', select=True),
         'child_ids': fields.one2many('idea.category', 'parent_id', 'Child Categories'),
         'visibility':fields.boolean('Open Idea?', required=False, help="If True creator of the idea will be visible to others"),
     }

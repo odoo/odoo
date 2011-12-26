@@ -31,10 +31,10 @@ class project_task(osv.osv):
     }
 
     def _validate_subflows(self, cr, uid, ids):
+        wf_service = netsvc.LocalService("workflow")
         for task in self.browse(cr, uid, ids):
             if task.procurement_id:
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'procurement.order', task.procurement_id.id, 'subflow.done', cr)
+                wf_service.trg_write(uid, 'procurement.order', task.procurement_id.id, cr)
 
     def do_close(self, cr, uid, ids, *args, **kwargs):
         res = super(project_task, self).do_close(cr, uid, ids, *args, **kwargs)
@@ -57,9 +57,9 @@ product_product()
 class sale_order(osv.osv):
     _inherit ='sale.order'
 
-    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, *args):
+    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
         proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
-                uid, order, line, move_id, date_planned, *args)
+                uid, order, line, move_id, date_planned, context=context)
         proc_data['sale_line_id'] = line.id
         return proc_data
 
