@@ -2,6 +2,15 @@
   In order to check the Account_voucher module with multi-currency in OpenERP,
   I create an invoice in CAD and make its Payment in CHF based on the currency rating on that particular date.
 -
+  I set the income and expense currency accounts on the main company
+-
+  !python {model: res.company}: |
+    from datetime import datetime
+    vals = {
+      'income_currency_exchange_account_id': ref('account.o_expense'),
+      'expense_currency_exchange_account_id': ref('account.o_expense')}
+    self.write(cr, uid, ref('base.main_company'), vals)
+-
   I create currency CAD in OpenERP for January of 1.338800 Rate
 -
   !record {model: res.currency.rate, id: jan_cad}:
@@ -37,7 +46,7 @@
     name: "cash account in chf"
     code: "Xcash chf"
     type: 'liquidity'
-    user_type: "account.account_type_cash_moves"
+    user_type: "account.data_account_type_cash"
 
 -
   I create a bank journal with CHF as currency
@@ -89,38 +98,40 @@
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
     assert (move_line.debit - move_line.credit == 149.39), "Invoice move is incorrect for debtors account"
 -
-  I create the first voucher of payment
-  <create with values 200 CHF, journal CHF, and completly pat the invoice of 200 CAD>
+  I set the context that will be used for the encoding of all the vouchers of this file
+-
+  !context
+    'type': 'receipt'
+-
+  I create the first voucher of payment with values 200 CHF, journal CHF
+-
+  !record {model: account.voucher, id: account_voucher_1_case4, view: view_vendor_receipt_form}:
+    account_id: account.cash
+    amount: 200
+    company_id: base.main_company
+    journal_id: bank_journal_CHF
+    partner_id: base.res_partner_seagate
+    period_id: account.period_3
+    date: !eval time.strftime("%Y-03-01")
+    payment_option: 'with_writeoff'
+    writeoff_acc_id: account.a_expense
+    comment: 'Write Off'
+    name: 'First payment: Case 4'
+-
+  I completly pay the invoice of 200 CAD
 -
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_seagate"), ref('bank_journal_CHF'), 200.00, ref('base.CHF'), ttype='receipt', date=False)
-    vals = {
-        'account_id': ref('account.cash'),
-        'amount': 200.00,
-        'company_id': ref('base.main_company'),
-        'currency_id': ref('base.CHF'),
-        'journal_id': ref('bank_journal_CHF'),
-        'partner_id': ref('base.res_partner_seagate'),
-        'period_id': ref('account.period_3'),
-        'type': 'receipt',
-        'date': time.strftime("%Y-%m-%d"),
-        'payment_option': 'with_writeoff',
-        'writeoff_acc_id': ref('account.a_expense'),
-        'exchange_acc_id': ref('account.o_expense'),
-        'comment': 'Write Off',
-        'name': 'First payment: Case 4',
-    }
-    vals.update(self.onchange_date(cr, uid, [], time.strftime('%Y-03-01'), ref('base.CHF'), 200.0)['value'])
-    if not res['value']['line_cr_ids']:
-      res['value']['line_cr_ids'] = [{'type': 'cr', 'account_id': ref('account.a_recv'),}]
-    for item in res['value']['line_cr_ids']:
-        if item['amount_unreconciled'] == 186.74:
-            item['amount'] = 186.74
-    vals['line_cr_ids'] = [(0,0,i) for i in res['value']['line_cr_ids']]
-    id = self.create(cr, uid, vals)
-    voucher_id = self.browse(cr, uid, id)
+    voucher_id = self.browse(cr, uid, ref('account_voucher_1_case4'))
+    data = []
+    for item in voucher_id.line_cr_ids:
+        if item.amount_unreconciled == 186.74:
+            data += [(item.id, 186.74)]
+        else:
+            data += [(item.id, 0.0)]
+    for line_id, amount in data:
+        self.pool.get('account.voucher.line').write(cr, uid, [line_id], {'amount': amount})
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
 -
   I check that writeoff amount computed is 13.26
@@ -151,7 +162,7 @@
 -
   I check that my debtor account is correct
 -
-  I check that the debtor account has 1 new line with -186.74 as amount_currency columns and 149.39 of credit and currency is CHF.
+  I check that the debtor account has 1 new line with -298.78 as amount_currency columns and 149.39 of credit and currency is CAD.
 -
   I check that my currency rate difference is correct. 0 in debit with no amount_currency
 -
@@ -165,7 +176,7 @@
     for move_line in move_line_obj.browse(cr, uid, move_lines):
         if move_line.amount_currency == 200:
             assert move_line.debit == 160.00, "Bank account has wrong entry."
-        elif move_line.amount_currency == -186.74:
+        elif move_line.amount_currency == -298.78:
             assert move_line.credit == 149.39, "Debtor account has wrong entry."
         elif move_line.debit == 0.00 and move_line.credit == 0.00:
             assert move_line.amount_currency == 0.00, "Incorrect Currency Difference."

@@ -63,25 +63,25 @@ class project_task_delegate(osv.osv_memory):
         task_name =tools.ustr(task.name)
 
         if 'project_id' in fields:
-            res.update({'project_id': task.project_id and task.project_id.id})
+            res['project_id'] = int(task.project_id.id) if task.project_id else False
 
         if 'name' in fields:
             if task_name.startswith(_('CHECK: ')):
                 newname = tools.ustr(task_name).replace(_('CHECK: '), '')
             else:
                 newname = tools.ustr(task_name or '')
-            res.update({'name': newname})
+            res['name'] = newname
         if 'planned_hours' in fields:
-            res.update({'planned_hours': task.remaining_hours or 0.0})
+            res['planned_hours'] = task.remaining_hours or 0.0
         if 'prefix' in fields:
             if task_name.startswith(_('CHECK: ')):
                 newname = tools.ustr(task_name).replace(_('CHECK: '), '')
             else:
                 newname = tools.ustr(task_name or '')
             prefix = _('CHECK: %s') % newname
-            res.update({'prefix': prefix})
+            res['prefix'] = prefix
         if 'new_task_description' in fields:
-            res.update({'new_task_description': task.description})
+            res['new_task_description'] = task.description
         return res
 
 

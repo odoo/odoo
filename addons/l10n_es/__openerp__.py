@@ -22,7 +22,7 @@
 ##############################################################################
 
 {
-    "name" : "Spanish Charts of Accounts (PGCE 2008)",
+    "name" : "Spanish - Accounting (PGCE 2008)",
     "version" : "3.0",
     "author" : "Spanish Localization Team",
     'website' : 'https://launchpad.net/openerp-spain',

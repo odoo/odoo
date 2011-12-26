@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Support for iCal based on Document Management System',
+    'name': 'iCal Support',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Knowledge Management',
     'complexity': "normal",
     'description': """
 Allows to synchronise calendars with others applications.

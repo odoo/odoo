@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Template: Internal FAQ',
+    'name': 'Wiki: Internal FAQ',
     'version': '1.0',
     'category': 'Knowledge Management',
     'complexity': "easy",

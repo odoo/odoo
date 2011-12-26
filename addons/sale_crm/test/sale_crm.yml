@@ -1,42 +1,30 @@
 -
-  In order to test the sale_crm module in the Open-ERP,
-  I create an opportunity and create a sale order through 'Convert to Sale' wizard .
+  Make sure the main company has at least one shop.
 -
-  I create an opportunity
+  !python {model: sale.shop}: |
+    company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+    shop_ids = self.search(cr, uid, [('company_id', '=', company_id)])
+    if not shop_ids:
+        # take a shop, and assign it to the user's company
+        shop_ids = self.search(cr, uid, [])
+        if shop_ids:
+            self.write(cr, uid, [shop_ids[0]], {'company_id': company_id})
 -
-  !record {model: crm.lead, id: crm_lead_opportunity0}:
-    country_id: base.be
-    name: Opportunity-1
-    planned_revenue: 50000.0
-    probability: 70.0
-    partner_address_id: base.res_partner_address_7
-    partner_id: base.res_partner_4
-    planned_revenue: 0.0
-    probability: 0.0
-    section_id: crm.section_sales_department
-    type: opportunity
-    categ_id: crm.categ_oppor1
--
-  Then I click on the 'Convert to Sale' wizard
--
-  I place a sale order for product keyboard having quantity 50
+  I open the wizard "Make sales".
 -
   !record {model: crm.make.sale, id: crm_make_sale_0}:
     partner_id: base.res_partner_4
-    shop_id: sale.shop
 -
-  Then I click on the 'Ok' button of wizard
+  I convert opportunity into "Quotation".
 -
   !python {model: crm.make.sale}: |
-    crm_obj = self.pool.get('crm.lead')
-    crm = crm_obj.browse(cr, uid, ref("crm_lead_opportunity0"))
-    self.makeOrder(cr, uid, [ref("crm_make_sale_0")], {"lang": "en_US", "tz": False,
-      "active_model": "crm.lead", "section_id": "crm.section_sales_department", "default_type": "opportunity",
-      "search_default_user_id": 1, "search_default_current": 1, "active_ids": [crm.id],
+    crm_lead = self.pool.get('crm.lead')
+    crm = crm_lead.browse(cr, uid, ref("crm.crm_case_construstazunits0"))
+    self.makeOrder(cr, uid, [ref("crm_make_sale_0")], {"active_ids": [crm.id],
       "active_id": crm.id})
 -
-  I verify that a sale order has been generated from an opportunity
+  I check that reference number of "Quotation" in opportunity.
 -
   !python {model: crm.lead}: |
-    crm = self.browse(cr, uid, ref("crm_lead_opportunity0"))
-    assert (crm.ref),("sale order has not been created")
+    crm = self.browse(cr, uid, ref("crm.crm_case_construstazunits0"))
+    assert crm.ref, "Quotation has not been created."

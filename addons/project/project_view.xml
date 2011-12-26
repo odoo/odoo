@@ -313,7 +313,7 @@
             </field>
         </record>
 
-	
+
         <!-- Project Task Kanban View  -->
         <record model="ir.ui.view" id="view_task_kanban">
             <field name="name">project.task.kanban</field>
@@ -350,8 +350,8 @@
                                             <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
                                             <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
                                         </td>
-                                        <td align="left" valign="middle" class="oe_kanban_title3" tooltip="task_details">
-                                            <b><field name="name"/></b>
+                                        <td align="left" valign="middle" class="oe_kanban_title" tooltip="task_details">
+                                            <field name="name"/>
                                         </td>
                                         <td valign="top" width="22">
                                             <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>
@@ -378,6 +378,7 @@
                                                         type="object" class="oe_kanban_button"><t t-esc="time[0]"/></a
                                                     ><b t-if="time[1]" class="oe_kanban_button oe_kanban_button_active"><t t-esc="Math.round(hours)"/></b
                                                 ></t>
+                                                <a name="do_open" states="draft" string="Validate planned time and open task" type="object" class="oe_kanban_button oe_kanban_button_active">!</a>
                                             </span>
                                         </div>
                                         <div class="oe_kanban_clear"/>
@@ -488,11 +489,6 @@
                         <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
-                        <filter name="edit"
-                            string="Edit" context="{'set_editable':True,'seq_visible': True}"
-                            icon="gtk-execute"
-                            groups="base.group_extended"/>
-                        <separator orientation="vertical"/>
                         <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
@@ -526,12 +522,22 @@
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,gantt,graph,kanban</field>
+            <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
-            <field name="view_id" ref="view_task_tree2"/>
+            <field name="view_id" eval="False"/>
             <field name="context">{"search_default_draft": 1, "search_default_open":1, "search_default_project_id": project_id}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
+        </record>
+        <record id="open_view_task_list_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="action_view_task"/>
+        </record>
+        <record id="open_view_task_list_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_view_task"/>
         </record>
 
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="3"/>

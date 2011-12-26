@@ -60,22 +60,11 @@ class mrp_product_produce(osv.osv_memory):
     }
 
     def do_produce(self, cr, uid, ids, context=None):
-        """ To check the product type
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: the ID or list of IDs if we want more than one
-        @param context: A standard dictionary
-        @return:
-        """
-        if context is None:
-            context = {}
-        prod_obj = self.pool.get('mrp.production')
-        move_ids = context.get('active_ids', [])
-        for data in self.browse(cr, uid, ids, context=context):
-            for move_id in move_ids:
-                prod_obj.action_produce(cr, uid, move_id,
-                                    data.product_qty, data.mode, context=context)
+        production_id = context.get('active_id', False)
+        assert production_id, "Production Id should be specified in context as a Active ID"
+        data = self.browse(cr, uid, ids[0], context=context)
+        self.pool.get('mrp.production').action_produce(cr, uid, production_id,
+                            data.product_qty, data.mode, context=context)
         return {}
 
 mrp_product_produce()

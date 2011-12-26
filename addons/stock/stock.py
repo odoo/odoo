@@ -167,7 +167,7 @@ class stock_location(osv.osv):
                        \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
                       """, select = True),
          # temporarily removed, as it's unused: 'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
-        'complete_name': fields.function(_complete_name, type='char', size=100, string="Location Name", store=True),
+        'complete_name': fields.function(_complete_name, type='char', size=256, string="Location Name", store=True),
 
         'stock_real': fields.function(_product_value, type='float', string='Real Stock', multi="stock"),
         'stock_virtual': fields.function(_product_value, type='float', string='Virtual Stock', multi="stock"),
@@ -211,8 +211,16 @@ class stock_location(osv.osv):
         'stock_virtual_value': fields.function(_product_value, type='float', string='Virtual Stock Value', multi="stock", digits_compute=dp.get_precision('Account')),
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
         'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
-        'valuation_in_account_id': fields.many2one('account.account', 'Stock Input Account',domain = [('type','=','other')], help='This account will be used to value stock moves that have this location as destination, instead of the stock output account from the product.'),
-        'valuation_out_account_id': fields.many2one('account.account', 'Stock Output Account',domain = [('type','=','other')], help='This account will be used to value stock moves that have this location as source, instead of the stock input account from the product.'),
+        'valuation_in_account_id': fields.many2one('account.account', 'Stock Valuation Account (Incoming)', domain = [('type','=','other')],
+                                                   help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
+                                                        "this account will be used to hold the value of products being moved from an internal location "
+                                                        "into this location, instead of the generic Stock Output Account set on the product. "
+                                                        "This has no effect for internal locations."),
+        'valuation_out_account_id': fields.many2one('account.account', 'Stock Valuation Account (Outgoing)', domain = [('type','=','other')],
+                                                   help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
+                                                        "this account will be used to hold the value of products being moved out of this location "
+                                                        "and into an internal location, instead of the generic Stock Output Account set on the product. "
+                                                        "This has no effect for internal locations."),
     }
     _defaults = {
         'active': True,
@@ -981,7 +989,6 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
-            payment_term_id = False
             partner =  picking.address_id and picking.address_id.partner_id
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
@@ -992,10 +999,8 @@ class stock_picking(osv.osv):
 
             if inv_type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
-                payment_term_id = self._get_payment_term(cr, uid, picking)
             else:
                 account_id = partner.property_account_payable.id
-
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cr, uid, picking).values()
             address = address_obj.browse(cr, uid, address_contact_id, context=context)
@@ -1022,7 +1027,7 @@ class stock_picking(osv.osv):
                     'address_invoice_id': address_invoice_id,
                     'address_contact_id': address_contact_id,
                     'comment': comment,
-                    'payment_term': payment_term_id,
+                    'payment_term': self._get_payment_term(cr, uid, picking),
                     'fiscal_position': partner.property_account_position.id,
                     'date_invoice': context.get('date_inv',False),
                     'company_id': picking.company_id.id,
@@ -1355,6 +1360,17 @@ class stock_production_lot(osv.osv):
                 name = '%s [%s]' % (name, record['ref'])
             res.append((record['id'], name))
         return res
+    
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        args = args or []
+        ids = []
+        if name:
+            ids = self.search(cr, uid, [('prefix', '=', name)] + args, limit=limit, context=context)
+            if not ids:
+                ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context)
 
     _name = 'stock.production.lot'
     _description = 'Production lot'
@@ -1803,7 +1819,7 @@ class stock_move(osv.osv):
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
         """ On change of Scheduled Date gives a Move date.
-        @param date_expected: Scheduled Date 
+        @param date_expected: Scheduled Date
         @param date: Move Date
         @return: Move Date
         """
@@ -1847,23 +1863,41 @@ class stock_move(osv.osv):
                     result[m.picking_id].append( (m, dest) )
         return result
 
-    def _create_chained_picking(self, cr, uid, pick_name, picking, ptype, move, context=None):
-        res_obj = self.pool.get('res.company')
+    def _prepare_chained_picking(self, cr, uid, picking_name, picking, picking_type, moves_todo, context=None):
+        """Prepare the definition (values) to create a new chained picking.
+
+           :param str picking_name: desired new picking name
+           :param browse_record picking: source picking (being chained to)
+           :param str picking_type: desired new picking type
+           :param list moves_todo: specification of the stock moves to be later included in this
+               picking, in the form::
+
+                   [[move, (dest_location, auto_packing, chained_delay, chained_journal,
+                                  chained_company_id, chained_picking_type)],
+                    ...
+                   ]
+
+               See also :meth:`stock_location.chained_location_get`.
+        """
+        res_company = self.pool.get('res.company')
+        return {
+                    'name': picking_name,
+                    'origin': tools.ustr(picking.origin or ''),
+                    'type': picking_type,
+                    'note': picking.note,
+                    'move_type': picking.move_type,
+                    'auto_picking': moves_todo[0][1][1] == 'auto',
+                    'stock_journal_id': moves_todo[0][1][3],
+                    'company_id': moves_todo[0][1][4] or res_company._company_default_get(cr, uid, 'stock.company', context=context),
+                    'address_id': picking.address_id.id,
+                    'invoice_state': 'none',
+                    'date': picking.date,
+                }
+
+    def _create_chained_picking(self, cr, uid, picking_name, picking, picking_type, moves_todo, context=None):
         picking_obj = self.pool.get('stock.picking')
-        pick_id= picking_obj.create(cr, uid, {
-                                'name': pick_name,
-                                'origin': tools.ustr(picking.origin or ''),
-                                'type': ptype,
-                                'note': picking.note,
-                                'move_type': picking.move_type,
-                                'auto_picking': move[0][1][1] == 'auto',
-                                'stock_journal_id': move[0][1][3],
-                                'company_id': move[0][1][4] or res_obj._company_default_get(cr, uid, 'stock.company', context=context),
-                                'address_id': picking.address_id.id,
-                                'invoice_state': 'none',
-                                'date': picking.date,
-                            })
-        return pick_id
+        return picking_obj.create(cr, uid, self._prepare_chained_picking(cr, uid, picking_name, picking, picking_type, moves_todo, context=context))
+
     def create_chained_picking(self, cr, uid, moves, context=None):
         res_obj = self.pool.get('res.company')
         location_obj = self.pool.get('stock.location')
@@ -2266,7 +2300,7 @@ class stock_move(osv.osv):
         return super(stock_move, self).unlink(
             cr, uid, ids, context=ctx)
 
-    # _create_lot function is not used anywhere 
+    # _create_lot function is not used anywhere
     def _create_lot(self, cr, uid, ids, product_id, prefix=False):
         """ Creates production lot
         @return: Production lot id
@@ -2309,10 +2343,10 @@ class stock_move(osv.osv):
             for (id, name) in product_obj.name_get(cr, uid, [move.product_id.id]):
                 self.log(cr, uid, move.id, "%s x %s %s" % (quantity, name, _("were scrapped")))
 
-        self.action_done(cr, uid, res)
+        self.action_done(cr, uid, res, context=context)
         return res
 
-    # action_split function is not used anywhere 
+    # action_split function is not used anywhere
     def action_split(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
         """ Split Stock Move lines into production lot which specified split by quantity.
         @param cr: the database cursor
@@ -2434,7 +2468,7 @@ class stock_move(osv.osv):
                 for (id, name) in product_obj.name_get(cr, uid, [new_move.product_id.id]):
                     message = _("Product  '%s' is consumed with '%s' quantity.") %(name, new_move.product_qty)
                     self.log(cr, uid, new_move.id, message)
-        self.action_done(cr, uid, res)
+        self.action_done(cr, uid, res, context=context)
 
         return res
 
@@ -2698,7 +2732,7 @@ class stock_inventory_line(osv.osv):
             return {'value': {'product_qty': 0.0, 'product_uom': False}}
         obj_product = self.pool.get('product.product').browse(cr, uid, product)
         uom = uom or obj_product.uom_id.id
-        amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date})[product]
+        amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date, 'compute_child': False})[product]
         result = {'product_qty': amount, 'product_uom': uom}
         return {'value': result}
 

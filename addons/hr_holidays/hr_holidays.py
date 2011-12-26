@@ -21,7 +21,7 @@
 #
 ##############################################################################
 
-import datetime
+import datetime, time
 from itertools import groupby
 from operator import itemgetter
 
@@ -118,7 +118,7 @@ class hr_holidays(osv.osv):
             \nThe state is \'Refused\', when holiday request is refused by manager.\
             \nThe state is \'Approved\', when holiday request is approved by manager.'),
         'user_id':fields.related('employee_id', 'user_id', type='many2one', relation='res.users', string='User', store=True),
-        'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)]}),
+        'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)]}, select=True),
         'date_to': fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)]}),
         'holiday_status_id': fields.many2one("hr.holidays.status", "Leave Type", required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'employee_id': fields.many2one('hr.employee', "Employee", select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)]}, help='Leave Manager can let this field empty if this leave request/allocation is for every employee'),
@@ -129,7 +129,7 @@ class hr_holidays(osv.osv):
         'number_of_days_temp': fields.float('Number of Days', readonly=True, states={'draft':[('readonly',False)]}),
         'number_of_days': fields.function(_compute_number_of_days, string='Number of Days', store=True),
         'case_id': fields.many2one('crm.meeting', 'Meeting'),
-        'type': fields.selection([('remove','Leave Request'),('add','Allocation Request')], 'Request Type', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose 'Leave Request' if someone wants to take an off-day. \nChoose 'Allocation Request' if you want to increase the number of leaves available for someone"),
+        'type': fields.selection([('remove','Leave Request'),('add','Allocation Request')], 'Request Type', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose 'Leave Request' if someone wants to take an off-day. \nChoose 'Allocation Request' if you want to increase the number of leaves available for someone", select=True),
         'parent_id': fields.many2one('hr.holidays', 'Parent'),
         'linked_request_ids': fields.one2many('hr.holidays', 'parent_id', 'Linked Requests',),
         'department_id':fields.related('employee_id', 'department_id', string='Department', type='many2one', relation='hr.department', readonly=True, store=True),
@@ -262,7 +262,7 @@ class hr_holidays(osv.osv):
                     'name': record.name,
                     'categ_id': record.holiday_status_id.categ_id.id,
                     'duration': record.number_of_days_temp * 8,
-                    'note': record.notes,
+                    'description': record.notes,
                     'user_id': record.user_id.id,
                     'date': record.date_from,
                     'end_date': record.date_to,
@@ -396,8 +396,29 @@ class hr_employee(osv.osv):
                 remaining[employee_id] = 0.0
         return remaining
 
+   def _get_leave_status(self, cr, uid, ids, name, args, context=None):
+        holidays_id = self.pool.get('hr.holidays').search(cr, uid, 
+           [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d %H:%M:%S')), 
+            ('date_to','>=',time.strftime('%Y-%m-%d %H:%M:%S')),('type','=','remove')],
+           context=context)
+        result = {}
+        for id in ids:
+            result[id] = {
+                'current_leave_state': False,
+                'current_leave_id': False
+            }
+        for holiday in self.pool.get('hr.holidays').browse(cr, uid, holidays_id, context=context):
+            result[holiday.employee_id.id]['current_leave_state'] = holiday.state
+            result[holiday.employee_id.id]['current_leave_id'] = holiday.holiday_status_id.id
+        return result
+
    _columns = {
         'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.'),
+        'current_leave_state': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Status", type="selection",
+            selection=[('draft', 'New'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
+            ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')]),
+        'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status'),
+        'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1)
     }
 
 hr_employee()

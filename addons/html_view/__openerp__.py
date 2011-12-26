@@ -2,7 +2,7 @@
     "name" : "Html View",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category" : "Hidden",
+    "category" : "Hidden/Test",
     "depends" : ['base'],
     "init_xml" : ['html_view.xml'],
     "demo_xml" : [],

@@ -254,6 +254,7 @@ class project_scrum_task(osv.osv):
             for task in line.tasks_id:
                 result[task.id] = True
         return result.keys()
+
     _columns = {
         'product_backlog_id': fields.many2one('project.scrum.product.backlog', 'Product Backlog',help="Related product backlog that contains this task. Used in SCRUM methodology"),
         'sprint_id': fields.related('product_backlog_id','sprint_id', type='many2one', relation='project.scrum.sprint', string='Sprint',
@@ -262,12 +263,7 @@ class project_scrum_task(osv.osv):
                 'project.scrum.product.backlog': (_get_task, ['sprint_id'], 10)
             }),
     }
-    #dead code
-    def onchange_backlog_id(self, cr, uid, backlog_id=False):
-        if not backlog_id:
-            return {}
-        project_id = self.pool.get('project.scrum.product.backlog').browse(cr, uid, backlog_id).project_id.id
-        return {'value': {'project_id': project_id}}
+
 project_scrum_task()
 
 class project_scrum_meeting(osv.osv):
@@ -292,45 +288,6 @@ class project_scrum_meeting(osv.osv):
     _defaults = {
         'date' : lambda *a: time.strftime('%Y-%m-%d'),
     }
-    # dead code
-    def button_send_to_master(self, cr, uid, ids, context=None):
-        meeting_id = self.browse(cr, uid, ids, context=context)[0]
-        if meeting_id and meeting_id.sprint_id.scrum_master_id.user_email:
-            res = self.email_send(cr, uid, ids, meeting_id.sprint_id.scrum_master_id.user_email)
-            if not res:
-                raise osv.except_osv(_('Error !'), _('Email notification could not be sent to the scrum master %s') % meeting_id.sprint_id.scrum_master_id.name)
-        else:
-            raise osv.except_osv(_('Error !'), _('Please provide email address for scrum master defined on sprint.'))
-        return True
-
-    #dead code
-    def button_send_product_owner(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        context.update({'button_send_product_owner': True})
-        meeting_id = self.browse(cr, uid, ids, context=context)[0]
-        if meeting_id.sprint_id.product_owner_id.user_email:
-            res = self.email_send(cr,uid,ids,meeting_id.sprint_id.product_owner_id.user_email)
-            if not res:
-                raise osv.except_osv(_('Error !'), _('Email notification could not be sent to the product owner %s') % meeting_id.sprint_id.product_owner_id.name)
-        else:
-            raise osv.except_osv(_('Error !'), _('Please provide email address for product owner defined on sprint.'))
-        return True
-
-    #dead code
-    def email_send(self, cr, uid, ids, email, context=None):
-        mail_message_obj = self.pool.get('mail.message')
-        meeting_id = self.browse(cr, uid, ids, context=context)[0]
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        user_email = user.user_email or tools.config.get('email_from', False)
-        body = _("Hello %s,\n \nI am sending you Daily Meeting Details of date %s for the Sprint %s\n") %(meeting_id.sprint_id.scrum_master_id.name, meeting_id.date, meeting_id.sprint_id.name)
-        body += _('\n* Tasks since yesterday:\n_______________________\n%s\n\n* Task for Today:\n_______________________ \n%s\n\n* Blocks encountered:\n_______________________ \n\n%s') %(meeting_id.question_yesterday,meeting_id.question_today, meeting_id.question_blocks or _('No Blocks'))
-        body += _("\n\nThank you,\n%s") % user.name
-        sub_name = meeting_id.name or _('Scrum Meeting of %s') % meeting_id.date
-        flag = mail_message_obj.schedule_with_attach(cr, uid, user_email , [email], sub_name, body, model='project.scrum.meeting', res_id=meeting_id.id, context=context)
-        if not flag:
-            return False
-        return True
 
 project_scrum_meeting()
 

@@ -23,6 +23,7 @@ import base64
 
 from osv import osv, fields
 from tools.translate import _
+from report import report_sxw
 
 class partner_vat_intra(osv.osv_memory):
     """
@@ -66,38 +67,55 @@ class partner_vat_intra(osv.osv_memory):
         'name': 'vat_Intra.xml',
     }
 
-    def create_xml(self, cursor, user, ids, context=None):
+    def _get_datas(self, cr, uid, ids, context=None):
+        """Collects require data for vat intra xml
+        :param ids: id of wizard.
+        :return: dict of all data to be used to generate xml for Partner VAT Intra.
+        :rtype: dict
+        """
+        if context is None:
+            context = {}
+
         obj_user = self.pool.get('res.users')
         obj_sequence = self.pool.get('ir.sequence')
         obj_partner = self.pool.get('res.partner')
         obj_partner_add = self.pool.get('res.partner.address')
-        mod_obj = self.pool.get('ir.model.data')
+
+        xmldict = {}
         street = zip_city = country = p_list = data_clientinfo = ''
         seq = amount_sum = 0
 
-        if context is None:
-            context = {}
-        data_tax = self.browse(cursor, user, ids[0], context=context)
-        if data_tax.tax_code_id:
-            data_cmpny = data_tax.tax_code_id.company_id
+        wiz_data = self.browse(cr, uid, ids[0], context=context)
+
+        if wiz_data.tax_code_id:
+            data_cmpny = wiz_data.tax_code_id.company_id
         else:
-            data_cmpny = obj_user.browse(cursor, user, user).company_id
-        data  = self.read(cursor, user, ids)[0]
+            data_cmpny = obj_user.browse(cr, uid, uid, context=context).company_id
+
+        # Get Company vat
         company_vat = data_cmpny.partner_id.vat
         if not company_vat:
             raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
         company_vat = company_vat.replace(' ','').upper()
 
-        seq_controlref = obj_sequence.get(cursor, user, 'controlref')
-        seq_declarantnum = obj_sequence.get(cursor, user, 'declarantnum')
-        cref = company_vat[2:] + seq_controlref[-4:]
-        dnum = cref + seq_declarantnum[-5:]
-        if len(data['period_code']) != 6:
+        if len(wiz_data.period_code) != 6:
             raise osv.except_osv(_('Wrong Period Code'), _('The period code you entered is not valid.'))
 
-        addr = obj_partner.address_get(cursor, user, [data_cmpny.partner_id.id], ['invoice'])
+        if not wiz_data.period_ids:
+            raise osv.except_osv(_('Data Insufficient!'),_('Please select at least one Period.'))
+
+        p_id_list = obj_partner.search(cr, uid, [('vat','!=',False)], context=context)
+        if not p_id_list:
+            raise osv.except_osv(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
+
+        seq_controlref = obj_sequence.get(cr, uid, 'controlref')
+        seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
+        cref = company_vat[2:] + seq_controlref[-4:]
+        dnum = cref + seq_declarantnum[-5:]
+
+        addr = obj_partner.address_get(cr, uid, [data_cmpny.partner_id.id], ['invoice'])
         if addr.get('invoice',False):
-            ads = obj_partner_add.browse(cursor, user, [addr['invoice']])[0]
+            ads = obj_partner_add.browse(cr, uid, [addr['invoice']])[0]
             zip_city = (ads.city or '') + ' ' + (ads.zip or '')
             if zip_city== ' ':
                 zip_city = ''
@@ -109,46 +127,94 @@ class partner_vat_intra(osv.osv_memory):
             if ads.country_id:
                 country = ads.country_id.code
 
-        comp_name = data_cmpny.name
-        sender_date = time.strftime('%Y-%m-%d')
-        data_file = '<?xml version="1.0"?>\n<VatIntra xmlns="http://www.minfin.fgov.be/VatIntra" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" RecipientId="VAT-ADMIN" SenderId="' + str(company_vat) + '"'
-        data_file += ' ControlRef="' + cref + '" MandataireId="' + data['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
-        data_file += ' VersionTech="1.3">'
-        data_file += '\n\t<AgentRepr DecNumber="1">\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat)+'</VATNum>\n\t\t\t<Name>'+ comp_name +'</Name>\n\t\t\t<Street>'+ street +'</Street>\n\t\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>'
-        data_file += '\n\t\t\t<Country>' + country +'</Country>\n\t\t</CompanyInfo>\n\t</AgentRepr>'
-        data_comp = '\n\t\t<CompanyInfo>\n\t\t\t<VATNum>'+str(company_vat[2:])+'</VATNum>\n\t\t\t<Name>'+ comp_name +'</Name>\n\t\t\t<Street>'+ street +'</Street>\n\t\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>\n\t\t\t<Country>'+ country +'</Country>\n\t\t</CompanyInfo>'
-        data_period = '\n\t\t<Period>'+ data['period_code'] +'</Period>' #trimester
-        p_id_list = obj_partner.search(cursor, user, [('vat','!=',False)])
-        if not p_id_list:
-            raise osv.except_osv(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
-
-        if not data['period_ids']:
-            raise osv.except_osv(_('Data Insufficient!'),_('Please select at least one Period.'))
+        xmldict.update({
+                        'company_name': data_cmpny.name,
+                        'company_vat': company_vat, 
+                        'vatnum':  company_vat[2:],
+                        'controlref': seq_controlref,
+                        'cref': cref, 
+                        'mand_id': wiz_data.mand_id, 
+                        'sender_date': str(time.strftime('%Y-%m-%d')),
+                        'street': street,
+                        'zip_city': zip_city,
+                        'country': country,
+                        'period': wiz_data.period_code,
+                        'clientlist': []
+                        })
+        
         codes = ('44', '46L', '46T')
-        cursor.execute('''SELECT p.name As partner_name, l.partner_id AS partner_id, p.vat AS vat, t.code AS intra_code, SUM(l.tax_amount) AS amount
+        cr.execute('''SELECT p.name As partner_name, l.partner_id AS partner_id, p.vat AS vat, t.code AS intra_code, SUM(l.tax_amount) AS amount
                       FROM account_move_line l
                       LEFT JOIN account_tax_code t ON (l.tax_code_id = t.id)
                       LEFT JOIN res_partner p ON (l.partner_id = p.id)
                       WHERE t.code IN %s
                        AND l.period_id IN %s
-                      GROUP BY p.name, l.partner_id, p.vat, t.code''', (codes, tuple(data['period_ids'])))            
-        for row in cursor.dictfetchall():
+                      GROUP BY p.name, l.partner_id, p.vat, t.code''', (codes, tuple([p.id for p in wiz_data.period_ids])))            
+
+        p_count = 0
+        for row in cr.dictfetchall():
             if not row['vat']:
                 p_list += str(row['partner_name']) + ', '
+                p_count += 1
                 continue
+
             seq += 1
             amt = row['amount'] or 0
             amt = int(round(amt * 100))
             amount_sum += amt
+
             intra_code = row['intra_code'] == '44' and 'S' or (row['intra_code'] == '46L' and 'L' or (row['intra_code'] == '46T' and 'T' or ''))
 #            intra_code = row['intra_code'] == '88' and 'L' or (row['intra_code'] == '44b' and 'T' or (row['intra_code'] == '44a' and 'S' or ''))
-            data_clientinfo +='\n\t\t<ClientList SequenceNum="'+str(seq)+'">\n\t\t\t<CompanyInfo>\n\t\t\t\t<VATNum>'+row['vat'][2:].replace(' ','').upper() +'</VATNum>\n\t\t\t\t<Country>'+row['vat'][:2] +'</Country>\n\t\t\t</CompanyInfo>\n\t\t\t<Amount>'+str(amt) +'</Amount>\n\t\t\t<Code>'+str(intra_code) +'</Code>\n\t\t</ClientList>'
-        amount_sum = int(amount_sum)
-        data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" AmountSum="'+ str(amount_sum) +'" >'
-        data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n\t</DeclarantList>\n</VatIntra>'
+
+            xmldict['clientlist'].append({
+                                        'partner_name': row['partner_name'],
+                                        'seq': seq, 
+                                        'vatnum': row['vat'][2:].replace(' ','').upper(), 
+                                        'vat': row['vat'],
+                                        'country': row['vat'][:2],
+                                        'amount': amt,
+                                        'intra_code': row['intra_code'],
+                                        'code': intra_code})
+
+        xmldict.update({'dnum': dnum, 'clientnbr': str(seq), 'amountsum': amount_sum, 'partner_wo_vat': p_count})
+        return xmldict
+
+    def create_xml(self, cursor, user, ids, context=None):
+        """Creates xml that is to be exported and sent to estate for partner vat intra.
+        :return: Value for next action.
+        :rtype: dict
+        """
+        mod_obj = self.pool.get('ir.model.data')
+        xml_data = self._get_datas(cursor, user, ids, context=context)
+        data_file = ''
+
+        # Can't we do this by etree?
+        data_head = """<?xml version="1.0"?>
+<VatIntra xmlns="http://www.minfin.fgov.be/VatIntra" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" RecipientId="VAT-ADMIN" SenderId="%(company_vat)s" ControlRef="%(controlref)s" MandataireId="%(mand_id)s" SenderDate="%(sender_date)s" VersionTech="1.3">
+	<AgentRepr DecNumber="1">
+		<CompanyInfo>
+			<VATNum>%(company_vat)s</VATNum>
+			<Name>%(company_name)s</Name>
+			<Street>%(street)s</Street>
+			<CityAndZipCode>%(zip_city)s</CityAndZipCode>
+			<Country>%(country)s</Country>
+		</CompanyInfo>
+	</AgentRepr>""" % (xml_data)
+
+        data_comp_period = '\n\t\t<CompanyInfo>\n\t\t\t<VATNum>%(vatnum)s</VATNum>\n\t\t\t<Name>%(company_name)s</Name>\n\t\t\t<Street>%(street)s</Street>\n\t\t\t<CityAndZipCode>%(zip_city)s</CityAndZipCode>\n\t\t\t<Country>%(country)s</Country>\n\t\t</CompanyInfo>\n\t\t<Period>%(period)s</Period>' % (xml_data)
+
+        data_clientinfo = ''
+        for client in xml_data['clientlist']:
+            data_clientinfo +='\n\t\t<ClientList SequenceNum="%(seq)s">\n\t\t\t<CompanyInfo>\n\t\t\t\t<VATNum>%(vatnum)s</VATNum>\n\t\t\t\t<Country>%(country)s</Country>\n\t\t\t</CompanyInfo>\n\t\t\t<Amount>%(amount)s</Amount>\n\t\t\t<Code>%(code)s</Code>\n\t\t</ClientList>' % (client)
+
+        data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="%(dnum)s" ClientNbr="%(clientnbr)s" AmountSum="%(amountsum)s" >' % (xml_data)
+
+        data_file += data_head + data_decl + data_comp_period + data_clientinfo + '\n\t</DeclarantList>\n</VatIntra>'
+        context['file_save'] = data_file
+
         model_data_ids = mod_obj.search(cursor, user,[('model','=','ir.ui.view'),('name','=','view_vat_intra_save')], context=context)
         resource_id = mod_obj.read(cursor, user, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        context['file_save'] = data_file
+
         return {
             'name': _('Save'),
             'context': context,
@@ -161,6 +227,31 @@ class partner_vat_intra(osv.osv_memory):
             'target': 'new',
         }
 
+    def preview(self, cr, uid, ids, context=None):
+        xml_data = self._get_datas(cr, uid, ids, context=context)
+        datas = {
+             'ids': [],
+             'model': 'partner.vat.intra',
+             'form': xml_data
+        }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'partner.vat.intra.print',
+            'datas': datas,
+        }
+
+
 partner_vat_intra()
+
+
+class vat_intra_print(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context):
+        super(vat_intra_print, self).__init__(cr, uid, name, context=context)
+        self.localcontext.update({
+            'time': time,
+        })
+        
+report_sxw.report_sxw('report.partner.vat.intra.print', 'partner.vat.intra', 'addons/l10n_be/wizard/l10n_be_vat_intra_print.rml', parser=vat_intra_print)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

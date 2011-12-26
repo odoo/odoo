@@ -6,7 +6,6 @@
             <field name="name">res.bank.form</field>
             <field name="model">res.bank</field>
             <field name="type">form</field>
-            <field name="sequence" eval="9" />
             <field name="inherit_id" ref="base.view_res_bank_form"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
@@ -23,7 +22,6 @@
             <field name="name">res.bank.tree</field>
             <field name="model">res.bank</field>
             <field name="type">tree</field>
-            <field name="sequence" eval="9" />
             <field name="inherit_id" ref="base.view_res_bank_tree"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
@@ -40,7 +38,6 @@
             <field name="name">res.partner_bank.form.hide.f1</field>
             <field name="model">res.partner</field>
             <field name="type">form</field>
-            <field name="sequence" eval="9" />
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <field name="acc_number" position="replace">
@@ -51,7 +48,6 @@
             <field name="name">res.partner_bank.form.hide.f2</field>
             <field name="model">res.partner</field>
             <field name="type">form</field>
-            <field name="sequence" eval="9" />
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <field name="bank" position="replace">
@@ -63,7 +59,6 @@
             <field name="name">res.partner_bank.form.hide.f2</field>
             <field name="model">res.partner</field>
             <field name="type">form</field>
-            <field name="sequence" eval="10" />
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <field name="state" position="after">
@@ -94,7 +89,6 @@
             <field name="name">res.partner_bank.form.hide.acc_number.frominvoice</field>
             <field name="model">res.partner.bank</field>
             <field name="type">form</field>
-            <field name="sequence" eval="9" />
             <field name="inherit_id" ref="base.view_partner_bank_form"/>
             <field name="arch" type="xml">
                 <field name="acc_number" position="replace">
@@ -106,7 +100,6 @@
             <field name="name">res.partner_bank.form.hide.bank.frominvoice</field>
             <field name="model">res.partner.bank</field>
             <field name="type">form</field>
-            <field name="sequence" eval="9" />
             <field name="inherit_id" ref="base.view_partner_bank_form"/>
             <field name="arch" type="xml">
                 <field name="bank" position="replace"> 
@@ -118,7 +111,6 @@
             <field name="name">res.partner_bank.form.hide.frominvoice</field>
             <field name="model">res.partner.bank</field>
             <field name="type">form</field>
-            <field name="sequence" eval="10"/>
             <field name="inherit_id" ref="base.view_partner_bank_form"/>
             <field name="arch" type="xml">
                 <field name="state" position="after">

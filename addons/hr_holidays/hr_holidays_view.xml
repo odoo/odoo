@@ -397,7 +397,6 @@
                     <field name="max_leaves"/>
                     <field name="leaves_taken"/>
                     <field name="remaining_leaves"/>
-                    <field name="limit"/>
                 </tree>
             </field>
         </record>
@@ -493,7 +492,9 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <field name="coach_id" position="after">
-                    <field name="remaining_leaves" string="Remaining Legal Leaves" readonly="1"/>
+                    <field name="remaining_leaves"/>
+                    <field name="current_leave_id"/>
+                    <field name="current_leave_state" attrs="{'invisible':[('current_leave_id','=',False)]}"/>
                 </field>
             </field>
         </record>

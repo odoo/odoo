@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16:12+0000\n"
-"PO-Revision-Date: 2011-01-11 11:16:12+0000\n"
+"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"PO-Revision-Date: 2011-12-22 18:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,12 +26,13 @@ msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
 
 #. module: users_ldap
-#: field:res.company,ldaps:0
-msgid "LDAP Parameters"
+#: help:res.company.ldap,ldap_tls:0
+msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
 msgstr ""
 
 #. module: users_ldap
 #: view:res.company:0
+#: view:res.company.ldap:0
 msgid "LDAP Configuration"
 msgstr ""
 
@@ -66,8 +67,23 @@ msgid "LDAP Server port"
 msgstr ""
 
 #. module: users_ldap
+#: help:res.company.ldap,ldap_binddn:0
+msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
+msgstr ""
+
+#. module: users_ldap
 #: field:res.company.ldap,ldap_base:0
 msgid "LDAP base"
+msgstr ""
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "User Information"
+msgstr ""
+
+#. module: users_ldap
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
 msgstr ""
 
 #. module: users_ldap
@@ -76,8 +92,8 @@ msgid "Companies"
 msgstr ""
 
 #. module: users_ldap
-#: field:res.company.ldap,ldap_password:0
-msgid "LDAP password"
+#: view:res.company.ldap:0
+msgid "Process Parameter"
 msgstr ""
 
 #. module: users_ldap
@@ -86,8 +102,8 @@ msgid "res.company.ldap"
 msgstr ""
 
 #. module: users_ldap
-#: model:ir.module.module,description:users_ldap.module_meta_information
-msgid "Adds support for authentication by ldap server"
+#: field:res.company.ldap,ldap_tls:0
+msgid "Use TLS"
 msgstr ""
 
 #. module: users_ldap
@@ -96,13 +112,38 @@ msgid "Sequence"
 msgstr ""
 
 #. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Login Information"
+msgstr ""
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Server Information"
+msgstr ""
+
+#. module: users_ldap
+#: model:ir.actions.act_window,name:users_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr ""
+
+#. module: users_ldap
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: users_ldap
-#: model:ir.module.module,shortdesc:users_ldap.module_meta_information
-msgid "Authenticate users with ldap server"
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr ""
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_password:0
+msgid "The password of the user account on the LDAP server that is used to query the directory."
+msgstr ""
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_password:0
+msgid "LDAP password"
 msgstr ""
 
 #. module: users_ldap

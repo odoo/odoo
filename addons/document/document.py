@@ -132,7 +132,7 @@ class document_file(osv.osv):
         # fields used for file storage
         'store_fname': fields.char('Stored Filename', size=200),
     }
-    _order = "create_date desc"
+    _order = "id desc"
 
     def __get_def_directory(self, cr, uid, context=None):
         dirobj = self.pool.get('document.directory')

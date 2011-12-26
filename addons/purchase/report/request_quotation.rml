@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="Request for Quotation.pdf">
-  <template pageSize="(595.0,842.0)" title="Request for Quotation" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+  <template title="Request for Quotation" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="23.0" y1="43.0" width="530" height="799"/>
     </pageTemplate>
@@ -92,11 +92,7 @@
         <td>
           <para style="terp_default_Bold_9">Expected Delivery address:</para>
           <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id.partner_id.name) or (order.warehouse_id and order.warehouse_id.name) or '']]</para>
-          <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.street) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.street) or '']]</para>
-          <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.street2) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.street2) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.zip) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.zip) or '' ]][[ (order.dest_address_id and order.dest_address_id and order.dest_address_id.city) or (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.city) or '' ]]</para>
-          <para style="terp_default_9">[[(order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.state_id and order.warehouse_id.partner_address_id.state_id.name) or order.partner_address_id and order.partner_address_id.state_id and order.partner_address_id.state_id.name or removeParentNode('para') ]] </para>
-          <para style="terp_default_9">[[(order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.country_id and order.warehouse_id.partner_address_id.country_id.name) or order.partner_address_id.country_id.name ]]</para>
+          <para style="terp_default_9">[[ order.dest_address_id and display_address(order.dest_address_id) ]] </para>
         </td>
         <td>
           <para style="terp_default_9">
@@ -105,11 +101,7 @@
         </td>
         <td>
           <para style="terp_default_9">[[ (order.partner_id and order.partner_id.title and order.partner_id.title.name) or '' ]] [[ order.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.street) or '']]</para>
-          <para style="terp_default_9">[[ (order.partner_address_id.street2) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.zip) or '' ]][[ (order.partner_address_id and order.partner_address_id.city) or '' ]]</para>
-          <para style="terp_default_9">[[ (order.partner_address_id.state_id.name) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.country_id and order.partner_address_id.country_id.name) or '' ]]</para>
+          <para style="terp_default_9">[[ order.partner_address_id and display_address(order.partner_address_id) ]] </para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>

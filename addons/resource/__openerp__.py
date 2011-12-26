@@ -23,7 +23,7 @@
     "name" : "Resource",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category" : "Hidden",
+    "category" : "Hidden/Dependency",
     "website" : "http://www.openerp.com",
     "description": """
 Module for resource management.
@@ -44,6 +44,10 @@ It also manages the leaves of every resource.
         'resource_view.xml',
     ],
     'demo_xml': ['resource_demo.xml'
+    ],
+    'test': [
+        'test/resource.yml',
+        'test/duplicate_resource.yml',
     ],
     'installable': True,
     'active': False,

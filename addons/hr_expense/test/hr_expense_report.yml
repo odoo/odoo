@@ -1,8 +1,0 @@
--
-  In order to test the PDF reports defined on a HR Expense, we will print a HR Expense
-- 
-  !python {model: hr.expense.expense}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.hr.expense').create(cr, uid, [ref('hr_expense.hr_expense_expense_septemberexpenses0'),ref('hr_expense.hr_expense_expense_septemberexpenses1')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'hr_expense-report.'+format), 'wb+').write(data)

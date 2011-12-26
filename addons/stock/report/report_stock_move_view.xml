@@ -44,7 +44,7 @@
          <field name="arch" type="xml">
              <graph string="Moves Analysis" type="bar">
                  <field name="product_id"/>
-                 <field name="day_diff2" operator="+"/>
+                 <field name="product_qty" operator="+"/>
              </graph>
          </field>
     </record>
@@ -55,7 +55,7 @@
          <field name="arch" type="xml">
              <graph string="Moves Analysis" type="bar">
                  <field name="day"/>
-                 <field name="day_diff2" operator="+" string="Delay(Days)"/>
+                 <field name="product_qty" operator="avg"/>
              </graph>
          </field>
     </record>
