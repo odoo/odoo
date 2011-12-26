@@ -155,6 +155,7 @@ var pushHandler = {
 
 
 function push() {
+    window.close();
 	var model_name = document.getElementById('menu_model_list').selectedItem.value;
 	var res_id = 0;
 	if(getOperation() == "add") {
@@ -182,6 +183,5 @@ function push() {
 	var strres_id = get_rpc_int(xmlRpcClient, res_id);
     xmlRpcClient.asyncCall(pushHandler,null,'execute',[strDbName,struid,strpass,strobj,strmethod,strmodel, stremail, strres_id],8);
 }
-
 
 

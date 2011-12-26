@@ -96,6 +96,7 @@ var openPartnerHandler = {
         open_url(res[URL])
         
         
+        
     },
     onFault: function (client, ctxt, fault) {
 		log_message(fault);
@@ -159,14 +160,15 @@ var listDocumentHandler = {
     onResult: function(client, context, result) {
         res = extract_data(result)
         log_message("open document")
+        window.open('chrome://openerp_plugin/content/push_dialog.xul', '', 'chrome', resizable='yes');
         if(res[RES_ID]==0) {
-            alert("Document is not available.");
-            window.open('chrome://openerp_plugin/content/push_dialog.xul', '', 'chrome', resizable='yes');
-            document.getElementById('message_label').setAttribute('value', 'No document was found');
+            setPreference('statutdoc','create');
         }
         else {
-    		open_url(res[URL])
-        }
+            setPreference('statutdoc', 'open');
+            setPreference('urldoc', res[URL]);
+        } 
+       setPreference('message_label',setPreference('subject'));// to have the subject to print on the push dialog       
 
     },
     onFault: function (client, ctxt, fault) {
@@ -198,6 +200,7 @@ function open_document() {
     var strobj = get_rpc_string(xmlRpcClient, 'plugin.handler');
     
     var eml_string = getMessage(messageUri);
+    setPreference('email_text', eml_string);
     var email = get_rpc_string(xmlRpcClient, eml_string);
     xmlRpcClient.asyncCall(listDocumentHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod, email],6);
 }

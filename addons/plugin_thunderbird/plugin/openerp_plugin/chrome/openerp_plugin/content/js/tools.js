@@ -31,6 +31,7 @@ function createMenuItem(aLabel, aValue) {
     return item;
 }
 
+    
 function clear_search_box(element) {
 	var cmbSearchList = document.getElementById(element);
 	count = cmbSearchList.itemCount
@@ -38,7 +39,6 @@ function clear_search_box(element) {
 		cmbSearchList.removeItemAt(count - i)	
 	}
 }
-
 
 function open_url(url) {
 	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');

@@ -109,6 +109,7 @@ var listCreateContactHandler = {
 
 //function to create a new contact
 function createContact(){
+    window.close();
     setServerService('xmlrpc/object');
     netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
     var xmlRpcClient = getXmlRpc();
