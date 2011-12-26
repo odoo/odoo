@@ -93,8 +93,7 @@ class plugin_handler(osv.osv_memory):
         msg = mail_message.parse_message(email)
         message_id = msg.get('message-id')
         mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
-        if model=='res.partner':
-            model_obj = self.pool.get('mail.thread')
+        
         if message_id and mail_ids :
             mail_record = mail_message.browse(cr, uid, mail_ids)[0]
             res_id = mail_record.res_id
@@ -106,8 +105,12 @@ class plugin_handler(osv.osv_memory):
                 res_id = model_obj.message_new(cr, uid, msg)
                 notify = "Mail succefully pushed, a new %s has been created " % model
         else:
-            model_obj.message_append_dict(cr, uid, [res_id], msg)
+            if model == 'res.partner':
+                model_obj = self.pool.get('mail.thread')
+            res = self.pool.get(model).browse(cr, uid, [res_id])
+            model_obj.message_append_dict(cr, uid, res, msg)
             notify = "Mail succefully pushed"
+            
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url, notify)
 

@@ -10,7 +10,10 @@
 	<script type="text/javascript" src="chrome://openerp_plugin/content/js/create.js"></script>
 	<groupbox id="contact" >
 		<hbox>
-			<label align="right" value="Partner not found. create a new one ? "/>
+			<textbox class="plain" style="background-color: transparent;" flex="1"
+			        multiline="true" readonly="true"
+			        onoverflow="this.height = this.inputField.scrollHeight;"
+			        value="No existing contact found, you can create a new partner with this contact or link to a existing partner" />
 		</hbox>
 		<hbox>
 			<label align="right" id="partner" value="&selectpartner.value;" width="90" class="text-prompt"/>

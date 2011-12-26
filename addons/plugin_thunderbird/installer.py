@@ -29,18 +29,11 @@ class thunderbird_installer(osv.osv_memory):
     _name = 'thunderbird.installer'
     _inherit = 'res.config.installer'
 
-    def default_get(self, cr, uid, fields, context=None):
-        data = super(thunderbird_installer, self).default_get(cr, uid, fields, context)
-        data['pdf_file'] = 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_thunderbird.html'
-        file = open(addons.get_module_resource('thunderbird','plugin', 'openerp_plugin.xpi'),'rb')
-        data['plugin_file'] = base64.encodestring(file.read())
-        return data
-
     _columns = {
         'name':fields.char('File name', size=34),
         'pdf_name':fields.char('File name', size=64),
         'thunderbird':fields.boolean('Thunderbird Plug-in', help="Allows you to select an object that you would like to add to your email and its attachments."),
-        'plugin_file':fields.binary('Thunderbird Plug-in', readonly=True, help="Thunderbird plug-in file. Save as this file and install this plug-in in thunderbird."),
+        'plugin_file':fields.char('Thunderbird Plug-in', size=256, readonly=True, help="Thunderbird plug-in file. Save as this file and install this plug-in in thunderbird."),
         'pdf_file':fields.char('Installation Manual', size=264, help="The documentation file :- how to install Thunderbird Plug-in.", readonly=True),
         'description':fields.text('Description', readonly=True)
     }
@@ -48,6 +41,8 @@ class thunderbird_installer(osv.osv_memory):
     _defaults = {
         'thunderbird' : True,
         'name' : 'openerp_plugin.xpi',
+        'pdf_file' : 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_thunderbird.html',
+        'plugin_file' : 'https://addons.mozilla.org/en-US/thunderbird/addon/openerp-plugin/',
         'description' : """
 Thunderbird plugin installation:
     1.  Save the Thunderbird plug-­in.

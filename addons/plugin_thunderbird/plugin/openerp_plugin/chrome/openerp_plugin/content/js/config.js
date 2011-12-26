@@ -8,7 +8,7 @@ function load_config_data() {
 
 function config_close() {
    window.close("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
-   window.open("chrome://openerp_plugin/content/config.xul", "", "chrome");
+   open_window('chrome://openerp_plugin/content/config.xul', 580,500);
 }
 
 //set the value of the configuration fields
@@ -33,7 +33,7 @@ function config_ok()
 
 function openConfigChange() {
     window.close("chrome://openerp_plugin/content/config.xul", "", "chrome");
-    window.open("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
+    open_window("chrome://openerp_plugin/content/config_change.xul", 350,200);
 }
 
 //xmlrpc request handler for getting the list of database

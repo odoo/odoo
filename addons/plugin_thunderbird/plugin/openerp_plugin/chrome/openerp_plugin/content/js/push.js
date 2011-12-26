@@ -111,7 +111,6 @@ function searchCheckbox()
 //xmlrpc request handler for creating the record of mail
 var pushHandler = {
     onResult: function(client, context, result) {
-    	log_message("push finished")
         res = extract_data(result)
         alert(res[ADDITIONAL_INFORMATION])
         open_url(res[URL]);
@@ -141,7 +140,6 @@ function push(op) {
 		var res_id = item.value;
 		
 	}	
-	log_message("model :" + model_name + ", res_id : " + res_id)
 	setServerService('xmlrpc/object');
     netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
     var xmlRpcClient = getXmlRpc();

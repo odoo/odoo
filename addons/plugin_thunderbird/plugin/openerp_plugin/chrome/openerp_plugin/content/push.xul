@@ -11,7 +11,7 @@
     <script type="text/javascript" src="chrome://openerp_plugin/content/js/push.js"></script>
     <description></description>
         <vbox>
-        	<separator class="groove-thin" orient="horizontal" width="400"/>
+        	<separator class="groove-thin" orient="horizontal"/>
             	<grid flex="1">
   					<columns>
 						<column />
@@ -20,23 +20,16 @@
 					</columns>
   					<rows>
     					<row>
-	    					<label id="lblex3" align="right" width="135" control="section" value="&object.label;" class="text-prompt" />
-	                        <menulist id="menu_model_list" width="150">
+	    					<label id="lblex3" align="right" control="section" value="&object.label;" class="text-prompt" />
+	                        <menulist id="menu_model_list" >
 	                            <menupopup id="model_list">
 	                                <menuitem id="first_model_list" value="" label=""/>
 	                            </menupopup>
 	                        </menulist>
     					</row>
     					<row>
-	    					<menulist id="operation" hidden="true" width="150" oncommand="changeForm()">
-	                            <menupopup>
-	                            	<menuitem label="Attach to an existing one" value="add"/>	                                
-	                            </menupopup>
-	                        </menulist>
-    					</row>
-    					<row>
     						<label id="lblsearch" control="txtvalueobj" value="&search.label;" class="text-prompt"/>
-	                        <textbox id="txtvalueobj" size="30"/>
+	                        <textbox id="txtvalueobj" />
 	                        <button label="&bsearch.label;" oncommand="searchCheckbox()" image="&imagesearch.value;" accesskey="s" id="search_button"/> 
     					</row>
 					</rows>
@@ -45,7 +38,7 @@
                 	<caption label="&document.label;"  id="label_box"/>
                 </hbox>
                 <vbox >
-                	<listbox height="250" width="100%" id="listSearchBox" style="border:1px solid red" seltype="multiple">
+                	<listbox height="200"  id="listSearchBox" style="border:1px solid red" seltype="multiple">
                     	<listhead>
                         	<listheader label="&listSearchBox.header;"/>
                         </listhead>
@@ -54,10 +47,10 @@
                         </listcols>
                        </listbox>
                 </vbox>
-                <hbox align="right" width="480">
+                <hbox align="right" >
                 	<button label="&attach.label;" accesskey="u" image="&imagearchive.value;" oncommand="push('add');"/>
                 </hbox>
-                <separator class="groove-thin" orient="horizontal" width="480"/>  
+                <separator class="groove-thin" orient="horizontal"/>  
         </vbox>
     
 </window>

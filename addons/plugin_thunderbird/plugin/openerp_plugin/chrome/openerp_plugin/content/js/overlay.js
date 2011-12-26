@@ -23,65 +23,11 @@ function check(fun) {
 
 }
 
-function searchmail()
-{   
-    var prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-    var dirService = Components.classes["@mozilla.org/file/directory_service;1"].
-    	getService(Components.interfaces.nsIProperties).get("Home", Components.interfaces.nsIFile);
-    
-    
-    //gives the selected email uri
-    var messageUri= gDBView.URIForFirstSelectedMessage;
-
-    var messenger = Components.classes['@mozilla.org/messenger;1'].createInstance(Components.interfaces.nsIMessenger);
-
-    //gives the selected email object
-    var message = messenger.messageServiceFromURI(messageUri).messageURIToMsgHdr(messageUri);
-
-    //gives the received email date
-    var stdate = new Date(message.date / 1000);
-
-    //functionality to split the author name and email
-    if(message.author.charAt(0) == '"'){
-        sendername = message.author.split('"')[1].split('"')[0];
-    }
-    else if(message.author.indexOf('<')!=-1){
-        sendername = message.author.split('<')[0];
-    }
-    else{
-        sendername = message.author;
-    }
-    if(message.author.indexOf('<')!=-1){
-        senderemail = message.author.split('<')[1].split('>')[0];
-    }
-    else{
-        senderemail = message.author
-    }
-
-    //gives the receiver email address
-    receiveremail = message.mime2DecodedRecipients;
-
-    //parsing the received date in the particular format
-    receivedDate = stdate.getFullYear()+'/'+(stdate.getMonth()+1)+'/'+stdate.getDate();
-
-    //gives the selected email subject
-    subject = message.subject;
-    log_message("subject: " + subject)
-    var uri = message.folder.getUriForMsg(message);
-    var messagebody = getMessage(uri);
-    getPref().setCharPref('email_text', messagebody);
-
- 
-    //set the initial information for the selected email
-    window.open("chrome://openerp_plugin/content/push.xul", "", "chrome, resizable=yes");
-}
-
-
 var openPartnerHandler = {
     onResult: function(client, context, result) {
         res = extract_data(result)
         if(res[RES_ID]==0) {
-        	open_window("chrome://openerp_plugin/content/create.xul", 550, 230);
+        	open_window("chrome://openerp_plugin/content/create.xul", 550, 250);
             return;
         } 
         open_url(res[URL])
