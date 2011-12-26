@@ -106,22 +106,28 @@
 
 <t t-name="web_dashboard.ApplicationTiles">
     <div>
-        <h1 class="welcome_message">Welcome to OpenERP</h1>
     	<div class="oe_applications_tiles">
-    	<h1>Welcome to OpenERP</h1>
+    	<h1 class="oe_welcome_message">Welcome to OpenERP</h1>
 		</div>
     </div>
 </t>
 
 <div t-name="web_dashboard.ApplicationInstaller">
-    <div class="initial_welcome_message">
+    <div class="oe_initial_welcome_message">
         <ul>
-            <li>Remember to bookmark <a href="javascript:if(document.all) window.external.AddFavorite(location.href,document.title); else if(window.sidebar) window.sidebar.addPanel (document.title,location.href,'');">this page.</a></li>
-            <li>Remember your login: <t t-esc="widget.session.username"/></li>
+            <li>Remember to bookmark 
+                <a class="oe_welcome_url" href="#">
+                This url 
+                </a>
+            </li>
+            <li>Your login: <t t-esc="widget.session.username"/></li>
         </ul>
-        <h3>Please choose the first application to install.</h3>
     </div>
     <div class="oe_installer" />
 </div>
-
+<t t-extend="web_dashboard.ApplicationInstaller">
+    <t t-jquery=".oe_welcome_url">
+        this.attr('href', window.location.host);
+    </t>
+</t>
 </template>
