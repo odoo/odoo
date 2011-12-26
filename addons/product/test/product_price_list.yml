@@ -76,4 +76,35 @@
     result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc1") ,5,ref("base.res_partner_desertic_hispafuentes"))])
     new_price = result[ref("product_product_pc1")].values()
     assert new_price[0] == 350,"PC1 sale price is not 350 with Discount on end of year."
-
+-
+  Now I new pricelist for "Agrolait" customer.
+-
+  !record {model: product.pricelist, id: agrolait_price_list1}:
+    name: Price List For Agrolait
+    type: sale
+    version_id:
+      -  name: Agrolait Price List Version
+         items_id:
+           -  name: Agrolait Price List Version Rule
+              min_quantity: 1
+              base: 2
+              price_surcharge: 100
+-
+  Now I check "PC4" public price is 1200.
+-
+  !python {model: product.product}: |
+    prd_brw = self.browse(cr, uid, ref("product_product_pc4"))
+    assert prd_brw.list_price == 1200,"PC2 sale price is not 1200"
+-
+   I assing "Price List For Agrolait" to Agrolait.
+-
+  !record {model: res.partner, id: base.res_partner_agrolait}:
+    property_product_pricelist: agrolait_price_list1
+-
+  I check sale price of PC4 is 900 for "Agrolait" customer.
+-
+  !python {model: product.pricelist}: |
+    result = self.price_get_multi(cr, uid, [ref("product.agrolait_price_list1")], [(ref("product_product_pc4") ,5,ref("base.res_partner_agrolait"))])
+    new_price = result[ref("product_product_pc4")].values()
+    assert new_price[0] == 900,"PC4 sale price is not 900 with Discount."  
+    
