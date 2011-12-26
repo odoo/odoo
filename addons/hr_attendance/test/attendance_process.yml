@@ -1,36 +1,32 @@
 -
-  In order to test attendance process in OpenERP, at the time of login, I use "Sign In/Sign Out" wizard for attendances.
+    In order to test attendance process in OpenERP, I perform SignIn/SignOut for an employee.
 -
   !record {model: hr.sign.in.out, id: employee_sign_in}:
     emp_id: hr.employee3
     state: absent
 -
-  I click on "Sign In" button of this wizard.
+  Employee Signs In.
 -
   !python {model: hr.sign.in.out}: |
     import time
     from datetime import datetime, date, timedelta
-    employee = self.pool.get('hr.employee').read(cr, uid, [ref('hr.employee3')])[0]
+    employee = self.pool.get('hr.employee').read(cr, uid, ref('hr.employee3'))
     self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': employee['id']})
     self.si_check(cr, uid, [ref("employee_sign_in")])
-    attendance_obj = self.pool.get('hr.attendance')
-    attendance_id = attendance_obj.search(cr, uid, [('employee_id', '=', "Antoine Philippe")])
-    date = (datetime.now()+timedelta(seconds=-20)).strftime('%Y-%m-%d %H:%M:%S')
-    attendance_obj.write(cr, uid, attendance_id ,{'name': date})
 -
   I check that Employee is "Present".
 -
   !assert {model: hr.employee, id: hr.employee3, severity: error, string: Employee should be in present state}:
     - state == 'present'
 -
-  I click on "Sign out" button of this wizard.
+  After few seconds, employee sign's out.
 -
   !python {model: hr.sign.in.out}: |
-    employee = self.pool.get('hr.employee').read(cr, uid, [ref('hr.employee3')])[0]
-    self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': employee['id']})
+    import time
+    time.sleep(2)
     self.so_check(cr, uid, [ref("employee_sign_in")])
 -
-  I check that Employee is "absent".
+  I check that Employee is "Absent".
 -
-  !assert {model: hr.employee, id: hr.employee3, severity: error, string: Employee should be in present state}:
+  !assert {model: hr.employee, id: hr.employee3, severity: error, string: Employee should be in absent state}:
     - state == 'absent'
