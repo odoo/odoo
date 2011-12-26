@@ -1079,6 +1079,13 @@ class stock_picking(osv.osv):
                 if not uos_id and inv_type in ('out_invoice', 'out_refund'):
                     uos_id = move_line.product_uom.id
                 account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
+                
+                if move_line.price_unit != 0:
+                    if price_unit == move_line.price_unit:
+                        price_unit = price_unit
+                    else:
+                        price_unit = move_line.price_unit
+                
                 invoice_line_id = invoice_line_obj.create(cr, uid, {
                     'name': name,
                     'origin': origin,
@@ -1253,7 +1260,6 @@ class stock_picking(osv.osv):
                             'picking_id' : new_picking,
                             'state': 'assigned',
                             'move_dest_id': False,
-                            'price_unit': move.price_unit,
                     }
                     prodlot_id = prodlot_ids[move.id]
                     if prodlot_id:
