@@ -107,4 +107,11 @@
     result = self.price_get_multi(cr, uid, [ref("product.agrolait_price_list1")], [(ref("product_product_pc4") ,5,ref("base.res_partner_agrolait"))])
     new_price = result[ref("product_product_pc4")].values()
     assert new_price[0] == 900,"PC4 sale price is not 900 with Discount."  
+-
+  I add supplier pricelist for product "PC1" for 10 Qty.
+-
+  !record {model: product.supplierinfo, id: supplierinfo5}:
+    pricelist_ids:
+      -  min_quantity: 10
+         price: 200
     
