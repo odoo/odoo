@@ -1,7 +1,4 @@
 openerp.edi = function(openerp) {
-openerp.web.qweb.add_template("/edi/static/src/xml/edi.xml");
-openerp.web.qweb.add_template("/edi/static/src/xml/edi_account.xml");
-openerp.web.qweb.add_template("/edi/static/src/xml/edi_sale_purchase.xml");
 openerp.edi = {}
 
 openerp.edi.EdiView = openerp.web.Widget.extend({

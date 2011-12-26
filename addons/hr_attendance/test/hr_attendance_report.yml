@@ -3,7 +3,7 @@
 -
   !python {model: hr.employee}: |
     from tools import test_reports
-    ctx = {'model': 'hr.employee','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')]}
+    ctx = {'model': 'hr.employee','active_ids': [ref('hr.employee_fp'),ref('hr.employee_qdp'),ref('hr.employee_al')]}
     data_dict = {}
     test_reports.try_report_action(cr, uid, 'action_hr_attendance_month',wiz_data=data_dict, context=ctx, our_module='hr_attendance')
 -
@@ -12,6 +12,6 @@
   !python {model: hr.employee}: |
     import time
     from tools import test_reports
-    ctx = {'model': 'hr.employee','active_ids': [ref('hr.employee1')]}
+    ctx = {'model': 'hr.employee','active_ids': [ref('hr.employee_fp')]}
     data_dict = {'init_date': time.strftime('%Y-01-01')}
     test_reports.try_report_action(cr, uid, 'action_hr_attendance_error',wiz_data=data_dict, context=ctx, our_module='hr_attendance')

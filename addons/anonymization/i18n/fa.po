@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-12-18 17:04+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-19 04:49+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:33+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard
@@ -49,11 +49,6 @@ msgid "ir.model.fields.anonymization"
 msgstr ""
 
 #. module: anonymization
-#: model:ir.module.module,shortdesc:anonymization.module_meta_information
-msgid "Database anonymization module"
-msgstr ""
-
-#. module: anonymization
 #: field:ir.model.fields.anonymization.history,direction:0
 msgid "Direction"
 msgstr ""
@@ -71,10 +66,8 @@ msgid "Database anonymization"
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:55
-#: sql_constraint:ir.model.fields.anonymization:0
-#, python-format
-msgid "You cannot have two records having the same model and the same field"
+#: selection:ir.model.fields.anonymization.history,direction:0
+msgid "clear -> anonymized"
 msgstr ""
 
 #. module: anonymization
@@ -136,11 +129,6 @@ msgid "Clear"
 msgstr ""
 
 #. module: anonymization
-#: selection:ir.model.fields.anonymization.history,direction:0
-msgid "clear -> anonymized"
-msgstr ""
-
-#. module: anonymization
 #: view:ir.model.fields.anonymize.wizard:0
 #: field:ir.model.fields.anonymize.wizard,summary:0
 msgid "Summary"
@@ -149,14 +137,6 @@ msgstr ""
 #. module: anonymization
 #: view:ir.model.fields.anonymization:0
 msgid "Anonymized Field"
-msgstr ""
-
-#. module: anonymization
-#: model:ir.module.module,description:anonymization.module_meta_information
-msgid ""
-"\n"
-"This module allows you to anonymize a database.\n"
-"    "
 msgstr ""
 
 #. module: anonymization
@@ -223,4 +203,11 @@ msgstr ""
 #: field:ir.model.fields.anonymization.history,msg:0
 #: field:ir.model.fields.anonymize.wizard,msg:0
 msgid "Message"
+msgstr ""
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:55
+#: sql_constraint:ir.model.fields.anonymization:0
+#, python-format
+msgid "You cannot have two fields with the same name on the same object!"
 msgstr ""

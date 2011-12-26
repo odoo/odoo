@@ -492,8 +492,34 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <field name="coach_id" position="after">
-                    <field name="remaining_leaves" string="Remaining Legal Leaves" readonly="1"/>
+                    <field name="remaining_leaves"/>
+                    <field name="current_leave_id"/>
+                    <field name="current_leave_state" attrs="{'invisible':[('current_leave_id','=',False)]}"/>
                 </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_kanban_view_employees_kanban">
+            <field name="name">HR - Employees Kanban with leave status</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+            <field name="arch" type="xml">
+                <xpath expr="//templates" position="before">
+                    <field name="current_leave_state"/>
+                    <field name="last_login"/>
+                </xpath>
+                <xpath expr="//div[@class='oe_employee_details']/ul/li" position="before">
+                    <li t-if="record.current_leave_id.raw_value || record.last_login.raw_value">
+                        <span t-if="record.current_leave_id.raw_value" t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_color_3':'oe_kanban_color_2'">
+                            <span class="oe_kanban_button" style="font-size: 100%%">
+                                <field name="current_leave_id"/>
+                            </span>
+                        </span>
+                        <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
+                            <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
+                        </span>
+                    </li>
+                </xpath>
             </field>
         </record>
 
