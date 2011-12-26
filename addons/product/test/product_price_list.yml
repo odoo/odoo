@@ -1,0 +1,55 @@
+-
+  In order to test product pricelist,first I check PC1 sale price is 450.
+-
+  !python {model: product.product}: |
+    prd_brw = self.browse(cr, uid, ref("product_product_pc1"))
+    assert prd_brw.list_price == 450,"PC1 sale price is not 450"
+-
+  Make new rule in "Default Public Pricelist Version" if product qty is more than 4 Discount 50 Rs per qty.
+-
+  !record {model: product.pricelist.item, id: pricelist_rules_for_more_qty1}:
+    name: Default Public Pricelist for More Qty
+    min_quantity: 5
+    sequence: 1
+    base: 2
+    price_version_id: product.ver0
+    price_surcharge: 100
+-
+  I check sale price of PC1 is 400 by discount.
+-
+  !python {model: product.pricelist}: |
+    result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc1") ,5,ref("base.res_partner_desertic_hispafuentes"))])
+    new_price = result[ref("product_product_pc1")].values()
+    assert new_price[0] == 400,"PC1 sale price is not 400 with Discount."
+-
+  Now I deactivate the old pricelist version.
+-
+  !python {model: product.pricelist.version}: |
+    price_obj = self.pool.get("product.pricelist")
+    self.write(cr, uid, ref("ver0"), {"active":False})
+-
+  I create new "End of Years Price List Version" for end of year.
+-
+  !record {model: product.pricelist.version, id: product_price_version_end_year}:
+    name: End of Years Price List Version
+    pricelist_id: list0
+    date_start: !eval "'%s-12-01' %(datetime.now().year)"
+    date_end: !eval "'%s-12-31' %(datetime.now().year)"
+-
+  Make new rule in "End of Years Price List Version" 100 Rs off on product.
+-
+  !record {model: product.pricelist.item, id: product_price_version_end_year_rule}:
+    name: End of Years Price List Version Rule
+    min_quantity: 1
+    sequence: 1
+    base: 2
+    price_version_id: product.product_price_version_end_year
+    price_surcharge: 50
+-
+  I check sale price of PC1 is 350 on end of years by discount.
+-
+  !python {model: product.pricelist}: |
+    result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc1") ,5,ref("base.res_partner_desertic_hispafuentes"))])
+    new_price = result[ref("product_product_pc1")].values()
+    assert new_price[0] == 350,"PC1 sale price is not 350 with Discount on end of year."
+
