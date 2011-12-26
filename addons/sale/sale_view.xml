@@ -112,9 +112,9 @@
                     <notebook colspan="5">
                         <page string="Sales Order">
                             <field name="partner_id" options='{"quick_create": false}' on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_order_id" on_change="onchange_partner_order_id(partner_order_id, partner_invoice_id, partner_shipping_id)"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_order_id" on_change="onchange_partner_order_id(partner_order_id, partner_invoice_id, partner_shipping_id)" options='{"quick_create": false}'/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended" options='{"quick_create": false}'/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended" options='{"quick_create": false}'/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="project_id" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                             <newline/>
