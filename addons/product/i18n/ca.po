@@ -6,648 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2010-10-30 15:08+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:18+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
-
-#. module: product
-#: model:product.template,name:product.product_product_ram512_product_template
-msgid "DDR 512MB PC400"
-msgstr "DDR 512MB PC400"
-
-#. module: product
-#: field:product.packaging,rows:0
-msgid "Number of Layers"
-msgstr "Nombre de capes"
-
-#. module: product
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-"Error!  No podeu assignar la tarifa principal com una altra tarifa en un "
-"element de la tarifa."
-
-#. module: product
-#: help:product.pricelist.item,product_tmpl_id:0
-msgid ""
-"Set a template if this rule only apply to a template of product. Keep empty "
-"for all products"
-msgstr ""
-"Indiqueu una plantilla si aquesta regla només s'aplica a una plantilla de "
-"producte. Deixeu-lo buit per a tots els productes"
-
-#. module: product
-#: model:product.category,name:product.cat1
-msgid "Sellable"
-msgstr "Vendible"
-
-#. module: product
-#: model:product.template,name:product.product_product_mb2_product_template
-msgid "Mainboard ASUStek A7V8X-X"
-msgstr "Placa mare ASUStek A7V8X-X"
-
-#. module: product
-#: help:product.template,seller_qty:0
-msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr "Aquesta és la quantitat mínima a comprar al proveïdor principal."
-
-#. module: product
-#: model:product.uom,name:product.uom_day
-msgid "Day"
-msgstr "Dia"
-
-#. module: product
-#: view:product.product:0
-msgid "UoM"
-msgstr "UdM"
-
-#. module: product
-#: model:product.template,name:product.product_product_pc2_product_template
-msgid "Basic+ PC (assembly on order)"
-msgstr "PC Bàsic+ (muntat sota comanda)"
-
-#. module: product
-#: field:product.product,incoming_qty:0
-msgid "Incoming"
-msgstr "Entrant"
-
-#. module: product
-#: field:product.template,mes_type:0
-msgid "Measure Type"
-msgstr "Tipo de medida"
-
-#. module: product
-#: help:res.partner,property_product_pricelist:0
-msgid ""
-"This pricelist will be used, instead of the default one, for sales to the "
-"current partner"
-msgstr ""
-"Aquesta tarifa s'utilitzarà, en lloc de la per defecte, per a les vendes de "
-"l'empresa actual."
-
-#. module: product
-#: constraint:product.supplierinfo:0
-msgid ""
-"Error: The default UOM and the Supplier Product UOM must be in the same "
-"category."
-msgstr ""
-"Error: La UdM per defecte i la UdM del proveïdor del producte han d'estar en "
-"la mateixa categoria."
-
-#. module: product
-#: field:product.template,seller_qty:0
-msgid "Supplier Quantity"
-msgstr "Quantitat proveïdor"
-
-#. module: product
-#: selection:product.template,mes_type:0
-msgid "Fixed"
-msgstr "Fix"
-
-#. module: product
-#: code:addons/product/pricelist.py:186
-#: code:addons/product/pricelist.py:342
-#: code:addons/product/pricelist.py:360
-#, python-format
-msgid "Warning !"
-msgstr "Atenció!"
-
-#. module: product
-#: model:ir.actions.report.xml,name:product.report_product_pricelist
-#: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
-#: field:product.product,pricelist_id:0
-#: view:product.supplierinfo:0
-msgid "Pricelist"
-msgstr "Tarifa"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Base Prices"
-msgstr "Preus base"
-
-#. module: product
-#: field:product.pricelist.item,name:0
-msgid "Rule Name"
-msgstr "Nom de regla"
-
-#. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
-msgid "Reference"
-msgstr "Referència"
-
-#. module: product
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Error! No podeu crear categories recursives."
-
-#. module: product
-#: help:pricelist.partnerinfo,min_quantity:0
-msgid ""
-"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
-"any or in the default UoM of the product otherrwise."
-msgstr ""
-"La quantitat mínima per disparar aquesta regla, expressada en la UdM del "
-"proveïdor si existeix o en la UdM per defecte del producte en cas contrari."
-
-#. module: product
-#: model:product.template,name:product.product_product_24_product_template
-msgid "Keyboard"
-msgstr "Teclat"
-
-#. module: product
-#: model:ir.model,name:product.model_res_partner
-msgid "Partner"
-msgstr "Empresa"
-
-#. module: product
-#: help:product.template,supply_method:0
-msgid ""
-"Produce will generate production order or tasks, according to the product "
-"type. Purchase will trigger purchase orders when requested."
-msgstr ""
-"Produir generarà ordre de producció o tasques, segons el tipus de producte. "
-"Compra generarà comandes de compra quan sigui necessari."
-
-#. module: product
-#: selection:product.template,cost_method:0
-msgid "Average Price"
-msgstr "Preu mig"
-
-#. module: product
-#: help:product.pricelist.item,name:0
-msgid "Explicit rule name for this pricelist line."
-msgstr "Nom de regla explícita per aquesta línia de tarifa."
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr "Categories d'unitats de mesura"
-
-#. module: product
-#: model:product.template,name:product.product_product_cpu1_product_template
-msgid "Processor AMD Athlon XP 1800+"
-msgstr "Processador AMD Athlon XP 1800+"
-
-#. module: product
-#: model:product.template,name:product.product_product_20_product_template
-msgid "HDD on demand"
-msgstr "HDD sota comanda"
-
-#. module: product
-#: field:product.price_list,price_list:0
-msgid "PriceList"
-msgstr "Tarifa"
-
-#. module: product
-#: view:product.template:0
-msgid "UOM"
-msgstr "UdM"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_unit
-msgid "PCE"
-msgstr "Unitat"
-
-#. module: product
-#: view:product.template:0
-msgid "Miscelleanous"
-msgstr "Miscel·lània"
-
-#. module: product
-#: model:product.template,name:product.product_product_worker0_product_template
-msgid "Worker"
-msgstr "Treballador"
-
-#. module: product
-#: help:product.template,sale_ok:0
-msgid ""
-"Determines if the product can be visible in the list of product within a "
-"selection from a sale order line."
-msgstr ""
-"Indica si el producte serà visible en la llista de productes que apareix en "
-"seleccionar un producte en una línia de comanda de venda."
-
-#. module: product
-#: model:product.pricelist.version,name:product.ver0
-msgid "Default Public Pricelist Version"
-msgstr "Versió per defecte de tarifa venda al públic"
-
-#. module: product
-#: selection:product.template,cost_method:0
-msgid "Standard Price"
-msgstr "Preu estàndard"
-
-#. module: product
-#: model:product.pricelist.type,name:product.pricelist_type_sale
-#: field:res.partner,property_product_pricelist:0
-msgid "Sale Pricelist"
-msgstr "Tarifa de venda"
-
-#. module: product
-#: view:product.template:0
-#: field:product.template,type:0
-msgid "Product Type"
-msgstr "Tipus de producte"
-
-#. module: product
-#: view:product.uom:0
-msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr "  per ex.: 1 * (aquesta unitat) = ràtio * (unitat referencia)"
-
-#. module: product
-#: code:addons/product/product.py:380
-#, python-format
-msgid "Products: "
-msgstr "Productes: "
-
-#. module: product
-#: field:product.category,parent_id:0
-msgid "Parent Category"
-msgstr "Categoria pare"
-
-#. module: product
-#: help:product.product,outgoing_qty:0
-msgid ""
-"Quantities of products that are planned to leave in selected locations or "
-"all internal if none have been selected."
-msgstr ""
-"Quantitats de productes que estan previstos deixar en les ubicacions "
-"seleccionades o totes les internes si no s'ha seleccionat cap."
-
-#. module: product
-#: help:product.template,procure_method:0
-msgid ""
-"'Make to Stock': When needed, take from the stock or wait until re-"
-"supplying. 'Make to Order': When needed, purchase or produce for the "
-"procurement request."
-msgstr ""
-"'Obtenir per estoc': Quan sigui necessari, agafar de l'estoc o esperar fins "
-"que torni haver-hi estoc suficient. 'Obtenir sota comanda': Quan sigui "
-"necessari, comprar o produir per a la petició de proveïment."
-
-#. module: product
-#: model:process.node,note:product.process_node_supplier0
-msgid "Supplier name, price, product code, ..."
-msgstr "Nom proveïdor, preu, codi producte, ..."
-
-#. module: product
-#: model:product.template,name:product.product_product_hdd3_product_template
-msgid "HDD Seagate 7200.8 160GB"
-msgstr "HDD Seagate 7200.8 160GB"
-
-#. module: product
-#: field:product.product,ean13:0
-msgid "EAN13"
-msgstr "EAN13"
-
-#. module: product
-#: field:product.template,seller_id:0
-msgid "Main Supplier"
-msgstr "Proveïdor principal"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_ul_form_action
-#: model:ir.model,name:product.model_product_packaging
-#: model:ir.ui.menu,name:product.menu_product_ul_form_action
-#: view:product.packaging:0
-#: view:product.product:0
-#: view:product.ul:0
-msgid "Packaging"
-msgstr "Empaquetament"
-
-#. module: product
-#: view:product.product:0
-#: field:product.template,categ_id:0
-msgid "Category"
-msgstr "Categoria"
-
-#. module: product
-#: help:product.pricelist.item,min_quantity:0
-msgid ""
-"The rule only applies if the partner buys/sells more than this quantity."
-msgstr ""
-"La regla només s'aplica si l'empresa compra/ven més d'aquesta quantitat."
-
-#. module: product
-#: model:product.template,name:product.product_product_woodmm0_product_template
-msgid "Wood 2mm"
-msgstr "Fusta 2mm"
-
-#. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Quantitat-1"
-
-#. module: product
-#: help:product.packaging,ul_qty:0
-msgid "The number of packages by layer"
-msgstr "Número de paquets per capa."
-
-#. module: product
-#: field:product.packaging,qty:0
-msgid "Quantity by Package"
-msgstr "Quantitat per paquet"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,state:0
-msgid "Status"
-msgstr "Estat"
-
-#. module: product
-#: help:product.template,categ_id:0
-msgid "Select category for the current product"
-msgstr "Seleccioneu la categoria per al producte actual."
-
-#. module: product
-#: field:product.product,outgoing_qty:0
-msgid "Outgoing"
-msgstr "Sortint"
-
-#. module: product
-#: selection:product.uom,uom_type:0
-msgid "Reference UoM for this category"
-msgstr "Referència UdM per aquesta categoria"
-
-#. module: product
-#: model:product.price.type,name:product.list_price
-#: field:product.product,lst_price:0
-msgid "Public Price"
-msgstr "Preu al públic"
-
-#. module: product
-#: field:product.price_list,qty5:0
-msgid "Quantity-5"
-msgstr "Quantitat-5"
-
-#. module: product
-#: model:product.category,name:product.product_category_10
-msgid "IT components"
-msgstr "Components TI"
-
-#. module: product
-#: field:product.template,product_manager:0
-msgid "Product Manager"
-msgstr "Responsable de producte"
-
-#. module: product
-#: field:product.supplierinfo,product_name:0
-msgid "Supplier Product Name"
-msgstr "Nom de producte del proveïdor"
-
-#. module: product
-#: model:product.template,name:product.product_product_pc3_product_template
-msgid "Medium PC"
-msgstr "PC Mitjà"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action_puchased
-msgid ""
-"Products can be purchased and/or sold. They can be raw materials, stockable "
-"products, consumables or services. The Product form contains detailed "
-"information about your products related to procurement logistics, sales "
-"price, product category, suppliers and so on."
-msgstr ""
-"Els productes poden ser comprats i / o venuts. Poden ser matèries primeres, "
-"productes inventariable, material fungible o serveis. El formulari del "
-"producte conté informació detallada sobre els seus productes relacionats amb "
-"la logística de contractació, preu de venda, categoria dels productes, "
-"proveïdors, etc."
-
-#. module: product
-#: view:product.pricelist:0
-msgid "Products Price Search"
-msgstr "Cerca preu dels productes"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,description_sale:0
-msgid "Sale Description"
-msgstr "Descripció de venda"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Storage Localisation"
-msgstr "Ubicació en el magatzem"
-
-#. module: product
-#: help:product.packaging,length:0
-msgid "The length of the package"
-msgstr "La longitud del paquet"
-
-#. module: product
-#: help:product.template,weight_net:0
-msgid "The net weight in Kg."
-msgstr "El pes net en Kg."
-
-#. module: product
-#: help:product.template,state:0
-msgid "Tells the user if he can use the product or not."
-msgstr "Informa a l'usuari si pot usar el producte o no."
-
-#. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-#: field:product.supplierinfo,qty:0
-msgid "Quantity"
-msgstr "Quantitat"
-
-#. module: product
-#: field:product.packaging,height:0
-msgid "Height"
-msgstr "Altura"
-
-#. module: product
-#: help:product.pricelist.version,date_end:0
-msgid "Ending date for this pricelist version to be valid."
-msgstr "Data final de validesa d'aquesta versió de tarifa."
-
-#. module: product
-#: model:product.category,name:product.cat0
-msgid "All products"
-msgstr "Tots els productes"
-
-#. module: product
-#: model:ir.model,name:product.model_pricelist_partnerinfo
-msgid "pricelist.partnerinfo"
-msgstr "pricelist.partnerinfo"
-
-#. module: product
-#: field:product.price_list,qty2:0
-msgid "Quantity-2"
-msgstr "Quantitat-2"
-
-#. module: product
-#: field:product.price_list,qty3:0
-msgid "Quantity-3"
-msgstr "Quantitat-3"
-
-#. module: product
-#: view:product.product:0
-msgid "Codes"
-msgstr "Codis"
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid ""
-"Choose here the Unit of Measure in which the prices and quantities are "
-"expressed below."
-msgstr ""
-"Seleccioneu aquí la unitat de mesura en què s'expressaran els preus i les "
-"quantitats llistades."
-
-#. module: product
-#: field:product.price_list,qty4:0
-msgid "Quantity-4"
-msgstr "Quantitat-4"
-
-#. module: product
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Vendes & Compres"
-
-#. module: product
-#: model:product.uom.categ,name:product.uom_categ_wtime
-msgid "Working Time"
-msgstr "Horari de treball"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action2
-msgid ""
-"A price list contains rules to be evaluated in order to compute the purchase "
-"or sales price for all the partners assigned to a price list. Price lists "
-"have several versions (2010, 2011, Promotion of February 2010, etc.) and "
-"each version has several rules. Example: the customer price of a product "
-"category will be based on the supplier price multiplied by 1.80."
-msgstr ""
-"Una llista de preus conté normes que han d'avaluar-se amb la finalitat de "
-"calcular preu de compra o de venda per tots els tercers assignats amb una "
-"llista de preus. Les llistes de preus tenen diverses versions (2010, 2011, "
-"promoció de febrer de 2010, etc) i cada versió té diverses regles. Exemple: "
-"preu dels clients d'una categoria de producte es basarà en preu del "
-"proveïdor multiplicat per 1,80."
-
-#. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the product "
-"without removing it."
-msgstr ""
-"Si el camp actiu es desmarca, permet ocultar el producte sense eliminar-ho."
-
-#. module: product
-#: model:product.template,name:product.product_product_metalcleats0_product_template
-msgid "Metal Cleats"
-msgstr "Tacs de metall"
-
-#. module: product
-#: code:addons/product/pricelist.py:343
-#, python-format
-msgid ""
-"No active version for the selected pricelist !\n"
-"Please create or activate one."
-msgstr ""
-"No hi ha una versió activa de la tarifa seleccionada!\n"
-"Creeu o activeu una."
-
-#. module: product
-#: model:ir.model,name:product.model_product_uom_categ
-msgid "Product uom categ"
-msgstr "Categ. UdM de productes"
-
-#. module: product
-#: model:product.ul,name:product.product_ul_box
-msgid "Box 20x20x40"
-msgstr "Caixa 20x20x40"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Price Computation"
-msgstr "Càlcul del preu"
-
-#. module: product
-#: field:product.template,purchase_ok:0
-msgid "Can be Purchased"
-msgstr "Pot ser comprat"
-
-#. module: product
-#: model:product.template,name:product.product_product_cpu2_product_template
-msgid "High speed processor config"
-msgstr "Processador alta velocitat config."
-
-#. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
-msgstr ""
-"1 o diversos proveïdor(s) poden ser relacionats amb un producte. Tota la "
-"informació es troba en el formulari del producte."
-
-#. module: product
-#: help:product.uom,category_id:0
-msgid ""
-"Quantity conversions may happen automatically between Units of Measure in "
-"the same category, according to their respective ratios."
-msgstr ""
-"Conversions de quantitat poden realitzar-se de forma automàtica entre "
-"unitats de mesura en la mateixa categoria, d'acord amb els seus coeficients "
-"de conversió respectius."
-
-#. module: product
-#: help:product.packaging,width:0
-msgid "The width of the package"
-msgstr "L'amplada del paquet"
-
-#. module: product
-#: field:product.product,virtual_available:0
-msgid "Virtual Stock"
-msgstr "Estoc virtual"
-
-#. module: product
-#: selection:product.category,type:0
-msgid "View"
-msgstr "Vista"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_template_action_tree
-msgid "Product Templates"
-msgstr "Plantilles de producte"
-
-#. module: product
-#: model:product.template,name:product.product_product_restaurantexpenses0_product_template
-msgid "Restaurant Expenses"
-msgstr "Despeses restaurant"
-
-#. module: product
-#: constraint:product.packaging:0
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Error: Codi EAN erroni"
-
-#. module: product
-#: field:product.pricelist.item,min_quantity:0
-msgid "Min. Quantity"
-msgstr "Quantitat Mín."
-
-#. module: product
-#: model:ir.model,name:product.model_product_price_type
-msgid "Price Type"
-msgstr "Tipus de preu"
+"X-Launchpad-Export-Date: 2011-12-23 06:48+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -660,14 +27,68 @@ msgid "Base Price"
 msgstr "Preu base"
 
 #. module: product
-#: model:product.template,name:product.product_product_fan2_product_template
-msgid "Silent fan"
-msgstr "Ventilador silenciós"
+#: field:product.product,partner_ref:0
+msgid "Customer ref"
+msgstr "Ref. client"
+
+#. module: product
+#: field:product.uom,factor:0
+#: field:product.uom,factor_inv:0
+msgid "Ratio"
+msgstr "Ràtio"
+
+#. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+"La quantitat mínima a comprar a aquest proveïdor, expressada en la UdM del "
+"proveïdor si existeix o en la UdM per defecte del producte en cas contrari."
+
+#. module: product
+#: selection:product.template,type:0
+msgid "Service"
+msgstr "Servei"
+
+#. module: product
+#: help:product.template,purchase_ok:0
+msgid ""
+"Determine if the product is visible in the list of products within a "
+"selection from a purchase order line."
+msgstr ""
+"Indica si el producte és visible en la llista de productes dins d'una "
+"selecció des d'una línia de comanda de compra."
 
 #. module: product
 #: help:product.supplierinfo,name:0
 msgid "Supplier of this product"
 msgstr "Proveïdor d'aquest producte"
+
+#. module: product
+#: model:process.node,note:product.process_node_supplier0
+msgid "Supplier name, price, product code, ..."
+msgstr "Nom proveïdor, preu, codi producte, ..."
+
+#. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
+"La quantitat mínima per disparar aquesta regla, expressada en la UdM del "
+"proveïdor si existeix o en la UdM per defecte del producte en cas contrari."
+
+#. module: product
+#: field:product.packaging,rows:0
+msgid "Number of Layers"
+msgstr "Nombre de capes"
+
+#. module: product
+#: field:product.template,weight_net:0
+msgid "Net weight"
+msgstr "Pes net"
 
 #. module: product
 #: help:product.pricelist.version,active:0
@@ -681,9 +102,48 @@ msgstr ""
 "la tarifa."
 
 #. module: product
-#: model:product.template,name:product.product_product_kitshelfofcm0_product_template
-msgid "KIT Shelf of 100cm"
-msgstr "KIT prestatge de 100cm"
+#: field:product.price.type,field:0
+msgid "Product Field"
+msgstr "Camp de producte"
+
+#. module: product
+#: help:product.pricelist.item,product_tmpl_id:0
+msgid ""
+"Set a template if this rule only apply to a template of product. Keep empty "
+"for all products"
+msgstr ""
+"Indiqueu una plantilla si aquesta regla només s'aplica a una plantilla de "
+"producte. Deixeu-lo buit per a tots els productes"
+
+#. module: product
+#: help:product.product,virtual_available:0
+msgid ""
+"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location typed as "
+"'internal'."
+msgstr ""
+
+#. module: product
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
+msgstr "UdM proveïdor"
+
+#. module: product
+#: help:product.pricelist.item,price_round:0
+msgid ""
+"Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+msgstr ""
+"Calcula el preu de manera que sigui un múltiple d'aquest valor.\n"
+"L'arrodoniment s'aplica després del descompte i abans de l'increment.\n"
+"Per tenir els preus acabats en 9,99, arrodoniment 10, increment -0,01."
 
 #. module: product
 #: field:product.supplierinfo,name:0
@@ -691,529 +151,9 @@ msgid "Supplier"
 msgstr "Proveïdor"
 
 #. module: product
-#: model:product.template,name:product.product_product_sidepanel0_product_template
-msgid "Side Panel"
-msgstr "Panell lateral"
-
-#. module: product
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Kit Keyboard + Mouse"
-msgstr "Kit Teclat + Ratlí"
-
-#. module: product
-#: field:product.price.type,name:0
-msgid "Price Name"
-msgstr "Nom preu"
-
-#. module: product
-#: model:product.template,name:product.product_product_cpu3_product_template
-msgid "Processor AMD Athlon XP 2200+"
-msgstr "Processador AMD Athlon XP 2200+"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.action_product_price_list
-#: model:ir.model,name:product.model_product_price_list
-#: view:product.price_list:0
-#: report:product.pricelist:0
-#: field:product.pricelist.version,pricelist_id:0
-msgid "Price List"
-msgstr "Llista de preus"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Suppliers"
-msgstr "Proveïdors"
-
-#. module: product
-#: view:product.product:0
-msgid "To Purchase"
-msgstr "A compra"
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the supplier "
-"Product UoM if not empty, in the default unit of measure of the product "
-"otherwise."
+#: model:product.template,name:product.product_consultant_product_template
+msgid "Service on Timesheet"
 msgstr ""
-"La quantitat mínima a comprar a aquest proveïdor, expressada en la UdM del "
-"proveïdor si existeix o en la UdM per defecte del producte en cas contrari."
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "New Price ="
-msgstr "Nou Preu ="
-
-#. module: product
-#: help:pricelist.partnerinfo,price:0
-msgid ""
-"This price will be considered as a price for the supplier UoM if any or the "
-"default Unit of Measure of the product otherwise"
-msgstr ""
-"Aquest preu es considerarà com el preu per la UdM del proveïdor si existeix "
-"o en la UdM per defecte del producte en cas contrari."
-
-#. module: product
-#: model:product.category,name:product.product_category_accessories
-msgid "Accessories"
-msgstr "Accessoris"
-
-#. module: product
-#: field:product.template,sale_delay:0
-msgid "Customer Lead Time"
-msgstr "Termini de lliurament del client"
-
-#. module: product
-#: model:process.transition,name:product.process_transition_supplierofproduct0
-msgid "Supplier of the product"
-msgstr "Proveïdor del producte"
-
-#. module: product
-#: help:product.template,uos_id:0
-msgid ""
-"Used by companies that manage two units of measure: invoicing and inventory "
-"management. For example, in food industries, you will manage a stock of ham "
-"but invoice in Kg. Keep empty to use the default UOM."
-msgstr ""
-"Utilitzat per les empreses que gestionen dues unitats de mesura: facturació "
-"i gestió d'inventari. Per exemple, en indústries alimentàries, pot gestionar "
-"un estoc d'unitats de pernil, però facturar en Kg. Deixeu-ho buit per "
-"utilitzar la UdM per defecte."
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Min. Margin"
-msgstr "Marge mín."
-
-#. module: product
-#: field:product.category,child_id:0
-msgid "Child Categories"
-msgstr "Categories filles"
-
-#. module: product
-#: field:product.pricelist.version,date_end:0
-msgid "End Date"
-msgstr "Data final"
-
-#. module: product
-#: view:product.price_list:0
-msgid "Print"
-msgstr "Imprimeix"
-
-#. module: product
-#: view:product.product:0
-#: field:product.ul,type:0
-msgid "Type"
-msgstr "Tipus"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_pricelist_action2
-#: model:ir.ui.menu,name:product.menu_product_pricelist_action2
-#: model:ir.ui.menu,name:product.menu_product_pricelist_main
-msgid "Pricelists"
-msgstr "Tarifes"
-
-#. module: product
-#: field:product.product,partner_ref:0
-msgid "Customer ref"
-msgstr "Ref. client"
-
-#. module: product
-#: view:product.product:0
-msgid "Miscellaneous"
-msgstr "Varis"
-
-#. module: product
-#: field:product.pricelist.type,key:0
-msgid "Key"
-msgstr "Clau"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Rules Test Match"
-msgstr "Regles test de concordança"
-
-#. module: product
-#: help:product.pricelist.item,product_id:0
-msgid ""
-"Set a product if this rule only apply to one product. Keep empty for all "
-"products"
-msgstr ""
-"Indiqueu un producte si aquesta regla només s'aplica a un producte. Deixeu-"
-"lo buit per a tots els productes"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Abastament & Ubicacions"
-
-#. module: product
-#: model:product.template,name:product.product_product_kitchendesignproject0_product_template
-msgid "Kitchen Design Project"
-msgstr "Projecte disseny de cuina"
-
-#. module: product
-#: model:product.uom,name:product.uom_hour
-msgid "Hour"
-msgstr "Hora"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "In Development"
-msgstr "En desenvolupament"
-
-#. module: product
-#: model:product.template,name:product.product_product_shelfofcm1_product_template
-msgid "Shelf of 200cm"
-msgstr "Prestatge de 200cm"
-
-#. module: product
-#: view:product.uom:0
-msgid "Ratio & Precision"
-msgstr "Ràtio i precisió"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_gram
-msgid "g"
-msgstr "g"
-
-#. module: product
-#: model:product.category,name:product.product_category_11
-msgid "IT components kits"
-msgstr "Kits de components TI"
-
-#. module: product
-#: selection:product.category,type:0
-#: selection:product.template,state:0
-msgid "Normal"
-msgstr "Normal"
-
-#. module: product
-#: model:process.node,name:product.process_node_supplier0
-#: view:product.supplierinfo:0
-msgid "Supplier Information"
-msgstr "Informació del proveïdor"
-
-#. module: product
-#: field:product.price.type,currency_id:0
-#: report:product.pricelist:0
-#: field:product.pricelist,currency_id:0
-msgid "Currency"
-msgstr "Moneda"
-
-#. module: product
-#: model:product.template,name:product.product_product_ram_product_template
-msgid "DDR 256MB PC400"
-msgstr "DDR 256MB PC400"
-
-#. module: product
-#: view:product.category:0
-msgid "Product Categories"
-msgstr "Categories de producte"
-
-#. module: product
-#: view:product.uom:0
-msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr "  per ex.: 1 * (unitat referència) = ràtio * (aquesta unitat)"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid ""
-"Create and manage the units of measure you want to be used in your system. "
-"You can define a conversion rate between several Units of Measure within the "
-"same category."
-msgstr ""
-"Creeu i gestioneu les unitats de mesura que voleu utilitzar en el vostre "
-"sistema. Podeu definir un tipus de conversió entre diferents unitats de "
-"mesura en la mateixa categoria."
-
-#. module: product
-#: field:product.packaging,weight:0
-msgid "Total Package Weight"
-msgstr "Total pes paquet"
-
-#. module: product
-#: help:product.packaging,code:0
-msgid "The code of the transport unit."
-msgstr "El codi de la unitat de transport."
-
-#. module: product
-#: help:product.template,standard_price:0
-msgid ""
-"Product's cost for accounting stock valuation. It is the base price for the "
-"supplier price."
-msgstr ""
-"Cost del producte per a la valoració comptable de les existències. És el "
-"preu base per al preu del proveïdor."
-
-#. module: product
-#: view:product.price.type:0
-msgid "Products Price Type"
-msgstr "Tipus de preus de productes"
-
-#. module: product
-#: field:product.product,price_extra:0
-msgid "Variant Price Extra"
-msgstr "Preu extra variant"
-
-#. module: product
-#: model:product.template,name:product.product_product_fan_product_template
-msgid "Regular case fan 80mm"
-msgstr "Ventilador normal 80mm"
-
-#. module: product
-#: model:ir.model,name:product.model_product_supplierinfo
-msgid "Information about a product supplier"
-msgstr "Informació d'un proveïdor de producte"
-
-#. module: product
-#: view:product.product:0
-msgid "Extended Filters..."
-msgstr "Filtres extensos..."
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,description_purchase:0
-msgid "Purchase Description"
-msgstr "Descripció de compra"
-
-#. module: product
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "No podeu tenir 2 versions de tarifa que es sobreposin!"
-
-#. module: product
-#: help:product.supplierinfo,delay:0
-msgid ""
-"Lead time in days between the confirmation of the purchase order and the "
-"reception of the products in your warehouse. Used by the scheduler for "
-"automatic computation of the purchase order planning."
-msgstr ""
-"Termini de lliurament en dies entre la confirmació de la comanda de compra i "
-"la recepció dels productes en el vostre magatzem. Utilitzat pel planificador "
-"per al càlcul automàtic de la planificació de la comanda de compra."
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action
-msgid ""
-"There can be more than one version of a pricelist. Here you can create and "
-"manage new versions of a price list. Some examples of versions: 2010, 2011, "
-"Summer Promotion, etc."
-msgstr ""
-"No pot haver-hi més d'una versió d'una llista de preus. Aquí podeu crear i "
-"administrar noves versions d'una llista de preus. Alguns exemples de "
-"versions: 2010, 2011, promoció d'estiu, etc"
-
-#. module: product
-#: selection:product.template,type:0
-msgid "Stockable Product"
-msgstr "Estocable"
-
-#. module: product
-#: field:product.packaging,code:0
-msgid "Code"
-msgstr "Codi"
-
-#. module: product
-#: view:product.supplierinfo:0
-msgid "Seq"
-msgstr "Seq"
-
-#. module: product
-#: view:product.price_list:0
-msgid "Calculate Product Price per unit base on pricelist version."
-msgstr ""
-"Calcula els preus del producte segons unitats per una versió de tarifa."
-
-#. module: product
-#: model:ir.model,name:product.model_product_ul
-msgid "Shipping Unit"
-msgstr "Unitat d'enviament"
-
-#. module: product
-#: field:pricelist.partnerinfo,suppinfo_id:0
-msgid "Partner Information"
-msgstr "Informació d'empresa"
-
-#. module: product
-#: selection:product.ul,type:0
-#: model:product.uom.categ,name:product.product_uom_categ_unit
-msgid "Unit"
-msgstr "Unitat de venda"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Information"
-msgstr "Informació"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Products Listprices Items"
-msgstr "Elements de llista de preus de productes"
-
-#. module: product
-#: view:product.packaging:0
-msgid "Other Info"
-msgstr "Altra informació"
-
-#. module: product
-#: field:product.pricelist.version,items_id:0
-msgid "Price List Items"
-msgstr "Elements de llista de preus"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
-msgid ""
-"Create and manage the units of measure categories you want to be used in "
-"your system. If several units of measure are in the same category, they can "
-"be converted to each other. For example, in the unit of measure category "
-"\"Time\", you will have the following UoM: Hours, Days."
-msgstr ""
-"Creeu i gestioneu les categories d'unitats de mesura que vulgueu utilitzar "
-"en el vostre sistema. Si diverses unitats de mesura estan en la mateixa "
-"categoria, poden ser convertides entre elles. Per exemple, en a l'unitat de "
-"mesurada \"Temps\", tindrà les següents UdM: hores, dies."
-
-#. module: product
-#: selection:product.uom,uom_type:0
-msgid "Bigger than the reference UoM"
-msgstr "Major que la UdM de referència"
-
-#. module: product
-#: model:ir.module.module,shortdesc:product.module_meta_information
-msgid "Products & Pricelists"
-msgstr "Productes i tarifes"
-
-#. module: product
-#: view:product.product:0
-msgid "To Sell"
-msgstr "A vendre"
-
-#. module: product
-#: model:product.category,name:product.product_category_services0
-msgid "Marketable Services"
-msgstr "Serveis negociables"
-
-#. module: product
-#: field:product.pricelist.item,price_surcharge:0
-msgid "Price Surcharge"
-msgstr "Sobrecàrrega preu"
-
-#. module: product
-#: model:product.template,name:product.product_product_mb1_product_template
-msgid "Mainboard ASUStek A7N8X"
-msgstr "Placa mare ASUStek A7N8X"
-
-#. module: product
-#: field:product.product,packaging:0
-msgid "Logistical Units"
-msgstr "Unitats de logística"
-
-#. module: product
-#: field:product.category,complete_name:0
-#: field:product.category,name:0
-#: field:product.pricelist.type,name:0
-#: field:product.pricelist.version,name:0
-#: view:product.product:0
-#: field:product.product,name_template:0
-#: field:product.template,name:0
-#: field:product.ul,name:0
-#: field:product.uom,name:0
-#: field:product.uom.categ,name:0
-msgid "Name"
-msgstr "Nom"
-
-#. module: product
-#: view:product.product:0
-msgid "Stockable"
-msgstr "Estocable"
-
-#. module: product
-#: model:product.template,name:product.product_product_woodlintelm0_product_template
-msgid "Wood Lintel 4m"
-msgstr "Llinda fusta 4m"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action
-msgid ""
-"You must define a Product for everything you buy or sell. Products can be "
-"raw materials, stockable products, consumables or services. The Product form "
-"contains detailed information about your products related to procurement "
-"logistics, sales price, product category, suppliers and so on."
-msgstr ""
-"Heu de definir un producte per cada cosa que compreu o vengueu. Els "
-"productes poden ser matèries primeres, productes emmagatzenables, "
-"consumibles o serveis. El formulari de producte conté informació detallada "
-"sobre els seus productes en relació amb logística de proveïment, preu de "
-"venda, categoria de producte, proveïdors, etc."
-
-#. module: product
-#: model:product.uom,name:product.product_uom_kgm
-msgid "kg"
-msgstr "kg"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_meter
-msgid "m"
-msgstr "m"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "Obsolete"
-msgstr "Obsolet"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_km
-msgid "km"
-msgstr "km"
-
-#. module: product
-#: help:product.template,cost_method:0
-msgid ""
-"Standard Price: the cost price is fixed and recomputed periodically (usually "
-"at the end of the year), Average Price: the cost price is recomputed at each "
-"reception of products."
-msgstr ""
-"Preu estàndard: El preu de cost es fix i es recalcula periòdicament "
-"(normalment al finalitzar l'any), Preu mitjà: El preu de cost es recalcula "
-"en cada recepció de productes."
-
-#. module: product
-#: help:product.category,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of product categories."
-msgstr ""
-"Indica l'ordre de seqüència quan es mostra una llista de categories de "
-"producte."
-
-#. module: product
-#: field:product.uom,factor:0
-#: field:product.uom,factor_inv:0
-msgid "Ratio"
-msgstr "Ràtio"
-
-#. module: product
-#: help:product.template,purchase_ok:0
-msgid ""
-"Determine if the product is visible in the list of products within a "
-"selection from a purchase order line."
-msgstr ""
-"Indica si el producte és visible en la llista de productes dins d'una "
-"selecció des d'una línia de comanda de compra."
-
-#. module: product
-#: field:product.template,weight_net:0
-msgid "Net weight"
-msgstr "Pes net"
-
-#. module: product
-#: field:product.packaging,width:0
-msgid "Width"
-msgstr "Amplada"
 
 #. module: product
 #: help:product.price.type,field:0
@@ -1236,51 +176,45 @@ msgid "Printing Date"
 msgstr "Data d'impressió"
 
 #. module: product
-#: field:product.template,uos_id:0
-msgid "Unit of Sale"
-msgstr "Unitat de venda"
+#: field:product.product,qty_available:0
+msgid "Quantity On Hand"
+msgstr ""
 
 #. module: product
-#: model:ir.module.module,description:product.module_meta_information
-msgid ""
-"\n"
-"    This is the base module for managing products and pricelists in "
-"OpenERP.\n"
-"\n"
-"    Products support variants, different pricing methods, suppliers\n"
-"    information, make to stock/order, different unit of measures,\n"
-"    packaging and properties.\n"
-"\n"
-"    Pricelists support:\n"
-"    * Multiple-level of discount (by product, category, quantities)\n"
-"    * Compute price based on different criteria:\n"
-"        * Other pricelist,\n"
-"        * Cost price,\n"
-"        * List price,\n"
-"        * Supplier price, ...\n"
-"    Pricelists preferences by product and/or partners.\n"
-"\n"
-"    Print product labels with barcode.\n"
-"    "
-msgstr ""
-"\n"
-"    Aquest és el mòdul base per gestionar productes i tarifes a OpenERP.\n"
-"\n"
-"    Els productes suporten variants, diferents mètodes de preus, informació\n"
-"    de proveïdor, obtenir per a estoc/demanat, diferents unitats de mesura,\n"
-"    empaquetat i propietats.\n"
-"\n"
-"    Suport de tarifes:\n"
-"    * Múltiple-nivell de descompte (per producte, categoria, quantitats)\n"
-"    * Càlcul del preu basat en diferents criteris:\n"
-"        * Una altra tarifa,\n"
-"        * Preu cost,\n"
-"        * Preu llesta,\n"
-"        * Preu proveïdor, ...\n"
-"    Preferències de tarifes per producte i/o empreses.\n"
-"\n"
-"    Imprimir etiquetes de productes amb codis de barres.\n"
-"    "
+#: view:product.pricelist:0
+msgid "Products Price List"
+msgstr "Llista de preus de productes"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_cm
+msgid "cm"
+msgstr "cm"
+
+#. module: product
+#: field:product.price.type,name:0
+msgid "Price Name"
+msgstr "Nom preu"
+
+#. module: product
+#: code:addons/product/pricelist.py:178
+#, python-format
+msgid "Warning !"
+msgstr "Atenció!"
+
+#. module: product
+#: field:product.pricelist,company_id:0
+#: field:product.pricelist.item,company_id:0
+#: field:product.pricelist.version,company_id:0
+#: view:product.product:0
+#: field:product.supplierinfo,company_id:0
+#: field:product.template,company_id:0
+msgid "Company"
+msgstr "Companyia"
+
+#. module: product
+#: help:product.template,weight_net:0
+msgid "The net weight in Kg."
+msgstr "El pes net en Kg."
 
 #. module: product
 #: help:product.template,seller_delay:0
@@ -1295,16 +229,119 @@ msgstr ""
 "les comandes."
 
 #. module: product
+#: help:product.template,seller_qty:0
+msgid "This is minimum quantity to purchase from Main Supplier."
+msgstr "Aquesta és la quantitat mínima a comprar al proveïdor principal."
+
+#. module: product
+#: help:product.product,incoming_qty:0
+msgid ""
+"Quantity of products that are planned to arrive.\n"
+"In a context with a single Stock Location, this includes goods arriving to "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods arriving to the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location typed as "
+"'internal'."
+msgstr ""
+
+#. module: product
 #: help:product.template,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
 msgstr ""
 "Proveïdor principal que té la prioritat més alta en la llista de proveïdors."
 
 #. module: product
-#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Serveis"
+
+#. module: product
+#: help:product.template,list_price:0
+msgid ""
+"Base price for computing the customer price. Sometimes called the catalog "
+"price."
+msgstr ""
+"Preu base per calcular el preu de client. També dit el preu de catàleg."
+
+#. module: product
+#: code:addons/product/pricelist.py:376
+#, python-format
+msgid "Partner section of the product form"
+msgstr "Secció empresa del formulario de producte"
+
+#. module: product
+#: model:product.uom,name:product.uom_day
+msgid "Day"
+msgstr "Dia"
+
+#. module: product
+#: view:product.product:0
+msgid "UoM"
+msgstr "UdM"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_form_config_action
+msgid "Create or Import Products"
+msgstr ""
+
+#. module: product
+#: help:product.template,supply_method:0
+msgid ""
+"Produce will generate production order or tasks, according to the product "
+"type. Buy will trigger purchase orders when requested."
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.version,date_start:0
+msgid "Starting date for this pricelist version to be valid."
+msgstr "Data inicial de validesa d'aquesta versió de tarifa."
+
+#. module: product
+#: field:product.product,incoming_qty:0
+msgid "Incoming"
+msgstr "Entrant"
+
+#. module: product
+#: selection:product.template,procure_method:0
+msgid "Make to Stock"
+msgstr "Obtenir per estoc"
+
+#. module: product
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Error: La UdM per defecte i la UdM de compra han d'estar en la mateixa "
+"categoria."
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Suppliers"
+msgstr "Proveïdors"
+
+#. module: product
+#: field:product.pricelist.item,name:0
+msgid "Rule Name"
+msgstr "Nom de regla"
+
+#. module: product
+#: view:product.product:0
+msgid "To Purchase"
+msgstr "A compra"
+
+#. module: product
+#: field:product.supplierinfo,product_code:0
+msgid "Supplier Product Code"
+msgstr "Codi producte del proveïdor"
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Rules Test Match"
+msgstr "Regles test de concordança"
 
 #. module: product
 #: field:product.pricelist.item,base_pricelist_id:0
@@ -1314,6 +351,7 @@ msgstr "Tarifa alternativa"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_puchased
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:0
@@ -1321,14 +359,120 @@ msgid "Products"
 msgstr "Productes"
 
 #. module: product
+#: model:product.uom.categ,name:product.uom_categ_length
+msgid "Length / Distance"
+msgstr "Longitud / Distància"
+
+#. module: product
+#: field:product.template,seller_qty:0
+msgid "Supplier Quantity"
+msgstr "Quantitat proveïdor"
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "New Price ="
+msgstr "Nou Preu ="
+
+#. module: product
+#: model:ir.model,name:product.model_pricelist_partnerinfo
+msgid "pricelist.partnerinfo"
+msgstr "pricelist.partnerinfo"
+
+#. module: product
+#: field:product.template,uom_po_id:0
+msgid "Purchase Unit of Measure"
+msgstr "Unitat de mesura de compra"
+
+#. module: product
+#: selection:product.template,mes_type:0
+msgid "Fixed"
+msgstr "Fix"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
+msgid "Units of Measure Categories"
+msgstr "Categories d'unitats de mesura"
+
+#. module: product
+#: help:product.pricelist.item,product_id:0
+msgid ""
+"Set a product if this rule only apply to one product. Keep empty for all "
+"products"
+msgstr ""
+"Indiqueu un producte si aquesta regla només s'aplica a un producte. Deixeu-"
+"lo buit per a tots els productes"
+
+#. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layers on a pallet or box"
 msgstr "Número de capes en un palet o caixa."
 
 #. module: product
-#: help:product.pricelist.item,base:0
-msgid "The mode for computing the price for this rule."
-msgstr "La forma de calcular el preu per aquesta regla."
+#: model:ir.model,name:product.model_product_pricelist_type
+#: field:product.pricelist,type:0
+msgid "Pricelist Type"
+msgstr "Tipus de tarifa"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Base Prices"
+msgstr "Preus base"
+
+#. module: product
+#: field:product.product,color:0
+msgid "Color Index"
+msgstr ""
+
+#. module: product
+#: view:product.template:0
+#: field:product.template,type:0
+msgid "Product Type"
+msgstr "Tipus de producte"
+
+#. module: product
+#: field:product.product,code:0
+#: field:product.product,default_code:0
+msgid "Reference"
+msgstr "Referència"
+
+#. module: product
+#: field:product.packaging,width:0
+msgid "Width"
+msgstr "Amplada"
+
+#. module: product
+#: view:product.product:0
+msgid "Characteristics"
+msgstr "Característiques"
+
+#. module: product
+#: field:product.template,sale_ok:0
+msgid "Can be Sold"
+msgstr "Pot ser venut"
+
+#. module: product
+#: view:product.product:0
+msgid "Group by..."
+msgstr "Agrupa per..."
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+#: field:product.template,description_sale:0
+msgid "Sale Description"
+msgstr "Descripció de venda"
+
+#. module: product
+#: field:product.template,produce_delay:0
+msgid "Manufacturing Lead Time"
+msgstr "Termini de lliurament de fabricació"
+
+#. module: product
+#: field:product.supplierinfo,pricelist_ids:0
+msgid "Supplier Pricelist"
+msgstr "Tarifa de proveïdor"
 
 #. module: product
 #: view:product.packaging:0
@@ -1337,10 +481,79 @@ msgid "Pallet Dimension"
 msgstr "Dimensió del palet"
 
 #. module: product
-#: code:addons/product/product.py:618
+#: code:addons/product/product.py:175
 #, python-format
-msgid " (copy)"
-msgstr " (còpia)"
+msgid "Warning"
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.item,base:0
+msgid "Based on"
+msgstr "Basat en"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_ton
+msgid "t"
+msgstr ""
+
+#. module: product
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
+msgstr ""
+"Aquest preu es considerarà com el preu per la UdM del proveïdor si existeix "
+"o en la UdM per defecte del producte en cas contrari."
+
+#. module: product
+#: model:product.uom,name:product.product_uom_kgm
+msgid "kg"
+msgstr "kg"
+
+#. module: product
+#: model:ir.model,name:product.model_res_partner
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: product
+#: code:addons/product/product.py:143
+#, python-format
+msgid ""
+"Conversion from Product UoM %s to Default UoM %s is not possible as they "
+"both belong to different Category!."
+msgstr ""
+
+#. module: product
+#: field:product.template,sale_delay:0
+msgid "Customer Lead Time"
+msgstr "Termini de lliurament del client"
+
+#. module: product
+#: model:process.transition,name:product.process_transition_supplierofproduct0
+msgid "Supplier of the product"
+msgstr "Proveïdor del producte"
+
+#. module: product
+#: help:product.template,cost_method:0
+msgid ""
+"Standard Price: the cost price is fixed and recomputed periodically (usually "
+"at the end of the year), Average Price: the cost price is recomputed at each "
+"reception of products."
+msgstr ""
+"Preu estàndard: El preu de cost es fix i es recalcula periòdicament "
+"(normalment al finalitzar l'any), Preu mitjà: El preu de cost es recalcula "
+"en cada recepció de productes."
+
+#. module: product
+#: field:product.pricelist,name:0
+msgid "Pricelist Name"
+msgstr "Nom tarifa"
+
+#. module: product
+#: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
+msgid "Public Price"
+msgstr "Preu al públic"
 
 #. module: product
 #: field:product.template,seller_ids:0
@@ -1348,27 +561,134 @@ msgid "Partners"
 msgstr "Empreses"
 
 #. module: product
-#: help:product.template,sale_delay:0
-msgid ""
-"This is the average delay in days between the confirmation of the customer "
-"order and the delivery of the finished products. It's the time you promise "
-"to your customers."
-msgstr ""
-"Aquesta és la demora mitjana en dies entre la confirmació de la comanda del "
-"client i el lliurament dels productes acabats. És el temps que prometeu als "
-"vostres clients."
+#: selection:product.template,cost_method:0
+msgid "Average Price"
+msgstr "Preu mig"
+
+#. module: product
+#: field:product.template,uos_id:0
+msgid "Unit of Sale"
+msgstr "Unitat de venda"
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "Precisió d'arrodoniment"
+
+#. module: product
+#: help:product.pricelist.item,name:0
+msgid "Explicit rule name for this pricelist line."
+msgstr "Nom de regla explícita per aquesta línia de tarifa."
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Min. Margin"
+msgstr "Marge mín."
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "* ( 1 + "
+msgstr "* ( 1 + "
+
+#. module: product
+#: help:product.template,product_manager:0
+msgid "This is use as task responsible"
+msgstr "S'utilitza com a responsable de tasca."
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Rounding Method"
+msgstr "Mètode arrodoniment"
+
+#. module: product
+#: field:product.category,child_id:0
+msgid "Child Categories"
+msgstr "Categories filles"
 
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
-msgid "Second UoM"
-msgstr "UdM secundària"
+#: field:product.template,state:0
+msgid "Status"
+msgstr "Estat"
 
 #. module: product
-#: code:addons/product/product.py:142
+#: field:product.pricelist.item,price_round:0
+msgid "Price Rounding"
+msgstr "Arrodoniment preu"
+
+#. module: product
+#: sql_constraint:product.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr "El ràtio de conversió per a una unitat de mesura no pot ser 0!"
+
+#. module: product
+#: help:product.packaging,height:0
+msgid "The height of the package"
+msgstr "L'altura del paquet"
+
+#. module: product
+#: code:addons/product/product.py:345
+#, python-format
+msgid ""
+"New UoM '%s' must belongs to same UoM category '%s' as of old UoM '%s'."
+msgstr ""
+
+#. module: product
+#: model:product.pricelist.type,name:product.pricelist_type_sale
+#: field:res.partner,property_product_pricelist:0
+msgid "Sale Pricelist"
+msgstr "Tarifa de venda"
+
+#. module: product
+#: view:product.product:0
+#: field:product.ul,type:0
+msgid "Type"
+msgstr "Tipus"
+
+#. module: product
+#: field:product.price_list,price_list:0
+msgid "PriceList"
+msgstr "Tarifa"
+
+#. module: product
+#: help:product.packaging,weight:0
+msgid "The weight of a full package, pallet or box."
+msgstr "El pes d'un paquet, palet o caixa complet/a."
+
+#. module: product
+#: model:product.uom,name:product.product_uom_unit
+msgid "PCE"
+msgstr "Unitat"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
+#: model:ir.ui.menu,name:product.menu_product_pricelist_action2
+#: model:ir.ui.menu,name:product.menu_product_pricelist_main
+msgid "Pricelists"
+msgstr "Tarifes"
+
+#. module: product
+#: view:product.template:0
+msgid "Miscelleanous"
+msgstr "Miscel·lània"
+
+#. module: product
+#: code:addons/product/product.py:143
 #, python-format
 msgid "Error !"
 msgstr "Error!"
+
+#. module: product
+#: report:product.pricelist:0
+msgid "Price List Name"
+msgstr "Nom tarifa"
+
+#. module: product
+#: help:product.pricelist.item,base:0
+msgid "The mode for computing the price for this rule."
+msgstr "La forma de calcular el preu per aquesta regla."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -1379,14 +699,47 @@ msgid "Units of Measure"
 msgstr "Unitats de mesura"
 
 #. module: product
+#: view:product.price_list:0
+msgid "Print"
+msgstr "Imprimeix"
+
+#. module: product
+#: field:product.supplierinfo,delay:0
+msgid "Delivery Lead Time"
+msgstr "Temps inicial d'entrega"
+
+#. module: product
 #: field:product.supplierinfo,min_qty:0
 msgid "Minimal Quantity"
 msgstr "Quantitat mínima"
 
 #. module: product
-#: model:product.category,name:product.product_category_pc
-msgid "PC"
-msgstr "PC"
+#: view:product.product:0
+msgid "Miscellaneous"
+msgstr "Varis"
+
+#. module: product
+#: help:product.uom,active:0
+msgid ""
+"By unchecking the active field you can disable a unit of measure without "
+"deleting it."
+msgstr ""
+"Si el camp actiu es desmarca, permet ocultar una unitat de mesura sense "
+"eliminar-la."
+
+#. module: product
+#: help:product.template,sale_ok:0
+msgid ""
+"Determines if the product can be visible in the list of product within a "
+"selection from a sale order line."
+msgstr ""
+"Indica si el producte serà visible en la llista de productes que apareix en "
+"seleccionar un producte en una línia de comanda de venda."
+
+#. module: product
+#: field:product.template,seller_delay:0
+msgid "Supplier Lead Time"
+msgstr "Termini de lliurament del proveïdor"
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
@@ -1398,14 +751,24 @@ msgstr ""
 "sol·licitud de pressupost. Deixeu-ho buit per usar el codi intern."
 
 #. module: product
-#: selection:product.template,procure_method:0
-msgid "Make to Stock"
-msgstr "Obtenir per estoc"
+#: model:product.pricelist.version,name:product.ver0
+msgid "Default Public Pricelist Version"
+msgstr "Versió per defecte de tarifa venda al públic"
+
+#. module: product
+#: field:product.pricelist.type,key:0
+msgid "Key"
+msgstr "Clau"
 
 #. module: product
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
 msgstr "Versió de llista de preus"
+
+#. module: product
+#: field:product.product,virtual_available:0
+msgid "Quantity Available"
+msgstr ""
 
 #. module: product
 #: help:product.pricelist.item,sequence:0
@@ -1419,19 +782,91 @@ msgstr ""
 "aviat com es troba un element coincident."
 
 #. module: product
+#: model:ir.actions.report.xml,name:product.report_product_pricelist
+#: model:ir.model,name:product.model_product_pricelist
+#: field:product.product,price:0
+#: field:product.product,pricelist_id:0
+#: view:product.supplierinfo:0
+msgid "Pricelist"
+msgstr "Tarifa"
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
 msgstr "Consumible"
 
 #. module: product
-#: help:product.price.type,currency_id:0
-msgid "The currency the field is expressed in."
-msgstr "La moneda en que s'expressa el camp."
+#: model:ir.actions.act_window,help:product.product_form_config_action
+msgid ""
+"Create a product form for everything you buy or sell. Specify a supplier if "
+"the product can be purchased."
+msgstr ""
+
+#. module: product
+#: view:product.uom:0
+msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
+msgstr "  per ex.: 1 * (aquesta unitat) = ràtio * (unitat referencia)"
 
 #. module: product
 #: help:product.template,weight:0
 msgid "The gross weight in Kg."
 msgstr "El pes brut en Kg."
+
+#. module: product
+#: selection:product.ul,type:0
+msgid "Box"
+msgstr "Caixa"
+
+#. module: product
+#: code:addons/product/product.py:400
+#, python-format
+msgid "Products: "
+msgstr "Productes: "
+
+#. module: product
+#: model:product.uom,name:product.uom_hour
+msgid "Hour"
+msgstr "Hora"
+
+#. module: product
+#: field:product.category,parent_id:0
+msgid "Parent Category"
+msgstr "Categoria pare"
+
+#. module: product
+#: selection:product.template,state:0
+msgid "In Development"
+msgstr "En desenvolupament"
+
+#. module: product
+#: help:product.pricelist.type,key:0
+msgid ""
+"Used in the code to select specific prices based on the context. Keep "
+"unchanged."
+msgstr ""
+"Utilitzat en el codi per seleccionar preus específics basats en el context. "
+"Deixeu-lo tal como està"
+
+#. module: product
+#: field:product.packaging,weight:0
+msgid "Total Package Weight"
+msgstr "Total pes paquet"
+
+#. module: product
+#: view:product.product:0
+msgid "Context..."
+msgstr ""
+
+#. module: product
+#: help:product.template,procure_method:0
+msgid ""
+"'Make to Stock': When needed, take from the stock or wait until re-"
+"supplying. 'Make to Order': When needed, purchase or produce for the "
+"procurement request."
+msgstr ""
+"'Obtenir per estoc': Quan sigui necessari, agafar de l'estoc o esperar fins "
+"que torni haver-hi estoc suficient. 'Obtenir sota comanda': Quan sigui "
+"necessari, comprar o produir per a la petició de proveïment."
 
 #. module: product
 #: view:product.product:0
@@ -1440,9 +875,41 @@ msgid "Procurement"
 msgstr "Proveïment"
 
 #. module: product
+#: model:ir.actions.act_window,name:product.product_category_action
+#: model:ir.ui.menu,name:product.menu_products_category
+msgid "Products by Category"
+msgstr "Productes per categoria"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Weights"
+msgstr "Pesos"
+
+#. module: product
 #: field:product.uom,category_id:0
 msgid "UoM Category"
 msgstr "Categoria UdM"
+
+#. module: product
+#: view:product.product:0
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant"
+msgstr "Variants de producte"
+
+#. module: product
+#: help:product.supplierinfo,product_name:0
+msgid ""
+"This supplier's product name will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+"Aquest nom de producte del proveïdor s'utilitza per imprimir una sol·licitud "
+"de pressupost. Deixeu-ho buit per usar el nom intern."
+
+#. module: product
+#: field:product.packaging,ul:0
+msgid "Type of Package"
+msgstr "Tipus de empaquetament"
 
 #. module: product
 #: field:product.template,loc_rack:0
@@ -1450,9 +917,52 @@ msgid "Rack"
 msgstr "Prestatge"
 
 #. module: product
-#: field:product.template,uom_po_id:0
-msgid "Purchase Unit of Measure"
-msgstr "Unitat de mesura de compra"
+#: selection:product.ul,type:0
+msgid "Pack"
+msgstr "Paquet"
+
+#. module: product
+#: field:product.product,ean13:0
+msgid "EAN13"
+msgstr "EAN13"
+
+#. module: product
+#: view:product.uom:0
+msgid "Ratio & Precision"
+msgstr "Ràtio i precisió"
+
+#. module: product
+#: code:addons/product/product.py:641
+#, python-format
+msgid " (copy)"
+msgstr " (còpia)"
+
+#. module: product
+#: field:product.template,seller_id:0
+msgid "Main Supplier"
+msgstr "Proveïdor principal"
+
+#. module: product
+#: help:product.template,type:0
+msgid ""
+"Will change the way procurements are processed. Consumable are product where "
+"you don't manage stock."
+msgstr ""
+
+#. module: product
+#: model:product.uom.categ,name:product.product_uom_categ_kgm
+msgid "Weight"
+msgstr "Pes"
+
+#. module: product
+#: help:product.uom,category_id:0
+msgid ""
+"Quantity conversions may happen automatically between Units of Measure in "
+"the same category, according to their respective ratios."
+msgstr ""
+"Conversions de quantitat poden realitzar-se de forma automàtica entre "
+"unitats de mesura en la mateixa categoria, d'acord amb els seus coeficients "
+"de conversió respectius."
 
 #. module: product
 #: field:product.template,supply_method:0
@@ -1471,24 +981,60 @@ msgstr ""
 "vinculats amb aquesta categoria o amb una categoria filla."
 
 #. module: product
-#: view:product.product:0
-msgid "Group by..."
-msgstr "Agrupa per..."
+#: selection:product.template,state:0
+msgid "Obsolete"
+msgstr "Obsolet"
 
 #. module: product
-#: model:product.template,name:product.product_product_cpu_gen_product_template
-msgid "Regular processor config"
-msgstr "Config. processador normal"
+#: model:process.node,name:product.process_node_supplier0
+#: view:product.supplierinfo:0
+msgid "Supplier Information"
+msgstr "Informació del proveïdor"
 
 #. module: product
-#: code:addons/product/product.py:142
-#, python-format
+#: help:product.product,active:0
 msgid ""
-"Conversion from Product UoM m to Default UoM PCE is not possible as they "
-"both belong to different Category!."
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
 msgstr ""
-"La conversió de la UdM m a la UdM PCE no és possible ja que ambdues "
-"pertanyen a categories diferents!"
+"Si el camp actiu es desmarca, permet ocultar el producte sense eliminar-ho."
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_ul_form_action
+#: model:ir.model,name:product.model_product_packaging
+#: model:ir.ui.menu,name:product.menu_product_ul_form_action
+#: view:product.packaging:0
+#: view:product.product:0
+#: view:product.ul:0
+msgid "Packaging"
+msgstr "Empaquetament"
+
+#. module: product
+#: field:product.price.type,currency_id:0
+#: report:product.pricelist:0
+#: field:product.pricelist,currency_id:0
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: product
+#: help:product.price.type,currency_id:0
+msgid "The currency the field is expressed in."
+msgstr "La moneda en que s'expressa el camp."
+
+#. module: product
+#: help:product.uom,rounding:0
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
+"that cannot be further split, such as a piece."
+msgstr ""
+"La quantitat calculada serà un múltiple d'aquest valor. Utilitzeu 1.0 per a "
+"una Unitat de Mesura que no pugui dividir-se encara més, com una peça."
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Descriptions"
+msgstr "Descripcions"
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1496,31 +1042,32 @@ msgid "Start Date"
 msgstr "Data inicial"
 
 #. module: product
-#: help:product.template,produce_delay:0
-msgid ""
-"Average delay in days to produce this product. This is only for the "
-"production order and, if it is a multi-level bill of material, it's only for "
-"the level of this product. Different lead times will be summed for all "
-"levels and purchase orders."
-msgstr ""
-"Demora mitjana en dies per produir aquest producte. Això només és per a "
-"l'ordre de fabricació i, si es tracta d'una llista de material multi-nivell, "
-"és només per al nivell d'aquest producte. Diferents temps de demora es sumen "
-"per a tots els nivells i comandes de compra."
+#: view:res.partner:0
+msgid "Sales Properties"
+msgstr "Propietats de venda"
 
 #. module: product
-#: help:product.product,qty_available:0
-msgid ""
-"Current quantities of products in selected locations or all internal if none "
-"have been selected."
-msgstr ""
-"Quantitats actuals de productes en les ubicacions seleccionades o totes les "
-"internes si no s'ha seleccionat cap."
+#: field:product.template,loc_row:0
+msgid "Row"
+msgstr "Fila"
 
 #. module: product
-#: model:product.template,name:product.product_product_pc1_product_template
-msgid "Basic PC"
-msgstr "PC Bàsic"
+#: view:product.product:0
+#: field:product.template,categ_id:0
+msgid "Category"
+msgstr "Categoria"
+
+#. module: product
+#: help:product.pricelist.item,min_quantity:0
+msgid ""
+"The rule only applies if the partner buys/sells more than this quantity."
+msgstr ""
+"La regla només s'aplica si l'empresa compra/ven més d'aquesta quantitat."
+
+#. module: product
+#: selection:product.template,cost_method:0
+msgid "Standard Price"
+msgstr "Preu estàndard"
 
 #. module: product
 #: help:product.pricelist,active:0
@@ -1531,14 +1078,16 @@ msgstr ""
 "Si el camp actiu es desmarca, permet ocultar la tarifa sense eliminar-la."
 
 #. module: product
-#: field:product.product,qty_available:0
-msgid "Real Stock"
-msgstr "Estoc real"
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model:ir.ui.menu,name:product.menu_product_category_action_form
+#: view:product.category:0
+msgid "Product Categories"
+msgstr "Categories de producte"
 
 #. module: product
-#: model:product.uom,name:product.product_uom_cm
-msgid "cm"
-msgstr "cm"
+#: field:product.uom,uom_type:0
+msgid "UoM Type"
+msgstr "Tipus UdM"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
@@ -1546,17 +1095,63 @@ msgid "Product Unit of Measure"
 msgstr "Unitat de mesura del producte"
 
 #. module: product
-#: constraint:product.template:0
+#: help:product.template,uom_po_id:0
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+"Default Unit of Measure used for purchase orders. It must be in the same "
+"category than the default unit of measure."
 msgstr ""
-"Error: La UdM per defecte i la UdM de compra han d'estar en la mateixa "
-"categoria."
+"Unitat de mesura per defecte utilitzada per a les comandes de compra. Ha "
+"d'estar en la mateixa categoria que la unitat de mesura per defecte."
 
 #. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "Precisió d'arrodoniment"
+#: help:product.supplierinfo,product_uom:0
+msgid "This comes from the product form."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
+msgid ""
+"You must define a Product for everything you buy or sell. Products can be "
+"raw materials, stockable products, consumables or services. The Product form "
+"contains detailed information about your products related to procurement "
+"logistics, sales price, product category, suppliers and so on."
+msgstr ""
+"Heu de definir un producte per cada cosa que compreu o vengueu. Els "
+"productes poden ser matèries primeres, productes emmagatzenables, "
+"consumibles o serveis. El formulari de producte conté informació detallada "
+"sobre els seus productes en relació amb logística de proveïment, preu de "
+"venda, categoria de producte, proveïdors, etc."
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Products Listprices Items"
+msgstr "Elements de llista de preus de productes"
+
+#. module: product
+#: help:product.packaging,ul_qty:0
+msgid "The number of packages by layer"
+msgstr "Número de paquets per capa."
+
+#. module: product
+#: help:product.uom,factor_inv:0
+msgid ""
+"How many times this UoM is bigger than the reference UoM in this category:\n"
+"1 * (this unit) = ratio * (reference unit)"
+msgstr ""
+"Quantes vegades aquesta UdM és més gran que la UdM de referència en aquesta "
+"categoria:\n"
+"1 * (aquesta unitat) = ràtio * (unitat de referència)"
+
+#. module: product
+#: help:product.packaging,width:0
+msgid "The width of the package"
+msgstr "L'amplada del paquet"
+
+#. module: product
+#: field:product.packaging,qty:0
+msgid "Quantity by Package"
+msgstr "Quantitat per paquet"
 
 #. module: product
 #: view:product.uom:0
@@ -1564,9 +1159,48 @@ msgid "Unit of Measure Properties"
 msgstr "Propietats unitat de mesura"
 
 #. module: product
-#: model:product.template,name:product.product_product_shelf1_product_template
-msgid "Rack 200cm"
-msgstr "Prestatgeria 200cm"
+#: help:product.template,standard_price:0
+msgid ""
+"Product's cost for accounting stock valuation. It is the base price for the "
+"supplier price."
+msgstr ""
+"Cost del producte per a la valoració comptable de les existències. És el "
+"preu base per al preu del proveïdor."
+
+#. module: product
+#: help:product.supplierinfo,qty:0
+msgid "This is a quantity which is converted into Default Uom."
+msgstr "Aquesta és una quantitat que serà convertida en UdM per defecte."
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid ""
+"Create and manage the units of measure you want to be used in your system. "
+"You can define a conversion rate between several Units of Measure within the "
+"same category."
+msgstr ""
+"Creeu i gestioneu les unitats de mesura que voleu utilitzar en el vostre "
+"sistema. Podeu definir un tipus de conversió entre diferents unitats de "
+"mesura en la mateixa categoria."
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_ul_form_action
+msgid ""
+"Create and manage your packaging dimensions and types you want to be "
+"maintained in your system."
+msgstr ""
+"Creeu i gestioneu les unitats i tipus d'embalatge que vulgui utilitzar en el "
+"seu sistema."
+
+#. module: product
+#: help:product.template,categ_id:0
+msgid "Select category for the current product"
+msgstr "Seleccioneu la categoria per al producte actual."
+
+#. module: product
+#: field:product.product,outgoing_qty:0
+msgid "Outgoing"
+msgstr "Sortint"
 
 #. module: product
 #: selection:product.template,supply_method:0
@@ -1574,9 +1208,45 @@ msgid "Buy"
 msgstr "Comprar"
 
 #. module: product
-#: view:product.uom.categ:0
-msgid "Units of Measure categories"
-msgstr "Categorias d'unitats de mesura"
+#: selection:product.uom,uom_type:0
+msgid "Reference UoM for this category"
+msgstr "Referència UdM per aquesta categoria"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_version
+#: view:product.pricelist:0
+#: view:product.pricelist.version:0
+msgid "Pricelist Version"
+msgstr "Versió de tarifa"
+
+#. module: product
+#: help:product.packaging,sequence:0
+msgid "Gives the sequence order when displaying a list of packaging."
+msgstr "Indica l'ordre de seqüència quan es mostra una llista de paquets."
+
+#. module: product
+#: selection:product.category,type:0
+#: selection:product.template,state:0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: product
+#: code:addons/product/pricelist.py:178
+#, python-format
+msgid ""
+"At least one pricelist has no active version !\n"
+"Please create or activate one."
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.item,price_max_margin:0
+msgid "Max. Price Margin"
+msgstr "Marge preu màx."
+
+#. module: product
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Vendes & Compres"
 
 #. module: product
 #: help:product.packaging,weight_ul:0
@@ -1584,9 +1254,45 @@ msgid "The weight of the empty UL"
 msgstr "El pes de l'UL buit"
 
 #. module: product
+#: help:product.packaging,code:0
+msgid "The code of the transport unit."
+msgstr "El codi de la unitat de transport."
+
+#. module: product
+#: view:product.uom:0
+msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
+msgstr "  per ex.: 1 * (unitat referència) = ràtio * (aquesta unitat)"
+
+#. module: product
+#: code:addons/product/pricelist.py:375
+#, python-format
+msgid "Other Pricelist"
+msgstr "Altra tarifa"
+
+#. module: product
+#: view:product.price.type:0
+msgid "Products Price Type"
+msgstr "Tipus de preus de productes"
+
+#. module: product
+#: field:product.template,product_manager:0
+msgid "Product Manager"
+msgstr "Responsable de producte"
+
+#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference UoM"
 msgstr "Menor que la UdM de referència"
+
+#. module: product
+#: field:product.product,price_extra:0
+msgid "Variant Price Extra"
+msgstr "Preu extra variant"
+
+#. module: product
+#: model:ir.model,name:product.model_product_supplierinfo
+msgid "Information about a product supplier"
+msgstr "Informació d'un proveïdor de producte"
 
 #. module: product
 #: field:product.price.type,active:0
@@ -1603,14 +1309,97 @@ msgid "Variant Price Margin"
 msgstr "Marge de preu variant"
 
 #. module: product
-#: sql_constraint:product.uom:0
-msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr "El ràtio de conversió per a una unitat de mesura no pot ser 0!"
+#: field:product.supplierinfo,product_name:0
+msgid "Supplier Product Name"
+msgstr "Nom de producte del proveïdor"
 
 #. module: product
-#: help:product.packaging,ean:0
-msgid "The EAN code of the package unit."
-msgstr "El codi EAN de la unitat del paquet."
+#: model:ir.actions.act_window,help:product.product_normal_action_puchased
+msgid ""
+"Products can be purchased and/or sold. They can be raw materials, stockable "
+"products, consumables or services. The Product form contains detailed "
+"information about your products related to procurement logistics, sales "
+"price, product category, suppliers and so on."
+msgstr ""
+"Els productes poden ser comprats i / o venuts. Poden ser matèries primeres, "
+"productes inventariable, material fungible o serveis. El formulari del "
+"producte conté informació detallada sobre els seus productes relacionats amb "
+"la logística de contractació, preu de venda, categoria dels productes, "
+"proveïdors, etc."
+
+#. module: product
+#: help:product.product,qty_available:0
+msgid ""
+"Current quantity of products.\n"
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location typed as "
+"'internal'."
+msgstr ""
+
+#. module: product
+#: field:product.template,rental:0
+msgid "Can be Rent"
+msgstr "Pot ser llogat"
+
+#. module: product
+#: model:product.price.type,name:product.standard_price
+#: field:product.template,standard_price:0
+msgid "Cost Price"
+msgstr "Preu cost"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+#: field:product.template,description_purchase:0
+msgid "Purchase Description"
+msgstr "Descripció de compra"
+
+#. module: product
+#: view:product.pricelist:0
+msgid "Products Price Search"
+msgstr "Cerca preu dels productes"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Second UoM"
+msgstr "UdM secundària"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_template_action_tree
+msgid "Product Templates"
+msgstr "Plantilles de producte"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Storage Localisation"
+msgstr "Ubicació en el magatzem"
+
+#. module: product
+#: help:product.packaging,length:0
+msgid "The length of the package"
+msgstr "La longitud del paquet"
+
+#. module: product
+#: field:product.pricelist.item,price_min_margin:0
+msgid "Min. Price Margin"
+msgstr "Marge preu mín."
+
+#. module: product
+#: field:product.pricelist.version,items_id:0
+msgid "Price List Items"
+msgstr "Elements de llista de preus"
+
+#. module: product
+#: field:product.template,weight:0
+msgid "Gross weight"
+msgstr "Pes brut"
 
 #. module: product
 #: field:product.packaging,weight_ul:0
@@ -1618,15 +1407,41 @@ msgid "Empty Package Weight"
 msgstr "Pes paquet buit"
 
 #. module: product
-#: field:product.price.type,field:0
-msgid "Product Field"
-msgstr "Camp de producte"
+#: model:ir.model,name:product.model_product_category
+#: field:product.pricelist.item,categ_id:0
+msgid "Product Category"
+msgstr "Categoria de producte"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_pricelist_type_action
-#: model:ir.ui.menu,name:product.menu_product_pricelist_type_action2
-msgid "Pricelists Types"
-msgstr "Tipus de tarifes"
+#: model:ir.actions.act_window,name:product.product_price_type_action
+#: model:ir.ui.menu,name:product.menu_product_price_type
+msgid "Price Types"
+msgstr "Tipus de Preu"
+
+#. module: product
+#: constraint:product.pricelist.item:0
+msgid ""
+"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+"Item!"
+msgstr ""
+"Error!  No podeu assignar la tarifa principal com una altra tarifa en un "
+"element de la tarifa."
+
+#. module: product
+#: field:product.template,mes_type:0
+msgid "Measure Type"
+msgstr "Tipo de medida"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action
+msgid ""
+"There can be more than one version of a pricelist. Here you can create and "
+"manage new versions of a price list. Some examples of versions: 2010, 2011, "
+"Summer Promotion, etc."
+msgstr ""
+"No pot haver-hi més d'una versió d'una llista de preus. Aquí podeu crear i "
+"administrar noves versions d'una llista de preus. Alguns exemples de "
+"versions: 2010, 2011, promoció d'estiu, etc"
 
 #. module: product
 #: help:product.uom,factor:0
@@ -1639,31 +1454,97 @@ msgstr ""
 "1 * (unitat de referència) = ràtio * (aquesta unitat)"
 
 #. module: product
+#: help:product.template,state:0
+msgid "Tells the user if he can use the product or not."
+msgstr "Informa a l'usuari si pot usar el producte o no."
+
+#. module: product
+#: selection:product.template,type:0
+msgid "Stockable Product"
+msgstr "Estocable"
+
+#. module: product
+#: field:pricelist.partnerinfo,min_quantity:0
+#: field:product.supplierinfo,qty:0
+msgid "Quantity"
+msgstr "Quantitat"
+
+#. module: product
+#: field:product.packaging,code:0
+msgid "Code"
+msgstr "Codi"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_gram
+msgid "g"
+msgstr "g"
+
+#. module: product
+#: view:product.supplierinfo:0
+msgid "Seq"
+msgstr "Seq"
+
+#. module: product
+#: view:product.price_list:0
+msgid "Calculate Product Price per unit base on pricelist version."
+msgstr ""
+"Calcula els preus del producte segons unitats per una versió de tarifa."
+
+#. module: product
+#: selection:product.template,mes_type:0
+msgid "Variable"
+msgstr "Variable"
+
+#. module: product
 #: help:product.template,uom_id:0
 msgid "Default Unit of Measure used for all stock operation."
 msgstr ""
 "Unitat de mesura per defecte utilitzada per a totes les operacions d'estoc."
 
 #. module: product
-#: model:product.category,name:product.product_category_misc0
-msgid "Misc"
-msgstr "Varis"
+#: model:ir.model,name:product.model_product_ul
+msgid "Shipping Unit"
+msgstr "Unitat d'enviament"
 
 #. module: product
-#: model:product.template,name:product.product_product_pc4_product_template
-msgid "Customizable PC"
-msgstr "PC personalitzable"
+#: field:product.packaging,height:0
+msgid "Height"
+msgstr "Altura"
 
 #. module: product
-#: field:pricelist.partnerinfo,price:0
-msgid "Unit Price"
-msgstr "Preu un."
+#: help:product.pricelist.version,date_end:0
+msgid "Ending date for this pricelist version to be valid."
+msgstr "Data final de validesa d'aquesta versió de tarifa."
 
 #. module: product
-#: model:product.category,name:product.product_category_7
-#: model:product.template,name:product.product_product_1_product_template
-msgid "Onsite Intervention"
-msgstr "Intervenció en el mateix lloc"
+#: field:pricelist.partnerinfo,suppinfo_id:0
+msgid "Partner Information"
+msgstr "Informació d'empresa"
+
+#. module: product
+#: selection:product.category,type:0
+msgid "View"
+msgstr "Vista"
+
+#. module: product
+#: model:product.category,name:product.cat0
+msgid "All products"
+msgstr "Tots els productes"
+
+#. module: product
+#: view:product.price_list:0
+msgid "Close"
+msgstr "Tanca"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_item
+msgid "Pricelist item"
+msgstr "Element de la tarifa"
+
+#. module: product
+#: help:product.price.type,name:0
+msgid "Name of this kind of price."
+msgstr "Nom d'aquest tipus de preu."
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -1671,14 +1552,75 @@ msgid "Public Pricelist"
 msgstr "Tarifa pública"
 
 #. module: product
-#: model:product.category,name:product.product_category_marketableproduct0
-msgid "Marketable Products"
-msgstr "Productes negociables"
+#: field:product.product,product_image:0
+msgid "Image"
+msgstr ""
 
 #. module: product
-#: field:product.supplierinfo,product_code:0
-msgid "Supplier Product Code"
-msgstr "Codi producte del proveïdor"
+#: selection:product.ul,type:0
+#: model:product.uom.categ,name:product.product_uom_categ_unit
+msgid "Unit"
+msgstr "Unitat de venda"
+
+#. module: product
+#: help:product.template,produce_delay:0
+msgid ""
+"Average delay in days to produce this product. This is only for the "
+"production order and, if it is a multi-level bill of material, it's only for "
+"the level of this product. Different lead times will be summed for all "
+"levels and purchase orders."
+msgstr ""
+"Demora mitjana en dies per produir aquest producte. Això només és per a "
+"l'ordre de fabricació i, si es tracta d'una llista de material multi-nivell, "
+"és només per al nivell d'aquest producte. Diferents temps de demora es sumen "
+"per a tots els nivells i comandes de compra."
+
+#. module: product
+#: field:product.price_list,qty2:0
+msgid "Quantity-2"
+msgstr "Quantitat-2"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Information"
+msgstr "Informació"
+
+#. module: product
+#: view:product.product:0
+msgid "Codes"
+msgstr "Codis"
+
+#. module: product
+#: field:product.price_list,qty4:0
+msgid "Quantity-4"
+msgstr "Quantitat-4"
+
+#. module: product
+#: field:product.price_list,qty5:0
+msgid "Quantity-5"
+msgstr "Quantitat-5"
+
+#. module: product
+#: view:product.packaging:0
+msgid "Other Info"
+msgstr "Altra informació"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_meter
+msgid "m"
+msgstr "m"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Delays"
+msgstr "Terminis"
+
+#. module: product
+#: model:product.uom.categ,name:product.uom_categ_wtime
+msgid "Working Time"
+msgstr "Horari de treball"
 
 #. module: product
 #: view:product.product:0
@@ -1686,14 +1628,69 @@ msgid "Default UOM"
 msgstr "UdM per defecte"
 
 #. module: product
+#: view:product.product:0
+msgid "Both stockable and consumable products"
+msgstr ""
+
+#. module: product
 #: selection:product.ul,type:0
 msgid "Pallet"
 msgstr "Palet"
 
 #. module: product
+#: model:process.node,note:product.process_node_product0
+msgid "Creation of the product"
+msgstr "Creació del producte"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+msgid ""
+"Create and manage the units of measure categories you want to be used in "
+"your system. If several units of measure are in the same category, they can "
+"be converted to each other. For example, in the unit of measure category "
+"\"Time\", you will have the following UoM: Hours, Days."
+msgstr ""
+"Creeu i gestioneu les categories d'unitats de mesura que vulgueu utilitzar "
+"en el vostre sistema. Si diverses unitats de mesura estan en la mateixa "
+"categoria, poden ser convertides entre elles. Per exemple, en a l'unitat de "
+"mesurada \"Temps\", tindrà les següents UdM: hores, dies."
+
+#. module: product
+#: selection:product.uom,uom_type:0
+msgid "Bigger than the reference UoM"
+msgstr "Major que la UdM de referència"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
+msgid ""
+"A price list contains rules to be evaluated in order to compute the purchase "
+"or sales price for all the partners assigned to a price list. Price lists "
+"have several versions (2010, 2011, Promotion of February 2010, etc.) and "
+"each version has several rules. Example: the customer price of a product "
+"category will be based on the supplier price multiplied by 1.80."
+msgstr ""
+"Una llista de preus conté normes que han d'avaluar-se amb la finalitat de "
+"calcular preu de compra o de venda per tots els tercers assignats amb una "
+"llista de preus. Les llistes de preus tenen diverses versions (2010, 2011, "
+"promoció de febrer de 2010, etc) i cada versió té diverses regles. Exemple: "
+"preu dels clients d'una categoria de producte es basarà en preu del "
+"proveïdor multiplicat per 1,80."
+
+#. module: product
 #: field:product.packaging,ul_qty:0
 msgid "Package by layer"
 msgstr "Paquets per pis"
+
+#. module: product
+#: view:product.uom.categ:0
+msgid "Units of Measure categories"
+msgstr "Categorias d'unitats de mesura"
+
+#. module: product
+#: field:pricelist.partnerinfo,price:0
+msgid "Unit Price"
+msgstr "Preu un."
 
 #. module: product
 #: field:product.template,warranty:0
@@ -1724,6 +1721,67 @@ msgid "Product"
 msgstr "Producte"
 
 #. module: product
+#: help:product.template,sale_delay:0
+msgid ""
+"This is the average delay in days between the confirmation of the customer "
+"order and the delivery of the finished products. It's the time you promise "
+"to your customers."
+msgstr ""
+"Aquesta és la demora mitjana en dies entre la confirmació de la comanda del "
+"client i el lliurament dels productes acabats. És el temps que prometeu als "
+"vostres clients."
+
+#. module: product
+#: code:addons/product/product.py:175
+#, python-format
+msgid "Cannot change the category of existing UoM '%s'."
+msgstr ""
+
+#. module: product
+#: field:product.packaging,ean:0
+msgid "EAN"
+msgstr "EAN"
+
+#. module: product
+#: view:product.template:0
+msgid "Product Description"
+msgstr "Descripció del producte"
+
+#. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr "El número total de productes que podeu posar per palet o caixa."
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid " ) + "
+msgstr " ) + "
+
+#. module: product
+#: model:ir.model,name:product.model_product_uom_categ
+msgid "Product uom categ"
+msgstr "Categ. UdM de productes"
+
+#. module: product
+#: field:product.price_list,qty3:0
+msgid "Quantity-3"
+msgstr "Quantitat-3"
+
+#. module: product
+#: help:product.product,outgoing_qty:0
+msgid ""
+"Quantity of products that are planned to leave.\n"
+"In a context with a single Stock Location, this includes goods leaving from "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving from the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods leaving from the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods leaving from any Stock Location typed as "
+"'internal'."
+msgstr ""
+
+#. module: product
 #: selection:product.template,supply_method:0
 msgid "Produce"
 msgstr "Produir"
@@ -1734,9 +1792,28 @@ msgid "Make to Order"
 msgstr "Obtenir sota comanda"
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
-msgstr "El número total de productes que podeu posar per palet o caixa."
+#: view:product.template:0
+msgid "UOM"
+msgstr "UdM"
+
+#. module: product
+#: field:product.pricelist.item,price_surcharge:0
+msgid "Price Surcharge"
+msgstr "Sobrecàrrega preu"
+
+#. module: product
+#: constraint:product.pricelist.version:0
+msgid "You cannot have 2 pricelist versions that overlap!"
+msgstr "No podeu tenir 2 versions de tarifa que es sobreposin!"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.action_product_price_list
+#: model:ir.model,name:product.model_product_price_list
+#: view:product.price_list:0
+#: report:product.pricelist:0
+#: field:product.pricelist.version,pricelist_id:0
+msgid "Price List"
+msgstr "Llista de preus"
 
 #. module: product
 #: field:product.product,variants:0
@@ -1744,570 +1821,14 @@ msgid "Variants"
 msgstr "Variant"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_category_action
-#: model:ir.ui.menu,name:product.menu_products_category
-msgid "Products by Category"
-msgstr "Productes per categoria"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_category_action_form
-#: model:ir.ui.menu,name:product.menu_product_category_action_form
-msgid "Product Categories"
-msgstr "Categories de productes"
-
-#. module: product
-#: field:product.template,uos_coeff:0
-msgid "UOM -> UOS Coeff"
-msgstr "Coef. UdM -> UdV"
-
-#. module: product
-#: help:product.supplierinfo,sequence:0
-msgid "Assigns the priority to the list of product supplier."
-msgstr "Assigna la prioritat a la llista de proveïdor de producte."
-
-#. module: product
-#: field:product.template,uom_id:0
-msgid "Default Unit Of Measure"
-msgstr "Unitat de mesura per defecte"
-
-#. module: product
-#: model:product.template,name:product.product_product_tow1_product_template
-msgid "ATX Mid-size Tower"
-msgstr "Torre de tamany mitjà ATX"
-
-#. module: product
-#: field:product.packaging,ean:0
-msgid "EAN"
-msgstr "EAN"
-
-#. module: product
 #: view:product.pricelist.item:0
-msgid "Rounding Method"
-msgstr "Mètode arrodoniment"
+msgid "Price Computation"
+msgstr "Càlcul del preu"
 
 #. module: product
-#: model:ir.actions.report.xml,name:product.report_product_label
-msgid "Products Labels"
-msgstr "Etiquetes de productes"
-
-#. module: product
-#: model:product.ul,name:product.product_ul_big_box
-msgid "Box 30x40x60"
-msgstr "Caixa 30x40x60"
-
-#. module: product
-#: selection:product.template,type:0
-msgid "Service"
-msgstr "Servei"
-
-#. module: product
-#: help:product.packaging,height:0
-msgid "The height of the package"
-msgstr "L'altura del paquet"
-
-#. module: product
-#: view:product.pricelist:0
-msgid "Products Price List"
-msgstr "Llista de preus de productes"
-
-#. module: product
-#: field:product.pricelist,company_id:0
-#: field:product.pricelist.item,company_id:0
-#: field:product.pricelist.version,company_id:0
-#: field:product.supplierinfo,company_id:0
-#: field:product.template,company_id:0
-msgid "Company"
-msgstr "Companyia"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_price_type_action
-msgid "Prices Types"
-msgstr "Tipus de preus"
-
-#. module: product
-#: help:product.template,list_price:0
-msgid ""
-"Base price for computing the customer price. Sometimes called the catalog "
-"price."
+#: model:res.groups,name:product.group_uos
+msgid "Product UoS View"
 msgstr ""
-"Preu base per calcular el preu de client. També dit el preu de catàleg."
-
-#. module: product
-#: code:addons/product/pricelist.py:518
-#, python-format
-msgid "Partner section of the product form"
-msgstr "Secció empresa del formulario de producte"
-
-#. module: product
-#: help:product.price.type,name:0
-msgid "Name of this kind of price."
-msgstr "Nom d'aquest tipus de preu."
-
-#. module: product
-#: field:product.supplierinfo,product_uom:0
-msgid "Supplier UoM"
-msgstr "UdM proveïdor"
-
-#. module: product
-#: help:product.pricelist.version,date_start:0
-msgid "Starting date for this pricelist version to be valid."
-msgstr "Data inicial de validesa d'aquesta versió de tarifa."
-
-#. module: product
-#: help:product.template,uom_po_id:0
-msgid ""
-"Default Unit of Measure used for purchase orders. It must be in the same "
-"category than the default unit of measure."
-msgstr ""
-"Unitat de mesura per defecte utilitzada per a les comandes de compra. Ha "
-"d'estar en la mateixa categoria que la unitat de mesura per defecte."
-
-#. module: product
-#: model:product.template,description:product.product_product_cpu1_product_template
-msgid "This product is configured with example of push/pull flows"
-msgstr "Aquest producte està configurat amb exemple de fluxos empeny/estira."
-
-#. module: product
-#: field:product.packaging,length:0
-msgid "Length"
-msgstr "Longitud"
-
-#. module: product
-#: model:product.uom.categ,name:product.uom_categ_length
-msgid "Length / Distance"
-msgstr "Longitud / Distància"
-
-#. module: product
-#: model:product.template,name:product.product_product_0_product_template
-msgid "Onsite Senior Intervention"
-msgstr "Intervenció en el mateix lloc senior"
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_type
-#: field:product.pricelist,type:0
-#: view:product.pricelist.type:0
-msgid "Pricelist Type"
-msgstr "Tipus de tarifa"
-
-#. module: product
-#: model:product.category,name:product.product_category_otherproducts0
-msgid "Other Products"
-msgstr "Altres productes"
-
-#. module: product
-#: view:product.product:0
-msgid "Characteristics"
-msgstr "Característiques"
-
-#. module: product
-#: field:product.template,sale_ok:0
-msgid "Can be Sold"
-msgstr "Pot ser venut"
-
-#. module: product
-#: field:product.template,produce_delay:0
-msgid "Manufacturing Lead Time"
-msgstr "Termini de lliurament de fabricació"
-
-#. module: product
-#: field:product.supplierinfo,pricelist_ids:0
-msgid "Supplier Pricelist"
-msgstr "Tarifa de proveïdor"
-
-#. module: product
-#: field:product.pricelist.item,base:0
-msgid "Based on"
-msgstr "Basat en"
-
-#. module: product
-#: model:product.category,name:product.product_category_rawmaterial0
-msgid "Raw Materials"
-msgstr "Matèries primeres"
-
-#. module: product
-#: help:product.product,virtual_available:0
-msgid ""
-"Future stock for this product according to the selected locations or all "
-"internal if none have been selected. Computed as: Real Stock - Outgoing + "
-"Incoming."
-msgstr ""
-"Estoc futur d'aquest producte conforme a les ubicacions seleccionades o "
-"totes les internes, si cap d'elles ha estat seleccionada. Calculat com: "
-"Estoc real - Sortides+ Entrades."
-
-#. module: product
-#: field:product.pricelist,name:0
-msgid "Pricelist Name"
-msgstr "Nom tarifa"
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_version
-#: view:product.pricelist:0
-#: view:product.pricelist.version:0
-msgid "Pricelist Version"
-msgstr "Versió de tarifa"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "* ( 1 + "
-msgstr "* ( 1 + "
-
-#. module: product
-#: help:product.packaging,weight:0
-msgid "The weight of a full package, pallet or box."
-msgstr "El pes d'un paquet, palet o caixa complet/a."
-
-#. module: product
-#: model:product.template,name:product.product_product_hdd2_product_template
-msgid "HDD Seagate 7200.8 120GB"
-msgstr "HDD Seagate 7200.8 120GB"
-
-#. module: product
-#: model:product.template,name:product.product_product_employee0_product_template
-msgid "Employee"
-msgstr "Treballador"
-
-#. module: product
-#: model:product.template,name:product.product_product_shelfofcm0_product_template
-msgid "Shelf of 100cm"
-msgstr "Prestatge de 100cm"
-
-#. module: product
-#: model:ir.model,name:product.model_product_category
-#: field:product.pricelist.item,categ_id:0
-msgid "Product Category"
-msgstr "Categoria de producte"
-
-#. module: product
-#: report:product.pricelist:0
-msgid "Price List Name"
-msgstr "Nom tarifa"
-
-#. module: product
-#: field:product.supplierinfo,delay:0
-msgid "Delivery Lead Time"
-msgstr "Temps inicial d'entrega"
-
-#. module: product
-#: help:product.uom,active:0
-msgid ""
-"By unchecking the active field you can disable a unit of measure without "
-"deleting it."
-msgstr ""
-"Si el camp actiu es desmarca, permet ocultar una unitat de mesura sense "
-"eliminar-la."
-
-#. module: product
-#: field:product.template,seller_delay:0
-msgid "Supplier Lead Time"
-msgstr "Termini de lliurament del proveïdor"
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Box"
-msgstr "Caixa"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_ul_form_action
-msgid ""
-"Create and manage your packaging dimensions and types you want to be "
-"maintained in your system."
-msgstr ""
-"Creeu i gestioneu les unitats i tipus d'embalatge que vulgui utilitzar en el "
-"seu sistema."
-
-#. module: product
-#: model:product.template,name:product.product_product_rearpanelarm1_product_template
-msgid "Rear Panel SHE200"
-msgstr "Panell posterior SHE200"
-
-#. module: product
-#: help:product.pricelist.type,key:0
-msgid ""
-"Used in the code to select specific prices based on the context. Keep "
-"unchanged."
-msgstr ""
-"Utilitzat en el codi per seleccionar preus específics basats en el context. "
-"Deixeu-lo tal como està"
-
-#. module: product
-#: model:product.template,name:product.product_product_hdd1_product_template
-msgid "HDD Seagate 7200.8 80GB"
-msgstr "HDD Seagate 7200.8 80GB"
-
-#. module: product
-#: help:product.supplierinfo,qty:0
-msgid "This is a quantity which is converted into Default Uom."
-msgstr "Aquesta és una quantitat que serà convertida en UdM per defecte."
-
-#. module: product
-#: field:product.packaging,ul:0
-msgid "Type of Package"
-msgstr "Tipus de empaquetament"
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Pack"
-msgstr "Paquet"
-
-#. module: product
-#: model:product.category,name:product.product_category_4
-msgid "Dello Computer"
-msgstr "Ordenador Dello"
-
-#. module: product
-#: model:product.uom.categ,name:product.product_uom_categ_kgm
-msgid "Weight"
-msgstr "Pes"
-
-#. module: product
-#: model:product.template,name:product.product_product_22_product_template
-msgid "Processor on demand"
-msgstr "Processador sota comanda"
-
-#. module: product
-#: model:product.template,name:product.product_product_25_product_template
-msgid "Mouse"
-msgstr "Ratolí"
-
-#. module: product
-#: field:product.uom,uom_type:0
-msgid "UoM Type"
-msgstr "Tipus UdM"
-
-#. module: product
-#: help:product.template,product_manager:0
-msgid "This is use as task responsible"
-msgstr "S'utilitza com a responsable de tasca."
-
-#. module: product
-#: help:product.uom,rounding:0
-msgid ""
-"The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
-"that cannot be further split, such as a piece."
-msgstr ""
-"La quantitat calculada serà un múltiple d'aquest valor. Utilitzeu 1.0 per a "
-"una Unitat de Mesura que no pugui dividir-se encara més, com una peça."
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Descriptions"
-msgstr "Descripcions"
-
-#. module: product
-#: field:product.template,loc_row:0
-msgid "Row"
-msgstr "Fila"
-
-#. module: product
-#: model:product.template,name:product.product_product_rearpanelarm0_product_template
-msgid "Rear Panel SHE100"
-msgstr "Panell posterior SHE100"
-
-#. module: product
-#: model:product.template,name:product.product_product_23_product_template
-msgid "Complete PC With Peripherals"
-msgstr "PC complert amb perifèrics"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Weigths"
-msgstr "Pesos"
-
-#. module: product
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Error! No podeu crear membres associats recursius."
-
-#. module: product
-#: model:product.template,name:product.product_product_hotelexpenses0_product_template
-msgid "Hotel Expenses"
-msgstr "Despeses hotel"
-
-#. module: product
-#: help:product.uom,factor_inv:0
-msgid ""
-"How many times this UoM is bigger than the reference UoM in this category:\n"
-"1 * (this unit) = ratio * (reference unit)"
-msgstr ""
-"Quantes vegades aquesta UdM és més gran que la UdM de referència en aquesta "
-"categoria:\n"
-"1 * (aquesta unitat) = ràtio * (unitat de referència)"
-
-#. module: product
-#: model:product.template,name:product.product_product_shelf0_product_template
-msgid "Rack 100cm"
-msgstr "Prestatgeria 100cm"
-
-#. module: product
-#: help:product.packaging,sequence:0
-msgid "Gives the sequence order when displaying a list of packaging."
-msgstr "Indica l'ordre de seqüència quan es mostra una llista de paquets."
-
-#. module: product
-#: field:product.pricelist.item,price_round:0
-msgid "Price Rounding"
-msgstr "Arrodoniment preu"
-
-#. module: product
-#: field:product.pricelist.item,price_max_margin:0
-msgid "Max. Price Margin"
-msgstr "Marge preu màx."
-
-#. module: product
-#: help:product.supplierinfo,product_name:0
-msgid ""
-"This supplier's product name will be used when printing a request for "
-"quotation. Keep empty to use the internal one."
-msgstr ""
-"Aquest nom de producte del proveïdor s'utilitza per imprimir una sol·licitud "
-"de pressupost. Deixeu-ho buit per usar el nom intern."
-
-#. module: product
-#: selection:product.template,mes_type:0
-msgid "Variable"
-msgstr "Variable"
-
-#. module: product
-#: field:product.template,rental:0
-msgid "Can be Rent"
-msgstr "Pot ser llogat"
-
-#. module: product
-#: model:product.price.type,name:product.standard_price
-#: field:product.template,standard_price:0
-msgid "Cost Price"
-msgstr "Preu cost"
-
-#. module: product
-#: field:product.pricelist.item,price_min_margin:0
-msgid "Min. Price Margin"
-msgstr "Marge preu mín."
-
-#. module: product
-#: field:product.template,weight:0
-msgid "Gross weight"
-msgstr "Pes brut"
-
-#. module: product
-#: model:product.template,name:product.product_product_assemblysection0_product_template
-msgid "Assembly Section"
-msgstr "Secció muntatge"
-
-#. module: product
-#: model:product.category,name:product.product_category_3
-msgid "Computer Stuff"
-msgstr "Complements d'ordenador"
-
-#. module: product
-#: model:product.category,name:product.product_category_8
-msgid "Phone Help"
-msgstr "Ajuda telefònica"
-
-#. module: product
-#: help:product.pricelist.item,price_round:0
-msgid ""
-"Sets the price so that it is a multiple of this value.\n"
-"Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
-"Calcula el preu de manera que sigui un múltiple d'aquest valor.\n"
-"L'arrodoniment s'aplica després del descompte i abans de l'increment.\n"
-"Per tenir els preus acabats en 9,99, arrodoniment 10, increment -0,01."
-
-#. module: product
-#: view:product.price_list:0
-msgid "Close"
-msgstr "Tanca"
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_item
-msgid "Pricelist item"
-msgstr "Element de la tarifa"
-
-#. module: product
-#: model:product.template,name:product.product_product_21_product_template
-msgid "RAM on demand"
-msgstr "RAM sota comanda"
-
-#. module: product
-#: view:res.partner:0
-msgid "Sales Properties"
-msgstr "Propietats de venda"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_ton
-msgid "tonne"
-msgstr "tona"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Delays"
-msgstr "Terminis"
-
-#. module: product
-#: model:process.node,note:product.process_node_product0
-msgid "Creation of the product"
-msgstr "Creació del producte"
-
-#. module: product
-#: help:product.template,type:0
-msgid ""
-"Will change the way procurements are processed. Consumables are stockable "
-"products with infinite stock, or for use when you have no inventory "
-"management in the system."
-msgstr ""
-"Canviarà la forma en què les compres són processades. Els consumibles són "
-"productes emmagatzemables i amb infinita capacitat d'emmagatzematge, o per "
-"utilitzar-se quan no hi ha administració d'inventaris en el sistema."
-
-#. module: product
-#: field:pricelist.partnerinfo,name:0
-#: field:product.packaging,name:0
-#: report:product.pricelist:0
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,description:0
-msgid "Description"
-msgstr "Descripció"
-
-#. module: product
-#: code:addons/product/pricelist.py:361
-#, python-format
-msgid ""
-"Could not resolve product category, you have defined cyclic categories of "
-"products!"
-msgstr ""
-"No s'ha pogut resoldre la categoria del producte, ha definit categories de "
-"producte cícliques!"
-
-#. module: product
-#: view:product.template:0
-msgid "Product Description"
-msgstr "Descripció del producte"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid " ) + "
-msgstr " ) + "
-
-#. module: product
-#: help:product.product,incoming_qty:0
-msgid ""
-"Quantities of products that are planned to arrive in selected locations or "
-"all internal if none have been selected."
-msgstr ""
-"Quantitats de productes que està previst que arribin en les ubicacions "
-"seleccionades o en totes les ubicacions internes si cap ha estat "
-"seleccionada."
-
-#. module: product
-#: field:product.template,volume:0
-msgid "Volume"
-msgstr "Volum"
 
 #. module: product
 #: field:product.template,loc_case:0
@@ -2315,20 +1836,56 @@ msgid "Case"
 msgstr "Caixa"
 
 #. module: product
+#: field:product.pricelist.version,date_end:0
+msgid "End Date"
+msgstr "Data final"
+
+#. module: product
+#: field:product.product,packaging:0
+msgid "Logistical Units"
+msgstr "Unitats de logística"
+
+#. module: product
+#: field:product.category,complete_name:0
+#: field:product.category,name:0
+#: field:product.pricelist.type,name:0
+#: field:product.pricelist.version,name:0
 #: view:product.product:0
-msgid "Product Variant"
-msgstr "Variants de producte"
+#: field:product.product,name_template:0
+#: field:product.template,name:0
+#: field:product.ul,name:0
+#: field:product.uom,name:0
+#: field:product.uom.categ,name:0
+msgid "Name"
+msgstr "Nom"
 
 #. module: product
-#: model:product.category,name:product.product_category_shelves0
-msgid "Shelves"
-msgstr "Prestatges"
+#: field:product.template,purchase_ok:0
+msgid "Can be Purchased"
+msgstr "Pot ser comprat"
 
 #. module: product
-#: code:addons/product/pricelist.py:517
-#, python-format
-msgid "Other Pricelist"
-msgstr "Altra tarifa"
+#: field:product.template,uos_coeff:0
+msgid "UOM -> UOS Coeff"
+msgstr "Coef. UdM -> UdV"
+
+#. module: product
+#: help:res.partner,property_product_pricelist:0
+msgid ""
+"This pricelist will be used, instead of the default one, for sales to the "
+"current partner"
+msgstr ""
+"Aquesta tarifa s'utilitzarà, en lloc de la per defecte, per a les vendes de "
+"l'empresa actual."
+
+#. module: product
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid ""
+"1 or several supplier(s) can be linked to a product. All information stands "
+"in the product form."
+msgstr ""
+"1 o diversos proveïdor(s) poden ser relacionats amb un producte. Tota la "
+"informació es troba en el formulari del producte."
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2350,9 +1907,50 @@ msgid "Palletization"
 msgstr "Paletització"
 
 #. module: product
+#: field:product.packaging,length:0
+msgid "Length"
+msgstr "Longitud"
+
+#. module: product
+#: code:addons/product/product.py:345
+#, python-format
+msgid "UoM categories Mismatch!"
+msgstr ""
+
+#. module: product
+#: field:product.template,volume:0
+msgid "Volume"
+msgstr "Volum"
+
+#. module: product
+#: help:product.supplierinfo,sequence:0
+msgid "Assigns the priority to the list of product supplier."
+msgstr "Assigna la prioritat a la llista de proveïdor de producte."
+
+#. module: product
+#: field:product.template,uom_id:0
+msgid "Default Unit Of Measure"
+msgstr "Unitat de mesura per defecte"
+
+#. module: product
+#: help:product.packaging,ean:0
+msgid "The EAN code of the package unit."
+msgstr "El codi EAN de la unitat del paquet."
+
+#. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
 msgstr "Fi del cicle de vida"
+
+#. module: product
+#: field:pricelist.partnerinfo,name:0
+#: field:product.packaging,name:0
+#: report:product.pricelist:0
+#: view:product.product:0
+#: view:product.template:0
+#: field:product.template,description:0
+msgid "Description"
+msgstr "Descripció"
 
 #. module: product
 #: help:product.product,packaging:0
@@ -2365,11 +1963,27 @@ msgstr ""
 "el mòdul EDI."
 
 #. module: product
+#: help:product.supplierinfo,delay:0
+msgid ""
+"Lead time in days between the confirmation of the purchase order and the "
+"reception of the products in your warehouse. Used by the scheduler for "
+"automatic computation of the purchase order planning."
+msgstr ""
+"Termini de lliurament en dies entre la confirmació de la comanda de compra i "
+"la recepció dels productes en el vostre magatzem. Utilitzat pel planificador "
+"per al càlcul automàtic de la planificació de la comanda de compra."
+
+#. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action
 #: field:product.pricelist,version_id:0
 msgid "Pricelist Versions"
 msgstr "Versions de tarifa"
+
+#. module: product
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: product
 #: field:product.category,sequence:0
@@ -2385,14 +1999,42 @@ msgid "Sale Price"
 msgstr "Preu de venda"
 
 #. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
+msgstr "Abastament & Ubicacions"
+
+#. module: product
+#: constraint:product.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr ""
+
+#. module: product
 #: field:product.category,type:0
 msgid "Category Type"
 msgstr "Tipus de categoria"
 
 #. module: product
-#: model:product.category,name:product.cat2
-msgid "Private"
-msgstr "Privat"
+#: model:product.uom,name:product.product_uom_km
+msgid "km"
+msgstr "km"
+
+#. module: product
+#: help:product.template,uos_id:0
+msgid ""
+"Used by companies that manage two units of measure: invoicing and inventory "
+"management. For example, in food industries, you will manage a stock of ham "
+"but invoice in Kg. Keep empty to use the default UOM."
+msgstr ""
+"Utilitzat per les empreses que gestionen dues unitats de mesura: facturació "
+"i gestió d'inventari. Per exemple, en indústries alimentàries, pot gestionar "
+"un estoc d'unitats de pernil, però facturar en Kg. Deixeu-ho buit per "
+"utilitzar la UdM per defecte."
+
+#. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Quantitat-1"
 
 #. module: product
 #: help:product.template,uos_coeff:0
@@ -2404,14 +2046,54 @@ msgstr ""
 "UdV = UdM * coef"
 
 #. module: product
+#: constraint:product.packaging:0
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Error: Codi EAN erroni"
+
+#. module: product
+#: field:product.pricelist.item,min_quantity:0
+msgid "Min. Quantity"
+msgstr "Quantitat Mín."
+
+#. module: product
+#: model:ir.actions.report.xml,name:product.report_product_label
+msgid "Products Labels"
+msgstr "Etiquetes de productes"
+
+#. module: product
 #: help:product.template,volume:0
 msgid "The volume in m3."
 msgstr "El volum en m3."
 
 #. module: product
+#: model:ir.model,name:product.model_product_price_type
+msgid "Price Type"
+msgstr "Tipus de preu"
+
+#. module: product
+#: view:product.product:0
+msgid "To Sell"
+msgstr "A vendre"
+
+#. module: product
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Descompte preu"
+
+#. module: product
+#: help:product.category,sequence:0
+msgid ""
+"Gives the sequence order when displaying a list of product categories."
+msgstr ""
+"Indica l'ordre de seqüència quan es mostra una llista de categories de "
+"producte."
+
+#~ msgid "DDR 512MB PC400"
+#~ msgstr "DDR 512MB PC400"
+
+#~ msgid "Onsite Senior Intervention"
+#~ msgstr "Intervenció en el mateix lloc senior"
 
 #~ msgid ""
 #~ "The minimal quantity to purchase for this supplier, expressed in the default "
@@ -2419,6 +2101,14 @@ msgstr "Descompte preu"
 #~ msgstr ""
 #~ "La quantitat mínima a comprar a aquest proveïdor, expressada en la unitat de "
 #~ "mesura per defecte."
+
+#~ msgid ""
+#~ "Quantities of products that are planned to arrive in selected locations or "
+#~ "all internal if none have been selected."
+#~ msgstr ""
+#~ "Quantitats de productes que està previst que arribin en les ubicacions "
+#~ "seleccionades o en totes les ubicacions internes si cap ha estat "
+#~ "seleccionada."
 
 #~ msgid ""
 #~ "Futur stock for this product according to the selected location or all "
@@ -2435,14 +2125,42 @@ msgstr "Descompte preu"
 #~ msgid "Product Process"
 #~ msgstr "Procés producte"
 
+#~ msgid "Sellable"
+#~ msgstr "Vendible"
+
+#~ msgid "Kit Keyboard + Mouse"
+#~ msgstr "Kit Teclat + Ratlí"
+
 #~ msgid "Customer Price"
 #~ msgstr "Preu client"
 
 #~ msgid "List Price"
 #~ msgstr "Preu llista"
 
+#~ msgid "Prices Types"
+#~ msgstr "Tipus de preus"
+
+#~ msgid "Processor AMD Athlon XP 2200+"
+#~ msgstr "Processador AMD Athlon XP 2200+"
+
+#~ msgid "Weigths"
+#~ msgstr "Pesos"
+
+#~ msgid "Silent fan"
+#~ msgstr "Ventilador silenciós"
+
+#~ msgid ""
+#~ "Produce will generate production order or tasks, according to the product "
+#~ "type. Purchase will trigger purchase orders when requested."
+#~ msgstr ""
+#~ "Produir generarà ordre de producció o tasques, segons el tipus de producte. "
+#~ "Compra generarà comandes de compra quan sigui necessari."
+
 #~ msgid "The number of layer on a palet or box"
 #~ msgstr "El número de pis en un palet o caixa"
+
+#~ msgid "Virtual Stock"
+#~ msgstr "Estoc virtual"
 
 #~ msgid "Prices Computations"
 #~ msgstr "Càlculs de preus"
@@ -2453,17 +2171,35 @@ msgstr "Descompte preu"
 #~ msgid "Number of Layer"
 #~ msgstr "Número de pis"
 
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Error! No podeu crear categories recursives."
+
 #~ msgid "Default UoM"
 #~ msgstr "UdM per defecte"
+
+#~ msgid "Keyboard"
+#~ msgstr "Teclat"
+
+#~ msgid "Mouse"
+#~ msgstr "Ratolí"
 
 #~ msgid "Create new Product"
 #~ msgstr "Crea nou producte"
 
+#~ msgid "Processor AMD Athlon XP 1800+"
+#~ msgstr "Processador AMD Athlon XP 1800+"
+
 #~ msgid "In Production"
 #~ msgstr "En producció"
 
+#~ msgid "Accessories"
+#~ msgstr "Accessoris"
+
 #~ msgid "Priority"
 #~ msgstr "Prioritat (0=Molt urgent)"
+
+#~ msgid "HDD on demand"
+#~ msgstr "HDD sota comanda"
 
 #~ msgid "Factor"
 #~ msgstr "Factor"
@@ -2473,6 +2209,9 @@ msgstr "Descompte preu"
 
 #~ msgid "Partner Product Name"
 #~ msgstr "Nom producte proveïdor"
+
+#~ msgid "PC"
+#~ msgstr "PC"
 
 #~ msgid ""
 #~ "This pricelist will be used, instead of the default one,                     "
@@ -2495,14 +2234,58 @@ msgstr "Descompte preu"
 #~ msgstr "Error: La UdV ha d'estar en una categoria diferent que la UdM"
 
 #~ msgid ""
+#~ "Quantities of products that are planned to leave in selected locations or "
+#~ "all internal if none have been selected."
+#~ msgstr ""
+#~ "Quantitats de productes que estan previstos deixar en les ubicacions "
+#~ "seleccionades o totes les internes si no s'ha seleccionat cap."
+
+#~ msgid "HDD Seagate 7200.8 80GB"
+#~ msgstr "HDD Seagate 7200.8 80GB"
+
+#~ msgid "HDD Seagate 7200.8 160GB"
+#~ msgstr "HDD Seagate 7200.8 160GB"
+
+#~ msgid "Processor on demand"
+#~ msgstr "Processador sota comanda"
+
+#~ msgid ""
 #~ "Name of the product for this partner, will be used when printing a request "
 #~ "for quotation. Keep empty to use the internal one."
 #~ msgstr ""
 #~ "Nom del producte per aquesta empresa, s'utilitzarà al imprimir una petició "
 #~ "de pressupost. Deixeu-lo buit per utilitzar el nom intern."
 
+#~ msgid "IT components kits"
+#~ msgstr "Kits de components TI"
+
+#~ msgid "Regular processor config"
+#~ msgstr "Config. processador normal"
+
+#~ msgid ""
+#~ "Current quantities of products in selected locations or all internal if none "
+#~ "have been selected."
+#~ msgstr ""
+#~ "Quantitats actuals de productes en les ubicacions seleccionades o totes les "
+#~ "internes si no s'ha seleccionat cap."
+
+#~ msgid "Basic PC"
+#~ msgstr "PC Bàsic"
+
+#~ msgid "DDR 256MB PC400"
+#~ msgstr "DDR 256MB PC400"
+
+#~ msgid "Real Stock"
+#~ msgstr "Estoc real"
+
 #~ msgid "Can be sold"
 #~ msgstr "Pot ser venut"
+
+#~ msgid "Complete PC With Peripherals"
+#~ msgstr "PC complert amb perifèrics"
+
+#~ msgid "Mainboard ASUStek A7V8X-X"
+#~ msgstr "Placa mare ASUStek A7V8X-X"
 
 #~ msgid "Rate"
 #~ msgstr "Taxa"
@@ -2517,11 +2300,23 @@ msgstr "Descompte preu"
 #~ "gestionar un estoc d'unitats de pernil però realitzar la facturació en Kg. "
 #~ "Deixeu-lo buit per utilitzar l'UdM per defecte."
 
+#~ msgid "IT components"
+#~ msgstr "Components TI"
+
 #~ msgid "Purchase UoM"
 #~ msgstr "UdM de compra"
 
+#~ msgid "Regular case fan 80mm"
+#~ msgstr "Ventilador normal 80mm"
+
 #~ msgid "Price list"
 #~ msgstr "Tarifa"
+
+#~ msgid "Medium PC"
+#~ msgstr "PC Mitjà"
+
+#~ msgid "Dello Computer"
+#~ msgstr "Ordenador Dello"
 
 #~ msgid ""
 #~ "Gives the different ways to package the same product. This has no impact on "
@@ -2530,14 +2325,35 @@ msgstr "Descompte preu"
 #~ "Indica diferents maneres d'empaquetar el mateix producte. No influeix en "
 #~ "l'albarà i s'utilitza principalment si s'usa el mòdul EDI."
 
+#~ msgid "Pricelists Types"
+#~ msgstr "Tipus de tarifes"
+
 #~ msgid "Partner Product Code"
 #~ msgstr "Codi producte proveïdor"
+
+#~ msgid "Computer Stuff"
+#~ msgstr "Complements d'ordenador"
+
+#~ msgid "Phone Help"
+#~ msgstr "Ajuda telefònica"
+
+#~ msgid "Customizable PC"
+#~ msgstr "PC personalitzable"
+
+#~ msgid "Onsite Intervention"
+#~ msgstr "Intervenció en el mateix lloc"
 
 #~ msgid "Cancel"
 #~ msgstr "Cancel·la"
 
 #~ msgid "The total number of products you can put by palet or box."
 #~ msgstr "El número total de productes que podeu posar por palet o caixa."
+
+#~ msgid "RAM on demand"
+#~ msgstr "RAM sota comanda"
+
+#~ msgid "HDD Seagate 7200.8 120GB"
+#~ msgstr "HDD Seagate 7200.8 120GB"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -2558,6 +2374,12 @@ msgstr "Descompte preu"
 #~ msgid "Price type"
 #~ msgstr "Tipus de preu"
 
+#~ msgid "Mainboard ASUStek A7N8X"
+#~ msgstr "Placa mare ASUStek A7N8X"
+
+#~ msgid "Products Categories"
+#~ msgstr "Categories de productes"
+
 #~ msgid ""
 #~ "Coefficient to convert UOM to UOS\n"
 #~ " uom = uos * coeff"
@@ -2565,11 +2387,20 @@ msgstr "Descompte preu"
 #~ "Coeficient per convertir UdM a UdV\n"
 #~ " udm = udv * coef"
 
+#~ msgid "High speed processor config"
+#~ msgstr "Processador alta velocitat config."
+
+#~ msgid "Basic+ PC (assembly on order)"
+#~ msgstr "PC Bàsic+ (muntat sota comanda)"
+
 #~ msgid "Prices & Suppliers"
 #~ msgstr "Preus & Proveïdors"
 
 #~ msgid "The weight of a full of products palet or box."
 #~ msgstr "El pes d'un palet o caixa plena de productes."
+
+#~ msgid "ATX Mid-size Tower"
+#~ msgstr "Torre de tamany mitjà ATX"
 
 #~ msgid "Delivery Delay"
 #~ msgstr "Termini de lliurament"
@@ -2584,6 +2415,9 @@ msgstr "Descompte preu"
 #~ "producció i, si és una llista de materials multi-nivell, només pel nivell "
 #~ "d'aquest producte. Els diferents terminis seran sumats per a tots els "
 #~ "nivells i comandes de compra."
+
+#~ msgid "Private"
+#~ msgstr "Privat"
 
 #~ msgid ""
 #~ "Delay in days between the confirmation of the purchase order and the "
@@ -2642,6 +2476,12 @@ msgstr "Descompte preu"
 #~ "El coeficient per a la fórmula:\n"
 #~ "1 (unitat base) = coef. (esta unitat). Rati = 1 / Factor."
 
+#~ msgid "Products & Pricelists"
+#~ msgstr "Productes i tarifes"
+
+#~ msgid "Box 20x20x40"
+#~ msgstr "Caixa 20x20x40"
+
 #~ msgid ""
 #~ "This is the average time between the confirmation of the customer order and "
 #~ "the delivery of the finished products. It's the time you promise to your "
@@ -2649,6 +2489,9 @@ msgstr "Descompte preu"
 #~ msgstr ""
 #~ "Aquest és el temps mitjà entre la confirmació de la comanda del client i el "
 #~ "lliurament dels productes acabats. És el temps que promet als seus clients."
+
+#~ msgid "Box 30x40x60"
+#~ msgstr "Caixa 30x40x60"
 
 #~ msgid ""
 #~ "Will change the way procurements are processed. Consumables are stockable "
@@ -2675,3 +2518,183 @@ msgstr "Descompte preu"
 #~ msgstr ""
 #~ "La quantitat calculada serà un múltiple d'aquest valor. Utilitzeu 1.0 pels "
 #~ "productes que no es puguin dividir."
+
+#~ msgid ""
+#~ "Error: The default UOM and the Supplier Product UOM must be in the same "
+#~ "category."
+#~ msgstr ""
+#~ "Error: La UdM per defecte i la UdM del proveïdor del producte han d'estar en "
+#~ "la mateixa categoria."
+
+#~ msgid "Wood 2mm"
+#~ msgstr "Fusta 2mm"
+
+#~ msgid "Worker"
+#~ msgstr "Treballador"
+
+#~ msgid "Metal Cleats"
+#~ msgstr "Tacs de metall"
+
+#, python-format
+#~ msgid ""
+#~ "No active version for the selected pricelist !\n"
+#~ "Please create or activate one."
+#~ msgstr ""
+#~ "No hi ha una versió activa de la tarifa seleccionada!\n"
+#~ "Creeu o activeu una."
+
+#~ msgid ""
+#~ "Choose here the Unit of Measure in which the prices and quantities are "
+#~ "expressed below."
+#~ msgstr ""
+#~ "Seleccioneu aquí la unitat de mesura en què s'expressaran els preus i les "
+#~ "quantitats llistades."
+
+#~ msgid "Restaurant Expenses"
+#~ msgstr "Despeses restaurant"
+
+#~ msgid "KIT Shelf of 100cm"
+#~ msgstr "KIT prestatge de 100cm"
+
+#~ msgid "Side Panel"
+#~ msgstr "Panell lateral"
+
+#~ msgid "Shelf of 200cm"
+#~ msgstr "Prestatge de 200cm"
+
+#~ msgid "Kitchen Design Project"
+#~ msgstr "Projecte disseny de cuina"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Filtres extensos..."
+
+#~ msgid "Stockable"
+#~ msgstr "Estocable"
+
+#~ msgid "Marketable Services"
+#~ msgstr "Serveis negociables"
+
+#~ msgid "Wood Lintel 4m"
+#~ msgstr "Llinda fusta 4m"
+
+#, python-format
+#~ msgid ""
+#~ "Conversion from Product UoM m to Default UoM PCE is not possible as they "
+#~ "both belong to different Category!."
+#~ msgstr ""
+#~ "La conversió de la UdM m a la UdM PCE no és possible ja que ambdues "
+#~ "pertanyen a categories diferents!"
+
+#~ msgid "Rack 200cm"
+#~ msgstr "Prestatgeria 200cm"
+
+#~ msgid "Marketable Products"
+#~ msgstr "Productes negociables"
+
+#~ msgid "Misc"
+#~ msgstr "Varis"
+
+#~ msgid "Other Products"
+#~ msgstr "Altres productes"
+
+#~ msgid "Raw Materials"
+#~ msgstr "Matèries primeres"
+
+#~ msgid ""
+#~ "Future stock for this product according to the selected locations or all "
+#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
+#~ "Incoming."
+#~ msgstr ""
+#~ "Estoc futur d'aquest producte conforme a les ubicacions seleccionades o "
+#~ "totes les internes, si cap d'elles ha estat seleccionada. Calculat com: "
+#~ "Estoc real - Sortides+ Entrades."
+
+#~ msgid "Rear Panel SHE200"
+#~ msgstr "Panell posterior SHE200"
+
+#~ msgid "Employee"
+#~ msgstr "Treballador"
+
+#~ msgid "Shelf of 100cm"
+#~ msgstr "Prestatge de 100cm"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Error! No podeu crear membres associats recursius."
+
+#~ msgid "Rear Panel SHE100"
+#~ msgstr "Panell posterior SHE100"
+
+#~ msgid "Hotel Expenses"
+#~ msgstr "Despeses hotel"
+
+#~ msgid "Rack 100cm"
+#~ msgstr "Prestatgeria 100cm"
+
+#~ msgid "Assembly Section"
+#~ msgstr "Secció muntatge"
+
+#, python-format
+#~ msgid ""
+#~ "Could not resolve product category, you have defined cyclic categories of "
+#~ "products!"
+#~ msgstr ""
+#~ "No s'ha pogut resoldre la categoria del producte, ha definit categories de "
+#~ "producte cícliques!"
+
+#~ msgid ""
+#~ "Will change the way procurements are processed. Consumables are stockable "
+#~ "products with infinite stock, or for use when you have no inventory "
+#~ "management in the system."
+#~ msgstr ""
+#~ "Canviarà la forma en què les compres són processades. Els consumibles són "
+#~ "productes emmagatzemables i amb infinita capacitat d'emmagatzematge, o per "
+#~ "utilitzar-se quan no hi ha administració d'inventaris en el sistema."
+
+#~ msgid "Shelves"
+#~ msgstr "Prestatges"
+
+#~ msgid "tonne"
+#~ msgstr "tona"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This is the base module for managing products and pricelists in "
+#~ "OpenERP.\n"
+#~ "\n"
+#~ "    Products support variants, different pricing methods, suppliers\n"
+#~ "    information, make to stock/order, different unit of measures,\n"
+#~ "    packaging and properties.\n"
+#~ "\n"
+#~ "    Pricelists support:\n"
+#~ "    * Multiple-level of discount (by product, category, quantities)\n"
+#~ "    * Compute price based on different criteria:\n"
+#~ "        * Other pricelist,\n"
+#~ "        * Cost price,\n"
+#~ "        * List price,\n"
+#~ "        * Supplier price, ...\n"
+#~ "    Pricelists preferences by product and/or partners.\n"
+#~ "\n"
+#~ "    Print product labels with barcode.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Aquest és el mòdul base per gestionar productes i tarifes a OpenERP.\n"
+#~ "\n"
+#~ "    Els productes suporten variants, diferents mètodes de preus, informació\n"
+#~ "    de proveïdor, obtenir per a estoc/demanat, diferents unitats de mesura,\n"
+#~ "    empaquetat i propietats.\n"
+#~ "\n"
+#~ "    Suport de tarifes:\n"
+#~ "    * Múltiple-nivell de descompte (per producte, categoria, quantitats)\n"
+#~ "    * Càlcul del preu basat en diferents criteris:\n"
+#~ "        * Una altra tarifa,\n"
+#~ "        * Preu cost,\n"
+#~ "        * Preu llesta,\n"
+#~ "        * Preu proveïdor, ...\n"
+#~ "    Preferències de tarifes per producte i/o empreses.\n"
+#~ "\n"
+#~ "    Imprimir etiquetes de productes amb codis de barres.\n"
+#~ "    "
+
+#~ msgid "This product is configured with example of push/pull flows"
+#~ msgstr "Aquest producte està configurat amb exemple de fluxos empeny/estira."
