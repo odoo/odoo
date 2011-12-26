@@ -29,6 +29,7 @@ import pooler
 from tools.translate import _
 import decimal_precision as dp
 from osv.orm import browse_record, browse_null
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 #
 # Model definition
@@ -828,6 +829,32 @@ class procurement_order(osv.osv):
         po_vals.update({'order_line': [(0,0,line_vals)]})
         return self.pool.get('purchase.order').create(cr, uid, po_vals, context=context)
 
+    def _get_purchase_schedule_date(self, cr, uid, procurement, company, context=None):
+        """Return the datetime value to use as Schedule Date (``date_planned``) for the
+           Purchase Order Lines created to satisfy the given procurement.
+
+           :param browse_record procurement: the procurement for which a PO will be created.
+           :param browse_report company: the company to which the new PO will belong to.
+           :rtype: datetime
+           :return: the desired Schedule Date for the PO lines
+        """
+        procurement_date_planned = datetime.strptime(procurement.date_planned, DEFAULT_SERVER_DATETIME_FORMAT)
+        schedule_date = (procurement_date_planned - relativedelta(days=company.po_lead))
+        return schedule_date
+
+    def _get_purchase_order_date(self, cr, uid, procurement, company, schedule_date, context=None):
+        """Return the datetime value to use as Order Date (``date_order``) for the
+           Purchase Order created to satisfy the given procurement.
+
+           :param browse_record procurement: the procurement for which a PO will be created.
+           :param browse_report company: the company to which the new PO will belong to.
+           :param datetime schedule_date: desired Scheduled Date for the Purchase Order lines.
+           :rtype: datetime
+           :return: the desired Order Date for the PO
+        """
+        seller_delay = int(procurement.product_id.seller_delay)
+        return schedule_date - relativedelta(days=seller_delay)
+
     def make_po(self, cr, uid, ids, context=None):
         """ Make purchase order from procurement
         @return: New created Purchase Orders procurement wise
@@ -847,7 +874,6 @@ class procurement_order(osv.osv):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
             seller_qty = procurement.product_id.seller_qty
-            seller_delay = int(procurement.product_id.seller_delay)
             partner_id = partner.id
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
@@ -860,9 +886,8 @@ class procurement_order(osv.osv):
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner_id, {'uom': uom_id})[pricelist_id]
 
-            order_date = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
-            schedule_date = (order_date - relativedelta(days=company.po_lead))
-            order_dates = schedule_date - relativedelta(days=seller_delay)
+            schedule_date = self._get_purchase_schedule_date(cr, uid, procurement, company, context=context)
+            purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
 
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})
@@ -877,7 +902,7 @@ class procurement_order(osv.osv):
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,
                 'price_unit': price or 0.0,
-                'date_planned': schedule_date.strftime('%Y-%m-%d %H:%M:%S'),
+                'date_planned': schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'move_dest_id': res_id,
                 'notes': product.description_purchase,
                 'taxes_id': [(6,0,taxes)],
@@ -891,7 +916,7 @@ class procurement_order(osv.osv):
                 'location_id': procurement.location_id.id,
                 'warehouse_id': warehouse_id and warehouse_id[0] or False,
                 'pricelist_id': pricelist_id,
-                'date_order': order_dates.strftime('%Y-%m-%d %H:%M:%S'),
+                'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             }

@@ -54,6 +54,9 @@
   Now I check workcenter lines.
 -
   !python {model: mrp.production}: |
+    from tools import float_compare
+    def assert_equals(value1, value2, msg, float_compare=float_compare):
+        assert float_compare(value1, value2, precision_digits=2) == 0, msg
     order = self.browse(cr, uid, ref("mrp_production_shelf100cm"), context=context)
     assert len(order.workcenter_lines), "Workcenter lines are not generated proper."
     for line in order.workcenter_lines:
@@ -63,25 +66,20 @@
         d, m = divmod(factor, wc.capacity_per_cycle)
         cycle = (d + (m and 1.0 or 0.0))
         if line.name == "Short time assembly - Assembly Section":
-            assert line.sequence, "Sequence is not correspond: %s" % (line.name)
-            assert line.cycle == (4*cycle), "Cycle is not correspond: %s" % (line.name)
-            assert line.hour == (2*cycle*4 + hours), "Hours is not correspond: %s"% (line.name)
+            assert_equals(line.cycle, (4*cycle), "Computed cycles mismatch: %s" % (line.name))
+            assert_equals(line.hour, (2*cycle*4 + hours), "Computed hours mismatch: %s"% (line.name))
         elif line.name == "Short time assembly - Rear Panel SHE100":
-            assert line.sequence, "Sequence is not correspond: %s" % (line.name)
-            assert line.cycle == (1*cycle), "Cycle is not correspond: %s" % (line.name)
-            assert line.hour == (2*cycle + hours), "Hours is not correspond: %s"% (line.name)
+            assert_equals(line.cycle, (1*cycle), "Computed cycles mismatch: %s" % (line.name))
+            assert_equals(line.hour, (2*cycle + hours), "Computed hours mismatch: %s"% (line.name))
         elif line.name == "long time assembly - Shelf of 100cm":
-            assert line.sequence, "Sequence is not correspond: %s" % (line.name)
-            assert line.cycle == (2*cycle), "Cycle is not correspond: %s" % (line.name)
-            assert line.hour == (5*cycle + hours), "Hours is not correspond: %s"% (line.name)
+            assert_equals(line.cycle, (2*cycle), "Computed cycles mismatch: %s" % (line.name))
+            assert_equals(line.hour, (5*cycle + hours), "Computed hours mismatch: %s"% (line.name))
         elif line.name == "Testing - Shelf of 100cm":
-            assert line.sequence, "Sequence is not correspond: %s" % (line.name)
-            assert line.cycle == (1*cycle), "Cycle is not correspond: %s" % (line.name)
-            assert line.hour == (1*cycle + hours), "Hours is not correspond: %s"% (line.name)
+            assert_equals(line.cycle, (1*cycle), "Computed cycles mismatch: %s" % (line.name))
+            assert_equals(line.hour, (1*cycle + hours), "Computed hours mismatch: %s"% (line.name))
         elif line.name == "Packing - Shelf of 100cm":
-            assert line.sequence, "Sequence is not correspond: %s" % (line.name)
-            assert line.cycle == (1*cycle), "Cycle is not correspond: %s" % (line.name)
-            assert line.hour == (0.5*cycle + hours), "Hours is not correspond: %s"% (line.name)
+            assert_equals(line.cycle, (1*cycle), "Computed cycles mismatch: %s" % (line.name))
+            assert_equals(line.hour, (0.5*cycle + hours), "Computed hours mismatch: %s"% (line.name))
         else:
             raise AssertionError('unknown workcenter line: %s' % line)
 -

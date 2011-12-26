@@ -4,7 +4,7 @@
 -
   I assign this product(Service on Timesheet) and journal(Timesheet Journal) to employee "Quentin Paolino"
 -
-  !record {model: hr.employee, id: hr.employee2}:
+  !record {model: hr.employee, id: hr.employee_qdp}:
     product_id: product.product_consultant
     journal_id: hr_timesheet.analytic_journal
 -
@@ -16,7 +16,7 @@
     name: Quentin Paolinon
     state: new
     user_id: base.user_demo
-    employee_id: 'hr.employee2'
+    employee_id: 'hr.employee_qdp'
 -
   Now, at the time of login, I create Attendances and perform "Sign In" action.
 -
@@ -54,7 +54,7 @@
 -
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
-    employee_id: 'hr.employee2'
+    employee_id: 'hr.employee_qdp'
     name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(min(23,datetime.now().hour+2),min(59,datetime.now().minute+1),min(59,datetime.now().second+1))
 -
   I create Timesheet Entry for time spend on today work.

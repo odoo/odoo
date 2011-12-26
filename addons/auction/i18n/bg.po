@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-08-03 02:58+0000\n"
 "Last-Translator: lem0na <nickyk@gmx.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:25+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:57+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
@@ -174,6 +174,11 @@ msgid "Amount For Third Bank Statement"
 msgstr "Сума за трето банково извлечение"
 
 #. module: auction
+#: view:auction.lots:0
+msgid "Buy object"
+msgstr ""
+
+#. module: auction
 #: field:auction.lots,lot_num:0
 msgid "List Number"
 msgstr ""
@@ -263,7 +268,6 @@ msgid "Items"
 msgstr "Артикули"
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax5
 #: field:auction.dates,seller_costs:0
 msgid "Seller Costs"
 msgstr "Разходи на продавача"
@@ -277,6 +281,11 @@ msgstr "Разходи на продавача"
 #: model:ir.ui.menu,name:auction.menu_action_bid_open
 msgid "Bids"
 msgstr "Залози"
+
+#. module: auction
+#: field:report.auction,gross_revenue:0
+msgid "Gross Revenue"
+msgstr "Брутен приход"
 
 #. module: auction
 #: view:auction.lots.buyer_map:0
@@ -311,9 +320,9 @@ msgid "The Buyer \"%s\" has no Invoice Address."
 msgstr ""
 
 #. module: auction
-#: view:auction.dates:0
-msgid "Commissions"
-msgstr "Комисионни"
+#: model:ir.actions.act_window,name:auction.action_auction_object_categories
+msgid "Auction object Categories"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit_cost
@@ -384,6 +393,11 @@ msgstr "Юни"
 #, python-format
 msgid "No Lots belong to this Auction Date"
 msgstr "Няма паритиди към тази тръжна дата"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "New Object"
+msgstr ""
 
 #. module: auction
 #: selection:report.auction,month:0
@@ -458,9 +472,10 @@ msgid "Buyers"
 msgstr "Купувачи"
 
 #. module: auction
-#: model:account.tax.code,name:auction.account_tax_code_id4
-msgid "VAT 12%"
-msgstr "ДДС 12%"
+#: view:auction.lots:0
+#: view:report.auction:0
+msgid "Object Category"
+msgstr ""
 
 #. module: auction
 #: view:auction.dates:0
@@ -525,9 +540,9 @@ msgid "Last Auction Date"
 msgstr "Последна тръжна дата"
 
 #. module: auction
-#: model:account.tax,name:auction.tax_seller
-msgid "Seller Costs (12%)"
-msgstr "Разходи на продавач (12%)"
+#: field:report.object.encoded,obj_num:0
+msgid "# of Encoded obj."
+msgstr ""
 
 #. module: auction
 #: field:auction.lots,paid_vnd:0
@@ -626,11 +641,6 @@ msgid "March"
 msgstr "Март"
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax4
-msgid "Seller Costs1"
-msgstr "Разходи на продавач1"
-
-#. module: auction
 #: field:auction.deposit,create_uid:0
 #: field:auction.lots,create_uid:0
 msgid "Created by"
@@ -652,17 +662,12 @@ msgid "Account tax for seller"
 msgstr "Данъчна сметка на продавач"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:68
+#: code:addons/auction/wizard/auction_lots_invoice.py:67
 #: code:addons/auction/wizard/auction_lots_numerotate.py:103
 #: code:addons/auction/wizard/auction_lots_numerotate.py:129
 #, python-format
 msgid "UserError"
 msgstr "Потребителска грешка"
-
-#. module: auction
-#: model:ir.module.module,shortdesc:auction.module_meta_information
-msgid "Auction Management"
-msgstr "Управление на търг"
 
 #. module: auction
 #: field:auction.dates,journal_seller_id:0
@@ -682,14 +687,8 @@ msgid "Draft"
 msgstr "Проект"
 
 #. module: auction
-#: help:auction.lots,state:0
-msgid ""
-" * The 'Draft' state is used when a object is encoding as a new object.      "
-"           \n"
-"* The 'Unsold' state is used when object does not sold for long time, user "
-"can also set it as draft state after unsold.                 \n"
-"* The 'Paid' state is used when user pay for the object                 \n"
-"* The 'Sold' state is used when user buy the object."
+#: view:auction.dates:0
+msgid "Invoiced Auction"
 msgstr ""
 
 #. module: auction
@@ -725,6 +724,7 @@ msgstr ""
 #: view:auction.lots:0
 #: field:auction.lots,auction_id:0
 #: report:auction.total.rml:0
+#: model:ir.module.category,name:auction.module_category_auction
 #: model:ir.ui.menu,name:auction.auction_menu_root
 #: view:report.auction:0
 msgid "Auction"
@@ -784,11 +784,6 @@ msgid "Auction Name"
 msgstr "Име на търг"
 
 #. module: auction
-#: field:report.object.encoded,obj_num:0
-msgid "# of Encoded obj."
-msgstr ""
-
-#. module: auction
 #: field:aie.category,parent_id:0
 msgid "Parent aie Category"
 msgstr ""
@@ -844,11 +839,6 @@ msgid "Account tax for author commission"
 msgstr ""
 
 #. module: auction
-#: model:product.template,name:auction.monproduit_product_template
-msgid "Oeuvres a 21%"
-msgstr ""
-
-#. module: auction
 #: field:report.object.encoded,adj:0
 msgid "Adj."
 msgstr ""
@@ -900,9 +890,9 @@ msgid "To pay ("
 msgstr "За плащане ("
 
 #. module: auction
-#: model:account.tax,name:auction.tax_buyer
-msgid "Buyer Costs (20%)"
-msgstr "Разходи на купувач (20%)"
+#: model:ir.model,name:auction.model_auction_lots
+msgid "Auction Object"
+msgstr "Обект на търга"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction
@@ -960,6 +950,7 @@ msgstr "№"
 
 #. module: auction
 #: view:auction.catalog.flagey:0
+#: view:auction.taken:0
 msgid "Cancel"
 msgstr "Отмяна"
 
@@ -1080,16 +1071,17 @@ msgid "Active IDs not Found"
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/wizard/auction_aie_send.py:167
+#: code:addons/auction/wizard/auction_aie_send.py:166
 #: code:addons/auction/wizard/auction_aie_send_result.py:117
 #, python-format
 msgid "Connection to WWW.Auction-in-Europe.com failed !"
 msgstr "Връзката с WWW.Auction-in-Europe.com е невъзможна!"
 
 #. module: auction
-#: field:report.auction,gross_revenue:0
-msgid "Gross Revenue"
-msgstr "Брутен приход"
+#: model:ir.actions.act_window,name:auction.act_auction_lot_open_bid
+#: model:ir.actions.act_window,name:auction.action_bid_open
+msgid "Open Bids"
+msgstr "Отворени залози"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.open_board_auction
@@ -1105,6 +1097,7 @@ msgstr "Име"
 
 #. module: auction
 #: field:auction.deposit,name:0
+#: view:auction.lots:0
 #: field:auction.lots,bord_vnd_id:0
 msgid "Depositer Inventory"
 msgstr ""
@@ -1116,8 +1109,8 @@ msgid "The Buyer has no Invoice Address."
 msgstr "Купувачът няма адрес за фактура."
 
 #. module: auction
-#: view:report.object.encoded:0
-msgid "Total adj."
+#: model:ir.actions.act_window,name:auction.action_report_auction_adjudication_tree
+msgid "Auction Adjudication Report"
 msgstr ""
 
 #. module: auction
@@ -1147,11 +1140,6 @@ msgid "Mark Lots"
 msgstr ""
 
 #. module: auction
-#: model:ir.model,name:auction.model_auction_lots
-msgid "Auction Object"
-msgstr "Обект на търга"
-
-#. module: auction
 #: field:auction.lots,obj_num:0
 #: field:auction.lots.enable,confirm_en:0
 msgid "Catalog Number"
@@ -1178,6 +1166,15 @@ msgid "Debit:"
 msgstr "Дебит:"
 
 #. module: auction
+#: code:addons/auction/wizard/auction_aie_send.py:166
+#: code:addons/auction/wizard/auction_aie_send_result.py:116
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:70
+#: code:addons/auction/wizard/auction_lots_numerotate.py:145
+#, python-format
+msgid "Error"
+msgstr "Грешка"
+
+#. module: auction
 #: field:auction.lots,author_right:0
 msgid "Author rights"
 msgstr "Авторски права:"
@@ -1190,6 +1187,11 @@ msgstr "Авторски права:"
 #: view:report.auction:0
 msgid "Group By..."
 msgstr "Групиране по..."
+
+#. module: auction
+#: view:report.auction:0
+msgid "Auction during last month."
+msgstr ""
 
 #. module: auction
 #: help:auction.dates,journal_id:0
@@ -1219,6 +1221,11 @@ msgstr "Обновяване"
 #: model:ir.ui.menu,name:auction.auction_seller_menu
 msgid "Sellers"
 msgstr "Продавачи"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Draft Auction"
+msgstr ""
 
 #. module: auction
 #: help:auction.lots,lot_est2:0
@@ -1285,6 +1292,7 @@ msgstr "Приоритет"
 
 #. module: auction
 #: view:board.board:0
+#: model:ir.actions.act_window,name:auction.action_report_latest_objects_tree
 msgid "Latest objects"
 msgstr "Последни обекти"
 
@@ -1400,11 +1408,6 @@ msgid "Beginning of the auction"
 msgstr "Начало на аукцион"
 
 #. module: auction
-#: help:auction.pay.buy,statement_id3:0
-msgid "Third Bank Statement For Buyer"
-msgstr "Трето банково извлечение за купувач"
-
-#. module: auction
 #: view:report.auction:0
 #: field:report.auction,month:0
 #: field:report.auction.object.date,month:0
@@ -1448,19 +1451,19 @@ msgid "Create invoices"
 msgstr "Създаване на фактури"
 
 #. module: auction
-#: model:account.tax.code,name:auction.account_tax_code_id5
-msgid "VAT 5%"
-msgstr "ДДС 5%"
-
-#. module: auction
-#: field:auction.dates,expo1:0
-msgid "First Exposition Day"
-msgstr "Първи изложбен ден"
+#: model:ir.model,name:auction.model_auction_lots_buyer_map
+msgid "Map Buyer"
+msgstr ""
 
 #. module: auction
 #: report:buyer.list:0
 msgid "Lot"
 msgstr "Партида"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_auction_object_date_tree
+msgid "Auction Object Date"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_artists
@@ -1505,11 +1508,6 @@ msgid "Exposition Dates"
 msgstr ""
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax1
-msgid "TVA"
-msgstr ""
-
-#. module: auction
 #: field:auction.lots,important:0
 msgid "To be Emphatized"
 msgstr ""
@@ -1518,11 +1516,6 @@ msgstr ""
 #: report:buyer.list:0
 msgid "Total:"
 msgstr "Общо:"
-
-#. module: auction
-#: model:account.tax,name:auction.auction_tax2
-msgid "TVA1"
-msgstr ""
 
 #. module: auction
 #: view:report.auction.object.date:0
@@ -1564,7 +1557,7 @@ msgid "Auction manager "
 msgstr "Мениджър на търг "
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:68
+#: code:addons/auction/wizard/auction_lots_invoice.py:67
 #, python-format
 msgid ""
 "Two different buyers for the same invoice !\n"
@@ -1575,6 +1568,11 @@ msgstr ""
 #: view:auction.dates:0
 msgid "Invoice"
 msgstr "Фактура"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Commissions"
+msgstr "Комисионни"
 
 #. module: auction
 #: field:auction.lots,vnd_lim:0
@@ -1688,6 +1686,11 @@ msgid "Create Invoices For Buyer"
 msgstr "Текст на СМС"
 
 #. module: auction
+#: model:res.groups,name:auction.group_auction_manager
+msgid "Manager"
+msgstr ""
+
+#. module: auction
 #: view:auction.dates:0
 msgid "Names"
 msgstr "Имена"
@@ -1729,6 +1732,11 @@ msgid "Lots"
 msgstr "Партиди"
 
 #. module: auction
+#: model:ir.actions.act_window,name:auction.action_auction_artist
+msgid "Auction Artists"
+msgstr ""
+
+#. module: auction
 #: field:auction.lots,seller_price:0
 msgid "Seller price"
 msgstr "Цена на продавач"
@@ -1757,25 +1765,14 @@ msgid "Seller Price"
 msgstr "Цена на продавач"
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax20
-#: model:account.tax,name:auction.auction_tax6
-msgid "Frais de vente"
-msgstr ""
+#: help:auction.pay.buy,statement_id3:0
+msgid "Third Bank Statement For Buyer"
+msgstr "Трето банково извлечение за купувач"
 
 #. module: auction
-#: model:account.tax.code,name:auction.account_tax_code_id1
-msgid "VAT 1%"
-msgstr "ДДС 1%"
-
-#. module: auction
-#: model:account.tax,name:auction.auction_tax
-msgid "Droit d'auteur"
-msgstr ""
-
-#. module: auction
-#: model:ir.model,name:auction.model_auction_lots_buyer_map
-msgid "Map Buyer"
-msgstr ""
+#: field:auction.dates,expo1:0
+msgid "First Exposition Day"
+msgstr "Първи изложбен ден"
 
 #. module: auction
 #: field:report.auction.object.date,name:0
@@ -1797,10 +1794,15 @@ msgstr "Нетен приход"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_catalog_flagey_report.py:63
-#: code:addons/auction/wizard/auction_pay_buy.py:87
+#: code:addons/auction/wizard/auction_pay_buy.py:89
 #, python-format
 msgid "Error!"
 msgstr "Грешка!"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_latest_doposit_tree
+msgid "Latest Deposits"
+msgstr ""
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -1808,32 +1810,8 @@ msgid "# of items:"
 msgstr ""
 
 #. module: auction
-#: model:account.tax,name:auction.tax_buyer_author
-msgid "Author rights (4%)"
-msgstr "Авторски права  (4%)"
-
-#. module: auction
 #: field:report.object.encoded,estimation:0
 msgid "Estimation"
-msgstr ""
-
-#. module: auction
-#: model:ir.module.module,description:auction.module_meta_information
-msgid ""
-"\n"
-"     This module manages the records of the artists,\n"
-"     the articles to be put up for auction,the buyers and\n"
-"     sellers.\n"
-"\n"
-"     It completely manages an auction such as managing bids,\n"
-"     keeping track of the sold articles along with the paid\n"
-"     and unpaid objects including delivery of the articles.\n"
-"     Dashboards for auction that includes:\n"
-"       * My Latest Objects (list)\n"
-"       * My Latest Deposits (list)\n"
-"       * Objects Statistics (list)\n"
-"       * My Objects By Day (list)\n"
-"    "
 msgstr ""
 
 #. module: auction
@@ -1934,6 +1912,11 @@ msgid "Configuration"
 msgstr "Настройка"
 
 #. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_auction_object_date_tree_my
+msgid "My Auction Object Date"
+msgstr ""
+
+#. module: auction
 #: code:addons/auction/wizard/auction_pay_buy.py:80
 #, python-format
 msgid ""
@@ -1966,11 +1949,6 @@ msgid "Lots able"
 msgstr ""
 
 #. module: auction
-#: model:account.tax.code,name:auction.account_tax_code_id3
-msgid "VAT 10%"
-msgstr "ДДС 10%"
-
-#. module: auction
 #: field:auction.artists,name:0
 msgid "Artist/Author Name"
 msgstr ""
@@ -1997,11 +1975,6 @@ msgid "Auction Lots Category"
 msgstr ""
 
 #. module: auction
-#: model:account.tax.code,name:auction.account_tax_code_id2
-msgid "VAT 20%"
-msgstr "ДДС 20%"
-
-#. module: auction
 #: model:ir.model,name:auction.model_auction_payer_sel
 msgid "Auction payment for seller"
 msgstr ""
@@ -2015,6 +1988,11 @@ msgstr ""
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.seller_form_id
 msgid "Seller List"
+msgstr ""
+
+#. module: auction
+#: view:report.object.encoded:0
+msgid "Total adj."
 msgstr ""
 
 #. module: auction
@@ -2059,6 +2037,7 @@ msgstr "Табло за търгове"
 #: field:report.auction.adjudication,user_id:0
 #: field:report.auction.object.date,user_id:0
 #: field:report.object.encoded,user_id:0
+#: model:res.groups,name:auction.group_auction_user
 msgid "User"
 msgstr "Потребител"
 
@@ -2079,9 +2058,15 @@ msgid "Buyer Price - Seller Price - Indirect Cost"
 msgstr "Цена на купувач - Цена на продавач - Косвени разходи"
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.act_auction_lot_open_bid
-msgid "Open Bids"
-msgstr "Отворени залози"
+#: help:auction.lots,state:0
+msgid ""
+" * The 'Draft' state is used when a object is encoding as a new object.      "
+"           \n"
+"* The 'Unsold' state is used when object does not sold for long time, user "
+"can also set it as draft state after unsold.                 \n"
+"* The 'Paid' state is used when user pay for the object                 \n"
+"* The 'Sold' state is used when user buy the object."
+msgstr ""
 
 #. module: auction
 #: field:auction.artists,pseudo:0
@@ -2094,7 +2079,6 @@ msgid "Not sold"
 msgstr ""
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax3
 #: field:auction.dates,buyer_costs:0
 msgid "Buyer Costs"
 msgstr ""
@@ -2105,13 +2089,9 @@ msgid "Auction Date:"
 msgstr "Тръжна дата:"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_aie_send.py:167
-#: code:addons/auction/wizard/auction_aie_send_result.py:116
-#: code:addons/auction/wizard/auction_lots_buyer_map.py:70
-#: code:addons/auction/wizard/auction_lots_numerotate.py:145
-#, python-format
-msgid "Error"
-msgstr "Грешка"
+#: view:auction.deposit:0
+msgid "Objects Description"
+msgstr "Описание на обекти"
 
 #. module: auction
 #: field:auction.dates,buyer_invoice_history:0
@@ -2186,12 +2166,7 @@ msgid "Last Auction Day"
 msgstr "Последен тържен ден"
 
 #. module: auction
-#: view:auction.deposit:0
-msgid "Objects Description"
-msgstr "Описание на обекти"
-
-#. module: auction
-#: code:addons/auction/wizard/auction_pay_buy.py:87
+#: code:addons/auction/wizard/auction_pay_buy.py:89
 #, python-format
 msgid "No auction date for \"%s\": Please set one."
 msgstr ""
@@ -2264,8 +2239,18 @@ msgid "Expenses"
 msgstr "Разходи"
 
 #. module: auction
+#: view:report.auction:0
+msgid "Auction during current month."
+msgstr ""
+
+#. module: auction
 #: model:ir.model,name:auction.model_auction_payer
 msgid "Auction payer"
+msgstr ""
+
+#. module: auction
+#: view:report.auction:0
+msgid "Auction during current year."
 msgstr ""
 
 #. module: auction
@@ -2350,3 +2335,33 @@ msgstr ""
 
 #~ msgid "Provisoire"
 #~ msgstr "Временен"
+
+#~ msgid "VAT 12%"
+#~ msgstr "ДДС 12%"
+
+#~ msgid "VAT 1%"
+#~ msgstr "ДДС 1%"
+
+#~ msgid "VAT 20%"
+#~ msgstr "ДДС 20%"
+
+#~ msgid "Seller Costs (12%)"
+#~ msgstr "Разходи на продавач (12%)"
+
+#~ msgid "Seller Costs1"
+#~ msgstr "Разходи на продавач1"
+
+#~ msgid "Auction Management"
+#~ msgstr "Управление на търг"
+
+#~ msgid "Buyer Costs (20%)"
+#~ msgstr "Разходи на купувач (20%)"
+
+#~ msgid "VAT 5%"
+#~ msgstr "ДДС 5%"
+
+#~ msgid "Author rights (4%)"
+#~ msgstr "Авторски права  (4%)"
+
+#~ msgid "VAT 10%"
+#~ msgstr "ДДС 10%"

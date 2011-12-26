@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-19 16:20+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:54+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:26+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: project_planning
 #: constraint:account.analytic.account:0
@@ -76,11 +76,6 @@ msgstr "Les meves planificacions de projectes"
 #: field:report_account_analytic.planning.user,timesheet:0
 msgid "Timesheet"
 msgstr "Full d'assistència"
-
-#. module: project_planning
-#: model:ir.module.module,shortdesc:project_planning.module_meta_information
-msgid "Planning Management Module"
-msgstr "Mòdul per la gestió de la planificació"
 
 #. module: project_planning
 #: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
@@ -429,43 +424,6 @@ msgid "Total Remaining Tasks"
 msgstr "Total de tasques pendents"
 
 #. module: project_planning
-#: model:ir.module.module,description:project_planning.module_meta_information
-msgid ""
-"\n"
-"This module helps you to manage your plannings.\n"
-"\n"
-"This module is based on the analytic accounting and is totally integrated "
-"with\n"
-"* the timesheets encoding\n"
-"* the holidays management\n"
-"* the project management\n"
-"\n"
-"So that, each department manager can know if someone in his team has still "
-"unallocated time for a given planning (taking in consideration the validated "
-"leaves) or if he still needs to encode tasks.\n"
-"\n"
-"At the end of the month, the planning manager can also check if the encoded "
-"timesheets are respecting the planned time on each analytic account.\n"
-msgstr ""
-"\n"
-"Aquest mòdul li permet gestionar les seves planificacions.\n"
-"\n"
-"Aquest mòdul es basa en la comptabilitat analítica i està totalment integrat "
-"amb\n"
-"* la codificació de fulles de serveis\n"
-"* la gestió de les vacances/festes\n"
-"* la gestió de projectes\n"
-"\n"
-"D'aquesta forma, cada responsable de departament pot saber si algú en el seu "
-"equip encara té temps no assignat per una certa planificació (tenint en "
-"compte les vacances validades) o si encara ho necessiteu per codificar "
-"tasques.\n"
-"\n"
-"Al final del mes, el responsable de planificació també pot comprovar si les "
-"fulles de serveis codificades estan respectant el temps planificat en cada "
-"compte analític.\n"
-
-#. module: project_planning
 #: model:ir.model,name:project_planning.model_res_company
 msgid "Companies"
 msgstr "Companyies"
@@ -545,6 +503,12 @@ msgid "Reactivate"
 msgstr "Reactiva"
 
 #. module: project_planning
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
+"Error ! La data final de la tasca ha de ser major que la data d'inici"
+
+#. module: project_planning
 #: field:report_account_analytic.planning,user_id:0
 msgid "Responsible"
 msgstr "Responsable"
@@ -583,6 +547,11 @@ msgstr "Temps total d'assignació de tasques"
 #: field:report_account_analytic.planning,date_to:0
 msgid "End Date"
 msgstr "Data final"
+
+#. module: project_planning
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr ""
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -627,3 +596,41 @@ msgid ""
 msgstr ""
 "Aquest valor ve donat per la suma de l'assignació de temps amb la/es "
 "tasca/ques enllaçada/es, expressat en dies."
+
+#~ msgid "Planning Management Module"
+#~ msgstr "Mòdul per la gestió de la planificació"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module helps you to manage your plannings.\n"
+#~ "\n"
+#~ "This module is based on the analytic accounting and is totally integrated "
+#~ "with\n"
+#~ "* the timesheets encoding\n"
+#~ "* the holidays management\n"
+#~ "* the project management\n"
+#~ "\n"
+#~ "So that, each department manager can know if someone in his team has still "
+#~ "unallocated time for a given planning (taking in consideration the validated "
+#~ "leaves) or if he still needs to encode tasks.\n"
+#~ "\n"
+#~ "At the end of the month, the planning manager can also check if the encoded "
+#~ "timesheets are respecting the planned time on each analytic account.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Aquest mòdul li permet gestionar les seves planificacions.\n"
+#~ "\n"
+#~ "Aquest mòdul es basa en la comptabilitat analítica i està totalment integrat "
+#~ "amb\n"
+#~ "* la codificació de fulles de serveis\n"
+#~ "* la gestió de les vacances/festes\n"
+#~ "* la gestió de projectes\n"
+#~ "\n"
+#~ "D'aquesta forma, cada responsable de departament pot saber si algú en el seu "
+#~ "equip encara té temps no assignat per una certa planificació (tenint en "
+#~ "compte les vacances validades) o si encara ho necessiteu per codificar "
+#~ "tasques.\n"
+#~ "\n"
+#~ "Al final del mes, el responsable de planificació també pot comprovar si les "
+#~ "fulles de serveis codificades estan respectant el temps planificat en cada "
+#~ "compte analític.\n"

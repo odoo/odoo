@@ -1,4 +1,17 @@
 -
+  Make sure the main company has at least one shop.
+-
+  !python {model: sale.shop}: |
+    company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+    shop_ids = self.search(cr, uid, [('company_id', '=', company_id)])
+    if not shop_ids:
+        # take a shop, and assign it to the user's company
+        shop_ids = self.search(cr, uid, [])
+        if shop_ids:
+            self.write(cr, uid, [shop_ids[0]], {'company_id': company_id})
+-
+  I open the wizard "Make sales".
+-
   !record {model: crm.make.sale, id: crm_make_sale_0}:
     partner_id: base.res_partner_4
 -

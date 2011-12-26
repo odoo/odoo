@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2010-09-09 07:19+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:22+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:52+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: sale_journal
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -22,19 +27,21 @@ msgid "Note"
 msgstr "Not"
 
 #. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr ""
+
+#. module: sale_journal
 #: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and picking."
-msgstr "Satış ve paketleme için kullanılan yayın türü."
+msgid ""
+"This invoicing type will be used, by default, for invoicing the current "
+"partner."
+msgstr ""
 
 #. module: sale_journal
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "Sipariş referans no'su tek olmalı !"
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Faturalama"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -56,61 +63,16 @@ msgid "Notes"
 msgstr "Notlar"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Method"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
 msgstr "Faturalama Yöntemi"
 
 #. module: sale_journal
-#: model:ir.module.module,description:sale_journal.module_meta_information
-msgid ""
-"\n"
-"    The sales journal modules allows you to categorise your\n"
-"    sales and deliveries (picking lists) between different journals.\n"
-"    This module is very helpful for bigger companies that\n"
-"    works by departments.\n"
-"\n"
-"    You can use journal for different purposes, some examples:\n"
-"    * isolate sales of different departments\n"
-"    * journals for deliveries by truck or by UPS\n"
-"\n"
-"    Journals have a responsible and evolves between different status:\n"
-"    * draft, open, cancel, done.\n"
-"\n"
-"    Batch operations can be processed on the different journals to\n"
-"    confirm all sales at once, to validate or invoice packing, ...\n"
-"\n"
-"    It also supports batch invoicing methods that can be configured by\n"
-"    partners and sales orders, examples:\n"
-"    * daily invoicing,\n"
-"    * monthly invoicing, ...\n"
-"\n"
-"    Some statistics by journals are provided.\n"
-"    "
-msgstr ""
-"\n"
-"    Satış Yevmiyesi Modülü, farklı yevmiyelerdeki satış ve teslimatlarınızı\n"
-"    (toplama listeleri) sınıflandırmanızı sağlar.\n"
-"    Bu modül bölümlerce çalışan büyük firmalar\n"
-"    için çok yararlıdır.\n"
-"\n"
-"    Yevmiyeyi farklı amaçlar için kullanabilirsiniz, örneğin:\n"
-"    * farklı bölümlerin satışlarını ayırma\n"
-"    * kamyon ile ya da UPS (kargo) ile yapılan sevkiyat yevmiyeleri\n"
-"\n"
-"    yevmiyelerin bir sorumlusu vrdır ve farklı durumlara göre değişir:\n"
-"    * taslak, aç, vazgeç, bitti.\n"
-"\n"
-"    Tüm satışların bir seferde onaylanması, paketlemeyi doğrulamak ya da \n"
-"    faturalandırmak, ... için farklı yevmiyelere toplu işlemler "
-"uygulanabilir.\n"
-"\n"
-"    Paydaşlara, satış siparişlerine göre yapılandırılabilen toplu\n"
-"    faturalandırma yöntemlerini destekler, örnekler:\n"
-"    * günlük faturalandırma,\n"
-"    * aylık faturalandırma, ...\n"
-"\n"
-"    Yevmiyelere göre bazı istatistikler elde edilir.\n"
-"    "
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Fatura Tipleri"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -121,11 +83,6 @@ msgstr "Gruplanmamış"
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
 msgstr "Gruplanmış"
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Hata! Yinelemeli üyeler oluşturamazsınız."
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -139,14 +96,9 @@ msgstr ""
 "gruplayabilirsiniz: günlük, her Çarşamba, aylık, vb."
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Faturalama Yöntemi"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sales Order"
-msgstr "Satış Siparişi"
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -167,11 +119,9 @@ msgid "Partner"
 msgstr "İş ortağı"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Fatura Tipleri"
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
+msgstr "Satış Siparişi"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
@@ -179,9 +129,9 @@ msgid "Picking List"
 msgstr "Paketleme Listesi"
 
 #. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr "Yevmiyelere göre satış ve teslimat yönetimi"
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "Faturalama"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
@@ -333,6 +283,9 @@ msgstr "Yevmiyelere göre satış ve teslimat yönetimi"
 #~ msgid "Creation date"
 #~ msgstr "Oluşturma Tarihi"
 
+#~ msgid "Invoicing Method"
+#~ msgstr "Faturalama Yöntemi"
+
 #~ msgid "Code"
 #~ msgstr "Kodu"
 
@@ -410,3 +363,65 @@ msgstr "Yevmiyelere göre satış ve teslimat yönetimi"
 
 #~ msgid "Approved sales"
 #~ msgstr "Onaylanan Satışlar"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Sipariş referans no'su tek olmalı !"
+
+#~ msgid "The type of journal used for sales and picking."
+#~ msgstr "Satış ve paketleme için kullanılan yayın türü."
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Hata! Yinelemeli üyeler oluşturamazsınız."
+
+#~ msgid "Managing sales and deliveries by journal"
+#~ msgstr "Yevmiyelere göre satış ve teslimat yönetimi"
+
+#~ msgid ""
+#~ "\n"
+#~ "    The sales journal modules allows you to categorise your\n"
+#~ "    sales and deliveries (picking lists) between different journals.\n"
+#~ "    This module is very helpful for bigger companies that\n"
+#~ "    works by departments.\n"
+#~ "\n"
+#~ "    You can use journal for different purposes, some examples:\n"
+#~ "    * isolate sales of different departments\n"
+#~ "    * journals for deliveries by truck or by UPS\n"
+#~ "\n"
+#~ "    Journals have a responsible and evolves between different status:\n"
+#~ "    * draft, open, cancel, done.\n"
+#~ "\n"
+#~ "    Batch operations can be processed on the different journals to\n"
+#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
+#~ "\n"
+#~ "    It also supports batch invoicing methods that can be configured by\n"
+#~ "    partners and sales orders, examples:\n"
+#~ "    * daily invoicing,\n"
+#~ "    * monthly invoicing, ...\n"
+#~ "\n"
+#~ "    Some statistics by journals are provided.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Satış Yevmiyesi Modülü, farklı yevmiyelerdeki satış ve teslimatlarınızı\n"
+#~ "    (toplama listeleri) sınıflandırmanızı sağlar.\n"
+#~ "    Bu modül bölümlerce çalışan büyük firmalar\n"
+#~ "    için çok yararlıdır.\n"
+#~ "\n"
+#~ "    Yevmiyeyi farklı amaçlar için kullanabilirsiniz, örneğin:\n"
+#~ "    * farklı bölümlerin satışlarını ayırma\n"
+#~ "    * kamyon ile ya da UPS (kargo) ile yapılan sevkiyat yevmiyeleri\n"
+#~ "\n"
+#~ "    yevmiyelerin bir sorumlusu vrdır ve farklı durumlara göre değişir:\n"
+#~ "    * taslak, aç, vazgeç, bitti.\n"
+#~ "\n"
+#~ "    Tüm satışların bir seferde onaylanması, paketlemeyi doğrulamak ya da \n"
+#~ "    faturalandırmak, ... için farklı yevmiyelere toplu işlemler "
+#~ "uygulanabilir.\n"
+#~ "\n"
+#~ "    Paydaşlara, satış siparişlerine göre yapılandırılabilen toplu\n"
+#~ "    faturalandırma yöntemlerini destekler, örnekler:\n"
+#~ "    * günlük faturalandırma,\n"
+#~ "    * aylık faturalandırma, ...\n"
+#~ "\n"
+#~ "    Yevmiyelere göre bazı istatistikler elde edilir.\n"
+#~ "    "

@@ -174,6 +174,7 @@ class hr_employee(osv.osv):
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
+        'login': fields.related('user_id', 'login', type='char', string='Login', readonly=1),
     }
 
     def unlink(self, cr, uid, ids, context=None):

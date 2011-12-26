@@ -43,7 +43,7 @@
   !python {model: account.account}: |
     ctx={}
     ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
-    data_dict = {'chart_account_id':ref('account.chart0'),'display_type': False, 'account_report_id': ref('account_financial_report_balancesheet0')}
+    data_dict = {'chart_account_id':ref('account.chart0'), 'account_report_id': ref('account_financial_report_balancesheet0')}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_report',wiz_data=data_dict, context=ctx, our_module='account')
 -
@@ -138,7 +138,7 @@
   !python {model: account.account}: |
     ctx={}
     ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
-    data_dict = {'chart_account_id':ref('account.chart0'),'display_type': False,'target_move': 'all', 'account_report_id': ref('account_financial_report_balancesheet0')}
+    data_dict = {'chart_account_id':ref('account.chart0'), 'target_move': 'all', 'account_report_id': ref('account_financial_report_balancesheet0')}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_report',wiz_data=data_dict, context=ctx, our_module='account')
 -

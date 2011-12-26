@@ -3,7 +3,7 @@
 -
   !python {model: account.analytic.line}: |
     import netsvc, tools, os, time
-    data_dict = {'model': 'ir.ui.menu', 'form': {'date_from': time.strftime('%Y-%m-01'), 'employee_ids': [[6,0,[ref('hr.employee1'), ref('hr.employee2'),ref('hr.employee3')]]], 'journal_ids': [[6,0,[ref('hr_timesheet.analytic_journal')]]], 'date_to': time.strftime('%Y-%m-%d')}}
+    data_dict = {'model': 'ir.ui.menu', 'form': {'date_from': time.strftime('%Y-%m-01'), 'employee_ids': [[6,0,[ref('hr.employee_fp'), ref('hr.employee_qdp'),ref('hr.employee_al')]]], 'journal_ids': [[6,0,[ref('hr_timesheet.analytic_journal')]]], 'date_to': time.strftime('%Y-%m-%d')}}
     (data, format) = netsvc.LocalService('report.account.analytic.profit').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'hr_timesheet_invoice-account_analytic_profit_report.'+format), 'wb+').write(data)

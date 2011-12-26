@@ -6,16 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-09-05 06:12+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:23+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:53+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 "X-Poedit-Language: Czech\n"
+
+#. module: project_mrp
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -28,9 +33,14 @@ msgid "Procurement Task"
 msgstr "Úloha zásobování"
 
 #. module: project_mrp
-#: model:ir.module.module,shortdesc:project_mrp.module_meta_information
-msgid "Procurement and Project Management integration"
-msgstr "Integrace zásobování a projektového řízení"
+#: model:ir.model,name:project_mrp.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: project_mrp
+#: field:procurement.order,sale_line_id:0
+msgid "Sale order line"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
@@ -44,8 +54,13 @@ msgstr "pokud je typ 'služba', pak vytvoří úkol."
 
 #. module: project_mrp
 #: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "Chyba ! Nemůžete vytvořit rekurzivní úkoly."
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sale Order Task"
+msgstr "Úkol prodejního příkazu"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
@@ -87,61 +102,14 @@ msgid "Order Task"
 msgstr "Příkaz úkolu"
 
 #. module: project_mrp
-#: model:process.node,name:project_mrp.process_node_saleordertask0
-msgid "Sale Order Task"
-msgstr "Úkol prodejního příkazu"
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "Chyba ! Nemůžete vytvořit rekurzivní úkoly."
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
 msgid "Create Task"
 msgstr "Vytvořit úkol"
-
-#. module: project_mrp
-#: model:ir.module.module,description:project_mrp.module_meta_information
-msgid ""
-"\n"
-"This module creates a link between procurement orders\n"
-"containing \"service\" lines and project management tasks.\n"
-"\n"
-"When installed, this module will automatically create a new task\n"
-"for each procurement order line, when the corresponding product\n"
-"meets the following characteristics:\n"
-"  * Type = Service\n"
-"  * Procurement method (Order fulfillment) = MTO (make to order)\n"
-"  * Supply/Procurement method = Produce\n"
-"\n"
-"The new task is created outside of any existing project, but\n"
-"can be added to a project manually.\n"
-"\n"
-"When the project task is completed or cancelled, the workflow of the "
-"corresponding\n"
-"procurement line is updated accordingly.\n"
-"\n"
-"This module is useful to be able to invoice services based on tasks\n"
-"automatically created via sale orders.\n"
-"\n"
-msgstr ""
-"\n"
-"Tento modul vytváří spojení mezi zásobovacími příkazy\n"
-"obsahujícími řádky \"služby\" a úkoly projektového řízení.\n"
-"\n"
-"Když je instalováno, tak tento modul automaticky vytvoří nový úkol\n"
-"pro každý řádek příkazu zásobování, pokud odopvídající výrobek\n"
-"splňuje následující vlastnosti:\n"
-"  * Typ = Služba\n"
-"  * Metoda zásobování (Splnění příkazu) = MTO (udělat na příkaz)\n"
-"  * Metoda dodání/zásobování = Vyrobit\n"
-"\n"
-"Nový úkol je vytvořen mimo existující projekt, ale \n"
-"může být do projektu přidán ručně.\n"
-"\n"
-"When the project task is completed or cancelled, the workflow of the "
-"corresponding\n"
-"procurement line is updated accordingly.\n"
-"\n"
-"This module is useful to be able to invoice services based on tasks\n"
-"automatically created via sale orders.\n"
-"\n"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
@@ -153,3 +121,56 @@ msgstr ""
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
 msgstr "V případě, kdy prodáváte služby pomocí prodejního příkazu"
+
+#. module: project_mrp
+#: field:project.task,sale_line_id:0
+msgid "Sale Order Line"
+msgstr ""
+
+#~ msgid "Procurement and Project Management integration"
+#~ msgstr "Integrace zásobování a projektového řízení"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module creates a link between procurement orders\n"
+#~ "containing \"service\" lines and project management tasks.\n"
+#~ "\n"
+#~ "When installed, this module will automatically create a new task\n"
+#~ "for each procurement order line, when the corresponding product\n"
+#~ "meets the following characteristics:\n"
+#~ "  * Type = Service\n"
+#~ "  * Procurement method (Order fulfillment) = MTO (make to order)\n"
+#~ "  * Supply/Procurement method = Produce\n"
+#~ "\n"
+#~ "The new task is created outside of any existing project, but\n"
+#~ "can be added to a project manually.\n"
+#~ "\n"
+#~ "When the project task is completed or cancelled, the workflow of the "
+#~ "corresponding\n"
+#~ "procurement line is updated accordingly.\n"
+#~ "\n"
+#~ "This module is useful to be able to invoice services based on tasks\n"
+#~ "automatically created via sale orders.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Tento modul vytváří spojení mezi zásobovacími příkazy\n"
+#~ "obsahujícími řádky \"služby\" a úkoly projektového řízení.\n"
+#~ "\n"
+#~ "Když je instalováno, tak tento modul automaticky vytvoří nový úkol\n"
+#~ "pro každý řádek příkazu zásobování, pokud odopvídající výrobek\n"
+#~ "splňuje následující vlastnosti:\n"
+#~ "  * Typ = Služba\n"
+#~ "  * Metoda zásobování (Splnění příkazu) = MTO (udělat na příkaz)\n"
+#~ "  * Metoda dodání/zásobování = Vyrobit\n"
+#~ "\n"
+#~ "Nový úkol je vytvořen mimo existující projekt, ale \n"
+#~ "může být do projektu přidán ručně.\n"
+#~ "\n"
+#~ "When the project task is completed or cancelled, the workflow of the "
+#~ "corresponding\n"
+#~ "procurement line is updated accordingly.\n"
+#~ "\n"
+#~ "This module is useful to be able to invoice services based on tasks\n"
+#~ "automatically created via sale orders.\n"
+#~ "\n"
