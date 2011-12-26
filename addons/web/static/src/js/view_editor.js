@@ -38,10 +38,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
         };
         this.view_edit_dialog = new openerp.web.Dialog(this, {
-            modal: true,
             title: _t("ViewEditor"),
-            width: 750,
-            height: 500,
+            width: 850,
             buttons: [
                 {text: _t("Create"), click: function() { self.on_create_view(); }},
                 {text: _t("Edit"), click: function() { self.xml_element_id = 0; self.get_arch(); }},
@@ -67,10 +65,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     on_create_view: function() {
         var self = this;
         this.create_view_dialog = new openerp.web.Dialog(this, {
-            modal: true,
             title: _.str.sprintf(_t("Create a view (%s)"), self.model),
-            width: 500,
-            height: 400,
             buttons: [
                 {text: _t("Save"), click: function () {
                     var view_values = {};
@@ -363,10 +358,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         this.one_object = one_object;
         this.edit_xml_dialog = new openerp.web.Dialog(this, {
-            modal: true,
             title: _.str.sprintf(_t("View Editor %d - %s"), self.main_view_id, self.model),
-            width: 750,
-            height: 500,
+            height: '90%',
             buttons: [
                 {text: _t("Preview"), click: function() {
                     var action = {
@@ -752,10 +745,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     on_edit_node: function(properties){
         var self = this;
         this.edit_node_dialog = new openerp.web.Dialog(this,{
-            modal: true,
             title: _t("Properties"),
-            width: 500,
-            height: 400,
+            width: 450,
             buttons: [
                 {text: _t("Update"), click: function () {
                     var warn = false, update_values = [];
@@ -879,10 +870,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             {'name': 'position','selection': ['After','Before','Inside'], 'value': false, 'string': 'Position','type': 'selection'}];
         this.add_widget = [];
         this.add_node_dialog = new openerp.web.Dialog(this,{
-            modal: true,
             title: _t("Properties"),
             width: 450,
-            height: 190,
             buttons: [
                 {text: _t("Update"), click: function() {
                     var check_add_node = true, values = {};

@@ -27,7 +27,7 @@ session.web.ActionManager = session.web.Widget.extend({
         this.client_widget = null;
     },
     render: function() {
-        return "<div id='"+this.element_id+"'></div>";
+        return '<div id="' + this.element_id + '" style="height: 100%;"></div>';
     },
     dialog_stop: function () {
         if (this.dialog) {
@@ -49,8 +49,12 @@ session.web.ActionManager = session.web.Widget.extend({
     },
     do_push_state: function(state) {
         if (this.widget_parent && this.widget_parent.do_push_state) {
-            if (this.inner_action && this.inner_action.id) {
-                state['action_id'] = this.inner_action.id;
+            if (this.inner_action) {
+                if (this.inner_action.id) {
+                    state['action_id'] = this.inner_action.id;
+                } else {
+                    state['model'] = this.inner_action.res_model;
+                }
             }
             this.widget_parent.do_push_state(state);
         }
@@ -66,10 +70,15 @@ session.web.ActionManager = session.web.Widget.extend({
             }
         }
         else if (state.model && state.id) {
-            // TODO implement it
-            //this.null_action();
-            //action = {res_model: state.model, res_id: state.id};
-            //action_loaded = this.do_action(action);
+            // TODO handle context & domain ?
+            this.null_action();
+            var action = {
+                res_model: state.model,
+                res_id: state.id,
+                type: 'ir.actions.act_window',
+                views: [[false, 'page'], [false, 'form']]
+            };
+            action_loaded = this.do_action(action);
         }
         else if (state.client_action) {
             this.null_action();
@@ -135,6 +144,11 @@ session.web.ActionManager = session.web.Widget.extend({
             this.dialog_viewmanager.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
+            if(action.menu_id) {
+                return this.widget_parent.do_action(action, function () {
+                    session.webclient.menu.open_menu(action.menu_id);
+                });
+            }
             this.dialog_stop();
             this.content_stop();
             this.inner_action = action;
@@ -313,17 +327,18 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             .filter('[data-view-type="' + view_type + '"]')
             .attr('disabled', true);
 
-        for (var view_name in this.views) {
-            if (!this.views.hasOwnProperty(view_name)) { continue; }
-            if (this.views[view_name].controller) {
-                if (view_name === view_type) {
-                    $.when(view_promise).then(this.views[view_name].controller.do_show);
-                } else {
-                    this.views[view_name].controller.do_hide();
-                }
-            }
-        }
         $.when(view_promise).then(function () {
+            _.each(_.keys(self.views), function(view_name) {
+                var controller = self.views[view_name].controller;
+                if (controller) {
+                    if (view_name === view_type) {
+                        controller.do_show();
+                    } else {
+                        controller.do_hide();
+                    }
+                }
+            });
+
             self.$element.find('.oe_view_title_text:first').text(
                     self.display_title());
         });
@@ -542,7 +557,10 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                         view_mode : 'form',
                         target : 'new',
                         flags : {
-                            action_buttons : true
+                            action_buttons : true,
+                            form : {
+                                resize_textareas : true
+                            }
                         }
                     };
                 if (id) {
@@ -585,7 +603,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
 
             var $title = self.$element.find('.oe_view_title_text'),
                 $search_prefix = $title.find('span.oe_searchable_view');
-            if (controller.searchable !== false) {
+            if (controller.searchable !== false && self.flags.search_view !== false) {
                 if (!$search_prefix.length) {
                     $title.prepend('<span class="oe_searchable_view">' + _t("Search: ") + '</span>');
                 }
@@ -604,7 +622,11 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var self = this,
             defs = [];
         if (state.view_type && state.view_type !== this.active_view) {
-            defs.push(this.on_mode_switch(state.view_type, true));
+            defs.push(
+                this.views[this.active_view].deferred.pipe(function() {
+                    return self.on_mode_switch(state.view_type, true);
+                })
+            );
         } 
 
         $.when(defs).then(function() {
@@ -616,7 +638,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var grandparent = this.widget_parent && this.widget_parent.widget_parent;
         // display shortcuts if on the first view for the action
         var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        if (!(grandparent instanceof session.web.WebClient) ||
+        if (!this.action.name ||
             !(view.view_type === this.views_src[0].view_type
                 && view.view_id === this.views_src[0].view_id)) {
             $shortcut_toggle.hide();
@@ -847,7 +869,10 @@ session.web.Sidebar = session.web.Widget.extend({
                     additional_context);
                 result.result.flags = result.result.flags || {};
                 result.result.flags.new_window = true;
-                self.do_action(result.result);
+                self.do_action(result.result, function () {
+                    // reload view
+                    self.widget_parent.reload();
+                });
             });
         });
     },
@@ -1171,7 +1196,14 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     on_sidebar_view_log: function() {
     },
     sidebar_context: function () {
-        return $.Deferred().resolve({}).promise();
+        return $.when();
+    },
+    /**
+     * Asks the view to reload itself, if the reloading is asynchronous should
+     * return a {$.Deferred} indicating when the reloading is done.
+     */
+    reload: function () {
+        return $.when();
     }
 });
 

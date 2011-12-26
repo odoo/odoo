@@ -275,7 +275,6 @@ openerp.web_process = function (openerp) {
             var action_manager = new openerp.web.ActionManager(this);
             var dialog = new openerp.web.Dialog(this, {
                 width: 800,
-                height: 600,
                 buttons : [
                     {text: _t("Cancel"), click: function() { $(this).dialog('destroy'); }},
                     {text: _t("Save"), click: function() {

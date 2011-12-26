@@ -141,7 +141,6 @@ class JsonRequest(WebRequest):
         jsonp = args.get('jsonp')
         requestf = None
         request = None
-        print "ARGS",args
 
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
@@ -356,8 +355,10 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                     if stored and isinstance(v, session.OpenERPSession):
                         v.contexts_store.update(stored.contexts_store)
                         v.domains_store.update(stored.domains_store)
-                        jsonp = getattr(v, 'jsonp_requests', {})
-                        jsonp.update(stored.jsonp_requests)
+                        if not hasattr(v, 'jsonp_requests'):
+                            v.jsonp_requests = {}
+                        v.jsonp_requests.update(getattr(
+                            stored, 'jsonp_requests', {}))
 
                 # add missing keys
                 for k, v in in_store.iteritems():
@@ -441,6 +442,7 @@ class Root(object):
         """
         request = werkzeug.wrappers.Request(environ)
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
+        request.app = self
 
         if request.path == '/':
             params = urllib.urlencode(request.args)
