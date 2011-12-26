@@ -1,22 +1,20 @@
 -
-  In order to test attendance process in OpenERP, I perform SignIn/SignOut for an employee.
+  In order to test attendance process in OpenERP, I entry of SignIn of employee.
+-
+  !python {model: hr.sign.in.out}: |
+    context.update({'emp_id': [ref('hr.employee_al')]}) #TOFIX: emp_ids instead of 'emp_id'
 -
   !record {model: hr.sign.in.out, id: employee_sign_in}:
-    emp_id: hr.employee_mit
-    state: absent
+    {}
 -
   Employee Signs In.
 -
   !python {model: hr.sign.in.out}: |
-    import time
-    from datetime import datetime, date, timedelta
-    employee = self.pool.get('hr.employee').read(cr, uid, ref('hr.employee_mit'))
-    self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': employee['id']})
-    self.si_check(cr, uid, [ref("employee_sign_in")])
+    self.si_check(cr, uid, [ref("employee_sign_in")], context=context)
 -
   I check that Employee is "Present".
 -
-  !assert {model: hr.employee, id: hr.employee_mit, severity: error, string: Employee should be in present state}:
+  !assert {model: hr.employee, id: hr.employee_al, severity: error, string: Employee should be in present state}:
     - state == 'present'
 -
   After few seconds, employee sign's out.
@@ -24,9 +22,9 @@
   !python {model: hr.sign.in.out}: |
     import time
     time.sleep(2)
-    self.so_check(cr, uid, [ref("employee_sign_in")])
+    self.so_check(cr, uid, [ref("employee_sign_in")], context=context)
 -
   I check that Employee is "Absent".
 -
-  !assert {model: hr.employee, id: hr.employee_mit, severity: error, string: Employee should be in absent state}:
+  !assert {model: hr.employee, id: hr.employee_al, severity: error, string: Employee should be in absent state}:
     - state == 'absent'
