@@ -45,31 +45,6 @@ function getDocumentType(){
 }
 
 /**
- * Return the current operation :
- *  add or create
- */
-function getOperation() {
-	var operation = document.getElementById('operation').selectedItem;
-	return operation.value	
-}
-
-function changeForm() {
-	
-	var hidden = false
-	
-	if(getOperation() == "create") {
-		hidden = true
-	}
-	document.getElementById('label_box').hidden = hidden
-	document.getElementById('listSearchBox').hidden = hidden
-	document.getElementById('lblsearch').hidden = hidden
-	document.getElementById('txtvalueobj').hidden = hidden
-	document.getElementById('search_button').hidden = hidden
-}
-
-
-
-/**
  * Search Handler : Fill the result of list_document_get in the listbox
  */
 //xmlrpc request handler for getting the search results for the particular selected check box object
@@ -137,10 +112,9 @@ function searchCheckbox()
 var pushHandler = {
     onResult: function(client, context, result) {
     	log_message("push finished")
-        netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
-        var message = result.QueryInterface(Components.interfaces.nsISupportsCString);
-        log_message(message)
-        alert(message)
+        res = extract_data(result)
+        alert(res[ADDITIONAL_INFORMATION])
+        open_url(res[URL]);
 	    window.close();
     },
     
@@ -154,11 +128,10 @@ var pushHandler = {
 }
 
 
-function push() {
-    window.close();
+function push(op) {
 	var model_name = document.getElementById('menu_model_list').selectedItem.value;
 	var res_id = 0;
-	if(getOperation() == "add") {
+	if(op == "add") {
 		var item = document.getElementById('listSearchBox').selectedItem
 		if (String(item) == "null") {
 			alert("select at least one Document !")

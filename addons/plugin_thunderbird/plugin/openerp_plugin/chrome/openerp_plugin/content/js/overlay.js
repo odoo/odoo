@@ -79,18 +79,9 @@ function searchmail()
 
 var openPartnerHandler = {
     onResult: function(client, context, result) {
-    	log_message('get partner')
-    	log_message(1)
         res = extract_data(result)
-        log_message(2)
-        log_message(res[RES_ID])
-        log_message(3)
-        log_message(res[URL])
-        log_message(4)
-        if(res[RES_ID]==0)
-        {
-            alert("Partner is not Available.");
-            window.open("chrome://openerp_plugin/content/create.xul", "", "chrome, resizable=yes");
+        if(res[RES_ID]==0) {
+        	open_window("chrome://openerp_plugin/content/create.xul", 550, 230);
             return;
         } 
         open_url(res[URL])
@@ -159,8 +150,7 @@ function open_partner()
 var listDocumentHandler = {
     onResult: function(client, context, result) {
         res = extract_data(result)
-        log_message("open document")
-        window.open('chrome://openerp_plugin/content/push_dialog.xul', '', 'chrome', resizable='yes');
+        
         if(res[RES_ID]==0) {
             setPreference('statutdoc','create');
         }
@@ -168,7 +158,7 @@ var listDocumentHandler = {
             setPreference('statutdoc', 'open');
             setPreference('urldoc', res[URL]);
         } 
-       setPreference('message_label',setPreference('subject'));// to have the subject to print on the push dialog       
+       open_window("chrome://openerp_plugin/content/push_dialog.xul", 480, 110);       
 
     },
     onFault: function (client, ctxt, fault) {

@@ -4,10 +4,21 @@
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/create.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="load_createContact();" >
+	title="&title.label;" onload="load_createContact();" id="create_partner_window">
 	<script type="text/javascript" src="chrome://openerp_plugin/content/js/tiny_xmlrpc.js"></script>
 	<script type="text/javascript" src="chrome://openerp_plugin/content/js/tools.js"></script>
 	<script type="text/javascript" src="chrome://openerp_plugin/content/js/create.js"></script>
+	<groupbox id="contact" >
+		<hbox>
+			<label align="right" value="Partner not found. create a new one ? "/>
+		</hbox>
+		<hbox>
+			<label align="right" id="partner" value="&selectpartner.value;" width="90" class="text-prompt"/>
+			<textbox id="txtselectpartner" readonly="true" value="" width="170"/>
+			<button label="Link to partner" oncommand="open_window('chrome://openerp_plugin/content/selectpartner.xul', 400, 400);" image="&imagesearch.value;"/>
+			<button label="Clear" oncommand="clear();"/>
+		</hbox>
+	</groupbox>
 	<groupbox id="information" >
 		<caption label="Address Detail" />
 		<grid flex="1">
@@ -31,6 +42,5 @@
 	<hbox align="right">
   		<button label="cancel" image="&imagecancel.value;" oncommand="close();" />
   		<button label="create partner" image="&imageok.value;" oncommand="createContact();"/>
-  		<button label="link to a partner" image="&imageok.value;" oncommand="window.open('chrome://openerp_plugin/content/selectpartner.xul', '', 'chrome', resizable='yes');"/>
 	</hbox>
 </window>

@@ -42,7 +42,7 @@ function clear_search_box(element) {
 
 function open_url(url) {
 	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
-    messenger = messenger.QueryInterface(Components.interfaces.nsIMessenger);
+	var messenger = Components.classes['@mozilla.org/messenger;1'].createInstance(Components.interfaces.nsIMessenger);
     messenger.launchExternalURL(url);
 }
 
@@ -65,6 +65,7 @@ function extract_data(result) {
 var MODEL = 0;
 var RES_ID = 1;
 var URL = 2;
+var ADDITIONAL_INFORMATION = 3
 
 function check_connection(callback) {
 	return function () {
@@ -79,3 +80,13 @@ function check_connection(callback) {
     	return callback()
 	}
 }
+
+function open_window(url,width,height) {
+	var win = window.open(url, '', 'chrome,width='+width+',height='+height+',resizable=yes');
+	var w = ((window.screen.availWidth/2)-(width/2));
+	var h=((window.screen.availHeight/2)-(height/2));
+	win.moveTo(w,h);
+}
+
+
+

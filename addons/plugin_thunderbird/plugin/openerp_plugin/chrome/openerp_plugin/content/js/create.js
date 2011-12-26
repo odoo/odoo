@@ -29,11 +29,12 @@ function selectPartner(){
 		document.getElementById('txtselectpartner').setAttribute('value', label);
 		window.opener.document.getElementById('txtselectpartner').setAttribute('value', label);
 	}
-	else {
-		window.opener.document.getElementById('txtselectpartner').setAttribute('value','');
-	}
 }
 
+function clear() {
+	setPartnerId(0);
+	document.getElementById('txtselectpartner').setAttribute('value', '');
+}
 
 
 //xmlrpc request handler for getting the list of partners
@@ -91,25 +92,25 @@ function getPartnerList(){
 //xmlrpc request handler for creating a new contact
 var listCreateContactHandler = {
     onResult: function(client, context, result) {
-        netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
-        var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
-        setPreference('partner_id', createId);
-        alert("Contact Created Successfully.");
+        res = extract_data(result)
+        open_url(res[URL])
         window.close();
     },
     onFault: function (client, ctxt, fault) {
-
+    	log_message('fail')
+		log_message(fault)
     },
 
     onError: function (client, ctxt, status, errorMsg) {
-
+		log_message('fail 2')
+		log_message(errorMsg)
     }
 }
 
 
 //function to create a new contact
 function createContact(){
-    window.close();
+	log_message("create partner call")
     setServerService('xmlrpc/object');
     netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
     var xmlRpcClient = getXmlRpc();
