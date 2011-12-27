@@ -28,6 +28,7 @@ from osv import fields, osv
 from tools.translate import _
 import netsvc
 import tools
+from tools import float_compare
 import decimal_precision as dp
 import logging
 
@@ -459,7 +460,8 @@ class stock_location(osv.osv):
                 continue
 
             amount = results2
-            if amount > 0:
+            compare_qty = float_compare(amount, product_qty, precision_rounding=context.get('rounding'))
+            if compare_qty <> -1:
                 if amount > min(total, product_qty):
                     amount = min(product_qty, total)
                 result.append((amount, id))
@@ -2005,7 +2007,7 @@ class stock_move(osv.osv):
                 continue
             if move.state in ('confirmed', 'waiting'):
                 # Important: we must pass lock=True to _product_reserve() to avoid race conditions and double reservations
-                res = self.pool.get('stock.location')._product_reserve(cr, uid, [move.location_id.id], move.product_id.id, move.product_qty, {'uom': move.product_uom.id}, lock=True)
+                res = self.pool.get('stock.location')._product_reserve(cr, uid, [move.location_id.id], move.product_id.id, move.product_qty, {'uom': move.product_uom.id, 'rounding': move.product_uom.rounding}, lock=True)
                 if res:
                     #_product_available_test depends on the next status for correct functioning
                     #the test does not work correctly if the same product occurs multiple times
