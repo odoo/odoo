@@ -4,7 +4,7 @@
   !record {model: product.pricelist.item, id: pricelist_rules_for_more_qty1}:
     name: Default Public Pricelist for More Qty
     min_quantity: 5
-    sequence: 1
+    sequence: 5
     base: 1
     price_version_id: product.ver0
     price_discount: -0.10
@@ -20,29 +20,27 @@
     product_price = product_obj.browse(cr, uid, ref("product_product_pc1"), context=ctx).price
     assert new_price[0] == product_price,"10% discount is given on sale price of 5 qty product"
 -
-  For special product pricelist, first I check "PC2" sale price is 750.
--
-  !python {model: product.product}: |
-    prd_brw = self.browse(cr, uid, ref("product_product_pc2"))
-    assert prd_brw.list_price == 750,"PC2 sale price is not 750"
--
-  Make new rule in "Default Public Pricelist Version" if product is "PC2" than 30 Rs off on sale price of product .
+  For special product pricelist,I make new rule in "Default Public Pricelist Version" if special product than give 20% Discount.
 -
   !record {model: product.pricelist.item, id: pricelist_rules_for_pc2}:
     name: Default Public Pricelist for PC2
     min_quantity: 1
     product_id: product.product_product_pc2
-    sequence: 1
-    base: 2
+    sequence: 4
+    base: 1
     price_version_id: product.ver0
-    price_surcharge: 220
+    price_discount: -0.20
 -
-  I check sale price of PC2 is 720 by discount.
+  I check 20% discount is given on sale price of special product.
 -
   !python {model: product.pricelist}: |
     result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc2") ,5,ref("base.res_partner_desertic_hispafuentes"))])
+    product_obj = self.pool.get("product.product")
     new_price = result[ref("product_product_pc2")].values()
-    assert new_price[0] == 720,"PC1 sale price is not 720 with Discount."
+    ctx = context.copy()
+    ctx.update({'pricelist': ref("product.list0"), 'quantity': 1})
+    product_price = product_obj.browse(cr, uid, ref("product_product_pc2"), context=ctx).price
+    assert new_price[0] == product_price,"20% discount is given on sale price of special product product"
 -
   Now I deactivate the old pricelist version.
 -
