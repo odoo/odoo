@@ -76,34 +76,34 @@
     product_price = product_obj.browse(cr, uid, ref("product_product_pc1"), context=ctx).price
     assert new_price[0] == product_price,"30% discount is not given on sale price of product at end of year"
 -
-  Now I create new pricelist for "Agrolait" customer to give 40% discount.
+  Now I create new pricelist for special customer to give 40% discount.
 -
-  !record {model: product.pricelist, id: agrolait_price_list1}:
-    name: Price List For Agrolait
+  !record {model: product.pricelist, id: special_customer_price_list1}:
+    name: Price List For Special Customer
     type: sale
     version_id:
-      -  name: Agrolait Price List Version
+      -  name: Special Customer Price List Version
          items_id:
-           -  name: Agrolait Price List Version Rule
+           -  name: Special Customer Price List Version Rule
               min_quantity: 1
               base: 1
               price_discount: -0.40
 -
-   I assing "Price List For Agrolait" to Agrolait.
+   I assing "Price List For Special Customer" to customer.
 -
   !record {model: res.partner, id: base.res_partner_agrolait}:
-    property_product_pricelist: agrolait_price_list1
+    property_product_pricelist: special_customer_price_list1
 -
-  I check 40% discount is given on sale price of product for "Agrolait" customer .
+  I check 40% discount is given on sale price of product for special customer.
 -
   !python {model: product.pricelist}: |
-    result = self.price_get_multi(cr, uid, [ref("product.agrolait_price_list1")], [(ref("product_product_pc4") ,5,ref("base.res_partner_agrolait"))])
+    result = self.price_get_multi(cr, uid, [ref("product.special_customer_price_list1")], [(ref("product_product_pc4") ,5,ref("base.res_partner_agrolait"))])
     product_obj = self.pool.get("product.product")
     new_price = result[ref("product_product_pc4")].values()
     ctx = context.copy()
-    ctx.update({'pricelist': ref("product.agrolait_price_list1"), 'quantity': 1})
+    ctx.update({'pricelist': ref("product.special_customer_price_list1"), 'quantity': 1})
     product_price = product_obj.browse(cr, uid, ref("product_product_pc4"), context=ctx).price
-    assert new_price[0] == product_price,"40% discount is not given on sale price of product for Agrolait customer "
+    assert new_price[0] == product_price,"40% discount is not given on sale price of product for special customer "
 -
   I add supplier pricelist for 10 qty product.
 -
