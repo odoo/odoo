@@ -365,8 +365,7 @@ class Database(openerpweb.Controller):
 class Session(openerpweb.Controller):
     _cp_path = "/web/session"
 
-    @openerpweb.jsonrequest
-    def get_session_info(self, req):
+    def session_info(self, req):
         return {
             "session_id": req.session_id,
             "uid": req.session._uid,
@@ -375,6 +374,10 @@ class Session(openerpweb.Controller):
             "login": req.session._login,
             "openerp_entreprise": req.session.openerp_entreprise(),
         }
+
+    @openerpweb.jsonrequest
+    def get_session_info(self, req):
+        return self.session_info(req)
 
     @openerpweb.jsonrequest
     def authenticate(self, req, db, login, password, base_location=None):
@@ -388,7 +391,7 @@ class Session(openerpweb.Controller):
         )
         req.session.authenticate(db, login, password, env)
 
-        return self.get_session_info(req)
+        return self.session_info(req)
 
     @openerpweb.jsonrequest
     def change_password (self,req,fields):
