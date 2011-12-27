@@ -52,4 +52,4 @@
     assert len(line_ids), "Delivery cost is not Added"
 
     line_data = self.browse(cr ,uid ,line_ids[0] ,context)
-    #assert line_data.price_subtotal == 0, "Added Delivey cost is wrong."
+    #assert line_data.price_subtotal == 0, "Added Delivey cost is wrong." # Due to Bug #908020
