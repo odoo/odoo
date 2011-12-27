@@ -9,15 +9,16 @@
     price_version_id: product.ver0
     price_discount: -0.10
 -
-  I check 10% discount is given on sale price of "PC1".
+  I check 10% discount is given on sale price of 5 qty product.
 -
   !python {model: product.pricelist}: |
     product_obj = self.pool.get("product.product")
     result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc1") ,5,ref("base.res_partner_desertic_hispafuentes"))])
     new_price = result[ref("product_product_pc1")].values()
-    old_price = product_obj.browse(cr, uid,ref("product_product_pc1")).list_price
-    discount = old_price * 0.10
-    assert new_price[0] == old_price - discount,"10% discount is given on sale price of PC1"
+    ctx = context.copy()
+    ctx.update({'pricelist': ref("product.list0"), 'quantity': 5})
+    product_price = product_obj.browse(cr, uid, ref("product_product_pc1"), context=ctx).price
+    assert new_price[0] == product_price,"10% discount is given on sale price of 5 qty product"
 -
   For special product pricelist, first I check "PC2" sale price is 750.
 -
