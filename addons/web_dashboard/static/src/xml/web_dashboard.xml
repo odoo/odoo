@@ -25,7 +25,7 @@
         <h2 t-attf-class="oe-dashboard-action-header #{action.attrs.string ? '' : 'oe-dashboard-action-header-empty'}">
             <t t-esc="action.attrs.string"/>
             <t t-if="!action.attrs.string">&amp;nbsp;</t>
-            <button t-if="action.attrs.creatable and action.attrs.creatable !== 'false'" class="oe_dashboard_button_create">Create</button>
+            <button t-if="action.attrs.creatable and action.attrs.creatable !== 'false'" class="oe_button oe_dashboard_button_create">Create</button>
             <span class='ui-icon ui-icon-closethick'></span>
             <span class='ui-icon ui-icon-minusthick oe-dashboard-fold' t-if="!action.attrs.fold"></span>
             <span class='ui-icon ui-icon-plusthick oe-dashboard-fold' t-if="action.attrs.fold"></span>
@@ -105,7 +105,7 @@
 </t>
 
 <t t-name="web_dashboard.ApplicationTiles">
-    <div>
+    <div class="oe_applications_tiles">
     <h1>Welcome to OpenERP</h1>
     </div>
 </t>

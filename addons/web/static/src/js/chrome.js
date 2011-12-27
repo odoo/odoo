@@ -51,15 +51,19 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         this._super(parent);
         this.dialog_options = {
             modal: true,
-            width: 'auto',
+            destroy_on_close: true,
+            width: $(window).width() * (($(window).width() > 1024) ? 0.5 : 0.75),
             min_width: 0,
-            max_width: '100%',
+            max_width: '95%',
             height: 'auto',
             min_height: 0,
-            max_height: '100%',
+            max_height: '95%',
             autoOpen: false,
+            position: [false, 50],
+            autoResize : 'auto',
             buttons: {},
-            beforeClose: function () { self.on_close(); }
+            beforeClose: function () { self.on_close(); },
+            resizeStop: this.on_resized
         };
         for (var f in this) {
             if (f.substr(0, 10) == 'on_button_') {
@@ -77,7 +81,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         options.max_width = this.get_width(options.max_width || this.dialog_options.max_width);
         options.height = this.get_height(options.height || this.dialog_options.height);
         options.min_height = this.get_height(options.min_height || this.dialog_options.min_height);
-        options.max_height = this.get_height(options.max_height || this.dialog_options.max_width);
+        options.max_height = this.get_height(options.max_height || this.dialog_options.max_height);
 
         if (options.width !== 'auto') {
             if (options.width > options.max_width) options.width = options.max_width;
@@ -108,7 +112,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         }
     },
     start: function () {
-        this.$dialog = $(this.$element).dialog(this.dialog_options);
+        this.$element.dialog(this.dialog_options);
         this._super();
         return this;
     },
@@ -118,19 +122,26 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
             this.$element.html(this.render());
         }
         this.set_options(dialog_options);
-        this.$dialog.dialog(this.dialog_options).dialog('open');
+        this.$element.dialog(this.dialog_options).dialog('open');
         return this;
     },
     close: function() {
-        // Closes the dialog but leave it in a state where it could be opened again.
-        this.$dialog.dialog('close');
+        this.$element.dialog('close');
     },
     on_close: function() {
+        if (this.dialog_options.destroy_on_close) {
+            this.$element.dialog('destroy');
+        }
+    },
+    on_resized: function() {
+        if (openerp.connection.debug) {
+            console.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
+        }
     },
     stop: function () {
         // Destroy widget
         this.close();
-        this.$dialog.dialog('destroy');
+        this.$element.dialog('destroy');
         this._super();
     }
 });
@@ -167,10 +178,6 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
         var dialog = new openerp.web.Dialog(this, {
             title: "OpenERP " + _.str.capitalize(error.type),
             autoOpen: true,
-            width: '90%',
-            height: '90%',
-            min_width: '800px',
-            min_height: '600px',
             buttons: [
                 {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
             ]
@@ -532,15 +539,6 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
                 this.selected_password = localStorage.getItem('last_password_login_success');
             }
         }
-        
-        var qs = jQuery.deparam(jQuery.param.querystring());
-        if (qs.db) {
-            this.selected_db = qs.db;
-        }
-        if (qs.login) {
-            this.selected_login = qs.login;
-        }
-
     },
     start: function() {
         var self = this;
@@ -580,7 +578,9 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         this.$element.closest(".openerp").removeClass("login-mode");
     },
     on_submit: function(ev) {
-        ev.preventDefault();
+        if(ev) {
+            ev.preventDefault();
+        }
         var $e = this.$element;
         var db = $e.find("form [name=db]").val();
         var login = $e.find("form input[name=login]").val();
@@ -597,26 +597,29 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
      */
     do_login: function (db, login, password) {
         var self = this;
-        this.session.session_authenticate(db, login, password).then(function() {
-            if(self.session.session_is_valid()) {
-                if (self.has_local_storage) {
-                    if(self.remember_credentials) {
-                        localStorage.setItem('last_db_login_success', db);
-                        localStorage.setItem('last_login_login_success', login);
-                        if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
-                            localStorage.setItem('last_password_login_success', password);
-                        }
-                    } else {
-                        localStorage.setItem('last_db_login_success', '');
-                        localStorage.setItem('last_login_login_success', '');
-                        localStorage.setItem('last_password_login_success', '');
-                    }
-                }
-                self.on_login_valid();
-            } else {
+        this.session.on_session_invalid.add({
+            callback: function () {
                 self.$element.addClass("login_invalid");
                 self.on_login_invalid();
+            },
+            unique: true
+        });
+        this.session.session_authenticate(db, login, password).then(function() {
+            self.$element.removeClass("login_invalid");
+            if (self.has_local_storage) {
+                if(self.remember_credentials) {
+                    localStorage.setItem('last_db_login_success', db);
+                    localStorage.setItem('last_login_login_success', login);
+                    if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
+                        localStorage.setItem('last_password_login_success', password);
+                    }
+                } else {
+                    localStorage.setItem('last_db_login_success', '');
+                    localStorage.setItem('last_login_login_success', '');
+                    localStorage.setItem('last_password_login_success', '');
+                }
             }
+            self.on_login_valid();
         });
     },
     do_ask_login: function(continuation) {
@@ -628,7 +631,7 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
             unique: true,
             callback: continuation || function() {}
         });
-    },
+    }
 });
 
 openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
@@ -751,10 +754,8 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
             });
         });
         this.dialog = new openerp.web.Dialog(this,{
-            modal: true,
             title: _t("Preferences"),
-            width: 600,
-            height: 500,
+            width: '700px',
             buttons: [
                 {text: _t("Change password"), click: function(){ self.change_password(); }},
                 {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
@@ -776,11 +777,9 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
 
     change_password :function() {
         var self = this;
-        this.dialog = new openerp.web.Dialog(this,{
-            modal : true,
+        this.dialog = new openerp.web.Dialog(this, {
             title: _t("Change Password"),
-            width : 'auto',
-            height : 'auto'
+            width : 'auto'
         });
         this.dialog.start().open();
         this.dialog.$element.html(QWeb.render("Change_Pwd", self));
@@ -836,7 +835,12 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this.$secondary_menu.addClass(this.folded ? 'oe_folded' : 'oe_unfolded');
     },
     do_reload: function() {
-        return this.rpc("/web/menu/load", {}, this.on_loaded);
+        var self = this;
+        return this.rpc("/web/menu/load", {}, this.on_loaded).then(function () {
+            if (self.current_menu) {
+                self.open_menu(self.current_menu);
+            }
+        });
     },
     on_loaded: function(data) {
         this.data = data;
@@ -857,6 +861,46 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             localStorage.setItem('oe_menu_folded', this.folded.toString());
         }
     },
+    /**
+     * Opens a given menu by id, as if a user had browsed to that menu by hand
+     * except does not trigger any event on the way
+     *
+     * @param {Number} menu_id database id of the terminal menu to select
+     */
+    open_menu: function (menu_id) {
+        this.$element.add(this.$secondary_menu).find('.active')
+                .removeClass('active');
+        this.$secondary_menu.find('> .oe_secondary_menu').hide();
+
+        var $primary_menu;
+        var $secondary_submenu = this.$secondary_menu.find(
+                'a[data-menu=' + menu_id +']');
+        if ($secondary_submenu.length) {
+            for(;;) {
+                if ($secondary_submenu.hasClass('leaf')) {
+                    $secondary_submenu.addClass('active');
+                } else if ($secondary_submenu.hasClass('submenu')) {
+                    $secondary_submenu.addClass('opened')
+                }
+                var $parent = $secondary_submenu.parent().show();
+                if ($parent.hasClass('oe_secondary_menu')) {
+                    var primary_id = $parent.data('menu-parent');
+                    $primary_menu = this.$element.find(
+                            'a[data-menu=' + primary_id + ']');
+                    break;
+                }
+                $secondary_submenu = $parent.prev();
+            }
+        } else {
+            $primary_menu = this.$element.find('a[data-menu=' + menu_id + ']');
+        }
+        if (!$primary_menu.length) {
+            return;
+        }
+        $primary_menu.addClass('active');
+        this.$secondary_menu.find(
+            'div[data-menu-parent=' + $primary_menu.data('menu') + ']').show();
+    },
     on_menu_click: function(ev, id) {
         id = id || 0;
         var $clicked_menu, manual = false;
@@ -874,6 +918,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         }
 
         if (this.do_menu_click($clicked_menu, manual) && id) {
+            this.current_menu = id;
             this.session.active_id = id;
             this.rpc('/web/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
         }
@@ -971,6 +1016,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         var self = this;
         if (data.action.length) {
             var action = data.action[0][2];
+            action.from_menu = true;
             self.on_action(action);
         } else {
             self.on_action({type: 'null_action'});
@@ -1023,7 +1069,11 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.header.appendTo($("#oe_header"));
             self.login.appendTo($('#oe_login'));
             self.menu.start();
-            self.login.on_login_invalid();
+            if(self.session.session_is_valid()) {
+                self.login.on_login_valid();
+            } else {
+                self.login.on_login_invalid();
+            }
         });
         this.session.ready.then(function() {
             self.login.on_login_valid();
@@ -1037,7 +1087,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         });
     },
     do_reload: function() {
-        return $.when(this.session.session_init(),this.menu.do_reload());
+        return this.session.session_init().pipe(_.bind(function() {this.menu.do_reload();}, this));
     },
     do_notify: function() {
         var n = this.notification;
@@ -1085,7 +1135,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     do_action: function(action) {
         var self = this;
         // TODO replace by client action menuclick 
-        if(action.type === "ir.ui.menu") {
+        if(action.menu_id) {
             this.do_reload().then(function () {
                 self.menu.on_menu_click(null, action.menu_id);
             });
@@ -1134,7 +1184,7 @@ openerp.web.embed = function (origin, dbname, login, key, action, options) {
         currentScript = sc[sc.length-1];
     }
     openerp.connection.bind(origin).then(function () {
-        openerp.connection.session_authenticate(dbname, login, key).then(function () {
+        openerp.connection.session_authenticate(dbname, login, key, true).then(function () {
             var client = new openerp.web.EmbeddedClient(action, options);
             client.insertAfter(currentScript);
         });

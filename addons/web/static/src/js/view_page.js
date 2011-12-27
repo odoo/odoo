@@ -55,9 +55,9 @@ openerp.web.page = function (openerp) {
                         def.resolve();
                     });
                 } else {
-                    setTimeout(function () {
+                    $.async_when().then(function () {
                         def.reject();
-                    }, 0)
+                    })
                 }
             });
             return def.promise();
@@ -171,7 +171,7 @@ openerp.web.page = function (openerp) {
                         real_set_value(data[0]);
                 });
             } else {
-                setTimeout(function() {real_set_value(value);}, 0);
+                $.async_when().then(function() {real_set_value(value);});
             }
         },
         get_value: function() {

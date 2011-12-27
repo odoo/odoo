@@ -21,7 +21,11 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.has_been_loaded = $.Deferred();
         this.creating_event_id = null;
         this.dataset_events = [];
-        this.form_dialog = new openerp.web_calendar.CalendarFormDialog(this, {}, this.options.action_views_ids.form, dataset);
+        this.form_dialog = new openerp.web_calendar.CalendarFormDialog(this, {
+                destroy_on_close: false,
+                width: '80%',
+                min_width: 850
+            }, this.options.action_views_ids.form, dataset);
         this.form_dialog.start();
         this.COLOR_PALETTE = ['#f57900', '#cc0000', '#d400a8', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
              '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
@@ -415,6 +419,7 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
         this.view = view;
     },
     start: function() {
+        var self = this;
         this._super();
         this.form = new openerp.web.FormView(this, this.dataset, this.view_id, {
             sidebar: false,
@@ -423,6 +428,9 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
         this.form.appendTo(this.$element);
         this.form.on_created.add_last(this.on_form_dialog_saved);
         this.form.on_saved.add_last(this.on_form_dialog_saved);
+        this.form.on_button_cancel = function() {
+            self.close();
+        }
     },
     on_form_dialog_saved: function() {
         var id = this.dataset.ids[this.dataset.index];
