@@ -72,7 +72,7 @@
     new_price = result[ref("product_product_pc1")].values()
     product_obj = self.pool.get("product.product")
     ctx = context.copy()
-    ctx.update({'pricelist': ref("product.product_price_list_end_year"), 'quantity': 1})
+    ctx.update({'pricelist': ref("product.list0"), 'quantity': 1})
     product_price = product_obj.browse(cr, uid, ref("product_product_pc1"), context=ctx).price
     assert new_price[0] == product_price,"30% discount is not given on sale price of product at end of year"
 -
