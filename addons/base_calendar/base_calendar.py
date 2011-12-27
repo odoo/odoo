@@ -1501,8 +1501,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             ids.remove(event_id)
         for event in self.browse(cr, uid, ids, context=context):
             if event.attendee_ids:
-                attendee_ids = [x.id for x in event.attendee_ids]
-                calendar_obj.unlink(cr, uid, attendee_ids, context=context)
+                calendar_obj.unlink(cr, uid, [x.id for x in event.attendee_ids], context=context)
 
         res = super(calendar_event, self).unlink(cr, uid, ids, context=context)
         self.pool.get('res.alarm').do_alarm_unlink(cr, uid, ids, self._name)
