@@ -1,0 +1,68 @@
+-
+  I Create sale order.
+-
+  !record {model: sale.order, id: order_01}:
+    shop_id: shop
+    user_id: base.user_root
+    partner_invoice_id: base.res_partner_address_8
+    partner_shipping_id: base.res_partner_address_8
+    partner_order_id: base.res_partner_address_8
+    order_policy: picking
+    invoice_quantity: procurement
+    partner_id: base.res_partner_agrolait
+    note: 'Invoice after delivery'
+    payment_term: account.account_payment_term
+    order_line:
+      - name: '[PC1] Basic PC'
+        product_id: product.product_product_pc1
+        product_uom: product.product_uom_unit
+        price_unit: 450.00
+        product_uom_qty: 2
+        product_uos_qty: 2
+        type: make_to_stock
+
+      - name: '[EMPL] Employee'
+        product_id: product.product_product_employee0
+        product_uom: product.uom_hour
+        price_unit: 200
+        product_uom_qty: 3
+        product_uos_qty: 3
+        type: make_to_stock
+-
+  I confirm the sale order.
+-
+  !workflow {model: sale.order, action: order_confirm, ref: order_01}
+-
+  I send delivery in two shipments, so I am doing a partial delivery order.
+-
+  !python {model: stock.picking}: |
+    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("order_01"))])
+    first_picking = self.browse(cr, uid, delivery_orders[0], context=context)
+
+    if first_picking.force_assign(cr, uid, first_picking):
+      first_move = first_picking.move_lines[0]
+      values = {'move%s'%(first_move.id): {'product_qty': 1}}
+      id = first_picking.do_partial(values, context=context)
+
+    if first_picking.force_assign(cr, uid, first_picking):
+      first_move = first_picking.move_lines[0]
+      values = {'move%s'%(first_move.id): {'product_qty': 1}}
+      id = first_picking.do_partial(values, context=context)
+-
+  I create invoice of both shipment.
+-
+  !python {model: stock.invoice.onshipping}: |
+    pick_obj = self.pool.get("stock.picking")
+
+    delivery_orders = pick_obj.search(cr, uid, [('sale_id','=',ref("order_01")),('state','=','done'),('invoice_state','=','2binvoiced')])
+    new_id = self.create(cr ,uid ,{'group': True,'invoice_date': '2011-12-26','journal_id': '',},{'active_ids': delivery_orders})
+    self.open_invoice(cr ,uid ,[new_id],{"active_ids": delivery_orders, "active_id": delivery_orders[0]})
+-
+  I Check That Invoice is created with proper data or not.
+-
+  !python {model: account.invoice}: |
+    invoice_ids = self.search(cr ,uid ,[('amount_total','=','2100')] ,context)
+    invoice = self.browse(cr ,uid ,invoice_ids[0] ,context)
+
+    assert len(invoice.invoice_line) == 4, "Invoice lines are not created properly."
+    assert invoice.amount_total == 2100, "Invoice total is wrong."

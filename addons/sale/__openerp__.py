@@ -95,6 +95,7 @@ Dashboard for Sales Manager that includes:
         'test/cancel_order.yml',
         'test/delete_order.yml',
         'test/edi_sale_order.yml',
+        'test/test_bug907211.yml',
     ],
     'installable': True,
     'active': False,
