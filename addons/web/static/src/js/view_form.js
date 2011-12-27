@@ -356,7 +356,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.on_form_changed();
         }
         if (!_.isEmpty(result.warning)) {
-            $(QWeb.render("DialogWarning", result.warning)).dialog({
+            $(QWeb.render("CrashManagerWarning", result.warning)).dialog({
                 modal: true,
                 buttons: [
                     {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
