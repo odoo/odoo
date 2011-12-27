@@ -373,6 +373,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.username = false;
         this.user_context= {};
         this.db = false;
+        this.openerp_entreprise = false;
         this.module_list = [];
         this.module_loaded = {"web": true};
         this.context = {};
@@ -549,7 +550,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
-                user_context: result.context
+                user_context: result.context,
+                openerp_entreprise: result.openerp_entreprise
             });
             var deferred = self.do_load_qweb(['/web/webclient/qweb']);
             if(self.session_is_valid()) {
@@ -574,7 +576,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
-                user_context: result.context
+                user_context: result.context,
+                openerp_entreprise: result.openerp_entreprise
             });
             if (!volatile) {
                 self.set_cookie('session_id', self.session_id);

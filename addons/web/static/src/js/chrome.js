@@ -167,7 +167,7 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
         }
     },
     on_managed_error: function(error) {
-        $('<div>' + QWeb.render('DialogWarning', {error: error}) + '</div>').dialog({
+        $('<div>' + QWeb.render('CrashManagerWarning', {error: error}) + '</div>').dialog({
             title: "OpenERP " + _.str.capitalize(error.type),
             buttons: [
                 {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
@@ -175,15 +175,42 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
         });
     },
     on_traceback: function(error) {
+        var self = this;
+        var buttons = {};
+        if (openerp.connection.openerp_entreprise) {
+            buttons[_t("Send OpenERP Enterprise Report")] = function() {
+                $this = $(this);
+                var issuename = $('#issuename').val();
+                var explanation = $('#explanation').val();
+                var remark = $('#remark').val();
+                // Call the send method from server to send mail with details
+                new openerp.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('send', [error.data,explanation,remark,issuename]).then(function(result){
+                    if (result === false) {
+                        alert('There was a communication error.')
+                    } else {
+                        $this.dialog('close');
+                    }
+                });
+            };
+            buttons[_t("Dont send")] = function() {
+                $(this).dialog("close");
+            };
+        } else {
+            buttons[_t("Ok")] = function() {
+                $(this).dialog("close");
+            };
+        }
         var dialog = new openerp.web.Dialog(this, {
-            title: "OpenERP " + _.str.capitalize(error.type),
+            title: "OpenERP " + _.str.capitalize(this.error.type),
             autoOpen: true,
-            buttons: [
-                {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
-            ]
+            width: '80%',
+            height: '50%',
+            min_width: '800px',
+            min_height: '600px',
+            buttons: buttons
         }).start();
-        dialog.$element.html(QWeb.render('DialogTraceback', {error: error}));
-    }
+        dialog.$element.html(QWeb.render('CrashManagerError', {session: openerp.connection, error: error}));
+    },
 });
 
 openerp.web.Loading = openerp.web.Widget.extend(/** @lends openerp.web.Loading# */{
@@ -1084,6 +1111,10 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.action_manager = new openerp.web.ActionManager(self);
             self.action_manager.appendTo($("#oe_app"));
             self.bind_hashchange();
+            if (!self.session.openerp_entreprise) {
+                self.$element.find('.oe_footer_powered').append('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">Unsupported/Community Version</a></span>');
+                $('title').html('OpenERP - Usupported/Community Version');
+            }
         });
     },
     do_reload: function() {

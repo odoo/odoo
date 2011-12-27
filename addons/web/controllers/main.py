@@ -366,6 +366,17 @@ class Session(openerpweb.Controller):
     _cp_path = "/web/session"
 
     @openerpweb.jsonrequest
+    def get_session_info(self, req):
+        return {
+            "session_id": req.session_id,
+            "uid": req.session._uid,
+            "context": req.session.get_context() if req.session._uid else {},
+            "db": req.session._db,
+            "login": req.session._login,
+            "openerp_entreprise": req.session.openerp_entreprise(),
+        }
+
+    @openerpweb.jsonrequest
     def authenticate(self, req, db, login, password, base_location=None):
         wsgienv = req.httprequest.environ
         release = web.common.release
@@ -376,24 +387,8 @@ class Session(openerpweb.Controller):
             user_agent="%s / %s" % (release.name, release.version),
         )
         req.session.authenticate(db, login, password, env)
-        ctx = req.session.get_context() if req.session._uid else {}
 
-        return {
-            "session_id": req.session_id,
-            "uid": req.session._uid,
-            "context": ctx,
-            "db": req.session._db,
-            "login": req.session._login
-        }
-
-    @openerpweb.jsonrequest
-    def get_session_info(self, req):
-        return {
-            "uid": req.session._uid,
-            "context": req.session.get_context() if req.session._uid else False,
-            "db": req.session._db,
-            "login": req.session._login
-        }
+        return self.get_session_info(req)
 
     @openerpweb.jsonrequest
     def change_password (self,req,fields):
