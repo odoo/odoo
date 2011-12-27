@@ -91,7 +91,7 @@
         <field name="arch" type="xml">
             <search string="Partner Contact">
                 <field name="name" string="First/Lastname"
-                    filter_domain="['|', ('firstname','ilike', self), ('lastname','ilike',self)]"/>
+                    filter_domain="['|', ('first_name','ilike', self), ('last_name', 'ilike', self)]"/>
                 <field name="partner_id" string="Partner"/>
             </search>
         </field>
