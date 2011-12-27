@@ -553,9 +553,10 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 user_context: result.context,
                 openerp_entreprise: result.openerp_entreprise
             });
-            var deferred = self.do_load_qweb(['/web/webclient/qweb']);
+            var modules = openerp._modules.join(',');
+            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb);
             if(self.session_is_valid()) {
-                return deferred.pipe(_.bind(function() { this.load_modules(); }, self));
+                return deferred.pipe(function() { self.load_modules(); });
             }
             return deferred;
         });
@@ -636,9 +637,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      */
     load_modules: function() {
         var self = this;
-        if(openerp._modules_loaded) {
-            return $.when();
-        }
         return this.rpc('/web/session/modules', {}).pipe(function(result) {
             self.module_list = result;
             var lang = self.user_context.lang;
