@@ -1,5 +1,5 @@
 -
-  In order to test product pricelist, I make new rule in "Default Public Pricelist Version" if product qty >= 5 than give discount 10% per qty.
+  I create a price list rule for more qty product and check whether it gives the correct price or not.
 -
   !record {model: product.pricelist.item, id: pricelist_rules_for_more_qty1}:
     name: Default Public Pricelist for More Qty
@@ -8,8 +8,6 @@
     base: 1
     price_version_id: product.ver0
     price_discount: -0.10
--
-  I check 10% discount is given on sale price of 5 qty product.
 -
   !python {model: product.pricelist}: |
     product_obj = self.pool.get("product.product")
@@ -20,7 +18,7 @@
     product_price = product_obj.browse(cr, uid, ref("product_product_pc1"), context=ctx).price
     assert new_price[0] == product_price,"10% discount is not given on sale price of 5 qty product"
 -
-  For special product pricelist,I make new rule in "Default Public Pricelist Version" if special product than give 20% Discount.
+  I create a price list rule for a specific product and check whether it gives the correct price or not.
 -
   !record {model: product.pricelist.item, id: pricelist_rules_for_pc2}:
     name: Default Public Pricelist for PC2
@@ -31,8 +29,6 @@
     price_version_id: product.ver0
     price_discount: -0.20
 -
-  I check 20% discount is given on sale price of special product.
--
   !python {model: product.pricelist}: |
     result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc2") ,5,False)])
     product_obj = self.pool.get("product.product")
@@ -42,7 +38,7 @@
     product_price = product_obj.browse(cr, uid, ref("product_product_pc2"), context=ctx).price
     assert new_price[0] == product_price,"20% discount is not given on sale price of special product"
 -
-  For special product category pricelist,I make new rule in "Default Public Pricelist Version" if special category than give 25% Discount.
+  I create a price list rule for a specific category and check whether it gives the correct price or not.
 -
   !record {model: product.pricelist.item, id: pricelist_rules_category_1}:
     name: Default Public Pricelist for Category
@@ -53,8 +49,6 @@
     price_version_id: product.ver0
     price_discount: -0.25
 -
-  I check 25% discount is given on sale price of special category product.
--
   !python {model: product.pricelist}: |
     result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_fan2") ,5,False)])
     product_obj = self.pool.get("product.product")
@@ -64,7 +58,7 @@
     product_price = product_obj.browse(cr, uid, ref("product_product_fan2"), context=ctx).price
     assert new_price[0] == product_price,"25% discount is not given on sale price of special category product."
 -
-  Now I create new pricelist for end of yearto give 30% discount.
+  I create a price list for end of year and check whether it gives the correct price or not.
 -
   !record {model: product.pricelist, id: product_price_list_end_year}:
     name: End of Years Price List
@@ -77,8 +71,6 @@
               base: 1
               price_discount: -0.30
 -
-  For end of year pricelist,I make new rule in "Default Public Pricelist Version" to give 30% discount.
--
   !record {model: product.pricelist.item, id: pricelist_rules_for_end_year1}:
     name: End of Years Price List Version Rule - Public Pricelist
     min_quantity: 1
@@ -86,8 +78,6 @@
     base: -1
     price_version_id: product.ver0
     base_pricelist_id: product_price_list_end_year
--
-  I check 30% discount is given on sale price of product at end of year.
 -
   !python {model: product.pricelist}: |
     result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc1") ,5,False)])
@@ -98,7 +88,7 @@
     product_price = product_obj.browse(cr, uid, ref("product_product_pc1"), context=ctx).price
     assert new_price[0] == product_price,"30% discount is not given on sale price of product at end of year"
 -
-  Now I create new pricelist for special customer to give 40% discount.
+  I create a price list for special customer and check whether it gives the correct price or not.
 -
   !record {model: product.pricelist, id: special_customer_price_list1}:
     name: Price List For Special Customer
@@ -111,12 +101,8 @@
               base: 1
               price_discount: -0.40
 -
-   I assing "Price List For Special Customer" to customer.
--
   !record {model: res.partner, id: base.res_partner_agrolait}:
     property_product_pricelist: special_customer_price_list1
--
-  I check 40% discount is given on sale price of product for special customer.
 -
   !python {model: product.pricelist}: |
     result = self.price_get_multi(cr, uid, [ref("product.special_customer_price_list1")], [(ref("product_product_pc4") ,5,ref("base.res_partner_agrolait"))])
@@ -127,7 +113,7 @@
     product_price = product_obj.browse(cr, uid, ref("product_product_pc4"), context=ctx).price
     assert new_price[0] == product_price,"40% discount is not given on sale price of product for special customer "
 -
-  I add supplier pricelist for 10 qty product.
+  I add supplier pricelist.
 -
   !record {model: product.supplierinfo, id: supplierinfo5}:
     pricelist_ids:
