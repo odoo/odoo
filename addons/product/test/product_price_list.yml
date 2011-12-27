@@ -13,7 +13,7 @@
 -
   !python {model: product.pricelist}: |
     product_obj = self.pool.get("product.product")
-    result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc1") ,5,ref("base.res_partner_desertic_hispafuentes"))])
+    result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc1") ,5,False)])
     new_price = result[ref("product_product_pc1")].values()
     ctx = context.copy()
     ctx.update({'pricelist': ref("product.list0"), 'quantity': 5})
@@ -34,7 +34,7 @@
   I check 20% discount is given on sale price of special product.
 -
   !python {model: product.pricelist}: |
-    result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc2") ,5,ref("base.res_partner_desertic_hispafuentes"))])
+    result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc2") ,5,False)])
     product_obj = self.pool.get("product.product")
     new_price = result[ref("product_product_pc2")].values()
     ctx = context.copy()
@@ -68,7 +68,7 @@
   I check 30% discount is given on sale price of product at end of year.
 -
   !python {model: product.pricelist}: |
-    result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc1") ,5,ref("base.res_partner_desertic_hispafuentes"))])
+    result = self.price_get_multi(cr, uid, [ref("product.list0")], [(ref("product_product_pc1") ,5,False)])
     new_price = result[ref("product_product_pc1")].values()
     product_obj = self.pool.get("product.product")
     ctx = context.copy()
