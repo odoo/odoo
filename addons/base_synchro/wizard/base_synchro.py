@@ -191,20 +191,23 @@ class base_synchro(osv.osv_memory):
         if not object in self.meta[pool_src]:
             self.meta[pool_src][object] = pool_src.get(object).fields_get(cr, uid)
         fields = self.meta[pool_src][object]
-
         for f in fields:
             if f not in data:
                 continue
             ftype = fields[f]['type']
-
             if ftype in ('function', 'one2many', 'one2one'):
                 del data[f]
+            
             elif ftype == 'many2one':
-                if data[f]:
-                    df = self.relation_transform(cr, uid, pool_src, pool_dest, fields[f]['relation'], data[f][0], action, context=context)
-                    data[f] = df
-                    if not data[f]:
-                        del data[f]
+                if (isinstance(data[f], list)) and data[f]:
+                    fdata = data[f][0]
+                else:
+                    fdata = data[f]
+                df = self.relation_transform(cr, uid, pool_src, pool_dest, fields[f]['relation'], fdata, action, context=context)
+                data[f] = df
+                if not data[f]:
+                    del data[f]
+            
             elif ftype == 'many2many':
                 res = map(lambda x: self.relation_transform(cr, uid, pool_src, pool_dest, fields[f]['relation'], x, action, context), data[f])
                 data[f] = [(6, 0, res)]
