@@ -3445,14 +3445,28 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         :rtype: dict
         '''
         obj_data = self.pool.get('ir.model.data')
+        obj_journal = self.pool.get('account.journal')
         # Get the id of journal views
         tmp = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi')
         view_id_cur = tmp and tmp[1] or False
         tmp = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view')
         view_id_cash = tmp and tmp[1] or False
+
+        # we need to loop again to find next number for journal code 
+        # because we can't rely on the value current_num as,
+        # its possible that we already have bank journals created (e.g. by the creation of res.partner.bank) 
+        # and the next number for account code might have been already used before for journal
+        journal_count = 0
+        while True:
+            journal_code = _('BNK') + str(current_num + journal_count)
+            ids = obj_journal.search(cr, uid, [('code', '=', journal_code), ('company_id', '=', company_id)], context=context)
+            if not ids:
+                break
+            journal_count += 1
+
         vals = {
                 'name': line['acc_name'],
-                'code': _('BNK') + str(current_num),
+                'code': journal_code,
                 'type': line['account_type'] == 'cash' and 'cash' or 'bank',
                 'company_id': company_id,
                 'analytic_journal_id': False,
