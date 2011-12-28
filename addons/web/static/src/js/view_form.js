@@ -2655,20 +2655,6 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             }
         });
         this.searchview.on_loaded.add_last(function () {
-            var $buttons = self.searchview.$element.find(".oe_search-view-buttons");
-            $buttons.append(QWeb.render("SelectCreatePopup.search.buttons"));
-            var $cbutton = $buttons.find(".oe_selectcreatepopup-search-close");
-            $cbutton.click(function() {
-                self.stop();
-            });
-            var $sbutton = $buttons.find(".oe_selectcreatepopup-search-select");
-            if(self.options.disable_multiple_selection) {
-                $sbutton.hide();
-            }
-            $sbutton.click(function() {
-                self.on_select_elements(self.selected_ids);
-                self.stop();
-            });
             self.view_list = new openerp.web.form.SelectCreateListView(self,
                     self.dataset, false,
                     _.extend({'deletable': false,
@@ -2679,6 +2665,22 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                 self.view_list.do_show();
             }).pipe(function() {
                 self.searchview.do_search();
+            });
+            self.view_list.on_loaded.add_last(function() {
+                var $buttons = self.view_list.$element.find(".oe-actions");
+                $buttons.prepend(QWeb.render("SelectCreatePopup.search.buttons"));
+                var $cbutton = $buttons.find(".oe_selectcreatepopup-search-close");
+                $cbutton.click(function() {
+                    self.stop();
+                });
+                var $sbutton = $buttons.find(".oe_selectcreatepopup-search-select");
+                if(self.options.disable_multiple_selection) {
+                    $sbutton.hide();
+                }
+                $sbutton.click(function() {
+                    self.on_select_elements(self.selected_ids);
+                    self.stop();
+                });
             });
         });
         this.searchview.appendTo($("#" + this.element_id + "_search"));
