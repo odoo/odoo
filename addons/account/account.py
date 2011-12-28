@@ -2591,8 +2591,8 @@ class account_add_tmpl_wizard(osv.osv_memory):
             context = {}
         acc_obj = self.pool.get('account.account')
         tmpl_obj = self.pool.get('account.account.template')
-        data = self.read(cr, uid, ids)
-        company_id = acc_obj.read(cr, uid, [data[0]['cparent_id']][0][0], ['company_id'])['company_id'][0]
+        data = self.read(cr, uid, ids)[0]
+        company_id = acc_obj.read(cr, uid, [data['cparent_id'][0]], ['company_id'])[0]['company_id'][0]
         account_template = tmpl_obj.browse(cr, uid, context['tmpl_ids'])
         vals = {
             'name': account_template.name,
@@ -2603,7 +2603,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
             'reconcile': account_template.reconcile,
             'shortcut': account_template.shortcut,
             'note': account_template.note,
-            'parent_id': data[0]['cparent_id'][0],
+            'parent_id': data['cparent_id'][0],
             'company_id': company_id,
             }
         acc_obj.create(cr, uid, vals)
