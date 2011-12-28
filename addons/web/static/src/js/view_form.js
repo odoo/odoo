@@ -2130,6 +2130,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 if (self.is_readonly()) {
                     view.options.addable = null;
                     view.options.deletable = null;
+                    view.options.isClarkGable = false;
                 }
             } else if (view.view_type === "form") {
                 if (self.is_readonly()) {
@@ -2478,7 +2479,8 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
         this.list_view = new openerp.web.form.Many2ManyListView(this, this.dataset, false, {
                     'addable': self.is_readonly() ? null : _t("Add"),
                     'deletable': self.is_readonly() ? false : true,
-                    'selectable': self.multi_selection
+                    'selectable': self.multi_selection,
+                    'isClarkGable': self.is_readonly() ? false : true
             });
         var embedded = (this.field.views || {}).tree;
         if (embedded) {
