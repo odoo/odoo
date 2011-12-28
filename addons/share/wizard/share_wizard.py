@@ -752,8 +752,6 @@ class share_wizard(osv.osv_memory):
         self._logger.info('Sending share notifications by email...')
         mail_message = self.pool.get('mail.message')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
-        if not user.user_email:
-            raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
 
         # TODO: also send an HTML version of this mail
         msg_ids = []
@@ -761,6 +759,8 @@ class share_wizard(osv.osv_memory):
             email_to = result_line.user_id.user_email
             if not email_to:
                 continue
+            if not user.user_email:
+                raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
             subject = wizard_data.name
             body = _("Hello,")
             body += "\n\n"
