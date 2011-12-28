@@ -23,14 +23,14 @@ class EDI(openerpweb.Controller):
     @openerpweb.httprequest
     def view(self, req, db, token):
         d = self.template(req)
-        d["init"] = 'new s.edi.EdiView(null,"%s","%s").appendTo($("body"));'%(db,token)
+        d["init"] = 's.edi.edi_view("%s","%s");'%(db,token)
         r = web.controllers.main.html_template % d
         return r
 
     @openerpweb.httprequest
     def import_url(self, req, url):
         d = self.template(req)
-        d["init"] = 'new s.edi.EdiImport(null,"%s").appendTo($("body"));'%(url)
+        d["init"] = 's.edi.edi_import("%s");'%(url)
         r = web.controllers.main.html_template % d
         return r
 
