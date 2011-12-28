@@ -1073,6 +1073,31 @@ class BaseModel(object):
             else:
                 return False
 
+        def _get_xml_id(self, cr, uid, r):
+            model_data = self.pool.get('ir.model.data')
+            data_ids = model_data.search(cr, uid, [('model', '=', r._table_name), ('res_id', '=', r['id'])])
+            if len(data_ids):
+                d = model_data.read(cr, uid, data_ids, ['name', 'module'])[0]
+                if d['module']:
+                    r = '%s.%s' % (d['module'], d['name'])
+                else:
+                    r = d['name']
+            else:
+                postfix = 0
+                while True:
+                    n = self._table+'_'+str(r['id']) + (postfix and ('_'+str(postfix)) or '' )
+                    if not model_data.search(cr, uid, [('name', '=', n)]):
+                        break
+                    postfix += 1
+                model_data.create(cr, uid, {
+                    'name': n,
+                    'model': self._name,
+                    'res_id': r['id'],
+                    'module': '__export__',
+                })
+                r = '__export__.'+n
+            return r
+
         lines = []
         data = map(lambda x: '', range(len(fields)))
         done = []
@@ -1082,35 +1107,14 @@ class BaseModel(object):
                 r = row
                 i = 0
                 while i < len(f):
+                    cols = False
                     if f[i] == '.id':
                         r = r['id']
                     elif f[i] == 'id':
-                        model_data = self.pool.get('ir.model.data')
-                        data_ids = model_data.search(cr, uid, [('model', '=', r._table_name), ('res_id', '=', r['id'])])
-                        if len(data_ids):
-                            d = model_data.read(cr, uid, data_ids, ['name', 'module'])[0]
-                            if d['module']:
-                                r = '%s.%s' % (d['module'], d['name'])
-                            else:
-                                r = d['name']
-                        else:
-                            postfix = 0
-                            while True:
-                                n = self._table+'_'+str(r['id']) + (postfix and ('_'+str(postfix)) or '' )
-                                if not model_data.search(cr, uid, [('name', '=', n)]):
-                                    break
-                                postfix += 1
-                            model_data.create(cr, uid, {
-                                'name': n,
-                                'model': self._name,
-                                'res_id': r['id'],
-                                'module': '__export__',
-                            })
-                            r = '__export__.'+n
+                        r = _get_xml_id(self, cr, uid, r)
                     else:
                         r = r[f[i]]
                         # To display external name of selection field when its exported
-                        cols = False
                         if f[i] in self._columns.keys():
                             cols = self._columns[f[i]]
                         elif f[i] in self._inherit_fields.keys():
@@ -1135,8 +1139,12 @@ class BaseModel(object):
                             if [x for x in fields2 if x]:
                                 break
                         done.append(fields2)
+                        if cols and cols._type=='many2many' and len(fields[fpos])>(i+1) and (fields[fpos][i+1]=='id'):
+                            data[fpos] = ','.join([_get_xml_id(self, cr, uid, x) for x in r])
+                            break
+
                         for row2 in r:
-                            lines2 = self.__export_row(cr, uid, row2, fields2,
+                            lines2 = row2._model.__export_row(cr, uid, row2, fields2,
                                     context)
                             if first:
                                 for fpos2 in range(len(fields)):
