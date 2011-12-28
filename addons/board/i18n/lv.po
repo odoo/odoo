@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-01-13 12:53+0000\n"
 "Last-Translator: Vladimirs Kuzmins <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:29+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:01+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: board
 #: view:res.log.report:0
@@ -28,22 +28,9 @@ msgid "Menu Create"
 msgstr ""
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-#: model:ir.model,name:board.model_board_note_type
-msgid "Note Type"
-msgstr "Piezīmes tips"
-
-#. module: board
-#: view:board.note:0
-#: field:board.note,user_id:0
-msgid "Author"
-msgstr "Autors"
-
-#. module: board
-#: model:ir.module.module,shortdesc:board.module_meta_information
-msgid "Dashboard main module"
-msgstr "Instrumentu paneļu galvenais modulis"
+#: view:board.menu.create:0
+msgid "Menu Information"
+msgstr "Izvēlnes informācija"
 
 #. module: board
 #: view:res.users:0
@@ -51,30 +38,25 @@ msgid "Latest Connections"
 msgstr "Pēdējie pieslēgumi"
 
 #. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
-#, python-format
-msgid "User Error!"
-msgstr "Lietotāja kļūda!"
+#: view:res.log.report:0
+msgid "Log created in last month"
+msgstr ""
 
 #. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.open_board_administration_form
-#: model:ir.ui.menu,name:board.menu_board_admin
 msgid "Administration Dashboard"
 msgstr "Administrēšanas instrumentu panelis"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note,note:0
-#: model:ir.model,name:board.model_board_note
-msgid "Note"
-msgstr "Piezīme"
-
-#. module: board
-#: view:board.note:0
 #: view:res.log.report:0
 msgid "Group By..."
 msgstr "Grupēt pēc..."
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log created in current year"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -82,7 +64,11 @@ msgid "Board"
 msgstr "Panelis"
 
 #. module: board
-#: view:board.board:0
+#: field:board.menu.create,menu_name:0
+msgid "Menu Name"
+msgstr "Izvēlnes Nosaukums"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
 #: view:res.log.report:0
 msgid "Weekly Global Activity"
@@ -105,21 +91,20 @@ msgid "Month"
 msgstr "Mēnesis"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr "Atvērt instrumentu paneli"
+#: view:res.log.report:0
+msgid "Log created in current month"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
 #: view:res.log.report:0
 msgid "Monthly Activity per Document"
 msgstr "Ikmēneša aktivitāte uz dokumentu"
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
-msgstr "Žurnāla analīze"
+#: view:board.board:0
+msgid "Configuration Overview"
+msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
@@ -138,7 +123,6 @@ msgid "August"
 msgstr "Augusts"
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_user_connection_tree
 msgid "User Connections"
 msgstr "Lietotāja pieslēgumi"
@@ -149,25 +133,19 @@ msgid "Creation Date"
 msgstr "Izveidošanas datums"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_note_form
-#: model:ir.ui.menu,name:board.menu_view_board_note_form
-msgid "Publish a note"
-msgstr "Publicēt piezīmi"
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr "Žurnāla analīze"
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
-msgstr "Izvēlnes informācija"
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr "Objekts"
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "June"
 msgstr "Jūnijs"
-
-#. module: board
-#: field:board.note,type:0
-msgid "Note type"
-msgstr "Piezīmes tips"
 
 #. module: board
 #: field:board.board,line_ids:0
@@ -180,20 +158,15 @@ msgid "Log Report"
 msgstr "Žurnāla atskaite"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note,date:0
-msgid "Date"
-msgstr "Datums"
+#: code:addons/board/wizard/board_menu_create.py:46
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr ""
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "July"
 msgstr "Jūlijs"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Extended Filters..."
-msgstr "Paplašinātie filtri..."
 
 #. module: board
 #: view:res.log.report:0
@@ -237,9 +210,9 @@ msgid "January"
 msgstr "Janvāris"
 
 #. module: board
-#: view:board.note:0
-msgid "Notes"
-msgstr "Piezīmes"
+#: view:board.board:0
+msgid "Users"
+msgstr ""
 
 #. module: board
 #: selection:res.log.report,month:0
@@ -262,15 +235,15 @@ msgstr "Aprīlis"
 #: view:board.board:0
 #: field:board.board,name:0
 #: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.admin_menu_dasboard
 #: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
 msgstr "Instrumentu panelis"
 
 #. module: board
-#: model:ir.module.module,description:board.module_meta_information
-msgid "Base module for all dashboards."
-msgstr "Bāzes modulis visiem instrumentu paneļiem."
+#: code:addons/board/wizard/board_menu_create.py:45
+#, python-format
+msgid "User Error!"
+msgstr "Lietotāja kļūda!"
 
 #. module: board
 #: field:board.board.line,action_id:0
@@ -288,12 +261,11 @@ msgid "Model"
 msgstr "Modelis"
 
 #. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "Izvēlnes Nosaukums"
+#: model:ir.actions.act_window,name:board.board_homepage_action
+msgid "Home Page"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_latest_activities_tree
 msgid "Latest Activities"
 msgstr "Pēdējas aktivitātes"
@@ -360,11 +332,6 @@ msgid "May"
 msgstr "Maijs"
 
 #. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr "Objekts"
-
-#. module: board
 #: view:res.log.report:0
 #: field:res.log.report,name:0
 msgid "Year"
@@ -380,14 +347,35 @@ msgstr "Atcelt"
 msgid "Dashboard View"
 msgstr "Instrumentu paneļa skatījums"
 
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
-#, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr ""
+#~ msgid "Author"
+#~ msgstr "Autors"
 
-#. module: board
-#: view:board.note:0
-#: field:board.note,name:0
-msgid "Subject"
-msgstr ""
+#~ msgid "Note"
+#~ msgstr "Piezīme"
+
+#~ msgid "Dashboard main module"
+#~ msgstr "Instrumentu paneļu galvenais modulis"
+
+#~ msgid "Open Dashboard"
+#~ msgstr "Atvērt instrumentu paneli"
+
+#~ msgid "Publish a note"
+#~ msgstr "Publicēt piezīmi"
+
+#~ msgid "Note type"
+#~ msgstr "Piezīmes tips"
+
+#~ msgid "Date"
+#~ msgstr "Datums"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Paplašinātie filtri..."
+
+#~ msgid "Base module for all dashboards."
+#~ msgstr "Bāzes modulis visiem instrumentu paneļiem."
+
+#~ msgid "Notes"
+#~ msgstr "Piezīmes"
+
+#~ msgid "Note Type"
+#~ msgstr "Piezīmes tips"

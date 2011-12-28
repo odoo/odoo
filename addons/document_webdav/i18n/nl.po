@@ -7,21 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-01-13 19:35+0000\n"
 "Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:41+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:13+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,create_date:0
 #: field:document.webdav.file.property,create_date:0
 msgid "Date Created"
 msgstr "Datum gemaakt"
+
+#. module: document_webdav
+#: model:ir.ui.menu,name:document_webdav.menu_document_props
+msgid "Documents"
+msgstr ""
 
 #. module: document_webdav
 #: constraint:document.directory:0
@@ -64,9 +69,9 @@ msgid "These properties will be added to WebDAV requests"
 msgstr "Deze eigenschappen worden toegevoegd bij WebDAV aanvragen"
 
 #. module: document_webdav
-#: model:ir.ui.menu,name:document_webdav.menu_file_props
-msgid "DAV properties for documents"
-msgstr "DAV eigenschappen voor documenten"
+#: model:ir.actions.act_window,name:document_webdav.action_file_props_form
+msgid "DAV Properties for Documents"
+msgstr ""
 
 #. module: document_webdav
 #: code:addons/document_webdav/webdav.py:37
@@ -81,44 +86,9 @@ msgid "Document"
 msgstr "Document"
 
 #. module: document_webdav
-#: model:ir.module.module,description:document_webdav.module_meta_information
-msgid ""
-" With this module, the WebDAV server for the documents is activated.\n"
-"        You can then use any compatible browser to remotely see the "
-"attachments of OpenObject.\n"
-"\n"
-"        After installation, the webDAV server can be controlled by a "
-"[webdav] section in the server's config.\n"
-"        Server Configuration Parameter:\n"
-"        [webdav]\n"
-"        ; enable = True ; Serve webdav over the http(s) servers\n"
-"        ; vdir = webdav ; the directory that webdav will be served at\n"
-"          ; this default val means that webdav will be\n"
-"          ; on \"http://localhost:8069/webdav/\n"
-"        ; verbose = True ; Turn on the verbose messages of webdav\n"
-"        ; debug = True ; Turn on the debugging messages of webdav\n"
-"          ; since the messages are routed to the python logging, with\n"
-"          ; levels \"debug\" and \"debug_rpc\" respectively, you can leave\n"
-"          ; these options on\n"
+#: model:ir.ui.menu,name:document_webdav.menu_folder_props
+msgid "Folders"
 msgstr ""
-" Met deze module wordt de WebDAV server voor documenten geactiveerd.\n"
-"        U kunt nu met een compatibele browser door uw bijlagen in OpenObject "
-"bladeren.\n"
-"\n"
-"        Na installatie kan de webDAV server worden bestuurd vanuit de "
-"[webdav] sectie in de server configuratie.\n"
-"        Server configuratie parameters:\n"
-"        [webdav]\n"
-"        ; enable = True ; Serve webdav via de http(s) servers\n"
-"        ; vdir = webdav ; de map van waaruit webdav wordt geserved\n"
-"          ; deze standaard waarde betekent dat webdav bereikbaar is\n"
-"          ; via \"http://localhost:8069/webdav/\n"
-"        ; verbose = True ; Aanzetten uitegreide berichten van webdav\n"
-"        ; debug = True ; Aanzetten van de debugging berichten van webdav\n"
-"          ; omdat de berichten worden gestuurd naar de python logging, met\n"
-"          ; niveaus \"debug\" en \"debug_rpc\" respectievelijk, kunt u deze "
-"opties\n"
-"          ; aan laten staan\n"
 
 #. module: document_webdav
 #: sql_constraint:document.directory:0
@@ -153,9 +123,9 @@ msgstr ""
 "0.9.4.tar.gz&can=2&q=/"
 
 #. module: document_webdav
-#: model:ir.ui.menu,name:document_webdav.menu_dir_props
-msgid "DAV properties for folders"
-msgstr "DAV eigenschappen voor mappen"
+#: model:ir.actions.act_window,name:document_webdav.action_dir_props_form
+msgid "DAV Properties for Folders"
+msgstr ""
 
 #. module: document_webdav
 #: view:document.directory:0
@@ -211,9 +181,9 @@ msgid "Creator"
 msgstr "Gemaakt door"
 
 #. module: document_webdav
-#: model:ir.module.module,shortdesc:document_webdav.module_meta_information
-msgid "WebDAV server for Document Management"
-msgstr "WebDAV server voor documentbeheer"
+#: model:ir.ui.menu,name:document_webdav.menu_properties
+msgid "DAV Properties"
+msgstr ""
 
 #. module: document_webdav
 #: sql_constraint:document.directory:0
@@ -225,3 +195,12 @@ msgstr "Map moet een bovenliggende map hebben of opslag zijn"
 #: field:document.webdav.file.property,do_subst:0
 msgid "Substitute"
 msgstr "Vervangen"
+
+#~ msgid "WebDAV server for Document Management"
+#~ msgstr "WebDAV server voor documentbeheer"
+
+#~ msgid "DAV properties for folders"
+#~ msgstr "DAV eigenschappen voor mappen"
+
+#~ msgid "DAV properties for documents"
+#~ msgstr "DAV eigenschappen voor documenten"

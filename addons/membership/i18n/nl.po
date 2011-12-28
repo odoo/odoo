@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:45+0000\n"
 "PO-Revision-Date: 2011-01-14 18:20+0000\n"
 "Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 04:59+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 05:56+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -77,6 +77,11 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: membership
+#: view:res.partner:0
+msgid "Ending Date Of Membership"
+msgstr ""
+
+#. module: membership
 #: field:product.product,membership_date_to:0
 msgid "Date to"
 msgstr "Datum tot"
@@ -87,9 +92,9 @@ msgid "Waiting to invoice"
 msgstr "Wacht op facturatie"
 
 #. module: membership
-#: help:report.membership,date_to:0
-msgid "End membership date"
-msgstr "Einddatum lidmaatschap"
+#: view:report.membership:0
+msgid "This will display paid, old and total earned columns"
+msgstr ""
 
 #. module: membership
 #: view:res.partner:0
@@ -97,14 +102,16 @@ msgid "Suppliers"
 msgstr "Leveranciers"
 
 #. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Non Member"
+msgstr "Niet-lid"
+
+#. module: membership
 #: view:res.partner:0
 msgid "All Members"
 msgstr "Alle leden"
-
-#. module: membership
-#: field:res.partner,membership_stop:0
-msgid "Stop membership date"
-msgstr "Einddatum lidmaatschap"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -112,7 +119,6 @@ msgid "Product to member"
 msgstr "Product aan lid"
 
 #. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
 #: view:res.partner:0
 msgid "Join Membership"
 msgstr "Lid worden"
@@ -128,6 +134,11 @@ msgid "Member is associated."
 msgstr "Lid is geassocieerd"
 
 #. module: membership
+#: view:report.membership:0
+msgid "   Month   "
+msgstr ""
+
+#. module: membership
 #: field:report.membership,tot_pending:0
 msgid "Pending Amount"
 msgstr "Te ontvangen bedrag"
@@ -138,11 +149,17 @@ msgid "Associated partner."
 msgstr "Geassocieerde relatie"
 
 #. module: membership
-#: field:report.membership,num_invoiced:0
-msgid "# Invoiced"
-msgstr "# Gefactureerd"
+#: view:res.partner:0
+msgid "Supplier Partners"
+msgstr ""
 
 #. module: membership
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_report_membership_tree
 #: model:ir.ui.menu,name:membership.menu_report_membership
 msgid "Members Analysis"
 msgstr "Leden analyse"
@@ -173,6 +190,11 @@ msgstr "Relatie"
 #: model:process.transition,name:membership.process_transition_invoicetopaid0
 msgid "Invoice to paid"
 msgstr "Factuur naar betaald"
+
+#. module: membership
+#: view:res.partner:0
+msgid "Customer Partners"
+msgstr ""
 
 #. module: membership
 #: view:res.partner:0
@@ -226,6 +248,11 @@ msgid "Create"
 msgstr "Maak"
 
 #. module: membership
+#: view:product.product:0
+msgid "Membership products"
+msgstr "Producten voor leden"
+
+#. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "Member line"
 msgstr "Lid-regel"
@@ -235,6 +262,16 @@ msgstr "Lid-regel"
 #: field:res.partner,membership_start:0
 msgid "Start membership date"
 msgstr "Lid vanaf"
+
+#. module: membership
+#: view:report.membership:0
+msgid "Events created in current month"
+msgstr ""
+
+#. module: membership
+#: view:report.membership:0
+msgid "This will display waiting, invoiced and total pending columns"
+msgstr ""
 
 #. module: membership
 #: code:addons/membership/membership.py:410
@@ -249,9 +286,24 @@ msgid "Paid member"
 msgstr "Betalend lid"
 
 #. module: membership
+#: view:report.membership:0
+msgid "    Month-1    "
+msgstr ""
+
+#. module: membership
+#: view:report.membership:0
+msgid "Events created in last month"
+msgstr ""
+
+#. module: membership
 #: field:report.membership,num_waiting:0
 msgid "# Waiting"
 msgstr "# Wachtend"
+
+#. module: membership
+#: view:report.membership:0
+msgid "Events created in current year"
+msgstr ""
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
@@ -261,11 +313,9 @@ msgid "Members"
 msgstr "Leden"
 
 #. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Non Member"
-msgstr "Niet-lid"
+#: view:res.partner:0
+msgid "Invoiced/Paid/Free"
+msgstr ""
 
 #. module: membership
 #: model:process.node,note:membership.process_node_invoicedmember0
@@ -278,9 +328,9 @@ msgid "July"
 msgstr "Juli"
 
 #. module: membership
-#: model:product.template,name:membership.membership_0_product_template
-msgid "Golden Membership"
-msgstr "Gouden lidmaatschap"
+#: field:report.membership,num_invoiced:0
+msgid "# Invoiced"
+msgstr "# Gefactureerd"
 
 #. module: membership
 #: help:res.partner,associate_member:0
@@ -320,9 +370,9 @@ msgid "Date until which membership remains active."
 msgstr "Datum tot wanneer het lidmaatschap actief blijft"
 
 #. module: membership
-#: view:product.product:0
-msgid "Membership products"
-msgstr "Producten voor leden"
+#: field:res.partner,membership_cancel:0
+msgid "Cancel membership date"
+msgstr "Annuleringsdatum lidmaatschap"
 
 #. module: membership
 #: field:membership.membership_line,date:0
@@ -365,33 +415,9 @@ msgid "September"
 msgstr "September"
 
 #. module: membership
-#: model:ir.module.module,description:membership.module_meta_information
-msgid ""
-"\n"
-"This module allows you to manage all operations for managing memberships.\n"
-"It supports different kind of members:\n"
-"* Free member\n"
-"* Associated member (ex: a group subscribe for a membership for all\n"
-"  subsidiaries)\n"
-"* Paid members,\n"
-"* Special member prices, ...\n"
-"\n"
-"It is integrated with sales and accounting to allow you to automatically\n"
-"invoice and send propositions for membership renewal.\n"
-"    "
-msgstr ""
-"\n"
-"Deze module laat u alle bewerkingen rondom lidmaatschappen beheren.\n"
-"Het ondersteunt verschillende soorten leden:\n"
-"* Gratis lid\n"
-"* Geassocieerd lid (bijv. een groep inschrijving voor lidmaatschap van alle "
-"filialen)\n"
-"* Betelend lid,\n"
-"* Speciale leden prijzen, ...\n"
-"\n"
-"Het is geïntegreerd met verkoop en financieel zodat u automatisch facturen "
-"kunt sturen en voorstellen tot lidmaatschapsverlenging.\n"
-"    "
+#: selection:report.membership,month:0
+msgid "December"
+msgstr "December"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
@@ -492,12 +518,6 @@ msgid "Category"
 msgstr "Categorie"
 
 #. module: membership
-#: model:ir.model,name:membership.model_account_invoice
-#: field:membership.membership_line,account_invoice_id:0
-msgid "Invoice"
-msgstr "Factuur"
-
-#. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
@@ -528,11 +548,6 @@ msgid "Member"
 msgstr "Lid"
 
 #. module: membership
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
-
-#. module: membership
 #: view:product.product:0
 msgid "Date From"
 msgstr "Vanaf datum"
@@ -548,9 +563,9 @@ msgid "Accounting Info"
 msgstr "Financiële informatie"
 
 #. module: membership
-#: field:res.partner,membership_cancel:0
-msgid "Cancel membership date"
-msgstr "Annuleringsdatum lidmaatschap"
+#: help:report.membership,date_to:0
+msgid "End membership date"
+msgstr "Einddatum lidmaatschap"
 
 #. module: membership
 #: view:res.partner:0
@@ -575,7 +590,6 @@ msgid "June"
 msgstr "Juni"
 
 #. module: membership
-#: model:ir.module.module,shortdesc:membership.module_meta_information
 #: model:ir.ui.menu,name:membership.menu_membership
 #: field:membership.invoice,product_id:0
 #: view:product.product:0
@@ -611,14 +625,20 @@ msgid "Association Partner"
 msgstr "Geassocieerde relatie"
 
 #. module: membership
+#: field:report.membership,date_from:0
+#: view:res.partner:0
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: membership
 #: selection:report.membership,month:0
 msgid "November"
 msgstr "November"
 
 #. module: membership
-#: view:product.product:0
-msgid "Extended Filters..."
-msgstr "Uitgebreide filters..."
+#: help:product.product,membership:0
+msgid "Select if a product is a membership product."
+msgstr "Selecteren als een product een lidmaatschap product is."
 
 #. module: membership
 #: field:membership.membership_line,state:0
@@ -641,6 +661,11 @@ msgid "January"
 msgstr "Januari"
 
 #. module: membership
+#: view:res.partner:0
+msgid "Membership Partners"
+msgstr ""
+
+#. module: membership
 #: view:product.product:0
 msgid "Membership Fee"
 msgstr "Contributie"
@@ -656,14 +681,14 @@ msgid "The price negotiated by the partner"
 msgstr "De met de relatie overeengekomen prijs."
 
 #. module: membership
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr "Standaard lidmaatschap"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
 
 #. module: membership
-#: help:product.product,membership:0
-msgid "Select if a product is a membership product."
-msgstr "Selecteren als een product een lidmaatschap product is."
+#: view:res.partner:0
+msgid "None/Canceled/Old/Waiting"
+msgstr ""
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -685,11 +710,6 @@ msgid "Current Membership State"
 msgstr "Huidige status lidmaatschap"
 
 #. module: membership
-#: view:report.membership:0
-msgid "Last 365 Days"
-msgstr "Laatste 365 dagen"
-
-#. module: membership
 #: view:product.product:0
 msgid "General"
 msgstr "Algemeen"
@@ -705,14 +725,10 @@ msgid "Inactive"
 msgstr "Inactief"
 
 #. module: membership
-#: view:report.membership:0
-msgid "Last 30 Days"
-msgstr "Laatste 30 Dagen"
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "December"
-msgstr "December"
+#: model:ir.model,name:membership.model_account_invoice
+#: field:membership.membership_line,account_invoice_id:0
+msgid "Invoice"
+msgstr "Factuur"
 
 #. module: membership
 #: view:membership.invoice:0
@@ -778,9 +794,9 @@ msgid "May"
 msgstr "Mei"
 
 #. module: membership
-#: model:product.template,name:membership.membership_1_product_template
-msgid "Silver Membership"
-msgstr "Zilver lidmaatschap"
+#: field:res.partner,membership_stop:0
+msgid "Stop membership date"
+msgstr "Einddatum lidmaatschap"
 
 #. module: membership
 #: view:product.product:0
@@ -809,6 +825,11 @@ msgid "April"
 msgstr "April"
 
 #. module: membership
+#: view:res.partner:0
+msgid "Starting Date Of Membership"
+msgstr ""
+
+#. module: membership
 #: help:res.partner,membership_cancel:0
 msgid "Date on which membership has been cancelled"
 msgstr "Datum waarop het lidmaatschap is opgezegd"
@@ -824,10 +845,9 @@ msgid "Waiting member"
 msgstr "Wachtend lid"
 
 #. module: membership
-#: field:report.membership,date_from:0
-#: view:res.partner:0
-msgid "Start Date"
-msgstr "Startdatum"
+#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
+msgid "Invoice Membership"
+msgstr "Factureer lidmaatschap"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_membershipproduct0
@@ -838,6 +858,11 @@ msgstr "Product voor leden"
 #: help:membership.membership_line,member_price:0
 msgid "Amount for the membership"
 msgstr "Bedrag voor het lidmaatschap"
+
+#. module: membership
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -885,9 +910,6 @@ msgstr "Ontvangen inkomsten"
 
 #~ msgid "Future members"
 #~ msgstr "Toekomstige leden"
-
-#~ msgid "Invoice Membership"
-#~ msgstr "Factureer lidmaatschap"
 
 #~ msgid "State"
 #~ msgstr "Status"
@@ -977,9 +999,57 @@ msgstr "Ontvangen inkomsten"
 #~ msgid "You cannot have 2 pricelist versions that overlap!"
 #~ msgstr "U kunt geen twee overlappende prijslijsten hebben!"
 
+#~ msgid "Last 30 Days"
+#~ msgstr "Laatste 30 Dagen"
+
+#~ msgid "Golden Membership"
+#~ msgstr "Gouden lidmaatschap"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Uitgebreide filters..."
+
+#~ msgid "Basic Membership"
+#~ msgstr "Standaard lidmaatschap"
+
+#~ msgid "Last 365 Days"
+#~ msgstr "Laatste 365 dagen"
+
 #~ msgid ""
 #~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 #~ "Item!"
 #~ msgstr ""
 #~ "Fout ! U kunt de hoofd prijslijst niet als andere prijslijst toekennen in "
 #~ "prijslijst item!"
+
+#~ msgid "Silver Membership"
+#~ msgstr "Zilver lidmaatschap"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows you to manage all operations for managing memberships.\n"
+#~ "It supports different kind of members:\n"
+#~ "* Free member\n"
+#~ "* Associated member (ex: a group subscribe for a membership for all\n"
+#~ "  subsidiaries)\n"
+#~ "* Paid members,\n"
+#~ "* Special member prices, ...\n"
+#~ "\n"
+#~ "It is integrated with sales and accounting to allow you to automatically\n"
+#~ "invoice and send propositions for membership renewal.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Deze module laat u alle bewerkingen rondom lidmaatschappen beheren.\n"
+#~ "Het ondersteunt verschillende soorten leden:\n"
+#~ "* Gratis lid\n"
+#~ "* Geassocieerd lid (bijv. een groep inschrijving voor lidmaatschap van alle "
+#~ "filialen)\n"
+#~ "* Betelend lid,\n"
+#~ "* Speciale leden prijzen, ...\n"
+#~ "\n"
+#~ "Het is geïntegreerd met verkoop en financieel zodat u automatisch facturen "
+#~ "kunt sturen en voorstellen tot lidmaatschapsverlenging.\n"
+#~ "    "

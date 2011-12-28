@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-13 16:03+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,8 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:22+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:52+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: sale_journal
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -23,20 +28,21 @@ msgid "Note"
 msgstr "Note"
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and picking."
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
 msgstr ""
-"Le type de journaux utilisé pour les ventes et les opérations de manutention."
 
 #. module: sale_journal
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "La référence de la commande doit être unique !"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, for invoicing the current "
+"partner."
+msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Facturation"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -58,64 +64,16 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Method"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
 msgstr "Méthode de facturation"
 
 #. module: sale_journal
-#: model:ir.module.module,description:sale_journal.module_meta_information
-msgid ""
-"\n"
-"    The sales journal modules allows you to categorise your\n"
-"    sales and deliveries (picking lists) between different journals.\n"
-"    This module is very helpful for bigger companies that\n"
-"    works by departments.\n"
-"\n"
-"    You can use journal for different purposes, some examples:\n"
-"    * isolate sales of different departments\n"
-"    * journals for deliveries by truck or by UPS\n"
-"\n"
-"    Journals have a responsible and evolves between different status:\n"
-"    * draft, open, cancel, done.\n"
-"\n"
-"    Batch operations can be processed on the different journals to\n"
-"    confirm all sales at once, to validate or invoice packing, ...\n"
-"\n"
-"    It also supports batch invoicing methods that can be configured by\n"
-"    partners and sales orders, examples:\n"
-"    * daily invoicing,\n"
-"    * monthly invoicing, ...\n"
-"\n"
-"    Some statistics by journals are provided.\n"
-"    "
-msgstr ""
-"\n"
-"    Le module de journal de ventes vous permet de catégoriser\n"
-"    vos ventes et vos livraisons entre différents journaux.\n"
-"    Ce module est très utile pour les grandes sociétés qui\n"
-"    travaillent par départements.\n"
-"\n"
-"    Vous pouvez utiliser des journaux pour différents objectifs, par exemple "
-":\n"
-"    * isoler les ventes entre différents départements\n"
-"    * isoler les livraisons par camion ou transporteur\n"
-"\n"
-"    Les journaux évoluent parmi différents statuts :\n"
-"    * brouillon, ouvert, annulé, fermé.\n"
-"\n"
-"    Des lots d'opérations peuvent être traités sur les différents journaux "
-"pour\n"
-"    confirmer toutes les ventes d'un coup, pour valider ou facturer le "
-"colisage, ...\n"
-"\n"
-"    Il supporte aussi les méthodes de facturation par lot, qui peuvent être "
-"configurées\n"
-"    par partenaire et bon de commande, exemples :\n"
-"    * facturation quotidienne,\n"
-"    * facturation mensuelle, ...\n"
-"\n"
-"    Quelques statistiques par journal sont fournis.\n"
-"    "
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Types de facture"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -126,11 +84,6 @@ msgstr "Non groupées"
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
 msgstr "Groupé"
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Erreur ! Vous ne pouvez pas créer de membres associés récursifs."
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -145,14 +98,9 @@ msgstr ""
 "vos clients : quotidiennement, chaque mercredi, mensuellement, etc."
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Méthode de facturation"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sales Order"
-msgstr "Bon de commande"
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -173,11 +121,9 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Types de facture"
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
+msgstr "Bon de commande"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
@@ -185,9 +131,12 @@ msgid "Picking List"
 msgstr "Liste de préparation"
 
 #. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr "Gestion des ventes et des livraisons par journal"
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "Facturation"
+
+#~ msgid "Managing sales and deliveries by journal"
+#~ msgstr "Gestion des ventes et des livraisons par journal"
 
 #~ msgid "Monthly sales"
 #~ msgstr "Ventes mensuelles"
@@ -306,6 +255,9 @@ msgstr "Gestion des ventes et des livraisons par journal"
 #~ msgid "Creation date"
 #~ msgstr "Date de création"
 
+#~ msgid "Invoicing Method"
+#~ msgstr "Méthode de facturation"
+
 #~ msgid "Code"
 #~ msgstr "Code"
 
@@ -380,3 +332,66 @@ msgstr "Gestion des ventes et des livraisons par journal"
 
 #~ msgid "Approved sales"
 #~ msgstr "Ventes Approuvées"
+
+#~ msgid "The type of journal used for sales and picking."
+#~ msgstr ""
+#~ "Le type de journaux utilisé pour les ventes et les opérations de manutention."
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Erreur ! Vous ne pouvez pas créer de membres associés récursifs."
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "La référence de la commande doit être unique !"
+
+#~ msgid ""
+#~ "\n"
+#~ "    The sales journal modules allows you to categorise your\n"
+#~ "    sales and deliveries (picking lists) between different journals.\n"
+#~ "    This module is very helpful for bigger companies that\n"
+#~ "    works by departments.\n"
+#~ "\n"
+#~ "    You can use journal for different purposes, some examples:\n"
+#~ "    * isolate sales of different departments\n"
+#~ "    * journals for deliveries by truck or by UPS\n"
+#~ "\n"
+#~ "    Journals have a responsible and evolves between different status:\n"
+#~ "    * draft, open, cancel, done.\n"
+#~ "\n"
+#~ "    Batch operations can be processed on the different journals to\n"
+#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
+#~ "\n"
+#~ "    It also supports batch invoicing methods that can be configured by\n"
+#~ "    partners and sales orders, examples:\n"
+#~ "    * daily invoicing,\n"
+#~ "    * monthly invoicing, ...\n"
+#~ "\n"
+#~ "    Some statistics by journals are provided.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Le module de journal de ventes vous permet de catégoriser\n"
+#~ "    vos ventes et vos livraisons entre différents journaux.\n"
+#~ "    Ce module est très utile pour les grandes sociétés qui\n"
+#~ "    travaillent par départements.\n"
+#~ "\n"
+#~ "    Vous pouvez utiliser des journaux pour différents objectifs, par exemple "
+#~ ":\n"
+#~ "    * isoler les ventes entre différents départements\n"
+#~ "    * isoler les livraisons par camion ou transporteur\n"
+#~ "\n"
+#~ "    Les journaux évoluent parmi différents statuts :\n"
+#~ "    * brouillon, ouvert, annulé, fermé.\n"
+#~ "\n"
+#~ "    Des lots d'opérations peuvent être traités sur les différents journaux "
+#~ "pour\n"
+#~ "    confirmer toutes les ventes d'un coup, pour valider ou facturer le "
+#~ "colisage, ...\n"
+#~ "\n"
+#~ "    Il supporte aussi les méthodes de facturation par lot, qui peuvent être "
+#~ "configurées\n"
+#~ "    par partenaire et bon de commande, exemples :\n"
+#~ "    * facturation quotidienne,\n"
+#~ "    * facturation mensuelle, ...\n"
+#~ "\n"
+#~ "    Quelques statistiques par journal sont fournis.\n"
+#~ "    "
