@@ -768,13 +768,7 @@
 
         <!-- use menuitem to add web_icon and web_icon_hover above -->
         <menuitem id="menu_point_root_touchscreen"
-            web_icon="images/touchscreen.png" web_icon_hover="images/touchscreen-hover.png" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
-
-        <record id="menu_point_root_touchscreen_submenu" model="ir.ui.menu">
-          <field name="name">Launch PoS</field>
-          <field name="action" ref="action_pos_pos"/>
-          <field name="parent_id" ref="menu_point_root_touchscreen"/>
-        </record>
+            web_icon="images/pos.png" web_icon_hover="images/pos-hover.png" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
 
     </data>
 </openerp>
