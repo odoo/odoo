@@ -139,15 +139,14 @@ class stock_picking(osv.osv):
                 continue
             sale_lines = picking.sale_id.order_line
             invoice_created = invoices[result[picking.id]]
-
             if picking.sale_id.user_id:
                 invoice_obj.write(cursor, user, [invoice_created.id], {'user_id': picking.sale_id.user_id.id}, context=context)
+
             if picking.sale_id.fiscal_position:
                 invoice_obj.write(cursor, user, [invoice_created.id], {'fiscal_position': picking.sale_id.fiscal_position.id}, context=context)
             if picking.sale_id.client_order_ref:
                 inv_name = picking.sale_id.client_order_ref + " : " + invoice_created.name
                 invoice_obj.write(cursor, user, [invoice_created.id], {'name': inv_name}, context=context)
-
             for sale_line in sale_lines:
                 if sale_line.product_id.type == 'service' and sale_line.invoiced == False:
                     if not type:
