@@ -1106,7 +1106,7 @@ class BaseModel(object):
                                 'res_id': r['id'],
                                 'module': '__export__',
                             })
-                            r = n
+                            r = '__export__.'+n
                     else:
                         r = r[f[i]]
                         # To display external name of selection field when its exported
@@ -1330,7 +1330,7 @@ class BaseModel(object):
                     newfd = relation_obj.fields_get( cr, uid, context=context )
                     pos = position
 
-                    res = many_ids(line[i], relation, current_module, mode)
+                    res = []
 
                     first = 0
                     while pos < len(datas):
@@ -1341,9 +1341,6 @@ class BaseModel(object):
                         nbrmax = max(nbrmax, pos)
                         warning += w2
                         first += 1
-
-                        if data_res_id2:
-                            res.append((4, data_res_id2))
 
                         if (not newrow) or not reduce(lambda x, y: x or y, newrow.values(), 0):
                             break
