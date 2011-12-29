@@ -31,7 +31,7 @@ function jsonp(form, attributes, callback) {
 
 openerp.web.DataImport = openerp.web.Dialog.extend({
     template: 'ImportDataView',
-    dialog_title: "Import Data",
+    dialog_title: {toString: function () { return _t("Import Data"); }},
     init: function(parent, dataset){
         var self = this;
         this._super(parent, {});
@@ -65,10 +65,6 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         var self = this;
         this._super();
         this.open({
-            modal: true,
-            width: '70%',
-            height: 'auto',
-            position: 'top',
             buttons: [
                 {text: _t("Close"), click: function() { self.stop(); }},
                 {text: _t("Import File"), click: function() { self.do_import(); }, 'class': 'oe-dialog-import-button'}
@@ -111,7 +107,11 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             });
         }
         _(fields).each(function (field, field_name) {
-            if (field_name === 'id') { return; }
+            // Ignore spec for id field
+            // Don't import function fields (function and related)
+            if (field_name === 'id' || 'function' in field) {
+                return;
+            }
             var f = {
                 id: field_name,
                 name: field_name,
@@ -140,7 +140,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         });
     },
     toggle_import_button: function (newstate) {
-        this.$dialog.dialog('widget')
+        this.$element.dialog('widget')
                 .find('.oe-dialog-import-button')
                 .button('option', 'disabled', !newstate);
     },
@@ -348,7 +348,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         return true;
     },
     stop: function() {
-        $(this.$dialog).remove();
+        this.$element.remove();
         this._super();
     }
 });

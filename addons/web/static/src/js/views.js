@@ -3,8 +3,8 @@
  *---------------------------------------------------------*/
 
 openerp.web.views = function(session) {
-
-var _t = session.web._t;
+var QWeb = session.web.qweb,
+    _t = session.web._t;
 
 /**
  * Registry for all the client actions key: tag value: widget
@@ -20,13 +20,14 @@ session.web.ActionManager = session.web.Widget.extend({
     identifier_prefix: "actionmanager",
     init: function(parent) {
         this._super(parent);
+        this.inner_action = null;
         this.inner_viewmanager = null;
         this.dialog = null;
         this.dialog_viewmanager = null;
         this.client_widget = null;
     },
     render: function() {
-        return "<div id='"+this.element_id+"'></div>";
+        return '<div id="' + this.element_id + '" style="height: 100%;"></div>';
     },
     dialog_stop: function () {
         if (this.dialog) {
@@ -46,35 +47,61 @@ session.web.ActionManager = session.web.Widget.extend({
             this.client_widget = null;
         }
     },
-    url_update: function(action) {
-        var url = {};
-        if(action.id)
-            url.action_id = action.id;
-        // this.url = {
-        //     "model": action.res_model,
-        //     "domain": action.domain,
-        // };
-        // action.res_model
-        // action.domain
-        // action.context
-        // after
-        // action.views
-        // action.res_id
-        // mode
-        // menu
-        this.do_url_set_hash(url);
-    },
-    do_url_set_hash: function(url) {
-    },
-    on_url_hashchange: function(url) {
-        var self = this;
-        if(url && url.action_id) {
-            self.rpc("/web/action/load", { action_id: url.action_id }, function(result) {
-                    self.do_action(result.result);
-                });
+    do_push_state: function(state) {
+        if (this.widget_parent && this.widget_parent.do_push_state) {
+            if (this.inner_action) {
+                if (this.inner_action.id) {
+                    state['action_id'] = this.inner_action.id;
+                } else {
+                    state['model'] = this.inner_action.res_model;
+                }
+            }
+            this.widget_parent.do_push_state(state);
         }
     },
+    do_load_state: function(state) {
+        var self = this,
+            action_loaded;
+        if (state.action_id) {
+            var run_action = (!this.inner_viewmanager) || this.inner_viewmanager.action.id !== state.action_id;
+            if (run_action) {
+                this.null_action();
+                action_loaded = this.do_action(state.action_id);
+            }
+        }
+        else if (state.model && state.id) {
+            // TODO handle context & domain ?
+            this.null_action();
+            var action = {
+                res_model: state.model,
+                res_id: state.id,
+                type: 'ir.actions.act_window',
+                views: [[false, 'page'], [false, 'form']]
+            };
+            action_loaded = this.do_action(action);
+        }
+        else if (state.client_action) {
+            this.null_action();
+            this.ir_actions_client(state.client_action);
+        }
+
+        $.when(action_loaded || null).then(function() {
+            if (self.inner_viewmanager) {
+                self.inner_viewmanager.do_load_state(state);
+            }
+        });
+    },
     do_action: function(action, on_close) {
+        if (_.isNumber(action)) {
+            var self = this;
+            return self.rpc("/web/action/load", { action_id: action }, function(result) {
+                self.do_action(result.result, on_close);
+            });
+        }
+        if (!action.type) {
+            console.error("No type for action", action);
+            return;
+        }
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         action.flags = _.extend({
@@ -85,12 +112,17 @@ session.web.ActionManager = session.web.Widget.extend({
             pager : !popup
         }, action.flags || {});
         if (!(type in this)) {
-            console.log("Action manager can't handle action of type " + action.type, action);
+            console.error("Action manager can't handle action of type " + action.type, action);
             return;
         }
         return this[type](action, on_close);
     },
+    null_action: function() {
+        this.dialog_stop();
+        this.content_stop();
+    },
     ir_actions_act_window: function (action, on_close) {
+        var self = this;
         if (_(['base.module.upgrade', 'base.setup.installer'])
                 .contains(action.res_model)) {
             var old_close = on_close;
@@ -112,18 +144,17 @@ session.web.ActionManager = session.web.Widget.extend({
             this.dialog_viewmanager.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
+            if(action.menu_id) {
+                return this.widget_parent.do_action(action, function () {
+                    session.webclient.menu.open_menu(action.menu_id);
+                });
+            }
             this.dialog_stop();
             this.content_stop();
+            this.inner_action = action;
             this.inner_viewmanager = new session.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
-            this.url_update(action);
         }
-        /* new window code
-            this.rpc("/web/session/save_session_action", { the_action : action}, function(key) {
-                var url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
-                window.open(url,'_blank');
-            });
-        */
     },
     ir_actions_act_window_close: function (action, on_closed) {
         if (!this.dialog && on_closed) {
@@ -142,6 +173,7 @@ session.web.ActionManager = session.web.Widget.extend({
     },
     ir_actions_client: function (action) {
         this.content_stop();
+        this.dialog_stop();
         var ClientWidget = session.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
     },
@@ -169,6 +201,9 @@ session.web.ActionManager = session.web.Widget.extend({
     },
     ir_actions_act_url: function (action) {
         window.open(action.url, action.target === 'self' ? '_self' : '_blank');
+    },
+    ir_ui_menu: function (action) {
+        this.widget_parent.do_action(action);
     }
 });
 
@@ -183,16 +218,28 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
      * @param dataset
      * @param views
      */
-    init: function(parent, dataset, views) {
+    init: function(parent, dataset, views, flags) {
         this._super(parent);
         this.model = dataset ? dataset.model : undefined;
         this.dataset = dataset;
         this.searchview = null;
         this.active_view = null;
-        this.views_src = _.map(views, function(x) {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
+        this.views_src = _.map(views, function(x) {
+            if (x instanceof Array) {
+                var View = session.web.views.get_object(x[1], true);
+                return {
+                    view_id: x[0],
+                    view_type: x[1],
+                    label: View ? View.prototype.display_name : (void 'nope')
+                };
+            } else {
+                return x;
+            }
+        });
         this.views = {};
-        this.flags = this.flags || {};
+        this.flags = flags || {};
         this.registry = session.web.views;
+        this.views_history = [];
     },
     render: function() {
         return session.web.qweb.render(this.template, {
@@ -225,20 +272,29 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         if (this.flags.views_switcher === false) {
             this.$element.find('.oe_vm_switch').hide();
         }
-        // switch to the first one in sequence
-        return this.on_mode_switch(this.views_src[0].view_type);
+        // If no default view defined, switch to the first one in sequence
+        var default_view = this.flags.default_view || this.views_src[0].view_type;
+        return this.on_mode_switch(default_view);
     },
     /**
      * Asks the view manager to switch visualization mode.
      *
      * @param {String} view_type type of view to display
+     * @param {Boolean} [no_store=false] don't store the view being switched to on the switch stack
      * @returns {jQuery.Deferred} new view loading promise
      */
-    on_mode_switch: function(view_type) {
+    on_mode_switch: function(view_type, no_store) {
         var self = this,
+            view = this.views[view_type],
             view_promise;
+        if(!view)
+            return $.Deferred().reject();
+
+        if (!no_store) {
+            this.views_history.push(view_type);
+        }
         this.active_view = view_type;
-        var view = this.views[view_type];
+
         if (!view.controller) {
             // Lazy loading of views
             var controllerclass = this.registry.get_object(view_type);
@@ -247,18 +303,19 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
                 controller.set_embedded_view(view.embedded_view);
             }
             controller.do_switch_view.add_last(this.on_mode_switch);
+            controller.do_prev_view.add_last(this.on_prev_view);
             var container = $("#" + this.element_id + '_view_' + view_type);
             view_promise = controller.appendTo(container);
             this.views[view_type].controller = controller;
-            this.views[view_type].deferred.resolve();
+            this.views[view_type].deferred.resolve(view_type);
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
                 if (self.searchview && view.controller.searchable !== false) {
-                    self.searchview.do_search();
+                    self.searchview.ready.then(self.searchview.do_search);
                 }
             });
         } else if (this.searchview && view.controller.searchable !== false) {
-            this.searchview.do_search();
+            this.searchview.ready.then(this.searchview.do_search);
         }
 
         if (this.searchview) {
@@ -266,25 +323,44 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         }
 
         this.$element
-            .find('.views-switchers button').removeAttr('disabled')
+            .find('.oe_vm_switch button').removeAttr('disabled')
             .filter('[data-view-type="' + view_type + '"]')
             .attr('disabled', true);
 
-        for (var view_name in this.views) {
-            if (!this.views.hasOwnProperty(view_name)) { continue; }
-            if (this.views[view_name].controller) {
-                if (view_name === view_type) {
-                    $.when(view_promise).then(this.views[view_name].controller.do_show);
-                } else {
-                    this.views[view_name].controller.do_hide();
-                }
-            }
-        }
         $.when(view_promise).then(function () {
+            _.each(_.keys(self.views), function(view_name) {
+                var controller = self.views[view_name].controller;
+                if (controller) {
+                    if (view_name === view_type) {
+                        controller.do_show();
+                    } else {
+                        controller.do_hide();
+                    }
+                }
+            });
+
             self.$element.find('.oe_view_title_text:first').text(
                     self.display_title());
         });
         return view_promise;
+    },
+    /**
+     * Returns to the view preceding the caller view in this manager's
+     * navigation history (the navigation history is appended to via
+     * on_mode_switch)
+     *
+     * @param {Boolean} [created=false] returning from a creation
+     * @returns {$.Deferred} switching end signal
+     */
+    on_prev_view: function (created) {
+        var current_view = this.views_history.pop();
+        var previous_view = this.views_history[this.views_history.length - 1];
+        // APR special case: "If creation mode from list (and only from a list),
+        // after saving, go to page view (don't come back in list)"
+        if (created && current_view === 'form' && previous_view === 'list') {
+            return this.on_mode_switch('page');
+        }
+        return this.on_mode_switch(previous_view, true);
     },
     /**
      * Sets up the current viewmanager's search view.
@@ -306,15 +382,19 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
     },
     do_searchview_search: function(domains, contexts, groupbys) {
         var self = this,
-            controller = this.views[this.active_view].controller;
+            controller = this.views[this.active_view].controller,
+            action_context = this.action.context || {};
         this.rpc('/web/session/eval_domain_and_context', {
             domains: [this.action.domain || []].concat(domains || []),
-            contexts: [this.action.context || {}].concat(contexts || []),
+            contexts: [action_context].concat(contexts || []),
             group_by_seq: groupbys || []
         }, function (results) {
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            controller.do_search(results.domain, results.context, results.group_by);
+            var groupby = results.group_by.length
+                        ? results.group_by
+                        : action_context.group_by;
+            controller.do_search(results.domain, results.context, groupby || []);
         });
     },
     /**
@@ -339,7 +419,8 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
     /**
      * Called by children view after executing an action
      */
-    on_action_executed: function () {},
+    on_action_executed: function () {
+    },
     display_title: function () {
         var view = this.views[this.active_view];
         if (view) {
@@ -363,7 +444,19 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         // dataset initialization will take the session from ``this``, so if we
         // do not have it yet (and we don't, because we've not called our own
         // ``_super()``) rpc requests will blow up.
-        this._super(parent, null, action.views);
+        var flags = action.flags || {};
+        if (action.res_model == 'board.board' && action.view_mode === 'form') {
+            // Special case for Dashboards
+            _.extend(flags, {
+                views_switcher : false,
+                display_title : false,
+                search_view : false,
+                pager : false,
+                sidebar : false,
+                action_buttons : false
+            });
+        }
+        this._super(parent, null, action.views, flags);
         this.session = parent.session;
         this.action = action;
         var dataset = new session.web.DataSetSearch(this, action.res_model, action.context, action.domain);
@@ -372,12 +465,6 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             dataset.index = 0;
         }
         this.dataset = dataset;
-        this.flags = this.action.flags || {};
-        if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
-            // Not elegant but allows to avoid form chrome (pager, save/new
-            // buttons, sidebar, ...) displaying
-            this.flags.display_title = this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
-        }
 
         // setup storage for session-wise menu hiding
         if (this.session.hidden_menutips) {
@@ -410,12 +497,8 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
 
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
 
-        this.$element.find('.oe_get_xml_view').click(function () {
-            // TODO: add search view?
-            $('<pre>').text(session.web.json_node_to_xml(
-                self.views[self.active_view].controller.fields_view.arch, true))
-                    .dialog({ width: '95%'});
-        });
+        this.$element.find('.oe_debug_view').change(this.on_debug_changed);
+
         if (this.action.help && !this.flags.low_profile) {
             var Users = new session.web.DataSet(self, 'res.users'),
                 $tips = this.$element.find('.oe_view_manager_menu_tips');
@@ -453,29 +536,101 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
 
         return manager_ready;
     },
-    on_mode_switch: function (view_type) {
+    on_debug_changed: function (evt) {
+        var $sel = $(evt.currentTarget),
+            $option = $sel.find('option:selected'),
+            val = $sel.val();
+        switch (val) {
+            case 'fvg':
+                $('<pre>').text(session.web.json_node_to_xml(
+                    this.views[this.active_view].controller.fields_view.arch, true)
+                ).dialog({ width: '95%'});
+                break;
+            case 'edit':
+                var model = $option.data('model'),
+                    id = $option.data('id'),
+                    domain = $option.data('domain'),
+                    action = {
+                        res_model : model,
+                        type : 'ir.actions.act_window',
+                        view_type : 'form',
+                        view_mode : 'form',
+                        target : 'new',
+                        flags : {
+                            action_buttons : true,
+                            form : {
+                                resize_textareas : true
+                            }
+                        }
+                    };
+                if (id) {
+                    action.res_id = id,
+                    action.views = [[false, 'form']];
+                } else if (domain) {
+                    action.views = [[false, 'list'], [false, 'form']];
+                    action.domain = domain;
+                    action.flags.views_switcher = true;
+                }
+                this.do_action(action);
+                break;
+            default:
+                if (val) {
+                    console.log("No debug handler for ", val);
+                }
+        }
+        evt.currentTarget.selectedIndex = 0;
+    },
+    on_mode_switch: function (view_type, no_store) {
         var self = this;
-        return $.when(
-                this._super(view_type),
-                this.shortcut_check(this.views[view_type])
-            ).then(function() {
-                var controller = self.views[self.active_view].controller,
-                    fvg = controller.fields_view,
-                    view_id = (fvg && fvg.view_id) || '--';
-                self.$element.find('.oe_get_xml_view span').text(view_id);
-                if (!self.action.name && fvg) {
-                    self.$element.find('.oe_view_title_text').text(fvg.arch.attrs.string || fvg.name);
-                }
 
-                var $title = self.$element.find('.oe_view_title_text'),
-                    $search_prefix = $title.find('span.oe_searchable_view');
-                if (controller.searchable !== false) {
-                    if (!$search_prefix.length) {
-                        $title.prepend('<span class="oe_searchable_view">' + _t("Search: ") + '</span>');
-                    }
-                } else {
-                    $search_prefix.remove();
+        return $.when(this._super(view_type, no_store)).then(function () {
+            self.shortcut_check(self.views[view_type]);
+
+            self.$element.find('.oe-view-manager-logs:first')
+                .addClass('oe-folded').removeClass('oe-has-more')
+                .find('ul').empty();
+
+            var controller = self.views[self.active_view].controller,
+                fvg = controller.fields_view,
+                view_id = (fvg && fvg.view_id) || '--';
+            self.$element.find('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
+                view: controller,
+                view_manager: self
+            }));
+            if (!self.action.name && fvg) {
+                self.$element.find('.oe_view_title_text').text(fvg.arch.attrs.string || fvg.name);
+            }
+
+            var $title = self.$element.find('.oe_view_title_text'),
+                $search_prefix = $title.find('span.oe_searchable_view');
+            if (controller.searchable !== false && self.flags.search_view !== false) {
+                if (!$search_prefix.length) {
+                    $title.prepend('<span class="oe_searchable_view">' + _t("Search: ") + '</span>');
                 }
+            } else {
+                $search_prefix.remove();
+            }
+        });
+    },
+    do_push_state: function(state) {
+        if (this.widget_parent && this.widget_parent.do_push_state) {
+            state["view_type"] = this.active_view;
+            this.widget_parent.do_push_state(state);
+        }
+    },
+    do_load_state: function(state) {
+        var self = this,
+            defs = [];
+        if (state.view_type && state.view_type !== this.active_view) {
+            defs.push(
+                this.views[this.active_view].deferred.pipe(function() {
+                    return self.on_mode_switch(state.view_type, true);
+                })
+            );
+        } 
+
+        $.when(defs).then(function() {
+            self.views[self.active_view].controller.do_load_state(state);
         });
     },
     shortcut_check : function(view) {
@@ -483,7 +638,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var grandparent = this.widget_parent && this.widget_parent.widget_parent;
         // display shortcuts if on the first view for the action
         var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        if (!(grandparent instanceof session.web.WebClient) ||
+        if (!this.action.name ||
             !(view.view_type === this.views_src[0].view_type
                 && view.view_id === this.views_src[0].view_id)) {
             $shortcut_toggle.hide();
@@ -569,25 +724,29 @@ session.web.Sidebar = session.web.Widget.extend({
         });
     },
     add_default_sections: function() {
+        var self = this,
+            view = this.widget_parent,
+            view_manager = view.widget_parent,
+            action = view_manager.action;
         if (this.session.uid === 1) {
             this.add_section(_t('Customize'), 'customize');
             this.add_items('customize', [
                 {
                     label: _t("Manage Views"),
-                    callback: this.widget_parent.on_sidebar_manage_views,
+                    callback: view.on_sidebar_manage_views,
                     title: _t("Manage views of the current object")
                 }, {
                     label: _t("Edit Workflow"),
-                    callback: this.widget_parent.on_sidebar_edit_workflow,
+                    callback: view.on_sidebar_edit_workflow,
                     title: _t("Manage views of the current object"),
                     classname: 'oe_hide oe_sidebar_edit_workflow'
                 }, {
                     label: _t("Customize Object"),
-                    callback: this.widget_parent.on_sidebar_customize_object,
+                    callback: view.on_sidebar_customize_object,
                     title: _t("Manage views of the current object")
                 }, {
                     label: _t("Translate"),
-                    callback: this.widget_parent.on_sidebar_translate,
+                    callback: view.on_sidebar_translate,
                     title: _t("Technical translation")
                 }
             ]);
@@ -597,13 +756,13 @@ session.web.Sidebar = session.web.Widget.extend({
         this.add_items('other', [
             {
                 label: _t("Import"),
-                callback: this.widget_parent.on_sidebar_import
+                callback: view.on_sidebar_import
             }, {
                 label: _t("Export"),
-                callback: this.widget_parent.on_sidebar_export
+                callback: view.on_sidebar_export
             }, {
                 label: _t("View Log"),
-                callback: this.widget_parent.on_sidebar_view_log,
+                callback: view.on_sidebar_view_log,
                 classname: 'oe_hide oe_sidebar_view_log'
             }
         ]);
@@ -710,7 +869,10 @@ session.web.Sidebar = session.web.Widget.extend({
                     additional_context);
                 result.result.flags = result.result.flags || {};
                 result.result.flags.new_window = true;
-                self.do_action(result.result);
+                self.do_action(result.result, function () {
+                    // reload view
+                    self.widget_parent.reload();
+                });
             });
         });
     },
@@ -726,7 +888,7 @@ session.web.Sidebar = session.web.Widget.extend({
 });
 
 session.web.TranslateDialog = session.web.Dialog.extend({
-    dialog_title: _t("Translations"),
+    dialog_title: {toString: function () { return _t("Translations"); }},
     init: function(view) {
         // TODO fme: should add the language to fields_view_get because between the fields view get
         // and the moment the user opens the translation dialog, the user language could have been changed
@@ -841,6 +1003,8 @@ session.web.TranslateDialog = session.web.Dialog.extend({
 
 session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     template: "EmptyComponent",
+    // name displayed in view switchers
+    display_name: '',
     set_default_options: function(options) {
         this.options = options || {};
         _.defaults(this.options, {
@@ -939,11 +1103,33 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         this.embedded_view = embedded_view;
         this.options.sidebar = false;
     },
-    do_switch_view: function(view) {
+    do_show: function () {
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
+    },
+    do_push_state: function(state) {
+        if (this.widget_parent && this.widget_parent.do_push_state) {
+            this.widget_parent.do_push_state(state);
+        }
+    },
+    do_load_state: function(state) {
+    },
+    /**
+     * Switches to a specific view type
+     *
+     * @param {String} view view type to switch to
+     */
+    do_switch_view: function(view) { 
+    },
+    /**
+     * Cancels the switch to the current view, switches to the previous one
+     */
+    do_prev_view: function () { 
     },
     do_search: function(view) {
     },
-
     set_common_sidebar_sections: function(sidebar) {
         sidebar.add_default_sections();
     },
@@ -959,7 +1145,14 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         console.log('Todo');
     },
     on_sidebar_customize_object: function() {
-        console.log('Todo');
+        var self = this;
+        this.rpc('/web/dataset/search_read', {
+            model: 'ir.model',
+            fields: ['id'],
+            domain: [['model', '=', self.dataset.model]]
+        }, function (result) {
+            self.on_sidebar_edit_resource('ir.model', result.ids[0]);
+        });
     },
     on_sidebar_import: function() {
         var import_view = new session.web.DataImport(this, this.dataset);
@@ -979,10 +1172,38 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             view_mode : "list"
         });
     },
+    on_sidebar_edit_resource: function(model, id, domain) {
+        var action = {
+            res_model : model,
+            type : 'ir.actions.act_window',
+            view_type : 'form',
+            view_mode : 'form',
+            target : 'new',
+            flags : {
+                action_buttons : true
+            }
+        }
+        if (id) {
+            action.res_id = id,
+            action.views = [[false, 'form']];
+        } else if (domain) {
+            action.views = [[false, 'list'], [false, 'form']];
+            action.domain = domain;
+            action.flags.views_switcher = true;
+        }
+        this.do_action(action);
+    },
     on_sidebar_view_log: function() {
     },
     sidebar_context: function () {
-        return $.Deferred().resolve({}).promise();
+        return $.when();
+    },
+    /**
+     * Asks the view to reload itself, if the reloading is asynchronous should
+     * return a {$.Deferred} indicating when the reloading is done.
+     */
+    reload: function () {
+        return $.when();
     }
 });
 

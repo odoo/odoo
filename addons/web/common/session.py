@@ -37,12 +37,19 @@ class OpenERPSession(object):
         self.context = {}
         self.contexts_store = {}
         self.domains_store = {}
+        self.jsonp_requests = {}     # FIXME use a LRU
         
     def __getstate__(self):
         state = dict(self.__dict__)
         if "config" in state:
             del state['config']
         return state
+
+    def openerp_entreprise(self):
+        if not self._uid:
+            return False
+        else:
+            return self.model('publisher_warranty.contract').status()['status'] == 'full'
 
     def build_connection(self):
         conn = openerplib.Connection(self.config.connector, database=self._db, login=self._login,
@@ -58,8 +65,9 @@ class OpenERPSession(object):
         self._login = login
         self._password = password
 
-    def login(self, db, login, password):
-        uid = self.proxy('common').login(db, login, password)
+    def authenticate(self, db, login, password, env):
+        # TODO use the openerplib API once it exposes authenticate()
+        uid = self.proxy('common').authenticate(db, login, password, env)
         self.bind(db, uid, login, password)
         
         if uid: self.get_context()

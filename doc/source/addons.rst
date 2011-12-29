@@ -295,6 +295,124 @@ to help you get started:
     guides/client-action
     guides/sidebar-protocol
 
+Translations
+------------
+
+OpenERP Web should provide most of the tools needed to correctly translate your
+addons via the tool of your choice (OpenERP itself uses `Launchpad's own
+translation tool`_.
+
+Making strings translatable
++++++++++++++++++++++++++++
+
+QWeb
+~~~~
+
+QWeb automatically marks all text nodes (any text which is not in an XML
+attribute and not part of an XML tag) as translatable, and handles the
+replacement for you. There is nothing special to do to mark template text as
+translatable
+
+JavaScript
+~~~~~~~~~~
+
+OpenERP Web provides two functions to translate human-readable strings in
+javascript code. These functions should be "imported" in your module by
+aliasing them to their bare name:
+
+.. code-block:: javascript
+
+    var _t = openerp.web._t,
+       _tl = openerp.web._tl;
+
+importing those functions under any other name is not guaranteed to work.
+
+.. note:: only import them if necessary, and only the necessary one(s), no need
+          to clutter your module's namespace for nothing
+
+.. js:function:: openerp.web._t(s)
+
+    Base translation function, eager, works much like :manpage:`gettext(3)`
+
+    :type s: String
+    :rtype: String
+
+.. js:function:: openerp.web._lt(s)
+
+    Lazy equivalent to :js:func:`~openerp.web._t`, this function will postpone
+    fetching the translation to its argument until the last possible moment.
+
+    To use in contexts evaluated before the translation database can be
+    fetched, usually your module's toplevel and the attributes of classes
+    defined in it (class attributes, not instance attributes set in the
+    constructor).
+
+    :type s: String
+    :rtype: LazyString
+
+Text formatting & translations
+""""""""""""""""""""""""""""""
+
+A difficulty when translating is integrating data (from the code) into the
+translated string. In OpenERP Web addons, this should be done by wrapping the
+text to translate in an :manpage:`sprintf(3)` call. For OpenERP Web,
+:manpage:`sprintf(3)` is provided by `underscore.string
+<http://epeli.github.com/underscore.string/>`_.
+
+As much as possible, you should use the "named argument" form of sprintf:
+
+.. code-block:: javascript
+
+    var translated_string = _.str.sprintf(
+        _t("[%(first_record)d to %(last_record)d] of %(records_count)d"), {
+            first_record: first + 1,
+            last_record: last,
+            records_count: total
+        }));
+
+named arguments make the string to translate much clearer for translators, and
+allows them to "move" sections around based on the requirements of their
+language (not all language order text like english).
+
+Named arguments are specified using the following pattern: ``%($name)$type``
+where
+
+``$name``
+  the name of the argument, this is the key in the object/dictionary provided
+  as second parameter to ``sprintf``
+``$type``
+  a type/format specifier, `see the list for all possible types
+  <http://www.diveintojavascript.com/projects/javascript-sprintf>`_.
+
+.. note:: positional arguments are acceptable if the translated string has
+          *a single* argument and its content is easy to guess from the text
+          around it. Named arguments should still be preferred.
+
+.. warning:: you should *never* use string concatenation as it robs the
+             translator of context and make result in a completely incorrect
+             translation
+
+Extracting strings
+~~~~~~~~~~~~~~~~~~
+
+.. program:: gen_translations.sh
+
+Once strings have been marked for translation, they need to be extracted into
+:abbr:`POT (Portable Object Template)` files, from which most translation tools
+can build a database.
+
+This can be done via the provided :program:`gen_translations.sh`.
+
+It can be called either as :option:`gen_translations.sh -a` or by providing
+two parameters, a path to the addons and the complete path in which to put the
+extracted POT file.
+
+.. option:: -a
+
+    Extracts translations from all standard OpenERP Web addons (addons bundled
+    with OpenERP Web itself) and puts the extracted templates into the right
+    directory for `Rosetta`_ to handle them
+
 Utility behaviors
 -----------------
 
@@ -436,3 +554,7 @@ Python
 
 .. _.insertBefore():
     http://api.jquery.com/insertBefore/
+
+.. _Rosetta:
+.. _Launchpad's own translation tool:
+    https://help.launchpad.net/Translations

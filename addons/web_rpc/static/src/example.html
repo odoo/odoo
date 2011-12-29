@@ -29,7 +29,7 @@
     c._modules_loaded = true; // Hack to prevent loading of additional modules
 
     var s = new c.base.Session(); // setup a Session
-    s.session_login("web-trunk", "admin", "admin", function() {
+    s.login("web-trunk", "admin", "admin", function() {
 
             var ds = new c.base.DataSetSearch(s, "ir.model"); // DataSetSearch used to search, read
             ds.read_slice(['name','model'], {}, function(users){

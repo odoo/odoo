@@ -3,7 +3,7 @@
 }
 .openerp .oe-dashboard-links {
     text-align: right;
-    margin: -2em 0.4em 1em 0;
+    margin: 0 4px 6px 0;
 }
 .openerp .oe-dashboard-action {
     margin: 0 0.5em 0.5em 0;
@@ -37,6 +37,12 @@
 .openerp h2.oe-dashboard-action-header-empty {
     padding-top: 0;
     padding-bottom: 2px;
+}
+
+.openerp .oe_dashboard_button_create {
+    margin-left: 4px;
+    padding: 0 4px 0 4px;
+    height: 16px !important;
 }
 
 .openerp a.oe-dashboard-action-rename {
@@ -80,8 +86,8 @@
 
 /* Base overwriting */
 .openerp .oe-dashboard .oe-listview-content, .openerp .oe-dashboard .ui-widget-header {
-    border:none !important;
-    padding:0px 3px;
+    border-right:none !important;
+    padding:0 3px;
 }
 
 /* Layouts */
@@ -272,7 +278,7 @@
     text-align: center;
 }
 .oe-static-home h1 {
-    margin: 0 0 0.3em
+    margin: 0 0 0.3em;
 }
 .oe-static-home-banner {
     display: inline-block;
@@ -309,3 +315,58 @@
 .oe-static-home-tile-text p {
     margin: 0.5em 0;
 }
+
+.openerp .oe_app_tiles h1, .openerp .oe_app_tiles h3 {
+  margin: 16px 24px;
+}
+
+.openerp .oe_app_tiles {
+  padding: 0 10px;
+}
+
+.openerp .oe_app_tiles li {
+  float: left;
+  list-style: none;
+}
+
+.openerp .oe_app_tiles li img {
+  display: block;
+  margin: 0 auto;
+  height: 100px;
+  width: 100px;
+}
+.openerp .oe_app_tiles li img.hover {
+    display: none;
+}
+.openerp .oe_app_tiles li:hover img {
+    display: none;
+}
+.openerp .oe_app_tiles li:hover img.hover {
+    display: block;
+}
+
+.openerp .oe_app_tiles li a {
+  display: block;
+  height: 120px;
+  width: 194px;
+  color: #4C4C4C;
+  border: 1px solid #f4f2f2;
+  margin: 6px;
+  padding: 12px;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+  background: white;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  -ms-border-radius: 6px;
+  border-radius: 6px;
+  -moz-box-shadow: 0 1px 2px #bbb;
+  -webkit-box-shadow: 0 1px 2px #bbb;
+  -o-box-shadow: 0 1px 2px #bbb;
+  box-shadow: 0 1px 2px #bbb;
+}
+
+

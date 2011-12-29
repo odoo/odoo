@@ -64,7 +64,7 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
         var password = $e.find("div input[name=password]").val();
         //$e.hide();
         // Should hide then call callback
-        this.session.session_login(db, login, password, function() {
+        this.session.login(db, login, password, function() {
             if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
                     if(self.remember_creditentials) {

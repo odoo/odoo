@@ -1,5 +1,6 @@
 openerp.web_process = function (openerp) {
-    var QWeb = openerp.web.qweb;
+    var QWeb = openerp.web.qweb,
+          _t = openerp.web._t;
     openerp.web.ViewManager.include({
         start: function() {
             this._super();
@@ -274,20 +275,17 @@ openerp.web_process = function (openerp) {
             var action_manager = new openerp.web.ActionManager(this);
             var dialog = new openerp.web.Dialog(this, {
                 width: 800,
-                height: 600,
-                buttons : {
-                    Cancel : function() {
-                        $(this).dialog('destroy');
-                    },
-                    Save : function() {
+                buttons : [
+                    {text: _t("Cancel"), click: function() { $(this).dialog('destroy'); }},
+                    {text: _t("Save"), click: function() {
                         var form_view = action_manager.inner_viewmanager.views.form.controller;
 
                         form_view.do_save(function() {
                             self.initialize_process_view();
                         });
                         $(this).dialog('destroy');
-                    }
-                }
+                    }}
+                ]
             }).start().open();
 
             action_manager.appendTo(dialog.$element);

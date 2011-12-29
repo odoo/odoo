@@ -1,5 +1,6 @@
 openerp.web_dashboard = function(openerp) {
-var QWeb = openerp.web.qweb;
+var QWeb = openerp.web.qweb,
+    _t = openerp.web._t;
 
 if (!openerp.web_dashboard) {
     /** @namespace */
@@ -59,7 +60,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         };
         var $dialog = $('<div>').dialog({
                             modal: true,
-                            title: 'Edit Layout',
+                            title: _t("Edit Layout"),
                             width: 'auto',
                             height: 'auto'
                         }).html(QWeb.render('DashBoard.layouts', qdict));
@@ -149,12 +150,13 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             view_mode = action_attrs.view_mode;
 
         if (action_attrs.context) {
-            action.context = action_attrs.context;
+            action.context = _.extend((action.context || {}), action_attrs.context);
         }
         if (action_attrs.domain) {
-            action.domain = action_attrs.domain;
+            action.domain = action.domain || [];
+            action.domain.unshift.apply(action.domain, action_attrs.domain);
         }
-        var action_orig = _.extend({}, action);
+        var action_orig = _.extend({ flags : {} }, action);
 
         if (view_mode && view_mode != action.view_mode) {
             var action_view_mode = action.view_mode.split(',');
@@ -182,12 +184,31 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
                 selectable: false
             }
         };
-        var am = new openerp.web.ActionManager(this);
+        var am = new openerp.web.ActionManager(this),
+            // FIXME: ideally the dashboard view shall be refactored like kanban.
+            $action = $('#' + this.view.element_id + '_action_' + index);
         this.action_managers.push(am);
-        am.appendTo($('#' + this.view.element_id + '_action_' + index));
+        am.appendTo($action);
         am.do_action(action);
         am.do_action = function(action) {
             self.do_action(action);
+        }
+        if (action_attrs.creatable && action_attrs.creatable !== 'false') {
+            var action_id = parseInt(action_attrs.creatable, 10);
+            $action.parent().find('button.oe_dashboard_button_create').click(function() {
+                if (isNaN(action_id)) {
+                    action_orig.flags.default_view = 'form';
+                    self.do_action(action_orig);
+                } else {
+                    self.rpc('/web/action/load', {
+                        action_id: action_id
+                    }, function(result) {
+                        result.result.flags = result.result.flags || {};
+                        result.result.flags.default_view = 'form';
+                        self.do_action(result.result);
+                    });
+                }
+            });
         }
         if (am.inner_viewmanager) {
             am.inner_viewmanager.on_mode_switch.add(function(mode) {
@@ -260,20 +281,29 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
     template: 'ConfigOverview',
     init: function (parent) {
         this._super(parent);
-        this.dataset = new openerp.web.DataSetSearch(
-                this, 'ir.actions.todo');
-        this.dataset.domain = [['type', '!=', 'automatic']];
+        this.user = _.extend(new openerp.web.DataSet(this, 'res.users'), {
+            index: 0,
+            ids: [this.session.uid]
+        });
+        this.dataset = new openerp.web.DataSetSearch(this, 'ir.actions.todo');
     },
     start: function () {
         this._super();
-        $.when(this.dataset.read_slice(['state', 'action_id', 'category_id']),
-               this.dataset.call('progress'))
-            .then(this.on_records_loaded);
-    },
-    on_records_loaded: function (read_response, progress_response) {
-        var records = read_response,
-           progress = progress_response[0];
+        var self = this;
+        return this.user.read_index(['groups_id']).pipe(function (record) {
+            var todos_filter = [
+                ['type', '!=', 'automatic'],
+                '|', ['groups_id', '=', false],
+                     ['groups_id', 'in', record['groups_id']]];
+            return $.when(
+                self.dataset.read_slice(['state', 'action_id', 'category_id'],{
+                        domain: todos_filter }),
+                self.dataset.call('progress').pipe(
+                        function (arg) { return arg; }, null))
+        }, null).then(this.on_records_loaded);
 
+    },
+    on_records_loaded: function (records, progress) {
         var grouped_todos = _(records).chain()
             .map(function (record) {
                 return {
@@ -319,143 +349,6 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
 });
 
 /*
- * ApplicationTiles
- * This client action designed to be used as a dashboard widget display
- * either a list of application to install (if none is installed yet) or
- * a list of root menu
- */
-openerp.web.client_actions.add( 'board.home.applications', 'openerp.web_dashboard.ApplicationTiles');
-openerp.web_dashboard.apps = {
-    applications: [
-        [
-            {
-                module: 'crm', name: 'CRM',
-                help: "Acquire leads, follow opportunities, manage prospects and phone calls, \u2026"
-            }, {
-                module: 'sale', name: 'Sales',
-                help: "Do quotations, follow sales orders, invoice and control deliveries"
-            }, {
-                module: 'account_voucher', name: 'Invoicing',
-                help: "Send invoice, track payments and reminders"
-            }, {
-                module: 'point_of_sale', name: 'Point of Sales',
-                help: "Manage shop sales, use touch-screen POS"
-            }
-        ], [
-            {
-                module: 'purchase', name: 'Purchase',
-                help: "Do purchase orders, control invoices and reception, follow your suppliers, \u2026"
-            }, {
-                module: 'stock', name: 'Warehouse',
-                help: "Track your stocks, schedule product moves, manage incoming and outgoing shipments, \u2026"
-            }, {
-                module: 'mrp', name: 'Manufacturing',
-                help: "Manage your manufacturing, control your supply chain, personalize master data, \u2026"
-            }, {
-                module: 'account_accountant', name: 'Accounting and Finance',
-                help: "Record financial operations, automate followup, manage multi-currency, \u2026"
-            }
-        ], [
-            {
-                module: 'project', name: 'Projects',
-                help: "Manage projects, track tasks, invoice task works, follow issues, \u2026"
-            }, {
-                module: 'hr', name: 'Human Resources',
-                help: "Manage employees and their contracts, follow laves, recruit people, \u2026"
-            }, {
-                module: 'marketing', name: 'Marketing',
-                help: "Manage campaigns, follow activities, automate emails, \u2026"
-            }, {
-                module: 'knowledge', name: 'Knowledge',
-                help: "Track your documents, browse your files, \u2026"
-            }
-        ]
-    ]
-};
-openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
-    template: 'ApplicationTiles',
-    start: function () {
-        var self = this;
-        this._super();
-        // Check for installed application
-        var Installer = new openerp.web.DataSet(this, 'base.setup.installer');
-        Installer.call('default_get', [], function (installed_modules) {
-            var installed = _(installed_modules).any(function (active, name) {
-                return _.str.startsWith(name, 'cat') && active; });
-
-            if(installed) {
-                self.do_display_root_menu();
-            } else {
-                self.do_display_installer();
-            }
-        });
-    },
-    do_display_root_menu: function() {
-        var self = this;
-        var dss = new openerp.web.DataSetSearch( this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
-        var r = dss.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
-            // Create a matrix of 3*x applications
-            var rows = [];
-            while (applications.length) {
-                rows.push(applications.splice(0, 3));
-            }
-            var tiles = QWeb.render( 'ApplicationTiles.content', {rows: rows});
-            self.$element.append(tiles)
-                .find('.oe-dashboard-home-tile')
-                    .click(function () {
-                        openerp.webclient.menu.on_menu_click(null, $(this).data('menuid'))
-                    });
-        });
-        return  r;
-    },
-    do_display_installer: function() {
-        var self = this;
-        var render_ctx = {
-            url: window.location.protocol + '//' + window.location.host + window.location.pathname,
-            session: self.session,
-            rows: openerp.web_dashboard.apps.applications
-        };
-        var installer = QWeb.render('StaticHome', render_ctx);
-        self.$element.append(installer);
-        this.$element.delegate('.oe-static-home-tile-text button', 'click', function () {
-            self.install_module($(this).val());
-        });
-    },
-    install_module: function (module_name) {
-        var self = this;
-        var Modules = new openerp.web.DataSetSearch(
-            this, 'ir.module.module', null,
-            [['name', '=', module_name], ['state', '=', 'uninstalled']]);
-        var Upgrade = new openerp.web.DataSet(this, 'base.module.upgrade');
-
-        $.blockUI();
-        Modules.read_slice(['id'], {}, function (records) {
-            if (!(records.length === 1)) { $.unblockUI(); return; }
-            Modules.call('state_update',
-                [_.pluck(records, 'id'), 'to install', ['uninstalled']],
-                function () {
-                    Upgrade.call('upgrade_module', [[]], function () {
-                        self.run_configuration_wizards();
-                    });
-                }
-            )
-        });
-    },
-    run_configuration_wizards: function () {
-        var self = this;
-        new openerp.web.DataSet(this, 'res.config').call('start', [[]], function (action) {
-            self.widget_parent.widget_parent.do_action(action, function () {
-                openerp.webclient.do_reload();
-            });
-            self.$element.empty();
-            self.do_display_root_menu().then(function () {
-                $.unblockUI();
-            });
-        });
-    }
-});
-
-/*
  * Widgets
  * This client action designed to be used as a dashboard widget display
  * the html content of a res_widget given as argument
@@ -494,5 +387,85 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
         }));
     }
 });
+
+/*
+ * HomeTiles this client action display either the list of application to
+ * install (if none is installed yet) or a list of root menu items
+ */
+openerp.web.client_actions.add('default_home', 'session.web_dashboard.ApplicationTiles');
+openerp.web_dashboard.ApplicationTiles = openerp.web.Widget.extend({
+    template: 'web_dashboard.ApplicationTiles',
+    init: function(parent) {
+        this._super(parent);
+    },
+    start: function() {
+        var self = this;
+        openerp.webclient.menu.do_hide_secondary();
+        var domain = [['application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
+        var ds = new openerp.web.DataSetSearch(this, 'ir.module.module',{},domain);
+        ds.read_slice(['id'], {}, function(result) {
+            if(result.length) {
+                self.on_installed_database();
+            } else {
+                self.on_uninstalled_database();
+            }
+        });
+    },
+    on_uninstalled_database: function() {
+        installer = new openerp.web_dashboard.ApplicationInstaller(this);
+        installer.appendTo(this.$element);
+    },
+    on_installed_database: function() {
+        var self = this;
+        var ds = new openerp.web.DataSetSearch(this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
+        var r = ds.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data', 'module'], {}, function (applications) {
+            //// Create a matrix of 3*x applications
+            //var rows = [];
+            //while (applications.length) {
+            //    rows.push(applications.splice(0, 3));
+            //}
+            //var tiles = QWeb.render('ApplicationTiles.content', {rows: rows});
+            var tiles = QWeb.render('ApplicationTiles.content', {applications: applications});
+            $(tiles).appendTo(self.$element).find('.oe_install-module-link').click(function () {
+                openerp.webclient.menu.on_menu_click(null, $(this).data('menu'))
+            });
+        });
+    }
+});
+
+/**
+ * ApplicationInstaller
+ * This client action  display a list of applications to install.
+ */
+openerp.web.client_actions.add( 'board.application.installer', 'openerp.web_dashboard.ApplicationInstaller');
+openerp.web_dashboard.ApplicationInstaller = openerp.web.Widget.extend({
+    template: 'web_dashboard.ApplicationInstaller',
+    start: function () {
+        // TODO menu hide
+        var r = this._super();
+        this.action_manager = new openerp.web.ActionManager(this);
+        this.action_manager.appendTo(this.$element.find('.oe_installer'));
+        this.action_manager.do_action({
+            type: 'ir.actions.act_window',
+            res_model: 'ir.module.module',
+            domain: [['application','=',true]],
+            views: [[false, 'kanban']],
+            flags: {
+                display_title:false,
+                search_view: false,
+                views_switcher: false,
+                action_buttons: false,
+                sidebar: false,
+                pager: false
+            }
+        });
+        return r;
+    },
+    stop: function() {
+        this.action_manager.stop();
+        return this._super();
+    }
+});
+
 
 };

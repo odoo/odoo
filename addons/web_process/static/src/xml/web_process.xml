@@ -1,7 +1,9 @@
 <template>
+<!-- vim:fdl=1:
+-->
     <t t-extend="ViewManager" t-name="ViewManagerAction">
         <t t-jquery=".oe-view-manager-header" t-operation="append">
-            <a class="oe-process-view" title="Process View" href="javascript: void(0)"></a>
+            <a t-if="self.flags.display_title !== false" class="oe-process-view" title="Process View" href="javascript: void(0)"></a>
         </t>
     </t>
     <t t-name="ProcessView">
@@ -32,7 +34,7 @@
                         </a>
                         <a class="cta-a" target="_blank" href="http://www.openerp.com/services/subscribe-onsite">
                             <span>
-                                <strong>Support / Publisher Warranty</strong>
+                                <strong>Support / OpenERP Enterprise</strong>
                                 Get the OpenERP Warranty
                             </span>
                         </a>
@@ -93,7 +95,7 @@
                                 </option>
                             </t>
                         </select>
-                        <button id="change_process">Select</button>
+                        <button class="oe_button" id="change_process">Select</button>
                     </fieldset>
                 </td>
             </tr>
@@ -104,8 +106,8 @@
             </tr>
             <tr t-if="process_id">
                 <td>
-                    <button id="edit_process">Edit Process</button>
-                    <button class="toggle_fields">
+                    <button class="oe_button" id="edit_process">Edit Process</button>
+                    <button class="oe_button toggle_fields">
                         <span>Show Fields</span>
                         <span>Hide Fields</span>
                     </button>

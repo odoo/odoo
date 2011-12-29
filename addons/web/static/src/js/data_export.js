@@ -1,8 +1,9 @@
 openerp.web.data_export = function(openerp) {
-var QWeb = openerp.web.qweb;
+var QWeb = openerp.web.qweb,
+      _t = openerp.web._t;
 openerp.web.DataExport = openerp.web.Dialog.extend({
     template: 'ExportTreeView',
-    dialog_title: 'Export Data',
+    dialog_title: {toString: function () { return _t("Export Data"); }},
     init: function(parent, dataset) {
         this._super(parent);
         this.records = {};
@@ -14,18 +15,10 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         var self = this;
         this._super.apply(this, arguments);
         this.open({
-            modal: true,
-            width: '55%',
-            height: 'auto',
-            position: 'top',
-            buttons : {
-                "Close" : function() {
-                    self.close();
-                  },
-                "Export To File" : function() {
-                    self.on_click_export_data();
-                  }
-               },
+            buttons : [
+                {text: _t("Close"), click: function() { self.close(); }},
+                {text: _t("Export To File"), click: function() { self.on_click_export_data(); }}
+            ],
             close: function(event, ui){ self.close();}
         });
         self.$element.removeClass('ui-dialog-content ui-widget-content');
@@ -388,7 +381,7 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         });
     },
     close: function() {
-        $(this.$dialog).remove();
+        this.$element.remove();
         this._super();
     }
 });

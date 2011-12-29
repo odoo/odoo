@@ -252,14 +252,17 @@ openerp.web.format_cell = function (row_data, column, value_if_empty, process_mo
     }
     if (attrs.invisible) { return ''; }
     if (column.tag === 'button') {
-        return [
-            '<button type="button" title="', column.string || '', '">',
-                '<img src="/web/static/src/img/icons/', column.icon, '.png"',
-                    ' alt="', column.string || '', '"/>',
-            '</button>'
-        ].join('')
+        return _.template('<button type="button" title="<%-title%>" <%=additional_attributes%> >' +
+            '<img src="<%-prefix%>/web/static/src/img/icons/<%-icon%>.png" alt="<%-alt%>"/>' +
+            '</button>', {
+                title: column.string || '',
+                additional_attributes: isNaN(row_data["id"].value) && openerp.web.BufferedDataSet.virtual_id_regex.test(row_data["id"].value) ?
+                    'disabled="disabled" class="oe-listview-button-disabled"' : '',
+                prefix: openerp.connection.prefix,
+                icon: column.icon,
+                alt: column.string || '',
+            });
     }
-
     if (!row_data[column.id]) {
         return value_if_empty === undefined ? '' : value_if_empty;
     }
