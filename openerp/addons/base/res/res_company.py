@@ -120,7 +120,7 @@ class res_company(osv.osv):
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
-        'rml_header1': fields.char('Report Header / Company Slogan', size=200),
+        'rml_header1': fields.char('Report Header / Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents."),
         'rml_footer1': fields.char('General Information Footer', size=200),
         'rml_footer2': fields.function(_get_bank_data, type="char", string='Bank Accounts Footer', size=250, help="This field is computed automatically based on bank accounts defined, having the display on footer checkbox set."),
         'rml_header': fields.text('RML Header', required=True),
