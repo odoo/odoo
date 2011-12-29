@@ -41,7 +41,7 @@ class stock_partial_picking_line(osv.TransientModel):
     _name = "stock.partial.picking.line"
     _rec_name = 'product_id'
     _columns = {
-        'product_id' : fields.many2one('product.product', string="Product", required=True, readonly=True, ondelete='CASCADE'),
+        'product_id' : fields.many2one('product.product', string="Product", required=True, ondelete='CASCADE'),
         'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product UoM'), required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, ondelete='CASCADE'),
         'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot', ondelete='CASCADE'),
@@ -133,7 +133,6 @@ class stock_partial_picking(osv.osv_memory):
         }
         picking_type = partial.picking_id.type
         for wizard_line in partial.move_ids:
-            initial_uom = wizard_line.move_id.product_uom
             line_uom = wizard_line.product_uom
             move_id = wizard_line.move_id.id
 
@@ -141,22 +140,24 @@ class stock_partial_picking(osv.osv_memory):
             if wizard_line.quantity < 0:
                 raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
 
-            #Compute the quantity for respective wizard_line in the line uom and in the initial uom
-            qty_in_initial_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, initial_uom.id)
-            qty_in_line_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, line_uom.id) #this just do the rounding if necessary
+            #Compute the quantity for respective wizard_line in the line uom (this jsut do the rounding if necessary)
+            qty_in_line_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, line_uom.id)
 
-            #Check rounding Quantity.ex.
-            #picking: 1kg, uom kg rounding = 0.01 (rounding to 10g), 
-            #partial delivery: 253g
-            #=> result= refused, as the qty left on picking would be 0.747kg and only 0.75 is accepted by the uom.
-            if line_uom.factor and line_uom.factor <> 0 and initial_uom.factor:
+            if line_uom.factor and line_uom.factor <> 0:
                 if qty_in_line_uom <> wizard_line.quantity:
                     raise osv.except_osv(_('Warning'), _('The uom rounding does not allow you to ship "%s %s", only roundings of "%s %s" is accepted by the uom.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
+            if move_id:
+                #Check rounding Quantity.ex.
+                #picking: 1kg, uom kg rounding = 0.01 (rounding to 10g), 
+                #partial delivery: 253g
+                #=> result= refused, as the qty left on picking would be 0.747kg and only 0.75 is accepted by the uom.
+                initial_uom = wizard_line.move_id.product_uom
+                #Compute the quantity for respective wizard_line in the initial uom
+                qty_in_initial_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, initial_uom.id)
                 without_rounding_qty = (wizard_line.quantity / line_uom.factor) * initial_uom.factor
                 if qty_in_initial_uom <> without_rounding_qty:
                     raise osv.except_osv(_('Warning'), _('The rounding of the initial uom does not allow you to ship "%s %s", as it would let a quantity of "%s %s" to ship and only roundings of "%s %s" is accepted by the uom.') % (wizard_line.quantity, line_uom.name, wizard_line.move_id.product_qty - without_rounding_qty, initial_uom.name, initial_uom.rounding, initial_uom.name))
-
-            if not move_id:
+            else:
                 seq_obj_name =  'stock.picking.' + picking_type
                 move_id = stock_move.create(cr,uid,{'name' : self.pool.get('ir.sequence').get(cr, uid, seq_obj_name),
                                                     'product_id': wizard_line.product_id.id,
