@@ -8,13 +8,16 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <group>
+                        <filter icon="terp-go-year" name="year" string="Year" domain="[('date_from','&gt;=',time.strftime('%%Y-1-1')),('date_from','&lt;=',time.strftime('%%Y-12-31'))]"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Month" icon="terp-go-month" name="This Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
+                        <filter icon="terp-go-month" string=" Month-1 " 
+                         domain="[('date_from','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+                         help="Holidays during last month"/>                        
+                        <separator orientation="vertical"/>                    	
                         <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
                         <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-go-year" name="year" string="Year" domain="[('create_date','&gt;=',time.strftime('%%Y-1-1')),('create_date','&lt;=',time.strftime('%%Y-12-31'))]"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Month" icon="terp-go-month" name="This Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
                         <field name="employee_id">
                             <filter icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
