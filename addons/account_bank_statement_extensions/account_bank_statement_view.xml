@@ -3,7 +3,7 @@
   <data>
 
     <!-- Batch Payment Info form -->
-    
+
     <record id="view_statement_line_global_form" model="ir.ui.view">
       <field name="name">statement.line.global.form</field>
       <field name="model">account.bank.statement.line.global</field>
@@ -32,9 +32,9 @@
         </form>
       </field>
     </record>
-    
+
     <!-- add Valuta Date and Globalisation id to bank statement line -->
-    
+
     <record id="view_bank_statement_form_add_fields" model="ir.ui.view">
       <field name="name">view.bank.statement.form.add.fields</field>
       <field name="model">account.bank.statement</field>
@@ -81,8 +81,6 @@
           <field name="globalisation_id" string="Glob. Id"/>
           <field name="globalisation_amount" string="Glob. Am."/>
           <field name="state"/>
-          <field name="write_date"/>
-          <field name="write_uid"/>
         </tree>
       </field>
     </record>
@@ -106,8 +104,6 @@
           <field name="amount"/>
           <field name="globalisation_id"/>
           <field name="sequence" readonly="0"/>
-          <field name="write_date"/>
-          <field name="write_uid"/>
           <field name="state"/>
           <separator colspan="4" string="Notes"/>
           <field colspan="4" name="note" nolabel="1"/>
@@ -140,8 +136,6 @@
           <group string="Extended Filters..." expand="0">
             <field name="account_id"/>
             <field name="partner_id"/>
-            <field name="write_date"/>
-            <field name="write_uid"/>
             <field name="ref"/>
             <field name="note"/>
           </group>
