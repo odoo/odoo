@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Module Record',
+    'name': 'Record and Create Modules',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'description': """
 This module allows you to create a new module without any development.
 ======================================================================

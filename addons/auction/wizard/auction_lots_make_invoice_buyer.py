@@ -89,3 +89,5 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
             }
 
 auction_lots_make_invoice_buyer()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

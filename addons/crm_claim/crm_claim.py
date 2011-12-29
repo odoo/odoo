@@ -46,6 +46,7 @@ class crm_claim(crm.crm_case, osv.osv):
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Claim Subject', size=128, required=True),
+        'active': fields.boolean('Active'),
         'action_next': fields.char('Next Action', size=200),
         'date_action_next': fields.datetime('Next Action Date'),
         'description': fields.text('Description'),
@@ -54,7 +55,7 @@ class crm_claim(crm.crm_case, osv.osv):
         'write_date': fields.datetime('Update Date' , readonly=True),
         'date_deadline': fields.date('Deadline'),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'date': fields.datetime('Claim Date'),
+        'date': fields.datetime('Claim Date', select=True),
         'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
@@ -95,6 +96,7 @@ class crm_claim(crm.crm_case, osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'active': lambda *a: 1
     }
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
@@ -105,8 +107,7 @@ class crm_claim(crm.crm_case, osv.osv):
         if not part:
             return {'value': {'partner_address_id': False,
                             'email_from': False,
-                            'partner_phone': False,
-                            'partner_mobile': False
+                            'partner_phone': False
                             }}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
         data = {'partner_address_id': addr['contact']}
@@ -121,7 +122,7 @@ class crm_claim(crm.crm_case, osv.osv):
         if not add:
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        return {'value': {'email_from': address.email, 'partner_phone': address.phone, 'partner_mobile': address.mobile}}
+        return {'value': {'email_from': address.email, 'partner_phone': address.phone}}
 
     def case_open(self, cr, uid, ids, *args):
         """Opens Claim"""
@@ -130,8 +131,6 @@ class crm_claim(crm.crm_case, osv.osv):
             if l.state == 'draft':
                 message = _("The claim '%s' has been opened.") % l.name
                 self.log(cr, uid, l.id, message)
-                value = {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')}
-                self.write(cr, uid, [l.id], value)
                 stage_id = self.stage_find(cr, uid, l.section_id.id or False, [('sequence','>',0)])
                 if stage_id:
                     self.stage_set(cr, uid, [l.id], stage_id)

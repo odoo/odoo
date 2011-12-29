@@ -20,7 +20,7 @@
 #
 ##############################################################################
 {
-    "name" : "Greece - Normal Plan",
+    "name" : "Greece - Accounting",
     "version" : "0.2",
     "author" : "P. Christeas, OpenERP SA.",
     "website": "http://openerp.hellug.gr/",

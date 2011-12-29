@@ -559,6 +559,8 @@ class account_move_line(osv.osv):
         'state': 'draft',
         'currency_id': _get_currency,
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
+        'credit': 0.0,
+        'debit': 0.0,
         'account_id': lambda self, cr, uid, c: c.get('account_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
@@ -579,14 +581,14 @@ class account_move_line(osv.osv):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'view':
-                return False
+                raise osv.except_osv(_('Error :'), _('You can not create move line on view account %s %s') % (l.account_id.code, l.account_id.name))
         return True
 
     def _check_no_closed(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'closed':
-                return False
+                raise osv.except_osv(_('Error :'), _('You can not create move line on closed account %s %s') % (l.account_id.code, l.account_id.name))
         return True
 
     def _check_company_id(self, cr, uid, ids, context=None):
@@ -1082,8 +1084,6 @@ class account_move_line(osv.osv):
                 f.set("invisible", "context.get('journal_id', False)")
             elif field in ('period_id',):
                 f.set("invisible", "context.get('period_id', False)")
-            else:
-                f.set('invisible', "context.get('visible_id') not in %s" % (fields.get(field)))
 
             orm.setup_modifiers(f, fields_get[field], context=context,
                                 in_tree_view=True)
@@ -1243,6 +1243,14 @@ class account_move_line(osv.osv):
             m = move_obj.browse(cr, uid, vals['move_id'])
             context['journal_id'] = m.journal_id.id
             context['period_id'] = m.period_id.id
+        #we need to treat the case where a value is given in the context for period_id as a string
+        if 'period_id' not in context or not isinstance(context.get('period_id', ''), (int, long)):
+            period_candidate_ids = self.pool.get('account.period').name_search(cr, uid, name=context.get('period_id',''))
+            if len(period_candidate_ids) != 1:
+                raise osv.except_osv(_('Encoding error'), _('No period found or period given is ambigous.'))
+            context['period_id'] = period_candidate_ids[0][0]
+        if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
+            context['journal_id'] = context.get('search_default_journal_id')            
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
         move_id = vals.get('move_id', False)
         journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
@@ -1324,7 +1332,7 @@ class account_move_line(osv.osv):
                 base_sign = 'base_sign'
                 tax_sign = 'tax_sign'
             tmp_cnt = 0
-            for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00).get('taxes'):
+            for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00, force_excluded=True).get('taxes'):
                 #create the base movement
                 if tmp_cnt == 0:
                     if tax[base_code]:
@@ -1336,8 +1344,6 @@ class account_move_line(osv.osv):
                 else:
                     data = {
                         'move_id': vals['move_id'],
-                        'journal_id': vals['journal_id'],
-                        'period_id': vals['period_id'],
                         'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
                         'date': vals['date'],
                         'partner_id': vals.get('partner_id',False),
@@ -1354,8 +1360,6 @@ class account_move_line(osv.osv):
                 #create the VAT movement
                 data = {
                     'move_id': vals['move_id'],
-                    'journal_id': vals['journal_id'],
-                    'period_id': vals['period_id'],
                     'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
                     'date': vals['date'],
                     'partner_id': vals.get('partner_id',False),

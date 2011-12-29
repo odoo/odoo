@@ -107,7 +107,7 @@
             <field name="name">Membership Products</field>
             <field name="res_model">product.product</field>
             <field name="domain">[('membership','=',True), ('type', '=', 'service')]</field>
-            <field name="context">{'membership':True, 'type':'service'}</field>
+            <field name="context">{'membership':True, 'type':'service', 'default_membership': True, 'default_type': 'service'}</field>
             <field name="search_view_id" ref="membership_product_search_form_view"/>
         </record>
 
@@ -127,8 +127,12 @@
 
         <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
         <menuitem name="Membership" id="menu_membership" sequence="0" parent="base.menu_association"/>
+        <menuitem name="Configuration" id="base.menu_marketing_config_association"
+            parent="base.menu_association" sequence="30" groups="base.group_extended"/>
+
+
         <menuitem name="Membership Products"
-                  parent="menu_membership"
+                  parent="base.menu_marketing_config_association"
                   id="menu_membership_products"
                   action="action_membership_products"
                   sequence="1"

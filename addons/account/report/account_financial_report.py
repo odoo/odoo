@@ -64,31 +64,34 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 vals['balance_cmp'] = self.pool.get('account.financial.report').browse(self.cr, self.uid, report.id, context=data['form']['comparison_context']).balance
             lines.append(vals)
             account_ids = []
-            if report.type == 'accounts' and report.display_detail and report.account_ids:
+            if report.type == 'accounts' and report.account_ids:
                 account_ids = account_obj._get_children_and_consol(self.cr, self.uid, [x.id for x in report.account_ids])
             elif report.type == 'account_type' and report.account_type_ids:
                 account_ids = account_obj.search(self.cr, self.uid, [('user_type','in', [x.id for x in report.account_type_ids])])
             if account_ids:
                 for account in account_obj.browse(self.cr, self.uid, account_ids, context=data['form']['used_context']):
-                    if account.type != 'view':
-                        flag = False
-                        vals = {
-                            'name': account.code + ' ' + account.name,
-                            'balance':  account.balance != 0 and account.balance * account.user_type.sign or account.balance,
-                            'type': 'account',
-                            'level': 6,
-                            'account_type': account.type,
-                        }
-                        if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance']):
+                    if report.display_detail == 'detail_flat' and account.type == 'view':
+                        continue
+                    flag = False
+                    vals = {
+                        'name': account.code + ' ' + account.name,
+                        'balance':  account.balance != 0 and account.balance * report.sign or account.balance,
+                        'type': 'account',
+                        'level': report.display_detail == 'detail_with_hierarchy' and min(account.level,6) or 6,
+                        'account_type': account.type,
+                    }
+                    if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance']):
+                        flag = True
+                    if data['form']['enable_filter']:
+                        vals['balance_cmp'] = account_obj.browse(self.cr, self.uid, account.id, context=data['form']['comparison_context']).balance
+                        if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance_cmp']):
                             flag = True
-                        if data['form']['enable_filter']:
-                            vals['balance_cmp'] = account_obj.browse(self.cr, self.uid, account.id, context=data['form']['comparison_context']).balance
-                            if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance_cmp']):
-                                flag = True
-                        if flag:
-                            lines.append(vals)
+                    if flag:
+                        lines.append(vals)
         return lines
 
 report_sxw.report_sxw('report.account.financial.report', 'account.financial.report',
     'addons/account/report/account_financial_report.rml', parser=report_account_common, header='internal')
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

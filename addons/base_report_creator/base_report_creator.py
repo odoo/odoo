@@ -201,18 +201,15 @@ class report_result(osv.osv):
                 else:
                     fields['column_count'] = (False, 'Count')
             newargs = []
-            newargs2 = []
             for a in args:
                 if fields[a[0]][0]:
-                    res = self.pool.get(fields[a[0]][0])._where_calc(cr, user, [[fields[a[0]][1], a[1], a[2]]], active_test = False, context = context)
-                    newargs += res[0]
-                    newargs2 += res[1]
-                else:
-                    newargs += [("count(*) " + a[1] +" " + str(a[2]))]
+                    model = self.pool.get(fields[a[0]][0])
+                    newargs.append(str(model._table+"."+fields[a[0]][1] + " " +a[1] + " '" + a[2])+"'")
             ctx = context or {}
             ctx['getid'] = True
-            sql_query = report.sql_query
-            cr.execute(sql_query) # TODO: FILTER
+            report_pool = self.pool.get('base_report_creator.report')
+            reports = report_pool._sql_query_get(cr, user, [context_id], 'sql_query', None, ctx, where_plus=newargs, limit=limit, offset=offset)
+            cr.execute(reports[context_id])
             result = cr.fetchall()
             return map(lambda x: x[0], result)
 
@@ -247,7 +244,10 @@ class report_creator(osv.osv):
             #End Loop
         return {'datas': final_datas}
 
-
+    def unlink(self, cr, uid, ids, context=None):
+        menu_ids = [report.menu_id.id for report in self.browse(cr, uid, ids, context) if report.menu_id]
+        self.pool.get('ir.ui.menu').unlink(cr, uid, menu_ids, context=context)
+        return super(report_creator, self).unlink(cr, uid, ids, context=context)
     def _path_get(self, cr, uid, models, filter_ids=[]):
         """
         @param cr: the current row, from the database cursor,
@@ -545,7 +545,7 @@ class report_creator_field(osv.osv):
     _rec_name = 'field_id'
     _order = "sequence,id"
     _columns = {
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of fields."),
+        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of fields."),
         'field_id': fields.many2one('ir.model.fields', 'Field'),
         'report_id': fields.many2one('base_report_creator.report', 'Report', on_delete='cascade'),
         'group_method': fields.selection([('group', 'Grouped'),

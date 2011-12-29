@@ -30,7 +30,6 @@ import pos_details_summary
 import pos_payment_report
 import pos_sales_user
 import pos_sales_user_today
-import pos_payment_report_date
 import pos_payment_report_user
 import pos_report
 import pos_order_report

@@ -298,6 +298,14 @@ class hr_payslip(osv.osv):
                     context=context).company_id.id,
     }
 
+    def _check_dates(self, cr, uid, ids, context=None):
+        for payslip in self.browse(cr, uid, ids, context=context):
+            if payslip.date_from > payslip.date_to:
+                return False
+        return True
+
+    _constraints = [(_check_dates, "Payslip 'Date From' must be before 'Date To'.", ['date_from', 'date_to'])]  
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -646,7 +654,7 @@ class hr_payslip(osv.osv):
                       'struct_id': False,
                       }
             }
-        if not employee_id:
+        if (not employee_id) or (not date_from) or (not date_to):
             return res
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
@@ -712,8 +720,8 @@ class hr_payslip_worked_days(osv.osv):
     _description = 'Payslip Worked Days'
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True),
-        'sequence': fields.integer('Sequence', required=True,),
+        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade', select=True),
+        'sequence': fields.integer('Sequence', required=True, select=True),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
         'number_of_days': fields.float('Number of Days'),
         'number_of_hours': fields.float('Number of Hours'),
@@ -734,8 +742,8 @@ class hr_payslip_input(osv.osv):
     _description = 'Payslip Input'
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True),
-        'sequence': fields.integer('Sequence', required=True,),
+        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade', select=True),
+        'sequence': fields.integer('Sequence', required=True, select=True),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
         'amount': fields.float('Amount', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs.SALEURO.amount * contract.wage*0.01."),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=True, help="The contract for which applied this input"),
@@ -754,7 +762,7 @@ class hr_salary_rule(osv.osv):
     _columns = {
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, help="The code of salary rules can be used as reference in computation of other rules. In that case, it is case sensitive."),
-        'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
+        'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence', select=True),
         'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days.WORK100.number_of_days."),
         'category_id':fields.many2one('hr.salary.rule.category', 'Category', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
@@ -823,7 +831,7 @@ result = rules.NET > categories.NET * 0.10''',
         'amount_percentage': 0.0,
         'quantity': '1.0',
      }
-    
+
     def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
         """
         @param rule_ids: list of browse record
@@ -919,13 +927,17 @@ class hr_payslip_line(osv.osv):
         return res
 
     _columns = {
-        'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=True),
+        'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade'),
         'salary_rule_id':fields.many2one('hr.salary.rule', 'Rule', required=True),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
-        'contract_id':fields.many2one('hr.contract', 'Contract', required=True),
+        'contract_id':fields.many2one('hr.contract', 'Contract', required=True, select=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Payroll')),
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Payroll')),
         'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Payroll'),store=True ),
+    }
+
+    _defaults = {
+        'quantity': 1.0,
     }
 
 hr_payslip_line()

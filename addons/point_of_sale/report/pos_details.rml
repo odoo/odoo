@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Details of Sales" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template title="Details of Sales" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="57.0" width="511" height="728"/>
     </pageTemplate>
@@ -199,13 +199,13 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="53.0,44.0,158.0,54.0,76.0,37.0,88.0" style="Table4">
+    <blockTable colWidths="108.0,54.0,159.0,54.0,75.0,30.0,69.0" style="Table4">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Code</para>
+          <para style="terp_tblheader_Details">Order</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Product</para>
@@ -226,7 +226,7 @@
     </blockTable>
     <section>
       <para style="terp_default_1">[[ repeatIn(pos_sales_details(data['form'],user), 'line_ids') ]]</para>
-      <blockTable colWidths="54.0,44.0,159.0,54.0,75.0,36.0,89.0" style="Table6">
+      <blockTable colWidths="108.0,54.0,159.0,54.0,75.0,30.0,69.0" style="Table6">
         <tr>
           <td>
             <para style="terp_default_9">[[ formatLang(line_ids['date_order'],date_time = True) ]]</para>
@@ -258,7 +258,7 @@
     <blockTable colWidths="256.0,256.0" style="Table3">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">Mode of Taxes</para>
+          <para style="terp_tblheader_Details">Taxes</para>
         </td>
         <td>
           <para style="terp_default_8">
@@ -289,7 +289,7 @@
     <blockTable colWidths="257.0,255.0" style="Table9">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">Mode of Payment</para>
+          <para style="terp_tblheader_Details">Payment</para>
         </td>
         <td>
           <para style="terp_default_8">

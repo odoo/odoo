@@ -128,15 +128,12 @@ class report_stock_move(osv.osv):
                         LEFT JOIN product_uom pu ON (sm.product_uom=pu.id)
                           LEFT JOIN product_uom pu2 ON (sm.product_uom=pu2.id)
                         LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
-                        LEFT JOIN stock_location sl ON (sm.location_id = sl.id)
-
                     GROUP BY
                         sm.id,sp.type, sm.date,sm.address_id,
                         sm.product_id,sm.state,sm.product_uom,sm.date_expected,
                         sm.product_id,pt.standard_price, sm.picking_id, sm.product_qty,
                         sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id,pu.factor,pt.categ_id, sp.stock_journal_id)
                     AS al
-
                     GROUP BY
                         al.out_qty,al.in_qty,al.curr_year,al.curr_month,
                         al.curr_day,al.curr_day_diff,al.curr_day_diff1,al.curr_day_diff2,al.dp,al.location_id,al.location_dest_id,
@@ -154,6 +151,9 @@ class report_stock_inventory(osv.osv):
     _auto = False
     _columns = {
         'date': fields.datetime('Date', readonly=True),
+        'year': fields.char('Year', size=4, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
+            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September')]),
         'partner_id':fields.many2one('res.partner.address', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'product_categ_id':fields.many2one('product.category', 'Product Category', readonly=True),
@@ -219,3 +219,5 @@ CREATE OR REPLACE view report_stock_inventory AS (
 report_stock_inventory()
 
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

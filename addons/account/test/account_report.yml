@@ -38,23 +38,14 @@
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_aged_balance_view',wiz_data=data_dict, context=ctx, our_module='account')
 -
-  Print the Account Balance Sheet in Horizontal mode
--
-  !python {model: account.account}: |
-    ctx={}
-    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
-    data_dict = {'chart_account_id':ref('account.chart0'),'display_type': True}
-    from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_bs_report',wiz_data=data_dict, context=ctx, our_module='account')
--
   Print the Account Balance Sheet in Normal mode
 -
   !python {model: account.account}: |
     ctx={}
     ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
-    data_dict = {'chart_account_id':ref('account.chart0'),'display_type': False}
+    data_dict = {'chart_account_id':ref('account.chart0'), 'account_report_id': ref('account_financial_report_balancesheet0')}
     from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_bs_report',wiz_data=data_dict, context=ctx, our_module='account')
+    test_reports.try_report_action(cr, uid, 'action_account_report',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the Account Balance Report in Normal mode through the wizard - From Account Chart
 -
@@ -147,18 +138,9 @@
   !python {model: account.account}: |
     ctx={}
     ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
-    data_dict = {'chart_account_id':ref('account.chart0'),'display_type': False,'target_move': 'all'}
+    data_dict = {'chart_account_id':ref('account.chart0'), 'target_move': 'all', 'account_report_id': ref('account_financial_report_balancesheet0')}
     from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_pl_report',wiz_data=data_dict, context=ctx, our_module='account')
--
-  Print the Profit-Loss Report in Horizontal Mode
--
-  !python {model: account.account}: |
-    ctx={}
-    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
-    data_dict = {'chart_account_id':ref('account.chart0'),'display_type': True,'target_move': 'all'}
-    from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_pl_report',wiz_data=data_dict, context=ctx, our_module='account')
+    test_reports.try_report_action(cr, uid, 'action_account_report',wiz_data=data_dict, context=ctx, our_module='account')
 -
  Print the Analytic Balance Report through the wizard
 -

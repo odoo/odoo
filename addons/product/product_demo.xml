@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-            
+
         <record id="base.user_demo" model="res.users">
             <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
         </record>
-        
+
         <!--
     Resource: product.category
     -->
@@ -413,7 +413,19 @@
             <field name="type">product</field>
             <field name="categ_id" ref="product_category_11"/>
         </record>
-
+        <record id="product_product_arm" model="product.product">
+            <field name="default_code">ARM100</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">450.0</field>
+            <field name="standard_price">300.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="procure_method">make_to_order</field>
+            <field name="sale_delay">3.0</field>
+            <field name="name">Cabinet</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_misc0"/>
+        </record>
         <!--
     Resource: product.product NEW EVV
     -->
@@ -442,6 +454,16 @@
             <field name="type">product</field>
                 <field name="categ_id" ref="product_category_shelves0"/>
         </record>
+        <record id="product_product_span100" model="product.product">
+            <field name="default_code">SPAN100</field>
+            <field name="supply_method">produce</field>
+            <field eval="'make_to_order'" name="procure_method"/>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Shelf Panel</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_shelves0"/>
+        </record>
         <record id="product_product_woodmm0" model="product.product">
             <field name="default_code">WOOD002</field>
             <field name="supply_method">buy</field>
@@ -449,6 +471,32 @@
             <field name="uom_id" ref="product_uom_meter"/>
             <field name="uom_po_id" ref="product_uom_meter"/>
             <field name="name">Wood 2mm</field>
+            <field eval="2" name="seller_delay"/>
+            <field eval="7.0" name="sale_delay"/>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_rawmaterial0"/>
+        </record>
+        <record id="product_product_woodentable0" model="product.product">
+            <field name="default_code">WOODTAB</field>
+            <field name="supply_method">produce</field>
+            <field eval="'make_to_stock'" name="procure_method"/>
+            <field name="standard_price">5.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Wooden Table</field>
+            <field eval="2" name="seller_delay"/>
+            <field eval="7.0" name="sale_delay"/>
+            <field name="type">product</field>
+            <field name="categ_id" ref="cat1"/>
+        </record>
+
+        <record id="product_product_woodmm10" model="product.product">
+            <field name="default_code">WOOD010</field>
+            <field name="supply_method">buy</field>
+            <field name="standard_price">7.0</field>
+            <field name="uom_id" ref="product_uom_meter"/>
+            <field name="uom_po_id" ref="product_uom_meter"/>
+            <field name="name">Wood 10mm</field>
             <field eval="2" name="seller_delay"/>
             <field eval="7.0" name="sale_delay"/>
             <field name="type">product</field>
@@ -509,7 +557,7 @@
 
         <record id="product_product_rearpanelarm0" model="product.product">
             <field name="default_code">RPAN100</field>
-            <field name="supply_method">buy</field>
+            <field name="supply_method">produce</field>
             <field name="standard_price">10.0</field>
             <field eval="0" name="sale_ok"/>
             <field name="uom_id" ref="product_uom_unit"/>
@@ -548,7 +596,7 @@
 
         <record id="product_product_shelf0" model="product.product">
             <field name="default_code">RCK100</field>
-            <field name="supply_method">buy</field>
+            <field name="supply_method">produce</field>
             <field name="standard_price">5.0</field>
             <field eval="0" name="sale_ok"/>
             <field name="uom_id" ref="product_uom_unit"/>

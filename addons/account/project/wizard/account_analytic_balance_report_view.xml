@@ -35,7 +35,6 @@
 
 		<record model="ir.values" id="account_analytic_balance_values">
             <field name="model_id" ref="analytic.model_account_analytic_account" />
-            <field name="object" eval="1" />
             <field name="name">Account Analytic Balance</field>
             <field name="key2">client_print_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_analytic_balance'))" />

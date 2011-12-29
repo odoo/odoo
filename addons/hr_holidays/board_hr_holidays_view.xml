@@ -16,8 +16,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.board_hr_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/hpaned/child2" position="inside">
-                 <action colspan="4" height="220" name="%(action_hr_holidays_leaves_by_month)d" string="Leaves" />
+                <xpath expr="/form/board/column[1]" position="inside">
+                 <action name="%(action_hr_holidays_leaves_by_month)d" string="Leaves"/>
                 </xpath>
             </field>
         </record>

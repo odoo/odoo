@@ -6,28 +6,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-08-03 03:36+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"PO-Revision-Date: 2011-12-19 12:16+0000\n"
+"Last-Translator: Tomislav Bosnjakovic <Unknown>\n"
 "Language-Team: Vinteh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 04:53+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 05:50+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 "Language: hr\n"
 
 #. module: base_iban
-#: model:ir.module.module,shortdesc:base_iban.module_meta_information
-msgid "Create IBAN bank accounts"
+#: constraint:res.partner.bank:0
+msgid ""
+"\n"
+"Please define BIC/Swift code on bank for bank type IBAN Account to make "
+"valid payments"
 msgstr ""
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:120
-#, python-format
-msgid ""
-"The IBAN does not seems to be correct. You should have entered something "
-"like this %s"
+#: model:res.partner.bank.type,format_layout:base_iban.bank_iban
+msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
+msgstr ""
+
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
+msgid "bank_bic"
 msgstr ""
 
 #. module: base_iban
@@ -38,12 +43,12 @@ msgstr "Pošt. Broj"
 #. module: base_iban
 #: help:res.partner.bank,iban:0
 msgid "International Bank Account Number"
-msgstr "Međunarodni broj Bankovnog računa"
+msgstr "Međunarodni broj bankovnog računa"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
 msgid "Bank Accounts"
-msgstr ""
+msgstr "Bankovni računi"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_country_field
@@ -51,19 +56,11 @@ msgid "country_id"
 msgstr "country_id"
 
 #. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
-msgid "bic"
-msgstr "bic"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_iban_field
-msgid "iban"
-msgstr "iban"
-
-#. module: base_iban
-#: code:addons/base_iban/base_iban.py:121
+#: code:addons/base_iban/base_iban.py:130
 #, python-format
-msgid "The IBAN is invalid, It should begin with the country code"
+msgid ""
+"The IBAN does not seem to be correct. You should have entered something like "
+"this %s"
 msgstr ""
 
 #. module: base_iban
@@ -72,24 +69,50 @@ msgid "IBAN"
 msgstr "IBAN"
 
 #. module: base_iban
-#: model:res.partner.bank.type,name:base_iban.bank_iban
-msgid "IBAN Account"
-msgstr "IBAN konto"
-
-#. module: base_iban
-#: model:ir.module.module,description:base_iban.module_meta_information
-msgid ""
-"\n"
-"This module installs the base for IBAN (International Bank Account Number) "
-"bank accounts and checks for its validity.\n"
-"\n"
-"    "
+#: code:addons/base_iban/base_iban.py:131
+#, python-format
+msgid "The IBAN is invalid, it should begin with the country code"
 msgstr ""
 
 #. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_acc_number_field
-msgid "acc_number"
-msgstr "Broj konta"
+#: model:res.partner.bank.type,name:base_iban.bank_iban
+msgid "IBAN Account"
+msgstr "IBAN račun"
+
+#~ msgid "bic"
+#~ msgstr "bic"
+
+#~ msgid "iban"
+#~ msgstr "iban"
+
+#~ msgid "acc_number"
+#~ msgstr "acc_number"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Nepravilan XML format za Arhitekturu Prikaza!"
+
+#~ msgid "Create IBAN bank accounts"
+#~ msgstr "Kreiraj IBAN bankovne račune"
+
+#, python-format
+#~ msgid "The IBAN is invalid, It should begin with the country code"
+#~ msgstr "Neispravan IBAN. Mora početi sa oznakom države"
+
+#, python-format
+#~ msgid ""
+#~ "The IBAN does not seems to be correct. You should have entered something "
+#~ "like this %s"
+#~ msgstr "Izgleda da IBAN nije točan. Trebali ste unijeti nešto kao %s"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module installs the base for IBAN (International Bank Account Number) "
+#~ "bank accounts and checks for its validity.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Ovaj modul instalira osnovu za IBAN (International Bank Account Number) "
+#~ "bankovne račune i provjera njihovu ispravnost.\n"
+#~ "\n"
+#~ "    "

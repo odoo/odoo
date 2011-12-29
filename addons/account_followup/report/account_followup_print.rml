@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="Account Followup.pdf">
-  <template pageSize="(595.0,842.0)" title="Account Followup" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template title="Account Followup" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="31.0" y1="28.0" width="532" height="786"/>
     </pageTemplate>
@@ -124,7 +124,7 @@
   </stylesheet>
   <story>
     <para style="terp_default_8">[[ repeatIn(ids_to_objects(data['form']['partner_ids']),'o') ]] </para>
-    <para style="terp_default_8">[[ setLang(o.lang) ]]</para>
+    <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
     
     <blockTable colWidths="298.0,234.0" style="Tableau2">
       <tr>
@@ -132,7 +132,7 @@
           <para style="terp_default_9">[[ repeatIn(adr_get(o,'invoice'),'a' )]]</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.name or '' ]]</para>
+          <para style="terp_default_9">[[ o.partner_id.name or '' ]]</para>
           <para style="terp_default_9">[[ a['street'] or '']]</para>
           <para style="terp_default_9">[[ a['street2'] or removeParentNode('para') ]]</para>
           <para style="terp_default_9">[[ a['zip'] or '' ]] [[ a['city'] or '' ]]</para>
@@ -141,7 +141,7 @@
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">VAT: [[ o.vat or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">VAT: [[ o.partner_id.vat or removeParentNode('para') ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -150,7 +150,7 @@
     </para>
     <para style="terp_default_9">Document : Customer account statement</para>
     <para style="terp_default_9">Date : [[ formatLang(data['form']['date'],date=True) ]]</para>
-    <para style="terp_default_9">Customer Ref : [[ o.ref or '' ]]</para>
+    <para style="terp_default_9">Customer Ref : [[ o.partner_id.ref or '' ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>

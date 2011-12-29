@@ -1,0 +1,139 @@
+# Croatian translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"PO-Revision-Date: 2011-12-22 08:05+0000\n"
+"Last-Translator: Tomislav Bosnjakovic <Unknown>\n"
+"Language-Team: Croatian <hr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:15+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: account_anglo_saxon
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
+
+#. module: account_anglo_saxon
+#: view:product.category:0
+msgid " Accounting Property"
+msgstr ""
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_product_category
+msgid "Product Category"
+msgstr "Grupa proizvoda"
+
+#. module: account_anglo_saxon
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr ""
+
+#. module: account_anglo_saxon
+#: constraint:product.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr ""
+
+#. module: account_anglo_saxon
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
+
+#. module: account_anglo_saxon
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Greška: Zadana jedinica mjere i jedinica mjere nabave moraju biti iz iste "
+"kategorije jedinica mjera."
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Stavka računa"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_purchase_order
+msgid "Purchase Order"
+msgstr "Nalog za nabavu"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_product_template
+msgid "Product Template"
+msgstr "Predložak proizvoda"
+
+#. module: account_anglo_saxon
+#: field:product.category,property_account_creditor_price_difference_categ:0
+#: field:product.template,property_account_creditor_price_difference:0
+msgid "Price Difference Account"
+msgstr "Račun razlike u cijeni"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice
+msgid "Invoice"
+msgstr "Račun"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_stock_picking
+msgid "Picking List"
+msgstr "Popis prijenosa"
+
+#. module: account_anglo_saxon
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
+
+#. module: account_anglo_saxon
+#: help:product.category,property_account_creditor_price_difference_categ:0
+#: help:product.template,property_account_creditor_price_difference:0
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and cost price."
+msgstr ""
+"Ovaj konto će se koristiti za knjiženje razlike između nabavne cijene i "
+"cijene koštanja."
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Greška ! Ne možete stvoriti rekurzivne grupe."
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Vezna oznaka naloga mora biti jedinstvena"
+
+#~ msgid ""
+#~ "This module will support the Anglo-Saxons accounting methodology by\n"
+#~ "    changing the accounting logic with stock transactions. The difference "
+#~ "between the Anglo-Saxon accounting countries\n"
+#~ "    and the Rhine or also called Continental accounting countries is the "
+#~ "moment of taking the Cost of Goods Sold versus Cost of Sales.\n"
+#~ "    Anglo-Saxons accounting does take the cost when sales invoice is "
+#~ "created, Continental accounting will take the cost at the moment the goods "
+#~ "are shipped.\n"
+#~ "    This module will add this functionality by using a interim account, to "
+#~ "store the value of shipped goods and will contra book this interim account\n"
+#~ "    when the invoice is created to transfer this amount to the debtor or "
+#~ "creditor account.\n"
+#~ "    Secondly, price differences between actual purchase price and fixed "
+#~ "product standard price are booked on a separate account"
+#~ msgstr ""
+#~ "Ovaj modul podržava metodoogiju anglosaksonskog računovodstva\n"
+#~ "    promjenom računovdstvene logike knjiženja zaliha. Razlika između "
+#~ "anglosaksonskog raćunovodstva i kontinentalnog      računovodstva je u "
+#~ "trenutku knjiženja troškova prodane robe i troškova prodaje.\n"
+#~ "    Anglosaksonsko računovdstvo knjiži trošak u trenutku kreiranja računa, "
+#~ "dok kontinentalno knjiži trošak u trentuku otpreme robe.\n"
+#~ "    Ovaj modul dodaje funkcionalnost korištenjem prijelaznog konta za "
+#~ "knjiženje vrijednosti otpremljene robe i zatvorit će taj konto u trenutku "
+#~ "kreiranja računa za prijenos iznosa na konto kupca.\n"
+#~ "    Također, razlika u cijeni između stvarne nabavne cijene i fiksne planske "
+#~ "cijene artikla se knjiži na zaseban konto."
+
+#~ msgid "Stock Accounting for Anglo Saxon countries"
+#~ msgstr "Računovodstvo zaliha za anglosaksonske države"

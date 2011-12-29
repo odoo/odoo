@@ -21,7 +21,7 @@
 {
     'name': 'Receive User Feedback',
     'version': '2.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'complexity': "easy",
     'description': """
 Add Feedback button in header.
@@ -39,5 +39,10 @@ Invite OpenERP user feedback, powered by uservoice.
 
     'js': ['static/src/js/web_uservoice.js'],
     'css': ['static/src/css/uservoice.css'],
+    'qweb' : [
+        "static/src/xml/*.xml",
+    ],
     'images': ['static/src/img/submit_an_idea.jpeg', 'static/src/img/web_uservoice_feedback.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

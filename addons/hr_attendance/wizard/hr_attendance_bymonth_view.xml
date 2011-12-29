@@ -29,7 +29,6 @@
 
         <record model="ir.values" id="hr_attendance_month_values">
             <field name="model_id" ref="hr.model_hr_employee" />
-            <field name="object" eval="1" />
             <field name="name">Attendances By Month</field>
             <field name="key2">client_print_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_hr_attendance_month'))" />

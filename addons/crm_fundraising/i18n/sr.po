@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-11-03 07:55+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:47+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:19+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,planned_revenue:0
@@ -102,14 +102,20 @@ msgid "Messages"
 msgstr "Poruke"
 
 #. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "My company"
+msgstr ""
+
+#. module: crm_fundraising
 #: view:crm.fundraising:0
 msgid "Amount"
 msgstr "Iznos"
 
 #. module: crm_fundraising
-#: model:crm.case.categ,name:crm_fundraising.categ_fund4
-msgid "Arts And Culture"
-msgstr "Umetnost i Kultura"
+#: selection:crm.fundraising,state:0
+#: selection:crm.fundraising.report,state:0
+msgid "Cancelled"
+msgstr "Otkazano"
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
@@ -118,14 +124,14 @@ msgid "Est.Revenue"
 msgstr "Ocek.Prihod"
 
 #. module: crm_fundraising
-#: field:crm.fundraising,partner_address_id:0
-msgid "Partner Contact"
-msgstr "Kontakt Partnera"
+#: view:crm.fundraising:0
+msgid "Open Funds"
+msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "   Month   "
-msgstr "   Mesec   "
+#: field:crm.fundraising,ref:0
+msgid "Reference"
+msgstr "Referenca"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,type_id:0
@@ -162,15 +168,15 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Funds raised in current year"
+msgstr ""
+
+#. module: crm_fundraising
 #: model:ir.actions.act_window,name:crm_fundraising.action_report_crm_fundraising
 #: model:ir.ui.menu,name:crm_fundraising.menu_report_crm_fundraising_tree
 msgid "Fundraising Analysis"
 msgstr "Analiza Priklupljanja Sredstava"
-
-#. module: crm_fundraising
-#: model:ir.module.module,shortdesc:crm_fundraising.module_meta_information
-msgid "CRM Fundraising"
-msgstr "CRM Prikupljanje Sredstava"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -200,14 +206,21 @@ msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
+msgid "Pending Funds"
+msgstr ""
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
 #: view:crm.fundraising.report:0
 msgid "Payment Mode"
 msgstr "Nacin Placanja"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Reply"
-msgstr "Odgovori"
+#: selection:crm.fundraising,state:0
+#: view:crm.fundraising.report:0
+msgid "New"
+msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising,email_from:0
@@ -215,14 +228,15 @@ msgid "Email"
 msgstr "Email"
 
 #. module: crm_fundraising
-#: field:crm.fundraising,canal_id:0
-msgid "Channel"
-msgstr "Kanal"
-
-#. module: crm_fundraising
 #: selection:crm.fundraising,priority:0
 msgid "Lowest"
 msgstr "Najnizi"
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+#: view:crm.fundraising.report:0
+msgid "My Sales Team(s)"
+msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising,create_date:0
@@ -265,17 +279,6 @@ msgid "Employee Email"
 msgstr "Email Radnika"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "    Month-1    "
-msgstr ""
-
-#. module: crm_fundraising
-#: selection:crm.fundraising,state:0
-#: selection:crm.fundraising.report,state:0
-msgid "Cancelled"
-msgstr "Otkazano"
-
-#. module: crm_fundraising
 #: model:crm.case.categ,name:crm_fundraising.categ_fund2
 msgid "Learning And Education"
 msgstr "Ucenje i Edukacija"
@@ -301,13 +304,17 @@ msgid "Number of Days to close the case"
 msgstr "Br Dana do zatvaranja Slucaja"
 
 #. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Funds raised in current month"
+msgstr ""
+
+#. module: crm_fundraising
 #: view:crm.fundraising:0
 msgid "References"
 msgstr "Reference"
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
-#: model:ir.module.module,description:crm_fundraising.module_meta_information
 msgid "Fundraising"
 msgstr "Prikupljanje Sredstava"
 
@@ -366,14 +373,14 @@ msgid "Salesman"
 msgstr "Prodavac"
 
 #. module: crm_fundraising
-#: field:crm.fundraising,ref:0
-msgid "Reference"
-msgstr "Referenca"
-
-#. module: crm_fundraising
 #: field:crm.fundraising,ref2:0
 msgid "Reference 2"
 msgstr "REferenca 2"
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Funds raised in last month"
+msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -384,9 +391,9 @@ msgid "Category"
 msgstr "Kategorija"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "  Year  "
-msgstr "  Godina  "
+#: model:crm.case.categ,name:crm_fundraising.categ_fund4
+msgid "Arts And Culture"
+msgstr "Umetnost i Kultura"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,planned_cost:0
@@ -406,8 +413,6 @@ msgstr ""
 "ovaj zapis pre samog slanja. Odvajajte vise adresa zarezom."
 
 #. module: crm_fundraising
-#: selection:crm.fundraising,state:0
-#: view:crm.fundraising.report:0
 #: selection:crm.fundraising.report,state:0
 msgid "Draft"
 msgstr "Priprema"
@@ -436,11 +441,6 @@ msgstr "NA cekanju"
 #: view:crm.fundraising:0
 msgid "Communication & History"
 msgstr ""
-
-#. module: crm_fundraising
-#: model:ir.ui.menu,name:crm_fundraising.menu_crm_fundraising_stage_act
-msgid "Stages"
-msgstr "Nivoi"
 
 #. module: crm_fundraising
 #: selection:crm.fundraising.report,month:0
@@ -479,9 +479,9 @@ msgid "User"
 msgstr "Korisnik"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "#Fundraising"
-msgstr "#Prikupljanje Sredstava"
+#: model:crm.case.resource.type,name:crm_fundraising.type_fund2
+msgid "Cheque"
+msgstr "Ček"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,active:0
@@ -514,9 +514,9 @@ msgid "January"
 msgstr "Januar"
 
 #. module: crm_fundraising
-#: model:crm.case.resource.type,name:crm_fundraising.type_fund2
-msgid "Cheque"
-msgstr "Ček"
+#: view:crm.fundraising.report:0
+msgid "#Fundraising"
+msgstr "#Prikupljanje Sredstava"
 
 #. module: crm_fundraising
 #: model:ir.actions.act_window,help:crm_fundraising.crm_fund_categ_action
@@ -529,6 +529,11 @@ msgstr ""
 #: help:crm.fundraising,email_from:0
 msgid "These people will receive email."
 msgstr "Ovi ce ljudi primite Email."
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "Fund Category"
+msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising,date:0
@@ -546,13 +551,13 @@ msgid "History"
 msgstr "Istorija"
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Attachments"
-msgstr "Dodatak"
+#: field:crm.fundraising,partner_address_id:0
+msgid "Partner Contact"
+msgstr "Kontakt Partnera"
 
 #. module: crm_fundraising
-#: model:ir.model,name:crm_fundraising.model_crm_case_stage
-msgid "Stage of case"
+#: view:crm.fundraising.report:0
+msgid "Month of fundraising"
 msgstr ""
 
 #. module: crm_fundraising
@@ -567,6 +572,11 @@ msgstr "Procene"
 #: field:crm.fundraising.report,state:0
 msgid "State"
 msgstr "Stanje"
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "Unassigned"
+msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -587,11 +597,15 @@ msgstr "Otkazi"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-#: selection:crm.fundraising,state:0
 #: view:crm.fundraising.report:0
 #: selection:crm.fundraising.report,state:0
 msgid "Open"
 msgstr "Otvori"
+
+#. module: crm_fundraising
+#: selection:crm.fundraising,state:0
+msgid "In Progress"
+msgstr ""
 
 #. module: crm_fundraising
 #: model:ir.actions.act_window,help:crm_fundraising.crm_case_category_act_fund_all1
@@ -608,11 +622,6 @@ msgid "Responsible"
 msgstr "Odgovoran"
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Current"
-msgstr "Trenutni"
-
-#. module: crm_fundraising
 #: help:crm.fundraising,section_id:0
 msgid ""
 "Sales team to which Case belongs to. Define Responsible user and Email "
@@ -622,14 +631,25 @@ msgstr ""
 "Email nalog za slanje Emailova."
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Details"
-msgstr "Detalji"
-
-#. module: crm_fundraising
 #: model:ir.model,name:crm_fundraising.model_crm_fundraising_report
 msgid "CRM Fundraising Report"
 msgstr "Izvestaj CRM Prikupljanja Sredstava"
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "Reply"
+msgstr "Odgovori"
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Date of fundraising"
+msgstr ""
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+#: field:crm.fundraising.report,amount_revenue_prob:0
+msgid "Est. Rev*Prob."
+msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising.report,type_id:0
@@ -637,9 +657,8 @@ msgid "Fundraising Type"
 msgstr "Tip Prikupljanja Sredstava"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-#: field:crm.fundraising.report,amount_revenue_prob:0
-msgid "Est. Rev*Prob."
+#: view:crm.fundraising:0
+msgid "New Funds"
 msgstr ""
 
 #. module: crm_fundraising
@@ -668,14 +687,6 @@ msgstr "Verovatnoca (%)"
 #: field:crm.fundraising,partner_name:0
 msgid "Employee's Name"
 msgstr "Ime Zaposlenog"
-
-#. module: crm_fundraising
-#: help:crm.fundraising,canal_id:0
-msgid ""
-"The channels represent the different communication  modes available with the "
-"customer."
-msgstr ""
-"Kanali reprezentuju razlicite komunikacione nacine moguce sa  Klijentom"
 
 #. module: crm_fundraising
 #: help:crm.fundraising,state:0
@@ -716,6 +727,11 @@ msgstr "Gotovina"
 #: view:crm.fundraising:0
 msgid "Funds by Categories"
 msgstr "Sredstva po Kategorijama"
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Month-1"
+msgstr ""
 
 #. module: crm_fundraising
 #: selection:crm.fundraising.report,month:0
@@ -774,3 +790,33 @@ msgstr "Godina"
 #: field:crm.fundraising,duration:0
 msgid "Duration"
 msgstr "Kasnjenje"
+
+#~ msgid "CRM Fundraising"
+#~ msgstr "CRM Prikupljanje Sredstava"
+
+#~ msgid "   Month   "
+#~ msgstr "   Mesec   "
+
+#~ msgid "Channel"
+#~ msgstr "Kanal"
+
+#~ msgid "Stages"
+#~ msgstr "Nivoi"
+
+#~ msgid "  Year  "
+#~ msgstr "  Godina  "
+
+#~ msgid "Attachments"
+#~ msgstr "Dodatak"
+
+#~ msgid "Current"
+#~ msgstr "Trenutni"
+
+#~ msgid "Details"
+#~ msgstr "Detalji"
+
+#~ msgid ""
+#~ "The channels represent the different communication  modes available with the "
+#~ "customer."
+#~ msgstr ""
+#~ "Kanali reprezentuju razlicite komunikacione nacine moguce sa  Klijentom"

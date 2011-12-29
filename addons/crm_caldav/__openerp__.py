@@ -22,7 +22,7 @@
 
 
 {
-    'name': 'Calendar Synchronizing',
+    'name': 'Meetings Synchronization',
     'version': '1.1',
     'category': 'Customer Relationship Management',
     'complexity': "normal",

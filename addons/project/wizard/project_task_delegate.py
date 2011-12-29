@@ -31,13 +31,22 @@ class project_task_delegate(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Delegated Title', size=64, required=True, help="New title of the task delegated to the user"),
-        'prefix': fields.char('Your Task Title', size=64, required=True, help="Title for your validation task"),
+        'prefix': fields.char('Your Task Title', size=64, help="Title for your validation task"),
+        'project_id': fields.many2one('project.project', 'Project', help="User you want to delegate this task to"),
         'user_id': fields.many2one('res.users', 'Assign To', required=True, help="User you want to delegate this task to"),
         'new_task_description': fields.text('New Task Description', help="Reinclude the description of the task in the task of the user"),
         'planned_hours': fields.float('Planned Hours',  help="Estimated time to close this task by the delegated user"),
-        'planned_hours_me': fields.float('Hours to Validate', required=True, help="Estimated time for you to validate the work done by the user to whom you delegate this task"),
-        'state': fields.selection([('pending','Pending'), ('done','Done'), ], 'Validation State', required=True, help="New state of your own task. Pending will be reopened automatically when the delegated task is closed")
+        'planned_hours_me': fields.float('Hours to Validate', help="Estimated time for you to validate the work done by the user to whom you delegate this task"),
+        'state': fields.selection([('pending','Pending'), ('done','Done'), ], 'Validation State', help="New state of your own task. Pending will be reopened automatically when the delegated task is closed")
     }
+
+    def onchange_project_id(self, cr, uid, ids, project_id=False, context=None):
+        project_project = self.pool.get('project.project')
+        if not project_id:
+            return {'value':{'user_id': False}}
+        project = project_project.browse(cr, uid, project_id, context=context)
+        return {'value': {'user_id': project.user_id and project.user_id.id or False}}
+        
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -47,27 +56,32 @@ class project_task_delegate(osv.osv_memory):
         if context is None:
             context = {}
         record_id = context and context.get('active_id', False) or False
+        if not record_id:
+            return res
         task_pool = self.pool.get('project.task')
         task = task_pool.browse(cr, uid, record_id, context=context)
         task_name =tools.ustr(task.name)
+
+        if 'project_id' in fields:
+            res['project_id'] = int(task.project_id.id) if task.project_id else False
 
         if 'name' in fields:
             if task_name.startswith(_('CHECK: ')):
                 newname = tools.ustr(task_name).replace(_('CHECK: '), '')
             else:
                 newname = tools.ustr(task_name or '')
-            res.update({'name': newname})
+            res['name'] = newname
         if 'planned_hours' in fields:
-            res.update({'planned_hours': task.remaining_hours or 0.0})
+            res['planned_hours'] = task.remaining_hours or 0.0
         if 'prefix' in fields:
             if task_name.startswith(_('CHECK: ')):
                 newname = tools.ustr(task_name).replace(_('CHECK: '), '')
             else:
                 newname = tools.ustr(task_name or '')
             prefix = _('CHECK: %s') % newname
-            res.update({'prefix': prefix})
+            res['prefix'] = prefix
         if 'new_task_description' in fields:
-            res.update({'new_task_description': task.description})
+            res['new_task_description'] = task.description
         return res
 
 
@@ -105,9 +119,19 @@ class project_task_delegate(osv.osv_memory):
         task_id = context.get('active_id', False)
         task_pool = self.pool.get('project.task')
         delegate_data = self.read(cr, uid, ids, context=context)[0]
-        delegate_data['user_id'] = delegate_data['user_id'][0]
-        delegate_data['name'] = tools.ustr(delegate_data['name'])
-        task_pool.do_delegate(cr, uid, task_id, delegate_data, context=context)
-        return {'type': 'ir.actions.act_window_close'}
+        delegated_tasks = task_pool.do_delegate(cr, uid, [task_id], delegate_data, context=context)
+        models_data = self.pool.get('ir.model.data')
+
+        action_model, action_id = models_data.get_object_reference(cr, uid, 'project', 'action_view_task')
+        view_model, task_view_form_id = models_data.get_object_reference(cr, uid, 'project', 'view_task_form2')
+        view_model, task_view_tree_id = models_data.get_object_reference(cr, uid, 'project', 'view_task_tree2')
+        action = self.pool.get(action_model).read(cr, uid, action_id, context=context)         
+        action['res_id'] = delegated_tasks[task_id]
+        action['view_id'] = False
+        action['views'] = [(task_view_form_id, 'form'), (task_view_tree_id, 'tree')]
+        action['help'] = False    
+        return action
 
 project_task_delegate()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

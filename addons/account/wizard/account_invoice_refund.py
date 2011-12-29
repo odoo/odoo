@@ -36,7 +36,7 @@ class account_invoice_refund(osv.osv_memory):
        'period': fields.many2one('account.period', 'Force period'),
        'journal_id': fields.many2one('account.journal', 'Refund Journal', help='You can select here the journal to use for the refund invoice that will be created. If you leave that field empty, it will use the same journal as the current invoice.'),
        'description': fields.char('Description', size=128, required=True),
-       'filter_refund': fields.selection([('refund', 'Refund'), ('cancel', 'Cancel'),('modify', 'Modify')], "Refund Type", required=True, help='Refund invoice base on this type. You can not Modify and Cancel if the invoice is already reconciled'),
+       'filter_refund': fields.selection([('refund', 'Create a draft Refund'), ('cancel', 'Cancel: refund invoice and reconcile'),('modify', 'Modify: refund invoice, reconcile and create a new draft invoice')], "Refund Method", required=True, help='Refund invoice base on this type. You can not Modify and Cancel if the invoice is already reconciled'),
     }
 
     def _get_journal(self, cr, uid, context=None):
@@ -62,6 +62,8 @@ class account_invoice_refund(osv.osv_memory):
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         journal_obj = self.pool.get('account.journal')
         user_obj = self.pool.get('res.users')
+        # remove the entry with key 'form_view_ref', otherwise fields_view_get crashes
+        context.pop('form_view_ref', None)
         res = super(account_invoice_refund,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         type = context.get('type', 'out_invoice')
         company_id = user_obj.browse(cr, uid, uid, context=context).company_id.id

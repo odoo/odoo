@@ -35,7 +35,7 @@
             <field name="res_model">crm.case.categ</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_categ_tree-view"/>
-            <field name="context">{'object_id': 'crm.lead'}</field>
+            <field name="context" eval="{'object_id': ref('model_crm_lead')}"/>
             <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
             <field name="help">Create specific categories that fit your company's activities to better classify and analyse your leads and opportunities. Such categories could for instance reflect your product structure or the different types of sales you do.</field>
         </record>
@@ -59,10 +59,11 @@
                         widget="selection"
                         domain="[('object_id.model','=','crm.lead')]"/>
                     <button
-                         name="convert_opportunity"
+                         name="%(crm.action_crm_lead2opportunity_partner)d"
                          string="Convert to Opportunity"
                          help="Convert to Opportunity" icon="gtk-go-forward"
-                         type="object"/>
+                         type="action"
+                         />
                     <newline />
                     <field name="user_id" />
                     <field name="section_id" widget="selection" />
@@ -142,6 +143,29 @@
                             type="object" icon="gtk-convert" />
                     </group>
                  </page>
+                 <page string="Communication &amp; History" groups="base.group_extended">
+                   <group colspan="4">
+                       <field colspan="4" name="email_cc" widget="char" size="512"/>
+                   </group>
+                    <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
+                        <tree string="History">
+                            <field name="display_text" string="History Information"/>
+                            <field name="email_from" invisible="1"/>
+                            <button
+                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+                                name="%(mail.action_email_compose_message_wizard)d"
+                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                icon="terp-mail-replied" type="action" />
+                        </tree>
+                    </field>
+                    <button string="Add Internal Note"
+                        name="%(crm.action_crm_add_note)d"
+                        context="{'model': 'crm.lead' }"
+                        icon="terp-document-new" type="action" />
+                    <button string="Send New Email"
+                        name="%(mail.action_email_compose_message_wizard)d"
+                        icon="terp-mail-message-new" type="action"/>
+                 </page>
                  <page string="Extra Info" groups="base.group_extended">
                     <group colspan="2" col="2">
                         <separator string="Categorization" colspan="2" col="2"/>
@@ -169,58 +193,6 @@
                         <field name="day_open"/>
                         <field name="day_close"/>
                     </group>
-                 </page>
-                 <page string="Communication &amp; History" groups="base.group_extended">
-                   <group colspan="4">
-                       <field colspan="4" name="email_cc" widget="char" size="512"/>
-                   </group>
-                    <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
-                        <tree string="History">
-                            <field name="display_text" string="History Information"/>
-                            <field name="email_from" invisible="1"/>
-                            <button
-                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-                                name="%(mail.action_email_compose_message_wizard)d"
-                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                icon="terp-mail-replied" type="action" />
-                        </tree>
-                        <form string="History">
-                            <group col="4" colspan="4">
-                                <group col="2" colspan="2" attrs="{'invisible': [('email_from', '=', False)]}">
-                                    <field name="email_from"/>
-                                    <field name="email_to" size="512"/>
-                                </group>
-                                <group col="2" colspan="2">
-                                    <field name="date"/>
-                                    <field name="email_cc" size="512" attrs="{'invisible': [('email_from', '=', False)]}"/>
-                                </group>
-                                <field name="subject" colspan="4" widget="char" attrs="{'invisible': [('email_from', '=', False)]}" size="512"/>
-                                <field name="display_text" colspan="4" attrs="{'invisible': [('email_from', '!=', False)]}"/>
-                            </group>
-                            <notebook colspan="4">
-                                <page string="Details" attrs="{'invisible': [('email_from', '=', False)]}">
-                                    <field name="body_text" colspan="4" nolabel="1"/>
-                                    <group attrs="{'invisible': [('email_from', '=', False)]}">
-                                        <button colspan="4" string="Reply"
-                                            name="%(mail.action_email_compose_message_wizard)d"
-                                            context="{'mail.compose.message.mode':'reply'}"
-                                            icon="terp-mail-replied" type="action"/>
-                                        </group>
-
-                                </page>
-                                <page string="Attachments" attrs="{'invisible': [('email_from', '=', False)]}">
-                                    <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
-                                </page>
-                                </notebook>
-                        </form>
-                    </field>
-                    <button string="Add Internal Note"
-                        name="%(crm.action_crm_add_note)d"
-                        context="{'model': 'crm.lead' }"
-                        icon="terp-document-new" type="action" />
-                    <button string="Send New Email"
-                        name="%(mail.action_email_compose_message_wizard)d"
-                        icon="terp-mail-message-new" type="action"/>
                  </page>
                 </notebook>
             </form>
@@ -304,31 +276,46 @@
                 <field name="priority"/>
                 <field name="planned_revenue" sum="Expected Revenues"/>
                 <field name="user_email"/>
+                <field name="user_id"/>
+                <field name="partner_address_email"/>
                 <templates>
+                    <t t-name="lead_details">
+                        <ul class="oe_kanban_tooltip">
+                            <li t-if="record.phone.raw_value"><b>Phone:</b> <field name="phone"/></li>
+                            <li><b>Probability:</b> <field name="probability"/>%%</li>
+                            <li><b>Creation date:</b> <field name="create_date"/></li>
+                            <li t-if="record.date_deadline.raw_value"><b>Date Deadline:</b> <field name="date_deadline"/></li>
+                        </ul>
+                    </t>
                     <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
-                        <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="border">oe_kanban_color_red</t>
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
                             <div class="oe_kanban_box oe_kanban_color_border">
                                 <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                 <tr>
-                                    <td class="oe_kanban_title3" align="left" valign="middle">
+                                    <td align="left" valign="middle" width="16">
                                         <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
                                         <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                    </td>
+                                    <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
                                         <field name="partner_id"/>
+                                        <t t-if="record.planned_revenue.raw_value">
+                                            - <t t-esc="Math.round(record.planned_revenue.value)"/>
+                                            <field name="company_currency"/>
+                                        </t>
                                     </td>
-                                    <td class="oe_kanban_title2" align="right" valign="middle" t-if="record.planned_revenue.raw_value" nowrap="nowrap">
-                                        <t t-esc="Math.round(record.planned_revenue.value)"/> <field name="company_currency"/>
-                                    </td>
-                                    <td valign="top" width="22"><img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar"/></td>
+                                    <td valign="top" width="22"><img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/></td>
                                 </tr>
                                 </table>
 
                                 <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                    <div class="oe_kanban_right oe_kanban_small">
-                                        <field name="user_login"/>
-                                    </div>
                                     <div>
-                                        <b><field name="partner_address_name"/></b>
+                                        <b>
+                                            <a t-if="record.partner_address_email.raw_value" t-attf-href="mailto:#{record.partner_address_email.raw_value}">
+                                                <field name="partner_address_name"/>
+                                            </a>
+                                            <field t-if="!record.partner_address_email.raw_value" name="partner_address_name"/>
+                                        </b>
                                     </div>
                                     <div>
                                         <field name="name"/>
@@ -343,14 +330,15 @@
                                         <a string="Edit" icon="gtk-edit" type="edit"/>
                                         <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
-                                        <a string="Schedule/Log Call" name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action"/>
-                                        <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
+                                        <a string="Log Call" name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action"/>
                                         <a string="Schedule Meeting" name="action_makeMeeting" type="object" icon="stock_calendar"/>
+                                        <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
                                     </div>
                                     <div class="oe_kanban_right">
-                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="lead-stage-pending" />
-                                        <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="lead-stage-won" />
-                                        <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="lead-stage-lost" />
+                                        <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="kanban-stop" />
+                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="kanban-pause" />
+                                        <a name="case_open" string="Open" states="pending" type="object" icon="gtk-media-play" />
+                                        <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="kanban-apply" />
                                     </div>
                                     <br class="oe_kanban_clear"/>
                                 </div>
@@ -443,7 +431,7 @@
         <field name="name">Opportunities</field>
         <field name="model">crm.lead</field>
         <field name="type">form</field>
-        <field name="priority">10</field>
+        <field name="priority">20</field>
         <field name="arch" type="xml">
             <form string="Opportunities">
                 <group colspan="4" col="7">
@@ -462,7 +450,8 @@
                     <field name="user_id"/>
 
                     <button string="Schedule/Log Call"
-                    name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action"/>
+                        name="%(opportunity2phonecall_act)d" icon="terp-call-start"
+                        type="action"/>
 
                     <field name="planned_revenue"/>
                     <field name="probability"/>
@@ -561,7 +550,7 @@
                   <group colspan="4">
                       <field colspan="4" name="email_cc" widget="char" size="512"/>
                   </group>
-                   <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
+                   <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
                        <tree string="History">
                            <field name="display_text" string="History Information"/>
                            <field name="email_from" invisible="1"/>
@@ -571,34 +560,6 @@
                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
                                icon="terp-mail-replied" type="action" />
                        </tree>
-                       <form string="History">
-                           <group col="4" colspan="4">
-                               <group col="2" colspan="2" attrs="{'invisible': [('email_from', '=', False)]}">
-                                   <field name="email_from"/>
-                                   <field name="email_to" size="512"/>
-                               </group>
-                               <group col="2" colspan="2">
-                                   <field name="date"/>
-                                   <field name="email_cc" size="512" attrs="{'invisible': [('email_from', '=', False)]}"/>
-                               </group>
-                               <field name="subject" colspan="4" widget="char" attrs="{'invisible': [('email_from', '=', False)]}" size="512"/>
-                               <field name="display_text" colspan="4" attrs="{'invisible': [('email_from', '!=', False)]}"/>
-                           </group>
-                           <notebook colspan="4">
-                               <page string="Details" attrs="{'invisible': [('email_from', '=', False)]}">
-                                   <field name="body_text" colspan="4" nolabel="1"/>
-                                   <group attrs="{'invisible': [('email_from', '=', False)]}">
-                                       <button colspan="4" string="Reply"
-                                           name="%(mail.action_email_compose_message_wizard)d"
-                                           context="{'mail.compose.message.mode':'reply'}"
-                                           icon="terp-mail-replied" type="action"/>
-                                       </group>
-                                </page>
-                               <page string="Attachments" attrs="{'invisible': [('email_from', '=', False)]}">
-                                   <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
-                               </page>
-                               </notebook>
-                       </form>
                    </field>
                    <button string="Add Internal Note"
                        name="%(crm.action_crm_add_note)d"
@@ -688,7 +649,8 @@
                     name="pending"
                     domain="[('state','=','pending')]"/>
                 <separator orientation="vertical"/>
-                <field name="name" string="Opportunity / Customer" filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
+                <field name="name" string="Opportunity / Customer"
+                    filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                 <field name="user_id">
                     <filter icon="terp-personal-"
                         domain="[('user_id','=', False)]"

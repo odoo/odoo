@@ -6,7 +6,7 @@
         <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17"/>
 
         <menuitem name="Events Organisation" id="base.menu_event_main" parent="base.marketing_menu" />
-        <menuitem name="Events Organisation" id="base.menu_event_association" parent="base.menu_association" />
+        <menuitem name="Events" id="base.menu_event_association" parent="base.menu_association" />
 
     <!-- EVENTS  -->
 
@@ -42,7 +42,7 @@
         <menuitem name="Configuration" id="base.menu_marketing_config_association" parent="base.menu_association" sequence="30" groups="base.group_extended"/>
 
         <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root" groups="base.group_extended"/>
-        <menuitem name="Types of Events" id="menu_event_type_association" action="action_event_type" parent="base.menu_marketing_config_association" groups="base.group_extended"/>
+        <menuitem name="Events Type" id="menu_event_type_association" action="action_event_type" parent="base.menu_marketing_config_association" groups="base.group_extended"/>
 
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
@@ -388,7 +388,7 @@
                             <group colspan="4">
                                  <field colspan="4" name="email_cc" string="CC" widget="char" size="512"/>
                             </group>
-                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree">
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
                                     <field name="email_from" invisible="1"/>
@@ -398,32 +398,6 @@
                                         context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
                                         icon="terp-mail-replied" type="action" />
                                 </tree>
-                                <form string="History">
-                                    <group col="4" colspan="4">
-                                        <field name="email_from"/>
-                                        <field name="date"/>
-                                        <field name="email_to" widget="char" size="512"/>
-                                        <field name="email_cc" widget="char" size="512"/>
-                                        <field name="subject" colspan="4" widget="char" size="512"/>
-                                    </group>
-                                    <notebook colspan="4">
-                                        <page string="Details">
-                                            <group attrs="{'invisible': [('email_from', '=', False)]}">
-                                                <field name="body_text" colspan="4" nolabel="1" height="250"/>
-                                                <button colspan="4" string="Reply"
-                                                    name="%(mail.action_email_compose_message_wizard)d"
-                                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                                    icon="terp-mail-replied" type="action"/>
-                                            </group>
-                                            <group attrs="{'invisible': [('email_from', '!=', False)]}">
-                                                <field name="display_text" colspan="4" nolabel="1"  height="250"/>
-                                            </group>
-                                        </page>
-                                        <page string="Attachments">
-                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
-                                        </page>
-                                    </notebook>
-                                </form>
                             </field>
                             <button string="Add Internal Note"
                                 name="%(crm.action_crm_add_note)d"

@@ -2,7 +2,7 @@
 <data>
 
     <!--
-        Asset Category 
+        Asset Category
      -->
 
     <record model="ir.ui.view" id="view_account_asset_category_form">
@@ -32,11 +32,11 @@
                     <field name="prorata"/>
                     <field name="open_asset"/>
                 </group>
-        	<group col="2" colspan="2" groups="analytic.group_analytic_accounting">
-        	    <separator string="Analytic information" colspan="4"/>
-        	    <newline/>
-        	    <field name="account_analytic_id"/>
-        	</group>
+            <group col="2" colspan="2" groups="analytic.group_analytic_accounting">
+                <separator string="Analytic information" colspan="4"/>
+                <newline/>
+                <field name="account_analytic_id"/>
+            </group>
                 <separator string="Notes" colspan="4"/>
                 <field name="note" colspan="4" nolabel="1"/>
             </form>
@@ -51,9 +51,7 @@
             <tree string="Asset category">
                 <field name="name"/>
                 <field name="journal_id"/>
-                <field name="method_time"/>
                 <field name="method"/>
-                <field name="open_asset"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -89,14 +87,14 @@
                  <field name="salvage_value"/>
                  <field name="value_residual"/>
                  <field name="currency_id"/>
-                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                 <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
               </group>
               <notebook colspan="4">
                  <page string="General">
                     <separator string="Other Information" colspan="4"/>
-                    <field name="parent_id"/>
                     <field name="partner_id"/>
                     <field name="purchase_date"/>
+                    <field name="parent_id" groups="base.group_extended"/>
                     <newline/>
                     <group colspan="2" col="2">
                         <separator string="Depreciation Dates" colspan="2"/>
@@ -105,7 +103,7 @@
                         <field name="method_period"/>
                         <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
                         <newline/>
-                        <button name="%(action_asset_modify)d" states="open" string="Change Duration" type="action" icon="terp-stock_effects-object-colorize" colspan="2"/> 
+                        <button name="%(action_asset_modify)d" states="open" string="Change Duration" type="action" icon="terp-stock_effects-object-colorize" colspan="2"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Depreciation Method" colspan="2"/>
@@ -116,12 +114,13 @@
                     <newline/>
                     <separator string="" colspan="4"/>
                     <field name="state" readonly="1" colspan="2"/>
-                    <group colspan="2" col="2">
+                    <group colspan="2" col="4">
                        <button name="validate" states="draft" string="Confirm Asset" type="object" icon="terp-camera_test"/>
+                       <button name="set_to_draft" states="open" string="Set to Draft" type="object" icon="gtk-convert"/> 
                        <button name="set_to_close" states="open" string="Set to Close" type="object" icon="gtk-close"/>
                     </group>
                  </page>
-                 <page string="Depreciation board">
+                 <page string="Depreciation Board">
                     <field name="depreciation_line_ids" colspan="4" nolabel="1" mode="tree,graph">
                        <tree string="Depreciation Lines" colors="blue:(move_check == False);black:(move_check == True)">
                           <field name="depreciation_date"/>
@@ -211,9 +210,9 @@
             </search>
         </field>
     </record>
-    
+
     <!--
-        Asset History 
+        Asset History
      -->
 
     <record model="ir.ui.view" id="view_account_asset_history_form">
@@ -276,7 +275,7 @@
             </field>
         </field>
     </record>
-    
+
     <record id="view_account_move_line_filter_inherit" model="ir.ui.view">
         <field name="name">Journal Items (Search)</field>
         <field name="model">account.move.line</field>
@@ -290,8 +289,12 @@
     </record>
 
     <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance"/>
-    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_tree" action="action_account_asset_asset_tree"/>
-      <record model="ir.actions.act_window" id="action_account_asset_asset_form">
+    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_tree"
+        groups="base.group_extended"
+        sequence="100"
+        action="action_account_asset_asset_tree"/>
+
+    <record model="ir.actions.act_window" id="action_account_asset_asset_form">
         <field name="name">Assets</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">form</field>
@@ -300,7 +303,7 @@
     </record>
 
     <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form"/>
-    
+
     <act_window id="act_entries_open" name="Entries" res_model="account.move.line" src_model="account.asset.asset" context="{'search_default_asset_id': [active_id], 'default_asset_id': active_id}"/>
 
     <menuitem id="menu_finance_config_assets" name="Assets" parent="account.menu_finance_accounting"/>
@@ -312,19 +315,19 @@
     </record>
 
     <menuitem parent="menu_finance_config_assets" id="menu_action_account_asset_asset_list_normal" action="action_account_asset_asset_list_normal"/>
-    
+
     <record model="ir.actions.act_window" id="action_account_asset_asset_form_normal">
         <field name="name">Review Asset Categories</field>
         <field name="res_model">account.asset.category</field>
         <field name="view_type">form</field>
-        <field name="view_mode">form</field>
+        <field name="view_mode">tree,form</field>
     </record>
-    
+
     <record id="asset_category_form_view_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_account_asset_asset_form_normal"/>
         <field name="category_id" ref="account.category_accounting_configuration"/>
         <field name="sequence">3</field>
     </record>
-    
+
 </data>
 </openerp>

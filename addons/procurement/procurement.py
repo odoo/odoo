@@ -23,6 +23,7 @@ from osv import osv, fields
 from tools.translate import _
 import netsvc
 import time
+import decimal_precision as dp
 
 # Procurement
 # ------------------------------------------------------------------
@@ -62,7 +63,6 @@ mrp_property()
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
-
     _columns= {
         'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
     }
@@ -87,11 +87,11 @@ class procurement_order(osv.osv):
         'origin': fields.char('Source Document', size=64,
             help="Reference of the document that created this Procurement.\n"
             "This is automatically completed by OpenERP."),
-        'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
-        'date_planned': fields.datetime('Scheduled date', required=True),
+        'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True, select=True),
+        'date_planned': fields.datetime('Scheduled date', required=True, select=True),
         'date_close': fields.datetime('Date Closed'),
         'product_id': fields.many2one('product.product', 'Product', required=True, states={'draft':[('readonly',False)]}, readonly=True),
-        'product_qty': fields.float('Quantity', required=True, states={'draft':[('readonly',False)]}, readonly=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uom': fields.many2one('product.uom', 'Product UoM', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos_qty': fields.float('UoS Quantity', states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
@@ -153,11 +153,11 @@ class procurement_order(osv.osv):
             return {'value': v}
         return {}
 
-    def check_product(self, cr, uid, ids):
+    def check_product(self, cr, uid, ids, context=None):
         """ Checks product type.
         @return: True or False
         """
-        return all(procurement.product_id.type in ('product', 'consu') for procurement in self.browse(cr, uid, ids))
+        return all(proc.product_id.type in ('product', 'consu') for proc in self.browse(cr, uid, ids, context=context))
 
     def check_move_cancel(self, cr, uid, ids, context=None):
         """ Checks if move is cancelled or not.
@@ -173,9 +173,9 @@ class procurement_order(osv.osv):
         """ Checks if move is done or not.
         @return: True or False.
         """
-        if not context:
-            context = {}
-        return all(not procurement.move_id or procurement.move_id.state == 'done' for procurement in self.browse(cr, uid, ids, context=context))
+        return all(proc.product_id.type == 'service' or (proc.move_id and proc.move_id.state == 'done') \
+                    for proc in self.browse(cr, uid, ids, context=context))
+
     #
     # This method may be overrided by objects that override procurement.order
     # for computing their own purpose
@@ -257,26 +257,25 @@ class procurement_order(osv.osv):
 
     def check_produce(self, cr, uid, ids, context=None):
         """ Checks product type.
-        @return: True or Product Id.
+        @return: True or False
         """
-        res = True
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for procurement in self.browse(cr, uid, ids, context=context):
-            if procurement.product_id.product_tmpl_id.supply_method <> 'produce':
-                partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  procurement.product_id.seller_ids if partner_id])
-                if partner_list:
-                    partner = partner_list and partner_list[0] and partner_list[0][1] and partner_list[0][1].name or False
-                    if user.company_id and user.company_id.partner_id:
-                        if partner.id == user.company_id.partner_id.id:
-                            return True
+            product = procurement.product_id
+            #TOFIX: if product type is 'service' but supply_method is 'buy'.
+            if product.supply_method <> 'produce':
+                supplier = product.seller_id
+                if supplier and user.company_id and user.company_id.partner_id:
+                    if supplier.id == user.company_id.partner_id.id:
+                        continue
                 return False
-            if procurement.product_id.product_tmpl_id.type=='service':
-                res = res and self.check_produce_service(cr, uid, procurement, context)
+            if product.type=='service':
+                res = self.check_produce_service(cr, uid, procurement, context)
             else:
-                res = res and self.check_produce_product(cr, uid, procurement, context)
+                res = self.check_produce_product(cr, uid, procurement, context)
             if not res:
                 return False
-        return res
+        return True
 
     def check_buy(self, cr, uid, ids):
         """ Checks product type.
@@ -469,14 +468,6 @@ class procurement_order(osv.osv):
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
         return res
 
-    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
-        ''' Runs through scheduler.
-        @param use_new_cursor: False or the dbname
-        '''
-        self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, context=context)
-        self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
-                use_new_cursor=use_new_cursor, context=context)
-
 procurement_order()
 
 class StockPicking(osv.osv):
@@ -490,7 +481,7 @@ class StockPicking(osv.osv):
                 if move.state == 'done' and move.procurements:
                     for procurement in move.procurements:
                         wf_service.trg_validate(user, 'procurement.order',
-                                procurement.id, 'button_check', cursor)
+                            procurement.id, 'button_check', cursor)
         return res
 
 StockPicking()

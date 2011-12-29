@@ -58,6 +58,19 @@
         <field name="arch" type="xml">
             <search string="Invoices Analysis">
               <group>
+                    <filter icon="terp-go-year" string="Year" 
+                            name="year"
+                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
+                            help="year"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-go-month" string="Month"
+                            name="month"
+                            domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                            help="current month"/>
+                    <filter icon="terp-go-month" string="Month-1"
+                            domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+                            help="last month"/>
+                    <separator orientation="vertical"/>
                     <filter string="Draft"
                            icon="terp-document-new"
                            domain="[('state','=','draft')]"
@@ -91,20 +104,7 @@
                    <separator orientation="vertical"/>
                    <field name="partner_id"/>
                    <field name="user_id" />
-                   <field name="date" string="Invoice Date"/>
                    <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
-                </group>
-                <newline/>
-                <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                    <field name="product_id"/>
-                    <separator orientation="vertical"/>
-                    <field name="journal_id" widget="selection"/>
-                    <field name="account_id"/>
-                    <field name="account_line_id"/>
-                    <separator orientation="vertical"/>
-                    <field name="date_due"/>
-                    <separator orientation="vertical" groups="base.group_multi_company"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
@@ -121,7 +121,7 @@
                     <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_line_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Due Date" icon="terp-go-today" context="{'group_by':'date_due'}"/>
-                    <filter string="Period" icon="terp-go-month" context="{'group_by':'period_id'}"/>
+                    <filter string="Period" icon="terp-go-month" context="{'group_by':'period_id'}" name="period"/>
                     <separator orientation="vertical" groups="base.group_multi_company"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
@@ -138,7 +138,7 @@
         <field name="res_model">account.invoice.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_current':1, 'search_default_category_product':1, 'search_default_customer':1, 'search_default_date': time.strftime('%Y-01-01'), 'group_by':[], 'group_by_no_leaf':1,}</field>
+        <field name="context">{'search_default_period':1,'search_default_current':1, 'search_default_year': 1, 'search_default_category_product':1, 'search_default_customer':1, 'search_default_date': time.strftime('%Y-01-01'), 'group_by':[], 'group_by_no_leaf':1,}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
         <field name="help">From this report, you can have an overview of the amount invoiced to your customer as well as payment delays. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
 

@@ -1,0 +1,6 @@
+-
+  I check the question type of the survey "Initial Partner Feedback".
+-
+  !python {model: survey.question}: |
+    sur_question = self.on_change_type(cr, uid, [ref("survey_Initial_partner_feedback")], 'multiple_textboxes_diff_type')
+    assert sur_question

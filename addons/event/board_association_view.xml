@@ -40,24 +40,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Association Dashboard">
-                    <hpaned position="100">
-                        <child1>
+                    <board style="2-1">
+                        <column>
                             <action string="Next Events"
                                 name="%(act_event_view)d"
-                                domain="[('state','not in',('cancel','done'))]"
-                                colspan="4"/>
-                            <action
-                                string="Unconfirmed Registrations"
+                                domain="[('state','not in',('cancel','done'))]"/>
+                            <action string="Unconfirmed Registrations"
                                 name="%(event.act_event_list_register_event)d"
-                                colspan="4"
                                 domain="[('state','=','draft')]"/>
-                        </child1>
-                        <child2>
+                        </column>
+                        <column>
                             <action string="Events Filling Status"
-                                name="%(act_event_reg)d"
-                                colspan="4"/>
-                        </child2>
-                    </hpaned>
+                                name="%(act_event_reg)d"/>
+                        </column>
+                    </board>
                 </form>
             </field>
         </record>
@@ -69,9 +65,8 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_associations_manager_form"/>
         </record>
-        <menuitem id="board_associations" name="Dashboard" parent="base.menu_report_association" sequence="0"/>
         <menuitem
-            name="Events" parent="board_associations"
+            name="Event Dashboard" parent="base.menu_report_association"
             action="open_board_associations_manager"
             sequence="1"
             id="menu_board_associations_manager"
