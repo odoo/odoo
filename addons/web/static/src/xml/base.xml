@@ -56,7 +56,7 @@
     <tr>
         <td colspan="2">
             <div id="oe_footer" class="oe_footer">
-                <p class="oe_footer_powered">Powered by <a href="http://www.openerp.com">openerp.com</a>.</p>
+                <p class="oe_footer_powered">Powered by <a href="http://www.openerp.com/">OpenERP</a></p>
             </div>
         </td>
     </tr>
@@ -413,40 +413,43 @@
 <t t-name="ViewManager">
     <table class="view-manager-main-table" cellpadding="0" cellspacing="0">
     <tbody>
-    <tr>
-        <td class="view-manager-main-content">
-            <div class="oe-view-manager-header">
-                <h2 class="oe_view_title" t-if="self.flags.display_title !== false">
-                    <span class="oe_view_title_text"><t t-esc="self.display_title()"/></span>
-                </h2>
-                <div class="oe_vm_switch">
-                    <t t-if="views.length != 1" t-foreach="views" t-as="view">
+        <tr>
+            <td rowspan="2" class="view-manager-main-sidebar" height="100%">
+                    <t t-foreach="views" t-as="view">
+                    <div t-attf-id="#{prefix}_sidebar_#{view.view_type}" class="sidebar-main-div closed-sidebar" style="display: none"/>
+                </t>
+            </td>
+        </tr>
+        <tr>
+            <td class="view-manager-main-content">
+                <div class="oe-view-manager-header">
+                    <h2 class="oe_view_title" t-if="self.flags.display_title !== false">
+                        <span class="oe_view_title_text"><t t-esc="self.display_title()"/></span>
+                    </h2>
+                    <div class="oe_vm_switch">
+                        <t t-if="views.length != 1" t-foreach="views" t-as="view">
 
-                        <button type="button" t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="view.view_type">
-                            <span><t t-esc="view.label || view.view_type"/></span>
-                        </button>
-                    </t>
+                            <button type="button" t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="view.view_type">
+                                <span><t t-esc="view.label || view.view_type"/></span>
+                            </button>
+                        </t>
+                    </div>
                 </div>
-            </div>
-            <div t-attf-id="#{prefix}_search" t-opentag="true"/>
-            <t t-foreach="views" t-as="view">
-                <div t-attf-id="#{prefix}_view_#{view.view_type}"/>
-            </t>
-        </td>
-        <td class="view-manager-main-sidebar" height="100%">
-            <t t-foreach="views" t-as="view">
-                <div t-attf-id="#{prefix}_sidebar_#{view.view_type}" class="sidebar-main-div closed-sidebar" style="display: none"/>
-            </t>
-        </td>
-    </tr>
+                <div t-attf-id="#{prefix}_search" t-opentag="true"/>
+                <t t-foreach="views" t-as="view">
+                    <div t-attf-id="#{prefix}_view_#{view.view_type}"/>
+                </t>
+            </td>
+            <td>
+            </td>       
+        </tr>
     </tbody>
     </table>
 </t>
 
 <t t-extend="ViewManager" t-name="ViewManagerAction">
-    <t t-jquery=".view-manager-main-table tbody" t-operation="prepend">
-        <tr>
-            <td class="oe_view_manager_menu_tips" colspan="2">
+    <t t-jquery=".view-manager-main-sidebar" t-operation="before">
+            <td class="oe_view_manager_menu_tips">
                 <blockquote t-if="self.action.help and !self.flags.low_profile
                                  and !(self.action.id in self.session.hidden_menutips)">
                     <p><t t-esc="self.action.help"/></p>
@@ -456,7 +459,6 @@
                     </div>
                 </blockquote>
             </td>
-        </tr>
     </t>
     <t t-jquery="h2.oe_view_title" t-operation="prepend">
         <a t-if="self.flags.display_title !== false" class="oe-shortcut-toggle" title="Add / Remove Shortcut..."

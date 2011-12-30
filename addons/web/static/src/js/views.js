@@ -529,10 +529,11 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             $res_logs.removeClass('oe-folded');
             return false;
         }).delegate('a.oe-remove-everything', 'click', function () {
-            $res_logs.removeClass('oe-has-more')
-                     .find('ul').empty();
+            $res_logs.removeClass('oe-has-more').find('ul').empty();
+            $res_logs.css('display','none');
             return false;
         });
+        $res_logs.css('display','none');
 
         return manager_ready;
     },
@@ -586,9 +587,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         return $.when(this._super(view_type, no_store)).then(function () {
             self.shortcut_check(self.views[view_type]);
 
-            self.$element.find('.oe-view-manager-logs:first')
-                .addClass('oe-folded').removeClass('oe-has-more')
-                .find('ul').empty();
+            self.$element.find('.oe-view-manager-logs:first').addClass('oe-folded').removeClass('oe-has-more').css('display','none').find('ul').empty();
 
             var controller = self.views[self.active_view].controller,
                 fvg = controller.fields_view,
@@ -682,11 +681,10 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
      * @param {Array<Object>} log_records
      */
     do_display_log: function (log_records) {
-        var self = this,
-            cutoff = 3,
-            $logs = this.$element.find('.oe-view-manager-logs:first')
-                    .addClass('oe-folded'),
-            $logs_list = $logs.find('ul').empty();
+        var self = this;
+        var cutoff = 3;
+        var $logs = this.$element.find('.oe-view-manager-logs:first').addClass('oe-folded').css('display', 'block');
+        var $logs_list = $logs.find('ul').empty();
         $logs.toggleClass('oe-has-more', log_records.length > cutoff);
         _(log_records.reverse()).each(function (record) {
             $(_.str.sprintf('<li><a href="#">%s</a></li>', record.name))
