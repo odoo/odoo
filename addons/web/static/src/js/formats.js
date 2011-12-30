@@ -125,6 +125,9 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             return value.format(l10n.time_format);
         case 'selection':
             // Each choice is [value, label]
+            if(_.isArray(value)) {
+                 value = value[0]
+            }
             var result = _(descriptor.selection).detect(function (choice) {
                 return choice[0] === value;
             });
