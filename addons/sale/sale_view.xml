@@ -152,7 +152,7 @@
                                             <field colspan="5" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <group colspan="5" col="5" groups="base.group_extended">
                                                 <separator colspan="5" string="States"/>
-                                                <field name="state"/>
+                                                <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                                                 <field name="invoiced"/>
                                                 <group attrs="{'invisible':[('invoiced','=',True)]}">
                                                     <button colspan="1" name="%(action_view_sale_order_line_make_invoice)d" states="confirmed" string="Make Invoices" type="action" icon="terp-document-new"/>
@@ -390,7 +390,7 @@
                     <separator colspan="4" string="Notes"/>
                     <field colspan="4" name="notes" nolabel="1"/>
                     <separator colspan="4"/>
-                    <field name="state"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     <group col="3" colspan="2">
                         <button name="button_cancel" string="Cancel" type="object" icon="gtk-cancel" states="confirmed,exception"/>
                         <button colspan="1" name="%(action_view_sale_order_line_make_invoice)d" string="Create Invoice" type="action" states="done" icon="gtk-go-forward" attrs="{'invisible': [('invoiced', '=', 1)]}"/>
