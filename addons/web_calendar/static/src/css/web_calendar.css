@@ -1,5 +1,5 @@
 #openerp_scheduler {
-    background-color:white;
+    background-color:#eee;
 }
 .openerp .dhx_mini_calendar {
     -moz-box-shadow: none;
@@ -39,112 +39,84 @@
     font-weight:bold;
     float:left;
     font-size:1em;
+    color:#444;
     margin:2px 0px 0px 10px;
 }
 
-.openerp .dhx_cal_button .dhx_left_bg{width:1px;overflow:hidden;height:17px;z-index:20;top:0;}
+.openerp .dhx_cal_button .dhx_left_bg{width:1px;overflow:hidden;height:1px;z-index:20;top:0;}
 
 .openerp .dhx_cal_today_button, .openerp .dhx_cal_prev_button, .openerp .dhx_cal_next_button {
-    color:white;
-    height:17px;
-    line-height:17px;
-    font-weight:bold;
-    cursor:pointer;
+    display: inline-block;
+    vertical-align:0px;
+    float: left;
+    height:14px;
+    line-height:14px;
     font-size:90%;
-    text-decoration:none;
-    float:left;
+    border: 1px solid #ababab;
+    color: #404040;
+    padding: 3px 10px;
     margin:0px 3px;
-    padding:2px 2px;
-    border:1px solid black;
-    border-radius: 3px;
+    text-align: center;
+    cursor:pointer;
+    -o-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -webkit-background-size: auto auto !important;
+    background-size: 100% 100%;
+    background: #d8d8d8 none;
+    background: none, -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
+    background: none, -webkit-linear-gradient(#efefef, #d8d8d8);
+    background: none, -moz-linear-gradient(#efefef, #d8d8d8);
+    background: none, -o-linear-gradient(top, #efefef, #d8d8d8);
+    background: none, -khtml-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    vertical-align:0px;
+    -o-border-radius: 3px;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    -webkit-font-smoothing: antialiased;
+    outline: none;
+    font-weight:normal;
 }
-
-.openerp .dhx_cal_today_button {
-    background: #ccc; /* Old browsers */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#c9c9c9', endColorstr='#999999'); /* IE6-9 */
-    background: -webkit-gradient(linear, left top, left bottom, from(#c9c9c9), to(#999999)); /* Chrome,Safari4+ */
-    background: -moz-linear-gradient(top,  #c9c9c9,  #999999); /* FF3.6+ */
-    background: -webkit-linear-gradient(top, #c9c9c9 0%,#999999 60%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #c9c9c9 0%,#999999 60%); /* Opera11.10+ */
-    background: -ms-linear-gradient(top, #c9c9c9 0%,#999999 60%); /* IE10+ */
-    background: linear-gradient(top, #c9c9c9 0%,#999999 60%); /* W3C */
-    padding-left:5px;
-    padding-right:5px;
+.openerp .dhx_cal_prev_button {
+    background: url("/web_calendar/static/src/img/minical_left.png") no-repeat 8px 7px, -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
+    background: url("/web_calendar/static/src/img/minical_left.png") no-repeat 8px 7px, -webkit-linear-gradient(#efefef, #d8d8d8);
+    background: url("/web_calendar/static/src/img/minical_left.png") no-repeat 8px 7px, -moz-linear-gradient(#efefef, #d8d8d8);
+    background: url("/web_calendar/static/src/img/minical_left.png") no-repeat 8px 7px, -o-linear-gradient(top, #efefef, #d8d8d8);
+    background: url("/web_calendar/static/src/img/minical_left.png") no-repeat 8px 7px, -khtml-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
 }
-
-.openerp .dhx_cal_prev_button{
-    background: #bbb;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#c9c9c9', endColorstr='#999999'); 
-    background: url("/web_calendar/static/src/img/cal_left.png") 5px 3px, -webkit-gradient(linear, left top, left bottom, from(#c9c9c9), to(#999999)); 
-    background: url("/web_calendar/static/src/img/cal_left.png") 5px 3px, -moz-linear-gradient(top,  #c9c9c9,  #999999);
-    background: url("/web_calendar/static/src/img/cal_left.png") 5px 3px, -webkit-linear-gradient(top, #c9c9c9 0%,#999999 60%); 
-    background: url("/web_calendar/static/src/img/cal_left.png") 5px 3px, -o-linear-gradient(top, #c9c9c9 0%,#999999 60%); 
-    background: url("/web_calendar/static/src/img/cal_left.png") 5px 3px, -ms-linear-gradient(top, #c9c9c9 0%,#999999 60%); 
-    background: url("/web_calendar/static/src/img/cal_left.png") 5px 3px, linear-gradient(top, #c9c9c9 0%,#999999 60%); 
-    background-repeat:no-repeat;
-    width:20px;
-}
-
 .openerp .dhx_cal_next_button {
-    background: #ccc; /* Old browsers */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#888', endColorstr='#888'); /* IE6-9 */
-    background: url("/web_calendar/src/img/cal_right.png") 5px 3px, -webkit-gradient(linear, left top, left bottom, from(#c9c9c9), to(#999999)); /* Chrome,Safari4+ */
-    background: url("/web_calendar/static/src/img/cal_right.png") 5px 3px, -moz-linear-gradient(top,  #c9c9c9,  #999999); /* FF3.6+ */
-    background: url("/web_calendar/static/src/img/cal_right.png") 5px 3px, -webkit-linear-gradient(top, #c9c9c9 0%,#999999 60%); /* Chrome10+,Safari5.1+ */
-    background: url("/web_calendar/static/src/img/cal_right.png") 5px 3px, -o-linear-gradient(top, #c9c9c9 0%,#999999 60%); /* Opera11.10+ */
-    background: url("/web_calendar/static/src/img/cal_right.png") 5px 3px, -ms-linear-gradient(top, #c9c9c9 0%,#999999 60%); /* IE10+ */
-    background: url("/web_calendar/static/src/img/cal_right.png") 5px 3px, linear-gradient(top, #c9c9c9 0%,#999999 60%); /* W3C */
-    background-repeat:no-repeat;
-    width:20px;
-} 
-
-.openerp .dhx_cal_prev_button:hover, .openerp .dhx_cal_prev_button:active {
-    background: #bbb;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#888', endColorstr='#888'); 
-    background: url("/web_calendar/static/src/img/cal_left.png") 5px 3px, -webkit-gradient(linear, left top, left bottom, from(#888), to(#888)); 
-    background: url("/web_calendar/static/src/img/cal_left.png") 5px 3px, -moz-linear-gradient(top,  #888,  #888);
-    background: url("/web_calendar/static/src/img/cal_left.png") 5px 3px, -webkit-linear-gradient(top, #888 0%,#888 60%); 
-    background: url("/web_calendar/static/src/img/cal_left.png") 5px 3px, -o-linear-gradient(top, #888 0%,#888 60%); 
-    background: url("/web_calendar/static/src/img/cal_left.png") 5px 3px, -ms-linear-gradient(top, #888 0%,#888 60%); 
-    background: url("/web_calendar/static/src/img/cal_left.png") 5px 3px, linear-gradient(top, #888 0%,#888 60%); 
-    background-repeat:no-repeat;
-}
-
-.openerp .dhx_cal_next_button:hover, .openerp .dhx_cal_next_button:active {
-    background: #bbb;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#888', endColorstr='#888'); 
-    background:-webkit-gradient(linear, left top, left bottom, from(#888), to(#888)); 
-    background: url("/web_calendar/static/src/img/cal_right.png") 5px 3px, -moz-linear-gradient(top,  #888,  #888);
-    background: url("/web_calendar/static/src/img/cal_right.png") 5px 3px, -webkit-linear-gradient(top, #888 0%,#888 60%); 
-    background: url("/web_calendar/static/src/img/cal_right.png") 5px 3px, -o-linear-gradient(top, #888 0%,#888 60%); 
-    background: url("/web_calendar/static/src/img/cal_right.png") 5px 3px, -ms-linear-gradient(top, #888 0%,#888 60%); 
-    background: url("/web_calendar/static/src/img/cal_right.png") 5px 3px, linear-gradient(top, #888 0%,#888 60%); 
-    background-repeat:no-repeat;
-}
-
-.openerp .dhx_cal_today_button:hover, .openerp .dhx_cal_today_button:active { 
-    background: #bbb;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#bbb', endColorstr='#bbb'); 
-    background: -webkit-gradient(linear, left top, left bottom, from(#888), to(#888)); 
-    background: -moz-linear-gradient(top,  #888,  #888);
-    background: -webkit-linear-gradient(top, #888 0%,#888 60%); 
-    background: -o-linear-gradient(top, #888 0%,#888 60%); 
-    background: -ms-linear-gradient(top, #888 0%,#888 60%); 
-    background: linear-gradient(top, #888 0%,#888 60%); 
-    background-repeat:no-repeat;
-}
-
-.openerp .dhx_mini_calendar .dhx_cal_prev_button, .openerp .dhx_mini_calendar .dhx_cal_next_button, .openerp .dhx_mini_calendar .dhx_cal_today_button {
-    background:none;
-    border:0px;
+    background: url("/web_calendar/static/src/img/minical_right.png") no-repeat 8px 7px, -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
+    background: url("/web_calendar/static/src/img/minical_right.png") no-repeat 8px 7px, -webkit-linear-gradient(#efefef, #d8d8d8);
+    background: url("/web_calendar/static/src/img/minical_right.png") no-repeat 8px 7px, -moz-linear-gradient(#efefef, #d8d8d8);
+    background: url("/web_calendar/static/src/img/minical_right.png") no-repeat 8px 7px, -o-linear-gradient(top, #efefef, #d8d8d8);
+    background: url("/web_calendar/static/src/img/minical_right.png") no-repeat 8px 7px, -khtml-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
 }
 .openerp .dhx_mini_calendar .dhx_cal_prev_button, .openerp .dhx_mini_calendar .dhx_cal_next_button {
     width:16px;
     height:18px;
+    margin-bottom:1px;
 }
+.openerp .dhx_mini_calendar .dhx_cal_next_button {
+    padding:3px 1px 3px 0px;
+    float:right;
+}
+.openerp .dhx_cal_prev_button:hover, .openerp .dhx_cal_prev_button:active, .openerp .dhx_cal_today_button:hover, .openerp .dhx_cal_today_button:active, .openerp .dhx_cal_next_button:hover, .openerp .dhx_cal_next_button:active {
+
+}
+
+.openerp .dhx_mini_calendar .dhx_cal_prev_button, .openerp .dhx_mini_calendar .dhx_cal_next_button, .openerp .dhx_mini_calendar .dhx_cal_today_button {
+    background:none;
+    border:none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -o-box-shadow: none;
+}
+
 .openerp .dhx_mini_calendar .dhx_cal_prev_button {
     background:url("/web_calendar/static/src/img/minical_left.png") no-repeat 5px 6px;
 }
@@ -164,7 +136,7 @@
 }
 .openerp .dhx_mini_calendar .dhx_scale_bar {
     border-width:0px;
-    padding:2px 0px;
+    padding:1px 0 2px 0;
 }
 
 .openerp .dhx_cal_tab {
@@ -224,8 +196,14 @@
     border-top:1px dotted #8894A3;
     border-right:1px dotted #8894A3;z-index:2;*/
     overflow:hidden;
-    background-color: white; /*#F4F4F4;*/
+    background-color: white;
     text-shadow: 0 1px 0 white;
+    -webkit-border-top-left-radius:4px;
+    -webkit-border-top-right-radius:4px;
+    -moz-border-radius-topleft:4px;
+    -moz-border-radius-topright:4px;
+    border-top-left-radius:4px;
+    border-top-right-radius:4px;
 }
 
 .openerp .dhx_cal_data{
@@ -234,6 +212,7 @@
     width:600px;
     overflow-y:auto;
     overflow-x:hidden;
+    background-color:white;
 }
 .openerp .oe_cal_month .dhx_cal_data {
     overflow-y: hidden;
@@ -248,9 +227,7 @@
     position:absolute;
     text-align:center;
     text-shadow: 0 1px 0 white;
-    background-color:#C2D5FC;
-    padding-top:3px;
-    border-left:1px dotted #586A7E;
+    padding-top:2px;
 }
 
 .openerp .dhx_scale_holder{
@@ -284,8 +261,6 @@
     text-align:center;
     border-left:1px solid #E9E9E9;
     height:18px;
-    padding-right:4px;
-    padding-top:4px;
     text-align:right;
     font-size:0.9em;
 }
@@ -299,10 +274,12 @@
 
 
 .openerp .dhx_now .openerp .dhx_month_body{
-    background-color:#cccccc;
+    background-color:white;
 }
 
-.openerp .dhx_after .dhx_month_body,.openerp .dhx_before  .dhx_month_body{background-color:#ECECEC;}
+.openerp .dhx_after .dhx_month_body,.openerp .dhx_before  .dhx_month_body{
+background-color:#ECECEC;
+}
 
 .openerp .dhx_after .dhx_month_head,.openerp .dhx_before .dhx_month_head{background-color:#F4F4F4;color:#94A6BB;}
 
@@ -315,13 +292,17 @@
 .openerp .dhx_loading{position:absolute;width:128px;height:15px;background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/loading.gif);z-index:9999;}
 
 .openerp .dhx_multi_day_icon, .openerp .dhx_multi_day{
-    background-color:#ddd;
+    background-color:#A8B4C3;
     background-repeat:no-repeat;
-    /*border-right:1px dotted #8894A3;*/
+    -webkit-border-top-left-radius:4px;
+    -webkit-border-top-right-radius:4px;
+    -moz-border-radius-topleft:4px;
+    -moz-border-radius-topright:4px;
+    border-top-left-radius:4px;
+    border-top-right-radius:4px;
 }
 .openerp .dhx_multi_day{
     position:absolute;
-/*border-top:1px dotted #8894A3;*/
 }
 
 .openerp .dhx_multi_day_icon{
@@ -335,7 +316,6 @@
 .openerp .dhx_multi_day_icon, .openerp .dhx_multi_day_icon_small{
     background-position:center center; 
     background-repeat:no-repeat;
-    border:1px dotted #8894A3;
     border-left:0px;
 }
 
@@ -523,8 +503,6 @@ The old one
 .openerp .dhx_cal_light_wide .dhx_repeat_right{margin-right:55px;}
 .openerp .dhx_cal_light_wide .dhx_repeat_divider{border-color:#FFE763;}
 
-.openerp .dhx_scale_bar_header{position:absolute;border-bottom:1px dotted #8894A3;width:100%;}
-
 .openerp .dhx_expand_icon{position:absolute;top:0;right:0;background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/colapce-expand-icon.gif);width:18px;height:18px;cursor:pointer;background-position:0 18px;z-index:16;}
 .openerp .dhx_agenda_area{width:100%;height:100%;overflow-y:auto;background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/databg.png);}
 .openerp .dhx_agenda_line{height:21px;clear:both;overflow:hidden;}
@@ -544,8 +522,6 @@ The old one
     border-top:1px solid #ccc;
     border-bottom:1px solid #ccc;
 }
-
-.openerp .dhx_scale_bar_last{border-right:1px dotted #586A7E;}
 
 .openerp .dhx_year_month{
     height:18px;
@@ -661,13 +637,6 @@ font-size:11px;line-height:24px;}
 
 .openerp .dhx_cal_navline{background-color:none;height:23px!important;}
 
-
-
-
-.openerp .dhx_scale_bar{/*background-image:url(imgs/top-separator.gif);background-position:0 0;background-repeat:no-repeat; */background-color:transparent;padding-top:3px;border-left:0;}
-
-.openerp .dhx_multi_day{background-image:url(/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/multi-days-bg.png);background-repeat:repeat;}
-
 .openerp .dhx_month_head{background-color:#F4F4F4;}
 
 .openerp .dhx_after .dhx_month_head,.openerp .dhx_before .dhx_month_head{background-color:#F4F4F4;}
@@ -728,7 +697,6 @@ font-size:11px;line-height:24px;}
 .openerp .dhx_form_repeat{background:white;}
 .openerp .dhx_repeat_divider{border-left:1px solid #A4BED4;}
 .openerp .dhx_cal_header .dhx_second_cal_header{background-image:url("/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/second-top-days-bg.png");padding-right:20px;}
-.openerp .dhx_scale_bar{padding-top:4px;}
 
 .openerp .dhx_second_scale_bar{border-bottom:0;padding-top:4px;}
 .openerp .dhx_cal_light_wide .dhx_cal_lsection .dhx_fullday,.openerp .dhx_cal_lsection .dhx_fullday{color:#000;font-size:14px;}
@@ -890,9 +858,6 @@ div.openerp .dhx_repeat_divider {
 /*=================================================================*/
 
 
-.openerp .dhx_cal_navline{
-    background-color:none;
-}
 
 .openerp .dhx_in_move{
     background-image:url("/web_calendar/static/lib/dhtmlxScheduler/codebase/imgs/move.png");
