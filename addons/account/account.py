@@ -2977,7 +2977,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                res['value'].update({'code_digits': data.code_digits})
         return res
 
-
     def default_get(self, cr, uid, fields, context=None):
         res = super(wizard_multi_charts_accounts, self).default_get(cr, uid, fields, context=context) 
         tax_templ_obj = self.pool.get('account.tax.template')
@@ -3054,14 +3053,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     def _prepare_all_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
         def _get_analytic_journal(journal_type):
             # Get the analytic journal
-            analytic_journal_ids = []
+            data = False
             if journal_type in ('sale', 'sale_refund'):
-                analytical_journal_ids = analytic_journal_obj.search(cr, uid, [('type','=','sale')], context=context)
+                data = obj_data.get_object_reference(cr, uid, 'account', 'analytic_journal_sale') 
             elif journal_type in ('purchase', 'purchase_refund'):
-                analytical_journal_ids = analytic_journal_obj.search(cr, uid, [('type','=','purchase')], context=context)
+                pass
             elif journal_type == 'general':
-                analytical_journal_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'situation')], context=context)
-            return analytic_journal_ids and analytic_journal_ids[0] or False
+                pass
+            return data and data[1] or False
 
         def _get_default_account(journal_type, type='debit'):
             # Get the default accounts
@@ -3121,7 +3120,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'default_credit_account_id': _get_default_account(journal_type, 'credit'),
                 'default_debit_account_id': _get_default_account(journal_type, 'debit'),
             }
-            print 'VALS', vals, journal_type
             journal_data.append(vals)
         return journal_data
 
