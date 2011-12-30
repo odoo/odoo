@@ -14,7 +14,6 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
 
 .openerp .view-manager-main-content {
     width: 100%;
-    height: 100%;
     padding: 0 8px 8px 8px;
 }
 
@@ -745,14 +744,11 @@ label.error {
 .openerp .oe_search-view-filters-management, .openerp .oe_search-view-custom-filter-btn {
     float:right;
 }
-.openerp .searchview_extended_add_proposition {
-    text-decoration: none;
-}
+
 .openerp .searchview_extended_add_proposition span {
     font-size: 0.9em;
     background: url(/web/static/src/img/icons/gtk-add.png) repeat-y;
     padding-left: 18px;
-    color:#9A0404;
 }
 
 .openerp .searchview_extended_delete_group {
@@ -923,9 +919,6 @@ label.error {
    font-weight: bold;
    vertical-align: middle;
 }
-.openerp tfoot .oe-list-pager {
-    padding:0 6px 8px 0;
-}
 .openerp .oe_button.oe_button_pager,
 .openerp .oe_button.oe_button_pager:disabled {
     padding: 0 3px 0 3px;
@@ -1093,7 +1086,6 @@ label.error {
 }
 .openerp .oe_form_buttons, .openerp .oe_list_buttons {
     float: left;
-    margin-bottom:5px;
 }
 .openerp .oe_form_pager, .openerp .oe_list_pager {
     float: right;
@@ -1223,20 +1215,7 @@ label.error {
     min-height:100px;
 }
 /* Inputs */
-.openerp tr[id^="oe-editable-row"] input { /* editable list input */
-    font-size: 110%;
-    height: 22px;
-}
-.openerp tr[id^="oe-editable-row"] select {
-    margin-bottom:1px;
-}
-.openerp .searchview_extended_prop_value input.field_char {
-    height: 22px;
-    margin-bottom: 6px;
-    padding-top: 1px;
-}
-
-.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms textarea, .openerp tr[id^="oe-editable-row"] input, .searchview_extended_prop_value input.field_char {
+.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms textarea {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -1431,10 +1410,6 @@ label.error {
     background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
 }
 
-.openerp tfoot.ui-widget-header .oe-list-footer { /* adding some space to the footer */
-    padding: 4px 0 5px 0;
-}
-
 /* Sidebar */
 .openerp .view-manager-main-table {
     margin: 0;
@@ -1493,16 +1468,13 @@ label.error {
     background: #fff;
     margin: 0.25em 0;
     font-size: 85%;
-    color: #9A0404;
+    color: #4C4C4C;
     position: relative;
     overflow: hidden;
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
 }
 .openerp .oe-view-manager-logs ul {
     margin: 0;
-    padding: 5px 10px;
+    padding: 0 10px;
     list-style: none;
 }
 .openerp .oe-view-manager-logs li:before {
@@ -1727,16 +1699,10 @@ label.error {
     margin-bottom: -4px;
     cursor: pointer;
 }
-.openerp .oe-m2o input, .openerp tr[id^="oe-editable-row"] input.field_many2one  {
+.openerp .oe-m2o input  {
     border-right: none;
     margin-right: 0px !important;
     padding-bottom: 2px !important;
-}
-.openerp tr[id^="oe-editable-row"] input.field_many2one  {
-    padding-top: 1px;
-}
-.openerp tr[id^="oe-editable-row"] input.field_many2one, .openerp tr[id^="oe-editable-row"] button {
-    margin-top: 2px;
 }
 .openerp .oe-m2o-disabled-cm {
     color: grey;
