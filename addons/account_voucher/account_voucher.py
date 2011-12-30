@@ -1288,7 +1288,7 @@ class account_voucher_line(osv.osv):
         'account_id':fields.many2one('account.account','Account', required=True),
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
         'untax_amount':fields.float('Untax Amount'),
-        'amount':fields.float('Allocation', digits_compute=dp.get_precision('Account')),
+        'amount':fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'reconcile': fields.boolean('Full Reconcile'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Dr/Cr'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
