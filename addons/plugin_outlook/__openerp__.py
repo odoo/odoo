@@ -18,7 +18,30 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import installer
 
 
+{
+    'name' : 'Outlook Plug-In',
+    'version' : '1.0',
+    'author' : 'OpenERP SA',
+    'website' : 'http://www.openerp.com/',
+    'depends' : ['base', 'mail','plugin'],
+    'category' : 'Customer Relationship Management',
+    'description': '''
+This module provides the Outlook Plug-in.
+=========================================
+Outlook plug-in allows you to select an object that you would like to add
+to your email and its attachments from MS Outlook. You can select a partner, a task,
+a project, an analytical account, or any other object and archive selected
+mail into mail.message with attachments.
+      ''',
+    'init_xml' : [],
+    'demo_xml' : [],
+    'update_xml' : ['plugin_outlook.xml'],
+    'active': False,
+    'installable': True,
+    'certificate' : '001278773815818292125',
+    'images': ['images/config_outlook.jpeg','images/outlook_config_openerp.jpeg','images/outlook_push.jpeg'],
+
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
