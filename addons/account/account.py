@@ -3208,6 +3208,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'default_credit_account_id': _get_default_account(journal_type, 'credit'),
                 'default_debit_account_id': _get_default_account(journal_type, 'debit'),
             }
+            print 'VALS', vals, journal_type
             journal_data.append(vals)
         return journal_data
 
