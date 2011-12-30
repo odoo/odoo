@@ -737,7 +737,7 @@ session.web.Sidebar = session.web.Widget.extend({
                     label: _t("Edit Workflow"),
                     callback: view.on_sidebar_edit_workflow,
                     title: _t("Manage views of the current object"),
-                    classname: 'oe_hide oe_sidebar_edit_workflow'
+                    classname: 'oe_sidebar_edit_workflow'
                 }, {
                     label: _t("Customize Object"),
                     callback: view.on_sidebar_customize_object,
@@ -1140,7 +1140,14 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         }
     },
     on_sidebar_edit_workflow: function() {
-        console.log('Todo');
+        return this.do_action({
+            res_model : 'workflow',
+            domain : [['osv', '=', this.dataset.model]],
+            views: [[false, 'list'], [false, 'form']],
+            type : 'ir.actions.act_window',
+            view_type : "list",
+            view_mode : "list"
+        });
     },
     on_sidebar_customize_object: function() {
         var self = this;
