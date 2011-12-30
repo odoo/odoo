@@ -24,9 +24,10 @@
                             <field name="product_uom" />
                             <field name="tracking" invisible="1"/>
                             <field name="prodlot_id" domain="[('product_id', '=', product_id)]" invisible="context.get('hide_tracking',False)" attrs="{'required':[('tracking','=',True)]}"/>
+                            <!-- Removed as this feature is not logic: price must be updated upon reception of invoice -->
                             <field name="update_cost" invisible="1"/>
-                            <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
-                            <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                            <field name="cost"  invisible="1"/>
+                            <field name="currency"  invisible="1"/>
                         </tree>
                     </field>
                     <separator string="" colspan="4" />
@@ -50,9 +51,10 @@
                     <field name="product_uom" />
                     <field name="tracking" invisible="1"/>
                     <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}" groups="base.group_extended" />
+                    <!-- Removed as this feature is not logic: price must be updated upon reception of invoice -->
                     <field name="update_cost" invisible="1"/>
-                    <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
-                    <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                    <field name="cost" invisible="1"/>
+                    <field name="currency" invisible="1"/>
                 </tree>
             </field>
         </record>
