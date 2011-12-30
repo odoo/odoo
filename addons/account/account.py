@@ -2955,6 +2955,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'purchase_tax_rate': fields.float('Purchase Tax(%)'),
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
     }
+    def onchange_tax_rate(self, cr, uid, ids, rate=False, context=None):
+        return {'value': {'purchase_tax_rate': rate or False}}
+
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = {}
         tax_templ_obj = self.pool.get('account.tax.template')
