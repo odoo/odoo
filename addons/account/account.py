@@ -3000,6 +3000,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                           , "=", ids[0]), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
                 res.update({'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
+        res.update({
+            'purchase_tax_rate': 15.0,
+            'sale_tax_rate': 15.0,
+        })
         return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -3264,46 +3268,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         vals = {}
         # create tax templates and tax code templates from purchase_tax_rate and sale_tax_rate fields
         if not chart_template.complete_tax_set:
-            tax_data = {
-                'sale': obj_wizard.sale_tax_rate,
-                'purchase': obj_wizard.purchase_tax_rate,
-            }
-
-            for tax_type, value in tax_data.items():
-                # don't consider cases where entered value in rates are lower than 0
-                if value >= 0.0:
-                    #create the tax code templates for base and tax
-                    base_code_vals = {
-                        'name': (tax_type == 'sale' and _('Taxable Sales at %s') or _('Taxable Purchases at %s')) % value,
-                        'code': (tax_type == 'sale' and _('BASE-S-%s') or _('BASE-P-%s')) %value,
-                        'parent_id': chart_template.tax_code_root_id.id,
-                        'company_id': company_id,
-                    }
-                    new_base_code_id = obj_tax_code_template.create(cr, uid, base_code_vals, context=context)
-                    tax_code_vals = {
-                        'name': (tax_type == 'sale' and _('Tax Received at %s') or _('Tax Paid at %s')) % value,
-                        'code': (tax_type == 'sale' and _('TAX-S-%s') or _('TAX-P-%s')) %value,
-                        'parent_id': chart_template.tax_code_root_id.id,
-                        'company_id': company_id,
-                    }
-                    new_tax_code_id = obj_tax_code_template.create(cr, uid, tax_code_vals, context=context)
-                    #create the tax
-                    tax_template_id = obj_tax_temp.create(cr, uid, {
-                                            'name': _('Tax %s%%') % value,
-                                            'amount': value/100,
-                                            'base_code_id': new_base_code_id,
-                                            'tax_code_id': new_tax_code_id,
-                                            'ref_base_code_id': new_base_code_id,
-                                            'ref_tax_code_id': new_tax_code_id,
-                                            'type_tax_use': tax_type,
-                                            'type': 'percent',
-                                            'sequence': 0,
-                                            'chart_template_id': chart_template.id or False,
-                    }, context=context)
-                    #record this new tax_template as default for this chart template
-                    field_name = tax_type == 'sale' and 'sale_tax' or 'purchase_tax'
-                    vals[field_name] = tax_template_id
-        self.write(cr, uid, obj_wizard.id, vals, context=context)
+            if obj_wizard.sale_tax:
+                value = obj_wizard.sale_tax_rate
+                obj_tax_temp.write(cr, uid, [obj_wizard.sale_tax.id], {'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
+            if obj_wizard.purchase_tax:
+                value = obj_wizard.purchase_tax_rate
+                obj_tax_temp.write(cr, uid, [obj_wizard.purchase_tax.id], {'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
         return True
 
     def execute(self, cr, uid, ids, context=None):
