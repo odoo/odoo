@@ -625,7 +625,9 @@ class module(osv.osv):
             while menu.parent_id:
                 menu = menu.parent_id
             if not menu.id in root_menu_ids:
-                root_menu_ids.append(menu.id)
+                root_menu_ids.append((menu.sequence,menu.id))
+        root_menu_ids.sort()
+        root_menu_ids = [i[1] for i in root_menu_ids]
         return root_menu_ids
 
 class module_dependency(osv.osv):
