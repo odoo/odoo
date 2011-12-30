@@ -13,7 +13,6 @@
                         <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-year" name="year" string="Year" domain="[('create_date','&gt;=',time.strftime('%%Y-1-1')),('create_date','&lt;=',time.strftime('%%Y-12-31'))]"/>
-                        <separator orientation="vertical"/>
                         <filter string="Month" icon="terp-go-month" name="This Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
                         <field name="employee_id">
