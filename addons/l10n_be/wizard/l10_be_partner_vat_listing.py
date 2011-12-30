@@ -58,7 +58,12 @@ class partner_vat(osv.osv_memory):
         obj_vat_lclient = self.pool.get('vat.listing.clients')
         obj_model_data = self.pool.get('ir.model.data')
         data  = self.read(cursor, user, ids)[0]
-        period = obj_period.search(cursor, user, [('fiscalyear_id', '=', data['fyear'])], context=context)
+        
+        domains = [('date_start','>=',data['date_start']),('date_stop','<=',data['date_stop'])]
+        period = obj_period.search(cursor, user, domains, context=context)
+        if not period:
+            raise osv.except_osv(_('Warning !'), _('Please select the proper Start date and End Date'))
+        
         p_id_list = obj_partner.search(cursor, user, [('vat_subjected', '!=', False)], context=context)
         if not p_id_list:
              raise osv.except_osv(_('Data Insufficient!'), _('No partner has a VAT Number asociated with him.'))
@@ -98,7 +103,7 @@ class partner_vat(osv.osv_memory):
             id_client = obj_vat_lclient.create(cursor, user, record, context=context)
             partners.append(id_client)
             records.append(record)
-        context.update({'partner_ids': partners, 'fyear': data['fyear'], 'limit_amount': data['limit_amount'], 'mand_id':data['mand_id']})
+        context.update({'partner_ids': partners, 'date_start': data['date_start'], 'date_stop': data['date_stop'], 'limit_amount': data['limit_amount'], 'mand_id':data['mand_id']})
         model_data_ids = obj_model_data.search(cursor, user, [('model','=','ir.ui.view'), ('name','=','view_vat_listing')])
         resource_id = obj_model_data.read(cursor, user, model_data_ids, fields=['res_id'])[0]['res_id']
         return {
@@ -113,10 +118,16 @@ class partner_vat(osv.osv_memory):
             }
 
     _columns = {
-        'fyear': fields.many2one('account.fiscalyear','Fiscal Year', required=True),
+        'date_start': fields.date('Start of Period', required=True),
+        'date_stop': fields.date('End of Period', required=True),
         'mand_id': fields.char('MandataireId', size=14, required=True,  help="This identifies the representative of the sending company. This is a string of 14 characters"),
         'limit_amount': fields.integer('Limit Amount', required=True),
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
+        }
+    
+    _defaults = {
+        'date_start': lambda *a: time.strftime('%Y-01-01'),
+        'date_stop': lambda *a: time.strftime('%Y-12-01'),
         }
 partner_vat()
 
@@ -156,7 +167,8 @@ class partner_vat_list(osv.osv_memory):
 
         cref = company_vat + seq_controlref
         dnum = cref + seq_declarantnum
-        obj_year= obj_fyear.browse(cursor, user, context['fyear'], context=context)
+        date_stop = context.get('date_stop')
+        
         street = zip_city = country = ''
         addr = obj_partner.address_get(cursor, user, [obj_cmpny.partner_id.id], ['invoice'])
         if addr.get('invoice',False):
@@ -182,7 +194,7 @@ class partner_vat_list(osv.osv_memory):
         data_file += '\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+ comp_name +'</Name>\n\t\t<Street>'+ street +'</Street>\n\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>'
         data_file += '\n\t\t<Country>'+ country +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
         data_comp = '\n<CompanyInfo>\n\t<VATNum>'+str(company_vat)+'</VATNum>\n\t<Name>'+ comp_name +'</Name>\n\t<Street>'+ street +'</Street>\n\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>\n\t<Country>'+ country +'</Country>\n</CompanyInfo>'
-        data_period = '\n<Period>'+ obj_year.date_stop[:4] +'</Period>'
+        data_period = '\n<Period>'+ date_stop[:4] +'</Period>'
         error_message = []
         data = self.read(cursor, user, ids)[0]
         for partner in data['partner_ids']:
@@ -205,8 +217,23 @@ class partner_vat_list(osv.osv_memory):
             seq += 1
             sum_tax += line['amount']
             sum_turnover += line['turnover']
-            data_clientinfo += '\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line['vat'] +'</VATNum>\n\t\t<Country>' + line['country'] +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(round(line['amount'] * 100))) +'</Amount>\n\t<TurnOver>'+str(int(round(line['turnover'] * 100))) +'</TurnOver>\n</ClientList>'
 
+            if not line['vat']:
+                raise osv.except_osv(_('Configuration Error !'), _("Missing VAT ,Partner %s does not have a vat number") % line['name'])
+            if not line['country']:
+                raise osv.except_osv(_('Configuration Error !'), _("Missing Country ,Partner %s doest not have a country") % line['name'])
+            data_clientinfo = "".join([
+                data_clientinfo,
+                '<ClientList SequenceNum="',str(seq),'">\n',
+                '\t<CompanyInfo>\n',
+                '\t\t<VATNum>',line['vat'],'</VATNum>\n',
+                '\t\t<Country>',line['country'],'</Country>\n',
+                '\t</CompanyInfo>\n',
+                '\t<Amount>',str(int(round(line['amount'] * 100))),'</Amount>\n',
+                '\t<TurnOver>',str(int(round(line['turnover'] * 100))),'</TurnOver>\n',
+                '</ClientList>\n'
+            ])
+            
         data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(round(sum_turnover * 100))) +'" TaxSum="'+ str(int(round(sum_tax * 100))) +'" />'
         data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n</VatList>'
         msg = 'Save the File with '".xml"' extension.'
