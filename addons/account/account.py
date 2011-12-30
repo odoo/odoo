@@ -2980,9 +2980,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_templ_obj = self.pool.get('account.tax.template')
 
         if 'bank_accounts_id' in fields:
-            res.update({'bank_accounts_id': [{'acc_name': _('Current'), 'account_type': 'bank'},
-                    {'acc_name': _('Deposit'), 'account_type': 'bank'},
-                    {'acc_name': _('Cash'), 'account_type': 'cash'}]})
+            res.update({'bank_accounts_id': [{'acc_name': _('Cash'), 'account_type': 'cash'}]})
         if 'company_id' in fields:
             res.update({'company_id': self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0].company_id.id})
         if 'seq_journal' in fields:

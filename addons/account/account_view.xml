@@ -2451,6 +2451,7 @@
                     <field name ="seq_journal" groups="base.group_extended"/>
                     <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                     <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                    <newline/>
                     <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                     <field name ="purchase_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                     <field name ="complete_tax_set" invisible="1"/>
