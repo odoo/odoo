@@ -30,12 +30,16 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
     },
     on_search_data: function(ev){
         var self = this;
+        var list_ids = [];
         var datasearch = new openerp.web.DataSetSearch(self, self.action.res_model,self.action.context);
         datasearch.domain = self.action.domain;
         datasearch.read_slice(['name'], {context:datasearch.context, domain: datasearch.domain, limit:80}, function(listresult){
+            _.each(listresult, function(i) {
+                list_ids.push(i.id);
+            });
             _.extend(self.action.context,{"html_name_get" : true});
             var dataset = new openerp.web.DataSet(self, datasearch.model,datasearch.context);
-            dataset.name_get(listresult,function(res){
+            dataset.name_get(list_ids,function(res){
                 var additional = "";
                 if(res['html_name_get']){
                     additional = res['display'];
@@ -47,6 +51,7 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
                 });
                 self.$element.find("a#list-id").click(self.on_list_click);
                 $.mobile.changePage("#"+self.element_id, "slide", false, true);
+                self.$element.find("a#list-id").find('span').addClass('desc');
             });
         });
     },

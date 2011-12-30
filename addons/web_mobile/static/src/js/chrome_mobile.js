@@ -17,14 +17,17 @@ openerp.web_mobile.MobileWebClient = openerp.web.Widget.extend({
 
     init: function(element_id) {
         this._super(null, element_id);
-        openerp.web.qweb.add_template("xml/web_mobile.xml");
-        var params = {};
-        this.$element.html(this.render());
         this.crashmanager =  new openerp.web.CrashManager(this);
         this.login = new openerp.web_mobile.Login(this, "oe_login");
     },
     start: function() {
-        this.login.start();
+        this._super.apply(this, arguments);
+        var self = this;
+        this.session.bind().then(function() {
+            openerp.web.qweb.add_template("xml/web_mobile.xml");
+            self.$element.html(self.render());
+            self.login.start();
+        });
     }
 });
 
@@ -45,7 +48,8 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
         jQuery("#oe_header").children().remove();
         this.rpc("/web/database/get_list", {}, function(result) {
             self.db_list = result.db_list;
-            self.$element.html(self.render(self));
+            $('#'+self.element_id).html(self.render(self));
+            self.$element = $('#'+self.element_id);
             if(self.session.db!=""){
                 self.$element.find("#database").val(self.session.db);
             }
@@ -64,7 +68,7 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
         var password = $e.find("div input[name=password]").val();
         //$e.hide();
         // Should hide then call callback
-        this.session.login(db, login, password, function() {
+        this.session.session_authenticate(db, login, password).then(function() {
             if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
                     if(self.remember_creditentials) {
@@ -78,9 +82,13 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
                     }
                 }
                 self.on_login_valid();
-            } else {
+            } 
+        });
+        this.session.on_session_invalid.add({
+            callback: function () {
                 self.on_login_invalid();
-            }
+            },
+            unique: true
         });
     },
     on_login_invalid: function() {
@@ -185,6 +193,7 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
         this.menu = false;
     },
     start: function() {
+        this._super.apply(this, arguments);
         this.rpc("/web/menu/load", {}, this.on_loaded);
     },
     on_loaded: function(data) {

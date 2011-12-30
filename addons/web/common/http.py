@@ -448,7 +448,7 @@ class Root(object):
             params = urllib.urlencode(request.args)
             return werkzeug.utils.redirect(self.root + '?' + params, 301)(
                 environ, start_response)
-        elif request.path == '/mobile' or ('#' in request.path):
+        elif request.path == '/mobile':
             return werkzeug.utils.redirect(
                 '/web_mobile/static/src/web_mobile.html', 301)(environ, start_response)
 
