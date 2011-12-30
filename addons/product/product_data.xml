@@ -122,17 +122,17 @@ parameter) will see those record just disappear.
 	Price list
 	-->
         <record id="list0" model="product.pricelist">
-            <field name="name">Public Pricelist</field>
+            <field name="name">Default Sales Pricelist</field>
             <field name="type">sale</field>
         </record>
         <record id="ver0" model="product.pricelist.version">
             <field name="pricelist_id" ref="list0"/>
-            <field name="name">Default Public Pricelist Version</field>
+            <field name="name">Default Default Sales Pricelist Version</field>
         </record>
         <record id="item0" model="product.pricelist.item">
             <field name="price_version_id" ref="ver0"/>
             <field name="base" ref="list_price"/>
-            <field name="name">Default Public Pricelist Line</field>
+            <field name="name">Default Default Sales Pricelist Line</field>
         </record>
 
         <!--
