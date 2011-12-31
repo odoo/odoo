@@ -278,7 +278,7 @@ class pos_order(osv.osv):
                                                      ('user_id', '=', uid),
                                                      ('state', '=', 'open')], context=context)
         if len(statement_id) == 0:
-            raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
+            raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox.'))
         if statement_id:
             statement_id = statement_id[0]
         args['statement_id'] = statement_id

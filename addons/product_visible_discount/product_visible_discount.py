@@ -142,7 +142,7 @@ class account_invoice_line(osv.osv):
                 if not price_unit and partner_id:
                     pricelist =partner_obj.browse(cr, uid, partner_id).property_product_pricelist_purchase.id
                     if not pricelist:
-                        raise osv.except_osv(_('No Purchase Pricelist Found !'),_("You must first define a pricelist for Supplier !"))
+                        raise osv.except_osv(_('No Purchase Pricelist Found!'),_("You must first define a pricelist on the supplier form!"))
                     price_unit_res = pricelist_obj.price_get(cr, uid, [pricelist], product.id, qty or 1.0, partner_id, {'uom': uom})
                     price_unit = price_unit_res[pricelist]
                     real_price = get_real_price(price_unit_res, product.id, qty, uom, pricelist)
@@ -150,7 +150,7 @@ class account_invoice_line(osv.osv):
                 if partner_id:
                     pricelist = partner_obj.browse(cr, uid, partner_id).property_product_pricelist.id
                     if not pricelist:
-                        raise osv.except_osv(_('No Sale Pricelist Found '),_("You must first define a pricelist for Customer !"))
+                        raise osv.except_osv(_('No Sale Pricelist Found!'),_("You must first define a pricelist on the customer form!"))
                     price_unit_res = pricelist_obj.price_get(cr, uid, [pricelist], product.id, qty or 1.0, partner_id, {'uom': uom})
                     price_unit = price_unit_res[pricelist]
 

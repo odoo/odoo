@@ -620,7 +620,7 @@ class account_account(osv.osv):
             if method == 'write':
                 raise osv.except_osv(_('Error !'), _('You can not desactivate an account that contains some journal items.'))
             elif method == 'unlink':
-                raise osv.except_osv(_('Error !'), _('You can not remove an account containing journal items!. '))
+                raise osv.except_osv(_('Error !'), _('You can not remove an account containing journal items.'))
         #Checking whether the account is set as a property to any Partner or not
         value = 'account.account,' + str(ids[0])
         partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','=',value)], context=context)
@@ -660,7 +660,7 @@ class account_account(osv.osv):
                 # Allow the write if the value is the same
                 for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'])]:
                     if vals['company_id']!=i:
-                        raise osv.except_osv(_('Warning !'), _('You cannot modify Company of account as its related record exist in Entry Lines'))
+                        raise osv.except_osv(_('Warning !'), _('You cannot modify the company as its related to existing journal items.'))
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context=context)
         if 'type' in vals.keys():
@@ -959,7 +959,7 @@ class account_fiscalyear(osv.osv):
         ids = self.search(cr, uid, args, context=context)
         if not ids:
             if exception:
-                raise osv.except_osv(_('Error !'), _('No fiscal year defined for this date !\nPlease create one.'))
+                raise osv.except_osv(_('Error !'), _('No fiscal year defined for this date !\nPlease create one from the configuration of the accounting menu.'))
             else:
                 return []
         return ids
