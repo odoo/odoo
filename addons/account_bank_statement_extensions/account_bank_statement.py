@@ -111,7 +111,6 @@ class account_bank_statement_line(osv.osv):
             help="Code to identify transactions belonging to the same globalisation level within a batch payment"),
         'globalisation_amount': fields.related('globalisation_id', 'amount', type='float',
             relation='account.bank.statement.line.global', string='Glob. Amount', readonly=True),
-        'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed')],
             'State', required=True, readonly=True),    
         'counterparty_name': fields.char('Counterparty Name', size=35),

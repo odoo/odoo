@@ -108,7 +108,7 @@
             <field model="pos.order" name="pos_statement_id" search="[('name', '=', u'POS/019')]"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="account_id" ref="account.a_recv"/>
-            <field name="journal_id">Cash Journal - (test)</field>
+            <field name="journal_id" ref="account.cash_journal"/>
             <field eval="[(6,0,[])]" name="move_ids"/>
             <field name="date" eval="time.strftime('%Y-%m-%d')"/>
             <field eval="450.0" name="amount"/>

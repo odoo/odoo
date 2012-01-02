@@ -468,6 +468,7 @@ class account_bank_statement_line(osv.osv):
             required=True),
         'statement_id': fields.many2one('account.bank.statement', 'Statement',
             select=True, required=True, ondelete='cascade'),
+        'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'move_ids': fields.many2many('account.move',
             'account_bank_statement_line_move_rel', 'statement_line_id','move_id',
