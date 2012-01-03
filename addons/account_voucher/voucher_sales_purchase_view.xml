@@ -276,6 +276,7 @@
                         <group attrs="{'invisible':['|', ('state','!=','posted'), ('paid','=',True)]}">
                             <button icon="terp-dolar_ok!" name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
                         </group>
+                        <field name="pay_now" invisible="1"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                         <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                     </group>
