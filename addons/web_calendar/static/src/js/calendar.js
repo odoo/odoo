@@ -397,6 +397,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             if (self.sidebar) {
                 self.sidebar.$element.show();
             }
+            self.do_push_state({});
         });
     },
     do_hide: function () {

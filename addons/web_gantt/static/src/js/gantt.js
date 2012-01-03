@@ -517,6 +517,11 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                     self.on_project_loaded(projects);
                 });
         });
+    },
+
+    do_show: function() {
+        this.do_push_state({});
+        return this._super();
     }
 
 });
