@@ -6,637 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-03-01 13:44+0000\n"
 "Last-Translator: Dimitar Markov <dimitar.markov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:23+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
-
-#. module: product
-#: model:product.template,name:product.product_product_ram512_product_template
-msgid "DDR 512MB PC400"
-msgstr "DDR 512MB PC400"
-
-#. module: product
-#: field:product.packaging,rows:0
-msgid "Number of Layers"
-msgstr "Броя на слоевете"
-
-#. module: product
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-"Грешка! Вие не можете да присвоите Основния ценоразпис като Друг ценоразпис!"
-
-#. module: product
-#: help:product.pricelist.item,product_tmpl_id:0
-msgid ""
-"Set a template if this rule only apply to a template of product. Keep empty "
-"for all products"
-msgstr ""
-"Задаване на шаблон, ако това правило се прилага само за шаблон на продукта. "
-"Оставете празно за всички продукти"
-
-#. module: product
-#: model:product.category,name:product.cat1
-msgid "Sellable"
-msgstr "Продаваем"
-
-#. module: product
-#: model:product.template,name:product.product_product_mb2_product_template
-msgid "Mainboard ASUStek A7V8X-X"
-msgstr "Дънна платка ASUStek A7V8X-X"
-
-#. module: product
-#: help:product.template,seller_qty:0
-msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr "Това е минималното количество за закупуване от Основен доставчик"
-
-#. module: product
-#: model:product.uom,name:product.uom_day
-msgid "Day"
-msgstr "Ден"
-
-#. module: product
-#: view:product.product:0
-msgid "UoM"
-msgstr "Мерни единици"
-
-#. module: product
-#: model:product.template,name:product.product_product_pc2_product_template
-msgid "Basic+ PC (assembly on order)"
-msgstr ""
-
-#. module: product
-#: field:product.product,incoming_qty:0
-msgid "Incoming"
-msgstr "Входящи"
-
-#. module: product
-#: field:product.template,mes_type:0
-msgid "Measure Type"
-msgstr "Вид мярка"
-
-#. module: product
-#: help:res.partner,property_product_pricelist:0
-msgid ""
-"This pricelist will be used, instead of the default one, for sales to the "
-"current partner"
-msgstr ""
-"Тази ценова листа ще бъде използвана, а не тази по подразбиране, за продажби "
-"за настоящ партньор"
-
-#. module: product
-#: constraint:product.supplierinfo:0
-msgid ""
-"Error: The default UOM and the Supplier Product UOM must be in the same "
-"category."
-msgstr ""
-"Грешка: Мерните единици по подразбиране и Мерните единици на доставчика на "
-"продукта UOM трябва да са в същата категория."
-
-#. module: product
-#: field:product.template,seller_qty:0
-msgid "Supplier Quantity"
-msgstr "Количество на доставчик"
-
-#. module: product
-#: selection:product.template,mes_type:0
-msgid "Fixed"
-msgstr "Фиксиран"
-
-#. module: product
-#: code:addons/product/pricelist.py:186
-#: code:addons/product/pricelist.py:342
-#: code:addons/product/pricelist.py:360
-#, python-format
-msgid "Warning !"
-msgstr "Предупреждение !"
-
-#. module: product
-#: model:ir.actions.report.xml,name:product.report_product_pricelist
-#: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
-#: field:product.product,pricelist_id:0
-#: view:product.supplierinfo:0
-msgid "Pricelist"
-msgstr "Ценова листа"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Base Prices"
-msgstr "Основни цени"
-
-#. module: product
-#: field:product.pricelist.item,name:0
-msgid "Rule Name"
-msgstr "Име на правило"
-
-#. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
-msgid "Reference"
-msgstr "Означение"
-
-#. module: product
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Грешка! Не можете да създавате рекурсивни категории"
-
-#. module: product
-#: help:pricelist.partnerinfo,min_quantity:0
-msgid ""
-"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
-"any or in the default UoM of the product otherrwise."
-msgstr ""
-"Минималното количество за да се включи това правило, изразено в Мер. ед. на "
-"доставчика ако има такова или в мерните едниници по подразбиране."
-
-#. module: product
-#: model:product.template,name:product.product_product_24_product_template
-msgid "Keyboard"
-msgstr "Клавиатура"
-
-#. module: product
-#: model:ir.model,name:product.model_res_partner
-msgid "Partner"
-msgstr "Партньор"
-
-#. module: product
-#: help:product.template,supply_method:0
-msgid ""
-"Produce will generate production order or tasks, according to the product "
-"type. Purchase will trigger purchase orders when requested."
-msgstr ""
-
-#. module: product
-#: selection:product.template,cost_method:0
-msgid "Average Price"
-msgstr "Средна цена"
-
-#. module: product
-#: help:product.pricelist.item,name:0
-msgid "Explicit rule name for this pricelist line."
-msgstr "Изрично правило за име за тази линия на ценоразпис."
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr "Категории мерни единици"
-
-#. module: product
-#: model:product.template,name:product.product_product_cpu1_product_template
-msgid "Processor AMD Athlon XP 1800+"
-msgstr "Процесор AMD Athlon XP 1800+"
-
-#. module: product
-#: model:product.template,name:product.product_product_20_product_template
-msgid "HDD on demand"
-msgstr "HDD при заявка"
-
-#. module: product
-#: field:product.price_list,price_list:0
-msgid "PriceList"
-msgstr "Ценива листа"
-
-#. module: product
-#: view:product.template:0
-msgid "UOM"
-msgstr "Мерна единица"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_unit
-msgid "PCE"
-msgstr "бр."
-
-#. module: product
-#: view:product.template:0
-msgid "Miscelleanous"
-msgstr "Разни"
-
-#. module: product
-#: model:product.template,name:product.product_product_worker0_product_template
-msgid "Worker"
-msgstr "Работник"
-
-#. module: product
-#: help:product.template,sale_ok:0
-msgid ""
-"Determines if the product can be visible in the list of product within a "
-"selection from a sale order line."
-msgstr ""
-"Определя дали продуктът може да се вижда в списъка на продукт по избор от "
-"линията за продажба."
-
-#. module: product
-#: model:product.pricelist.version,name:product.ver0
-msgid "Default Public Pricelist Version"
-msgstr "По подразбиране публична версия на Ценоразпис"
-
-#. module: product
-#: selection:product.template,cost_method:0
-msgid "Standard Price"
-msgstr "Стандартна цена"
-
-#. module: product
-#: model:product.pricelist.type,name:product.pricelist_type_sale
-#: field:res.partner,property_product_pricelist:0
-msgid "Sale Pricelist"
-msgstr "Продажна цена"
-
-#. module: product
-#: view:product.template:0
-#: field:product.template,type:0
-msgid "Product Type"
-msgstr "Тип на продукта"
-
-#. module: product
-#: view:product.uom:0
-msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
-
-#. module: product
-#: code:addons/product/product.py:380
-#, python-format
-msgid "Products: "
-msgstr "Продукти: "
-
-#. module: product
-#: field:product.category,parent_id:0
-msgid "Parent Category"
-msgstr "Родителска категория"
-
-#. module: product
-#: help:product.product,outgoing_qty:0
-msgid ""
-"Quantities of products that are planned to leave in selected locations or "
-"all internal if none have been selected."
-msgstr ""
-"Количества продукти, които се планира да напусне в определени места, или "
-"всички вътрешни, ако никой не е бил избран."
-
-#. module: product
-#: help:product.template,procure_method:0
-msgid ""
-"'Make to Stock': When needed, take from the stock or wait until re-"
-"supplying. 'Make to Order': When needed, purchase or produce for the "
-"procurement request."
-msgstr ""
-
-#. module: product
-#: model:process.node,note:product.process_node_supplier0
-msgid "Supplier name, price, product code, ..."
-msgstr "Доставчик име, цена, код на продукта, ..."
-
-#. module: product
-#: model:product.template,name:product.product_product_hdd3_product_template
-msgid "HDD Seagate 7200.8 160GB"
-msgstr "HDD Seagate 7200.8 160GB"
-
-#. module: product
-#: field:product.product,ean13:0
-msgid "EAN13"
-msgstr "EAN13"
-
-#. module: product
-#: field:product.template,seller_id:0
-msgid "Main Supplier"
-msgstr "Основен доставчик"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_ul_form_action
-#: model:ir.model,name:product.model_product_packaging
-#: model:ir.ui.menu,name:product.menu_product_ul_form_action
-#: view:product.packaging:0
-#: view:product.product:0
-#: view:product.ul:0
-msgid "Packaging"
-msgstr "Опаковане"
-
-#. module: product
-#: view:product.product:0
-#: field:product.template,categ_id:0
-msgid "Category"
-msgstr "Категория"
-
-#. module: product
-#: help:product.pricelist.item,min_quantity:0
-msgid ""
-"The rule only applies if the partner buys/sells more than this quantity."
-msgstr ""
-"Правилото се прилага само ако партньор купува/продава повече от това "
-"количество."
-
-#. module: product
-#: model:product.template,name:product.product_product_woodmm0_product_template
-msgid "Wood 2mm"
-msgstr "Дърво 2mm"
-
-#. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Количество-1"
-
-#. module: product
-#: help:product.packaging,ul_qty:0
-msgid "The number of packages by layer"
-msgstr "Брой пакети на слой"
-
-#. module: product
-#: field:product.packaging,qty:0
-msgid "Quantity by Package"
-msgstr "Количество в пакет"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,state:0
-msgid "Status"
-msgstr "Състояние"
-
-#. module: product
-#: help:product.template,categ_id:0
-msgid "Select category for the current product"
-msgstr "Изберете категория за текущия продукт"
-
-#. module: product
-#: field:product.product,outgoing_qty:0
-msgid "Outgoing"
-msgstr "Изходящ"
-
-#. module: product
-#: selection:product.uom,uom_type:0
-msgid "Reference UoM for this category"
-msgstr "Референтени мерни единици за тази категория"
-
-#. module: product
-#: model:product.price.type,name:product.list_price
-#: field:product.product,lst_price:0
-msgid "Public Price"
-msgstr "Публична цена"
-
-#. module: product
-#: field:product.price_list,qty5:0
-msgid "Quantity-5"
-msgstr "Количество-5"
-
-#. module: product
-#: model:product.category,name:product.product_category_10
-msgid "IT components"
-msgstr "ИТ компоненти"
-
-#. module: product
-#: field:product.template,product_manager:0
-msgid "Product Manager"
-msgstr "Продуктов мениджър"
-
-#. module: product
-#: field:product.supplierinfo,product_name:0
-msgid "Supplier Product Name"
-msgstr "Име на доставчика на продукта"
-
-#. module: product
-#: model:product.template,name:product.product_product_pc3_product_template
-msgid "Medium PC"
-msgstr "Medium PC"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action_puchased
-msgid ""
-"Products can be purchased and/or sold. They can be raw materials, stockable "
-"products, consumables or services. The Product form contains detailed "
-"information about your products related to procurement logistics, sales "
-"price, product category, suppliers and so on."
-msgstr ""
-"Продуктите могат да бъдат закупувани и / или продавани. Те могат да бъдат "
-"суровини, stockable продукти, консумативи и услуги. Във формата на продукта "
-"се съдържа подробна информация за продукти, свързани с възлагане на "
-"обществени поръчки логистика, продажната цена, категория продукти, "
-"доставчици и така нататък."
-
-#. module: product
-#: view:product.pricelist:0
-msgid "Products Price Search"
-msgstr "Търсене по цена продукти"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,description_sale:0
-msgid "Sale Description"
-msgstr "Описание на продажбата"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Storage Localisation"
-msgstr ""
-
-#. module: product
-#: help:product.packaging,length:0
-msgid "The length of the package"
-msgstr "Дължина на пакета"
-
-#. module: product
-#: help:product.template,weight_net:0
-msgid "The net weight in Kg."
-msgstr "Нето тегло в килограми"
-
-#. module: product
-#: help:product.template,state:0
-msgid "Tells the user if he can use the product or not."
-msgstr "Показва на потребителя дали може да използва продукт или не."
-
-#. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-#: field:product.supplierinfo,qty:0
-msgid "Quantity"
-msgstr "Количество"
-
-#. module: product
-#: field:product.packaging,height:0
-msgid "Height"
-msgstr "Височина"
-
-#. module: product
-#: help:product.pricelist.version,date_end:0
-msgid "Ending date for this pricelist version to be valid."
-msgstr "Крайна дата на валидност на тази версия на ценоразпис."
-
-#. module: product
-#: model:product.category,name:product.cat0
-msgid "All products"
-msgstr "Всички продукти"
-
-#. module: product
-#: model:ir.model,name:product.model_pricelist_partnerinfo
-msgid "pricelist.partnerinfo"
-msgstr "pricelist.partnerinfo"
-
-#. module: product
-#: field:product.price_list,qty2:0
-msgid "Quantity-2"
-msgstr "Количество-2"
-
-#. module: product
-#: field:product.price_list,qty3:0
-msgid "Quantity-3"
-msgstr "Количество-3"
-
-#. module: product
-#: view:product.product:0
-msgid "Codes"
-msgstr "Кодове"
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid ""
-"Choose here the Unit of Measure in which the prices and quantities are "
-"expressed below."
-msgstr ""
-"Изберете тук Мер. единици, в които цените и количствата ще се изобразяват по-"
-"долу"
-
-#. module: product
-#: field:product.price_list,qty4:0
-msgid "Quantity-4"
-msgstr "Количество-4"
-
-#. module: product
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Продажби и поръчки"
-
-#. module: product
-#: model:product.uom.categ,name:product.uom_categ_wtime
-msgid "Working Time"
-msgstr "Работно време"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action2
-msgid ""
-"A price list contains rules to be evaluated in order to compute the purchase "
-"or sales price for all the partners assigned to a price list. Price lists "
-"have several versions (2010, 2011, Promotion of February 2010, etc.) and "
-"each version has several rules. Example: the customer price of a product "
-"category will be based on the supplier price multiplied by 1.80."
-msgstr ""
-
-#. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the product "
-"without removing it."
-msgstr ""
-"Ако активното поле е настроено на False, ще ви позволи да скриете продукта, "
-"без да го махате."
-
-#. module: product
-#: model:product.template,name:product.product_product_metalcleats0_product_template
-msgid "Metal Cleats"
-msgstr "Метални Ключалки"
-
-#. module: product
-#: code:addons/product/pricelist.py:343
-#, python-format
-msgid ""
-"No active version for the selected pricelist !\n"
-"Please create or activate one."
-msgstr ""
-"Няма активна версия на избранта ценова листа!\n"
-"Моля, създайте или активирайте такава."
-
-#. module: product
-#: model:ir.model,name:product.model_product_uom_categ
-msgid "Product uom categ"
-msgstr "Категория продуктови мерни единици"
-
-#. module: product
-#: model:product.ul,name:product.product_ul_box
-msgid "Box 20x20x40"
-msgstr "Кутия 20x20x40"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Price Computation"
-msgstr "Изчисляване на цена"
-
-#. module: product
-#: field:product.template,purchase_ok:0
-msgid "Can be Purchased"
-msgstr "Може да бъде закупувана"
-
-#. module: product
-#: model:product.template,name:product.product_product_cpu2_product_template
-msgid "High speed processor config"
-msgstr ""
-
-#. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
-msgstr ""
-"1 или повече доставчици могат да бъдат свързани към продукт. Всичката "
-"информация е в продуктовата форма."
-
-#. module: product
-#: help:product.uom,category_id:0
-msgid ""
-"Quantity conversions may happen automatically between Units of Measure in "
-"the same category, according to their respective ratios."
-msgstr ""
-"Конвертиране на количества може да се случи автоматично между мерни единици "
-"в една и съща категория според тяхното съотношение."
-
-#. module: product
-#: help:product.packaging,width:0
-msgid "The width of the package"
-msgstr "Ширина на пратката"
-
-#. module: product
-#: field:product.product,virtual_available:0
-msgid "Virtual Stock"
-msgstr "Виртуален склад"
-
-#. module: product
-#: selection:product.category,type:0
-msgid "View"
-msgstr "Преглед"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_template_action_tree
-msgid "Product Templates"
-msgstr "Шаблони за продукт"
-
-#. module: product
-#: model:product.template,name:product.product_product_restaurantexpenses0_product_template
-msgid "Restaurant Expenses"
-msgstr "Разходи за ресторант"
-
-#. module: product
-#: constraint:product.packaging:0
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Грешка: Невалиден европейски баркод"
-
-#. module: product
-#: field:product.pricelist.item,min_quantity:0
-msgid "Min. Quantity"
-msgstr "Мин. количество"
-
-#. module: product
-#: model:ir.model,name:product.model_product_price_type
-msgid "Price Type"
-msgstr "Вид цена"
+"X-Launchpad-Export-Date: 2011-12-23 06:48+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -649,14 +27,68 @@ msgid "Base Price"
 msgstr "Базова цена"
 
 #. module: product
-#: model:product.template,name:product.product_product_fan2_product_template
-msgid "Silent fan"
-msgstr "Тих вентилатор"
+#: field:product.product,partner_ref:0
+msgid "Customer ref"
+msgstr "Озн. на клиент"
+
+#. module: product
+#: field:product.uom,factor:0
+#: field:product.uom,factor_inv:0
+msgid "Ratio"
+msgstr "Съотношение"
+
+#. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+"Минималното количество за закупуване от този доставчик, изразено в мер. ед. "
+"на доставчика на продукта ако не е празно в мер. ед. по подразбиране обаче"
+
+#. module: product
+#: selection:product.template,type:0
+msgid "Service"
+msgstr "Услуга"
+
+#. module: product
+#: help:product.template,purchase_ok:0
+msgid ""
+"Determine if the product is visible in the list of products within a "
+"selection from a purchase order line."
+msgstr ""
+"Определя дали продуктът ще се вижда в списъка на продуктите, по избор от "
+"линията за покупка."
 
 #. module: product
 #: help:product.supplierinfo,name:0
 msgid "Supplier of this product"
 msgstr "Доставчика на този продукт"
+
+#. module: product
+#: model:process.node,note:product.process_node_supplier0
+msgid "Supplier name, price, product code, ..."
+msgstr "Доставчик име, цена, код на продукта, ..."
+
+#. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
+"Минималното количество за да се включи това правило, изразено в Мер. ед. на "
+"доставчика ако има такова или в мерните едниници по подразбиране."
+
+#. module: product
+#: field:product.packaging,rows:0
+msgid "Number of Layers"
+msgstr "Броя на слоевете"
+
+#. module: product
+#: field:product.template,weight_net:0
+msgid "Net weight"
+msgstr "Тегло нето"
 
 #. module: product
 #: help:product.pricelist.version,active:0
@@ -670,9 +102,48 @@ msgstr ""
 "активирате отново ценовата листа"
 
 #. module: product
-#: model:product.template,name:product.product_product_kitshelfofcm0_product_template
-msgid "KIT Shelf of 100cm"
-msgstr "KIT Shelf of 100cm"
+#: field:product.price.type,field:0
+msgid "Product Field"
+msgstr "Поле за порукт"
+
+#. module: product
+#: help:product.pricelist.item,product_tmpl_id:0
+msgid ""
+"Set a template if this rule only apply to a template of product. Keep empty "
+"for all products"
+msgstr ""
+"Задаване на шаблон, ако това правило се прилага само за шаблон на продукта. "
+"Оставете празно за всички продукти"
+
+#. module: product
+#: help:product.product,virtual_available:0
+msgid ""
+"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location typed as "
+"'internal'."
+msgstr ""
+
+#. module: product
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
+msgstr "Мер. ед. на доставчик"
+
+#. module: product
+#: help:product.pricelist.item,price_round:0
+msgid ""
+"Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+msgstr ""
+"Определя цена, така че да е кратна на тази стойност.\n"
+"Закръгляване се прилага, след отстъпка и преди увеличение.\n"
+"За да са цените катот тази 9.99, определете закръгляване 10, доплащане -0,01"
 
 #. module: product
 #: field:product.supplierinfo,name:0
@@ -680,512 +151,9 @@ msgid "Supplier"
 msgstr "Доставчик"
 
 #. module: product
-#: model:product.template,name:product.product_product_sidepanel0_product_template
-msgid "Side Panel"
-msgstr "Страничен панел"
-
-#. module: product
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Kit Keyboard + Mouse"
-msgstr "Kit Keyboard + Mouse"
-
-#. module: product
-#: field:product.price.type,name:0
-msgid "Price Name"
-msgstr "Име на цена"
-
-#. module: product
-#: model:product.template,name:product.product_product_cpu3_product_template
-msgid "Processor AMD Athlon XP 2200+"
-msgstr "Processor AMD Athlon XP 2200+"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.action_product_price_list
-#: model:ir.model,name:product.model_product_price_list
-#: view:product.price_list:0
-#: report:product.pricelist:0
-#: field:product.pricelist.version,pricelist_id:0
-msgid "Price List"
-msgstr "Ценова листа"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Suppliers"
-msgstr "Доставчици"
-
-#. module: product
-#: view:product.product:0
-msgid "To Purchase"
-msgstr "За покупка"
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the supplier "
-"Product UoM if not empty, in the default unit of measure of the product "
-"otherwise."
+#: model:product.template,name:product.product_consultant_product_template
+msgid "Service on Timesheet"
 msgstr ""
-"Минималното количество за закупуване от този доставчик, изразено в мер. ед. "
-"на доставчика на продукта ако не е празно в мер. ед. по подразбиране обаче"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "New Price ="
-msgstr "Нова цена ="
-
-#. module: product
-#: help:pricelist.partnerinfo,price:0
-msgid ""
-"This price will be considered as a price for the supplier UoM if any or the "
-"default Unit of Measure of the product otherwise"
-msgstr ""
-"Тази цена ще се счита за цена за Мерните единици на доставчика ако има "
-"такива или в противен случай мерните единице по подразбиране за продукта"
-
-#. module: product
-#: model:product.category,name:product.product_category_accessories
-msgid "Accessories"
-msgstr "Аксесоари"
-
-#. module: product
-#: field:product.template,sale_delay:0
-msgid "Customer Lead Time"
-msgstr "Срок за доставка към клиент"
-
-#. module: product
-#: model:process.transition,name:product.process_transition_supplierofproduct0
-msgid "Supplier of the product"
-msgstr "Доставчик на продукта"
-
-#. module: product
-#: help:product.template,uos_id:0
-msgid ""
-"Used by companies that manage two units of measure: invoicing and inventory "
-"management. For example, in food industries, you will manage a stock of ham "
-"but invoice in Kg. Keep empty to use the default UOM."
-msgstr ""
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Min. Margin"
-msgstr "Мин. Маржин"
-
-#. module: product
-#: field:product.category,child_id:0
-msgid "Child Categories"
-msgstr "Подкатегории"
-
-#. module: product
-#: field:product.pricelist.version,date_end:0
-msgid "End Date"
-msgstr "Крайна дата"
-
-#. module: product
-#: view:product.price_list:0
-msgid "Print"
-msgstr "Печат"
-
-#. module: product
-#: view:product.product:0
-#: field:product.ul,type:0
-msgid "Type"
-msgstr "Тип"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_pricelist_action2
-#: model:ir.ui.menu,name:product.menu_product_pricelist_action2
-#: model:ir.ui.menu,name:product.menu_product_pricelist_main
-msgid "Pricelists"
-msgstr "Ценови листи"
-
-#. module: product
-#: field:product.product,partner_ref:0
-msgid "Customer ref"
-msgstr "Озн. на клиент"
-
-#. module: product
-#: view:product.product:0
-msgid "Miscellaneous"
-msgstr "Разни"
-
-#. module: product
-#: field:product.pricelist.type,key:0
-msgid "Key"
-msgstr "Ключ"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Rules Test Match"
-msgstr ""
-
-#. module: product
-#: help:product.pricelist.item,product_id:0
-msgid ""
-"Set a product if this rule only apply to one product. Keep empty for all "
-"products"
-msgstr ""
-"Задаване на продукта, ако това правило се прилага само за един продукт. "
-"Дръжте празно за всички продукти"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Набавяне & местонахождения"
-
-#. module: product
-#: model:product.template,name:product.product_product_kitchendesignproject0_product_template
-msgid "Kitchen Design Project"
-msgstr "Дизайн за проект на кухня"
-
-#. module: product
-#: model:product.uom,name:product.uom_hour
-msgid "Hour"
-msgstr "Час"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "In Development"
-msgstr "В разработка"
-
-#. module: product
-#: model:product.template,name:product.product_product_shelfofcm1_product_template
-msgid "Shelf of 200cm"
-msgstr "Рафт 200 см"
-
-#. module: product
-#: view:product.uom:0
-msgid "Ratio & Precision"
-msgstr "Сътношение и прецизност"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_gram
-msgid "g"
-msgstr "g"
-
-#. module: product
-#: model:product.category,name:product.product_category_11
-msgid "IT components kits"
-msgstr "Комплект ИТ компоненти"
-
-#. module: product
-#: selection:product.category,type:0
-#: selection:product.template,state:0
-msgid "Normal"
-msgstr "Нормален"
-
-#. module: product
-#: model:process.node,name:product.process_node_supplier0
-#: view:product.supplierinfo:0
-msgid "Supplier Information"
-msgstr "Информация за доставчик"
-
-#. module: product
-#: field:product.price.type,currency_id:0
-#: report:product.pricelist:0
-#: field:product.pricelist,currency_id:0
-msgid "Currency"
-msgstr "Валута"
-
-#. module: product
-#: model:product.template,name:product.product_product_ram_product_template
-msgid "DDR 256MB PC400"
-msgstr "DDR 256MB PC400"
-
-#. module: product
-#: view:product.category:0
-msgid "Product Categories"
-msgstr "Категории на продукта"
-
-#. module: product
-#: view:product.uom:0
-msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid ""
-"Create and manage the units of measure you want to be used in your system. "
-"You can define a conversion rate between several Units of Measure within the "
-"same category."
-msgstr ""
-"Създававане и управление на мер. ед., които желаете да се използват във "
-"вашата система. Мовете да дефинирате конвертиране между няколко мерни "
-"единици в една и съща категория."
-
-#. module: product
-#: field:product.packaging,weight:0
-msgid "Total Package Weight"
-msgstr "Общo тегло на пратката"
-
-#. module: product
-#: help:product.packaging,code:0
-msgid "The code of the transport unit."
-msgstr "Код на транспортната единица"
-
-#. module: product
-#: help:product.template,standard_price:0
-msgid ""
-"Product's cost for accounting stock valuation. It is the base price for the "
-"supplier price."
-msgstr ""
-
-#. module: product
-#: view:product.price.type:0
-msgid "Products Price Type"
-msgstr "Тип цена на продуктите"
-
-#. module: product
-#: field:product.product,price_extra:0
-msgid "Variant Price Extra"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_fan_product_template
-msgid "Regular case fan 80mm"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_supplierinfo
-msgid "Information about a product supplier"
-msgstr "Информация за доставчик на продукт"
-
-#. module: product
-#: view:product.product:0
-msgid "Extended Filters..."
-msgstr "Разширени филтри"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,description_purchase:0
-msgid "Purchase Description"
-msgstr "Описание на покупката"
-
-#. module: product
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "Не можете да имате 2 ценови листи, които да се припокриват"
-
-#. module: product
-#: help:product.supplierinfo,delay:0
-msgid ""
-"Lead time in days between the confirmation of the purchase order and the "
-"reception of the products in your warehouse. Used by the scheduler for "
-"automatic computation of the purchase order planning."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action
-msgid ""
-"There can be more than one version of a pricelist. Here you can create and "
-"manage new versions of a price list. Some examples of versions: 2010, 2011, "
-"Summer Promotion, etc."
-msgstr ""
-
-#. module: product
-#: selection:product.template,type:0
-msgid "Stockable Product"
-msgstr "Складируем продукт"
-
-#. module: product
-#: field:product.packaging,code:0
-msgid "Code"
-msgstr "Код"
-
-#. module: product
-#: view:product.supplierinfo:0
-msgid "Seq"
-msgstr "Поредност"
-
-#. module: product
-#: view:product.price_list:0
-msgid "Calculate Product Price per unit base on pricelist version."
-msgstr ""
-"Изчисляване на цена на продукт за единица на база версия на ценова листа."
-
-#. module: product
-#: model:ir.model,name:product.model_product_ul
-msgid "Shipping Unit"
-msgstr "Доставяне на артикул"
-
-#. module: product
-#: field:pricelist.partnerinfo,suppinfo_id:0
-msgid "Partner Information"
-msgstr "Информация за партньор"
-
-#. module: product
-#: selection:product.ul,type:0
-#: model:product.uom.categ,name:product.product_uom_categ_unit
-msgid "Unit"
-msgstr "Единица"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Information"
-msgstr "Информация"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Products Listprices Items"
-msgstr ""
-
-#. module: product
-#: view:product.packaging:0
-msgid "Other Info"
-msgstr "Друга информация"
-
-#. module: product
-#: field:product.pricelist.version,items_id:0
-msgid "Price List Items"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
-msgid ""
-"Create and manage the units of measure categories you want to be used in "
-"your system. If several units of measure are in the same category, they can "
-"be converted to each other. For example, in the unit of measure category "
-"\"Time\", you will have the following UoM: Hours, Days."
-msgstr ""
-
-#. module: product
-#: selection:product.uom,uom_type:0
-msgid "Bigger than the reference UoM"
-msgstr ""
-
-#. module: product
-#: model:ir.module.module,shortdesc:product.module_meta_information
-msgid "Products & Pricelists"
-msgstr "Продукти и ценови листи"
-
-#. module: product
-#: view:product.product:0
-msgid "To Sell"
-msgstr "За продажба"
-
-#. module: product
-#: model:product.category,name:product.product_category_services0
-msgid "Marketable Services"
-msgstr "Пазарни услуги"
-
-#. module: product
-#: field:product.pricelist.item,price_surcharge:0
-msgid "Price Surcharge"
-msgstr "Увеличение на цената"
-
-#. module: product
-#: model:product.template,name:product.product_product_mb1_product_template
-msgid "Mainboard ASUStek A7N8X"
-msgstr "Дънна платка ASUStek A7N8X"
-
-#. module: product
-#: field:product.product,packaging:0
-msgid "Logistical Units"
-msgstr ""
-
-#. module: product
-#: field:product.category,complete_name:0
-#: field:product.category,name:0
-#: field:product.pricelist.type,name:0
-#: field:product.pricelist.version,name:0
-#: view:product.product:0
-#: field:product.product,name_template:0
-#: field:product.template,name:0
-#: field:product.ul,name:0
-#: field:product.uom,name:0
-#: field:product.uom.categ,name:0
-msgid "Name"
-msgstr "Име"
-
-#. module: product
-#: view:product.product:0
-msgid "Stockable"
-msgstr "Складируеми"
-
-#. module: product
-#: model:product.template,name:product.product_product_woodlintelm0_product_template
-msgid "Wood Lintel 4m"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action
-msgid ""
-"You must define a Product for everything you buy or sell. Products can be "
-"raw materials, stockable products, consumables or services. The Product form "
-"contains detailed information about your products related to procurement "
-"logistics, sales price, product category, suppliers and so on."
-msgstr ""
-"Трябва да се определи на \"Продукт\" за всичко, което купува или да продава. "
-"Продуктите могат да бъдат суровини, налични продукти, консумативи и услуги. "
-"Във Формата на продукта се съдържа подробна информация за продукти, свързани "
-"с възлагане на обществени поръчки логистика, продажна цена, категории "
-"продукти, доставчици и така нататък."
-
-#. module: product
-#: model:product.uom,name:product.product_uom_kgm
-msgid "kg"
-msgstr "kg"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_meter
-msgid "m"
-msgstr "м"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "Obsolete"
-msgstr "Без употреба"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_km
-msgid "km"
-msgstr "км"
-
-#. module: product
-#: help:product.template,cost_method:0
-msgid ""
-"Standard Price: the cost price is fixed and recomputed periodically (usually "
-"at the end of the year), Average Price: the cost price is recomputed at each "
-"reception of products."
-msgstr ""
-"\"Стандартна\" Цена: цената е фиксирана и преизчислявана периодично "
-"(обикновено в края на годината), Средна Цена: себестойността се преизчислява "
-"на всеки прием на продуктите."
-
-#. module: product
-#: help:product.category,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of product categories."
-msgstr ""
-"Показва в последователен ред при показване на списък с продуктови категории."
-
-#. module: product
-#: field:product.uom,factor:0
-#: field:product.uom,factor_inv:0
-msgid "Ratio"
-msgstr "Съотношение"
-
-#. module: product
-#: help:product.template,purchase_ok:0
-msgid ""
-"Determine if the product is visible in the list of products within a "
-"selection from a purchase order line."
-msgstr ""
-"Определя дали продуктът ще се вижда в списъка на продуктите, по избор от "
-"линията за покупка."
-
-#. module: product
-#: field:product.template,weight_net:0
-msgid "Net weight"
-msgstr "Тегло нето"
-
-#. module: product
-#: field:product.packaging,width:0
-msgid "Width"
-msgstr "Ширина"
 
 #. module: product
 #: help:product.price.type,field:0
@@ -1208,33 +176,45 @@ msgid "Printing Date"
 msgstr "Дата на отпечатване"
 
 #. module: product
-#: field:product.template,uos_id:0
-msgid "Unit of Sale"
-msgstr "Артикул за продажба"
+#: field:product.product,qty_available:0
+msgid "Quantity On Hand"
+msgstr ""
 
 #. module: product
-#: model:ir.module.module,description:product.module_meta_information
-msgid ""
-"\n"
-"    This is the base module for managing products and pricelists in "
-"OpenERP.\n"
-"\n"
-"    Products support variants, different pricing methods, suppliers\n"
-"    information, make to stock/order, different unit of measures,\n"
-"    packaging and properties.\n"
-"\n"
-"    Pricelists support:\n"
-"    * Multiple-level of discount (by product, category, quantities)\n"
-"    * Compute price based on different criteria:\n"
-"        * Other pricelist,\n"
-"        * Cost price,\n"
-"        * List price,\n"
-"        * Supplier price, ...\n"
-"    Pricelists preferences by product and/or partners.\n"
-"\n"
-"    Print product labels with barcode.\n"
-"    "
-msgstr ""
+#: view:product.pricelist:0
+msgid "Products Price List"
+msgstr "Ценова листа за продукти"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_cm
+msgid "cm"
+msgstr "см"
+
+#. module: product
+#: field:product.price.type,name:0
+msgid "Price Name"
+msgstr "Име на цена"
+
+#. module: product
+#: code:addons/product/pricelist.py:178
+#, python-format
+msgid "Warning !"
+msgstr "Предупреждение !"
+
+#. module: product
+#: field:product.pricelist,company_id:0
+#: field:product.pricelist.item,company_id:0
+#: field:product.pricelist.version,company_id:0
+#: view:product.product:0
+#: field:product.supplierinfo,company_id:0
+#: field:product.template,company_id:0
+msgid "Company"
+msgstr "Фирма"
+
+#. module: product
+#: help:product.template,weight_net:0
+msgid "The net weight in Kg."
+msgstr "Нето тегло в килограми"
 
 #. module: product
 #: help:product.template,seller_delay:0
@@ -1248,16 +228,120 @@ msgstr ""
 "планировчика за да поръчва на база закъснения."
 
 #. module: product
+#: help:product.template,seller_qty:0
+msgid "This is minimum quantity to purchase from Main Supplier."
+msgstr "Това е минималното количество за закупуване от Основен доставчик"
+
+#. module: product
+#: help:product.product,incoming_qty:0
+msgid ""
+"Quantity of products that are planned to arrive.\n"
+"In a context with a single Stock Location, this includes goods arriving to "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods arriving to the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location typed as "
+"'internal'."
+msgstr ""
+
+#. module: product
 #: help:product.template,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
 msgstr ""
 "Основен доставчик, който е най-висок приоритет в списък на доставчиците."
 
 #. module: product
-#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Услуги"
+
+#. module: product
+#: help:product.template,list_price:0
+msgid ""
+"Base price for computing the customer price. Sometimes called the catalog "
+"price."
+msgstr ""
+"Базова цена за изчисляване на цена към клиент. Понякгоа наричана Каталожна "
+"цена."
+
+#. module: product
+#: code:addons/product/pricelist.py:376
+#, python-format
+msgid "Partner section of the product form"
+msgstr "Секця за партньор в продуктовата форма"
+
+#. module: product
+#: model:product.uom,name:product.uom_day
+msgid "Day"
+msgstr "Ден"
+
+#. module: product
+#: view:product.product:0
+msgid "UoM"
+msgstr "Мерни единици"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_form_config_action
+msgid "Create or Import Products"
+msgstr ""
+
+#. module: product
+#: help:product.template,supply_method:0
+msgid ""
+"Produce will generate production order or tasks, according to the product "
+"type. Buy will trigger purchase orders when requested."
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.version,date_start:0
+msgid "Starting date for this pricelist version to be valid."
+msgstr "Начална дата на валидност на ценовата листа"
+
+#. module: product
+#: field:product.product,incoming_qty:0
+msgid "Incoming"
+msgstr "Входящи"
+
+#. module: product
+#: selection:product.template,procure_method:0
+msgid "Make to Stock"
+msgstr ""
+
+#. module: product
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Грешка: Мер. ед. по подрабиране и мер. ед. на поръчката трябва да са от една "
+"и съща категория."
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Suppliers"
+msgstr "Доставчици"
+
+#. module: product
+#: field:product.pricelist.item,name:0
+msgid "Rule Name"
+msgstr "Име на правило"
+
+#. module: product
+#: view:product.product:0
+msgid "To Purchase"
+msgstr "За покупка"
+
+#. module: product
+#: field:product.supplierinfo,product_code:0
+msgid "Supplier Product Code"
+msgstr "Продуктов код на доставчик"
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Rules Test Match"
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,base_pricelist_id:0
@@ -1267,6 +351,7 @@ msgstr ""
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_puchased
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:0
@@ -1274,14 +359,120 @@ msgid "Products"
 msgstr "Продукти"
 
 #. module: product
+#: model:product.uom.categ,name:product.uom_categ_length
+msgid "Length / Distance"
+msgstr "Дължина / Разстояние"
+
+#. module: product
+#: field:product.template,seller_qty:0
+msgid "Supplier Quantity"
+msgstr "Количество на доставчик"
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "New Price ="
+msgstr "Нова цена ="
+
+#. module: product
+#: model:ir.model,name:product.model_pricelist_partnerinfo
+msgid "pricelist.partnerinfo"
+msgstr "pricelist.partnerinfo"
+
+#. module: product
+#: field:product.template,uom_po_id:0
+msgid "Purchase Unit of Measure"
+msgstr "Мерни единице на покупката"
+
+#. module: product
+#: selection:product.template,mes_type:0
+msgid "Fixed"
+msgstr "Фиксиран"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
+msgid "Units of Measure Categories"
+msgstr "Категории мерни единици"
+
+#. module: product
+#: help:product.pricelist.item,product_id:0
+msgid ""
+"Set a product if this rule only apply to one product. Keep empty for all "
+"products"
+msgstr ""
+"Задаване на продукта, ако това правило се прилага само за един продукт. "
+"Дръжте празно за всички продукти"
+
+#. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layers on a pallet or box"
 msgstr "Брой слоеве в пале или кашон"
 
 #. module: product
-#: help:product.pricelist.item,base:0
-msgid "The mode for computing the price for this rule."
-msgstr "Режимът за калкулиране центата за това правило."
+#: model:ir.model,name:product.model_product_pricelist_type
+#: field:product.pricelist,type:0
+msgid "Pricelist Type"
+msgstr "Тип ценова листа"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Base Prices"
+msgstr "Основни цени"
+
+#. module: product
+#: field:product.product,color:0
+msgid "Color Index"
+msgstr ""
+
+#. module: product
+#: view:product.template:0
+#: field:product.template,type:0
+msgid "Product Type"
+msgstr "Тип на продукта"
+
+#. module: product
+#: field:product.product,code:0
+#: field:product.product,default_code:0
+msgid "Reference"
+msgstr "Означение"
+
+#. module: product
+#: field:product.packaging,width:0
+msgid "Width"
+msgstr "Ширина"
+
+#. module: product
+#: view:product.product:0
+msgid "Characteristics"
+msgstr "Характеристики"
+
+#. module: product
+#: field:product.template,sale_ok:0
+msgid "Can be Sold"
+msgstr "Продаваем"
+
+#. module: product
+#: view:product.product:0
+msgid "Group by..."
+msgstr "Групирай по ..."
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+#: field:product.template,description_sale:0
+msgid "Sale Description"
+msgstr "Описание на продажбата"
+
+#. module: product
+#: field:product.template,produce_delay:0
+msgid "Manufacturing Lead Time"
+msgstr "Производствен срок за доставка"
+
+#. module: product
+#: field:product.supplierinfo,pricelist_ids:0
+msgid "Supplier Pricelist"
+msgstr "Ценова листа на доставчик"
 
 #. module: product
 #: view:product.packaging:0
@@ -1290,10 +481,79 @@ msgid "Pallet Dimension"
 msgstr "Размери на пале"
 
 #. module: product
-#: code:addons/product/product.py:618
+#: code:addons/product/product.py:175
 #, python-format
-msgid " (copy)"
-msgstr " (копие)"
+msgid "Warning"
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.item,base:0
+msgid "Based on"
+msgstr "Базиран на"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_ton
+msgid "t"
+msgstr ""
+
+#. module: product
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
+msgstr ""
+"Тази цена ще се счита за цена за Мерните единици на доставчика ако има "
+"такива или в противен случай мерните единице по подразбиране за продукта"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_kgm
+msgid "kg"
+msgstr "kg"
+
+#. module: product
+#: model:ir.model,name:product.model_res_partner
+msgid "Partner"
+msgstr "Партньор"
+
+#. module: product
+#: code:addons/product/product.py:143
+#, python-format
+msgid ""
+"Conversion from Product UoM %s to Default UoM %s is not possible as they "
+"both belong to different Category!."
+msgstr ""
+
+#. module: product
+#: field:product.template,sale_delay:0
+msgid "Customer Lead Time"
+msgstr "Срок за доставка към клиент"
+
+#. module: product
+#: model:process.transition,name:product.process_transition_supplierofproduct0
+msgid "Supplier of the product"
+msgstr "Доставчик на продукта"
+
+#. module: product
+#: help:product.template,cost_method:0
+msgid ""
+"Standard Price: the cost price is fixed and recomputed periodically (usually "
+"at the end of the year), Average Price: the cost price is recomputed at each "
+"reception of products."
+msgstr ""
+"\"Стандартна\" Цена: цената е фиксирана и преизчислявана периодично "
+"(обикновено в края на годината), Средна Цена: себестойността се преизчислява "
+"на всеки прием на продуктите."
+
+#. module: product
+#: field:product.pricelist,name:0
+msgid "Pricelist Name"
+msgstr "Име на ценова листа"
+
+#. module: product
+#: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
+msgid "Public Price"
+msgstr "Публична цена"
 
 #. module: product
 #: field:product.template,seller_ids:0
@@ -1301,27 +561,134 @@ msgid "Partners"
 msgstr "Партньори"
 
 #. module: product
-#: help:product.template,sale_delay:0
-msgid ""
-"This is the average delay in days between the confirmation of the customer "
-"order and the delivery of the finished products. It's the time you promise "
-"to your customers."
+#: selection:product.template,cost_method:0
+msgid "Average Price"
+msgstr "Средна цена"
+
+#. module: product
+#: field:product.template,uos_id:0
+msgid "Unit of Sale"
+msgstr "Артикул за продажба"
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "Закръглена точност"
+
+#. module: product
+#: help:product.pricelist.item,name:0
+msgid "Explicit rule name for this pricelist line."
+msgstr "Изрично правило за име за тази линия на ценоразпис."
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Min. Margin"
+msgstr "Мин. Маржин"
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "* ( 1 + "
+msgstr "* ( 1 + "
+
+#. module: product
+#: help:product.template,product_manager:0
+msgid "This is use as task responsible"
 msgstr ""
-"Това е средното забавяне в дни между потвърждаване на поръчка на клиента и "
-"доставка на готовата продукция. Това е времето, което обещавате на клиентите "
-"си."
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Rounding Method"
+msgstr "Метод на закръгляване"
+
+#. module: product
+#: field:product.category,child_id:0
+msgid "Child Categories"
+msgstr "Подкатегории"
 
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
-msgid "Second UoM"
-msgstr "Втора мерна единица"
+#: field:product.template,state:0
+msgid "Status"
+msgstr "Състояние"
 
 #. module: product
-#: code:addons/product/product.py:142
+#: field:product.pricelist.item,price_round:0
+msgid "Price Rounding"
+msgstr "Закръгляване на цена"
+
+#. module: product
+#: sql_constraint:product.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr ""
+
+#. module: product
+#: help:product.packaging,height:0
+msgid "The height of the package"
+msgstr "Височината на пакет"
+
+#. module: product
+#: code:addons/product/product.py:345
+#, python-format
+msgid ""
+"New UoM '%s' must belongs to same UoM category '%s' as of old UoM '%s'."
+msgstr ""
+
+#. module: product
+#: model:product.pricelist.type,name:product.pricelist_type_sale
+#: field:res.partner,property_product_pricelist:0
+msgid "Sale Pricelist"
+msgstr "Продажна цена"
+
+#. module: product
+#: view:product.product:0
+#: field:product.ul,type:0
+msgid "Type"
+msgstr "Тип"
+
+#. module: product
+#: field:product.price_list,price_list:0
+msgid "PriceList"
+msgstr "Ценива листа"
+
+#. module: product
+#: help:product.packaging,weight:0
+msgid "The weight of a full package, pallet or box."
+msgstr "Теглото на целия пакет, пале или кутия"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_unit
+msgid "PCE"
+msgstr "бр."
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
+#: model:ir.ui.menu,name:product.menu_product_pricelist_action2
+#: model:ir.ui.menu,name:product.menu_product_pricelist_main
+msgid "Pricelists"
+msgstr "Ценови листи"
+
+#. module: product
+#: view:product.template:0
+msgid "Miscelleanous"
+msgstr "Разни"
+
+#. module: product
+#: code:addons/product/product.py:143
 #, python-format
 msgid "Error !"
 msgstr "Грешка !"
+
+#. module: product
+#: report:product.pricelist:0
+msgid "Price List Name"
+msgstr "Име на ценовата листа"
+
+#. module: product
+#: help:product.pricelist.item,base:0
+msgid "The mode for computing the price for this rule."
+msgstr "Режимът за калкулиране центата за това правило."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -1332,14 +699,47 @@ msgid "Units of Measure"
 msgstr "Мерни единици"
 
 #. module: product
+#: view:product.price_list:0
+msgid "Print"
+msgstr "Печат"
+
+#. module: product
+#: field:product.supplierinfo,delay:0
+msgid "Delivery Lead Time"
+msgstr "Време за доставка"
+
+#. module: product
 #: field:product.supplierinfo,min_qty:0
 msgid "Minimal Quantity"
 msgstr "Минимално количество"
 
 #. module: product
-#: model:product.category,name:product.product_category_pc
-msgid "PC"
-msgstr "PC"
+#: view:product.product:0
+msgid "Miscellaneous"
+msgstr "Разни"
+
+#. module: product
+#: help:product.uom,active:0
+msgid ""
+"By unchecking the active field you can disable a unit of measure without "
+"deleting it."
+msgstr ""
+"Като махнете отметката на активното поле можете да забраните единица мярка, "
+"без да я изтриете."
+
+#. module: product
+#: help:product.template,sale_ok:0
+msgid ""
+"Determines if the product can be visible in the list of product within a "
+"selection from a sale order line."
+msgstr ""
+"Определя дали продуктът може да се вижда в списъка на продукт по избор от "
+"линията за продажба."
+
+#. module: product
+#: field:product.template,seller_delay:0
+msgid "Supplier Lead Time"
+msgstr "Срок за доставка на доставчик"
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
@@ -1351,14 +751,24 @@ msgstr ""
 "оферта. Когато е празен ще се използва вътрешен такъв."
 
 #. module: product
-#: selection:product.template,procure_method:0
-msgid "Make to Stock"
-msgstr ""
+#: model:product.pricelist.version,name:product.ver0
+msgid "Default Public Pricelist Version"
+msgstr "По подразбиране публична версия на Ценоразпис"
+
+#. module: product
+#: field:product.pricelist.type,key:0
+msgid "Key"
+msgstr "Ключ"
 
 #. module: product
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
 msgstr "Версия на ценова листа"
+
+#. module: product
+#: field:product.product,virtual_available:0
+msgid "Quantity Available"
+msgstr ""
 
 #. module: product
 #: help:product.pricelist.item,sequence:0
@@ -1369,19 +779,88 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model:ir.actions.report.xml,name:product.report_product_pricelist
+#: model:ir.model,name:product.model_product_pricelist
+#: field:product.product,price:0
+#: field:product.product,pricelist_id:0
+#: view:product.supplierinfo:0
+msgid "Pricelist"
+msgstr "Ценова листа"
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
 msgstr "Консумативи"
 
 #. module: product
-#: help:product.price.type,currency_id:0
-msgid "The currency the field is expressed in."
-msgstr "Полето за валута се изразява във."
+#: model:ir.actions.act_window,help:product.product_form_config_action
+msgid ""
+"Create a product form for everything you buy or sell. Specify a supplier if "
+"the product can be purchased."
+msgstr ""
+
+#. module: product
+#: view:product.uom:0
+msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
+msgstr ""
 
 #. module: product
 #: help:product.template,weight:0
 msgid "The gross weight in Kg."
 msgstr "Бруто тегло в кг."
+
+#. module: product
+#: selection:product.ul,type:0
+msgid "Box"
+msgstr "Кутия"
+
+#. module: product
+#: code:addons/product/product.py:400
+#, python-format
+msgid "Products: "
+msgstr "Продукти: "
+
+#. module: product
+#: model:product.uom,name:product.uom_hour
+msgid "Hour"
+msgstr "Час"
+
+#. module: product
+#: field:product.category,parent_id:0
+msgid "Parent Category"
+msgstr "Родителска категория"
+
+#. module: product
+#: selection:product.template,state:0
+msgid "In Development"
+msgstr "В разработка"
+
+#. module: product
+#: help:product.pricelist.type,key:0
+msgid ""
+"Used in the code to select specific prices based on the context. Keep "
+"unchanged."
+msgstr ""
+"Използва се в кода за избор на конкретни цени на базата на контекста. Да се "
+"съхранява непроменена."
+
+#. module: product
+#: field:product.packaging,weight:0
+msgid "Total Package Weight"
+msgstr "Общo тегло на пратката"
+
+#. module: product
+#: view:product.product:0
+msgid "Context..."
+msgstr ""
+
+#. module: product
+#: help:product.template,procure_method:0
+msgid ""
+"'Make to Stock': When needed, take from the stock or wait until re-"
+"supplying. 'Make to Order': When needed, purchase or produce for the "
+"procurement request."
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -1390,9 +869,41 @@ msgid "Procurement"
 msgstr "Снабдаване"
 
 #. module: product
+#: model:ir.actions.act_window,name:product.product_category_action
+#: model:ir.ui.menu,name:product.menu_products_category
+msgid "Products by Category"
+msgstr "Продукти по категория"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Weights"
+msgstr "Тегла"
+
+#. module: product
 #: field:product.uom,category_id:0
 msgid "UoM Category"
 msgstr "Категория мерни единици"
+
+#. module: product
+#: view:product.product:0
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant"
+msgstr "Варианти на продукт"
+
+#. module: product
+#: help:product.supplierinfo,product_name:0
+msgid ""
+"This supplier's product name will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+"Това име на доставчика на ме на продукта ще се използва при отпечатване на "
+"искане за оферта. Да се съхранява празен за да се използва вътрешно."
+
+#. module: product
+#: field:product.packaging,ul:0
+msgid "Type of Package"
+msgstr "Тип на пратката"
 
 #. module: product
 #: field:product.template,loc_rack:0
@@ -1400,9 +911,51 @@ msgid "Rack"
 msgstr ""
 
 #. module: product
-#: field:product.template,uom_po_id:0
-msgid "Purchase Unit of Measure"
-msgstr "Мерни единице на покупката"
+#: selection:product.ul,type:0
+msgid "Pack"
+msgstr "Пакет"
+
+#. module: product
+#: field:product.product,ean13:0
+msgid "EAN13"
+msgstr "EAN13"
+
+#. module: product
+#: view:product.uom:0
+msgid "Ratio & Precision"
+msgstr "Сътношение и прецизност"
+
+#. module: product
+#: code:addons/product/product.py:641
+#, python-format
+msgid " (copy)"
+msgstr " (копие)"
+
+#. module: product
+#: field:product.template,seller_id:0
+msgid "Main Supplier"
+msgstr "Основен доставчик"
+
+#. module: product
+#: help:product.template,type:0
+msgid ""
+"Will change the way procurements are processed. Consumable are product where "
+"you don't manage stock."
+msgstr ""
+
+#. module: product
+#: model:product.uom.categ,name:product.product_uom_categ_kgm
+msgid "Weight"
+msgstr "Тегло"
+
+#. module: product
+#: help:product.uom,category_id:0
+msgid ""
+"Quantity conversions may happen automatically between Units of Measure in "
+"the same category, according to their respective ratios."
+msgstr ""
+"Конвертиране на количества може да се случи автоматично между мерни единици "
+"в една и съща категория според тяхното съотношение."
 
 #. module: product
 #: field:product.template,supply_method:0
@@ -1421,22 +974,59 @@ msgstr ""
 "подкатегории."
 
 #. module: product
-#: view:product.product:0
-msgid "Group by..."
-msgstr "Групирай по ..."
+#: selection:product.template,state:0
+msgid "Obsolete"
+msgstr "Без употреба"
 
 #. module: product
-#: model:product.template,name:product.product_product_cpu_gen_product_template
-msgid "Regular processor config"
-msgstr ""
+#: model:process.node,name:product.process_node_supplier0
+#: view:product.supplierinfo:0
+msgid "Supplier Information"
+msgstr "Информация за доставчик"
 
 #. module: product
-#: code:addons/product/product.py:142
-#, python-format
+#: help:product.product,active:0
 msgid ""
-"Conversion from Product UoM m to Default UoM PCE is not possible as they "
-"both belong to different Category!."
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
 msgstr ""
+"Ако активното поле е настроено на False, ще ви позволи да скриете продукта, "
+"без да го махате."
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_ul_form_action
+#: model:ir.model,name:product.model_product_packaging
+#: model:ir.ui.menu,name:product.menu_product_ul_form_action
+#: view:product.packaging:0
+#: view:product.product:0
+#: view:product.ul:0
+msgid "Packaging"
+msgstr "Опаковане"
+
+#. module: product
+#: field:product.price.type,currency_id:0
+#: report:product.pricelist:0
+#: field:product.pricelist,currency_id:0
+msgid "Currency"
+msgstr "Валута"
+
+#. module: product
+#: help:product.price.type,currency_id:0
+msgid "The currency the field is expressed in."
+msgstr "Полето за валута се изразява във."
+
+#. module: product
+#: help:product.uom,rounding:0
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
+"that cannot be further split, such as a piece."
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Descriptions"
+msgstr "Описание"
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1444,25 +1034,33 @@ msgid "Start Date"
 msgstr "Начална дата"
 
 #. module: product
-#: help:product.template,produce_delay:0
-msgid ""
-"Average delay in days to produce this product. This is only for the "
-"production order and, if it is a multi-level bill of material, it's only for "
-"the level of this product. Different lead times will be summed for all "
-"levels and purchase orders."
-msgstr ""
+#: view:res.partner:0
+msgid "Sales Properties"
+msgstr "Свойства на продажбите"
 
 #. module: product
-#: help:product.product,qty_available:0
-msgid ""
-"Current quantities of products in selected locations or all internal if none "
-"have been selected."
-msgstr ""
+#: field:product.template,loc_row:0
+msgid "Row"
+msgstr "Ред"
 
 #. module: product
-#: model:product.template,name:product.product_product_pc1_product_template
-msgid "Basic PC"
+#: view:product.product:0
+#: field:product.template,categ_id:0
+msgid "Category"
+msgstr "Категория"
+
+#. module: product
+#: help:product.pricelist.item,min_quantity:0
+msgid ""
+"The rule only applies if the partner buys/sells more than this quantity."
 msgstr ""
+"Правилото се прилага само ако партньор купува/продава повече от това "
+"количество."
+
+#. module: product
+#: selection:product.template,cost_method:0
+msgid "Standard Price"
+msgstr "Стандартна цена"
 
 #. module: product
 #: help:product.pricelist,active:0
@@ -1472,14 +1070,16 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.product,qty_available:0
-msgid "Real Stock"
-msgstr "Налична стока"
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model:ir.ui.menu,name:product.menu_product_category_action_form
+#: view:product.category:0
+msgid "Product Categories"
+msgstr "Категории на продукта"
 
 #. module: product
-#: model:product.uom,name:product.product_uom_cm
-msgid "cm"
-msgstr "см"
+#: field:product.uom,uom_type:0
+msgid "UoM Type"
+msgstr "Тип мер. ед."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
@@ -1487,17 +1087,60 @@ msgid "Product Unit of Measure"
 msgstr "Мерни единици на продукт"
 
 #. module: product
-#: constraint:product.template:0
+#: help:product.template,uom_po_id:0
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+"Default Unit of Measure used for purchase orders. It must be in the same "
+"category than the default unit of measure."
 msgstr ""
-"Грешка: Мер. ед. по подрабиране и мер. ед. на поръчката трябва да са от една "
-"и съща категория."
+"По подразбиране мер. ед. използвани при нареждане за закупуване. Трябва да "
+"бъде в същата категория като мер. ед. по подразбиране."
 
 #. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "Закръглена точност"
+#: help:product.supplierinfo,product_uom:0
+msgid "This comes from the product form."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
+msgid ""
+"You must define a Product for everything you buy or sell. Products can be "
+"raw materials, stockable products, consumables or services. The Product form "
+"contains detailed information about your products related to procurement "
+"logistics, sales price, product category, suppliers and so on."
+msgstr ""
+"Трябва да се определи на \"Продукт\" за всичко, което купува или да продава. "
+"Продуктите могат да бъдат суровини, налични продукти, консумативи и услуги. "
+"Във Формата на продукта се съдържа подробна информация за продукти, свързани "
+"с възлагане на обществени поръчки логистика, продажна цена, категории "
+"продукти, доставчици и така нататък."
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Products Listprices Items"
+msgstr ""
+
+#. module: product
+#: help:product.packaging,ul_qty:0
+msgid "The number of packages by layer"
+msgstr "Брой пакети на слой"
+
+#. module: product
+#: help:product.uom,factor_inv:0
+msgid ""
+"How many times this UoM is bigger than the reference UoM in this category:\n"
+"1 * (this unit) = ratio * (reference unit)"
+msgstr ""
+
+#. module: product
+#: help:product.packaging,width:0
+msgid "The width of the package"
+msgstr "Ширина на пратката"
+
+#. module: product
+#: field:product.packaging,qty:0
+msgid "Quantity by Package"
+msgstr "Количество в пакет"
 
 #. module: product
 #: view:product.uom:0
@@ -1505,9 +1148,46 @@ msgid "Unit of Measure Properties"
 msgstr "Свойства на мер. ед."
 
 #. module: product
-#: model:product.template,name:product.product_product_shelf1_product_template
-msgid "Rack 200cm"
+#: help:product.template,standard_price:0
+msgid ""
+"Product's cost for accounting stock valuation. It is the base price for the "
+"supplier price."
 msgstr ""
+
+#. module: product
+#: help:product.supplierinfo,qty:0
+msgid "This is a quantity which is converted into Default Uom."
+msgstr "Това е количество, конвертирано в Мер. ед. по подразбиране"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid ""
+"Create and manage the units of measure you want to be used in your system. "
+"You can define a conversion rate between several Units of Measure within the "
+"same category."
+msgstr ""
+"Създававане и управление на мер. ед., които желаете да се използват във "
+"вашата система. Мовете да дефинирате конвертиране между няколко мерни "
+"единици в една и съща категория."
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_ul_form_action
+msgid ""
+"Create and manage your packaging dimensions and types you want to be "
+"maintained in your system."
+msgstr ""
+"Създаване и управление на  размери и видове на опаковката, които искате да "
+"се поддържат във вашата система."
+
+#. module: product
+#: help:product.template,categ_id:0
+msgid "Select category for the current product"
+msgstr "Изберете категория за текущия продукт"
+
+#. module: product
+#: field:product.product,outgoing_qty:0
+msgid "Outgoing"
+msgstr "Изходящ"
 
 #. module: product
 #: selection:product.template,supply_method:0
@@ -1515,9 +1195,45 @@ msgid "Buy"
 msgstr "Купи"
 
 #. module: product
-#: view:product.uom.categ:0
-msgid "Units of Measure categories"
-msgstr "Категории мерни единици"
+#: selection:product.uom,uom_type:0
+msgid "Reference UoM for this category"
+msgstr "Референтени мерни единици за тази категория"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_version
+#: view:product.pricelist:0
+#: view:product.pricelist.version:0
+msgid "Pricelist Version"
+msgstr "Версия на ценовата листа"
+
+#. module: product
+#: help:product.packaging,sequence:0
+msgid "Gives the sequence order when displaying a list of packaging."
+msgstr "Показва в последователен ред при показване на списък на опаковките."
+
+#. module: product
+#: selection:product.category,type:0
+#: selection:product.template,state:0
+msgid "Normal"
+msgstr "Нормален"
+
+#. module: product
+#: code:addons/product/pricelist.py:178
+#, python-format
+msgid ""
+"At least one pricelist has no active version !\n"
+"Please create or activate one."
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.item,price_max_margin:0
+msgid "Max. Price Margin"
+msgstr "Макс. маржин на цена"
+
+#. module: product
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Продажби и поръчки"
 
 #. module: product
 #: help:product.packaging,weight_ul:0
@@ -1525,9 +1241,45 @@ msgid "The weight of the empty UL"
 msgstr "Теглото на празен UL"
 
 #. module: product
+#: help:product.packaging,code:0
+msgid "The code of the transport unit."
+msgstr "Код на транспортната единица"
+
+#. module: product
+#: view:product.uom:0
+msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+
+#. module: product
+#: code:addons/product/pricelist.py:375
+#, python-format
+msgid "Other Pricelist"
+msgstr "Друга ценова листа"
+
+#. module: product
+#: view:product.price.type:0
+msgid "Products Price Type"
+msgstr "Тип цена на продуктите"
+
+#. module: product
+#: field:product.template,product_manager:0
+msgid "Product Manager"
+msgstr "Продуктов мениджър"
+
+#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference UoM"
 msgstr "По-малко от референтната Мерна единица"
+
+#. module: product
+#: field:product.product,price_extra:0
+msgid "Variant Price Extra"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_supplierinfo
+msgid "Information about a product supplier"
+msgstr "Информация за доставчик на продукт"
 
 #. module: product
 #: field:product.price.type,active:0
@@ -1544,14 +1296,97 @@ msgid "Variant Price Margin"
 msgstr ""
 
 #. module: product
-#: sql_constraint:product.uom:0
-msgid "The conversion ratio for a unit of measure cannot be 0!"
+#: field:product.supplierinfo,product_name:0
+msgid "Supplier Product Name"
+msgstr "Име на доставчика на продукта"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action_puchased
+msgid ""
+"Products can be purchased and/or sold. They can be raw materials, stockable "
+"products, consumables or services. The Product form contains detailed "
+"information about your products related to procurement logistics, sales "
+"price, product category, suppliers and so on."
+msgstr ""
+"Продуктите могат да бъдат закупувани и / или продавани. Те могат да бъдат "
+"суровини, stockable продукти, консумативи и услуги. Във формата на продукта "
+"се съдържа подробна информация за продукти, свързани с възлагане на "
+"обществени поръчки логистика, продажната цена, категория продукти, "
+"доставчици и така нататък."
+
+#. module: product
+#: help:product.product,qty_available:0
+msgid ""
+"Current quantity of products.\n"
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location typed as "
+"'internal'."
 msgstr ""
 
 #. module: product
-#: help:product.packaging,ean:0
-msgid "The EAN code of the package unit."
-msgstr "Баркод на пакета"
+#: field:product.template,rental:0
+msgid "Can be Rent"
+msgstr "Може да се наеме"
+
+#. module: product
+#: model:product.price.type,name:product.standard_price
+#: field:product.template,standard_price:0
+msgid "Cost Price"
+msgstr "Себестойност"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+#: field:product.template,description_purchase:0
+msgid "Purchase Description"
+msgstr "Описание на покупката"
+
+#. module: product
+#: view:product.pricelist:0
+msgid "Products Price Search"
+msgstr "Търсене по цена продукти"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Second UoM"
+msgstr "Втора мерна единица"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_template_action_tree
+msgid "Product Templates"
+msgstr "Шаблони за продукт"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Storage Localisation"
+msgstr ""
+
+#. module: product
+#: help:product.packaging,length:0
+msgid "The length of the package"
+msgstr "Дължина на пакета"
+
+#. module: product
+#: field:product.pricelist.item,price_min_margin:0
+msgid "Min. Price Margin"
+msgstr "Мин. маржин на цена"
+
+#. module: product
+#: field:product.pricelist.version,items_id:0
+msgid "Price List Items"
+msgstr ""
+
+#. module: product
+#: field:product.template,weight:0
+msgid "Gross weight"
+msgstr "Брутно тегло"
 
 #. module: product
 #: field:product.packaging,weight_ul:0
@@ -1559,15 +1394,37 @@ msgid "Empty Package Weight"
 msgstr "Тегло на празен пакет"
 
 #. module: product
-#: field:product.price.type,field:0
-msgid "Product Field"
-msgstr "Поле за порукт"
+#: model:ir.model,name:product.model_product_category
+#: field:product.pricelist.item,categ_id:0
+msgid "Product Category"
+msgstr "Категория на продукта"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_pricelist_type_action
-#: model:ir.ui.menu,name:product.menu_product_pricelist_type_action2
-msgid "Pricelists Types"
-msgstr "Типове ценови листи"
+#: model:ir.actions.act_window,name:product.product_price_type_action
+#: model:ir.ui.menu,name:product.menu_product_price_type
+msgid "Price Types"
+msgstr ""
+
+#. module: product
+#: constraint:product.pricelist.item:0
+msgid ""
+"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+"Item!"
+msgstr ""
+"Грешка! Вие не можете да присвоите Основния ценоразпис като Друг ценоразпис!"
+
+#. module: product
+#: field:product.template,mes_type:0
+msgid "Measure Type"
+msgstr "Вид мярка"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action
+msgid ""
+"There can be more than one version of a pricelist. Here you can create and "
+"manage new versions of a price list. Some examples of versions: 2010, 2011, "
+"Summer Promotion, etc."
+msgstr ""
 
 #. module: product
 #: help:product.uom,factor:0
@@ -1577,30 +1434,96 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: help:product.template,state:0
+msgid "Tells the user if he can use the product or not."
+msgstr "Показва на потребителя дали може да използва продукт или не."
+
+#. module: product
+#: selection:product.template,type:0
+msgid "Stockable Product"
+msgstr "Складируем продукт"
+
+#. module: product
+#: field:pricelist.partnerinfo,min_quantity:0
+#: field:product.supplierinfo,qty:0
+msgid "Quantity"
+msgstr "Количество"
+
+#. module: product
+#: field:product.packaging,code:0
+msgid "Code"
+msgstr "Код"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_gram
+msgid "g"
+msgstr "g"
+
+#. module: product
+#: view:product.supplierinfo:0
+msgid "Seq"
+msgstr "Поредност"
+
+#. module: product
+#: view:product.price_list:0
+msgid "Calculate Product Price per unit base on pricelist version."
+msgstr ""
+"Изчисляване на цена на продукт за единица на база версия на ценова листа."
+
+#. module: product
+#: selection:product.template,mes_type:0
+msgid "Variable"
+msgstr "Променлива"
+
+#. module: product
 #: help:product.template,uom_id:0
 msgid "Default Unit of Measure used for all stock operation."
 msgstr "По подразбиране мерни единици, използвани за стокови операции"
 
 #. module: product
-#: model:product.category,name:product.product_category_misc0
-msgid "Misc"
-msgstr "Разни"
+#: model:ir.model,name:product.model_product_ul
+msgid "Shipping Unit"
+msgstr "Доставяне на артикул"
 
 #. module: product
-#: model:product.template,name:product.product_product_pc4_product_template
-msgid "Customizable PC"
+#: field:product.packaging,height:0
+msgid "Height"
+msgstr "Височина"
+
+#. module: product
+#: help:product.pricelist.version,date_end:0
+msgid "Ending date for this pricelist version to be valid."
+msgstr "Крайна дата на валидност на тази версия на ценоразпис."
+
+#. module: product
+#: field:pricelist.partnerinfo,suppinfo_id:0
+msgid "Partner Information"
+msgstr "Информация за партньор"
+
+#. module: product
+#: selection:product.category,type:0
+msgid "View"
+msgstr "Преглед"
+
+#. module: product
+#: model:product.category,name:product.cat0
+msgid "All products"
+msgstr "Всички продукти"
+
+#. module: product
+#: view:product.price_list:0
+msgid "Close"
+msgstr "Затвори"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_item
+msgid "Pricelist item"
 msgstr ""
 
 #. module: product
-#: field:pricelist.partnerinfo,price:0
-msgid "Unit Price"
-msgstr "Единична цена"
-
-#. module: product
-#: model:product.category,name:product.product_category_7
-#: model:product.template,name:product.product_product_1_product_template
-msgid "Onsite Intervention"
-msgstr ""
+#: help:product.price.type,name:0
+msgid "Name of this kind of price."
+msgstr "Име на този вид цена"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -1608,14 +1531,71 @@ msgid "Public Pricelist"
 msgstr "Публична ценова листа"
 
 #. module: product
-#: model:product.category,name:product.product_category_marketableproduct0
-msgid "Marketable Products"
-msgstr "Продаваеми продукти"
+#: field:product.product,product_image:0
+msgid "Image"
+msgstr ""
 
 #. module: product
-#: field:product.supplierinfo,product_code:0
-msgid "Supplier Product Code"
-msgstr "Продуктов код на доставчик"
+#: selection:product.ul,type:0
+#: model:product.uom.categ,name:product.product_uom_categ_unit
+msgid "Unit"
+msgstr "Единица"
+
+#. module: product
+#: help:product.template,produce_delay:0
+msgid ""
+"Average delay in days to produce this product. This is only for the "
+"production order and, if it is a multi-level bill of material, it's only for "
+"the level of this product. Different lead times will be summed for all "
+"levels and purchase orders."
+msgstr ""
+
+#. module: product
+#: field:product.price_list,qty2:0
+msgid "Quantity-2"
+msgstr "Количество-2"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Information"
+msgstr "Информация"
+
+#. module: product
+#: view:product.product:0
+msgid "Codes"
+msgstr "Кодове"
+
+#. module: product
+#: field:product.price_list,qty4:0
+msgid "Quantity-4"
+msgstr "Количество-4"
+
+#. module: product
+#: field:product.price_list,qty5:0
+msgid "Quantity-5"
+msgstr "Количество-5"
+
+#. module: product
+#: view:product.packaging:0
+msgid "Other Info"
+msgstr "Друга информация"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_meter
+msgid "m"
+msgstr "м"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Delays"
+msgstr "Закъснения"
+
+#. module: product
+#: model:product.uom.categ,name:product.uom_categ_wtime
+msgid "Working Time"
+msgstr "Работно време"
 
 #. module: product
 #: view:product.product:0
@@ -1623,14 +1603,59 @@ msgid "Default UOM"
 msgstr "По подразбиране Мер. ед."
 
 #. module: product
+#: view:product.product:0
+msgid "Both stockable and consumable products"
+msgstr ""
+
+#. module: product
 #: selection:product.ul,type:0
 msgid "Pallet"
 msgstr "Пале"
 
 #. module: product
+#: model:process.node,note:product.process_node_product0
+msgid "Creation of the product"
+msgstr "Създаване на продукта"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+msgid ""
+"Create and manage the units of measure categories you want to be used in "
+"your system. If several units of measure are in the same category, they can "
+"be converted to each other. For example, in the unit of measure category "
+"\"Time\", you will have the following UoM: Hours, Days."
+msgstr ""
+
+#. module: product
+#: selection:product.uom,uom_type:0
+msgid "Bigger than the reference UoM"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
+msgid ""
+"A price list contains rules to be evaluated in order to compute the purchase "
+"or sales price for all the partners assigned to a price list. Price lists "
+"have several versions (2010, 2011, Promotion of February 2010, etc.) and "
+"each version has several rules. Example: the customer price of a product "
+"category will be based on the supplier price multiplied by 1.80."
+msgstr ""
+
+#. module: product
 #: field:product.packaging,ul_qty:0
 msgid "Package by layer"
 msgstr "Пакети на един слой"
+
+#. module: product
+#: view:product.uom.categ:0
+msgid "Units of Measure categories"
+msgstr "Категории мерни единици"
+
+#. module: product
+#: field:pricelist.partnerinfo,price:0
+msgid "Unit Price"
+msgstr "Единична цена"
 
 #. module: product
 #: field:product.template,warranty:0
@@ -1661,6 +1686,67 @@ msgid "Product"
 msgstr "Продукт"
 
 #. module: product
+#: help:product.template,sale_delay:0
+msgid ""
+"This is the average delay in days between the confirmation of the customer "
+"order and the delivery of the finished products. It's the time you promise "
+"to your customers."
+msgstr ""
+"Това е средното забавяне в дни между потвърждаване на поръчка на клиента и "
+"доставка на готовата продукция. Това е времето, което обещавате на клиентите "
+"си."
+
+#. module: product
+#: code:addons/product/product.py:175
+#, python-format
+msgid "Cannot change the category of existing UoM '%s'."
+msgstr ""
+
+#. module: product
+#: field:product.packaging,ean:0
+msgid "EAN"
+msgstr "EAN"
+
+#. module: product
+#: view:product.template:0
+msgid "Product Description"
+msgstr "Описание на продукт"
+
+#. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr "Общ брой продукти, които можете да сложите едно пале или кашон"
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid " ) + "
+msgstr " ) + "
+
+#. module: product
+#: model:ir.model,name:product.model_product_uom_categ
+msgid "Product uom categ"
+msgstr "Категория продуктови мерни единици"
+
+#. module: product
+#: field:product.price_list,qty3:0
+msgid "Quantity-3"
+msgstr "Количество-3"
+
+#. module: product
+#: help:product.product,outgoing_qty:0
+msgid ""
+"Quantity of products that are planned to leave.\n"
+"In a context with a single Stock Location, this includes goods leaving from "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving from the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods leaving from the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods leaving from any Stock Location typed as "
+"'internal'."
+msgstr ""
+
+#. module: product
 #: selection:product.template,supply_method:0
 msgid "Produce"
 msgstr "Продукция"
@@ -1671,9 +1757,28 @@ msgid "Make to Order"
 msgstr "Произведи за поръчка"
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
-msgstr "Общ брой продукти, които можете да сложите едно пале или кашон"
+#: view:product.template:0
+msgid "UOM"
+msgstr "Мерна единица"
+
+#. module: product
+#: field:product.pricelist.item,price_surcharge:0
+msgid "Price Surcharge"
+msgstr "Увеличение на цената"
+
+#. module: product
+#: constraint:product.pricelist.version:0
+msgid "You cannot have 2 pricelist versions that overlap!"
+msgstr "Не можете да имате 2 ценови листи, които да се припокриват"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.action_product_price_list
+#: model:ir.model,name:product.model_product_price_list
+#: view:product.price_list:0
+#: report:product.pricelist:0
+#: field:product.pricelist.version,pricelist_id:0
+msgid "Price List"
+msgstr "Ценова листа"
 
 #. module: product
 #: field:product.product,variants:0
@@ -1681,562 +1786,14 @@ msgid "Variants"
 msgstr "Варианти"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_category_action
-#: model:ir.ui.menu,name:product.menu_products_category
-msgid "Products by Category"
-msgstr "Продукти по категория"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_category_action_form
-#: model:ir.ui.menu,name:product.menu_product_category_action_form
-msgid "Products Categories"
-msgstr "Категории продукти"
-
-#. module: product
-#: field:product.template,uos_coeff:0
-msgid "UOM -> UOS Coeff"
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,sequence:0
-msgid "Assigns the priority to the list of product supplier."
-msgstr "Възложете приоритет към списъка на продуктите на доставчика."
-
-#. module: product
-#: field:product.template,uom_id:0
-msgid "Default Unit Of Measure"
-msgstr "Мерни единици по подразбиране"
-
-#. module: product
-#: model:product.template,name:product.product_product_tow1_product_template
-msgid "ATX Mid-size Tower"
-msgstr "ATX Mid-size Tower"
-
-#. module: product
-#: field:product.packaging,ean:0
-msgid "EAN"
-msgstr "EAN"
-
-#. module: product
 #: view:product.pricelist.item:0
-msgid "Rounding Method"
-msgstr "Метод на закръгляване"
+msgid "Price Computation"
+msgstr "Изчисляване на цена"
 
 #. module: product
-#: model:ir.actions.report.xml,name:product.report_product_label
-msgid "Products Labels"
-msgstr "Етикети на продукти"
-
-#. module: product
-#: model:product.ul,name:product.product_ul_big_box
-msgid "Box 30x40x60"
-msgstr "Кашон 30x40x60"
-
-#. module: product
-#: selection:product.template,type:0
-msgid "Service"
-msgstr "Услуга"
-
-#. module: product
-#: help:product.packaging,height:0
-msgid "The height of the package"
-msgstr "Височината на пакет"
-
-#. module: product
-#: view:product.pricelist:0
-msgid "Products Price List"
-msgstr "Ценова листа за продукти"
-
-#. module: product
-#: field:product.pricelist,company_id:0
-#: field:product.pricelist.item,company_id:0
-#: field:product.pricelist.version,company_id:0
-#: field:product.supplierinfo,company_id:0
-#: field:product.template,company_id:0
-msgid "Company"
-msgstr "Фирма"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_price_type_action
-msgid "Prices Types"
-msgstr "Типове цени"
-
-#. module: product
-#: help:product.template,list_price:0
-msgid ""
-"Base price for computing the customer price. Sometimes called the catalog "
-"price."
+#: model:res.groups,name:product.group_uos
+msgid "Product UoS View"
 msgstr ""
-"Базова цена за изчисляване на цена към клиент. Понякгоа наричана Каталожна "
-"цена."
-
-#. module: product
-#: code:addons/product/pricelist.py:518
-#, python-format
-msgid "Partner section of the product form"
-msgstr "Секця за партньор в продуктовата форма"
-
-#. module: product
-#: help:product.price.type,name:0
-msgid "Name of this kind of price."
-msgstr "Име на този вид цена"
-
-#. module: product
-#: field:product.supplierinfo,product_uom:0
-msgid "Supplier UoM"
-msgstr "Мер. ед. на доставчик"
-
-#. module: product
-#: help:product.pricelist.version,date_start:0
-msgid "Starting date for this pricelist version to be valid."
-msgstr "Начална дата на валидност на ценовата листа"
-
-#. module: product
-#: help:product.template,uom_po_id:0
-msgid ""
-"Default Unit of Measure used for purchase orders. It must be in the same "
-"category than the default unit of measure."
-msgstr ""
-"По подразбиране мер. ед. използвани при нареждане за закупуване. Трябва да "
-"бъде в същата категория като мер. ед. по подразбиране."
-
-#. module: product
-#: model:product.template,description:product.product_product_cpu1_product_template
-msgid "This product is configured with example of push/pull flows"
-msgstr ""
-
-#. module: product
-#: field:product.packaging,length:0
-msgid "Length"
-msgstr "Дължина"
-
-#. module: product
-#: model:product.uom.categ,name:product.uom_categ_length
-msgid "Length / Distance"
-msgstr "Дължина / Разстояние"
-
-#. module: product
-#: model:product.template,name:product.product_product_0_product_template
-msgid "Onsite Senior Intervention"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_type
-#: field:product.pricelist,type:0
-#: view:product.pricelist.type:0
-msgid "Pricelist Type"
-msgstr "Тип ценова листа"
-
-#. module: product
-#: model:product.category,name:product.product_category_otherproducts0
-msgid "Other Products"
-msgstr "Други продукти"
-
-#. module: product
-#: view:product.product:0
-msgid "Characteristics"
-msgstr "Характеристики"
-
-#. module: product
-#: field:product.template,sale_ok:0
-msgid "Can be Sold"
-msgstr "Продаваем"
-
-#. module: product
-#: field:product.template,produce_delay:0
-msgid "Manufacturing Lead Time"
-msgstr "Производствен срок за доставка"
-
-#. module: product
-#: field:product.supplierinfo,pricelist_ids:0
-msgid "Supplier Pricelist"
-msgstr "Ценова листа на доставчик"
-
-#. module: product
-#: field:product.pricelist.item,base:0
-msgid "Based on"
-msgstr "Базиран на"
-
-#. module: product
-#: model:product.category,name:product.product_category_rawmaterial0
-msgid "Raw Materials"
-msgstr "Суровини"
-
-#. module: product
-#: help:product.product,virtual_available:0
-msgid ""
-"Future stock for this product according to the selected locations or all "
-"internal if none have been selected. Computed as: Real Stock - Outgoing + "
-"Incoming."
-msgstr ""
-
-#. module: product
-#: field:product.pricelist,name:0
-msgid "Pricelist Name"
-msgstr "Име на ценова листа"
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_version
-#: view:product.pricelist:0
-#: view:product.pricelist.version:0
-msgid "Pricelist Version"
-msgstr "Версия на ценовата листа"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "* ( 1 + "
-msgstr "* ( 1 + "
-
-#. module: product
-#: help:product.packaging,weight:0
-msgid "The weight of a full package, pallet or box."
-msgstr "Теглото на целия пакет, пале или кутия"
-
-#. module: product
-#: model:product.template,name:product.product_product_hdd2_product_template
-msgid "HDD Seagate 7200.8 120GB"
-msgstr "HDD Seagate 7200.8 120GB"
-
-#. module: product
-#: model:product.template,name:product.product_product_employee0_product_template
-msgid "Employee"
-msgstr "Служител"
-
-#. module: product
-#: model:product.template,name:product.product_product_shelfofcm0_product_template
-msgid "Shelf of 100cm"
-msgstr "Рафт - 100cm"
-
-#. module: product
-#: model:ir.model,name:product.model_product_category
-#: field:product.pricelist.item,categ_id:0
-msgid "Product Category"
-msgstr "Категория на продукта"
-
-#. module: product
-#: report:product.pricelist:0
-msgid "Price List Name"
-msgstr "Име на ценовата листа"
-
-#. module: product
-#: field:product.supplierinfo,delay:0
-msgid "Delivery Lead Time"
-msgstr "Време за доставка"
-
-#. module: product
-#: help:product.uom,active:0
-msgid ""
-"By unchecking the active field you can disable a unit of measure without "
-"deleting it."
-msgstr ""
-"Като махнете отметката на активното поле можете да забраните единица мярка, "
-"без да я изтриете."
-
-#. module: product
-#: field:product.template,seller_delay:0
-msgid "Supplier Lead Time"
-msgstr "Срок за доставка на доставчик"
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Box"
-msgstr "Кутия"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_ul_form_action
-msgid ""
-"Create and manage your packaging dimensions and types you want to be "
-"maintained in your system."
-msgstr ""
-"Създаване и управление на  размери и видове на опаковката, които искате да "
-"се поддържат във вашата система."
-
-#. module: product
-#: model:product.template,name:product.product_product_rearpanelarm1_product_template
-msgid "Rear Panel SHE200"
-msgstr "Rear Panel SHE200"
-
-#. module: product
-#: help:product.pricelist.type,key:0
-msgid ""
-"Used in the code to select specific prices based on the context. Keep "
-"unchanged."
-msgstr ""
-"Използва се в кода за избор на конкретни цени на базата на контекста. Да се "
-"съхранява непроменена."
-
-#. module: product
-#: model:product.template,name:product.product_product_hdd1_product_template
-msgid "HDD Seagate 7200.8 80GB"
-msgstr "HDD Seagate 7200.8 80GB"
-
-#. module: product
-#: help:product.supplierinfo,qty:0
-msgid "This is a quantity which is converted into Default Uom."
-msgstr "Това е количество, конвертирано в Мер. ед. по подразбиране"
-
-#. module: product
-#: field:product.packaging,ul:0
-msgid "Type of Package"
-msgstr "Тип на пратката"
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Pack"
-msgstr "Пакет"
-
-#. module: product
-#: model:product.category,name:product.product_category_4
-msgid "Dello Computer"
-msgstr "Dello Computer"
-
-#. module: product
-#: model:product.uom.categ,name:product.product_uom_categ_kgm
-msgid "Weight"
-msgstr "Тегло"
-
-#. module: product
-#: model:product.template,name:product.product_product_22_product_template
-msgid "Processor on demand"
-msgstr "Процесор при заявка"
-
-#. module: product
-#: model:product.template,name:product.product_product_25_product_template
-msgid "Mouse"
-msgstr "Мишка"
-
-#. module: product
-#: field:product.uom,uom_type:0
-msgid "UoM Type"
-msgstr "Тип мер. ед."
-
-#. module: product
-#: help:product.template,product_manager:0
-msgid "This is use as task responsible"
-msgstr ""
-
-#. module: product
-#: help:product.uom,rounding:0
-msgid ""
-"The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
-"that cannot be further split, such as a piece."
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Descriptions"
-msgstr "Описание"
-
-#. module: product
-#: field:product.template,loc_row:0
-msgid "Row"
-msgstr "Ред"
-
-#. module: product
-#: model:product.template,name:product.product_product_rearpanelarm0_product_template
-msgid "Rear Panel SHE100"
-msgstr "Заден панел SHE100"
-
-#. module: product
-#: model:product.template,name:product.product_product_23_product_template
-msgid "Complete PC With Peripherals"
-msgstr "Цяло PC с периферии"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Weigths"
-msgstr "Тегла"
-
-#. module: product
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Грешка ! Не може да създадете рекурсивно свързани членове"
-
-#. module: product
-#: model:product.template,name:product.product_product_hotelexpenses0_product_template
-msgid "Hotel Expenses"
-msgstr "Разходи за хотел"
-
-#. module: product
-#: help:product.uom,factor_inv:0
-msgid ""
-"How many times this UoM is bigger than the reference UoM in this category:\n"
-"1 * (this unit) = ratio * (reference unit)"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_shelf0_product_template
-msgid "Rack 100cm"
-msgstr ""
-
-#. module: product
-#: help:product.packaging,sequence:0
-msgid "Gives the sequence order when displaying a list of packaging."
-msgstr "Показва в последователен ред при показване на списък на опаковките."
-
-#. module: product
-#: field:product.pricelist.item,price_round:0
-msgid "Price Rounding"
-msgstr "Закръгляване на цена"
-
-#. module: product
-#: field:product.pricelist.item,price_max_margin:0
-msgid "Max. Price Margin"
-msgstr "Макс. маржин на цена"
-
-#. module: product
-#: help:product.supplierinfo,product_name:0
-msgid ""
-"This supplier's product name will be used when printing a request for "
-"quotation. Keep empty to use the internal one."
-msgstr ""
-"Това име на доставчика на ме на продукта ще се използва при отпечатване на "
-"искане за оферта. Да се съхранява празен за да се използва вътрешно."
-
-#. module: product
-#: selection:product.template,mes_type:0
-msgid "Variable"
-msgstr "Променлива"
-
-#. module: product
-#: field:product.template,rental:0
-msgid "Can be Rent"
-msgstr "Може да се наеме"
-
-#. module: product
-#: model:product.price.type,name:product.standard_price
-#: field:product.template,standard_price:0
-msgid "Cost Price"
-msgstr "Себестойност"
-
-#. module: product
-#: field:product.pricelist.item,price_min_margin:0
-msgid "Min. Price Margin"
-msgstr "Мин. маржин на цена"
-
-#. module: product
-#: field:product.template,weight:0
-msgid "Gross weight"
-msgstr "Брутно тегло"
-
-#. module: product
-#: model:product.template,name:product.product_product_assemblysection0_product_template
-msgid "Assembly Section"
-msgstr ""
-
-#. module: product
-#: model:product.category,name:product.product_category_3
-msgid "Computer Stuff"
-msgstr "Компютърни части"
-
-#. module: product
-#: model:product.category,name:product.product_category_8
-msgid "Phone Help"
-msgstr "Помощ по телефон"
-
-#. module: product
-#: help:product.pricelist.item,price_round:0
-msgid ""
-"Sets the price so that it is a multiple of this value.\n"
-"Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
-"Определя цена, така че да е кратна на тази стойност.\n"
-"Закръгляване се прилага, след отстъпка и преди увеличение.\n"
-"За да са цените катот тази 9.99, определете закръгляване 10, доплащане -0,01"
-
-#. module: product
-#: view:product.price_list:0
-msgid "Close"
-msgstr "Затвори"
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_item
-msgid "Pricelist item"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_21_product_template
-msgid "RAM on demand"
-msgstr "RAM при желание"
-
-#. module: product
-#: view:res.partner:0
-msgid "Sales Properties"
-msgstr "Свойства на продажбите"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_ton
-msgid "tonne"
-msgstr "тон"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Delays"
-msgstr "Закъснения"
-
-#. module: product
-#: model:process.node,note:product.process_node_product0
-msgid "Creation of the product"
-msgstr "Създаване на продукта"
-
-#. module: product
-#: help:product.template,type:0
-msgid ""
-"Will change the way procurements are processed. Consumables are stockable "
-"products with infinite stock, or for use when you have no inventory "
-"management in the system."
-msgstr ""
-"Ще се промени начина, по който обществените поръчки се обработват. "
-"Консумативи са складируеми продукти с безкраен запас или за използване "
-"когато нямате материални запаси в системата."
-
-#. module: product
-#: field:pricelist.partnerinfo,name:0
-#: field:product.packaging,name:0
-#: report:product.pricelist:0
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,description:0
-msgid "Description"
-msgstr "Описание"
-
-#. module: product
-#: code:addons/product/pricelist.py:361
-#, python-format
-msgid ""
-"Could not resolve product category, you have defined cyclic categories of "
-"products!"
-msgstr ""
-"Не може да бъде определено продуктова категория, определили сте циклични "
-"категории продукти!"
-
-#. module: product
-#: view:product.template:0
-msgid "Product Description"
-msgstr "Описание на продукт"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid " ) + "
-msgstr " ) + "
-
-#. module: product
-#: help:product.product,incoming_qty:0
-msgid ""
-"Quantities of products that are planned to arrive in selected locations or "
-"all internal if none have been selected."
-msgstr ""
-"Количества продукти, за които е планирано да пристигнат в избрани локации и "
-"изцяло вътрешно ако нищо не е избрано."
-
-#. module: product
-#: field:product.template,volume:0
-msgid "Volume"
-msgstr "Обем"
 
 #. module: product
 #: field:product.template,loc_case:0
@@ -2244,20 +1801,56 @@ msgid "Case"
 msgstr "Кутия"
 
 #. module: product
+#: field:product.pricelist.version,date_end:0
+msgid "End Date"
+msgstr "Крайна дата"
+
+#. module: product
+#: field:product.product,packaging:0
+msgid "Logistical Units"
+msgstr ""
+
+#. module: product
+#: field:product.category,complete_name:0
+#: field:product.category,name:0
+#: field:product.pricelist.type,name:0
+#: field:product.pricelist.version,name:0
 #: view:product.product:0
-msgid "Product Variant"
-msgstr "Варианти на продукт"
+#: field:product.product,name_template:0
+#: field:product.template,name:0
+#: field:product.ul,name:0
+#: field:product.uom,name:0
+#: field:product.uom.categ,name:0
+msgid "Name"
+msgstr "Име"
 
 #. module: product
-#: model:product.category,name:product.product_category_shelves0
-msgid "Shelves"
-msgstr "Рафтове"
+#: field:product.template,purchase_ok:0
+msgid "Can be Purchased"
+msgstr "Може да бъде закупувана"
 
 #. module: product
-#: code:addons/product/pricelist.py:517
-#, python-format
-msgid "Other Pricelist"
-msgstr "Друга ценова листа"
+#: field:product.template,uos_coeff:0
+msgid "UOM -> UOS Coeff"
+msgstr ""
+
+#. module: product
+#: help:res.partner,property_product_pricelist:0
+msgid ""
+"This pricelist will be used, instead of the default one, for sales to the "
+"current partner"
+msgstr ""
+"Тази ценова листа ще бъде използвана, а не тази по подразбиране, за продажби "
+"за настоящ партньор"
+
+#. module: product
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid ""
+"1 or several supplier(s) can be linked to a product. All information stands "
+"in the product form."
+msgstr ""
+"1 или повече доставчици могат да бъдат свързани към продукт. Всичката "
+"информация е в продуктовата форма."
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2279,9 +1872,50 @@ msgid "Palletization"
 msgstr "Разпределяне по палета"
 
 #. module: product
+#: field:product.packaging,length:0
+msgid "Length"
+msgstr "Дължина"
+
+#. module: product
+#: code:addons/product/product.py:345
+#, python-format
+msgid "UoM categories Mismatch!"
+msgstr ""
+
+#. module: product
+#: field:product.template,volume:0
+msgid "Volume"
+msgstr "Обем"
+
+#. module: product
+#: help:product.supplierinfo,sequence:0
+msgid "Assigns the priority to the list of product supplier."
+msgstr "Възложете приоритет към списъка на продуктите на доставчика."
+
+#. module: product
+#: field:product.template,uom_id:0
+msgid "Default Unit Of Measure"
+msgstr "Мерни единици по подразбиране"
+
+#. module: product
+#: help:product.packaging,ean:0
+msgid "The EAN code of the package unit."
+msgstr "Баркод на пакета"
+
+#. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
 msgstr "Край на жезнен цикъл на продукта"
+
+#. module: product
+#: field:pricelist.partnerinfo,name:0
+#: field:product.packaging,name:0
+#: report:product.pricelist:0
+#: view:product.product:0
+#: view:product.template:0
+#: field:product.template,description:0
+msgid "Description"
+msgstr "Описание"
 
 #. module: product
 #: help:product.product,packaging:0
@@ -2294,11 +1928,24 @@ msgstr ""
 "модула EDI."
 
 #. module: product
+#: help:product.supplierinfo,delay:0
+msgid ""
+"Lead time in days between the confirmation of the purchase order and the "
+"reception of the products in your warehouse. Used by the scheduler for "
+"automatic computation of the purchase order planning."
+msgstr ""
+
+#. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action
 #: field:product.pricelist,version_id:0
 msgid "Pricelist Versions"
 msgstr "Версии на ценова листа"
+
+#. module: product
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: product
 #: field:product.category,sequence:0
@@ -2314,14 +1961,38 @@ msgid "Sale Price"
 msgstr "Продажна цена"
 
 #. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
+msgstr "Набавяне & местонахождения"
+
+#. module: product
+#: constraint:product.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr ""
+
+#. module: product
 #: field:product.category,type:0
 msgid "Category Type"
 msgstr "Вид категория"
 
 #. module: product
-#: model:product.category,name:product.cat2
-msgid "Private"
-msgstr "Лично"
+#: model:product.uom,name:product.product_uom_km
+msgid "km"
+msgstr "км"
+
+#. module: product
+#: help:product.template,uos_id:0
+msgid ""
+"Used by companies that manage two units of measure: invoicing and inventory "
+"management. For example, in food industries, you will manage a stock of ham "
+"but invoice in Kg. Keep empty to use the default UOM."
+msgstr ""
+
+#. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Количество-1"
 
 #. module: product
 #: help:product.template,uos_coeff:0
@@ -2331,14 +2002,47 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: constraint:product.packaging:0
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Грешка: Невалиден европейски баркод"
+
+#. module: product
+#: field:product.pricelist.item,min_quantity:0
+msgid "Min. Quantity"
+msgstr "Мин. количество"
+
+#. module: product
+#: model:ir.actions.report.xml,name:product.report_product_label
+msgid "Products Labels"
+msgstr "Етикети на продукти"
+
+#. module: product
 #: help:product.template,volume:0
 msgid "The volume in m3."
 msgstr "Обемът в м3"
 
 #. module: product
+#: model:ir.model,name:product.model_product_price_type
+msgid "Price Type"
+msgstr "Вид цена"
+
+#. module: product
+#: view:product.product:0
+msgid "To Sell"
+msgstr "За продажба"
+
+#. module: product
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Отстъпка от цената"
+
+#. module: product
+#: help:product.category,sequence:0
+msgid ""
+"Gives the sequence order when displaying a list of product categories."
+msgstr ""
+"Показва в последователен ред при показване на списък с продуктови категории."
 
 #~ msgid "Configuration"
 #~ msgstr "Настройка"
@@ -2351,3 +2055,239 @@ msgstr "Отстъпка от цената"
 #~ msgstr ""
 #~ "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални "
 #~ "символи!"
+
+#~ msgid "DDR 512MB PC400"
+#~ msgstr "DDR 512MB PC400"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Грешка! Не можете да създавате рекурсивни категории"
+
+#~ msgid "Keyboard"
+#~ msgstr "Клавиатура"
+
+#~ msgid "Worker"
+#~ msgstr "Работник"
+
+#~ msgid "HDD Seagate 7200.8 160GB"
+#~ msgstr "HDD Seagate 7200.8 160GB"
+
+#~ msgid "Virtual Stock"
+#~ msgstr "Виртуален склад"
+
+#~ msgid "Side Panel"
+#~ msgstr "Страничен панел"
+
+#~ msgid "Accessories"
+#~ msgstr "Аксесоари"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Разширени филтри"
+
+#~ msgid "Products & Pricelists"
+#~ msgstr "Продукти и ценови листи"
+
+#~ msgid "PC"
+#~ msgstr "PC"
+
+#~ msgid "Real Stock"
+#~ msgstr "Налична стока"
+
+#~ msgid "Misc"
+#~ msgstr "Разни"
+
+#~ msgid "Products Categories"
+#~ msgstr "Категории продукти"
+
+#~ msgid "Other Products"
+#~ msgstr "Други продукти"
+
+#~ msgid "Employee"
+#~ msgstr "Служител"
+
+#~ msgid "Mouse"
+#~ msgstr "Мишка"
+
+#~ msgid "Weigths"
+#~ msgstr "Тегла"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Грешка ! Не може да създадете рекурсивно свързани членове"
+
+#~ msgid "Hotel Expenses"
+#~ msgstr "Разходи за хотел"
+
+#~ msgid "Shelves"
+#~ msgstr "Рафтове"
+
+#~ msgid "Private"
+#~ msgstr "Лично"
+
+#~ msgid "Sellable"
+#~ msgstr "Продаваем"
+
+#~ msgid "HDD on demand"
+#~ msgstr "HDD при заявка"
+
+#~ msgid ""
+#~ "Error: The default UOM and the Supplier Product UOM must be in the same "
+#~ "category."
+#~ msgstr ""
+#~ "Грешка: Мерните единици по подразбиране и Мерните единици на доставчика на "
+#~ "продукта UOM трябва да са в същата категория."
+
+#~ msgid "Processor AMD Athlon XP 1800+"
+#~ msgstr "Процесор AMD Athlon XP 1800+"
+
+#~ msgid "IT components"
+#~ msgstr "ИТ компоненти"
+
+#~ msgid "Metal Cleats"
+#~ msgstr "Метални Ключалки"
+
+#, python-format
+#~ msgid ""
+#~ "No active version for the selected pricelist !\n"
+#~ "Please create or activate one."
+#~ msgstr ""
+#~ "Няма активна версия на избранта ценова листа!\n"
+#~ "Моля, създайте или активирайте такава."
+
+#~ msgid "Box 20x20x40"
+#~ msgstr "Кутия 20x20x40"
+
+#~ msgid "Restaurant Expenses"
+#~ msgstr "Разходи за ресторант"
+
+#~ msgid "Kitchen Design Project"
+#~ msgstr "Дизайн за проект на кухня"
+
+#~ msgid "Shelf of 200cm"
+#~ msgstr "Рафт 200 см"
+
+#~ msgid "IT components kits"
+#~ msgstr "Комплект ИТ компоненти"
+
+#~ msgid "DDR 256MB PC400"
+#~ msgstr "DDR 256MB PC400"
+
+#~ msgid ""
+#~ "Quantities of products that are planned to leave in selected locations or "
+#~ "all internal if none have been selected."
+#~ msgstr ""
+#~ "Количества продукти, които се планира да напусне в определени места, или "
+#~ "всички вътрешни, ако никой не е бил избран."
+
+#~ msgid "Wood 2mm"
+#~ msgstr "Дърво 2mm"
+
+#~ msgid "Silent fan"
+#~ msgstr "Тих вентилатор"
+
+#~ msgid "Stockable"
+#~ msgstr "Складируеми"
+
+#~ msgid "Marketable Products"
+#~ msgstr "Продаваеми продукти"
+
+#~ msgid "Pricelists Types"
+#~ msgstr "Типове ценови листи"
+
+#~ msgid "Marketable Services"
+#~ msgstr "Пазарни услуги"
+
+#~ msgid "Box 30x40x60"
+#~ msgstr "Кашон 30x40x60"
+
+#~ msgid "Prices Types"
+#~ msgstr "Типове цени"
+
+#~ msgid "HDD Seagate 7200.8 120GB"
+#~ msgstr "HDD Seagate 7200.8 120GB"
+
+#~ msgid "Raw Materials"
+#~ msgstr "Суровини"
+
+#~ msgid "Rear Panel SHE200"
+#~ msgstr "Rear Panel SHE200"
+
+#~ msgid "Dello Computer"
+#~ msgstr "Dello Computer"
+
+#~ msgid "HDD Seagate 7200.8 80GB"
+#~ msgstr "HDD Seagate 7200.8 80GB"
+
+#~ msgid "Shelf of 100cm"
+#~ msgstr "Рафт - 100cm"
+
+#~ msgid "Processor on demand"
+#~ msgstr "Процесор при заявка"
+
+#~ msgid "Rear Panel SHE100"
+#~ msgstr "Заден панел SHE100"
+
+#~ msgid "Complete PC With Peripherals"
+#~ msgstr "Цяло PC с периферии"
+
+#~ msgid "Phone Help"
+#~ msgstr "Помощ по телефон"
+
+#~ msgid "Computer Stuff"
+#~ msgstr "Компютърни части"
+
+#~ msgid "RAM on demand"
+#~ msgstr "RAM при желание"
+
+#~ msgid ""
+#~ "Quantities of products that are planned to arrive in selected locations or "
+#~ "all internal if none have been selected."
+#~ msgstr ""
+#~ "Количества продукти, за които е планирано да пристигнат в избрани локации и "
+#~ "изцяло вътрешно ако нищо не е избрано."
+
+#, python-format
+#~ msgid ""
+#~ "Could not resolve product category, you have defined cyclic categories of "
+#~ "products!"
+#~ msgstr ""
+#~ "Не може да бъде определено продуктова категория, определили сте циклични "
+#~ "категории продукти!"
+
+#~ msgid ""
+#~ "Will change the way procurements are processed. Consumables are stockable "
+#~ "products with infinite stock, or for use when you have no inventory "
+#~ "management in the system."
+#~ msgstr ""
+#~ "Ще се промени начина, по който обществените поръчки се обработват. "
+#~ "Консумативи са складируеми продукти с безкраен запас или за използване "
+#~ "когато нямате материални запаси в системата."
+
+#~ msgid "tonne"
+#~ msgstr "тон"
+
+#~ msgid "Mainboard ASUStek A7V8X-X"
+#~ msgstr "Дънна платка ASUStek A7V8X-X"
+
+#~ msgid ""
+#~ "Choose here the Unit of Measure in which the prices and quantities are "
+#~ "expressed below."
+#~ msgstr ""
+#~ "Изберете тук Мер. единици, в които цените и количствата ще се изобразяват по-"
+#~ "долу"
+
+#~ msgid "Processor AMD Athlon XP 2200+"
+#~ msgstr "Processor AMD Athlon XP 2200+"
+
+#~ msgid "Kit Keyboard + Mouse"
+#~ msgstr "Kit Keyboard + Mouse"
+
+#~ msgid "KIT Shelf of 100cm"
+#~ msgstr "KIT Shelf of 100cm"
+
+#~ msgid "Mainboard ASUStek A7N8X"
+#~ msgstr "Дънна платка ASUStek A7N8X"
+
+#~ msgid "ATX Mid-size Tower"
+#~ msgstr "ATX Mid-size Tower"
+
+#~ msgid "Medium PC"
+#~ msgstr "Medium PC"

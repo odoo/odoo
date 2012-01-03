@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-08-03 05:40+0000\n"
 "Last-Translator: Raimon Esteve (www.zikzakmedia.com) "
 "<resteve@zikzakmedia.com>\n"
@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:31+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:59+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Hourly cost computation"
-msgstr "Càlcul cost per hora"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Salari"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Gross"
-msgstr "Brut"
+#: view:hr.contract:0
+msgid "Information"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -38,11 +38,6 @@ msgid "Trial Start Date"
 msgstr "Data d'inici"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Passport"
-msgstr "Passaport"
-
-#. module: hr_contract
 #: view:hr.employee:0
 msgid "Medical Examination"
 msgstr "Examen mèdic"
@@ -51,11 +46,6 @@ msgstr "Examen mèdic"
 #: field:hr.employee,vehicle:0
 msgid "Company Vehicle"
 msgstr "Vehicle de la companyia"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "Nom tipus de salari"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -68,19 +58,9 @@ msgid "Current"
 msgstr "Actual"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "Factor pel cost d'hora"
-
-#. module: hr_contract
 #: view:hr.contract:0
-msgid "Overpassed"
-msgstr "Sobrepassat"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Wage Types"
-msgstr "Tipus de salari"
+msgid "Group By..."
+msgstr "Agrupa per..."
 
 #. module: hr_contract
 #: field:hr.contract,department_id:0
@@ -88,9 +68,9 @@ msgid "Department"
 msgstr "Departament"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Basic"
-msgstr "Bàsic"
+#: view:hr.contract:0
+msgid "Overpassed"
+msgstr "Sobrepassat"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -100,19 +80,14 @@ msgid "Employee"
 msgstr "Empleat"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Net"
-msgstr "Net"
+#: view:hr.contract:0
+msgid "Search Contract"
+msgstr "Cerca contracte"
 
 #. module: hr_contract
-#: model:ir.module.module,shortdesc:hr_contract.module_meta_information
-msgid "Human Resources Contracts"
-msgstr "Contractes laborals per a recursos humans"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,factor_days:0
-msgid "Hours in the period"
-msgstr "Hores en el període"
+#: view:hr.contract:0
+msgid "Contracts in progress"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
@@ -135,13 +110,8 @@ msgstr "Informació personal"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Job"
-msgstr "Feina"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Search Contract"
-msgstr "Cerca contracte"
+msgid "Contracts whose end date already passed"
+msgstr ""
 
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
@@ -149,29 +119,9 @@ msgid "Latest contract of the employee"
 msgstr "Darrer contracte de l'empleat."
 
 #. module: hr_contract
-#: field:hr.contract,advantages_net:0
-msgid "Deductions"
-msgstr "Deduccions"
-
-#. module: hr_contract
-#: model:ir.module.module,description:hr_contract.module_meta_information
-msgid ""
-"\n"
-"    Add all information on the employee form to manage contracts:\n"
-"    * Marital status,\n"
-"    * Security number,\n"
-"    * Place of birth, birth date, ...\n"
-"    You can assign several contracts per employee.\n"
-"    "
-msgstr ""
-"\n"
-"    Afegeix informació en el formulari de l'empleat per gestionar "
-"contractes:\n"
-"    * Estat civil,\n"
-"    * Número Seguretat Social,\n"
-"    * Lloc de naixement, data de naixement, ...\n"
-"    Podeu assignar diversos contractes per empleat.\n"
-"    "
+#: view:hr.contract:0
+msgid "Job"
+msgstr "Feina"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -201,15 +151,6 @@ msgid "Contract Types"
 msgstr "Tipus de contracte"
 
 #. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
-msgstr "Tipus de salari"
-
-#. module: hr_contract
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr "Error! No podeu crear una jerarquia recursiva d'empleats."
@@ -220,9 +161,9 @@ msgid "End Date"
 msgstr "Data final"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Salari"
+#: help:hr.contract,wage:0
+msgid "Basic Salary of the employee"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,name:0
@@ -241,11 +182,9 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
 msgstr ""
-"Error! No podeu seleccionar un departament l'empleat del qual és el director."
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -265,11 +204,6 @@ msgid "Contract Type"
 msgstr "Tipus de contracte"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type.period:0
-msgid "Search Wage Period"
-msgstr "Cerca període de salaris"
-
-#. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,working_hours:0
 msgid "Working Schedule"
@@ -281,11 +215,9 @@ msgid "Job Info"
 msgstr "Informació del treball"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,period_id:0
-#: view:hr.contract.wage.type.period:0
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
-msgid "Wage Period"
-msgstr "Període de salari"
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
@@ -310,56 +242,14 @@ msgstr ""
 "finalització."
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
-msgstr "Cerca tipus de salari"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,type:0
-msgid "Type"
-msgstr "Tipus"
-
-#. module: hr_contract
-#: field:hr.contract,trial_date_end:0
-msgid "Trial End Date"
-msgstr "Data de finalització"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr "Agrupa per..."
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,name:0
-msgid "Period Name"
-msgstr "Nom de període"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Period"
-msgstr "Període"
+#: field:hr.contract,visa_no:0
+msgid "Visa No"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
 msgid "Place of Birth"
 msgstr "Lloc de naixement"
-
-#. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr "Períodes de salari"
-
-#. module: hr_contract
-#: help:hr.contract.wage.type,factor_type:0
-#: help:hr.contract.wage.type.period,factor_days:0
-msgid ""
-"This field is used by the timesheet system to compute the price of an hour "
-"of work wased on the contract of the employee"
-msgstr ""
-"Aquest camp es usat pel sistema de horaris per calcular el preu d'una hora "
-"de treball basat en el contracte de l' empleat"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -372,19 +262,20 @@ msgid "Medical Examination Date"
 msgstr "Data de l'examen mèdic"
 
 #. module: hr_contract
-#: field:hr.contract,advantages_gross:0
-msgid "Allowances"
-msgstr "Primes"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Main Data"
-msgstr "Dades principals"
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
+msgstr "Data de finalització"
 
 #. module: hr_contract
 #: view:hr.contract.type:0
 msgid "Search Contract Type"
 msgstr "Cerca tipus contracte"
+
+#~ msgid "Hourly cost computation"
+#~ msgstr "Càlcul cost per hora"
+
+#~ msgid "Gross"
+#~ msgstr "Brut"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -398,6 +289,18 @@ msgstr "Cerca tipus contracte"
 #~ msgid "Number of children"
 #~ msgstr "Número de fills"
 
+#~ msgid "Factor for hour cost"
+#~ msgstr "Factor pel cost d'hora"
+
+#~ msgid "Wage Types"
+#~ msgstr "Tipus de salari"
+
+#~ msgid "Net"
+#~ msgstr "Net"
+
+#~ msgid "Hours in the period"
+#~ msgstr "Hores en el període"
+
 #~ msgid "Function"
 #~ msgstr "Funció"
 
@@ -407,11 +310,23 @@ msgstr "Cerca tipus contracte"
 #~ msgid "Miscelleanous"
 #~ msgstr "Miscel·lània"
 
+#~ msgid "Type"
+#~ msgstr "Tipus"
+
+#~ msgid "Wage Type"
+#~ msgstr "Tipus de salari"
+
+#~ msgid "Period Name"
+#~ msgstr "Nom de període"
+
 #~ msgid "Employee Marital Status"
 #~ msgstr "Estat civil de l'empleat"
 
 #~ msgid "Medical examination date"
 #~ msgstr "Data reconeixement mèdic"
+
+#~ msgid "Wage Type Name"
+#~ msgstr "Nom tipus de salari"
 
 #~ msgid "Working hours per day"
 #~ msgstr "Hores de treball per dia"
@@ -421,6 +336,9 @@ msgstr "Cerca tipus contracte"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "﻿XML invàlid per a la definició de la vista!"
+
+#~ msgid "Wage Period"
+#~ msgstr "Període de salari"
 
 #~ msgid "Remuneration"
 #~ msgstr "Remuneració"
@@ -434,14 +352,74 @@ msgstr "Cerca tipus contracte"
 #~ msgid "Manager"
 #~ msgstr "Director"
 
+#~ msgid "Wage period"
+#~ msgstr "Períodes de salari"
+
+#~ msgid ""
+#~ "This field is used by the timesheet system to compute the price of an hour "
+#~ "of work wased on the contract of the employee"
+#~ msgstr ""
+#~ "Aquest camp es usat pel sistema de horaris per calcular el preu d'una hora "
+#~ "de treball basat en el contracte de l' empleat"
+
 #~ msgid "Status Description"
 #~ msgstr "Descripció de l'estat civil"
 
 #~ msgid "Contract Duration"
 #~ msgstr "Duració del contracte"
 
+#~ msgid "Human Resources Contracts"
+#~ msgstr "Contractes laborals per a recursos humans"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom de model no vàlid en la definició de l'acció."
 
 #~ msgid "AUDIENS Number"
 #~ msgstr "Número d'AUDIENS"
+
+#~ msgid "Basic"
+#~ msgstr "Bàsic"
+
+#~ msgid "Passport"
+#~ msgstr "Passaport"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Add all information on the employee form to manage contracts:\n"
+#~ "    * Marital status,\n"
+#~ "    * Security number,\n"
+#~ "    * Place of birth, birth date, ...\n"
+#~ "    You can assign several contracts per employee.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Afegeix informació en el formulari de l'empleat per gestionar "
+#~ "contractes:\n"
+#~ "    * Estat civil,\n"
+#~ "    * Número Seguretat Social,\n"
+#~ "    * Lloc de naixement, data de naixement, ...\n"
+#~ "    Podeu assignar diversos contractes per empleat.\n"
+#~ "    "
+
+#~ msgid "Deductions"
+#~ msgstr "Deduccions"
+
+#~ msgid "Search Wage Period"
+#~ msgstr "Cerca període de salaris"
+
+#~ msgid "Main Data"
+#~ msgstr "Dades principals"
+
+#~ msgid "Search Wage Type"
+#~ msgstr "Cerca tipus de salari"
+
+#~ msgid "Period"
+#~ msgstr "Període"
+
+#~ msgid ""
+#~ "Error ! You cannot select a department for which the employee is the manager."
+#~ msgstr ""
+#~ "Error! No podeu seleccionar un departament l'empleat del qual és el director."
+
+#~ msgid "Allowances"
+#~ msgstr "Primes"

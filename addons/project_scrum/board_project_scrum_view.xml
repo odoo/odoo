@@ -76,15 +76,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="My Board">
-                    <hpaned>
-                        <child1>
-               				 <action colspan="4" height="220" name="%(action_sprint_all_dashboard_tree)d" string="Sprints" width="510"/>
-                        </child1>
-                        <child2>
-                             <action colspan="4" height="220" name="%(action_view_task_progress_graph)d" string="Task Progress" width="510"/>
-                             <action colspan="4" height="220" name="%(action_view_backlog_progress_graph)d" string="Backlog Progress" width="510"/>
-                        </child2>
-                    </hpaned>
+                    <board style="2-1">
+                        <column>
+               				 <action name="%(action_sprint_all_dashboard_tree)d" string="Sprints"/>
+                        </column>
+                        <column>
+                             <action name="%(action_view_task_progress_graph)d" string="Task Progress"/>
+                             <action name="%(action_view_backlog_progress_graph)d" string="Backlog Progress"/>
+                        </column>
+                    </board>
                 </form>
             </field>
         </record>
@@ -133,8 +133,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.board_project_form"/>
             <field name="arch" type="xml">
-            	<xpath expr="/form/hpaned/child1/action[@string='My Delegated Tasks']" position="after">
-						<action colspan="4"  height="100" name="%(action_view_my_scrum_sprint_tree)d" string="My Sprint" />
+            	<xpath expr="/form/board/column/action[@string='My Delegated Tasks']" position="after">
+						<action name="%(action_view_my_scrum_sprint_tree)d" string="My Sprint"/>
             	</xpath>
             </field>
         </record>

@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Email Subsystem',
+    'name': 'Emails Management',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Dependency',
     'complexity': "easy",
     'description': """
 A generic email subsystem with message storage and queuing
@@ -62,7 +62,6 @@ The main features are:
         "res_partner_view.xml",
         'security/ir.model.access.csv',
         'mail_data.xml',
-        'mail_installer.xml',
     ],
     'installable': True,
     'active': False,

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-08-02 14:37+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:41+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:11+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -23,8 +23,9 @@ msgid "Parent Directory"
 msgstr ""
 
 #. module: document
-#: model:ir.model,name:document.model_document_configuration
-msgid "Auto Directory Configuration"
+#: code:addons/document/document_directory.py:276
+#, python-format
+msgid "Directory name contains special characters!"
 msgstr ""
 
 #. module: document
@@ -55,16 +56,10 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: code:addons/document/document_directory.py:276
-#, python-format
-msgid "Directory name contains special characters!"
-msgstr ""
-
-#. module: document
 #: view:document.directory:0
 #: view:document.storage:0
 msgid "Group By..."
-msgstr ""
+msgstr "Nhóm theo..."
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
@@ -91,11 +86,16 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "March"
-msgstr ""
+msgstr "Tháng Ba"
 
 #. module: document
 #: view:document.configuration:0
 msgid "title"
+msgstr ""
+
+#. module: document
+#: field:document.directory.dctx,expr:0
+msgid "Expression"
 msgstr ""
 
 #. module: document
@@ -146,6 +146,10 @@ msgstr ""
 
 #. module: document
 #: view:ir.attachment:0
+msgid "Filter on my documents"
+msgstr ""
+
+#. module: document
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr ""
@@ -158,16 +162,15 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: view:document.directory:0
-#: field:document.storage,dir_ids:0
-#: model:ir.actions.act_window,name:document.action_document_directory_form
-#: model:ir.ui.menu,name:document.menu_document_directories
-msgid "Directories"
+#: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
+msgid "Knowledge Management"
 msgstr ""
 
 #. module: document
-#: field:document.configuration,sale_order:0
-msgid "Sale Order"
+#: view:document.directory:0
+#: field:document.storage,dir_ids:0
+#: model:ir.ui.menu,name:document.menu_document_directories
+msgid "Directories"
 msgstr ""
 
 #. module: document
@@ -176,21 +179,11 @@ msgid "Files details by Users"
 msgstr ""
 
 #. module: document
-#: field:document.configuration,project:0
-msgid "Project"
-msgstr ""
-
-#. module: document
 #: code:addons/document/document_storage.py:573
 #: code:addons/document/document_storage.py:601
 #, python-format
 msgid "Error!"
-msgstr ""
-
-#. module: document
-#: help:document.configuration,product:0
-msgid "Auto directory configuration for Products."
-msgstr ""
+msgstr "Lỗi!"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -200,6 +193,11 @@ msgstr ""
 #. module: document
 #: selection:document.directory,type:0
 msgid "Folders per resource"
+msgstr ""
+
+#. module: document
+#: view:ir.attachment:0
+msgid "Indexed Content - experimental"
 msgstr ""
 
 #. module: document
@@ -235,8 +233,8 @@ msgid "Document directory"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #: code:addons/document/document_directory.py:266
 #: code:addons/document/document_directory.py:271
 #: code:addons/document/document_directory.py:276
@@ -269,8 +267,8 @@ msgid "Storage"
 msgstr ""
 
 #. module: document
-#: view:document.configuration:0
-msgid "Configure Resource Directory"
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
 msgstr ""
 
 #. module: document
@@ -324,11 +322,6 @@ msgid "Stored Filename"
 msgstr ""
 
 #. module: document
-#: field:document.directory,ressource_type_id:0
-msgid "Resource model"
-msgstr ""
-
-#. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
@@ -343,7 +336,7 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "July"
-msgstr ""
+msgstr "Tháng Bảy"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.open_board_document_manager
@@ -383,6 +376,13 @@ msgid "Generated Files"
 msgstr ""
 
 #. module: document
+#: view:document.configuration:0
+msgid ""
+"When executing this wizard, it will configure your directories automatically "
+"according to modules installed."
+msgstr ""
+
+#. module: document
 #: field:document.directory.content,directory_id:0
 #: field:document.directory.dctx,dir_id:0
 #: model:ir.actions.act_window,name:document.action_document_file_directory_form
@@ -394,8 +394,8 @@ msgid "Directory"
 msgstr ""
 
 #. module: document
-#: view:board.board:0
-msgid "Files by Partner"
+#: view:document.directory:0
+msgid "Security"
 msgstr ""
 
 #. module: document
@@ -409,11 +409,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:document.act_res_partner_document
 #: model:ir.actions.act_window,name:document.zoom_directory
 msgid "Related Documents"
-msgstr ""
-
-#. module: document
-#: field:document.configuration,progress:0
-msgid "Configuration Progress"
 msgstr ""
 
 #. module: document
@@ -449,7 +444,7 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "December"
-msgstr ""
+msgstr "Tháng Mười Hai"
 
 #. module: document
 #: field:document.configuration,config_logo:0
@@ -469,27 +464,6 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
-msgstr ""
-
-#. module: document
-#: model:ir.module.module,description:document.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
-"    * User Authentication\n"
-"    * Document Indexation :- .pptx and .docx files are not support in "
-"windows platform.\n"
-"    * Dashboard for Document that includes:\n"
-"        * New Files (list)\n"
-"        * Files by Resource Type (graph)\n"
-"        * Files by Partner (graph)\n"
-"        * Files by Month (graph)\n"
-"    ATTENTION:\n"
-"    - When you install this module in a running company that have already "
-"PDF files stored into the database,\n"
-"      you will lose them all.\n"
-"    - After installing this module PDF's are no longer stored into the "
-"database,\n"
-"      but in the servers rootpad like /server/bin/filestore.\n"
 msgstr ""
 
 #. module: document
@@ -536,7 +510,7 @@ msgstr ""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
-msgid "Auto Configure Directory"
+msgid "Configure Directories"
 msgstr ""
 
 #. module: document
@@ -567,11 +541,6 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: view:document.directory:0
-msgid "Security"
-msgstr ""
-
-#. module: document
 #: help:document.directory,ressource_id:0
 msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
@@ -582,7 +551,7 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "August"
-msgstr ""
+msgstr "Tháng Tám"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -593,7 +562,7 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "June"
-msgstr ""
+msgstr "Tháng Sáu"
 
 #. module: document
 #: field:report.document.user,user:0
@@ -605,7 +574,7 @@ msgstr ""
 #: field:document.directory,group_ids:0
 #: field:document.storage,group_ids:0
 msgid "Groups"
-msgstr ""
+msgstr "Các nhóm"
 
 #. module: document
 #: field:document.directory.content.type,active:0
@@ -616,7 +585,7 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "November"
-msgstr ""
+msgstr "Tháng Mười Một"
 
 #. module: document
 #: view:ir.attachment:0
@@ -642,7 +611,7 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "October"
-msgstr ""
+msgstr "Tháng Mười"
 
 #. module: document
 #: view:document.directory:0
@@ -655,23 +624,14 @@ msgid "Database"
 msgstr ""
 
 #. module: document
-#: help:document.configuration,project:0
-msgid "Auto directory configuration for Projects."
-msgstr ""
+#: selection:report.document.user,month:0
+#: selection:report.files.partner,month:0
+msgid "January"
+msgstr "Tháng Giêng"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Related to"
-msgstr ""
-
-#. module: document
-#: model:ir.module.module,shortdesc:document.module_meta_information
-msgid "Integrated Document Management System"
-msgstr ""
-
-#. module: document
-#: view:document.configuration:0
-msgid "Choose the following Resouces to auto directory configuration."
 msgstr ""
 
 #. module: document
@@ -695,8 +655,8 @@ msgid "Read Only"
 msgstr ""
 
 #. module: document
-#: field:document.directory.dctx,expr:0
-msgid "Expression"
+#: model:ir.actions.act_window,name:document.action_document_directory_form
+msgid "Document Directory"
 msgstr ""
 
 #. module: document
@@ -711,6 +671,20 @@ msgid "Creator"
 msgstr ""
 
 #. module: document
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr ""
+
+#. module: document
+#: view:document.configuration:0
+msgid ""
+"OpenERP's Document Management System supports mapping virtual folders with "
+"documents. The virtual folder of a document can be used to manage the files "
+"attached to the document, or to print and download any report. This tool "
+"will create directories automatically according to modules installed."
+msgstr ""
+
+#. module: document
 #: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
@@ -721,7 +695,7 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "September"
-msgstr ""
+msgstr "Tháng Chín"
 
 #. module: document
 #: field:document.directory.content,prefix:0
@@ -800,13 +774,13 @@ msgid "Month"
 msgstr ""
 
 #. module: document
-#: model:ir.ui.menu,name:document.menu_reporting
-msgid "Reporting"
+#: view:report.document.user:0
+msgid "This Months Files"
 msgstr ""
 
 #. module: document
-#: field:document.configuration,product:0
-msgid "Product"
+#: model:ir.ui.menu,name:document.menu_reporting
+msgid "Reporting"
 msgstr ""
 
 #. module: document
@@ -818,7 +792,7 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "May"
-msgstr ""
+msgstr "Tháng Năm"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
@@ -853,12 +827,6 @@ msgid "New Files"
 msgstr ""
 
 #. module: document
-#: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
-msgid "January"
-msgstr ""
-
-#. module: document
 #: view:document.directory:0
 msgid "Static"
 msgstr ""
@@ -869,10 +837,8 @@ msgid "Files By Partner"
 msgstr ""
 
 #. module: document
-#: help:document.directory.dctx,field:0
-msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
+#: view:document.configuration:0
+msgid "Configure Direcories"
 msgstr ""
 
 #. module: document
@@ -886,9 +852,8 @@ msgid "Notes"
 msgstr ""
 
 #. module: document
-#: help:document.configuration,sale_order:0
-msgid ""
-"Auto directory configuration for Sale Orders and Quotation with report."
+#: model:ir.model,name:document.model_document_configuration
+msgid "Directory Configuration"
 msgstr ""
 
 #. module: document
@@ -905,12 +870,19 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "February"
-msgstr ""
+msgstr "Tháng Hai"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.open_board_document_manager1
 #: model:ir.ui.menu,name:document.menu_reports_document_manager1
 msgid "Statistics by User"
+msgstr ""
+
+#. module: document
+#: help:document.directory.dctx,field:0
+msgid ""
+"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+"what is typed here."
 msgstr ""
 
 #. module: document
@@ -938,13 +910,19 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "April"
-msgstr ""
+msgstr "Tháng Tư"
 
 #. module: document
 #: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
 #: field:report.files.partner,nbr:0
 msgid "# of Files"
+msgstr ""
+
+#. module: document
+#: code:addons/document/document.py:209
+#, python-format
+msgid "(copy)"
 msgstr ""
 
 #. module: document
@@ -967,8 +945,8 @@ msgid "Mime Type"
 msgstr ""
 
 #. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
+#: view:report.document.user:0
+msgid "All Months Files"
 msgstr ""
 
 #. module: document
@@ -977,8 +955,8 @@ msgid "Content Name"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #, python-format
 msgid "File name must be unique!"
 msgstr ""
@@ -1000,8 +978,6 @@ msgid "Directories' Structure"
 msgstr ""
 
 #. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_document_by_resourcetype_graph
 #: view:report.document.user:0
 msgid "Files by Resource Type"
 msgstr ""
@@ -1014,6 +990,7 @@ msgstr ""
 
 #. module: document
 #: view:document.storage:0
+#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
 #: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
@@ -1028,3 +1005,6 @@ msgstr ""
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr ""
+
+#~ msgid "Product"
+#~ msgstr "Sản phẩm"

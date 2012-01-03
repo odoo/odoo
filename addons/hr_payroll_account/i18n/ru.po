@@ -7,327 +7,222 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-06-12 22:30+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:49+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:19+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: hr_payroll_account
-#: field:hr.payslip,move_line_ids:0
-msgid "Accounting Lines"
-msgstr "Строки счета"
-
-#. module: hr_payroll_account
-#: field:hr.payroll.register,bank_journal_id:0
-#: field:hr.payslip,bank_journal_id:0
-msgid "Bank Journal"
-msgstr "Банковский журнал"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contibution_register_line
-msgid "Contribution Register Line"
+#: field:hr.payslip,move_id:0
+msgid "Accounting Entry"
 msgstr ""
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contibution_register
-msgid "Contribution Register"
+#: field:hr.salary.rule,account_tax_id:0
+msgid "Tax Code"
 msgstr ""
 
 #. module: hr_payroll_account
-#: help:hr.employee,analytic_account:0
-msgid "Analytic Account for Salary Analysis"
-msgstr "Аналитический счет для анализа заработной платы"
-
-#. module: hr_payroll_account
-#: field:hr.payroll.register,journal_id:0
 #: field:hr.payslip,journal_id:0
+#: field:hr.payslip.run,journal_id:0
 msgid "Expense Journal"
 msgstr ""
 
 #. module: hr_payroll_account
-#: field:hr.contibution.register.line,period_id:0
-msgid "Period"
-msgstr "Период"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_employee
-msgid "Employee"
-msgstr "Сотрудник"
-
-#. module: hr_payroll_account
-#: view:hr.payslip:0
-msgid "Other Informations"
-msgstr "Прочая информация"
-
-#. module: hr_payroll_account
-#: field:hr.employee,salary_account:0
-msgid "Salary Account"
-msgstr "Зарплатный счет"
-
-#. module: hr_payroll_account
-#: help:hr.employee,property_bank_account:0
-msgid "Select Bank Account from where Salary Expense will be Paid"
-msgstr ""
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payroll_register
-msgid "Payroll Register"
-msgstr "Журнал начисления заработной платы"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_account_move
-msgid "Account Move Link to Pay Slip"
-msgstr ""
-
-#. module: hr_payroll_account
-#: view:hr.payslip:0
-msgid "Description"
-msgstr "Описание"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:331
+#: code:addons/hr_payroll_account/hr_payroll_account.py:157
+#: code:addons/hr_payroll_account/hr_payroll_account.py:173
 #, python-format
-msgid "Please Confirm all Expense Invoice appear for Reimbursement"
+msgid "Adjustment Entry"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:432
-#, python-format
-msgid "Please defined partner in bank account for %s !"
+#: field:hr.contract,analytic_account_id:0
+#: field:hr.salary.rule,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Счёт аналитики"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
+msgid "hr.salary.rule"
 msgstr ""
 
 #. module: hr_payroll_account
-#: view:hr.payslip:0
-msgid "Accounting Informations"
-msgstr "Учетная информация"
-
-#. module: hr_payroll_account
-#: help:hr.employee,salary_account:0
-msgid "Expense account when Salary Expense will be recorded"
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:429
-#, python-format
-msgid "Please defined bank account for %s !"
+#: field:hr.contract,journal_id:0
+msgid "Salary Journal"
 msgstr ""
 
 #. module: hr_payroll_account
-#: model:ir.module.module,description:hr_payroll_account.module_meta_information
-msgid ""
-"Generic Payroll system Integrated with Accountings\n"
-"    * Expanse Encoding\n"
-"    * Payment Encoding\n"
-"    * Comany Contribution Managemet\n"
-"    "
-msgstr ""
-
-#. module: hr_payroll_account
-#: model:ir.module.module,shortdesc:hr_payroll_account.module_meta_information
-msgid "Human Resource Payroll Accounting"
-msgstr "Учёт выплат персоналу"
-
-#. module: hr_payroll_account
-#: view:hr.payslip:0
-#: field:hr.payslip,move_payment_ids:0
-msgid "Payment Lines"
-msgstr "Позиции платежа"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:270
-#: code:addons/hr_payroll_account/hr_payroll_account.py:445
-#, python-format
-msgid "Please define fiscal year for perticular contract"
-msgstr ""
-
-#. module: hr_payroll_account
-#: field:hr.payslip.account.move,slip_id:0
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
 msgid "Pay Slip"
 msgstr "Расчетный листок"
 
 #. module: hr_payroll_account
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Ошибка! Структура подчинения не может быть рекурсивной."
-
-#. module: hr_payroll_account
-#: view:hr.payslip:0
-msgid "Account Lines"
-msgstr "Строки счета"
-
-#. module: hr_payroll_account
-#: field:hr.contibution.register,account_id:0
-#: field:hr.holidays.status,account_id:0
-#: field:hr.payroll.advice,account_id:0
-msgid "Account"
-msgstr "Учётная запись"
-
-#. module: hr_payroll_account
-#: field:hr.employee,property_bank_account:0
-msgid "Bank Account"
-msgstr "Банковский счет"
-
-#. module: hr_payroll_account
-#: field:hr.payslip.account.move,name:0
-msgid "Name"
-msgstr "Название"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
-msgid "Payslip Line"
-msgstr "Строка расчетного листка"
-
-#. module: hr_payroll_account
-#: view:hr.payslip:0
-msgid "Accounting Vouchers"
+#: constraint:hr.payslip:0
+msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr ""
 
 #. module: hr_payroll_account
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
-"Ошибка! Вы не можете выбрать подразделение, для которого сотрудник является "
-"руководителем."
-
-#. module: hr_payroll_account
-#: help:hr.payroll.register,period_id:0
 #: help:hr.payslip,period_id:0
 msgid "Keep empty to use the period of the validation(Payslip) date."
 msgstr ""
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payroll_advice
-msgid "Bank Advice Note"
-msgstr ""
-
-#. module: hr_payroll_account
-#: field:hr.payslip.account.move,move_id:0
-msgid "Expense Entries"
-msgstr ""
-
-#. module: hr_payroll_account
-#: field:hr.payslip,move_ids:0
-msgid "Accounting vouchers"
-msgstr ""
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:270
-#: code:addons/hr_payroll_account/hr_payroll_account.py:277
-#: code:addons/hr_payroll_account/hr_payroll_account.py:280
-#: code:addons/hr_payroll_account/hr_payroll_account.py:297
-#: code:addons/hr_payroll_account/hr_payroll_account.py:331
-#: code:addons/hr_payroll_account/hr_payroll_account.py:445
-#: code:addons/hr_payroll_account/hr_payroll_account.py:452
-#: code:addons/hr_payroll_account/hr_payroll_account.py:455
-#: code:addons/hr_payroll_account/hr_payroll_account.py:469
-#: code:addons/hr_payroll_account/hr_payroll_account.py:492
+#: code:addons/hr_payroll_account/hr_payroll_account.py:171
 #, python-format
-msgid "Warning !"
-msgstr "Warning !"
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr ""
 
 #. module: hr_payroll_account
-#: field:hr.employee,employee_account:0
-msgid "Employee Account"
-msgstr "Счёт работника"
+#: code:addons/hr_payroll_account/hr_payroll_account.py:155
+#, python-format
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr ""
 
 #. module: hr_payroll_account
-#: field:hr.payslip.line,account_id:0
-msgid "General Account"
-msgstr "Базовый счёт"
+#: field:hr.salary.rule,account_debit:0
+msgid "Debit Account"
+msgstr ""
 
 #. module: hr_payroll_account
-#: field:hr.contibution.register,yearly_total_by_emp:0
-msgid "Total By Employee"
-msgstr "Всего на сотрудника"
+#: code:addons/hr_payroll_account/hr_payroll_account.py:102
+#, python-format
+msgid "Payslip of %s"
+msgstr ""
 
 #. module: hr_payroll_account
-#: field:hr.payslip.account.move,sequence:0
-msgid "Sequence"
-msgstr "Последовательность"
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Contract"
+msgstr ""
 
 #. module: hr_payroll_account
-#: field:hr.payroll.register,period_id:0
+#: constraint:hr.contract:0
+msgid "Error! contract start-date must be lower then contract end-date."
+msgstr ""
+
+#. module: hr_payroll_account
 #: field:hr.payslip,period_id:0
 msgid "Force Period"
 msgstr "Установить период"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_holidays_status
-msgid "Leave Type"
-msgstr "Тип отсутствия"
+#: field:hr.salary.rule,account_credit:0
+msgid "Credit Account"
+msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:277
-#: code:addons/hr_payroll_account/hr_payroll_account.py:452
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr ""
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:155
+#: code:addons/hr_payroll_account/hr_payroll_account.py:171
 #, python-format
-msgid "Fiscal Year is not defined for slip date %s"
+msgid "Configuration Error!"
 msgstr ""
 
 #. module: hr_payroll_account
-#: field:hr.contibution.register,analytic_account_id:0
-#: field:hr.employee,analytic_account:0
-#: field:hr.holidays.status,analytic_account_id:0
-#: field:hr.payroll.structure,account_id:0
-#: field:hr.payslip.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Счёт аналитики"
-
-#. module: hr_payroll_account
-#: help:hr.employee,employee_account:0
-msgid "Employee Payable Account"
+#: view:hr.contract:0
+#: view:hr.salary.rule:0
+msgid "Accounting"
 msgstr ""
 
-#. module: hr_payroll_account
-#: field:hr.contibution.register,yearly_total_by_comp:0
-msgid "Total By Company"
-msgstr "Всего по организации"
+#~ msgid "Analytic Account for Salary Analysis"
+#~ msgstr "Аналитический счет для анализа заработной платы"
 
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payroll_structure
-msgid "Salary Structure"
-msgstr "Структура зарплаты"
+#~ msgid "Period"
+#~ msgstr "Период"
 
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:557
+#~ msgid "Employee"
+#~ msgstr "Сотрудник"
+
+#~ msgid "Bank Journal"
+#~ msgstr "Банковский журнал"
+
+#~ msgid "Accounting Lines"
+#~ msgstr "Строки счета"
+
+#~ msgid "Accounting Informations"
+#~ msgstr "Учетная информация"
+
+#~ msgid "Description"
+#~ msgstr "Описание"
+
+#~ msgid "Other Informations"
+#~ msgstr "Прочая информация"
+
+#~ msgid "Salary Account"
+#~ msgstr "Зарплатный счет"
+
+#~ msgid "Payroll Register"
+#~ msgstr "Журнал начисления заработной платы"
+
+#~ msgid "Bank Account"
+#~ msgstr "Банковский счет"
+
+#~ msgid "Human Resource Payroll Accounting"
+#~ msgstr "Учёт выплат персоналу"
+
+#~ msgid "Payment Lines"
+#~ msgstr "Позиции платежа"
+
+#~ msgid "Account Lines"
+#~ msgstr "Строки счета"
+
+#~ msgid "Name"
+#~ msgstr "Название"
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Ошибка! Структура подчинения не может быть рекурсивной."
+
+#~ msgid "Account"
+#~ msgstr "Учётная запись"
+
 #, python-format
-msgid "Please Configure Partners Receivable Account!!"
-msgstr ""
+#~ msgid "Warning !"
+#~ msgstr "Warning !"
 
-#. module: hr_payroll_account
-#: view:hr.contibution.register:0
-msgid "Year"
-msgstr "Год"
+#~ msgid "Payslip Line"
+#~ msgstr "Строка расчетного листка"
 
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:280
-#: code:addons/hr_payroll_account/hr_payroll_account.py:455
-#, python-format
-msgid "Period is not defined for slip date %s"
-msgstr ""
+#~ msgid "Sequence"
+#~ msgstr "Последовательность"
 
-#. module: hr_payroll_account
-#: view:hr.payslip:0
-msgid "Accounting Details"
-msgstr ""
+#~ msgid "Leave Type"
+#~ msgstr "Тип отсутствия"
 
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:540
-#, python-format
-msgid "Please Configure Partners Payable Account!!"
-msgstr ""
+#~ msgid "General Account"
+#~ msgstr "Базовый счёт"
 
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:429
-#: code:addons/hr_payroll_account/hr_payroll_account.py:432
-#: code:addons/hr_payroll_account/hr_payroll_account.py:533
-#: code:addons/hr_payroll_account/hr_payroll_account.py:550
-#, python-format
-msgid "Integrity Error !"
-msgstr ""
+#~ msgid "Employee Account"
+#~ msgstr "Счёт работника"
+
+#~ msgid "Total By Employee"
+#~ msgstr "Всего на сотрудника"
+
+#~ msgid "Total By Company"
+#~ msgstr "Всего по организации"
+
+#~ msgid "Salary Structure"
+#~ msgstr "Структура зарплаты"
+
+#~ msgid "Year"
+#~ msgstr "Год"
+
+#~ msgid ""
+#~ "Error ! You cannot select a department for which the employee is the manager."
+#~ msgstr ""
+#~ "Ошибка! Вы не можете выбрать подразделение, для которого сотрудник является "
+#~ "руководителем."

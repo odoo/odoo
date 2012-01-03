@@ -120,7 +120,7 @@
                     <field name="number"/>
                     <field name="partner_id" groups="base.group_user"/>
                     <field name="reference" invisible="1"/>
-                    <field name="name"/>
+                    <field name="name" invisible="1"/>
                     <field name="journal_id" invisible="1"/>
                     <field name="period_id" invisible="1" groups="account.group_account_user"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -152,8 +152,8 @@
                         <field name="currency_id" width="50"/>
                         <button name="%(action_account_change_currency)d" type="action" icon="terp-stock_effects-object-colorize" string="Change" attrs="{'invisible':[('state','!=','draft')]}" groups="account.group_account_user"/>
                         <newline/>
-                        <field string="Supplier" name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
-                        <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
+                        <field string="Supplier" name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" options='{"quick_create": false}'/>
+                        <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id" context="{'default_partner_id': partner_id}" options='{"quick_create": false}'/>
                         <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                         <newline/>
                         <field name="date_invoice"/>
@@ -208,10 +208,10 @@
                                 <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                                 <field name="residual"/>
                                 <group col="6" colspan="4">
-                                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
+                                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel" groups="base.group_no_one"/>
                                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
                                     <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid' icon="gtk-execute"/>
-                                    <button name="%(action_account_state_open)d" type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="base.group_no_one"/>
+                                    <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" icon="gtk-convert" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
                                     <button name="invoice_open" states="draft,proforma2" string="Approve" icon="terp-camera_test"/>
                                 </group>
                             </group>
@@ -234,6 +234,7 @@
                             <field name="payment_ids" colspan="4" nolabel="1" >
                                 <tree string="Payments">
                                     <field name="date" string="Payment Date"/>
+                                    <field name="move_id"/>
                                     <field name="ref"/>
                                     <field name="name" groups="base.group_extended"/>
                                     <field name="journal_id"/>
@@ -262,21 +263,19 @@
                     <field name="currency_id" width="50"/>
                     <button name="%(action_account_change_currency)d" type="action" icon="terp-stock_effects-object-colorize" string="Change" attrs="{'invisible':[('state','!=','draft')]}" groups="account.group_account_user"/>
                     <newline/>
-                    <field string="Customer" name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" groups="base.group_user" context="{'search_default_customer': 1}"/>
-                    <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
-                    <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
+                    <field string="Customer" name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" groups="base.group_user" context="{'search_default_customer': 1}" options='{"quick_create": false}'/>
+                    <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id" context="{'default_partner_id': partner_id}" options='{"quick_create": false}'/>
+                    <field name="fiscal_position" groups="base.group_extended" widget="selection" options='{"quick_create": false}'/>
                     <newline/>
                     <field name="date_invoice"/>
                     <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_account_user" widget="selection"/>
-                    <group colspan="2" col="1" groups="account.group_account_user">
-                        <label align="0.0" string="(keep empty to use the current period)"/>
-                    </group>
+                    <field name="payment_term" widget="selection"/>
+                    <newline/>
+                    <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]" name="account_id" groups="account.group_account_user"/>
+                    <field name="name" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">
-                            <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]" name="account_id" groups="account.group_account_user"/>
-                            <field name="name"/>
-                            <field name="payment_term" widget="selection"/>
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}"/>
                             <group col="1" colspan="2">
                                 <field name="tax_line" nolabel="1">
@@ -302,11 +301,11 @@
                                 <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                                 <field name="residual"/>
                                 <group col="8" colspan="4" groups="base.group_user">
-                                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
+                                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel" groups="base.group_no_one"/>
                                     <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
 
+                                    <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" icon="gtk-convert" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
                                     <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid' icon="gtk-execute"/>
-                                    <button name='%(action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="base.group_no_one"/>
                                     <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="terp-gtk-media-pause" groups="account.group_account_user"/>
                                     <button name="invoice_open" states="draft,proforma2" string="Validate" icon="gtk-go-forward"/>
                                     <button name="%(account_invoices)d" string="Print Invoice" type="action" icon="gtk-print" states="open,paid,proforma,sale,proforma2"/>
@@ -332,6 +331,7 @@
                             <field name="payment_ids" colspan="4" nolabel="1">
                                 <tree string="Payments">
                                     <field name="date"/>
+                                    <field name="move_id"/>
                                     <field name="ref"/>
                                     <field name="name"/>
                                     <field name="journal_id" groups="base.group_user"/>
@@ -360,13 +360,13 @@
                         <separator orientation="vertical"/>
                         <filter name="unpaid" icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                         <separator orientation="vertical"/>
-                        <field name="number"/>
+                        <field name="number"
+                            string="Reference"
+                            filter_domain="['|', ('number','ilike',self),('origin','ilike',self)]"/>
                         <field name="partner_id"/>
                         <field name="user_id" widget="selection" string="Salesman">
-                        <filter domain="[('user_id','=',uid)]" help="My invoices" icon="terp-personal" />
+                            <filter domain="[('user_id','=',uid)]" help="My invoices" icon="terp-personal" />
                         </field>
-                        <field name="origin"/>
-                        <field name="amount_total"/>
                     </group>
                     <newline/>
                     <group>
@@ -430,7 +430,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
-            <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help">With Customer Invoices you can create and manage sales invoices issued to your customers. OpenERP can also generate draft invoices automatically from sales orders or deliveries. You should only confirm them before sending them to your customers.</field>
         </record>
@@ -458,7 +458,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
-            <field name="context">{'type':'in_invoice', 'journal_type': 'purchase'}</field>
+            <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help">With Supplier Invoices you can enter and manage invoices issued by your suppliers. OpenERP can also generate draft invoices automatically from purchase orders or receipts. This way, you can control the invoice from your supplier according to what you purchased or received.</field>
         </record>
@@ -471,7 +471,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
-            <field name="context">{'type':'out_refund', 'journal_type': 'sale_refund'}</field>
+            <field name="context">{'default_type':'out_refund', 'type':'out_refund', 'journal_type': 'sale_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help">With Customer Refunds you can manage the credit notes for your customers. A refund is a document that credits an invoice completely or partially. You can easily generate refunds and reconcile them directly from the invoice form.</field>
         </record>
@@ -497,7 +497,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
-            <field name="context">{'type':'in_refund', 'journal_type': 'purchase_refund'}</field>
+            <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help">With Supplier Refunds you can manage the credit notes you receive from your suppliers. A refund is a document that credits an invoice completely or partially. You can easily generate refunds and reconcile them directly from the invoice form.</field>
         </record>

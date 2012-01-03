@@ -6,24 +6,34 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2010-10-30 13:13+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:33+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:02+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:44
-#, python-format
-msgid "No employee defined for user \"%s\". You must create one."
+#: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
+msgid ""
+"You will find here all works made on tasks that you can invoice.\n"
+"In order to invoice the time spent on a project, you must define the\n"
+"pricelist and the field 'Invoice Task Work' on the tab 'Billing' of\n"
+"the project form."
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:52
+#: code:addons/project_timesheet/project_timesheet.py:55
+#, python-format
+msgid "No employee defined for user \"%s\". You must create one."
+msgstr ""
+"Geen medewerker gedefinieerd voor gebruiker \"%s\". U moet er een maken."
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:63
 #, python-format
 msgid ""
 "No journal defined on the related employee.\n"
@@ -36,12 +46,22 @@ msgstr ""
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_timesheettask0
 msgid "Timesheet task"
+msgstr "Urenstaat taak"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:0
+msgid "Group by year of date"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
-msgid "Sign in / Sign out by project"
+#: view:report.timesheet.task.user:0
+msgid "Task Hours in current month"
 msgstr ""
+
+#. module: project_timesheet
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr "Fout! Einddatum taak moet groter zijn dat begindatum taak"
 
 #. module: project_timesheet
 #: field:project.task.work,hr_analytic_timesheet_id:0
@@ -49,213 +69,235 @@ msgid "Related Timeline Id"
 msgstr "Gerelateerde tijdlijn ID"
 
 #. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_task_work
-msgid "Project Task Work"
-msgstr ""
+#: view:report.timesheet.task.user:0
+msgid "Tasks by User"
+msgstr "Taken per gebruiker"
 
 #. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
-msgid "report.timesheet.task.user"
+#: model:ir.model,name:project_timesheet.model_project_task_work
+msgid "Project Task Work"
+msgstr "Project taak werk"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:231
+#, python-format
+msgid ""
+"You cannot delete a partner which is assigned to project, we suggest you to "
+"uncheck the active box!"
 msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group By..."
-msgstr ""
+msgstr "Groepeer op..."
 
 #. module: project_timesheet
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
+#: model:process.node,note:project_timesheet.process_node_triggerinvoice0
+msgid "Trigger invoices from sale order lines"
 msgstr ""
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,year:0
 msgid "Year"
+msgstr "Jaar"
+
+#. module: project_timesheet
+#: view:project.project:0
+msgid "Billable"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
+msgid ""
+"You will find here the contracts related to your customer projects in order "
+"to track the invoicing progress."
 msgstr ""
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
 msgid "Analytic account/project"
-msgstr ""
+msgstr "Kostenplaats/project"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,task_hrs:0
 msgid "Task Hours"
-msgstr ""
+msgstr "Uren taak"
 
 #. module: project_timesheet
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
+msgstr "Fout! Project startdatum moet liggen voor project einddatum."
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
+msgid "Customer Projects"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid " Year "
-msgstr ""
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_res_partner
-msgid "Partner"
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:220
-#, python-format
-msgid "Cannot delete Partner which is Assigned to project  !"
-msgstr ""
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr ""
+#: model:ir.model,name:project_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Kostenplaatsboeking"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "August"
-msgstr ""
+msgstr "Augustus"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskinvoice0
 msgid "Task invoice"
-msgstr ""
+msgstr "Factuur taak"
 
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_taskwork0
 msgid "Task Work"
-msgstr ""
+msgstr "Taakwerkzaamheden"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "May"
-msgstr ""
+msgstr "Mei"
 
 #. module: project_timesheet
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
+msgstr "Fout! U kunt geen recursieve taken aanmaken."
+
+#. module: project_timesheet
+#: model:ir.ui.menu,name:project_timesheet.menu_project_working_hours
+msgid "Timesheet Lines"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:220
+#: code:addons/project_timesheet/project_timesheet.py:231
 #, python-format
 msgid "Invalid action !"
+msgstr "Ongeldige actie !"
+
+#. module: project_timesheet
+#: view:project.project:0
+msgid "Billable Project"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "June"
+#: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
+msgid "Contracts to Renew"
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
+msgid "Sign in / Sign out by project"
+msgstr "Klok in / Klok uit per project"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:0
+msgid "Group by month of date"
 msgstr ""
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Taak"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
 msgid "Invoice Tasks Work"
-msgstr ""
+msgstr "Taak werk factureren"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Gebruiker"
 
 #. module: project_timesheet
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "Fout! U kunt geen escalatie toewijzen aan hetzelfde project!"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,name:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "July"
-msgstr ""
+msgstr "Juli"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_timesheettask0
 msgid "Complete Your Timesheet."
-msgstr ""
+msgstr "Maak uw urenstaat compleet."
 
 #. module: project_timesheet
-#: view:project.project:0
-msgid "Invoiceable"
+#: view:report.timesheet.task.user:0
+msgid "Task Hours in current year"
 msgstr ""
 
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Customer"
-msgstr ""
+msgstr "Klant"
 
 #. module: project_timesheet
-#: model:ir.module.module,description:project_timesheet.module_meta_information
-msgid ""
-"\n"
-"        This module lets you transfer the entries under tasks defined for "
-"Project Management to\n"
-"        the Timesheet line entries for particular date and particular user  "
-"with the effect of creating, editing and deleting either ways.\n"
-"\n"
-"    "
-msgstr ""
+#: model:process.node,note:project_timesheet.process_node_taskwork0
+msgid "Work on task"
+msgstr "Werken aan taak"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "February"
-msgstr ""
+msgstr "Februari"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
 msgid "Bill Tasks Works"
-msgstr ""
+msgstr "Werk doorberekenen"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
 msgid "Timesheet Hours"
-msgstr ""
+msgstr "Urenstaat uren"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskencoding0
 msgid "Task encoding"
-msgstr ""
+msgstr "Taak codering"
 
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_filltimesheet0
 msgid "Task summary is comes into the timesheet line"
-msgstr ""
+msgstr "Korte taakomschrijving die in de urenstaatregel komt"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "January"
-msgstr ""
+msgstr "Januari"
 
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_triggerinvoice0
 msgid "Trigger Invoice"
-msgstr ""
+msgstr "Trigger facturatie"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
-msgid "Tasks by User"
+msgid "Task hours of last month"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:48
+#: code:addons/project_timesheet/project_timesheet.py:59
 #, python-format
 msgid ""
 "No product defined on the related employee.\n"
@@ -267,38 +309,43 @@ msgstr ""
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
 msgid "Project"
-msgstr ""
+msgstr "Project"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Invoicing Data"
-msgstr ""
+msgstr "Facturatie data"
 
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_taskencoding0
 msgid "Encode how much time u spent on your task"
-msgstr ""
+msgstr "Vul in hoeveel tijd u bezig was met uw taak"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid " Month "
-msgstr ""
+#: model:ir.model,name:project_timesheet.model_res_partner
+msgid "Partner"
+msgstr "Relatie"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "Maart"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Timesheet/Task hours Report Per Month"
-msgstr ""
+msgstr "Urenstaat/Taak uren rapport per maand"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:43
-#: code:addons/project_timesheet/project_timesheet.py:47
-#: code:addons/project_timesheet/project_timesheet.py:51
+#: code:addons/project_timesheet/project_timesheet.py:54
 #: code:addons/project_timesheet/project_timesheet.py:58
+#: code:addons/project_timesheet/project_timesheet.py:62
+#: code:addons/project_timesheet/project_timesheet.py:69
 #, python-format
 msgid "Bad Configuration !"
 msgstr "Fout in configuratie !"
@@ -306,22 +353,22 @@ msgstr "Fout in configuratie !"
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturatie"
 
 #. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_taskwork0
-msgid "Work on task"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
 msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid " Month-1 "
-msgstr ""
+msgstr " Maand-1 "
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -334,9 +381,14 @@ msgid "After task is completed, Create its invoice."
 msgstr ""
 
 #. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_triggerinvoice0
-msgid "Trigger invoices from sale order lines"
-msgstr ""
+#: selection:report.timesheet.task.user,month:0
+msgid "June"
+msgstr "Juni"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
+msgid "report.timesheet.task.user"
+msgstr "report.timesheet.task.user"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -345,9 +397,14 @@ msgid "Month"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.module.module,shortdesc:project_timesheet.module_meta_information
-msgid "Project Timesheet"
-msgstr "Urenstaat project"
+#: model:ir.ui.menu,name:project_timesheet.menu_act_project_management_timesheet_sheet_form
+msgid "My Timesheet"
+msgstr ""
+
+#. module: project_timesheet
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: project_timesheet
 #: view:project.project:0
@@ -355,7 +412,7 @@ msgid "Invoice Task Work"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:59
+#: code:addons/project_timesheet/project_timesheet.py:70
 #, python-format
 msgid ""
 "No product and product category property account defined on the related "
@@ -373,16 +430,45 @@ msgstr ""
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
-msgstr ""
-
-#. module: project_timesheet
-#: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
-msgid ""
-"This lists show you every task work you can invoice to the customer. Select "
-"the lines in order to generate the invoices automatically."
-msgstr ""
+msgstr "Urenstaat invullen"
 
 #, python-format
 #~ msgid "No employee defined for this user. You must create one."
 #~ msgstr ""
 #~ "Geen werknemer gedefinieerd voor deze gebruiker. U dient deze aan te maken."
+
+#~ msgid "Project Timesheet"
+#~ msgstr "Urenstaat project"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
+
+#, python-format
+#~ msgid "Cannot delete Partner which is Assigned to project  !"
+#~ msgstr "Kan relatie niet verwijderen die is toegewezen aan project !"
+
+#~ msgid " Year "
+#~ msgstr " Jaar "
+
+#~ msgid "Invoiceable"
+#~ msgstr "Facturabel"
+
+#~ msgid "Working Hours"
+#~ msgstr "Werkuren"
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module lets you transfer the entries under tasks defined for "
+#~ "Project Management to\n"
+#~ "        the Timesheet line entries for particular date and particular user  "
+#~ "with the effect of creating, editing and deleting either ways.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Deze module laat u taakregels uit projectmanagement overzetten naar "
+#~ "de urenstaten voor specifieke datums\n"
+#~ "        en gebruikers met als effect het maken, wijzigen en verwijderen van "
+#~ "die regels\n"
+#~ "\n"
+#~ "    "

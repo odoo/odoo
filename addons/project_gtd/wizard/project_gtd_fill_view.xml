@@ -33,7 +33,6 @@
 
     	<record model="ir.values" id="project_gtd_fill_values">
             <field name="model_id" ref="model_project_gtd_timebox" />
-            <field name="object" eval="1" />
             <field name="name">Plannify Timebox</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_project_gtd_fill'))" />

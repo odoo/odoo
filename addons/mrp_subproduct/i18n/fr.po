@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"POT-Creation-Date: 2011-12-22 18:45+0000\n"
 "PO-Revision-Date: 2011-01-13 02:28+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,13 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:41+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:12+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
 msgid "Product"
 msgstr "Produit"
+
+#. module: mrp_subproduct
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Fixed"
+msgstr "Fixe"
 
 #. module: mrp_subproduct
 #: sql_constraint:mrp.bom:0
@@ -44,22 +49,14 @@ msgid "Manufacturing Order"
 msgstr "Ordre de fabrication"
 
 #. module: mrp_subproduct
-#: model:ir.module.module,shortdesc:mrp_subproduct.module_meta_information
-msgid ""
-"MRP Sub Product - To produce several products from one production order"
+#: constraint:mrp.bom:0
+msgid "BoM line product should not be same as BoM product."
 msgstr ""
-"Sous-produit dans le module MRP - pour pouvoir fabriquer plusieurs produits "
-"à partir d'un seul ordre de fabrication"
 
 #. module: mrp_subproduct
-#: field:mrp.subproduct,product_qty:0
-msgid "Product Qty"
-msgstr "Qté de Produit"
-
-#. module: mrp_subproduct
-#: field:mrp.bom,sub_products:0
-msgid "sub_products"
-msgstr "Sous-produits"
+#: view:mrp.bom:0
+msgid "Sub Products"
+msgstr "Sous-produit"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,subproduct_type:0
@@ -72,27 +69,9 @@ msgid "Bill of Material"
 msgstr "Nomenclature"
 
 #. module: mrp_subproduct
-#: model:ir.module.module,description:mrp_subproduct.module_meta_information
-msgid ""
-"\n"
-"This module allows you to produce several products from one production "
-"order.\n"
-"You can configure sub-products in the bill of material.\n"
-"Without this module:\n"
-"    A + B + C -> D\n"
-"With this module:\n"
-"    A + B + C -> D + E\n"
-"    "
-msgstr ""
-"\n"
-"Ce module vous permet de produire divers produits à partir d'un seul ordre "
-"de production.\n"
-"Vous pouvez configurer des sous-produits dans la nomenclature.\n"
-"Sans ce module :\n"
-"    A + B + C -> D\n"
-"Avec ce module :\n"
-"    A + B + C -> D + E\n"
-"    "
+#: field:mrp.subproduct,product_qty:0
+msgid "Product Qty"
+msgstr "Qté de Produit"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
@@ -105,14 +84,14 @@ msgid "BoM"
 msgstr "Nomenclature"
 
 #. module: mrp_subproduct
-#: constraint:mrp.bom:0
-msgid "Error ! You can not create recursive BoM."
-msgstr "Erreur ! Vous ne pouvez pas créer de nomenclatures récursives."
+#: sql_constraint:mrp.production:0
+msgid "Reference must be unique per Company!"
+msgstr ""
 
 #. module: mrp_subproduct
-#: view:mrp.bom:0
-msgid "Sub Products"
-msgstr "Sous-produit"
+#: field:mrp.bom,sub_products:0
+msgid "sub_products"
+msgstr "Sous-produits"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -120,22 +99,67 @@ msgid "Variable"
 msgstr "Variable"
 
 #. module: mrp_subproduct
-#: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero !"
-msgstr "La quantité à produire ne peut être ni négative ni nulle !"
-
-#. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
 msgid "Sub Product"
 msgstr "Sous-produit"
 
 #. module: mrp_subproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Fixe"
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero!"
+msgstr ""
+
+#. module: mrp_subproduct
+#: help:mrp.subproduct,subproduct_type:0
+msgid ""
+"Define how the quantity of subproducts will be set on the production orders "
+"using this BoM.  'Fixed' depicts a situation where the quantity of created "
+"subproduct is always equal to the quantity set on the BoM, regardless of how "
+"many are created in the production order.  By opposition, 'Variable' means "
+"that the quantity will be computed as    '(quantity of subproduct set on the "
+"BoM / quantity of manufactured product set on the BoM * quantity of "
+"manufactured product in the production order.)'"
+msgstr ""
+
+#. module: mrp_subproduct
+#: constraint:mrp.bom:0
+msgid "Error ! You cannot create recursive BoM."
+msgstr ""
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
 #~ "spéciaux !"
+
+#~ msgid ""
+#~ "MRP Sub Product - To produce several products from one production order"
+#~ msgstr ""
+#~ "Sous-produit dans le module MRP - pour pouvoir fabriquer plusieurs produits "
+#~ "à partir d'un seul ordre de fabrication"
+
+#~ msgid "Order quantity cannot be negative or zero !"
+#~ msgstr "La quantité à produire ne peut être ni négative ni nulle !"
+
+#~ msgid "Error ! You can not create recursive BoM."
+#~ msgstr "Erreur ! Vous ne pouvez pas créer de nomenclatures récursives."
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows you to produce several products from one production "
+#~ "order.\n"
+#~ "You can configure sub-products in the bill of material.\n"
+#~ "Without this module:\n"
+#~ "    A + B + C -> D\n"
+#~ "With this module:\n"
+#~ "    A + B + C -> D + E\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Ce module vous permet de produire divers produits à partir d'un seul ordre "
+#~ "de production.\n"
+#~ "Vous pouvez configurer des sous-produits dans la nomenclature.\n"
+#~ "Sans ce module :\n"
+#~ "    A + B + C -> D\n"
+#~ "Avec ce module :\n"
+#~ "    A + B + C -> D + E\n"
+#~ "    "

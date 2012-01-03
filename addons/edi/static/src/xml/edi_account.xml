@@ -1,0 +1,163 @@
+<template>
+<t t-name="Edi.account.invoice.content">
+    <div class="oe_edi_paperbox">
+       <div class="oe_edi_address_from">
+           <div class="oe_edi_company_block_title">
+               <span class="oe_edi_company_name"><t t-esc="doc.company_id[1]"/></span>
+           </div>
+           <div class="oe_edi_company_block_body">
+                <p>
+                    <t t-if="doc.company_address">
+                       <t t-if="doc.company_address.street" t-esc="doc.company_address.street"/><br/>
+                       <t t-if="doc.company_address.street2"><t t-esc="doc.company_address.street2"/><br/></t>
+                       <t t-if="doc.company_address.zip" t-esc="doc.company_address.zip"/> <t t-if="doc.company_address.city" t-esc="doc.company_address.city"/> <br/>
+                       <t t-if="doc.company_address.country_id"><t t-esc="doc.company_address.country_id[1]"/><br/></t>
+                   </t>
+                </p>
+           </div>
+       </div>
+       <div class="oe_edi_address_to">
+           <div class="oe_edi_company_block_title">
+               <span class="oe_edi_company_name"><t t-esc="doc.partner_id[1]"/></span>
+           </div>
+           <div class="oe_edi_company_block_body">
+                <p>
+                    <t t-if="doc.partner_address">
+                       <t t-if="doc.partner_address.street" t-esc="doc.partner_address.street"/><br/>
+                       <t t-if="doc.partner_address.street2"><t t-esc="doc.partner_address.street2"/><br/></t>
+                       <t t-if="doc.partner_address.zip" t-esc="doc.partner_address.zip"/> <t t-if="doc.partner_address.city" t-esc="doc.partner_address.city"/> <br/>
+                       <t t-if="doc.partner_address.country_id"><t t-esc="doc.partner_address.country_id[1]"/><br/></t>
+                   </t>
+                </p>
+           </div>
+       </div>
+       <h1 class="oe_edi_doc_title">Invoice <t t-esc="doc.internal_number"/>: <t t-esc="_.str.sprintf('%.2f',doc.amount_total)"/> <t t-esc="doc.currency.code"/></h1>
+       <table width="100%" class="oe_edi_data oe_edi_shade">
+            <tr class="oe_edi_floor">
+                <th align="left">Description</th>
+                <th align="left">Date</th>
+                <th align="left">Your Reference</th>
+            </tr>
+            <tr class="oe_edi_data_row">
+                <td align="left"><t t-esc="doc.name"/></td>
+                <td align="left"><t t-esc="doc.date_invoice"/></td>
+                <td align="left"><t t-esc="doc.partner_ref"/></td>
+            </tr>
+        </table>
+        <p/>
+        <table width="100%" class="oe_edi_data">
+            <tr class="oe_edi_floor">
+                <th align="left">Product Description</th>
+                <th align="right">Quantity</th>
+                <th align="right">Unit Price</th>
+                <th align="right">Discount</th>
+                <th align="right">Price</th>
+            </tr>
+                <t t-if="doc.invoice_line" t-foreach="doc.invoice_line" t-as="invoice_line">
+                    <tr class="oe_edi_data_row">
+                        <td align="left"><t t-esc="invoice_line.name"/>
+                            <t t-if="invoice_line.note">
+                                <pre class="oe_edi_inner_note"><t t-esc="invoice_line.note"/></pre>
+                            </t>
+                        </td>
+                        <td align="right"><t t-esc="_.str.sprintf('%.2f',invoice_line.quantity)"/> <t t-esc="invoice_line.uos_id[1]"/></td>
+                        <td align="right"><t t-esc="_.str.sprintf('%.2f',invoice_line.price_unit)"/></td>
+                        <td align="right"><t t-esc="_.str.sprintf('%.2f',invoice_line.discount)"/></td>
+                        <td align="right"><t t-esc="_.str.sprintf('%.2f',invoice_line.price_subtotal)"/> <t t-esc="doc.currency.code"/></td>
+                    </tr>
+                </t>
+            <tr>
+                <td colspan="3"></td>
+                <td colspan="2" class="oe_edi_ceiling">
+                    <div class="oe_edi_summary_label">
+                        Net Total:
+                    </div>
+                    <div class="oe_edi_summary_value">
+                        <t t-esc="_.str.sprintf('%.2f',doc.amount_untaxed)"/> <t t-esc="doc.currency.code"/>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"></td>
+                <td colspan="2" class="oe_edi_floor">
+                    <div class="oe_edi_summary_label">
+                        Taxes:
+                    </div>
+                    <div class="oe_edi_summary_value">
+                        <t t-esc="_.str.sprintf('%.2f',doc.amount_tax)"/> <t t-esc="doc.currency.code"/>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"></td>
+                <th colspan="2" class="oe_edi_shade">
+                    <div class="oe_edi_summary_label">
+                        Total:
+                    </div>
+                    <div class="oe_edi_summary_value">
+                        <t t-esc="_.str.sprintf('%.2f',doc.amount_total)"/> <t t-esc="doc.currency.code"/>
+                    </div>
+                </th>
+            </tr>
+        </table>
+        <t t-if="doc.tax_line">
+        <table class="oe_edi_data" width="40%">
+            <tr class="oe_edi_floor">
+                <th align="left">Tax</th>
+                <th align="right">Base Amount</th>
+                <th align="right">Amount</th>
+            </tr>
+            <t t-if="doc.tax_line"><t t-foreach="doc.tax_line" t-as="tax_line">
+                <tr class="oe_edi_data_row">
+                    <td align="left"><t t-esc="tax_line.name"/></td>
+                    <td align="right"><t t-esc="_.str.sprintf('%.2f',tax_line.base_amount)"/> <t t-esc="doc.currency.code"/></td>
+                    <td align="right"><t t-esc="_.str.sprintf('%.2f',tax_line.amount)"/> <t t-esc="doc.currency.code"/></td>
+                </tr>
+                </t>
+            </t>
+        </table>
+        </t>
+        <t t-if="doc.comment">
+            <p>Notes:</p>
+            <pre class="oe_edi_inner_note"><t t-esc="doc.comment"/></pre>
+        </t>
+    </div>
+</t>
+<t t-name="Edi.account.invoice.sidebar">
+    <t t-if="!doc.reconciled &amp;&amp; (doc.type == 'out_invoice' or doc.type == 'in_refund')">
+        <t t-if="doc.company_address.paypal_account || doc.company_address.bank_ids">
+            <p class="oe_edi_sidebar_title">Pay Online</p>
+            <t t-if="doc.company_address.paypal_account">
+                <div class="oe_edi_option">
+                    <input type="radio" id="oe_edi_paypal" name="oe_edi_pay" class="oe_edi_pay_choice"/>
+                    <label for="oe_edi_paypal" id="oe_edi_paypal" class="oe_edi_pay_choice_label">Paypal</label>
+                </div>
+                <p class="oe_edi_nested_block_pay oe_edi_paypal_nested">
+                    You may directly pay this invoice online via Paypal's secure payment gateway:<br/>
+                    <a t-att-href="widget.get_paypal_url('Invoice','internal_number')" target="_new">
+                        <img class="oe_edi_paypal_button" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
+                    </a>
+                </p>
+            </t>
+            <t t-if="doc.company_address.bank_ids">
+                <div class="oe_edi_option">
+                    <input type="radio" id="oe_edi_pay_wire" name="oe_edi_pay" class="oe_edi_pay_choice"/>
+                    <label for="oe_edi_pay_wire" id="oe_edi_pay_wire" class="oe_edi_pay_choice_label">Bank Wire Transfer</label>
+                </div>
+                <p class="oe_edi_nested_block_pay oe_edi_pay_wire_nested">
+                    Please transfer <strong><t t-esc="_.str.sprintf('%.2f',doc.amount_total)"/> <t t-esc="doc.currency.code"/></strong> to
+                    <strong><t t-esc="doc.company_id[1]"/></strong> (postal address on the invoice header)
+                     using one of the following bank accounts. Be sure to mention the invoice
+                     reference <strong><t t-esc="doc.internal_number"/></strong> on the transfer:
+                     <br/><br/>
+                </p>
+                <ul class="oe_edi_nested_block_pay oe_edi_pay_wire_nested">
+                <t t-foreach="doc.company_address.bank_ids" t-as="bank_info">
+                    <li><t t-esc="bank_info[1]"/></li>
+                </t>
+                </ul>
+            </t>
+        </t>
+    </t>
+</t>
+</template>

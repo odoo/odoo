@@ -86,14 +86,14 @@ class mrp_production_workcenter_line(osv.osv):
     _order = "sequence, date_planned"
 
     _columns = {
-       'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Cancelled'),('done','Finished')],'State', readonly=True,
+       'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pending'),('cancel','Cancelled'),('done','Finished')],'State', readonly=True,
                                  help="* When a work order is created it is set in 'Draft' state.\n" \
                                        "* When user sets work order in start mode that time it will be set in 'In Progress' state.\n" \
-                                       "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pause' state.\n" \
+                                       "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' state.\n" \
                                        "* When the user cancels the work order it will be set in 'Canceled' state.\n" \
                                        "* When order is completely processed that time it is set in 'Finished' state."),
        'date_start_date': fields.function(_get_date_date, string='Start Date', type='date'),
-       'date_planned': fields.datetime('Scheduled Date'),
+       'date_planned': fields.datetime('Scheduled Date', select=True),
        'date_planned_end': fields.function(_get_date_end, string='End Date', type='datetime'),
        'date_start': fields.datetime('Start Date'),
        'date_finished': fields.datetime('End Date'),
@@ -350,6 +350,7 @@ class mrp_production(osv.osv):
                     if l.production_id and (l.production_id.date_start < po.date_finished):
                         self.write(cr, uid, [l.production_id.id], {'date_start': po.date_finished})
                         break
+        return True
 
 
     def write(self, cr, uid, ids, vals, context=None, update=True, mini=True):
@@ -371,13 +372,13 @@ class mrp_production(osv.osv):
                 pass
         return result
 
-    def action_compute(self, cr, uid, ids, properties=[]):
+    def action_compute(self, cr, uid, ids, properties=[], context=None):
         """ Computes bills of material of a product and planned date of work order.
         @param properties: List containing dictionaries of properties.
         @return: No. of products.
         """
-        result = super(mrp_production, self).action_compute(cr, uid, ids, properties=properties)
-        self._compute_planned_workcenter(cr, uid, ids, context={})
+        result = super(mrp_production, self).action_compute(cr, uid, ids, properties=properties, context=context)
+        self._compute_planned_workcenter(cr, uid, ids, context=context)
         return result
 
 mrp_production()
@@ -551,6 +552,13 @@ class mrp_operations_operation(osv.osv):
         self.pool.get('mrp.production.workcenter.line').write(cr, uid, wc_op_id, line_vals, context=context)
 
         return super(mrp_operations_operation, self).create(cr, uid, vals, context=context)
+
+    def initialize_workflow_instance(self, cr, uid, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        line_ids = self.pool.get('mrp.production.workcenter.line').search(cr, uid, [], context=context)
+        for line_id in line_ids:
+            wf_service.trg_create(uid, 'mrp.production.workcenter.line', line_id, cr)
+        return True
 
     _columns={
         'production_id':fields.many2one('mrp.production','Production',required=True),

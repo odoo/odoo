@@ -8,20 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: account-analytic-default-es\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-02-03 18:53+0000\n"
 "Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
 "Language-Team: Galego <g11n@mancomun.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:29+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
-
-#. module: account_analytic_default
-#: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
-msgid "Account Analytic Default"
-msgstr "Contas analíticas predefinidas"
+"X-Launchpad-Export-Date: 2011-12-23 06:57+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -65,6 +60,11 @@ msgstr "Data límite para esta conta analítica"
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
 msgstr "Albarán"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Comapny"
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -136,26 +136,14 @@ msgid "Analytic Defaults"
 msgstr "Análise: Valores predefinidos"
 
 #. module: account_analytic_default
-#: model:ir.module.module,description:account_analytic_default.module_meta_information
-msgid ""
-"\n"
-"Allows to automatically select analytic accounts based on criterions:\n"
-"* Product\n"
-"* Partner\n"
-"* User\n"
-"* Company\n"
-"* Date\n"
-"    "
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
 msgstr ""
-"\n"
-"Permite escoller automáticamente contas analíticas basándose nos seguintes "
-"criterios:\n"
-"*Producto\n"
-"*Partner\n"
-"*Usuario\n"
-"*Compañía\n"
-"*Data\n"
-"    "
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Analytical defaults whose end date is greater than today or None"
+msgstr ""
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -227,5 +215,28 @@ msgstr "Liña de orde de venda"
 #~ msgid "Analytic Distributions"
 #~ msgstr "Distribucións analíticas"
 
+#~ msgid "Account Analytic Default"
+#~ msgstr "Contas analíticas predefinidas"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "El nome del modelu nun ye válidu pa la definición de l'aición"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allows to automatically select analytic accounts based on criterions:\n"
+#~ "* Product\n"
+#~ "* Partner\n"
+#~ "* User\n"
+#~ "* Company\n"
+#~ "* Date\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Permite escoller automáticamente contas analíticas basándose nos seguintes "
+#~ "criterios:\n"
+#~ "*Producto\n"
+#~ "*Partner\n"
+#~ "*Usuario\n"
+#~ "*Compañía\n"
+#~ "*Data\n"
+#~ "    "

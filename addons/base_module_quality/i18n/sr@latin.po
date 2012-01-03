@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-12-23 15:34+0000\n"
 "Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:42+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:13+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:187
@@ -24,6 +24,12 @@ msgstr ""
 #, python-format
 msgid "Suggestion"
 msgstr "Predlog"
+
+#. module: base_module_quality
+#: model:ir.actions.act_window,name:base_module_quality.action_view_quality_save_report
+#: view:save.report:0
+msgid "Standard Entries"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/base_module_quality.py:100
@@ -38,11 +44,6 @@ msgid "Method Test"
 msgstr "Testiraj Metodu"
 
 #. module: base_module_quality
-#: model:ir.module.module,shortdesc:base_module_quality.module_meta_information
-msgid "Base module quality - To check the quality of other modules"
-msgstr "Kvalitet baze modula - Da proveri kvalitet ostalih modula"
-
-#. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:34
 #, python-format
 msgid ""
@@ -51,10 +52,9 @@ msgid ""
 msgstr ""
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:127
-#, python-format
-msgid "O(n) or worst"
-msgstr "O(n) ili losije"
+#: view:save.report:0
+msgid " "
+msgstr ""
 
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
@@ -74,10 +74,9 @@ msgid "Speed Test"
 msgstr "Test Brzine"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/terp_test/terp_test.py:54
-#, python-format
-msgid "The module does not contain the __openerp__.py file"
-msgstr "Ovaj Modul ne sadrzi __openerp__.py fajl"
+#: model:ir.model,name:base_module_quality.model_quality_check
+msgid "Module Quality Check"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:82
@@ -111,7 +110,7 @@ msgstr ""
 "koristi."
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/quality_save_report.py:46
+#: code:addons/base_module_quality/wizard/quality_save_report.py:39
 #, python-format
 msgid "No report to save!"
 msgstr "Nema Izvestaja za cuvanje!"
@@ -155,8 +154,9 @@ msgid "Save Report"
 msgstr "Sacuvaj Izvestaj"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/module_quality_check.py:46
-#: model:ir.actions.wizard,name:base_module_quality.create_quality_check_id
+#: code:addons/base_module_quality/wizard/module_quality_check.py:43
+#: model:ir.actions.act_window,name:base_module_quality.act_base_module_quality
+#: view:quality.check:0
 #, python-format
 msgid "Quality Check"
 msgstr "Provera Kvaliteta"
@@ -168,16 +168,27 @@ msgid "Not Efficient"
 msgstr "Nije Efikasno"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/quality_save_report.py:46
+#: code:addons/base_module_quality/wizard/quality_save_report.py:39
 #, python-format
 msgid "Warning"
 msgstr "Upozorenje"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/structure_test/structure_test.py:172
+#, python-format
+msgid "Feedback about structure of module"
+msgstr "Povratno o strukturi modula"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:35
 #, python-format
 msgid "Unit Test"
 msgstr "Test Jedinice"
+
+#. module: base_module_quality
+#: view:quality.check:0
+msgid "Check"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:151
@@ -252,7 +263,13 @@ msgid "module.quality.detail"
 msgstr "modul.detalj.kvalitet"
 
 #. module: base_module_quality
-#: wizard_field:quality_detail_save,init,module_file:0
+#: code:addons/base_module_quality/speed_test/speed_test.py:127
+#, python-format
+msgid "O(n) or worst"
+msgstr "O(n) ili losije"
+
+#. module: base_module_quality
+#: field:save.report,module_file:0
 msgid "Save report"
 msgstr "Sacuvaj Izvestaj"
 
@@ -274,9 +291,9 @@ msgid "Result in %"
 msgstr "Rezultat u %"
 
 #. module: base_module_quality
-#: wizard_view:quality_detail_save,init:0
-msgid "Standard entries"
-msgstr "Standardne stavke"
+#: view:quality.check:0
+msgid "This wizard will check module(s) quality"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:58
@@ -297,6 +314,12 @@ msgstr "Rezultat"
 #: field:module.quality.detail,message:0
 msgid "Message"
 msgstr "Poruka"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/terp_test/terp_test.py:54
+#, python-format
+msgid "The module does not contain the __openerp__.py file"
+msgstr "Ovaj Modul ne sadrzi __openerp__.py fajl"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
@@ -377,10 +400,10 @@ msgid "Error! Module is not properly loaded/installed"
 msgstr "Greska ! Modul nije ispravno ucitan/instaliran"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:116
+#: code:addons/base_module_quality/speed_test/speed_test.py:115
 #, python-format
-msgid "Error in Read method: %s"
-msgstr ""
+msgid "Error in Read method"
+msgstr "Greska u metodi Citanja"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:138
@@ -409,21 +432,21 @@ msgid "Test Is Not Implemented"
 msgstr "Tset NIJE Implementiran"
 
 #. module: base_module_quality
+#: model:ir.model,name:base_module_quality.model_save_report
+msgid "Save Report of Quality"
+msgstr ""
+
+#. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:151
 #, python-format
 msgid "N"
 msgstr "N"
 
 #. module: base_module_quality
-#: model:ir.actions.wizard,name:base_module_quality.quality_detail_save
-msgid "Report Save"
-msgstr "Sacuvaj Izvestaj"
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/structure_test/structure_test.py:172
+#: code:addons/base_module_quality/workflow_test/workflow_test.py:143
 #, python-format
-msgid "Feedback about structure of module"
-msgstr "Povratno o strukturi modula"
+msgid "Feed back About Workflow of Module"
+msgstr "Povratna informacija o prezasicenosti Modula"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:73
@@ -445,10 +468,10 @@ msgid ""
 msgstr ""
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/workflow_test/workflow_test.py:143
+#: code:addons/base_module_quality/speed_test/speed_test.py:116
 #, python-format
-msgid "Feed back About Workflow of Module"
-msgstr "Povratna informacija o prezasicenosti Modula"
+msgid "Error in Read method: %s"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:129
@@ -462,9 +485,14 @@ msgid "Done"
 msgstr "Gotovo"
 
 #. module: base_module_quality
-#: wizard_button:quality_detail_save,init,end:0
+#: view:quality.check:0
 msgid "Cancel"
 msgstr "Otkaži"
+
+#. module: base_module_quality
+#: view:save.report:0
+msgid "Close"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:32
@@ -572,31 +600,6 @@ msgid "Tag Name"
 msgstr "Ime Tag-a"
 
 #. module: base_module_quality
-#: wizard_field:quality_detail_save,init,name:0
-msgid "File name"
-msgstr "Ime fajla"
-
-#. module: base_module_quality
-#: model:ir.module.module,description:base_module_quality.module_meta_information
-msgid ""
-"\n"
-"The aim of this module is to check the quality of other modules.\n"
-"\n"
-"It defines a wizard on the list of modules in OpenERP, which allows you to\n"
-"evaluate them on different criteria such as: the respect of OpenERP coding\n"
-"standards, the speed efficiency...\n"
-"\n"
-"This module also provides generic framework to define your own quality "
-"test.\n"
-"For further info, coders may take a look into base_module_quality\\"
-"README.txt\n"
-"\n"
-"WARNING: This module can not work as a ZIP file, you must unzip it before\n"
-"using it, otherwise it may crash.\n"
-"    "
-msgstr ""
-
-#. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
 msgid "module.quality.check"
 msgstr "modul.provera.kvaliteta"
@@ -619,7 +622,7 @@ msgid "Score (%)"
 msgstr "Rezultat (%)"
 
 #. module: base_module_quality
-#: help:quality_detail_save,init,name:0
+#: help:save.report,name:0
 msgid "Save report as .html format"
 msgstr "Sacuvaj Izvestaj kao .html format"
 
@@ -652,6 +655,7 @@ msgstr "Sumarno"
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:99
 #: code:addons/base_module_quality/structure_test/structure_test.py:172
+#: field:save.report,name:0
 #, python-format
 msgid "File Name"
 msgstr "Ime Fajla"
@@ -678,6 +682,9 @@ msgstr "Kvalitet"
 #, python-format
 msgid "Feed back About terp file of Module"
 msgstr "Povratni info o terp fajlu Modula"
+
+#~ msgid "Base module quality - To check the quality of other modules"
+#~ msgstr "Kvalitet baze modula - Da proveri kvalitet ostalih modula"
 
 #, python-format
 #~ msgid ""
@@ -755,9 +762,8 @@ msgstr "Povratni info o terp fajlu Modula"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Nevažeći XML za pregled arhitekture"
 
-#, python-format
-#~ msgid "Error in Read method"
-#~ msgstr "Greska u metodi Citanja"
+#~ msgid "Standard entries"
+#~ msgstr "Standardne stavke"
 
 #, python-format
 #~ msgid ""
@@ -771,11 +777,17 @@ msgstr "Povratni info o terp fajlu Modula"
 #~ "vise informacija.\n"
 #~ " \"\""
 
+#~ msgid "Report Save"
+#~ msgstr "Sacuvaj Izvestaj"
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Ime Objekta mora da počne sa x_ i ne sme da sadrži ne jedan specijalni "
 #~ "karakter"
+
+#~ msgid "File name"
+#~ msgstr "Ime fajla"
 
 #~ msgid "Base module quality"
 #~ msgstr "Kvalitet osnovnog Modula"

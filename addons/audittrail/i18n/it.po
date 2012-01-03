@@ -6,23 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-01-28 07:46+0000\n"
 "Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:36+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:04+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: audittrail
-#: model:ir.module.module,shortdesc:audittrail.module_meta_information
-msgid "Audit Trail"
-msgstr "Audit Trail"
-
-#. module: audittrail
-#: code:addons/audittrail/audittrail.py:81
+#: code:addons/audittrail/audittrail.py:75
 #, python-format
 msgid "WARNING: audittrail is not part of the pool"
 msgstr ""
@@ -37,6 +32,18 @@ msgstr "Log"
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "Iscritto"
+
+#. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is already a rule defined on this object\n"
+" You cannot define another: please edit the existing one."
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "Subscribed Rule"
+msgstr ""
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_rule
@@ -215,33 +222,12 @@ msgid "Log Workflow"
 msgstr "Log workflow"
 
 #. module: audittrail
-#: model:ir.module.module,description:audittrail.module_meta_information
-msgid ""
-"\n"
-"    This module gives the administrator the rights\n"
-"    to track every user operation on all the objects\n"
-"    of the system.\n"
-"\n"
-"    Administrator can subscribe rules for read,write and\n"
-"    delete on objects and can check logs.\n"
-"    "
-msgstr ""
-"\n"
-"    Questo modulo fornisce all'amministratore i diritti\n"
-"    di tracciare ogni operazione utente su tutti gli oggetti\n"
-"    del sistema.\n"
-"\n"
-"    L'amministratore può sottoscrivere regole per lettura, scrittura e\n"
-"    cancellazione su oggetti e può controllare inoltre anche i log.\n"
-"    "
-
-#. module: audittrail
 #: field:audittrail.rule,log_read:0
 msgid "Log Reads"
 msgstr "Log letture"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:82
+#: code:addons/audittrail/audittrail.py:76
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr ""
@@ -337,6 +323,11 @@ msgid "AuditTrail Logs"
 msgstr "Logs di AuditTrail"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "Draft  Rule"
+msgstr ""
+
+#. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
 msgstr "Log audit"
@@ -353,15 +344,6 @@ msgstr ""
 #: view:audittrail.log:0
 msgid "New Value : "
 msgstr "Nuovo Valore: "
-
-#. module: audittrail
-#: sql_constraint:audittrail.rule:0
-msgid ""
-"There is a rule defined on this object\n"
-" You can not define other on the same!"
-msgstr ""
-"C'è una regola definita su questo oggetto\n"
-" Non è possibile definirne altre sullo stesso!"
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
@@ -411,6 +393,9 @@ msgstr ""
 
 #~ msgid "Create"
 #~ msgstr "Crea"
+
+#~ msgid "Audit Trail"
+#~ msgstr "Audit Trail"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome modello non valido nella definizione dell'azione."
@@ -473,6 +458,32 @@ msgstr ""
 
 #~ msgid "Logs"
 #~ msgstr "Logs"
+
+#~ msgid ""
+#~ "There is a rule defined on this object\n"
+#~ " You can not define other on the same!"
+#~ msgstr ""
+#~ "C'è una regola definita su questo oggetto\n"
+#~ " Non è possibile definirne altre sullo stesso!"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module gives the administrator the rights\n"
+#~ "    to track every user operation on all the objects\n"
+#~ "    of the system.\n"
+#~ "\n"
+#~ "    Administrator can subscribe rules for read,write and\n"
+#~ "    delete on objects and can check logs.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Questo modulo fornisce all'amministratore i diritti\n"
+#~ "    di tracciare ogni operazione utente su tutti gli oggetti\n"
+#~ "    del sistema.\n"
+#~ "\n"
+#~ "    L'amministratore può sottoscrivere regole per lettura, scrittura e\n"
+#~ "    cancellazione su oggetti e può controllare inoltre anche i log.\n"
+#~ "    "
 
 #, python-format
 #~ msgid "WARNING:audittrail is not part of the pool"

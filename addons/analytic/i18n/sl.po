@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-12-16 05:04+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:47+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:17+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -30,29 +30,17 @@ msgstr "Naziv konta"
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
-
-#. module: analytic
-#: model:ir.module.module,description:analytic.module_meta_information
-msgid ""
-"Module for defining analytic accounting object.\n"
-"    "
-msgstr ""
+msgstr "Določa vrednost količine za štetje."
 
 #. module: analytic
 #: field:account.analytic.account,state:0
 msgid "State"
-msgstr ""
+msgstr "Stanje"
 
 #. module: analytic
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
-msgstr "Odgovorni za stranko"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Draft"
-msgstr "Osnutek"
+msgstr "Računovodja"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -84,14 +72,14 @@ msgid ""
 msgstr ""
 
 #. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr ""
+
+#. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
 msgstr "Vrsta konta"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "Predloga"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -118,12 +106,19 @@ msgstr "Običajno"
 #: field:account.analytic.account,company_id:0
 #: field:account.analytic.line,company_id:0
 msgid "Company"
-msgstr "Družba"
+msgstr "Podjetje"
 
 #. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Maximum Quantity"
-msgstr "Največja količina"
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really usefull for "
+"consolidation purposes of several companies charts with different "
+"currencies, for example."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -141,9 +136,9 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: analytic
-#: field:account.analytic.account,currency_id:0
-msgid "Account currency"
-msgstr "Valuta konta"
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "Predloga"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -157,10 +152,17 @@ msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
 msgstr ""
+"Izračunano z množenjem količine in cene podane v ceni vrednosti Izdelka. "
+"Vedno izraženo v glavni valuti podjetja."
+
+#. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr "Hierarhija konta"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
-msgid "Sets the higher limit of quantity of hours."
+msgid "Sets the higher limit of time to work on the contract."
 msgstr ""
 
 #. module: analytic
@@ -176,19 +178,30 @@ msgstr "Znesek"
 #. module: analytic
 #: field:account.analytic.account,contact_id:0
 msgid "Contact"
-msgstr "Stik"
+msgstr "Kontakt"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
+msgstr "Napaka! Valuta mora biti enaka kot valuta izbranega podjetja"
+
+#. module: analytic
+#: field:account.analytic.account,code:0
+msgid "Code/Reference"
 msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
 msgstr "Preklicano"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -206,6 +219,8 @@ msgid ""
 "If you select the View Type, it means you won't allow to create journal "
 "entries using that account."
 msgstr ""
+"Če izberete Tip pogleda, to pomeni, da ne boste dovolili ustvarjanje vnosov "
+"v dnevnik s tem kontom."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -213,8 +228,13 @@ msgid "Date End"
 msgstr "Datum konca"
 
 #. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Account Code"
+#: field:account.analytic.account,quantity_max:0
+msgid "Maximum Time"
+msgstr ""
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
 msgstr ""
 
 #. module: analytic
@@ -225,9 +245,18 @@ msgstr "Polni naziv konta"
 #. module: analytic
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.module.module,shortdesc:analytic.module_meta_information
 msgid "Analytic Account"
 msgstr "Analitični konto"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr ""
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -253,3 +282,25 @@ msgstr "Odpri"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Analitične vknjižbe"
+
+#~ msgid "Draft"
+#~ msgstr "Osnutek"
+
+#~ msgid "Maximum Quantity"
+#~ msgstr "Največja količina"
+
+#~ msgid "Account currency"
+#~ msgstr "Valuta konta"
+
+#~ msgid ""
+#~ "Module for defining analytic accounting object.\n"
+#~ "    "
+#~ msgstr ""
+#~ "Modul objekta za definiranje analitičnega konta\n"
+#~ "    "
+
+#~ msgid "Sets the higher limit of quantity of hours."
+#~ msgstr "Nastavi višjo omejitev količine ur."
+
+#~ msgid "Account Code"
+#~ msgstr "Šifra konta"

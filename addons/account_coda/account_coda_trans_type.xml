@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- account.coda.trans.type -->
+        <record id="actt_0" model="account.coda.trans.type">
+            <field name="type">0</field>
+            <field name="description">Simple amount without detailed data; e.g. : an individual credit transfer (free of charges).</field>
+        </record>
+        <record id="actt_1" model="account.coda.trans.type">
+            <field name="type">1</field>
+            <field name="description">Amount as totalised by the customer; e.g. a file regrouping payments of wages or payments made to suppliers or a file regrouping collections for which the customer is debited or credited with one single amount. As a matter of principle, this type is also used when no detailed data is following (type 5).</field>
+        </record>
+        <record id="actt_5" model="account.coda.trans.type">
+            <field name="type">5</field>
+            <field name="parent_id" ref="actt_1"/>
+            <field name="description">Detail of 1. Standard procedure is no detailing. However, the customer may ask for detailed data to be included into his file after the overall record (type 1).</field>
+        </record>
+        <record id="actt_2" model="account.coda.trans.type">
+            <field name="type">2</field>
+            <field name="description">Amount as totalised by the bank; e.g. : the total amount of a series of credit transfers with a structured communication As a matter of principle, this type will also be used when no detailed data (type 6 or 7) is following.</field>
+        </record>
+        <record id="actt_6" model="account.coda.trans.type">
+            <field name="type">6</field>
+            <field name="parent_id" ref="actt_2"/>
+            <field name="description">Detail of 2. Simple amount without detailed data. Normally, data of this kind comes after type 2. The customer may ask for a separate file containing the detailed data. In that case, one will speak of a ‘separate application’. The records in a separate application keep type 6.</field>
+        </record>
+        <record id="actt_7" model="account.coda.trans.type">
+            <field name="type">7</field>
+            <field name="parent_id" ref="actt_2"/>
+            <field name="description">Detail of 2. Simple account with detailed data The records in a separate application keep type 7.</field>
+        </record>
+        <record id="actt_9" model="account.coda.trans.type">
+            <field name="type">9</field>
+            <field name="parent_id" ref="actt_7"/>
+            <field name="description">Detail of 7. The records in a separate application keep type 9.</field>
+        </record>
+        <record id="actt_3" model="account.coda.trans.type">
+            <field name="type">3</field>
+            <field name="description">Simple amount with detailed data; e.g. in case of charges for cross-border credit transfers.</field>
+        </record>
+        <record id="actt_8" model="account.coda.trans.type">
+            <field name="type">8</field>
+            <field name="parent_id" ref="actt_3"/>
+            <field name="description">Detail of 3.</field>
+        </record>
+
+    </data>
+</openerp>

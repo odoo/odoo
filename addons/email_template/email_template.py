@@ -28,6 +28,7 @@ from osv import osv
 from osv import fields
 import tools
 from tools.translate import _
+from urllib import quote as quote
 
 try:
     from mako.template import Template as MakoTemplate
@@ -66,6 +67,7 @@ class email_template(osv.osv):
                                                            user=user,
                                                            # context kw would clash with mako internals
                                                            ctx=context,
+                                                           quote=quote,
                                                            format_exceptions=True)
             if result == u'False':
                 result = u''
@@ -212,7 +214,7 @@ class email_template(osv.osv):
                     ir_values_obj = self.pool.get('ir.values')
                     ir_values_obj.unlink(cr, uid, template.ref_ir_value.id, context)
             except:
-                raise osv.except_osv(_("Warning"), _("Deletion of Record failed"))
+                raise osv.except_osv(_("Warning"), _("Deletion of the action record failed."))
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -305,6 +307,7 @@ class email_template(osv.osv):
                   'attachment_ids': False,
                   'message_id': False,
                   'state': 'outgoing',
+                  'subtype': 'plain',
         }
         if not template_id:
             return values
@@ -318,6 +321,9 @@ class email_template(osv.osv):
             values[field] = self.render_template(cr, uid, getattr(template, field),
                                                  template.model, res_id, context=context) \
                                                  or False
+
+        if values['body_html']:
+            values.update(subtype='html')
 
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
@@ -355,20 +361,24 @@ class email_template(osv.osv):
         values['attachments'] = attachments
         return values
 
-    def send_mail(self, cr, uid, template_id, res_id, context=None):
+    def send_mail(self, cr, uid, template_id, res_id, force_send=False, context=None):
         """Generates a new mail message for the given template and record,
-           and schedule it for delivery through the ``mail`` module's scheduler.
+           and schedules it for delivery through the ``mail`` module's scheduler.
 
            :param int template_id: id of the template to render
            :param int res_id: id of the record to render the template with
                               (model is taken from the template)
+           :param bool force_send: if True, the generated mail.message is
+                immediately sent after being created, as if the scheduler
+                was executed for this message only.
+           :returns: id of the mail.message that was created 
         """
         mail_message = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
         template = self.browse(cr, uid, template_id, context)
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         attachments = values.pop('attachments') or {}
-        message_id = mail_message.create(cr, uid, values, context=context)
+        msg_id = mail_message.create(cr, uid, values, context=context)
         # link attachments
         attachment_ids = []
         for fname, fcontent in attachments.iteritems():
@@ -377,10 +387,13 @@ class email_template(osv.osv):
                     'datas_fname': fname,
                     'datas': fcontent,
                     'res_model': mail_message._name,
-                    'res_id': message_id,
+                    'res_id': msg_id,
             }
             if context.has_key('default_type'):
                 del context['default_type']
-            attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context))
+            attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
+        if force_send:
+            mail_message.send(cr, uid, [msg_id], context=context)
+        return msg_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

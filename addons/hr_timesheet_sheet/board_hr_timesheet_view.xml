@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <record id="action_hr_timesheet_sheet_graph" model="ir.actions.act_window">
             <field name="name">Timesheets</field>
             <field name="type">ir.actions.act_window</field>
@@ -19,8 +20,8 @@
                     <field name="user_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="name"/>
-                    <field name="total_attendance"/>
-                    <field name="total_timesheet"/>
+                    <field name="total_attendance" widget="float_time"/>
+                    <field name="total_timesheet" widget="float_time"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -39,8 +40,8 @@
             <field name="inherit_id" ref="hr.board_hr_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/hpaned/child2" position="inside">
-                    <action colspan="4" height="220" name="%(action_week_attendance_graph)d" string="My Total Attendance By Week" />
+                <xpath expr="/form/board/column[2]" position="inside">
+                    <action name="%(action_week_attendance_graph)d" string="My Total Attendance By Week"/>
                 </xpath>
             </field>
         </record>

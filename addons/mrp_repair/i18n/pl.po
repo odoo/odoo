@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:45+0000\n"
 "PO-Revision-Date: 2010-08-03 08:04+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:42+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:12+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -93,9 +93,15 @@ msgid "Group by partner invoice address"
 msgstr "Grupuj wg adresów partnera do faktur"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:430
+#: code:addons/mrp_repair/mrp_repair.py:433
 #, python-format
 msgid "No product defined on Fees!"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+#: field:mrp.repair,company_id:0
+msgid "Company"
 msgstr ""
 
 #. module: mrp_repair
@@ -132,6 +138,7 @@ msgid "Invoice address :"
 msgstr "Adres do faktury :"
 
 #. module: mrp_repair
+#: view:mrp.repair:0
 #: field:mrp.repair,guarantee_limit:0
 msgid "Guarantee limit"
 msgstr ""
@@ -142,20 +149,7 @@ msgid "Notes"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.module.module,description:mrp_repair.module_meta_information
-msgid ""
-"\n"
-"           The aim is to have a complete module to manage all products "
-"repairs. The following topics should be covered by this module:\n"
-"           * Add/remove products in the reparation\n"
-"           * Impact for stocks\n"
-"           * Invoicing (products and/or services)\n"
-"           * Warranty concept\n"
-"           * Repair quotation report\n"
-"           * Notes for the technician and for the final customer\n"
-msgstr ""
-
-#. module: mrp_repair
+#: view:mrp.repair:0
 #: field:mrp.repair,amount_tax:0
 #: field:mrp.repair.fee,tax_id:0
 #: field:mrp.repair.line,tax_id:0
@@ -168,7 +162,7 @@ msgid "Net Total :"
 msgstr "Suma netto :"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:430
+#: code:addons/mrp_repair/mrp_repair.py:433
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -189,7 +183,7 @@ msgid "Move"
 msgstr "Przesunięcie"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:365
+#: code:addons/mrp_repair/mrp_repair.py:368
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr ""
@@ -204,6 +198,12 @@ msgstr "Zamówienie naprawy"
 #: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
 msgid "Quotation / Order"
 msgstr "Oferta / Zamówienie"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:335
+#, python-format
+msgid "Warning"
+msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -222,7 +222,7 @@ msgid "Draft"
 msgstr "Projekt"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:379
+#: code:addons/mrp_repair/mrp_repair.py:382
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr ""
@@ -277,9 +277,9 @@ msgid "Shipping address :"
 msgstr "Adres do wysyłki :"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:379
-#: code:addons/mrp_repair/mrp_repair.py:408
-#: code:addons/mrp_repair/mrp_repair.py:437
+#: code:addons/mrp_repair/mrp_repair.py:382
+#: code:addons/mrp_repair/mrp_repair.py:411
+#: code:addons/mrp_repair/mrp_repair.py:440
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -363,11 +363,6 @@ msgid "Repaired"
 msgstr "Naprawione"
 
 #. module: mrp_repair
-#: model:ir.module.module,shortdesc:mrp_repair.module_meta_information
-msgid "Products Repairs Module - Manage All products Repairs"
-msgstr ""
-
-#. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
 #: field:mrp.repair.line,invoice_line_id:0
 msgid "Invoice Line"
@@ -377,6 +372,12 @@ msgstr "Pozycja faktury"
 #: selection:mrp.repair.line,state:0
 msgid "Canceled"
 msgstr "Anulowano"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:335
+#, python-format
+msgid "Production lot is required for opration line with product '%s'"
+msgstr ""
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -512,8 +513,8 @@ msgid "End Repair"
 msgstr "Koniec naprawy"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:408
-#: code:addons/mrp_repair/mrp_repair.py:437
+#: code:addons/mrp_repair/mrp_repair.py:411
+#: code:addons/mrp_repair/mrp_repair.py:440
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr ""
@@ -763,7 +764,7 @@ msgid "Ready to Repair"
 msgstr "Gotowe do naprawy"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:365
+#: code:addons/mrp_repair/mrp_repair.py:368
 #, python-format
 msgid "No partner !"
 msgstr ""

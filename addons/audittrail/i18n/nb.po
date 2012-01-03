@@ -7,23 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-03-31 16:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:36+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:04+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: audittrail
-#: model:ir.module.module,shortdesc:audittrail.module_meta_information
-msgid "Audit Trail"
-msgstr "Revisjonssporing"
-
-#. module: audittrail
-#: code:addons/audittrail/audittrail.py:81
+#: code:addons/audittrail/audittrail.py:75
 #, python-format
 msgid "WARNING: audittrail is not part of the pool"
 msgstr "ADVARSEL: revisjonssporing er ikke en del av denne gruppen"
@@ -38,6 +33,18 @@ msgstr "Logg"
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "Abbonert"
+
+#. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is already a rule defined on this object\n"
+" You cannot define another: please edit the existing one."
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "Subscribed Rule"
+msgstr ""
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_rule
@@ -216,33 +223,12 @@ msgid "Log Workflow"
 msgstr "Logg arbeidsflyt"
 
 #. module: audittrail
-#: model:ir.module.module,description:audittrail.module_meta_information
-msgid ""
-"\n"
-"    This module gives the administrator the rights\n"
-"    to track every user operation on all the objects\n"
-"    of the system.\n"
-"\n"
-"    Administrator can subscribe rules for read,write and\n"
-"    delete on objects and can check logs.\n"
-"    "
-msgstr ""
-"\n"
-"    This module gives the administrator the rights\n"
-"    to track every user operation on all the objects\n"
-"    of the system.\n"
-"\n"
-"    Administrator can subscribe rules for read,write and\n"
-"    delete on objects and can check logs.\n"
-"    "
-
-#. module: audittrail
 #: field:audittrail.rule,log_read:0
 msgid "Log Reads"
 msgstr "Logg lesninger"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:82
+#: code:addons/audittrail/audittrail.py:76
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr "Endre revisjonssporing avhengigheter -- Setter regel som utkast!"
@@ -339,6 +325,11 @@ msgid "AuditTrail Logs"
 msgstr "Revisjonssporting logger"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "Draft  Rule"
+msgstr ""
+
+#. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
 msgstr "Revisjonssporting logg"
@@ -355,15 +346,6 @@ msgstr ""
 #: view:audittrail.log:0
 msgid "New Value : "
 msgstr "Ny verdi: "
-
-#. module: audittrail
-#: sql_constraint:audittrail.rule:0
-msgid ""
-"There is a rule defined on this object\n"
-" You can not define other on the same!"
-msgstr ""
-"Det er en regel definert på dette objektet\n"
-"Du kan ikke definere flere på samme objekt!"
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
@@ -398,6 +380,35 @@ msgid ""
 msgstr ""
 "Velg dette dersom du ønsker å spore opprettelse av nye records av objektet "
 "valgt for denne regelen"
+
+#~ msgid "Audit Trail"
+#~ msgstr "Revisjonssporing"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module gives the administrator the rights\n"
+#~ "    to track every user operation on all the objects\n"
+#~ "    of the system.\n"
+#~ "\n"
+#~ "    Administrator can subscribe rules for read,write and\n"
+#~ "    delete on objects and can check logs.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    This module gives the administrator the rights\n"
+#~ "    to track every user operation on all the objects\n"
+#~ "    of the system.\n"
+#~ "\n"
+#~ "    Administrator can subscribe rules for read,write and\n"
+#~ "    delete on objects and can check logs.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "There is a rule defined on this object\n"
+#~ " You can not define other on the same!"
+#~ msgstr ""
+#~ "Det er en regel definert på dette objektet\n"
+#~ "Du kan ikke definere flere på samme objekt!"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

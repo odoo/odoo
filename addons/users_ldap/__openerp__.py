@@ -19,12 +19,12 @@
 ##############################################################################
 
 {
-    "name" : "Authenticate users with LDAP server",
+    "name" : "Authentication via LDAP",
     "version" : "1.0",
     "depends" : ["base"],
     "images" : ["images/ldap_configuration.jpeg"],
     "author" : "OpenERP SA",
-    'complexity': "easy",
+    'complexity': "expert",
     "description": """
 Adds support for authentication by LDAP server.
 ===============================================
@@ -49,6 +49,13 @@ empty in the LDAP configuration. This does **not** allow
 anonymous authentication for users, it is only for the master
 LDAP account that is used to verify if a user exists before
 attempting to authenticate it.
+
+Securing the connection with STARTTLS is available for LDAP
+servers supporting it, by enabling the TLS option in the LDAP
+configuration.
+
+For further options configuring the LDAP settings, refer to the
+ldap.conf manpage :manpage:`ldap.conf(5)`.
 
 Security Considerations
 +++++++++++++++++++++++
@@ -78,6 +85,9 @@ OpenERP database (which means no access), the first step
 always fails and the LDAP server is queried to do the
 authentication.
 
+Enabling STARTTLS ensures that the authentication query to the
+LDAP server is encrypted.
+
 User Template
 +++++++++++++
 In the LDAP configuration on the Company form, it is possible to
@@ -106,10 +116,11 @@ will disable LDAP authentication if installed at the same time.
 
 
     "website" : "http://www.openerp.com",
-    "category" : "Hidden",
+    "category" : "Tools",
     "data" : [
         "users_ldap_view.xml",
         "user_ldap_installer.xml",
+        "security/ir.model.access.csv",
     ],
     "active": False,
     "installable": True,

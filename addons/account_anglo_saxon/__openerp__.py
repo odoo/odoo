@@ -19,7 +19,7 @@
 ##############################################################################
 
 {
-    "name"      : "Anglo-Saxon Accouting",
+    "name"      : "Anglo-Saxon Accounting",
     "version"   : "1.2",
     "author"    : "OpenERP SA, Veritos",
     "website"   : "http://tinyerp.com - http://veritos.nl",
@@ -36,7 +36,7 @@ when the invoice is created to transfer this amount to the debtor or creditor ac
 Secondly, price differences between actual purchase price and fixed product standard price are booked on a separate account""",
     "images"   : ["images/account_anglo_saxon.jpeg"],
     "depends"   : ["product", "purchase"],
-    "category"  : "Accounting & Finance",
+    "category"  : "Hidden/Dependency",
     "init_xml"  : [],
     "demo_xml"  : [],
     "update_xml" : ["product_view.xml",],

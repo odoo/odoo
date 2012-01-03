@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2010-12-31 10:23+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:56+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:26+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: project_caldav
 #: help:project.task,exdate:0
@@ -73,9 +73,9 @@ msgid "Public"
 msgstr "Publisks"
 
 #. module: project_caldav
-#: field:project.task,base_calendar_url:0
-msgid "Caldav URL"
-msgstr "Caldav URL"
+#: view:project.task:0
+msgid " "
+msgstr ""
 
 #. module: project_caldav
 #: selection:project.task,month_list:0
@@ -118,14 +118,9 @@ msgid "Last"
 msgstr "Pēdējais"
 
 #. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Days"
-msgstr "Dienas"
-
-#. module: project_caldav
-#: selection:project.task,freq:0
-msgid "No Repeat"
-msgstr "Neatkārtot"
+#: view:project.task:0
+msgid "From"
+msgstr "No"
 
 #. module: project_caldav
 #: selection:project.task,rrule_type:0
@@ -154,11 +149,6 @@ msgid "Organizer"
 msgstr "Organizators"
 
 #. module: project_caldav
-#: help:project.task,edit_all:0
-msgid "Edit all Occurrences  of recurrent Meeting."
-msgstr ""
-
-#. module: project_caldav
 #: field:project.task,sa:0
 msgid "Sat"
 msgstr "Se"
@@ -174,6 +164,11 @@ msgid "Sun"
 msgstr "Sv"
 
 #. module: project_caldav
+#: field:project.task,end_type:0
+msgid "Recurrence termination"
+msgstr ""
+
+#. module: project_caldav
 #: selection:project.task,select1:0
 msgid "Day of month"
 msgstr "Mēneša diena"
@@ -184,29 +179,24 @@ msgid "Location"
 msgstr "Vieta"
 
 #. module: project_caldav
+#: selection:project.task,class:0
+msgid "Public for Employees"
+msgstr ""
+
+#. module: project_caldav
 #: view:project.task:0
 msgid "Mail TO"
 msgstr "Kam"
 
 #. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Weeks"
-msgstr "Nedēļas"
+#: field:project.task,exdate:0
+msgid "Exception Date/Times"
+msgstr "Izņēmuma datumi/laiki"
 
 #. module: project_caldav
-#: field:project.task,select1:0
-msgid "Option"
-msgstr "Iespēja"
-
-#. module: project_caldav
-#: selection:project.task,class:0
-msgid "Confidential"
-msgstr "Konfidenciāls"
-
-#. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Hours"
-msgstr "Stundas"
+#: field:project.task,base_calendar_url:0
+msgid "Caldav URL"
+msgstr "Caldav URL"
 
 #. module: project_caldav
 #: field:project.task,recurrent_uid:0
@@ -222,11 +212,6 @@ msgstr "Jūlijs"
 #: field:project.task,th:0
 msgid "Thu"
 msgstr "Ce"
-
-#. module: project_caldav
-#: selection:project.task,end_type:0
-msgid "Forever"
-msgstr ""
 
 #. module: project_caldav
 #: help:project.task,count:0
@@ -285,11 +270,6 @@ msgid "Month"
 msgstr "Mēnesis"
 
 #. module: project_caldav
-#: model:ir.module.module,shortdesc:project_caldav.module_meta_information
-msgid "CalDAV for task management"
-msgstr "CalDAV uzdevumu vadībai"
-
-#. module: project_caldav
 #: field:project.task,vtimezone:0
 msgid "Timezone"
 msgstr "Laika josla"
@@ -298,11 +278,6 @@ msgstr "Laika josla"
 #: selection:project.task,rrule_type:0
 msgid "Weekly"
 msgstr "Ik nedēļu"
-
-#. module: project_caldav
-#: field:project.task,edit_all:0
-msgid "Edit All"
-msgstr "Labot visus"
 
 #. module: project_caldav
 #: field:project.task,fr:0
@@ -321,18 +296,13 @@ msgstr "Atkārtošanas noteikums"
 
 #. module: project_caldav
 #: view:project.task:0
-msgid "From"
-msgstr "No"
+msgid "End of recurrency"
+msgstr ""
 
 #. module: project_caldav
 #: view:project.task:0
 msgid "Reminder"
 msgstr "Atgādinājums"
-
-#. module: project_caldav
-#: model:ir.module.module,description:project_caldav.module_meta_information
-msgid " Synchronize between Project task and Caldav Vtodo."
-msgstr " Sinhronizēt projektu uzdevumus un CalDAV vTodo"
 
 #. module: project_caldav
 #: view:project.task:0
@@ -350,14 +320,14 @@ msgid "Monday"
 msgstr "Pirmdiena"
 
 #. module: project_caldav
-#: selection:project.task,byday:0
-msgid "Third"
-msgstr "Trešais"
-
-#. module: project_caldav
 #: selection:project.task,month_list:0
 msgid "June"
 msgstr "Jūnijs"
+
+#. module: project_caldav
+#: selection:project.task,end_type:0
+msgid "Number of repetitions"
+msgstr ""
 
 #. module: project_caldav
 #: field:project.task,write_date:0
@@ -380,18 +350,13 @@ msgid "January"
 msgstr "Janvāris"
 
 #. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Months"
-msgstr "Mēneši"
-
-#. module: project_caldav
 #: selection:project.task,week_list:0
 msgid "Wednesday"
 msgstr "Trešdiena"
 
 #. module: project_caldav
 #: view:project.task:0
-msgid "Repeat Times"
+msgid "Choose day in the month where repeat the meeting"
 msgstr ""
 
 #. module: project_caldav
@@ -410,19 +375,9 @@ msgid "Recurrent ID date"
 msgstr "Atkārtošanās ID datums"
 
 #. module: project_caldav
-#: field:project.task,freq:0
-msgid "Frequency"
-msgstr "Biežums"
-
-#. module: project_caldav
 #: help:project.task,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
 msgstr ""
-
-#. module: project_caldav
-#: view:project.task:0
-msgid "of"
-msgstr "no"
 
 #. module: project_caldav
 #: selection:project.task,show_as:0
@@ -435,8 +390,8 @@ msgid "Repeat every"
 msgstr ""
 
 #. module: project_caldav
-#: selection:project.task,end_type:0
-msgid "Fix amout of times"
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
 msgstr ""
 
 #. module: project_caldav
@@ -445,7 +400,6 @@ msgid "Recurrent"
 msgstr ""
 
 #. module: project_caldav
-#: view:project.task:0
 #: field:project.task,rrule_type:0
 msgid "Recurrency"
 msgstr "Atkārtošanās"
@@ -480,19 +434,6 @@ msgstr ""
 "noteikuma."
 
 #. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Years"
-msgstr "Gadi"
-
-#. module: project_caldav
-#: help:project.task,rrule:0
-msgid ""
-"Defines a rule or repeating pattern for recurring events\n"
-"e.g.: Every other month on the last Sunday of the month for 10 occurrences:  "
-"      FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
-msgstr ""
-
-#. module: project_caldav
 #: selection:project.task,month_list:0
 msgid "May"
 msgstr "Maijs"
@@ -504,7 +445,7 @@ msgstr "Piešķirtu uzdevumu"
 
 #. module: project_caldav
 #: view:project.task:0
-msgid "Recurrency Rule"
+msgid "Choose day where repeat the meeting"
 msgstr ""
 
 #. module: project_caldav
@@ -513,9 +454,9 @@ msgid "February"
 msgstr "Februāris"
 
 #. module: project_caldav
-#: field:project.task,exdate:0
-msgid "Exception Date/Times"
-msgstr "Izņēmuma datumi/laiki"
+#: selection:project.task,byday:0
+msgid "Third"
+msgstr "Trešais"
 
 #. module: project_caldav
 #: field:project.task,alarm_id:0
@@ -527,6 +468,11 @@ msgstr "Atgādinājums"
 #: selection:project.task,month_list:0
 msgid "April"
 msgstr "Aprīlis"
+
+#. module: project_caldav
+#: view:project.task:0
+msgid "Recurrency period"
+msgstr ""
 
 #. module: project_caldav
 #: field:project.task,week_list:0
@@ -544,6 +490,11 @@ msgid "The"
 msgstr ""
 
 #. module: project_caldav
+#: field:project.task,select1:0
+msgid "Option"
+msgstr "Iespēja"
+
+#. module: project_caldav
 #: help:project.task,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
 msgstr "Iestatīt atgādinājumu uz šo laiku pirms notikuma iestāšanās"
@@ -557,11 +508,6 @@ msgstr "Privāts"
 #: selection:project.task,byday:0
 msgid "Second"
 msgstr "Otrais"
-
-#. module: project_caldav
-#: field:project.task,end_type:0
-msgid "Way to end reccurency"
-msgstr ""
 
 #. module: project_caldav
 #: field:project.task,date:0
@@ -578,3 +524,39 @@ msgstr "Sestdiena"
 #: selection:project.task,byday:0
 msgid "Fifth"
 msgstr "Piektais"
+
+#~ msgid "Days"
+#~ msgstr "Dienas"
+
+#~ msgid "No Repeat"
+#~ msgstr "Neatkārtot"
+
+#~ msgid "Hours"
+#~ msgstr "Stundas"
+
+#~ msgid "Confidential"
+#~ msgstr "Konfidenciāls"
+
+#~ msgid "Weeks"
+#~ msgstr "Nedēļas"
+
+#~ msgid "Edit All"
+#~ msgstr "Labot visus"
+
+#~ msgid "CalDAV for task management"
+#~ msgstr "CalDAV uzdevumu vadībai"
+
+#~ msgid " Synchronize between Project task and Caldav Vtodo."
+#~ msgstr " Sinhronizēt projektu uzdevumus un CalDAV vTodo"
+
+#~ msgid "Months"
+#~ msgstr "Mēneši"
+
+#~ msgid "Frequency"
+#~ msgstr "Biežums"
+
+#~ msgid "of"
+#~ msgstr "no"
+
+#~ msgid "Years"
+#~ msgstr "Gadi"

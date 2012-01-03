@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,7 +25,7 @@
     "depends" : ["account"],
     "author" : "OpenERP S.A.",
     "description": """Financial and accounting asset management.
-    This Module manages the assets owned by a company or an individual. It will keep track of depreciation's occurred on 
+    This Module manages the assets owned by a company or an individual. It will keep track of depreciation's occurred on
     those assets. And it allows to create Move's of the depreciation lines.
     """,
     "website" : "http://www.openerp.com",
@@ -34,8 +34,11 @@
     ],
     "demo_xml" : [ 'account_asset_demo.xml'
     ],
-    'test': ['test/account_asset.yml',
-             ],
+    'test': [
+        'test/account_asset_demo.yml',
+        'test/account_asset.yml',
+        'test/account_asset_wizard.yml',
+    ],
     "update_xml" : [
         "security/account_asset_security.xml",
         "security/ir.model.access.csv",
@@ -45,10 +48,10 @@
         "account_asset_view.xml",
         "account_asset_invoice_view.xml",
         "report/account_asset_report_view.xml",
-	
     ],
     "active": False,
     "installable": True,
+    "application": True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

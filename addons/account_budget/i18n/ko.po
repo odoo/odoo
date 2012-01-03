@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2009-09-08 12:44+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:39+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -255,6 +255,11 @@ msgid "Budget"
 msgstr "예산"
 
 #. module: account_budget
+#: view:crossovered.budget:0
+msgid "To Approve Budgets"
+msgstr ""
+
+#. module: account_budget
 #: code:addons/account_budget/account_budget.py:119
 #, python-format
 msgid "Error!"
@@ -350,33 +355,11 @@ msgid "Print"
 msgstr "인쇄"
 
 #. module: account_budget
-#: model:ir.module.module,description:account_budget.module_meta_information
-msgid ""
-"This module allows accountants to manage analytic and crossovered budgets.\n"
-"\n"
-"Once the Master Budgets and the Budgets are defined (in "
-"Accounting/Budgets/),\n"
-"the Project Managers can set the planned amount on each Analytic Account.\n"
-"\n"
-"The accountant has the possibility to see the total of amount planned for "
-"each\n"
-"Budget and Master Budget in order to ensure the total planned is not\n"
-"greater/lower than what he planned for this Budget/Master Budget. Each list "
-"of\n"
-"record can also be switched to a graphical view of it.\n"
-"\n"
-"Three reports are available:\n"
-"    1. The first is available from a list of Budgets. It gives the "
-"spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
-"\n"
-"    2. The second is a summary of the previous one, it only gives the "
-"spreading, for the selected Budgets, of the Analytic Accounts.\n"
-"\n"
-"    3. The last one is available from the Analytic Chart of Accounts. It "
-"gives the spreading, for the selected Analytic Accounts, of the Master "
-"Budgets per Budgets.\n"
-"\n"
-msgstr ""
+#: view:account.budget.post:0
+#: view:crossovered.budget:0
+#: field:crossovered.budget.lines,theoritical_amount:0
+msgid "Theoretical Amount"
+msgstr "이론적 금액"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
@@ -425,11 +408,6 @@ msgid "Cancel"
 msgstr "취소"
 
 #. module: account_budget
-#: model:ir.module.module,shortdesc:account_budget.module_meta_information
-msgid "Budget Management"
-msgstr "예산 관리"
-
-#. module: account_budget
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
@@ -439,6 +417,11 @@ msgstr ""
 #: report:crossovered.budget.report:0
 msgid "Analysis from"
 msgstr "분석 출처"
+
+#. module: account_budget
+#: view:crossovered.budget:0
+msgid "Draft Budgets"
+msgstr ""
 
 #, python-format
 #~ msgid "Insufficient Data!"
@@ -550,9 +533,6 @@ msgstr "분석 출처"
 #~ msgid "Spreading"
 #~ msgstr "확산"
 
-#~ msgid "Theoretical Amount"
-#~ msgstr "이론적 금액"
-
 #~ msgid "Item"
 #~ msgstr "아이템"
 
@@ -561,6 +541,9 @@ msgstr "분석 출처"
 
 #~ msgid "Select period"
 #~ msgstr "기간 선택"
+
+#~ msgid "Budget Management"
+#~ msgstr "예산 관리"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "유효하지 않은 뷰 아키텍처를 위한 XML !"

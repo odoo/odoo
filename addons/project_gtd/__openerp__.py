@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Methodology: Getting Things Done',
+    'name': 'Todo Lists',
     'version': '1.0',
     'category': 'Project Management',
     'complexity': "easy",
@@ -29,8 +29,12 @@
 This module implements all concepts defined by the Getting Things Done methodology.
 ===================================================================================
 
-This world-wide used methodology is used for personal
-time management improvement.
+This module implements a simple personnal Todo list based on tasks. It adds in
+the project application an editable list of tasks simplified to the minimum
+required fields.
+
+The todo list is based on the GTD methodology. This world-wide used methodology
+is used for personal time management improvement.
 
 Getting Things Done (commonly abbreviated as GTD) is an action management
 method created by David Allen, and described in a book of the same name.
@@ -53,9 +57,10 @@ performing those tasks.
     ],
     'demo_xml': ['project_gtd_demo.xml'],
     'test':[
-        'test/gtd_test.yml'
+         'test/task_timebox.yml'
     ],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '0043525236301',
 }

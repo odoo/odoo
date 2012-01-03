@@ -35,10 +35,11 @@
             <field name="arch" type="xml">
                 <search string="Point of Sale Analysis">
                     <group>
-                        <filter icon="terp-go-year" string="Year"
+                        <filter icon="terp-go-year" string="Year" name="year"
                             domain="[('year','=',time.strftime('%%Y'))]"
                             help="POS ordered created during current year"/>
-                        <filter icon="terp-go-month" string="Month"
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-go-month" string="Month" name="This Month"
                            domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                             help="POS ordered created during current month"/>
                         <filter icon="terp-go-month"
@@ -56,7 +57,7 @@
                             string="Invoiced"
                             domain="[('state','=',('invoiced'))]"/>
                         <filter icon="terp-dolar"
-                            string="Paid"
+                            string="Not Invoiced"
                             domain="[('state','=',('paid'))]"/>
                     <separator orientation="vertical"/>
                     <field name="partner_id"/>
@@ -86,9 +87,9 @@
             <field name="name">Point of Sale Analysis</field>
             <field name="res_model">report.pos.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
+            <field name="view_mode">tree</field>
             <field name="search_view_id" ref="view_report_pos_order_search"/>
-            <field name="context">{'search_default_today':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_year':1,'search_default_This Month':1,'search_default_today':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         </record>
 
         <menuitem action="action_report_pos_order_all" id="menu_report_pos_order_all" parent="menu_point_rep" sequence="3"/>

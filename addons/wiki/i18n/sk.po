@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2010-08-02 14:49+0000\n"
 "Last-Translator: Peter Kohaut <peter.kohaut@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:38+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:08+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: wiki
 #: field:wiki.groups,template:0
@@ -99,9 +99,10 @@ msgid "Parent Menu"
 msgstr "Nadradené menu"
 
 #. module: wiki
-#: help:wiki.wiki,group_id:0
-msgid "Topic, also called Wiki Group"
-msgstr "Téma, tiež volá Wiki skupiny"
+#: code:addons/wiki/wizard/wiki_make_index.py:52
+#, python-format
+msgid "There is no section in this Page"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,name:0
@@ -131,21 +132,22 @@ msgid "Page Content"
 msgstr "Obsah stránky"
 
 #. module: wiki
-#: code:addons/wiki/wiki.py:236
+#: code:addons/wiki/wiki.py:237
+#: code:addons/wiki/wizard/wiki_make_index.py:52
 #, python-format
 msgid "Warning !"
 msgstr "Varovanie!"
 
 #. module: wiki
-#: code:addons/wiki/wiki.py:236
+#: code:addons/wiki/wiki.py:237
 #, python-format
 msgid "There are no changes in revisions"
 msgstr "Nie sú žiadne zmeny v revíziách"
 
 #. module: wiki
-#: model:ir.module.module,shortdesc:wiki.module_meta_information
-msgid "Document Management - Wiki"
-msgstr "Správa dokumentov - Wiki"
+#: help:wiki.wiki,section:0
+msgid "Use page section code like 1.2.1"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.create.menu,menu_name:0
@@ -211,9 +213,9 @@ msgid "Warning"
 msgstr "Upozornenie"
 
 #. module: wiki
-#: field:wiki.wiki,create_date:0
-msgid "Created on"
-msgstr "Vytvorené"
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -243,11 +245,6 @@ msgid "Group Description"
 msgstr "Opis skupiny"
 
 #. module: wiki
-#: help:wiki.wiki,section:0
-msgid "Use page section code like 1.2.1"
-msgstr ""
-
-#. module: wiki
 #: view:wiki.wiki.page.open:0
 msgid "Want to open a wiki page? "
 msgstr "Chcete otvoriť wiki stránky? "
@@ -268,25 +265,15 @@ msgid "Meta Information"
 msgstr "Meta-informácie"
 
 #. module: wiki
-#: model:ir.module.module,description:wiki.module_meta_information
-msgid ""
-"\n"
-"The base module to manage documents(wiki)\n"
-"\n"
-"keep track for the wiki groups, pages, and history\n"
-"    "
-msgstr ""
+#: field:wiki.wiki,create_date:0
+msgid "Created on"
+msgstr "Vytvorené"
 
 #. module: wiki
 #: view:wiki.groups:0
 #: view:wizard.wiki.history.show_diff:0
 msgid "Notes"
 msgstr "Poznámky"
-
-#. module: wiki
-#: help:wiki.groups,home:0
-msgid "Required to select home page if display method is Home Page"
-msgstr ""
 
 #. module: wiki
 #: selection:wiki.groups,method:0
@@ -349,6 +336,11 @@ msgstr "Umožňuje prepojenie s ostatnými stránkami s aktuálnou témou"
 #: view:wiki.wiki:0
 msgid "Modification Information"
 msgstr "Informácie o zmene"
+
+#. module: wiki
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
+msgstr "Téma, tiež volá Wiki skupiny"
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_wiki_configuration
@@ -469,6 +461,9 @@ msgstr "Vyhľadanie stránky"
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Názov objektu musí začínať x_ a nesmie obsahovať žiadne špeciálne znaky!"
+
+#~ msgid "Document Management - Wiki"
+#~ msgstr "Správa dokumentov - Wiki"
 
 #~ msgid "Wiki Configuration"
 #~ msgstr "Wiki konfigurácia"

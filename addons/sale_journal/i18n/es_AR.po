@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2010-09-20 21:39+0000\n"
 "Last-Translator: Margarita Manterola <ubuntu@marga.com.ar>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:26+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:52+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: sale_journal
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -22,18 +27,20 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr ""
+
+#. module: sale_journal
 #: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and picking."
+msgid ""
+"This invoicing type will be used, by default, for invoicing the current "
+"partner."
 msgstr ""
 
 #. module: sale_journal
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr ""
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
 msgstr ""
 
 #. module: sale_journal
@@ -54,37 +61,16 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Method"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
 msgstr "Método de facturación"
 
 #. module: sale_journal
-#: model:ir.module.module,description:sale_journal.module_meta_information
-msgid ""
-"\n"
-"    The sales journal modules allows you to categorise your\n"
-"    sales and deliveries (picking lists) between different journals.\n"
-"    This module is very helpful for bigger companies that\n"
-"    works by departments.\n"
-"\n"
-"    You can use journal for different purposes, some examples:\n"
-"    * isolate sales of different departments\n"
-"    * journals for deliveries by truck or by UPS\n"
-"\n"
-"    Journals have a responsible and evolves between different status:\n"
-"    * draft, open, cancel, done.\n"
-"\n"
-"    Batch operations can be processed on the different journals to\n"
-"    confirm all sales at once, to validate or invoice packing, ...\n"
-"\n"
-"    It also supports batch invoicing methods that can be configured by\n"
-"    partners and sales orders, examples:\n"
-"    * daily invoicing,\n"
-"    * monthly invoicing, ...\n"
-"\n"
-"    Some statistics by journals are provided.\n"
-"    "
-msgstr ""
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Tipos de factura"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -97,11 +83,6 @@ msgid "Grouped"
 msgstr "Agrupado"
 
 #. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr ""
-
-#. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
 msgid ""
 "Invoice types are used for partners, sales orders and delivery orders. You "
@@ -110,13 +91,8 @@ msgid ""
 msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Método de facturación"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sales Order"
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
 msgstr ""
 
 #. module: sale_journal
@@ -138,11 +114,9 @@ msgid "Partner"
 msgstr ""
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Tipos de factura"
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
@@ -150,9 +124,9 @@ msgid "Picking List"
 msgstr ""
 
 #. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr "Administración de ventas y entregas por diario"
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr ""
 
 #~ msgid "Journal date"
 #~ msgstr "Fecha del diario"
@@ -268,6 +242,9 @@ msgstr "Administración de ventas y entregas por diario"
 #~ msgid "Confirm Sales"
 #~ msgstr "Confirmar las ventas"
 
+#~ msgid "Invoicing Method"
+#~ msgstr "Método de facturación"
+
 #~ msgid "Responsible"
 #~ msgstr "Responsable"
 
@@ -333,6 +310,9 @@ msgstr "Administración de ventas y entregas por diario"
 
 #~ msgid "Creation date"
 #~ msgstr "Fecha de creación"
+
+#~ msgid "Managing sales and deliveries by journal"
+#~ msgstr "Administración de ventas y entregas por diario"
 
 #~ msgid "Assigned packing"
 #~ msgstr "Remito asignado"

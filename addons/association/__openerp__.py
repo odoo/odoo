@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Association profile',
+    'name': 'Associations Management',
     'version': '0.1',
-    'category': 'Vertical Applications',
+    'category': 'Specific Industry Applications',
     'complexity': "normal",
     'description': """
 This module is to configure modules related to an association.

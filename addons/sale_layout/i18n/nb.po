@@ -7,34 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-04-06 17:08+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:47+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:17+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: sale_layout
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
 msgid "Sub Total"
 msgstr "Subtotal"
-
-#. module: sale_layout
-#: model:ir.module.module,description:sale_layout.module_meta_information
-msgid ""
-"\n"
-"    This module provides features to improve the layout of the Sales Order.\n"
-"\n"
-"    It gives you the possibility to\n"
-"        * order all the lines of a sales order\n"
-"        * add titles, comment lines, sub total lines\n"
-"        * draw horizontal lines and put page breaks\n"
-"\n"
-"    "
-msgstr ""
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -52,9 +43,9 @@ msgid "Note"
 msgstr "Notat"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Unit Price"
-msgstr "Enhetspris"
+#: field:sale.order.line,layout_type:0
+msgid "Line Type"
+msgstr ""
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -72,14 +63,14 @@ msgid "Disc.(%)"
 msgstr "Rab.(%)"
 
 #. module: sale_layout
-#: field:sale.order.line,layout_type:0
-msgid "Layout Type"
-msgstr "Layout type"
+#: report:sale.order.layout:0
+msgid "Unit Price"
+msgstr "Enhetspris"
 
 #. module: sale_layout
 #: view:sale.order:0
-msgid "Seq."
-msgstr "Sekv."
+msgid "Invoice Lines"
+msgstr "Fakturalinjer"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -92,19 +83,9 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: sale_layout
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "Ordrereferanse må være unik !"
-
-#. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Description"
 msgstr "Beskrivelse"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Manual Description"
-msgstr "Manuell beskrivelse"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -112,14 +93,9 @@ msgid "Our Salesman"
 msgstr "Vår salgsperson"
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "Automatic Declaration"
-msgstr "Automatisk deklarasjon"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Invoice Lines"
-msgstr "Fakturalinjer"
+#: report:sale.order.layout:0
+msgid "Tel. :"
+msgstr "Tel.:"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -152,14 +128,9 @@ msgid "Invoice address :"
 msgstr "Fakturaadresse :"
 
 #. module: sale_layout
-#: model:ir.module.module,shortdesc:sale_layout.module_meta_information
-msgid "Sale Order Layout"
-msgstr "Salgsordre layout"
-
-#. module: sale_layout
-#: selection:sale.order.line,layout_type:0
-msgid "Page Break"
-msgstr "Sideskift"
+#: report:sale.order.layout:0
+msgid "Fax :"
+msgstr "Fax:"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -177,6 +148,7 @@ msgid "Shipping address :"
 msgstr "Leveringsadresse :"
 
 #. module: sale_layout
+#: view:sale.order:0
 #: report:sale.order.layout:0
 msgid "Taxes"
 msgstr "Avgifter"
@@ -185,11 +157,6 @@ msgstr "Avgifter"
 #: report:sale.order.layout:0
 msgid "Net Total :"
 msgstr ""
-
-#. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Tel. :"
-msgstr "Tel.:"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -205,11 +172,6 @@ msgstr "Betalingsbetingelser"
 #: view:sale.order:0
 msgid "History"
 msgstr ""
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Sale Order Lines"
-msgstr "Salgsordrelinjer"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -262,9 +224,9 @@ msgid "Taxes :"
 msgstr "Avgifter :"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Fax :"
-msgstr "Fax:"
+#: selection:sale.order.line,layout_type:0
+msgid "Page Break"
+msgstr "Sideskift"
 
 #. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order
@@ -290,3 +252,24 @@ msgstr "Salgsordrelinje"
 #: view:sale.order:0
 msgid "Stock Moves"
 msgstr "Lagerbevegelser"
+
+#~ msgid "Layout Type"
+#~ msgstr "Layout type"
+
+#~ msgid "Seq."
+#~ msgstr "Sekv."
+
+#~ msgid "Automatic Declaration"
+#~ msgstr "Automatisk deklarasjon"
+
+#~ msgid "Manual Description"
+#~ msgstr "Manuell beskrivelse"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Ordrereferanse må være unik !"
+
+#~ msgid "Sale Order Layout"
+#~ msgstr "Salgsordre layout"
+
+#~ msgid "Sale Order Lines"
+#~ msgstr "Salgsordrelinjer"

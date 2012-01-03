@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Customer & Supplier Relationship Management',
+    'name': 'CRM',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'complexity': "easy",
@@ -55,14 +55,14 @@ Creates a dashboard for CRM that includes:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [
-        'base',
         'base_action_rule',
         'base_setup',
         'process',
         'mail',
         'base_calendar',
         'resource',
-        'board'
+        'board',
+        'fetchmail'
     ],
     'init_xml': [
         'crm_data.xml',
@@ -108,8 +108,8 @@ Creates a dashboard for CRM that includes:
         'crm_installer_view.xml',
 
         'res_partner_view.xml',
-        'board_crm_view.xml',
         'board_crm_statistical_view.xml',
+        'board_crm_view.xml',
 
     ],
     'demo_xml': [
@@ -119,20 +119,18 @@ Creates a dashboard for CRM that includes:
         'crm_phonecall_demo.xml',
     ],
     'test': [
-            'test/test_crm_lead.yml',
-            'test/test_crm_meeting.yml',
-            'test/test_crm_opportunity.yml',
-            'test/test_crm_phonecall.yml',
-            'test/test_crm_recurrent_meeting.yml',
-            'test/test_crm_stage_changes.yml',
-            'test/test_crm_recurrent_meeting_case2.yml',
-            'test/test_crm_lead_case2.yml',
-            'test/test_crm_opportunity_case2.yml',
-            'test/test_crm_phonecall_case2.yml',
-            'test/test_crm_partner2opportunity.yml',
-            'test/test_crm_segmentation.yml',
+            'test/process/communication_with_customer.yml',
+            'test/process/lead2opportunity2win.yml',
+            'test/process/merge_opportunity.yml',
+            'test/process/cancel_lead.yml',
+            'test/process/action_rule.yml',
+            'test/process/segmentation.yml',
+            'test/ui/crm_demo.yml',
+            'test/ui/duplicate_lead.yml',
+            'test/ui/delete_lead.yml'
              ],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '0079056041421',
     'images': ['images/sale_crm_crm_dashboard.png', 'images/crm_dashboard.jpeg','images/leads.jpeg','images/meetings.jpeg','images/opportunities.jpeg','images/outbound_calls.jpeg','images/stages.jpeg'],

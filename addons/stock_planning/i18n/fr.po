@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-09-26 12:15+0000\n"
 "Last-Translator: lholivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-27 04:47+0000\n"
-"X-Generator: Launchpad (build 14028)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:21+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -42,11 +42,6 @@ msgid "Maximum Rule"
 msgstr "Règle du stock maximum"
 
 #. module: stock_planning
-#: field:stock.sale.forecast,analyzed_period1_per_company:0
-msgid "This Copmany Period1"
-msgstr "Période 1 de cette société"
-
-#. module: stock_planning
 #: view:stock.planning:0
 #: view:stock.sale.forecast:0
 msgid "Group By..."
@@ -62,11 +57,11 @@ msgstr ""
 "des prix."
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:621
-#: code:addons/stock_planning/stock_planning.py:663
+#: code:addons/stock_planning/stock_planning.py:626
+#: code:addons/stock_planning/stock_planning.py:670
 #, python-format
 msgid "Incoming Left must be greater than 0 !"
-msgstr "Le reste à venir doit être plus grand que 0 !"
+msgstr "Le reste à recevoir doit être supérieur à 0 !"
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_before:0
@@ -77,12 +72,6 @@ msgstr ""
 "Sorties planifiées sur les périodes avant recalcul. Entre la date de départ "
 "de la période actuelle et jusqu'à un jour avant le début de la période "
 "calculée."
-
-#. module: stock_planning
-#: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
-#, python-format
-msgid "No products in selected category !"
-msgstr "Pas de produit dans la catégorie sélectionnée !"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,warehouse_id:0
@@ -107,12 +96,7 @@ msgstr " "
 #. module: stock_planning
 #: field:stock.planning,incoming_left:0
 msgid "Incoming Left"
-msgstr "Reste à venir"
-
-#. module: stock_planning
-#: view:stock.planning:0
-msgid "Requisition history"
-msgstr "Historique des réquisitions"
+msgstr "Reste à recevoir"
 
 #. module: stock_planning
 #: view:stock.sale.forecast.createlines:0
@@ -141,17 +125,6 @@ msgid "Company"
 msgstr "Société"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:640
-#: code:addons/stock_planning/stock_planning.py:682
-#, python-format
-msgid ""
-"\n"
-" Initial Stock: "
-msgstr ""
-"\n"
-" Stock initial: "
-
-#. module: stock_planning
 #: help:stock.planning,warehouse_forecast:0
 msgid ""
 "All sales forecasts for selected Warehouse of selected Product during "
@@ -159,11 +132,6 @@ msgid ""
 msgstr ""
 "Toutes les prévisions de ventes pour le dépôt sélectionné du produit "
 "sélectionné pendant la période sélectionnée."
-
-#. module: stock_planning
-#: model:ir.ui.menu,name:stock_planning.menu_stock_period_creatlines
-msgid "Create Stock and Sales Periods"
-msgstr "Créer des périodes de stock et de vente."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -187,13 +155,9 @@ msgid ""
 msgstr "Quantité déjà expédiée depuis ce dépôt pour la période actuelle."
 
 #. module: stock_planning
-#: help:stock.planning,procure_to_stock:0
-msgid ""
-"Chect to make procurement to stock location of selected warehouse. If not "
-"selected procurement will be made into input location of warehouse."
-msgstr ""
-"Cochez pour approvisionner l'emplacement de stock du dépôt sélectionné. Si "
-"non coché, l'approvisionnement se fera sur l'emplacement d'entrée du dépôt."
+#: field:stock.planning,incoming:0
+msgid "Confirmed In"
+msgstr "Entrées confirmées"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -201,18 +165,17 @@ msgid "Current Period Situation"
 msgstr "Situation de la période actuelle."
 
 #. module: stock_planning
+#: model:ir.actions.act_window,help:stock_planning.action_stock_period_createlines_form
+msgid ""
+"This wizard helps with the creation of stock planning periods. These periods "
+"are independent of financial periods. If you need periods other than day-, "
+"week- or month-based, you may also add then manually."
+msgstr ""
+
+#. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Monthly Periods"
 msgstr "Créer des périodes mensuelles"
-
-#. module: stock_planning
-#: help:stock.planning,supply_warehouse_id:0
-msgid ""
-"Warehouse used as source in supply pick move created by 'Supply from Another "
-"Warhouse'."
-msgstr ""
-"Dépôt utilisé en tant qu'origine dans un mouvement d'approvisionnement créé "
-"par 'Approvisionner à partir d'un autre dépôt'."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period_createlines
@@ -230,9 +193,21 @@ msgid "All Products with Forecast"
 msgstr "Tous les produits avec prévisions"
 
 #. module: stock_planning
+#: help:stock.planning,maximum_op:0
+msgid "Maximum quantity set in Minimum Stock Rules for this Warehouse"
+msgstr ""
+
+#. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Periods :"
 msgstr "Périodes :"
+
+#. module: stock_planning
+#: help:stock.planning,procure_to_stock:0
+msgid ""
+"Check to make procurement to stock location of selected warehouse. If not "
+"selected procurement will be made into input location of warehouse."
+msgstr ""
 
 #. module: stock_planning
 #: help:stock.planning,already_in:0
@@ -241,11 +216,10 @@ msgid ""
 msgstr "Quantité qui a déjà été prélevée dans ce dépôt pour cette période."
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:644
-#: code:addons/stock_planning/stock_planning.py:686
+#: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
 #, python-format
-msgid "    Confirmed In Before: "
-msgstr "    Entrées confirmées avant: "
+msgid "No products in selected category !"
+msgstr "Pas de produit dans la catégorie sélectionnée !"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -256,11 +230,6 @@ msgstr "Prévisions de stock et de vente"
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast
 msgid "stock.sale.forecast"
 msgstr "stock.sale.forecast"
-
-#. module: stock_planning
-#: field:stock.sale.forecast,analyzed_dept_id:0
-msgid "This Department"
-msgstr "Ce département"
 
 #. module: stock_planning
 #: field:stock.planning,to_procure:0
@@ -325,7 +294,6 @@ msgid "This User Period3"
 msgstr "Période3 de cet utilisateur"
 
 #. module: stock_planning
-#: model:ir.ui.menu,name:stock_planning.menu_stock_planning_main
 #: view:stock.planning:0
 msgid "Stock Planning"
 msgstr "Planification du stock"
@@ -338,20 +306,7 @@ msgstr "Règle du stock minimum"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Procure Incoming Left"
-msgstr "Reste à acheter"
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:646
-#: code:addons/stock_planning/stock_planning.py:688
-#, python-format
-msgid "    Incoming Left: "
-msgstr "    Entrées à traiter : "
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:719
-#, python-format
-msgid "%s Pick List %s (%s,  %s) %s %s \n"
-msgstr ""
+msgstr "Approvisionner pour le reste à recevoir"
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
@@ -361,26 +316,16 @@ msgstr "Créer"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_planning_form
-#: model:ir.module.module,shortdesc:stock_planning.module_meta_information
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning
+#: model:ir.ui.menu,name:stock_planning.menu_stock_planning_manual
 #: view:stock.planning:0
 msgid "Master Procurement Schedule"
 msgstr "Plan directeur d'approvisionnement"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:636
-#: code:addons/stock_planning/stock_planning.py:678
-#, python-format
-msgid "  Creation Date: "
-msgstr "  Date de création: "
-
-#. module: stock_planning
-#: field:stock.planning,period_id:0
-#: field:stock.planning.createlines,period_id:0
-#: field:stock.sale.forecast,period_id:0
-#: field:stock.sale.forecast.createlines,period_id:0
-msgid "Period"
-msgstr "Période"
+#: field:stock.planning,line_time:0
+msgid "Past/Future"
+msgstr "Passé/futur"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -438,14 +383,9 @@ msgid "Check this box to see the sales for whole company."
 msgstr "Cocher pour voir les ventes de toute la société."
 
 #. module: stock_planning
-#: field:stock.sale.forecast,name:0
-msgid "Name"
-msgstr "Nom"
-
-#. module: stock_planning
-#: view:stock.planning:0
-msgid "Search Stock Planning"
-msgstr "Rechercher dans la planification du stock"
+#: view:stock.sale.forecast:0
+msgid "Per Department :"
+msgstr "Par département:"
 
 #. module: stock_planning
 #: field:stock.planning,incoming_before:0
@@ -453,16 +393,31 @@ msgid "Incoming Before"
 msgstr "Produits entrants avant"
 
 #. module: stock_planning
-#: field:stock.planning.createlines,product_categ_id:0
-#: field:stock.sale.forecast.createlines,product_categ_id:0
-msgid "Product Category"
-msgstr "Catégorie de produits"
+#: code:addons/stock_planning/stock_planning.py:641
+#, python-format
+msgid ""
+" Procurement created by MPS for user: %s   Creation Date: %s                 "
+"                        \n"
+" For period: %s                                         \n"
+" according to state:                                         \n"
+" Warehouse Forecast: %s                                         \n"
+" Initial Stock: %s                                         \n"
+" Planned Out: %s    Planned In: %s                                         \n"
+" Already Out: %s    Already In: %s                                         \n"
+" Confirmed Out: %s    Confirmed In: %s                                       "
+"  \n"
+" Planned Out Before: %s    Confirmed In Before: %s                           "
+"              \n"
+" Expected Out: %s    Incoming Left: %s                                       "
+"  \n"
+" Stock Simulation: %s    Minimum stock: %s"
+msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:621
-#: code:addons/stock_planning/stock_planning.py:663
-#: code:addons/stock_planning/stock_planning.py:665
-#: code:addons/stock_planning/stock_planning.py:667
+#: code:addons/stock_planning/stock_planning.py:626
+#: code:addons/stock_planning/stock_planning.py:670
+#: code:addons/stock_planning/stock_planning.py:672
+#: code:addons/stock_planning/stock_planning.py:674
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
 #: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
 #, python-format
@@ -470,26 +425,9 @@ msgid "Error !"
 msgstr "Erreur !"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:626
-#, python-format
-msgid "Manual planning for %s"
-msgstr "Planification manuelle pour %s"
-
-#. module: stock_planning
 #: field:stock.sale.forecast,analyzed_user_id:0
 msgid "This User"
 msgstr "Cet utilisateur"
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:643
-#: code:addons/stock_planning/stock_planning.py:685
-#, python-format
-msgid ""
-"\n"
-" Confirmed Out: "
-msgstr ""
-"\n"
-" sorties confirmées: "
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -507,28 +445,7 @@ msgid "Calculate Planning"
 msgstr "Calculer la planification"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:636
-#, python-format
-msgid ""
-" Procurement created in MPS by user: %s   Creation Date: %s                  "
-"                       \n"
-" For period: %s                                         \n"
-" according to state:                                         \n"
-" Warehouse Forecast: %s                                         \n"
-" Initial Stock: %s                                         \n"
-" Planned Out: %s    Planned In: %s                                         \n"
-" Already Out: %s    Already In: %s                                         \n"
-" Confirmed Out: %s    Confirmed In: %s                                       "
-"  \n"
-" Planned Out Before: %s    Confirmed In Before: %s                           "
-"              \n"
-" Expected Out: %s    Incoming Left: %s                                       "
-"  \n"
-" Stock Simulation: %s    Minimum stock: %s"
-msgstr ""
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:140
+#: code:addons/stock_planning/stock_planning.py:146
 #, python-format
 msgid "Invalid action !"
 msgstr "Action non valide !"
@@ -539,37 +456,44 @@ msgid "Stock quantity one day before current period."
 msgstr "Quantité en stock un jour avant la période actuelle"
 
 #. module: stock_planning
+#: view:stock.planning:0
+msgid "Procurement history"
+msgstr ""
+
+#. module: stock_planning
+#: help:stock.planning,product_uom:0
+msgid ""
+"Unit of Measure used to show the quantities of stock calculation.You can use "
+"units from default category or from second category (UoS category)."
+msgstr ""
+
+#. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Weekly Periods"
 msgstr "Créer des périodes hebdomadaires"
 
 #. module: stock_planning
-#: help:stock.planning,maximum_op:0
-msgid "Maximum quantity set in Minimum Stock Rules for this Warhouse"
-msgstr "Quantité maximum fixée dans la règle de stock minimum pour ce dépôt."
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:665
-#, python-format
-msgid "You must specify a Source Warehouse !"
-msgstr "Vous devez indiquer un dépôt d'origine !"
-
-#. module: stock_planning
-#: view:stock.planning.createlines:0
-msgid "Creates planning lines for selected period and warehouse."
+#: model:ir.actions.act_window,help:stock_planning.action_stock_period_form
+msgid ""
+"Stock periods are used for stock planning. Stock periods are independent of "
+"account periods. You can use wizard for creating periods and review them "
+"here."
 msgstr ""
-"Crée des lignes de planification pour la période et le dépôt sélectionnés."
+
+#. module: stock_planning
+#: view:stock.planning:0
+msgid "Calculated Period Simulation"
+msgstr "Simulation de la période calculée"
+
+#. module: stock_planning
+#: view:stock.period.createlines:0
+msgid "Cancel"
+msgstr "Annuler"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_user:0
 msgid "This User Period4"
 msgstr "Période4 de cet utilisateur"
-
-#. module: stock_planning
-#: view:stock.planning.createlines:0
-#: view:stock.sale.forecast.createlines:0
-msgid "Note: Doesn't duplicate existing lines created by you."
-msgstr "Note: ne duplique pas les lignes existantes créées par vous."
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -582,15 +506,9 @@ msgid "Company Forecast"
 msgstr "Prévisions pour la société"
 
 #. module: stock_planning
-#: help:stock.planning,product_uom:0
-#: help:stock.sale.forecast,product_uom:0
-msgid ""
-"Unit of Measure used to show the quanities of stock calculation.You can use "
-"units form default category or from second category (UoS category)."
+#: help:stock.planning,minimum_op:0
+msgid "Minimum quantity set in Minimum Stock Rules for this Warehouse"
 msgstr ""
-"Unité de mesure utilisée pour indiquer les quantités pour le calcul de "
-"stock. Vous pouvez utiliser des unités de la catégorie par défaut ou de la "
-"catégorie secondaire."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -598,17 +516,9 @@ msgid "Per User :"
 msgstr "Par utilisateur :"
 
 #. module: stock_planning
-#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
-#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
-#: view:stock.sale.forecast:0
-msgid "Sales Forecasts"
-msgstr "Prévisions de vente"
-
-#. module: stock_planning
-#: field:stock.period,name:0
-#: field:stock.period.createlines,name:0
-msgid "Period Name"
-msgstr "Nom de la Période"
+#: help:stock.planning.createlines,warehouse_id:0
+msgid "Warehouse which planning will concern."
+msgstr "Entrepôt sur lequel va porter la planification"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,user_id:0
@@ -616,19 +526,40 @@ msgid "Created/Validated by"
 msgstr "Créé/validé par"
 
 #. module: stock_planning
-#: view:stock.planning:0
-msgid "Internal Supply"
-msgstr "Approvisionnement intenre"
+#: field:stock.planning,warehouse_forecast:0
+msgid "Warehouse Forecast"
+msgstr "Prévision de l'entrepôt"
 
 #. module: stock_planning
-#: field:stock.sale.forecast,analyzed_period4_per_company:0
-msgid "This Company Period4"
-msgstr "Période4 de cette société"
+#: code:addons/stock_planning/stock_planning.py:674
+#, python-format
+msgid ""
+"You must specify a Source Warehouse different than calculated (destination) "
+"Warehouse !"
+msgstr ""
+"Vous devez indiquer un entrepôt d'origine différent de l'entrepôt calculé "
+"(de destination) !"
+
+#. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:146
+#, python-format
+msgid "Cannot delete a validated sales forecast!"
+msgstr ""
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
 msgid "This Company Period5"
 msgstr "Période5 de cette société"
+
+#. module: stock_planning
+#: field:stock.sale.forecast,product_uom:0
+msgid "Product UoM"
+msgstr "UdM produit"
+
+#. module: stock_planning
+#: field:stock.sale.forecast,analyzed_period1_per_company:0
+msgid "This Company Period1"
+msgstr ""
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_company:0
@@ -647,15 +578,9 @@ msgid "Start Date"
 msgstr "Date de début"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:642
-#: code:addons/stock_planning/stock_planning.py:684
-#, python-format
-msgid ""
-"\n"
-" Already Out: "
-msgstr ""
-"\n"
-" Déjà sorti : "
+#: field:stock.sale.forecast,analyzed_period2_per_user:0
+msgid "This User Period2"
+msgstr "Période2 de cet utilisateur"
 
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
@@ -678,9 +603,9 @@ msgid "Planned Out"
 msgstr "Sorties planifiées"
 
 #. module: stock_planning
-#: view:stock.sale.forecast:0
-msgid "Per Department :"
-msgstr "Par département:"
+#: field:stock.sale.forecast,product_qty:0
+msgid "Forecast Quantity"
+msgstr ""
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -706,20 +631,16 @@ msgid "Warehouse "
 msgstr "Entrepôt "
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:646
-#: code:addons/stock_planning/stock_planning.py:688
-#, python-format
+#: help:stock.sale.forecast,product_uom:0
 msgid ""
-"\n"
-" Expected Out: "
+"Unit of Measure used to show the quantities of stock calculation.You can use "
+"units form default category or from second category (UoS category)."
 msgstr ""
-"\n"
-" Sorties attendues : "
 
 #. module: stock_planning
-#: view:stock.period.createlines:0
-msgid "Create periods for Stock and Sales Planning"
-msgstr "Créer les périodes pour la planification du stock et des ventes"
+#: view:stock.planning:0
+msgid "Planning and Situation for Calculated Period"
+msgstr "Planification et situation pour la période calculée"
 
 #. module: stock_planning
 #: help:stock.planning,planned_outgoing:0
@@ -734,530 +655,20 @@ msgstr ""
 "valeur devrait être plus grande ou égale aux sorties confirmées."
 
 #. module: stock_planning
-#: model:ir.module.module,description:stock_planning.module_meta_information
-msgid ""
-"\n"
-"This module is based on original OpenERP SA module stock_planning version "
-"1.0 of the same name Master Procurement Schedule.\n"
-"\n"
-"Purpose of MPS is to allow create a manual procurement (requisition) apart "
-"of MRP scheduler (which works automatically on minimum stock rules).\n"
-"\n"
-"Terms used in the module:\n"
-"- Stock and Sales Period - is the time (between Start Date and End Date) for "
-"which you plan Stock and Sales Forecast and make Procurement Planning. \n"
-"- Stock and Sales Forecast - is the quantity of products you plan to sell in "
-"the Period.\n"
-"- Stock Planning - is the quantity of products you plan to purchase or "
-"produce for the Period.\n"
-"\n"
-"Because we have another module sale_forecast which uses terms \"Sales "
-"Forecast\" and \"Planning\" as amount values we will use terms \"Stock and "
-"Sales Forecast\" and \"Stock Planning\" to emphasize that we use quantity "
-"values. \n"
-"\n"
-"Activity with this module is divided to three steps:\n"
-"- Creating Periods. Mandatory step.\n"
-"- Creating Sale Forecasts and entering quantities to them. Optional step but "
-"useful for further planning.\n"
-"- Creating Planning lines, entering quantities to them and making "
-"Procurement. Making procurement is the final step for the Period.\n"
-"\n"
-"Periods\n"
-"=======\n"
-"You have two menu items for Periods in \"Sales Management - Configuration\". "
-"There are:\n"
-"- \"Create Sales Periods\" - Which automates creating daily, weekly or "
-"monthly periods.\n"
-"- \"Stock and sales Periods\" - Which allows to create any type of periods, "
-"change the dates and change the State of period.\n"
-"\n"
-"Creating periods is the first step you have to do to use modules features. "
-"You can create custom periods using \"New\" button in \"Stock and Sales "
-"Periods\" form or view but it is recommended to use automating tool.\n"
-"\n"
-"Remarks:\n"
-"- These periods (officially Stock and Sales Periods) are separated of "
-"Financial or other periods in the system.\n"
-"- Periods are not assigned to companies (when you use multicompany feature "
-"at all). Module suppose that you use the same periods across companies. If "
-"you wish to use different periods for different companies define them as you "
-"wish (they can overlap). Later on in this text will be indications how to "
-"use such periods.\n"
-"- When periods are created automatically their start and finish dates are "
-"with start hour 00:00:00 and end hour 23:59:00. Fe. when you create daily "
-"periods they will have start date 31.01.2010 00:00:00 and end date "
-"31.01.2010 23:59:00. It works only in automatic creation of periods. When "
-"you create periods manually you have to take care about hours because you "
-"can have incorrect values form sales or stock. \n"
-"- If you use overlapping periods for the same product, warehouse and company "
-"results can be unpredictable.\n"
-"- If current date doesn't belong to any period or you have holes between "
-"periods results can be unpredictable.\n"
-"\n"
-"Sales Forecasts\n"
-"===============\n"
-"You have few menus for Sales forecast in \"Sales Management - Sales "
-"Forecasts\".\n"
-"- \"Create Sales Forecasts for Sales Periods\" - which automates creating "
-"forecasts lines according to some parameters.\n"
-"- \"Sales Forecasts\" - few menus for working with forecasts lists and "
-"forms.\n"
-"\n"
-"Menu \"Create Sales Forecasts for Sales Periods\" creates Forecasts for "
-"products from selected Category, for selected Period and for selected "
-"Warehouse. It is an option \"Copy Last Forecast\" to copy forecast and other "
-"settings of period before this one to created one.\n"
-"\n"
-"Remarks:\n"
-"- This tool doesn't create lines, if relevant lines (for the same Product, "
-"Period, Warehouse and validated or created by you) already exists. If you "
-"wish to create another forecast, if relevant lines exists you have to do it "
-"manually using menus described bellow.\n"
-"- When created lines are validated by someone else you can use this tool to "
-"create another lines for the same Period, Product and Warehouse. \n"
-"- When you choose \"Copy Last Forecast\" created line takes quantity and "
-"some settings from your (validated by you or created by you if not validated "
-"yet) forecast which is for last period before period of created forecast. If "
-"there are few your forecasts for period before this one (it is possible) "
-"system takes one of them (no rule which of them).\n"
-"\n"
-"\n"
-"Menus \"Sales Forecasts\"\n"
-"On \"Sales Forecast\" form mainly you have to enter a forecast quantity in "
-"\"Product Quantity\". Further calculation can work for draft forecasts. But "
-"validation can save your data against any accidental changes. You can click "
-"\"Validate\" button but it is not mandatory.\n"
-"\n"
-"Instead of forecast quantity you can enter amount of forecast sales in field "
-"\"Product Amount\". System will count quantity from amount according to Sale "
-"price of the Product.\n"
-"\n"
-"All values on the form are expressed in unit of measure selected on form. "
-"You can select one of unit of measure from default category or from second "
-"category. When you change unit of measure the quanities will be recalculated "
-"according to new UoM: editable values (blue fields) immediately, non edited "
-"fields after clicking of \"Calculate Planning\" button.\n"
-"\n"
-"To find proper value for Sale Forecast you can use \"Sales History\" table "
-"for this product. You have to enter parameters to the top and left of this "
-"table and system will count sale quantities according to these parameters. "
-"So you can select fe. your department (at the top) then (to the left): last "
-"period, period before last and period year ago.\n"
-"\n"
-"Remarks:\n"
-"\n"
-"\n"
-"Procurement Planning\n"
-"====================\n"
-"Menu for Planning you can find in \"Warehouse - Stock Planning\".\n"
-"- \"Create Stock Planning Lines\" - allows you to automate creating planning "
-"lines according to some parameters.\n"
-"- \"Master Procurement Scheduler\" - is the most important menu of the "
-"module which allows to create procurement.\n"
-"\n"
-"As Sales forecast is phase of planning sales. The Procurement Planning "
-"(Planning) is the phase of scheduling Purchasing or Producing. You can "
-"create Procurement Planning quickly using tool from menu \"Create Stock "
-"Planning Lines\", then you can review created planning and make procurement "
-"using menu \"Master Procurement Schedule\".\n"
-"\n"
-"Menu \"Create Stock Planning Lines\" allows you to create quickly Planning "
-"lines for products from selected Category, for selected Period, and for "
-"selected Warehouse. When you check option \"All Products with Forecast\" "
-"system creates lines for all products having forecast for selected Period "
-"and Warehouse. Selected Category will be ignored in this case.\n"
-"\n"
-"Under menu \"Master Procurement Scheduler\" you can generally change the "
-"values \"Planned Out\" and \"Planned In\" to observe the field \"Stock "
-"Simulation\" and decide if this value would be accurate for end of the "
-"Period. \n"
-"\"Planned Out\" can be based on \"Warehouse Forecast\" which is the sum of "
-"all forecasts for Period and Warehouse. But your planning can be based on "
-"any other information you have. It is not necessary to have any forecast. \n"
-"\"Planned In\" quantity is used to calculate field \"Incoming Left\" which "
-"is the quantity to be procured to make stock as indicated in \"Stock "
-"Simulation\" at the end of Period. You can compare \"Stock Simulation\" "
-"quantity to minimum stock rules visible on the form. But you can plan "
-"different quantity than in Minimum Stock Rules. Calculation is made for "
-"whole Warehouse by default. But if you want to see values for Stock location "
-"of calculated warehouse you can use check box \"Stock Location Only\".\n"
-"\n"
-"If after few tries you decide that you found correct quantities for "
-"\"Planned Out\" and \"Planned In\" and you are satisfied with end of period "
-"stock calculated in \"Stock Simulation\" you can click \"Procure Incoming "
-"Left\" button to procure quantity of field \"Incoming Left\" into the "
-"Warehouse. System creates appropriate Procurement Order. You can decide if "
-"procurement will be made to Stock or Input location of calculated Warehouse. "
-"\n"
-"\n"
-"If you don't want to Produce or Buy the product but just pick calculated "
-"quantity from another warehouse you can click \"Supply from Another "
-"Warehouse\" (instead of \"Procure Incoming Left\"). System creates pick list "
-"with move from selected source Warehouse to calculated Warehouse (as "
-"destination). You can also decide if this pick should be done from Stock or "
-"Output location of source warehouse. Destination location (Stock or Input) "
-"of destination warehouse will be used as set for \"Procure Incoming Left\". "
-"\n"
-"\n"
-"To see proper quantities in fields \"Confirmed In\", \"Confirmed Out\", "
-"\"Confirmed In Before\", \"Planned Out Before\" and \"Stock Simulation\" you "
-"have to click button \"Calculate Planning\".\n"
-"\n"
-"All values on the form are expressed in unit of measure selected on form. "
-"You can select one of unit of measure from default category or from second "
-"category. When you change unit of measure the quanities will be recalculated "
-"according to new UoM: editable values (blue fields) immediately, non edited "
-"fields after clicking of \"Calculate Planning\" button.\n"
-"\n"
-"How Stock Simulation field is calculated:\n"
-"Generally Stock Simulation shows the stock for end of the calculated period "
-"according to some planned or confirmed stock moves. Calculation always "
-"starts with quantity of real stock of beginning of current period. Then "
-"calculation adds or subtracts quantities of calculated period or periods "
-"before calculated.\n"
-"When you are in the same period (current period is the same as calculated) "
-"Stock Simulation is calculated as follows:\n"
-"Stock Simulation = \n"
-"\tStock of beginning of current Period\n"
-"\t- Planned Out \n"
-"\t+ Planned In\n"
-"\n"
-"When you calculate period next to current:\n"
-"Stock Simulation = \n"
-"\tStock of beginning of current Period\n"
-"\t- Planned Out of current Period \n"
-"\t+ Confirmed In of current Period  (incl. Already In)\n"
-"\t- Planned Out of calculated Period \n"
-"\t+ Planned In of calculated Period .\n"
-"\n"
-"As you see calculated Period is taken the same way like in case above. But "
-"calculation of current Period are made a little bit different. First you "
-"should note that system takes for current Period only Confirmed In moves. It "
-"means that you have to make planning and procurement for current Period "
-"before this calculation (for Period next to current). \n"
-"\n"
-"When you calculate Period ahead:\n"
-"Stock Simulation = \n"
-"\tStock of beginning of current Period \n"
-"\t- Sum of Planned Out of Periods before calculated \n"
-"\t+ Sum of Confirmed In of Periods before calculated (incl. Already In) \n"
-"\t- Planned Out of calculated Period \n"
-"\t+ Planned In of calculated Period.\n"
-"\n"
-"Periods before calculated means periods starting from current till period "
-"before calculated.\n"
-"\n"
-"Remarks:\n"
-"- Remember to make planning for all periods before calculated because "
-"omitting these quantities and procurements can cause wrong suggestions for "
-"procurements few periods ahead.\n"
-"- If you made planning few periods ahead and you find that real Confirmed "
-"Out is bigger than Planned Out in some periods before you can repeat "
-"Planning and make another procurement. You should do it in the same planning "
-"line. If you create another planning line the suggestions can be wrong.\n"
-"- When you wish to work with different periods for some part of products "
-"define two kinds of periods (fe. Weekly and Monthly) and use them for "
-"different products. Example: If you use always Weekly periods for Products "
-"A, and Monthly periods for Products B your all calculations will work "
-"correctly. You can also use different kind of periods for the same products "
-"from different warehouse or companies. But you cannot use overlapping "
-"periods for the same product, warehouse and company because results can be "
-"unpredictable. The same apply to Forecasts lines.\n"
+#: view:stock.period:0
+msgid "Current Periods"
 msgstr ""
-"\n"
-"Ce module est basé sur la version du module stock_planning originel "
-"d'OpenERP SA du même nom que Planificateur d'approvisionnements.\n"
-"\n"
-"Le but du planificateur d'approvisionnements est de permettre de créer un "
-"approvisionnement manuel (demande) au lieu du planificateur MRP (qui "
-"travaille automatiquement sur les règles de stock minimum).\n"
-"\n"
-"Termes utilisés dans ce module :\n"
-"- Période de stock et de ventes - est le temps (entre la date de démarrage "
-"et la date de fin) pour lequel vous planifiez les prévisions de stock et de "
-"ventes et vous faites le planning des approvisionnements.\n"
-"- Prévision de stock et de ventes - est la quantité de produits que vous "
-"planifiez de vendre dans la période.\n"
-"- Planification du stock - est la quantité de produits que vous planifiez "
-"d'acheter ou de produire durant la période.\n"
-"\n"
-"Parce que nous avosn un autre module sale_forecast qui utilise les termes "
-"'Prévisions de ventes\" et \"Planification\" comme des valeurs pour les "
-"montants, nous utiliserons les termes \"Prévision de stock et de ventes\" et "
-"\"Planification du stock\" pour insister sur le fait que nous utilisons des "
-"valeurs quantitatives.\n"
-"\n"
-"L'activité avec ce module est divisée en trois étapes :\n"
-"- Création des périodes. Étape obligatoire.\n"
-"- Création des prévisions de vente et entrée des quantités pour cela. Étape "
-"optionnelle mais utile pour d'autres planifications.\n"
-"- Création des lignes de planification, entrée des quantités pour cela et "
-"pour créer les approvisionnements. Créer les approvisionnements est al "
-"dernière étape de la période.\n"
-"\n"
-"Périodes\n"
-"========\n"
-"Vous avez deux entrées de menu pour les périodes dans \"Ventes - "
-"Configuration\". Il y a:\n"
-"- \"Créer les périodes de ventes\" - qui créé automatiquement les périodes "
-"journalières, hebdomadaires ou mensuelles.\n"
-"- \"Périodes de stock et de vente\" - qui permet de créer tout type de "
-"périodes, de modifier les dates et de changer les états de la période.\n"
-"\n"
-"Créer les périodes est la première étape que vous devez faire pour utiliser "
-"les fonctionnalités de ce module. Vous pouvez créer des périodes "
-"personnalisées en utilisant le bouton \"Nouveau\" dans la vue ou la liste "
-"\"Périodes de stock et de ventes\" mais il est recommandé d'utiliser les "
-"outils automatiques.\n"
-"\n"
-"Remarques :\n"
-"- Ces périodes (officiellement périodes de stock et de ventes) sont séparées "
-"de la finance ou des autres modules dans le système.\n"
-"- Les périodes ne sont pas assignées aux sociétés (quand vous utiliser les "
-"fonctionnalités multi-sociétés). Le module suppose que vous utilisiez les "
-"mêmes périodes pour toutes les sociétés. Si vous souhaitez utiliser des "
-"périodes différentes pour des sociétés différentes, définissez les comme "
-"vous le voulez (elles peuvent se chevaucher). Plus tard dans ce texte seront "
-"écrites les indications pour utiliser chaque période.\n"
-"- Quand les périodes sont créées automatiquement leurs dates de début et de "
-"fin démarrent à 00:00:00 et se terminent à 23:59:00. Fe. Lorsque vous créer "
-"des périodes journalières, elle auront une date de démarrage du genre "
-"31.01.2010 00:00:00 et une date de fin 31.01.2010 23:59:00. Cela fonctionne "
-"seulement avec une création automatique des périodes. Lorsque vous créer "
-"manuellement des périodes, vous devez faire attention aux heures car vous "
-"pouvez avoir des velurs incorrectes venant des ventes ou du stock\n"
-"- Si vous utiliser des périodes qui se chevauchent pour le mêm produit, le "
-"même entrepôt ou la mêm société, les résultats ppeuvent être incertains.\n"
-"- Si la date actuelle n'appartient à aucune période ou si vous avez des "
-"trous entre les périodes, les résultats peuvent être incertains.\n"
-"\n"
-"Prévisions de vente\n"
-"===================\n"
-"Vous avez quelques menus pour les prévisions de ventes in \"Ventes - "
-"Prévisions de vente\".\n"
-"- \"Créer les prévisions de ventes pour les périodes\" - qui créé "
-"automatiquement les lignes de prévisions en fonction de plusieurs "
-"paramètres.\n"
-"- \"Prévisions de vente\" - quelques menus pour travailler avec les listes "
-"et les formulaires de prévisions.\n"
-"\n"
-"Le menu \"Créer des prévisions de vente pour les périodes\" créé les "
-"prévisions pour les produits de la catégorie sélectionnée, pour la période "
-"et pour l'entrepôt sélectionné. Il y a une option \"Copier la dernière "
-"prévision\" pour copier la prévision ainsi que les autres paramètres de la "
-"période avant celle-ci pour en créer une nouvelle.\n"
-"\n"
-"Remarques:\n"
-"- Cet outil ne créé pas de lignes si des lignes significatives (pour le même "
-"produit, la même période et le même entrepôt et validées ou créées par vous) "
-"existe déjà. Si vous souhaitez créer une autre prévision et que des lignes "
-"significatives existent, vous devez le faire manuellement en utilsant les "
-"menus décrits plus bas.\n"
-"- Lorsque des lignes créées sont validées par quelqu'un, vous pouvez "
-"utiliser cet outil pour créer d'autres lignes pour la même période, le même "
-"produit et le même entrepôt.\n"
-"- Lorsque vous choisissez \"Copier la dernière prévision\" le slignes créées "
-"prennent les quantités et certains paramètres depuis votre (validés ou créés "
-"par vous si ils ne sont pas encore validés) prévision qui es la dernière "
-"période avant la période de la prévision créée. Si il y a plusieurs "
-"prévisions pour la période avant celle-ci (c'est possible), le système "
-"prendra l'une d'elles (aucune règle n'est définie pour cela).\n"
-"\n"
-"Menus \"Prévisions de vente\"\n"
-"Sur le formulaire de \"prévisions de vente\", vous devez entrer une quantité "
-"prévue dans le champ \"Quantité de produit\". D'autres calculs peuvent être "
-"lancés pour les prévisions en brouillon. Mais la validation peut sauvegarder "
-"vos données contre tout changement accidentel. Vous pouvez cliquer sur le "
-"bouton \"Valider\" mais ce n'est pas obligatoire.\n"
-"\n"
-"À la place de la quantité prévue vous pouvez entrer le montant des "
-"prévisions de vente dans le champ \"Montant produit\". Le système comptera "
-"la quantité depuis le montant en fonction des prix de vente des produits.\n"
-"\n"
-"Toutes les valeurs dans le formulaire sont exprimées dans l'unité de mesure "
-"sélectionnée dans le formulaire. Vous pouvez sélectionné une unité de mesure "
-"depuis la catégorie par défaut ou depuis la seconde catégorie. Quand vous "
-"modifier l'unié de mesure, les quantités seront recalculées en fonction de "
-"la nouvelle unité de mesure : valeurs éditables (champs en bleu) "
-"immédiatement, champs non-éditables après avoir cliqué sur le bouton "
-"\"Calculer la planification\".\n"
-"\n"
-"Pour trouver la bonne valeur pour les prévisions de vente, vous pouvez "
-"utiliser le tableau \"Historique des ventes\" pour ce produit. Vous devez "
-"entrer les paramètres en haut et à gauche du tableau et le système calculera "
-"la quantité de ventes en fonction de ces paramètres. Donc vous pouvez "
-"sélectionner fe. votre département (en haut) puis (à gauche) : dernière "
-"période, période avant la dernière et la période d'il y a un an.\n"
-"\n"
-"\n"
-"Planification des approvisionnements\n"
-"====================================\n"
-"Vous pouvez trouver le menu pour la planification dans \"Entrepôt - "
-"Planification du stock\".\n"
-"- \"Créer des lignes de planification de stock\" - vous permet d'automatiser "
-"la création des lignes de planification en fonction de quelques paramètres.\n"
-"- \"Planificateur d'approvisionnements\" - est le menu le plus important du "
-"module qui permet de créer des approvisionnements.\n"
-"\n"
-"Commes les prévisions de ventes sont une phase de la planification des "
-"ventes, la planification des approvisionnements est une phase des plannings "
-"d'achat et de production. Vous pouvez créer rapidement une planification des "
-"approvisionnements en utlisant l'outil depuis le menu \"Créer des lignes de "
-"planification de stock\", ensuite, vous pouvez revoir les planification "
-"créées et faire les approvisionnement depuis le menu \"Planificateur "
-"d'approvisionnements\".\n"
-"\n"
-"Le menu \"Créer des lignes de planification de stock\" vous permet de créer "
-"rapideùent des lignes de planification pour les produits de la catégorie "
-"sélectionnée, pour la période et pour l'entrepôt sélectionnée. Lorsque vous "
-"cocher l'option \"Tous les produits avec prévision\", le système va créé des "
-"lignes pour tous les produits qui ont des prévisions pour la période et "
-"l'entrepôt sélectionné. Dans ce cas, la catégorie sélectionnée sera "
-"ignorée.\n"
-"\n"
-"Sous le menu \"Planificateur d'approvisionnements\", vous pouvez "
-"généralement modifier les valeurs \"Sorties planifiées\" et \"Entrées "
-"planifiées\" pour observer le champ \"Simulation du stock\" et dévider si la "
-"valeur sera correcte pour la fin de la période.\n"
-"Les \"Sorties planifiées\" peuvent être basées sur les \"prévisions "
-"d'entrepôt\" qui sont la somme de toutes les prévisions pour la période et "
-"l'entrepôt. Mais notre planification peut être basée sur toute autre "
-"information que vous avez. Il n'est pas nécessaire d'avoir une prévision.\n"
-"La quantité dans \"Entrées planifiées\" est utilisée pour calculer le champ "
-"\"Entrées à traiter\" qui est la quantité devant être apportée pour avoir le "
-"même stock que celui indiqué dans \"Simulation du stock\" à la fin de la "
-"période. Vous pouvez comparer la quantité dans \"Simulation du stock\" avec "
-"la règle de stock minimum visible dans le formulaire. Mais vous pouvez "
-"planifier une quantité différente que celle dans Règles de stock minimum. "
-"Par défaut, le calcul est fait pour tous les entrepôts. Mais si vous voulez "
-"voir les valeurs pour les emplacements de stock des entrepôts, vous pouvez "
-"utiliser la case à cocher \"Emplacements de stock seulement\".\n"
-"\n"
-"Si après quelques essais vous décidez que vous avez trouvé les quantités "
-"correctes pour les \"Sorties planifiées\" et les \"Entrées planifiées\" et "
-"que vous êtes satisfait avec le stock calculé dans \"Simulation du stock\" "
-"pour la fin de la période, vous pouvez cliquer sur le bouton "
-"\"Approvisionner les entrées à traiter\" pour approvisionner la quantité "
-"inscrite dans \"Entrées à traiter\" dans l'entrepôt. Le système créé les "
-"ordres d'approvisionnements appropriés. Vous pouvez décider si "
-"l'approvisionnement sera fait du Stock ou de l'emplacement d'entrée de "
-"l'entrepôt calculé.\n"
-"\n"
-"Si vous ne voulez pas produire ou acheter les produits mais simplement "
-"préparer les quantités calculées depuis un autre entrepôt, vous pouvez "
-"cliquer sur \"Approvisionner depuis un autre entrepôt\" (au lieu de "
-"\"Approvisionner les entrées à traiter\"). Le système créé une liste de "
-"préparation avec le mouvement depuis l'entrepôt sélectionné jusqu'à "
-"l'entrepôt calculé (comme destination). Vous pouvez aussi décider si cette "
-"préparation doit être faite depuis le stock ou depuis l'emplacement de "
-"sortie de l'entrepôt source. L'emplacement de destination (Stock ou Entrée) "
-"de lentrpôt de destination sera utilisé pour remplir le champ "
-"\"Approvisionnement des entrées à traiter\".\n"
-"\n"
-"Pour voir les bonnes quantités dans les champs \"Entrées confirmées\", "
-"\"Sorties confirmées\", \"Entrés confirmées avant\", \"Sorties confirmées "
-"avant\" et \"Simulation du stock\", vous devez cliquez sur le bouton "
-"\"Calculer la planification\".\n"
-"\n"
-"Toutes les valeurs sur le formulaire sont exprimées dans l'unité de mesure "
-"sélectionnée dans le formulaire. Vous pouvez en sléectionner une autre "
-"depuis la catégorie par défaut ou depuis la catégorie secondaire. Lorsque "
-"vous changez l'unité de mesure, les quantités seront recalculées en focntion "
-"de la nouvelle UdM : les valeurs modifiables (champs en bleu) immédiatement, "
-"champs non modifiables après avoir cliqué sur le bouton \"Calcul de la "
-"planification\".\n"
-"\n"
-"Comment le champ \"Simulation du stock\" est calculé :\n"
-"Généralement, le champ \"Simulation du stock\" affiche le stock pour la fin "
-"de la période calculée en fonction de plusieurs mouvements de stocks "
-"planifiés ou confirmés. Le calcul démarre toujours avec la quantité de stock "
-"réel du début de la période courante. Puis, le calcul ajoute ou soustrait "
-"les quantités de la période calculée ou des périodes avant le calcul.\n"
-"Lorsque vous êtes dans la même période (la période courante est la même que "
-"celle calculée), la simulation du stock est calculée comme suit :\n"
-"Simulation du stock =\n"
-"\tStock au début de la période courante\n"
-"\t- Sorties planifiées\n"
-"\t+ Entrées planifiées\n"
-"\n"
-"Quand vous calculer la prochaine période :\n"
-"Simulation du stock = \n"
-"\tStock au début de la période courante\n"
-"\t- Sorties planifiées de la période courante\n"
-"\t+ Entrées confirmées de la période courante (incl. les entrées en cours)\n"
-"\t- Sorties planifiées de la période calculée\n"
-"\t+ Entrées planifiées de la période calculée.\n"
-"\n"
-"Comme vous voyez, la période calculée est calculée de la même façon que le "
-"cas du dessus. Mais le calcul de la période courante est fait un peit peu "
-"différement. PRemièrement, vous devez noter que le système prend seulement "
-"les mouvement en entrée confirmés pour la période courante. Cela veut dire "
-"que vous devez faire la planification et l'approvisionnement de la période "
-"avant le calcul (pour la préiode suivante).\n"
-"\n"
-"When you calculate Period ahead:\n"
-"Quand vous calculez la période à venir :\n"
-"Simulation du stock =\n"
-"\tStock du début de la période courante\n"
-"\t- Somme des sorties planifiées de la période avant celle calculée\n"
-"\t+ Somme des entrées confirmées de la période avant celle calculée (incl. "
-"les entrées en cours)\n"
-"\t- Sorties planifiées de la période calculée\n"
-"\t+ Entrées planifiées de la période calculée.\n"
-"\n"
-"Périodes avant celle calculée veut dire les périodes démarrées depuis "
-"l'actuelle jusqu'à la période avant le calcul.\n"
-"\n"
-"Remarques :\n"
-"- Souvenez-vous qu'il faut planifier toutes les périodes avant le calcul "
-"parce qu'ommettre les quantités et les approvisionnements peut provoquer de "
-"fausses suggestions pour les approvisionnement des quelques périodes "
-"précédentes.\n"
-"- Si vous planifiez quelques périodes en avance et que vous trouvez que les "
-"sorties réelles confirmées sont trop grandes par rapport aux sorties "
-"planifiées dans les quelques périodes avant, vous pouvez refaire la "
-"planification et refaire un approvisionnement. Vous devez faire cela dans la "
-"ligne de planifications. Si vous créer une autre ligne de planification, les "
-"suggestions pourraient être fausses.\n"
-"- Lorsque vous souhaitez travailler avec différentes périodes pour quelques "
-"parties des produits, définissez deux sortes de périodes (ie. Hebdomadaires "
-"et mensuelles) et utiliser les pour les différentes produits. Exemple : si "
-"vous utilisez toujours des périodes hebdomadaires pour le produit A, et des "
-"périodes mensuelles pour le produit B, tous vos calculs vont se faire "
-"correctement. Vous pouvez également utiliser des types différents de "
-"périodes pour les mêmes produits mais avec des entreprôts ou des sociétés "
-"différentes. Mais vous ne pouvez pas utiliser des périodes qui se "
-"chevauchent pour le même produit, le même entreprôt et la même société car "
-"les résultats peuvent être incertains. Cela s'applique aussi sur les lignes "
-"de prévisions.\n"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:140
-#, python-format
-msgid "Cannot delete Validated Sale Forecasts !"
-msgstr "Impossible de supprimer des prévisions de ventes validées !"
+#: view:stock.planning:0
+msgid "Internal Supply"
+msgstr "Approvisionnement intenre"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:641
-#: code:addons/stock_planning/stock_planning.py:683
+#: code:addons/stock_planning/stock_planning.py:724
 #, python-format
-msgid ""
-"\n"
-" Planned Out: "
+msgid "%s Pick List %s (%s,  %s) %s %s \n"
 msgstr ""
-"\n"
-" Sorties planifiées : "
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:667
-#, python-format
-msgid ""
-"You must specify a Source Warehouse different than calculated (destination) "
-"Warehouse !"
-msgstr ""
-"Vous devez indiquer un entrepôt d'origine différent de l'entrepôt calculé "
-"(de destination) !"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_sale_forecast_createlines_form
@@ -1266,45 +677,15 @@ msgid "Create Sales Forecasts"
 msgstr "Créer des prévisions de ventes"
 
 #. module: stock_planning
-#: view:stock.sale.forecast.createlines:0
-msgid "Creates forecast lines for selected warehouse and period."
-msgstr ""
-"Crée des lignes de prévisions pour l'entrepôt et la période sélectionnés."
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:656
-#, python-format
-msgid "%s Requisition (%s,  %s) %s %s \n"
-msgstr ""
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:655
-#, python-format
-msgid "Requisition ("
-msgstr "Réquisition ("
-
-#. module: stock_planning
-#: help:stock.planning,outgoing_left:0
-msgid ""
-"Quantity expected to go out in selected period. As a difference between "
-"Planned Out and Confirmed Out. For current period Already Out is also "
-"calculated"
-msgstr ""
-"Quantité planifée de sortie pour la période. C'est la différence entre le "
-"planifié entrant et les sorties confirmées. Pour la période en cours, les "
-"quantités sorties est aussi calculé."
-
-#. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_id:0
 msgid "Period4"
 msgstr "Période4"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:642
-#: code:addons/stock_planning/stock_planning.py:684
-#, python-format
-msgid "    Already In: "
-msgstr "    Déjà entré: "
+#: field:stock.period,name:0
+#: field:stock.period.createlines,name:0
+msgid "Period Name"
+msgstr "Nom de la Période"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_id:0
@@ -1322,17 +703,17 @@ msgid "Period1"
 msgstr "Période1"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:647
-#: code:addons/stock_planning/stock_planning.py:689
-#, python-format
-msgid "    Minimum stock: "
-msgstr "    Stock minimum: "
+#: model:ir.actions.act_window,help:stock_planning.action_stock_planning_createlines_form
+msgid ""
+"This wizard helps create MPS planning lines for a given selected period and "
+"warehouse, so you don't have to create them one by one. The wizard doesn't "
+"duplicate lines if they already exist for this selection."
+msgstr ""
 
 #. module: stock_planning
-#: field:stock.planning,active_uom:0
-#: field:stock.sale.forecast,active_uom:0
-msgid "Active UoM"
-msgstr "UdM active"
+#: field:stock.planning,outgoing:0
+msgid "Confirmed Out"
+msgstr "Sorties confirmées"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_planning_createlines_form
@@ -1352,26 +733,9 @@ msgid "Sales Forecast"
 msgstr "Prévisions de ventes"
 
 #. module: stock_planning
-#: view:stock.planning:0
-msgid "Planning and Situation for Calculated Period"
-msgstr "Planification et situation pour la période calculée"
-
-#. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_warehouse:0
 msgid "This Warehouse Period1"
 msgstr "Ce dépôt Période1"
-
-#. module: stock_planning
-#: field:stock.planning,warehouse_forecast:0
-msgid "Warehouse Forecast"
-msgstr "Prévision de l'entrepôt"
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:643
-#: code:addons/stock_planning/stock_planning.py:685
-#, python-format
-msgid "    Confirmed In: "
-msgstr "    Entrants confirmés: "
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1385,13 +749,8 @@ msgstr "Entrepôt d'origine"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_qty:0
-msgid "Forecasted quantity."
-msgstr "Quantité prévisionnelle"
-
-#. module: stock_planning
-#: view:stock.planning:0
-msgid "Stock"
-msgstr "Stock"
+msgid "Forecast Product quantity."
+msgstr ""
 
 #. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
@@ -1404,11 +763,6 @@ msgid "Ending date for planning period."
 msgstr "Date de fin de la période de planification"
 
 #. module: stock_planning
-#: field:stock.sale.forecast,analyzed_period2_per_user:0
-msgid "This User Period2"
-msgstr "Période2 de cet utilisateur"
-
-#. module: stock_planning
 #: help:stock.planning.createlines,forecasted_products:0
 msgid ""
 "Check this box to create planning for all products having any forecast for "
@@ -1417,6 +771,14 @@ msgstr ""
 "Cocher cette case pour créer la planification pour tous les produits qui ont "
 "une prévision pour l'entrepôt et la période sélectionnés. Le champ catégorie "
 "de produits sera ignoré."
+
+#. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:632
+#: code:addons/stock_planning/stock_planning.py:678
+#: code:addons/stock_planning/stock_planning.py:702
+#, python-format
+msgid "MPS(%s) %s"
+msgstr ""
 
 #. module: stock_planning
 #: field:stock.planning,already_in:0
@@ -1431,14 +793,54 @@ msgid "Product UoM Category"
 msgstr "Catégorie d'UdM du produit"
 
 #. module: stock_planning
-#: field:stock.planning,incoming:0
-msgid "Confirmed In"
-msgstr "Entrées confirmées"
+#: model:ir.actions.act_window,help:stock_planning.action_view_stock_sale_forecast_form
+msgid ""
+"This quantity sales forecast is an indication for Stock Planner to make "
+"procurement manually or to complement automatic procurement. You can use "
+"manual procurement with this forecast when some periods are exceptional for "
+"usual minimum stock rules."
+msgstr ""
 
 #. module: stock_planning
-#: field:stock.planning,line_time:0
-msgid "Past/Future"
-msgstr "Passé/futur"
+#: model:ir.actions.act_window,help:stock_planning.action_view_stock_planning_form
+msgid ""
+"The Master Procurement Schedule can be the main driver for warehouse "
+"replenishment, or can complement the automatic MRP scheduling (minimum stock "
+"rules, etc.).\n"
+"Each MPS line gives you a pre-computed overview of the incoming and outgoing "
+"quantities of a given product for a given Stock Period in a given Warehouse, "
+"based on the current and future stock levels,\n"
+"as well as the planned stock moves. The forecast quantities can be altered "
+"manually, and when satisfied with resulting (simulated) Stock quantity, you "
+"can trigger the procurement of what is missing to reach your desired "
+"quantities"
+msgstr ""
+
+#. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:685
+#, python-format
+msgid ""
+"Pick created from MPS by user: %s   Creation Date: %s                        "
+"             \n"
+"For period: %s   according to state:                                     \n"
+" Warehouse Forecast: %s                                     \n"
+" Initial Stock: %s                                     \n"
+" Planned Out: %s  Planned In: %s                                     \n"
+" Already Out: %s  Already In: %s                                     \n"
+" Confirmed Out: %s   Confirmed In: %s                                     \n"
+" Planned Out Before: %s   Confirmed In Before: %s                            "
+"         \n"
+" Expected Out: %s   Incoming Left: %s                                     \n"
+" Stock Simulation: %s   Minimum stock: %s "
+msgstr ""
+
+#. module: stock_planning
+#: field:stock.planning,period_id:0
+#: field:stock.planning.createlines,period_id:0
+#: field:stock.sale.forecast,period_id:0
+#: field:stock.sale.forecast.createlines,period_id:0
+msgid "Period"
+msgstr "Période"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uos_categ:0
@@ -1446,9 +848,15 @@ msgid "Product UoS Category"
 msgstr "Catégorie d'UdV du produit"
 
 #. module: stock_planning
-#: field:stock.sale.forecast,product_qty:0
-msgid "Product Quantity"
-msgstr "Quantité de produit"
+#: field:stock.planning,active_uom:0
+#: field:stock.sale.forecast,active_uom:0
+msgid "Active UoM"
+msgstr "UdM active"
+
+#. module: stock_planning
+#: view:stock.planning:0
+msgid "Search Stock Planning"
+msgstr "Rechercher dans la planification du stock"
 
 #. module: stock_planning
 #: field:stock.sale.forecast.createlines,copy_forecast:0
@@ -1471,16 +879,9 @@ msgid "Periods"
 msgstr "Périodes"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:638
-#: code:addons/stock_planning/stock_planning.py:680
-#, python-format
-msgid " according to state:"
-msgstr " d'après l'état:"
-
-#. module: stock_planning
-#: view:stock.period.createlines:0
-msgid "Cancel"
-msgstr "Annuler"
+#: model:ir.ui.menu,name:stock_planning.menu_stock_period_creatlines
+msgid "Create Stock Periods"
+msgstr ""
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -1543,9 +944,12 @@ msgid "This Warehouse Period3"
 msgstr "Période3 de cet entrepôt"
 
 #. module: stock_planning
-#: field:stock.planning,outgoing:0
-msgid "Confirmed Out"
-msgstr "Sorties confirmées"
+#: help:stock.planning,stock_supply_location:0
+msgid ""
+"Check to supply from Stock location of Supply Warehouse. If not checked "
+"supply will be made from Output location of Supply Warehouse. Used in "
+"'Supply from Another Warehouse' with Supply Warehouse."
+msgstr ""
 
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
@@ -1573,6 +977,13 @@ msgid "Current"
 msgstr "Actuel"
 
 #. module: stock_planning
+#: help:stock.planning,supply_warehouse_id:0
+msgid ""
+"Warehouse used as source in supply pick move created by 'Supply from Another "
+"Warehouse'."
+msgstr ""
+
+#. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
 msgid "stock.planning"
 msgstr "stock.planning"
@@ -1588,20 +999,15 @@ msgstr ""
 "entrepôts, vous pouvez choisir n'importe quel entrepôt ici."
 
 #. module: stock_planning
-#: help:stock.planning.createlines,warehouse_id:0
-msgid "Warehouse which planning will concern."
-msgstr "Entrepôt sur lequel va porter la planification"
+#: code:addons/stock_planning/stock_planning.py:661
+#, python-format
+msgid "%s Procurement (%s,  %s) %s %s \n"
+msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:647
-#: code:addons/stock_planning/stock_planning.py:689
-#, python-format
-msgid ""
-"\n"
-" Stock Simulation: "
-msgstr ""
-"\n"
-" Simulation de stock: "
+#: field:stock.sale.forecast,analyze_company:0
+msgid "Per Company"
+msgstr "Par société"
 
 #. module: stock_planning
 #: help:stock.planning,to_procure:0
@@ -1613,6 +1019,11 @@ msgstr ""
 "Saisissez la quantité qui (selon votre plan) devrait entrer. Modifiez cette "
 "valeur et observez la simulation de stock. Cette valeur devrait être "
 "supérieure ou égale aux entrées confirmées."
+
+#. module: stock_planning
+#: field:stock.sale.forecast,analyzed_period4_per_company:0
+msgid "This Company Period4"
+msgstr "Période4 de cette société"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,period_id:0
@@ -1635,17 +1046,6 @@ msgid "Per Warehouse :"
 msgstr "Par entrepôt :"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:639
-#: code:addons/stock_planning/stock_planning.py:681
-#, python-format
-msgid ""
-"\n"
-" Warehouse Forecast: "
-msgstr ""
-"\n"
-" Prévisions du dépôt: "
-
-#. module: stock_planning
 #: field:stock.planning,history:0
 msgid "Procurement History"
 msgstr "Historique d'approvisionnement"
@@ -1656,29 +1056,19 @@ msgid "Starting date for planning period."
 msgstr "Date de début de la période de planification"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:641
-#: code:addons/stock_planning/stock_planning.py:683
-#, python-format
-msgid "    Planned In: "
-msgstr "    Entrants planifiés : "
-
-#. module: stock_planning
-#: field:stock.sale.forecast,analyze_company:0
-msgid "Per Company"
-msgstr "Par société"
-
-#. module: stock_planning
-#: help:stock.planning,incoming_left:0
-msgid ""
-"Quantity left to Planned incoming quantity. This is calculated difference "
-"between Planned In and Confirmed In. For current period Already In is also "
-"calculated. This value is used to create procurement for lacking quantity."
+#: model:ir.actions.act_window,name:stock_planning.action_stock_period_createlines_form
+#: model:ir.actions.act_window,name:stock_planning.action_stock_period_form
+#: model:ir.ui.menu,name:stock_planning.menu_stock_period
+#: model:ir.ui.menu,name:stock_planning.menu_stock_period_main
+#: view:stock.period:0
+#: view:stock.period.createlines:0
+msgid "Stock Periods"
 msgstr ""
-"Quantité restante dans les quantités entrantes planifiées. Ceci est calculé "
-"comme la différence entre les entrées planifiées et les entrées confirmées. "
-"Pour la période actuelle, les entrées déjà réalisées sont aussi calculées. "
-"Cette valeur est utilisée pour créer un approvisionnement pour la quantité "
-"manquante."
+
+#. module: stock_planning
+#: view:stock.planning:0
+msgid "Stock"
+msgstr "Stock"
 
 #. module: stock_planning
 #: help:stock.planning,incoming:0
@@ -1694,28 +1084,14 @@ msgid "End Date"
 msgstr "Date de fin"
 
 #. module: stock_planning
-#: help:stock.planning,stock_supply_location:0
-msgid ""
-"Check to supply from Stock location of Supply Warehouse. If not checked "
-"supply will be made from Output location of Supply Warehouse. Used in "
-"'Supply from Another Warhouse' with Supply Warehouse."
-msgstr ""
-"Cochez pour approvisionner à partir de l'emplacement de stock de l'entrepôt "
-"d'origine. Si non coché, l'approvisionnement sera fait à partir de "
-"l'emplacement de sortie de l'entrepôt d'origine. Utilisé dans "
-"\"Approvisionner depuis un autre entrepôt\" avec l'approvisionnement "
-"d'entrepôt."
-
-#. module: stock_planning
 #: view:stock.planning:0
 msgid "No Requisition"
-msgstr "Pas de réquisition"
+msgstr "Pas de demande"
 
 #. module: stock_planning
-#: help:stock.planning,minimum_op:0
-msgid "Minimum quantity set in Minimum Stock Rules for this Warhouse"
-msgstr ""
-"Quantité minimum définie dans la règle de stock minimum pour cet entrepôt."
+#: field:stock.sale.forecast,name:0
+msgid "Name"
+msgstr "Nom"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,period_id:0
@@ -1728,9 +1104,9 @@ msgid "UoM"
 msgstr "UdM"
 
 #. module: stock_planning
-#: view:stock.planning:0
-msgid "Calculated Period Simulation"
-msgstr "Simulation de la période calculée"
+#: view:stock.period:0
+msgid "Closed Periods"
+msgstr ""
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1741,54 +1117,23 @@ msgid "Product"
 msgstr "Produit"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:638
-#: code:addons/stock_planning/stock_planning.py:680
-#, python-format
-msgid ""
-"\n"
-"For period: "
-msgstr ""
-"\n"
-"Pour la période: "
+#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
+#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
+#: view:stock.sale.forecast:0
+msgid "Sales Forecasts"
+msgstr "Prévisions de vente"
 
 #. module: stock_planning
-#: field:stock.sale.forecast,product_uom:0
-msgid "Product UoM"
-msgstr "UdM produit"
+#: field:stock.planning.createlines,product_categ_id:0
+#: field:stock.sale.forecast.createlines,product_categ_id:0
+msgid "Product Category"
+msgstr "Catégorie de produits"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:627
-#: code:addons/stock_planning/stock_planning.py:673
-#: code:addons/stock_planning/stock_planning.py:697
+#: code:addons/stock_planning/stock_planning.py:672
 #, python-format
-msgid "MPS(%s) %s"
-msgstr ""
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:627
-#: code:addons/stock_planning/stock_planning.py:671
-#: code:addons/stock_planning/stock_planning.py:693
-#, python-format
-msgid "MPS("
-msgstr "PDA ("
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:680
-#, python-format
-msgid ""
-"Pick created from MPS by user: %s   Creation Date: %s                        "
-"             \n"
-"For period: %s   according to state:                                     \n"
-" Warehouse Forecast: %s                                     \n"
-" Initial Stock: %s                                     \n"
-" Planned Out: %s  Planned In: %s                                     \n"
-" Already Out: %s  Already In: %s                                     \n"
-" Confirmed Out: %s   Confirmed In: %s                                     \n"
-" Planned Out Before: %s   Confirmed In Before: %s                            "
-"         \n"
-" Expected Out: %s   Incoming Left: %s                                     \n"
-" Stock Simulation: %s   Minimum stock: %s "
-msgstr ""
+msgid "You must specify a Source Warehouse !"
+msgstr "Vous devez indiquer un dépôt d'origine !"
 
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
@@ -1810,9 +1155,15 @@ msgstr ""
 "cette période."
 
 #. module: stock_planning
-#: view:stock.sale.forecast:0
-msgid "Calculate Sales History"
-msgstr "Calculer l'historique de vente"
+#: code:addons/stock_planning/stock_planning.py:631
+#, python-format
+msgid "MPS planning for %s"
+msgstr ""
+
+#. module: stock_planning
+#: field:stock.planning,stock_start:0
+msgid "Initial Stock"
+msgstr "Stock initial"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_amt:0
@@ -1834,23 +1185,9 @@ msgid "Period5"
 msgstr "Période5"
 
 #. module: stock_planning
-#: model:ir.actions.act_window,name:stock_planning.action_stock_period_createlines_form
-msgid "Stock and Sales Planning Periods"
-msgstr "Périodes de planification des stocks et des ventes"
-
-#. module: stock_planning
 #: field:stock.sale.forecast,analyzed_warehouse_id:0
 msgid "This Warehouse"
 msgstr "Cet entrepôt"
-
-#. module: stock_planning
-#: model:ir.actions.act_window,name:stock_planning.action_stock_period_form
-#: model:ir.ui.menu,name:stock_planning.menu_stock_period
-#: model:ir.ui.menu,name:stock_planning.menu_stock_period_main
-#: view:stock.period:0
-#: view:stock.period.createlines:0
-msgid "Stock and Sales Periods"
-msgstr "Périodes de stock et ventes"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,user_id:0
@@ -1858,34 +1195,757 @@ msgid "Shows who created this forecast, or who validated."
 msgstr "Affiche l'utilisateur qui a créé ou validé cette prévision."
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:644
-#: code:addons/stock_planning/stock_planning.py:686
-#, python-format
-msgid ""
-"\n"
-" Planned Out Before: "
+#: field:stock.sale.forecast,analyzed_team_id:0
+msgid "Sales Team"
 msgstr ""
-"\n"
-" Entrées planifiées avant: "
 
 #. module: stock_planning
-#: field:stock.planning,stock_start:0
-msgid "Initial Stock"
-msgstr "Stock initial"
+#: help:stock.planning,incoming_left:0
+msgid ""
+"Quantity left to Planned incoming quantity. This is calculated difference "
+"between Planned In and Confirmed In. For current period Already In is also "
+"calculated. This value is used to create procurement for lacking quantity."
+msgstr ""
+"Quantité restante dans les quantités entrantes planifiées. Ceci est calculé "
+"comme la différence entre les entrées planifiées et les entrées confirmées. "
+"Pour la période actuelle, les entrées déjà réalisées sont aussi calculées. "
+"Cette valeur est utilisée pour créer un approvisionnement pour la quantité "
+"manquante."
+
+#. module: stock_planning
+#: help:stock.planning,outgoing_left:0
+msgid ""
+"Quantity expected to go out in selected period besides Confirmed Out. As a "
+"difference between Planned Out and Confirmed Out. For current period Already "
+"Out is also calculated"
+msgstr ""
+
+#. module: stock_planning
+#: view:stock.sale.forecast:0
+msgid "Calculate Sales History"
+msgstr "Calculer l'historique de vente"
+
+#. module: stock_planning
+#: model:ir.actions.act_window,help:stock_planning.action_stock_sale_forecast_createlines_form
+msgid ""
+"This wizard helps create many forecast lines at once. After creating them "
+"you only have to fill in the forecast quantities. The wizard doesn't "
+"duplicate the line when another one exist for the same selection."
+msgstr ""
+
+#~ msgid "This Copmany Period1"
+#~ msgstr "Période 1 de cette société"
+
+#~ msgid "Requisition history"
+#~ msgstr "Historique des réquisitions"
+
+#~ msgid "Create Stock and Sales Periods"
+#~ msgstr "Créer des périodes de stock et de vente."
+
+#~ msgid ""
+#~ "Warehouse used as source in supply pick move created by 'Supply from Another "
+#~ "Warhouse'."
+#~ msgstr ""
+#~ "Dépôt utilisé en tant qu'origine dans un mouvement d'approvisionnement créé "
+#~ "par 'Approvisionner à partir d'un autre dépôt'."
+
+#~ msgid ""
+#~ "Chect to make procurement to stock location of selected warehouse. If not "
+#~ "selected procurement will be made into input location of warehouse."
+#~ msgstr ""
+#~ "Cochez pour approvisionner l'emplacement de stock du dépôt sélectionné. Si "
+#~ "non coché, l'approvisionnement se fera sur l'emplacement d'entrée du dépôt."
+
+#, python-format
+#~ msgid "    Confirmed In Before: "
+#~ msgstr "    Entrées confirmées avant: "
+
+#~ msgid "This Department"
+#~ msgstr "Ce département"
 
 #, python-format
 #~ msgid "Pick List "
 #~ msgstr "Liste de prélèvement "
 
 #, python-format
+#~ msgid "  Creation Date: "
+#~ msgstr "  Date de création: "
+
+#, python-format
 #~ msgid "Manual planning for "
 #~ msgstr "Planification manuelle pour "
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Confirmed Out: "
+#~ msgstr ""
+#~ "\n"
+#~ " sorties confirmées: "
+
+#~ msgid "Creates planning lines for selected period and warehouse."
+#~ msgstr ""
+#~ "Crée des lignes de planification pour la période et le dépôt sélectionnés."
+
+#~ msgid "Maximum quantity set in Minimum Stock Rules for this Warhouse"
+#~ msgstr "Quantité maximum fixée dans la règle de stock minimum pour ce dépôt."
+
+#~ msgid ""
+#~ "Unit of Measure used to show the quanities of stock calculation.You can use "
+#~ "units form default category or from second category (UoS category)."
+#~ msgstr ""
+#~ "Unité de mesure utilisée pour indiquer les quantités pour le calcul de "
+#~ "stock. Vous pouvez utiliser des unités de la catégorie par défaut ou de la "
+#~ "catégorie secondaire."
+
+#~ msgid "Create periods for Stock and Sales Planning"
+#~ msgstr "Créer les périodes pour la planification du stock et des ventes"
+
+#, python-format
+#~ msgid "    Already In: "
+#~ msgstr "    Déjà entré: "
+
+#, python-format
+#~ msgid "Requisition ("
+#~ msgstr "Réquisition ("
+
+#, python-format
+#~ msgid "    Minimum stock: "
+#~ msgstr "    Stock minimum: "
+
+#, python-format
+#~ msgid "    Confirmed In: "
+#~ msgstr "    Entrants confirmés: "
+
+#~ msgid "Forecasted quantity."
+#~ msgstr "Quantité prévisionnelle"
+
+#, python-format
+#~ msgid " according to state:"
+#~ msgstr " d'après l'état:"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Stock Simulation: "
+#~ msgstr ""
+#~ "\n"
+#~ " Simulation de stock: "
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Warehouse Forecast: "
+#~ msgstr ""
+#~ "\n"
+#~ " Prévisions du dépôt: "
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "For period: "
+#~ msgstr ""
+#~ "\n"
+#~ "Pour la période: "
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Planned Out Before: "
+#~ msgstr ""
+#~ "\n"
+#~ " Entrées planifiées avant: "
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Initial Stock: "
+#~ msgstr ""
+#~ "\n"
+#~ " Stock initial: "
 
 #, python-format
 #~ msgid "Procurement created in MPS by user: "
 #~ msgstr ""
 #~ "Approvisionnement créé dans le programme directeur par un utilisateur: "
 
+#~ msgid "Note: Doesn't duplicate existing lines created by you."
+#~ msgstr "Note: ne duplique pas les lignes existantes créées par vous."
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Expected Out: "
+#~ msgstr ""
+#~ "\n"
+#~ " Sorties attendues : "
+
+#~ msgid ""
+#~ "Quantity expected to go out in selected period. As a difference between "
+#~ "Planned Out and Confirmed Out. For current period Already Out is also "
+#~ "calculated"
+#~ msgstr ""
+#~ "Quantité planifée de sortie pour la période. C'est la différence entre le "
+#~ "planifié entrant et les sorties confirmées. Pour la période en cours, les "
+#~ "quantités sorties est aussi calculé."
+
+#~ msgid "Creates forecast lines for selected warehouse and period."
+#~ msgstr ""
+#~ "Crée des lignes de prévisions pour l'entrepôt et la période sélectionnés."
+
+#, python-format
+#~ msgid "Cannot delete Validated Sale Forecasts !"
+#~ msgstr "Impossible de supprimer des prévisions de ventes validées !"
+
+#~ msgid "Minimum quantity set in Minimum Stock Rules for this Warhouse"
+#~ msgstr ""
+#~ "Quantité minimum définie dans la règle de stock minimum pour cet entrepôt."
+
+#~ msgid "Stock and Sales Planning Periods"
+#~ msgstr "Périodes de planification des stocks et des ventes"
+
+#~ msgid "Stock and Sales Periods"
+#~ msgstr "Périodes de stock et ventes"
+
+#, python-format
+#~ msgid "    Planned In: "
+#~ msgstr "    Entrants planifiés : "
+
+#~ msgid ""
+#~ "Check to supply from Stock location of Supply Warehouse. If not checked "
+#~ "supply will be made from Output location of Supply Warehouse. Used in "
+#~ "'Supply from Another Warhouse' with Supply Warehouse."
+#~ msgstr ""
+#~ "Cochez pour approvisionner à partir de l'emplacement de stock de l'entrepôt "
+#~ "d'origine. Si non coché, l'approvisionnement sera fait à partir de "
+#~ "l'emplacement de sortie de l'entrepôt d'origine. Utilisé dans "
+#~ "\"Approvisionner depuis un autre entrepôt\" avec l'approvisionnement "
+#~ "d'entrepôt."
+
+#, python-format
+#~ msgid "MPS("
+#~ msgstr "PDA ("
+
 #, python-format
 #~ msgid "Pick created from MPS by user: "
 #~ msgstr "Mouvement créé à partir du PDA par l'utilisateur : "
+
+#~ msgid "Product Quantity"
+#~ msgstr "Quantité de produit"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Planned Out: "
+#~ msgstr ""
+#~ "\n"
+#~ " Sorties planifiées : "
+
+#, python-format
+#~ msgid "    Incoming Left: "
+#~ msgstr "    Entrées à traiter : "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module is based on original OpenERP SA module stock_planning version "
+#~ "1.0 of the same name Master Procurement Schedule.\n"
+#~ "\n"
+#~ "Purpose of MPS is to allow create a manual procurement (requisition) apart "
+#~ "of MRP scheduler (which works automatically on minimum stock rules).\n"
+#~ "\n"
+#~ "Terms used in the module:\n"
+#~ "- Stock and Sales Period - is the time (between Start Date and End Date) for "
+#~ "which you plan Stock and Sales Forecast and make Procurement Planning. \n"
+#~ "- Stock and Sales Forecast - is the quantity of products you plan to sell in "
+#~ "the Period.\n"
+#~ "- Stock Planning - is the quantity of products you plan to purchase or "
+#~ "produce for the Period.\n"
+#~ "\n"
+#~ "Because we have another module sale_forecast which uses terms \"Sales "
+#~ "Forecast\" and \"Planning\" as amount values we will use terms \"Stock and "
+#~ "Sales Forecast\" and \"Stock Planning\" to emphasize that we use quantity "
+#~ "values. \n"
+#~ "\n"
+#~ "Activity with this module is divided to three steps:\n"
+#~ "- Creating Periods. Mandatory step.\n"
+#~ "- Creating Sale Forecasts and entering quantities to them. Optional step but "
+#~ "useful for further planning.\n"
+#~ "- Creating Planning lines, entering quantities to them and making "
+#~ "Procurement. Making procurement is the final step for the Period.\n"
+#~ "\n"
+#~ "Periods\n"
+#~ "=======\n"
+#~ "You have two menu items for Periods in \"Sales Management - Configuration\". "
+#~ "There are:\n"
+#~ "- \"Create Sales Periods\" - Which automates creating daily, weekly or "
+#~ "monthly periods.\n"
+#~ "- \"Stock and sales Periods\" - Which allows to create any type of periods, "
+#~ "change the dates and change the State of period.\n"
+#~ "\n"
+#~ "Creating periods is the first step you have to do to use modules features. "
+#~ "You can create custom periods using \"New\" button in \"Stock and Sales "
+#~ "Periods\" form or view but it is recommended to use automating tool.\n"
+#~ "\n"
+#~ "Remarks:\n"
+#~ "- These periods (officially Stock and Sales Periods) are separated of "
+#~ "Financial or other periods in the system.\n"
+#~ "- Periods are not assigned to companies (when you use multicompany feature "
+#~ "at all). Module suppose that you use the same periods across companies. If "
+#~ "you wish to use different periods for different companies define them as you "
+#~ "wish (they can overlap). Later on in this text will be indications how to "
+#~ "use such periods.\n"
+#~ "- When periods are created automatically their start and finish dates are "
+#~ "with start hour 00:00:00 and end hour 23:59:00. Fe. when you create daily "
+#~ "periods they will have start date 31.01.2010 00:00:00 and end date "
+#~ "31.01.2010 23:59:00. It works only in automatic creation of periods. When "
+#~ "you create periods manually you have to take care about hours because you "
+#~ "can have incorrect values form sales or stock. \n"
+#~ "- If you use overlapping periods for the same product, warehouse and company "
+#~ "results can be unpredictable.\n"
+#~ "- If current date doesn't belong to any period or you have holes between "
+#~ "periods results can be unpredictable.\n"
+#~ "\n"
+#~ "Sales Forecasts\n"
+#~ "===============\n"
+#~ "You have few menus for Sales forecast in \"Sales Management - Sales "
+#~ "Forecasts\".\n"
+#~ "- \"Create Sales Forecasts for Sales Periods\" - which automates creating "
+#~ "forecasts lines according to some parameters.\n"
+#~ "- \"Sales Forecasts\" - few menus for working with forecasts lists and "
+#~ "forms.\n"
+#~ "\n"
+#~ "Menu \"Create Sales Forecasts for Sales Periods\" creates Forecasts for "
+#~ "products from selected Category, for selected Period and for selected "
+#~ "Warehouse. It is an option \"Copy Last Forecast\" to copy forecast and other "
+#~ "settings of period before this one to created one.\n"
+#~ "\n"
+#~ "Remarks:\n"
+#~ "- This tool doesn't create lines, if relevant lines (for the same Product, "
+#~ "Period, Warehouse and validated or created by you) already exists. If you "
+#~ "wish to create another forecast, if relevant lines exists you have to do it "
+#~ "manually using menus described bellow.\n"
+#~ "- When created lines are validated by someone else you can use this tool to "
+#~ "create another lines for the same Period, Product and Warehouse. \n"
+#~ "- When you choose \"Copy Last Forecast\" created line takes quantity and "
+#~ "some settings from your (validated by you or created by you if not validated "
+#~ "yet) forecast which is for last period before period of created forecast. If "
+#~ "there are few your forecasts for period before this one (it is possible) "
+#~ "system takes one of them (no rule which of them).\n"
+#~ "\n"
+#~ "\n"
+#~ "Menus \"Sales Forecasts\"\n"
+#~ "On \"Sales Forecast\" form mainly you have to enter a forecast quantity in "
+#~ "\"Product Quantity\". Further calculation can work for draft forecasts. But "
+#~ "validation can save your data against any accidental changes. You can click "
+#~ "\"Validate\" button but it is not mandatory.\n"
+#~ "\n"
+#~ "Instead of forecast quantity you can enter amount of forecast sales in field "
+#~ "\"Product Amount\". System will count quantity from amount according to Sale "
+#~ "price of the Product.\n"
+#~ "\n"
+#~ "All values on the form are expressed in unit of measure selected on form. "
+#~ "You can select one of unit of measure from default category or from second "
+#~ "category. When you change unit of measure the quanities will be recalculated "
+#~ "according to new UoM: editable values (blue fields) immediately, non edited "
+#~ "fields after clicking of \"Calculate Planning\" button.\n"
+#~ "\n"
+#~ "To find proper value for Sale Forecast you can use \"Sales History\" table "
+#~ "for this product. You have to enter parameters to the top and left of this "
+#~ "table and system will count sale quantities according to these parameters. "
+#~ "So you can select fe. your department (at the top) then (to the left): last "
+#~ "period, period before last and period year ago.\n"
+#~ "\n"
+#~ "Remarks:\n"
+#~ "\n"
+#~ "\n"
+#~ "Procurement Planning\n"
+#~ "====================\n"
+#~ "Menu for Planning you can find in \"Warehouse - Stock Planning\".\n"
+#~ "- \"Create Stock Planning Lines\" - allows you to automate creating planning "
+#~ "lines according to some parameters.\n"
+#~ "- \"Master Procurement Scheduler\" - is the most important menu of the "
+#~ "module which allows to create procurement.\n"
+#~ "\n"
+#~ "As Sales forecast is phase of planning sales. The Procurement Planning "
+#~ "(Planning) is the phase of scheduling Purchasing or Producing. You can "
+#~ "create Procurement Planning quickly using tool from menu \"Create Stock "
+#~ "Planning Lines\", then you can review created planning and make procurement "
+#~ "using menu \"Master Procurement Schedule\".\n"
+#~ "\n"
+#~ "Menu \"Create Stock Planning Lines\" allows you to create quickly Planning "
+#~ "lines for products from selected Category, for selected Period, and for "
+#~ "selected Warehouse. When you check option \"All Products with Forecast\" "
+#~ "system creates lines for all products having forecast for selected Period "
+#~ "and Warehouse. Selected Category will be ignored in this case.\n"
+#~ "\n"
+#~ "Under menu \"Master Procurement Scheduler\" you can generally change the "
+#~ "values \"Planned Out\" and \"Planned In\" to observe the field \"Stock "
+#~ "Simulation\" and decide if this value would be accurate for end of the "
+#~ "Period. \n"
+#~ "\"Planned Out\" can be based on \"Warehouse Forecast\" which is the sum of "
+#~ "all forecasts for Period and Warehouse. But your planning can be based on "
+#~ "any other information you have. It is not necessary to have any forecast. \n"
+#~ "\"Planned In\" quantity is used to calculate field \"Incoming Left\" which "
+#~ "is the quantity to be procured to make stock as indicated in \"Stock "
+#~ "Simulation\" at the end of Period. You can compare \"Stock Simulation\" "
+#~ "quantity to minimum stock rules visible on the form. But you can plan "
+#~ "different quantity than in Minimum Stock Rules. Calculation is made for "
+#~ "whole Warehouse by default. But if you want to see values for Stock location "
+#~ "of calculated warehouse you can use check box \"Stock Location Only\".\n"
+#~ "\n"
+#~ "If after few tries you decide that you found correct quantities for "
+#~ "\"Planned Out\" and \"Planned In\" and you are satisfied with end of period "
+#~ "stock calculated in \"Stock Simulation\" you can click \"Procure Incoming "
+#~ "Left\" button to procure quantity of field \"Incoming Left\" into the "
+#~ "Warehouse. System creates appropriate Procurement Order. You can decide if "
+#~ "procurement will be made to Stock or Input location of calculated Warehouse. "
+#~ "\n"
+#~ "\n"
+#~ "If you don't want to Produce or Buy the product but just pick calculated "
+#~ "quantity from another warehouse you can click \"Supply from Another "
+#~ "Warehouse\" (instead of \"Procure Incoming Left\"). System creates pick list "
+#~ "with move from selected source Warehouse to calculated Warehouse (as "
+#~ "destination). You can also decide if this pick should be done from Stock or "
+#~ "Output location of source warehouse. Destination location (Stock or Input) "
+#~ "of destination warehouse will be used as set for \"Procure Incoming Left\". "
+#~ "\n"
+#~ "\n"
+#~ "To see proper quantities in fields \"Confirmed In\", \"Confirmed Out\", "
+#~ "\"Confirmed In Before\", \"Planned Out Before\" and \"Stock Simulation\" you "
+#~ "have to click button \"Calculate Planning\".\n"
+#~ "\n"
+#~ "All values on the form are expressed in unit of measure selected on form. "
+#~ "You can select one of unit of measure from default category or from second "
+#~ "category. When you change unit of measure the quanities will be recalculated "
+#~ "according to new UoM: editable values (blue fields) immediately, non edited "
+#~ "fields after clicking of \"Calculate Planning\" button.\n"
+#~ "\n"
+#~ "How Stock Simulation field is calculated:\n"
+#~ "Generally Stock Simulation shows the stock for end of the calculated period "
+#~ "according to some planned or confirmed stock moves. Calculation always "
+#~ "starts with quantity of real stock of beginning of current period. Then "
+#~ "calculation adds or subtracts quantities of calculated period or periods "
+#~ "before calculated.\n"
+#~ "When you are in the same period (current period is the same as calculated) "
+#~ "Stock Simulation is calculated as follows:\n"
+#~ "Stock Simulation = \n"
+#~ "\tStock of beginning of current Period\n"
+#~ "\t- Planned Out \n"
+#~ "\t+ Planned In\n"
+#~ "\n"
+#~ "When you calculate period next to current:\n"
+#~ "Stock Simulation = \n"
+#~ "\tStock of beginning of current Period\n"
+#~ "\t- Planned Out of current Period \n"
+#~ "\t+ Confirmed In of current Period  (incl. Already In)\n"
+#~ "\t- Planned Out of calculated Period \n"
+#~ "\t+ Planned In of calculated Period .\n"
+#~ "\n"
+#~ "As you see calculated Period is taken the same way like in case above. But "
+#~ "calculation of current Period are made a little bit different. First you "
+#~ "should note that system takes for current Period only Confirmed In moves. It "
+#~ "means that you have to make planning and procurement for current Period "
+#~ "before this calculation (for Period next to current). \n"
+#~ "\n"
+#~ "When you calculate Period ahead:\n"
+#~ "Stock Simulation = \n"
+#~ "\tStock of beginning of current Period \n"
+#~ "\t- Sum of Planned Out of Periods before calculated \n"
+#~ "\t+ Sum of Confirmed In of Periods before calculated (incl. Already In) \n"
+#~ "\t- Planned Out of calculated Period \n"
+#~ "\t+ Planned In of calculated Period.\n"
+#~ "\n"
+#~ "Periods before calculated means periods starting from current till period "
+#~ "before calculated.\n"
+#~ "\n"
+#~ "Remarks:\n"
+#~ "- Remember to make planning for all periods before calculated because "
+#~ "omitting these quantities and procurements can cause wrong suggestions for "
+#~ "procurements few periods ahead.\n"
+#~ "- If you made planning few periods ahead and you find that real Confirmed "
+#~ "Out is bigger than Planned Out in some periods before you can repeat "
+#~ "Planning and make another procurement. You should do it in the same planning "
+#~ "line. If you create another planning line the suggestions can be wrong.\n"
+#~ "- When you wish to work with different periods for some part of products "
+#~ "define two kinds of periods (fe. Weekly and Monthly) and use them for "
+#~ "different products. Example: If you use always Weekly periods for Products "
+#~ "A, and Monthly periods for Products B your all calculations will work "
+#~ "correctly. You can also use different kind of periods for the same products "
+#~ "from different warehouse or companies. But you cannot use overlapping "
+#~ "periods for the same product, warehouse and company because results can be "
+#~ "unpredictable. The same apply to Forecasts lines.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Ce module est basé sur la version du module stock_planning originel "
+#~ "d'OpenERP SA du même nom que Planificateur d'approvisionnements.\n"
+#~ "\n"
+#~ "Le but du planificateur d'approvisionnements est de permettre de créer un "
+#~ "approvisionnement manuel (demande) au lieu du planificateur MRP (qui "
+#~ "travaille automatiquement sur les règles de stock minimum).\n"
+#~ "\n"
+#~ "Termes utilisés dans ce module :\n"
+#~ "- Période de stock et de ventes - est le temps (entre la date de démarrage "
+#~ "et la date de fin) pour lequel vous planifiez les prévisions de stock et de "
+#~ "ventes et vous faites le planning des approvisionnements.\n"
+#~ "- Prévision de stock et de ventes - est la quantité de produits que vous "
+#~ "planifiez de vendre dans la période.\n"
+#~ "- Planification du stock - est la quantité de produits que vous planifiez "
+#~ "d'acheter ou de produire durant la période.\n"
+#~ "\n"
+#~ "Parce que nous avosn un autre module sale_forecast qui utilise les termes "
+#~ "'Prévisions de ventes\" et \"Planification\" comme des valeurs pour les "
+#~ "montants, nous utiliserons les termes \"Prévision de stock et de ventes\" et "
+#~ "\"Planification du stock\" pour insister sur le fait que nous utilisons des "
+#~ "valeurs quantitatives.\n"
+#~ "\n"
+#~ "L'activité avec ce module est divisée en trois étapes :\n"
+#~ "- Création des périodes. Étape obligatoire.\n"
+#~ "- Création des prévisions de vente et entrée des quantités pour cela. Étape "
+#~ "optionnelle mais utile pour d'autres planifications.\n"
+#~ "- Création des lignes de planification, entrée des quantités pour cela et "
+#~ "pour créer les approvisionnements. Créer les approvisionnements est al "
+#~ "dernière étape de la période.\n"
+#~ "\n"
+#~ "Périodes\n"
+#~ "========\n"
+#~ "Vous avez deux entrées de menu pour les périodes dans \"Ventes - "
+#~ "Configuration\". Il y a:\n"
+#~ "- \"Créer les périodes de ventes\" - qui créé automatiquement les périodes "
+#~ "journalières, hebdomadaires ou mensuelles.\n"
+#~ "- \"Périodes de stock et de vente\" - qui permet de créer tout type de "
+#~ "périodes, de modifier les dates et de changer les états de la période.\n"
+#~ "\n"
+#~ "Créer les périodes est la première étape que vous devez faire pour utiliser "
+#~ "les fonctionnalités de ce module. Vous pouvez créer des périodes "
+#~ "personnalisées en utilisant le bouton \"Nouveau\" dans la vue ou la liste "
+#~ "\"Périodes de stock et de ventes\" mais il est recommandé d'utiliser les "
+#~ "outils automatiques.\n"
+#~ "\n"
+#~ "Remarques :\n"
+#~ "- Ces périodes (officiellement périodes de stock et de ventes) sont séparées "
+#~ "de la finance ou des autres modules dans le système.\n"
+#~ "- Les périodes ne sont pas assignées aux sociétés (quand vous utiliser les "
+#~ "fonctionnalités multi-sociétés). Le module suppose que vous utilisiez les "
+#~ "mêmes périodes pour toutes les sociétés. Si vous souhaitez utiliser des "
+#~ "périodes différentes pour des sociétés différentes, définissez les comme "
+#~ "vous le voulez (elles peuvent se chevaucher). Plus tard dans ce texte seront "
+#~ "écrites les indications pour utiliser chaque période.\n"
+#~ "- Quand les périodes sont créées automatiquement leurs dates de début et de "
+#~ "fin démarrent à 00:00:00 et se terminent à 23:59:00. Fe. Lorsque vous créer "
+#~ "des périodes journalières, elle auront une date de démarrage du genre "
+#~ "31.01.2010 00:00:00 et une date de fin 31.01.2010 23:59:00. Cela fonctionne "
+#~ "seulement avec une création automatique des périodes. Lorsque vous créer "
+#~ "manuellement des périodes, vous devez faire attention aux heures car vous "
+#~ "pouvez avoir des velurs incorrectes venant des ventes ou du stock\n"
+#~ "- Si vous utiliser des périodes qui se chevauchent pour le mêm produit, le "
+#~ "même entrepôt ou la mêm société, les résultats ppeuvent être incertains.\n"
+#~ "- Si la date actuelle n'appartient à aucune période ou si vous avez des "
+#~ "trous entre les périodes, les résultats peuvent être incertains.\n"
+#~ "\n"
+#~ "Prévisions de vente\n"
+#~ "===================\n"
+#~ "Vous avez quelques menus pour les prévisions de ventes in \"Ventes - "
+#~ "Prévisions de vente\".\n"
+#~ "- \"Créer les prévisions de ventes pour les périodes\" - qui créé "
+#~ "automatiquement les lignes de prévisions en fonction de plusieurs "
+#~ "paramètres.\n"
+#~ "- \"Prévisions de vente\" - quelques menus pour travailler avec les listes "
+#~ "et les formulaires de prévisions.\n"
+#~ "\n"
+#~ "Le menu \"Créer des prévisions de vente pour les périodes\" créé les "
+#~ "prévisions pour les produits de la catégorie sélectionnée, pour la période "
+#~ "et pour l'entrepôt sélectionné. Il y a une option \"Copier la dernière "
+#~ "prévision\" pour copier la prévision ainsi que les autres paramètres de la "
+#~ "période avant celle-ci pour en créer une nouvelle.\n"
+#~ "\n"
+#~ "Remarques:\n"
+#~ "- Cet outil ne créé pas de lignes si des lignes significatives (pour le même "
+#~ "produit, la même période et le même entrepôt et validées ou créées par vous) "
+#~ "existe déjà. Si vous souhaitez créer une autre prévision et que des lignes "
+#~ "significatives existent, vous devez le faire manuellement en utilsant les "
+#~ "menus décrits plus bas.\n"
+#~ "- Lorsque des lignes créées sont validées par quelqu'un, vous pouvez "
+#~ "utiliser cet outil pour créer d'autres lignes pour la même période, le même "
+#~ "produit et le même entrepôt.\n"
+#~ "- Lorsque vous choisissez \"Copier la dernière prévision\" le slignes créées "
+#~ "prennent les quantités et certains paramètres depuis votre (validés ou créés "
+#~ "par vous si ils ne sont pas encore validés) prévision qui es la dernière "
+#~ "période avant la période de la prévision créée. Si il y a plusieurs "
+#~ "prévisions pour la période avant celle-ci (c'est possible), le système "
+#~ "prendra l'une d'elles (aucune règle n'est définie pour cela).\n"
+#~ "\n"
+#~ "Menus \"Prévisions de vente\"\n"
+#~ "Sur le formulaire de \"prévisions de vente\", vous devez entrer une quantité "
+#~ "prévue dans le champ \"Quantité de produit\". D'autres calculs peuvent être "
+#~ "lancés pour les prévisions en brouillon. Mais la validation peut sauvegarder "
+#~ "vos données contre tout changement accidentel. Vous pouvez cliquer sur le "
+#~ "bouton \"Valider\" mais ce n'est pas obligatoire.\n"
+#~ "\n"
+#~ "À la place de la quantité prévue vous pouvez entrer le montant des "
+#~ "prévisions de vente dans le champ \"Montant produit\". Le système comptera "
+#~ "la quantité depuis le montant en fonction des prix de vente des produits.\n"
+#~ "\n"
+#~ "Toutes les valeurs dans le formulaire sont exprimées dans l'unité de mesure "
+#~ "sélectionnée dans le formulaire. Vous pouvez sélectionné une unité de mesure "
+#~ "depuis la catégorie par défaut ou depuis la seconde catégorie. Quand vous "
+#~ "modifier l'unié de mesure, les quantités seront recalculées en fonction de "
+#~ "la nouvelle unité de mesure : valeurs éditables (champs en bleu) "
+#~ "immédiatement, champs non-éditables après avoir cliqué sur le bouton "
+#~ "\"Calculer la planification\".\n"
+#~ "\n"
+#~ "Pour trouver la bonne valeur pour les prévisions de vente, vous pouvez "
+#~ "utiliser le tableau \"Historique des ventes\" pour ce produit. Vous devez "
+#~ "entrer les paramètres en haut et à gauche du tableau et le système calculera "
+#~ "la quantité de ventes en fonction de ces paramètres. Donc vous pouvez "
+#~ "sélectionner fe. votre département (en haut) puis (à gauche) : dernière "
+#~ "période, période avant la dernière et la période d'il y a un an.\n"
+#~ "\n"
+#~ "\n"
+#~ "Planification des approvisionnements\n"
+#~ "====================================\n"
+#~ "Vous pouvez trouver le menu pour la planification dans \"Entrepôt - "
+#~ "Planification du stock\".\n"
+#~ "- \"Créer des lignes de planification de stock\" - vous permet d'automatiser "
+#~ "la création des lignes de planification en fonction de quelques paramètres.\n"
+#~ "- \"Planificateur d'approvisionnements\" - est le menu le plus important du "
+#~ "module qui permet de créer des approvisionnements.\n"
+#~ "\n"
+#~ "Commes les prévisions de ventes sont une phase de la planification des "
+#~ "ventes, la planification des approvisionnements est une phase des plannings "
+#~ "d'achat et de production. Vous pouvez créer rapidement une planification des "
+#~ "approvisionnements en utlisant l'outil depuis le menu \"Créer des lignes de "
+#~ "planification de stock\", ensuite, vous pouvez revoir les planification "
+#~ "créées et faire les approvisionnement depuis le menu \"Planificateur "
+#~ "d'approvisionnements\".\n"
+#~ "\n"
+#~ "Le menu \"Créer des lignes de planification de stock\" vous permet de créer "
+#~ "rapideùent des lignes de planification pour les produits de la catégorie "
+#~ "sélectionnée, pour la période et pour l'entrepôt sélectionnée. Lorsque vous "
+#~ "cocher l'option \"Tous les produits avec prévision\", le système va créé des "
+#~ "lignes pour tous les produits qui ont des prévisions pour la période et "
+#~ "l'entrepôt sélectionné. Dans ce cas, la catégorie sélectionnée sera "
+#~ "ignorée.\n"
+#~ "\n"
+#~ "Sous le menu \"Planificateur d'approvisionnements\", vous pouvez "
+#~ "généralement modifier les valeurs \"Sorties planifiées\" et \"Entrées "
+#~ "planifiées\" pour observer le champ \"Simulation du stock\" et dévider si la "
+#~ "valeur sera correcte pour la fin de la période.\n"
+#~ "Les \"Sorties planifiées\" peuvent être basées sur les \"prévisions "
+#~ "d'entrepôt\" qui sont la somme de toutes les prévisions pour la période et "
+#~ "l'entrepôt. Mais notre planification peut être basée sur toute autre "
+#~ "information que vous avez. Il n'est pas nécessaire d'avoir une prévision.\n"
+#~ "La quantité dans \"Entrées planifiées\" est utilisée pour calculer le champ "
+#~ "\"Entrées à traiter\" qui est la quantité devant être apportée pour avoir le "
+#~ "même stock que celui indiqué dans \"Simulation du stock\" à la fin de la "
+#~ "période. Vous pouvez comparer la quantité dans \"Simulation du stock\" avec "
+#~ "la règle de stock minimum visible dans le formulaire. Mais vous pouvez "
+#~ "planifier une quantité différente que celle dans Règles de stock minimum. "
+#~ "Par défaut, le calcul est fait pour tous les entrepôts. Mais si vous voulez "
+#~ "voir les valeurs pour les emplacements de stock des entrepôts, vous pouvez "
+#~ "utiliser la case à cocher \"Emplacements de stock seulement\".\n"
+#~ "\n"
+#~ "Si après quelques essais vous décidez que vous avez trouvé les quantités "
+#~ "correctes pour les \"Sorties planifiées\" et les \"Entrées planifiées\" et "
+#~ "que vous êtes satisfait avec le stock calculé dans \"Simulation du stock\" "
+#~ "pour la fin de la période, vous pouvez cliquer sur le bouton "
+#~ "\"Approvisionner les entrées à traiter\" pour approvisionner la quantité "
+#~ "inscrite dans \"Entrées à traiter\" dans l'entrepôt. Le système créé les "
+#~ "ordres d'approvisionnements appropriés. Vous pouvez décider si "
+#~ "l'approvisionnement sera fait du Stock ou de l'emplacement d'entrée de "
+#~ "l'entrepôt calculé.\n"
+#~ "\n"
+#~ "Si vous ne voulez pas produire ou acheter les produits mais simplement "
+#~ "préparer les quantités calculées depuis un autre entrepôt, vous pouvez "
+#~ "cliquer sur \"Approvisionner depuis un autre entrepôt\" (au lieu de "
+#~ "\"Approvisionner les entrées à traiter\"). Le système créé une liste de "
+#~ "préparation avec le mouvement depuis l'entrepôt sélectionné jusqu'à "
+#~ "l'entrepôt calculé (comme destination). Vous pouvez aussi décider si cette "
+#~ "préparation doit être faite depuis le stock ou depuis l'emplacement de "
+#~ "sortie de l'entrepôt source. L'emplacement de destination (Stock ou Entrée) "
+#~ "de lentrpôt de destination sera utilisé pour remplir le champ "
+#~ "\"Approvisionnement des entrées à traiter\".\n"
+#~ "\n"
+#~ "Pour voir les bonnes quantités dans les champs \"Entrées confirmées\", "
+#~ "\"Sorties confirmées\", \"Entrés confirmées avant\", \"Sorties confirmées "
+#~ "avant\" et \"Simulation du stock\", vous devez cliquez sur le bouton "
+#~ "\"Calculer la planification\".\n"
+#~ "\n"
+#~ "Toutes les valeurs sur le formulaire sont exprimées dans l'unité de mesure "
+#~ "sélectionnée dans le formulaire. Vous pouvez en sléectionner une autre "
+#~ "depuis la catégorie par défaut ou depuis la catégorie secondaire. Lorsque "
+#~ "vous changez l'unité de mesure, les quantités seront recalculées en focntion "
+#~ "de la nouvelle UdM : les valeurs modifiables (champs en bleu) immédiatement, "
+#~ "champs non modifiables après avoir cliqué sur le bouton \"Calcul de la "
+#~ "planification\".\n"
+#~ "\n"
+#~ "Comment le champ \"Simulation du stock\" est calculé :\n"
+#~ "Généralement, le champ \"Simulation du stock\" affiche le stock pour la fin "
+#~ "de la période calculée en fonction de plusieurs mouvements de stocks "
+#~ "planifiés ou confirmés. Le calcul démarre toujours avec la quantité de stock "
+#~ "réel du début de la période courante. Puis, le calcul ajoute ou soustrait "
+#~ "les quantités de la période calculée ou des périodes avant le calcul.\n"
+#~ "Lorsque vous êtes dans la même période (la période courante est la même que "
+#~ "celle calculée), la simulation du stock est calculée comme suit :\n"
+#~ "Simulation du stock =\n"
+#~ "\tStock au début de la période courante\n"
+#~ "\t- Sorties planifiées\n"
+#~ "\t+ Entrées planifiées\n"
+#~ "\n"
+#~ "Quand vous calculer la prochaine période :\n"
+#~ "Simulation du stock = \n"
+#~ "\tStock au début de la période courante\n"
+#~ "\t- Sorties planifiées de la période courante\n"
+#~ "\t+ Entrées confirmées de la période courante (incl. les entrées en cours)\n"
+#~ "\t- Sorties planifiées de la période calculée\n"
+#~ "\t+ Entrées planifiées de la période calculée.\n"
+#~ "\n"
+#~ "Comme vous voyez, la période calculée est calculée de la même façon que le "
+#~ "cas du dessus. Mais le calcul de la période courante est fait un peit peu "
+#~ "différement. PRemièrement, vous devez noter que le système prend seulement "
+#~ "les mouvement en entrée confirmés pour la période courante. Cela veut dire "
+#~ "que vous devez faire la planification et l'approvisionnement de la période "
+#~ "avant le calcul (pour la préiode suivante).\n"
+#~ "\n"
+#~ "When you calculate Period ahead:\n"
+#~ "Quand vous calculez la période à venir :\n"
+#~ "Simulation du stock =\n"
+#~ "\tStock du début de la période courante\n"
+#~ "\t- Somme des sorties planifiées de la période avant celle calculée\n"
+#~ "\t+ Somme des entrées confirmées de la période avant celle calculée (incl. "
+#~ "les entrées en cours)\n"
+#~ "\t- Sorties planifiées de la période calculée\n"
+#~ "\t+ Entrées planifiées de la période calculée.\n"
+#~ "\n"
+#~ "Périodes avant celle calculée veut dire les périodes démarrées depuis "
+#~ "l'actuelle jusqu'à la période avant le calcul.\n"
+#~ "\n"
+#~ "Remarques :\n"
+#~ "- Souvenez-vous qu'il faut planifier toutes les périodes avant le calcul "
+#~ "parce qu'ommettre les quantités et les approvisionnements peut provoquer de "
+#~ "fausses suggestions pour les approvisionnement des quelques périodes "
+#~ "précédentes.\n"
+#~ "- Si vous planifiez quelques périodes en avance et que vous trouvez que les "
+#~ "sorties réelles confirmées sont trop grandes par rapport aux sorties "
+#~ "planifiées dans les quelques périodes avant, vous pouvez refaire la "
+#~ "planification et refaire un approvisionnement. Vous devez faire cela dans la "
+#~ "ligne de planifications. Si vous créer une autre ligne de planification, les "
+#~ "suggestions pourraient être fausses.\n"
+#~ "- Lorsque vous souhaitez travailler avec différentes périodes pour quelques "
+#~ "parties des produits, définissez deux sortes de périodes (ie. Hebdomadaires "
+#~ "et mensuelles) et utiliser les pour les différentes produits. Exemple : si "
+#~ "vous utilisez toujours des périodes hebdomadaires pour le produit A, et des "
+#~ "périodes mensuelles pour le produit B, tous vos calculs vont se faire "
+#~ "correctement. Vous pouvez également utiliser des types différents de "
+#~ "périodes pour les mêmes produits mais avec des entreprôts ou des sociétés "
+#~ "différentes. Mais vous ne pouvez pas utiliser des périodes qui se "
+#~ "chevauchent pour le même produit, le même entreprôt et la même société car "
+#~ "les résultats peuvent être incertains. Cela s'applique aussi sur les lignes "
+#~ "de prévisions.\n"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Already Out: "
+#~ msgstr ""
+#~ "\n"
+#~ " Déjà sorti : "

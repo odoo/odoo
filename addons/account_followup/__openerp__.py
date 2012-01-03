@@ -20,12 +20,12 @@
 ##############################################################################
 
 {
-    'name': 'Followups Management',
+    'name': 'Followup Management',
     'version': '1.0',
     'category': 'Accounting & Finance',
     'complexity': "normal",
     'description': """
-Modules to automate letters for unpaid invoices, with multi-level recalls.
+Module to automate letters for unpaid invoices, with multi-level recalls.
 ==========================================================================
 
 You can define your multiple levels of recall through the menu:
@@ -57,7 +57,10 @@ Note that if you want to check the followup level for a given partner/account en
         'account_followup_data.xml',
     ],
     'demo_xml': [],
-    'test': ['test/account_followup.yml'],
+    'test': [
+        'test/account_followup.yml',
+        'test/account_followup_report.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '0072481076453',

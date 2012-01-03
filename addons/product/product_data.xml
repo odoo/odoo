@@ -23,8 +23,8 @@
 
 
         <!--
-	Resource: product.uom
-	-->
+            Resource: product.uom
+        -->
         <record id="product_uom_unit" model="product.uom">
             <field name="category_id" ref="product_uom_categ_unit"/>
             <field name="name">PCE</field>
@@ -57,7 +57,7 @@
             <field name="category_id" ref="product_uom_categ_kgm"/>
             <!-- 'tonne' is the most common spelling in english-speaking countries,
                  the alternative is 'metric ton' in the US, abbreviated as 'mt' -->
-            <field name="name">tonne</field>
+            <field name="name">t</field>
             <field name="factor" eval="0.001"/>
             <field name="uom_type">bigger</field>
         </record>
@@ -168,5 +168,19 @@ parameter) will see those record just disappear.
             <field name="name">Product UoS</field>
             <field name="digits" eval="3"/>
         </record>        
+
+        <!--
+        Product
+        -->
+        <record id="product_consultant" model="product.product">
+            <field name="list_price">75.0</field>
+            <field name="standard_price">30.0</field>
+            <field name="uom_id" ref="product.uom_hour"/>
+            <field name="uom_po_id" ref="product.uom_hour"/>
+            <field name="name">Service on Timesheet</field>
+            <field name="categ_id" ref="product.cat0"/>
+            <field name="type">service</field>
+            <field eval="False" name="purchase_ok"/>
+        </record>
     </data>
 </openerp>

@@ -7,15 +7,81 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-08-03 01:38+0000\n"
 "Last-Translator: Peter Kohaut <peter.kohaut@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:09+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:02+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: base_contact
+#: field:res.partner.location,city:0
+msgid "City"
+msgstr ""
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "First/Lastname"
+msgstr ""
+
+#. module: base_contact
+#: model:ir.actions.act_window,name:base_contact.action_partner_contact_form
+#: model:ir.ui.menu,name:base_contact.menu_partner_contact_form
+#: model:ir.ui.menu,name:base_contact.menu_purchases_partner_contact_form
+#: model:process.node,name:base_contact.process_node_contacts0
+#: field:res.partner.location,job_ids:0
+msgid "Contacts"
+msgstr "Kontakty"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "Professional Info"
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.contact,first_name:0
+msgid "First Name"
+msgstr "Krstné meno"
+
+#. module: base_contact
+#: field:res.partner.address,location_id:0
+msgid "Location"
+msgstr ""
+
+#. module: base_contact
+#: model:process.transition,name:base_contact.process_transition_partnertoaddress0
+msgid "Partner to address"
+msgstr "Adresy partnera"
+
+#. module: base_contact
+#: help:res.partner.contact,active:0
+msgid ""
+"If the active field is set to False,                 it will allow you to "
+"hide the partner contact without removing it."
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.contact,website:0
+msgid "Website"
+msgstr "Webová stránka"
+
+#. module: base_contact
+#: field:res.partner.location,zip:0
+msgid "Zip"
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.location,state_id:0
+msgid "Fed. State"
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.location,company_id:0
+msgid "Company"
+msgstr ""
 
 #. module: base_contact
 #: field:res.partner.contact,title:0
@@ -23,56 +89,65 @@ msgid "Title"
 msgstr "Názov"
 
 #. module: base_contact
+#: field:res.partner.location,partner_id:0
+msgid "Main Partner"
+msgstr ""
+
+#. module: base_contact
+#: model:process.process,name:base_contact.process_process_basecontactprocess0
+msgid "Base Contact"
+msgstr "Základný kontakt"
+
+#. module: base_contact
+#: field:res.partner.contact,email:0
+msgid "E-Mail"
+msgstr "E-Mail"
+
+#. module: base_contact
+#: field:res.partner.contact,active:0
+msgid "Active"
+msgstr "Aktívny"
+
+#. module: base_contact
+#: field:res.partner.contact,country_id:0
+msgid "Nationality"
+msgstr "Národnosť"
+
+#. module: base_contact
+#: view:res.partner:0
 #: view:res.partner.address:0
-msgid "# of Contacts"
-msgstr "# z Kontaktov"
+msgid "Postal Address"
+msgstr "Poštová adresa"
 
 #. module: base_contact
-#: field:res.partner.job,fax:0
-msgid "Fax"
-msgstr "Fax"
+#: field:res.partner.contact,function:0
+msgid "Main Function"
+msgstr "Hlavná funkcia"
 
 #. module: base_contact
-#: view:base.contact.installer:0
-msgid "title"
-msgstr "titul"
+#: model:process.transition,note:base_contact.process_transition_partnertoaddress0
+msgid "Define partners and their addresses."
+msgstr "Definovať partnerov a ich adresy."
 
 #. module: base_contact
-#: help:res.partner.job,date_start:0
-msgid "Start date of job(Joining Date)"
-msgstr ""
+#: field:res.partner.contact,name:0
+msgid "Name"
+msgstr "Meno"
 
 #. module: base_contact
-#: view:base.contact.installer:0
-msgid "Select the Option for Addresses Migration"
-msgstr ""
-
-#. module: base_contact
-#: help:res.partner.job,function:0
-msgid "Function of this contact with this partner"
-msgstr ""
-
-#. module: base_contact
-#: help:res.partner.job,state:0
-msgid "Status of Address"
-msgstr ""
-
-#. module: base_contact
-#: help:res.partner.job,name:0
-msgid ""
-"You may                     enter Address first,Partner will be linked "
-"automatically if any."
-msgstr ""
-
-#. module: base_contact
-#: help:res.partner.job,fax:0
-msgid "Job FAX no."
-msgstr "FAX do práce č."
+#: field:res.partner.contact,lang_id:0
+msgid "Language"
+msgstr "Jazyk"
 
 #. module: base_contact
 #: field:res.partner.contact,mobile:0
 msgid "Mobile"
 msgstr "Mobil"
+
+#. module: base_contact
+#: field:res.partner.location,country_id:0
+msgid "Country"
+msgstr ""
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -86,115 +161,9 @@ msgid "People you work with."
 msgstr "Ľudia s ktorými pracujete."
 
 #. module: base_contact
-#: model:process.transition,note:base_contact.process_transition_functiontoaddress0
-msgid "Define functions and address."
-msgstr "Definovanie funkcií a adries."
-
-#. module: base_contact
-#: help:res.partner.job,date_stop:0
-msgid "Last date of job"
-msgstr "Posledný deň práce"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-#: field:base.contact.installer,migrate:0
-msgid "Migrate"
-msgstr "Presunúť"
-
-#. module: base_contact
 #: view:res.partner.contact:0
-#: field:res.partner.job,name:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: base_contact
-#: model:process.node,note:base_contact.process_node_function0
-msgid "Jobs at a same partner address."
-msgstr "Práce na na rovnakej partnerovej adrese."
-
-#. module: base_contact
-#: model:process.node,name:base_contact.process_node_partners0
-msgid "Partners"
-msgstr "Partneri"
-
-#. module: base_contact
-#: field:res.partner.job,state:0
-msgid "State"
-msgstr "Štát"
-
-#. module: base_contact
-#: help:res.partner.contact,active:0
-msgid ""
-"If the active field is set to False,                 it will allow you to "
-"hide the partner contact without removing it."
-msgstr ""
-
-#. module: base_contact
-#: model:ir.module.module,description:base_contact.module_meta_information
-msgid ""
-"\n"
-"        This module allows you to manage your contacts entirely.\n"
-"\n"
-"    It lets you define\n"
-"        *contacts unrelated to a partner,\n"
-"        *contacts working at several addresses (possibly for different "
-"partners),\n"
-"        *contacts with possibly different functions for each of its job's "
-"addresses\n"
-"\n"
-"    It also adds new menu items located in\n"
-"        Partners \\ Contacts\n"
-"        Partners \\ Functions\n"
-"\n"
-"    Pay attention that this module converts the existing addresses into "
-"\"addresses + contacts\". It means that some fields of the addresses will be "
-"missing (like the contact name), since these are supposed to be defined in "
-"an other object.\n"
-"    "
-msgstr ""
-
-#. module: base_contact
-#: model:ir.module.module,shortdesc:base_contact.module_meta_information
-#: model:process.process,name:base_contact.process_process_basecontactprocess0
-msgid "Base Contact"
-msgstr "Základný kontakt"
-
-#. module: base_contact
-#: field:res.partner.job,date_stop:0
-msgid "Date Stop"
-msgstr "Dátum ukončenia"
-
-#. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.action_res_partner_job
-msgid "Contact's Jobs"
-msgstr ""
-
-#. module: base_contact
-#: view:res.partner:0
-msgid "Categories"
-msgstr "Kategórie"
-
-#. module: base_contact
-#: help:res.partner.job,sequence_partner:0
-msgid ""
-"Order of importance                 of this job title in the list of job "
-"title of the linked partner"
-msgstr ""
-
-#. module: base_contact
-#: field:res.partner.job,extension:0
-msgid "Extension"
-msgstr "Rozšírenie"
-
-#. module: base_contact
-#: help:res.partner.job,extension:0
-msgid "Internal/External extension phone number"
-msgstr "Interná / Externá klapka"
-
-#. module: base_contact
-#: help:res.partner.job,phone:0
-msgid "Job Phone no."
-msgstr "Telefón do práce č."
+msgid "Extra Information"
+msgstr "Extra informácie"
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -204,179 +173,14 @@ msgstr "Funkcie a adresy"
 
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_contact
-#: field:res.partner.job,contact_id:0
+#: field:res.partner.address,contact_id:0
 msgid "Contact"
 msgstr "Kontakt"
 
 #. module: base_contact
-#: help:res.partner.job,email:0
-msgid "Job E-Mail"
-msgstr "Email do práce"
-
-#. module: base_contact
-#: field:res.partner.job,sequence_partner:0
-msgid "Partner Seq."
-msgstr "Por. partnera"
-
-#. module: base_contact
-#: model:process.transition,name:base_contact.process_transition_functiontoaddress0
-msgid "Function to address"
-msgstr "Funkcia na adresu"
-
-#. module: base_contact
-#: field:base.contact.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Priebeh nastavenia"
-
-#. module: base_contact
-#: field:res.partner.contact,name:0
-msgid "Last Name"
-msgstr "Priezvisko"
-
-#. module: base_contact
-#: view:res.partner:0
-#: view:res.partner.contact:0
-msgid "Communication"
-msgstr "Komunikácia"
-
-#. module: base_contact
-#: field:base.contact.installer,config_logo:0
-#: field:res.partner.contact,photo:0
-msgid "Image"
-msgstr "Obrázok"
-
-#. module: base_contact
-#: selection:res.partner.job,state:0
-msgid "Past"
-msgstr "Minulosť"
-
-#. module: base_contact
-#: model:ir.model,name:base_contact.model_res_partner_address
-msgid "Partner Addresses"
-msgstr "Partnerove adresy"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "Address's Migration to Contacts"
-msgstr "Presun adries do kontaktov"
-
-#. module: base_contact
-#: field:res.partner.job,sequence_contact:0
-msgid "Contact Seq."
-msgstr "Por. kontaktu"
-
-#. module: base_contact
-#: view:res.partner.address:0
-msgid "Search Contact"
-msgstr "Hľadanie kontaktu"
-
-#. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.action_partner_contact_form
-#: model:ir.ui.menu,name:base_contact.menu_partner_contact_form
-#: model:ir.ui.menu,name:base_contact.menu_purchases_partner_contact_form
-#: model:process.node,name:base_contact.process_node_contacts0
-#: view:res.partner:0
-#: field:res.partner.address,job_ids:0
-msgid "Contacts"
-msgstr "Kontakty"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid ""
-"Due to changes in Address and Partner's relation, some of the details from "
-"address are needed to be migrated into contact information."
+#: model:ir.model,name:base_contact.model_res_partner_location
+msgid "res.partner.location"
 msgstr ""
-
-#. module: base_contact
-#: model:process.node,note:base_contact.process_node_addresses0
-msgid "Working and private addresses."
-msgstr "Pracovné a súkromné adresy."
-
-#. module: base_contact
-#: help:res.partner.job,address_id:0
-msgid "Address which is linked to the Partner"
-msgstr "Adresa, ktorá je spojená s partnerom"
-
-#. module: base_contact
-#: field:res.partner.job,function:0
-msgid "Partner Function"
-msgstr "Funkcia partnera"
-
-#. module: base_contact
-#: help:res.partner.job,other:0
-msgid "Additional phone field"
-msgstr "Dodatočné pole telefónu"
-
-#. module: base_contact
-#: field:res.partner.contact,website:0
-msgid "Website"
-msgstr "Webová stránka"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "Otherwise these details will not be visible from address/contact."
-msgstr "V opačnom prípade tieto údaje nebudú viditeľné z adresy / kontaktu."
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "Configure"
-msgstr "Nastaviť"
-
-#. module: base_contact
-#: field:res.partner.contact,email:0
-#: field:res.partner.job,email:0
-msgid "E-Mail"
-msgstr "E-Mail"
-
-#. module: base_contact
-#: model:ir.model,name:base_contact.model_base_contact_installer
-msgid "base.contact.installer"
-msgstr "base.contact.installer"
-
-#. module: base_contact
-#: view:res.partner.job:0
-msgid "Contact Functions"
-msgstr "Funkcie kontaktu"
-
-#. module: base_contact
-#: field:res.partner.job,phone:0
-msgid "Phone"
-msgstr "Telefón"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "Do you want to migrate your Address data in Contact Data?"
-msgstr ""
-
-#. module: base_contact
-#: field:res.partner.contact,active:0
-msgid "Active"
-msgstr "Aktívny"
-
-#. module: base_contact
-#: field:res.partner.contact,function:0
-msgid "Main Function"
-msgstr "Hlavná funkcia"
-
-#. module: base_contact
-#: model:process.transition,note:base_contact.process_transition_partnertoaddress0
-msgid "Define partners and their addresses."
-msgstr "Definovať partnerov a ich adresy."
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "Seq."
-msgstr "Por."
-
-#. module: base_contact
-#: field:res.partner.contact,lang_id:0
-msgid "Language"
-msgstr "Jazyk"
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "Extra Information"
-msgstr "Extra informácie"
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_partners0
@@ -384,9 +188,40 @@ msgid "Companies you work with."
 msgstr "Spoločnosti s ktorými pracujete."
 
 #. module: base_contact
+#: field:res.partner.contact,partner_id:0
+msgid "Main Employer"
+msgstr "Hlavný zamestnávateľ"
+
+#. module: base_contact
 #: view:res.partner.contact:0
 msgid "Partner Contact"
 msgstr "Kontakt partnera"
+
+#. module: base_contact
+#: model:process.node,name:base_contact.process_node_addresses0
+msgid "Addresses"
+msgstr "Adresy"
+
+#. module: base_contact
+#: model:process.node,note:base_contact.process_node_addresses0
+msgid "Working and private addresses."
+msgstr "Pracovné a súkromné adresy."
+
+#. module: base_contact
+#: field:res.partner.contact,last_name:0
+msgid "Last Name"
+msgstr "Priezvisko"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+#: field:res.partner.contact,photo:0
+msgid "Photo"
+msgstr "Fotografia"
+
+#. module: base_contact
+#: view:res.partner.location:0
+msgid "Locations"
+msgstr ""
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -394,131 +229,84 @@ msgid "General"
 msgstr "Všeobecné"
 
 #. module: base_contact
+#: field:res.partner.location,street:0
+msgid "Street"
+msgstr ""
+
+#. module: base_contact
 #: view:res.partner.contact:0
-msgid "Photo"
-msgstr "Fotografia"
+msgid "Partner"
+msgstr "Partner"
+
+#. module: base_contact
+#: model:process.node,name:base_contact.process_node_partners0
+msgid "Partners"
+msgstr "Partneri"
+
+#. module: base_contact
+#: model:ir.model,name:base_contact.model_res_partner_address
+msgid "Partner Addresses"
+msgstr "Partnerove adresy"
+
+#. module: base_contact
+#: field:res.partner.location,street2:0
+msgid "Street2"
+msgstr ""
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "Personal Information"
+msgstr ""
 
 #. module: base_contact
 #: field:res.partner.contact,birthdate:0
 msgid "Birth Date"
 msgstr "Dátum narodenia"
 
-#. module: base_contact
-#: help:base.contact.installer,migrate:0
-msgid "If you select this, all addresses will be migrated."
-msgstr "Ak vyberiete túto možnosť, budú všetky adresy presunuté."
+#~ msgid "Partner Function"
+#~ msgstr "Funkcia partnera"
 
-#. module: base_contact
-#: selection:res.partner.job,state:0
-msgid "Current"
-msgstr "Aktuálne"
+#~ msgid "Current"
+#~ msgstr "Aktuálne"
 
-#. module: base_contact
-#: field:res.partner.contact,first_name:0
-msgid "First Name"
-msgstr "Krstné meno"
+#~ msgid "Other"
+#~ msgstr "Iné"
 
-#. module: base_contact
-#: model:ir.model,name:base_contact.model_res_partner_job
-msgid "Contact Partner Function"
-msgstr "Kontakt - funkcia partnera"
+#~ msgid "# of Contacts"
+#~ msgstr "# z Kontaktov"
 
-#. module: base_contact
-#: field:res.partner.job,other:0
-msgid "Other"
-msgstr "Iné"
+#~ msgid "Phone"
+#~ msgstr "Telefón"
 
-#. module: base_contact
-#: model:process.node,name:base_contact.process_node_function0
-msgid "Function"
-msgstr "Funkcia"
+#~ msgid "Function"
+#~ msgstr "Funkcia"
 
-#. module: base_contact
-#: field:res.partner.address,job_id:0
-#: field:res.partner.contact,job_id:0
-msgid "Main Job"
-msgstr "Hlavná práca"
+#~ msgid "Fax"
+#~ msgstr "Fax"
 
-#. module: base_contact
-#: model:process.transition,note:base_contact.process_transition_contacttofunction0
-msgid "Defines contacts and functions."
-msgstr "Definovanie kontaktov a funkcií."
+#~ msgid "Contact Functions"
+#~ msgstr "Funkcie kontaktu"
 
-#. module: base_contact
-#: model:process.transition,name:base_contact.process_transition_contacttofunction0
-msgid "Contact to function"
-msgstr "Funkcia kontaktu"
-
-#. module: base_contact
-#: view:res.partner:0
-#: field:res.partner.job,address_id:0
-msgid "Address"
-msgstr "Adresa"
-
-#. module: base_contact
-#: field:res.partner.contact,country_id:0
-msgid "Nationality"
-msgstr "Národnosť"
-
-#. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.act_res_partner_jobs
-msgid "Open Jobs"
-msgstr ""
-
-#. module: base_contact
-#: field:base.contact.installer,name:0
-msgid "Name"
-msgstr "Meno"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "You can migrate Partner's current addresses to the contact."
-msgstr ""
-
-#. module: base_contact
-#: field:res.partner.contact,partner_id:0
-msgid "Main Employer"
-msgstr "Hlavný zamestnávateľ"
-
-#. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.action_base_contact_installer
-msgid "Address Migration"
-msgstr "Presun adresy"
-
-#. module: base_contact
-#: view:res.partner:0
-msgid "Postal Address"
-msgstr "Poštová adresa"
-
-#. module: base_contact
-#: model:process.node,name:base_contact.process_node_addresses0
-#: view:res.partner:0
-msgid "Addresses"
-msgstr "Adresy"
-
-#. module: base_contact
-#: model:process.transition,name:base_contact.process_transition_partnertoaddress0
-msgid "Partner to address"
-msgstr "Adresy partnera"
-
-#. module: base_contact
-#: field:res.partner.job,date_start:0
-msgid "Date Start"
-msgstr "Dátum spustenia"
-
-#. module: base_contact
-#: help:res.partner.job,sequence_contact:0
-msgid ""
-"Order of                     importance of this address in the list of "
-"addresses of the linked contact"
-msgstr ""
-"Poradie dôležitosti tejto adresy v zozname adries spojených s kontaktom"
+#~ msgid "Address"
+#~ msgstr "Adresa"
 
 #~ msgid "Base Contact Process"
 #~ msgstr "Základný proces kontaktu"
 
+#~ msgid "Categories"
+#~ msgstr "Kategórie"
+
 #~ msgid "Partner Contacts"
 #~ msgstr "Kontakty partnera"
+
+#~ msgid "State"
+#~ msgstr "Štát"
+
+#~ msgid "Date Start"
+#~ msgstr "Dátum spustenia"
+
+#~ msgid "Date Stop"
+#~ msgstr "Dátum ukončenia"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -528,11 +316,110 @@ msgstr ""
 #~ msgid "res.partner.contact"
 #~ msgstr "res.partner.contact"
 
+#~ msgid "Seq."
+#~ msgstr "Por."
+
+#~ msgid "Partner Seq."
+#~ msgstr "Por. partnera"
+
+#~ msgid "Contact Seq."
+#~ msgstr "Por. kontaktu"
+
+#~ msgid "Contact Partner Function"
+#~ msgstr "Kontakt - funkcia partnera"
+
+#~ msgid "Contact to function"
+#~ msgstr "Funkcia kontaktu"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Neplatný názov modelu v definícii akcie."
+
+#~ msgid "Additional phone field"
+#~ msgstr "Dodatočné pole telefónu"
+
+#~ msgid "Main Job"
+#~ msgstr "Hlavná práca"
+
+#~ msgid "Internal/External extension phone number"
+#~ msgstr "Interná / Externá klapka"
+
+#~ msgid "Extension"
+#~ msgstr "Rozšírenie"
+
+#~ msgid "Function to address"
+#~ msgstr "Funkcia na adresu"
 
 #~ msgid "General Information"
 #~ msgstr "Všeobecné informácie"
 
+#~ msgid "Past"
+#~ msgstr "Minulosť"
+
+#~ msgid "Jobs at a same partner address."
+#~ msgstr "Práce na na rovnakej partnerovej adrese."
+
+#~ msgid "Define functions and address."
+#~ msgstr "Definovanie funkcií a adries."
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Neplatné XML pre zobrazenie architektúry!"
+
+#~ msgid "Defines contacts and functions."
+#~ msgstr "Definovanie kontaktov a funkcií."
+
+#~ msgid "Migrate"
+#~ msgstr "Presunúť"
+
+#~ msgid "Job FAX no."
+#~ msgstr "FAX do práce č."
+
+#~ msgid "title"
+#~ msgstr "titul"
+
+#~ msgid "Last date of job"
+#~ msgstr "Posledný deň práce"
+
+#~ msgid "Job E-Mail"
+#~ msgstr "Email do práce"
+
+#~ msgid "Job Phone no."
+#~ msgstr "Telefón do práce č."
+
+#~ msgid "Image"
+#~ msgstr "Obrázok"
+
+#~ msgid "Communication"
+#~ msgstr "Komunikácia"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Priebeh nastavenia"
+
+#~ msgid "Address which is linked to the Partner"
+#~ msgstr "Adresa, ktorá je spojená s partnerom"
+
+#~ msgid "Search Contact"
+#~ msgstr "Hľadanie kontaktu"
+
+#~ msgid "Otherwise these details will not be visible from address/contact."
+#~ msgstr "V opačnom prípade tieto údaje nebudú viditeľné z adresy / kontaktu."
+
+#~ msgid "If you select this, all addresses will be migrated."
+#~ msgstr "Ak vyberiete túto možnosť, budú všetky adresy presunuté."
+
+#~ msgid "base.contact.installer"
+#~ msgstr "base.contact.installer"
+
+#~ msgid "Address's Migration to Contacts"
+#~ msgstr "Presun adries do kontaktov"
+
+#~ msgid "Configure"
+#~ msgstr "Nastaviť"
+
+#~ msgid ""
+#~ "Order of                     importance of this address in the list of "
+#~ "addresses of the linked contact"
+#~ msgstr ""
+#~ "Poradie dôležitosti tejto adresy v zozname adries spojených s kontaktom"
+
+#~ msgid "Address Migration"
+#~ msgstr "Presun adresy"

@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-03-02 22:45+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish (Paraguay) <es_PY@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:29+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
-
-#. module: account_analytic_default
-#: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
-msgid "Account Analytic Default"
-msgstr "Cuenta analítica por defecto"
+"X-Launchpad-Export-Date: 2011-12-23 06:57+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -65,6 +60,11 @@ msgstr "Fecha final por defecto para esta cuenta analítica."
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
 msgstr "Nota de Remisión"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Comapny"
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -137,26 +137,14 @@ msgid "Analytic Defaults"
 msgstr "Análisis: Valores por defecto"
 
 #. module: account_analytic_default
-#: model:ir.module.module,description:account_analytic_default.module_meta_information
-msgid ""
-"\n"
-"Allows to automatically select analytic accounts based on criterions:\n"
-"* Product\n"
-"* Partner\n"
-"* User\n"
-"* Company\n"
-"* Date\n"
-"    "
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
 msgstr ""
-"\n"
-"Permite seleccionar automáticamente cuentas analíticas según estos "
-"criterios:\n"
-"* Producto\n"
-"* Empresa\n"
-"* Usuario\n"
-"* Compañía\n"
-"* Fecha\n"
-"    "
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Analytical defaults whose end date is greater than today or None"
+msgstr ""
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -214,3 +202,26 @@ msgstr ""
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Línea pedido de venta"
+
+#~ msgid "Account Analytic Default"
+#~ msgstr "Cuenta analítica por defecto"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allows to automatically select analytic accounts based on criterions:\n"
+#~ "* Product\n"
+#~ "* Partner\n"
+#~ "* User\n"
+#~ "* Company\n"
+#~ "* Date\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Permite seleccionar automáticamente cuentas analíticas según estos "
+#~ "criterios:\n"
+#~ "* Producto\n"
+#~ "* Empresa\n"
+#~ "* Usuario\n"
+#~ "* Compañía\n"
+#~ "* Fecha\n"
+#~ "    "

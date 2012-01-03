@@ -93,6 +93,7 @@ class product_uom(osv.osv):
             del(data['factor_inv'])
         return super(product_uom, self).create(cr, uid, data, context)
 
+    _order = "name"
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
@@ -166,6 +167,13 @@ class product_uom(osv.osv):
         if value == 'reference':
             return {'value': {'factor': 1, 'factor_inv': 1}}
         return {}
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'category_id' in vals:
+            for uom in self.browse(cr, uid, ids, context=context):
+                if uom.category_id.id != vals['category_id']:
+                    raise osv.except_osv(_('Warning'),_("Cannot change the category of existing UoM '%s'.") % (uom.name,))
+        return super(product_uom, self).write(cr, uid, ids, vals, context=context)
 
 product_uom()
 
@@ -204,11 +212,11 @@ class product_category(osv.osv):
     _name = "product.category"
     _description = "Product Category"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', size=64, required=True, translate=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('product.category','Parent Category', select=True),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
+        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
     }
 
@@ -326,7 +334,16 @@ class product_template(osv.osv):
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
         if uom_id:
             return {'value': {'uom_po_id': uom_id}}
-        return False
+        return {}
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'uom_po_id' in vals:
+            new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_po_id'], context=context)
+            for product in self.browse(cr, uid, ids, context=context):
+                old_uom = product.uom_po_id
+                if old_uom.category_id.id != new_uom.category_id.id:
+                    raise osv.except_osv(_('UoM categories Mismatch!'), _("New UoM '%s' must belong to same UoM category '%s' as of old UoM '%s'. If you need to change the unit of measure, you may desactivate this product from the 'Procurement & Locations' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
+        return super(product_template, self).write(cr, uid, ids, vals, context=context)
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
@@ -477,7 +494,7 @@ class product_product(osv.osv):
         'lst_price' : fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Sale Price')),
         'code': fields.function(_product_code, type='char', string='Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
-        'default_code' : fields.char('Reference', size=64),
+        'default_code' : fields.char('Reference', size=64, select=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
@@ -486,7 +503,7 @@ class product_product(osv.osv):
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
-        'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True),
+        'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True, select=True),
         'color': fields.integer('Color Index'),
         'product_image': fields.binary('Image'),
     }

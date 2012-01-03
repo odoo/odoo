@@ -10,7 +10,7 @@
             <field name="date_from" eval="time.strftime('%Y-%m-01')"/>
             <field name="date_to" eval="time.strftime('%Y-%m-28')"/>
             <field name="state">open</field>
-            <field name="user_id" ref="project.res_users_project_manager"/>
+            <field name="user_id" ref="base.user_al"/>
         </record>
         
         
@@ -19,7 +19,7 @@
             <field name="amount">16.0</field>
             <field name="amount_unit" ref="product.uom_hour"/>
             <field name="planning_id" ref="project_plannning_1"/>
-            <field name="user_id" ref="project.res_users_project_manager"/>
+            <field name="user_id" ref="base.user_al"/>
             <field name="task_ids" eval="[(6,0,[ref('project.project_task_188')])]"/>
         </record>        
 
@@ -29,8 +29,8 @@
             <field name="amount">24.0</field>
             <field name="amount_unit" ref="product.uom_hour"/>
             <field name="planning_id" ref="project_plannning_1"/>
-            <field name="user_id" ref="project.res_users_technical_leader"/>
-            <field name="task_ids" eval="[(6,0,[ref('project.project_task_192')])]"/>
+            <field name="user_id" ref="base.user_qdp"/>
+            <field name="task_ids" eval="[(6,0,[ref('project.project_task_190')])]"/>
         </record>     
         
                 
@@ -39,7 +39,7 @@
             <field name="amount">90.0</field>
             <field name="amount_unit" ref="product.uom_hour"/>
             <field name="planning_id" ref="project_plannning_1"/>
-            <field name="user_id" ref="project.res_users_developer"/>
+            <field name="user_id" ref="base.user_fpi"/>
             <field name="task_ids" eval="[(6,0,[ref('project.project_task_11')])]"/>
         </record>     
         
@@ -49,7 +49,7 @@
             <field name="amount">50.0</field>
             <field name="amount_unit" ref="product.uom_hour"/>
             <field name="planning_id" ref="project_plannning_1"/>
-            <field name="user_id" ref="project.res_users_tester"/>
+            <field name="user_id" ref="base.user_mit"/>
             <field name="task_ids" eval="[(6,0,[ref('project.project_task_13')])]"/>
         </record>     
 

@@ -74,7 +74,7 @@ class mail_message_common(osv.osv_memory):
         'model': fields.char('Related Document model', size=128, select=1, readonly=1),
         'res_id': fields.integer('Related Document ID', select=1, readonly=1),
         'date': fields.datetime('Date'),
-        'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences'),
+        'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences. If empty, this is not a mail but a message.'),
         'email_to': fields.char('To', size=256, help='Message recipients'),
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
@@ -334,8 +334,8 @@ class mail_message(osv.osv):
                       'subtype': msg_mime_subtype,
                       'body_text': plaintext_body
                       'body_html': html_body,
-                      'attachments': { 'file1': 'bytes',
-                                       'file2': 'bytes' }
+                      'attachments': [('file1', 'bytes'),
+                                       ('file2', 'bytes') }
                        # ...
                        'original': source_of_email,
                     }
@@ -380,11 +380,15 @@ class mail_message(osv.osv):
 
         if 'To' in fields:
             msg['to'] = decode(msg_txt.get('To'))
+
         if 'Delivered-To' in fields:
             msg['to'] = decode(msg_txt.get('Delivered-To'))
 
         if 'CC' in fields:
             msg['cc'] = decode(msg_txt.get('CC'))
+
+        if 'Cc' in fields:
+            msg['cc'] = decode(msg_txt.get('Cc'))
 
         if 'Reply-To' in fields:
             msg['reply'] = decode(msg_txt.get('Reply-To'))
@@ -416,7 +420,7 @@ class mail_message(osv.osv):
                 body = tools.html2plaintext(body)
             msg['body_text'] = tools.ustr(body, encoding)
 
-        attachments = {}
+        attachments = []
         if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
             body = ""
             if 'multipart/alternative' in msg.get('content-type', ''):
@@ -432,7 +436,7 @@ class mail_message(osv.osv):
                 if part.get_content_maintype()=='text':
                     content = part.get_payload(decode=True)
                     if filename:
-                        attachments[filename] = content
+                        attachments.append((filename, content))
                     content = tools.ustr(content, encoding)
                     if part.get_content_subtype() == 'html':
                         msg['body_html'] = content
@@ -442,7 +446,7 @@ class mail_message(osv.osv):
                         body = content
                 elif part.get_content_maintype() in ('application', 'image'):
                     if filename :
-                        attachments[filename] = part.get_payload(decode=True)
+                        attachments.append((filename,part.get_payload(decode=True)))
                     else:
                         res = part.get_payload(decode=True)
                         body += tools.ustr(res, encoding)
@@ -454,6 +458,7 @@ class mail_message(osv.osv):
         msg['body'] = msg['body_text']
         msg['sub_type'] = msg['subtype'] or 'plain'
         return msg
+
 
     def send(self, cr, uid, ids, auto_commit=False, context=None):
         """Sends the selected emails immediately, ignoring their current
@@ -479,11 +484,22 @@ class mail_message(osv.osv):
                 attachments = []
                 for attach in message.attachment_ids:
                     attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
+
+                body = message.body_html if message.subtype == 'html' else message.body_text
+                body_alternative = None
+                subtype_alternative = None
+                if message.subtype == 'html' and message.body_text:
+                    # we have a plain text alternative prepared, pass it to 
+                    # build_message instead of letting it build one
+                    body_alternative = message.body_text
+                    subtype_alternative = 'plain'
+
                 msg = ir_mail_server.build_email(
                     email_from=message.email_from,
                     email_to=to_email(message.email_to),
                     subject=message.subject,
-                    body=message.body_html if message.subtype == 'html' else message.body_text,
+                    body=body,
+                    body_alternative=body_alternative,
                     email_cc=to_email(message.email_cc),
                     email_bcc=to_email(message.email_bcc),
                     reply_to=message.reply_to,
@@ -491,6 +507,7 @@ class mail_message(osv.osv):
                     references = message.references,
                     object_id=message.res_id and ('%s-%s' % (message.res_id,message.model)),
                     subtype=message.subtype,
+                    subtype_alternative=subtype_alternative,
                     headers=message.headers and literal_eval(message.headers))
                 res = ir_mail_server.send_email(cr, uid, msg,
                                                 mail_server_id=message.mail_server_id.id,

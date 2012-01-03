@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-12-29 08:59+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:25+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:51+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -54,11 +54,6 @@ msgid "Analytic Plan"
 msgstr "Πλάνο Αναλυτικής"
 
 #. module: account_analytic_plans
-#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
-msgid "Multiple-plans management in Analytic Accounting"
-msgstr "Διαχείριση Πολλαπλών πλάνων στην Αναλυτική Λογιστική"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
 #: view:account.crossovered.analytic:0
 #: field:account.crossovered.analytic,journal_ids:0
@@ -72,7 +67,7 @@ msgid "Analytic Plan Line"
 msgstr "Πλάνο Γραμμής Αναλυτικής"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:60
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
 msgid "User Error"
 msgstr "Σφάλμα Χρήστη"
@@ -103,9 +98,9 @@ msgid "Account2 Id"
 msgstr "Account2 Id"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Account Id"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -113,9 +108,11 @@ msgid "Amount"
 msgstr "Ποσό"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Code"
-msgstr "Κωδικός"
+#: constraint:account.journal:0
+msgid ""
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -138,6 +135,16 @@ msgid "Bank Statement Line"
 msgstr "Γραμμή Εξτρέ"
 
 #. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid "Define your Analytic Plans"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Λογαριασμος Αναλυτικής"
@@ -151,12 +158,6 @@ msgstr "Ο κωδικός του ημερολογίου πρέπει να είν
 #: field:account.crossovered.analytic,ref:0
 msgid "Analytic Account Reference"
 msgstr "Αναφορά Λογαριασμού Αναλυτικής"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
@@ -182,11 +183,17 @@ msgstr "Εκτύπωση"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+#: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "Ποσοστό"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Account Id"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #, python-format
 msgid "A model having this name and code already exists !"
 msgstr "Ένα μοντέλο που έχει αυτό το όνομα και κωδικό υπάρχει ήδη!"
@@ -252,9 +259,11 @@ msgid "Start Date"
 msgstr "Ημερομηνία Από"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Company"
-msgstr "Εταιρία"
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry must receive a value in its "
+"secondary currency"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -277,8 +286,8 @@ msgid "To Date"
 msgstr "Σε Ημερ/νία"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:483
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "Πρέπει να ορίσετε το αναλυτικό ημερολόγιο για το '%s' ημερολόγιο!"
@@ -294,84 +303,14 @@ msgid "analytic.plan.create.model.action"
 msgstr "αναλυτικό.πλάνο.δημιουργία.ενέργεια"
 
 #. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account :"
 msgstr "Αναλυτικός Λογαριασμός:"
-
-#. module: account_analytic_plans
-#: model:ir.module.module,description:account_analytic_plans.module_meta_information
-msgid ""
-"This module allows to use several analytic plans, according to the general "
-"journal,\n"
-"so that multiple analytic lines are created when the invoice or the entries\n"
-"are confirmed.\n"
-"\n"
-"For example, you can define the following analytic structure:\n"
-"  Projects\n"
-"      Project 1\n"
-"          SubProj 1.1\n"
-"          SubProj 1.2\n"
-"      Project 2\n"
-"  Salesman\n"
-"      Eric\n"
-"      Fabien\n"
-"\n"
-"Here, we have two plans: Projects and Salesman. An invoice line must\n"
-"be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-"Fabien. The amount can also be split. The following example is for\n"
-"an invoice that touches the two subproject and assigned to one salesman:\n"
-"\n"
-"Plan1:\n"
-"    SubProject 1.1 : 50%\n"
-"    SubProject 1.2 : 50%\n"
-"Plan2:\n"
-"    Eric: 100%\n"
-"\n"
-"So when this line of invoice will be confirmed, it will generate 3 analytic "
-"lines,\n"
-"for one account entry.\n"
-"The analytic plan validates the minimum and maximum percentage at the time "
-"of creation\n"
-"of distribution models.\n"
-"        "
-msgstr ""
-"Αυτό το πρόσθετο επιτρέπει τη χρήση πολλών αναλυτικών προγραμμάτων, σύμφωνα "
-"με το γενικό ημερολόγιο,\n"
-"έτσι ώστε να δημιουργηθούν πολλές αναλυτικές γραμμές όταν το τιμολόγιο ή οι "
-"καταχωρήσεις\n"
-"επιβεβαιώνονται.\n"
-"\n"
-"Για παράδειγμα, μπορείτε να ορίσετε την ακόλουθη αναλυτική δομή:\n"
-"  Έργα\n"
-"      Έργο1\n"
-"          Υποέργο 1,1\n"
-"          Υποέργο 1,2\n"
-"      Έργο 2\n"
-"  Πωλητής\n"
-"      Eric\n"
-"      Fabien\n"
-"\n"
-"Εδώ, έχουμε δύο σχέδια: Έργα και Πωλητής. Μια γραμμή τιμολογίου πρέπει\n"
-"να είναι σε θέση να γράψει αναλυτικά τις εγγραφές στο 2 σχέδια: Υποέργο 1,1 "
-"και\n"
-"Fabien. Το ποσό αυτό μπορεί επίσης να διαιρεθεί. Το ακόλουθο παράδειγμα "
-"είναι για\n"
-"ένα τιμολόγιο που αγγίζει τα δύο υποπρογράμματα και να ανατίθενται σε έναν "
-"πωλητή:\n"
-"\n"
-"Πλάνο1:\n"
-"    Υποέργο 1.1: 50%\n"
-"    Υποέργο 1.2: 50%\n"
-"Πλάνο2:\n"
-"    Eric: 100%\n"
-"\n"
-"Έτσι, όταν αυτή η γραμμή του τιμολογίου  επιβεβαιωθεί, δημιουργήσει 3 "
-"αναλυτικές γραμμές,\n"
-"για μία καταχώρηση λογαριασμόυ.\n"
-"Το αναλυτικό πλάνο επικυρώνει το ελάχιστο και το μέγιστο ποσοστό που κατά τη "
-"στιγμή της δημιουργίας\n"
-"των μοντέλων διανομής.\n"
-"        "
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -404,6 +343,11 @@ msgid "Company must be same for its related account and period."
 msgstr ""
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "The date of your Journal Entry is not in the defined period!"
+msgstr ""
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
 msgstr "Ελάχιστη Επιτρεπόμενη (%)"
@@ -414,7 +358,7 @@ msgid "Root account of this plan."
 msgstr "Κύριος λογαριασμός για αυτό το πλάνο."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
@@ -444,8 +388,8 @@ msgid "Print Crossovered Analytic"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:483
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Όχι Αναλυτικό Ημερολόγιο"
@@ -459,6 +403,11 @@ msgstr "Εξτρέ"
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
 msgstr "Account3 Id"
+
+#. module: account_analytic_plans
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -482,7 +431,7 @@ msgid "Analytic Distribution Lines"
 msgstr "Γραμμές Διανομής Αναλυτικής"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "The Total Should be Between %s and %s"
 msgstr "Το Σύνολο θα πρέπει να είναι Μεταξύ %s και %s"
@@ -534,6 +483,11 @@ msgid "Journal"
 msgstr "Ημερολόγιο"
 
 #. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Code"
+msgstr "Κωδικός"
+
+#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
 msgid "analytic.plan.create.model"
 msgstr "αναλυτικό.πλάνο.δημιουργία.μοντέλο"
@@ -549,6 +503,19 @@ msgid "Distribution Models"
 msgstr "Μοντέλα Διανομής"
 
 #. module: account_analytic_plans
+#: model:ir.actions.act_window,help:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid ""
+"To setup a multiple analytic plans environment, you must define the root "
+"analytic accounts for each plan set. Then, you must attach a plan set to "
+"your account journals."
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr "Εταιρία"
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
 msgstr "Αλληλουχία"
@@ -559,7 +526,7 @@ msgid "The name of the journal must be unique per company !"
 msgstr "Το όνομα του ημερολογίου πρέπει να είναι μοναδικός ανά εταιρία !"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "Value Error"
 msgstr "Σφάλμα Αξίας"
@@ -656,6 +623,9 @@ msgstr ""
 #~ "για μία εγγραφή λογαριασμού.\n"
 #~ "        "
 
+#~ msgid "Multiple-plans management in Analytic Accounting"
+#~ msgstr "Διαχείριση Πολλαπλών πλάνων στην Αναλυτική Λογιστική"
+
 #~ msgid "OK"
 #~ msgstr "ΟΚ"
 
@@ -676,3 +646,76 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Αυτό το πρόσθετο επιτρέπει τη χρήση πολλών αναλυτικών προγραμμάτων, σύμφωνα "
+#~ "με το γενικό ημερολόγιο,\n"
+#~ "έτσι ώστε να δημιουργηθούν πολλές αναλυτικές γραμμές όταν το τιμολόγιο ή οι "
+#~ "καταχωρήσεις\n"
+#~ "επιβεβαιώνονται.\n"
+#~ "\n"
+#~ "Για παράδειγμα, μπορείτε να ορίσετε την ακόλουθη αναλυτική δομή:\n"
+#~ "  Έργα\n"
+#~ "      Έργο1\n"
+#~ "          Υποέργο 1,1\n"
+#~ "          Υποέργο 1,2\n"
+#~ "      Έργο 2\n"
+#~ "  Πωλητής\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Εδώ, έχουμε δύο σχέδια: Έργα και Πωλητής. Μια γραμμή τιμολογίου πρέπει\n"
+#~ "να είναι σε θέση να γράψει αναλυτικά τις εγγραφές στο 2 σχέδια: Υποέργο 1,1 "
+#~ "και\n"
+#~ "Fabien. Το ποσό αυτό μπορεί επίσης να διαιρεθεί. Το ακόλουθο παράδειγμα "
+#~ "είναι για\n"
+#~ "ένα τιμολόγιο που αγγίζει τα δύο υποπρογράμματα και να ανατίθενται σε έναν "
+#~ "πωλητή:\n"
+#~ "\n"
+#~ "Πλάνο1:\n"
+#~ "    Υποέργο 1.1: 50%\n"
+#~ "    Υποέργο 1.2: 50%\n"
+#~ "Πλάνο2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "Έτσι, όταν αυτή η γραμμή του τιμολογίου  επιβεβαιωθεί, δημιουργήσει 3 "
+#~ "αναλυτικές γραμμές,\n"
+#~ "για μία καταχώρηση λογαριασμόυ.\n"
+#~ "Το αναλυτικό πλάνο επικυρώνει το ελάχιστο και το μέγιστο ποσοστό που κατά τη "
+#~ "στιγμή της δημιουργίας\n"
+#~ "των μοντέλων διανομής.\n"
+#~ "        "

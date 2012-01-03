@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-02-24 00:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:47+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:16+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -33,15 +33,6 @@ msgid "Specifies the amount of quantity to count."
 msgstr "Especifica o importe da cantidade a contar."
 
 #. module: analytic
-#: model:ir.module.module,description:analytic.module_meta_information
-msgid ""
-"Module for defining analytic accounting object.\n"
-"    "
-msgstr ""
-"Módulo para definir o obxecto da conta analítica.\n"
-"    "
-
-#. module: analytic
 #: field:account.analytic.account,state:0
 msgid "State"
 msgstr "Provincia"
@@ -50,11 +41,6 @@ msgstr "Provincia"
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
 msgstr "Xestor da Conta"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Draft"
-msgstr "Borrador"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -96,14 +82,14 @@ msgstr ""
 "Cando o proxecto estea rematado, o estado é establecido como 'Feito'."
 
 #. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr ""
+
+#. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
 msgstr "Tipo de Conta"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "Plantilla"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -133,9 +119,16 @@ msgid "Company"
 msgstr "Compañía"
 
 #. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Maximum Quantity"
-msgstr "Máxima Cantidade"
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really usefull for "
+"consolidation purposes of several companies charts with different "
+"currencies, for example."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -153,9 +146,9 @@ msgid "Date"
 msgstr "Data"
 
 #. module: analytic
-#: field:account.analytic.account,currency_id:0
-msgid "Account currency"
-msgstr "Divisa Contable"
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "Plantilla"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -173,9 +166,14 @@ msgstr ""
 "produto. Sempre expresado na divisa da compañía principal."
 
 #. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr ""
+
+#. module: analytic
 #: help:account.analytic.account,quantity_max:0
-msgid "Sets the higher limit of quantity of hours."
-msgstr "Establece o límite maior da cantidade de horas"
+msgid "Sets the higher limit of time to work on the contract."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -200,9 +198,20 @@ msgid ""
 msgstr "¡Erro! A divisa ten que sela mesma ca da compañía seleccionada"
 
 #. module: analytic
+#: field:account.analytic.account,code:0
+msgid "Code/Reference"
+msgstr ""
+
+#. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
 msgstr "Cancelado"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -229,9 +238,14 @@ msgid "Date End"
 msgstr "Data de Fin"
 
 #. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Account Code"
-msgstr "Código de Conta"
+#: field:account.analytic.account,quantity_max:0
+msgid "Maximum Time"
+msgstr ""
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -241,9 +255,18 @@ msgstr "Nome Completo da Conta"
 #. module: analytic
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.module.module,shortdesc:analytic.module_meta_information
 msgid "Analytic Account"
 msgstr "Conta analítica"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr ""
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -269,3 +292,25 @@ msgstr "Abrir"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Apuntes Analíticos"
+
+#~ msgid ""
+#~ "Module for defining analytic accounting object.\n"
+#~ "    "
+#~ msgstr ""
+#~ "Módulo para definir o obxecto da conta analítica.\n"
+#~ "    "
+
+#~ msgid "Draft"
+#~ msgstr "Borrador"
+
+#~ msgid "Maximum Quantity"
+#~ msgstr "Máxima Cantidade"
+
+#~ msgid "Sets the higher limit of quantity of hours."
+#~ msgstr "Establece o límite maior da cantidade de horas"
+
+#~ msgid "Account currency"
+#~ msgstr "Divisa Contable"
+
+#~ msgid "Account Code"
+#~ msgstr "Código de Conta"

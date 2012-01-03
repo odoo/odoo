@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-02-01 21:02+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
 "<openerp@novotrade.hu>\n"
@@ -14,8 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:26+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:52+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: sale_journal
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -23,19 +28,21 @@ msgid "Note"
 msgstr "Megjegyzés"
 
 #. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr ""
+
+#. module: sale_journal
 #: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and picking."
-msgstr "Az értékesítésre és kiszedésre használt napló típusa."
+msgid ""
+"This invoicing type will be used, by default, for invoicing the current "
+"partner."
+msgstr ""
 
 #. module: sale_journal
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "A megrendelés hivatkozásnak egyedinek kell lennie!"
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Számlázás"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -55,64 +62,16 @@ msgid "Notes"
 msgstr "Megjegyzések"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Method"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
 msgstr "Számlázási mód"
 
 #. module: sale_journal
-#: model:ir.module.module,description:sale_journal.module_meta_information
-msgid ""
-"\n"
-"    The sales journal modules allows you to categorise your\n"
-"    sales and deliveries (picking lists) between different journals.\n"
-"    This module is very helpful for bigger companies that\n"
-"    works by departments.\n"
-"\n"
-"    You can use journal for different purposes, some examples:\n"
-"    * isolate sales of different departments\n"
-"    * journals for deliveries by truck or by UPS\n"
-"\n"
-"    Journals have a responsible and evolves between different status:\n"
-"    * draft, open, cancel, done.\n"
-"\n"
-"    Batch operations can be processed on the different journals to\n"
-"    confirm all sales at once, to validate or invoice packing, ...\n"
-"\n"
-"    It also supports batch invoicing methods that can be configured by\n"
-"    partners and sales orders, examples:\n"
-"    * daily invoicing,\n"
-"    * monthly invoicing, ...\n"
-"\n"
-"    Some statistics by journals are provided.\n"
-"    "
-msgstr ""
-"\n"
-"    Az értékesítési napló modul lehetővé teszi az értékesítések és a "
-"szállítások\n"
-"    (kiszedési listák) különböző naplók közötti osztályozását.\n"
-"    Ez a modul nagyon hasznos nagyobb vállalatok számára, amelyek osztályok\n"
-"    szerint épülnek fel.\n"
-"\n"
-"    Különböző célokra használhatják a naplót, például:\n"
-"    * különböző osztályok értékesítésének elkülönítésére\n"
-"    * kamionos vagy UPS által végzett szállítások szétválasztására\n"
-"\n"
-"    A naplónak felelőse van, és a napló különböző állapotokban lehet:\n"
-"    * tervezet, nyitott, törölt, kész.\n"
-"\n"
-"    A naplókon kötegelt műveleteket lehet végrehajtani, pl. minden "
-"értékesítés\n"
-"    egyszerre történő jóváhagyása, kiszedések jóváhagyása vagy számlázása, "
-"stb.\n"
-"\n"
-"    A modul támogatja a kötegelt számlázást is, amely partnerekre vagy "
-"vevői\n"
-"    megrendelésekre állítható be, pl.:\n"
-"    * napi számlázás\n"
-"    * havi számlázás, stb\n"
-"\n"
-"    A naplókról néhány statisztikát is elérhetővé tesz a modul.\n"
-"    "
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Számla típusok"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -123,11 +82,6 @@ msgstr "Nem csoportosított"
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
 msgstr "Csoportosított"
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Hiba! Nem hozhat létre rekurzív társult tagokat."
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -142,14 +96,9 @@ msgstr ""
 "havi, stb."
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Számlázási mód"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sales Order"
-msgstr "Vevői megrendelés"
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -170,11 +119,9 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Számla típusok"
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
+msgstr "Vevői megrendelés"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
@@ -182,6 +129,74 @@ msgid "Picking List"
 msgstr "Kiszedési lista"
 
 #. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr "Irányított értékesítések és kiszállítások napló szerint"
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "Számlázás"
+
+#~ msgid "Managing sales and deliveries by journal"
+#~ msgstr "Irányított értékesítések és kiszállítások napló szerint"
+
+#~ msgid "Invoicing Method"
+#~ msgstr "Számlázási mód"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "A megrendelés hivatkozásnak egyedinek kell lennie!"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Hiba! Nem hozhat létre rekurzív társult tagokat."
+
+#~ msgid "The type of journal used for sales and picking."
+#~ msgstr "Az értékesítésre és kiszedésre használt napló típusa."
+
+#~ msgid ""
+#~ "\n"
+#~ "    The sales journal modules allows you to categorise your\n"
+#~ "    sales and deliveries (picking lists) between different journals.\n"
+#~ "    This module is very helpful for bigger companies that\n"
+#~ "    works by departments.\n"
+#~ "\n"
+#~ "    You can use journal for different purposes, some examples:\n"
+#~ "    * isolate sales of different departments\n"
+#~ "    * journals for deliveries by truck or by UPS\n"
+#~ "\n"
+#~ "    Journals have a responsible and evolves between different status:\n"
+#~ "    * draft, open, cancel, done.\n"
+#~ "\n"
+#~ "    Batch operations can be processed on the different journals to\n"
+#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
+#~ "\n"
+#~ "    It also supports batch invoicing methods that can be configured by\n"
+#~ "    partners and sales orders, examples:\n"
+#~ "    * daily invoicing,\n"
+#~ "    * monthly invoicing, ...\n"
+#~ "\n"
+#~ "    Some statistics by journals are provided.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Az értékesítési napló modul lehetővé teszi az értékesítések és a "
+#~ "szállítások\n"
+#~ "    (kiszedési listák) különböző naplók közötti osztályozását.\n"
+#~ "    Ez a modul nagyon hasznos nagyobb vállalatok számára, amelyek osztályok\n"
+#~ "    szerint épülnek fel.\n"
+#~ "\n"
+#~ "    Különböző célokra használhatják a naplót, például:\n"
+#~ "    * különböző osztályok értékesítésének elkülönítésére\n"
+#~ "    * kamionos vagy UPS által végzett szállítások szétválasztására\n"
+#~ "\n"
+#~ "    A naplónak felelőse van, és a napló különböző állapotokban lehet:\n"
+#~ "    * tervezet, nyitott, törölt, kész.\n"
+#~ "\n"
+#~ "    A naplókon kötegelt műveleteket lehet végrehajtani, pl. minden "
+#~ "értékesítés\n"
+#~ "    egyszerre történő jóváhagyása, kiszedések jóváhagyása vagy számlázása, "
+#~ "stb.\n"
+#~ "\n"
+#~ "    A modul támogatja a kötegelt számlázást is, amely partnerekre vagy "
+#~ "vevői\n"
+#~ "    megrendelésekre állítható be, pl.:\n"
+#~ "    * napi számlázás\n"
+#~ "    * havi számlázás, stb\n"
+#~ "\n"
+#~ "    A naplókról néhány statisztikát is elérhetővé tesz a modul.\n"
+#~ "    "

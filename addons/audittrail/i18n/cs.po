@@ -6,24 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-09-06 06:48+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-07 04:35+0000\n"
-"X-Generator: Launchpad (build 13861)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:04+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: audittrail
-#: model:ir.module.module,shortdesc:audittrail.module_meta_information
-msgid "Audit Trail"
-msgstr "Prověřovací záznam"
-
-#. module: audittrail
-#: code:addons/audittrail/audittrail.py:81
+#: code:addons/audittrail/audittrail.py:75
 #, python-format
 msgid "WARNING: audittrail is not part of the pool"
 msgstr "VAROVÁNÍ: přověřovací záznam není částí fondu"
@@ -38,6 +33,18 @@ msgstr "Záznam"
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "Upsaný"
+
+#. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is already a rule defined on this object\n"
+" You cannot define another: please edit the existing one."
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "Subscribed Rule"
+msgstr ""
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_rule
@@ -212,33 +219,12 @@ msgid "Log Workflow"
 msgstr "Záznam Pracovních postupů"
 
 #. module: audittrail
-#: model:ir.module.module,description:audittrail.module_meta_information
-msgid ""
-"\n"
-"    This module gives the administrator the rights\n"
-"    to track every user operation on all the objects\n"
-"    of the system.\n"
-"\n"
-"    Administrator can subscribe rules for read,write and\n"
-"    delete on objects and can check logs.\n"
-"    "
-msgstr ""
-"\n"
-"    Tento modul dává správcům práva\n"
-"    ke sledování každé uživatelské operace na všech objektech\n"
-"    systému.\n"
-"\n"
-"    Správce může zapsat pravidla pro čtení, zápis a \n"
-"    mazání nad objekty a může kontrolovat záznamy.\n"
-"    "
-
-#. module: audittrail
 #: field:audittrail.rule,log_read:0
 msgid "Log Reads"
 msgstr "Záznam čtení"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:82
+#: code:addons/audittrail/audittrail.py:76
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr ""
@@ -335,6 +321,11 @@ msgid "AuditTrail Logs"
 msgstr "Záznamy Prověřovacícho záznamu"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "Draft  Rule"
+msgstr ""
+
+#. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
 msgstr "Záznam Prověřovacího záznamu"
@@ -351,15 +342,6 @@ msgstr ""
 #: view:audittrail.log:0
 msgid "New Value : "
 msgstr "Nová hodnota : "
-
-#. module: audittrail
-#: sql_constraint:audittrail.rule:0
-msgid ""
-"There is a rule defined on this object\n"
-" You can not define other on the same!"
-msgstr ""
-"Je zadáno pravidlo nad tímto objektem\n"
-" Na stejném nemůžete zadávat jiné!"
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
@@ -394,3 +376,32 @@ msgid ""
 msgstr ""
 "Vyberte toto, pokud chcete udržovat přehled o vytváření nad tímto záznamem "
 "objektu tohoto pravidla"
+
+#~ msgid "Audit Trail"
+#~ msgstr "Prověřovací záznam"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module gives the administrator the rights\n"
+#~ "    to track every user operation on all the objects\n"
+#~ "    of the system.\n"
+#~ "\n"
+#~ "    Administrator can subscribe rules for read,write and\n"
+#~ "    delete on objects and can check logs.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Tento modul dává správcům práva\n"
+#~ "    ke sledování každé uživatelské operace na všech objektech\n"
+#~ "    systému.\n"
+#~ "\n"
+#~ "    Správce může zapsat pravidla pro čtení, zápis a \n"
+#~ "    mazání nad objekty a může kontrolovat záznamy.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "There is a rule defined on this object\n"
+#~ " You can not define other on the same!"
+#~ msgstr ""
+#~ "Je zadáno pravidlo nad tímto objektem\n"
+#~ " Na stejném nemůžete zadávat jiné!"

@@ -21,9 +21,9 @@
 
 
 {
-    'name'      : 'Analytic Account View',
+    'name'      : 'Contracts Management',
     'version'   : '1.1',
-    'category'  : 'Hidden',
+    'category'  : 'Sales Management',
     'complexity': "normal",
     'description': """
 This module is for modifying account analytic view to show important data to project manager of services companies.
@@ -42,6 +42,7 @@ user-wise as well as month wise.
                     "security/ir.model.access.csv",
                     "account_analytic_analysis_view.xml",
                     "account_analytic_analysis_menu.xml",
+                    "account_analytic_analysis_cron.xml",
                     ],
     'demo_xml'  : [],
     'installable': True,

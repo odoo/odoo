@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-09-29 10:18+0000\n"
 "Last-Translator: Radoslav Sloboda <rado.sloboda@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:29+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
-
-#. module: account_analytic_default
-#: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
-msgid "Account Analytic Default"
-msgstr "Predvolený analytický účet"
+"X-Launchpad-Export-Date: 2011-12-23 06:57+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -60,6 +55,11 @@ msgstr ""
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
+msgstr ""
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Comapny"
 msgstr ""
 
 #. module: account_analytic_default
@@ -127,16 +127,13 @@ msgid "Analytic Defaults"
 msgstr "Predvolené analýzy"
 
 #. module: account_analytic_default
-#: model:ir.module.module,description:account_analytic_default.module_meta_information
-msgid ""
-"\n"
-"Allows to automatically select analytic accounts based on criterions:\n"
-"* Product\n"
-"* Partner\n"
-"* User\n"
-"* Company\n"
-"* Date\n"
-"    "
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr ""
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Analytical defaults whose end date is greater than today or None"
 msgstr ""
 
 #. module: account_analytic_default
@@ -200,6 +197,9 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Neplatný názov modelu v definícii akcie."
+
+#~ msgid "Account Analytic Default"
+#~ msgstr "Predvolený analytický účet"
 
 #~ msgid "Analytic Distributions"
 #~ msgstr "Analytické distribúcie"

@@ -1,9 +1,0 @@
--
-  In order to test the PDF reports defined on a Project Scrum, we will print Project Scrum Sprint Burndown Report
-- 
-  !python {model: project.scrum.sprint}: |
-    import netsvc, tools, os
-    data_dict = {'model': 'project.scrum.sprint', 'id':ref('project_scrum.scrum_sprint_0')}
-    (data, format) = netsvc.LocalService('report.scrum.sprint.burndown').create(cr, uid, [ref('project_scrum.scrum_sprint_0')], data_dict, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'project_scrum-project_scrum_sprint_burndown.'+format), 'wb+').write(data)

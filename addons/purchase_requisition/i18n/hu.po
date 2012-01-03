@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-31 20:01+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
 "<openerp@novotrade.hu>\n"
@@ -14,8 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:57+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:27+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: purchase_requisition
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -24,21 +29,26 @@ msgid "In Progress"
 msgstr "Folyamatban"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
 #, python-format
 msgid "No Product in Tender"
-msgstr "Nincs termék az árajánlatban"
+msgstr "Nincs megadott termék az árajánlatban"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Confirm"
-msgstr "Megerősítés"
+#: view:purchase.order:0
+msgid "Requisition"
+msgstr "Igénylés"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 #: field:purchase.requisition,user_id:0
 msgid "Responsible"
 msgstr "Felelős"
+
+#. module: purchase_requisition
+#: view:purchase.requisition.partner:0
+msgid "Create Quotation"
+msgstr "Árajánlat létrehozása"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -53,9 +63,8 @@ msgstr "Állapot"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
-msgid "Draft"
-msgstr "Tervezet"
+msgid "Purchase Requisition in negociation"
+msgstr ""
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -63,9 +72,10 @@ msgid "Supplier"
 msgstr "Szállító"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,exclusive:0
-msgid "Requisition Type"
-msgstr "Igény típusa"
+#: view:purchase.requisition:0
+#: selection:purchase.requisition,state:0
+msgid "New"
+msgstr ""
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -76,24 +86,30 @@ msgstr "Termék részletei"
 #: report:purchase.requisition:0
 #: field:purchase.requisition,date_start:0
 msgid "Requisition Date"
-msgstr "Igény dátuma"
+msgstr "Igénylés dátuma"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: model:ir.actions.report.xml,name:purchase_requisition.report_purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
+#: model:ir.module.category,name:purchase_requisition.module_category_purchase_requisition
 #: field:product.product,purchase_requisition:0
 #: field:purchase.order,requisition_id:0
 #: view:purchase.requisition:0
 #: field:purchase.requisition.line,requisition_id:0
 #: view:purchase.requisition.partner:0
 msgid "Purchase Requisition"
-msgstr "Beszerzési igény"
+msgstr "Beszerzési igénylés"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 msgid "Purchase Requisition Line"
-msgstr "Beszerzési igény sor"
+msgstr "Beszerzési igénylési sor"
+
+#. module: purchase_requisition
+#: view:purchase.order:0
+msgid "Purchase Orders with requisition"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -102,9 +118,9 @@ msgid "Product"
 msgstr "Termék"
 
 #. module: purchase_requisition
-#: sql_constraint:purchase.order:0
-msgid "Order Reference must be unique !"
-msgstr "A megrendelés hivatkozásnak egyedinek kell lennie!"
+#: view:purchase.requisition:0
+msgid "Quotations"
+msgstr "Árajánlatok"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -118,8 +134,14 @@ msgid ""
 "Check this box so that requisitions generates purchase requisitions instead "
 "of directly requests for quotations."
 msgstr ""
-"Jelölje be ezt a négyzetet, hogy az igények közvetlen ajánlatkérések helyett "
-"beszerzési igényeket állítsanak elő."
+"Jelölje ki ezt a mezőt, ha azt szeretné, hogy az igénylések beszerzési "
+"igényléseket hozzanak létre, közvetlenül árajánlatkérések helyett."
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:136
+#, python-format
+msgid "Warning"
+msgstr ""
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -135,17 +157,23 @@ msgstr "Vállalat"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Request a Quotation"
-msgstr "Ajánlat kérése"
+msgstr "Árajánlat kérése"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Multiple Requisitions"
-msgstr ""
+msgstr "Többszörös igénylés"
+
+#. module: purchase_requisition
+#: report:purchase.requisition:0
+#: field:purchase.requisition.line,product_uom_id:0
+msgid "Product UoM"
+msgstr "Termék ME"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Approved by Supplier"
-msgstr "Szállító által jóváhagyott"
+msgstr "Szállító által jóváhagyva"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -153,14 +181,13 @@ msgid "Reset to Draft"
 msgstr "Visszaállítás tervezet állapotba"
 
 #. module: purchase_requisition
-#: model:ir.module.module,description:purchase_requisition.module_meta_information
-msgid ""
-"\n"
-"    This module allows you to manage your Purchase Requisition.\n"
-"    When a purchase order is created, you now have the opportunity to save "
-"the related requisition.\n"
-"    This new object will regroup and will allow you to easily keep track and "
-"order all your purchase orders.\n"
+#: view:purchase.requisition:0
+msgid "Current Purchase Requisition"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:res.groups,name:purchase_requisition.group_purchase_requisition_user
+msgid "User"
 msgstr ""
 
 #. module: purchase_requisition
@@ -171,12 +198,7 @@ msgstr "Cím"
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Order Reference"
-msgstr "Megrendelés hivatkozás"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Start Date"
-msgstr "Kezdő dátum"
+msgstr "Megrendelés hivatkozása"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -187,10 +209,11 @@ msgid ""
 "negotiation, once you have reviewed all the supplier's offers, you can "
 "validate some and cancel others."
 msgstr ""
-"A beszerzési igény az ajánlatkérés előtti lépés. A beszerzési igényben "
-"rögzítheti a beszerzendő termékeket és elkészítheti a szállítói "
-"ajánlatkéréseket. Miután minden szállítói ajánlatot áttekintett, egyeseket "
-"jóváhagyhat, másokat törölhet."
+"Egy beszerzés igénylés az árajánlatkérést megelőző lépés. Egy beszerzés "
+"igénylés (vagy beszerzési tender) során, Ön felveheti a vásárlandó "
+"termékeket, és kezdeményezheti árajánlatkérések létrehozását a szállítók "
+"felé . A tárgyalást követően, miután Ön áttekintette összes az szállító "
+"árajánlatát, érvényesítheti vagy megszakíthatja azokat."
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_qty:0
@@ -198,36 +221,49 @@ msgid "Quantity"
 msgstr "Mennyiség"
 
 #. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Unassigned  Requisition"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Purchase Requisitions"
-msgstr "Beszerzési igények"
+msgstr "Beszerzési igénylések"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:136
+#, python-format
+msgid ""
+"You have already one %s purchase order for this partner, you must cancel "
+"this purchase order to create a new quotation."
+msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "End Date"
-msgstr "Záró dátum"
+msgstr "Befejezési dátum"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 #: field:purchase.requisition,name:0
 msgid "Requisition Reference"
-msgstr "Igény hivatkozás"
+msgstr "Igénylés hivatkozása"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,line_ids:0
 msgid "Products to Purchase"
-msgstr "Beszerzendő termékek"
+msgstr "Beszerzésre váró termékek"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,date_end:0
 msgid "Requisition Deadline"
-msgstr "Igény határideje"
+msgstr "Igénylési határidő"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Search Purchase Requisition"
-msgstr "Beszerzési igény keresése"
+msgstr "Beszerzési Igénylés keresése"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -248,11 +284,16 @@ msgid ""
 "orders.On confirmation of a purchase order it does not cancel the remaining "
 "orders"
 msgstr ""
+"Exkluzív igénylés:  Egy szállítói megrendelés megerősítésekor megszakítja a "
+"többi szállítói megrendelést.\n"
+"Többszörös igénylés:  Lehetővé teszi több szállítói megrendelés "
+"létrehozását. Egy szállítói megrendelés megerősítésekor nem szakítja meg a "
+"többi megrendelést."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Cancel Purchase Order"
-msgstr "Szállítói megrendelés érvénytelenítése"
+msgstr "Szállítói megrendelés megszakítása"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -261,16 +302,20 @@ msgid "Purchase Order"
 msgstr "Szállítói megrendelés"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
 #, python-format
 msgid "Error!"
 msgstr "Hiba!"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition.line,product_uom_id:0
-msgid "Product UoM"
-msgstr "Termék ME"
+#: field:purchase.requisition,exclusive:0
+msgid "Requisition Type"
+msgstr "Igénylés típusa"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "New Purchase Requisition"
+msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -283,9 +328,14 @@ msgid "Order Date"
 msgstr "Megrendelés dátuma"
 
 #. module: purchase_requisition
+#: report:purchase.requisition:0
+msgid "]"
+msgstr "]"
+
+#. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Cancelled"
-msgstr "Érvénytelenített"
+msgstr "Megszakítva"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -295,12 +345,12 @@ msgstr "["
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
 msgid "Purchase Requisition Partner"
-msgstr "Beszerzési igény partner"
+msgstr "Beszerzési igénylési partner"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "]"
-msgstr "]"
+#: view:purchase.requisition:0
+msgid "Start"
+msgstr ""
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -310,7 +360,7 @@ msgstr "Árajánlat részletei"
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Purchase for Requisitions"
-msgstr "Beszerzés igény alapján"
+msgstr "Beszerzés az igénylésekre"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -322,7 +372,7 @@ msgstr "Szállítói megrendelések"
 #: view:purchase.requisition:0
 #: field:purchase.requisition,origin:0
 msgid "Origin"
-msgstr "Forrás"
+msgstr "Eredet"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -342,27 +392,22 @@ msgstr "Raktár"
 #. module: purchase_requisition
 #: field:procurement.order,requisition_id:0
 msgid "Latest Requisition"
-msgstr "Legutolsó igény"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Quotations"
-msgstr "Árajánlatok"
+msgstr "Legújabb igénylés"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Qty"
-msgstr "Menny."
+msgstr "Mennyiség"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Purchase Requisition (exclusive)"
-msgstr "Beszerzési igény (kizárólagos)"
+msgstr "Exkluzív Igénylés"
 
 #. module: purchase_requisition
-#: view:purchase.requisition.partner:0
-msgid "Create Quotation"
-msgstr "Árajánlat készítése"
+#: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager
+msgid "Manager"
+msgstr ""
 
 #. module: purchase_requisition
 #: constraint:product.product:0
@@ -378,7 +423,7 @@ msgstr "Kész"
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Mégsem"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -396,29 +441,44 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: purchase_requisition
-#: model:ir.module.module,shortdesc:purchase_requisition.module_meta_information
-msgid "Purchase - Purchase Requisition"
-msgstr "Beszerzés - beszerzési igény"
+#: view:purchase.requisition:0
+msgid "Start Date"
+msgstr "Kezdési dátum"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Unassigned"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.order:0
-msgid "Requisition"
-msgstr "Igény"
+msgstr "Nem hozzárendelt"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
 msgstr "Szállítói megrendelések"
 
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:90
-#, python-format
-msgid ""
-"You have already one %s purchase order for this partner, you must cancel "
-"this purchase order to create a new quotation."
-msgstr ""
+#~ msgid "Draft"
+#~ msgstr "Tervezet"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "A megrendelés hivatkozásnak egyedinek kell lennie!"
+
+#~ msgid "Confirm"
+#~ msgstr "Megerősítés"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module allows you to manage your Purchase Requisition.\n"
+#~ "    When a purchase order is created, you now have the opportunity to save "
+#~ "the related requisition.\n"
+#~ "    This new object will regroup and will allow you to easily keep track and "
+#~ "order all your purchase orders.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "    Ez a modul lehetővé teszi, hogy kezelje beszerzési igényléseit. \n"
+#~ "    Mikor egy szállítói megrendelés létrehozásra kerül, Önnek ezt követően "
+#~ "nyílik lehetősége elmenteni a kapcsolódó igénylést.\n"
+#~ "    Ez az új objektum lehetővé fogja tenni az Ön számára, hogy "
+#~ "újracsoportosítsa, könnyedén számon tartsa és elintézze szállítói "
+#~ "megrendeléseit.\n"
+
+#~ msgid "Purchase - Purchase Requisition"
+#~ msgstr "Beszerzés - Beszerzési igénylés"

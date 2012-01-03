@@ -6,7 +6,7 @@
   !record {model: hr.employee, id: hr_employee_richard0}:
     birthday: '1984-05-01'
     country_id: base.be
-    department_id: hr.dep_it
+    department_id: hr.dep_rd
     gender: male
     name: Richard
 -
@@ -16,7 +16,6 @@
     name: Salary Structure for Software Developer
     code: SD
     company_id: base.main_company
-    parent_id: structure_base
     rule_ids:
       - hr_salary_rule_houserentallowance1
       - hr_salary_rule_convanceallowance1
@@ -42,25 +41,6 @@
   !record {model: hr.payslip, id: hr_payslip_0}:
     employee_id: hr_payroll.hr_employee_richard0
 -
-  The selection of an employee fills the contract, structure, worked days and input data fields
--
-  !python {model: hr.payslip}: |
-    import time
-    from datetime import datetime
-    from dateutil import relativedelta
-    date_from = time.strftime('%Y-%m-01')
-    worked_days_obj = self.pool.get('hr.payslip.worked_days')
-    date_to = str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10]
-    res = self.onchange_employee_id(cr, uid, [], date_from, date_to, ref("hr_employee_richard0"), False, None)
-    vals = {
-      'struct_id': res['value']['struct_id'],
-      'contract_id': res['value']['contract_id'],
-      'name': res['value']['name'],
-      }
-    vals['worked_days_line_ids'] = [(0,0,i) for i in res['value']['worked_days_line_ids']]
-    vals['input_line_ids'] = [(0, 0, i) for i in res['value']['input_line_ids']]
-    self.write(cr, uid, ref("hr_payslip_0"), vals)
--
   I assign the amount to Input data
 -
   !python {model: hr.payslip.input}: |
@@ -70,9 +50,8 @@
   I verify the payslip is in draft state
 -
   !python {model: hr.payslip}: |
-    from tools.translate import _
     payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
-    assert(payslip_brw.state == 'draft'), _('State not changed!')
+    assert (payslip_brw.state == 'draft'), 'State not changed!'
 -
   I click on 'Compute Sheet' button on payslip
 -
@@ -92,3 +71,45 @@
     from tools.translate import _
     payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
     assert(payslip_brw.state == 'done'), _('State not changed!')
+-
+  I want to check refund payslip so I click on refund button.
+-
+  !python {model: hr.payslip}: |
+    self.refund_sheet(cr, uid, [ref("hr_payslip_0")], None)
+-
+  I check on new payslip Credit Note is checked or not.
+-
+  !python {model: hr.payslip}: |
+    payslip_obj = self.browse(cr, uid, ref("hr_payslip_0"), None)
+    payslip_ids = self.search(cr, uid, [('name','like','Refund: '+payslip_obj.name),('credit_note','=',True)], None)
+    assert payslip_ids, "Payslip not refunded!"
+-
+  I want to generate a payslip from Payslip run.
+-
+  !record {model: hr.payslip.run, id: hr_payslip_run_PayslipforEmployee0}:
+    date_end: '2011-09-30'
+    date_start: '2011-09-01'
+    name: Payslip for Employee
+-
+  I create record for generating the payslip for this Payslip run.
+-
+  !record {model: hr.payslip.employees, id: hr_payslip_employees0}:
+    employee_ids:
+      - hr_employee_richard0
+-
+  I generate the payslip by clicking on Generat button wizard.
+-
+  !python {model: hr.payslip.employees}: |
+     self.compute_sheet(cr, uid, [ref('hr_payslip_employees0')], context={'active_id': ref('hr_payslip_run_PayslipforEmployee0')})
+-
+  I open Contribution Register and from there I print the Payslip Lines report.
+-
+  !record {model: payslip.lines.contribution.register, id: payslip_lines_contribution_register0}:
+    date_from: '2011-09-30'
+    date_to: '2011-09-01'
+-
+  I print the report.
+-
+  !python {model: payslip.lines.contribution.register}: |
+    self.print_report(cr, uid, [ref('payslip_lines_contribution_register0')], context={'active_ids': [ref('hr_houserent_register')]})
+

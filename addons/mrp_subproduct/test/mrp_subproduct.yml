@@ -1,152 +1,60 @@
 -
-  In order to test mrp_subproduct with OpenERP, I create a bill of material with subproducts.
+  In order to test mrp_subproduct with OpenERP, I add subproduct in bill of material.
   I make a production order, confirm it so stock moves for subproducts are generated.
 -
-  I create a record for the product Chair.
+  I add a sub product in Bill of material for product Cabinet.
 -
-  !record {model: product.product, id: product_product_woodenchair0}:
-    categ_id: product.cat1
-    name: Wooden Chair
-    procure_method: make_to_stock
-    supply_method: produce
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
-    property_stock_inventory: stock.location_inventory
-    property_stock_procurement: stock.location_procurement
-    property_stock_production: stock.location_production
--
-  I create a record for the product Wood.
--
-  !record {model: product.product, id: product_product_wood0}:
-    categ_id: product.cat1
-    name: Wood
-    procure_method: make_to_order
-    supply_method: buy
-    property_stock_inventory: stock.location_inventory
-    property_stock_procurement: stock.location_procurement
-    property_stock_production: stock.location_production
-    seller_ids:
-      - delay: 1
-        name: base.res_partner_maxtor
-        min_qty: 300.0
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
--
-  I create a record for the product Nails.
--
-  !record {model: product.product, id: product_product_nails0}:
-    categ_id: product.cat1
-    name: Nails
-    procure_method: make_to_order
-    supply_method: buy
-    property_stock_inventory: stock.location_inventory
-    property_stock_procurement: stock.location_procurement
-    property_stock_production: stock.location_production
-    seller_ids:
-      - delay: 1
-        name: base.res_partner_asus
-        min_qty: 500.0
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
--
-  I create a record for the product Table.
--
-  !record {model: product.product, id: product_product_woodentable0}:
-    categ_id: product.cat1
-    name: Wooden Table
-    procure_method: make_to_stock
-    supply_method: produce
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
-    property_stock_inventory: stock.location_inventory
-    property_stock_procurement: stock.location_procurement
-    property_stock_production: stock.location_production
--
-  Now I create a bill of material for the product Wooden Chair.
--
-  !record {model: mrp.bom, id: mrp_bom_woodenchair0}:
-    company_id: base.main_company
-    name: Wooden Chair
-    product_efficiency: 1.0
-    product_id: product_product_woodenchair0
-    product_qty: 1.0
+  !record {model: mrp.bom, id: mrp_bom_arm1}:
+    product_id: product.product_product_arm
+    name: ARM100 + Subproduct
     product_uom: product.product_uom_unit
-    product_uos_qty: 0.0
-    type: normal
-    bom_lines:
-      - company_id: base.main_company
-        name: Wood
-        product_efficiency: 1.0
-        product_id: product_product_wood0
-        product_qty: 10.0
-        product_uom: product.product_uom_unit
-        product_uos_qty: 0.0
-        sequence: 0.0
-        type: normal
-      - company_id: base.main_company
-        name: Nails
-        product_efficiency: 1.0
-        product_id: product_product_nails0
-        product_qty: 35.0
-        product_uom: product.product_uom_unit
-        product_uos_qty: 0.0
-        sequence: 0.0
-        type: normal
     sub_products:
-      - product_id: product_product_woodentable0
+      - product_id: product.product_product_woodentable0
         product_uom: product.product_uom_unit
-        product_qty: 1.0
+        product_qty: 2.0
         subproduct_type: fixed
 -
-  I create a production order for Wooden Chair.
+  I create a production order for Cabinet.
 -
   !record {model: mrp.production, id: mrp_production_mo0}:
-    bom_id: mrp_bom_woodenchair0
-    company_id: base.main_company
-    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-    location_dest_id: stock.stock_location_stock
-    location_src_id: stock.stock_location_stock
-    name: MO/00004
-    product_id: product_product_woodenchair0
+    product_id: product.product_product_arm
     product_qty: 10.0
     product_uom: product.product_uom_unit
-    product_uos_qty: 0.0
+    bom_id: mrp_bom_arm1
+    location_src_id: stock.stock_location_stock
 -
   I compute the data of production order.
 -
   !python {model: mrp.production}: |
-    self.action_compute(cr, uid, [ref("mrp_production_mo0")], {"lang": "en_US", "tz": False, "search_default_Current":
-      1, "active_model": "ir.ui.menu", "active_ids": [ref("mrp.menu_mrp_production_action")],
-      "active_id": ref("mrp.menu_mrp_production_action"), })
+    self.action_compute(cr, uid, [ref("mrp_production_mo0")], {"active_ids": [ref("mrp_production_mo0")],"active_id": ref("mrp_production_mo0")})
 -
   I confirm the production order.
 -
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo0}
+  !python {model: mrp.production}: |
+    self.action_confirm(cr, uid, [ref('mrp_production_mo0')])
+-
+  I check production order state.
+-
+  !assert {model: mrp.production, id: mrp_production_mo0, severity: error, string: Production order should be in state confirmed}:
+    - state == 'confirmed'
 -
   Now I check the stock moves for the subproduct I created in the bill of material.
   This move is created automatically when I confirmed the production order.
 -
   !python {model: stock.move}: |
-    move_id = self.search(cr, uid, [('product_id','=',ref('product_product_woodentable0'))])
-    assert move_id, 'No moves are created !'
+    move_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_woodentable0'))])
+    assert move_ids, 'No moves are created !'
 -
   I want to start the production so I force the reservation of products.
 -
   !python {model: mrp.production}: |
-    self.force_production(cr, uid, [ref("mrp_production_mo0")], {"lang": "en_US", "tz": False,
-      "search_default_Current": 1, "active_model": "ir.ui.menu", "active_ids":
-      [ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),
-      })
+    self.force_production(cr, uid, [ref("mrp_production_mo0")], {"active_ids":[ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),})
 -
   I start the production.
 -
   !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo0}
 -
-  I consume and produce the Production of products.
+  I consume and produce the production of products.
 -
   I create record for selecting mode and quantity of products to produce.
 -
@@ -157,13 +65,11 @@
   I finish the production order.
 -
   !python {model: mrp.product.produce}: |
-    self.do_produce(cr, uid, [ref("mrp_product_produce0")], {"lang": "en_US", "tz":
-      False, "search_default_Current": 1, "active_model": "mrp.production", "active_ids":
-      [ref("mrp_production_mo0")], "active_id": ref("mrp_production_mo0"), })
+    self.do_produce(cr, uid, [ref("mrp_product_produce0")], {"active_model": "mrp.production", "active_ids":[ref("mrp_production_mo0")], "active_id": ref("mrp_production_mo0")})
 -
-  I see that stock moves of Wood and Nails including Wooden Table are done now.
+  I see that stock moves of Cabinet including Wooden Table are done now.
 -
   !python {model: stock.move}: |
-    move_ids = self.search(cr, uid, [('product_id','in',[ref("product_product_woodentable0"),ref("product_product_wood0"),ref("product_product_nails0")])])
+    move_ids = self.search(cr, uid, [('product_id','in',[ref("product.product_product_arm"),ref("product.product_product_sidepanel0")])])
     moves = self.browse(cr, uid, move_ids)
     assert all(move.state == 'done' for move in moves), 'Moves are not done!'

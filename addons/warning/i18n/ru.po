@@ -6,15 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2010-12-11 16:24+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:41+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:11+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: warning
+#: sql_constraint:purchase.order:0
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -31,11 +37,6 @@ msgstr "Сообщение о продаже позиции в заказе"
 #: field:product.product,purchase_line_warn_msg:0
 msgid "Message for Purchase Order Line"
 msgstr "Сообщение о покупке позиции в заказе"
-
-#. module: warning
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Ошибка! Вы не можете создать рекурсивно связанных участников."
 
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking
@@ -56,12 +57,6 @@ msgstr "Предупреждение при покупке этого товар
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
 msgstr "ТМЦ"
-
-#. module: warning
-#: sql_constraint:purchase.order:0
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "Номер заказа должен быть уникальным!"
 
 #. module: warning
 #: view:product.product:0
@@ -90,6 +85,11 @@ msgid "Blocking Message"
 msgstr "Блокирующее сообщение"
 
 #. module: warning
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Комплектование запасов"
+
+#. module: warning
 #: view:res.partner:0
 msgid "Warning on the Invoice"
 msgstr "Предупреждение при выставлении счета"
@@ -111,11 +111,6 @@ msgid "Invoice"
 msgstr "Счет"
 
 #. module: warning
-#: model:ir.module.module,shortdesc:warning.module_meta_information
-msgid "Module for Warnings form onchange Event"
-msgstr "Модуль для предупреждений при внесении изменении"
-
-#. module: warning
 #: view:product.product:0
 msgid "Warning when Selling this Product"
 msgstr "Предупреждение при продаже этого товара"
@@ -126,15 +121,20 @@ msgid "Sale Order"
 msgstr "Заказ на продажу"
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Комплектование запасов"
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Сообщение при выставлении счета"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Заказ на закупку"
+
+#. module: warning
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr ""
 
 #. module: warning
 #: field:res.partner,sale_warn_msg:0
@@ -176,14 +176,19 @@ msgid "Alert for %s !"
 msgstr "Сигнал о %s !"
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Сообщение при выставлении счета"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
 
 #. module: warning
-#: model:ir.module.module,description:warning.module_meta_information
-msgid "Module for Warnings form onchange Event."
-msgstr "Модуль для предупреждений при внесении изменении"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
+
+#. module: warning
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
 
 #. module: warning
 #: view:res.partner:0
@@ -238,3 +243,15 @@ msgstr "Позиция заказа на продажу"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid "Module for Warnings form onchange Event"
+#~ msgstr "Модуль для предупреждений при внесении изменении"
+
+#~ msgid "Module for Warnings form onchange Event."
+#~ msgstr "Модуль для предупреждений при внесении изменении"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Ошибка! Вы не можете создать рекурсивно связанных участников."
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Номер заказа должен быть уникальным!"

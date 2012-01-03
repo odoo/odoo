@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:43+0000\n"
 "PO-Revision-Date: 2011-01-17 22:23+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:32+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:00+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -23,12 +23,12 @@ msgid "Blue"
 msgstr "Blau"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
 #: field:hr.holidays,holiday_type:0
 msgid "Allocation Type"
 msgstr "Typ Anspruch"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr "Zweite Genehmigung"
@@ -49,9 +49,9 @@ msgid "Group By..."
 msgstr "Gruppierung..."
 
 #. module: hr_holidays
-#: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
-msgid "Sick Leave"
-msgstr "Fehltage Krankheit"
+#: view:hr.holidays:0
+msgid "Allocation Mode"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -60,6 +60,12 @@ msgid "Department"
 msgstr "Abteilung"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.request_approve_holidays
+msgid "Requests Approve"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Refused"
 msgstr "Abgelehnt"
@@ -99,13 +105,6 @@ msgid "Set to Draft"
 msgstr "Setze auf Entwurf"
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
-msgid "Holidays"
-msgstr "Urlaub"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Cyan"
 msgstr "Cyan Blau"
@@ -114,6 +113,11 @@ msgstr "Cyan Blau"
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Green"
 msgstr "Grün"
+
+#. module: hr_holidays
+#: field:hr.employee,current_leave_id:0
+msgid "Current Leave Type"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -136,6 +140,7 @@ msgid "Summary Of Leaves"
 msgstr "Überblick Urlaub"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: view:hr.holidays:0
 #: selection:hr.holidays,state:0
 msgid "Approved"
@@ -147,7 +152,7 @@ msgid "Refuse"
 msgstr "Abgelehnt"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:337
 #, python-format
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
@@ -156,8 +161,21 @@ msgstr ""
 "noch verfügbaren Urlaubstage reichen nicht aus (%s)."
 
 #. module: hr_holidays
+#: help:hr.holidays,state:0
+msgid ""
+"The state is set to 'Draft', when a holiday request is created.            \n"
+"The state is 'Waiting Approval', when holiday request is confirmed by user.  "
+"          \n"
+"The state is 'Refused', when holiday request is refused by manager.          "
+"  \n"
+"The state is 'Approved', when holiday request is approved by manager."
+msgstr ""
+
+#. module: hr_holidays
 #: view:board.board:0
-#: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Leaves"
 msgstr "Urlaubstage"
 
@@ -167,11 +185,17 @@ msgid "Leave"
 msgstr "Urlaub"
 
 #. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
+msgid "Leave Requests to Approve"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
 msgid "Leaves by Department"
 msgstr "Urlaub nach Abteilung"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "Abgebrochen"
@@ -188,9 +212,22 @@ msgstr ""
 "gegebenenfalls erhöhen wollen."
 
 #. module: hr_holidays
+#: help:hr.employee,remaining_leaves:0
+msgid ""
+"Total number of legal leaves allocated to this employee, change this value "
+"to create allocation/leave requests."
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Validation"
 msgstr "Genehmigung"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:362
+#, python-format
+msgid "Warning !"
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -203,7 +240,11 @@ msgid "HR Holidays Summary Report By Employee"
 msgstr "Personal Urlaubskonten nach Mitarbeitern"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
+#: help:hr.holidays,manager_id:0
+msgid "This area is automatically filled by the user who validate the leave"
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
@@ -216,35 +257,16 @@ msgid "Leave Type"
 msgstr "Abwesenheitstyp"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:186
-#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:199
+#: code:addons/hr_holidays/hr_holidays.py:337
 #, python-format
 msgid "Warning!"
 msgstr "Warnung !"
 
 #. module: hr_holidays
-#: selection:hr.holidays,state:0
-msgid "Draft"
-msgstr "Entwurf"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Magenta"
 msgstr "Magenta"
-
-#. module: hr_holidays
-#: help:hr.holidays,state:0
-msgid ""
-"When the holiday request is created the state is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the state is "
-"'Waiting Approval'.            If the admin accepts it, the state is "
-"'Approved'. If it is refused, the state is 'Refused'."
-msgstr ""
-"Wenn der Urlaubsantrag erstellt wird ist der Status zuerst 'Entwurf'. Durch "
-"die Bestätigung des Benutzers erfolgt eine Weiterleitung an den Vorgesetzten "
-"und der Status wechselt zu 'Erwarte Genehmigung'. Wenn der Vorgesetzte dann "
-"den Urlaub genehmigt, ist der Status 'Genehmigt'. Wenn der Antrag abgelehnt "
-"wird ist der Status 'Abgelehnt'."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -270,77 +292,10 @@ msgid "Confirm"
 msgstr "Bestätigt"
 
 #. module: hr_holidays
-#: sql_constraint:hr.holidays:0
-msgid "The start date must be before the end date !"
-msgstr "Das Startdatum muss vor dem Enddatum sein!"
-
-#. module: hr_holidays
-#: model:ir.module.module,description:hr_holidays.module_meta_information
-msgid ""
-"Human Resources: Holidays tracking and workflow\n"
-"\n"
-"    This module allows you to manage leaves and leaves' requests.\n"
-"    Implements a dashboard for human resource management that includes.\n"
-"        * My Leaves\n"
-"        * My Expenses\n"
-"    Note that:\n"
-"    - A synchronisation with an internal agenda (use of the CRM module) is "
-"possible: in order to automatically create a case when an holiday request is "
-"accepted, you have to link the holidays status to a case section. You can "
-"set up this info and your colour preferences in\n"
-"                HR / Configuration / Holidays Status\n"
-"    - An employee can make an ask for more off-days by making a new "
-"Allocation It will increase his total of that leave type available (if the "
-"request is accepted).\n"
-"    - There are two ways to print the employee's holidays:\n"
-"        * The first will allow to choose employees by department and is used "
-"by clicking the menu item located in\n"
-"                HR / Holidays Request / Print Summary of Holidays\n"
-"        * The second will allow you to choose the holidays report for "
-"specific employees. Go on the list\n"
-"                HR / Employees / Employees\n"
-"            then select the ones you want to choose, click on the print icon "
-"and select the option\n"
-"                'Print Summary of Employee's Holidays'\n"
-"    - The wizard allows you to choose if you want to print either the "
-"Confirmed & Validated holidays or only the Validated ones. These states must "
-"be set up by a user from the group 'HR'. You can define these features in "
-"the security tab from the user data in\n"
-"                Administration / Users / Users\n"
-"            for example, you maybe will do it for the user 'admin'\n"
-"            .\n"
+#: code:addons/hr_holidays/hr_holidays.py:369
+#, python-format
+msgid "Leave Request for %s"
 msgstr ""
-"Personalwesen: Urlaubsmanagement für Urlaubszeiterfassung und "
-"Genehmigungsworkflow\n"
-"\n"
-"   Dieses Modul ermöglicht die Verwaltung von Urlaubsansprüchen und "
-"Urlaubsanträgen.\n"
-"   Ausserdem beinhaltet das Modul ein Pinnwand Modul, welches folgende "
-"Informationen darstellt.\n"
-"          * Mein Urlaubsanspruch\n"
-"          * Meine Mitarbeiterausgaben\n"
-"     Beachten Sie folgendes:\n"
-"     - Eine Synchronisation mit einem Kalender aus dem Modul CRM ist "
-"möglich: Wenn Sie automatisch einen Fall erzeugen wollen, immer wenn ein "
-"Urlaubsantrag genehmigt wurde, können Sie den Urlaubstyp mit einer "
-"Fallsektion verknüpfen. Sie können die Einrichtung sowie die Farbe im "
-"Kalender hier einrichten:\n"
-"              Personal/Konfiguration/Urlaubsübersicht\n"
-"   - Ein Mitarbeiter kann mehr Tage ergänzend zu seinem ursprüngl. Anspruch "
-"bekommen, indem der Urlaubsanspruch erhöht und genehmigt wird.   - Auf zwei "
-"Wegen können Sie dann  einen Überblick über den Urlaubsstand des "
-"Unternehmens gewinnen:\n"
-"        * Navigieren Sie über das Menü\n"
-"                Personal / Personal / Mitarbeiter\n"
-"           und wählen einen Mitarbeiter aus. Dann klicken Sie auf den Druck "
-"Button für die Auswertung 'Mitarbeiter Urlaubstage'.\n"
-"          Der Wizard ermöglicht eine Unterscheidung nach 'Beantragter "
-"Urlaub', 'Genehmigter Urlaub', sowie 'Beantragter und Genehmigter Urlaub'.   "
-"     * Wählen Sie die Auswertung 'Mitarbeiter nach Abteilungen' über das "
-"Menü\n"
-"                Personal / "
-"Urlaubsmanagement/Reporting/Urlaubsmanagement/Urlaub nach Abteilungen\n"
-"         durch Klick auf den Drucken Button.\n"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
@@ -359,11 +314,19 @@ msgid "Total holidays by type"
 msgstr "Abwesenheit nach Typ"
 
 #. module: hr_holidays
+#: view:hr.employee:0
 #: view:hr.holidays:0
 #: field:hr.holidays,employee_id:0
 #: field:hr.holidays.remaining.leaves.user,name:0
+#: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
 msgstr "Mitabeiter"
+
+#. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
+msgid "New"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -397,6 +360,12 @@ msgstr ""
 "Fehler ! Das Start Datum für die Abwesenheit muss vor dem Ende Datum liegen !"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:367
+#, python-format
+msgid "Allocation for %s"
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,number_of_days:0
 #: field:hr.holidays,number_of_days_temp:0
@@ -423,6 +392,7 @@ msgstr ""
 "Vorgesetzten, z.B. Projektmanager oder Personalleiter genehmigt werden."
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Waiting Approval"
 msgstr "Erwarte Genehmigung"
@@ -447,6 +417,13 @@ msgid "Linked Requests"
 msgstr "Verbundene Anfragen"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
+#: selection:hr.holidays.summary.dept,holiday_type:0
+#: selection:hr.holidays.summary.employee,holiday_type:0
+msgid "Validated"
+msgstr "Bestätigt"
+
+#. module: hr_holidays
 #: field:hr.holidays,parent_id:0
 msgid "Parent"
 msgstr "Oberbegriff"
@@ -457,6 +434,7 @@ msgid "Lavender"
 msgstr "Lavendel"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "Leave Requests"
@@ -474,6 +452,7 @@ msgid "Employee's Holidays"
 msgstr "Mitarbeiter Urlaub"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: field:hr.holidays,category_id:0
 msgid "Category"
 msgstr "Kategorie"
@@ -509,6 +488,11 @@ msgid "Black"
 msgstr "Schwarz"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_holidays_leaves_assign_legal
+msgid "Allocate Leaves for Employees"
+msgstr ""
+
+#. module: hr_holidays
 #: field:resource.calendar.leaves,holiday_id:0
 msgid "Holiday"
 msgstr "Urlaub"
@@ -542,6 +526,11 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: hr_holidays
+#: sql_constraint:hr.holidays:0
+msgid "The start date must be before the end date !"
+msgstr "Das Startdatum muss vor dem Enddatum sein!"
+
+#. module: hr_holidays
 #: field:hr.holidays.status,active:0
 msgid "Active"
 msgstr "Aktiv"
@@ -552,14 +541,15 @@ msgid "Leaves To Validate"
 msgstr "Zu genehmigende Urlaubsanträge"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-msgid "Extended Filters..."
-msgstr "Erweiterter Filter..."
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr_holidays
-#: sql_constraint:hr.holidays:0
-msgid "The number of days must be greater than 0 !"
-msgstr "Die Anzahl der Tage muss größer als 0 sein!"
+#: view:hr.employee:0
+#: field:hr.employee,remaining_leaves:0
+msgid "Remaining Legal Leaves"
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -567,12 +557,13 @@ msgid "First Approval"
 msgstr "Erste Genehmigung"
 
 #. module: hr_holidays
-#: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Casual Leave"
-msgstr "Zusätzliche Freizeit"
+#: model:hr.holidays.status,name:hr_holidays.holiday_status_unpaid
+msgid "Unpaid"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
 msgstr "Auswertung Urlaubskonto"
@@ -584,9 +575,24 @@ msgid "Error"
 msgstr "Fehler"
 
 #. module: hr_holidays
+#: view:hr.employee:0
+msgid "Assign Leaves"
+msgstr ""
+
+#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Blue"
 msgstr "Hellblau"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "My Department Leaves"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.employee,current_leave_state:0
+msgid "Current Leave Status"
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays,type:0
@@ -613,12 +619,18 @@ msgid "General"
 msgstr "Allgemein"
 
 #. module: hr_holidays
+#: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
+msgid "Compensatory Days"
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,notes:0
 msgid "Reasons"
 msgstr "Abwesenheitsgrund"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
 msgstr "Analyse Abwesenheit"
@@ -640,11 +652,12 @@ msgstr ""
 "  Auswertungen/Urlaub nach Abteilungen auffinden."
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: selection:hr.holidays.summary.dept,holiday_type:0
-#: selection:hr.holidays.summary.employee,holiday_type:0
-msgid "Validated"
-msgstr "Bestätigt"
+#: code:addons/hr_holidays/hr_holidays.py:362
+#, python-format
+msgid ""
+"To use this feature, you must have only one leave type without the option "
+"'Allow to Override Limit' set. (%s Found)."
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -658,6 +671,7 @@ msgid "Leave Detail"
 msgstr "Detail Abwesenheit"
 
 #. module: hr_holidays
+#: field:hr.holidays,double_validation:0
 #: field:hr.holidays.status,double_validation:0
 msgid "Apply Double Validation"
 msgstr "Doppelte Genehmigung"
@@ -674,6 +688,7 @@ msgid "Details"
 msgstr "Details"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
 msgstr "Mein Urlaubskonto"
@@ -695,6 +710,16 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #. module: hr_holidays
+#: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
+msgid "Legal Leaves"
+msgstr ""
+
+#. module: hr_holidays
+#: sql_constraint:hr.holidays:0
+msgid "The number of days must be greater than 0 !"
+msgstr "Die Anzahl der Tage muss größer als 0 sein!"
+
+#. module: hr_holidays
 #: help:hr.holidays,holiday_type:0
 msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee "
@@ -704,7 +729,7 @@ msgstr ""
 "Mitarbeiterkategorien: Für eine definierte Gruppe an Mitarbeitern."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:186
+#: code:addons/hr_holidays/hr_holidays.py:199
 #, python-format
 msgid "You cannot delete a leave which is not in draft state !"
 msgstr "Sie können keine Abweseneitszeiten im Draft State erlauben !"
@@ -745,6 +770,11 @@ msgid "End Date"
 msgstr "Ende Datum"
 
 #. module: hr_holidays
+#: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
+msgid "Sick Leaves"
+msgstr ""
+
+#. module: hr_holidays
 #: help:hr.holidays.status,limit:0
 msgid ""
 "If you tick this checkbox, the system will allow, for this section, the "
@@ -768,6 +798,13 @@ msgid "Violet"
 msgstr "Violett"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
+msgid ""
+"You can assign remaining Legal Leaves for each employee, OpenERP will "
+"automatically create and validate allocation requests."
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Allowed"
 msgstr "Maximal zulässige"
@@ -782,21 +819,14 @@ msgstr ""
 "Urlaubsantrag gestellt hat."
 
 #. module: hr_holidays
-#: model:ir.module.module,shortdesc:hr_holidays.module_meta_information
-msgid "Human Resources: Holidays management"
-msgstr "Personal: Urlaubs Management"
+#: view:hr.holidays:0
+msgid "Mode"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
 msgid "HR Holidays Summary Report By Department"
 msgstr "Urlaubsauswertung nach Abteilung"
-
-#. module: hr_holidays
-#: help:hr.holidays,manager_id:0
-msgid "This area is automaticly filled by the user who validate the leave"
-msgstr ""
-"Dieser Bereich wird autom. mit dem Benutzer ausgefüllt, der dem Benutzer "
-"seinen Urlaub genehmigen muss."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -809,6 +839,7 @@ msgid "Start Date"
 msgstr "Start am"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
@@ -838,3 +869,104 @@ msgstr "Zu Bestätigen"
 #: view:hr.holidays:0
 msgid "To Approve"
 msgstr "Zu Genehmigen"
+
+#~ msgid "Holidays"
+#~ msgstr "Urlaub"
+
+#~ msgid "Human Resources: Holidays management"
+#~ msgstr "Personal: Urlaubs Management"
+
+#~ msgid "Draft"
+#~ msgstr "Entwurf"
+
+#~ msgid ""
+#~ "When the holiday request is created the state is 'Draft'.\n"
+#~ " It is confirmed by the user and request is sent to admin, the state is "
+#~ "'Waiting Approval'.            If the admin accepts it, the state is "
+#~ "'Approved'. If it is refused, the state is 'Refused'."
+#~ msgstr ""
+#~ "Wenn der Urlaubsantrag erstellt wird ist der Status zuerst 'Entwurf'. Durch "
+#~ "die Bestätigung des Benutzers erfolgt eine Weiterleitung an den Vorgesetzten "
+#~ "und der Status wechselt zu 'Erwarte Genehmigung'. Wenn der Vorgesetzte dann "
+#~ "den Urlaub genehmigt, ist der Status 'Genehmigt'. Wenn der Antrag abgelehnt "
+#~ "wird ist der Status 'Abgelehnt'."
+
+#~ msgid ""
+#~ "Human Resources: Holidays tracking and workflow\n"
+#~ "\n"
+#~ "    This module allows you to manage leaves and leaves' requests.\n"
+#~ "    Implements a dashboard for human resource management that includes.\n"
+#~ "        * My Leaves\n"
+#~ "        * My Expenses\n"
+#~ "    Note that:\n"
+#~ "    - A synchronisation with an internal agenda (use of the CRM module) is "
+#~ "possible: in order to automatically create a case when an holiday request is "
+#~ "accepted, you have to link the holidays status to a case section. You can "
+#~ "set up this info and your colour preferences in\n"
+#~ "                HR / Configuration / Holidays Status\n"
+#~ "    - An employee can make an ask for more off-days by making a new "
+#~ "Allocation It will increase his total of that leave type available (if the "
+#~ "request is accepted).\n"
+#~ "    - There are two ways to print the employee's holidays:\n"
+#~ "        * The first will allow to choose employees by department and is used "
+#~ "by clicking the menu item located in\n"
+#~ "                HR / Holidays Request / Print Summary of Holidays\n"
+#~ "        * The second will allow you to choose the holidays report for "
+#~ "specific employees. Go on the list\n"
+#~ "                HR / Employees / Employees\n"
+#~ "            then select the ones you want to choose, click on the print icon "
+#~ "and select the option\n"
+#~ "                'Print Summary of Employee's Holidays'\n"
+#~ "    - The wizard allows you to choose if you want to print either the "
+#~ "Confirmed & Validated holidays or only the Validated ones. These states must "
+#~ "be set up by a user from the group 'HR'. You can define these features in "
+#~ "the security tab from the user data in\n"
+#~ "                Administration / Users / Users\n"
+#~ "            for example, you maybe will do it for the user 'admin'\n"
+#~ "            .\n"
+#~ msgstr ""
+#~ "Personalwesen: Urlaubsmanagement für Urlaubszeiterfassung und "
+#~ "Genehmigungsworkflow\n"
+#~ "\n"
+#~ "   Dieses Modul ermöglicht die Verwaltung von Urlaubsansprüchen und "
+#~ "Urlaubsanträgen.\n"
+#~ "   Ausserdem beinhaltet das Modul ein Pinnwand Modul, welches folgende "
+#~ "Informationen darstellt.\n"
+#~ "          * Mein Urlaubsanspruch\n"
+#~ "          * Meine Mitarbeiterausgaben\n"
+#~ "     Beachten Sie folgendes:\n"
+#~ "     - Eine Synchronisation mit einem Kalender aus dem Modul CRM ist "
+#~ "möglich: Wenn Sie automatisch einen Fall erzeugen wollen, immer wenn ein "
+#~ "Urlaubsantrag genehmigt wurde, können Sie den Urlaubstyp mit einer "
+#~ "Fallsektion verknüpfen. Sie können die Einrichtung sowie die Farbe im "
+#~ "Kalender hier einrichten:\n"
+#~ "              Personal/Konfiguration/Urlaubsübersicht\n"
+#~ "   - Ein Mitarbeiter kann mehr Tage ergänzend zu seinem ursprüngl. Anspruch "
+#~ "bekommen, indem der Urlaubsanspruch erhöht und genehmigt wird.   - Auf zwei "
+#~ "Wegen können Sie dann  einen Überblick über den Urlaubsstand des "
+#~ "Unternehmens gewinnen:\n"
+#~ "        * Navigieren Sie über das Menü\n"
+#~ "                Personal / Personal / Mitarbeiter\n"
+#~ "           und wählen einen Mitarbeiter aus. Dann klicken Sie auf den Druck "
+#~ "Button für die Auswertung 'Mitarbeiter Urlaubstage'.\n"
+#~ "          Der Wizard ermöglicht eine Unterscheidung nach 'Beantragter "
+#~ "Urlaub', 'Genehmigter Urlaub', sowie 'Beantragter und Genehmigter Urlaub'.   "
+#~ "     * Wählen Sie die Auswertung 'Mitarbeiter nach Abteilungen' über das "
+#~ "Menü\n"
+#~ "                Personal / "
+#~ "Urlaubsmanagement/Reporting/Urlaubsmanagement/Urlaub nach Abteilungen\n"
+#~ "         durch Klick auf den Drucken Button.\n"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Erweiterter Filter..."
+
+#~ msgid "Casual Leave"
+#~ msgstr "Zusätzliche Freizeit"
+
+#~ msgid "This area is automaticly filled by the user who validate the leave"
+#~ msgstr ""
+#~ "Dieser Bereich wird autom. mit dem Benutzer ausgefüllt, der dem Benutzer "
+#~ "seinen Urlaub genehmigen muss."
+
+#~ msgid "Sick Leave"
+#~ msgstr "Fehltage Krankheit"

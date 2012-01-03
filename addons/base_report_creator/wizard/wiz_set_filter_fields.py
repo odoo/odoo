@@ -150,7 +150,7 @@ def _set_filter_value(self, cr, uid, data, context):
 def _set_form_value(self, cr, uid, data, context):
     field_id = data['form']['field_id']
     field_data = pooler.get_pool(cr.dbname).get('ir.model.fields').read(cr,uid,[field_id])[0]
-    fields_dict = pooler.get_pool(cr.dbname).get(field_data.get('model')).fields_get(cr,uid,fields=[field_data.get('name')])
+    fields_dict = pooler.get_pool(cr.dbname).get(field_data.get('model')).fields_get(cr,uid,allfields=[field_data.get('name')])
     value_field = set_value_fields.get('value')
     for k,v in value_field.items():
         if k in ('size','relation','type'):

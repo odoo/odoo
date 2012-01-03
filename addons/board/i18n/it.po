@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-01-01 11:27+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:33+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:01+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: board
 #: view:res.log.report:0
@@ -27,22 +27,9 @@ msgid "Menu Create"
 msgstr "Creazione menù"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-#: model:ir.model,name:board.model_board_note_type
-msgid "Note Type"
-msgstr "Tipo di nota"
-
-#. module: board
-#: view:board.note:0
-#: field:board.note,user_id:0
-msgid "Author"
-msgstr "Mittente"
-
-#. module: board
-#: model:ir.module.module,shortdesc:board.module_meta_information
-msgid "Dashboard main module"
-msgstr "Modulo principale dashboard"
+#: view:board.menu.create:0
+msgid "Menu Information"
+msgstr "Informazioni Menu"
 
 #. module: board
 #: view:res.users:0
@@ -50,30 +37,25 @@ msgid "Latest Connections"
 msgstr "Ultime connessioni"
 
 #. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
-#, python-format
-msgid "User Error!"
-msgstr "Errore Utente!"
+#: view:res.log.report:0
+msgid "Log created in last month"
+msgstr ""
 
 #. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.open_board_administration_form
-#: model:ir.ui.menu,name:board.menu_board_admin
 msgid "Administration Dashboard"
 msgstr "Dashboard amministrazione"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note,note:0
-#: model:ir.model,name:board.model_board_note
-msgid "Note"
-msgstr "Appunto"
-
-#. module: board
-#: view:board.note:0
 #: view:res.log.report:0
 msgid "Group By..."
 msgstr "Raggruppa per..."
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log created in current year"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -81,7 +63,11 @@ msgid "Board"
 msgstr "Board"
 
 #. module: board
-#: view:board.board:0
+#: field:board.menu.create,menu_name:0
+msgid "Menu Name"
+msgstr "Nome del Menu"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
 #: view:res.log.report:0
 msgid "Weekly Global Activity"
@@ -104,21 +90,20 @@ msgid "Month"
 msgstr "Mese"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr "Apri Dashboard"
+#: view:res.log.report:0
+msgid "Log created in current month"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
 #: view:res.log.report:0
 msgid "Monthly Activity per Document"
 msgstr "Attività mensile per documento"
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
-msgstr "Analisi log"
+#: view:board.board:0
+msgid "Configuration Overview"
+msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
@@ -137,7 +122,6 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_user_connection_tree
 msgid "User Connections"
 msgstr "Connessioni utente"
@@ -148,25 +132,19 @@ msgid "Creation Date"
 msgstr "Data creazione"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_note_form
-#: model:ir.ui.menu,name:board.menu_view_board_note_form
-msgid "Publish a note"
-msgstr "Pubblica una Nota"
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr "Analisi log"
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
-msgstr "Informazioni Menu"
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr "Oggetto"
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "June"
 msgstr "Giugno"
-
-#. module: board
-#: field:board.note,type:0
-msgid "Note type"
-msgstr "Tipo Nota"
 
 #. module: board
 #: field:board.board,line_ids:0
@@ -179,20 +157,15 @@ msgid "Log Report"
 msgstr "Report dei log"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note,date:0
-msgid "Date"
-msgstr "Data"
+#: code:addons/board/wizard/board_menu_create.py:46
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Prego Inserire le Viste Dashboard!"
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "July"
 msgstr "Luglio"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Extended Filters..."
-msgstr "Filtri estesi..."
 
 #. module: board
 #: view:res.log.report:0
@@ -236,9 +209,9 @@ msgid "January"
 msgstr "Gennaio"
 
 #. module: board
-#: view:board.note:0
-msgid "Notes"
-msgstr "Note"
+#: view:board.board:0
+msgid "Users"
+msgstr ""
 
 #. module: board
 #: selection:res.log.report,month:0
@@ -263,15 +236,15 @@ msgstr "Aprile"
 #: view:board.board:0
 #: field:board.board,name:0
 #: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.admin_menu_dasboard
 #: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
 msgstr "Dashboard"
 
 #. module: board
-#: model:ir.module.module,description:board.module_meta_information
-msgid "Base module for all dashboards."
-msgstr "Modulo base per tutti i cruscotti."
+#: code:addons/board/wizard/board_menu_create.py:45
+#, python-format
+msgid "User Error!"
+msgstr "Errore Utente!"
 
 #. module: board
 #: field:board.board.line,action_id:0
@@ -289,12 +262,11 @@ msgid "Model"
 msgstr "Modello"
 
 #. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "Nome del Menu"
+#: model:ir.actions.act_window,name:board.board_homepage_action
+msgid "Home Page"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_latest_activities_tree
 msgid "Latest Activities"
 msgstr "Ultime attività"
@@ -361,11 +333,6 @@ msgid "May"
 msgstr "Maggio"
 
 #. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr "Oggetto"
-
-#. module: board
 #: view:res.log.report:0
 #: field:res.log.report,name:0
 msgid "Year"
@@ -381,18 +348,6 @@ msgstr "Annulla"
 msgid "Dashboard View"
 msgstr "Vista Dashboard"
 
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
-#, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr "Prego Inserire le Viste Dashboard!"
-
-#. module: board
-#: view:board.note:0
-#: field:board.note,name:0
-msgid "Subject"
-msgstr "Oggetto"
-
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -402,17 +357,35 @@ msgstr "Oggetto"
 #~ msgid "board.board"
 #~ msgstr "board.board"
 
+#~ msgid "Publish a note"
+#~ msgstr "Pubblica una Nota"
+
 #~ msgid "board.note"
 #~ msgstr "board.note"
+
+#~ msgid "Date"
+#~ msgstr "Data"
 
 #~ msgid "Configuration"
 #~ msgstr "Configurazione"
 
+#~ msgid "Note Type"
+#~ msgstr "Tipo di nota"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valido per Visualizzazione Architettura!"
 
+#~ msgid "Notes"
+#~ msgstr "Note"
+
 #~ msgid "board.note.type"
 #~ msgstr "board.note.type"
+
+#~ msgid "Open Dashboard"
+#~ msgstr "Apri Dashboard"
+
+#~ msgid "Note type"
+#~ msgstr "Tipo Nota"
 
 #~ msgid "Dashboards"
 #~ msgstr "Dashboard"
@@ -420,5 +393,23 @@ msgstr "Oggetto"
 #~ msgid "board.board.line"
 #~ msgstr "board.board.line"
 
+#~ msgid "Subject"
+#~ msgstr "Oggetto"
+
+#~ msgid "Base module for all dashboards."
+#~ msgstr "Modulo base per tutti i cruscotti."
+
+#~ msgid "Author"
+#~ msgstr "Mittente"
+
+#~ msgid "Note"
+#~ msgstr "Appunto"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome modello non valido nella definizione dell'azione."
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Filtri estesi..."
+
+#~ msgid "Dashboard main module"
+#~ msgstr "Modulo principale dashboard"

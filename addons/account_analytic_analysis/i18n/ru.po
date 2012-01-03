@@ -6,24 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-02-19 12:16+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:25+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:50+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_invoiced:0
-msgid ""
-"Number of hours that can be invoiced plus those that already have been "
-"invoiced."
+#: view:account.analytic.account:0
+msgid "No Account Manager"
 msgstr ""
-"Количество часов, которое может быть выставлено в счете, а также те, которые "
-"уже были выставлены к оплате."
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,revenue_per_hour:0
+msgid "Revenue per Time (real)"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -33,40 +34,48 @@ msgstr ""
 "выставленным счетам."
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,remaining_hours:0
-msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-msgstr "Вычисленное по формуле: Максимальное Количество - Всего Часов."
+#: help:account.analytic.account,last_worked_date:0
+msgid "Date of the latest work done on this account."
+msgstr "Дата последней операции по этому счету."
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
+#: view:account.analytic.account:0
+msgid ""
+"The contracts to be renewed because the deadline is passed or the working "
+"hours are higher than the allocated hours"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending contracts to renew with your customer"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:551
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:722
 #, python-format
 msgid "AccessError"
 msgstr "AccessError"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,last_invoice_date:0
-msgid "Date of the last invoice created for this analytic account."
-msgstr "Дата последнего счета, созданного для этого аналитического счета."
+#: view:account.analytic.account:0
+msgid "Analytic Accounts with a past deadline in one month."
+msgstr ""
 
 #. module: account_analytic_analysis
-#: model:ir.module.module,description:account_analytic_analysis.module_meta_information
-msgid ""
-"\n"
-"This module is for modifying account analytic view to show\n"
-"important data to project manager of services companies.\n"
-"Adds menu to show relevant information to each manager..\n"
-"\n"
-"You can also view the report of account analytic summary\n"
-"user-wise as well as month wise.\n"
+#: view:account.analytic.account:0
+msgid "Group By..."
 msgstr ""
-"\n"
-"Это модуль для изменения вида аналитических счетов для представления\n"
-"данных менеджеру проекта обслуживающих компаний. Добавляет меню\n"
-"для представления соответствующей информации каждому менеджеру..\n"
-"\n"
-"Вы также можете просмотреть суммарный отчет по аналитическим счетам\n"
-"как по пользователям, так и по месяцам.\n"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "End Date"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Create Invoice"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -79,14 +88,42 @@ msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr "Вычисленное используя формулу: Доход теоретический - Общая Стоимость"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin_rate:0
-msgid "Real Margin Rate (%)"
-msgstr "Реальный размер маржи (%)"
+#: help:account.analytic.account,hours_quantity:0
+msgid ""
+"Number of time you spent on the analytic account (from timesheet). It "
+"computes quantities on all journal of type 'general'."
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts in progress"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,is_overdue_quantity:0
+msgid "Overdue Quantity"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
+msgid ""
+"You will find here the contracts to be renewed because the deadline is "
+"passed or the working hours are higher than the allocated hours. OpenERP "
+"automatically sets these analytic accounts to the pending state, in order to "
+"raise a warning during the timesheets recording. Salesmen should review all "
+"pending accounts and reopen or close the according to the negotiation with "
+"the customer."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
 msgstr "Теоретическая выручка"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_qtt_non_invoiced:0
+msgid "Uninvoiced Time"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -98,9 +135,9 @@ msgstr ""
 "которых был выставлен счет."
 
 #. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
-msgid "Billing"
-msgstr "Счет"
+#: view:account.analytic.account:0
+msgid "To Renew"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -108,28 +145,43 @@ msgid "Date of Last Cost/Work"
 msgstr "Дата последней затраты / работы"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,total_cost:0
-msgid "Total Costs"
-msgstr "Суммарные издержки"
+#: field:account.analytic.account,hours_qtt_invoiced:0
+msgid "Invoiced Time"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_quantity:0
+#: view:account.analytic.account:0
 msgid ""
-"Number of hours you spent on the analytic account (from timesheet). It "
-"computes on all journal of type 'general'."
+"A contract in OpenERP is an analytic account having a partner set on it."
 msgstr ""
-"Количество часов, которые Вы истратили по аналитическому счету (из табеля). "
-"Вычисляется по всем журналам типа 'Общий'."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
-msgid "Remaining Hours"
-msgstr "Оставшиеся часы"
+msgid "Remaining Time"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
+msgid "Contracts to Renew"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
 msgstr "Теоретическая маржа"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid " +1 Month"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -142,10 +194,9 @@ msgstr ""
 "если бы были учтены в нормальной продажной цене предусмотренной прайс-листом."
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,user_ids:0
-#: field:account_analytic_analysis.summary.user,user:0
-msgid "User"
-msgstr "Пользователь"
+#: view:account.analytic.account:0
+msgid "Pending"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
@@ -158,19 +209,20 @@ msgid "Computed using the formula: Invoiced Amount - Total Costs."
 msgstr "Вычисленно используя формулу: Сумма по счету - Все издержки"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_qtt_non_invoiced:0
-msgid "Uninvoiced Hours"
-msgstr "Не выставлено Часов"
+#: view:account.analytic.account:0
+msgid "Parent"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_date:0
-msgid "Date of the latest work done on this account."
-msgstr "Дата последней операции по этому счету."
+#: field:account.analytic.account,user_ids:0
+#: field:account_analytic_analysis.summary.user,user:0
+msgid "User"
+msgstr "Пользователь"
 
 #. module: account_analytic_analysis
-#: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
-msgid "report_account_analytic"
-msgstr "report_account_analytic"
+#: help:account.analytic.account,real_margin_rate:0
+msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
+msgstr "Вычисляется по формуле: (Реальная маржа / Суммарные издержки) * 100."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -183,8 +235,8 @@ msgid "Invoiced Amount"
 msgstr "Сумма к оплате"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:552
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:723
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
 msgstr "Вы пытаетесь нарушить правила доступа (Тип документа: %s)."
@@ -195,9 +247,14 @@ msgid "Date of Last Invoiced Cost"
 msgstr "Дата последнего счета расходов"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_qtt_invoiced:0
-msgid "Invoiced Hours"
-msgstr "Выставленные часы"
+#: view:account.analytic.account:0
+msgid "Contract"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,real_margin_rate:0
+msgid "Real Margin Rate (%)"
+msgstr "Реальный размер маржи (%)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
@@ -222,28 +279,26 @@ msgid "Hours summary by month"
 msgstr "Итоги в часах по месяцам"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,real_margin_rate:0
-msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr "Вычисляется по формуле: (Реальная маржа / Суммарные издержки) * 100."
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of hours (from journal of type 'general') that can be invoiced if you "
-"invoice based on analytic account."
-msgstr ""
-"Количество часов (из журнала типа \"Общие\"), которые могут быть занесены в "
-"счет, если счет основан на аналитическом счету."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Analytic accounts"
-msgstr "Счета аналитики"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "Ошибка! Вы не можете создать рекурсивные счета аналитического учета."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
 msgid "Remaining Revenue"
 msgstr "Оставшийся доход"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,remaining_hours:0
+msgid "Computed using the formula: Maximum Time - Total Time"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,hours_qtt_invoiced:0
+msgid ""
+"Number of time (hours/days) that can be invoiced plus those that already "
+"have been invoiced."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -256,19 +311,13 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
-msgid "Computed using the formula: Invoiced Amount / Hours Tot."
-msgstr "Вычислено по формуле: Всего по счету / Всего Часов."
+msgid "Computed using the formula: Invoiced Amount / Total Time"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,revenue_per_hour:0
-msgid "Revenue per Hours (real)"
-msgstr "Доход за Часы (реальные)"
-
-#. module: account_analytic_analysis
-#: field:account_analytic_analysis.summary.month,unit_amount:0
-#: field:account_analytic_analysis.summary.user,unit_amount:0
-msgid "Total Time"
-msgstr "Всего времени"
+#: field:account.analytic.account,total_cost:0
+msgid "Total Costs"
+msgstr "Суммарные издержки"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -277,6 +326,7 @@ msgid "Month"
 msgstr "Месяц"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
@@ -284,10 +334,15 @@ msgid "Analytic Account"
 msgstr "Счет аналитики"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_overpassed
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_managed_overpassed
-msgid "Overpassed Accounts"
-msgstr "Просроченные счета"
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
+msgid "Contracts"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Manager"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -296,14 +351,26 @@ msgid "All Uninvoiced Entries"
 msgstr "Все не выставленные записи"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_quantity:0
-msgid "Hours Tot"
-msgstr "Часов всего"
+#: help:account.analytic.account,last_invoice_date:0
+msgid "If invoice from the costs, this is the date of the latest invoiced."
+msgstr ""
 
 #. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "Ошибка! Вы не можете создать рекурсивные счета аналитического учета."
+#: view:account.analytic.account:0
+msgid "Associated Partner"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Open"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_quantity:0
+#: field:account_analytic_analysis.summary.month,unit_amount:0
+#: field:account_analytic_analysis.summary.user,unit_amount:0
+msgid "Total Time"
+msgstr "Всего времени"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -335,6 +402,9 @@ msgstr ""
 #~ msgid "Analytic Accounts"
 #~ msgstr "Счета аналитики"
 
+#~ msgid "Analytic accounts"
+#~ msgstr "Счета аналитики"
+
 #~ msgid "My Current Accounts"
 #~ msgstr "Мои текущие счета"
 
@@ -350,20 +420,91 @@ msgstr ""
 #~ msgid "Invoicing"
 #~ msgstr "Выставление счетов"
 
+#~ msgid "Uninvoiced Hours"
+#~ msgstr "Не выставлено Часов"
+
 #~ msgid "My Pending Accounts"
 #~ msgstr "Мои Незаконченные Отчеты"
+
+#~ msgid "Remaining Hours"
+#~ msgstr "Оставшиеся часы"
 
 #~ msgid "Financial Project Management"
 #~ msgstr "Финансовое Управление Проектом"
 
+#~ msgid "Hours Tot"
+#~ msgstr "Часов всего"
+
 #~ msgid "Pending Analytic Accounts"
 #~ msgstr "Незаконченные Аналитические Отчеты"
+
+#~ msgid "Invoiced Hours"
+#~ msgstr "Выставленные часы"
+
+#~ msgid ""
+#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
+#~ "invoice based on analytic account."
+#~ msgstr ""
+#~ "Количество часов (из журнала типа \"Общие\"), которые могут быть занесены в "
+#~ "счет, если счет основан на аналитическом счету."
+
+#~ msgid "Revenue per Hours (real)"
+#~ msgstr "Доход за Часы (реальные)"
+
+#~ msgid ""
+#~ "Number of hours that can be invoiced plus those that already have been "
+#~ "invoiced."
+#~ msgstr ""
+#~ "Количество часов, которое может быть выставлено в счете, а также те, которые "
+#~ "уже были выставлены к оплате."
+
+#~ msgid "Date of the last invoice created for this analytic account."
+#~ msgstr "Дата последнего счета, созданного для этого аналитического счета."
 
 #~ msgid "My Accounts"
 #~ msgstr "Мои аккаунты"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid "Computed using the formula: Invoiced Amount / Hours Tot."
+#~ msgstr "Вычислено по формуле: Всего по счету / Всего Часов."
+
+#~ msgid "report_account_analytic"
+#~ msgstr "report_account_analytic"
+
+#~ msgid "Billing"
+#~ msgstr "Счет"
+
+#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
+#~ msgstr "Вычисленное по формуле: Максимальное Количество - Всего Часов."
+
+#~ msgid ""
+#~ "\n"
+#~ "This module is for modifying account analytic view to show\n"
+#~ "important data to project manager of services companies.\n"
+#~ "Adds menu to show relevant information to each manager..\n"
+#~ "\n"
+#~ "You can also view the report of account analytic summary\n"
+#~ "user-wise as well as month wise.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Это модуль для изменения вида аналитических счетов для представления\n"
+#~ "данных менеджеру проекта обслуживающих компаний. Добавляет меню\n"
+#~ "для представления соответствующей информации каждому менеджеру..\n"
+#~ "\n"
+#~ "Вы также можете просмотреть суммарный отчет по аналитическим счетам\n"
+#~ "как по пользователям, так и по месяцам.\n"
+
+#~ msgid ""
+#~ "Number of hours you spent on the analytic account (from timesheet). It "
+#~ "computes on all journal of type 'general'."
+#~ msgstr ""
+#~ "Количество часов, которые Вы истратили по аналитическому счету (из табеля). "
+#~ "Вычисляется по всем журналам типа 'Общий'."
+
+#~ msgid "Overpassed Accounts"
+#~ msgstr "Просроченные счета"
 
 #~ msgid "My Uninvoiced Entries"
 #~ msgstr "Мои неотфактурованные записи"

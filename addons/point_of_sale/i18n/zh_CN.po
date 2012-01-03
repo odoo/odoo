@@ -6,41 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"POT-Creation-Date: 2011-12-22 18:43+0000\n"
 "PO-Revision-Date: 2011-06-29 01:01+0000\n"
 "Last-Translator: shjerryzhou <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:06+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
-
-#. module: point_of_sale
-#: field:pos.discount,discount_notes:0
-msgid "Discount Notes"
-msgstr "折扣备注"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
-msgid "Sales by day"
-msgstr "日销售情况"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_confirm
-msgid "Point of Sale Confirm"
-msgstr "POS确认"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
-#: view:pos.discount:0
-msgid "Apply Discount"
-msgstr "应用折扣"
-
-#. module: point_of_sale
-#: view:pos.order:0
-msgid "Set to draft"
-msgstr "设为草稿"
+"X-Launchpad-Export-Date: 2011-12-23 05:58+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -48,29 +22,25 @@ msgid "Product Nb."
 msgstr "产品号"
 
 #. module: point_of_sale
-#: model:ir.module.module,shortdesc:point_of_sale.module_meta_information
-msgid "Point Of Sale"
-msgstr "POS"
+#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
+msgid "Sales by day"
+msgstr "日销售情况"
 
 #. module: point_of_sale
+#: view:pos.order:0
 #: view:report.pos.order:0
 msgid "Today"
 msgstr "今天"
 
 #. module: point_of_sale
-#: view:pos.add.product:0
-msgid "Add product :"
-msgstr "增加业务伙伴:"
+#: view:pos.confirm:0
+msgid "Post All Orders"
+msgstr ""
 
 #. module: point_of_sale
-#: view:all.closed.cashbox.of.the.day:0
-msgid "All Cashboxes Of the day :"
-msgstr "当日所有钱箱"
-
-#. module: point_of_sale
-#: view:pos.box.entries:0
-msgid "Put Money"
-msgstr "存钱"
+#: model:ir.model,name:point_of_sale.model_pos_box_out
+msgid "Pos Box Out"
+msgstr "pos上缴"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_cash_register_all
@@ -86,18 +56,6 @@ msgid "Details of Sales"
 msgstr "销售详情"
 
 #. module: point_of_sale
-#: view:pos.close.statement:0
-msgid "Are you sure you want to close the statements ?"
-msgstr "你确定想关闭收银机吗？"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_scan_product
-#: model:ir.model,name:point_of_sale.model_pos_scan_product
-#: view:pos.scan.product:0
-msgid "Scan product"
-msgstr "扫描产品"
-
-#. module: point_of_sale
 #: view:report.cash.register:0
 #: field:report.cash.register,day:0
 #: view:report.pos.order:0
@@ -111,20 +69,20 @@ msgid "Add payment :"
 msgstr "增加付款:"
 
 #. module: point_of_sale
+#: field:pos.box.out,name:0
+msgid "Description / Reason"
+msgstr ""
+
+#. module: point_of_sale
 #: view:report.cash.register:0
 #: view:report.pos.order:0
 msgid "My Sales"
 msgstr "我的销售订单"
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_box_out
-msgid "Box Out"
-msgstr "开箱"
-
-#. module: point_of_sale
-#: report:pos.sales.user.today.current.user:0
-msgid "Today's Sales By Current User"
-msgstr "此用户今天销售情况"
+#: view:report.cash.register:0
+msgid "Month from Creation date of cash register"
+msgstr ""
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -136,6 +94,20 @@ msgstr "此用户今天销售情况"
 #: field:report.transaction.pos,amount:0
 msgid "Amount"
 msgstr "金额"
+
+#. module: point_of_sale
+#: constraint:account.journal:0
+msgid ""
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.pos_category_action
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_category
+#: view:pos.category:0
+msgid "PoS Categories"
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -158,9 +130,12 @@ msgid "Total Transaction"
 msgstr "交易数合计"
 
 #. module: point_of_sale
-#: help:account.journal,special_journal:0
-msgid "Will put all the orders in waiting status till being accepted"
-msgstr "将设置所有订单为等待状态，知道被接受"
+#: code:addons/point_of_sale/wizard/pos_box_entries.py:46
+#, python-format
+msgid ""
+"You do not have any open cash register. You must create a payment method or "
+"open a cash register."
+msgstr ""
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -186,10 +161,9 @@ msgid "Disc. (%)"
 msgstr "折扣(%)"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
-msgid "Total discount"
-msgstr "折扣合计"
+#: model:ir.ui.menu,name:point_of_sale.menu_point_open_config
+msgid "Cash Register Management"
+msgstr "收银机管理"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -197,16 +171,15 @@ msgstr "折扣合计"
 #: field:pos.order,state:0
 #: report:pos.sales.user:0
 #: report:pos.sales.user.today:0
-#: report:pos.sales.user.today.current.user:0
 #: field:report.cash.register,state:0
 #: field:report.pos.order,state:0
 msgid "State"
 msgstr "状态"
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
-msgid "Add payment"
-msgstr "新增付款"
+#: view:pos.order:0
+msgid "Accounting Information"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_month
@@ -222,13 +195,11 @@ msgstr "用户销售情况"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
-#: report:pos.payment.report:0
 msgid "Disc.(%)"
 msgstr "折扣(%)"
 
 #. module: point_of_sale
 #: field:pos.box.entries,ref:0
-#: field:pos.box.out,ref:0
 msgid "Ref"
 msgstr "关联单号"
 
@@ -239,60 +210,31 @@ msgid "Total Price"
 msgstr "总价格"
 
 #. module: point_of_sale
-#: view:product.product:0
-msgid "Miscelleanous"
-msgstr "杂项"
-
-#. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user
 #: report:pos.sales.user:0
 msgid "Sales Report"
 msgstr "销售报表"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_discount.py:52
-#, python-format
-msgid "No Order Lines"
-msgstr "无订单明细"
+#: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos_month
+msgid "Sales by margin monthly"
+msgstr "按月利润率查看销售情况"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Other Information"
-msgstr "其它信息"
+#: help:product.product,income_pdt:0
+msgid ""
+"This is a product you can use to put cash into a statement for the point of "
+"sale backend."
+msgstr ""
 
 #. module: point_of_sale
-#: view:product.product:0
-msgid "Product Type"
-msgstr "产品类型"
-
-#. module: point_of_sale
-#: view:pos.order:0
-#: view:pos.payment.report.date:0
-msgid "Dates"
-msgstr "日期"
-
-#. module: point_of_sale
-#: field:res.company,company_discount:0
-msgid "Max Discount(%)"
-msgstr "最大折扣(%)"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_point_open_config
-msgid "Cash register management"
-msgstr "现金登记管理"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1056
-#: code:addons/point_of_sale/point_of_sale.py:1075
-#, python-format
-msgid "No valid pricelist line found !"
-msgstr "没找到有效的价格表明细。"
+#: field:pos.category,parent_id:0
+msgid "Parent Category"
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.lines:0
-#: report:pos.payment.report:0
-#: report:pos.payment.report.date:0
 #: report:pos.payment.report.user:0
 #: report:pos.user.product:0
 msgid "["
@@ -305,6 +247,7 @@ msgid "Margin"
 msgstr "毛利"
 
 #. module: point_of_sale
+#: field:pos.discount,discount:0
 #: field:pos.order.line,discount:0
 msgid "Discount (%)"
 msgstr "折扣(%)"
@@ -320,30 +263,14 @@ msgid "Sales by user monthly"
 msgstr "用户月销售情况"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_open_statement.py:54
-#, python-format
-msgid ""
-"You can not open a Cashbox for \"%s\".\n"
-"Please close its related cash register."
+#: view:report.cash.register:0
+msgid "Cash Analysis created during this year"
 msgstr ""
-"你不能为\"%s\"打开钱箱。\n"
-"请关闭相关的收银机。"
 
 #. module: point_of_sale
-#: help:pos.order,user_salesman_id:0
-msgid "User who is logged into the system."
-msgstr "系统的登录用户"
-
-#. module: point_of_sale
-#: field:product.product,income_pdt:0
-msgid "Product for Input"
-msgstr "输入类产品"
-
-#. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
-msgid "Mode of Payment"
-msgstr "支付方式"
+#: view:report.cash.register:0
+msgid "Day from Creation date of cash register"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale
@@ -351,14 +278,20 @@ msgid "Daily Operations"
 msgstr "每天经营"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:273
+#, python-format
+msgid "Configuration Error !"
+msgstr ""
+
+#. module: point_of_sale
+#: view:pos.box.entries:0
+msgid "Fill in this form if you put money in the cash register:"
+msgstr ""
+
+#. module: point_of_sale
 #: view:account.bank.statement:0
 msgid "Search Cash Statements"
 msgstr "查询现金对账单"
-
-#. module: point_of_sale
-#: view:pos.confirm:0
-msgid "Are you sure you want to close your sales ?"
-msgstr "你确定要关闭你的销售订单吗？"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0
@@ -378,10 +311,21 @@ msgid "Sales by User Monthly"
 msgstr "用户月销售情况"
 
 #. module: point_of_sale
-#: field:pos.order,date_payment:0
-#: field:report.pos.order,date_payment:0
+#: field:pos.category,child_id:0
+msgid "Children Categories"
+msgstr ""
+
+#. module: point_of_sale
+#: field:pos.make.payment,payment_date:0
 msgid "Payment Date"
 msgstr "付款日期"
+
+#. module: point_of_sale
+#: help:product.product,pos_categ_id:0
+msgid ""
+"If you want to sell this product through the point of sale, select the "
+"category it belongs to."
+msgstr ""
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -396,28 +340,12 @@ msgid "October"
 msgstr "十月"
 
 #. module: point_of_sale
-#: field:account.bank.statement.line,am_out:0
-msgid "To count"
-msgstr "计算"
-
-#. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Summary"
 msgstr "摘要"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Quotations"
-msgstr "报价单"
-
-#. module: point_of_sale
-#: field:report.pos.order,delay_payment:0
-msgid "Delay Payment"
-msgstr "延期付款"
-
-#. module: point_of_sale
-#: field:pos.add.product,quantity:0
 #: report:pos.invoice:0
 #: report:pos.lines:0
 #: field:pos.order.line,qty:0
@@ -427,9 +355,9 @@ msgid "Quantity"
 msgstr "数量"
 
 #. module: point_of_sale
-#: help:account.journal,auto_cash:0
-msgid "This field authorize the automatic creation of the cashbox"
-msgstr "这字段授权自动建立钱箱"
+#: field:pos.order.line,name:0
+msgid "Line No"
+msgstr ""
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -438,19 +366,29 @@ msgstr "期间"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
-#: report:pos.payment.report:0
 msgid "Net Total:"
 msgstr "净合计:"
 
 #. module: point_of_sale
-#: field:pos.order.line,name:0
-msgid "Line Description"
-msgstr "说明"
+#: field:pos.make.payment,payment_name:0
+msgid "Payment Reference"
+msgstr ""
 
 #. module: point_of_sale
-#: view:product.product:0
-msgid "Codes"
-msgstr "编码"
+#: report:pos.details_summary:0
+msgid "Mode of Payment"
+msgstr "支付方式"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_confirm
+msgid "Post POS Journal Entries"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:396
+#, python-format
+msgid "Customer Invoice"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.box.out:0
@@ -458,39 +396,28 @@ msgid "Output Operation"
 msgstr "上缴"
 
 #. module: point_of_sale
-#: view:all.closed.cashbox.of.the.day:0
+#: view:report.pos.order:0
+#: field:report.pos.order,total_discount:0
+msgid "Total Discount"
+msgstr "总折扣"
+
+#. module: point_of_sale
 #: view:pos.details:0
 #: view:pos.payment.report:0
-#: view:pos.payment.report.date:0
 #: view:pos.payment.report.user:0
 #: view:pos.sale.user:0
-#: view:pos.sales.user.today:0
-#: view:pos.sales.user.today.current_user:0
 msgid "Print Report"
 msgstr "打印报表"
 
 #. module: point_of_sale
-#: report:pos.invoice:0
-#: report:pos.lines:0
-#: field:pos.order.line,price_unit:0
-#: report:pos.payment.report:0
-#: report:pos.payment.report.date:0
-#: report:pos.payment.report.user:0
-msgid "Unit Price"
-msgstr "单价"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_box_entries.py:107
+#: code:addons/point_of_sale/wizard/pos_box_entries.py:106
 #, python-format
 msgid "Please check that income account is set to %s"
 msgstr "请检查是否%s设置了收入类科目"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_add_product.py:56
-#: code:addons/point_of_sale/wizard/pos_return.py:166
-#: code:addons/point_of_sale/wizard/pos_return.py:327
-#: model:ir.actions.act_window,name:point_of_sale.action_add_product
-#: model:ir.model,name:point_of_sale.model_pos_add_product
+#: code:addons/point_of_sale/wizard/pos_return.py:85
+#: code:addons/point_of_sale/wizard/pos_return.py:240
 #, python-format
 msgid "Add Product"
 msgstr "新增产品"
@@ -520,11 +447,22 @@ msgid "Tel. :"
 msgstr "电话:"
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_confirm
+#: model:ir.ui.menu,name:point_of_sale.menu_wizard_pos_confirm
+msgid "Create Sale Entries"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
+#: report:pos.details:0
 #: view:pos.order:0
-#: selection:pos.order,state:0
-#: selection:report.pos.order,state:0
 msgid "Payment"
 msgstr "付款"
+
+#. module: point_of_sale
+#: view:report.cash.register:0
+msgid "Cash Analysis created in current month"
+msgstr ""
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -533,31 +471,17 @@ msgid "Ending Balance"
 msgstr "期末结余"
 
 #. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.products_for_output_operations
-msgid "Products for Output Operations"
-msgstr "产品出货"
+#: view:pos.order:0
+msgid "Post Entries"
+msgstr ""
 
 #. module: point_of_sale
-#: view:pos.payment.report.date:0
-msgid "Sale by Date and User"
-msgstr "按日期和用户查看销售情况"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:69
-#, python-format
-msgid ""
-"Cannot delete a point of sale which is closed or contains confirmed "
-"cashboxes!"
-msgstr "不能删除已关闭或者有已确认钱箱的销售终端！"
-
-#. module: point_of_sale
-#: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Mode of Taxes"
 msgstr "税收模式"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_close_statement.py:48
+#: code:addons/point_of_sale/wizard/pos_close_statement.py:50
 #, python-format
 msgid "Cash registers are already closed."
 msgstr "收银机已关闭。"
@@ -569,15 +493,21 @@ msgstr "错误：无效的EAN编码"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
-#: view:pos.confirm:0
 #: view:pos.open.statement:0
 msgid "Open Statements"
 msgstr "开启收银机"
 
 #. module: point_of_sale
-#: view:pos.add.product:0
-msgid "Save & New"
-msgstr "保存并新建"
+#: view:report.pos.order:0
+msgid "POS ordered created during current year"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
+#: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale
+#: view:pos.order:0
+msgid "PoS Orders"
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -591,20 +521,19 @@ msgid "Total paid"
 msgstr "付款合计"
 
 #. module: point_of_sale
-#: field:account.journal,check_dtls:0
-msgid "Check Details"
-msgstr "详细检查"
+#: model:ir.ui.menu,name:point_of_sale.menu_all_menu_all_register
+msgid "List of Cash Registers"
+msgstr ""
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
-msgid "Qty of product"
-msgstr "产品数量"
+#: model:ir.model,name:point_of_sale.model_report_transaction_pos
+msgid "transaction for the pos"
+msgstr "POS交易"
 
 #. module: point_of_sale
-#: field:pos.order,contract_number:0
-msgid "Contract Number"
-msgstr "联系号码"
+#: view:report.pos.order:0
+msgid "Not Invoiced"
+msgstr ""
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0
@@ -619,8 +548,7 @@ msgid "User's Product"
 msgstr "用户的产品"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1042
-#: code:addons/point_of_sale/point_of_sale.py:1067
+#: code:addons/point_of_sale/point_of_sale.py:629
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
@@ -630,7 +558,11 @@ msgstr ""
 "请在选择某个产品之前设置它。"
 
 #. module: point_of_sale
-#: view:pos.order:0
+#: model:ir.model,name:point_of_sale.model_pos_discount
+msgid "Add a Global Discount"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order.line,price_subtotal_incl:0
 msgid "Subtotal"
 msgstr "小计"
@@ -638,14 +570,8 @@ msgstr "小计"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_open_statement
 #: model:ir.model,name:point_of_sale.model_pos_close_statement
-#: view:pos.close.statement:0
 msgid "Close Statements"
 msgstr "关闭收银机"
-
-#. module: point_of_sale
-#: view:account.journal:0
-msgid "Extended Configureation"
-msgstr "扩展配置"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -654,14 +580,15 @@ msgid "Starting Balance"
 msgstr "期初余额"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_category
+#: field:product.product,pos_categ_id:0
+msgid "PoS Category"
+msgstr ""
+
+#. module: point_of_sale
 #: report:pos.payment.report.user:0
 msgid "Payment By User"
 msgstr "用户付款"
-
-#. module: point_of_sale
-#: field:pos.order,type_rec:0
-msgid "Type of Receipt"
-msgstr "收据类型"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -670,15 +597,10 @@ msgid "# of Lines"
 msgstr "# 明细"
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_order_accepted
-msgid "Accepted Sales"
-msgstr "已接受的销售订单"
-
-#. module: point_of_sale
-#: help:account.journal,check_dtls:0
-msgid ""
-"This field authorize Validation of Cashbox without checking ending details"
-msgstr "这字段授权校验钱箱不检查最终细节"
+#: view:pos.order:0
+#: selection:pos.order,state:0
+msgid "Posted"
+msgstr ""
 
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
@@ -694,11 +616,6 @@ msgstr "销售合计"
 #: view:pos.order.line:0
 msgid "Sum of subtotals"
 msgstr "合计小计"
-
-#. module: point_of_sale
-#: field:pos.make.payment,payment_date:0
-msgid "Payment date"
-msgstr "付款日期"
 
 #. module: point_of_sale
 #: field:pos.order,lines:0
@@ -726,16 +643,9 @@ msgstr "POS "
 
 #. module: point_of_sale
 #: report:account.statement:0
-#: report:pos.sales.user.today.current.user:0
 #: report:pos.user.product:0
 msgid "Total :"
 msgstr "合计:"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1206
-#, python-format
-msgid "Create line failed !"
-msgstr "明细创建失败！"
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,product_name:0
@@ -744,22 +654,14 @@ msgid "Product Name"
 msgstr "产品名称"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:69
-#, python-format
-msgid "Invalid action !"
-msgstr "无效动作！"
-
-#. module: point_of_sale
-#: field:pos.make.payment,pricelist_id:0
 #: field:pos.order,pricelist_id:0
 msgid "Pricelist"
 msgstr "价格表"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
-msgid "Total invoiced"
-msgstr "已开票合计"
+#: view:pos.receipt:0
+msgid "Receipt :"
+msgstr "收据："
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -768,14 +670,10 @@ msgid "# of Qty"
 msgstr "数量#"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_return
-msgid "Point of sale return"
-msgstr "POS退款"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos_month
-msgid "Sales by margin monthly"
-msgstr "按月利润率查看销售情况"
+#: model:ir.actions.act_window,name:point_of_sale.action_box_out
+#: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl2
+msgid "Take Money Out"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -802,17 +700,6 @@ msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
 msgstr "凭证金额必须和对账单明细上的金额一致"
-
-#. module: point_of_sale
-#: field:product.product,expense_pdt:0
-msgid "Product for Output"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_report_pos_sales_user_today_current_user
-#: view:pos.sales.user.today.current_user:0
-msgid "Sales for Current User"
-msgstr "当前用户的销售订单"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -842,6 +729,13 @@ msgid "Disc."
 msgstr "折扣"
 
 #. module: point_of_sale
+#: help:account.journal,check_dtls:0
+msgid ""
+"This field authorize Validation of Cashbox without controlling the closing "
+"balance."
+msgstr ""
+
+#. module: point_of_sale
 #: report:pos.invoice:0
 msgid "VAT :"
 msgstr "增值税:"
@@ -852,9 +746,10 @@ msgid "POS Order lines"
 msgstr "POS单明细"
 
 #. module: point_of_sale
-#: view:pos.receipt:0
-msgid "Receipt :"
-msgstr "收据："
+#: report:pos.details:0
+#: report:pos.details_summary:0
+msgid "Total invoiced"
+msgstr "已开票合计"
 
 #. module: point_of_sale
 #: field:account.bank.statement.line,pos_statement_id:0
@@ -869,41 +764,21 @@ msgid "Date"
 msgstr "日期"
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-msgid "Extended Filters..."
-msgstr "扩展过滤器..."
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
+#: view:pos.discount:0
+msgid "Apply Discount"
+msgstr "应用折扣"
 
 #. module: point_of_sale
-#: field:pos.order,num_sale:0
-msgid "Internal Note"
-msgstr "内部备注"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_res_company
-msgid "Companies"
-msgstr "公司"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_transaction_pos
-msgid "transaction for the pos"
-msgstr "POS交易"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_get_sale.py:54
-#, python-format
-msgid "UserError "
-msgstr "UserError "
+#: report:pos.details:0
+#: report:pos.details_summary:0
+msgid "Total discount"
+msgstr "折扣合计"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_box_entries
 msgid "Pos Box Entries"
 msgstr "POS"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_get_sale.py:54
-#, python-format
-msgid "You can't modify this order. It has already been paid"
-msgstr "你不能修改此订单，它已经付款了。"
 
 #. module: point_of_sale
 #: field:pos.details,date_end:0
@@ -912,31 +787,19 @@ msgid "Date End"
 msgstr "结束日期"
 
 #. module: point_of_sale
-#: report:pos.invoice:0
-msgid "Your Reference"
-msgstr "你的关联单号"
-
-#. module: point_of_sale
 #: field:report.transaction.pos,no_trans:0
 msgid "Number of Transaction"
 msgstr "交易数"
 
 #. module: point_of_sale
-#: view:pos.add.product:0
 #: view:pos.box.entries:0
 #: view:pos.box.out:0
-#: view:pos.get.sale:0
+#: view:pos.confirm:0
 #: view:pos.make.payment:0
-#: selection:pos.order,state:0
+#: view:pos.open.statement:0
 #: view:pos.receipt:0
-#: selection:report.pos.order,state:0
 msgid "Cancel"
 msgstr "取消"
-
-#. module: point_of_sale
-#: view:pos.order:0
-msgid "Return Picking"
-msgstr "退回分拣单"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
@@ -944,40 +807,12 @@ msgid "Sales (summary)"
 msgstr "销售(参考)"
 
 #. module: point_of_sale
-#: view:product.product:0
-msgid "Information"
-msgstr "信息"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl
-msgid "Input Operations"
-msgstr "存备用金"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_cash_register
-#: view:report.cash.register:0
-msgid "Point of Sale Cash Register Analysis"
-msgstr "POS收银机分析"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_sales_user_today
-msgid "Sale by Users"
-msgstr "按用户查看销售订单"
-
-#. module: point_of_sale
-#: report:pos.payment.report:0
-msgid "Payment For Sale"
-msgstr "销售付款"
-
-#. module: point_of_sale
-#: field:pos.order,first_name:0
-msgid "First Name"
-msgstr "名字"
-
-#. module: point_of_sale
-#: view:res.company:0
-msgid "Other"
-msgstr "其它"
+#: report:pos.invoice:0
+#: report:pos.lines:0
+#: field:pos.order.line,price_unit:0
+#: report:pos.payment.report.user:0
+msgid "Unit Price"
+msgstr "单价"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -992,15 +827,8 @@ msgstr "金额合计"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_all_tree
-#: model:ir.ui.menu,name:point_of_sale.menu_all_menu_all_register
 msgid "Cash Registers"
 msgstr "收银机"
-
-#. module: point_of_sale
-#: view:account.journal:0
-#: field:account.journal,journal_users:0
-msgid "Users"
-msgstr "用户"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -1010,18 +838,21 @@ msgid "Price"
 msgstr "价格"
 
 #. module: point_of_sale
-#: field:pos.scan.product,gencod:0
-msgid "Barcode"
-msgstr "条形码"
+#: field:account.journal,journal_user:0
+msgid "PoS Payment Method"
+msgstr ""
 
 #. module: point_of_sale
-#: view:report.sales.by.margin.pos:0
-#: view:report.sales.by.margin.pos.month:0
-#: view:report.sales.by.user.pos:0
-#: view:report.sales.by.user.pos.month:0
-#: view:report.transaction.pos:0
-msgid "POS"
-msgstr "POS"
+#: model:ir.actions.act_window,name:point_of_sale.action_report_pos_sale_user
+#: model:ir.model,name:point_of_sale.model_pos_sale_user
+#: view:pos.payment.report.user:0
+msgid "Sale by User"
+msgstr "用户的销售订单"
+
+#. module: point_of_sale
+#: help:product.product,img:0
+msgid "Use an image size of 50x50."
+msgstr ""
 
 #. module: point_of_sale
 #: field:report.cash.register,date:0
@@ -1029,9 +860,10 @@ msgid "Create Date"
 msgstr "创建日期"
 
 #. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl2
-msgid "Output Operations"
-msgstr "上缴"
+#: code:addons/point_of_sale/point_of_sale.py:53
+#, python-format
+msgid "Unable to Delete !"
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -1041,22 +873,37 @@ msgstr "开始期间"
 
 #. module: point_of_sale
 #: report:account.statement:0
+#: field:pos.category,complete_name:0
+#: field:pos.category,name:0
 #: report:pos.sales.user:0
 #: report:pos.sales.user.today:0
-#: report:pos.sales.user.today.current.user:0
 msgid "Name"
 msgstr "名称"
 
 #. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_open_statement
-msgid "Open Cash Registers"
-msgstr "打开收银机"
+#: code:addons/point_of_sale/point_of_sale.py:272
+#, python-format
+msgid ""
+"There is no receivable account defined to make payment for the partner: "
+"\"%s\" (id:%d)"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:281
+#: code:addons/point_of_sale/point_of_sale.py:460
+#: code:addons/point_of_sale/report/pos_invoice.py:46
+#: code:addons/point_of_sale/wizard/pos_box_entries.py:46
+#: code:addons/point_of_sale/wizard/pos_box_entries.py:101
+#: code:addons/point_of_sale/wizard/pos_box_entries.py:106
+#: code:addons/point_of_sale/wizard/pos_box_out.py:87
+#: code:addons/point_of_sale/wizard/pos_box_out.py:89
+#, python-format
+msgid "Error !"
+msgstr "错误！"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.lines:0
-#: report:pos.payment.report:0
-#: report:pos.payment.report.date:0
 #: report:pos.payment.report.user:0
 #: report:pos.user.product:0
 msgid "]"
@@ -1068,9 +915,37 @@ msgid "The name of the journal must be unique per company !"
 msgstr "每个公司的账簿名称必须唯一！"
 
 #. module: point_of_sale
-#: report:pos.invoice:0
-msgid "Supplier Refund"
-msgstr "供应商退货"
+#: report:pos.details:0
+#: report:pos.details_summary:0
+#: report:pos.lines:0
+#: report:pos.payment.report.user:0
+#: report:pos.sales.user:0
+#: report:pos.sales.user.today:0
+#: report:pos.user.product:0
+msgid "Print Date"
+msgstr "打印日期"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:270
+#, python-format
+msgid "There is no receivable account defined to make payment"
+msgstr ""
+
+#. module: point_of_sale
+#: view:pos.open.statement:0
+msgid "Do you want to open cash registers ?"
+msgstr ""
+
+#. module: point_of_sale
+#: help:pos.category,sequence:0
+msgid ""
+"Gives the sequence order when displaying a list of product categories."
+msgstr ""
+
+#. module: point_of_sale
+#: field:product.product,expense_pdt:0
+msgid "PoS Cash Output"
+msgstr ""
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -1079,6 +954,11 @@ msgstr "供应商退货"
 #: view:report.pos.order:0
 msgid "Group By..."
 msgstr "分组..."
+
+#. module: point_of_sale
+#: field:product.product,img:0
+msgid "Product Image, must be 50x50"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1091,22 +971,15 @@ msgid "All Closed CashBox"
 msgstr "所有关闭的钱箱"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1041
-#: code:addons/point_of_sale/point_of_sale.py:1066
+#: code:addons/point_of_sale/point_of_sale.py:628
 #, python-format
 msgid "No Pricelist !"
 msgstr "没有价格表！"
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_get_sale
-#: view:pos.get.sale:0
-msgid "Select an Open Sale Order"
-msgstr "选择待处理的销售单"
-
-#. module: point_of_sale
 #: view:pos.order:0
-msgid "Order date"
-msgstr "订单日期"
+msgid "Update"
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1115,13 +988,14 @@ msgstr "基础"
 
 #. module: point_of_sale
 #: view:product.product:0
-msgid "Account"
-msgstr "科目"
+msgid "Point-of-Sale"
+msgstr ""
 
 #. module: point_of_sale
-#: field:pos.order,sale_manager:0
-msgid "Salesman Manager"
-msgstr "销售经理"
+#: report:pos.details:0
+#: report:pos.details_summary:0
+msgid "Qty of product"
+msgstr "产品数量"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1129,12 +1003,12 @@ msgid "Notes"
 msgstr "备注"
 
 #. module: point_of_sale
-#: field:pos.get.sale,picking_id:0
 #: view:pos.order:0
 msgid "Sale Order"
 msgstr "销售单"
 
 #. module: point_of_sale
+#: report:pos.details:0
 #: report:pos.invoice:0
 #: field:pos.order,amount_tax:0
 msgid "Taxes"
@@ -1149,32 +1023,20 @@ msgstr "销售明细"
 
 #. module: point_of_sale
 #: field:pos.config.journal,code:0
-#: report:pos.details:0
 msgid "Code"
 msgstr "代码"
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_product_input
-#: model:ir.actions.act_window,name:point_of_sale.action_product_output
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_product
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_products
 msgid "Products"
 msgstr "产品"
 
 #. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report
-msgid "Payment Report For Sale"
-msgstr "销售的支付报表"
-
-#. module: point_of_sale
-#: field:account.journal,special_journal:0
-msgid "Special Journal"
-msgstr "专用账簿"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_all_closed_cashbox_of_the_day
-msgid "All closed cashbox of the day"
-msgstr "当日所有关闭的钱箱"
+#: model:ir.actions.act_window,name:point_of_sale.action_product_output
+#: model:ir.ui.menu,name:point_of_sale.products_for_output_operations
+msgid "Products 'Put Money In'"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1192,52 +1054,18 @@ msgid "Connected Salesman"
 msgstr "有关销售员"
 
 #. module: point_of_sale
-#: model:ir.module.module,description:point_of_sale.module_meta_information
-msgid ""
-"\n"
-"Main features :\n"
-" - Fast encoding of the sale.\n"
-" - Allow to choose one payment mode (the quick way) or to split the payment "
-"between several payment mode.\n"
-" - Computation of the amount of money to return.\n"
-" - Create and confirm picking list automatically.\n"
-" - Allow the user to create invoice automatically.\n"
-" - Allow to refund former sales.\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"主要特征:\n"
-"    - 销售快速编码\n"
-"    - 允许选择一个付款方式(快速方式)或在几个付款方式中分开付款\n"
-"    - 计算金额\n"
-"    - 自动创建和确认领料/提货单\n"
-"    - 允许用户自动创建发票\n"
-"    - 允许销售退款\n"
-"\n"
-"    "
-
-#. module: point_of_sale
-#: field:pos.order,price_type:0
-msgid "Price method"
-msgstr "定价方式"
-
-#. module: point_of_sale
 #: view:pos.receipt:0
 msgid "Print the receipt of the sale"
 msgstr "打印销售订单的收据"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_stock_picking
-msgid "Picking List"
-msgstr "分拣单"
+#: field:pos.make.payment,journal:0
+msgid "Payment Mode"
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.details:0
-#: report:pos.payment.report:0
-#: report:pos.payment.report.date:0
 #: report:pos.payment.report.user:0
-#: report:pos.sales.user.today.current.user:0
 #: report:pos.user.product:0
 #: field:report.sales.by.margin.pos,qty:0
 #: field:report.sales.by.margin.pos.month,qty:0
@@ -1251,30 +1079,16 @@ msgid "Month -1"
 msgstr "上月"
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_report_pos_sale_user
-#: model:ir.model,name:point_of_sale.model_pos_sale_user
-#: view:pos.payment.report.user:0
-msgid "Sale by User"
-msgstr "用户的销售订单"
+#: help:product.product,expense_pdt:0
+msgid ""
+"This is a product you can use to take cash from a statement for the point of "
+"sale backend, exemple: money lost, transfer to bank, etc."
+msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:555
-#: code:addons/point_of_sale/point_of_sale.py:743
-#: code:addons/point_of_sale/point_of_sale.py:851
-#: code:addons/point_of_sale/report/pos_invoice.py:46
-#: code:addons/point_of_sale/wizard/pos_box_entries.py:103
-#: code:addons/point_of_sale/wizard/pos_box_entries.py:107
-#: code:addons/point_of_sale/wizard/pos_box_out.py:95
-#: code:addons/point_of_sale/wizard/pos_box_out.py:99
-#: code:addons/point_of_sale/wizard/pos_box_out.py:101
-#, python-format
-msgid "Error !"
-msgstr "错误！"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_confirm
-msgid "Sale Confirm"
-msgstr "确认售出"
+#: model:ir.ui.menu,name:point_of_sale.menu_open_statement
+msgid "Open Cash Registers"
+msgstr "打开收银机"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
@@ -1282,21 +1096,10 @@ msgid "state"
 msgstr "状态"
 
 #. module: point_of_sale
-#: view:product.product:0
-msgid "Prices"
-msgstr "价格"
-
-#. module: point_of_sale
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "July"
 msgstr "7月"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:544
-#, python-format
-msgid "Please provide an account for the product: %s"
-msgstr "请为产品%s提供一个科目"
 
 #. module: point_of_sale
 #: field:report.pos.order,delay_validation:0
@@ -1325,20 +1128,9 @@ msgid "Automatic Opening"
 msgstr "自动打开"
 
 #. module: point_of_sale
-#: field:pos.order.line,price_ded:0
-msgid "Discount(Amount)"
-msgstr "折扣（金额）"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_add_product.py:51
-#, python-format
-msgid "Active ID is not found"
-msgstr "没有发现有效的ID"
-
-#. module: point_of_sale
-#: field:account.bank.statement.line,is_acc:0
-msgid "Is accompte"
-msgstr "付款"
+#: selection:report.pos.order,state:0
+msgid "Synchronized"
+msgstr ""
 
 #. module: point_of_sale
 #: view:report.cash.register:0
@@ -1349,28 +1141,26 @@ msgid "Month"
 msgstr "本月"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Sales Order POS"
-msgstr "POS销售单"
-
-#. module: point_of_sale
 #: report:account.statement:0
 msgid "Statement Name"
 msgstr "对账单名称"
 
 #. module: point_of_sale
+#: view:report.pos.order:0
+msgid "Year of order date"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
-#: model:ir.ui.menu,name:point_of_sale.menu_cash_register
 #: field:pos.box.entries,journal_id:0
 #: field:pos.box.out,journal_id:0
-#: field:pos.make.payment,journal:0
 msgid "Cash Register"
 msgstr "收银机"
 
 #. module: point_of_sale
-#: field:pos.payment.report.date,date_start:0
-msgid "Start Date"
-msgstr "开始日期"
+#: view:pos.close.statement:0
+msgid "Yes"
+msgstr "是"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_receipt
@@ -1378,26 +1168,15 @@ msgid "Point of sale receipt"
 msgstr "POS收银条"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_payment.py:91
-#, python-format
-msgid "No order lines defined for this sale "
-msgstr "此销售订单没有定义订单明细 "
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_today
 msgid "Sales by User Daily margin"
 msgstr "按用户日利润率查看销售报表"
 
 #. module: point_of_sale
-#: field:pos.order,note_2:0
-msgid "Customer Note"
-msgstr "客户备注"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:337
-#, python-format
-msgid "No order lines defined for this sale."
-msgstr "订单没有订单明细"
+#: model:ir.actions.act_window,name:point_of_sale.action_box_entries
+#: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl
+msgid "Put Money In"
+msgstr ""
 
 #. module: point_of_sale
 #: field:report.cash.register,balance_start:0
@@ -1405,10 +1184,19 @@ msgid "Opening Balance"
 msgstr "期初余额"
 
 #. module: point_of_sale
+#: view:account.bank.statement:0
+#: selection:report.pos.order,state:0
+msgid "Closed"
+msgstr ""
+
+#. module: point_of_sale
+#: view:report.pos.order:0
+msgid "POS ordered created by today"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,amount_paid:0
 #: selection:pos.order,state:0
-#: view:report.pos.order:0
-#: selection:report.pos.order,state:0
 msgid "Paid"
 msgstr "付款"
 
@@ -1418,7 +1206,29 @@ msgid "All sales lines"
 msgstr "所有销售明细"
 
 #. module: point_of_sale
-#: selection:pos.order,state:0
+#: view:pos.order:0
+msgid "Discount"
+msgstr "折扣"
+
+#. module: point_of_sale
+#: view:report.cash.register:0
+msgid "Cash Analysis created in last month"
+msgstr ""
+
+#. module: point_of_sale
+#: view:pos.close.statement:0
+msgid ""
+"OpenERP will close all cash registers he can close automatically without "
+"validation. He will also open all cash registers for which you have to "
+"control the ending belance before closing manually."
+msgstr ""
+
+#. module: point_of_sale
+#: view:report.cash.register:0
+msgid "Cash Analysis created by today"
+msgstr ""
+
+#. module: point_of_sale
 #: selection:report.cash.register,state:0
 msgid "Quotation"
 msgstr "报价单"
@@ -1427,7 +1237,6 @@ msgstr "报价单"
 #: report:all.closed.cashbox.of.the.day:0
 #: report:pos.invoice:0
 #: report:pos.lines:0
-#: report:pos.payment.report.date:0
 #: report:pos.payment.report.user:0
 msgid "Total:"
 msgstr "合计:"
@@ -1448,6 +1257,16 @@ msgid "Statement lines"
 msgstr "对账单明细"
 
 #. module: point_of_sale
+#: view:report.cash.register:0
+msgid "Year from Creation date of cash register"
+msgstr ""
+
+#. module: point_of_sale
+#: view:pos.order:0
+msgid "Reprint"
+msgstr "重新打印"
+
+#. module: point_of_sale
 #: help:pos.order,user_id:0
 msgid ""
 "Person who uses the the cash register. It could be a reliever, a student or "
@@ -1465,28 +1284,30 @@ msgid "Receipt"
 msgstr "收入"
 
 #. module: point_of_sale
-#: field:pos.order,invoice_wanted:0
-msgid "Create Invoice"
-msgstr "生成发票"
+#: view:pos.open.statement:0
+msgid ""
+"The system will open all cash registers, so that you can start recording "
+"payments. We suggest you to control the opening balance of each register, "
+"using their CashBox tab."
+msgstr ""
 
 #. module: point_of_sale
-#: selection:pos.order,state:0
-#: selection:report.pos.order,state:0
+#: field:account.journal,check_dtls:0
+msgid "Control Balance Before Closing"
+msgstr ""
+
+#. module: point_of_sale
+#: view:pos.order:0
 msgid "Done"
 msgstr "完成"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
 #: report:pos.invoice:0
-#: field:pos.make.payment,invoice_wanted:0
+#: view:pos.order:0
 #: field:pos.order,invoice_id:0
 msgid "Invoice"
 msgstr "发票"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_get_sale
-msgid "Get From Sale"
-msgstr "出售"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -1495,26 +1316,10 @@ msgid "Open"
 msgstr "开放"
 
 #. module: point_of_sale
+#: field:pos.order,name:0
 #: field:pos.order.line,order_id:0
 msgid "Order Ref"
 msgstr "单据参考"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment_repport_date
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_payment_report_date
-msgid "Sales lines Report"
-msgstr "销售明细报表"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_box_entries
-#: view:pos.box.entries:0
-msgid "Box Entries"
-msgstr "钱箱"
-
-#. module: point_of_sale
-#: selection:pos.order,price_type:0
-msgid "Tax excluded"
-msgstr "不含税"
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,net_margin_per_qty:0
@@ -1529,6 +1334,12 @@ msgid "Sales by User Margin"
 msgstr "按用户和利润查看销售情况"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_payment.py:59
+#, python-format
+msgid "Paiement"
+msgstr ""
+
+#. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Taxes:"
 msgstr "税:"
@@ -1540,14 +1351,10 @@ msgstr "POS订单统计"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
-#: field:pos.add.product,product_id:0
 #: report:pos.details:0
 #: field:pos.order.line,product_id:0
-#: report:pos.payment.report:0
-#: report:pos.payment.report.date:0
 #: report:pos.payment.report.user:0
 #: report:pos.user.product:0
-#: view:product.product:0
 #: view:report.pos.order:0
 #: field:report.pos.order,product_id:0
 msgid "Product"
@@ -1559,25 +1366,26 @@ msgid "Pos Lines"
 msgstr "销售单明细"
 
 #. module: point_of_sale
-#: field:product.product,disc_controle:0
-msgid "Discount Control"
-msgstr "折扣控制"
-
-#. module: point_of_sale
 #: field:report.cash.register,balance_end_real:0
 msgid "Closing Balance"
 msgstr "期末余额"
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_sale_all
+#: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale_all
+msgid "All Sales Orders"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_point_root
+msgid "PoS Backend"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_details
 msgid "Sale Details"
 msgstr "销售详情"
-
-#. module: point_of_sale
-#: field:pos.payment.report.date,date_end:0
-msgid "End Date"
-msgstr "结束日期"
 
 #. module: point_of_sale
 #: field:pos.order,date_order:0
@@ -1591,27 +1399,21 @@ msgid "Sales lines by Users"
 msgstr "用户销售明细"
 
 #. module: point_of_sale
-#: field:res.company,max_diff:0
-msgid "Max Difference for Cashboxes"
-msgstr "钱箱最大的差异"
+#: report:pos.details:0
+msgid "Order"
+msgstr ""
 
 #. module: point_of_sale
-#: view:pos.close.statement:0
-#: view:pos.confirm:0
-#: view:pos.open.statement:0
-msgid "Yes"
-msgstr "是"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:743
+#: code:addons/point_of_sale/point_of_sale.py:460
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr "没有为此产品定义收入类科目： \\\"%s\\\" (id:%d)"
 
 #. module: point_of_sale
-#: view:pos.make.payment:0
-msgid "The cash register must be opened to be able to execute a payment."
-msgstr "收银机必须处于开启状态才能处理支付业务。"
+#: model:ir.model,name:point_of_sale.model_report_cash_register
+#: view:report.cash.register:0
+msgid "Point of Sale Cash Register Analysis"
+msgstr "POS收银机分析"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -1619,9 +1421,9 @@ msgid "Net Total :"
 msgstr "总净重："
 
 #. module: point_of_sale
-#: view:product.product:0
-msgid "Product Description"
-msgstr "产品描述"
+#: model:res.groups,name:point_of_sale.group_pos_manager
+msgid "Manager"
+msgstr ""
 
 #. module: point_of_sale
 #: field:pos.details,date_start:0
@@ -1631,10 +1433,7 @@ msgstr "开始日期"
 
 #. module: point_of_sale
 #: field:pos.order,amount_total:0
-#: report:pos.payment.report:0
-#: report:pos.payment.report.date:0
 #: report:pos.payment.report.user:0
-#: report:pos.sales.user.today.current.user:0
 #: field:report.sales.by.user.pos,amount:0
 #: field:report.sales.by.user.pos.month,amount:0
 msgid "Total"
@@ -1651,33 +1450,31 @@ msgid "Open Cash Register"
 msgstr "开启收银机"
 
 #. module: point_of_sale
+#: view:report.sales.by.margin.pos:0
+#: view:report.sales.by.margin.pos.month:0
+#: view:report.sales.by.user.pos:0
+#: view:report.sales.by.user.pos.month:0
+#: view:report.transaction.pos:0
+msgid "POS"
+msgstr "POS"
+
+#. module: point_of_sale
 #: report:account.statement:0
 #: model:ir.actions.report.xml,name:point_of_sale.account_statement
 msgid "Statement"
 msgstr "银行单据"
 
 #. module: point_of_sale
-#: field:pos.order,name:0
-msgid "Order Description"
-msgstr "订单描述"
-
-#. module: point_of_sale
-#: field:pos.make.payment,num_sale:0
-msgid "Num.File"
-msgstr "Num.File"
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_report
-#: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report_date
 #: model:ir.model,name:point_of_sale.model_pos_payment_report
 #: view:pos.payment.report:0
 msgid "Payment Report"
 msgstr "付款分析报表"
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_view_pos_return
-msgid "Return lines"
-msgstr "退货明细"
+#: view:pos.confirm:0
+msgid "Generate Journal Entries"
+msgstr ""
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -1687,12 +1484,9 @@ msgstr "退货明细"
 #: report:pos.lines:0
 #: field:pos.order,company_id:0
 #: field:pos.order.line,company_id:0
-#: report:pos.payment.report:0
-#: report:pos.payment.report.date:0
 #: report:pos.payment.report.user:0
 #: report:pos.sales.user:0
 #: report:pos.sales.user.today:0
-#: report:pos.sales.user.today.current.user:0
 #: report:pos.user.product:0
 #: field:report.pos.order,company_id:0
 msgid "Company"
@@ -1704,30 +1498,26 @@ msgid "Invoice Date"
 msgstr "发票日期"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1057
-#: code:addons/point_of_sale/point_of_sale.py:1076
-#, python-format
-msgid ""
-"Couldn't find a pricelist line matching this product and quantity.\n"
-"You have to change either the product, the quantity or the pricelist."
+#: field:pos.box.entries,name:0
+msgid "Reason"
 msgstr ""
-"找不到此产品和数量的价格表。\n"
-"你必须修改产品，或价格表的数量。"
 
 #. module: point_of_sale
-#: field:pos.order.line,serial_number:0
-msgid "Serial Number"
-msgstr "序列号"
+#: model:ir.actions.act_window,name:point_of_sale.action_product_input
+#: model:ir.ui.menu,name:point_of_sale.products_for_input_operations
+msgid "Products 'Take Money Out'"
+msgstr ""
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Reprint"
-msgstr "重新打印"
+#: model:ir.actions.act_window,name:point_of_sale.action_account_journal_form
+#: model:ir.ui.menu,name:point_of_sale.menu_action_account_journal_form_open
+msgid "Payment Methods"
+msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:555
-#: code:addons/point_of_sale/wizard/pos_box_entries.py:103
-#: code:addons/point_of_sale/wizard/pos_box_out.py:101
+#: code:addons/point_of_sale/point_of_sale.py:281
+#: code:addons/point_of_sale/wizard/pos_box_entries.py:101
+#: code:addons/point_of_sale/wizard/pos_box_out.py:89
 #, python-format
 msgid "You have to open at least one cashbox"
 msgstr "你必须开启至少一个钱箱"
@@ -1738,13 +1528,13 @@ msgid "Today's Payment By User"
 msgstr "今日用户的付款分析"
 
 #. module: point_of_sale
-#: field:stock.picking,pos_order:0
-msgid "Pos order"
-msgstr "POS单"
+#: view:pos.open.statement:0
+msgid "Open Registers"
+msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_discount.py:52
-#: code:addons/point_of_sale/wizard/pos_payment.py:91
+#: code:addons/point_of_sale/point_of_sale.py:226
+#: code:addons/point_of_sale/point_of_sale.py:241
 #, python-format
 msgid "Error!"
 msgstr "出错！"
@@ -1755,12 +1545,13 @@ msgid "No. Of Articles"
 msgstr "条款号"
 
 #. module: point_of_sale
-#: field:pos.order,date_validity:0
-msgid "Validity Date"
-msgstr "有效期"
+#: selection:pos.order,state:0
+#: selection:report.pos.order,state:0
+msgid "Cancelled"
+msgstr ""
 
 #. module: point_of_sale
-#: field:pos.order,pickings:0
+#: field:pos.order,picking_id:0
 msgid "Picking"
 msgstr "领料/提货"
 
@@ -1769,11 +1560,6 @@ msgstr "领料/提货"
 #: field:report.pos.order,shop_id:0
 msgid "Shop"
 msgstr "商店"
-
-#. module: point_of_sale
-#: field:pos.order,picking_id:0
-msgid "Last Output Picking"
-msgstr "最近输出的领料/提货"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
@@ -1798,24 +1584,20 @@ msgid "POS Report"
 msgstr "POS分析报表"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_discount
-msgid "Add Discount"
-msgstr "增加折扣"
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_close_statement
 msgid "Close Cash Register"
 msgstr "关闭收银机"
 
 #. module: point_of_sale
-#: field:pos.order.line,qty_rfd:0
-msgid "Refunded Quantity"
-msgstr "退货数量"
+#: code:addons/point_of_sale/point_of_sale.py:53
+#, python-format
+msgid "In order to delete a sale, it must be new or cancelled."
+msgstr ""
 
 #. module: point_of_sale
-#: view:pos.scan.product:0
-msgid "Scan Barcode"
-msgstr "扫描条码"
+#: view:pos.confirm:0
+msgid "Generate Entries"
+msgstr ""
 
 #. module: point_of_sale
 #: field:pos.box.entries,product_id:0
@@ -1824,12 +1606,7 @@ msgid "Operation"
 msgstr "经营"
 
 #. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale
-msgid "Sales Order"
-msgstr "销售订单"
-
-#. module: point_of_sale
-#: field:pos.order,journal_entry:0
+#: field:pos.order,account_move:0
 msgid "Journal Entry"
 msgstr "日记账簿"
 
@@ -1844,26 +1621,16 @@ msgid "Cancelled Invoice"
 msgstr "已取消的发票"
 
 #. module: point_of_sale
-#: view:account.bank.statement:0
-#: view:pos.get.sale:0
 #: view:report.cash.register:0
 msgid "Confirm"
 msgstr "确定"
 
 #. module: point_of_sale
-#: report:pos.payment.report.date:0
-msgid "Sales Lines"
-msgstr "销售明细"
-
-#. module: point_of_sale
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "错误！您不能创建递归公司."
-
-#. module: point_of_sale
-#: field:pos.discount,discount:0
-msgid "Discount "
-msgstr "折扣 "
+#: help:account.journal,auto_cash:0
+msgid ""
+"This field authorize the automatic creation of the cashbox, without control "
+"of the initial balance."
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1871,15 +1638,22 @@ msgid "Supplier Invoice"
 msgstr "供应商发票"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1214
-#, python-format
-msgid "Modify line failed !"
-msgstr "明细修改失败！"
+#: view:pos.order:0
+#: selection:pos.order,state:0
+#: selection:report.pos.order,state:0
+msgid "New"
+msgstr ""
 
 #. module: point_of_sale
-#: field:pos.make.payment,payment_name:0
-msgid "Payment name"
-msgstr "付款名称"
+#: code:addons/point_of_sale/point_of_sale.py:226
+#, python-format
+msgid "In order to set to draft a sale, it must be cancelled."
+msgstr ""
+
+#. module: point_of_sale
+#: view:report.pos.order:0
+msgid "Day of order date"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -1887,19 +1661,9 @@ msgid "Reporting"
 msgstr "报告"
 
 #. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.products_for_input_operations
-msgid "Products for Input Operations"
-msgstr "产品进货"
-
-#. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user_today_current_user
-msgid "Today's Sales by Current User"
-msgstr "当前用户今日销售订单"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_box_out
-msgid "Pos Box Out"
-msgstr "pos上缴"
+#: view:pos.box.entries:0
+msgid "Put Money"
+msgstr "存钱"
 
 #. module: point_of_sale
 #: sql_constraint:account.journal:0
@@ -1917,17 +1681,20 @@ msgid "Starting Date"
 msgstr "开始日期"
 
 #. module: point_of_sale
-#: field:pos.order,date_validation:0
-#: field:report.pos.order,date_validation:0
-msgid "Validation Date"
-msgstr "审核日期"
+#: code:addons/point_of_sale/point_of_sale.py:241
+#, python-format
+msgid "Unable to cancel the picking."
+msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:504
-#: code:addons/point_of_sale/point_of_sale.py:506
-#, python-format
-msgid "You don't have enough access to validate this sale!"
-msgstr "你没有权限审核此销售订单！"
+#: view:report.pos.order:0
+msgid "POS ordered created during current month"
+msgstr ""
+
+#. module: point_of_sale
+#: view:report.pos.order:0
+msgid "POS ordered created last month"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_invoice
@@ -1941,10 +1708,11 @@ msgid "December"
 msgstr "12月"
 
 #. module: point_of_sale
-#: view:report.pos.order:0
-#: field:report.pos.order,total_discount:0
-msgid "Total Discount"
-msgstr "总折扣"
+#: code:addons/point_of_sale/point_of_sale.py:317
+#: view:pos.order:0
+#, python-format
+msgid "Return Products"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.box.out:0
@@ -1953,36 +1721,25 @@ msgstr "取钱"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details
-#: model:ir.model,name:point_of_sale.model_pos_sales_user_today_current_user
 msgid "Sales Details"
 msgstr "销售明细"
 
 #. module: point_of_sale
-#: field:product.product,am_out:0
-msgid "Control for Output Operations"
-msgstr "出货控制"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_close_statement.py:48
-#: code:addons/point_of_sale/wizard/pos_open_statement.py:54
+#: code:addons/point_of_sale/wizard/pos_close_statement.py:50
 #, python-format
 msgid "Message"
 msgstr "消息"
 
 #. module: point_of_sale
 #: view:account.journal:0
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_order_tree2
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_order_tree3
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form_user
 #: model:ir.model,name:point_of_sale.model_pos_order
-#: model:ir.ui.menu,name:point_of_sale.menu_point_root
+#: model:ir.ui.menu,name:point_of_sale.menu_point_root_touchscreen
+#: view:product.product:0
 msgid "Point of Sale"
 msgstr "POS"
 
 #. module: point_of_sale
 #: view:pos.order:0
-#: field:pos.payment.report.date,user_id:0
 #: field:pos.payment.report.user,user_id:0
 #: field:pos.sale.user,user_id:0
 #: field:pos.sales.user.today,user_id:0
@@ -1993,6 +1750,7 @@ msgstr "销售员"
 
 #. module: point_of_sale
 #: report:pos.details:0
+#: view:pos.order:0
 #: selection:pos.order,state:0
 #: view:report.pos.order:0
 #: selection:report.pos.order,state:0
@@ -2001,8 +1759,6 @@ msgstr "已开票"
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
-#: view:pos.confirm:0
-#: view:pos.open.statement:0
 msgid "No"
 msgstr "否"
 
@@ -2012,13 +1768,12 @@ msgid "Discount Notice"
 msgstr "折扣通告"
 
 #. module: point_of_sale
-#: view:pos.scan.product:0
-msgid "Add"
-msgstr "增加"
+#: view:pos.order:0
+msgid "Re-Print"
+msgstr ""
 
 #. module: point_of_sale
 #: view:report.cash.register:0
-#: selection:report.pos.order,state:0
 msgid "Draft"
 msgstr "草稿"
 
@@ -2028,45 +1783,21 @@ msgid "POS Order line"
 msgstr "POS单明细"
 
 #. module: point_of_sale
-#: view:pos.open.statement:0
-msgid "Are you sure you want to open the statements ?"
-msgstr "你确定要开启收银机吗？"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_payment_report_date
-msgid "POS Payment Report according to date"
-msgstr "按日期的POS付款分析报表"
-
-#. module: point_of_sale
 #: report:pos.invoice:0
 msgid "PRO-FORMA"
 msgstr "形式发票"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:637
+#: code:addons/point_of_sale/point_of_sale.py:346
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "请提供业务伙伴。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:852
-#, python-format
-msgid ""
-"There is no receivable account defined for this journal: \"%s\" (id:%d)"
-msgstr "没有为：\"%s\" (id:%d)定义应收账款科目"
-
-#. module: point_of_sale
-#: field:pos.order,user_salesman_id:0
-msgid "Cashier"
-msgstr "收银员"
-
-#. module: point_of_sale
 #: report:account.statement:0
 #: report:all.closed.cashbox.of.the.day:0
-#: view:pos.payment.report.date:0
 #: report:pos.sales.user:0
 #: report:pos.sales.user.today:0
-#: report:pos.sales.user.today.current.user:0
 #: report:pos.user.product:0
 #: view:report.cash.register:0
 #: field:report.cash.register,user_id:0
@@ -2075,8 +1806,16 @@ msgstr "收银员"
 #: field:report.sales.by.user.pos,user_id:0
 #: field:report.sales.by.user.pos.month,user_id:0
 #: field:report.transaction.pos,user_id:0
+#: model:res.groups,name:point_of_sale.group_pos_user
 msgid "User"
 msgstr "用户"
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
+msgid ""
+"Payment methods are defined by accounting journals having the field Payment "
+"Method checked."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
@@ -2107,13 +1846,14 @@ msgid "POS Orders lines"
 msgstr "POS订单明细"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:337
-#: code:addons/point_of_sale/point_of_sale.py:504
-#: code:addons/point_of_sale/point_of_sale.py:506
-#: code:addons/point_of_sale/point_of_sale.py:544
-#: code:addons/point_of_sale/point_of_sale.py:637
-#: code:addons/point_of_sale/point_of_sale.py:1206
-#: code:addons/point_of_sale/point_of_sale.py:1214
+#: view:pos.confirm:0
+msgid ""
+"Generate all sale journal entries for non invoiced orders linked to a closed "
+"cash register or statement."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:346
 #, python-format
 msgid "Error"
 msgstr "错误"
@@ -2122,6 +1862,11 @@ msgstr "错误"
 #: field:report.transaction.pos,journal_id:0
 msgid "Sales Journal"
 msgstr "销售账簿"
+
+#. module: point_of_sale
+#: view:pos.close.statement:0
+msgid "Do you want to close your cash registers ?"
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -2142,28 +1887,30 @@ msgid "Date Order"
 msgstr "订购日期"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_close_statement.py:66
 #: model:ir.ui.menu,name:point_of_sale.menu_close_statement
+#: view:pos.close.statement:0
+#, python-format
 msgid "Close Cash Registers"
 msgstr "关闭收银机"
 
 #. module: point_of_sale
 #: report:pos.details:0
-#: report:pos.payment.report.date:0
 #: report:pos.payment.report.user:0
 msgid "Disc(%)"
 msgstr "折扣（%）"
 
 #. module: point_of_sale
-#: view:all.closed.cashbox.of.the.day:0
+#: view:pos.order:0
+msgid "General Information"
+msgstr ""
+
+#. module: point_of_sale
 #: view:pos.details:0
 #: view:pos.discount:0
 #: view:pos.payment.report:0
-#: view:pos.payment.report.date:0
 #: view:pos.payment.report.user:0
 #: view:pos.sale.user:0
-#: view:pos.sales.user.today:0
-#: view:pos.sales.user.today.current_user:0
-#: view:pos.scan.product:0
 msgid "Close"
 msgstr "关闭"
 
@@ -2173,14 +1920,14 @@ msgid "Order lines"
 msgstr "单据明细"
 
 #. module: point_of_sale
+#: view:account.journal:0
+msgid "Extended Configuration"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
 msgid "Subtotal w/o Tax"
 msgstr "税额小计w/o"
-
-#. module: point_of_sale
-#: view:pos.order:0
-msgid "Add product"
-msgstr "添加产品"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment
@@ -2203,20 +1950,17 @@ msgid "Today's Sales By User"
 msgstr "今日用户销售情况"
 
 #. module: point_of_sale
-#: view:pos.box.entries:0
-#: view:pos.box.out:0
-msgid "Please fill these fields for entries to the box:"
-msgstr "请填充这些钱箱的字段"
+#: report:pos.invoice:0
+msgid "Customer Code"
+msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_box_out.py:99
+#: code:addons/point_of_sale/wizard/pos_box_out.py:87
 #, python-format
 msgid "please check that account is set to %s"
 msgstr "请检查科目是否设置为%s"
 
 #. module: point_of_sale
-#: field:pos.box.entries,name:0
-#: field:pos.box.out,name:0
 #: field:pos.config.journal,name:0
 #: report:pos.invoice:0
 #: report:pos.lines:0
@@ -2235,24 +1979,19 @@ msgid "Sales lines"
 msgstr "销售明细"
 
 #. module: point_of_sale
+#: view:pos.order:0
+msgid "Yesterday"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,note:0
 msgid "Internal Notes"
 msgstr "内部备注"
 
 #. module: point_of_sale
-#: view:pos.add.product:0
-msgid "Save & Close"
-msgstr "保存并关闭"
-
-#. module: point_of_sale
-#: view:pos.order:0
-msgid "Running"
-msgstr "正在运行"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_report_all_closed_cashbox_of_the_day
-msgid "All Cashboxes Of the day"
-msgstr "当日所有钱箱"
+#: view:pos.box.out:0
+msgid "Describe why you take money from the cash register:"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
@@ -2262,20 +2001,11 @@ msgid "Point of Sale Analysis"
 msgstr "POS分析"
 
 #. module: point_of_sale
-#: field:pos.make.payment,partner_id:0
 #: view:pos.order:0
 #: field:pos.order,partner_id:0
 #: view:report.pos.order:0
 msgid "Customer"
 msgstr "客户"
-
-#. module: point_of_sale
-#: field:pos.make.payment,is_acc:0
-#: field:pos.make.payment,product_id:0
-#: selection:pos.order,state:0
-#: selection:report.pos.order,state:0
-msgid "Advance"
-msgstr "预支"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0
@@ -2289,26 +2019,6 @@ msgid "    Today    "
 msgstr "    今日    "
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_box_out.py:95
-#, python-format
-msgid ""
-"The maximum value you can still withdraw is exceeded. \n"
-" Remaining value is equal to %d "
-msgstr ""
-"超出你能提取的最大金额。\n"
-"当前余额是%d。 "
-
-#. module: point_of_sale
-#: field:pos.order,remboursed:0
-msgid "Remboursed"
-msgstr "已报销"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_order_tree_open
-msgid "Opened Sales"
-msgstr "未结销售订单"
-
-#. module: point_of_sale
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "April"
@@ -2320,18 +2030,9 @@ msgid "Payments"
 msgstr "付款"
 
 #. module: point_of_sale
-#: report:pos.details:0
-#: report:pos.details_summary:0
-#: report:pos.lines:0
-#: report:pos.payment.report:0
-#: report:pos.payment.report.date:0
-#: report:pos.payment.report.user:0
-#: report:pos.sales.user:0
-#: report:pos.sales.user.today:0
-#: report:pos.sales.user.today.current.user:0
-#: report:pos.user.product:0
-msgid "Print Date"
-msgstr "打印日期"
+#: report:pos.invoice:0
+msgid "Supplier Refund"
+msgstr "供应商退货"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_month
@@ -2344,24 +2045,43 @@ msgid "Search Sales Order"
 msgstr "查询销售订单"
 
 #. module: point_of_sale
-#: field:pos.order,account_move:0
-msgid "Account Entry"
-msgstr "凭证"
+#: help:account.journal,journal_user:0
+msgid ""
+"Check this box if this journal define a payment method that can be used in "
+"point of sales."
+msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_add_product.py:84
-#: code:addons/point_of_sale/wizard/pos_return.py:407
+#: field:pos.category,sequence:0
+msgid "Sequence"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_return.py:316
 #: view:pos.make.payment:0
-#: view:pos.order:0
 #, python-format
 msgid "Make Payment"
 msgstr "付款"
 
 #. module: point_of_sale
+#: constraint:pos.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_sales_user_today
-#: view:pos.sales.user.today:0
 msgid "Sales User Today"
 msgstr "今日用户销售情况"
+
+#. module: point_of_sale
+#: view:report.pos.order:0
+msgid "Month of order date"
+msgstr ""
+
+#. module: point_of_sale
+#: field:product.product,income_pdt:0
+msgid "PoS Cash Input"
+msgstr ""
 
 #. module: point_of_sale
 #: view:report.cash.register:0
@@ -2371,14 +2091,18 @@ msgstr "今日用户销售情况"
 msgid "Year"
 msgstr "年"
 
+#~ msgid "Set to draft"
+#~ msgstr "设为草稿"
+
 #~ msgid "Detail of Sales"
 #~ msgstr "销售详情"
 
 #~ msgid "Ok"
 #~ msgstr "确定"
 
-#~ msgid "Discount"
-#~ msgstr "折扣"
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "无效动作！"
 
 #~ msgid ":"
 #~ msgstr "："
@@ -2386,11 +2110,20 @@ msgstr "年"
 #~ msgid "Discount percentage"
 #~ msgstr "折扣百分比"
 
+#~ msgid "Other"
+#~ msgstr "其它"
+
 #~ msgid "Disc"
 #~ msgstr "折扣"
 
 #~ msgid "Payment Term"
 #~ msgstr "付款条件"
+
+#~ msgid "Scan Barcode"
+#~ msgstr "扫描条码"
+
+#~ msgid "Barcode"
+#~ msgstr "条形码"
 
 #~ msgid "Discount :"
 #~ msgstr "折扣:"
@@ -2407,17 +2140,38 @@ msgstr "年"
 #~ msgid "Document"
 #~ msgstr "文档"
 
+#~ msgid "Add product :"
+#~ msgstr "增加业务伙伴:"
+
 #~ msgid "Net Total"
 #~ msgstr "净合计"
 
 #~ msgid "Orders of the day"
 #~ msgstr "单据日期"
 
+#~ msgid "Select an Open Sale Order"
+#~ msgstr "选择待处理的销售单"
+
+#~ msgid "Scan product"
+#~ msgstr "扫描产品"
+
 #~ msgid "Partner Ref."
 #~ msgstr "业务伙伴参考"
 
+#~ msgid "Line Description"
+#~ msgstr "说明"
+
+#~ msgid "Pos order"
+#~ msgstr "POS单"
+
+#~ msgid "Validity Date"
+#~ msgstr "有效期"
+
 #~ msgid "Refund Orders"
 #~ msgstr "退货单"
+
+#~ msgid "Last Output Picking"
+#~ msgstr "最近输出的领料/提货"
 
 #~ msgid "Select default journals"
 #~ msgstr "默认分类帐"
@@ -2433,6 +2187,39 @@ msgstr "年"
 
 #~ msgid "Ma_ke Payment"
 #~ msgstr "付款"
+
+#~ msgid ""
+#~ "\n"
+#~ "Main features :\n"
+#~ " - Fast encoding of the sale.\n"
+#~ " - Allow to choose one payment mode (the quick way) or to split the payment "
+#~ "between several payment mode.\n"
+#~ " - Computation of the amount of money to return.\n"
+#~ " - Create and confirm picking list automatically.\n"
+#~ " - Allow the user to create invoice automatically.\n"
+#~ " - Allow to refund former sales.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "主要特征:\n"
+#~ "    - 销售快速编码\n"
+#~ "    - 允许选择一个付款方式(快速方式)或在几个付款方式中分开付款\n"
+#~ "    - 计算金额\n"
+#~ "    - 自动创建和确认领料/提货单\n"
+#~ "    - 允许用户自动创建发票\n"
+#~ "    - 允许销售退款\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid "Payment date"
+#~ msgstr "付款日期"
+
+#~ msgid "Payment name"
+#~ msgstr "付款名称"
+
+#~ msgid "Point Of Sale"
+#~ msgstr "POS"
 
 #~ msgid "Point of Sale journal configuration."
 #~ msgstr "POS分类帐设置"
@@ -2461,6 +2248,9 @@ msgstr "年"
 #~ msgid "POS Lines"
 #~ msgstr "POS明细"
 
+#~ msgid "Sales Order POS"
+#~ msgstr "POS销售单"
+
 #~ msgid "Define default journals"
 #~ msgstr "定义默认分类帐"
 
@@ -2469,6 +2259,9 @@ msgstr "年"
 
 #~ msgid "Wizard default journals"
 #~ msgstr "向导默认分类帐"
+
+#~ msgid "Add"
+#~ msgstr "增加"
 
 #~ msgid "E-mail :"
 #~ msgstr "电子邮件:"
@@ -2534,6 +2327,9 @@ msgstr "年"
 #~ msgid "D_iscount"
 #~ msgstr "折扣"
 
+#~ msgid "Account Entry"
+#~ msgstr "凭证"
+
 #~ msgid "Actions"
 #~ msgstr "生效"
 
@@ -2543,5 +2339,356 @@ msgstr "年"
 #~ msgid "Company:"
 #~ msgstr "公司:"
 
+#~ msgid "Order Description"
+#~ msgstr "订单描述"
+
+#~ msgid "Create Invoice"
+#~ msgstr "生成发票"
+
+#, python-format
+#~ msgid "Create line failed !"
+#~ msgstr "明细创建失败！"
+
+#, python-format
+#~ msgid "Modify line failed !"
+#~ msgstr "明细修改失败！"
+
+#, python-format
+#~ msgid "No valid pricelist line found !"
+#~ msgstr "没找到有效的价格表明细。"
+
+#~ msgid "Discount Notes"
+#~ msgstr "折扣备注"
+
+#~ msgid "Today's Sales By Current User"
+#~ msgstr "此用户今天销售情况"
+
+#~ msgid "Miscelleanous"
+#~ msgstr "杂项"
+
+#~ msgid "Dates"
+#~ msgstr "日期"
+
+#~ msgid "Other Information"
+#~ msgstr "其它信息"
+
+#, python-format
+#~ msgid "No Order Lines"
+#~ msgstr "无订单明细"
+
+#~ msgid "Product Type"
+#~ msgstr "产品类型"
+
+#~ msgid "Max Discount(%)"
+#~ msgstr "最大折扣(%)"
+
+#~ msgid "User who is logged into the system."
+#~ msgstr "系统的登录用户"
+
+#~ msgid "Are you sure you want to close your sales ?"
+#~ msgstr "你确定要关闭你的销售订单吗？"
+
+#~ msgid "Codes"
+#~ msgstr "编码"
+
+#~ msgid "Delay Payment"
+#~ msgstr "延期付款"
+
+#~ msgid "Quotations"
+#~ msgstr "报价单"
+
+#~ msgid "Sale by Date and User"
+#~ msgstr "按日期和用户查看销售情况"
+
+#~ msgid "Check Details"
+#~ msgstr "详细检查"
+
+#~ msgid "Save & New"
+#~ msgstr "保存并新建"
+
+#~ msgid "Type of Receipt"
+#~ msgstr "收据类型"
+
+#~ msgid "Accepted Sales"
+#~ msgstr "已接受的销售订单"
+
+#~ msgid "Extended Configureation"
+#~ msgstr "扩展配置"
+
+#~ msgid "Sales for Current User"
+#~ msgstr "当前用户的销售订单"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "扩展过滤器..."
+
+#~ msgid "Companies"
+#~ msgstr "公司"
+
+#~ msgid "Internal Note"
+#~ msgstr "内部备注"
+
+#, python-format
+#~ msgid "UserError "
+#~ msgstr "UserError "
+
+#, python-format
+#~ msgid "You can't modify this order. It has already been paid"
+#~ msgstr "你不能修改此订单，它已经付款了。"
+
+#~ msgid "First Name"
+#~ msgstr "名字"
+
+#~ msgid "Users"
+#~ msgstr "用户"
+
+#~ msgid "Your Reference"
+#~ msgstr "你的关联单号"
+
+#~ msgid "Information"
+#~ msgstr "信息"
+
+#~ msgid "Return Picking"
+#~ msgstr "退回分拣单"
+
+#~ msgid "Payment For Sale"
+#~ msgstr "销售付款"
+
+#~ msgid "Sale by Users"
+#~ msgstr "按用户查看销售订单"
+
+#~ msgid "Order date"
+#~ msgstr "订单日期"
+
+#~ msgid "Account"
+#~ msgstr "科目"
+
+#~ msgid "Salesman Manager"
+#~ msgstr "销售经理"
+
+#~ msgid "Payment Report For Sale"
+#~ msgstr "销售的支付报表"
+
+#~ msgid "Price method"
+#~ msgstr "定价方式"
+
+#~ msgid "Are you sure you want to close the statements ?"
+#~ msgstr "你确定想关闭收银机吗？"
+
+#~ msgid "Point of Sale Confirm"
+#~ msgstr "POS确认"
+
+#~ msgid "All Cashboxes Of the day :"
+#~ msgstr "当日所有钱箱"
+
+#~ msgid "Will put all the orders in waiting status till being accepted"
+#~ msgstr "将设置所有订单为等待状态，知道被接受"
+
+#~ msgid "Product for Input"
+#~ msgstr "输入类产品"
+
+#, python-format
+#~ msgid ""
+#~ "You can not open a Cashbox for \"%s\".\n"
+#~ "Please close its related cash register."
+#~ msgstr ""
+#~ "你不能为\"%s\"打开钱箱。\n"
+#~ "请关闭相关的收银机。"
+
+#~ msgid "Add payment"
+#~ msgstr "新增付款"
+
+#~ msgid "To count"
+#~ msgstr "计算"
+
+#~ msgid "Contract Number"
+#~ msgstr "联系号码"
+
+#, python-format
+#~ msgid ""
+#~ "Cannot delete a point of sale which is closed or contains confirmed "
+#~ "cashboxes!"
+#~ msgstr "不能删除已关闭或者有已确认钱箱的销售终端！"
+
+#~ msgid "All closed cashbox of the day"
+#~ msgstr "当日所有关闭的钱箱"
+
+#~ msgid "Picking List"
+#~ msgstr "分拣单"
+
+#~ msgid "Discount(Amount)"
+#~ msgstr "折扣（金额）"
+
+#~ msgid "Prices"
+#~ msgstr "价格"
+
+#~ msgid "Sale Confirm"
+#~ msgstr "确认售出"
+
+#, python-format
+#~ msgid "Active ID is not found"
+#~ msgstr "没有发现有效的ID"
+
+#, python-format
+#~ msgid "Please provide an account for the product: %s"
+#~ msgstr "请为产品%s提供一个科目"
+
+#, python-format
+#~ msgid "No order lines defined for this sale "
+#~ msgstr "此销售订单没有定义订单明细 "
+
+#~ msgid "Start Date"
+#~ msgstr "开始日期"
+
+#, python-format
+#~ msgid "No order lines defined for this sale."
+#~ msgstr "订单没有订单明细"
+
+#~ msgid "Customer Note"
+#~ msgstr "客户备注"
+
+#~ msgid "Discount Control"
+#~ msgstr "折扣控制"
+
+#~ msgid "Sales lines Report"
+#~ msgstr "销售明细报表"
+
+#~ msgid "Tax excluded"
+#~ msgstr "不含税"
+
+#~ msgid "Product Description"
+#~ msgstr "产品描述"
+
+#~ msgid "Max Difference for Cashboxes"
+#~ msgstr "钱箱最大的差异"
+
+#~ msgid "End Date"
+#~ msgstr "结束日期"
+
+#~ msgid "Return lines"
+#~ msgstr "退货明细"
+
+#~ msgid "Serial Number"
+#~ msgstr "序列号"
+
+#~ msgid "Num.File"
+#~ msgstr "Num.File"
+
+#, python-format
+#~ msgid ""
+#~ "Couldn't find a pricelist line matching this product and quantity.\n"
+#~ "You have to change either the product, the quantity or the pricelist."
+#~ msgstr ""
+#~ "找不到此产品和数量的价格表。\n"
+#~ "你必须修改产品，或价格表的数量。"
+
+#~ msgid "Refunded Quantity"
+#~ msgstr "退货数量"
+
+#~ msgid "Today's Sales by Current User"
+#~ msgstr "当前用户今日销售订单"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "错误！您不能创建递归公司."
+
+#~ msgid "Sales Lines"
+#~ msgstr "销售明细"
+
+#~ msgid "Sales Order"
+#~ msgstr "销售订单"
+
+#~ msgid "Discount "
+#~ msgstr "折扣 "
+
+#, python-format
+#~ msgid "You don't have enough access to validate this sale!"
+#~ msgstr "你没有权限审核此销售订单！"
+
+#~ msgid "Validation Date"
+#~ msgstr "审核日期"
+
+#~ msgid "Cashier"
+#~ msgstr "收银员"
+
+#~ msgid "POS Payment Report according to date"
+#~ msgstr "按日期的POS付款分析报表"
+
+#~ msgid "Are you sure you want to open the statements ?"
+#~ msgstr "你确定要开启收银机吗？"
+
+#~ msgid "Add product"
+#~ msgstr "添加产品"
+
+#~ msgid "Running"
+#~ msgstr "正在运行"
+
+#~ msgid "All Cashboxes Of the day"
+#~ msgstr "当日所有钱箱"
+
+#~ msgid "Save & Close"
+#~ msgstr "保存并关闭"
+
+#~ msgid "Advance"
+#~ msgstr "预支"
+
+#~ msgid "Opened Sales"
+#~ msgstr "未结销售订单"
+
+#~ msgid "Remboursed"
+#~ msgstr "已报销"
+
+#~ msgid "The cash register must be opened to be able to execute a payment."
+#~ msgstr "收银机必须处于开启状态才能处理支付业务。"
+
+#~ msgid "Add Discount"
+#~ msgstr "增加折扣"
+
+#~ msgid "Point of sale return"
+#~ msgstr "POS退款"
+
+#~ msgid "Is accompte"
+#~ msgstr "付款"
+
 #~ msgid "Product for expenses"
 #~ msgstr "产品费用"
+
+#~ msgid ""
+#~ "This field authorize Validation of Cashbox without checking ending details"
+#~ msgstr "这字段授权校验钱箱不检查最终细节"
+
+#~ msgid "This field authorize the automatic creation of the cashbox"
+#~ msgstr "这字段授权自动建立钱箱"
+
+#~ msgid "Get From Sale"
+#~ msgstr "出售"
+
+#~ msgid "Box Out"
+#~ msgstr "开箱"
+
+#~ msgid "Please fill these fields for entries to the box:"
+#~ msgstr "请填充这些钱箱的字段"
+
+#~ msgid "Control for Output Operations"
+#~ msgstr "出货控制"
+
+#~ msgid "Box Entries"
+#~ msgstr "钱箱"
+
+#~ msgid "Output Operations"
+#~ msgstr "上缴"
+
+#~ msgid "Products for Output Operations"
+#~ msgstr "产品出货"
+
+#~ msgid "Input Operations"
+#~ msgstr "存备用金"
+
+#~ msgid "Products for Input Operations"
+#~ msgstr "产品进货"
+
+#~ msgid "Special Journal"
+#~ msgstr "专用账簿"
+
+#, python-format
+#~ msgid ""
+#~ "There is no receivable account defined for this journal: \"%s\" (id:%d)"
+#~ msgstr "没有为：\"%s\" (id:%d)定义应收账款科目"

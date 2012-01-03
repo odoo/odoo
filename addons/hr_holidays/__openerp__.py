@@ -23,7 +23,7 @@
 {
     "name": "Leaves Management",
     "version": "1.5",
-    "author": ['OpenERP SA', 'Axelor'],
+    "author": "OpenERP SA",
     "category": "Human Resources",
     'complexity': "easy",
     "website": "http://www.openerp.com",
@@ -72,6 +72,7 @@ Note that:
              'test/hr_holidays_report.yml',
              ],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '0086579209325',
 }

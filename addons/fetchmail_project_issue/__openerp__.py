@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Fetchmail for Project Issue",
+    "name" : "eMail Gateway for Project Issues",
     "version" : "1.0",
     "depends" : ["fetchmail", "project_issue"],
     "author" : "OpenERP SA",
-    "category": 'Hidden/Link',
+    "category": "Hidden/Links",
     "description": """
     """,
     'website': 'http://www.openerp.com',
@@ -37,3 +37,5 @@
     'installable': True,
     'active': False,
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

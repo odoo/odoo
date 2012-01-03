@@ -7,47 +7,116 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-09-05 17:16+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-06 04:40+0000\n"
-"X-Generator: Launchpad (build 13861)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:17+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: share
-#: code:addons/share/web/editors.py:15
-#, python-format
+#: field:share.wizard,embed_option_title:0
+msgid "Display title"
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+msgid "Access granted!"
+msgstr ""
+
+#. module: share
+#: field:share.wizard,user_type:0
+msgid "Sharing method"
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+msgid "Share with these people (one e-mail per line)"
+msgstr ""
+
+#. module: share
+#: field:share.wizard,name:0
+msgid "Share Title"
+msgstr ""
+
+#. module: share
+#: model:ir.module.category,name:share.module_category_share
 msgid "Sharing"
 msgstr "Sdílení"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:462
+#: field:share.wizard,share_root_url:0
+msgid "Share Access URL"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:783
+#, python-format
+msgid "You may use your current login (%s) and password to view them.\n"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:602
+#, python-format
+msgid "(Modified)"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:770
 #, python-format
 msgid ""
-"This additional data has been automatically added to your current access.\n"
+"The documents are not attached, you can view them online directly on my "
+"OpenERP server at:"
 msgstr ""
-"Přídavná data byla automaticky přidána k vašemu aktuálnímu přístupu.\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:580
+#, python-format
+msgid "Sharing filter created by user %s (%s) for group %s"
+msgstr "Filtr sdílení vytvořený uživatelem %s (%s) pro skupinu %s"
+
+#. module: share
+#: field:share.wizard,embed_url:0
+#: field:share.wizard.result.line,share_url:0
+msgid "Share URL"
+msgstr "Sdílet URL"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:777
+#, python-format
+msgid "These are your credentials to access this protected area:\n"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:644
+#, python-format
+msgid "You must be a member of the Share/User group to use the share wizard"
+msgstr ""
 
 #. module: share
 #: view:share.wizard:0
-msgid "Existing External Users"
-msgstr "Existující vnější uživatelé"
+msgid "Access info"
+msgstr "Přístupové informace"
 
 #. module: share
-#: help:res.groups,share:0
-msgid "Group created to set access rights for sharing data with some users."
+#: view:share.wizard:0
+msgid "Share"
+msgstr "Sdílení"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:552
+#, python-format
+msgid "(Duplicated for modified sharing permissions)"
 msgstr ""
-"Skupina vytvořená k nastavení přístupových práv pro sdílení dat s některými "
-"uživateli."
 
 #. module: share
-#: model:ir.module.module,shortdesc:share.module_meta_information
-msgid "Share Management"
-msgstr "Správa sdílení"
+#: help:share.wizard,domain:0
+msgid "Optional domain for further data filtering"
+msgstr "Volitelná doména pro další filtrování dat"
 
 #. module: share
 #: sql_constraint:res.users:0
@@ -55,41 +124,9 @@ msgid "You can not have two users with the same login !"
 msgstr "Nemůžete mít dva uživatele se stejným přihlašovacím jménem !"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:76
-#, python-format
-msgid "Sharing Wizard - Step 1"
-msgstr "Průvodce sdílení - Krok 1"
-
-#. module: share
-#: model:ir.actions.act_window,name:share.action_share_wizard
-#: model:ir.ui.menu,name:share.menu_action_share_wizard
-msgid "Share Access Rules"
-msgstr "Pravidla přístupu sdílení"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:453
-#, python-format
-msgid ""
-"Dear,\n"
-"\n"
-"%s\n"
-"\n"
+#: model:ir.model,name:share.model_ir_model_access
+msgid "ir.model.access"
 msgstr ""
-"Vážený,\n"
-"\n"
-"%s\n"
-"\n"
-
-#. module: share
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-"Vybraná společnost není v povolených společnostech pro tohoto uživatele"
-
-#. module: share
-#: model:ir.model,name:share.model_res_users
-msgid "res.users"
-msgstr "res.users"
 
 #. module: share
 #: view:share.wizard:0
@@ -97,225 +134,32 @@ msgid "Next"
 msgstr "Další"
 
 #. module: share
-#: help:share.wizard,action_id:0
-msgid ""
-"The action that opens the screen containing the data you wish to share."
-msgstr ""
-"Akce, které otevírají obrazovku obsahující data, které chcete sdílet."
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:68
-#, python-format
-msgid "Please specify \"share_root_url\" in context"
-msgstr "Prosíme zadejte \"share_root_url\" v kontextu"
-
-#. module: share
-#: view:share.wizard:0
-msgid "Congratulations, you have successfully setup a new shared access!"
-msgstr "Blahopřejeme, úspěšně jste nastavili nový přístup sdílení!"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:275
-#, python-format
-msgid "(Copy for sharing)"
-msgstr "(Kopie pro sdílení)"
-
-#. module: share
-#: field:share.wizard.result.line,newly_created:0
-msgid "Newly created"
-msgstr "Nově vytvořeno"
-
-#. module: share
-#: field:share.wizard,share_root_url:0
-msgid "Generic Share Access URL"
-msgstr "Obecné přístupové URL sdílení"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:457
-#, python-format
-msgid ""
-"You may use the following login and password to get access to this protected "
-"area:\n"
-msgstr ""
-"Můžete použít následující přihlašovací jméno a heslo pro přístup k této "
-"chráněné oblasti:\n"
-
-#. module: share
-#: view:res.groups:0
-msgid "Regular groups only (no share groups"
-msgstr "Pouze běžné skupiny (žádné sídlecí skupiny"
-
-#. module: share
-#: selection:share.wizard,access_mode:0
-msgid "Read & Write"
-msgstr "Čtení & Zápis"
-
-#. module: share
-#: view:share.wizard:0
-msgid "Share wizard: step 2"
-msgstr "Průvodce sdílením: krok 2"
-
-#. module: share
-#: view:share.wizard:0
-msgid "Share wizard: step 0"
-msgstr "Průvodce sdílením: krok 0"
-
-#. module: share
-#: view:share.wizard:0
-msgid "Share wizard: step 1"
-msgstr "Průvodce sdílením: krok 1"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:458
-#: field:share.wizard.result.line,login:0
+#: code:addons/share/wizard/share_wizard.py:778
 #, python-format
 msgid "Username"
 msgstr "Jméno uživatele"
 
 #. module: share
-#: field:res.users,share:0
-msgid "Share User"
-msgstr "Sdílet uživatele"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:452
-#, python-format
-msgid "%s has shared OpenERP %s information with you"
-msgstr "%s má s tebou sdíleny OpenERP %s informace"
-
-#. module: share
 #: view:share.wizard:0
-msgid "Finish"
-msgstr "Dokončit"
-
-#. module: share
-#: field:share.wizard,user_ids:0
-#: field:share.wizard.user,user_id:0
-msgid "Users"
-msgstr "Uživatelé"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:103
-#, python-format
-msgid ""
-"This username (%s) already exists, perhaps data has already been shared with "
-"this person.\n"
-"You may want to try selecting existing shared users instead."
+msgid "Sharing Options"
 msgstr ""
-"Uživatelské jméno (%s) již existuje, možná byla s touto osobou již data "
-"nasdílena.\n"
-"Možná místo toho chcete zkusit vybrat existující sdílené uživatele."
 
 #. module: share
-#: field:share.wizard,new_users:0
-msgid "New users"
-msgstr "Nový uživatelé"
-
-#. module: share
-#: model:ir.model,name:share.model_res_groups
-msgid "res.groups"
-msgstr "res.groups"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:149
+#: code:addons/share/wizard/share_wizard.py:766
 #, python-format
-msgid "%s (Shared)"
-msgstr "%s (Sdíleno)"
-
-#. module: share
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Jméno skupiny musí být jedinečné !"
-
-#. module: share
-#: selection:share.wizard,user_type:0
-msgid "New users (emails required)"
-msgstr "Nový uživatelé (požadovány emaily)"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:418
-#, python-format
-msgid "Sharing filter created by user %s (%s) for group %s"
-msgstr "Filtr sdílení vytvořený uživatelem %s (%s) pro skupinu %s"
-
-#. module: share
-#: view:res.groups:0
-msgid "Groups"
-msgstr "Skupiny"
-
-#. module: share
-#: view:share.wizard:0
-msgid "Select the desired shared access mode:"
-msgstr "Vyberte požadovaný režim přístupu sdílení:"
-
-#. module: share
-#: field:res.groups,share:0
-msgid "Share Group"
-msgstr "Sdílena skupina"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:459
-#: field:share.wizard.result.line,password:0
-#, python-format
-msgid "Password"
-msgstr "Heslo"
-
-#. module: share
-#: view:share.wizard:0
-msgid "Who would you want to share this data with?"
-msgstr "S kým chcete sdílet tato data?"
-
-#. module: share
-#: model:ir.module.module,description:share.module_meta_information
-msgid ""
-"The goal is to implement a generic sharing mechanism, where user of OpenERP\n"
-"can share data from OpenERP to their colleagues, customers, or friends.\n"
-"The system will work by creating new users and groups on the fly, and by\n"
-"combining the appropriate access rights and ir.rules to ensure that the "
-"/shared\n"
-"users/ will only have access to the correct data.\n"
-"    "
+msgid "Hello,"
 msgstr ""
-"Cíl je realizovat obecné mechanizmi sdílení, kde uživatel OpenERP\n"
-"může sdílet data z OpenERP svým kolegům, zákazníkům nebo přátelům.\n"
-"Systém bude pracovat s vytvořením nových uživatelů a skupin za běhu, a "
-"pomocí\n"
-"kombinování odpovídajících přístupových práv a ir.rules pro ujištění se, že "
-"\n"
-"pouze /sdílení uživatelé/ budou mít přístup ke správným datům.\n"
-"    "
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:102
-#, python-format
-msgid "User already exists"
-msgstr "Uživatel již existuje"
 
 #. module: share
 #: view:share.wizard:0
-msgid "Send Email Notification(s)"
-msgstr "Poslat emailové upozornění"
+msgid "Close"
+msgstr "Zavřít"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:463
+#: code:addons/share/wizard/share_wizard.py:641
 #, python-format
-msgid ""
-"You may use your existing login and password to view it. As a reminder, your "
-"login is %s.\n"
+msgid "Action and Access Mode are required to create a shared access"
 msgstr ""
-"Můžete použít vaše existující jméno a heslo k jeho zobrazení. Jako "
-"připomenutí, váše přihlášení je %s.\n"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:460
-#, python-format
-msgid "Database"
-msgstr "Databáze"
-
-#. module: share
-#: model:ir.model,name:share.model_share_wizard_user
-msgid "share.wizard.user"
-msgstr "share.wizard.user"
 
 #. module: share
 #: view:share.wizard:0
@@ -327,38 +171,28 @@ msgstr ""
 "sdílet."
 
 #. module: share
-#: selection:share.wizard,user_type:0
-msgid "Existing external users"
-msgstr "Existující vnější uživatelé"
+#: code:addons/share/wizard/share_wizard.py:782
+#, python-format
+msgid ""
+"The documents have been automatically added to your current OpenERP "
+"documents.\n"
+msgstr ""
 
 #. module: share
 #: view:share.wizard:0
-#: field:share.wizard,result_line_ids:0
-msgid "Summary"
-msgstr "Shrnutí"
+msgid "Cancel"
+msgstr "Zrušit"
 
 #. module: share
-#: field:share.wizard,user_type:0
-msgid "Users to share with"
-msgstr "Uživatele pro sdílení s"
+#: field:res.groups,share:0
+msgid "Share Group"
+msgstr "Sdílena skupina"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:304
-#, python-format
-msgid "Indirect sharing filter created by user %s (%s) for group %s"
-msgstr "Filtr nepřímého sdílení vytvořený uživatelem %s (%s) pro skupinu %s"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:448
+#: code:addons/share/wizard/share_wizard.py:757
 #, python-format
 msgid "Email required"
 msgstr "Požadován email"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:240
-#, python-format
-msgid "Copied access for sharing"
-msgstr "Zkopírované práva pro sdílení"
 
 #. module: share
 #: view:share.wizard:0
@@ -370,38 +204,121 @@ msgstr ""
 "sdílená data."
 
 #. module: share
-#: view:share.wizard:0
-msgid "New Users (please provide one e-mail address per line below)"
+#: help:share.wizard,name:0
+msgid "Title for the share (displayed to users as menu and shortcut name)"
 msgstr ""
-"Nový uživatelé (prosíme poskytněte jednu e-mailovou adresu na řádek níže)"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:448
+#: view:share.wizard:0
+msgid "Options"
+msgstr ""
+
+#. module: share
+#: view:res.groups:0
+msgid "Regular groups only (no share groups"
+msgstr "Pouze běžné skupiny (žádné sídlecí skupiny"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:788
 #, python-format
 msgid ""
-"The current user must have an email address configured in User Preferences "
-"to be able to send outgoing emails."
+"OpenERP is a powerful and user-friendly suite of Business Applications (CRM, "
+"Sales, HR, etc.)\n"
+"It is open source and can be found on http://www.openerp.com."
 msgstr ""
-"Aktuální uživatel musí mít emailovou adresu nastavenu v Předvolbách "
-"uživatele, aby byllo možné odeslat odchozí emaily."
 
 #. module: share
-#: view:res.users:0
-msgid "Regular users only (no share user)"
-msgstr "Pouze běžní uživatelé (žádní sdílení uživatelé)"
+#: field:share.wizard,action_id:0
+msgid "Action to share"
+msgstr "Akce ke sdílení"
 
 #. module: share
-#: field:share.wizard.result.line,share_url:0
-msgid "Share URL"
-msgstr "Sdílet URL"
+#: view:share.wizard:0
+msgid "Optional: include a personal message"
+msgstr ""
 
 #. module: share
-#: field:share.wizard,domain:0
-msgid "Domain"
-msgstr "Doména"
+#: field:res.users,share:0
+msgid "Share User"
+msgstr "Sdílet uživatele"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:314
+#: code:addons/share/wizard/share_wizard.py:648
+#, python-format
+msgid "Please indicate the emails of the persons to share with, one per line"
+msgstr ""
+
+#. module: share
+#: field:share.wizard,embed_code:0
+#: field:share.wizard.result.line,user_id:0
+msgid "unknown"
+msgstr ""
+
+#. module: share
+#: help:res.groups,share:0
+msgid "Group created to set access rights for sharing data with some users."
+msgstr ""
+"Skupina vytvořená k nastavení přístupových práv pro sdílení dat s některými "
+"uživateli."
+
+#. module: share
+#: help:share.wizard,action_id:0
+msgid ""
+"The action that opens the screen containing the data you wish to share."
+msgstr ""
+"Akce, které otevírají obrazovku obsahující data, které chcete sdílet."
+
+#. module: share
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"Vybraná společnost není v povolených společnostech pro tohoto uživatele"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:527
+#, python-format
+msgid "(Copy for sharing)"
+msgstr "(Kopie pro sdílení)"
+
+#. module: share
+#: field:share.wizard.result.line,newly_created:0
+msgid "Newly created"
+msgstr "Nově vytvořeno"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:617
+#, python-format
+msgid "Indirect sharing filter created by user %s (%s) for group %s"
+msgstr "Filtr nepřímého sdílení vytvořený uživatelem %s (%s) pro skupinu %s"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:768
+#, python-format
+msgid "I've shared %s with you!"
+msgstr ""
+
+#. module: share
+#: help:share.wizard,share_root_url:0
+msgid "Main access page for users that are granted shared access"
+msgstr ""
+
+#. module: share
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr "Jméno skupiny musí být jedinečné !"
+
+#. module: share
+#: model:res.groups,name:share.group_share_user
+msgid "User"
+msgstr ""
+
+#. module: share
+#: view:res.groups:0
+msgid "Groups"
+msgstr "Skupiny"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:637
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -413,46 +330,49 @@ msgstr ""
 "Můžete zkusit jednodušší filtr."
 
 #. module: share
-#: field:share.wizard,access_mode:0
-msgid "Access Mode"
-msgstr "Režim přístupu"
-
-#. module: share
 #: view:share.wizard:0
-msgid "Access info"
-msgstr "Přístupové informace"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:454
-#, python-format
-msgid ""
-"To access it, you can go to the following URL:\n"
-"    %s"
+msgid "Use this link"
 msgstr ""
-"K jeho přístupu, můžete jít na následující URL:\n"
-"    %s"
 
 #. module: share
-#: field:share.wizard,action_id:0
-msgid "Action to share"
-msgstr "Akce ke sdílení"
-
-#. module: share
-#: code:addons/share/web/editors.py:18
+#: code:addons/share/wizard/share_wizard.py:780
 #, python-format
-msgid "Share"
-msgstr "Sdílení"
+msgid "Database"
+msgstr "Databáze"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:434
-#, python-format
-msgid "Sharing Wizard - Step 2"
-msgstr "Průvodce sdílením - Krok 2"
+#: field:share.wizard,domain:0
+msgid "Domain"
+msgstr "Doména"
 
 #. module: share
 #: view:share.wizard:0
-msgid "Here is a summary of the access points you have just created:"
-msgstr "Zde je souhrn přístupových bodů, které jste právě vytvořili:"
+#: field:share.wizard,result_line_ids:0
+msgid "Summary"
+msgstr "Shrnutí"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:494
+#, python-format
+msgid "Copied access for sharing"
+msgstr "Zkopírované práva pro sdílení"
+
+#. module: share
+#: model:ir.actions.act_window,name:share.action_share_wizard_step1
+msgid "Share your documents"
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+msgid "Or insert the following code where you want to embed your documents"
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+msgid ""
+"An e-mail notification with instructions has been sent to the following "
+"people:"
+msgstr ""
 
 #. module: share
 #: model:ir.model,name:share.model_share_wizard_result_line
@@ -460,34 +380,42 @@ msgid "share.wizard.result.line"
 msgstr "share.wizard.result.line"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:313
-#, python-format
-msgid "Sharing access could not be setup"
-msgstr "Sdílený přístup nelze nastavit"
-
-#. module: share
-#: model:ir.actions.act_window,name:share.action_share_wizard
-#: model:ir.actions.act_window,name:share.action_share_wizard_step1
-#: model:ir.model,name:share.model_share_wizard
-#: model:ir.ui.menu,name:share.menu_action_share_wizard
-#: field:share.wizard.result.line,share_wizard_id:0
-msgid "Share Wizard"
-msgstr "Průvodce sdílením"
-
-#. module: share
 #: help:share.wizard,user_type:0
 msgid "Select the type of user(s) you would like to share data with."
 msgstr "Vyberte typ uživatele(ů), se kterým(i) chcete sdílet data."
 
 #. module: share
-#: view:share.wizard:0
-msgid "Cancel"
-msgstr "Zrušit"
+#: field:share.wizard,view_type:0
+msgid "Current View Type"
+msgstr ""
 
 #. module: share
-#: view:share.wizard:0
-msgid "Close"
-msgstr "Zavřít"
+#: selection:share.wizard,access_mode:0
+msgid "Can view"
+msgstr ""
+
+#. module: share
+#: selection:share.wizard,access_mode:0
+msgid "Can edit"
+msgstr ""
+
+#. module: share
+#: help:share.wizard,message:0
+msgid ""
+"An optional personal message, to be included in the e-mail notification."
+msgstr ""
+
+#. module: share
+#: model:ir.model,name:share.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:60
+#: code:addons/share/wizard/share_wizard.py:636
+#, python-format
+msgid "Sharing access could not be created"
+msgstr ""
 
 #. module: share
 #: help:res.users,share:0
@@ -498,17 +426,217 @@ msgstr ""
 "Vnější uživatel s omezeným přístupem, vytvořený pouze za účelem sdílení dat."
 
 #. module: share
-#: help:share.wizard,domain:0
-msgid "Optional domain for further data filtering"
-msgstr "Volitelná doména pro další filtrování dat"
+#: model:ir.actions.act_window,name:share.action_share_wizard
+#: model:ir.model,name:share.model_share_wizard
+#: field:share.wizard.result.line,share_wizard_id:0
+msgid "Share Wizard"
+msgstr "Průvodce sdílením"
 
 #. module: share
-#: selection:share.wizard,access_mode:0
-msgid "Read-only"
-msgstr "Pouze ke čtení"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:323
+#: code:addons/share/wizard/share_wizard.py:741
 #, python-format
-msgid "*usual password*"
-msgstr "*obvyklé heslo*"
+msgid "Shared access created!"
+msgstr ""
+
+#. module: share
+#: model:res.groups,comment:share.group_share_user
+msgid ""
+"\n"
+"Members of this groups have access to the sharing wizard, which allows them "
+"to invite external users to view or edit some of their documents."
+msgstr ""
+
+#. module: share
+#: model:ir.model,name:share.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:779
+#: field:share.wizard.result.line,password:0
+#, python-format
+msgid "Password"
+msgstr "Heslo"
+
+#. module: share
+#: field:share.wizard,new_users:0
+msgid "Emails"
+msgstr ""
+
+#. module: share
+#: field:share.wizard,embed_option_search:0
+msgid "Display search view"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:198
+#, python-format
+msgid "No e-mail address configured"
+msgstr ""
+
+#. module: share
+#: field:share.wizard,message:0
+msgid "Personal Message"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:757
+#, python-format
+msgid ""
+"The current user must have an email address configured in User Preferences "
+"to be able to send outgoing emails."
+msgstr ""
+"Aktuální uživatel musí mít emailovou adresu nastavenu v Předvolbách "
+"uživatele, aby byllo možné odeslat odchozí emaily."
+
+#. module: share
+#: field:share.wizard.result.line,login:0
+msgid "Login"
+msgstr ""
+
+#. module: share
+#: view:res.users:0
+msgid "Regular users only (no share user)"
+msgstr "Pouze běžní uživatelé (žádní sdílení uživatelé)"
+
+#. module: share
+#: field:share.wizard,access_mode:0
+msgid "Access Mode"
+msgstr "Režim přístupu"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Sharing: preparation"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:199
+#, python-format
+msgid ""
+"You must configure your e-mail address in the user preferences before using "
+"the Share button."
+msgstr ""
+
+#. module: share
+#: help:share.wizard,access_mode:0
+msgid "Access rights to be granted on the shared documents."
+msgstr ""
+
+#~ msgid "Read-only"
+#~ msgstr "Pouze ke čtení"
+
+#, python-format
+#~ msgid "*usual password*"
+#~ msgstr "*obvyklé heslo*"
+
+#, python-format
+#~ msgid ""
+#~ "This additional data has been automatically added to your current access.\n"
+#~ msgstr ""
+#~ "Přídavná data byla automaticky přidána k vašemu aktuálnímu přístupu.\n"
+
+#~ msgid "Existing External Users"
+#~ msgstr "Existující vnější uživatelé"
+
+#, python-format
+#~ msgid "Sharing Wizard - Step 1"
+#~ msgstr "Průvodce sdílení - Krok 1"
+
+#, python-format
+#~ msgid "Please specify \"share_root_url\" in context"
+#~ msgstr "Prosíme zadejte \"share_root_url\" v kontextu"
+
+#~ msgid "Congratulations, you have successfully setup a new shared access!"
+#~ msgstr "Blahopřejeme, úspěšně jste nastavili nový přístup sdílení!"
+
+#~ msgid "Generic Share Access URL"
+#~ msgstr "Obecné přístupové URL sdílení"
+
+#~ msgid "Read & Write"
+#~ msgstr "Čtení & Zápis"
+
+#~ msgid "Share wizard: step 2"
+#~ msgstr "Průvodce sdílením: krok 2"
+
+#~ msgid "Share wizard: step 0"
+#~ msgstr "Průvodce sdílením: krok 0"
+
+#~ msgid "Share wizard: step 1"
+#~ msgstr "Průvodce sdílením: krok 1"
+
+#, python-format
+#~ msgid "%s has shared OpenERP %s information with you"
+#~ msgstr "%s má s tebou sdíleny OpenERP %s informace"
+
+#~ msgid "Finish"
+#~ msgstr "Dokončit"
+
+#, python-format
+#~ msgid ""
+#~ "This username (%s) already exists, perhaps data has already been shared with "
+#~ "this person.\n"
+#~ "You may want to try selecting existing shared users instead."
+#~ msgstr ""
+#~ "Uživatelské jméno (%s) již existuje, možná byla s touto osobou již data "
+#~ "nasdílena.\n"
+#~ "Možná místo toho chcete zkusit vybrat existující sdílené uživatele."
+
+#~ msgid "New users"
+#~ msgstr "Nový uživatelé"
+
+#, python-format
+#~ msgid "%s (Shared)"
+#~ msgstr "%s (Sdíleno)"
+
+#~ msgid "New users (emails required)"
+#~ msgstr "Nový uživatelé (požadovány emaily)"
+
+#~ msgid "Select the desired shared access mode:"
+#~ msgstr "Vyberte požadovaný režim přístupu sdílení:"
+
+#~ msgid "Who would you want to share this data with?"
+#~ msgstr "S kým chcete sdílet tato data?"
+
+#, python-format
+#~ msgid "User already exists"
+#~ msgstr "Uživatel již existuje"
+
+#~ msgid "Send Email Notification(s)"
+#~ msgstr "Poslat emailové upozornění"
+
+#, python-format
+#~ msgid ""
+#~ "You may use your existing login and password to view it. As a reminder, your "
+#~ "login is %s.\n"
+#~ msgstr ""
+#~ "Můžete použít vaše existující jméno a heslo k jeho zobrazení. Jako "
+#~ "připomenutí, váše přihlášení je %s.\n"
+
+#~ msgid "Existing external users"
+#~ msgstr "Existující vnější uživatelé"
+
+#~ msgid "Users to share with"
+#~ msgstr "Uživatele pro sdílení s"
+
+#~ msgid "New Users (please provide one e-mail address per line below)"
+#~ msgstr ""
+#~ "Nový uživatelé (prosíme poskytněte jednu e-mailovou adresu na řádek níže)"
+
+#, python-format
+#~ msgid ""
+#~ "To access it, you can go to the following URL:\n"
+#~ "    %s"
+#~ msgstr ""
+#~ "K jeho přístupu, můžete jít na následující URL:\n"
+#~ "    %s"
+
+#, python-format
+#~ msgid "Sharing Wizard - Step 2"
+#~ msgstr "Průvodce sdílením - Krok 2"
+
+#~ msgid "Here is a summary of the access points you have just created:"
+#~ msgstr "Zde je souhrn přístupových bodů, které jste právě vytvořili:"
+
+#, python-format
+#~ msgid "Sharing access could not be setup"
+#~ msgstr "Sdílený přístup nelze nastavit"

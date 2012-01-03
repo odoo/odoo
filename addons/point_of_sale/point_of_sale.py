@@ -22,6 +22,10 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import PIL
+import io
+import base64
+import StringIO
 
 import netsvc
 from osv import fields, osv
@@ -122,10 +126,10 @@ class pos_order(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
 
         'state': fields.selection([('draft', 'New'),
-                                   ('paid', 'Done'),
+                                   ('cancel', 'Cancelled'),
+                                   ('paid', 'Paid'),
                                    ('done', 'Posted'),
-                                   ('invoiced', 'Invoiced'),
-                                   ('cancel', 'Cancelled')],
+                                   ('invoiced', 'Invoiced')],
                                   'State', readonly=True),
 
         'invoice_id': fields.many2one('account.invoice', 'Invoice'),
@@ -174,6 +178,8 @@ class pos_order(osv.osv):
         move_obj = self.pool.get('stock.move')
 
         for order in self.browse(cr, uid, ids, context=context):
+            if not order.state=='draft':
+                continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_id = picking_obj.create(cr, uid, {
                 'origin': order.name,
@@ -276,7 +282,7 @@ class pos_order(osv.osv):
                                                      ('user_id', '=', uid),
                                                      ('state', '=', 'open')], context=context)
         if len(statement_id) == 0:
-            raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
+            raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox.'))
         if statement_id:
             statement_id = statement_id[0]
         args['statement_id'] = statement_id
@@ -325,7 +331,11 @@ class pos_order(osv.osv):
         }
         return abs
 
+    def action_invoice_state(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'invoiced'}, context=context)
+
     def action_invoice(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
         product_obj = self.pool.get('product.product')
@@ -341,7 +351,7 @@ class pos_order(osv.osv):
 
             acc = order.partner_id.property_account_receivable.id
             inv = {
-                'name': 'Invoice from POS: '+order.name,
+                'name': order.name,
                 'origin': order.name,
                 'account_id': acc,
                 'journal_id': order.sale_journal.id or None,
@@ -379,16 +389,18 @@ class pos_order(osv.osv):
                     and [(6, 0, inv_line['invoice_line_tax_id'])] or []
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
+            wf_service.trg_validate(uid, 'pos.order', order.id, 'invoice', cr)
 
         if not inv_ids: return {}
+        
         mod_obj = self.pool.get('ir.model.data')
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         res_id = res and res[1] or False
         return {
-            'name': _('PoS Invoices'),
+            'name': _('Customer Invoice'),
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': res_id,
+            'view_id': [res_id],
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
@@ -445,12 +457,9 @@ class pos_order(osv.osv):
 
                 # Search for the income account
                 if  line.product_id.property_account_income.id:
-                    income_account = line.\
-                                    product_id.property_account_income.id
-                elif line.product_id.categ_id.\
-                        property_account_income_categ.id:
-                    income_account = line.product_id.categ_id.\
-                                    property_account_income_categ.id
+                    income_account = line.product_id.property_account_income.id
+                elif line.product_id.categ_id.property_account_income_categ.id:
+                    income_account = line.product_id.categ_id.property_account_income_categ.id
                 else:
                     raise osv.except_osv(_('Error !'), _('There is no income '\
                         'account defined for this product: "%s" (id:%d)') \
@@ -681,20 +690,85 @@ pos_order_line()
 
 class pos_category(osv.osv):
     _name = 'pos.category'
-    _inherit = 'product.category'
+    _description = "PoS Category"
+    _order = "sequence, name"
+    def _check_recursion(self, cr, uid, ids, context=None):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from pos_category where id IN %s',(tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
+    ]
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
     _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('pos.category','Parent Category', select=True),
-        'child_id': fields.one2many('pos.category', 'parent_id', string='Child Categories'),
+        'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
     }
 pos_category()
 
+_IMAGE_SIZE = 100,120
+
 class product_product(osv.osv):
     _inherit = 'product.product'
+    
+    def _get_img(self, cr, uid, ids, field_name, arg, context=None):
+        context = context or {}
+        bin_size = context.get('bin_size', False)
+        context = dict(context, bin_size = False)
+        products = self.browse(cr, uid, ids, context=context)
+        result = {}
+        for product in products:
+            image64 = product.product_image
+            if not image64:
+                result[product.id] = False
+                continue
+            image_bin = base64.decodestring(image64)
+            image_stream = io.BytesIO(image_bin)
+            im = PIL.Image.open(image_stream)
+            im.thumbnail(_IMAGE_SIZE, PIL.Image.ANTIALIAS)
+            nimage_stream = StringIO.StringIO()
+            im.save(nimage_stream, format="JPEG")
+            nimage_bin = nimage_stream.getvalue()
+            if not bin_size:
+                    result[product.id] = base64.encodestring(nimage_bin)
+            else:
+                    result[product.id] = nimage_bin.length
+        return result
+    
     _columns = {
-        'income_pdt': fields.boolean('Product for Input'),
-        'expense_pdt': fields.boolean('Product for Output'),
-        'img': fields.binary('Pos Image, must be 50x50'),
-        'pos_categ_id': fields.many2one('pos.category','POS Category', change_default=True, domain="[('type','=','normal')]" ,help="Select a pos category for the current product")
+        'income_pdt': fields.boolean('PoS Cash Input', help="This is a product you can use to put cash into a statement for the point of sale backend."),
+        'expense_pdt': fields.boolean('PoS Cash Output', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
+        'img': fields.function(_get_img, method=True, type="binary", string='Product Image', 
+                        store = {'product.product': (lambda self, cr, uid, ids, c=None: ids, ['product_image'], 10)}),
+        'pos_categ_id': fields.many2one('pos.category','PoS Category',
+            help="If you want to sell this product through the point of sale, select the category it belongs to.")
     }
 product_product()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -22,7 +22,7 @@
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_uom_qty" sum="# of Qty"/>
                 <field name="shipped_qty_1" sum="Shipped"/>
-                <field name="uom_name" invisible="not context.get('set_visible',False)"/>
+                <field name="product_uom" invisible="not context.get('set_visible',False)"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="delay" sum="Commitment Delay"/>
                 <field name="state" invisible="1"/>
@@ -51,10 +51,11 @@
         <field name="arch" type="xml">
             <search string="Sales Analysis">
                 <group>
-                    <filter icon="terp-go-year" string="  Year  "
+                    <filter icon="terp-go-year" string="Year" name="year"
                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
                         help="Sales order created in current year"/>
-                    <filter icon="terp-go-month" string="   Month   "
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-go-month" string="Month"
                         name="month"
                         domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                         help="Sales order created in current month"/>
@@ -98,7 +99,7 @@
                     <filter string="Partner" icon="terp-partner"  name="Customer" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
-                    <filter string="Reference UoM" icon="terp-mrp" context="{'group_by':'uom_name'}"/>
+                    <filter string="Reference UoM" icon="terp-mrp" context="{'group_by':'product_uom'}"/>
                     <filter string="Category of Product" icon="terp-stock_symbol-selection" name="Category" context="{'group_by':'categ_id'}"/>
                     <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
                     <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
@@ -123,12 +124,12 @@
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_order_product_search"/>
         <field name="view_id" ref="view_order_product_tree"/>
-        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 
-    <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="11"/>
-    <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="1" groups="base.group_sale_manager"/>
+    <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="11" groups="base.group_sale_manager"/>
+    <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="1"/>
 
     <!--This views used in board_sale module -->
     <record id="view_sales_by_partner_graph" model="ir.ui.view">
@@ -208,7 +209,7 @@
                 <field name="price_total" />
                 <field name="user_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
-                <field name="uom_name" invisible="1"/>
+                <field name="product_uom" invisible="1"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="analytic_account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
                 <field name="state" invisible="1"/>

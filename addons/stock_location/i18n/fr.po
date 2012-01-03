@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-18 16:46+0000\n"
 "Last-Translator: lholivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:40+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -48,6 +48,7 @@ msgid "Parameters"
 msgstr "Paramètres"
 
 #. module: stock_location
+#: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
 msgstr "Emplacement source"
@@ -87,8 +88,8 @@ msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
 msgstr ""
-"Gestion des besoins en flux tiré provenant de l'emplacement d'origine %s, "
-"règle de flux tiré %s, via le besoin %s (#%d)"
+"Approvisionnement en flux tiré provenant de l'emplacement d'origine %s, "
+"règle de flux tiré %s, via l'approvisionnement original %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -100,11 +101,6 @@ msgstr "Emplacement"
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
 msgstr "État de la facture"
-
-#. module: stock_location
-#: help:product.pulled.flow,name:0
-msgid "This field will fill the packing Origin and the name of its moves"
-msgstr "Ce champ remplira l'origine du colisage et le nom de ses mouvements"
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
@@ -126,29 +122,15 @@ msgstr ""
 "mouvement original."
 
 #. module: stock_location
-#: model:ir.module.module,shortdesc:stock_location.module_meta_information
-msgid "Warehouse Locations Paths"
-msgstr "Chemins des emplacements de l'entrepôt"
-
-#. module: stock_location
 #: view:product.product:0
 msgid "Conditions"
 msgstr "Conditions"
 
 #. module: stock_location
-#: model:stock.location,name:stock_location.location_pack_zone
-msgid "Pack Zone"
-msgstr "Zone d'emballage"
-
-#. module: stock_location
-#: model:stock.location,name:stock_location.location_gate_b
-msgid "Gate B"
-msgstr "Porte B"
-
-#. module: stock_location
-#: model:stock.location,name:stock_location.location_gate_a
-msgid "Gate A"
-msgstr "Porte A"
+#: model:ir.model,name:stock_location.model_product_product
+#: field:product.pulled.flow,product_id:0
+msgid "Product"
+msgstr "Produit"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -161,11 +143,6 @@ msgid "Pushed flows"
 msgstr "Flux poussés"
 
 #. module: stock_location
-#: model:stock.location,name:stock_location.location_dispatch_zone
-msgid "Dispatch Zone"
-msgstr "Zone d'expédition"
-
-#. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
 msgstr "Mouvement de stock"
@@ -176,10 +153,10 @@ msgid "Pulled flows"
 msgstr "Flux tirés"
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr "Société"
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "Journal"
 
 #. module: stock_location
 #: view:product.product:0
@@ -201,12 +178,12 @@ msgstr "Produire"
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr "Sur commande"
+msgstr "Production à la demande"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr "Sur stock"
+msgstr "Production sur stock"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -225,176 +202,9 @@ msgid "Number of days to do this transition"
 msgstr "Nombre de jours pour effectuer cette transition"
 
 #. module: stock_location
-#: model:ir.module.module,description:stock_location.module_meta_information
-msgid ""
-"\n"
-"This module supplements the Warehouse application by adding support for per-"
-"product\n"
-"location paths, effectively implementing Push and Pull inventory flows.\n"
-"\n"
-"Typically this could be used to:\n"
-"* Manage product manufacturing chains\n"
-"* Manage default locations per product\n"
-"* Define routes within your warehouse according to business needs, such as:\n"
-"   - Quality Control\n"
-"   - After Sales Services\n"
-"   - Supplier Returns\n"
-"* Help rental management, by generating automated return moves for rented "
-"products\n"
-"\n"
-"Once this module is installed, an additional tab appear on the product form, "
-"where you can add\n"
-"Push and Pull flow specifications. The demo data of  CPU1 product for that "
-"push/pull :\n"
-"\n"
-"Push flows\n"
-"----------\n"
-"Push flows are useful when the arrival of certain products in a given "
-"location should always\n"
-"be followed by a corresponding move to another location, optionally after a "
-"certain delay.\n"
-"The original Warehouse application already supports such Push flow "
-"specifications on the\n"
-"Locations themselves, but these cannot be refined per-product.\n"
-"\n"
-"A push flow specification indicates which location is chained with which "
-"location, and with\n"
-"what parameters. As soon as a given quantity of products is moved in the "
-"source location,\n"
-"a chained move is automatically foreseen according to the parameters set on "
-"the flow specification\n"
-"(destination location, delay, type of move, journal, etc.) The new move can "
-"be automatically\n"
-"processed, or require a manual confirmation, depending on the parameters.\n"
-"\n"
-"Pull flows\n"
-"----------\n"
-"Pull flows are a bit different from Pull flows, in the sense that they are "
-"not related to\n"
-"the processing of product moves, but rather to the processing of procurement "
-"orders.\n"
-"What is being pulled is a need, not directly products.\n"
-"A classical example of Push flow is when you have an Outlet company, with a "
-"parent Company\n"
-"that is responsible for the supplies of the Outlet.\n"
-"\n"
-"  [ Customer ] <- A - [ Outlet ]  <- B -  [ Holding ] <~ C ~ [ Supplier ]\n"
-"\n"
-"When a new procurement order (A, coming from the confirmation of a Sale "
-"Order for example) arrives\n"
-"in the Outlet, it is converted into another procurement (B, via a Push flow "
-"of type 'move')\n"
-"requested from the Holding. When procurement order B is processed by the "
-"Holding company, and\n"
-"if the product is out of stock, it can be converted into a Purchase Order "
-"(C) from the Supplier\n"
-"(Push flow of type Purchase). The result is that the procurement order, the "
-"need, is pushed\n"
-"all the way between the Customer and Supplier.\n"
-"\n"
-"Technically, Pull flows allow to process procurement orders differently, not "
-"only depending on\n"
-"the product being considered, but also depending on which location holds the "
-"\"need\" for that\n"
-"product (i.e. the destination location of that procurement order).\n"
-"\n"
-"Use-Case\n"
-"--------\n"
-"\n"
-"You can use the demo data as follow:\n"
-"  CPU1: Sell some CPU1 from Shop 1 and run the scheduler\n"
-"     - Warehouse: delivery order, Shop 1: reception\n"
-"  CPU3:\n"
-"     - When receiving the product, it goes to Quality Control location then "
-"stored to shelf 2.\n"
-"     - When delivering the customer: Pick List -> Packing -> Delivery Order "
-"from Gate A\n"
-"    "
-msgstr ""
-"\n"
-"Ce module complète l'application  Entrepôts par l'accès aux localisations "
-"par produit, il gère les flux d'inventaire en mode \"poussé et \"tiré\".\n"
-"\n"
-"Il peut typiquement être utilisé pour:\n"
-"* Gérer les chaînes de fabrication\n"
-"* Gérer les emplacements par défaut par produit\n"
-"* Définir des ordonnancements au sein de l'entrepôt selon les besoins tels "
-"que:\n"
-"   - Contrôle qualité\n"
-"   - Service Après Vente\n"
-"   - Retours fournisseur\n"
-"* Aide à la gestion de location, en générant les retours automatiques pour "
-"les produits loués\n"
-"\n"
-"Une fois ce module est installé, un onglet supplémentaire apparaît dans le "
-"formulaire produit, où l'on peut ajouter\n"
-"les spécification de \"Poussé\" et de \"Tiré\". Données de démonstration du "
-"produits CPU1 pour ce \"Poussé / Tiré\" :\n"
-"\n"
-"Flux poussés\n"
-"-------------------\n"
-"Les flux poussés servent aux produits dont l'arrivée dans un lieu donné doit "
-"toujours\n"
-"être suivie par un mouvement correspondant à un autre endroit, "
-"éventuellement après un certain délai.\n"
-"L'application Entrepôt de base prend déjà en charge la spécification de flux "
-"poussés sur les\n"
-"Localisations elles-mêmes, mais sans descendre jusqu'au produit.\n"
-"\n"
-"Une spécification de flux poussé chaîne les localisations entre elles, et "
-"selon\n"
-"quels paramètres. Dès qu'une quantité de produits est entrée dans la "
-"localisation source,\n"
-"un mouvement en chaîne est automatiquement prévu, selon le paramétrage du "
-"flux\n"
-"(localisation de destination, retards, type de transfert, journal, etc.). "
-"Selon le paramétrage, \n"
-"un nouveau transfert peut être déclenché automatiquement ou avec "
-"confirmation manuelle.\n"
-"Flux tirés\n"
-"--------------\n"
-"Les flux tirés sont un peu différents des flux poussés, dans le sens où ils "
-"ne sont pas liés au\n"
-"traitement des mouvements de produits, mais plutôt du traitement des ordres "
-"d'approvisionnement.\n"
-"Ce qui est \"tiré\" c'est un besoin, pas les produits directement .\n"
-"Un exemple classique de flux poussé est celui des succursales avec une "
-"société mère\n"
-"responsable de l'approvisionnement des succursales.\n"
-"\n"
-"  [client] <- A - [succursale] <- B - [société mère] <~ C  ~ [Fournisseur]\n"
-"\n"
-"Quand un nouvel ordre d'approvisionnement (A, venant de la confirmation d'un "
-"bon de commante par exemple) arrive\n"
-"à la succursalle, il est converti en un autre ordre d'approvisionnement (B, "
-"via un flux poussé de type \"transfert\")\n"
-"envoyé à la société mère. Quand l'ordre d'approvisionnement B est traité par "
-"la société mère que\n"
-"le produit est en rupture de stock, l'ordre d'approvisionnement B est "
-"transformé en un bon de commande (C) vers le fournisseur\n"
-"(Flux poussé de type \"achat\"). Le résultat est que l'ordre "
-"d'approvisionnement (il représente le besoin), est poussé\n"
-"du client vers le fournisseur.\n"
-"\n"
-"Techniquement, les flux tirés permettent de traiter des ordres "
-"d'approvisionnement différents, ne dépendant plus seulement\n"
-"du produit considéré, mais aussi de la localisation du «besoin» de ce\n"
-"produit (c'est à dire la localisation de destination de cet ordre "
-"d'approvisionnement).\n"
-"\n"
-"Cas d'utilisation\n"
-"-----------------------\n"
-"\n"
-"On peut utiliser les données de démonstration ainsi :\n"
-"  CPU1: Vendre quelques CPU1 à partir du Magasin 1 et exécuter "
-"l'ordonnanceur\n"
-"     - Entrepôt: bon de livraison, Magasin 1: réception\n"
-"  CPU3:\n"
-"     - Lors de la réception du produit, celui-ci passe au contrôle de "
-"qualité du magasin puis il est stocké sur l'étagère 2.\n"
-"     - Lors de la livraison au client : Bon de Livraison -> Emballage -> "
-"Ordre d'expédition en provenance de la Porte A\n"
-"    "
+#: help:product.pulled.flow,name:0
+msgid "This field will fill the packing Origin and the name of its moves"
+msgstr "Ce champ remplira l'origine du colisage et le nom de ses mouvements"
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
@@ -427,15 +237,9 @@ msgid "Manual Operation"
 msgstr "Opération manuelle"
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_product_product
-#: field:product.pulled.flow,product_id:0
-msgid "Product"
-msgstr "Produit"
-
-#. module: stock_location
 #: field:product.pulled.flow,procure_method:0
 msgid "Procure Method"
-msgstr "Méthode de gestion des besoins"
+msgstr "Méthode d'approvisionnement"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
@@ -450,10 +254,9 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"'Sur stock': Quand c'est possible prendre du stock ou attendre le "
-"réapprovisionnement.\n"
-"'Sur commande': Quand c'est possible, acheter ou produire pour la demande de "
-"réappro."
+"'Production sur stock' : quand il y a une demande, on prend du stock ou on "
+"attend jusqu'au prochain réapprovisionnement. 'Production à la demande' : "
+"quand il y a une demande, on achète ou on fabrique selon cette demande."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
@@ -470,12 +273,8 @@ msgstr "Produits"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location via procurement %d"
-msgstr "Tiré depuis un autre emplacement pour satisfaire le besoin %d"
-
-#. module: stock_location
-#: model:stock.location,name:stock_location.stock_location_qualitytest0
-msgid "Quality Control"
-msgstr "Contrôle qualité"
+msgstr ""
+"Tiré depuis un autre emplacement pour satisfaire l'approvisionnement %d"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
@@ -495,9 +294,9 @@ msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
 msgstr ""
-"Opération de manutention pour un besoin tiré, en provenance de l'emplacement "
-"d'origine %s, règle de flux tiré %s, pour satisfaire le besoin original %s "
-"(#%d)"
+"Opération de manutention pour un approvisionnement tiré, en provenance de "
+"l'emplacement d'origine %s, règle de flux tiré %s, pour satisfaire "
+"l'approvisionnement original %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
@@ -511,8 +310,9 @@ msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
 msgstr ""
-"Mouvement pour un besoin tiré, en provenance de l'emplacement d'origine %s, "
-"règle de flux tiré %s, pour satisfaire le besoin original %s (#%d)"
+"Mouvement pour un approvisionnement tiré, en provenance de l'emplacement "
+"d'origine %s, règle de flux tiré %s, pour satisfaire l'approvisionnement "
+"original %s (#%d)"
 
 #. module: stock_location
 #: constraint:stock.move:0
@@ -525,6 +325,7 @@ msgid "Procurement"
 msgstr "Approvisionnement"
 
 #. module: stock_location
+#: field:product.pulled.flow,location_id:0
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
 msgstr "Emplacement de destination"
@@ -562,9 +363,9 @@ msgstr ""
 "produits"
 
 #. module: stock_location
-#: model:stock.location,name:stock_location.location_order
-msgid "Order Processing"
-msgstr "Traitement de la commande"
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr ""
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -572,17 +373,15 @@ msgid "Operation"
 msgstr "Opération"
 
 #. module: stock_location
-#: view:product.product:0
-#: field:product.product,path_ids:0
 #: view:stock.location.path:0
 msgid "Location Paths"
 msgstr "Chemin des emplacements"
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr "Journal"
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "Société"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
@@ -613,3 +412,194 @@ msgstr "Facturé"
 
 #~ msgid "Stock Location Paths"
 #~ msgstr "Chemins des Emplacements de Stock"
+
+#~ msgid "Pack Zone"
+#~ msgstr "Zone d'emballage"
+
+#~ msgid "Dispatch Zone"
+#~ msgstr "Zone d'expédition"
+
+#~ msgid "Warehouse Locations Paths"
+#~ msgstr "Chemins des emplacements de l'entrepôt"
+
+#~ msgid "Gate B"
+#~ msgstr "Porte B"
+
+#~ msgid "Gate A"
+#~ msgstr "Porte A"
+
+#~ msgid "Order Processing"
+#~ msgstr "Traitement de la commande"
+
+#~ msgid "Quality Control"
+#~ msgstr "Contrôle qualité"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module supplements the Warehouse application by adding support for per-"
+#~ "product\n"
+#~ "location paths, effectively implementing Push and Pull inventory flows.\n"
+#~ "\n"
+#~ "Typically this could be used to:\n"
+#~ "* Manage product manufacturing chains\n"
+#~ "* Manage default locations per product\n"
+#~ "* Define routes within your warehouse according to business needs, such as:\n"
+#~ "   - Quality Control\n"
+#~ "   - After Sales Services\n"
+#~ "   - Supplier Returns\n"
+#~ "* Help rental management, by generating automated return moves for rented "
+#~ "products\n"
+#~ "\n"
+#~ "Once this module is installed, an additional tab appear on the product form, "
+#~ "where you can add\n"
+#~ "Push and Pull flow specifications. The demo data of  CPU1 product for that "
+#~ "push/pull :\n"
+#~ "\n"
+#~ "Push flows\n"
+#~ "----------\n"
+#~ "Push flows are useful when the arrival of certain products in a given "
+#~ "location should always\n"
+#~ "be followed by a corresponding move to another location, optionally after a "
+#~ "certain delay.\n"
+#~ "The original Warehouse application already supports such Push flow "
+#~ "specifications on the\n"
+#~ "Locations themselves, but these cannot be refined per-product.\n"
+#~ "\n"
+#~ "A push flow specification indicates which location is chained with which "
+#~ "location, and with\n"
+#~ "what parameters. As soon as a given quantity of products is moved in the "
+#~ "source location,\n"
+#~ "a chained move is automatically foreseen according to the parameters set on "
+#~ "the flow specification\n"
+#~ "(destination location, delay, type of move, journal, etc.) The new move can "
+#~ "be automatically\n"
+#~ "processed, or require a manual confirmation, depending on the parameters.\n"
+#~ "\n"
+#~ "Pull flows\n"
+#~ "----------\n"
+#~ "Pull flows are a bit different from Pull flows, in the sense that they are "
+#~ "not related to\n"
+#~ "the processing of product moves, but rather to the processing of procurement "
+#~ "orders.\n"
+#~ "What is being pulled is a need, not directly products.\n"
+#~ "A classical example of Push flow is when you have an Outlet company, with a "
+#~ "parent Company\n"
+#~ "that is responsible for the supplies of the Outlet.\n"
+#~ "\n"
+#~ "  [ Customer ] <- A - [ Outlet ]  <- B -  [ Holding ] <~ C ~ [ Supplier ]\n"
+#~ "\n"
+#~ "When a new procurement order (A, coming from the confirmation of a Sale "
+#~ "Order for example) arrives\n"
+#~ "in the Outlet, it is converted into another procurement (B, via a Push flow "
+#~ "of type 'move')\n"
+#~ "requested from the Holding. When procurement order B is processed by the "
+#~ "Holding company, and\n"
+#~ "if the product is out of stock, it can be converted into a Purchase Order "
+#~ "(C) from the Supplier\n"
+#~ "(Push flow of type Purchase). The result is that the procurement order, the "
+#~ "need, is pushed\n"
+#~ "all the way between the Customer and Supplier.\n"
+#~ "\n"
+#~ "Technically, Pull flows allow to process procurement orders differently, not "
+#~ "only depending on\n"
+#~ "the product being considered, but also depending on which location holds the "
+#~ "\"need\" for that\n"
+#~ "product (i.e. the destination location of that procurement order).\n"
+#~ "\n"
+#~ "Use-Case\n"
+#~ "--------\n"
+#~ "\n"
+#~ "You can use the demo data as follow:\n"
+#~ "  CPU1: Sell some CPU1 from Shop 1 and run the scheduler\n"
+#~ "     - Warehouse: delivery order, Shop 1: reception\n"
+#~ "  CPU3:\n"
+#~ "     - When receiving the product, it goes to Quality Control location then "
+#~ "stored to shelf 2.\n"
+#~ "     - When delivering the customer: Pick List -> Packing -> Delivery Order "
+#~ "from Gate A\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Ce module complète l'application  Entrepôts par l'accès aux localisations "
+#~ "par produit, il gère les flux d'inventaire en mode \"poussé et \"tiré\".\n"
+#~ "\n"
+#~ "Il peut typiquement être utilisé pour:\n"
+#~ "* Gérer les chaînes de fabrication\n"
+#~ "* Gérer les emplacements par défaut par produit\n"
+#~ "* Définir des ordonnancements au sein de l'entrepôt selon les besoins tels "
+#~ "que:\n"
+#~ "   - Contrôle qualité\n"
+#~ "   - Service Après Vente\n"
+#~ "   - Retours fournisseur\n"
+#~ "* Aide à la gestion de location, en générant les retours automatiques pour "
+#~ "les produits loués\n"
+#~ "\n"
+#~ "Une fois ce module est installé, un onglet supplémentaire apparaît dans le "
+#~ "formulaire produit, où l'on peut ajouter\n"
+#~ "les spécification de \"Poussé\" et de \"Tiré\". Données de démonstration du "
+#~ "produits CPU1 pour ce \"Poussé / Tiré\" :\n"
+#~ "\n"
+#~ "Flux poussés\n"
+#~ "-------------------\n"
+#~ "Les flux poussés servent aux produits dont l'arrivée dans un lieu donné doit "
+#~ "toujours\n"
+#~ "être suivie par un mouvement correspondant à un autre endroit, "
+#~ "éventuellement après un certain délai.\n"
+#~ "L'application Entrepôt de base prend déjà en charge la spécification de flux "
+#~ "poussés sur les\n"
+#~ "Localisations elles-mêmes, mais sans descendre jusqu'au produit.\n"
+#~ "\n"
+#~ "Une spécification de flux poussé chaîne les localisations entre elles, et "
+#~ "selon\n"
+#~ "quels paramètres. Dès qu'une quantité de produits est entrée dans la "
+#~ "localisation source,\n"
+#~ "un mouvement en chaîne est automatiquement prévu, selon le paramétrage du "
+#~ "flux\n"
+#~ "(localisation de destination, retards, type de transfert, journal, etc.). "
+#~ "Selon le paramétrage, \n"
+#~ "un nouveau transfert peut être déclenché automatiquement ou avec "
+#~ "confirmation manuelle.\n"
+#~ "Flux tirés\n"
+#~ "--------------\n"
+#~ "Les flux tirés sont un peu différents des flux poussés, dans le sens où ils "
+#~ "ne sont pas liés au\n"
+#~ "traitement des mouvements de produits, mais plutôt du traitement des ordres "
+#~ "d'approvisionnement.\n"
+#~ "Ce qui est \"tiré\" c'est un besoin, pas les produits directement .\n"
+#~ "Un exemple classique de flux poussé est celui des succursales avec une "
+#~ "société mère\n"
+#~ "responsable de l'approvisionnement des succursales.\n"
+#~ "\n"
+#~ "  [client] <- A - [succursale] <- B - [société mère] <~ C  ~ [Fournisseur]\n"
+#~ "\n"
+#~ "Quand un nouvel ordre d'approvisionnement (A, venant de la confirmation d'un "
+#~ "bon de commante par exemple) arrive\n"
+#~ "à la succursalle, il est converti en un autre ordre d'approvisionnement (B, "
+#~ "via un flux poussé de type \"transfert\")\n"
+#~ "envoyé à la société mère. Quand l'ordre d'approvisionnement B est traité par "
+#~ "la société mère que\n"
+#~ "le produit est en rupture de stock, l'ordre d'approvisionnement B est "
+#~ "transformé en un bon de commande (C) vers le fournisseur\n"
+#~ "(Flux poussé de type \"achat\"). Le résultat est que l'ordre "
+#~ "d'approvisionnement (il représente le besoin), est poussé\n"
+#~ "du client vers le fournisseur.\n"
+#~ "\n"
+#~ "Techniquement, les flux tirés permettent de traiter des ordres "
+#~ "d'approvisionnement différents, ne dépendant plus seulement\n"
+#~ "du produit considéré, mais aussi de la localisation du «besoin» de ce\n"
+#~ "produit (c'est à dire la localisation de destination de cet ordre "
+#~ "d'approvisionnement).\n"
+#~ "\n"
+#~ "Cas d'utilisation\n"
+#~ "-----------------------\n"
+#~ "\n"
+#~ "On peut utiliser les données de démonstration ainsi :\n"
+#~ "  CPU1: Vendre quelques CPU1 à partir du Magasin 1 et exécuter "
+#~ "l'ordonnanceur\n"
+#~ "     - Entrepôt: bon de livraison, Magasin 1: réception\n"
+#~ "  CPU3:\n"
+#~ "     - Lors de la réception du produit, celui-ci passe au contrôle de "
+#~ "qualité du magasin puis il est stocké sur l'étagère 2.\n"
+#~ "     - Lors de la livraison au client : Bon de Livraison -> Emballage -> "
+#~ "Ordre d'expédition en provenance de la Porte A\n"
+#~ "    "

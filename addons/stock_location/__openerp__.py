@@ -94,6 +94,7 @@ You can use the demo data as follow:
         'stock_location_demo_cpu1.xml',
         'stock_location_demo_cpu3.yml',
     ],
+    'complexity': 'expert',
     'installable': True,
     'test':[
             'test/stock_location_pull_flow.yml',
@@ -102,3 +103,5 @@ You can use the demo data as follow:
     'active': False,
     'certificate': '0046505115101',
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

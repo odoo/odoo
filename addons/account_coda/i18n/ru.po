@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-08-30 17:18+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:45+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:15+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_coda
 #: help:account.coda,journal_id:0
@@ -32,7 +32,7 @@ msgstr "Журнал"
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda_import
 msgid "Account Coda Import"
-msgstr ""
+msgstr "Импортирование Coda в учёт"
 
 #. module: account_coda
 #: field:account.coda,name:0
@@ -47,7 +47,7 @@ msgstr "Объединять по..."
 #. module: account_coda
 #: field:account.coda.import,awaiting_account:0
 msgid "Default Account for Unrecognized Movement"
-msgstr ""
+msgstr "Счёт по-умолчанию для неопознанных перемещений"
 
 #. module: account_coda
 #: help:account.coda,date:0
@@ -144,7 +144,7 @@ msgstr "Отменить"
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Open Statements"
-msgstr ""
+msgstr "Открыть выписки"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:167
@@ -164,19 +164,6 @@ msgid "Import Coda Statement"
 msgstr "Импортировать Coda выписку"
 
 #. module: account_coda
-#: model:ir.module.module,description:account_coda.module_meta_information
-msgid ""
-"\n"
-"    Module provides functionality to import\n"
-"    bank statements from coda files.\n"
-"    "
-msgstr ""
-"\n"
-"    Модуль предоставляет функции импорта\n"
-"    банковских выписок из Coda файлов.\n"
-"    "
-
-#. module: account_coda
 #: view:account.coda:0
 msgid "Statements"
 msgstr "Выписки"
@@ -184,7 +171,7 @@ msgstr "Выписки"
 #. module: account_coda
 #: field:account.bank.statement,coda_id:0
 msgid "Coda"
-msgstr ""
+msgstr "Coda"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -202,6 +189,8 @@ msgid ""
 "Set here the receivable account that will be used, by default, if the "
 "partner is not found"
 msgstr ""
+"Укажите здесь счёт, используемый как входящий по-умолчанию, если не партнёр "
+"не найден"
 
 #. module: account_coda
 #: field:account.coda.import,coda:0
@@ -217,7 +206,7 @@ msgstr "Банковская выписка"
 #. module: account_coda
 #: model:ir.actions.act_window,name:account_coda.action_account_coda
 msgid "Coda Logs"
-msgstr ""
+msgstr "Журналы Coda"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:311
@@ -228,12 +217,12 @@ msgstr "Результат"
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Click on 'New' to select your file :"
-msgstr ""
+msgstr "Нажмите \"Новый\" для выбора файла:"
 
 #. module: account_coda
 #: field:account.coda.import,def_receivable:0
 msgid "Default Receivable Account"
-msgstr ""
+msgstr "Входящий счёт по-умолчанию"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -243,12 +232,7 @@ msgstr "Закрыть"
 #. module: account_coda
 #: field:account.coda,statement_ids:0
 msgid "Generated Bank Statements"
-msgstr ""
-
-#. module: account_coda
-#: model:ir.module.module,shortdesc:account_coda.module_meta_information
-msgid "Account CODA - import bank statements from coda file"
-msgstr ""
+msgstr "Сгенерированные банковские выписки"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -283,3 +267,17 @@ msgstr "Журнал"
 
 #~ msgid "_Ok"
 #~ msgstr "_Далее"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Module provides functionality to import\n"
+#~ "    bank statements from coda files.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Модуль предоставляет функции импорта\n"
+#~ "    банковских выписок из Coda файлов.\n"
+#~ "    "
+
+#~ msgid "Account CODA - import bank statements from coda file"
+#~ msgstr "Учёт CODA - импорт банковских выписок из файлов \"coda\""

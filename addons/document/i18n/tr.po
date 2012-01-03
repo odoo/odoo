@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-06-10 19:43+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:41+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:11+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,9 +22,10 @@ msgid "Parent Directory"
 msgstr "Ana Dizin"
 
 #. module: document
-#: model:ir.model,name:document.model_document_configuration
-msgid "Auto Directory Configuration"
-msgstr "Otomatik Klasör Yapılandırması"
+#: code:addons/document/document_directory.py:276
+#, python-format
+msgid "Directory name contains special characters!"
+msgstr "Klasör adında özel karakterler var!"
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -53,12 +54,6 @@ msgid ""
 "will be used."
 msgstr ""
 "Kaynak klasörleri adı olarak kullanılacak alan. Boşsa \"ad\" kullanılacaktır."
-
-#. module: document
-#: code:addons/document/document_directory.py:276
-#, python-format
-msgid "Directory name contains special characters!"
-msgstr "Klasör adında özel karakterler var!"
 
 #. module: document
 #: view:document.directory:0
@@ -97,6 +92,11 @@ msgstr "Mart"
 #: view:document.configuration:0
 msgid "title"
 msgstr "unvan"
+
+#. module: document
+#: field:document.directory.dctx,expr:0
+msgid "Expression"
+msgstr "Anlatım"
 
 #. module: document
 #: view:document.directory:0
@@ -149,6 +149,10 @@ msgstr "Klasör adı eşsiz olmalı !"
 
 #. module: document
 #: view:ir.attachment:0
+msgid "Filter on my documents"
+msgstr ""
+
+#. module: document
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "İndekslenen İçerik"
@@ -163,17 +167,16 @@ msgstr ""
 "kaynağ sahip olanlar bulunacaktır."
 
 #. module: document
+#: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
+msgid "Knowledge Management"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.storage,dir_ids:0
-#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Dizinler"
-
-#. module: document
-#: field:document.configuration,sale_order:0
-msgid "Sale Order"
-msgstr "Satış Siparişi"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_user
@@ -181,21 +184,11 @@ msgid "Files details by Users"
 msgstr "Kullanıcıya göre dosya ayrıntıları"
 
 #. module: document
-#: field:document.configuration,project:0
-msgid "Project"
-msgstr "Proje"
-
-#. module: document
 #: code:addons/document/document_storage.py:573
 #: code:addons/document/document_storage.py:601
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
-
-#. module: document
-#: help:document.configuration,product:0
-msgid "Auto directory configuration for Products."
-msgstr "Ürünler için otomatik dizin yapılandırması"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -206,6 +199,11 @@ msgstr "Bütün kaynakları bul"
 #: selection:document.directory,type:0
 msgid "Folders per resource"
 msgstr "Her kaynağın klasörü"
+
+#. module: document
+#: view:ir.attachment:0
+msgid "Indexed Content - experimental"
+msgstr ""
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -240,8 +238,8 @@ msgid "Document directory"
 msgstr "Belge Dizini"
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #: code:addons/document/document_directory.py:266
 #: code:addons/document/document_directory.py:271
 #: code:addons/document/document_directory.py:276
@@ -274,9 +272,9 @@ msgid "Storage"
 msgstr "Saklama"
 
 #. module: document
-#: view:document.configuration:0
-msgid "Configure Resource Directory"
-msgstr "Kaynak Dizini Yapılandırması"
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
+msgstr "Kaynak model"
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -333,11 +331,6 @@ msgid "Stored Filename"
 msgstr "Saklanan Dosya adı"
 
 #. module: document
-#: field:document.directory,ressource_type_id:0
-msgid "Resource model"
-msgstr "Kaynak model"
-
-#. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
@@ -392,6 +385,13 @@ msgid "Generated Files"
 msgstr "Oluşturulan Dosyalar"
 
 #. module: document
+#: view:document.configuration:0
+msgid ""
+"When executing this wizard, it will configure your directories automatically "
+"according to modules installed."
+msgstr ""
+
+#. module: document
 #: field:document.directory.content,directory_id:0
 #: field:document.directory.dctx,dir_id:0
 #: model:ir.actions.act_window,name:document.action_document_file_directory_form
@@ -403,9 +403,9 @@ msgid "Directory"
 msgstr "Dizin"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by Partner"
-msgstr "Paydaşa göre Dosyalar"
+#: view:document.directory:0
+msgid "Security"
+msgstr "Güvenlik"
 
 #. module: document
 #: field:document.directory,write_uid:0
@@ -419,11 +419,6 @@ msgstr "Son Değiştiren Kullanıcı"
 #: model:ir.actions.act_window,name:document.zoom_directory
 msgid "Related Documents"
 msgstr "İlgili Belgeler"
-
-#. module: document
-#: field:document.configuration,progress:0
-msgid "Configuration Progress"
-msgstr "Yapılandırma Gelişimi"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -481,42 +476,6 @@ msgid "Define words in the context, for all child directories and files"
 msgstr "Bütün alt dizinler ve dosyalar için içerik kelimelerini tanımla"
 
 #. module: document
-#: model:ir.module.module,description:document.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
-"    * User Authentication\n"
-"    * Document Indexation :- .pptx and .docx files are not support in "
-"windows platform.\n"
-"    * Dashboard for Document that includes:\n"
-"        * New Files (list)\n"
-"        * Files by Resource Type (graph)\n"
-"        * Files by Partner (graph)\n"
-"        * Files by Month (graph)\n"
-"    ATTENTION:\n"
-"    - When you install this module in a running company that have already "
-"PDF files stored into the database,\n"
-"      you will lose them all.\n"
-"    - After installing this module PDF's are no longer stored into the "
-"database,\n"
-"      but in the servers rootpad like /server/bin/filestore.\n"
-msgstr ""
-"Bu bir tam belge yönetim sistemidir:\n"
-"    * Kullanıcı doğrulanması\n"
-"    *Belge indekslenmesi :- .pptx ve .docx dosyaları windows ortamında "
-"desteklenmez.\n"
-"    * Belge için Kontrol Paneli şunları içerir:\n"
-"        * Yeni Dosyalar (liste)\n"
-"        * Kaynak Türüne göre Dosyalar (grafik)\n"
-"        * Paydaşa göre Dosyalar (grafik)\n"
-"        * Aya göre Dosya (grafik)\n"
-"    DİKKAT:\n"
-"    - Bu modülü, halihazırda veritabanında saklı PDF dosyaları olan "
-"çalışılmakta olan firmaya kurarsanız,\n"
-"      hepsini silinir ve kaybedersiniz.\n"
-"    - Bu modül kurulduktan sonra PDF ler artık bu veritabanında saklanmaz,\n"
-"      ama /server/bin/filestore gibi kök tamponda saklanır.\n"
-
-#. module: document
 #: help:document.storage,online:0
 msgid ""
 "If not checked, media is currently offline and its contents not available"
@@ -562,8 +521,8 @@ msgstr ""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
-msgid "Auto Configure Directory"
-msgstr "Dizini Otomatik Yapılandır"
+msgid "Configure Directories"
+msgstr ""
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -593,11 +552,6 @@ msgid ""
 msgstr ""
 "Sistemde seçilen nesne ile aynı ağaç yapısını kullanmak isterseniz bunu "
 "işaretleyin."
-
-#. module: document
-#: view:document.directory:0
-msgid "Security"
-msgstr "Güvenlik"
 
 #. module: document
 #: help:document.directory,ressource_id:0
@@ -688,24 +642,15 @@ msgid "Database"
 msgstr "Veritabanı"
 
 #. module: document
-#: help:document.configuration,project:0
-msgid "Auto directory configuration for Projects."
-msgstr "Projelerin Otomatik Dizin yapılandırması"
+#: selection:report.document.user,month:0
+#: selection:report.files.partner,month:0
+msgid "January"
+msgstr "Ocak"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Related to"
 msgstr "Bağlı olduğu"
-
-#. module: document
-#: model:ir.module.module,shortdesc:document.module_meta_information
-msgid "Integrated Document Management System"
-msgstr "Entegre Edilen BelgeYönetim Sistemi"
-
-#. module: document
-#: view:document.configuration:0
-msgid "Choose the following Resouces to auto directory configuration."
-msgstr "Aşağıdaki kaynakları otomatik dizin yapılandırması için seçin."
 
 #. module: document
 #: view:ir.attachment:0
@@ -728,9 +673,9 @@ msgid "Read Only"
 msgstr "Salt Okunur"
 
 #. module: document
-#: field:document.directory.dctx,expr:0
-msgid "Expression"
-msgstr "Anlatım"
+#: model:ir.actions.act_window,name:document.action_document_directory_form
+msgid "Document Directory"
+msgstr ""
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -742,6 +687,20 @@ msgstr "Dizin adı eşsiz olmalı"
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Oluşturan"
+
+#. module: document
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr "Dizi"
+
+#. module: document
+#: view:document.configuration:0
+msgid ""
+"OpenERP's Document Management System supports mapping virtual folders with "
+"documents. The virtual folder of a document can be used to manage the files "
+"attached to the document, or to print and download any report. This tool "
+"will create directories automatically according to modules installed."
+msgstr ""
 
 #. module: document
 #: view:board.board:0
@@ -833,14 +792,14 @@ msgid "Month"
 msgstr "Ay"
 
 #. module: document
+#: view:report.document.user:0
+msgid "This Months Files"
+msgstr ""
+
+#. module: document
 #: model:ir.ui.menu,name:document.menu_reporting
 msgid "Reporting"
 msgstr "Raporlama"
-
-#. module: document
-#: field:document.configuration,product:0
-msgid "Product"
-msgstr "Ürün"
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -888,12 +847,6 @@ msgid "New Files"
 msgstr "Yeni Dosyalar"
 
 #. module: document
-#: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
-msgid "January"
-msgstr "Ocak"
-
-#. module: document
 #: view:document.directory:0
 msgid "Static"
 msgstr "Durağan"
@@ -904,12 +857,9 @@ msgid "Files By Partner"
 msgstr "Paydaşa göre Dosyalar"
 
 #. module: document
-#: help:document.directory.dctx,field:0
-msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
+#: view:document.configuration:0
+msgid "Configure Direcories"
 msgstr ""
-"Alanın adı. \"dctx_\" önekinin burada yazılanın ekleneceğine dikkat edin."
 
 #. module: document
 #: view:report.document.user:0
@@ -922,11 +872,9 @@ msgid "Notes"
 msgstr "Notlar"
 
 #. module: document
-#: help:document.configuration,sale_order:0
-msgid ""
-"Auto directory configuration for Sale Orders and Quotation with report."
+#: model:ir.model,name:document.model_document_configuration
+msgid "Directory Configuration"
 msgstr ""
-"Bu rapordaki Satış Siparişleri ve Tekliflerin otomatik dizin yapılandırması."
 
 #. module: document
 #: help:document.directory,type:0
@@ -949,6 +897,14 @@ msgstr "Şubat"
 #: model:ir.ui.menu,name:document.menu_reports_document_manager1
 msgid "Statistics by User"
 msgstr "Kullanıcıya göre İstatistikler"
+
+#. module: document
+#: help:document.directory.dctx,field:0
+msgid ""
+"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+"what is typed here."
+msgstr ""
+"Alanın adı. \"dctx_\" önekinin burada yazılanın ekleneceğine dikkat edin."
 
 #. module: document
 #: field:document.directory,name:0
@@ -985,6 +941,12 @@ msgid "# of Files"
 msgstr "Dosya Sayısı"
 
 #. module: document
+#: code:addons/document/document.py:209
+#, python-format
+msgid "(copy)"
+msgstr "(Kopya)"
+
+#. module: document
 #: view:document.directory:0
 msgid ""
 "Only members of these groups will have access to this directory and its "
@@ -1005,9 +967,9 @@ msgid "Mime Type"
 msgstr "Mime Türü"
 
 #. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
-msgstr "Dizi"
+#: view:report.document.user:0
+msgid "All Months Files"
+msgstr ""
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -1015,8 +977,8 @@ msgid "Content Name"
 msgstr "İçerik Adı"
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #, python-format
 msgid "File name must be unique!"
 msgstr "Dosya adı eşsiz olmalı !"
@@ -1038,8 +1000,6 @@ msgid "Directories' Structure"
 msgstr "Dizinlerin Yapısı"
 
 #. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_document_by_resourcetype_graph
 #: view:report.document.user:0
 msgid "Files by Resource Type"
 msgstr "Kaynak Türüne göre Dosyalar"
@@ -1052,6 +1012,7 @@ msgstr "Yıl"
 
 #. module: document
 #: view:document.storage:0
+#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
 #: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
@@ -1114,3 +1075,78 @@ msgstr "Belge Türü"
 
 #~ msgid "Cancel"
 #~ msgstr "İptal"
+
+#~ msgid "Project"
+#~ msgstr "Proje"
+
+#~ msgid "Product"
+#~ msgstr "Ürün"
+
+#~ msgid "Sale Order"
+#~ msgstr "Satış Siparişi"
+
+#~ msgid "Auto Directory Configuration"
+#~ msgstr "Otomatik Klasör Yapılandırması"
+
+#~ msgid "Auto directory configuration for Products."
+#~ msgstr "Ürünler için otomatik dizin yapılandırması"
+
+#~ msgid "Configure Resource Directory"
+#~ msgstr "Kaynak Dizini Yapılandırması"
+
+#~ msgid "Files by Partner"
+#~ msgstr "Paydaşa göre Dosyalar"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Yapılandırma Gelişimi"
+
+#~ msgid ""
+#~ "This is a complete document management system:\n"
+#~ "    * User Authentication\n"
+#~ "    * Document Indexation :- .pptx and .docx files are not support in "
+#~ "windows platform.\n"
+#~ "    * Dashboard for Document that includes:\n"
+#~ "        * New Files (list)\n"
+#~ "        * Files by Resource Type (graph)\n"
+#~ "        * Files by Partner (graph)\n"
+#~ "        * Files by Month (graph)\n"
+#~ "    ATTENTION:\n"
+#~ "    - When you install this module in a running company that have already "
+#~ "PDF files stored into the database,\n"
+#~ "      you will lose them all.\n"
+#~ "    - After installing this module PDF's are no longer stored into the "
+#~ "database,\n"
+#~ "      but in the servers rootpad like /server/bin/filestore.\n"
+#~ msgstr ""
+#~ "Bu bir tam belge yönetim sistemidir:\n"
+#~ "    * Kullanıcı doğrulanması\n"
+#~ "    *Belge indekslenmesi :- .pptx ve .docx dosyaları windows ortamında "
+#~ "desteklenmez.\n"
+#~ "    * Belge için Kontrol Paneli şunları içerir:\n"
+#~ "        * Yeni Dosyalar (liste)\n"
+#~ "        * Kaynak Türüne göre Dosyalar (grafik)\n"
+#~ "        * Paydaşa göre Dosyalar (grafik)\n"
+#~ "        * Aya göre Dosya (grafik)\n"
+#~ "    DİKKAT:\n"
+#~ "    - Bu modülü, halihazırda veritabanında saklı PDF dosyaları olan "
+#~ "çalışılmakta olan firmaya kurarsanız,\n"
+#~ "      hepsini silinir ve kaybedersiniz.\n"
+#~ "    - Bu modül kurulduktan sonra PDF ler artık bu veritabanında saklanmaz,\n"
+#~ "      ama /server/bin/filestore gibi kök tamponda saklanır.\n"
+
+#~ msgid "Auto Configure Directory"
+#~ msgstr "Dizini Otomatik Yapılandır"
+
+#~ msgid "Integrated Document Management System"
+#~ msgstr "Entegre Edilen BelgeYönetim Sistemi"
+
+#~ msgid "Choose the following Resouces to auto directory configuration."
+#~ msgstr "Aşağıdaki kaynakları otomatik dizin yapılandırması için seçin."
+
+#~ msgid ""
+#~ "Auto directory configuration for Sale Orders and Quotation with report."
+#~ msgstr ""
+#~ "Bu rapordaki Satış Siparişleri ve Tekliflerin otomatik dizin yapılandırması."
+
+#~ msgid "Auto directory configuration for Projects."
+#~ msgstr "Projelerin Otomatik Dizin yapılandırması"

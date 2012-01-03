@@ -6,7 +6,9 @@
     font-family: "Lucida Grande", Helvetica, Verdana, Arial;
     color: #555555;
     font-size: 12px;
-    position: relative;
+    position: absolute;
+    left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
 }
@@ -14,7 +16,7 @@
     border-spacing: 0;
     border-collapse: collapse;
 }
-.point-of-sale td { 
+.point-of-sale td {
     border: 1px solid #e9eaec;
 }
 .point-of-sale input {
@@ -123,8 +125,7 @@
 }
 .point-of-sale #neworder-button {
     width: 32px;
-    padding: 1px;
-    font-size: 23px;
+    padding: 4px 10px;
 }
 .point-of-sale #loggedas {
     float: right;
@@ -156,6 +157,7 @@
     width: 100%;
     background-color: #e0e0e0;
     background-image: url(../img/headerbackground.jpg);
+    white-space: nowrap;
 }
 .point-of-sale #current-order {
     width: 100%;
@@ -217,9 +219,10 @@
     width: 29%;
 }
 .point-of-sale #paypad {
-    padding: 8px;
-    float: left;
+    padding: 8px 4px 8px 8px;
+    display: inline-block;
     text-align: center;
+    vertical-align: top;
 }
 .point-of-sale #paypad button {
     height: 54px;
@@ -237,8 +240,8 @@
     background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
 }
 .point-of-sale #numpad {
-    padding: 7px;
-    float: right;
+    padding: 8px 8px 8px 4px;
+    display: inline-block;
     text-align: center;
 }
 .point-of-sale #numpad button {
@@ -470,9 +473,41 @@
 .point-of-sale .pos-sale-ticket table td {
     border: 0;
 }
-.point-of-sale .pos-sale-ticket table td.receiptline-amount {
-    text-align: right;
-}
 .point-of-sale .pos-receipt-container {
     font-size: 0.75em;
 }
+
+.point-of-sale .oe_pos_synch-notification-button {
+    color: white;
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 2px 3px 2px 3px;
+    background-color: #D92A2A;
+}
+
+.receipt-buttons {
+	white-space: nowrap;
+}
+
+@media print {
+    #oe_header, #oe_menu, .point-of-sale #topheader, .point-of-sale #leftpane {
+        display: none;
+    }
+    .point-of-sale #content {
+        top: 0px;
+    }
+    .point-of-sale #rigthpane {
+        left: 0px;
+        background-color: white;
+    }
+    #receipt-screen header, .receipt-buttons {
+        display: none;
+    }
+    #receipt-screen {
+        text-align: left;
+    }
+    .pos-sale-ticket {
+        margin: 0;
+    }
+}
+

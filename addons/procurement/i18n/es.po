@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-14 19:40+0000\n"
 "Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:50+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:20+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -56,7 +56,7 @@ msgstr ""
 "mínimo."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:288
+#: code:addons/procurement/procurement.py:291
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "¡No se ha definido un proveedor para este producto!"
@@ -72,7 +72,7 @@ msgid "Procurement Method"
 msgstr "Método abastecimiento"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:304
+#: code:addons/procurement/procurement.py:307
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "No se ha definido una dirección para el proveedor"
@@ -81,6 +81,11 @@ msgstr "No se ha definido una dirección para el proveedor"
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
 msgid "Compute Stock Minimum Rules Only"
 msgstr "Calcular sólo reglas de stock mínimo"
+
+#. module: procurement
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -157,18 +162,14 @@ msgstr ""
 "abastecimiento."
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Permanent Procurement Exceptions"
+msgstr ""
+
+#. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Minimum Stock Rules Search"
 msgstr "Buscar reglas de stock mínimo"
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,product_min_qty:0
-msgid ""
-"When the virtual stock goes belong the Min Quantity, OpenERP generates a "
-"procurement to bring the virtual stock to the Max Quantity."
-msgstr ""
-"Cuando el stock virtual está por debajo de la cantidad mínima, OpenERP "
-"genera un abastecimiento para aumentar el stock virtual a la cantidad máxima."
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -179,6 +180,11 @@ msgstr "Parámetros planificador"
 #: model:ir.model,name:procurement.model_stock_move
 msgid "Stock Move"
 msgstr "Moviemiento de stock"
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "Calcular todos los planificadores"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -196,6 +202,22 @@ msgid "Automatic orderpoint"
 msgstr "Regla de stock mínimo automática"
 
 #. module: procurement
+#: code:addons/procurement/schedulers.py:122
+#, python-format
+msgid ""
+"Here is the procurement scheduling report.\n"
+"\n"
+"        Start Time: %s \n"
+"        End Time: %s \n"
+"        Total Procurements processed: %d \n"
+"        Procurements with exceptions: %d \n"
+"        Skipped Procurements (scheduled date outside of scheduler range) %d "
+"\n"
+"\n"
+"        Exceptions:\n"
+msgstr ""
+
+#. module: procurement
 #: field:mrp.property,composition:0
 msgid "Properties composition"
 msgstr "Propiedades composición"
@@ -209,6 +231,14 @@ msgstr "Confirmada"
 #: view:procurement.order:0
 msgid "Retry"
 msgstr "Reintentar"
+
+#. module: procurement
+#: help:stock.warehouse.orderpoint,product_max_qty:0
+msgid ""
+"When the virtual stock goes below the Min Quantity, OpenERP generates a "
+"procurement to bring the virtual stock to the Quantity specified as Max "
+"Quantity."
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -239,6 +269,12 @@ msgstr "Órdenes de abastecimiento a procesar"
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
 msgstr "¡Error! No puede crear compañías recursivas."
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:386
+#, python-format
+msgid "Procurement '%s' is in exception: "
+msgstr "Contratación '%s' está en excepción: "
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -276,6 +312,12 @@ msgid "Best price (not yet active!)"
 msgstr "Mejor precio (¡todavía no activo!)"
 
 #. module: procurement
+#: code:addons/procurement/schedulers.py:110
+#, python-format
+msgid "PROC %d: from stock - %3.2f %-5s - %s"
+msgstr ""
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Product & Location"
 msgstr "Producto y Ubicación"
@@ -286,7 +328,6 @@ msgid "Compute Procurement"
 msgstr "Calcular abastecimiento"
 
 #. module: procurement
-#: model:ir.module.module,shortdesc:procurement.module_meta_information
 #: field:stock.move,procurements:0
 msgid "Procurements"
 msgstr "Abastecimientos"
@@ -331,7 +372,7 @@ msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:377
+#: code:addons/procurement/procurement.py:379
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr ""
@@ -421,25 +462,17 @@ msgid "Compute Stock"
 msgstr "Calcular stock"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Late"
-msgstr "Retrasada"
+#: help:stock.warehouse.orderpoint,product_min_qty:0
+msgid ""
+"When the virtual stock goes below the Min Quantity specified for this field, "
+"OpenERP generates a procurement to bring the virtual stock to the Max "
+"Quantity."
+msgstr ""
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
 msgstr "Servicio"
-
-#. module: procurement
-#: model:ir.module.module,description:procurement.module_meta_information
-msgid ""
-"\n"
-"    This is the module for computing Procurements.\n"
-"    "
-msgstr ""
-"\n"
-"    Este es el módulo para calcular abastecimientos.\n"
-"    "
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -470,7 +503,7 @@ msgid "plus"
 msgstr "más"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:325
+#: code:addons/procurement/procurement.py:328
 #, python-format
 msgid ""
 "Please check the Quantity in Procurement Order(s), it should not be less "
@@ -487,15 +520,6 @@ msgid ""
 msgstr ""
 "Si el campo activo se desmarca, permite ocultar la regla de stock mínimo sin "
 "eliminarla."
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,product_max_qty:0
-msgid ""
-"When the virtual stock goes belong the Max Quantity, OpenERP generates a "
-"procurement to bring the virtual stock to the Max Quantity."
-msgstr ""
-"Cuando el stock virtual se sitúa por debajo de la cantidad mínima, OpenERP "
-"genera un abastecimiento para situar el stock virtual a la cantidad máxima."
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
@@ -558,6 +582,12 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr "Está intentando asignar un lote que no es del mismo producto"
 
 #. module: procurement
+#: code:addons/procurement/procurement.py:383
+#, python-format
+msgid "Not enough stock."
+msgstr "Stock insuficiente."
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
 msgstr "Activo"
@@ -578,7 +608,13 @@ msgid "Exception"
 msgstr "Excepción"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:179
+#: code:addons/procurement/procurement.py:381
+#, python-format
+msgid "No minimum orderpoint rule defined."
+msgstr "No hay ninguna regla de punto de reposición definida"
+
+#. module: procurement
+#: code:addons/procurement/schedulers.py:183
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "Ord. abastecimiento automática: %s"
@@ -592,6 +628,11 @@ msgstr "Regla de stock mínimo automática"
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
 msgstr "Regla de inventario mínimo"
+
+#. module: procurement
+#: help:stock.warehouse.orderpoint,qty_multiple:0
+msgid "The procurement quantity will be rounded up to this multiple."
+msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -629,15 +670,14 @@ msgid "Order to Max"
 msgstr "Ordenar el máximo"
 
 #. module: procurement
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr ""
+
+#. module: procurement
 #: field:procurement.order,date_close:0
 msgid "Date Closed"
 msgstr "Fecha de cierre"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:372
-#, python-format
-msgid "Procurement '%s' is in exception: not enough stock."
-msgstr "El abastecimiento '%s' está en excepción: no suficiente stock."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:138
@@ -647,7 +687,7 @@ msgstr ""
 "¡No se puede eliminar orden(es) de abastecimiento que están en estado %s!"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:324
+#: code:addons/procurement/procurement.py:327
 #, python-format
 msgid "Data Insufficient !"
 msgstr "¡Datos insuficientes!"
@@ -690,11 +730,6 @@ msgid "Done"
 msgstr "Realizada"
 
 #. module: procurement
-#: help:stock.warehouse.orderpoint,qty_multiple:0
-msgid "The procurement quantity will by rounded up to this multiple."
-msgstr "La cantidad abastecida será redondeada hacia arriba a este múltiplo."
-
-#. module: procurement
 #: view:make.procurement:0
 #: view:procurement.order:0
 #: selection:procurement.order,state:0
@@ -720,14 +755,15 @@ msgid "Not urgent"
 msgstr "No urgente"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute_all
-msgid "Compute all schedulers"
-msgstr "Calcular todos los planificadores"
+#: code:addons/procurement/procurement.py:297
+#, python-format
+msgid "No default supplier defined for this product"
+msgstr "No hay definido ningún proveedor para este producto"
 
 #. module: procurement
 #: view:procurement.order:0
-msgid "Current"
-msgstr "Actual"
+msgid "Late"
+msgstr "Retrasada"
 
 #. module: procurement
 #: view:board.board:0
@@ -744,6 +780,7 @@ msgstr "Detalles"
 #: model:ir.actions.act_window,name:procurement.procurement_action_board
 #: model:ir.actions.act_window,name:procurement.procurement_exceptions
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
 msgid "Procurement Exceptions"
 msgstr "Excepciones abastecimiento"
 
@@ -864,6 +901,16 @@ msgid "MRP & Logistics Scheduler"
 msgstr "Planificador de MRP y logística"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Temporary Procurement Exceptions"
+msgstr ""
+
+#. module: procurement
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr ""
+
+#. module: procurement
 #: field:mrp.property,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
@@ -880,7 +927,7 @@ msgid "Product UoS"
 msgstr "UdV del producto"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:353
+#: code:addons/procurement/procurement.py:356
 #, python-format
 msgid "from stock: products assigned."
 msgstr "desde stock: productos asignados"
@@ -955,7 +1002,47 @@ msgid "Procurement Details"
 msgstr "Detalles de abastecimiento"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:180
+#: view:procurement.order:0
+msgid "Procurement started late"
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/schedulers.py:184
 #, python-format
 msgid "SCHEDULER"
 msgstr "PLANIFICADOR"
+
+#. module: procurement
+#: code:addons/procurement/schedulers.py:87
+#, python-format
+msgid "PROC %d: on order - %3.2f %-5s - %s"
+msgstr ""
+
+#~ msgid ""
+#~ "When the virtual stock goes belong the Min Quantity, OpenERP generates a "
+#~ "procurement to bring the virtual stock to the Max Quantity."
+#~ msgstr ""
+#~ "Cuando el stock virtual está por debajo de la cantidad mínima, OpenERP "
+#~ "genera un abastecimiento para aumentar el stock virtual a la cantidad máxima."
+
+#~ msgid "The procurement quantity will by rounded up to this multiple."
+#~ msgstr "La cantidad abastecida será redondeada hacia arriba a este múltiplo."
+
+#~ msgid "Current"
+#~ msgstr "Actual"
+
+#~ msgid ""
+#~ "When the virtual stock goes belong the Max Quantity, OpenERP generates a "
+#~ "procurement to bring the virtual stock to the Max Quantity."
+#~ msgstr ""
+#~ "Cuando el stock virtual se sitúa por debajo de la cantidad mínima, OpenERP "
+#~ "genera un abastecimiento para situar el stock virtual a la cantidad máxima."
+
+#~ msgid ""
+#~ "\n"
+#~ "    This is the module for computing Procurements.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Este es el módulo para calcular abastecimientos.\n"
+#~ "    "

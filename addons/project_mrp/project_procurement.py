@@ -19,9 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
-
-import tools
+from osv import fields, osv
 
 class procurement_order(osv.osv):
     _name = "procurement.order"
@@ -30,14 +28,47 @@ class procurement_order(osv.osv):
         'task_id': fields.many2one('project.task', 'Task'),
         'sale_line_id': fields.many2one('sale.order.line', 'Sale order line')
     }
-    def check_produce_service(self, cr, uid, procurement, context=None):
+
+    def action_check_finished(self, cr, uid, ids):
+        res = super(procurement_order, self).action_check_finished(cr, uid, ids)
+        return res and self.check_task_done(cr, uid, ids)
+    
+    def check_task_done(self, cr, uid, ids, context=None):
+        """ Checks if task is done or not.
+        @return: True or False.
+        """
+        return all(proc.product_id.type != 'service' or (proc.task_id and proc.task_id.state in ('done', 'cancelled')) \
+                    for proc in self.browse(cr, uid, ids, context=context))
+
+    def check_produce_service(self, cr, uid, procurement, context=None):    
         return True
 
-    def action_produce_assign_service(self, cr, uid, ids, context=None):
-        for procurement in self.browse(cr, uid, ids, context=context):
-            self.write(cr, uid, [procurement.id], {'state': 'running'})
+    def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
+        product_uom = self.pool.get('product.uom')
+        company_time_uom_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
+        if procurement.product_uom.id != company_time_uom_id:
+            planned_hours = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, company_time_uom_id)
+        else:
             planned_hours = procurement.product_qty
-            task_id = self.pool.get('project.task').create(cr, uid, {
+        return planned_hours
+
+    def _get_project(self, cr, uid, procurement, context=None):
+        project_project = self.pool.get('project.project')
+        project = procurement.product_id.project_id
+        if not project and procurement.sale_line_id:
+            # find the project corresponding to the analytic account of the sale order
+            account = procurement.sale_line_id.order_id.project_id
+            project_ids = project_project.search(cr, uid, [('analytic_account_id', '=', account.id)])
+            projects = project_project.browse(cr, uid, project_ids, context=context)
+            project = projects and projects[0] or False
+        return project
+
+    def action_produce_assign_service(self, cr, uid, ids, context=None):
+        project_task = self.pool.get('project.task')
+        for procurement in self.browse(cr, uid, ids, context=context):
+            project = self._get_project(cr, uid, procurement, context=context)
+            planned_hours = self._convert_qty_company_hours(cr, uid, procurement, context=context)
+            task_id = project_task.create(cr, uid, {
                 'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
                 'date_deadline': procurement.date_planned,
                 'planned_hours':planned_hours,
@@ -46,12 +77,10 @@ class procurement_order(osv.osv):
                 'notes': procurement.note,
                 'procurement_id': procurement.id,
                 'description': procurement.note,
-                'date_deadline': procurement.date_planned,
-                'project_id': procurement.product_id.project_id and procurement.product_id.project_id.id or False,
-                'state': 'draft',
+                'project_id':  project and project.id or False,
                 'company_id': procurement.company_id.id,
             },context=context)
-            self.write(cr, uid, [procurement.id],{'task_id':task_id})
+            self.write(cr, uid, [procurement.id], {'task_id': task_id, 'state': 'running'}, context=context)
         return task_id
 
 procurement_order()

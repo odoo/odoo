@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-13 17:19+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 04:58+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 05:50+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -81,7 +81,7 @@ msgid "Today"
 msgstr "Heute"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:44
+#: code:addons/subscription/subscription.py:136
 #, python-format
 msgid "Error !"
 msgstr "Fehler !"
@@ -107,12 +107,6 @@ msgstr "Stop"
 #: view:subscription.subscription:0
 msgid "Set to Draft"
 msgstr "Setze auf Entwurf"
-
-#. module: subscription
-#: model:ir.module.module,description:subscription.module_meta_information
-msgid ""
-"Module allows to create new documents and add subscription on that document."
-msgstr "Modul erlaubt neue Dokumente und Abos zu erstellen"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -166,14 +160,10 @@ msgid "Name"
 msgstr "Bezeichnung"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:44
+#: code:addons/subscription/subscription.py:136
 #, python-format
-msgid ""
-"You cannot modify the Object linked to the Document Type!\n"
-"Create another Document instead !"
+msgid "You cannot delete an active subscription !"
 msgstr ""
-"Das Objekt das mit dem Dokumnet verbunden ist, kann nicht verändert werden \n"
-"Erzeuge ein anderes Dokument!"
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
@@ -277,11 +267,6 @@ msgid "Process"
 msgstr "Prozess"
 
 #. module: subscription
-#: model:ir.module.module,shortdesc:subscription.module_meta_information
-msgid "Subscription and recurring operations"
-msgstr "Abonnements und wiederkehrende Vorgänge"
-
-#. module: subscription
 #: help:subscription.subscription,doc_source:0
 msgid ""
 "User can choose the source document on which he wants to create documents"
@@ -294,7 +279,7 @@ msgid "Document Types"
 msgstr "Dokument Typen"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:115
+#: code:addons/subscription/subscription.py:109
 #, python-format
 msgid "Wrong Source Document !"
 msgstr "Falsches Quellen Dokument"
@@ -317,7 +302,7 @@ msgid "Invoice"
 msgstr "Rechnung"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:115
+#: code:addons/subscription/subscription.py:109
 #, python-format
 msgid ""
 "Please provide another source document.\n"
@@ -364,5 +349,20 @@ msgstr "Dokumente erstellt"
 #~ msgid "Tools"
 #~ msgstr "Werkzeuge"
 
+#~ msgid ""
+#~ "Module allows to create new documents and add subscription on that document."
+#~ msgstr "Modul erlaubt neue Dokumente und Abos zu erstellen"
+
+#~ msgid "Subscription and recurring operations"
+#~ msgstr "Abonnements und wiederkehrende Vorgänge"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modellname in der Aktionsdefinition."
+
+#, python-format
+#~ msgid ""
+#~ "You cannot modify the Object linked to the Document Type!\n"
+#~ "Create another Document instead !"
+#~ msgstr ""
+#~ "Das Objekt das mit dem Dokumnet verbunden ist, kann nicht verändert werden \n"
+#~ "Erzeuge ein anderes Dokument!"

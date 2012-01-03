@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-01-18 16:44+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:29+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:58+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
@@ -177,6 +177,11 @@ msgid "Amount For Third Bank Statement"
 msgstr "Montant pour le relevé de la troisième banque"
 
 #. module: auction
+#: view:auction.lots:0
+msgid "Buy object"
+msgstr ""
+
+#. module: auction
 #: field:auction.lots,lot_num:0
 msgid "List Number"
 msgstr "N° de liste"
@@ -268,7 +273,6 @@ msgid "Items"
 msgstr "Articles"
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax5
 #: field:auction.dates,seller_costs:0
 msgid "Seller Costs"
 msgstr "Coûts des vendeurs"
@@ -282,6 +286,11 @@ msgstr "Coûts des vendeurs"
 #: model:ir.ui.menu,name:auction.menu_action_bid_open
 msgid "Bids"
 msgstr "Offres"
+
+#. module: auction
+#: field:report.auction,gross_revenue:0
+msgid "Gross Revenue"
+msgstr "Revenu brut"
 
 #. module: auction
 #: view:auction.lots.buyer_map:0
@@ -316,9 +325,9 @@ msgid "The Buyer \"%s\" has no Invoice Address."
 msgstr "L'acheteur \"%s\" n'a pas d'adresse de facturation"
 
 #. module: auction
-#: view:auction.dates:0
-msgid "Commissions"
-msgstr "Commissions"
+#: model:ir.actions.act_window,name:auction.action_auction_object_categories
+msgid "Auction object Categories"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit_cost
@@ -389,6 +398,11 @@ msgstr "Juin"
 #, python-format
 msgid "No Lots belong to this Auction Date"
 msgstr "Absence de lots sur cette séance"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "New Object"
+msgstr ""
 
 #. module: auction
 #: selection:report.auction,month:0
@@ -463,9 +477,10 @@ msgid "Buyers"
 msgstr "Acheteurs"
 
 #. module: auction
-#: model:account.tax.code,name:auction.account_tax_code_id4
-msgid "VAT 12%"
-msgstr "TVA 12%"
+#: view:auction.lots:0
+#: view:report.auction:0
+msgid "Object Category"
+msgstr ""
 
 #. module: auction
 #: view:auction.dates:0
@@ -530,9 +545,9 @@ msgid "Last Auction Date"
 msgstr "Date de la dernière enchère"
 
 #. module: auction
-#: model:account.tax,name:auction.tax_seller
-msgid "Seller Costs (12%)"
-msgstr "Coûts pour le vendeur (12%)"
+#: field:report.object.encoded,obj_num:0
+msgid "# of Encoded obj."
+msgstr "# d'Objets Encodés"
 
 #. module: auction
 #: field:auction.lots,paid_vnd:0
@@ -631,11 +646,6 @@ msgid "March"
 msgstr "Mars"
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax4
-msgid "Seller Costs1"
-msgstr "Coûts 1 du vendeur"
-
-#. module: auction
 #: field:auction.deposit,create_uid:0
 #: field:auction.lots,create_uid:0
 msgid "Created by"
@@ -657,17 +667,12 @@ msgid "Account tax for seller"
 msgstr "Compte de taxe pour le vendeur"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:68
+#: code:addons/auction/wizard/auction_lots_invoice.py:67
 #: code:addons/auction/wizard/auction_lots_numerotate.py:103
 #: code:addons/auction/wizard/auction_lots_numerotate.py:129
 #, python-format
 msgid "UserError"
 msgstr "Erreur utilisateur"
-
-#. module: auction
-#: model:ir.module.module,shortdesc:auction.module_meta_information
-msgid "Auction Management"
-msgstr "Gestion des enchères"
 
 #. module: auction
 #: field:auction.dates,journal_seller_id:0
@@ -687,21 +692,9 @@ msgid "Draft"
 msgstr "Brouillon"
 
 #. module: auction
-#: help:auction.lots,state:0
-msgid ""
-" * The 'Draft' state is used when a object is encoding as a new object.      "
-"           \n"
-"* The 'Unsold' state is used when object does not sold for long time, user "
-"can also set it as draft state after unsold.                 \n"
-"* The 'Paid' state is used when user pay for the object                 \n"
-"* The 'Sold' state is used when user buy the object."
+#: view:auction.dates:0
+msgid "Invoiced Auction"
 msgstr ""
-" * L'état 'Brouillon' est utilisé quand l'objet est défini en tant que "
-"nouvel oerpbjet.\n"
-"* L'état 'Non Vendu' est utilisé quand l'objet reste invendu après une "
-"longue période, l'utilisateur peut repasser l'objet à l'état 'Brouillon'\n"
-"* L'état 'Payé' est utilisé quand l'utilisateur paie l'objet\n"
-"* L'état 'Vendu' est utilisé quand l'utilisateur achète l'objet."
 
 #. module: auction
 #: view:auction.catalog.flagey:0
@@ -736,6 +729,7 @@ msgstr "Gestion emportée"
 #: view:auction.lots:0
 #: field:auction.lots,auction_id:0
 #: report:auction.total.rml:0
+#: model:ir.module.category,name:auction.module_category_auction
 #: model:ir.ui.menu,name:auction.auction_menu_root
 #: view:report.auction:0
 msgid "Auction"
@@ -795,11 +789,6 @@ msgid "Auction Name"
 msgstr "Nom de l'Enchère"
 
 #. module: auction
-#: field:report.object.encoded,obj_num:0
-msgid "# of Encoded obj."
-msgstr "# d'Objets Encodés"
-
-#. module: auction
 #: field:aie.category,parent_id:0
 msgid "Parent aie Category"
 msgstr "Catégorie aie parente"
@@ -855,11 +844,6 @@ msgid "Account tax for author commission"
 msgstr "Compte de taxe pour la commission de l'auteur"
 
 #. module: auction
-#: model:product.template,name:auction.monproduit_product_template
-msgid "Oeuvres a 21%"
-msgstr "Oeuvres à 21%"
-
-#. module: auction
 #: field:report.object.encoded,adj:0
 msgid "Adj."
 msgstr "Adj."
@@ -911,9 +895,9 @@ msgid "To pay ("
 msgstr "À payer ("
 
 #. module: auction
-#: model:account.tax,name:auction.tax_buyer
-msgid "Buyer Costs (20%)"
-msgstr "Coûts de l'acheteur (20%)"
+#: model:ir.model,name:auction.model_auction_lots
+msgid "Auction Object"
+msgstr "Objet de l'enchère"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction
@@ -971,6 +955,7 @@ msgstr "Num"
 
 #. module: auction
 #: view:auction.catalog.flagey:0
+#: view:auction.taken:0
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -1092,16 +1077,17 @@ msgid "Active IDs not Found"
 msgstr "Pas d'identifiants actifs trouvés"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_aie_send.py:167
+#: code:addons/auction/wizard/auction_aie_send.py:166
 #: code:addons/auction/wizard/auction_aie_send_result.py:117
 #, python-format
 msgid "Connection to WWW.Auction-in-Europe.com failed !"
 msgstr "La connexion à www.auction-in-europe.com a échoué !"
 
 #. module: auction
-#: field:report.auction,gross_revenue:0
-msgid "Gross Revenue"
-msgstr "Revenu brut"
+#: model:ir.actions.act_window,name:auction.act_auction_lot_open_bid
+#: model:ir.actions.act_window,name:auction.action_bid_open
+msgid "Open Bids"
+msgstr "Offres en cours"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.open_board_auction
@@ -1117,6 +1103,7 @@ msgstr "Nom"
 
 #. module: auction
 #: field:auction.deposit,name:0
+#: view:auction.lots:0
 #: field:auction.lots,bord_vnd_id:0
 msgid "Depositer Inventory"
 msgstr "Inventaire du dépositaire"
@@ -1128,9 +1115,9 @@ msgid "The Buyer has no Invoice Address."
 msgstr "L'acheteur n'a pas d'adresse de facturation."
 
 #. module: auction
-#: view:report.object.encoded:0
-msgid "Total adj."
-msgstr "Adj. Totale"
+#: model:ir.actions.act_window,name:auction.action_report_auction_adjudication_tree
+msgid "Auction Adjudication Report"
+msgstr ""
 
 #. module: auction
 #: field:auction.lots.sms.send,user:0
@@ -1159,11 +1146,6 @@ msgid "Mark Lots"
 msgstr "Marquer les Lots"
 
 #. module: auction
-#: model:ir.model,name:auction.model_auction_lots
-msgid "Auction Object"
-msgstr "Objet de l'enchère"
-
-#. module: auction
 #: field:auction.lots,obj_num:0
 #: field:auction.lots.enable,confirm_en:0
 msgid "Catalog Number"
@@ -1190,6 +1172,15 @@ msgid "Debit:"
 msgstr "Débit :"
 
 #. module: auction
+#: code:addons/auction/wizard/auction_aie_send.py:166
+#: code:addons/auction/wizard/auction_aie_send_result.py:116
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:70
+#: code:addons/auction/wizard/auction_lots_numerotate.py:145
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: auction
 #: field:auction.lots,author_right:0
 msgid "Author rights"
 msgstr "Droit d'auteurs"
@@ -1202,6 +1193,11 @@ msgstr "Droit d'auteurs"
 #: view:report.auction:0
 msgid "Group By..."
 msgstr "Regrouper par..."
+
+#. module: auction
+#: view:report.auction:0
+msgid "Auction during last month."
+msgstr ""
 
 #. module: auction
 #: help:auction.dates,journal_id:0
@@ -1231,6 +1227,11 @@ msgstr "Mettre à jour"
 #: model:ir.ui.menu,name:auction.auction_seller_menu
 msgid "Sellers"
 msgstr "Vendeurs"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Draft Auction"
+msgstr ""
 
 #. module: auction
 #: help:auction.lots,lot_est2:0
@@ -1297,6 +1298,7 @@ msgstr "Priorité"
 
 #. module: auction
 #: view:board.board:0
+#: model:ir.actions.act_window,name:auction.action_report_latest_objects_tree
 msgid "Latest objects"
 msgstr "Derniers Objets"
 
@@ -1412,11 +1414,6 @@ msgid "Beginning of the auction"
 msgstr "Début de la vente"
 
 #. module: auction
-#: help:auction.pay.buy,statement_id3:0
-msgid "Third Bank Statement For Buyer"
-msgstr "Relevé de compte tertiaire pour l'acheteur"
-
-#. module: auction
 #: view:report.auction:0
 #: field:report.auction,month:0
 #: field:report.auction.object.date,month:0
@@ -1460,19 +1457,19 @@ msgid "Create invoices"
 msgstr "Créer les factures"
 
 #. module: auction
-#: model:account.tax.code,name:auction.account_tax_code_id5
-msgid "VAT 5%"
-msgstr "TVA 5%"
-
-#. module: auction
-#: field:auction.dates,expo1:0
-msgid "First Exposition Day"
-msgstr "Premier jour de l'exposition"
+#: model:ir.model,name:auction.model_auction_lots_buyer_map
+msgid "Map Buyer"
+msgstr "Associer un acheteur"
 
 #. module: auction
 #: report:buyer.list:0
 msgid "Lot"
 msgstr "Lot"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_auction_object_date_tree
+msgid "Auction Object Date"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_artists
@@ -1517,11 +1514,6 @@ msgid "Exposition Dates"
 msgstr "Dates d'exposition"
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax1
-msgid "TVA"
-msgstr "TVA"
-
-#. module: auction
 #: field:auction.lots,important:0
 msgid "To be Emphatized"
 msgstr "À mettre en avant"
@@ -1530,11 +1522,6 @@ msgstr "À mettre en avant"
 #: report:buyer.list:0
 msgid "Total:"
 msgstr "Total :"
-
-#. module: auction
-#: model:account.tax,name:auction.auction_tax2
-msgid "TVA1"
-msgstr "TVA1"
 
 #. module: auction
 #: view:report.auction.object.date:0
@@ -1576,7 +1563,7 @@ msgid "Auction manager "
 msgstr "Gestionnaire de l'enchère "
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:68
+#: code:addons/auction/wizard/auction_lots_invoice.py:67
 #, python-format
 msgid ""
 "Two different buyers for the same invoice !\n"
@@ -1589,6 +1576,11 @@ msgstr ""
 #: view:auction.dates:0
 msgid "Invoice"
 msgstr "Facture"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Commissions"
+msgstr "Commissions"
 
 #. module: auction
 #: field:auction.lots,vnd_lim:0
@@ -1702,6 +1694,11 @@ msgid "Create Invoices For Buyer"
 msgstr "Créer les factures pour l'acheteur"
 
 #. module: auction
+#: model:res.groups,name:auction.group_auction_manager
+msgid "Manager"
+msgstr "Manager"
+
+#. module: auction
 #: view:auction.dates:0
 msgid "Names"
 msgstr "Noms"
@@ -1743,6 +1740,11 @@ msgid "Lots"
 msgstr "Lots"
 
 #. module: auction
+#: model:ir.actions.act_window,name:auction.action_auction_artist
+msgid "Auction Artists"
+msgstr ""
+
+#. module: auction
 #: field:auction.lots,seller_price:0
 msgid "Seller price"
 msgstr "Prix du vendeur"
@@ -1771,25 +1773,14 @@ msgid "Seller Price"
 msgstr "Prix du vendeur"
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax20
-#: model:account.tax,name:auction.auction_tax6
-msgid "Frais de vente"
-msgstr "Frais de vente"
+#: help:auction.pay.buy,statement_id3:0
+msgid "Third Bank Statement For Buyer"
+msgstr "Relevé de compte tertiaire pour l'acheteur"
 
 #. module: auction
-#: model:account.tax.code,name:auction.account_tax_code_id1
-msgid "VAT 1%"
-msgstr "TVA 1%"
-
-#. module: auction
-#: model:account.tax,name:auction.auction_tax
-msgid "Droit d'auteur"
-msgstr "Droit d'auteur"
-
-#. module: auction
-#: model:ir.model,name:auction.model_auction_lots_buyer_map
-msgid "Map Buyer"
-msgstr "Associer un acheteur"
+#: field:auction.dates,expo1:0
+msgid "First Exposition Day"
+msgstr "Premier jour de l'exposition"
 
 #. module: auction
 #: field:report.auction.object.date,name:0
@@ -1813,10 +1804,15 @@ msgstr "Revenu net"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_catalog_flagey_report.py:63
-#: code:addons/auction/wizard/auction_pay_buy.py:87
+#: code:addons/auction/wizard/auction_pay_buy.py:89
 #, python-format
 msgid "Error!"
 msgstr "Erreur !"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_latest_doposit_tree
+msgid "Latest Deposits"
+msgstr "Derniers dépôts"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -1824,47 +1820,9 @@ msgid "# of items:"
 msgstr "# d'articles :"
 
 #. module: auction
-#: model:account.tax,name:auction.tax_buyer_author
-msgid "Author rights (4%)"
-msgstr "Droits d'auteur (4%)"
-
-#. module: auction
 #: field:report.object.encoded,estimation:0
 msgid "Estimation"
 msgstr "Estimation"
-
-#. module: auction
-#: model:ir.module.module,description:auction.module_meta_information
-msgid ""
-"\n"
-"     This module manages the records of the artists,\n"
-"     the articles to be put up for auction,the buyers and\n"
-"     sellers.\n"
-"\n"
-"     It completely manages an auction such as managing bids,\n"
-"     keeping track of the sold articles along with the paid\n"
-"     and unpaid objects including delivery of the articles.\n"
-"     Dashboards for auction that includes:\n"
-"       * My Latest Objects (list)\n"
-"       * My Latest Deposits (list)\n"
-"       * Objects Statistics (list)\n"
-"       * My Objects By Day (list)\n"
-"    "
-msgstr ""
-"\n"
-"     Ce module gère les enregistrements des artistes,\n"
-"     les articles à vendre aux enchères, les acheteurs\n"
-"     et les vendeurs.\n"
-"\n"
-"     Il gère complètement une enchère avec la gestion des offres,\n"
-"     le suivi des articles vendus avec les objets payés et non-payés\n"
-"     incluant la livraison des articles.\n"
-"     Le tableau de bord des enchères inclut :\n"
-"       * Mes derniers objets (liste)\n"
-"       * Mes derniers dépôts (liste)\n"
-"       * Statistiques des objets (liste)\n"
-"       * Mes objets par jour (liste)\n"
-"    "
 
 #. module: auction
 #: view:auction.taken:0
@@ -1964,6 +1922,11 @@ msgid "Configuration"
 msgstr "Configuration"
 
 #. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_auction_object_date_tree_my
+msgid "My Auction Object Date"
+msgstr ""
+
+#. module: auction
 #: code:addons/auction/wizard/auction_pay_buy.py:80
 #, python-format
 msgid ""
@@ -1996,11 +1959,6 @@ msgid "Lots able"
 msgstr "Lots disponibles"
 
 #. module: auction
-#: model:account.tax.code,name:auction.account_tax_code_id3
-msgid "VAT 10%"
-msgstr "TVA 10%"
-
-#. module: auction
 #: field:auction.artists,name:0
 msgid "Artist/Author Name"
 msgstr "Nom Artiste/Auteur"
@@ -2027,11 +1985,6 @@ msgid "Auction Lots Category"
 msgstr "Catégories des lots d'enchère"
 
 #. module: auction
-#: model:account.tax.code,name:auction.account_tax_code_id2
-msgid "VAT 20%"
-msgstr "TVA 20%"
-
-#. module: auction
 #: model:ir.model,name:auction.model_auction_payer_sel
 msgid "Auction payment for seller"
 msgstr "Paiement de l'enchère pour le vendeur"
@@ -2046,6 +1999,11 @@ msgstr "Emporté"
 #: model:ir.actions.report.xml,name:auction.seller_form_id
 msgid "Seller List"
 msgstr "Listes des vendeurs"
+
+#. module: auction
+#: view:report.object.encoded:0
+msgid "Total adj."
+msgstr "Adj. Totale"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -2089,6 +2047,7 @@ msgstr "Tableau de bord des enchères"
 #: field:report.auction.adjudication,user_id:0
 #: field:report.auction.object.date,user_id:0
 #: field:report.object.encoded,user_id:0
+#: model:res.groups,name:auction.group_auction_user
 msgid "User"
 msgstr "Utilisateur"
 
@@ -2109,9 +2068,21 @@ msgid "Buyer Price - Seller Price - Indirect Cost"
 msgstr "Prix de l'acheteur - Prix du vendeur - Coût indirect"
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.act_auction_lot_open_bid
-msgid "Open Bids"
-msgstr "Offres en cours"
+#: help:auction.lots,state:0
+msgid ""
+" * The 'Draft' state is used when a object is encoding as a new object.      "
+"           \n"
+"* The 'Unsold' state is used when object does not sold for long time, user "
+"can also set it as draft state after unsold.                 \n"
+"* The 'Paid' state is used when user pay for the object                 \n"
+"* The 'Sold' state is used when user buy the object."
+msgstr ""
+" * L'état 'Brouillon' est utilisé quand l'objet est défini en tant que "
+"nouvel oerpbjet.\n"
+"* L'état 'Non Vendu' est utilisé quand l'objet reste invendu après une "
+"longue période, l'utilisateur peut repasser l'objet à l'état 'Brouillon'\n"
+"* L'état 'Payé' est utilisé quand l'utilisateur paie l'objet\n"
+"* L'état 'Vendu' est utilisé quand l'utilisateur achète l'objet."
 
 #. module: auction
 #: field:auction.artists,pseudo:0
@@ -2124,7 +2095,6 @@ msgid "Not sold"
 msgstr "Non Vendu"
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax3
 #: field:auction.dates,buyer_costs:0
 msgid "Buyer Costs"
 msgstr "Coûts de l'acheteur"
@@ -2135,13 +2105,9 @@ msgid "Auction Date:"
 msgstr "Date de l'Enchère :"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_aie_send.py:167
-#: code:addons/auction/wizard/auction_aie_send_result.py:116
-#: code:addons/auction/wizard/auction_lots_buyer_map.py:70
-#: code:addons/auction/wizard/auction_lots_numerotate.py:145
-#, python-format
-msgid "Error"
-msgstr "Erreur"
+#: view:auction.deposit:0
+msgid "Objects Description"
+msgstr "Description des objets"
 
 #. module: auction
 #: field:auction.dates,buyer_invoice_history:0
@@ -2216,12 +2182,7 @@ msgid "Last Auction Day"
 msgstr "Fin de l'enchère"
 
 #. module: auction
-#: view:auction.deposit:0
-msgid "Objects Description"
-msgstr "Description des objets"
-
-#. module: auction
-#: code:addons/auction/wizard/auction_pay_buy.py:87
+#: code:addons/auction/wizard/auction_pay_buy.py:89
 #, python-format
 msgid "No auction date for \"%s\": Please set one."
 msgstr "Absence de séance pour \"%s\" : En établir une, SVP."
@@ -2294,9 +2255,19 @@ msgid "Expenses"
 msgstr "Dépenses"
 
 #. module: auction
+#: view:report.auction:0
+msgid "Auction during current month."
+msgstr ""
+
+#. module: auction
 #: model:ir.model,name:auction.model_auction_payer
 msgid "Auction payer"
 msgstr "Payeur de l'enchère"
+
+#. module: auction
+#: view:report.auction:0
+msgid "Auction during current year."
+msgstr ""
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -2344,6 +2315,18 @@ msgstr "Historique de la vente"
 
 #~ msgid "Seller's Summary"
 #~ msgstr "Résumé du vendeur"
+
+#~ msgid "TVA1"
+#~ msgstr "TVA1"
+
+#~ msgid "Droit d'auteur"
+#~ msgstr "Droit d'auteur"
+
+#~ msgid "Frais de vente"
+#~ msgstr "Frais de vente"
+
+#~ msgid "TVA"
+#~ msgstr "TVA"
 
 #~ msgid "Total margin"
 #~ msgstr "Marge totale"
@@ -2475,6 +2458,9 @@ msgstr "Historique de la vente"
 #~ msgid "Antique/Toys"
 #~ msgstr "Antiquités/Jouets"
 
+#~ msgid "Auction Management"
+#~ msgstr "Gestion des enchères"
+
 #~ msgid "Define Artists"
 #~ msgstr "Ajouter un artiste"
 
@@ -2519,6 +2505,9 @@ msgstr "Historique de la vente"
 
 #~ msgid "Unclassified objects"
 #~ msgstr "Objets inclassifiés"
+
+#~ msgid "Oeuvres a 21%"
+#~ msgstr "Oeuvres à 21%"
 
 #~ msgid "Antique/Carpet and textilles"
 #~ msgstr "Antiquités/Tapis et Textiles"
@@ -2634,9 +2623,6 @@ msgstr "Historique de la vente"
 #~ msgid "Lot Category"
 #~ msgstr "Catégorie du lot"
 
-#~ msgid "Manager"
-#~ msgstr "Manager"
-
 #~ msgid "Total"
 #~ msgstr "Total"
 
@@ -2658,9 +2644,6 @@ msgstr "Historique de la vente"
 
 #~ msgid "Objects to sell"
 #~ msgstr "Objets à vendre"
-
-#~ msgid "Latest Deposits"
-#~ msgstr "Derniers dépôts"
 
 #~ msgid "Antique/Musical Instruments"
 #~ msgstr "Antiquités/Instruments de Musique"
@@ -2751,3 +2734,61 @@ msgstr "Historique de la vente"
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr ""
 #~ "Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
+
+#~ msgid "VAT 12%"
+#~ msgstr "TVA 12%"
+
+#~ msgid "Seller Costs (12%)"
+#~ msgstr "Coûts pour le vendeur (12%)"
+
+#~ msgid "VAT 5%"
+#~ msgstr "TVA 5%"
+
+#~ msgid "VAT 1%"
+#~ msgstr "TVA 1%"
+
+#~ msgid "Author rights (4%)"
+#~ msgstr "Droits d'auteur (4%)"
+
+#~ msgid "VAT 10%"
+#~ msgstr "TVA 10%"
+
+#~ msgid "VAT 20%"
+#~ msgstr "TVA 20%"
+
+#~ msgid "Seller Costs1"
+#~ msgstr "Coûts 1 du vendeur"
+
+#~ msgid "Buyer Costs (20%)"
+#~ msgstr "Coûts de l'acheteur (20%)"
+
+#~ msgid ""
+#~ "\n"
+#~ "     This module manages the records of the artists,\n"
+#~ "     the articles to be put up for auction,the buyers and\n"
+#~ "     sellers.\n"
+#~ "\n"
+#~ "     It completely manages an auction such as managing bids,\n"
+#~ "     keeping track of the sold articles along with the paid\n"
+#~ "     and unpaid objects including delivery of the articles.\n"
+#~ "     Dashboards for auction that includes:\n"
+#~ "       * My Latest Objects (list)\n"
+#~ "       * My Latest Deposits (list)\n"
+#~ "       * Objects Statistics (list)\n"
+#~ "       * My Objects By Day (list)\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "     Ce module gère les enregistrements des artistes,\n"
+#~ "     les articles à vendre aux enchères, les acheteurs\n"
+#~ "     et les vendeurs.\n"
+#~ "\n"
+#~ "     Il gère complètement une enchère avec la gestion des offres,\n"
+#~ "     le suivi des articles vendus avec les objets payés et non-payés\n"
+#~ "     incluant la livraison des articles.\n"
+#~ "     Le tableau de bord des enchères inclut :\n"
+#~ "       * Mes derniers objets (liste)\n"
+#~ "       * Mes derniers dépôts (liste)\n"
+#~ "       * Statistiques des objets (liste)\n"
+#~ "       * Mes objets par jour (liste)\n"
+#~ "    "

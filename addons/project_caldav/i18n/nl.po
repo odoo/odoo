@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-18 14:33+0000\n"
 "Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:56+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:26+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: project_caldav
 #: help:project.task,exdate:0
@@ -73,9 +73,9 @@ msgid "Public"
 msgstr "Openbaar"
 
 #. module: project_caldav
-#: field:project.task,base_calendar_url:0
-msgid "Caldav URL"
-msgstr "Caldav URL"
+#: view:project.task:0
+msgid " "
+msgstr ""
 
 #. module: project_caldav
 #: selection:project.task,month_list:0
@@ -118,14 +118,9 @@ msgid "Last"
 msgstr "Laatste"
 
 #. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Days"
-msgstr "Dagen"
-
-#. module: project_caldav
-#: selection:project.task,freq:0
-msgid "No Repeat"
-msgstr "Niet terugkerend"
+#: view:project.task:0
+msgid "From"
+msgstr "Vanaf"
 
 #. module: project_caldav
 #: selection:project.task,rrule_type:0
@@ -154,11 +149,6 @@ msgid "Organizer"
 msgstr "Organisator"
 
 #. module: project_caldav
-#: help:project.task,edit_all:0
-msgid "Edit all Occurrences  of recurrent Meeting."
-msgstr "Wijzig de reeks herhalende afspraken."
-
-#. module: project_caldav
 #: field:project.task,sa:0
 msgid "Sat"
 msgstr "Zat"
@@ -174,6 +164,11 @@ msgid "Sun"
 msgstr "Zon"
 
 #. module: project_caldav
+#: field:project.task,end_type:0
+msgid "Recurrence termination"
+msgstr ""
+
+#. module: project_caldav
 #: selection:project.task,select1:0
 msgid "Day of month"
 msgstr "Dag v/d maand"
@@ -184,29 +179,24 @@ msgid "Location"
 msgstr "Locatie"
 
 #. module: project_caldav
+#: selection:project.task,class:0
+msgid "Public for Employees"
+msgstr ""
+
+#. module: project_caldav
 #: view:project.task:0
 msgid "Mail TO"
 msgstr "Mail AAN"
 
 #. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Weeks"
-msgstr "Weken"
+#: field:project.task,exdate:0
+msgid "Exception Date/Times"
+msgstr "Uitzondering data/tijden"
 
 #. module: project_caldav
-#: field:project.task,select1:0
-msgid "Option"
-msgstr "Optie"
-
-#. module: project_caldav
-#: selection:project.task,class:0
-msgid "Confidential"
-msgstr "Vertrouwelijk"
-
-#. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Hours"
-msgstr "Uren"
+#: field:project.task,base_calendar_url:0
+msgid "Caldav URL"
+msgstr "Caldav URL"
 
 #. module: project_caldav
 #: field:project.task,recurrent_uid:0
@@ -222,11 +212,6 @@ msgstr "Juli"
 #: field:project.task,th:0
 msgid "Thu"
 msgstr "Don"
-
-#. module: project_caldav
-#: selection:project.task,end_type:0
-msgid "Forever"
-msgstr "Permanent"
 
 #. module: project_caldav
 #: help:project.task,count:0
@@ -285,11 +270,6 @@ msgid "Month"
 msgstr "Maand"
 
 #. module: project_caldav
-#: model:ir.module.module,shortdesc:project_caldav.module_meta_information
-msgid "CalDAV for task management"
-msgstr "Taakbeheer met behulp van CalDAV"
-
-#. module: project_caldav
 #: field:project.task,vtimezone:0
 msgid "Timezone"
 msgstr "Tijdzone"
@@ -298,11 +278,6 @@ msgstr "Tijdzone"
 #: selection:project.task,rrule_type:0
 msgid "Weekly"
 msgstr "Wekelijks"
-
-#. module: project_caldav
-#: field:project.task,edit_all:0
-msgid "Edit All"
-msgstr "Bewerk alles"
 
 #. module: project_caldav
 #: field:project.task,fr:0
@@ -321,18 +296,13 @@ msgstr "Herhalingsregel"
 
 #. module: project_caldav
 #: view:project.task:0
-msgid "From"
-msgstr "Vanaf"
+msgid "End of recurrency"
+msgstr ""
 
 #. module: project_caldav
 #: view:project.task:0
 msgid "Reminder"
 msgstr "Herinnering"
-
-#. module: project_caldav
-#: model:ir.module.module,description:project_caldav.module_meta_information
-msgid " Synchronize between Project task and Caldav Vtodo."
-msgstr " Synchroniseren tussen project taak en Caldav todo."
 
 #. module: project_caldav
 #: view:project.task:0
@@ -350,14 +320,14 @@ msgid "Monday"
 msgstr "Maandag"
 
 #. module: project_caldav
-#: selection:project.task,byday:0
-msgid "Third"
-msgstr "Derde"
-
-#. module: project_caldav
 #: selection:project.task,month_list:0
 msgid "June"
 msgstr "Juni"
+
+#. module: project_caldav
+#: selection:project.task,end_type:0
+msgid "Number of repetitions"
+msgstr ""
 
 #. module: project_caldav
 #: field:project.task,write_date:0
@@ -380,19 +350,14 @@ msgid "January"
 msgstr "Januari"
 
 #. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Months"
-msgstr "Maanden"
-
-#. module: project_caldav
 #: selection:project.task,week_list:0
 msgid "Wednesday"
 msgstr "Woensdag"
 
 #. module: project_caldav
 #: view:project.task:0
-msgid "Repeat Times"
-msgstr "Herhalingstijden"
+msgid "Choose day in the month where repeat the meeting"
+msgstr ""
 
 #. module: project_caldav
 #: selection:project.task,end_type:0
@@ -410,19 +375,9 @@ msgid "Recurrent ID date"
 msgstr "Datum herhalings-ID"
 
 #. module: project_caldav
-#: field:project.task,freq:0
-msgid "Frequency"
-msgstr "Frequentie"
-
-#. module: project_caldav
 #: help:project.task,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
 msgstr "Elke (Dag/Week/Maand/Jaar) herhalen"
-
-#. module: project_caldav
-#: view:project.task:0
-msgid "of"
-msgstr "van"
 
 #. module: project_caldav
 #: selection:project.task,show_as:0
@@ -435,9 +390,9 @@ msgid "Repeat every"
 msgstr "Herhalen elke"
 
 #. module: project_caldav
-#: selection:project.task,end_type:0
-msgid "Fix amout of times"
-msgstr "Vast aantal keren"
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr "Fout! Einddatum taak moet groter zijn dat begindatum taak"
 
 #. module: project_caldav
 #: field:project.task,recurrency:0
@@ -445,7 +400,6 @@ msgid "Recurrent"
 msgstr "Terugkerend"
 
 #. module: project_caldav
-#: view:project.task:0
 #: field:project.task,rrule_type:0
 msgid "Recurrency"
 msgstr "Herhaling"
@@ -480,22 +434,6 @@ msgstr ""
 "herhalingspatroon."
 
 #. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Years"
-msgstr "Jaren"
-
-#. module: project_caldav
-#: help:project.task,rrule:0
-msgid ""
-"Defines a rule or repeating pattern for recurring events\n"
-"e.g.: Every other month on the last Sunday of the month for 10 occurrences:  "
-"      FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
-msgstr ""
-"Definieert een regel of herhalingspatroon voor terugkerende gebeurtenissen\n"
-"bijv.: 10 gebeurtenissen om de maand op de laatste zondag van de maand:      "
-"  FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
-
-#. module: project_caldav
 #: selection:project.task,month_list:0
 msgid "May"
 msgstr "Mei"
@@ -507,8 +445,8 @@ msgstr "Taak toewijzen"
 
 #. module: project_caldav
 #: view:project.task:0
-msgid "Recurrency Rule"
-msgstr "Herhalingsregel"
+msgid "Choose day where repeat the meeting"
+msgstr ""
 
 #. module: project_caldav
 #: selection:project.task,month_list:0
@@ -516,9 +454,9 @@ msgid "February"
 msgstr "Februari"
 
 #. module: project_caldav
-#: field:project.task,exdate:0
-msgid "Exception Date/Times"
-msgstr "Uitzondering data/tijden"
+#: selection:project.task,byday:0
+msgid "Third"
+msgstr "Derde"
 
 #. module: project_caldav
 #: field:project.task,alarm_id:0
@@ -530,6 +468,11 @@ msgstr "Herinnering"
 #: selection:project.task,month_list:0
 msgid "April"
 msgstr "April"
+
+#. module: project_caldav
+#: view:project.task:0
+msgid "Recurrency period"
+msgstr ""
 
 #. module: project_caldav
 #: field:project.task,week_list:0
@@ -547,6 +490,11 @@ msgid "The"
 msgstr "De"
 
 #. module: project_caldav
+#: field:project.task,select1:0
+msgid "Option"
+msgstr "Optie"
+
+#. module: project_caldav
 #: help:project.task,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
 msgstr "Stel een herinnering in voorafgaand aan de afspraak"
@@ -560,11 +508,6 @@ msgstr "Persoonlijk"
 #: selection:project.task,byday:0
 msgid "Second"
 msgstr "Tweede"
-
-#. module: project_caldav
-#: field:project.task,end_type:0
-msgid "Way to end reccurency"
-msgstr "Beeindiging herhaling"
 
 #. module: project_caldav
 #: field:project.task,date:0
@@ -581,3 +524,66 @@ msgstr "Zaterdag"
 #: selection:project.task,byday:0
 msgid "Fifth"
 msgstr "Vijfde"
+
+#~ msgid "Days"
+#~ msgstr "Dagen"
+
+#~ msgid "No Repeat"
+#~ msgstr "Niet terugkerend"
+
+#~ msgid "Confidential"
+#~ msgstr "Vertrouwelijk"
+
+#~ msgid "Weeks"
+#~ msgstr "Weken"
+
+#~ msgid "Edit All"
+#~ msgstr "Bewerk alles"
+
+#~ msgid "CalDAV for task management"
+#~ msgstr "Taakbeheer met behulp van CalDAV"
+
+#~ msgid "Months"
+#~ msgstr "Maanden"
+
+#~ msgid "Frequency"
+#~ msgstr "Frequentie"
+
+#~ msgid "of"
+#~ msgstr "van"
+
+#~ msgid "Years"
+#~ msgstr "Jaren"
+
+#~ msgid ""
+#~ "Defines a rule or repeating pattern for recurring events\n"
+#~ "e.g.: Every other month on the last Sunday of the month for 10 occurrences:  "
+#~ "      FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
+#~ msgstr ""
+#~ "Definieert een regel of herhalingspatroon voor terugkerende gebeurtenissen\n"
+#~ "bijv.: 10 gebeurtenissen om de maand op de laatste zondag van de maand:      "
+#~ "  FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
+
+#~ msgid "Edit all Occurrences  of recurrent Meeting."
+#~ msgstr "Wijzig de reeks herhalende afspraken."
+
+#~ msgid "Hours"
+#~ msgstr "Uren"
+
+#~ msgid "Forever"
+#~ msgstr "Permanent"
+
+#~ msgid " Synchronize between Project task and Caldav Vtodo."
+#~ msgstr " Synchroniseren tussen project taak en Caldav todo."
+
+#~ msgid "Fix amout of times"
+#~ msgstr "Vast aantal keren"
+
+#~ msgid "Recurrency Rule"
+#~ msgstr "Herhalingsregel"
+
+#~ msgid "Way to end reccurency"
+#~ msgstr "Beeindiging herhaling"
+
+#~ msgid "Repeat Times"
+#~ msgstr "Herhalingstijden"

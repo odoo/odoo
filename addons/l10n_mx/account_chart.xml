@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data noupdate="1">
-	
-		
+
+
 	<!-- Account Types -->
 
 	<record model="account.account.type" id="account_type_receivable" >
@@ -59,7 +59,7 @@
       <field name="report_type">liability</field>
       <field name="close_method">balance</field>
     </record>
-	
+
 	<!-- Account Templates -->
 	<record id="chart0" model="account.account.template">
 		<field name="code">0</field>
@@ -67,7 +67,7 @@
 		<field name="type">view</field>
 		<field name="user_type" ref="account_type_view"/>
 	</record>
-	
+
 	<record id="chart1000" model="account.account.template">
 		<field name="code">1000</field>
 		<field name="reconcile" eval="False"/>
@@ -421,10 +421,10 @@
 
 	<record id="mx_a_recv" model="account.account.template">
 		<field name="code">4450</field>
-		<field name="reconcile" eval="False"/>
+		<field name="reconcile" eval="True"/>
 		<field name="parent_id" ref="chart0"/>
-		<field name="type">other</field>
-		<field name="user_type" ref="account_type_income"/>
+		<field name="type">receivable</field>
+		<field name="user_type" ref="account_type_receivable"/>
 		<field name="name">Ganancia en Paridad Cambiaria</field>
 	</record>
 
@@ -575,12 +575,12 @@
 	<record id="chart5530" model="account.account.template">
 		<field name="code">5530</field>
 		<field name="reconcile" eval="False"/>
-	
+
 		<field name="parent_id" ref="chart0"/>
 		<field name="type">other</field>
 		<field name="user_type" ref="account_type_expense"/>
 		<field name="name">Derecho de Frente</field>
-	
+
 	</record>
 
 	<record id="chart5600" model="account.account.template">
@@ -702,10 +702,10 @@
 
 	<record id="mx_a_pay" model="account.account.template">
 		<field name="code">5810</field>
-		<field name="reconcile" eval="False"/>
+		<field name="reconcile" eval="True"/>
 		<field name="parent_id" ref="chart0"/>
-		<field name="type">other</field>
-		<field name="user_type" ref="account_type_expense"/>
+		<field name="type">payable</field>
+		<field name="user_type" ref="account_type_payable"/>
 		<field name="name">Pérdidas Paridad Cambiaria</field>
 	</record>
 
@@ -721,6 +721,6 @@
         <field name="property_account_expense_categ" ref="mx_a_expense"/>
         <field name="property_account_income_categ" ref="mx_a_income"/>
 	</record>
-	
+
 </data>
 </openerp>

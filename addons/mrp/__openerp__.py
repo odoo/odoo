@@ -21,7 +21,7 @@
 
 
 {
-    "name" : "Manufacturing Resource Planning",
+    "name" : "MRP",
     "version" : "1.1",
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
@@ -75,7 +75,6 @@ Dashboard provided by this module:
         'wizard/change_production_qty_view.xml',
         'wizard/mrp_price_view.xml',
         'wizard/mrp_workcenter_load_view.xml',
-        'wizard/mrp_change_standard_price_view.xml',
         'mrp_view.xml',
         'mrp_report.xml',
         'company_view.xml',
@@ -93,15 +92,12 @@ Dashboard provided by this module:
          'mrp_demo.xml',
     ],
     'test': [
-         'test/mrp_procurement.yml',
-         'test/mrp_packs.yml',
-         'test/mrp_phantom_bom.yml',
-         'test/mrp_production_order.yml',
-         'test/mrp_production_cancel.yml',
-         'test/mrp_report.yml',
-
+         'test/order_demo.yml',
+         'test/order_process.yml', 
+         'test/cancel_order.yml',
     ],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '0032052481373',
 }

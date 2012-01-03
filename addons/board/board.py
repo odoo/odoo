@@ -56,14 +56,14 @@ class board_board(osv.osv):
         #End Loop
         arch = """<?xml version="1.0"?>
             <form string="My Board">
-            <hpaned>
-                <child1>
+            <board style="1-1">
+                <column>
                     %s
-                </child1>
-                <child2>
+                </column>
+                <column>
                     %s
-                </child2>
-            </hpaned>
+                </column>
+            </board>
             </form>""" % ('\n'.join(left), '\n'.join(right))
 
         return arch
@@ -134,10 +134,10 @@ class board_board(osv.osv):
         res['arch'] = self._arch_preprocessing(cr, user, res['arch'], context=context)
         res['toolbar'] = {'print': [], 'action': [], 'relate': []}
         return res
-    
-    
-    def _arch_preprocessing(self, cr, user, arch, context=None): 
-        from lxml import etree                               
+
+
+    def _arch_preprocessing(self, cr, user, arch, context=None):
+        from lxml import etree
         def remove_unauthorized_children(node):
             for child in node.iterchildren():
                 if child.tag=='action' and child.get('invisible'):
@@ -145,17 +145,17 @@ class board_board(osv.osv):
                 else:
                     child=remove_unauthorized_children(child)
             return node
-        
+
         def encode(s):
             if isinstance(s, unicode):
                 return s.encode('utf8')
             return s
-            
-        archnode = etree.fromstring(encode(arch))        
+
+        archnode = etree.fromstring(encode(arch))
         return etree.tostring(remove_unauthorized_children(archnode),pretty_print=True)
-        
-        
-    
+
+
+
 
     _columns = {
         'name': fields.char('Dashboard', size=64, required=True),
@@ -178,13 +178,13 @@ class board_line(osv.osv):
     _columns = {
         'name': fields.char('Title', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order\
-                         when displaying a list of board lines."),
+                         when displaying a list of board lines.", select=True),
         'height': fields.integer('Height'),
         'width': fields.integer('Width'),
         'board_id': fields.many2one('board.board', 'Dashboard', required=True, ondelete='cascade'),
         'action_id': fields.many2one('ir.actions.act_window', 'Action', required=True),
         'position': fields.selection([('left','Left'),
-                                      ('right','Right')], 'Position', required=True)
+                                      ('right','Right')], 'Position', required=True, select=True)
     }
     _defaults = {
         'position': lambda *args: 'left'

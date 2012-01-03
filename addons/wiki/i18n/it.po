@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-13 03:14+0000\n"
 "Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:38+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:08+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: wiki
 #: field:wiki.groups,template:0
@@ -98,9 +98,10 @@ msgid "Parent Menu"
 msgstr "Menu Superiore"
 
 #. module: wiki
-#: help:wiki.wiki,group_id:0
-msgid "Topic, also called Wiki Group"
-msgstr "Topic, altrimenti detto Gruppo Wiki"
+#: code:addons/wiki/wizard/wiki_make_index.py:52
+#, python-format
+msgid "There is no section in this Page"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,name:0
@@ -130,21 +131,22 @@ msgid "Page Content"
 msgstr "Contenuto pagina"
 
 #. module: wiki
-#: code:addons/wiki/wiki.py:236
+#: code:addons/wiki/wiki.py:237
+#: code:addons/wiki/wizard/wiki_make_index.py:52
 #, python-format
 msgid "Warning !"
 msgstr "Attenzione!"
 
 #. module: wiki
-#: code:addons/wiki/wiki.py:236
+#: code:addons/wiki/wiki.py:237
 #, python-format
 msgid "There are no changes in revisions"
 msgstr "Non ci sono cambiamenti nelle revisioni"
 
 #. module: wiki
-#: model:ir.module.module,shortdesc:wiki.module_meta_information
-msgid "Document Management - Wiki"
-msgstr "Gestione documentale - Wiki"
+#: help:wiki.wiki,section:0
+msgid "Use page section code like 1.2.1"
+msgstr "Usare il codice sezione di pagine come 1.2.1"
 
 #. module: wiki
 #: field:wiki.create.menu,menu_name:0
@@ -217,9 +219,11 @@ msgid "Warning"
 msgstr "Attenzione"
 
 #. module: wiki
-#: field:wiki.wiki,create_date:0
-msgid "Created on"
-msgstr "Creato il"
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
+"Necessario per selezionare la home page, se il metodo di visualizzazione è "
+"Home Page"
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -249,11 +253,6 @@ msgid "Group Description"
 msgstr "Descrizione del gruppo"
 
 #. module: wiki
-#: help:wiki.wiki,section:0
-msgid "Use page section code like 1.2.1"
-msgstr "Usare il codice sezione di pagine come 1.2.1"
-
-#. module: wiki
 #: view:wiki.wiki.page.open:0
 msgid "Want to open a wiki page? "
 msgstr "Volete aprire una pagina wiki? "
@@ -274,32 +273,15 @@ msgid "Meta Information"
 msgstr "Meta informazione"
 
 #. module: wiki
-#: model:ir.module.module,description:wiki.module_meta_information
-msgid ""
-"\n"
-"The base module to manage documents(wiki)\n"
-"\n"
-"keep track for the wiki groups, pages, and history\n"
-"    "
-msgstr ""
-"\n"
-"Il modulo base per gestire documenti (wiki)\n"
-"\n"
-"tiene traccia per i gruppi wiki, le pagine, e lo storico\n"
-"    "
+#: field:wiki.wiki,create_date:0
+msgid "Created on"
+msgstr "Creato il"
 
 #. module: wiki
 #: view:wiki.groups:0
 #: view:wizard.wiki.history.show_diff:0
 msgid "Notes"
 msgstr "Note"
-
-#. module: wiki
-#: help:wiki.groups,home:0
-msgid "Required to select home page if display method is Home Page"
-msgstr ""
-"Necessario per selezionare la home page, se il metodo di visualizzazione è "
-"Home Page"
 
 #. module: wiki
 #: selection:wiki.groups,method:0
@@ -363,6 +345,11 @@ msgstr ""
 #: view:wiki.wiki:0
 msgid "Modification Information"
 msgstr "Modifica informazioni"
+
+#. module: wiki
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
+msgstr "Topic, altrimenti detto Gruppo Wiki"
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_wiki_configuration
@@ -517,3 +504,19 @@ msgstr "Pagina di ricerca"
 
 #~ msgid "Tags"
 #~ msgstr "Etichette"
+
+#~ msgid "Document Management - Wiki"
+#~ msgstr "Gestione documentale - Wiki"
+
+#~ msgid ""
+#~ "\n"
+#~ "The base module to manage documents(wiki)\n"
+#~ "\n"
+#~ "keep track for the wiki groups, pages, and history\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Il modulo base per gestire documenti (wiki)\n"
+#~ "\n"
+#~ "tiene traccia per i gruppi wiki, le pagine, e lo storico\n"
+#~ "    "

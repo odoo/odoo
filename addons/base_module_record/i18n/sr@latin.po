@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-10-05 13:53+0000\n"
 "Last-Translator: Milan Milosevic <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-06 04:36+0000\n"
-"X-Generator: Launchpad (build 14085)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:03+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,info,category:0
@@ -28,15 +28,9 @@ msgid "Information"
 msgstr "Informacije"
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record_objects,save:0
-msgid ""
-"If you think your module could interest others people, we'd like you to "
-"publish it on OpenERP.com, in the 'Modules' section. You can do it through "
-"the website or using features of the 'base_module_publish' module."
-msgstr ""
-"Ako mislite da Vaš modul može zainteresovati i druge ljude, Voleli bismo da "
-"ga objabvite na OpenERP.com u sekciji 'Moduli'. To možete učiniti preko "
-"vebsajta ili koristeći mogućnosti modula 'base_module_publish' ."
+#: model:ir.model,name:base_module_record.model_ir_module_record
+msgid "ir.module.record"
+msgstr "ir.module.record"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,info,end:0
@@ -67,11 +61,6 @@ msgid "Records only"
 msgstr "Samo zapisi"
 
 #. module: base_module_record
-#: model:ir.model,name:base_module_record.model_ir_module_record
-msgid "ir.module.record"
-msgstr "ir.module.record"
-
-#. module: base_module_record
 #: selection:base_module_record.module_record_objects,info,data_kind:0
 msgid "Demo Data"
 msgstr "Demo podaci"
@@ -93,6 +82,14 @@ msgstr "Verzija"
 #: wizard_view:base_module_record.module_record_objects,init:0
 msgid "Objects Recording"
 msgstr "Zapisi stavki"
+
+#. module: base_module_record
+#: wizard_view:base_module_record.module_record_objects,save:0
+msgid ""
+"If you think your module could interest other people, we'd like you to "
+"publish it on http://www.openerp.com, in the 'Modules' section. You can do "
+"it through the website or using features of the 'base_module_publish' module."
+msgstr ""
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,init,check_date:0
@@ -194,11 +191,6 @@ msgid "Record"
 msgstr "Zapis"
 
 #. module: base_module_record
-#: model:ir.module.module,shortdesc:base_module_record.module_meta_information
-msgid "Module Record"
-msgstr "Zapisivanje modula"
-
-#. module: base_module_record
 #: wizard_button:base_module_record.module_record_objects,info,save:0
 msgid "Continue"
 msgstr "Nastavi"
@@ -272,51 +264,6 @@ msgstr "Zatvori"
 msgid "Created & Modified"
 msgstr "Kreiran & Izmijenjen"
 
-#. module: base_module_record
-#: model:ir.module.module,description:base_module_record.module_meta_information
-msgid ""
-"\n"
-"This module allows you to create a new module without any development.\n"
-"It records all operations on objects during the recording session and\n"
-"produce a .ZIP module. So you can create your own module directly from\n"
-"the OpenERP client.\n"
-"\n"
-"This version works for creating and updating existing records. It "
-"recomputes\n"
-"dependencies and links for all types of widgets (many2one, many2many, ...).\n"
-"It also support workflows and demo/update data.\n"
-"\n"
-"This should help you to easily create reusable and publishable modules\n"
-"for custom configurations and demo/testing data.\n"
-"\n"
-"How to use it:\n"
-"Run Administration/Customization/Module Creation/Export Customizations As a "
-"Module wizard.\n"
-"Select datetime criteria of recording and objects to be recorded and Record "
-"module.\n"
-"    "
-msgstr ""
-"\n"
-"Ovaj modul omogućava da napravite novi modul bez ikakvog razvoja.\n"
-"Zapisuje sve operacije na stavkama za vreme sesija zapisivanaj i\n"
-"pravi .ZIP modul. Tako da možete napraviti sopstvene module direknto iz\n"
-"OpenERP klijenta.\n"
-"\n"
-"Ova verzija radi za pravljenje i izmenu postojećih zapisa. Iznova "
-"obračunava\n"
-"međuzavisnosti i veze između svih tipova vidžeta (man2one, many2many, ...).\n"
-"\n"
-"Ovo bi trebalo da Vam pomogne da lako pravite ponovo upotrebljive module, "
-"koje možete ponovo objaviti,\n"
-"za korisnička podešavanja i demo/testiranje podataka.\n"
-"\n"
-"Kako ga koristiti:\n"
-"Pokrenite Administration/Customization/Module Creation/Export Customizations "
-"kao pomoćni modul.\n"
-"Izaberite datum i vreme kao kriterijume za zapis i stavke za zapis i "
-"zapišite modul.\n"
-"    "
-
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -387,3 +334,58 @@ msgstr ""
 
 #~ msgid "Stop Recording"
 #~ msgstr "Zaustavi Snimanje"
+
+#~ msgid ""
+#~ "If you think your module could interest others people, we'd like you to "
+#~ "publish it on OpenERP.com, in the 'Modules' section. You can do it through "
+#~ "the website or using features of the 'base_module_publish' module."
+#~ msgstr ""
+#~ "Ako mislite da Vaš modul može zainteresovati i druge ljude, Voleli bismo da "
+#~ "ga objabvite na OpenERP.com u sekciji 'Moduli'. To možete učiniti preko "
+#~ "vebsajta ili koristeći mogućnosti modula 'base_module_publish' ."
+
+#~ msgid "Module Record"
+#~ msgstr "Zapisivanje modula"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows you to create a new module without any development.\n"
+#~ "It records all operations on objects during the recording session and\n"
+#~ "produce a .ZIP module. So you can create your own module directly from\n"
+#~ "the OpenERP client.\n"
+#~ "\n"
+#~ "This version works for creating and updating existing records. It "
+#~ "recomputes\n"
+#~ "dependencies and links for all types of widgets (many2one, many2many, ...).\n"
+#~ "It also support workflows and demo/update data.\n"
+#~ "\n"
+#~ "This should help you to easily create reusable and publishable modules\n"
+#~ "for custom configurations and demo/testing data.\n"
+#~ "\n"
+#~ "How to use it:\n"
+#~ "Run Administration/Customization/Module Creation/Export Customizations As a "
+#~ "Module wizard.\n"
+#~ "Select datetime criteria of recording and objects to be recorded and Record "
+#~ "module.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Ovaj modul omogućava da napravite novi modul bez ikakvog razvoja.\n"
+#~ "Zapisuje sve operacije na stavkama za vreme sesija zapisivanaj i\n"
+#~ "pravi .ZIP modul. Tako da možete napraviti sopstvene module direknto iz\n"
+#~ "OpenERP klijenta.\n"
+#~ "\n"
+#~ "Ova verzija radi za pravljenje i izmenu postojećih zapisa. Iznova "
+#~ "obračunava\n"
+#~ "međuzavisnosti i veze između svih tipova vidžeta (man2one, many2many, ...).\n"
+#~ "\n"
+#~ "Ovo bi trebalo da Vam pomogne da lako pravite ponovo upotrebljive module, "
+#~ "koje možete ponovo objaviti,\n"
+#~ "za korisnička podešavanja i demo/testiranje podataka.\n"
+#~ "\n"
+#~ "Kako ga koristiti:\n"
+#~ "Pokrenite Administration/Customization/Module Creation/Export Customizations "
+#~ "kao pomoćni modul.\n"
+#~ "Izaberite datum i vreme kao kriterijume za zapis i stavke za zapis i "
+#~ "zapišite modul.\n"
+#~ "    "

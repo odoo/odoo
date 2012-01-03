@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-03-02 08:03+0000\n"
 "Last-Translator: Dimitar Markov <dimitar.markov@gmail.com>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:58+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:31+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -26,7 +26,7 @@ msgstr ""
 #. module: account_sequence
 #: constraint:account.move:0
 msgid ""
-"You cannot create entries on different periods/journals in the same move"
+"You can not create more than one move per period on centralized journal"
 msgstr ""
 
 #. module: account_sequence
@@ -51,19 +51,6 @@ msgid "Increment Number"
 msgstr "Число за увеличаване"
 
 #. module: account_sequence
-#: model:ir.module.module,description:account_sequence.module_meta_information
-msgid ""
-"\n"
-"    This module maintains internal sequence number for accounting entries.\n"
-"    "
-msgstr ""
-
-#. module: account_sequence
-#: model:ir.module.module,shortdesc:account_sequence.module_meta_information
-msgid "Entries Sequence Numbering"
-msgstr ""
-
-#. module: account_sequence
 #: help:account.sequence.installer,number_increment:0
 msgid "The next number of the sequence will be incremented by this number"
 msgstr ""
@@ -74,9 +61,9 @@ msgid "Configure Your Account Sequence Application"
 msgstr ""
 
 #. module: account_sequence
-#: field:account.sequence.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Прогрес на настройките"
+#: view:account.sequence.installer:0
+msgid "Configure"
+msgstr "Настройване"
 
 #. module: account_sequence
 #: help:account.sequence.installer,suffix:0
@@ -87,6 +74,11 @@ msgstr "Стойност на суфикса на записа за тази п�
 #: field:account.sequence.installer,company_id:0
 msgid "Company"
 msgstr "Фирма"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr "Не може да създадете ред за движение в приключена сметка."
 
 #. module: account_sequence
 #: help:account.journal,internal_sequence_id:0
@@ -130,13 +122,14 @@ msgstr "Име"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Не може да създадете ред за движение в приключена сметка."
+msgid "The date of your Journal Entry is not in the defined period!"
+msgstr ""
 
 #. module: account_sequence
-#: constraint:account.move:0
+#: constraint:account.journal:0
 msgid ""
-"You cannot create more than one move per period on centralized journal"
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
 msgstr ""
 
 #. module: account_sequence
@@ -148,16 +141,6 @@ msgstr "Грешна дебитна или кредитна стойност в 
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr ""
-
-#. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_sequence_installer
-msgid "account.sequence.installer"
-msgstr ""
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure"
-msgstr "Настройване"
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -190,6 +173,13 @@ msgid "The name of the journal must be unique per company !"
 msgstr "Името на дневникът трябва да бъде уникално за всяко предприятие!"
 
 #. module: account_sequence
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry must receive a value in its "
+"secondary currency"
+msgstr ""
+
+#. module: account_sequence
 #: field:account.sequence.installer,prefix:0
 msgid "Prefix"
 msgstr "Префикс"
@@ -200,9 +190,8 @@ msgid "The code of the journal must be unique per company !"
 msgstr "Кодът на дневника трябва да бъде уникален за всяко предприятие!"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
+#: model:ir.model,name:account_sequence.model_account_sequence_installer
+msgid "account.sequence.installer"
 msgstr ""
 
 #. module: account_sequence
@@ -219,3 +208,6 @@ msgstr ""
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
 msgstr ""
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Прогрес на настройките"

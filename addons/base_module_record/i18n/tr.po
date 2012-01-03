@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-09-09 07:16+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:10+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:03+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,info,category:0
@@ -27,12 +27,9 @@ msgid "Information"
 msgstr "Bilgi"
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record_objects,save:0
-msgid ""
-"If you think your module could interest others people, we'd like you to "
-"publish it on OpenERP.com, in the 'Modules' section. You can do it through "
-"the website or using features of the 'base_module_publish' module."
-msgstr "Eğer hazırladığınız modülünüz başka insanların ilgisini çekebili"
+#: model:ir.model,name:base_module_record.model_ir_module_record
+msgid "ir.module.record"
+msgstr "ir.module.record"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,info,end:0
@@ -63,11 +60,6 @@ msgid "Records only"
 msgstr "Sadece kayıtlar"
 
 #. module: base_module_record
-#: model:ir.model,name:base_module_record.model_ir_module_record
-msgid "ir.module.record"
-msgstr "ir.module.record"
-
-#. module: base_module_record
 #: selection:base_module_record.module_record_objects,info,data_kind:0
 msgid "Demo Data"
 msgstr "Demo Bilgileri"
@@ -89,6 +81,14 @@ msgstr "Sürüm"
 #: wizard_view:base_module_record.module_record_objects,init:0
 msgid "Objects Recording"
 msgstr "Nesnelerin kaydı"
+
+#. module: base_module_record
+#: wizard_view:base_module_record.module_record_objects,save:0
+msgid ""
+"If you think your module could interest other people, we'd like you to "
+"publish it on http://www.openerp.com, in the 'Modules' section. You can do "
+"it through the website or using features of the 'base_module_publish' module."
+msgstr ""
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,init,check_date:0
@@ -190,11 +190,6 @@ msgid "Record"
 msgstr "Kayıt"
 
 #. module: base_module_record
-#: model:ir.module.module,shortdesc:base_module_record.module_meta_information
-msgid "Module Record"
-msgstr "Modül Kaydet"
-
-#. module: base_module_record
 #: wizard_button:base_module_record.module_record_objects,info,save:0
 msgid "Continue"
 msgstr "Devam et"
@@ -268,51 +263,6 @@ msgstr "Kapat"
 msgid "Created & Modified"
 msgstr "Oluşturuldu & Değiştirildi"
 
-#. module: base_module_record
-#: model:ir.module.module,description:base_module_record.module_meta_information
-msgid ""
-"\n"
-"This module allows you to create a new module without any development.\n"
-"It records all operations on objects during the recording session and\n"
-"produce a .ZIP module. So you can create your own module directly from\n"
-"the OpenERP client.\n"
-"\n"
-"This version works for creating and updating existing records. It "
-"recomputes\n"
-"dependencies and links for all types of widgets (many2one, many2many, ...).\n"
-"It also support workflows and demo/update data.\n"
-"\n"
-"This should help you to easily create reusable and publishable modules\n"
-"for custom configurations and demo/testing data.\n"
-"\n"
-"How to use it:\n"
-"Run Administration/Customization/Module Creation/Export Customizations As a "
-"Module wizard.\n"
-"Select datetime criteria of recording and objects to be recorded and Record "
-"module.\n"
-"    "
-msgstr ""
-"\n"
-"Bu modül kod yazmadan yeni modül geliştirmeye yarar.\n"
-"Nesne üzerinde yaptığınız bütün işlemleri kaydeder ve bir .ZIP dosyasına "
-"kaydeder. \n"
-"Böylece OpenERP istemcisini kullanarak bir modül oluşturabilirsiniz.\n"
-"\n"
-"Bu sürüm yeni kayıt oluşturma ve kayıtları değiştirmek için kullanılabilir. "
-"Bağımlı modüller\n"
-"tekrar hesaplar ve her tip araç (many2one, many2many, ...) ile bağlantı "
-"kurar. \n"
-"\n"
-"Bu modülü kullanarak  tekrar kullanılabilir ve yayınlanabilir modüller "
-"oluşturabilirsiniz.\n"
-"\n"
-"Nasıl Kullanılır:\n"
-"Yönetim / ÖZelleştirmeler / Modül Oluşturma / Özelleştirmeleri modül olarak "
-"dışa aktarma sihirbazı.\n"
-"Kayıt için kaydedilecek nesneleri ve tarih saat bilgisini seçin ve modülü "
-"kaydedin.\n"
-"    "
-
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr "Nesne adı x_ ile başlamalı ve özel karakterler içermemelidir!"
@@ -322,3 +272,55 @@ msgstr ""
 
 #~ msgid "Start Recording"
 #~ msgstr "Kaydı Başlat"
+
+#~ msgid ""
+#~ "If you think your module could interest others people, we'd like you to "
+#~ "publish it on OpenERP.com, in the 'Modules' section. You can do it through "
+#~ "the website or using features of the 'base_module_publish' module."
+#~ msgstr "Eğer hazırladığınız modülünüz başka insanların ilgisini çekebili"
+
+#~ msgid "Module Record"
+#~ msgstr "Modül Kaydet"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows you to create a new module without any development.\n"
+#~ "It records all operations on objects during the recording session and\n"
+#~ "produce a .ZIP module. So you can create your own module directly from\n"
+#~ "the OpenERP client.\n"
+#~ "\n"
+#~ "This version works for creating and updating existing records. It "
+#~ "recomputes\n"
+#~ "dependencies and links for all types of widgets (many2one, many2many, ...).\n"
+#~ "It also support workflows and demo/update data.\n"
+#~ "\n"
+#~ "This should help you to easily create reusable and publishable modules\n"
+#~ "for custom configurations and demo/testing data.\n"
+#~ "\n"
+#~ "How to use it:\n"
+#~ "Run Administration/Customization/Module Creation/Export Customizations As a "
+#~ "Module wizard.\n"
+#~ "Select datetime criteria of recording and objects to be recorded and Record "
+#~ "module.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Bu modül kod yazmadan yeni modül geliştirmeye yarar.\n"
+#~ "Nesne üzerinde yaptığınız bütün işlemleri kaydeder ve bir .ZIP dosyasına "
+#~ "kaydeder. \n"
+#~ "Böylece OpenERP istemcisini kullanarak bir modül oluşturabilirsiniz.\n"
+#~ "\n"
+#~ "Bu sürüm yeni kayıt oluşturma ve kayıtları değiştirmek için kullanılabilir. "
+#~ "Bağımlı modüller\n"
+#~ "tekrar hesaplar ve her tip araç (many2one, many2many, ...) ile bağlantı "
+#~ "kurar. \n"
+#~ "\n"
+#~ "Bu modülü kullanarak  tekrar kullanılabilir ve yayınlanabilir modüller "
+#~ "oluşturabilirsiniz.\n"
+#~ "\n"
+#~ "Nasıl Kullanılır:\n"
+#~ "Yönetim / ÖZelleştirmeler / Modül Oluşturma / Özelleştirmeleri modül olarak "
+#~ "dışa aktarma sihirbazı.\n"
+#~ "Kayıt için kaydedilecek nesneleri ve tarih saat bilgisini seçin ve modülü "
+#~ "kaydedin.\n"
+#~ "    "

@@ -7,35 +7,47 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-23 09:56+0000\n"
 "PO-Revision-Date: 2011-03-02 22:13+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:29+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-24 05:53+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: l10n_be
-#: field:partner.vat,test_xml:0
 #: field:partner.vat.intra,test_xml:0
 msgid "Test XML file"
 msgstr "Proba de arquivo XML"
 
 #. module: l10n_be
-#: field:vat.listing.clients,name:0
-msgid "Client Name"
-msgstr "Nome do cliente"
+#: view:partner.vat.list_13:0
+msgid "You can remove customers which you do not want in exported xml file"
+msgstr ""
 
 #. module: l10n_be
-#: view:partner.vat.list:0
-msgid "XML File has been Created."
-msgstr "O arquivo XML foi creado."
+#: view:partner.vat_13:0
+msgid ""
+"This wizard will create an XML file for VAT details and total invoiced "
+"amounts per partner."
+msgstr ""
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:64
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:122
+#: model:account.account.type,name:l10n_be.user_type_tiers_receiv
+msgid "Tiers - Recevable"
+msgstr ""
+
+#. module: l10n_be
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:102
+#, python-format
+msgid "Wrong Period Code"
+msgstr "Código do período incorrecto"
+
+#. module: l10n_be
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:52
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:109
 #, python-format
 msgid "No partner has a VAT Number asociated with him."
 msgstr "Ningunha empresa ten un número fiscal asociado."
@@ -46,32 +58,19 @@ msgid "Error! You can not create recursive companies."
 msgstr "Erro! Non pode crear compañías recorrentes."
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:155
-#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:69
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:88
-#, python-format
-msgid "No VAT Number Associated with Main Company!"
-msgstr "Non hai Número de IVE asociado á empresa principal!"
-
-#. module: l10n_be
-#: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:64
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:122
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:125
-#, python-format
-msgid "Data Insufficient!"
-msgstr "Datos insuficientes!"
-
-#. module: l10n_be
-#: view:l1on_be.vat.declaration:0
-#: view:partner.vat.intra:0
-#: view:partner.vat.list:0
-msgid "Create XML"
-msgstr "Crear XML"
+#: model:account.account.type,name:l10n_be.user_type_tiers
+msgid "Tiers"
+msgstr ""
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,period_id:0
 msgid "Period"
 msgstr "Período"
+
+#. module: l10n_be
+#: field:partner.vat.intra,period_ids:0
+msgid "Period (s)"
+msgstr "Período (s)"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
@@ -80,42 +79,81 @@ msgid "Save the File with '.xml' extension."
 msgstr "Gardar o arquivo coa extensión '.xml'."
 
 #. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_charge
+msgid "Charge"
+msgstr ""
+
+#. module: l10n_be
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:47
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:52
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:109
+#, python-format
+msgid "Data Insufficient!"
+msgstr "Datos insuficientes!"
+
+#. module: l10n_be
+#: view:l1on_be.vat.declaration:0
+#: view:partner.vat.list_13:0
+msgid "Create XML"
+msgstr "Crear XML"
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_capitaux
+msgid "Capital"
+msgstr ""
+
+#. module: l10n_be
+#: view:partner.vat.list_13:0
+msgid "Print"
+msgstr ""
+
+#. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Save XML"
 msgstr "Gardar XML"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:150
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:219
 #, python-format
 msgid "Save"
 msgstr "Gardar"
 
 #. module: l10n_be
-#: model:ir.model,name:l10n_be.model_vat_listing_clients
-msgid "vat.listing.clients"
-msgstr "vat.listing.clients"
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr ""
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,msg:0
 #: field:partner.vat.intra,msg:0
-#: field:partner.vat.list,msg:0
+#: field:partner.vat.list_13,msg:0
 msgid "File created"
 msgstr "Arquivo creado"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:116
+#: view:partner.vat.intra:0
+msgid "_Close"
+msgstr ""
+
+#. module: l10n_be
+#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:131
 #, python-format
 msgid "Save XML For Vat declaration"
 msgstr "Gardar o XML para a declaración do IVE"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:95
-#, python-format
-msgid "The period code you entered is not valid."
-msgstr "O código do período que introduciu non é válido."
+#: view:partner.vat.list_13:0
+msgid "Customers"
+msgstr ""
 
 #. module: l10n_be
-#: help:l1on_be.vat.declaration,ask_resitution:0
+#: model:account.account.type,name:l10n_be.user_type_tax_in
+msgid "Taxes à l'entrée"
+msgstr ""
+
+#. module: l10n_be
+#: help:l1on_be.vat.declaration,ask_restitution:0
 msgid "It indicates whether a resitution is to made or not?"
 msgstr "Indica se hai que realizar a restitución ou non."
 
@@ -131,15 +169,20 @@ msgid "Partner With No VAT"
 msgstr "Socio sen CIF/NIF"
 
 #. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_immo
+msgid "Immobilisation"
+msgstr ""
+
+#. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
 msgid "Company"
 msgstr "Compañía"
 
 #. module: l10n_be
-#: model:ir.model,name:l10n_be.model_partner_vat_list
-msgid "partner.vat.list"
-msgstr "partner.vat.list"
+#: model:ir.model,name:l10n_be.model_partner_vat_13
+msgid "partner.vat_13"
+msgstr ""
 
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.partner_vat_listing
@@ -147,17 +190,26 @@ msgid "Annual Listing Of VAT-Subjected Customers"
 msgstr "Listaxe anual de Clientes suxeitos ó IVE"
 
 #. module: l10n_be
-#: model:ir.module.module,shortdesc:l10n_be.module_meta_information
-msgid "Belgium - Plan Comptable Minimum Normalise"
-msgstr "Bélxica - Plan contable mínimo normalizado"
+#: view:partner.vat.list_13:0
+msgid "XML File has been Created."
+msgstr "O arquivo XML foi creado."
 
 #. module: l10n_be
-#: view:partner.vat.list:0
+#: help:l1on_be.vat.declaration,client_nihil:0
+msgid ""
+"Tick this case only if it concerns only the last statement on the civil or "
+"cessation of activity"
+msgstr ""
+"Marcar esta opción só se atinxe á última declaración civil ou de cesamento "
+"de actividade"
+
+#. module: l10n_be
+#: view:partner.vat.list_13:0
 msgid "Select Fiscal Year"
 msgstr "Seleccionar exercicio fiscal"
 
 #. module: l10n_be
-#: field:l1on_be.vat.declaration,ask_resitution:0
+#: field:l1on_be.vat.declaration,ask_restitution:0
 msgid "Ask Restitution"
 msgstr "Pedir restitución"
 
@@ -179,15 +231,20 @@ msgid "Note: "
 msgstr "Nota: "
 
 #. module: l10n_be
+#: view:partner.vat.intra:0
+msgid "_Preview"
+msgstr ""
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_tiers_payable
+msgid "Tiers - Payable"
+msgstr ""
+
+#. module: l10n_be
 #: field:l1on_be.vat.declaration,tax_code_id:0
 #: field:partner.vat.intra,tax_code_id:0
 msgid "Tax Code"
 msgstr "Código do imposto"
-
-#. module: l10n_be
-#: view:vat.listing.clients:0
-msgid "VAT listing"
-msgstr "Listaxe do IVE"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
@@ -195,15 +252,19 @@ msgid "Periods"
 msgstr "Períodos"
 
 #. module: l10n_be
-#: help:partner.vat,test_xml:0
+#: model:account.account.type,name:l10n_be.user_type_produit
+msgid "Produit"
+msgstr ""
+
+#. module: l10n_be
 #: help:partner.vat.intra,test_xml:0
 msgid "Sets the XML output as test file"
 msgstr "Establece a saída XML como arquivo de probas"
 
 #. module: l10n_be
-#: field:partner.vat,limit_amount:0
-msgid "Limit Amount"
-msgstr "Cantidade límite"
+#: model:account.account.type,name:l10n_be.user_type_view
+msgid "Vue"
+msgstr ""
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
@@ -211,13 +272,9 @@ msgid "Ok"
 msgstr "Aceptar"
 
 #. module: l10n_be
-#: view:partner.vat:0
-msgid ""
-"This wizard will create an XML file for Vat details and total invoiced "
-"amounts per partner."
-msgstr ""
-"Este asistente creará un arquivo XML para a información relativa ó IVE e o "
-"total dos importes facturados por socio."
+#: field:l1on_be.vat.declaration,ask_payment:0
+msgid "Ask Payment"
+msgstr "Solicitar pagamento"
 
 #. module: l10n_be
 #: help:partner.vat.intra,no_vat:0
@@ -227,20 +284,9 @@ msgstr ""
 "O socio cuxo CIF/NIF non estea definido non se inclúe no arquivo XML."
 
 #. module: l10n_be
-#: field:vat.listing.clients,vat:0
-msgid "VAT"
-msgstr "IVE"
-
-#. module: l10n_be
-#: field:vat.listing.clients,country:0
-msgid "Country"
-msgstr "País"
-
-#. module: l10n_be
-#: view:partner.vat.list:0
-#: field:partner.vat.list,partner_ids:0
-msgid "Clients"
-msgstr "Clientes"
+#: field:partner.vat_13,limit_amount:0
+msgid "Limit Amount"
+msgstr "Cantidade límite"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_res_company
@@ -248,13 +294,9 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: l10n_be
-#: help:l1on_be.vat.declaration,client_nihil:0
-msgid ""
-"Tick this case only if it concerns only the last statement on the civil or "
-"cessation of activity"
+#: view:partner.vat.intra:0
+msgid "Create _XML"
 msgstr ""
-"Marcar esta opción só se atinxe á última declaración civil ou de cesamento "
-"de actividade"
 
 #. module: l10n_be
 #: help:partner.vat.intra,period_ids:0
@@ -264,9 +306,15 @@ msgstr ""
 "Elixa os períodos que desexe incluír na súa declaración intracomunitaria"
 
 #. module: l10n_be
-#: field:vat.listing.clients,amount:0
-msgid "Amount"
-msgstr "Cantidade"
+#: view:partner.vat_13:0
+msgid "View Customers"
+msgstr ""
+
+#. module: l10n_be
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:102
+#, python-format
+msgid "The period code you entered is not valid."
+msgstr "O código do período que introduciu non é válido."
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
@@ -274,9 +322,9 @@ msgid "Is Last Declaration"
 msgstr "É a última declaración"
 
 #. module: l10n_be
-#: model:ir.model,name:l10n_be.model_partner_vat
-msgid "partner.vat"
-msgstr "partner.vat"
+#: model:account.account.type,name:l10n_be.user_type_stock
+msgid "Stock et Encours"
+msgstr ""
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,client_nihil:0
@@ -284,14 +332,18 @@ msgid "Last Declaration of Enterprise"
 msgstr "Última declaración da empresa"
 
 #. module: l10n_be
-#: help:l1on_be.vat.declaration,ask_payment:0
-msgid "It indicates whether a payment is to made or not?"
-msgstr "Indica se un pagamento foi realizado ou non"
+#: help:partner.vat.intra,mand_id:0
+msgid ""
+"This identifies the representative of the sending company. This is a string "
+"of 14 characters"
+msgstr ""
+"Isto identifica ó representante da compañía emisora. É unha cadea de 14 "
+"caracteres."
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:155
-#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:69
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:88
+#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:75
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:150
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:98
 #, python-format
 msgid "Data Insufficient"
 msgstr "Dato insuficiente"
@@ -307,24 +359,14 @@ msgid "Partner Vat Intra"
 msgstr "IVE empresa intracomunitaria"
 
 #. module: l10n_be
-#: field:vat.listing.clients,turnover:0
-msgid "Turnover"
-msgstr "Volume de negocio"
-
-#. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 msgid "Declare Periodical VAT"
 msgstr "Declarar IVE periódico"
 
 #. module: l10n_be
-#: help:partner.vat,mand_id:0
-#: help:partner.vat.intra,mand_id:0
-msgid ""
-"This identifies the representative of the sending company. This is a string "
-"of 14 characters"
+#: model:ir.model,name:l10n_be.model_partner_vat_list_13
+msgid "partner.vat.list_13"
 msgstr ""
-"Isto identifica ó representante da compañía emisora. É unha cadea de 14 "
-"caracteres."
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
@@ -332,7 +374,6 @@ msgid "Save xml"
 msgstr "Gardar XML"
 
 #. module: l10n_be
-#: field:partner.vat,mand_id:0
 #: field:partner.vat.intra,mand_id:0
 msgid "MandataireId"
 msgstr "Id Mandatario"
@@ -340,7 +381,7 @@ msgstr "Id Mandatario"
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,file_save:0
 #: field:partner.vat.intra,file_save:0
-#: field:partner.vat.list,file_save:0
+#: field:partner.vat.list_13,file_save:0
 msgid "Save File"
 msgstr "Gardar arquivo"
 
@@ -367,20 +408,27 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,name:0
 #: field:partner.vat.intra,name:0
-#: field:partner.vat.list,name:0
+#: field:partner.vat.list_13,name:0
 msgid "File Name"
 msgstr "Nome do arquivo"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:95
-#, python-format
-msgid "Wrong Period Code"
-msgstr "Código do período incorrecto"
+#: model:account.account.type,name:l10n_be.user_type_tax_out
+msgid "Taxes à la sortie"
+msgstr ""
 
 #. module: l10n_be
-#: field:partner.vat,fyear:0
-msgid "Fiscal Year"
-msgstr "Exercicio fiscal"
+#: model:account.account.type,name:l10n_be.user_type_tax
+msgid "Tax"
+msgstr ""
+
+#. module: l10n_be
+#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:75
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:150
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:98
+#, python-format
+msgid "No VAT Number Associated with Main Company!"
+msgstr "Non hai Número de IVE asociado á empresa principal!"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_l1on_be_vat_declaration
@@ -394,8 +442,8 @@ msgid "European Countries"
 msgstr "Países europeos"
 
 #. module: l10n_be
-#: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing
-#: view:partner.vat:0
+#: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing_13
+#: view:partner.vat_13:0
 msgid "Partner VAT Listing"
 msgstr "Listaxe IVE empresa"
 
@@ -403,18 +451,6 @@ msgstr "Listaxe IVE empresa"
 #: view:partner.vat.intra:0
 msgid "General Information"
 msgstr "Información xeral"
-
-#. module: l10n_be
-#: help:partner.vat.list,partner_ids:0
-msgid ""
-"You can remove clients/partners which you do not want to show in xml file"
-msgstr "Pode eliminar clientes/empresas que non quere amosar no arquivo xml"
-
-#. module: l10n_be
-#: view:partner.vat.list:0
-msgid ""
-"You can remove clients/partners which you do not want in exported xml file"
-msgstr "Pode eliminar clientes/empresas do arquivo xml exportado"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
@@ -427,95 +463,37 @@ msgid "Period Code"
 msgstr "Código do período"
 
 #. module: l10n_be
-#: field:l1on_be.vat.declaration,ask_payment:0
-msgid "Ask Payment"
-msgstr "Solicitar pagamento"
+#: model:account.account.type,name:l10n_be.user_type_financiers
+msgid "Financier"
+msgstr ""
 
 #. module: l10n_be
-#: view:partner.vat:0
-msgid "View Client"
-msgstr "Ver cliente"
+#: field:partner.vat_13,year:0
+msgid "Year"
+msgstr ""
 
 #. module: l10n_be
-#: view:partner.vat:0
+#: view:partner.vat_13:0
 msgid "Cancel"
 msgstr "Anular"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
-#: view:partner.vat.list:0
+#: view:partner.vat.list_13:0
 msgid "Close"
 msgstr "Pechar"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:125
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
 #, python-format
 msgid "Please select at least one Period."
 msgstr "Seleccione polo menos un período."
 
 #. module: l10n_be
-#: model:ir.module.module,description:l10n_be.module_meta_information
-msgid ""
-"\n"
-"    This is the base module to manage the accounting chart for Belgium in "
-"OpenERP.\n"
-"\n"
-"    After Installing this module,The Configuration wizard for accounting is "
-"launched.\n"
-"    * We have the account templates which can be helpful to generate Charts "
-"of Accounts.\n"
-"    * On that particular wizard,You will be asked to pass the name of the "
-"company,the chart template to follow,the no. of digits to generate the code "
-"for your account and Bank account,currency to create Journals.\n"
-"        Thus,the pure copy of Chart Template is generated.\n"
-"    * This is the same wizard that runs from Financial "
-"Management/Configuration/Financial Accounting/Financial Accounts/Generate "
-"Chart of Accounts from a Chart Template.\n"
-"\n"
-"    Wizards provided by this module:\n"
-"    * Partner VAT Intra: Enlist the partners with their related VAT and "
-"invoiced amounts.Prepares an XML file format.\n"
-"                           Path to access : Financial "
-"Management/Reporting//Legal Statements/Belgium Statements/Partner VAT "
-"Listing\n"
-"    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration "
-"of the Main company of the User currently Logged in.\n"
-"                           Path to access : Financial "
-"Management/Reporting/Legal Statements/Belgium Statements/Periodical VAT "
-"Declaration\n"
-"    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for "
-"Vat Declaration of the Main company of the User currently Logged in.Based on "
-"Fiscal year\n"
-"                           Path to access : Financial "
-"Management/Reporting/Legal Statements/Belgium Statements/Annual Listing Of "
-"VAT-Subjected Customers\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"    Este é o módulo base para xestionar o plan contable belga en "
-"OpenERP.Despois de instalar este módulo, executarase o asistente de "
-"configuración contable.* Proporciona os modelos contables que poden ser "
-"útiles para xerar plans contables.* No asistente pediráselle o nome da "
-"compañía, o modelo de contas a utilizar, o nº de díxitos para xerar os "
-"códigos das súas contas e a conta bancaria e a divisa para crear diarios. "
-"Deste xeito xerarase unha copia do modelo de contas.* É o mesmo asistente "
-"que se executa desde 'Contabilidade/Configuración/Contabilidade "
-"financeira/Modelos/Xerar plan contable desde un modelo de plan contable. "
-"Asistentes incluídos neste módulo:* Listaxe de empresas: enumera as empresas "
-"co seu CIF e coas cantidades facturadas. Prepara un arquivo XML.Ruta de "
-"acceso: Contabilidade/Informes/Informes legais/Informes belgas/Listaxe de "
-"empresas co CIF* Declaración periódica do IVE: Prepara un arquivo XML para a "
-"declaración do IVE da compañía do usuario actualmente conectado.Ruta de "
-"acceso: Contabilidade/Informes/Informes legais/Informes belgas/Declaración "
-"periódica do IVE* Listaxe anual dos clientes suxeitos ó IVE: Prepara un "
-"arquivo XML para a declaración do IVE da compañía principal do usuario "
-"actualmente conectado. Baseado no exercicio fiscal.Ruta de acceso: "
-"Contabilidade/Informes/Informes legais/Informes belgas/Listaxe anual de "
-"clientes suxeitos ó IVE\n"
-"\n"
-"    "
+#: help:l1on_be.vat.declaration,ask_payment:0
+msgid "It indicates whether a payment is to made or not?"
+msgstr "Indica se un pagamento foi realizado ou non"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
@@ -523,6 +501,122 @@ msgid "Partner VAT intra"
 msgstr "Socio IVE intra"
 
 #. module: l10n_be
-#: field:partner.vat.intra,period_ids:0
-msgid "Period (s)"
-msgstr "Período (s)"
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:47
+#, python-format
+msgid "No data for the selected Year."
+msgstr ""
+
+#~ msgid "Client Name"
+#~ msgstr "Nome do cliente"
+
+#~ msgid "vat.listing.clients"
+#~ msgstr "vat.listing.clients"
+
+#~ msgid "Belgium - Plan Comptable Minimum Normalise"
+#~ msgstr "Bélxica - Plan contable mínimo normalizado"
+
+#~ msgid "partner.vat.list"
+#~ msgstr "partner.vat.list"
+
+#~ msgid "VAT listing"
+#~ msgstr "Listaxe do IVE"
+
+#~ msgid ""
+#~ "This wizard will create an XML file for Vat details and total invoiced "
+#~ "amounts per partner."
+#~ msgstr ""
+#~ "Este asistente creará un arquivo XML para a información relativa ó IVE e o "
+#~ "total dos importes facturados por socio."
+
+#~ msgid "Clients"
+#~ msgstr "Clientes"
+
+#~ msgid "Country"
+#~ msgstr "País"
+
+#~ msgid "VAT"
+#~ msgstr "IVE"
+
+#~ msgid "partner.vat"
+#~ msgstr "partner.vat"
+
+#~ msgid "Amount"
+#~ msgstr "Cantidade"
+
+#~ msgid "Fiscal Year"
+#~ msgstr "Exercicio fiscal"
+
+#~ msgid "Turnover"
+#~ msgstr "Volume de negocio"
+
+#~ msgid ""
+#~ "You can remove clients/partners which you do not want in exported xml file"
+#~ msgstr "Pode eliminar clientes/empresas do arquivo xml exportado"
+
+#~ msgid ""
+#~ "You can remove clients/partners which you do not want to show in xml file"
+#~ msgstr "Pode eliminar clientes/empresas que non quere amosar no arquivo xml"
+
+#~ msgid "View Client"
+#~ msgstr "Ver cliente"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This is the base module to manage the accounting chart for Belgium in "
+#~ "OpenERP.\n"
+#~ "\n"
+#~ "    After Installing this module,The Configuration wizard for accounting is "
+#~ "launched.\n"
+#~ "    * We have the account templates which can be helpful to generate Charts "
+#~ "of Accounts.\n"
+#~ "    * On that particular wizard,You will be asked to pass the name of the "
+#~ "company,the chart template to follow,the no. of digits to generate the code "
+#~ "for your account and Bank account,currency to create Journals.\n"
+#~ "        Thus,the pure copy of Chart Template is generated.\n"
+#~ "    * This is the same wizard that runs from Financial "
+#~ "Management/Configuration/Financial Accounting/Financial Accounts/Generate "
+#~ "Chart of Accounts from a Chart Template.\n"
+#~ "\n"
+#~ "    Wizards provided by this module:\n"
+#~ "    * Partner VAT Intra: Enlist the partners with their related VAT and "
+#~ "invoiced amounts.Prepares an XML file format.\n"
+#~ "                           Path to access : Financial "
+#~ "Management/Reporting//Legal Statements/Belgium Statements/Partner VAT "
+#~ "Listing\n"
+#~ "    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration "
+#~ "of the Main company of the User currently Logged in.\n"
+#~ "                           Path to access : Financial "
+#~ "Management/Reporting/Legal Statements/Belgium Statements/Periodical VAT "
+#~ "Declaration\n"
+#~ "    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for "
+#~ "Vat Declaration of the Main company of the User currently Logged in.Based on "
+#~ "Fiscal year\n"
+#~ "                           Path to access : Financial "
+#~ "Management/Reporting/Legal Statements/Belgium Statements/Annual Listing Of "
+#~ "VAT-Subjected Customers\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Este é o módulo base para xestionar o plan contable belga en "
+#~ "OpenERP.Despois de instalar este módulo, executarase o asistente de "
+#~ "configuración contable.* Proporciona os modelos contables que poden ser "
+#~ "útiles para xerar plans contables.* No asistente pediráselle o nome da "
+#~ "compañía, o modelo de contas a utilizar, o nº de díxitos para xerar os "
+#~ "códigos das súas contas e a conta bancaria e a divisa para crear diarios. "
+#~ "Deste xeito xerarase unha copia do modelo de contas.* É o mesmo asistente "
+#~ "que se executa desde 'Contabilidade/Configuración/Contabilidade "
+#~ "financeira/Modelos/Xerar plan contable desde un modelo de plan contable. "
+#~ "Asistentes incluídos neste módulo:* Listaxe de empresas: enumera as empresas "
+#~ "co seu CIF e coas cantidades facturadas. Prepara un arquivo XML.Ruta de "
+#~ "acceso: Contabilidade/Informes/Informes legais/Informes belgas/Listaxe de "
+#~ "empresas co CIF* Declaración periódica do IVE: Prepara un arquivo XML para a "
+#~ "declaración do IVE da compañía do usuario actualmente conectado.Ruta de "
+#~ "acceso: Contabilidade/Informes/Informes legais/Informes belgas/Declaración "
+#~ "periódica do IVE* Listaxe anual dos clientes suxeitos ó IVE: Prepara un "
+#~ "arquivo XML para a declaración do IVE da compañía principal do usuario "
+#~ "actualmente conectado. Baseado no exercicio fiscal.Ruta de acceso: "
+#~ "Contabilidade/Informes/Informes legais/Informes belgas/Listaxe anual de "
+#~ "clientes suxeitos ó IVE\n"
+#~ "\n"
+#~ "    "

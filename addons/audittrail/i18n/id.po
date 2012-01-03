@@ -6,23 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2009-11-09 13:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:36+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:04+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: audittrail
-#: model:ir.module.module,shortdesc:audittrail.module_meta_information
-msgid "Audit Trail"
-msgstr ""
-
-#. module: audittrail
-#: code:addons/audittrail/audittrail.py:81
+#: code:addons/audittrail/audittrail.py:75
 #, python-format
 msgid "WARNING: audittrail is not part of the pool"
 msgstr ""
@@ -36,6 +31,18 @@ msgstr ""
 #: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
+msgstr ""
+
+#. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is already a rule defined on this object\n"
+" You cannot define another: please edit the existing one."
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "Subscribed Rule"
 msgstr ""
 
 #. module: audittrail
@@ -209,25 +216,12 @@ msgid "Log Workflow"
 msgstr ""
 
 #. module: audittrail
-#: model:ir.module.module,description:audittrail.module_meta_information
-msgid ""
-"\n"
-"    This module gives the administrator the rights\n"
-"    to track every user operation on all the objects\n"
-"    of the system.\n"
-"\n"
-"    Administrator can subscribe rules for read,write and\n"
-"    delete on objects and can check logs.\n"
-"    "
-msgstr ""
-
-#. module: audittrail
 #: field:audittrail.rule,log_read:0
 msgid "Log Reads"
 msgstr ""
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:82
+#: code:addons/audittrail/audittrail.py:76
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr ""
@@ -321,6 +315,11 @@ msgid "AuditTrail Logs"
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "Draft  Rule"
+msgstr ""
+
+#. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
 msgstr ""
@@ -334,13 +333,6 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value : "
-msgstr ""
-
-#. module: audittrail
-#: sql_constraint:audittrail.rule:0
-msgid ""
-"There is a rule defined on this object\n"
-" You can not define other on the same!"
 msgstr ""
 
 #. module: audittrail

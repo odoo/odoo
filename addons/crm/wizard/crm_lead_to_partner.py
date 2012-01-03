@@ -21,11 +21,9 @@
 
 from osv import osv, fields
 from tools.translate import _
-import re
 
 class crm_lead2partner(osv.osv_memory):
     """ Converts lead to partner """
-
     _name = 'crm.lead2partner'
     _description = 'Lead to Partner'
 
@@ -35,176 +33,89 @@ class crm_lead2partner(osv.osv_memory):
                                     'Action', required=True),
         'partner_id': fields.many2one('res.partner', 'Partner'),
     }
-
     def view_init(self, cr, uid, fields, context=None):
         """
         This function checks for precondition before wizard executes
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
         """
-
-        lead_obj = self.pool.get('crm.lead')
+        if context is None:
+            context = {}
+        model = context.get('active_model')
+        model = self.pool.get(model)
         rec_ids = context and context.get('active_ids', [])
-        for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
-            if lead.partner_id:
+        for this in model.browse(cr, uid, rec_ids, context=context):
+            if this.partner_id:
                 raise osv.except_osv(_('Warning !'),
-                        _('A partner is already defined on this lead.'))
+                        _('A partner is already defined.'))
+
+    def _select_partner(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        lead = self.pool.get('crm.lead')
+        partner = self.pool.get('res.partner')
+        lead_ids = list(context and context.get('active_ids', []) or [])
+        if not len(lead_ids):
+            return False
+        this = lead.browse(cr, uid, lead_ids[0], context=context)
+        # Find partner address matches the email_from of the lead
+        res = lead.message_partner_by_email(cr, uid, this.email_from, context=context)
+        partner_id = res.get('partner_id', False)      
+        # Find partner name that matches the name of the lead
+        if not partner_id and this.partner_name:
+            partner_ids = partner.search(cr, uid, [('name', '=', this.partner_name)], context=context)
+            if partner_ids and len(partner_ids):
+               partner_id = partner_ids[0]
+        return partner_id
 
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        @return : default values of fields.
         """
+        res = super(crm_lead2partner, self).default_get(cr, uid, fields, context=context)        
+        partner_id = self._select_partner(cr, uid, context=context)
 
-        lead_obj = self.pool.get('crm.lead')
-        partner_obj = self.pool.get('res.partner')
-        partner_id = False
-
-        data = list(context and context.get('active_ids', []) or [])
-        res = super(crm_lead2partner, self).default_get(cr, uid, fields, context=context)
-        for lead in lead_obj.browse(cr, uid, data, context=context):
-            partner_ids = []
-            # Find partner address matches the email_from of the lead
-            email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from or '')
-            email = map(lambda x: "'" + x + "'", email)
-            if email:
-                cr.execute("""select id from res_partner_address
-                                where
-                                substring(email from '([^ ,<@]+@[^> ,]+)') in (%s)""" % (','.join(email)))
-                address_ids = map(lambda x: x[0], cr.fetchall())
-                if address_ids:
-                    partner_ids = partner_obj.search(cr, uid, [('address', 'in', address_ids)], context=context)
-                    
-            # Find partner name that matches the name of the lead
-            if not partner_ids and lead.partner_name:
-                partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
-                
-            partner_id = partner_ids and partner_ids[0] or False
+        if 'partner_id' in fields:
+            res.update({'partner_id': partner_id})
+        if 'action' in fields:
+            res.update({'action': partner_id and 'exist' or 'create'})
             
-            
-
-            if 'partner_id' in fields:
-                res.update({'partner_id': partner_id})
-            if 'action' in fields:
-                res.update({'action': partner_id and 'exist' or 'create'})
-            if 'opportunity_ids' in fields:
-                res.update({'opportunity_ids': data})
-
         return res
 
     def open_create_partner(self, cr, uid, ids, context=None):
         """
         This function Opens form of create partner.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Lead to Partner's IDs
-        @param context: A standard dictionary for contextual values
-
-        @return : Dictionary value for next form.
         """
-        if context is None:
-            context = {}
-
         view_obj = self.pool.get('ir.ui.view')
-        view_id = view_obj.search(cr, uid, [('model', '=', 'crm.lead2partner'), \
-                                     ('name', '=', 'crm.lead2partner.view')])
+        view_id = view_obj.search(cr, uid, [('model', '=', self._name), \
+                                     ('name', '=', self._name+'.view')])
         return {
             'view_mode': 'form',
             'view_type': 'form',
             'view_id': view_id or False,
-            'res_model': 'crm.lead2partner',
+            'res_model': self._name,
             'context': context,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            }
-
+        }
 
     def _create_partner(self, cr, uid, ids, context=None):
         """
         This function Creates partner based on action.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Lead to Partner's IDs
-        @param context: A standard dictionary for contextual values
-
-        @return : Dictionary {}.
         """
         if context is None:
             context = {}
-
-        lead_obj = self.pool.get('crm.lead')
-        partner_obj = self.pool.get('res.partner')
-        contact_obj = self.pool.get('res.partner.address')
-        partner_ids = []
-        partner_id = False
-        rec_ids = context and context.get('active_ids', [])
-
-        for data in self.browse(cr, uid, ids, context=context):
-            for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
-                if data.action == 'create':
-                    partner_id = partner_obj.create(cr, uid, {
-                        'name': lead.partner_name or lead.contact_name or lead.name,
-                        'user_id': lead.user_id.id,
-                        'comment': lead.description,
-                        'address': []
-                    })
-                    contact_obj.create(cr, uid, {
-                        'partner_id': partner_id,
-                        'name': lead.contact_name,
-                        'phone': lead.phone,
-                        'mobile': lead.mobile,
-                        'email': lead.email_from,
-                        'fax': lead.fax,
-                        'title': lead.title and lead.title.id or False,
-                        'function': lead.function,
-                        'street': lead.street,
-                        'street2': lead.street2,
-                        'zip': lead.zip,
-                        'city': lead.city,
-                        'country_id': lead.country_id and lead.country_id.id or False,
-                        'state_id': lead.state_id and lead.state_id.id or False,
-                    })
-
-                else:
-                    if data.partner_id:
-                        partner_id = data.partner_id.id
-                self.assign_partner(cr, uid, lead.id, partner_id)
-                partner_ids.append(partner_id)
-        return partner_ids
-
-
-    def assign_partner(self, cr, uid, lead_id, partner_id):
-        self.pool.get("crm.lead").write(cr, uid, [lead_id], {'partner_id' : partner_id})
-
+        lead = self.pool.get('crm.lead')
+        lead_ids = context and context.get('active_ids') or []
+        data = self.browse(cr, uid, ids, context=context)[0]
+        partner_id = data.partner_id and data.partner_id.id or False
+        partner_ids = lead.convert_partner(cr, uid, lead_ids, data.action, partner_id, context=context)
+        return partner_ids[lead_ids[0]]
 
     def make_partner(self, cr, uid, ids, context=None):
         """
         This function Makes partner based on action.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Lead to Partner's IDs
-        @param context: A standard dictionary for contextual values
-
-        @return : Dictionary value for created Partner form.
         """
-        if context is None:
-            context = {}
-
-        partner_ids = self._create_partner(cr, uid, ids, context=context)
-        return {'type': 'ir.actions.act_window_close'}
+        partner_id = self._create_partner(cr, uid, ids, context=context)
+        return self.pool.get('res.partner').redirect_partner_form(cr, uid, partner_id, context=context)
 
 crm_lead2partner()
 

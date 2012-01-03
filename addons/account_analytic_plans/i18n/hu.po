@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-02-09 11:58+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
 "<openerp@novotrade.hu>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:25+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:51+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -53,11 +53,6 @@ msgid "Analytic Plan"
 msgstr "Analitikus terv"
 
 #. module: account_analytic_plans
-#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
-msgid "Multiple-plans management in Analytic Accounting"
-msgstr "Többszörös tervek kezelése a vezetői számvitelben"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
 #: view:account.crossovered.analytic:0
 #: field:account.crossovered.analytic,journal_ids:0
@@ -71,7 +66,7 @@ msgid "Analytic Plan Line"
 msgstr "Analitikus tervsor"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:60
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
 msgid "User Error"
 msgstr "Felhasználói hiba"
@@ -102,9 +97,9 @@ msgid "Account2 Id"
 msgstr "2.gyűjtőkód azonosító"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Gyűjtőkód azonosító"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -112,9 +107,11 @@ msgid "Amount"
 msgstr "Összeg"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Code"
-msgstr "Kód"
+#: constraint:account.journal:0
+msgid ""
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -137,6 +134,16 @@ msgid "Bank Statement Line"
 msgstr "Bankkivonat sor"
 
 #. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid "Define your Analytic Plans"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Gyűjtőkód"
@@ -150,12 +157,6 @@ msgstr "A napló kódjának egyedinek kell lennie!"
 #: field:account.crossovered.analytic,ref:0
 msgid "Analytic Account Reference"
 msgstr "Gyűjtőkód hivatkozás"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr "Nem könyvelhet a vevő/szállító számlákra partner megadás nélkül"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
@@ -181,11 +182,17 @@ msgstr "Nyomtatás"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+#: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "Százalék"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Gyűjtőkód azonosító"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #, python-format
 msgid "A model having this name and code already exists !"
 msgstr "Egy ugyanilyen nevű és kódú modell már létezik!"
@@ -252,9 +259,11 @@ msgid "Start Date"
 msgstr "Kezdő dátum"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Company"
-msgstr "Vállalat"
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry must receive a value in its "
+"secondary currency"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -277,8 +286,8 @@ msgid "To Date"
 msgstr "Záró dátum"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:483
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "A(z) '%s' naplóhoz meg kell határoznia egy gyűjtőnaplót!"
@@ -294,82 +303,14 @@ msgid "analytic.plan.create.model.action"
 msgstr "analytic.plan.create.model.action"
 
 #. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account :"
 msgstr "Gyűjtőkód :"
-
-#. module: account_analytic_plans
-#: model:ir.module.module,description:account_analytic_plans.module_meta_information
-msgid ""
-"This module allows to use several analytic plans, according to the general "
-"journal,\n"
-"so that multiple analytic lines are created when the invoice or the entries\n"
-"are confirmed.\n"
-"\n"
-"For example, you can define the following analytic structure:\n"
-"  Projects\n"
-"      Project 1\n"
-"          SubProj 1.1\n"
-"          SubProj 1.2\n"
-"      Project 2\n"
-"  Salesman\n"
-"      Eric\n"
-"      Fabien\n"
-"\n"
-"Here, we have two plans: Projects and Salesman. An invoice line must\n"
-"be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-"Fabien. The amount can also be split. The following example is for\n"
-"an invoice that touches the two subproject and assigned to one salesman:\n"
-"\n"
-"Plan1:\n"
-"    SubProject 1.1 : 50%\n"
-"    SubProject 1.2 : 50%\n"
-"Plan2:\n"
-"    Eric: 100%\n"
-"\n"
-"So when this line of invoice will be confirmed, it will generate 3 analytic "
-"lines,\n"
-"for one account entry.\n"
-"The analytic plan validates the minimum and maximum percentage at the time "
-"of creation\n"
-"of distribution models.\n"
-"        "
-msgstr ""
-"Ez a modul lehetővé teszi több analitikus terv használatát a főkönyvi "
-"könyvelés\n"
-"során, hogy több gyűjtőkód tétel készüljön, amikor a számlák vagy a tételek\n"
-"könyvelésre kerülnek. \n"
-"\n"
-"Például meghatározhatja a következő gyűjtőkód struktúrát:\n"
-"  Projektek\n"
-"      1. projekt\n"
-"          1.1 alprojekt\n"
-"          1.2 alprojekt\n"
-"      2. projekt\n"
-"  Üzletkötő\n"
-"      Erik\n"
-"      Fábián\n"
-"\n"
-"Itt két tervünk van: a Projektek és az Üzletkötő. Egy számlasornak képesnek "
-"kell\n"
-"lennie gyűjtőkód tételeket írni mindkét tervbe: pl. az 1.1 alprojektbe és a "
-"Fábiánba.\n"
-"A számlasor összegét tehát szét kell osztani. Az alábbi példában legyen egy\n"
-"számla, amely két alprojektet érint és egy üzletkötőhöz van rendelve:\n"
-"\n"
-"1. terv:\n"
-"    1.1 alprojekt: 50%\n"
-"    1.2 alprojekt: 50%\n"
-"2. terv:\n"
-"    Erik: 100%\n"
-"\n"
-"Így amikor a számla ezen sora jóváhagyásra kerül, a rendszer 3 gyűjtőkód "
-"tételt\n"
-"fog előállítani egy könyvelési tételre.\n"
-"Az analitikus terv meghatározza a minimális és maximális százalékot a "
-"felosztási\n"
-"modellek létrehozásának időpontjában.\n"
-"        "
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -402,6 +343,11 @@ msgid "Company must be same for its related account and period."
 msgstr "A kapcsolt számla és az időszak vállalatának ugyanannak kell lennie."
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "The date of your Journal Entry is not in the defined period!"
+msgstr ""
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
 msgstr "Min. engedélyezett (%)"
@@ -412,7 +358,7 @@ msgid "Root account of this plan."
 msgstr "A terv gyökér gyűjtőkódja."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
@@ -441,8 +387,8 @@ msgid "Print Crossovered Analytic"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:483
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Nincs gyűjtőnapló!"
@@ -456,6 +402,11 @@ msgstr "Bankkivonat"
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
 msgstr "3.gyűjtőkód azonosító"
+
+#. module: account_analytic_plans
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -479,7 +430,7 @@ msgid "Analytic Distribution Lines"
 msgstr "Analitikus felosztás sorok"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "The Total Should be Between %s and %s"
 msgstr "A végösszegnek %s és %s között kellene lennie!"
@@ -531,6 +482,11 @@ msgid "Journal"
 msgstr "Napló"
 
 #. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Code"
+msgstr "Kód"
+
+#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
 msgid "analytic.plan.create.model"
 msgstr "analytic.plan.create.model"
@@ -546,6 +502,19 @@ msgid "Distribution Models"
 msgstr "Felosztási modellek"
 
 #. module: account_analytic_plans
+#: model:ir.actions.act_window,help:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid ""
+"To setup a multiple analytic plans environment, you must define the root "
+"analytic accounts for each plan set. Then, you must attach a plan set to "
+"your account journals."
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr "Vállalat"
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
 msgstr "Sorszám"
@@ -556,7 +525,7 @@ msgid "The name of the journal must be unique per company !"
 msgstr "A napló nevének egyedinek kell lennie!"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "Value Error"
 msgstr "Értékhiba"
@@ -565,3 +534,77 @@ msgstr "Értékhiba"
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
 msgstr "Nem könyvelhet gyűjtő típusú számlára."
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Ez a modul lehetővé teszi több analitikus terv használatát a főkönyvi "
+#~ "könyvelés\n"
+#~ "során, hogy több gyűjtőkód tétel készüljön, amikor a számlák vagy a tételek\n"
+#~ "könyvelésre kerülnek. \n"
+#~ "\n"
+#~ "Például meghatározhatja a következő gyűjtőkód struktúrát:\n"
+#~ "  Projektek\n"
+#~ "      1. projekt\n"
+#~ "          1.1 alprojekt\n"
+#~ "          1.2 alprojekt\n"
+#~ "      2. projekt\n"
+#~ "  Üzletkötő\n"
+#~ "      Erik\n"
+#~ "      Fábián\n"
+#~ "\n"
+#~ "Itt két tervünk van: a Projektek és az Üzletkötő. Egy számlasornak képesnek "
+#~ "kell\n"
+#~ "lennie gyűjtőkód tételeket írni mindkét tervbe: pl. az 1.1 alprojektbe és a "
+#~ "Fábiánba.\n"
+#~ "A számlasor összegét tehát szét kell osztani. Az alábbi példában legyen egy\n"
+#~ "számla, amely két alprojektet érint és egy üzletkötőhöz van rendelve:\n"
+#~ "\n"
+#~ "1. terv:\n"
+#~ "    1.1 alprojekt: 50%\n"
+#~ "    1.2 alprojekt: 50%\n"
+#~ "2. terv:\n"
+#~ "    Erik: 100%\n"
+#~ "\n"
+#~ "Így amikor a számla ezen sora jóváhagyásra kerül, a rendszer 3 gyűjtőkód "
+#~ "tételt\n"
+#~ "fog előállítani egy könyvelési tételre.\n"
+#~ "Az analitikus terv meghatározza a minimális és maximális százalékot a "
+#~ "felosztási\n"
+#~ "modellek létrehozásának időpontjában.\n"
+#~ "        "
+
+#~ msgid "Multiple-plans management in Analytic Accounting"
+#~ msgstr "Többszörös tervek kezelése a vezetői számvitelben"

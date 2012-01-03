@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:43+0000\n"
 "PO-Revision-Date: 2011-01-18 04:54+0000\n"
 "Last-Translator: ryanlin <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:49+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:19+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -29,6 +29,13 @@ msgstr "如果“有效”字段设为false，它对信息进行隐藏但不删�
 #: field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
 msgstr "必备条件"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.source:0
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
+msgid "Sources of Applicants"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,delay_open:0
@@ -46,11 +53,20 @@ msgid "Group By..."
 msgstr "分组..."
 
 #. module: hr_recruitment
+#: field:hr.applicant,user_email:0
+msgid "User Email"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Filter and view on next actions and date"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,department_id:0
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,department_id:0
-#: field:hr.recruitment.stage,department_id:0
 msgid "Department"
 msgstr "部门"
 
@@ -60,9 +76,19 @@ msgid "Next Action Date"
 msgstr "下一操作日期"
 
 #. module: hr_recruitment
+#: field:hr.applicant,salary_expected_extra:0
+msgid "Expected Salary Extra"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Jobs"
 msgstr "职务"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Pending Jobs"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,company_id:0
@@ -72,9 +98,14 @@ msgid "Company"
 msgstr "公司"
 
 #. module: hr_recruitment
-#: field:hr.applicant,email_cc:0
-msgid "Watchers Emails"
-msgstr "关注者的电子信箱"
+#: view:hired.employee:0
+msgid "No"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Job"
+msgstr "职位"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.partner.create,close:0
@@ -110,6 +141,11 @@ msgid "Day"
 msgstr "天数"
 
 #. module: hr_recruitment
+#: field:hr.applicant,reference:0
+msgid "Refered By"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Contract Data"
 msgstr "合同信息"
@@ -118,6 +154,16 @@ msgstr "合同信息"
 #: view:hr.applicant:0
 msgid "Add Internal Note"
 msgstr "添加内部备注"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Refuse"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
+msgid "Master Degree"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,partner_mobile:0
@@ -140,9 +186,10 @@ msgid "Next Actions"
 msgstr "下一操作"
 
 #. module: hr_recruitment
-#: model:crm.case.categ,name:hr_recruitment.categ_job2
-msgid "Junior Developer"
-msgstr "初级开发人员"
+#: field:hr.applicant,salary_expected:0
+#: view:hr.recruitment.report:0
+msgid "Expected Salary"
+msgstr "期望的薪酬"
 
 #. module: hr_recruitment
 #: field:hr.applicant,job_id:0
@@ -156,19 +203,9 @@ msgid "Graduate"
 msgstr "毕业生"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
-msgid "Initial Jobs Demand"
-msgstr "刚开始"
-
-#. module: hr_recruitment
-#: field:hr.applicant,partner_address_id:0
-msgid "Partner Contact"
-msgstr "业务伙伴联系方式"
-
-#. module: hr_recruitment
-#: field:hr.applicant,reference:0
-msgid "Reference"
-msgstr "单号"
+#: field:hr.applicant,color:0
+msgid "Color Index"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:board.board:0
@@ -183,9 +220,16 @@ msgid "My Recruitment"
 msgstr "我的招聘"
 
 #. module: hr_recruitment
-#: field:hr.applicant,title_action:0
-msgid "Next Action"
-msgstr "下一操作"
+#: field:hr.job,survey_id:0
+msgid "Interview Form"
+msgstr ""
+
+#. module: hr_recruitment
+#: help:hr.job,survey_id:0
+msgid ""
+"Choose an interview form for this job position and you will be able to "
+"print/answer this interview from all applicants who apply for this job"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_recruitment
@@ -193,16 +237,20 @@ msgid "Recruitment"
 msgstr "招聘"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:436
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop:0
 msgid "Salary Proposed"
 msgstr "提议薪酬"
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_id:0
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,partner_id:0
-msgid "Partner"
-msgstr "业务伙伴"
+#: view:hr.applicant:0
+msgid "Change Color"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -216,13 +264,24 @@ msgid "Availability"
 msgstr "有效"
 
 #. module: hr_recruitment
+#: help:hr.recruitment.stage,department_id:0
+msgid ""
+"Stages of the recruitment process may be different per department. If this "
+"stage is common to all departments, keep tempy this field."
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Previous"
 msgstr "上一个"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:107
-#: view:hr.applicant:0
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
+msgid "Source of Applicants"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:115
 #, python-format
 msgid "Phone Call"
 msgstr "电话拜访"
@@ -238,6 +297,22 @@ msgid "Recruitments Statistics"
 msgstr "招聘统计"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:477
+#, python-format
+msgid "Changed Stage to: %s"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Hire"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+msgid "Hired employees"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Next"
 msgstr "下一个"
@@ -246,6 +321,12 @@ msgstr "下一个"
 #: model:ir.model,name:hr_recruitment.model_hr_job
 msgid "Job Description"
 msgstr "职位描述"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+#: field:hr.applicant,source_id:0
+msgid "Source"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -282,6 +363,11 @@ msgid "Available"
 msgstr "有效的"
 
 #. module: hr_recruitment
+#: field:hr.applicant,title_action:0
+msgid "Next Action"
+msgstr "下一操作"
+
+#. module: hr_recruitment
 #: selection:hr.applicant,priority:0
 #: selection:hr.recruitment.report,priority:0
 msgid "Good"
@@ -309,6 +395,12 @@ msgid "Creation Date"
 msgstr "创建日期"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_hired_employee
+#: model:ir.model,name:hr_recruitment.model_hired_employee
+msgid "Create Employee"
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.recruitment.job2phonecall,deadline:0
 msgid "Planned Date"
 msgstr "计划的日期"
@@ -321,9 +413,14 @@ msgid "Appreciation"
 msgstr "评价"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Job"
-msgstr "职位"
+msgid "Print Interview"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -335,20 +432,22 @@ msgid "Stage"
 msgstr "阶段"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
-msgid "Second Interview"
-msgstr "第二次面谈"
-
-#. module: hr_recruitment
-#: field:hr.recruitment.report,salary_exp:0
-msgid "Salary Expected"
-msgstr "薪酬期望"
-
-#. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
 #: view:hr.recruitment.report:0
-msgid "Expected Salary"
-msgstr "期望的薪酬"
+#: selection:hr.recruitment.report,state:0
+msgid "Pending"
+msgstr "待处理"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
+msgid "Recruitment / Applicants Stages"
+msgstr "招聘 / 申请阶段"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
+msgid "Doctoral Degree"
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -359,6 +458,11 @@ msgstr "7月"
 #: view:hr.applicant:0
 msgid "Subject"
 msgstr "主题"
+
+#. module: hr_recruitment
+#: field:hr.applicant,email_cc:0
+msgid "Watchers Emails"
+msgstr "关注者的电子信箱"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -378,14 +482,22 @@ msgid "Dates"
 msgstr "日期"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
+msgid ""
+" Check if the following stages are matching your recruitment process. Don't "
+"forget to specify the department if your recruitment process is different "
+"according to the job position."
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "    Month-1    "
 msgstr "    上月    "
 
 #. module: hr_recruitment
-#: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
-msgid " > Bac +5"
-msgstr " > Bac +5"
+#: field:hr.recruitment.report,salary_exp:0
+msgid "Salary Expected"
+msgstr "薪酬期望"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
@@ -403,9 +515,21 @@ msgid "Contact"
 msgstr "联系方式"
 
 #. module: hr_recruitment
+#: help:hr.applicant,salary_expected_extra:0
+msgid "Salary Expected by Applicant, extra advantages"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Qualification"
 msgstr "资格"
+
+#. module: hr_recruitment
+#: field:hr.applicant,partner_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,partner_id:0
+msgid "Partner"
+msgstr "业务伙伴"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -426,8 +550,23 @@ msgstr "阶段"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
+msgid "Draft recruitment"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Delete"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
 msgid "In progress"
 msgstr "进行中"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
+msgid "Review Recruitment Stages"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -450,9 +589,25 @@ msgid "December"
 msgstr "12月"
 
 #. module: hr_recruitment
-#: model:ir.module.module,shortdesc:hr_recruitment.module_meta_information
-msgid "HR - Recruitement"
-msgstr "人力资源 - 招聘"
+#: view:hr.recruitment.report:0
+msgid "Recruitment performed in current year"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+msgid "Recruitment during last month"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,month:0
+msgid "Month"
+msgstr "月份"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Unassigned Recruitments"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -470,15 +625,20 @@ msgid "Update Date"
 msgstr "更新日期"
 
 #. module: hr_recruitment
+#: view:hired.employee:0
+msgid "Yes"
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.applicant,salary_proposed:0
 #: view:hr.recruitment.report:0
 msgid "Proposed Salary"
 msgstr "提议薪酬"
 
 #. module: hr_recruitment
-#: model:crm.case.categ,name:hr_recruitment.categ_job1
-msgid "Salesman"
-msgstr "业务员"
+#: view:hr.applicant:0
+msgid "Schedule Meeting"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -533,12 +693,22 @@ msgid "Salary Expected by Applicant"
 msgstr "申请人要求的薪酬"
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "All Initial Jobs"
+msgstr ""
+
+#. module: hr_recruitment
 #: help:hr.applicant,email_cc:0
 msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr "这些邮箱地址将添加到所有接收的发送邮件的抄送字段，用逗号分隔多个邮件地址。"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
+msgid "Degrees"
+msgstr "学历"
 
 #. module: hr_recruitment
 #: field:hr.applicant,date_closed:0
@@ -572,12 +742,10 @@ msgid "Meeting"
 msgstr "会议"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
-#: selection:hr.recruitment.report,state:0
-msgid "Pending"
-msgstr "待处理"
+#: code:addons/hr_recruitment/hr_recruitment.py:347
+#, python-format
+msgid "No Subject"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -616,23 +784,8 @@ msgstr "完整抄送"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
-msgid "October"
-msgstr "10月"
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
 msgid "June"
 msgstr "6月"
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
-msgid "Applicant Stages"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job7
-msgid "Refused by Company"
-msgstr "公司拒绝"
 
 #. module: hr_recruitment
 #: field:hr.applicant,day_close:0
@@ -671,9 +824,9 @@ msgid "Response"
 msgstr "回复"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
-msgid "Licenced"
-msgstr "证书"
+#: field:hr.recruitment.stage,department_id:0
+msgid "Specific to a Department"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
@@ -686,6 +839,11 @@ msgstr "平均提议薪酬"
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_job2phonecall
 msgid "Schedule Phone Call"
 msgstr "电话日程表"
+
+#. module: hr_recruitment
+#: field:hr.applicant,salary_proposed_extra:0
+msgid "Proposed Salary Extra"
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -720,6 +878,11 @@ msgid "Are you sure you want to create a partner based on this job request ?"
 msgstr "你确定建立这业务伙伴的职位空缺？"
 
 #. module: hr_recruitment
+#: view:hired.employee:0
+msgid "Would you like to create an employee ?"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
 "From this menu you can track applicants in the recruitment process and "
@@ -739,9 +902,28 @@ msgid "History"
 msgstr "日志"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Attachments"
-msgstr "附件"
+#: view:hr.recruitment.report:0
+msgid "Recruitment performed in current month"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_form_installer
+msgid ""
+"Check if the following stages are matching your recruitment process. Don't "
+"forget to specify the department if your recruitment process is different "
+"according to the job position."
+msgstr ""
+
+#. module: hr_recruitment
+#: field:hr.applicant,partner_address_id:0
+msgid "Partner Contact"
+msgstr "业务伙伴联系方式"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:436
+#, python-format
+msgid "You must define Applied Job for Applicant !"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
@@ -757,6 +939,23 @@ msgid "State"
 msgstr "状态"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.source_website_company
+msgid "Company Website"
+msgstr ""
+
+#. module: hr_recruitment
+#: sql_constraint:hr.recruitment.degree:0
+msgid "The name of the Degree of Recruitment must be unique!"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
+msgid "Year"
+msgstr "年"
+
+#. module: hr_recruitment
+#: view:hired.employee:0
 #: view:hr.recruitment.job2phonecall:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
@@ -779,6 +978,11 @@ msgid "A partner is already existing with the same name."
 msgstr "一个业务伙伴已经有相同的名称。"
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Subject / Applicant"
+msgstr ""
+
+#. module: hr_recruitment
 #: help:hr.recruitment.degree,sequence:0
 msgid "Gives the sequence order when displaying a list of degrees."
 msgstr "定义一个显示学历列表的序列"
@@ -798,34 +1002,19 @@ msgid "Recruitment Analysis"
 msgstr "招聘分析"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Current"
-msgstr "当前的"
-
-#. module: hr_recruitment
-#: model:ir.module.module,description:hr_recruitment.module_meta_information
-msgid ""
-"\n"
-"Manages job positions and the recruitement process. It's integrated with "
-"the\n"
-"survey module to allow you to define interview for different jobs.\n"
-"\n"
-"This module is integrated with the mail gateway to automatically tracks "
-"email\n"
-"sent to jobs@YOURCOMPANY.com. It's also integrated with the document "
-"management\n"
-"system to store and search in your CV base.\n"
-"    "
+#: view:hired.employee:0
+msgid "Create New Employee"
 msgstr ""
-"\n"
-"管理职位和招聘的过程。它集成了调查模块允许您定义不同的职位面试。\n"
-"这模块集成了邮件网关自动跟踪邮件发送到 jobs@YOURCOMPANY.com，它也集成了文档管理系统储存和搜索你的简历附件。\n"
-"    "
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Details"
-msgstr "详细信息"
+#: model:hr.recruitment.source,name:hr_recruitment.source_linkedin
+msgid "LinkedIn"
+msgstr ""
+
+#. module: hr_recruitment
+#: selection:hr.recruitment.report,month:0
+msgid "October"
+msgstr "10月"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -843,10 +1032,9 @@ msgid "Interview"
 msgstr "面谈"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,month:0
-msgid "Month"
-msgstr "月份"
+#: field:hr.recruitment.source,name:0
+msgid "Source Name"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,description:0
@@ -864,30 +1052,29 @@ msgid "Contract Signed"
 msgstr "签订合同"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: model:hr.recruitment.source,name:hr_recruitment.source_word
+msgid "Word of Mouth"
+msgstr ""
+
+#. module: hr_recruitment
 #: selection:hr.applicant,state:0
 #: selection:hr.recruitment.report,state:0
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
 msgid "Refused"
 msgstr "已拒绝"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:412
+#: code:addons/hr_recruitment/hr_recruitment.py:414
 #, python-format
 msgid "Applicant '%s' is being hired."
 msgstr "申请人 '%s'被录用。"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
 #: selection:hr.applicant,state:0
 #: view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
 msgid "Hired"
 msgstr "录用"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
-msgid "Refused by Employee"
-msgstr "被申请人拒绝"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -899,6 +1086,11 @@ msgstr "平均"
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Degree of Recruitment"
 msgstr "招聘的学历"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Open Jobs"
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -913,6 +1105,16 @@ msgid "Name"
 msgstr "姓名"
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Edit"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "第二次面谈"
+
+#. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
 msgid "Create Partner from job application"
 msgstr "建立业务伙伴的职位申请"
@@ -923,9 +1125,29 @@ msgid "April"
 msgstr "4月"
 
 #. module: hr_recruitment
-#: model:crm.case.section,name:hr_recruitment.section_hr_department
-msgid "HR Department"
-msgstr "人力资源部门"
+#: view:hr.recruitment.report:0
+msgid "Pending recruitment"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.source_monster
+msgid "Monster"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_job
+msgid "Job Positions"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+msgid "In progress recruitment"
+msgstr ""
+
+#. module: hr_recruitment
+#: sql_constraint:hr.job:0
+msgid "The name of the job position must be unique per company!"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.recruitment.degree,sequence:0
@@ -934,21 +1156,25 @@ msgid "Sequence"
 msgstr "序列"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
+msgid "Bachelor Degree"
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.recruitment.job2phonecall,user_id:0
 msgid "Assign To"
 msgstr "分配给"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:396
+#: code:addons/hr_recruitment/hr_recruitment.py:407
 #, python-format
 msgid "The job request '%s' has been set 'in progress'."
 msgstr "这职位空缺 '%s'已被定义为 “进行中”"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,year:0
-msgid "Year"
-msgstr "年"
+#: help:hr.applicant,salary_proposed_extra:0
+msgid "Salary Proposed by the Organisation, extra advantages"
+msgstr ""
 
 #. module: hr_recruitment
 #: help:hr.recruitment.report,delay_close:0
@@ -958,6 +1184,62 @@ msgstr "剩余天数"
 
 #. module: hr_recruitment
 #: field:hr.applicant,survey:0
-#: field:hr.job,survey_id:0
 msgid "Survey"
 msgstr "问卷"
+
+#~ msgid "HR - Recruitement"
+#~ msgstr "人力资源 - 招聘"
+
+#~ msgid "Salesman"
+#~ msgstr "业务员"
+
+#~ msgid "Refused by Company"
+#~ msgstr "公司拒绝"
+
+#~ msgid "Attachments"
+#~ msgstr "附件"
+
+#~ msgid "Current"
+#~ msgstr "当前的"
+
+#~ msgid "Details"
+#~ msgstr "详细信息"
+
+#~ msgid "Refused by Employee"
+#~ msgstr "被申请人拒绝"
+
+#~ msgid "HR Department"
+#~ msgstr "人力资源部门"
+
+#~ msgid " > Bac +5"
+#~ msgstr " > Bac +5"
+
+#~ msgid "Initial Jobs Demand"
+#~ msgstr "刚开始"
+
+#~ msgid "Reference"
+#~ msgstr "单号"
+
+#~ msgid "Junior Developer"
+#~ msgstr "初级开发人员"
+
+#~ msgid "Licenced"
+#~ msgstr "证书"
+
+#~ msgid ""
+#~ "\n"
+#~ "Manages job positions and the recruitement process. It's integrated with "
+#~ "the\n"
+#~ "survey module to allow you to define interview for different jobs.\n"
+#~ "\n"
+#~ "This module is integrated with the mail gateway to automatically tracks "
+#~ "email\n"
+#~ "sent to jobs@YOURCOMPANY.com. It's also integrated with the document "
+#~ "management\n"
+#~ "system to store and search in your CV base.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "管理职位和招聘的过程。它集成了调查模块允许您定义不同的职位面试。\n"
+#~ "这模块集成了邮件网关自动跟踪邮件发送到 jobs@YOURCOMPANY.com，它也集成了文档管理系统储存和搜索你的简历附件。\n"
+#~ "    "

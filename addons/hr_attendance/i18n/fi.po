@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-09-09 07:20+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:37+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:08+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -62,7 +62,7 @@ msgid "Print Attendance Report Error"
 msgstr "Tulosta läsnäoloraporttien virheet"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:156
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
 #, python-format
 msgid "The sign-out date must be in the past"
 msgstr "Uloskirjautumispäivän tulee olla menneisyydessä"
@@ -121,15 +121,9 @@ msgid "Define attendance reason"
 msgstr "Määrittle läsnäolon syy"
 
 #. module: hr_attendance
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
-msgstr "Virhe! Osastoa, jolla työntekijä on esimiehenä, ei voi valita."
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-msgid "Attendances By Month"
-msgstr "Läsnäolot kuukausittain"
+#: field:hr.sign.in.out,state:0
+msgid "Current state"
+msgstr "Nykyinen tila"
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,name:0
@@ -144,10 +138,10 @@ msgid "Attendance Reasons"
 msgstr "Läsnäolon syyt"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:156
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:162
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:169
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
 #, python-format
 msgid "UserError"
 msgstr "Käyttäjävirhe"
@@ -170,20 +164,23 @@ msgid "Warning"
 msgstr "Varoitus"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:169
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
 #, python-format
 msgid "The Sign-in date must be in the past"
 msgstr "Sisäänkirjautumispäivän tulee olla menneisyydessä"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:162
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
 #, python-format
 msgid "A sign-in must be right after a sign-out !"
 msgstr "Sisäänkirjauksen tulee olla heti uloskirjauksen jälkeen !"
 
 #. module: hr_attendance
 #: field:hr.employee,state:0
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
 msgid "Attendance"
 msgstr "Läsnäolo"
 
@@ -195,6 +192,7 @@ msgstr "Viive korkeintaan (min.)"
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
 msgid "Print"
 msgstr "Tulosta"
 
@@ -204,13 +202,8 @@ msgid "Hr Attendance Search"
 msgstr "HR läsnäolo haku"
 
 #. module: hr_attendance
-#: model:ir.module.module,description:hr_attendance.module_meta_information
-msgid ""
-"\n"
-"    This module aims to manage employee's attendances.\n"
-"    Keeps account of the attendances of the employees on the basis of the\n"
-"    actions(Sign in/Sign out) performed by them.\n"
-"       "
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
+msgid "Attendances By Week"
 msgstr ""
 
 #. module: hr_attendance
@@ -273,12 +266,22 @@ msgid "Month"
 msgstr "Kuukausi"
 
 #. module: hr_attendance
+#: field:hr.action.reason,action_type:0
+msgid "Action Type"
+msgstr ""
+
+#. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid ""
 "(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
 "(*) negatiivine viive tarkoittaa että työntekijä oli töissä enemmän kuin oli "
 "syöttänyt tunteja"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "My Attendance"
+msgstr ""
 
 #. module: hr_attendance
 #: help:hr.attendance,action_desc:0
@@ -299,9 +302,9 @@ msgid "Sign In Sign Out"
 msgstr "Kirjaudu sisään - Kirjaudu ulos"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:103
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:125
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:141
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:105
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:129
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:146
 #: view:hr.sign.in.out:0
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_sigh_in_out
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_sigh_in_out
@@ -315,12 +318,17 @@ msgid "hr.sign.out.ask"
 msgstr ""
 
 #. module: hr_attendance
+#: view:hr.attendance.week:0
+msgid "Print Attendance Report Weekly"
+msgstr ""
+
+#. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "August"
 msgstr "Elokuu"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
 #, python-format
 msgid "A sign-out must be right after a sign-in !"
 msgstr "Uloskirjautumisen tulee seurata heti sisäänkirjausta !"
@@ -334,11 +342,6 @@ msgstr "Kesäkuu"
 #: model:ir.model,name:hr_attendance.model_hr_attendance_error
 msgid "Print Error Attendance Report"
 msgstr "Tulosta läsnäolon virheraportti"
-
-#. module: hr_attendance
-#: model:ir.module.module,shortdesc:hr_attendance.module_meta_information
-msgid "Attendances Of Employees"
-msgstr "Työntekijöiden paikallaolot"
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
@@ -359,11 +362,6 @@ msgstr "Virhe! Et voi luoda itseään toistavaa työntekijähierarkiaa."
 #: selection:hr.attendance.month,month:0
 msgid "October"
 msgstr "Lokakuu"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "My Attendances"
-msgstr "Omat läsnäolot"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -408,16 +406,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.sign.in.out,emp_id:0
-msgid "Employee ID"
-msgstr "Työntekijän tunnus"
-
-#. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
 msgid "Print Week Attendance Report"
 msgstr "Tulosta viikon läsnäoloraportti"
 
 #. module: hr_attendance
+#: field:hr.sign.in.out,emp_id:0
 #: field:hr.sign.in.out.ask,emp_id:0
 msgid "Empoyee ID"
 msgstr "Työntekijän tunnus"
@@ -425,6 +419,7 @@ msgstr "Työntekijän tunnus"
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Cancel"
@@ -486,13 +481,6 @@ msgid "Date Recorded"
 msgstr "Päiväys tallennettu"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
-msgid "Attendances"
-msgstr "Läsnäolot"
-
-#. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "May"
 msgstr "Toukokuu"
@@ -533,19 +521,16 @@ msgid "February"
 msgstr "Helmikuu"
 
 #. module: hr_attendance
-#: field:hr.action.reason,action_type:0
-msgid "Action's type"
-msgstr "Tapahtuman tyyppi"
-
-#. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Employee attendances"
 msgstr "Työntekijöiden paikallaolot"
 
 #. module: hr_attendance
-#: field:hr.sign.in.out,state:0
-msgid "Current state"
-msgstr "Nykyinen tila"
+#: code:addons/hr_attendance/report/attendance_by_month.py:184
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
+#, python-format
+msgid "Attendances By Month"
+msgstr "Läsnäolot kuukausittain"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -597,6 +582,9 @@ msgstr ""
 #~ msgid "Print Timesheet by week"
 #~ msgstr "Tulosta viikon aikataulu"
 
+#~ msgid "Attendances Of Employees"
+#~ msgstr "Työntekijöiden paikallaolot"
+
 #~ msgid "Print Timesheet by month"
 #~ msgstr "Tulosta kuukausittainen aikataulu"
 
@@ -606,6 +594,12 @@ msgstr ""
 #~ msgstr ""
 #~ "Et kirjautunut ulos edellisen kerran. Anna päivämäärä ja aika jolloin "
 #~ "kirjauduit ulos."
+
+#~ msgid "Attendances"
+#~ msgstr "Läsnäolot"
+
+#~ msgid "Action's type"
+#~ msgstr "Tapahtuman tyyppi"
 
 #~ msgid "Select a starting and a end date"
 #~ msgstr "Valitse aloitus -ja päättymispäivämäärä"
@@ -619,3 +613,13 @@ msgstr ""
 
 #~ msgid "Print Attendance Report"
 #~ msgstr "Tulosta läsnäoloraportti"
+
+#~ msgid ""
+#~ "Error ! You cannot select a department for which the employee is the manager."
+#~ msgstr "Virhe! Osastoa, jolla työntekijä on esimiehenä, ei voi valita."
+
+#~ msgid "My Attendances"
+#~ msgstr "Omat läsnäolot"
+
+#~ msgid "Employee ID"
+#~ msgstr "Työntekijän tunnus"

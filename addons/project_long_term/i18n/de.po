@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-12 18:37+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,18 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:53+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:24+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: project_long_term
-#: model:ir.module.module,shortdesc:project_long_term.module_meta_information
-msgid "Long Term Project Management"
-msgstr "Management von Langzeit Projekten"
-
-#. module: project_long_term
-#: view:project.compute.phases:0
-msgid "Compute Scheduling of Phases"
-msgstr "Berechne Projektphasen"
+#: model:ir.actions.act_window,name:project_long_term.act_project_phases
+msgid "Phases"
+msgstr "Phasen"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -39,15 +34,20 @@ msgid "Project's Tasks"
 msgstr "Projekt Aufgaben"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_project_phases
-msgid "Phases"
-msgstr "Phasen"
-
-#. module: project_long_term
 #: view:project.phase:0
-#: view:project.resource.allocation:0
+#: view:project.user.allocation:0
 msgid "Group By..."
 msgstr "Gruppierung..."
+
+#. module: project_long_term
+#: field:project.phase,user_ids:0
+msgid "Assigned Users"
+msgstr ""
+
+#. module: project_long_term
+#: field:project.phase,progress:0
+msgid "Progress"
+msgstr ""
 
 #. module: project_long_term
 #: constraint:project.project:0
@@ -55,10 +55,9 @@ msgid "Error! project start-date must be lower then project end-date."
 msgstr "Fehler ! Projekt Beginn muss vor dem Ende Datum liegen."
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
-#: view:project.resource.allocation:0
-msgid "Resources Allocation"
-msgstr "Ressourcenaufteilung"
+#: view:project.phase:0
+msgid "In Progress Phases"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -71,58 +70,9 @@ msgid "Schedule"
 msgstr "Zeitplanung"
 
 #. module: project_long_term
-#: model:ir.module.module,description:project_long_term.module_meta_information
-msgid ""
-"\n"
-"\n"
-"        Long Term Project management module that tracks planning, "
-"scheduling, resources allocation.\n"
-"        Mainly used with Big project management.\n"
-"            - Project Phases will be maintained by Manager of the project\n"
-"            - Compute Phase Scheduling: Compute start date and end date of "
-"the phases which are in draft,open and pending state of the project given.\n"
-"                                        If no project given then all the "
-"draft,open and pending state phases will be taken\n"
-"            - Compute Task Scheduling: This works same as the scheduler "
-"button on project.phase. It takes the project as argument and computes all "
-"the open,draft and pending tasks\n"
-"            - Schedule Tasks: All the tasks which are in draft,pending and "
-"open state are scheduled with taking the phase's start date\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"\n"
-"        Das Projekt Management Module von Langzeit Projekten umfasst die "
-"zeitliche Planung, Planung, Terminierung sowie Zuweisung von (Personal-) "
-"Ressourcen.\n"
-"        Hauptsächlich wird es in grösseren Langzeit - Projekten benötigt.\n"
-"            - Projekt Phasen werden durch den Projektmanager erstellt und "
-"gemanagt.\n"
-"            - Berechnung der Terminierung v. Projektphasen:  Berechnung von "
-"Start und Ende Datum der Phasen die durch die verschiedenen Stadien Entwurf, "
-"Offen oder Im Wartezustand gekennzeichnet sind.\n"
-"       Wenn kein bestimmtes Projekt vorgegeben ist, werden nur die Stadien "
-"Entwurf, Offen, Im Wartezustand herangezogen.\n"
-"            - Berechnung der Aufgaben Terminierung: Dieses funktioniert in "
-"gleicher Weise wie der Klick auf den Button bei den einzelnen Projektphasen. "
-"Herangezogen wird das Projekt als solches, berechnet werden alle Aufgaben "
-"der Stadien Offen,Entwurf und Im Wartezustand.\n"
-"            - Terminiere Aufgaben: Alle Aufgaben in den Stadien Entwurf, Im "
-"Wartezustand und Offen werden ausgehend vom Start Datum der Phasen "
-"berechnet.\n"
-"\n"
-"    "
-
-#. module: project_long_term
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
 msgstr "Fehler ! Sie können keine rekursiven Aufgaben definieren."
-
-#. module: project_long_term
-#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-msgid "Resource Allocations"
-msgstr "Zuweisung Ressourcen"
 
 #. module: project_long_term
 #: constraint:project.project:0
@@ -130,15 +80,31 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr "Fehler ! Sie können keine Eskalation in dasselbe Projekt vornehmen!"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:128
+#: code:addons/project_long_term/project_long_term.py:126
 #, python-format
 msgid "Day"
 msgstr "Tag"
 
 #. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_user_allocation
+msgid "Phase User Allocation"
+msgstr ""
+
+#. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_task
 msgid "Task"
 msgstr "Aufgabe"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.act_project_phase
+msgid ""
+"A project can be split into the different phases. For each phase, you can "
+"define your users allocation, describe different tasks and link your phase "
+"to previous and next phases, add date constraints for the automated "
+"scheduling. Use the long term planning in order to planify your available "
+"users, convert your phases into a series of tasks when you start working on "
+"the project."
+msgstr ""
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -157,6 +123,14 @@ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
 msgstr "ME (Mengeneinheit) entspr. Einheit für die Dauer"
 
 #. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
+#: view:project.phase:0
+#: view:project.user.allocation:0
+msgid "Planning of Users"
+msgstr ""
+
+#. module: project_long_term
 #: help:project.phase,date_end:0
 msgid ""
 " It's computed by the scheduler according to the start date and the duration."
@@ -170,14 +144,14 @@ msgstr ""
 #: field:project.compute.tasks,project_id:0
 #: view:project.phase:0
 #: field:project.phase,project_id:0
-#: view:project.resource.allocation:0
-#: field:project.resource.allocation,project_id:0
 #: view:project.task:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,project_id:0
 msgid "Project"
 msgstr "Projekt"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:50
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Error!"
 msgstr "Fehler!"
@@ -188,19 +162,19 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 #. module: project_long_term
-#: help:project.resource.allocation,date_end:0
+#: help:project.user.allocation,date_end:0
 msgid "Ending Date"
 msgstr "Ende Datum"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Planning"
-msgstr "Planung"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_end:0
 msgid "Deadline"
 msgstr "Frist"
+
+#. module: project_long_term
+#: selection:project.compute.phases,target_project:0
+msgid "Compute All My Projects"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -209,23 +183,15 @@ msgid "_Cancel"
 msgstr "Abbrechen"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
-#: model:ir.ui.menu,name:project_long_term.menu_compute_phase
-msgid "Compute Phase Scheduling"
-msgstr "Berechne Terminierung der Phasen"
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:190
+#: code:addons/project_long_term/project_long_term.py:141
 #, python-format
 msgid " (copy)"
 msgstr " (Kopie)"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: view:project.resource.allocation:0
-#: field:project.resource.allocation,useability:0
-msgid "Availability"
-msgstr "Verfügbarkeit"
+#: view:project.user.allocation:0
+msgid "Project User Allocation"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -240,9 +206,15 @@ msgid "C_ompute"
 msgstr "Berechne"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-msgid "Compute Scheduling of phases for all or specified project"
-msgstr "Berechne Terminierung aller Phasen für das spezifizierte Projekt"
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "New"
+msgstr ""
+
+#. module: project_long_term
+#: help:project.phase,progress:0
+msgid "Computed based on related tasks"
+msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,product_uom:0
@@ -250,49 +222,23 @@ msgid "Duration UoM"
 msgstr "Dauer ME"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
-#: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
-msgid "Compute Task Scheduling"
-msgstr "Berechne Terminierung für Aufgaben"
-
-#. module: project_long_term
 #: field:project.phase,constraint_date_start:0
 msgid "Minimum Start Date"
 msgstr "Frühestes Startdatum"
 
 #. module: project_long_term
-#: model:ir.model,name:project_long_term.model_project_resource_allocation
-#: view:project.phase:0
-#: view:project.resource.allocation:0
-msgid "Project Resource Allocation"
-msgstr "Zuweisung Projekt Ressource"
-
-#. module: project_long_term
-#: view:project.compute.tasks:0
-msgid "Compute Scheduling of Task"
-msgstr "Berechne Aufgabenterminierung"
-
-#. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_project_resource
-#: model:ir.ui.menu,name:project_long_term.menu_pm_resources_project1
+#: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource
-#: view:project.resource.allocation:0
 msgid "Resources"
 msgstr "Ressourcen"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
-msgid ""
-"To schedule phases of all or a specified project. It then open a gantt "
-"view.\n"
-"\t           "
+#: view:project.phase:0
+msgid "My Projects"
 msgstr ""
-"Zur Berechnung aller Phasen für das spezifizierte Projekt. Es wird ein Gantt "
-"Chart zur Planung geöffnet.\n"
-"\t           "
 
 #. module: project_long_term
-#: help:project.resource.allocation,date_start:0
+#: help:project.user.allocation,date_start:0
 msgid "Starting Date"
 msgstr "Start Datum"
 
@@ -303,15 +249,14 @@ msgstr "Verknüpfte Aufgaben"
 
 #. module: project_long_term
 #: view:project.phase:0
-msgid "Dates"
-msgstr "Daten"
+msgid "New Phases"
+msgstr ""
 
 #. module: project_long_term
-#: help:project.resource.allocation,useability:0
-msgid ""
-"Availability of this resource for this project phase in percentage (=50%)"
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
+#, python-format
+msgid "Please specify a project to schedule."
 msgstr ""
-"Verfügbarkeit dieser Ressource für diese Projektphase in Prozent (=50%)"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_start:0
@@ -322,21 +267,6 @@ msgstr "erzwinge Phasenbeginn nach diesem Datum"
 #: field:project.phase,task_ids:0
 msgid "Project Tasks"
 msgstr "Projekt Aufgaben"
-
-#. module: project_long_term
-#: field:project.phase,resource_ids:0
-msgid "Project Resources"
-msgstr "Projekt Ressourcen"
-
-#. module: project_long_term
-#: view:project.schedule.tasks:0
-msgid "_Ok"
-msgstr "OK"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Schedule and Display info"
-msgstr "Info Planungsassistent und Anzeige"
 
 #. module: project_long_term
 #: help:project.phase,date_start:0
@@ -358,39 +288,15 @@ msgid "Phase start-date must be lower than phase end-date."
 msgstr "Start Datum der Phase muss vor dem Ende Datum sein."
 
 #. module: project_long_term
-#: model:ir.model,name:project_long_term.model_project_schedule_tasks
-msgid "project.schedule.tasks"
-msgstr "project.schedule.tasks"
-
-#. module: project_long_term
-#: model:ir.actions.act_window,help:project_long_term.act_project_phase
-msgid ""
-"A project can be split into the different phases. For each phase, you can "
-"define your resources allocation, describe different tasks and link your "
-"phase to previous and next phases, add date constraints for the automated "
-"scheduling. Use the long term planning in order to planify your available "
-"human resources, convert your phases into a series of tasks when you start "
-"working on the project."
+#: view:project.phase:0
+msgid "Start Month"
 msgstr ""
-"Ein Projekt kann in verschiedene Phasen aufgeteilt werden. Für jede Phase "
-"können Sie zur automatischen Terminierung die Ressourcenaufteilung "
-"definieren, Aufgaben beschreiben und die Phase sowohl mit vorhergehenden als "
-"auch nachfolgenden Phasen verknüpfen oder Bedingungen für feste Termine "
-"hinterlegen. Benutzen Sie das Modul Planung für Langzeitprojekte zur "
-"langfristigen Planung und Aufteilung verfügbarer Personalressourcen. "
-"Konvertieren Sie die Phasen in konkrete Aufgabenlisten, wenn Sie die "
-"Bearbeitung der Phasen eröffnen."
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
-#: field:project.resource.allocation,date_start:0
+#: field:project.user.allocation,date_start:0
 msgid "Start Date"
 msgstr "Start Datum"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Resource Allocation"
-msgstr "Zuweisung Ressourcen"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
@@ -398,10 +304,20 @@ msgid "force the phase to finish before this date"
 msgstr "erzwinge Ende der Periode vor"
 
 #. module: project_long_term
+#: help:project.phase,user_ids:0
+msgid ""
+"The ressources on the project can be computed automatically by the scheduler"
+msgstr ""
+
+#. module: project_long_term
 #: view:project.phase:0
-#: selection:project.phase,state:0
 msgid "Draft"
 msgstr "Entwurf"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Pending Phases"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -410,24 +326,10 @@ msgid "Pending"
 msgstr "Unerledigt"
 
 #. module: project_long_term
-#: field:project.resource.allocation,name:0
-msgid "unknown"
-msgstr "unbekannt"
-
-#. module: project_long_term
-#: field:project.resource.allocation,user_id:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,user_id:0
 msgid "User"
 msgstr "Benutzer"
-
-#. module: project_long_term
-#: view:project.phase:0
-msgid "Task Detail"
-msgstr "Aufgaben Detail"
-
-#. module: project_long_term
-#: help:project.project,resource_calendar_id:0
-msgid "Timetable working hours to adjust the gantt diagram report"
-msgstr "Zeiterfassung Arbeitsstunden für die Ausrichtung des Gantt Charts"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
@@ -477,21 +379,21 @@ msgid "Remaining Hours"
 msgstr "Verbleib. Stunden"
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,responsible_id:0
-msgid "Responsible"
-msgstr "Verantwortlicher"
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr "Fehler! Aufgaben End-Datum muss größer als Aufgaben-Beginn sein"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
-#: field:project.project,resource_calendar_id:0
 msgid "Working Time"
 msgstr "Arbeitszeit"
 
 #. module: project_long_term
-#: view:project.phase:0
-msgid "Current"
-msgstr "Aktuell"
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
+#: model:ir.ui.menu,name:project_long_term.menu_compute_phase
+#: view:project.compute.phases:0
+msgid "Schedule Phases"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -499,30 +401,17 @@ msgid "Start Phase"
 msgstr "Start der Phase"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:50
-#, python-format
-msgid "Please Specify Project to be schedule"
-msgstr ""
-"Bitte spezifizieren Sie ein Projekt für die automatische Terminierung"
-
-#. module: project_long_term
 #: view:project.phase:0
-#: field:project.phase,total_hours:0
 msgid "Total Hours"
 msgstr "Gesamte Stunden"
 
 #. module: project_long_term
-#: view:project.schedule.tasks:0
-msgid "Task Scheduling completed successfully."
-msgstr "Aufgaben Planung wurde erfolgreich vervollständigt."
+#: view:project.user.allocation:0
+msgid "Users"
+msgstr ""
 
 #. module: project_long_term
-#: view:project.compute.tasks:0
-msgid "Compute Scheduling of Task for specified project."
-msgstr "Berechne Aufgabenterminierung für spezifiziertes Projekt."
-
-#. module: project_long_term
-#: view:project.resource.allocation:0
+#: view:project.user.allocation:0
 msgid "Phase"
 msgstr "Phase"
 
@@ -543,15 +432,9 @@ msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,date_end:0
-#: field:project.resource.allocation,date_end:0
+#: field:project.user.allocation,date_end:0
 msgid "End Date"
 msgstr "Ende Datum"
-
-#. module: project_long_term
-#: view:project.resource.allocation:0
-#: field:project.resource.allocation,resource_id:0
-msgid "Resource"
-msgstr "Ressource"
 
 #. module: project_long_term
 #: field:project.phase,name:0
@@ -564,38 +447,36 @@ msgid "Tasks Details"
 msgstr "Aufgabendetails"
 
 #. module: project_long_term
-#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
-msgid "Working Period"
-msgstr "Arbeitszeitmodell"
+#: field:project.phase,duration:0
+msgid "Duration"
+msgstr "Dauer"
 
 #. module: project_long_term
-#: model:ir.model,name:project_long_term.model_resource_resource
-msgid "Resource Detail"
-msgstr "Ressource Detail"
-
-#. module: project_long_term
-#: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
-msgid "Scheduling"
-msgstr "Terminierung"
+#: view:project.phase:0
+msgid "Project Users"
+msgstr ""
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
 #: view:project.phase:0
-#: field:project.resource.allocation,phase_id:0
 #: view:project.task:0
 #: field:project.task,phase_id:0
+#: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
 msgstr "Projekt Phase"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
+msgid ""
+"To schedule phases of all or a specified project. It then open a gantt "
+"view.\n"
+"               "
+msgstr ""
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
 msgid "Project Compute Phases"
 msgstr "Berechne Projekt Phasen"
-
-#. module: project_long_term
-#: field:project.schedule.tasks,msg:0
-msgid "Message"
-msgstr "Nachricht"
 
 #. module: project_long_term
 #: constraint:project.phase:0
@@ -608,19 +489,14 @@ msgid "Sequence"
 msgstr "Reihenfolge"
 
 #. module: project_long_term
-#: selection:project.compute.phases,target_project:0
-msgid "Compute All Projects"
-msgstr "Berechne Alle Projekte"
-
-#. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
 msgid "Resource Leaves"
 msgstr "Ressource Abwesenheit"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.action_project_schedule_tasks
-#: view:project.phase:0
-#: view:project.schedule.tasks:0
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
+#: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
+#: view:project.compute.tasks:0
 msgid "Schedule Tasks"
 msgstr "Berechne Aufgaben"
 
@@ -630,6 +506,132 @@ msgid "By default in days"
 msgstr "Gem. Standard in Tagen"
 
 #. module: project_long_term
-#: field:project.phase,duration:0
-msgid "Duration"
-msgstr "Dauer"
+#: view:project.phase:0
+#: field:project.phase,user_force_ids:0
+msgid "Force Assigned Users"
+msgstr ""
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
+msgid "Scheduling"
+msgstr "Terminierung"
+
+#~ msgid "Compute Scheduling of Phases"
+#~ msgstr "Berechne Projektphasen"
+
+#~ msgid "Resource Allocations"
+#~ msgstr "Zuweisung Ressourcen"
+
+#~ msgid "Planning"
+#~ msgstr "Planung"
+
+#~ msgid "Compute Phase Scheduling"
+#~ msgstr "Berechne Terminierung der Phasen"
+
+#~ msgid "Dates"
+#~ msgstr "Daten"
+
+#~ msgid "Compute Task Scheduling"
+#~ msgstr "Berechne Terminierung für Aufgaben"
+
+#~ msgid "Project Resource Allocation"
+#~ msgstr "Zuweisung Projekt Ressource"
+
+#~ msgid "Project Resources"
+#~ msgstr "Projekt Ressourcen"
+
+#~ msgid "Resource Allocation"
+#~ msgstr "Zuweisung Ressourcen"
+
+#~ msgid "Task Detail"
+#~ msgstr "Aufgaben Detail"
+
+#~ msgid "Responsible"
+#~ msgstr "Verantwortlicher"
+
+#~ msgid "Task Scheduling completed successfully."
+#~ msgstr "Aufgaben Planung wurde erfolgreich vervollständigt."
+
+#~ msgid "Resource"
+#~ msgstr "Ressource"
+
+#~ msgid "Message"
+#~ msgstr "Nachricht"
+
+#~ msgid "Compute All Projects"
+#~ msgstr "Berechne Alle Projekte"
+
+#~ msgid "Long Term Project Management"
+#~ msgstr "Management von Langzeit Projekten"
+
+#~ msgid "_Ok"
+#~ msgstr "OK"
+
+#, python-format
+#~ msgid "Please Specify Project to be schedule"
+#~ msgstr ""
+#~ "Bitte spezifizieren Sie ein Projekt für die automatische Terminierung"
+
+#~ msgid "Resources Allocation"
+#~ msgstr "Ressourcenaufteilung"
+
+#~ msgid "Availability"
+#~ msgstr "Verfügbarkeit"
+
+#~ msgid "Compute Scheduling of phases for all or specified project"
+#~ msgstr "Berechne Terminierung aller Phasen für das spezifizierte Projekt"
+
+#~ msgid ""
+#~ "To schedule phases of all or a specified project. It then open a gantt "
+#~ "view.\n"
+#~ "\t           "
+#~ msgstr ""
+#~ "Zur Berechnung aller Phasen für das spezifizierte Projekt. Es wird ein Gantt "
+#~ "Chart zur Planung geöffnet.\n"
+#~ "\t           "
+
+#~ msgid ""
+#~ "Availability of this resource for this project phase in percentage (=50%)"
+#~ msgstr ""
+#~ "Verfügbarkeit dieser Ressource für diese Projektphase in Prozent (=50%)"
+
+#~ msgid "unknown"
+#~ msgstr "unbekannt"
+
+#~ msgid "Timetable working hours to adjust the gantt diagram report"
+#~ msgstr "Zeiterfassung Arbeitsstunden für die Ausrichtung des Gantt Charts"
+
+#~ msgid "Compute Scheduling of Task"
+#~ msgstr "Berechne Aufgabenterminierung"
+
+#~ msgid "Resource Detail"
+#~ msgstr "Ressource Detail"
+
+#~ msgid "Current"
+#~ msgstr "Aktuell"
+
+#~ msgid "Compute Scheduling of Task for specified project."
+#~ msgstr "Berechne Aufgabenterminierung für spezifiziertes Projekt."
+
+#~ msgid "project.schedule.tasks"
+#~ msgstr "project.schedule.tasks"
+
+#~ msgid "Schedule and Display info"
+#~ msgstr "Info Planungsassistent und Anzeige"
+
+#~ msgid ""
+#~ "A project can be split into the different phases. For each phase, you can "
+#~ "define your resources allocation, describe different tasks and link your "
+#~ "phase to previous and next phases, add date constraints for the automated "
+#~ "scheduling. Use the long term planning in order to planify your available "
+#~ "human resources, convert your phases into a series of tasks when you start "
+#~ "working on the project."
+#~ msgstr ""
+#~ "Ein Projekt kann in verschiedene Phasen aufgeteilt werden. Für jede Phase "
+#~ "können Sie zur automatischen Terminierung die Ressourcenaufteilung "
+#~ "definieren, Aufgaben beschreiben und die Phase sowohl mit vorhergehenden als "
+#~ "auch nachfolgenden Phasen verknüpfen oder Bedingungen für feste Termine "
+#~ "hinterlegen. Benutzen Sie das Modul Planung für Langzeitprojekte zur "
+#~ "langfristigen Planung und Aufteilung verfügbarer Personalressourcen. "
+#~ "Konvertieren Sie die Phasen in konkrete Aufgabenlisten, wenn Sie die "
+#~ "Bearbeitung der Phasen eröffnen."

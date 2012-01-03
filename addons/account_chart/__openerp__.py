@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Charts of Accounts',
+    'name': 'Template of Charts of Accounts',
     'version': '1.1',
-    'category': 'Hidden',
+    "category": 'Hidden/Dependency',
     'description': """
 Remove minimal account chart.
 =============================

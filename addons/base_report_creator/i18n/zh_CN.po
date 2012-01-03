@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-02-03 07:53+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:34+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:02+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: base_report_creator
 #: help:base_report_creator.report.filter,expression:0
@@ -239,11 +239,6 @@ msgid "AND"
 msgstr "与（AND）"
 
 #. module: base_report_creator
-#: constraint:base_report_creator.report:0
-msgid "You can not display field which are not stored in Database."
-msgstr "您无法显示数据库中没有的字段。"
-
-#. module: base_report_creator
 #: field:base_report_creator.report.fields,calendar_mode:0
 msgid "Calendar Mode"
 msgstr "日历模式"
@@ -365,7 +360,6 @@ msgstr "已分组"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-#: model:ir.module.module,shortdesc:base_report_creator.module_meta_information
 msgid "Report Creator"
 msgstr "创建报表"
 
@@ -432,6 +426,11 @@ msgstr "结束日期"
 #: field:base_report_creator.report,name:0
 msgid "Report Name"
 msgstr "报表名称"
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You can not display field which are not stored in database."
+msgstr ""
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -505,22 +504,6 @@ msgstr "显示字段"
 msgid "Filters"
 msgstr "筛选"
 
-#. module: base_report_creator
-#: model:ir.module.module,description:base_report_creator.module_meta_information
-msgid ""
-"This module allows you to create any statistic\n"
-"report on several objects. It's a SQL query builder and browser\n"
-"for and users.\n"
-"\n"
-"After installing the module, it adds a menu to define custom report in\n"
-"the \"Dashboard\" menu.\n"
-msgstr ""
-"这个模块允许你创建基于几个对象的统计报表.\n"
-"是一个SQL查询生成器和用户的浏览器。\n"
-"\n"
-"当安装这个模块后，它会增加一个用于定义客户报表的菜单到\n"
-"“控制台”的菜单上\n"
-
 #~ msgid "Draft"
 #~ msgstr "草稿"
 
@@ -561,3 +544,20 @@ msgstr ""
 #~ "报告几个对象, 它是一SQL查询生成器和浏览器\n"
 #~ "\n"
 #~ "安装模块后, 它在控制台菜单增加一个自定义的报表菜单\n"
+
+#~ msgid "You can not display field which are not stored in Database."
+#~ msgstr "您无法显示数据库中没有的字段。"
+
+#~ msgid ""
+#~ "This module allows you to create any statistic\n"
+#~ "report on several objects. It's a SQL query builder and browser\n"
+#~ "for and users.\n"
+#~ "\n"
+#~ "After installing the module, it adds a menu to define custom report in\n"
+#~ "the \"Dashboard\" menu.\n"
+#~ msgstr ""
+#~ "这个模块允许你创建基于几个对象的统计报表.\n"
+#~ "是一个SQL查询生成器和用户的浏览器。\n"
+#~ "\n"
+#~ "当安装这个模块后，它会增加一个用于定义客户报表的菜单到\n"
+#~ "“控制台”的菜单上\n"

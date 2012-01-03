@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-01-16 10:53+0000\n"
 "Last-Translator: silas <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:40+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:11+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,9 +22,10 @@ msgid "Parent Directory"
 msgstr "Hauptverzeichnis"
 
 #. module: document
-#: model:ir.model,name:document.model_document_configuration
-msgid "Auto Directory Configuration"
-msgstr "Auto Konfigurator Verzeichnisse"
+#: code:addons/document/document_directory.py:276
+#, python-format
+msgid "Directory name contains special characters!"
+msgstr "Der Verzeichnisname enthält spezielle Zeichen!"
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -54,12 +55,6 @@ msgid ""
 msgstr ""
 "Feld welches als Name bei den Ressourcenverzeichnissen genutzt wird. Falls "
 "es keinen Eintrag gibt, wird der 'Name' genutzt."
-
-#. module: document
-#: code:addons/document/document_directory.py:276
-#, python-format
-msgid "Directory name contains special characters!"
-msgstr "Der Verzeichnisname enthält spezielle Zeichen!"
 
 #. module: document
 #: view:document.directory:0
@@ -98,6 +93,11 @@ msgstr "März"
 #: view:document.configuration:0
 msgid "title"
 msgstr "Titel"
+
+#. module: document
+#: field:document.directory.dctx,expr:0
+msgid "Expression"
+msgstr "Ausdruck"
 
 #. module: document
 #: view:document.directory:0
@@ -151,6 +151,10 @@ msgstr "Verzeichnisname muss eindeutig sein"
 
 #. module: document
 #: view:ir.attachment:0
+msgid "Filter on my documents"
+msgstr ""
+
+#. module: document
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Inhaltsindizierung"
@@ -165,17 +169,16 @@ msgstr ""
 "lokalisiert."
 
 #. module: document
+#: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
+msgid "Knowledge Management"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.storage,dir_ids:0
-#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Verzeichnisse"
-
-#. module: document
-#: field:document.configuration,sale_order:0
-msgid "Sale Order"
-msgstr "Verkaufsauftrag"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_user
@@ -183,21 +186,11 @@ msgid "Files details by Users"
 msgstr "Dokumenteninhalt nach Benutzer"
 
 #. module: document
-#: field:document.configuration,project:0
-msgid "Project"
-msgstr "Projekt"
-
-#. module: document
 #: code:addons/document/document_storage.py:573
 #: code:addons/document/document_storage.py:601
 #, python-format
 msgid "Error!"
 msgstr "Fehler!"
-
-#. module: document
-#: help:document.configuration,product:0
-msgid "Auto directory configuration for Products."
-msgstr "Automatisches Verzeichnis für Produkte"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -208,6 +201,11 @@ msgstr "Finde alle Ressourcen"
 #: selection:document.directory,type:0
 msgid "Folders per resource"
 msgstr "Felder Pro Ressource"
+
+#. module: document
+#: view:ir.attachment:0
+msgid "Indexed Content - experimental"
+msgstr ""
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -242,8 +240,8 @@ msgid "Document directory"
 msgstr "Dokumentenverzeichnis"
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #: code:addons/document/document_directory.py:266
 #: code:addons/document/document_directory.py:271
 #: code:addons/document/document_directory.py:276
@@ -276,9 +274,9 @@ msgid "Storage"
 msgstr "Speicher"
 
 #. module: document
-#: view:document.configuration:0
-msgid "Configure Resource Directory"
-msgstr "Konfiguration Datenverzeichnis"
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
+msgstr "Ressourcenmodell"
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -335,11 +333,6 @@ msgid "Stored Filename"
 msgstr "Abgespeicherter Dateiname"
 
 #. module: document
-#: field:document.directory,ressource_type_id:0
-msgid "Resource model"
-msgstr "Ressourcenmodell"
-
-#. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
@@ -394,6 +387,13 @@ msgid "Generated Files"
 msgstr "Automatisch erzeugte Dokumente"
 
 #. module: document
+#: view:document.configuration:0
+msgid ""
+"When executing this wizard, it will configure your directories automatically "
+"according to modules installed."
+msgstr ""
+
+#. module: document
 #: field:document.directory.content,directory_id:0
 #: field:document.directory.dctx,dir_id:0
 #: model:ir.actions.act_window,name:document.action_document_file_directory_form
@@ -405,9 +405,9 @@ msgid "Directory"
 msgstr "Verzeichnis"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by Partner"
-msgstr "Dokumente nach Partnern"
+#: view:document.directory:0
+msgid "Security"
+msgstr "Sicherheit"
 
 #. module: document
 #: field:document.directory,write_uid:0
@@ -421,11 +421,6 @@ msgstr "Letzte Änderung"
 #: model:ir.actions.act_window,name:document.zoom_directory
 msgid "Related Documents"
 msgstr "Verbundenes Dokument"
-
-#. module: document
-#: field:document.configuration,progress:0
-msgid "Configuration Progress"
-msgstr "Abfolge Konfiguration"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -485,43 +480,6 @@ msgstr ""
 "berücksichtigt werden"
 
 #. module: document
-#: model:ir.module.module,description:document.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
-"    * User Authentication\n"
-"    * Document Indexation :- .pptx and .docx files are not support in "
-"windows platform.\n"
-"    * Dashboard for Document that includes:\n"
-"        * New Files (list)\n"
-"        * Files by Resource Type (graph)\n"
-"        * Files by Partner (graph)\n"
-"        * Files by Month (graph)\n"
-"    ATTENTION:\n"
-"    - When you install this module in a running company that have already "
-"PDF files stored into the database,\n"
-"      you will lose them all.\n"
-"    - After installing this module PDF's are no longer stored into the "
-"database,\n"
-"      but in the servers rootpad like /server/bin/filestore.\n"
-msgstr ""
-"Dieses ist ein vollständiges Dokumenten Management System:\n"
-"   * Benutzer Authentifizierung\n"
-"   * Dokumenten Indizierung: .pptx und .docx Dateien werdendabei für Windows "
-"nicht unterstützt.\n"
-"   * Pinnwand für Dokumente die folgendes beinhaltet:\n"
-"      * Neue Dateien(liste)\n"
-"      * Dateien nach Ressourcentyp (Grafik)\n"
-"      * Dateien nach Partnern (Grafik)\n"
-"      * Dateien nach Monaten (Grafik)\n"
-"   ACHTUNG:\n"
-"  - Wenn Sie dieses Modul in einer laufenden Datenbank mit bereits "
-"vorhandenen PDF Dateien installieren,\n"
-"     verlieren Sie alle diese Dateien.\n"
-"  - Nach Installation des Moduls werden die PDF's nicht länger in der "
-"Datenbank gespeichert,\n"
-"   sondern im Server Rootverzeichnis, z.B. /server/bin/filestore.\n"
-
-#. module: document
 #: help:document.storage,online:0
 msgid ""
 "If not checked, media is currently offline and its contents not available"
@@ -570,8 +528,8 @@ msgstr ""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
-msgid "Auto Configure Directory"
-msgstr "Autokonfiguration Verzeichnis"
+msgid "Configure Directories"
+msgstr ""
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -601,11 +559,6 @@ msgid ""
 msgstr ""
 "Dies Auswählen, um die gleiche Baumstruktur wie das Objekt in OpenERP zu "
 "verwenden."
-
-#. module: document
-#: view:document.directory:0
-msgid "Security"
-msgstr "Sicherheit"
 
 #. module: document
 #: help:document.directory,ressource_id:0
@@ -697,24 +650,15 @@ msgid "Database"
 msgstr "Datenbank"
 
 #. module: document
-#: help:document.configuration,project:0
-msgid "Auto directory configuration for Projects."
-msgstr "Automatische Verzeichnis Konfiguration für Projekte."
+#: selection:report.document.user,month:0
+#: selection:report.files.partner,month:0
+msgid "January"
+msgstr "Januar"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Related to"
 msgstr "Bezug"
-
-#. module: document
-#: model:ir.module.module,shortdesc:document.module_meta_information
-msgid "Integrated Document Management System"
-msgstr "Integrierte Dokumentenverwaltung"
-
-#. module: document
-#: view:document.configuration:0
-msgid "Choose the following Resouces to auto directory configuration."
-msgstr "Wählen Sie die folgenden Ressourcen für eine automatische Anbindung."
 
 #. module: document
 #: view:ir.attachment:0
@@ -737,9 +681,9 @@ msgid "Read Only"
 msgstr "NUR LESEN"
 
 #. module: document
-#: field:document.directory.dctx,expr:0
-msgid "Expression"
-msgstr "Ausdruck"
+#: model:ir.actions.act_window,name:document.action_document_directory_form
+msgid "Document Directory"
+msgstr ""
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -751,6 +695,20 @@ msgstr "Das Verzeichnis muss eindeutig sein"
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Urheber"
+
+#. module: document
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr "Sequenz"
+
+#. module: document
+#: view:document.configuration:0
+msgid ""
+"OpenERP's Document Management System supports mapping virtual folders with "
+"documents. The virtual folder of a document can be used to manage the files "
+"attached to the document, or to print and download any report. This tool "
+"will create directories automatically according to modules installed."
+msgstr ""
 
 #. module: document
 #: view:board.board:0
@@ -843,14 +801,14 @@ msgid "Month"
 msgstr "Monat"
 
 #. module: document
+#: view:report.document.user:0
+msgid "This Months Files"
+msgstr ""
+
+#. module: document
 #: model:ir.ui.menu,name:document.menu_reporting
 msgid "Reporting"
 msgstr "Berichtswesen"
-
-#. module: document
-#: field:document.configuration,product:0
-msgid "Product"
-msgstr "Produkt"
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -899,12 +857,6 @@ msgid "New Files"
 msgstr "Neue Dateien"
 
 #. module: document
-#: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
-msgid "January"
-msgstr "Januar"
-
-#. module: document
 #: view:document.directory:0
 msgid "Static"
 msgstr "Statisches Verzeichnis"
@@ -915,13 +867,9 @@ msgid "Files By Partner"
 msgstr "Dokumente nach Partnern"
 
 #. module: document
-#: help:document.directory.dctx,field:0
-msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
+#: view:document.configuration:0
+msgid "Configure Direcories"
 msgstr ""
-"Der Name des Feldes. Bitte beachten Sie das Präfix 'dctx_' wird dem "
-"vorangestellt, was hier eingegeben wird."
 
 #. module: document
 #: view:report.document.user:0
@@ -934,12 +882,9 @@ msgid "Notes"
 msgstr "Notizen"
 
 #. module: document
-#: help:document.configuration,sale_order:0
-msgid ""
-"Auto directory configuration for Sale Orders and Quotation with report."
+#: model:ir.model,name:document.model_document_configuration
+msgid "Directory Configuration"
 msgstr ""
-"Automatische Verzeichnis Konfiguration für Verkaufsaufträge und Angebote mit "
-"entsprechendem Report hierzu."
 
 #. module: document
 #: help:document.directory,type:0
@@ -968,6 +913,15 @@ msgstr "Februar"
 #: model:ir.ui.menu,name:document.menu_reports_document_manager1
 msgid "Statistics by User"
 msgstr "Statistik nach Benutzern"
+
+#. module: document
+#: help:document.directory.dctx,field:0
+msgid ""
+"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+"what is typed here."
+msgstr ""
+"Der Name des Feldes. Bitte beachten Sie das Präfix 'dctx_' wird dem "
+"vorangestellt, was hier eingegeben wird."
 
 #. module: document
 #: field:document.directory,name:0
@@ -1004,6 +958,12 @@ msgid "# of Files"
 msgstr "# Dokumente"
 
 #. module: document
+#: code:addons/document/document.py:209
+#, python-format
+msgid "(copy)"
+msgstr "(Kopie)"
+
+#. module: document
 #: view:document.directory:0
 msgid ""
 "Only members of these groups will have access to this directory and its "
@@ -1027,9 +987,9 @@ msgid "Mime Type"
 msgstr "Mime Typ"
 
 #. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
-msgstr "Sequenz"
+#: view:report.document.user:0
+msgid "All Months Files"
+msgstr ""
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -1037,8 +997,8 @@ msgid "Content Name"
 msgstr "Inhaltsbezeichnung"
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #, python-format
 msgid "File name must be unique!"
 msgstr "Datei muss eindeutig benannt sein!"
@@ -1062,8 +1022,6 @@ msgid "Directories' Structure"
 msgstr "Verzeichnisstruktur"
 
 #. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_document_by_resourcetype_graph
 #: view:report.document.user:0
 msgid "Files by Resource Type"
 msgstr "Dokumente nach Typen"
@@ -1076,6 +1034,7 @@ msgstr "Jahr"
 
 #. module: document
 #: view:document.storage:0
+#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
 #: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
@@ -1151,6 +1110,9 @@ msgstr "Dokumententyp"
 #~ msgid "Document Configuration"
 #~ msgstr "Konfiguration Dokumente"
 
+#~ msgid "Auto Configure Directory"
+#~ msgstr "Autokonfiguration Verzeichnis"
+
 #~ msgid ""
 #~ "This wizard will configure the URL of the server of the document management "
 #~ "system."
@@ -1165,6 +1127,9 @@ msgstr "Dokumententyp"
 
 #~ msgid "Configure"
 #~ msgstr "Konfiguriere"
+
+#~ msgid "Integrated Document Management System"
+#~ msgstr "Integrierte Dokumentenverwaltung"
 
 #~ msgid "Others Info"
 #~ msgstr "Andere Info"
@@ -1221,5 +1186,76 @@ msgstr "Dokumententyp"
 #~ msgid "Auto Configure"
 #~ msgstr "Konfiguriere Automatisch"
 
+#~ msgid "Auto Directory Configuration"
+#~ msgstr "Auto Konfigurator Verzeichnisse"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Sale Order"
+#~ msgstr "Verkaufsauftrag"
+
+#~ msgid "Project"
+#~ msgstr "Projekt"
+
+#~ msgid "Auto directory configuration for Products."
+#~ msgstr "Automatisches Verzeichnis für Produkte"
+
+#~ msgid "Files by Partner"
+#~ msgstr "Dokumente nach Partnern"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Abfolge Konfiguration"
+
+#~ msgid ""
+#~ "This is a complete document management system:\n"
+#~ "    * User Authentication\n"
+#~ "    * Document Indexation :- .pptx and .docx files are not support in "
+#~ "windows platform.\n"
+#~ "    * Dashboard for Document that includes:\n"
+#~ "        * New Files (list)\n"
+#~ "        * Files by Resource Type (graph)\n"
+#~ "        * Files by Partner (graph)\n"
+#~ "        * Files by Month (graph)\n"
+#~ "    ATTENTION:\n"
+#~ "    - When you install this module in a running company that have already "
+#~ "PDF files stored into the database,\n"
+#~ "      you will lose them all.\n"
+#~ "    - After installing this module PDF's are no longer stored into the "
+#~ "database,\n"
+#~ "      but in the servers rootpad like /server/bin/filestore.\n"
+#~ msgstr ""
+#~ "Dieses ist ein vollständiges Dokumenten Management System:\n"
+#~ "   * Benutzer Authentifizierung\n"
+#~ "   * Dokumenten Indizierung: .pptx und .docx Dateien werdendabei für Windows "
+#~ "nicht unterstützt.\n"
+#~ "   * Pinnwand für Dokumente die folgendes beinhaltet:\n"
+#~ "      * Neue Dateien(liste)\n"
+#~ "      * Dateien nach Ressourcentyp (Grafik)\n"
+#~ "      * Dateien nach Partnern (Grafik)\n"
+#~ "      * Dateien nach Monaten (Grafik)\n"
+#~ "   ACHTUNG:\n"
+#~ "  - Wenn Sie dieses Modul in einer laufenden Datenbank mit bereits "
+#~ "vorhandenen PDF Dateien installieren,\n"
+#~ "     verlieren Sie alle diese Dateien.\n"
+#~ "  - Nach Installation des Moduls werden die PDF's nicht länger in der "
+#~ "Datenbank gespeichert,\n"
+#~ "   sondern im Server Rootverzeichnis, z.B. /server/bin/filestore.\n"
+
+#~ msgid "Auto directory configuration for Projects."
+#~ msgstr "Automatische Verzeichnis Konfiguration für Projekte."
+
+#~ msgid "Product"
+#~ msgstr "Produkt"
+
+#~ msgid ""
+#~ "Auto directory configuration for Sale Orders and Quotation with report."
+#~ msgstr ""
+#~ "Automatische Verzeichnis Konfiguration für Verkaufsaufträge und Angebote mit "
+#~ "entsprechendem Report hierzu."
+
+#~ msgid "Choose the following Resouces to auto directory configuration."
+#~ msgstr "Wählen Sie die folgenden Ressourcen für eine automatische Anbindung."
+
+#~ msgid "Configure Resource Directory"
+#~ msgstr "Konfiguration Datenverzeichnis"

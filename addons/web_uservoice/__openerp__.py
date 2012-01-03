@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,8 +20,8 @@
 ##############################################################################
 {
     'name': 'Receive User Feedback',
-    'version': '1.0',
-    'category': 'Hidden',
+    'version': '2.0',
+    'category': 'Tools',
     'complexity': "easy",
     'description': """
 Add Feedback button in header.
@@ -36,5 +36,13 @@ Invite OpenERP user feedback, powered by uservoice.
     'installable': True,
     'active': False,
     'certificate': '0040452504963885',
-    'images': ['images/submit_an_idea.jpeg','images/web_uservoice_feedback.jpeg'],
+
+    'js': ['static/src/js/web_uservoice.js'],
+    'css': ['static/src/css/uservoice.css'],
+    'qweb' : [
+        "static/src/xml/*.xml",
+    ],
+    'images': ['static/src/img/submit_an_idea.jpeg', 'static/src/img/web_uservoice_feedback.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -22,7 +22,6 @@
 from datetime import datetime, timedelta
 import math
 from faces import *
-from new import classobj
 from osv import fields, osv
 from tools.translate import _
 
@@ -44,9 +43,12 @@ class resource_calendar(osv.osv):
     }
 
     def working_hours_on_day(self, cr, uid, resource_calendar_id, day, context=None):
-        """
+        """Calculates the  Working Total Hours based on Resource Calendar and
+        given working day (datetime object).
+        
         @param resource_calendar_id: resource.calendar browse record
         @param day: datetime object
+        
         @return: returns the working hours (as float) men should work on the given day if is in the attendance_ids of the resource_calendar_id (i.e if that day is a working day), returns 0.0 otherwise
         """
         res = 0.0
@@ -56,9 +58,16 @@ class resource_calendar(osv.osv):
         return res 
 
     def _get_leaves(self, cr, uid, id, resource):
+        """Private Method to Calculate resource Leaves days 
+        
+        @param id: resource calendar id
+        @param resource: resource id for which leaves will ew calculated 
+        
+        @return : returns the list of dates, where resource on leave in
+                  resource.calendar.leaves object (e.g.['%Y-%m-%d', '%Y-%m-%d'])
+        """
         resource_cal_leaves = self.pool.get('resource.calendar.leaves')
         dt_leave = []
-
         resource_leave_ids = resource_cal_leaves.search(cr, uid, [('calendar_id','=',id), '|', ('resource_id','=',False), ('resource_id','=',resource)])
         #res_leaves = resource_cal_leaves.read(cr, uid, resource_leave_ids, ['date_from', 'date_to'])
         res_leaves = resource_cal_leaves.browse(cr, uid, resource_leave_ids)
@@ -73,6 +82,21 @@ class resource_calendar(osv.osv):
         return dt_leave
 
     def interval_min_get(self, cr, uid, id, dt_from, hours, resource=False):
+        """
+        Calculates the working Schedule from supplied from date to till hours
+        will be satisfied  based or resource calendar id. If resource is also
+        given then it will consider the resource leave also and than will 
+        calculates resource working schedule
+        
+        @param dt_from: datetime object, start of working scheduled
+        @param hours: float, total number working  hours needed scheduled from
+                      start date
+        @param resource : Optional Resource id, if supplied than resource leaves
+                        will also taken into consideration for calculating working
+                        schedule.
+        @return : List datetime object of working schedule based on supplies
+                  params
+        """
         if not id:
             td = int(hours)*3
             return [(dt_from - timedelta(hours=td), dt_from)]
@@ -162,10 +186,32 @@ class resource_calendar(osv.osv):
         return results
 
     def interval_get(self, cr, uid, id, dt_from, hours, resource=False, byday=True):
+        """Calculates Resource Working Internal Timing Based on Resource Calendar.
+        
+        @param dt_from: start resource schedule calculation.
+        @param hours : total number of working hours to be scheduled.
+        @param resource: optional resource id, If supplied it will take care of 
+                         resource leave while scheduling.
+        @param byday: boolean flag bit enforce day wise scheduling
+        
+        @return :  list of scheduled working timing  based on resource calendar.
+        """
         res = self.interval_get_multi(cr, uid, [(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)], resource, byday)[(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)]
         return res
 
     def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False):
+        """ Calculates the Total Working hours based on given start_date to 
+        end_date, If resource id is supplied that it will consider the source 
+        leaves also in calculating the hours.
+        
+        @param dt_from : date start to calculate hours
+        @param dt_end : date end to calculate hours
+        @param resource: optional resource id, If given resource leave will be
+                         considered. 
+        
+        @return : Total number of working hours based dt_from and dt_end and 
+                  resource if supplied.
+        """
         if not id:
             return 0.0
         dt_leave = self._get_leaves(cr, uid, id, resource)
@@ -211,15 +257,21 @@ resource_calendar()
 class resource_calendar_attendance(osv.osv):
     _name = "resource.calendar.attendance"
     _description = "Work Detail"
+    
     _columns = {
         'name' : fields.char("Name", size=64, required=True),
-        'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of week'),
+        'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of week', required=True, select=True),
         'date_from' : fields.date('Starting date'),
-        'hour_from' : fields.float('Work from', size=8, required=True, help="Working time will start from"),
+        'hour_from' : fields.float('Work from', size=8, required=True, help="Working time will start from", select=True),
         'hour_to' : fields.float("Work to", size=8, required=True, help="Working time will end at"),
         'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True),
     }
+    
     _order = 'dayofweek, hour_from'
+    
+    _defaults = {
+        'dayofweek' : '0'
+    }
 resource_calendar_attendance()
 
 def convert_timeformat(time_string):
@@ -265,33 +317,26 @@ class resource_resource(osv.osv):
         resource_objs = {}
         user_pool = self.pool.get('res.users')
         for user in user_pool.browse(cr, uid, user_ids, context=context):
+            resource_objs[user.id] = {
+                 'name' : user.name,
+                 'vacation': [],
+                 'efficiency': 1.0,
+            }
+
             resource_ids = self.search(cr, uid, [('user_id', '=', user.id)], context=context)
-            #assert len(resource_ids) < 1, "User should not has more than one resources"
-            leaves = []
-            resource_eff = 1.0
             if resource_ids:
                 for resource in self.browse(cr, uid, resource_ids, context=context):
-                    resource_eff = resource.time_efficiency
+                    resource_objs[user.id]['efficiency'] = resource.time_efficiency
                     resource_cal = resource.calendar_id.id
                     if resource_cal:
                         leaves = self.compute_vacation(cr, uid, calendar_id, resource.id, resource_cal, context=context)
-                    temp = {
-                             'name' : resource.name,
-                             'vacation': tuple(leaves),
-                             'efficiency': resource_eff,
-                          }
-                    resource_objs[resource.id] = temp     
-#            resource_objs.append(classobj(str(user.name), (Resource,),{
-#                                             '__doc__': user.name,
-#                                             '__name__': user.name,
-#                                             'vacation': tuple(leaves),
-#                                             'efficiency': resource_eff,
-#                                          }))
+                        resource_objs[user.id]['vacation'] += list(leaves)
         return resource_objs
 
     def compute_vacation(self, cr, uid, calendar_id, resource_id=False, resource_calendar=False, context=None):
         """
         Compute the vacation from the working calendar of the resource.
+
         @param calendar_id : working calendar of the project
         @param resource_id : resource working on phase/task
         @param resource_calendar : working calendar of the resource
@@ -323,8 +368,8 @@ class resource_resource(osv.osv):
         """
         if not calendar_id:
             # Calendar is not specified: working days: 24/7
-            return [('fri', '1:0-12:0','12:0-24:0'), ('thu', '1:0-12:0','12:0-24:0'), ('wed', '1:0-12:0','12:0-24:0'), 
-                   ('mon', '1:0-12:0','12:0-24:0'), ('tue', '1:0-12:0','12:0-24:0'), ('sat', '1:0-12:0','12:0-24:0'), ('sun', '1:0-12:0','12:0-24:0')]
+            return [('fri', '8:0-12:0','13:0-17:0'), ('thu', '8:0-12:0','13:0-17:0'), ('wed', '8:0-12:0','13:0-17:0'), 
+                   ('mon', '8:0-12:0','13:0-17:0'), ('tue', '8:0-12:0','13:0-17:0')]
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         time_range = "8:00-8:00"
         non_working = ""
@@ -340,9 +385,11 @@ class resource_resource(osv.osv):
         for week in weeks:
             res_str = ""
             day = None
-            if week_days.has_key(week['dayofweek']):
+            if week_days.get(week['dayofweek'],False):
                 day = week_days[week['dayofweek']]
                 wk_days[week['dayofweek']] = week_days[week['dayofweek']]
+            else:
+                raise osv.except_osv(_('Configuration Error!'),_('Make sure the Working time has been configured with proper week days!'))
             hour_from_str = convert_timeformat(week['hour_from'])
             hour_to_str = convert_timeformat(week['hour_to'])
             res_str = hour_from_str + '-' + hour_to_str
@@ -365,13 +412,6 @@ class resource_resource(osv.osv):
         if non_working:
             wktime_cal.append((non_working[:-1], time_range))
         return wktime_cal
-
-    #TODO: Write optimized alogrothem for resource availability. : Method Yet not implemented
-    def check_availability(self, cr, uid, ids, start, end, context=None):
-        if context ==  None:
-            contex = {}
-        allocation = {}
-        return allocation
 
 resource_resource()
 

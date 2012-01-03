@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"POT-Creation-Date: 2011-12-22 18:45+0000\n"
 "PO-Revision-Date: 2011-07-15 02:29+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:35+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:03+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: mrp_operations
@@ -27,6 +27,12 @@ msgid "Work Orders"
 msgstr "Pracovní příkazy"
 
 #. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:489
+#, python-format
+msgid "Operation is already finished!"
+msgstr ""
+
+#. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_canceloperation0
 msgid "Cancel the operation."
 msgstr "Zrušit operace."
@@ -35,12 +41,6 @@ msgstr "Zrušit operace."
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
 msgid "mrp_operations.operation.code"
 msgstr "mrp_operations.operation.code"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:133
-#, python-format
-msgid "Production Order Cannot start in [%s] state"
-msgstr "Výrobní příkaz nemůže začít ve stavu [%s]"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -87,9 +87,19 @@ msgid "Production Operation"
 msgstr "Výrobní operace"
 
 #. module: mrp_operations
+#: view:mrp.production:0
+msgid "Set to Draft"
+msgstr ""
+
+#. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
 msgid "Free Serialisation"
 msgstr "Volné zřetězení"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Výrobní příkaz"
 
 #. module: mrp_operations
 #: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
@@ -101,6 +111,11 @@ msgstr "Operace MRP"
 #: field:mrp.workorder,day:0
 msgid "Day"
 msgstr "Den"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+msgid "Cancel Order"
+msgstr ""
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_productionorder0
@@ -118,17 +133,16 @@ msgid "Creation of the work order"
 msgstr "Vytvoření výrobního příkazu"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:463
-#, python-format
-msgid "You cannot Pause the Operation other then Start/Resume state !"
-msgstr "Nemůžete pozastavit jinou operaci než ve stavu Započetí/Obnovení !"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
-#: field:mrp.workorder,workcenter_id:0
-msgid "Workcenter"
-msgstr "Pracovní centrum"
+#: help:mrp.production.workcenter.line,state:0
+msgid ""
+"* When a work order is created it is set in 'Draft' state.\n"
+"* When user sets work order in start mode that time it will be set in 'In "
+"Progress' state.\n"
+"* When work order is in running mode, during that time if user wants to stop "
+"or to make changes in order then can set in 'Pending' state.\n"
+"* When the user cancels the work order it will be set in 'Canceled' state.\n"
+"* When order is completely processed that time it is set in 'Finished' state."
+msgstr ""
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_productionstart0
@@ -136,11 +150,11 @@ msgid "The work orders are created on the basis of the production order."
 msgstr "Pracovní příkazy jsou vytvářeny na základě výrobních příkazů."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:133
-#: code:addons/mrp_operations/mrp_operations.py:463
-#: code:addons/mrp_operations/mrp_operations.py:467
-#: code:addons/mrp_operations/mrp_operations.py:479
-#: code:addons/mrp_operations/mrp_operations.py:482
+#: code:addons/mrp_operations/mrp_operations.py:134
+#: code:addons/mrp_operations/mrp_operations.py:470
+#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:486
+#: code:addons/mrp_operations/mrp_operations.py:489
 #, python-format
 msgid "Error!"
 msgstr "Chyba!"
@@ -153,9 +167,16 @@ msgid "Cancelled"
 msgstr "Zrušeno"
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
-msgid "Confirmed Work Orders"
-msgstr "Potvrdit výrobní příkazy"
+#: code:addons/mrp_operations/mrp_operations.py:486
+#, python-format
+msgid "There is no Operation to be cancelled!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:482
+#, python-format
+msgid "Operation is Already Cancelled!"
+msgstr ""
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
@@ -169,17 +190,29 @@ msgid "Stock Move"
 msgstr "Přesun zásob"
 
 #. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:479
+#, python-format
+msgid ""
+"In order to Finish the operation, it must be in the Start or Resume state!"
+msgstr ""
+
+#. module: mrp_operations
 #: field:mrp.workorder,nbr:0
 msgid "# of Lines"
 msgstr "# z řádek"
 
 #. module: mrp_operations
+#: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
-#: selection:mrp.production.workcenter.line,production_state:0
-#: selection:mrp.production.workcenter.line,state:0
-#: selection:mrp.workorder,state:0
-msgid "Draft"
-msgstr "Koncept"
+msgid "Finish Order"
+msgstr ""
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,date_finished:0
+#: field:mrp.production.workcenter.line,date_planned_end:0
+#: field:mrp_operations.operation,date_finished:0
+msgid "End Date"
+msgstr "Datum ukončení"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -193,6 +226,14 @@ msgstr "Ve výrobě"
 #: field:mrp.workorder,state:0
 msgid "State"
 msgstr "Stav"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Draft"
+msgstr "Koncept"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
@@ -215,22 +256,14 @@ msgid "Month -1"
 msgstr "Měsíc -1"
 
 #. module: mrp_operations
-#: help:mrp.production.workcenter.line,state:0
-msgid ""
-"* When a work order is created it is set in 'Draft' state.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' state.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pause' state.\n"
-"* When the user cancels the work order it will be set in 'Canceled' state.\n"
-"* When order is completely processed that time it is set in 'Finished' state."
-msgstr ""
+#: field:mrp.production.workcenter.line,uom:0
+msgid "UOM"
+msgstr "MJ"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:472
-#, python-format
-msgid "You cannot finish the operation without Starting/Resuming it !"
-msgstr "Nemůžete dokončit operace bez jejich Započetí/Obnovení !"
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -238,16 +271,30 @@ msgid "Planned Date"
 msgstr "Plánovaný datum"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:479
-#, python-format
-msgid "There is no Operation to be cancelled !"
-msgstr "Žádná operace ke zrušení !"
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid ""
+"To manufacture or assemble products, and use raw materials and finished "
+"products you must also handle manufacturing operations. Manufacturing "
+"operations are often called Work Orders. The various operations will have "
+"different impacts on the costs of manufacturing and planning depending on "
+"the available workload."
+msgstr ""
+"K vyrobení nebo sestavení výrobků a použití surových materiálů a dokončení "
+"výrobků musíte také řídit výrobní operace. Výrobní operace jsou často "
+"nazýván Pracovní příkazy. Různé operace budou mít různý dopad na cenu výroby "
+"a plánování v závislosti na dostupném pracovním zatížení."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
 #: field:mrp.workorder,product_qty:0
 msgid "Product Qty"
 msgstr "Množství výrobků"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:134
+#, python-format
+msgid "Manufacturing order cannot start in state \"%s\"!"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -265,18 +312,15 @@ msgid "Status"
 msgstr "Stav"
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+#: help:mrp.production.workcenter.line,delay:0
 msgid ""
-"To manufacture or assemble products, and use raw materials and finished "
-"products you must also handle manufacturing operations. Manufacturing "
-"operations are often called Work Orders. The various operations will have "
-"different impacts on the costs of manufacturing and planning depending on "
-"the available workload."
+"This is lead time between operation start and stop in this Work Center"
 msgstr ""
-"K vyrobení nebo sestavení výrobků a použití surových materiálů a dokončení "
-"výrobků musíte také řídit výrobní operace. Výrobní operace jsou často "
-"nazýván Pracovní příkazy. Různé operace budou mít různý dopad na cenu výroby "
-"a plánování v závislosti na dostupném pracovním zatížení."
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Planned Year"
+msgstr ""
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
@@ -289,18 +333,20 @@ msgid "Future Work Orders"
 msgstr "Budoucí pracovní příkazy"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:459
-#, python-format
-msgid ""
-"Operation has already started !You  can either Pause /Finish/Cancel the "
-"operation"
+#: view:mrp.workorder:0
+msgid "Work orders during last month"
 msgstr ""
-"Operace byla již zahájena ! Můžete ji Pozastavit / Dokončit / Zrušit."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
 msgid "Operation Cancelled"
 msgstr "Operace zrušena"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+msgid "Pause Work Order"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -334,6 +380,11 @@ msgid "Work Order Report"
 msgstr "Výkaz pracovních příkazů"
 
 #. module: mrp_operations
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero!"
+msgstr ""
+
+#. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
 #: field:mrp.production.workcenter.line,date_start_date:0
 #: field:mrp_operations.operation,date_start:0
@@ -346,9 +397,11 @@ msgid "Waiting Goods"
 msgstr "Čekající zboží"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
-#: selection:mrp.production.workcenter.line,state:0
+#: view:mrp.workorder:0
+msgid "Work orders made during current year"
+msgstr ""
+
+#. module: mrp_operations
 #: selection:mrp.workorder,state:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Pause"
@@ -362,9 +415,17 @@ msgid "In Progress"
 msgstr "V běhu"
 
 #. module: mrp_operations
-#: model:ir.model,name:mrp_operations.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Výrobní příkaz"
+#: code:addons/mrp_operations/mrp_operations.py:470
+#, python-format
+msgid ""
+"In order to Pause the operation, it must be in the Start or Resume state!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:474
+#, python-format
+msgid "In order to Resume the operation, it must be in the Pause state!"
+msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -394,13 +455,9 @@ msgid "Set Draft"
 msgstr "Nastavit na koncept"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,total_cycles:0
-msgid "Total Cycles"
-msgstr "Celkem cyklů"
-
-#. module: mrp_operations
+#: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
+#: selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
 msgstr "Čekající"
 
@@ -410,10 +467,12 @@ msgid "Production Operation Code"
 msgstr "Kód výrobní operace"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:467
+#: code:addons/mrp_operations/mrp_operations.py:466
 #, python-format
-msgid " You cannot Resume the operation other then Pause state !"
-msgstr " Nemůžete znovu zahájit jinou operaci než ve stavu pozastaveno !"
+msgid ""
+"Operation has already started !Youcan either Pause/Finish/Cancel the "
+"operation"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -426,36 +485,13 @@ msgid "Started"
 msgstr "Zahájeno"
 
 #. module: mrp_operations
-#: model:ir.module.module,description:mrp_operations.module_meta_information
-msgid ""
-"\n"
-"     This module adds state, date_start,date_stop in production order "
-"operation lines\n"
-"     (in the \"Work Centers\" tab)\n"
-"     State: draft, confirm, done, cancel\n"
-"     When finishing/confirming,cancelling production orders set all state "
-"lines to the according state\n"
-"     Create menus:\n"
-"         Production Management > All Operations\n"
-"         Production Management > All Operations > Operations To Do "
-"(state=\"confirm\")\n"
-"     Which is a view on \"Work Centers\" lines in production order,\n"
-"     editable tree\n"
-"\n"
-"    Add buttons in the form view of production order under workcenter tab:\n"
-"    * start (set state to confirm), set date_start\n"
-"    * done (set state to done), set date_stop\n"
-"    * set to draft (set state to draft)\n"
-"    * cancel set state to cancel\n"
-"\n"
-"    When the production order becomes \"ready to produce\", operations must\n"
-"    become 'confirmed'. When the production order is done, all operations\n"
-"    must become done.\n"
-"\n"
-"    The field delay is the delay(stop date - start date).\n"
-"    So that we can compare the theoretic delay and real delay.\n"
-"\n"
-"    "
+#: view:mrp.production.workcenter.line:0
+msgid "Production started late"
+msgstr ""
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Planned Day"
 msgstr ""
 
 #. module: mrp_operations
@@ -464,10 +500,10 @@ msgid "June"
 msgstr "Červen"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:482
-#, python-format
-msgid "Operation is already finished !"
-msgstr "Operace již dokončena !"
+#: view:mrp.workorder:0
+#: field:mrp.workorder,total_cycles:0
+msgid "Total Cycles"
+msgstr "Celkem cyklů"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -496,13 +532,6 @@ msgid "November"
 msgstr "Listopad"
 
 #. module: mrp_operations
-#: help:mrp.production.workcenter.line,delay:0
-msgid "This is lead time between operation start and stop in this workcenter"
-msgstr ""
-"Toto je čekací čas mezi započetím a zastavením operace v tomto pracovním "
-"centru"
-
-#. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Search"
 msgstr "Hledat"
@@ -518,12 +547,18 @@ msgid "January"
 msgstr "Leden"
 
 #. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+msgid "Resume Work Order"
+msgstr ""
+
+#. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_doneoperation0
 msgid "Finish the operation."
 msgstr "Dokončit operaci"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:452
+#: code:addons/mrp_operations/mrp_operations.py:459
 #, python-format
 msgid "Operation is not started yet !"
 msgstr "Operace ještě nebyla zahájena !"
@@ -534,10 +569,15 @@ msgid "Information from the production order."
 msgstr "Informace z výrobního příkazu."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:452
+#: sql_constraint:mrp.production:0
+msgid "Reference must be unique per Company!"
+msgstr ""
+
+#. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:459
-#: code:addons/mrp_operations/mrp_operations.py:472
-#: code:addons/mrp_operations/mrp_operations.py:475
+#: code:addons/mrp_operations/mrp_operations.py:466
+#: code:addons/mrp_operations/mrp_operations.py:479
+#: code:addons/mrp_operations/mrp_operations.py:482
 #, python-format
 msgid "Sorry!"
 msgstr "Promiňte!"
@@ -554,15 +594,9 @@ msgid "Code"
 msgstr "Kód"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:475
-#, python-format
-msgid "Operation is Already Cancelled  !"
-msgstr "Operace je již zrušena !"
-
-#. module: mrp_operations
-#: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
-msgid "Work Center Production start end workflow"
-msgstr "Pracovní tok začátku a konce pracovního centra"
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
+msgid "Confirmed Work Orders"
+msgstr "Potvrdit výrobní příkazy"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
@@ -656,6 +690,9 @@ msgid "Search Work Orders"
 msgstr "Hledat pracovní příkazy"
 
 #. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: view:mrp.workorder:0
+#: field:mrp.workorder,workcenter_id:0
 #: field:mrp_operations.operation,workcenter_id:0
 #: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"
@@ -712,11 +749,6 @@ msgid "Finished"
 msgstr "Dokončeno"
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,uom:0
-msgid "UOM"
-msgstr "MJ"
-
-#. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Hours by Work Center"
 msgstr "Hodiny podle pracovního centra"
@@ -727,16 +759,19 @@ msgid "Working Hours"
 msgstr "Pracovní hodiny"
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,date_finished:0
-#: field:mrp.production.workcenter.line,date_planned_end:0
-#: field:mrp_operations.operation,date_finished:0
-msgid "End Date"
-msgstr "Datum ukončení"
+#: view:mrp.workorder:0
+msgid "Planned Month"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "February"
 msgstr "Únor"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Work orders made during current month"
+msgstr ""
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
@@ -762,6 +797,12 @@ msgstr "Operace dokončena"
 #: view:mrp.workorder:0
 msgid "#Line Orders"
 msgstr "#Řádek objednávek"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+msgid "Start Working"
+msgstr ""
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0
@@ -799,11 +840,55 @@ msgid "Duration"
 msgstr "Trvání"
 
 #. module: mrp_operations
-#: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero !"
-msgstr "Množství objednávky nemůže být záporné nebo nulové !"
-
-#. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr "Snažíte se přiřadit dávku, která není ze stejného výrobku"
+
+#, python-format
+#~ msgid "Production Order Cannot start in [%s] state"
+#~ msgstr "Výrobní příkaz nemůže začít ve stavu [%s]"
+
+#, python-format
+#~ msgid "You cannot Pause the Operation other then Start/Resume state !"
+#~ msgstr "Nemůžete pozastavit jinou operaci než ve stavu Započetí/Obnovení !"
+
+#~ msgid "Workcenter"
+#~ msgstr "Pracovní centrum"
+
+#, python-format
+#~ msgid "You cannot finish the operation without Starting/Resuming it !"
+#~ msgstr "Nemůžete dokončit operace bez jejich Započetí/Obnovení !"
+
+#, python-format
+#~ msgid "There is no Operation to be cancelled !"
+#~ msgstr "Žádná operace ke zrušení !"
+
+#, python-format
+#~ msgid ""
+#~ "Operation has already started !You  can either Pause /Finish/Cancel the "
+#~ "operation"
+#~ msgstr ""
+#~ "Operace byla již zahájena ! Můžete ji Pozastavit / Dokončit / Zrušit."
+
+#, python-format
+#~ msgid " You cannot Resume the operation other then Pause state !"
+#~ msgstr " Nemůžete znovu zahájit jinou operaci než ve stavu pozastaveno !"
+
+#, python-format
+#~ msgid "Operation is already finished !"
+#~ msgstr "Operace již dokončena !"
+
+#~ msgid "This is lead time between operation start and stop in this workcenter"
+#~ msgstr ""
+#~ "Toto je čekací čas mezi započetím a zastavením operace v tomto pracovním "
+#~ "centru"
+
+#, python-format
+#~ msgid "Operation is Already Cancelled  !"
+#~ msgstr "Operace je již zrušena !"
+
+#~ msgid "Work Center Production start end workflow"
+#~ msgstr "Pracovní tok začátku a konce pracovního centra"
+
+#~ msgid "Order quantity cannot be negative or zero !"
+#~ msgstr "Množství objednávky nemůže být záporné nebo nulové !"
