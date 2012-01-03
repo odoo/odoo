@@ -224,6 +224,8 @@ class hr_evaluation(osv.osv):
                         wait = True
                     if not wait:
                         hr_eval_inter_obj.survey_req_waiting_answer(cr, uid, [int_id], context=context)
+                    elif wait:
+                        hr_eval_inter_obj.survey_req_draft_answer(cr, uid, [int_id], context=context)
 
                     if (not wait) and phase.mail_feature:
                         body = phase.mail_body % {'employee_name': child.name, 'user_signature': child.user_id.signature,
@@ -308,6 +310,10 @@ class hr_evaluation_interview(osv.osv):
 
     def survey_req_waiting_answer(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, { 'state': 'waiting_answer'}, context=context)
+        return True
+    
+    def survey_req_draft_answer(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, { 'state': 'draft'}, context=context)
         return True
 
     def survey_req_done(self, cr, uid, ids, context=None):
