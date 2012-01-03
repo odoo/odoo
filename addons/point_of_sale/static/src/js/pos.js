@@ -364,6 +364,7 @@ openerp.point_of_sale = function(db) {
             step: 'products',
         };
         Order.prototype.initialize = function() {
+            this.set({creationDate: new Date});
             this.set({
                 orderLines: new OrderlineCollection
             });
@@ -742,7 +743,12 @@ openerp.point_of_sale = function(db) {
         setValue: function(val) {
         	var param = {};
         	param[this.numpadState.get('mode')] = val;
-        	this.shop.get('selectedOrder').selected.set(param);
+        	var order = this.shop.get('selectedOrder');
+        	if (order.get('orderLines').length !== 0) {
+        	   order.selected.set(param);
+        	} else {
+        	    this.shop.get('selectedOrder').destroy();
+        	}
         },
         changeSelectedOrder: function() {
             this.currentOrderLines.unbind();
@@ -1077,7 +1083,7 @@ openerp.point_of_sale = function(db) {
             this.order.destroy();
         },
         render_element: function() {
-            this.$element.html(this.template_fct(this.order.toJSON()));
+            this.$element.html(this.template_fct({widget:this}));
             this.$element.addClass('order-selector-button');
         }
     });
