@@ -99,13 +99,7 @@
             <field name="search_view_id" ref="view_email_server_search"/>
         </record>
 
-        <menuitem
-            parent="base.next_id_15"
-            id="menu_action_fetchmail_server_tree"
-            action="action_email_server_tree"
-            name="Incoming Mail Servers"
-            sequence="40"
-        />
+      <menuitem id="menu_mail_servers1" parent="base.menu_email" action="action_email_server_tree" sequence="14"/>
 
       <record model="ir.ui.view" id="email_message_tree_view">
           <field name="name">mail.message.list.fetchmail</field>
