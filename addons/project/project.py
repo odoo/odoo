@@ -506,7 +506,7 @@ class task(osv.osv):
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
 
-        if tm in ['Hours','Hour']:
+        if tm in [_('Hours'),_('Hour')]:
             return res
 
         eview = etree.fromstring(res['arch'])
