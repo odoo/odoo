@@ -2383,6 +2383,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
                         return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
                     },
                     parent_view: self.o2m.view,
+                    child_name: self.o2m.name,
                     form_view_options: {'not_interactible_on_create':true}
                 },
                 self.o2m.build_domain(),
