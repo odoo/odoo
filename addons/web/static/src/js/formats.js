@@ -254,6 +254,11 @@ openerp.web.format_cell = function (row_data, column, value_if_empty, process_mo
         attrs = column.modifiers_for(row_data);
     }
     if (attrs.invisible) { return ''; }
+    
+    if(column.type === "boolean")
+        return _.str.sprintf('<input type="checkbox" %s disabled="disabled" />',
+                 row_data[column.id].value ? 'checked="checked"':'');
+
     if (column.tag === 'button') {
         return _.template('<button type="button" title="<%-title%>" <%=additional_attributes%> >' +
             '<img src="<%-prefix%>/web/static/src/img/icons/<%-icon%>.png" alt="<%-alt%>"/>' +
