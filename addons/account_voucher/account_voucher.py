@@ -448,7 +448,9 @@ class account_voucher(osv.osv):
         default['value']['account_id'] = account_id
         default['value']['type'] = ttype or tr_type
 
-        vals = self.onchange_journal(cr, uid, ids, journal_id, line_ids, tax_id, partner_id, company_id, context)
+        date = time.strftime('%Y-%m-%d')
+        amount = 0.0
+        vals = self.onchange_journal(cr, uid, ids, journal_id, line_ids, tax_id, partner_id, date, amount, ttype, company_id, context)
         default['value'].update(vals.get('value'))
 
         return default
@@ -1051,7 +1053,7 @@ class account_voucher(osv.osv):
                 voucher_currency = voucher_brw.currency_id and voucher_brw.currency_id.id or voucher_brw.journal_id.company_id.currency_id.id
                 # We want to set it on the account move line as soon as the original line had a foreign currency
                 if line.move_line_id.currency_id and line.move_line_id.currency_id.id != company_currency:
-                    # we compute the amount in that foreign currency. 
+                    # we compute the amount in that foreign currency.
                     if line.move_line_id.currency_id.id == current_currency:
                         # if the voucher and the voucher line share the same currency, there is no computation to do
                         sign = (move_line['debit'] - move_line['credit']) < 0 and -1 or 1
@@ -1270,7 +1272,7 @@ class account_voucher_line(osv.osv):
 
     def _currency_id(self, cr, uid, ids, name, args, context=None):
         '''
-        This function returns the currency id of a voucher line. It's either the currency of the 
+        This function returns the currency id of a voucher line. It's either the currency of the
         associated move line (if any) or the currency of the voucher or the company currency.
         '''
         res = {}
