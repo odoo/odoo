@@ -1025,7 +1025,11 @@ openerp.point_of_sale = function(db) {
         render_element: function() {
             this.$element.html(qweb_template('pos-receipt-view'));
             $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
-            $('button#print-the-ticket', this.$element).click(function(){window.print();});
+            $('button#print-the-ticket', this.$element).click(_.bind(this.print, this));
+        },
+        print: function() {
+            window.print();
+            this.finishOrder();
         },
         finishOrder: function() {
             this.shop.get('selectedOrder').destroy();
