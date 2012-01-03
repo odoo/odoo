@@ -567,7 +567,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     /**
      * The session is validated either by login or by restoration of a previous session
      */
-    session_authenticate: function(db, login, password, volatile) {
+    session_authenticate: function(db, login, password, _volatile) {
         var self = this;
         var base_location = document.location.protocol + '//' + document.location.host;
         var params = { db: db, login: login, password: password, base_location: base_location };
@@ -580,7 +580,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 user_context: result.context,
                 openerp_entreprise: result.openerp_entreprise
             });
-            if (!volatile) {
+            if (!_volatile) {
                 self.set_cookie('session_id', self.session_id);
             }
             return self.load_modules();
