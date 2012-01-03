@@ -563,7 +563,7 @@ class survey_question_wiz(osv.osv_memory):
             surv_name_wiz.write(cr, uid, [context.get('sur_name_id',False)], {'response' : tools.ustr(response_id)})
 
         #click first time on next button then increemnet on total start suvey
-        if not sur_name_read['store_ans']:
+        if not safe_eval(sur_name_read['store_ans']):
             his_id = self.pool.get('survey.history').create(cr, uid, {'user_id': uid, \
                                               'date': strftime('%Y-%m-%d %H:%M:%S'), 'survey_id': sur_name_read['survey_id'][0]})
             survey_id = sur_name_read['survey_id'][0]
