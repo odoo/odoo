@@ -20,7 +20,6 @@
 ##############################################################################
 
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 import time
 import pooler
 from osv import fields, osv
@@ -711,8 +710,7 @@ class sale_order(osv.osv):
         """Compute the Stock Move date for the Sale Order Line"""
         date_planned = datetime.strptime(line.order_id.date_order,
                                          DEFAULT_SERVER_DATE_FORMAT)
-        # XXX shouldn't this be a timedelta() instead of a relativedelta()?
-        date_planned += relativedelta(days=line.delay or 0.0)
+        date_planned += timedelta(days=line.delay or 0.0)
         date_planned -= timedelta(days=line.order_id.company_id.security_lead)
         return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
