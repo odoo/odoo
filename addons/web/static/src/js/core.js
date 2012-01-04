@@ -502,7 +502,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                         .attr('action', ajax.url + '?' + $.param(data))
                         .append($('<input type="hidden" name="r" />').attr('value', payload_str))
                         .hide()
-                        .appendTo($('body'));
+                        .appendTo($('.openerp'));
             var cleanUp = function() {
                 if ($iframe) {
                     $iframe.unbind("load").attr("src", "javascript:false;").remove();

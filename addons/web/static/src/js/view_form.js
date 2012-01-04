@@ -1544,7 +1544,7 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
         _.each('font-family,font-size,white-space'.split(','), function(style) {
             $div.css(style, $input.css(style));
         });
-        $div.appendTo($('body'));
+        $div.appendTo($(".openerp"));
         new_height = $div.height();
         if (new_height < 90) {
             new_height = 90;
@@ -3155,7 +3155,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
         var div = $("<div></div>");
         div.css("display", "none");
         div.css("color", color);
-        div.appendTo($("body"));
+        div.appendTo($(".openerp"));
         var ncolor = div.css("color");
         div.remove();
         var res = /^\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/.exec(ncolor);

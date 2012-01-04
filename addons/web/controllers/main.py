@@ -197,7 +197,7 @@ class WebClient(openerpweb.Controller):
             'js': js,
             'css': css,
             'modules': simplejson.dumps(self.server_wide_modules(req)),
-            'init': 'new s.web.WebClient().replace($("body"));',
+            'init': 'new s.web.WebClient().appendTo($("body"));',
         }
         return r
 
