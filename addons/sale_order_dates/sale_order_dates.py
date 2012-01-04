@@ -39,7 +39,7 @@ class sale_order_dates(osv.osv):
         return super(sale_order_dates, self).copy(cr, uid, id, default=default,
                                             context=context)
     
-    def _order_line_move_date(self, cr, uid, line):
+    def _order_line_move_date(self, cr, uid, line, context=None):
         """Compute the expected date from the requested date, not the order date"""
         order=line.order_id
         if order and order.requested_date:
