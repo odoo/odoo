@@ -31,6 +31,7 @@ import logging
 import os
 import re
 import sys
+import threading
 import zipfile
 import zipimport
 
@@ -97,11 +98,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         cr.commit()
         if not tools.config.options['test_disable']:
             try:
+                threading.currentThread().testing = True
                 _load_data(cr, module_name, idref, mode, 'test')
             except Exception, e:
                 logging.getLogger('init.test').exception(
                     'Tests failed to execute in module %s', module_name)
             finally:
+                threading.currentThread().testing = False
                 if tools.config.options['test_commit']:
                     cr.commit()
                 else:

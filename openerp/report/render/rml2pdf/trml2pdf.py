@@ -37,6 +37,8 @@ from openerp.tools.safe_eval import safe_eval as eval
 from reportlab.lib.units import inch,cm,mm
 from openerp.tools.misc import file_open
 from reportlab.pdfbase import pdfmetrics
+from reportlab.lib.pagesizes import A4, letter
+
 
 try:
     from cStringIO import StringIO
@@ -910,9 +912,13 @@ class _rml_template(object):
         self.path = path
         self.title = title
 
-        if not node.get('pageSize'):
-            pageSize = (utils.unit_get('21cm'), utils.unit_get('29.7cm'))
-        else:
+        pagesize_map = {'a4': A4,
+                    'us_letter': letter
+                    }
+        pageSize = A4
+        if self.localcontext.get('company'):
+            pageSize = pagesize_map.get(self.localcontext.get('company').paper_format, A4)
+        if node.get('pageSize'):
             ps = map(lambda x:x.strip(), node.get('pageSize').replace(')', '').replace('(', '').split(','))
             pageSize = ( utils.unit_get(ps[0]),utils.unit_get(ps[1]) )
 

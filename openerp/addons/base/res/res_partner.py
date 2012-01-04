@@ -36,9 +36,20 @@ class res_payterm(osv.osv):
 res_payterm()
 
 class res_partner_category(osv.osv):
+
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
+        """Return the categories' display name, including their direct
+           parent by default.
+
+        :param dict context: the ``partner_category_display`` key can be
+                             used to select the short version of the
+                             category name (without the direct parent),
+                             when set to ``'short'``. The default is
+                             the long version.""" 
+        if context is None:
+            context = {}
+        if context.get('partner_category_display') == 'short':
+            return super(res_partner_category, self).name_get(cr, uid, ids, context=context)
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
@@ -141,7 +152,6 @@ class res_partner(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
     }
-
     def _default_category(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -235,7 +245,7 @@ class res_partner(osv.osv):
         address_obj = self.pool.get('res.partner.address')
         address_ids = address_obj.search(cr, uid, [('partner_id', 'in', ids)])
         address_rec = address_obj.read(cr, uid, address_ids, ['type'])
-        res = list(tuple(addr.values()) for addr in address_rec)
+        res = list((addr['type'],addr['id']) for addr in address_rec)
         adr = dict(res)
         # get the id of the (first) default address if there is one,
         # otherwise get the id of the first address in the list
@@ -289,7 +299,7 @@ class res_partner_address(osv.osv):
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
-        'function': fields.char('Function', size=64),
+        'function': fields.char('Function', size=128),
         'title': fields.many2one('res.partner.title','Title'),
         'name': fields.char('Contact Name', size=64, select=1),
         'street': fields.char('Street', size=128),
@@ -314,7 +324,6 @@ class res_partner_address(osv.osv):
         'active': lambda *a: 1,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner.address', context=c),
     }
-
     def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
@@ -355,6 +364,32 @@ class res_partner_address(osv.osv):
 
     def get_city(self, cr, uid, id):
         return self.browse(cr, uid, id).city
+
+    def _display_address(self, cr, uid, address, context=None):
+        '''
+        The purpose of this function is to build and return an address formatted accordingly to the
+        standards of the country where it belongs.
+
+        :param address: browse record of the res.partner.address to format
+        :returns: the address formatted in a display that fit its country habits (or the default ones
+            if not country is specified)
+        :rtype: string
+        '''
+        # get the address format
+        address_format = address.country_id and address.country_id.address_format or \
+                                         '%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s' 
+        # get the information that will be injected into the display format
+        args = {
+            'state_code': address.state_id and address.state_id.code or '',
+            'state_name': address.state_id and address.state_id.name or '',
+            'country_code': address.country_id and address.country_id.code or '',
+            'country_name': address.country_id and address.country_id.name or '',
+        }
+        address_field = ['title', 'street', 'street2', 'zip', 'city']
+        for field in address_field :
+            args[field] = getattr(address, field) or ''
+
+        return address_format % args
 
 res_partner_address()
 

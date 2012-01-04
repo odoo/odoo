@@ -189,7 +189,14 @@ class ir_sequence(openerp.osv.osv.osv):
     def _next(self, cr, uid, seq_ids, context=None):
         if not seq_ids:
             return False
-        seq = self.read(cr, uid, seq_ids[:1], ['implementation','number_next','prefix','suffix','padding'])[0]
+        if context is None:
+            context = {}
+        force_company = context.get('force_company')
+        if not force_company:
+            force_company = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+        sequences = self.read(cr, uid, seq_ids, ['company_id','implementation','number_next','prefix','suffix','padding'])
+        preferred_sequences = [s for s in sequences if s['company_id'] and s['company_id'][0] == force_company ]
+        seq = preferred_sequences[0] if preferred_sequences else sequences[0]
         if seq['implementation'] == 'standard':
             cr.execute("SELECT nextval('ir_sequence_%03d')" % seq['id'])
             seq['number_next'] = cr.fetchone()
@@ -204,14 +211,24 @@ class ir_sequence(openerp.osv.osv.osv):
     def next_by_id(self, cr, uid, sequence_id, context=None):
         """ Draw an interpolated string using the specified sequence."""
         self.check_read(cr, uid)
-        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context) + [False]
+        company_ids = self.pool.get('res.company').search(cr, uid, [], order='company_id', context=context) + [False]
         ids = self.search(cr, uid, ['&',('id','=', sequence_id),('company_id','in',company_ids)])
         return self._next(cr, uid, ids, context)
 
     def next_by_code(self, cr, uid, sequence_code, context=None):
-        """ Draw an interpolated string using the specified sequence."""
+        """ Draw an interpolated string using a sequence with the requested code.
+            If several sequences with the correct code are available to the user
+            (multi-company cases), the one from the user's current company will
+            be used.
+
+            :param dict context: context dictionary may contain a
+                ``force_company`` key with the ID of the company to
+                use instead of the user's current company for the
+                sequence selection. A matching sequence for that
+                specific company will get higher priority. 
+        """
         self.check_read(cr, uid)
-        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context) + [False]
+        company_ids = self.pool.get('res.company').search(cr, uid, [], order='company_id', context=context) + [False]
         ids = self.search(cr, uid, ['&',('code','=', sequence_code),('company_id','in',company_ids)])
         return self._next(cr, uid, ids, context)
 

@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import calendar
 import time
 import logging
 import threading
@@ -174,7 +175,7 @@ class ir_cron(osv.osv):
             if numbercall:
                 # Reschedule our own main cron thread if necessary.
                 # This is really needed if this job runs longer than its rescheduling period.
-                nextcall = time.mktime(nextcall.timetuple())
+                nextcall = calendar.timegm(nextcall.timetuple())
                 openerp.cron.schedule_wakeup(nextcall, cr.dbname)
         finally:
             cr.commit()
@@ -251,7 +252,7 @@ class ir_cron(osv.osv):
             next_call = cr.dictfetchone()['min_next_call']
 
             if next_call:
-                next_call = time.mktime(time.strptime(next_call, DEFAULT_SERVER_DATETIME_FORMAT))
+                next_call = calendar.timegm(time.strptime(next_call, DEFAULT_SERVER_DATETIME_FORMAT))
             else:
                 # no matching cron job found in database, re-schedule arbitrarily in 1 day,
                 # this delay will likely be modified when running jobs complete their tasks

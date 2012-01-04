@@ -116,11 +116,11 @@ class res_company(osv.osv):
 
 
     _columns = {
-        'name': fields.related('partner_id', 'name', string='Company Name', size=64, required=True, store=True, type='char'),
+        'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
-        'rml_header1': fields.char('Report Header / Company Slogan', size=200),
+        'rml_header1': fields.char('Report Header / Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents."),
         'rml_footer1': fields.char('General Information Footer', size=200),
         'rml_footer2': fields.function(_get_bank_data, type="char", string='Bank Accounts Footer', size=250, help="This field is computed automatically based on bank accounts defined, having the display on footer checkbox set."),
         'rml_header': fields.text('RML Header', required=True),
@@ -144,6 +144,7 @@ class res_company(osv.osv):
         'website': fields.related('partner_id', 'website', string="Website", type="char", size=64), 
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32), 
         'company_registry': fields.char('Company Registry', size=64),
+        'paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
@@ -277,29 +278,31 @@ class res_company(osv.osv):
             finally:
                 header_file.close()
         except:
-            return """
+            return self._header_a4
+
+    _header_main = """
     <header>
     <pageTemplate>
-        <frame id="first" x1="1.3cm" y1="2.5cm" height="23.0cm" width="19cm"/>
+        <frame id="first" x1="1.3cm" y1="2.5cm" height="%s" width="19.0cm"/>
         <pageGraphics>
             <!-- You Logo - Change X,Y,Width and Height -->
-            <image x="1.3cm" y="27.6cm" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
+            <image x="1.3cm" y="%s" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
             <setFont name="DejaVu Sans" size="8"/>
             <fill color="black"/>
             <stroke color="black"/>
-            <lines>1.3cm 27.7cm 20cm 27.7cm</lines>
+            <lines>1.3cm %s 20cm %s</lines>
 
-            <drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
+            <drawRightString x="20cm" y="%s">[[ company.rml_header1 ]]</drawRightString>
 
 
-            <drawString x="1.3cm" y="27.2cm">[[ company.partner_id.name ]]</drawString>
-            <drawString x="1.3cm" y="26.8cm">[[ company.partner_id.address and company.partner_id.address[0].street or  '' ]]</drawString>
-            <drawString x="1.3cm" y="26.4cm">[[ company.partner_id.address and company.partner_id.address[0].zip or '' ]] [[ company.partner_id.address and company.partner_id.address[0].city or '' ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name  or '']]</drawString>
-            <drawString x="1.3cm" y="26.0cm">Phone:</drawString>
-            <drawRightString x="7cm" y="26.0cm">[[ company.partner_id.address and company.partner_id.address[0].phone or '' ]]</drawRightString>
-            <drawString x="1.3cm" y="25.6cm">Mail:</drawString>
-            <drawRightString x="7cm" y="25.6cm">[[ company.partner_id.address and company.partner_id.address[0].email or '' ]]</drawRightString>
-            <lines>1.3cm 25.5cm 7cm 25.5cm</lines>
+            <drawString x="1.3cm" y="%s">[[ company.partner_id.name ]]</drawString>
+            <drawString x="1.3cm" y="%s">[[ company.partner_id.address and company.partner_id.address[0].street or  '' ]]</drawString>
+            <drawString x="1.3cm" y="%s">[[ company.partner_id.address and company.partner_id.address[0].zip or '' ]] [[ company.partner_id.address and company.partner_id.address[0].city or '' ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name  or '']]</drawString>
+            <drawString x="1.3cm" y="%s">Phone:</drawString>
+            <drawRightString x="7cm" y="%s">[[ company.partner_id.address and company.partner_id.address[0].phone or '' ]]</drawRightString>
+            <drawString x="1.3cm" y="%s">Mail:</drawString>
+            <drawRightString x="7cm" y="%s">[[ company.partner_id.address and company.partner_id.address[0].email or '' ]]</drawRightString>
+            <lines>1.3cm %s 7cm %s</lines>
 
             <!--page bottom-->
 
@@ -311,8 +314,18 @@ class res_company(osv.osv):
         </pageGraphics>
     </pageTemplate>
 </header>"""
+
+    _header_a4 = _header_main % ('23.0cm', '27.6cm', '27.7cm', '27.7cm', '27.8cm', '27.2cm', '26.8cm', '26.4cm', '26.0cm', '26.0cm', '25.6cm', '25.6cm', '25.5cm', '25.5cm')
+    _header_letter = _header_main % ('21.3cm', '25.9cm', '26.0cm', '26.0cm', '26.1cm', '25.5cm', '25.1cm', '24.7cm', '24.3cm', '24.3cm', '23.9cm', '23.9cm', '23.8cm', '23.8cm')
+
+    def onchange_paper_format(self, cr, uid, ids, paper_format, context=None):
+        if paper_format == 'us_letter':
+            return {'value': {'rml_header': self._header_letter}}
+        return {'value': {'rml_header': self._header_a4}}
+
     _defaults = {
         'currency_id': _get_euro,
+        'paper_format': 'a4',
         'rml_header':_get_header,
         'rml_header2': _header2,
         'rml_header3': _header3,

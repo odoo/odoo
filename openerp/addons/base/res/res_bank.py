@@ -139,7 +139,7 @@ class res_partner_bank(osv.osv):
         'state': fields.selection(_bank_type_get, 'Bank Account Type', required=True,
             change_default=True),
         'sequence': fields.integer('Sequence'),
-        'footer': fields.boolean("Display on Reports")
+        'footer': fields.boolean("Display on Reports", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
     }
     _defaults = {
         'owner_name': lambda obj, cursor, user, context: obj._default_value(

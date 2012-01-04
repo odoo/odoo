@@ -63,6 +63,9 @@
                     <!-- In case the action is an act_window,
                          overrides its own @views. -->
                     <rng:optional><rng:attribute name="view_mode"/></rng:optional>
+                    <!-- Add a 'Create' button in order to create a new resource of the action's model
+                         values :  [true|false|<ID of specific action view>]. -->
+                    <rng:optional><rng:attribute name="creatable"/></rng:optional>
                 </rng:element>
             </rng:zeroOrMore>
         </rng:element>
@@ -534,6 +537,10 @@
             <rng:optional><rng:attribute name="filters"/></rng:optional>
             <rng:optional><rng:attribute name="statusbar_visible"/></rng:optional>
             <rng:optional><rng:attribute name="statusbar_colors"/></rng:optional>
+            <!-- Widget *static* options defined as an arbitrary JSON dict, with
+                 widget-dependent parameters. To be ignored if widget/client does
+                 not support them. -->
+            <rng:optional><rng:attribute name="options"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="diagram"/>

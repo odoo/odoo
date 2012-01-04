@@ -73,7 +73,7 @@ class configmanager(object):
         # Not exposed in the configuration file.
         self.blacklist_for_save = set(
             ['publisher_warranty_url', 'load_language', 'root_path',
-            'init', 'save', 'config', 'update'])
+            'init', 'save', 'config', 'update', 'stop_after_init'])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
         self.casts = {}
@@ -568,6 +568,7 @@ class configmanager(object):
                 p.set('options', opt, self.options[opt])
 
         for sec in sorted(self.misc.keys()):
+            p.add_section(sec)
             for opt in sorted(self.misc[sec].keys()):
                 p.set(sec,opt,self.misc[sec][opt])
 
