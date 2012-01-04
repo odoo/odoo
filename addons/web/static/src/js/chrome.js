@@ -289,7 +289,6 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
         });
         $.when(fetch_db, fetch_langs).then(function () {self.do_create();});
 
-        this.$element.find('#db-back').click(_.bind(function() {this.hide();}, this));
         this.$element.find('#db-create').click(this.do_create);
         this.$element.find('#db-drop').click(this.do_drop);
         this.$element.find('#db-backup').click(this.do_backup);
