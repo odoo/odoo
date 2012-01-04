@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:43+0000\n"
 "PO-Revision-Date: 2010-09-29 10:51+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:28+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:00+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -44,8 +44,8 @@ msgid "Group By..."
 msgstr ""
 
 #. module: hr_expense
-#: model:product.template,name:hr_expense.product_product_expense_air_product_template
-msgid "Air Ticket"
+#: report:hr.expense:0
+msgid "Validated By"
 msgstr ""
 
 #. module: hr_expense
@@ -54,6 +54,11 @@ msgstr ""
 #: view:hr.expense.report:0
 #: field:hr.expense.report,department_id:0
 msgid "Department"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "New Expense"
 msgstr ""
 
 #. module: hr_expense
@@ -89,14 +94,13 @@ msgid "Expenses Statistics"
 msgstr ""
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
 #: view:hr.expense.report:0
-#: model:process.node,name:hr_expense.process_node_approved0
-msgid "Approved"
-msgstr "Odobreno"
+msgid "Approved Expenses"
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.line,uom_id:0
+#: view:product.product:0
 msgid "UoM"
 msgstr "JM"
 
@@ -105,6 +109,11 @@ msgstr "JM"
 msgid ""
 "Date of the acceptation of the sheet expense. It's filled when the button "
 "Accept is pressed."
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Expenses during current month"
 msgstr ""
 
 #. module: hr_expense
@@ -118,29 +127,24 @@ msgid "Employee's Invoice"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.module.module,description:hr_expense.module_meta_information
-msgid ""
-"\n"
-"    This module aims to manage employee's expenses.\n"
-"\n"
-"    The whole workflow is implemented:\n"
-"    * Draft expense\n"
-"    * Confirmation of the sheet by the employee\n"
-"    * Validation by his manager\n"
-"    * Validation by the accountant and invoice creation\n"
-"    * Payment of the invoice to the employee\n"
-"\n"
-"    This module also uses the analytic accounting and is compatible with\n"
-"    the invoice on timesheet module so that you will be able to "
-"automatically\n"
-"    re-invoice your customer's expenses if your work by project.\n"
-"    "
+#: view:product.product:0
+msgid "Products"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Confirm Expenses"
 msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
 msgid "Cancelled"
 msgstr "Otkazano"
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_refused0
+msgid "The direct manager refuses the sheet.Reset as draft."
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -156,11 +160,6 @@ msgstr "Čekam potvrđenje"
 #: selection:hr.expense.report,state:0
 msgid "Accepted"
 msgstr "Prihvaćeno"
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-msgid "   Month   "
-msgstr ""
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -193,11 +192,6 @@ msgid "Refuse expense"
 msgstr "Odbiti trošak"
 
 #. module: hr_expense
-#: model:product.template,name:hr_expense.product_product_expense_car_product_template
-msgid "Car Travel"
-msgstr ""
-
-#. module: hr_expense
 #: field:hr.expense.report,price_average:0
 msgid "Average Price"
 msgstr ""
@@ -217,6 +211,12 @@ msgstr "Potvrdi"
 #: model:process.node,note:hr_expense.process_node_supplierinvoice0
 msgid "The accoutant validates the sheet"
 msgstr "Računovođa odobrava izvještaj"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:187
+#, python-format
+msgid "The employee's home address must have a partner linked."
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.report,delay_valid:0
@@ -248,11 +248,16 @@ msgid "State"
 msgstr "Država"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:144
+#: code:addons/hr_expense/hr_expense.py:173
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product purchase, "
 "`property_account_expense_categ`"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Expenses during last month"
 msgstr ""
 
 #. module: hr_expense
@@ -262,6 +267,17 @@ msgstr ""
 #: view:hr.expense.report:0
 msgid "Employee"
 msgstr "Djelatnik"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: selection:hr.expense.expense,state:0
+msgid "New"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Confirmed Expense"
+msgstr ""
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -281,9 +297,9 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:144
-#: code:addons/hr_expense/hr_expense.py:157
-#: code:addons/hr_expense/hr_expense.py:159
+#: code:addons/hr_expense/hr_expense.py:173
+#: code:addons/hr_expense/hr_expense.py:185
+#: code:addons/hr_expense/hr_expense.py:187
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -342,12 +358,6 @@ msgid "Reimbursement"
 msgstr "Naknada"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:158
-#, python-format
-msgid "The employee must have a Home address"
-msgstr ""
-
-#. module: hr_expense
 #: view:hr.expense.report:0
 msgid "    Month-1    "
 msgstr ""
@@ -356,6 +366,11 @@ msgstr ""
 #: field:hr.expense.expense,date_valid:0
 #: field:hr.expense.report,date_valid:0
 msgid "Validation Date"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "My Department"
 msgstr ""
 
 #. module: hr_expense
@@ -396,6 +411,11 @@ msgid "December"
 msgstr ""
 
 #. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Invoiced Expenses"
+msgstr ""
+
+#. module: hr_expense
 #: view:hr.expense.expense:0
 #: view:hr.expense.report:0
 #: field:hr.expense.report,month:0
@@ -431,11 +451,6 @@ msgid "Can Constitute an Expense"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-msgid "  Year  "
-msgstr ""
-
-#. module: hr_expense
 #: selection:hr.expense.expense,state:0
 #: selection:hr.expense.report,state:0
 msgid "Reimbursed"
@@ -452,8 +467,6 @@ msgid "Create Customer invoice"
 msgstr "Generiraj novi izlazni račun"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: selection:hr.expense.expense,state:0
 #: selection:hr.expense.report,state:0
 msgid "Draft"
 msgstr ""
@@ -499,9 +512,8 @@ msgid "Customer Project"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,user_id:0
-msgid "User"
+#: model:ir.actions.act_window,name:hr_expense.product_normal_form_view_installer
+msgid "Review Your Expenses Products"
 msgstr ""
 
 #. module: hr_expense
@@ -519,6 +531,18 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Extended Filters..."
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,user_id:0
+msgid "User"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:185
+#, python-format
+msgid "The employee must have a Home address."
 msgstr ""
 
 #. module: hr_expense
@@ -542,13 +566,18 @@ msgid "HR Expenses"
 msgstr ""
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Submit to Manager"
+msgstr ""
+
+#. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_confirmedexpenses0
 msgid "The employee validates his expense sheet"
 msgstr ""
 
 #. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_refused0
-msgid "The direct manager refuses the sheet.Reset as draft."
+#: view:hr.expense.expense:0
+msgid "Expenses to Invoice"
 msgstr ""
 
 #. module: hr_expense
@@ -574,8 +603,9 @@ msgid "Day"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.module.module,shortdesc:hr_expense.module_meta_information
-msgid "Human Resources Expenses Tracking"
+#: report:hr.expense:0
+#: field:hr.expense.line,unit_amount:0
+msgid "Unit Price"
 msgstr ""
 
 #. module: hr_expense
@@ -643,9 +673,26 @@ msgid "Expense is refused."
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.line,unit_amount:0
-msgid "Unit Price"
+#: model:ir.actions.act_window,help:hr_expense.product_normal_form_view_installer
+msgid ""
+"Define one product for each expense type allowed for an employee (travel by "
+"car, hostel, restaurant, etc). If you reimburse the employees at a fixed "
+"rate, set a cost and a unit of measure on the product. If you reimburse "
+"based on real costs, set the cost at 0.00. The user will set the real price "
+"when recording his expense sheet."
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+#: view:hr.expense.report:0
+#: model:process.node,name:hr_expense.process_node_approved0
+msgid "Approved"
+msgstr "Odobreno"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:141
+#, python-format
+msgid "Supplier Invoices"
 msgstr ""
 
 #. module: hr_expense
@@ -753,11 +800,6 @@ msgid "Creates supplier invoice."
 msgstr ""
 
 #. module: hr_expense
-#: model:product.template,name:hr_expense.product_product_expense_hotel_product_template
-msgid "Hotel Accommodation"
-msgstr ""
-
-#. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "April"
 msgstr ""
@@ -790,6 +832,11 @@ msgid "Total"
 msgstr ""
 
 #. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Expenses during current year"
+msgstr ""
+
+#. module: hr_expense
 #: field:hr.expense.line,sequence:0
 msgid "Sequence"
 msgstr ""
@@ -804,6 +851,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_expense.expense_all
 #: model:ir.ui.menu,name:hr_expense.menu_expense_all
 #: model:ir.ui.menu,name:hr_expense.next_id_49
+#: model:product.category,name:hr_expense.cat_expense
 msgid "Expenses"
 msgstr ""
 

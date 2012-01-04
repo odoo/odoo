@@ -253,5 +253,6 @@
   I check whether the procurement orders are created or not.
 -
   !python {model: procurement.order}: |
-    proc_ids = self.search(cr, uid, [('origin','=','MPS(admin) 2011, week 29'),('product_id','=',ref("product.product_product_pc1"))])
+    import datetime
+    proc_ids = self.search(cr, uid, [('origin','=','MPS(admin) %s, week 29' % (datetime.datetime.now().year)),('product_id','=',ref("product.product_product_pc1"))])
     assert proc_ids,'No Procurements!'

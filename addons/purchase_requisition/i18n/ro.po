@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-18 18:25+0000\n"
 "Last-Translator: Mihai Satmarean <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:55+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:27+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: purchase_requisition
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -24,21 +29,26 @@ msgid "In Progress"
 msgstr "În derulare"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
 #, python-format
 msgid "No Product in Tender"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Confirm"
-msgstr "Confirmă"
+#: view:purchase.order:0
+msgid "Requisition"
+msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 #: field:purchase.requisition,user_id:0
 msgid "Responsible"
 msgstr "Responsabil"
+
+#. module: purchase_requisition
+#: view:purchase.requisition.partner:0
+msgid "Create Quotation"
+msgstr "Creaţi oferta"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -53,9 +63,8 @@ msgstr "Stare"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
-msgid "Draft"
-msgstr "Ciornă"
+msgid "Purchase Requisition in negociation"
+msgstr ""
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -63,8 +72,9 @@ msgid "Supplier"
 msgstr "Furnizor"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,exclusive:0
-msgid "Requisition Type"
+#: view:purchase.requisition:0
+#: selection:purchase.requisition,state:0
+msgid "New"
 msgstr ""
 
 #. module: purchase_requisition
@@ -82,6 +92,7 @@ msgstr "Data Rechiziţie"
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: model:ir.actions.report.xml,name:purchase_requisition.report_purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
+#: model:ir.module.category,name:purchase_requisition.module_category_purchase_requisition
 #: field:product.product,purchase_requisition:0
 #: field:purchase.order,requisition_id:0
 #: view:purchase.requisition:0
@@ -96,15 +107,20 @@ msgid "Purchase Requisition Line"
 msgstr ""
 
 #. module: purchase_requisition
+#: view:purchase.order:0
+msgid "Purchase Orders with requisition"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
 #: field:purchase.requisition.line,product_id:0
 msgid "Product"
 msgstr "Produs"
 
 #. module: purchase_requisition
-#: sql_constraint:purchase.order:0
-msgid "Order Reference must be unique !"
-msgstr ""
+#: view:purchase.requisition:0
+msgid "Quotations"
+msgstr "Oferte"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -117,6 +133,12 @@ msgstr "Descriere"
 msgid ""
 "Check this box so that requisitions generates purchase requisitions instead "
 "of directly requests for quotations."
+msgstr ""
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:136
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: purchase_requisition
@@ -141,6 +163,12 @@ msgid "Multiple Requisitions"
 msgstr ""
 
 #. module: purchase_requisition
+#: report:purchase.requisition:0
+#: field:purchase.requisition.line,product_uom_id:0
+msgid "Product UoM"
+msgstr "UM produs"
+
+#. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Approved by Supplier"
 msgstr "Aprobat de furnizor"
@@ -151,21 +179,14 @@ msgid "Reset to Draft"
 msgstr "Readuce in stadiul de ciornă"
 
 #. module: purchase_requisition
-#: model:ir.module.module,description:purchase_requisition.module_meta_information
-msgid ""
-"\n"
-"    This module allows you to manage your Purchase Requisition.\n"
-"    When a purchase order is created, you now have the opportunity to save "
-"the related requisition.\n"
-"    This new object will regroup and will allow you to easily keep track and "
-"order all your purchase orders.\n"
+#: view:purchase.requisition:0
+msgid "Current Purchase Requisition"
 msgstr ""
-"\n"
-"    Acest modul vă permite să gestionaţi dvs. Licitaţiile de achiziţie .\n"
-"    Atunci când o comandă de achiziţie este creat, acum aveţi posibilitatea "
-"de a salva licitaţiile de achiziţie aferente.\n"
-"    Acest nou obiect va regrupa şi vă va permite să păstraţi cu uşurinţă "
-"evidenţa şi pentru toate comenzile dvs. de achiziţie.\n"
+
+#. module: purchase_requisition
+#: model:res.groups,name:purchase_requisition.group_purchase_requisition_user
+msgid "User"
+msgstr ""
 
 #. module: purchase_requisition
 #: field:purchase.requisition.partner,partner_address_id:0
@@ -176,11 +197,6 @@ msgstr "Adresă"
 #: report:purchase.requisition:0
 msgid "Order Reference"
 msgstr "Referinţă comandă"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Start Date"
-msgstr "Data de început"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -203,10 +219,23 @@ msgid "Quantity"
 msgstr "Cantitate"
 
 #. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Unassigned  Requisition"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Purchase Requisitions"
 msgstr "Licitaţii de achiziţie"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:136
+#, python-format
+msgid ""
+"You have already one %s purchase order for this partner, you must cancel "
+"this purchase order to create a new quotation."
+msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -270,16 +299,20 @@ msgid "Purchase Order"
 msgstr "Comandă achiziţie"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
 #, python-format
 msgid "Error!"
 msgstr "Eroare!"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition.line,product_uom_id:0
-msgid "Product UoM"
-msgstr "UM produs"
+#: field:purchase.requisition,exclusive:0
+msgid "Requisition Type"
+msgstr ""
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "New Purchase Requisition"
+msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -290,6 +323,11 @@ msgstr "Produse"
 #: view:purchase.requisition:0
 msgid "Order Date"
 msgstr "Data comenzii"
+
+#. module: purchase_requisition
+#: report:purchase.requisition:0
+msgid "]"
+msgstr "]"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -307,9 +345,9 @@ msgid "Purchase Requisition Partner"
 msgstr ""
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "]"
-msgstr "]"
+#: view:purchase.requisition:0
+msgid "Start"
+msgstr ""
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -354,11 +392,6 @@ msgid "Latest Requisition"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Quotations"
-msgstr "Oferte"
-
-#. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Qty"
 msgstr "Cant."
@@ -369,9 +402,9 @@ msgid "Purchase Requisition (exclusive)"
 msgstr "Ofertă de cumpărare(exclusiv)"
 
 #. module: purchase_requisition
-#: view:purchase.requisition.partner:0
-msgid "Create Quotation"
-msgstr "Creaţi oferta"
+#: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager
+msgid "Manager"
+msgstr ""
 
 #. module: purchase_requisition
 #: constraint:product.product:0
@@ -405,9 +438,9 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: purchase_requisition
-#: model:ir.module.module,shortdesc:purchase_requisition.module_meta_information
-msgid "Purchase - Purchase Requisition"
-msgstr ""
+#: view:purchase.requisition:0
+msgid "Start Date"
+msgstr "Data de început"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -415,19 +448,27 @@ msgid "Unassigned"
 msgstr "Neatribuit"
 
 #. module: purchase_requisition
-#: view:purchase.order:0
-msgid "Requisition"
-msgstr ""
-
-#. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
 msgstr "Comenzi de achiziţie"
 
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:90
-#, python-format
-msgid ""
-"You have already one %s purchase order for this partner, you must cancel "
-"this purchase order to create a new quotation."
-msgstr ""
+#~ msgid "Draft"
+#~ msgstr "Ciornă"
+
+#~ msgid "Confirm"
+#~ msgstr "Confirmă"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module allows you to manage your Purchase Requisition.\n"
+#~ "    When a purchase order is created, you now have the opportunity to save "
+#~ "the related requisition.\n"
+#~ "    This new object will regroup and will allow you to easily keep track and "
+#~ "order all your purchase orders.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "    Acest modul vă permite să gestionaţi dvs. Licitaţiile de achiziţie .\n"
+#~ "    Atunci când o comandă de achiziţie este creat, acum aveţi posibilitatea "
+#~ "de a salva licitaţiile de achiziţie aferente.\n"
+#~ "    Acest nou obiect va regrupa şi vă va permite să păstraţi cu uşurinţă "
+#~ "evidenţa şi pentru toate comenzile dvs. de achiziţie.\n"

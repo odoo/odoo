@@ -368,8 +368,6 @@ class account_voucher(osv.osv):
 
         line_ids = resolve_o2m_operations(cr, uid, line_pool, line_ids, ["amount"], context)
 
-        total = 0.0
-        total_tax = 0.0
         for line in line_ids:
             line_amount = 0.0
             line_amount = line.get('amount',0.0)
@@ -443,14 +441,14 @@ class account_voucher(osv.osv):
             tr_type = 'purchase'
         else:
             if not journal.default_credit_account_id or not journal.default_debit_account_id:
-                raise osv.except_osv(_('Error !'), _('Please define default credit/debit account on the %s !') % (journal.name))
+                raise osv.except_osv(_('Error !'), _('Please define default credit/debit accounts on the journal "%s" !') % (journal.name))
             account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
             tr_type = 'receipt'
 
         default['value']['account_id'] = account_id
         default['value']['type'] = ttype or tr_type
 
-        vals = self.onchange_journal(cr, uid, ids, journal_id, line_ids, tax_id, partner_id, company_id, context)
+        vals = self.onchange_journal(cr, uid, ids, journal_id, line_ids, tax_id, partner_id, time.strftime('%Y-%m-%d'), price, ttype, company_id, context)
         default['value'].update(vals.get('value'))
 
         return default
@@ -830,8 +828,6 @@ class account_voucher(osv.osv):
         :return: mapping between fieldname and value of account move line to create
         :rtype: dict
         '''
-        move_line_obj = self.pool.get('account.move.line')
-        currency_obj = self.pool.get('res.currency')
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         debit = credit = 0.0
         # TODO: is there any other alternative then the voucher type ??
@@ -870,7 +866,6 @@ class account_voucher(osv.osv):
         :return: mapping between fieldname and value of account move to create
         :rtype: dict
         '''
-        move_obj = self.pool.get('account.move')
         seq_obj = self.pool.get('ir.sequence')
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         if voucher_brw.number:
@@ -992,6 +987,7 @@ class account_voucher(osv.osv):
             context = {}
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
+        tax_obj = self.pool.get('account.tax')
         tot_line = line_total
         rec_lst_ids = []
 
@@ -1118,7 +1114,6 @@ class account_voucher(osv.osv):
         :return: mapping between fieldname and value of account move line to create
         :rtype: dict
         '''
-        move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
         move_line = {}
 
@@ -1180,9 +1175,6 @@ class account_voucher(osv.osv):
             context = {}
         move_pool = self.pool.get('account.move')
         move_line_pool = self.pool.get('account.move.line')
-        currency_pool = self.pool.get('res.currency')
-        tax_obj = self.pool.get('account.tax')
-        seq_obj = self.pool.get('ir.sequence')
         for voucher in self.browse(cr, uid, ids, context=context):
             if voucher.move_id:
                 continue
@@ -1212,7 +1204,7 @@ class account_voucher(osv.osv):
             # Create the writeoff line if needed
             ml_writeoff = self.writeoff_move_line_get(cr, uid, voucher.id, line_total, move_id, name, company_currency, current_currency, context)
             if ml_writeoff:
-                ml_writeoff_id = move_line_pool.create(cr, uid, ml_writeoff, context)
+                move_line_pool.create(cr, uid, ml_writeoff, context)
             # We post the voucher.
             self.write(cr, uid, [voucher.id], {
                 'move_id': move_id,
@@ -1296,7 +1288,7 @@ class account_voucher_line(osv.osv):
         'account_id':fields.many2one('account.account','Account', required=True),
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
         'untax_amount':fields.float('Untax Amount'),
-        'amount':fields.float('Allocation', digits_compute=dp.get_precision('Account')),
+        'amount':fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'reconcile': fields.boolean('Full Reconcile'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Dr/Cr'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),

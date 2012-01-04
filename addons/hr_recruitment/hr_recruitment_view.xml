@@ -291,11 +291,7 @@
                                 </tr>
                                 </table>
                                 <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                    <div style="white-space: nowrap">
-                                        <field name="job_id"/>
-                                        <t t-if="!record.job_id.raw_value">
-                                            <field name="name"/>
-                                        </t>
+                                    <div class="oe_kanban_right">
                                         <span class="oe_kanban_highlight">
                                             <t t-set="priority" t-value="record.priority.raw_value || 5"/>
                                             <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
@@ -312,6 +308,14 @@
                                             </a>
                                         </span>
                                     </div>
+
+                                    <field name="job_id"/>
+                                    <t t-if="!record.job_id.raw_value">
+                                        <field name="name"/>
+                                    </t>
+
+                                    <div class="oe_kanban_clear" style="padding-top: 4px"/>
+
                                     <div t-if="record.type_id.raw_value or record.source_id.raw_value">
                                         <span t-if="record.type_id.raw_value" class="oe_kanban_highlight oe_kanban_button" style="font-size: 100%%">
                                             <field name="type_id"/>

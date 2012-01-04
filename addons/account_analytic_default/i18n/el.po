@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-12-29 11:33+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:25+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
-
-#. module: account_analytic_default
-#: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
-msgid "Account Analytic Default"
-msgstr "Προκαθορισμένος Λογαριασμός Αναλυτικής"
+"X-Launchpad-Export-Date: 2011-12-23 06:57+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -61,6 +56,11 @@ msgstr "Προκαθορισμένη Ημερομηνία Λήξης γι' αυ�
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
 msgstr "Λίστα Παραλαβής"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Comapny"
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -127,16 +127,13 @@ msgid "Analytic Defaults"
 msgstr "Προκαθορισμένη Αναλυτική"
 
 #. module: account_analytic_default
-#: model:ir.module.module,description:account_analytic_default.module_meta_information
-msgid ""
-"\n"
-"Allows to automatically select analytic accounts based on criterions:\n"
-"* Product\n"
-"* Partner\n"
-"* User\n"
-"* Company\n"
-"* Date\n"
-"    "
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr ""
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Analytical defaults whose end date is greater than today or None"
 msgstr ""
 
 #. module: account_analytic_default
@@ -201,6 +198,9 @@ msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "'Ακυρο XML για αρχιτεκτονική όψης!"
+
+#~ msgid "Account Analytic Default"
+#~ msgstr "Προκαθορισμένος Λογαριασμός Αναλυτικής"
 
 #~ msgid "Analytic Distributions"
 #~ msgstr "Αναλυτικές Διανομές"

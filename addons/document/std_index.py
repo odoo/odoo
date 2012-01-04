@@ -24,6 +24,7 @@ from subprocess import Popen, PIPE
 import StringIO
 import odt2txt
 import sys, zipfile, xml.dom.minidom
+import logging
 
 def _to_unicode(s):
     try:
@@ -95,9 +96,15 @@ class DocIndex(indexer):
         return ['.doc']
 
     def _doIndexFile(self,fname):
-        pop = Popen(['antiword', fname], shell=False, stdout=PIPE)
-        (data, _) = pop.communicate()
-        return _to_unicode(data)
+        try:
+            pop = Popen(['antiword', fname], shell=False, stdout=PIPE)
+            (data, _) = pop.communicate()
+            return _to_unicode(data)
+        except OSError:
+            logger = logging.getLogger('document.DocIndex')
+            logger.warn("Failed attempt to execute antiword (MS Word reader). Antiword is necessary to index the file %s of MIME type %s. Detailed error available at DEBUG level.", fname, self._getMimeTypes()[0])
+            logger.debug("Trace of the failed file indexing attempt: ", exc_info=True)
+            return False
     
 cntIndex.register(DocIndex())
 

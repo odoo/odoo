@@ -29,19 +29,12 @@ import pooler
 from tools.translate import _
 import decimal_precision as dp
 from osv.orm import browse_record, browse_null
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 #
 # Model definition
 #
 class purchase_order(osv.osv):
-
-    def _calc_amount(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        res = {}
-        for order in self.browse(cr, uid, ids):
-            res[order.id] = 0
-            for oline in order.order_line:
-                res[order.id] += oline.price_unit * oline.product_qty
-        return res
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -189,7 +182,7 @@ class purchase_order(osv.osv):
         'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on receptions')], 'Invoicing Control', required=True,
-            help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' frow where you can selectively create an invoice.\n" \
+            help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' from where you can selectively create an invoice.\n" \
                 "Based on generated invoice: create a draft invoice you can validate later.\n" \
                 "Based on receptions: let you create an invoice when receptions are validated."
         ),
@@ -300,25 +293,6 @@ class purchase_order(osv.osv):
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
         return True
-    # Dead code:
-    def wkf_warn_buyer(self, cr, uid, ids):
-        self.write(cr, uid, ids, {'state' : 'wait', 'validator' : uid})
-        request = pooler.get_pool(cr.dbname).get('res.request')
-        for po in self.browse(cr, uid, ids):
-            managers = []
-            for oline in po.order_line:
-                manager = oline.product_id.product_manager
-                if manager and not (manager.id in managers):
-                    managers.append(manager.id)
-            for manager_id in managers:
-                request.create(cr, uid,{
-                       'name' : _("Purchase amount over the limit"),
-                       'act_from' : uid,
-                       'act_to' : manager_id,
-                       'body': _('Somebody has just confirmed a purchase with an amount over the defined limit'),
-                       'ref_partner_id': po.partner_id.id,
-                       'ref_doc1': 'purchase.order,%d' % (po.id,),
-                })
 
     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
         """Collects require data from purchase order line that is used to create invoice line 
@@ -453,7 +427,7 @@ class purchase_order(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
-    def _prepare_order_picking(self, cr, uid, order, *args):
+    def _prepare_order_picking(self, cr, uid, order, context=None):
         return {
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
@@ -466,7 +440,7 @@ class purchase_order(osv.osv):
             'move_lines' : [],
         }
          
-    def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, *args):
+    def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None):
         return {
             'name': order.name + ': ' + (order_line.name or ''),
             'product_id': order_line.product_id.id,
@@ -487,7 +461,7 @@ class purchase_order(osv.osv):
             'price_unit': order_line.price_unit
         }
 
-    def _create_pickings(self, cr, uid, order, order_lines, picking_id=False, *args):
+    def _create_pickings(self, cr, uid, order, order_lines, picking_id=False, context=None):
         """Creates pickings and appropriate stock moves for given order lines, then
         confirms the moves, makes them available, and confirms the picking.
 
@@ -507,7 +481,7 @@ class purchase_order(osv.osv):
         :return: list of IDs of pickings used/created for the given order lines (usually just one)
         """
         if not picking_id: 
-            picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, *args))
+            picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
         todo_moves = []
         stock_move = self.pool.get('stock.move')
         wf_service = netsvc.LocalService("workflow")
@@ -515,7 +489,7 @@ class purchase_order(osv.osv):
             if not order_line.product_id:
                 continue
             if order_line.product_id.type in ('product', 'consu'):
-                move = stock_move.create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, *args))
+                move = stock_move.create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, context=context))
                 if order_line.move_dest_id:
                     order_line.move_dest_id.write({'location_id': order.location_id.id})
                 todo_moves.append(move)
@@ -524,10 +498,10 @@ class purchase_order(osv.osv):
         wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return [picking_id]
 
-    def action_picking_create(self,cr, uid, ids, *args):
+    def action_picking_create(self,cr, uid, ids, context=None):
         picking_ids = []
         for order in self.browse(cr, uid, ids):
-            picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, *args))
+            picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, context=context))
 
         # Must return one unique picking ID: the one to connect in the subflow of the purchase order.
         # In case of multiple (split) pickings, we should return the ID of the critical one, i.e. the
@@ -855,6 +829,32 @@ class procurement_order(osv.osv):
         po_vals.update({'order_line': [(0,0,line_vals)]})
         return self.pool.get('purchase.order').create(cr, uid, po_vals, context=context)
 
+    def _get_purchase_schedule_date(self, cr, uid, procurement, company, context=None):
+        """Return the datetime value to use as Schedule Date (``date_planned``) for the
+           Purchase Order Lines created to satisfy the given procurement.
+
+           :param browse_record procurement: the procurement for which a PO will be created.
+           :param browse_report company: the company to which the new PO will belong to.
+           :rtype: datetime
+           :return: the desired Schedule Date for the PO lines
+        """
+        procurement_date_planned = datetime.strptime(procurement.date_planned, DEFAULT_SERVER_DATETIME_FORMAT)
+        schedule_date = (procurement_date_planned - relativedelta(days=company.po_lead))
+        return schedule_date
+
+    def _get_purchase_order_date(self, cr, uid, procurement, company, schedule_date, context=None):
+        """Return the datetime value to use as Order Date (``date_order``) for the
+           Purchase Order created to satisfy the given procurement.
+
+           :param browse_record procurement: the procurement for which a PO will be created.
+           :param browse_report company: the company to which the new PO will belong to.
+           :param datetime schedule_date: desired Scheduled Date for the Purchase Order lines.
+           :rtype: datetime
+           :return: the desired Order Date for the PO
+        """
+        seller_delay = int(procurement.product_id.seller_delay)
+        return schedule_date - relativedelta(days=seller_delay)
+
     def make_po(self, cr, uid, ids, context=None):
         """ Make purchase order from procurement
         @return: New created Purchase Orders procurement wise
@@ -874,7 +874,6 @@ class procurement_order(osv.osv):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
             seller_qty = procurement.product_id.seller_qty
-            seller_delay = int(procurement.product_id.seller_delay)
             partner_id = partner.id
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
@@ -887,9 +886,8 @@ class procurement_order(osv.osv):
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner_id, {'uom': uom_id})[pricelist_id]
 
-            order_date = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
-            schedule_date = (order_date - relativedelta(days=company.po_lead))
-            order_dates = schedule_date - relativedelta(days=seller_delay)
+            schedule_date = self._get_purchase_schedule_date(cr, uid, procurement, company, context=context)
+            purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
 
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})
@@ -904,7 +902,7 @@ class procurement_order(osv.osv):
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,
                 'price_unit': price or 0.0,
-                'date_planned': schedule_date.strftime('%Y-%m-%d %H:%M:%S'),
+                'date_planned': schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'move_dest_id': res_id,
                 'notes': product.description_purchase,
                 'taxes_id': [(6,0,taxes)],
@@ -918,7 +916,7 @@ class procurement_order(osv.osv):
                 'location_id': procurement.location_id.id,
                 'warehouse_id': warehouse_id and warehouse_id[0] or False,
                 'pricelist_id': pricelist_id,
-                'date_order': order_dates.strftime('%Y-%m-%d %H:%M:%S'),
+                'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             }

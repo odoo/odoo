@@ -30,7 +30,7 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
         if (!this.session)
             return;
         var self = this;
-        var pwc = new openerp.web.Model(self.session, "publisher_warranty.contract");
+        var pwc = new openerp.web.Model("publisher_warranty.contract");
         pwc.get_func('get_default_livechat_text')().then(function(text) {
             self.$element.html(text);
             console.log('receiving text', text);
@@ -65,7 +65,7 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
         var lc_id = _.uniqueId('livechat_');
         this.$element.attr('id', lc_id);
 
-        var pwc = new openerp.web.Model(self.session, "publisher_warranty.contract");
+        var pwc = new openerp.web.Model("publisher_warranty.contract");
         
         pwc.get_func('is_livechat_enable')().then(function(res) {
             console.log('res', res);

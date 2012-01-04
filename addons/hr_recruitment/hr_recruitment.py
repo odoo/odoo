@@ -184,10 +184,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
     }
 
-    def _get_stage(self, cr, uid, context=None):
-        ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [], context=context)
-        return ids and ids[0] or False
-
     _defaults = {
         'active': lambda *a: 1,
         'user_id':  lambda self, cr, uid, context: uid,
@@ -437,9 +433,8 @@ class hr_applicant(crm.crm_case, osv.osv):
                                                      })
                 self.case_close(cr, uid, [applicant.id], *args)
             else:
-                raise osv.except_osv(_('Warning!'),_('You must define Applied Job for Applicant !'))
+                raise osv.except_osv(_('Warning!'),_('You must define Applied Job for this applicant.'))
 
-        
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
         dict_act_window = act_window.read(cr, uid, action_id, [])
         if emp_id:
