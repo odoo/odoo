@@ -20,7 +20,6 @@
 ##############################################################################
 
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv
 from tools.translate import _
@@ -75,7 +74,7 @@ class sale_order_dates(osv.osv):
             for line in order.order_line:
                 dt = (datetime.strptime(order.date_order,
                                         DEFAULT_SERVER_DATE_FORMAT)
-                     + relativedelta(days=line.delay or 0.0) )
+                     + timedelta(days=line.delay or 0.0) )
                 dt_s = dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
                 dates_list.append(dt_s)
             if dates_list:
