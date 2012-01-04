@@ -54,16 +54,6 @@
         </div>
     </div>
 </t>
-<t t-name="Database">
-    <ul class="db_options" style="padding: 0px; display: inline;">
-        <li id="db-create">Create</li>
-        <li id="db-drop">Drop</li>
-        <li id="db-backup">Backup</li>
-        <li id="db-restore">Restore</li>
-        <li id="db-change-password">Password</li>
-        <li id="back-to-login">Back to Login</li>
-    </ul>
-</t>
 <t t-name="Database.CreateDB">
     <form name="create_db_form" class="oe_forms" method="POST">
         <table width="100%">
@@ -320,17 +310,29 @@
         <a href="http://www.openerp.com">Powered by <span class="openerp">OpenERP</span></a>
       </div>
     </div>
+  </div>
+</t>
+<t t-name="DatabaseManager">
     <table class="oe-database-manager">
         <tr class="db_options_row">
             <td valign="top" class="db_container">
-                <div id="oe_database" class="database"></div>
+                <div class="database">
+                    <ul class="db_options" style="padding: 0px; display: inline;">
+                        <li id="db-back">Back</li>
+                        <li id="db-create">Create</li>
+                        <li id="db-drop">Drop</li>
+                        <li id="db-backup">Backup</li>
+                        <li id="db-restore">Restore</li>
+                        <li id="db-change-password">Password</li>
+                        <li id="back-to-login">Back to Login</li>
+                    </ul>
+                </div>
             </td>
             <td valign="top" class="db_right_pane">
              <div id="oe_db_options"></div>
             </td>
         </tr>
     </table>
-  </div>
 </t>
 <t t-name="Header">
     <div>

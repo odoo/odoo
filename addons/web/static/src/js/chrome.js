@@ -260,6 +260,7 @@ openerp.web.Loading = openerp.web.Widget.extend(/** @lends openerp.web.Loading# 
 });
 
 openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database# */{
+    template: "DatabaseManager",
     /**
      * @constructs openerp.web.Database
      * @extends openerp.web.Widget
@@ -270,12 +271,10 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
      */
     init: function(parent, element_id, option_id) {
         this._super(parent, element_id);
-        this.$option_id = $('#' + option_id);
         this.unblockUIFunction = $.unblockUI;
     },
     start: function() {
-        this._super();
-        this.$element.html(QWeb.render("Database", this));
+        this.$option_id = $("#oe_db_options");
 
         var self = this;
         var fetch_db = this.rpc("/web/database/get_list", {}, function(result) {
@@ -290,6 +289,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
         });
         $.when(fetch_db, fetch_langs).then(function () {self.do_create();});
 
+        this.$element.find('#db-back').click(_.bind(function() {this.hide();}, this));
         this.$element.find('#db-create').click(this.do_create);
         this.$element.find('#db-drop').click(this.do_drop);
         this.$element.find('#db-backup').click(this.do_backup);
@@ -567,9 +567,8 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
     },
     start: function() {
         var self = this;
-        this.database = new openerp.web.Database(
-                this, "oe_database", "oe_db_options");
-        this.database.start();
+        this.database = new openerp.web.Database(this);
+        this.database.appendTo(this.$element);
 
         this.$element.find('#oe-db-config').click(function() {
             self.database.show();
