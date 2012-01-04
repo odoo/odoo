@@ -239,6 +239,7 @@ openerp.web.Loading = openerp.web.Widget.extend(/** @lends openerp.web.Loading# 
     stop: function() {
         this.session.on_rpc_request.remove(this.request_call);
         this.session.on_rpc_response.remove(this.response_call);
+        this.on_rpc_event(-this.count);
         this._super();
     },
     on_rpc_event : function(increment) {
@@ -1060,19 +1061,18 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     start: function() {
         var self = this;
+        if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
+            this.$element.addClass("kitten-mode-activated");
+            this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
+                self.$element.toggleClass('clark-gable');
+            });
+        }
         this.session.bind().then(function() {
-            if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
-                this.$element.addClass("kitten-mode-activated");
-                this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
-                    self.$element.toggleClass('clark-gable');
-                });
-            }
-            
             if (!self.session.session_is_valid()) {
                 self.show_login();
             }
         });
-        this.session.ready.then(function() {
+        this.session.on_session_valid.add(function() {
             self.show_application();
             
             self.header.do_update();
@@ -1121,6 +1121,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         _.each(_.clone(this.widget_children), function(el) {
             el.stop();
         });
+        this.$element.children().remove();
     },
     do_reload: function() {
         return this.session.session_init().pipe(_.bind(function() {this.menu.do_reload();}, this));
@@ -1139,7 +1140,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         $(window).unbind('hashchange', this.on_hashchange);
         this.do_push_state({});
         this.show_login();
-        window.location.reload();
     },
     bind_hashchange: function() {
         $(window).bind('hashchange', this.on_hashchange);

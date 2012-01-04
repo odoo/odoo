@@ -385,7 +385,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
-        this.ready = $.Deferred();
         return this.session_init();
     },
     /**
@@ -595,6 +594,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     session_logout: function() {
         this.set_cookie('session_id', '');
     },
+    on_session_valid: function() {
+    },
     /**
      * Called when a rpc call fail due to an invalid session.
      * By default, it's a noop
@@ -658,7 +659,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     });
                 })
             ).then(function() {
-                self.ready.resolve();
+                self.on_session_valid();
             });
         });
     },
