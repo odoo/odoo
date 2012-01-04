@@ -585,20 +585,10 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         });
 
     },
-    stop: function () {
-        this.database.stop();
-        this._super();
-    },
     set_db_list: function (list) {
         this.$element.find("[name=db]").replaceWith(
             openerp.web.qweb.render('Login_dblist', {
                 db_list: list, selected_db: this.selected_db}))
-    },
-    on_login_invalid: function() {
-        this.$element.closest(".openerp").addClass("login-mode");
-    },
-    on_login_valid: function() {
-        this.$element.closest(".openerp").removeClass("login-mode");
     },
     on_submit: function(ev) {
         if(ev) {
@@ -623,7 +613,6 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         this.session.on_session_invalid.add({
             callback: function () {
                 self.$element.addClass("login_invalid");
-                self.on_login_invalid();
             },
             unique: true
         });
@@ -642,19 +631,8 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
                     localStorage.setItem('last_password_login_success', '');
                 }
             }
-            self.on_login_valid();
         });
     },
-    do_ask_login: function(continuation) {
-        this.on_login_invalid();
-        this.$element
-            .removeClass("login_invalid");
-        this.on_login_valid.add({
-            position: "last",
-            unique: true,
-            callback: continuation || function() {}
-        });
-    }
 });
 
 openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
@@ -1079,21 +1057,21 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             }
             
             self.crashmanager =  new openerp.web.CrashManager();
-            
             self.notification = new openerp.web.Notification(self);
             self.notification.appendTo(self.$element);
             self.loading = new openerp.web.Loading(self);
             self.loading.appendTo(self.$element);
-            self.login = new openerp.web.Login(self);
-            self.login.appendTo(self.$element);
             
-            if(self.session.session_is_valid()) {
-                self.login.on_login_valid();
-            } else {
-                self.login.on_login_invalid();
+            if (!self.session.session_is_valid()) {
+                self.login = new openerp.web.Login(self);
+                self.login.appendTo(self.$element);
             }
         });
         this.session.ready.then(function() {
+            if (self.login) {
+                self.login.stop();
+                self.login = undefined;
+            }
             self.$element.append($(QWeb.render("Interface", {})));
             self.header = new openerp.web.Header(self);
             self.header.on_logout.add(self.on_logout);
@@ -1103,7 +1081,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.menu.on_action.add(self.on_menu_action);
             self.menu.start();
             
-            self.login.on_login_valid();
             self.header.do_update();
             self.menu.do_reload();
             if(self.action_manager)
@@ -1130,7 +1107,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     on_logout: function() {
         this.session.session_logout();
-        this.login.on_login_invalid();
         this.header.do_update();
         $(window).unbind('hashchange', this.on_hashchange);
         this.do_push_state({});
