@@ -174,7 +174,6 @@
             </div>
         </header>
         <div id="categories">
-            <h4>Categories:</h4>
             <ol>
                 <t t-foreach="categories" t-as="category">
                     <li class="oe-pos-categories-list">
@@ -232,8 +231,7 @@
         <br />
     </t>
     <t t-name="pos-order-selector-button-template">
-        <button class="select-order">Order</button>
-        <button class="close-order">X</button>
+        <button class="select-order"><t t-esc="widget.order.get('creationDate').toString('t')"/></button>
     </t>
     <t t-name="pos-receipt-view">
         <div id="receipt-screen" class="step-screen" style="display:none">

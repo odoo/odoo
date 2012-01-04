@@ -8,24 +8,24 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2010-12-23 16:22+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-12-27 16:12+0000\n"
+"Last-Translator: Milan Milosevic <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:17+0000\n"
+"X-Launchpad-Export-Date: 2011-12-28 05:21+0000\n"
 "X-Generator: Launchpad (build 14560)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr "Podređeni Nalozi"
+msgstr "Podređeni nalozi"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account Name"
-msgstr "Naziv Naloga"
+msgstr "Naziv naloga"
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
@@ -70,26 +70,26 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
-"*Kada je neka faktura kreirana a nalazi se u ' U Toku'.                      "
-"                                                    \n"
-"*Ako je bilo koji asocirani partner tamo, on mora biti u stanju ' Otvoren'.  "
-"                                                                     \n"
-"*Ako je bilo koji Saldo u stanju 'U izvrsenju' on mora i biti tamo.          "
-"                                                                             "
+"*kada je nalog napravljen, stanje mu je 'U pripremi'                         "
+"         \n"
+"*Ako postoji bilo koji partner, može bitu u stanju 'Otvoren'                 "
+"                 \n"
+"*Ako postoji balans na čekanju, može biti 'Na čekanju'                       "
+"           \n"
+"*I , na kraju, kada su sve transakcije gotove, biće u stanju ' Zatvoreno'.   "
+"                                                                            "
 "\n"
-"*I , na kraju kada su sve transakcije gotove, mora se naci u stanju ' "
-"Zatvoreno'.                                                                  "
-"             \n"
-" Ako je ovo shema(obrazac) onda mi mozemo napraviri projekat baziran na "
-"istom. Ako je u stanju ' U izvrsenju' to je normalnan\n"
+"*Projekat može biti bilo gde ako su mu stanja 'U toku' i 'U pripremi'\n"
+" Ako je ovo obrazac, onda možemo napraviti projekat baziran na njima. Ako je "
+"u stanju ' U toku' to je normalnan\n"
 "projekat.\n"
-" Ako zelimo da ga pregledamo, stanje mora biti ' U Toku'.\n"
-" Kada je projekat zavrsen stanje je postavljeno na ' Zavrseno'."
+" Ako želimo da ga pregledamo, stanje mora biti ' U Toku'.\n"
+" Kada je projekat završen stanje je postavljeno na ' Završeno'."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
-msgstr ""
+msgstr "Novo"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -99,7 +99,7 @@ msgstr "Vrsta konta"
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Pending"
-msgstr "U toku"
+msgstr "Na čekanju"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -115,7 +115,7 @@ msgstr "Opis"
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Normal"
-msgstr "Normalan"
+msgstr "Normalno"
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -134,6 +134,11 @@ msgid ""
 "consolidation purposes of several companies charts with different "
 "currencies, for example."
 msgstr ""
+"Ako odredite kompaniju, izabrana valuta mora biti ista kao valuta preduzeća. "
+"\n"
+"Možete ukloniti preduzeće i tako izmeniti valutu, samo na analitičkom kontu "
+"tipa 'pregled'. Ovo može biti zaista korisno iz razloga konsolidacije tabela "
+"nekoliko preduzeća s raznim valutama, na primer."
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -153,7 +158,7 @@ msgstr "Datum"
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Template"
-msgstr "Šablon"
+msgstr "Obrazac"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -167,18 +172,18 @@ msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
 msgstr ""
-"Izracunato mnozenjem kolicine i cene date u proizvodovom cenovniku. Uvek "
-"prikazano u osnovnoj valuti preduzeca."
+"Izračunato množenjem količine i cene datim u cenovniku proizvoda. Uvek "
+"izraženo u osnovnoj valuti preduzeća."
 
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr ""
+msgstr "Hijerarhija naloga"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid "Sets the higher limit of time to work on the contract."
-msgstr ""
+msgstr "Postavlja višu granicu vremena za rad na ugovoru."
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -200,12 +205,12 @@ msgstr "Kontakt"
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "Greška! Valuta mora biti ista kao i valuta izabranog preduzeća"
 
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Code/Reference"
-msgstr ""
+msgstr "Kod/Poziv na broj"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -216,17 +221,17 @@ msgstr "Otkazano"
 #: code:addons/analytic/analytic.py:138
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Greska !"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
 msgid "Balance"
-msgstr "Saldo"
+msgstr "Balans"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Greška! Ne možete praviti rekurzivne analitičke naloge."
 
 #. module: analytic
 #: help:account.analytic.account,type:0
@@ -234,23 +239,23 @@ msgid ""
 "If you select the View Type, it means you won't allow to create journal "
 "entries using that account."
 msgstr ""
-"Ukoliko izaberete PREGLED, to znaci da ne zelite da kreirate sadrzaj "
-"dnevnika, koristeci taj nalog."
+"Ako izaberete Pregled, znači da ne zelite dozvoliti pravljenje sadržaja "
+"dnevnika koristeći taj nalog."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Date End"
-msgstr "Završni datum"
+msgstr "Datum završetka"
 
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Maximum Time"
-msgstr ""
+msgstr "Maksimalno vreme"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Analitičko računovodstvo"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -266,12 +271,12 @@ msgstr "Analitički konto"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "Ne možete napraviti analitički red na pregledu naloga."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -286,7 +291,7 @@ msgstr "Partner"
 #. module: analytic
 #: field:account.analytic.account,date_start:0
 msgid "Date Start"
-msgstr "Početni datum"
+msgstr "Datum početka"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0

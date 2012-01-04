@@ -135,7 +135,7 @@ class stock_picking(osv.osv):
 
         for picking in picking_obj.browse(cursor, user, picking_ids,
                 context=context):
-            if not picking.sale_id:
+            if not picking.sale_id or picking.backorder_id:
                 continue
             sale_lines = picking.sale_id.order_line
             invoice_created = invoices[result[picking.id]]

@@ -31,6 +31,12 @@ import tools
 
 
 def get_datetime(date_field):
+    '''Return a datetime from a date string or a datetime string'''
+    #complete date time if date_field contains only a date
+    date_split = date_field.split(' ')
+    if len(date_split) == 1:
+        date_field = date_split[0] + " 00:00:00"
+   
     return datetime.strptime(date_field[:19], '%Y-%m-%d %H:%M:%S')
 
 

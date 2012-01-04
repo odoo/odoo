@@ -107,7 +107,6 @@ class synchronize_google(osv.osv_memory):
     _defaults = {
         'create_partner': 'create_all',
         'group_name': 'all',
-        'calendar_name': 'all',
     }
 
     def import_google(self, cr, uid, ids, context=None):

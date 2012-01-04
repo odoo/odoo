@@ -169,7 +169,8 @@ class res_partner_address(osv.osv):
     _inherit = 'res.partner.address'
 
     def _default_location_id(self, cr, uid, context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         if not context.get('default_partner_id',False):
             return False
         ids = self.pool.get('res.partner.location').search(cr, uid, [('partner_id','=',context['default_partner_id'])], context=context)
@@ -242,7 +243,8 @@ class res_partner_address(osv.osv):
     }
 
     def default_get(self, cr, uid, fields=[], context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         if 'default_type' in context:
             del context['default_type']
         return super(res_partner_address, self).default_get(cr, uid, fields, context)

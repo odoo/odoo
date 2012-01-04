@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Employee Address Book",
+    "name": "Employee Directory",
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Human Resources",

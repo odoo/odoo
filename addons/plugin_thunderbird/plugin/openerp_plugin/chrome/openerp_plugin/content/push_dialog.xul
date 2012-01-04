@@ -1,0 +1,22 @@
+<?xml version="1.0"?>  
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>  
+<?xml-stylesheet href="style.css" type="text/css"?>
+<!-- Extremely recommended to keep this css include!! -->  
+<window id="rootWnd" title="push box"  onload="load_contact_dialog();" 
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">  
+    <script type="text/javascript" src="chrome://openerp_plugin/content/js/tiny_xmlrpc.js"></script>
+    <script type="text/javascript" src="chrome://openerp_plugin/content/js/tools.js"></script>
+    <script type="text/javascript" src="chrome://openerp_plugin/content/js/dialog.js"></script>
+    <script type="text/javascript" src="chrome://openerp_plugin/content/js/overlay.js"></script>
+	<vbox>  
+    	<hbox height="50"> 
+        	<label value="Message" id="message_label" class="text-border"/>  
+        </hbox>  
+        <hbox align="right">  
+        	<button label="Cancel" accesskey="c" oncommand="window.close();"/>
+        	<button id="push" label="Push Email" accesskey="a" oncommand="window.close();open_window('chrome://openerp_plugin/content/push.xul', 500,360);"/>
+        	<button id="new" label="Create Document" accesskey="d" oncommand="window.close();open_window('chrome://openerp_plugin/content/push_new.xul', 320,100);"/>
+        	<button id="open_document" label="Open Document" accesskey="o" oncommand="open_url(getPreference('urldoc'));window.close();"/>
+        </hbox>  
+    </vbox>  
+</window>  

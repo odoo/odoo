@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="9"/>
+        <menuitem groups="base.group_extended" id="prod_config_main" name="Products" parent="base.menu_base_config" sequence="9"/>
 
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
@@ -442,7 +442,7 @@
             </field>
         </record>
         <record id="product_uom_categ_form_action" model="ir.actions.act_window">
-            <field name="name">Units of Measure Categories</field>
+            <field name="name">UoM Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.uom.categ</field>
             <field name="view_type">form</field>
@@ -532,7 +532,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Supplier Information">
-                    <field name="name"/>
+                    <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                     <field name="sequence"/>
                     <field name="product_name" groups="base.group_extended"/>
                     <field name="product_code" groups="base.group_extended"/>

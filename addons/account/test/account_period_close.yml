@@ -1,13 +1,23 @@
 
 -
-  In order to test close period wizard I create a period then close it and checked it's state
+  In order to test close period wizard I first create a dummy fiscal year in the past to avoid conflicts related to closed periods
+-
+  !record {model: account.fiscalyear, id: data_fiscalyear_minus1}:
+    company_id: base.main_company
+    date_start: !eval "'%s-01-01' %(datetime.now().year-1)"
+    date_stop: !eval "'%s-12-31' %(datetime.now().year-1)"
+    name: !eval "'Fiscal Year X %s' %(datetime.now().year-1)"
+    code: !eval "'FY%s' %(datetime.now().year-1)"
+
+-
+  I create a period then close it and checked it's state
 -
   !record {model: account.period, id: account_period_jan0}:
     company_id: base.main_company
-    date_start: !eval "'%s-01-01' %(datetime.now().year)"
-    date_stop: !eval "'%s-01-31' %(datetime.now().year)"
-    fiscalyear_id: account.data_fiscalyear
-    name: !eval "'Jan-%s' %(datetime.now().year)"
+    date_start: !eval "'%s-01-01' %(datetime.now().year-1)"
+    date_stop: !eval "'%s-01-31' %(datetime.now().year-1)"
+    fiscalyear_id: data_fiscalyear_minus1
+    name: !eval "'Jan-%s' %(datetime.now().year-1)"
     special: 1
 
 -

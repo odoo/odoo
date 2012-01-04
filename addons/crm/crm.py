@@ -427,7 +427,7 @@ class crm_case(crm_base):
                     if case.section_id.parent_id.user_id:
                         data['user_id'] = case.section_id.parent_id.user_id.id
             else:
-                raise osv.except_osv(_('Error !'), _('You can not escalate, You are already at the top level regarding your sales-team category.'))
+                raise osv.except_osv(_('Error !'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data)
         cases = self.browse(cr, uid, ids)
         self.message_append(cr, uid, cases, _('Escalate'))

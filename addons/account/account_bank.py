@@ -68,7 +68,6 @@ class bank(osv.osv):
                 name = self._prepare_name(bank)
                 acc = {
                     'name': name,
-                    'currency_id': bank.company_id.currency_id.id,
                     'code': new_code,
                     'type': 'liquidity',
                     'user_type': ref_acc_bank_temp.user_type.id,

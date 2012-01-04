@@ -342,7 +342,7 @@ class product_template(osv.osv):
             for product in self.browse(cr, uid, ids, context=context):
                 old_uom = product.uom_po_id
                 if old_uom.category_id.id != new_uom.category_id.id:
-                    raise osv.except_osv(_('UoM categories Mismatch!'), _("New UoM '%s' must belongs to same UoM category '%s' as of old UoM '%s'.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
+                    raise osv.except_osv(_('UoM categories Mismatch!'), _("New UoM '%s' must belong to same UoM category '%s' as of old UoM '%s'. If you need to change the unit of measure, you may desactivate this product from the 'Procurement & Locations' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         return super(product_template, self).write(cr, uid, ids, vals, context=context)
 
     _defaults = {
