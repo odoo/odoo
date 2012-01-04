@@ -135,21 +135,21 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
 
     do_show: function () {
-        var self = this,
-            deferred = $.Deferred().resolve();
-        this.has_been_loaded.then(function() {
+        var self = this;
+        return this.has_been_loaded.pipe(function() {
+            var result;
             if (self.dataset.index === null) {
                 // null index means we should start a new record
-                deferred.pipe(self.on_button_new());
+                result = self.on_button_new();
             } else {
-                deferred.pipe(self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded));
+                result = self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded);
             }
             self.$element.show();
             if (self.sidebar) {
                 self.sidebar.$element.show();
             }
+            return result;
         });
-        return deferred;
     },
     do_hide: function () {
         this._super();
@@ -172,7 +172,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 field.validate();
             });
         });
-        return $.when.apply(null, set_values).then(function() {
+        return $.when.apply(null, set_values).pipe(function() {
             if (!record.id) {
                 self.show_invalid = false;
                 // New record: Second pass in order to trigger the onchanges
