@@ -2651,7 +2651,7 @@ class account_tax_code_template(osv.osv):
         company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
 
         #find all the children of the tax_code_root_id
-        children_tax_code_template = obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
+        children_tax_code_template = tax_code_root_id and obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id') or []
         for tax_code_template in obj_tax_code_template.browse(cr, uid, children_tax_code_template, context=context):
             vals = {
                 'name': (tax_code_root_id == tax_code_template.id) and company.name or tax_code_template.name,
