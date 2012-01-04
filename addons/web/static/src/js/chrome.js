@@ -242,8 +242,8 @@ openerp.web.Loading = openerp.web.Widget.extend(/** @lends openerp.web.Loading# 
         this.count += increment;
         if (this.count > 0) {
             //this.$element.html(QWeb.render("Loading", {}));
-            this.$element.html("Loading ("+this.count+")");
-            this.$element.show();
+            $(".loading",this.$element).html("Loading ("+this.count+")");
+            $(".loading",this.$element).show();
             this.widget_parent.$element.addClass('loading');
         } else {
             this.count = 0;
@@ -253,7 +253,7 @@ openerp.web.Loading = openerp.web.Widget.extend(/** @lends openerp.web.Loading# 
                 this.blocked_ui = false;
                 $.unblockUI();
             }
-            this.$element.fadeOut();
+            $(".loading",this.$element).fadeOut();
             this.widget_parent.$element.removeClass('loading');
         }
     }
@@ -1065,15 +1065,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this._super(parent);
         openerp.webclient = this;
 
-        this.notification = new openerp.web.Notification(this);
-        this.loading = new openerp.web.Loading(this);
-        this.crashmanager =  new openerp.web.CrashManager();
-
-        this.header = new openerp.web.Header(this);
-        this.login = new openerp.web.Login(this);
-        this.header.on_logout.add(this.on_logout);
-        this.header.on_action.add(this.on_menu_action);
-
         this._current_state = null;
     },
     render_element: function() {
@@ -1091,14 +1082,23 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
                     self.$element.toggleClass('clark-gable');
                 });
             }
-            self.$element.html(QWeb.render("Interface", params));
+            
+            self.crashmanager =  new openerp.web.CrashManager();
+            
+            self.notification = new openerp.web.Notification(self);
+            self.notification.appendTo(self.$element);
+            self.loading = new openerp.web.Loading(self);
+            self.loading.appendTo(self.$element);
+            self.login = new openerp.web.Login(self);
+            self.login.appendTo(self.$element);
+            
+            self.$element.append($(QWeb.render("Interface", params)));
+            self.header = new openerp.web.Header(self);
+            self.header.on_logout.add(self.on_logout);
+            self.header.on_action.add(self.on_menu_action);
+            self.header.appendTo($("#oe_header"));
             self.menu = new openerp.web.Menu(self, "oe_menu", "oe_secondary_menu");
             self.menu.on_action.add(self.on_menu_action);
-
-            self.notification.prependTo(self.$element);
-            self.loading.appendTo($('#oe_loading'));
-            self.header.appendTo($("#oe_header"));
-            self.login.appendTo(self.$element);
             self.menu.start();
             if(self.session.session_is_valid()) {
                 self.login.on_login_valid();
