@@ -1060,9 +1060,9 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
      *
      * @param element_id
      */
-    init: function(element_id) {
+    init: function(parent) {
         var self = this;
-        this._super(null, element_id);
+        this._super(parent);
         openerp.webclient = this;
 
         this.notification = new openerp.web.Notification(this);
@@ -1076,8 +1076,12 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
 
         this._current_state = null;
     },
+    render_element: function() {
+        this.$element = $('<body/>');
+        this.$element.attr("id", "oe");
+        this.$element.addClass("openerp");
+    },
     start: function() {
-        this._super.apply(this, arguments);
         var self = this;
         this.session.bind().then(function() {
             var params = {};
