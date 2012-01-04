@@ -1042,7 +1042,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this._current_state = null;
     },
     render_element: function() {
-        this.$element = $('<div/>');
+        this.$element = $('<body/>');
         this.$element.attr("id", "oe");
         this.$element.addClass("openerp");
     },

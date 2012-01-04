@@ -89,7 +89,7 @@ html_template = """<!DOCTYPE html>
             });
         </script>
     </head>
-    <body style="margin: 0;height: 100%%;"></body>
+    <body></body>
 </html>
 """
 
@@ -197,7 +197,7 @@ class WebClient(openerpweb.Controller):
             'js': js,
             'css': css,
             'modules': simplejson.dumps(self.server_wide_modules(req)),
-            'init': 'new s.web.WebClient().appendTo($("body"));',
+            'init': 'new s.web.WebClient().replace($("body"));',
         }
         return r
 
