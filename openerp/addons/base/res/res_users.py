@@ -357,7 +357,7 @@ class users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'menu_tips':True
+        'menu_tips': False
     }
 
     # User can write to a few of her own fields (but not her groups for example)
