@@ -73,7 +73,7 @@ class module_category(osv.osv):
         'name': fields.char("Name", size=128, required=True, translate=True, select=True),
         'parent_id': fields.many2one('ir.module.category', 'Parent Application', select=True),
         'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Applications'),
-        'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer'),
+        'module_nr': fields.function(_module_nbr, string='Number of Modules', type='integer'),
         'module_ids' : fields.one2many('ir.module.module', 'category_id', 'Modules'),
         'description' : fields.text("Description", translate=True),
         'sequence' : fields.integer('Sequence'),
@@ -183,7 +183,7 @@ class module(osv.osv):
         #   installed_version refer the latest version (the one on disk)
         #   latest_version refer the installed version (the one in database)
         #   published_version refer the version available on the repository
-        'installed_version': fields.function(_get_latest_version, method=True,
+        'installed_version': fields.function(_get_latest_version, 
             string='Latest version', type='char'),
         'latest_version': fields.char('Installed version', size=64, readonly=True),
         'published_version': fields.char('Published Version', size=64, readonly=True),
@@ -210,9 +210,9 @@ class module(osv.osv):
                 ('Other OSI approved licence', 'Other OSI Approved Licence'),
                 ('Other proprietary', 'Other Proprietary')
             ], string='License', readonly=True),
-        'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta", store=True),
-        'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta", store=True),
-        'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
+        'menus_by_module': fields.function(_get_views, string='Menus', type='text', multi="meta", store=True),
+        'reports_by_module': fields.function(_get_views, string='Reports', type='text', multi="meta", store=True),
+        'views_by_module': fields.function(_get_views, string='Views', type='text', multi="meta", store=True),
         'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
         'application': fields.boolean('Application', readonly=True),
         'icon': fields.char('Icon URL', size=128),
@@ -648,7 +648,7 @@ class module_dependency(osv.osv):
     _columns = {
         'name': fields.char('Name',  size=128, select=True),
         'module_id': fields.many2one('ir.module.module', 'Module', select=True, ondelete='cascade'),
-        'state': fields.function(_state, method=True, type='selection', selection=[
+        'state': fields.function(_state, type='selection', selection=[
             ('uninstallable','Uninstallable'),
             ('uninstalled','Not Installed'),
             ('installed','Installed'),

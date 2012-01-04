@@ -91,11 +91,11 @@ class ir_model(osv.osv):
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
-        'osv_memory': fields.function(_is_osv_memory, method=True, string='In-memory model', type='boolean',
+        'osv_memory': fields.function(_is_osv_memory, string='In-memory model', type='boolean',
             fnct_search=_search_osv_memory,
             help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)"),
-        'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the object is defined or inherited'),
-        'view_ids': fields.function(_view_ids, method=True, type='one2many', obj='ir.ui.view', string='Views'),
+        'modules': fields.function(_in_modules, type='char', size=128, string='In modules', help='List of modules in which the object is defined or inherited'),
+        'view_ids': fields.function(_view_ids, type='one2many', obj='ir.ui.view', string='Views'),
     }
 
     _defaults = {
@@ -206,7 +206,7 @@ class ir_model_fields(osv.osv):
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'view_load': fields.boolean('View Auto-Load'),
         'selectable': fields.boolean('Selectable'),
-        'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the field is defined'),
+        'modules': fields.function(_in_modules, type='char', size=128, string='In modules', help='List of modules in which the field is defined'),
         'serialization_field_id': fields.many2one('ir.model.fields', 'Serialization Field', domain = "[('ttype','=','serialized')]",
                                                   ondelete='cascade', help="If set, this field will be stored in the sparse "
                                                                            "structure of the serialization field, instead "

@@ -72,10 +72,10 @@ class ir_rule(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, select=1),
         'model_id': fields.many2one('ir.model', 'Object',select=1, required=True),
-        'global': fields.function(_get_value, method=True, string='Global', type='boolean', store=True, help="If no group is specified the rule is global and applied to everyone"),
+        'global': fields.function(_get_value, string='Global', type='boolean', store=True, help="If no group is specified the rule is global and applied to everyone"),
         'groups': fields.many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
         'domain_force': fields.text('Domain'),
-        'domain': fields.function(_domain_force_get, method=True, string='Domain', type='text'),
+        'domain': fields.function(_domain_force_get, string='Domain', type='text'),
         'perm_read': fields.boolean('Apply For Read'),
         'perm_write': fields.boolean('Apply For Write'),
         'perm_create': fields.boolean('Apply For Create'),

@@ -129,11 +129,11 @@ class report_xml(osv.osv):
         # temporary related field as report_rml is pending deprecation - this field will replace report_rml after v6.0
         'report_file': fields.related('report_rml', type="char", size=256, required=False, readonly=False, string='Report file', help="The path to the main report file (depending on Report Type) or NULL if the content is in another field", store=True),
 
-        'report_sxw': fields.function(_report_sxw, method=True, type='char', string='SXW path'),
+        'report_sxw': fields.function(_report_sxw, type='char', string='SXW path'),
         'report_sxw_content_data': fields.binary('SXW content'),
         'report_rml_content_data': fields.binary('RML content'),
-        'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, method=True, type='binary', string='SXW content',),
-        'report_rml_content': fields.function(_report_content, fnct_inv=_report_content_inv, method=True, type='binary', string='RML content'),
+        'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='SXW content',),
+        'report_rml_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='RML content'),
 
     }
     _defaults = {
@@ -273,7 +273,7 @@ class act_window(osv.osv):
         'usage': fields.char('Action Usage', size=32,
             help="Used to filter menu and home actions from the user form."),
         'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
-        'views': fields.function(_views_get_fnc, method=True, type='binary', string='Views',
+        'views': fields.function(_views_get_fnc, type='binary', string='Views',
                help="This function field computes the ordered list of views that should be enabled " \
                     "when displaying the result of an action, federating view mode, views and " \
                     "reference view. The result is returned as an ordered list of pairs (view_id,view_mode)."),
@@ -285,11 +285,11 @@ class act_window(osv.osv):
         'search_view_id': fields.many2one('ir.ui.view', 'Search View Ref.'),
         'filter': fields.boolean('Filter'),
         'auto_search':fields.boolean('Auto Search'),
-        'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
+        'search_view' : fields.function(_search_view, type='text', string='Search View'),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
             translate=True),
-        'display_menu_tip':fields.function(_get_help_status, type='boolean', method=True, string='Display Menu Tips',
+        'display_menu_tip':fields.function(_get_help_status, type='boolean', string='Display Menu Tips',
             help='It gives the status if the tip has to be displayed or not when a user executes an action'),
         'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
     }
@@ -935,7 +935,7 @@ class act_client(osv.osv):
                                 " according to its own needs and wishes. There "
                                 "is no central tag repository across clients."),
         'params': fields.function(_get_params, fnct_inv=_set_params,
-                                  type='binary', method=True,
+                                  type='binary', 
                                   string="Supplementary arguments",
                                   help="Arguments sent to the client along with"
                                        "the view tag"),

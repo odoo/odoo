@@ -43,7 +43,7 @@ class wizard_screen(osv.osv_memory):
         return dict.fromkeys(ids, image) # ok to use .fromkeys() as the image is same for all 
 
     _columns = {
-        'config_logo': fields.function(_get_image_fn, string='Image', type='binary', method=True),
+        'config_logo': fields.function(_get_image_fn, string='Image', type='binary'),
     }
 
     _defaults = {

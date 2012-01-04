@@ -233,7 +233,7 @@ class users(osv.osv):
         'login': fields.char('Login', size=64, required=True,
                              help="Used to log into the system"),
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
-        'new_password': fields.function(_get_password, method=True, type='char', size=64,
+        'new_password': fields.function(_get_password, type='char', size=64,
                                 fnct_inv=_set_new_password,
                                 string='Set password', help="Specify a value only when creating a user or if you're changing the user's password, "
                                                             "otherwise leave empty. After a change of password, the user has to login again."),
@@ -256,7 +256,7 @@ class users(osv.osv):
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The user's timezone, used to perform timezone conversions "
                  "between the server and the client."),
-        'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
+        'view': fields.function(_get_interface_type, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
                                 string='Interface', help="OpenERP offers a simplified and an extended user interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier to use. You can switch to the other interface from the User/Preferences menu at any time."),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
