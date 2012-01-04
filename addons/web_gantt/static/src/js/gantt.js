@@ -48,7 +48,8 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         }
         
         if (!this.date_start) {
-            return self.do_warn(_t("date_start is not defined "))
+            console.error("date_start is not defined in the definition of this gantt view");
+            return;
         }
         
         this.$element.html(QWeb.render("GanttView", {'height': $('.oe-application-container').height(), 'width': $('.oe-application-container').width()}));
@@ -99,17 +100,14 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
     on_project_loaded: function(events) {
         
         if(!events.length) return;
-        var self = this,
-            started_projects = _.filter(events, function(res) {
-            return res[self.date_start];
+        var self = this;
+        var started_projects = _.filter(events, function(res) {
+            return !!res[self.date_start];
         });
         
         this.database_projects = started_projects;
         
-        if(!started_projects.length)
-            return self.do_warn(_t("date_start is not defined"));
-            
-        if(!self.name && started_projects.length) {
+        if(!self.name && started_projects.length > 0) {
             var name = started_projects[0][self.parent];
             self.name = name instanceof Array? name[name.length - 1] : name;
         }
