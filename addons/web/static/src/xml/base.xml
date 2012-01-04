@@ -25,14 +25,6 @@
             <div id="oe_menu" class="menu"></div>
         </td>
     </tr>
-    <tr class="db_options_row">
-        <td valign="top" class="db_container">
-            <div id="oe_database" class="database"></div>
-        </td>
-        <td valign="top">
-         <div id="oe_db_options"></div>
-        </td>
-    </tr>
     <tr>
         <td colspan="2" valign="top" height="100%">
             <table cellspacing="0" cellpadding="0" border="0" height="100%" width="100%">
@@ -328,6 +320,16 @@
         <a href="http://www.openerp.com">Powered by <span class="openerp">OpenERP</span></a>
       </div>
     </div>
+    <table class="oe-database-manager">
+        <tr class="db_options_row">
+            <td valign="top" class="db_container">
+                <div id="oe_database" class="database"></div>
+            </td>
+            <td valign="top" class="db_right_pane">
+             <div id="oe_db_options"></div>
+            </td>
+        </tr>
+    </table>
   </div>
 </t>
 <t t-name="Header">

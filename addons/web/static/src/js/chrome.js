@@ -311,13 +311,11 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
         this._super();
     },
     show: function () {
-        this.$element.closest(".openerp")
-                .removeClass("login-mode")
+        this.$element.closest(".login")
                 .addClass("database_block");
     },
     hide: function () {
-        this.$element.closest(".openerp")
-                .addClass("login-mode")
+        this.$element.closest(".login")
                 .removeClass("database_block")
     },
     /**

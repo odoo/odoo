@@ -88,17 +88,190 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
     color: white;
 }
 
+/* Login page */
+
+.openerp .login {
+    display: none;
+}
+.openerp.login-mode .login {
+    display: block;
+}
+.openerp.login-mode .main_table {
+    display: none;
+}
+
+.login {
+    padding: 0;
+    margin: 0;
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
+    background: url("/web/static/src/img/pattern.png") repeat;
+    color: #eee;
+    font-size: 14px;
+    height: 100%;
+}
+
+.login ul, ol {
+    padding: 0;
+    margin: 0;
+}
+
+.login li {
+    list-style-type: none;
+    padding-bottom: 4px;
+}
+
+.login a {
+    color: #eee;
+    text-decoration: none;
+}
+
+.login button {
+    float: right;
+    display: inline-block;
+    cursor: pointer;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
+    border: 1px solid #222222;
+    color: white;
+    margin: 0;
+    background: #600606;
+    background: -moz-linear-gradient(#b92020, #600606);
+    background: -webkit-gradient(linear, left top, left bottom, from(#b92020), to(#600606));
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(155, 155, 155, 0.4) inset;
+    -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+}
+
+.login input, .login select {
+    width: 252px;
+    font-size: 14px;
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
+    border: 1px solid #999999;
+    background: whitesmoke;
+    -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    -box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.login input {
+    margin-bottom: 9px;
+    padding: 5px 6px;
+}
+
+.login select {
+    padding: 1px;
+}
+
+.login .dbpane {
+    position: fixed;
+    top: 0;
+    right: 8px;
+    padding: 5px 10px;
+    color: #eee;
+    border: solid 1px #333;
+    background: rgba(30,30,30,0.94);
+    -moz-border-radius: 0 0 8px 8px;
+    -webkit-border-radius: 0 0 8px 8px;
+    border-radius: 0 0 8px 8px;
+}
+
+.login .bottom {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-shadow: 0 1px 1px #999999;
+    background: #600606;
+    background: -moz-linear-gradient(#b41616, #600606);
+    background: -webkit-gradient(linear, left top, left bottom, from(#b41616), to(#600606));
+}
+
+.login .pane {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -160px -166px;
+    border: solid 1px #333333;
+    background: rgba(30,30,30,0.94);
+    padding: 22px 32px;
+    text-align: left;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    -moz-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+    -webkit-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+    -box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+}
+
+.login .pane h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.login #logo {
+    position: absolute;
+    top: -70px;
+    left: 0;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.login .footer {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.login .footer a {
+    font-size: 13px;
+    margin: 0 8px;
+}
+
+.login .footer a:hover {
+    text-decoration: underline;
+}
+
+.login .openerp {
+    font-weight: bold;
+    font-family: serif;
+    font-size: 16px;
+}
+
+
 /* Database */
-.openerp.database_block .db_options_row {
+.login .oe-database-manager {
+    display: none;
+    height: 100%;
+    width: 100%;
+}
+.login.database_block .bottom,
+.login.database_block .login_error_message,
+.login.database_block .pane {
+    display: none;
+}
+.login.database_block .oe-database-manager {
+    display: block;
+}
+.login .db_options_row {
+    width: 100%;
     height: 100%;
     display: table-row;
 }
-
-.openerp.database_block .menu,
-.openerp.database_block .secondary_menu,
-.openerp.database_block .oe-application,
-.openerp.database_block .login-container {
-    display: none;
+.login .db_options_row .db_right_pane {
+    width: 100%;
+    height: 100%;
 }
 
 .db_container {
@@ -2023,165 +2196,4 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     color: #aaaaaa !important;
     cursor: default;
     text-shadow: 0 1px 1px white !important;
-}
-
-/* Login page */
-
-.openerp .login {
-    display: none;
-}
-.openerp.login-mode .login {
-    display: block;
-}
-.openerp.login-mode .main_table {
-    display: none;
-}
-
-.login {
-    padding: 0;
-    margin: 0;
-    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
-    background: url("/web/static/src/img/pattern.png") repeat;
-    color: #eee;
-    font-size: 14px;
-    height: 100%;
-}
-
-.login ul, ol {
-    padding: 0;
-    margin: 0;
-}
-
-.login li {
-    list-style-type: none;
-    padding-bottom: 4px;
-}
-
-.login a {
-    color: #eee;
-    text-decoration: none;
-}
-
-.login button {
-    float: right;
-    display: inline-block;
-    cursor: pointer;
-    padding: 6px 16px;
-    font-size: 13px;
-    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
-    border: 1px solid #222222;
-    color: white;
-    margin: 0;
-    background: #600606;
-    background: -moz-linear-gradient(#b92020, #600606);
-    background: -webkit-gradient(linear, left top, left bottom, from(#b92020), to(#600606));
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
-    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(155, 155, 155, 0.4) inset;
-    -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
-}
-
-.login input, .login select {
-    width: 252px;
-    font-size: 14px;
-    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
-    border: 1px solid #999999;
-    background: whitesmoke;
-    -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
-    -box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-}
-
-.login input {
-    margin-bottom: 9px;
-    padding: 5px 6px;
-}
-
-.login select {
-    padding: 1px;
-}
-
-.login .dbpane {
-    position: fixed;
-    top: 0;
-    right: 8px;
-    padding: 5px 10px;
-    color: #eee;
-    border: solid 1px #333;
-    background: rgba(30,30,30,0.94);
-    -moz-border-radius: 0 0 8px 8px;
-    -webkit-border-radius: 0 0 8px 8px;
-    border-radius: 0 0 8px 8px;
-}
-
-.login .bottom {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    text-shadow: 0 1px 1px #999999;
-    background: #600606;
-    background: -moz-linear-gradient(#b41616, #600606);
-    background: -webkit-gradient(linear, left top, left bottom, from(#b41616), to(#600606));
-}
-
-.login .pane {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -160px -166px;
-    border: solid 1px #333333;
-    background: rgba(30,30,30,0.94);
-    padding: 22px 32px;
-    text-align: left;
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-    -moz-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
-    -webkit-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
-    -box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
-}
-
-.login .pane h2 {
-    margin-top: 0;
-    font-size: 18px;
-}
-
-.login #logo {
-    position: absolute;
-    top: -70px;
-    left: 0;
-    width: 100%;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.login .footer {
-    position: absolute;
-    bottom: -40px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-}
-
-.login .footer a {
-    font-size: 13px;
-    margin: 0 8px;
-}
-
-.login .footer a:hover {
-    text-decoration: underline;
-}
-
-.login .openerp {
-    font-weight: bold;
-    font-family: serif;
-    font-size: 16px;
 }
