@@ -297,7 +297,7 @@ class account_bank_statement(osv.osv):
                 context=context):
             if line.state <> 'valid':
                 raise osv.except_osv(_('Error !'),
-                        _('Journal Item "%s" is not valid') % line.name)
+                        _('Journal item "%s" is not valid.') % line.name)
 
         # Bank statements will not consider boolean on journal entry_posted
         account_move_obj.post(cr, uid, [move_id], context=context)
@@ -352,7 +352,7 @@ class account_bank_statement(osv.osv):
             for st_line in st.line_ids:
                 if st_line.analytic_account_id:
                     if not st.journal_id.analytic_journal_id:
-                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (st.journal_id.name,))
+                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to assign an analytic journal on the '%s' journal!") % (st.journal_id.name,))
                 if not st_line.amount:
                     continue
                 st_line_number = self.get_next_st_line_number(cr, uid, st_number, st_line, context)

@@ -27,7 +27,7 @@
     first_picking = self.browse(cr, uid, delivery_orders[0], context=context)
     if first_picking.force_assign(cr, uid, first_picking):
       first_move = first_picking.move_lines[0]
-      values = {'move%s'%(first_move.id): {'product_qty': 5}}
+      values = {'move%s'%(first_move.id): {'product_qty': 5, 'product_uom':ref('product.product_uom_unit')}}
       first_picking.do_partial(values, context=context)
 -
   Now I cancel latest shipment.

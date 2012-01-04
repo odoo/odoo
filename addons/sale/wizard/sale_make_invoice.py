@@ -45,6 +45,7 @@ class sale_make_invoice(osv.osv_memory):
     def make_invoices(self, cr, uid, ids, context=None):
         order_obj = self.pool.get('sale.order')
         mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
         newinv = []
         if context is None:
             context = {}
@@ -58,19 +59,12 @@ class sale_make_invoice(osv.osv_memory):
             for i in o.invoice_ids:
                 newinv.append(i.id)
 
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_invoice_filter')
+        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_invoice_tree1')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result['domain'] = "[('id','in', ["+','.join(map(str,newinv))+"])]"
 
-        return {
-            'domain': "[('id','in', ["+','.join(map(str,newinv))+"])]",
-            'name': 'Invoices',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'account.invoice',
-            'view_id': False,
-            'context': "{'type': 'out_refund'}",
-            'type': 'ir.actions.act_window',
-            'search_view_id': res and res[1] or False
-        }
+        return result
 
 sale_make_invoice()
 

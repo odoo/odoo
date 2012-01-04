@@ -22,6 +22,10 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import PIL
+import io
+import base64
+import StringIO
 
 import netsvc
 from osv import fields, osv
@@ -278,7 +282,7 @@ class pos_order(osv.osv):
                                                      ('user_id', '=', uid),
                                                      ('state', '=', 'open')], context=context)
         if len(statement_id) == 0:
-            raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
+            raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox.'))
         if statement_id:
             statement_id = statement_id[0]
         args['statement_id'] = statement_id
@@ -396,7 +400,7 @@ class pos_order(osv.osv):
             'name': _('Customer Invoice'),
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': res_id,
+            'view_id': [res_id],
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
@@ -727,12 +731,40 @@ class pos_category(osv.osv):
     }
 pos_category()
 
+_IMAGE_SIZE = 100,120
+
 class product_product(osv.osv):
     _inherit = 'product.product'
+    
+    def _get_img(self, cr, uid, ids, field_name, arg, context=None):
+        context = context or {}
+        bin_size = context.get('bin_size', False)
+        context = dict(context, bin_size = False)
+        products = self.browse(cr, uid, ids, context=context)
+        result = {}
+        for product in products:
+            image64 = product.product_image
+            if not image64:
+                result[product.id] = False
+                continue
+            image_bin = base64.decodestring(image64)
+            image_stream = io.BytesIO(image_bin)
+            im = PIL.Image.open(image_stream)
+            im.thumbnail(_IMAGE_SIZE, PIL.Image.ANTIALIAS)
+            nimage_stream = StringIO.StringIO()
+            im.save(nimage_stream, format="JPEG")
+            nimage_bin = nimage_stream.getvalue()
+            if not bin_size:
+                    result[product.id] = base64.encodestring(nimage_bin)
+            else:
+                    result[product.id] = nimage_bin.length
+        return result
+    
     _columns = {
         'income_pdt': fields.boolean('PoS Cash Input', help="This is a product you can use to put cash into a statement for the point of sale backend."),
         'expense_pdt': fields.boolean('PoS Cash Output', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
-        'img': fields.binary('Product Image, must be 50x50', help="Use an image size of 50x50."),
+        'img': fields.function(_get_img, method=True, type="binary", string='Product Image', 
+                        store = {'product.product': (lambda self, cr, uid, ids, c=None: ids, ['product_image'], 10)}),
         'pos_categ_id': fields.many2one('pos.category','PoS Category',
             help="If you want to sell this product through the point of sale, select the category it belongs to.")
     }
