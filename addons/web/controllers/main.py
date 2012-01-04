@@ -89,7 +89,7 @@ html_template = """<!DOCTYPE html>
             });
         </script>
     </head>
-    <body></body>
+    <body style="margin: 0;height: 100%%;"></body>
 </html>
 """
 
