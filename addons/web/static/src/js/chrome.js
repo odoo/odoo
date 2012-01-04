@@ -1071,7 +1071,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     start: function() {
         var self = this;
         this.session.bind().then(function() {
-            var params = {};
             if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
                 this.$element.addClass("kitten-mode-activated");
                 this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
@@ -1088,14 +1087,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.login = new openerp.web.Login(self);
             self.login.appendTo(self.$element);
             
-            self.$element.append($(QWeb.render("Interface", params)));
-            self.header = new openerp.web.Header(self);
-            self.header.on_logout.add(self.on_logout);
-            self.header.on_action.add(self.on_menu_action);
-            self.header.appendTo($("#oe_header"));
-            self.menu = new openerp.web.Menu(self, "oe_menu", "oe_secondary_menu");
-            self.menu.on_action.add(self.on_menu_action);
-            self.menu.start();
             if(self.session.session_is_valid()) {
                 self.login.on_login_valid();
             } else {
@@ -1103,6 +1094,15 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             }
         });
         this.session.ready.then(function() {
+            self.$element.append($(QWeb.render("Interface", {})));
+            self.header = new openerp.web.Header(self);
+            self.header.on_logout.add(self.on_logout);
+            self.header.on_action.add(self.on_menu_action);
+            self.header.appendTo($("#oe_header"));
+            self.menu = new openerp.web.Menu(self, "oe_menu", "oe_secondary_menu");
+            self.menu.on_action.add(self.on_menu_action);
+            self.menu.start();
+            
             self.login.on_login_valid();
             self.header.do_update();
             self.menu.do_reload();
