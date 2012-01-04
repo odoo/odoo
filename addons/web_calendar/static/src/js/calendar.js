@@ -276,6 +276,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             self.dataset.ids.push(id);
             scheduler.changeEventId(event_id, id);
             self.refresh_minical();
+            self.reload_event(id);
         }, function(r, event) {
             event.preventDefault();
             self.do_create_event_with_formdialog(event_id, event_obj);
