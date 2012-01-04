@@ -160,6 +160,12 @@ openerp.web.callback = function(obj, method) {
             position: "last"
         });
     };
+    callback.remove = function(f) {
+        callback.callback_chain = _.difference(callback.callback_chain, _.filter(callback.callback_chain, function(el) {
+            return el.callback === f;
+        }));
+        return callback;
+    };
 
     return callback.add({
         callback: method,

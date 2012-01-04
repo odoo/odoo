@@ -226,8 +226,20 @@ openerp.web.Loading = openerp.web.Widget.extend(/** @lends openerp.web.Loading# 
         this._super(parent);
         this.count = 0;
         this.blocked_ui = false;
-        this.session.on_rpc_request.add_first(this.on_rpc_event, 1);
-        this.session.on_rpc_response.add_last(this.on_rpc_event, -1);
+        var self = this;
+        this.request_call = function() {
+            self.on_rpc_event(1);
+        };
+        this.response_call = function() {
+            self.on_rpc_event(-1);
+        };
+        this.session.on_rpc_request.add_first(this.request_call);
+        this.session.on_rpc_response.add_last(this.response_call);
+    },
+    stop: function() {
+        this.session.on_rpc_request.remove(this.request_call);
+        this.session.on_rpc_response.remove(this.response_call);
+        this._super();
     },
     on_rpc_event : function(increment) {
         var self = this;
@@ -1056,31 +1068,12 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
                 });
             }
             
-            self.crashmanager =  new openerp.web.CrashManager();
-            self.notification = new openerp.web.Notification(self);
-            self.notification.appendTo(self.$element);
-            self.loading = new openerp.web.Loading(self);
-            self.loading.appendTo(self.$element);
-            
             if (!self.session.session_is_valid()) {
-                self.login = new openerp.web.Login(self);
-                self.login.appendTo(self.$element);
+                self.show_login();
             }
         });
         this.session.ready.then(function() {
-            if (self.login) {
-                self.login.stop();
-                self.login = undefined;
-            }
-            self.$table = $(QWeb.render("Interface", {}));
-            self.$element.append(self.$table);
-            self.header = new openerp.web.Header(self);
-            self.header.on_logout.add(self.on_logout);
-            self.header.on_action.add(self.on_menu_action);
-            self.header.appendTo($("#oe_header"));
-            self.menu = new openerp.web.Menu(self, "oe_menu", "oe_secondary_menu");
-            self.menu.on_action.add(self.on_menu_action);
-            self.menu.start();
+            self.show_application();
             
             self.header.do_update();
             self.menu.do_reload();
@@ -1093,6 +1086,40 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
                 self.$element.find('.oe_footer_powered').append('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">Unsupported/Community Version</a></span>');
                 $('title').html('OpenERP - Unsupported/Community Version');
             }
+        });
+    },
+    show_login: function() {
+        var self = this;
+        this.destroy_content();
+        this.show_common();
+        self.login = new openerp.web.Login(self);
+        self.login.appendTo(self.$element);
+    },
+    show_application: function() {
+        var self = this;
+        this.destroy_content();
+        this.show_common();
+        self.$table = $(QWeb.render("Interface", {}));
+        self.$element.append(self.$table);
+        self.header = new openerp.web.Header(self);
+        self.header.on_logout.add(self.on_logout);
+        self.header.on_action.add(self.on_menu_action);
+        self.header.appendTo($("#oe_header"));
+        self.menu = new openerp.web.Menu(self, "oe_menu", "oe_secondary_menu");
+        self.menu.on_action.add(self.on_menu_action);
+        self.menu.start();
+    },
+    show_common: function() {
+        var self = this;
+        self.crashmanager =  new openerp.web.CrashManager();
+        self.notification = new openerp.web.Notification(self);
+        self.notification.appendTo(self.$element);
+        self.loading = new openerp.web.Loading(self);
+        self.loading.appendTo(self.$element);
+    },
+    destroy_content: function() {
+        _.each(_.clone(this.widget_children), function(el) {
+            el.stop();
         });
     },
     do_reload: function() {
@@ -1111,22 +1138,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.header.do_update();
         $(window).unbind('hashchange', this.on_hashchange);
         this.do_push_state({});
-        if(this.action_manager) {
-            this.action_manager.stop();
-            this.action_manager = undefined;
-        }
-        if (this.menu) {
-            this.menu.stop();
-            this.menu = undefined;
-        }
-        if (this.header) {
-            this.header.stop();
-            this.header = undefined;
-        }
-        if (this.$table) {
-            this.$table.remove();
-            this.$table = undefined;
-        }
+        this.show_login();
         window.location.reload();
     },
     bind_hashchange: function() {
