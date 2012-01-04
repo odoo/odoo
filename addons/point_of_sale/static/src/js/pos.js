@@ -591,7 +591,7 @@ openerp.point_of_sale = function(db) {
         },
         clickAppendNewChar: function(event) {
             var newChar;
-            newChar = event.currentTarget.innerText;
+            newChar = event.currentTarget.innerText || event.currentTarget.textContent;
             return this.state.appendNewChar(newChar);
         },
         clickChangeMode: function(event) {
