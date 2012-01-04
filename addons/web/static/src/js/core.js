@@ -588,7 +588,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
     session_logout: function() {
         this.set_cookie('session_id', '');
-        window.location.reload();
     },
     /**
      * Called when a rpc call fail due to an invalid session.

@@ -1072,7 +1072,8 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
                 self.login.stop();
                 self.login = undefined;
             }
-            self.$element.append($(QWeb.render("Interface", {})));
+            self.$table = $(QWeb.render("Interface", {}));
+            self.$element.append(self.$table);
             self.header = new openerp.web.Header(self);
             self.header.on_logout.add(self.on_logout);
             self.header.on_action.add(self.on_menu_action);
@@ -1110,9 +1111,23 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.header.do_update();
         $(window).unbind('hashchange', this.on_hashchange);
         this.do_push_state({});
-        if(this.action_manager)
+        if(this.action_manager) {
             this.action_manager.stop();
-        this.action_manager = null;
+            this.action_manager = undefined;
+        }
+        if (this.menu) {
+            this.menu.stop();
+            this.menu = undefined;
+        }
+        if (this.header) {
+            this.header.stop();
+            this.header = undefined;
+        }
+        if (this.$table) {
+            this.$table.remove();
+            this.$table = undefined;
+        }
+        window.location.reload();
     },
     bind_hashchange: function() {
         $(window).bind('hashchange', this.on_hashchange);
