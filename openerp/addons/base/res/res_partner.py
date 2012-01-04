@@ -299,7 +299,7 @@ class res_partner_address(osv.osv):
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
-        'function': fields.char('Function', size=64),
+        'function': fields.char('Function', size=128),
         'title': fields.many2one('res.partner.title','Title'),
         'name': fields.char('Contact Name', size=64, select=1),
         'street': fields.char('Street', size=128),
