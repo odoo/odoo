@@ -318,13 +318,13 @@
       <form action="" method="post">
         <div class="dbpane" >
           Database:
-          <input name="db"/>
+          <input name="db" t-att-value="widget.selected_db || ''"/>
         </div>
         <ul>
           <li>Username</li>
-          <li><input type="text" name="login" autofocus="autofocus"/></li>
+          <li><input type="text" name="login" t-att-value="widget.selected_login || ''" autofocus="autofocus"/></li>
           <li>Password</li>
-          <li><input type="password" name="password" value=""/></li>
+          <li><input type="password" name="password" t-att-value="widget.selected_password || ''"/></li>
           <li><button name="submit">Log in</button></li>
         </ul>
       </form>
