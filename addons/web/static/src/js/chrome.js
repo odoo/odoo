@@ -1098,7 +1098,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.notification.prependTo(self.$element);
             self.loading.appendTo($('#oe_loading'));
             self.header.appendTo($("#oe_header"));
-            self.login.appendTo($('#oe_login'));
+            self.login.appendTo(self.$element);
             self.menu.start();
             if(self.session.session_is_valid()) {
                 self.login.on_login_valid();

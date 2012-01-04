@@ -88,84 +88,6 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
     color: white;
 }
 
-/* Login */
-.openerp .login {
-    display: none;
-}
-.openerp .login fieldset {
-    padding-bottom: 5px;
-    min-width: 100px;
-    margin-top: 60px;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-}
-.openerp .login fieldset legend {
-    padding: 4px;
-}
-.openerp .login .oe_box2 {
-    padding: 5px 5px 20px 5px;
-}
-.openerp .login .oe_box2 table {
-    width: 100%;
-    border:none;
-}
-.openerp .login .oe_box2 td {
-    padding: 3px;
-    text-align: right;
-}
-.openerp .login .oe_box2 td input,
-.openerp .login .oe_box2 td select {
-    width: 100%;
-}
-.openerp .login .oe_box2 td.oe_remember {
-    text-align:left;
-}
-.openerp .login .oe_box2 td.oe_remember input {
-    width: inherit;
-}
-.openerp .login .oe_login_right_pane {
-    padding:70px 35px 5px 10px;
-    min-width: 200px;
-    margin-left: 500px;
-}
-.openerp .login .login_error_message {
-    display: none;
-    background-color: #b41616;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-    -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-    color: #eee;
-    font-size: 14px;
-    padding: 14px 18px;
-    margin-top: 15px;
-    text-align: center;
-}
-.openerp .login .login_invalid {
-    text-align: center;
-}
-.openerp .login .login_invalid .login_error_message {
-    display: inline-block;
-}
-
-.openerp.login-mode .login-container {
-    height: 100%;
-}
-.openerp.login-mode .login {
-    display: block;
-}
-.openerp.login-mode .menu,
-.openerp.login-mode .secondary_menu,
-.openerp.login-mode .oe-application,
-.openerp.login-mode .oe_footer,
-.openerp.login-mode .header,
-.openerp.login-mode .db_options_row {
-    display: none;
-}
-
 /* Database */
 .openerp.database_block .db_options_row {
     height: 100%;
@@ -2105,6 +2027,16 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 
 /* Login page */
 
+.openerp .login {
+    display: none;
+}
+.openerp.login-mode .login {
+    display: block;
+}
+.openerp.login-mode .main_table {
+    display: none;
+}
+
 .login {
     padding: 0;
     margin: 0;
@@ -2152,7 +2084,7 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
 }
 
-.login input, #oe_login select {
+.login input, .login select {
     width: 252px;
     font-size: 14px;
     font-family: "Lucida Grande", Helvetica, Verdana, Arial;
@@ -2171,7 +2103,7 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     padding: 5px 6px;
 }
 
-#oe_login select {
+.login select {
     padding: 1px;
 }
 
