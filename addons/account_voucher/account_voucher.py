@@ -586,12 +586,22 @@ class account_voucher(osv.osv):
             recs = []
             for line in voucher.move_ids:
                 if line.reconcile_id:
-                    recs += [line.reconcile_id.id]
-                if line.reconcile_partial_id:
-                    recs += [line.reconcile_partial_id.id]
-
+                    recs = [rec.id for rec in line.reconcile_id.line_id]
+                    recs.remove(line.id)
+                    partial_ids = reconcile_pool.create(cr, uid, {
+                        'type': 'auto',
+                        'line_id': False,
+                        'line_partial_ids': [(6, 0, recs)]})
+                    self.pool.get('account.move.line').write(cr, uid, [line.id], {
+                        'reconcile_id': False,
+                        'reconcile_partial_id': False
+                        }, update_check=False)
+                    
+                    self.pool.get('account.move.line').write(cr, uid, recs, {
+                        'reconcile_id': False,
+                        'reconcile_partial_id': partial_ids
+                    }, update_check=False)
             reconcile_pool.unlink(cr, uid, recs)
-
             if voucher.move_id:
                 move_pool.button_cancel(cr, uid, [voucher.move_id.id])
                 move_pool.unlink(cr, uid, [voucher.move_id.id])
