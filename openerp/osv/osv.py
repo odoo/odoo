@@ -163,8 +163,6 @@ class object_proxy(object):
         return getattr(object, method)(cr, uid, *args, **kw)
 
     def execute_kw(self, db, uid, obj, method, args, kw=None):
-        import pdb
-        pdb.set_trace()
         return self.execute(db, uid, obj, method, *args, **kw or {})
 
     @check
