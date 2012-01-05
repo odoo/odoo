@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:43+0000\n"
 "PO-Revision-Date: 2011-01-13 22:01+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,23 +14,28 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:27+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:59+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: project_gtd
-#: help:project.task,timebox_id:0
-msgid "Time-laps during which task has to be treated"
-msgstr "Délai dans lequel la tâche doit être traitée"
+#: view:project.task:0
+msgid "In Progress"
+msgstr ""
 
 #. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_gtd_timebox
-msgid "project.gtd.timebox"
-msgstr "project.gtd.timebox"
+#: view:project.task:0
+msgid "Show only tasks having a deadline"
+msgstr ""
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Reactivate"
 msgstr "Réactiver"
+
+#. module: project_gtd
+#: help:project.task,timebox_id:0
+msgid "Time-laps during which task has to be treated"
+msgstr "Délai dans lequel la tâche doit être traitée"
 
 #. module: project_gtd
 #: help:project.gtd.timebox,sequence:0
@@ -48,71 +53,15 @@ msgid "Timebox Empty Process Completed Successfully."
 msgstr "Le vidage de la timebox s'est correctement déroulé."
 
 #. module: project_gtd
+#: view:project.task:0
+msgid "Pending Tasks"
+msgstr ""
+
+#. module: project_gtd
 #: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "No timebox child of this one !"
 msgstr "Pas de timebox enfant définit pour celle-ci !"
-
-#. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:112
-#, python-format
-msgid "GTD"
-msgstr "GTD"
-
-#. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_lt
-msgid "Long Term"
-msgstr "Long terme"
-
-#. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_timebox_empty
-msgid "Project Timebox Empty"
-msgstr "Timebox de projet vide"
-
-#. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_daily
-msgid "Today"
-msgstr "Aujourd'hui"
-
-#. module: project_gtd
-#: view:project.gtd.timebox:0
-#: field:project.gtd.timebox,name:0
-#: view:project.task:0
-#: field:project.task,timebox_id:0
-msgid "Timebox"
-msgstr "Timebox"
-
-#. module: project_gtd
-#: model:ir.module.module,shortdesc:project_gtd.module_meta_information
-msgid "Getting Things Done - Time Management Module"
-msgstr "Getting Things Done - Module de Gestion du Temps"
-
-#. module: project_gtd
-#: field:project.timebox.fill.plan,timebox_to_id:0
-msgid "Set to Timebox"
-msgstr "Mettre dans la timebox"
-
-#. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "Error !"
-msgstr "Erreur !"
-
-#. module: project_gtd
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "Erreur ! Vous ne pouvez pas créer de tâches récursives."
-
-#. module: project_gtd
-#: view:project.timebox.fill.plan:0
-msgid "_Cancel"
-msgstr "_Annuler"
-
-#. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
-#: view:project.timebox.empty:0
-msgid "Empty Timebox"
-msgstr "Timebox vide"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -126,14 +75,83 @@ msgstr ""
 "tâches dans des catégories : aujourd'hui, cette semaine, ce mois, long terme."
 
 #. module: project_gtd
+#: model:project.gtd.timebox,name:project_gtd.timebox_daily
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#. module: project_gtd
+#: model:project.gtd.timebox,name:project_gtd.timebox_lt
+msgid "Long Term"
+msgstr "Long terme"
+
+#. module: project_gtd
+#: model:ir.model,name:project_gtd.model_project_timebox_empty
+msgid "Project Timebox Empty"
+msgstr "Timebox de projet vide"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Pending"
+msgstr ""
+
+#. module: project_gtd
+#: view:project.gtd.timebox:0
+#: field:project.gtd.timebox,name:0
+#: view:project.task:0
+#: field:project.task,timebox_id:0
+msgid "Timebox"
+msgstr "Timebox"
+
+#. module: project_gtd
+#: field:project.timebox.fill.plan,timebox_to_id:0
+msgid "Set to Timebox"
+msgstr "Mettre dans la timebox"
+
+#. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "Error !"
+msgstr "Erreur !"
+
+#. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.open_gtd_task
+#: model:ir.ui.menu,name:project_gtd.menu_open_gtd_timebox_tree
+#: view:project.task:0
+msgid "My Tasks"
+msgstr ""
+
+#. module: project_gtd
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "Erreur ! Vous ne pouvez pas créer de tâches récursives."
+
+#. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
 msgid "This Week"
 msgstr "Cette semaine"
 
 #. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_monthly
-msgid "This Month"
-msgstr "Ce mois"
+#: view:project.timebox.fill.plan:0
+msgid "_Cancel"
+msgstr "_Annuler"
+
+#. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
+#: view:project.timebox.empty:0
+msgid "Empty Timebox"
+msgstr "Timebox vide"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Tasks having no timebox assigned yet"
+msgstr ""
+
+#. module: project_gtd
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
+"Erreur ! La date de fin de la tâche doit être postérieure à la date de "
+"démarrage"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
@@ -167,44 +185,9 @@ msgid "Contexts"
 msgstr "Contextes"
 
 #. module: project_gtd
-#: model:project.gtd.context,name:project_gtd.context_car
-msgid "Car"
-msgstr "Voiture"
-
-#. module: project_gtd
-#: model:ir.module.module,description:project_gtd.module_meta_information
-msgid ""
-"\n"
-"This module implements all concepts defined by the Getting Things Done\n"
-"methodology. This world-wide used methodology is used for personal\n"
-"time management improvement.\n"
-"\n"
-"Getting Things Done (commonly abbreviated as GTD) is an action management\n"
-"method created by David Allen, and described in a book of the same name.\n"
-"\n"
-"GTD rests on the principle that a person needs to move tasks out of the mind "
-"by\n"
-"recording them externally. That way, the mind is freed from the job of\n"
-"remembering everything that needs to be done, and can concentrate on "
-"actually\n"
-"performing those tasks.\n"
-"    "
+#: view:project.task:0
+msgid "Show Context"
 msgstr ""
-"\n"
-"Ce module implémente tous les concepts définis dans la méthodologie\n"
-"Getting Things Done. Cette méthode mondialement connue est utilisée pour\n"
-"l'amélioration de la gestion de temps personnelle.\n"
-"\n"
-"Getting Things Done (communément abrégée en GTD) est une méthode de gestion\n"
-"des actions créée par David Allen, et qui est décrite dans un livre du même "
-"nom.\n"
-"\n"
-"GTD se positionne sur le principe qu'une personne a besoin d'enlever de son "
-"esprit les tâches a réaliser, en\n"
-"les enregistrant ailleurs. Ainsi, l'esprit est libéré de l'effort de\n"
-"mémorisation de tout ce qu'il y a à faire, et peut alors se concentrer "
-"uniquement sur l'accomplissement de son travail.\n"
-"    "
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
@@ -213,11 +196,21 @@ msgid "Plannify Timebox"
 msgstr "Planifier la timebox"
 
 #. module: project_gtd
+#: model:ir.model,name:project_gtd.model_project_gtd_timebox
+msgid "project.gtd.timebox"
+msgstr "project.gtd.timebox"
+
+#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
 msgid "Timeboxes"
 msgstr "Mes feuilles de temps"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "In Progress and draft tasks"
+msgstr ""
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
@@ -238,12 +231,6 @@ msgid "_Ok"
 msgstr "_Ok"
 
 #. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:110
-#, python-format
-msgid "Getting Things Done"
-msgstr "Obtenir les choses terminés"
-
-#. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
 msgid "Office"
 msgstr "Bureau"
@@ -255,9 +242,19 @@ msgid "Sequence"
 msgstr "Séquence"
 
 #. module: project_gtd
+#: view:project.task:0
+msgid "Show the context field"
+msgstr ""
+
+#. module: project_gtd
 #: help:project.gtd.context,sequence:0
 msgid "Gives the sequence order when displaying a list of contexts."
 msgstr "Donne l'ordre d'affichage de la liste des contextes."
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Show Deadlines"
+msgstr ""
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
@@ -270,8 +267,7 @@ msgid "Tasks selection"
 msgstr "Sélection des tâches"
 
 #. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:111
-#, python-format
+#: view:project.task:0
 msgid "Inbox"
 msgstr "Boîte de réception"
 
@@ -286,11 +282,6 @@ msgid "The context place where user has to treat task"
 msgstr "Le contexte dans lequel l'utilisateur doit traiter la tâche"
 
 #. module: project_gtd
-#: model:project.gtd.context,name:project_gtd.context_home
-msgid "Home"
-msgstr "Domicile"
-
-#. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
 msgid ""
 "Contexts are defined in the \"Getting Things Done\" methodology. It allows "
@@ -301,6 +292,11 @@ msgstr ""
 "vous permettent catégoriser les tâches en fonction du contexte dans lequel "
 "vous devez les faire : au bureau, à la maison, quand je prend ma voiture, "
 "etc."
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "For reopening the tasks"
+msgstr ""
 
 #. module: project_gtd
 #: view:project.task:0
@@ -400,6 +396,10 @@ msgstr "Précédent"
 #~ msgid "Time Management"
 #~ msgstr "Gestion du Temps"
 
+#, python-format
+#~ msgid "Getting Things Done"
+#~ msgstr "Obtenir les choses terminés"
+
 #~ msgid "Tasks"
 #~ msgstr "Tâches"
 
@@ -429,3 +429,52 @@ msgstr "Précédent"
 
 #~ msgid "Child Timeboxes"
 #~ msgstr "Timeboxes enfant"
+
+#~ msgid "Getting Things Done - Time Management Module"
+#~ msgstr "Getting Things Done - Module de Gestion du Temps"
+
+#, python-format
+#~ msgid "GTD"
+#~ msgstr "GTD"
+
+#~ msgid "This Month"
+#~ msgstr "Ce mois"
+
+#~ msgid "Car"
+#~ msgstr "Voiture"
+
+#~ msgid "Home"
+#~ msgstr "Domicile"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module implements all concepts defined by the Getting Things Done\n"
+#~ "methodology. This world-wide used methodology is used for personal\n"
+#~ "time management improvement.\n"
+#~ "\n"
+#~ "Getting Things Done (commonly abbreviated as GTD) is an action management\n"
+#~ "method created by David Allen, and described in a book of the same name.\n"
+#~ "\n"
+#~ "GTD rests on the principle that a person needs to move tasks out of the mind "
+#~ "by\n"
+#~ "recording them externally. That way, the mind is freed from the job of\n"
+#~ "remembering everything that needs to be done, and can concentrate on "
+#~ "actually\n"
+#~ "performing those tasks.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Ce module implémente tous les concepts définis dans la méthodologie\n"
+#~ "Getting Things Done. Cette méthode mondialement connue est utilisée pour\n"
+#~ "l'amélioration de la gestion de temps personnelle.\n"
+#~ "\n"
+#~ "Getting Things Done (communément abrégée en GTD) est une méthode de gestion\n"
+#~ "des actions créée par David Allen, et qui est décrite dans un livre du même "
+#~ "nom.\n"
+#~ "\n"
+#~ "GTD se positionne sur le principe qu'une personne a besoin d'enlever de son "
+#~ "esprit les tâches a réaliser, en\n"
+#~ "les enregistrant ailleurs. Ainsi, l'esprit est libéré de l'effort de\n"
+#~ "mémorisation de tout ce qu'il y a à faire, et peut alors se concentrer "
+#~ "uniquement sur l'accomplissement de son travail.\n"
+#~ "    "

@@ -10,6 +10,7 @@
             <field name="model">hr.expense.line</field>
             <field name="arch" type="xml">
                 <tree string="Expense Lines">
+                    <field name="sequence" invisible="1"/>
                     <field name="date_value"/>
                     <field name="name"/>
                     <field name="ref"/>
@@ -30,9 +31,8 @@
                     <field name="employee_id"/>
                     <field name="date"/>
                     <field name="user_id" invisible="1"/>
-                    <field name="department_id" groups="base.group_extended"/>
-                    <field name="ref"/>
                     <field name="name"/>
+                    <field name="currency_id"/>
                     <field name="amount"/>
                     <field name="state"/>
                     <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
@@ -172,7 +172,6 @@
             <field name="name">Expenses</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
-            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
             <field name="view_id" ref="view_expenses_tree"/>
             <field name="help">The OpenERP expenses management module allows you to track the full flow. Every month, the employees record their expenses. At the end of the month, their managers validates the expenses sheets which creates costs on projects/analytic accounts. The accountant validates the proposed entries and the employee can be reimbursed. You can also reinvoice the customer at the end of the flow.</field>

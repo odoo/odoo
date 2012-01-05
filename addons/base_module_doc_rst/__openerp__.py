@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Module Technical Guide in Restructured Text ',
+    'name': 'Generate Docs of Modules',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'description': """
 This module generates the Technical Guides of selected modules in Restructured Text format (RST).
 =================================================================================================

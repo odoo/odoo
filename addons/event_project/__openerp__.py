@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Event Project - Create Retro-Planning to manage your Events',
+    'name': 'Retro-Planning on Events',
     'version': '0.1',
-    'category': 'Hidden/Link',
+    'category': 'Tools',
     'complexity': "easy",
     'description': """
 Organization and management of events.

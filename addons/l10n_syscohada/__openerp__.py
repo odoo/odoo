@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "OHADA - The accounting chart ",
+    "name" : "OHADA - Accounting",
     "version" : "1.0",
     "author" : "Baamtu Senegal",
     "category" : "Localization/Account Charts",

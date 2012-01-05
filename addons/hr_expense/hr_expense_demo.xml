@@ -2,95 +2,88 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="product_product_expense_air" model="product.product">
-            <field name="list_price">1.0</field>
-            <field name="standard_price">1.0</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
+        <record id="hr.employee_mit" model="hr.employee">
+            <field name="address_home_id" ref="base.res_partner_address_1"/>
+        </record>
+
+        <record id="car_travel" model="product.product">
+            <field name="list_price">0.32</field>
+            <field name="type">service</field>
+            <field name="name">Car Travel Expenses</field>
+            <field name="default_code">CarTRA</field>
+            <field name="categ_id" ref="hr_expense.cat_expense"/>
+            <field name="hr_expense_ok" eval="True" />
+        </record>
+
+        <record id="air_ticket" model="product.product">
+            <field name="list_price">700.0</field>
             <field name="type">service</field>
             <field name="name">Air Ticket</field>
             <field name="default_code">AT</field>
-            <field name="categ_id" ref="product.cat2"/>
+            <field name="categ_id" ref="hr_expense.cat_expense"/>
             <field name="hr_expense_ok" eval="True" />
         </record>
 
-        <record id="product_product_expense_hotel" model="product.product">
-            <field name="list_price">1.0</field>
-            <field name="standard_price">1.0</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
+        <record id="hotel_rent" model="product.product">
+            <field name="list_price">400.0</field>
             <field name="type">service</field>
             <field name="name">Hotel Accommodation</field>
             <field name="default_code">HA0</field>
-            <field name="categ_id" ref="product.cat2"/>
+            <field name="categ_id" ref="hr_expense.cat_expense"/>
             <field name="hr_expense_ok" eval="True" />
         </record>
-
-        <record id="hr_expense_expense_septemberexpenses0" model="hr.expense.expense">
-            <field name="currency_id" ref="base.EUR"/>
-            <field name="employee_id" ref="hr.employee1"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="name">May Expenses</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="date" eval="time.strftime('%Y-%m-03')"/>
-            <field name="state">draft</field>
+        <record id="expenses0" model="hr.expense.expense">
+            <field name="name">Expenses</field>
+            <field name="date" eval="time.strftime('%Y-08-25')"/>
+        </record>
+        <record id="expenses_line0" model="hr.expense.line">
+            <field name="name">Travel Expenses</field>
+            <field name="date_value" eval="time.strftime('%Y-08-10')"/>
+            <field name="analytic_account" ref="account.analytic_consultancy"/>
+            <field name="expense_id" ref="expenses0"/>
+            <field eval="200.0" name="unit_amount"/>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field eval="1.0" name="unit_quantity"/>
         </record>
 
-        <record id="hr_expense_line_travelbycarcustomerseagatedouble0" model="hr.expense.line">
+        <record id="sep_expenses" model="hr.expense.expense">
+            <field name="employee_id" ref="hr.employee_mit"/>
+            <field name="name">September Expenses</field>
+            <field name="date" eval="time.strftime('%Y-09-28')"/>
+        </record>
+
+        <record id="travel_by_air_sep" model="hr.expense.line">
             <field name="name">Travel by Air</field>
-            <field name="date_value" eval="time.strftime('%Y-%m-03')"/>
+            <field name="date_value" eval="time.strftime('%Y-09-03')"/>
             <field name="analytic_account" ref="account.analytic_consultancy"/>
-            <field name="product_id" ref="product_product_expense_air"/>
-            <field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'May Expenses')]"/>
+            <field name="product_id" ref="air_ticket"/>
+            <field name="expense_id" ref="sep_expenses"/>
             <field eval="700.0" name="unit_amount"/>
             <field name="uom_id" ref="product.product_uom_unit"/>
             <field eval="1.0" name="unit_quantity"/>
         </record>
 
-        <record id="hr_expense_line_basicpcserverforseagate0" model="hr.expense.line">
-            <field name="name">Basic PC - Server for Seagate</field>
-            <field name="date_value" eval="time.strftime('%Y-%m-03')"/>
-            <field name="analytic_account" ref="account.analytic_seagate_p2"/>
-            <field name="product_id" ref="product.product_product_pc4"/>
-            <field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'May Expenses')]"/>
-            <field eval="1200.0" name="unit_amount"/>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field eval="1.0" name="unit_quantity"/>
-        </record>
-
-    </data>
-
-    <data noupdate="1">
-        <record id="hr_expense_expense_septemberexpenses1" model="hr.expense.expense">
-            <field name="currency_id" ref="base.EUR"/>
-            <field name="employee_id" ref="hr.employee1"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="name">Travel Expenses</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="date" eval="time.strftime('%Y-%m-20')"/>
-            <field name="state">draft</field>
-        </record>
-
-        <record id="hr_expense_line_hotelexpensesthymbra0" model="hr.expense.line">
+        <record id="hotel_bill_sep" model="hr.expense.line">
             <field name="name">Hotel Expenses - Thymbra</field>
-            <field name="date_value" eval="time.strftime('%Y-%m-03')"/>
+            <field name="date_value" eval="time.strftime('%Y-09-20')"/>
             <field name="analytic_account" ref="account.analytic_thymbra"/>
-            <field name="product_id" ref="product_product_expense_hotel"/>
-            <field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'Travel Expenses')]"/>
+            <field name="product_id" ref="hotel_rent"/>
+            <field name="expense_id" ref="sep_expenses"/>
             <field eval="400.0" name="unit_amount"/>
             <field name="uom_id" ref="product.product_uom_unit"/>
             <field eval="5.0" name="unit_quantity"/>
         </record>
 
-        <record id="hr_expense_line_car_travel" model="hr.expense.line">
+        <record id="car_travel_sep" model="hr.expense.line">
                 <field name="name">Bruxelles - Paris</field>
-                <field name="date_value" eval="time.strftime('%Y-%m-03')"/>
+                <field name="date_value" eval="time.strftime('%Y-09-15')"/>
                 <field name="analytic_account" ref="account.analytic_thymbra"/>
-                <field name="product_id" ref="product_product_expense_car"/>
-                <field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'Travel Expenses')]"/>
+                <field name="product_id" ref="car_travel"/>
+                <field name="expense_id" ref="sep_expenses"/>
                 <field eval="0.30" name="unit_amount"/>
                 <field name="uom_id" ref="product.product_uom_km"/>
                 <field eval="622.0" name="unit_quantity"/>
         </record>
+
     </data>
 </openerp>

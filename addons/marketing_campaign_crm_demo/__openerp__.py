@@ -21,13 +21,13 @@
 
 
 {
-    "name" : "Demo data for Marketing Campaign",
+    "name" : "Marketing Campaign - Demo",
     "version" : "1.0",
     "depends" : ["marketing_campaign",
                  "crm",
                 ],
     "author" : "OpenERP SA",
-    "category": 'Hidden',
+    "category": 'Marketing',
     "description": """
 Demo data for the module marketing_campaign.
 ============================================

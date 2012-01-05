@@ -36,15 +36,6 @@
 			<field eval="1" name="flow_start"/>
 		</record>
 
-		<record id="process_node_function0" model="process.node">
-			<field name="model_id" ref="base_contact.model_res_partner_job"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Jobs at a same partner address.&quot;&quot;&quot;" name="note"/>
-			<field eval="&quot;&quot;&quot;Function&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="process_process_basecontactprocess0"/>
-			<field eval="0" name="flow_start"/>
-		</record>
-
 		<record id="process_node_addresses0" model="process.node">
 			<field name="menu_id" ref="base.menu_partner_address_form"/>
 			<field name="model_id" ref="base.model_res_partner_address"/>
@@ -58,22 +49,6 @@
 	<!--
 		Process Transition
 	-->
-
-		<record id="process_transition_contacttofunction0" model="process.transition">
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Contact to function&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Defines contacts and functions.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" ref="process_node_function0"/>
-			<field model="process.node" name="source_node_id" ref="process_node_contacts0"/>
-		</record>
-
-		<record id="process_transition_functiontoaddress0" model="process.transition">
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Function to address&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Define functions and address.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" ref="process_node_addresses0"/>
-			<field model="process.node" name="source_node_id" ref="process_node_function0"/>
-		</record>
 
 		<record id="process_transition_partnertoaddress0" model="process.transition">
 			<field eval="[(6,0,[])]" name="transition_ids"/>

@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Fetchmail for CRM",
+    "name" : "eMail Gateway for Leads",
     "version" : "1.0",
     "depends" : ["fetchmail", "crm"],
     "author" : "OpenERP SA",
-    "category": 'Hidden/Link',
+    "category": 'Hidden/Links',
     "description": """
     """,
     'website': 'http://www.openerp.com',

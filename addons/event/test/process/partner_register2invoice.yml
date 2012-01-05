@@ -1,0 +1,62 @@
+-
+  I want to organize one conference event, First I registered partner for event 
+  with 5 tickets.
+-
+  !python {model: partner.event.registration}: |
+    context.update({'active_model': 'res.partner', 'active_ids': [ref("base.res_partner_ericdubois0")], 'active_id': ref("base.res_partner_ericdubois0")})
+    register = self.create(cr, uid, {'event_id': ref('event_1'),'nb_register': 5}, context=context)
+    self.open_registration(cr, uid, [register], context=context)
+-
+  Now I check for registration created base on partner.
+-
+  !python {model: event.registration}: |
+    ids = self.search(cr, uid, [('partner_id','=',ref("base.res_partner_ericdubois0")), ('event_id', '=', ref('event_1'))])
+    assert ids, "Registration should be create here."
+-
+  I confirm registration process.
+-
+  !python {model: event.registration}: |
+    self.check_confirm(cr, uid, [ref("reg_1_1")])
+-
+  I Check that Registration is confirm.
+- 
+  !assert {model: event.registration, id: reg_1_1}: 
+     - state == 'open', "Registration should be open here."
+-
+  After confirmation of partner, I create invoice base on costing of event. 
+-
+  !python {model: event.registration}: |
+    self.action_invoice_create(cr, uid, [ref("reg_1_1")])
+-
+  Now I Check for Invoice is created and Registration should be closed after invoice generated.
+- 
+  !python {model: event.registration}: |
+    record = self.browse(cr, uid, [ref("reg_1_1")])[0]
+    assert record.invoice_id, "Invoice should be generated"
+    assert record.invoice_id.state == "draft", "Invoice state should be draft"
+    assert record.invoice_id.partner_id == record.partner_id, "Customer is not correspond with registration"
+    assert record.invoice_id.type == 'out_invoice', "Invoice type is not correct"
+    assert record.invoice_id.origin == record.event_product, "Invoice origin is not correct"
+    assert record.invoice_id.amount_total == record.price_subtotal, "Invoice amount is not correct"
+    assert record.state == "done", "Registration should be closed after invoice generated"
+-
+  Now I check for same partner registration for two diffrent event and I create group invoices for same partner. 
+-
+  !python {model: event.make.invoice}: |
+    context.update({'active_model': 'event.make.invoice', 'active_ids': [ref("reg_0_1"), ref("reg_0_2")], 'active_id': ref("reg_0_1")})
+    invoice = self.create(cr, uid, {'grouped': True}, context=context)
+    self.make_invoice(cr, uid, [invoice], context=context)
+-
+  Now I Check for group Invoice is created with total amount of both registration
+  and Registration should be closed after invoice generated.
+- 
+  !python {model: event.registration}: |
+    reg_data_1 = self.browse(cr, uid, [ref("reg_0_1")])[0]
+    reg_data_2 = self.browse(cr, uid, [ref("reg_0_2")])[0]
+    assert reg_data_1.invoice_id, "Invoice should be generated"
+    assert reg_data_1.invoice_id.state == "draft", "Invoice state should be draft"
+    assert reg_data_1.invoice_id.partner_id == reg_data_1.partner_id, "Customer is not correspond with registration"
+    assert reg_data_1.invoice_id.type == 'out_invoice', "Invoice type is not correct"
+    assert reg_data_1.invoice_id.origin == reg_data_1.event_product, "Invoice origin is not correct"
+    assert reg_data_1.invoice_id.amount_total == (reg_data_1.price_subtotal + reg_data_2.price_subtotal), "Invoice total amount is not correct"
+    assert reg_data_1.state == "done", "Registration should be closed after invoice generated"

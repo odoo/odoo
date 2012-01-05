@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="9"/>
+        <menuitem groups="base.group_extended" id="prod_config_main" name="Products" parent="base.menu_base_config" sequence="9"/>
 
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
@@ -26,7 +26,7 @@
                    </group>
                    <newline/>
                    <group  expand='0' string='Group by...' groups="base.group_extended">
-                       <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
+                       <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" groups="base.group_extended"/>
                        <separator orientation="vertical"/>
                        <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
                        <separator orientation="vertical"/>
@@ -56,7 +56,7 @@
                     <field name="virtual_available"/>
                     <field name="lst_price"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="standard_price"/>
+                    <field name="standard_price" groups="base.group_extended"/>
                     <field name="state" groups="base.group_extended"/>
                     <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 </tree>
@@ -100,9 +100,10 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Base Prices" colspan="2"/>
-                                <field groups="base.group_extended" name="cost_method"/>
-                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                 <field name="list_price"/>
+                                <field groups="base.group_extended" name="cost_method"/>
+                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"
+                                    groups="base.group_extended"/>
                                 <newline/>
                                 <field name="price_margin" groups="product.group_product_variant"/>
                                 <field name="price_extra" groups="product.group_product_variant"/>
@@ -194,7 +195,7 @@
                 </form>
             </field>
         </record>
-        
+
         <!-- Product Kanban View  -->
         <record model="ir.ui.view" id="product_kanban_view">
             <field name="name">Product Kanban</field>
@@ -244,6 +245,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
@@ -282,6 +284,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="context">{"search_default_filter_to_purchase":1}</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
@@ -357,7 +360,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="context">{'categ_id':active_id, 'search_default_categ_id':active_id}</field>
         </record>
         <record id="ir_product_category_open" model="ir.values">
@@ -439,7 +442,7 @@
             </field>
         </record>
         <record id="product_uom_categ_form_action" model="ir.actions.act_window">
-            <field name="name">Units of Measure Categories</field>
+            <field name="name">UoM Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.uom.categ</field>
             <field name="view_type">form</field>
@@ -529,7 +532,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Supplier Information">
-                    <field name="name"/>
+                    <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                     <field name="sequence"/>
                     <field name="product_name" groups="base.group_extended"/>
                     <field name="product_code" groups="base.group_extended"/>
@@ -637,8 +640,9 @@
 
                             <group colspan="2" col="2">
                                 <separator string="Base Prices" colspan="2"/>
-                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                 <field name="list_price"/>
+                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"
+                                    groups="base.group_extended"/>
                                 <field groups="base.group_extended" name="cost_method"/>
                             </group>
 

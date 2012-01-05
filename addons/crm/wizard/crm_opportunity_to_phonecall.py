@@ -21,8 +21,6 @@
 
 from osv import osv, fields
 from tools.translate import _
-import pprint
-pp = pprint.PrettyPrinter(indent=4)
 
 import time
 
@@ -42,7 +40,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
 
         record_ids = context and context.get('active_ids', []) or []
         res = {}
-        res.update({'action': 'schedule', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        res.update({'action': 'log', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         for opp in opp_obj.browse(cr, uid, record_ids, context=context):
             if 'name' in fields:
                 res.update({'name': opp.name})
@@ -75,7 +73,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 data.section_id and data.section_id.id or False, \
                 data.categ_id and data.categ_id.id or False, \
                 action=data.action, context=context)
-        return phonecall.redirect_phonecall_view(cr, uid, call_ids[opportunity_ids[0]], context=context)
+        return {'type': 'ir.actions.act_window_close'}
 
 crm_opportunity2phonecall()
 

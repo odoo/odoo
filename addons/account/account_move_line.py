@@ -94,7 +94,7 @@ class account_move_line(osv.osv):
         if initial_bal and not context.get('periods', False) and not where_move_lines_by_date:
             #we didn't pass any filter in the context, and the initial balance can't be computed using only the fiscalyear otherwise entries will be summed twice
             #so we have to invalidate this query
-            raise osv.except_osv(_('Warning !'),_("You haven't supplied enough argument to compute the initial balance"))
+            raise osv.except_osv(_('Warning !'),_("You haven't supplied enough argument to compute the initial balance, please select a period and journal in the context."))
 
 
         if context.get('journal_ids', False):
@@ -581,14 +581,14 @@ class account_move_line(osv.osv):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'view':
-                return False
+                raise osv.except_osv(_('Error :'), _('You can not create journal items on a "view" account %s %s') % (l.account_id.code, l.account_id.name))
         return True
 
     def _check_no_closed(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'closed':
-                return False
+                raise osv.except_osv(_('Error :'), _('You can not create journal items on a closed account %s %s') % (l.account_id.code, l.account_id.name))
         return True
 
     def _check_company_id(self, cr, uid, ids, context=None):
@@ -613,11 +613,11 @@ class account_move_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_no_view, 'You can not create move line on view account.', ['account_id']),
-        (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
-        (_check_company_id, 'Company must be same for its related account and period.', ['company_id']),
-        (_check_date, 'The date of your Journal Entry is not in the defined period!', ['date']),
-        (_check_currency, 'The selected account of your Journal Entry must receive a value in its secondary currency', ['currency_id']),
+        (_check_no_view, 'You can not create journal items on an account of type view.', ['account_id']),
+        (_check_no_closed, 'You can not create journal items on closed account.', ['account_id']),
+        (_check_company_id, 'Company must be the same for its related account and period.', ['company_id']),
+        (_check_date, 'The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal.', ['date']),
+        (_check_currency, 'The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal.', ['currency_id']),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -832,7 +832,7 @@ class account_move_line(osv.osv):
             raise osv.except_osv(_('Error'), _('Entry is already reconciled'))
         account = account_obj.browse(cr, uid, account_id, context=context)
         if not context.get('fy_closing', False) and not account.reconcile:
-            raise osv.except_osv(_('Error'), _('The account is not defined to be reconciled !'))
+            raise osv.except_osv(_('Error'), _('This account does not allow reconciliation! You should update the account definition to change this.'))
         if r[0][1] != None:
             raise osv.except_osv(_('Error'), _('Some entries are already reconciled !'))
 
@@ -1212,9 +1212,9 @@ class account_move_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
             if line.move_id.state <> 'draft' and (not line.journal_id.entry_posted):
-                raise osv.except_osv(_('Error !'), _('You can not do this modification on a confirmed entry ! Please note that you can just change some non important fields ! \n%s') % err_msg)
+                raise osv.except_osv(_('Error !'), _('You can not do this modification on a confirmed entry! You can just change some non legal fields or you must unconfirm the journal entry first! \n%s') % err_msg)
             if line.reconcile_id:
-                raise osv.except_osv(_('Error !'), _('You can not do this modification on a reconciled entry ! Please note that you can just change some non important fields ! \n%s') % err_msg)
+                raise osv.except_osv(_('Error !'), _('You can not do this modification on a reconciled entry! You can just change some non legal fields or you must unreconcile first!\n%s') % err_msg)
             t = (line.journal_id.id, line.period_id.id)
             if t not in done:
                 self._update_journal_check(cr, uid, line.journal_id.id, line.period_id.id, context)
@@ -1247,8 +1247,10 @@ class account_move_line(osv.osv):
         if 'period_id' not in context or not isinstance(context.get('period_id', ''), (int, long)):
             period_candidate_ids = self.pool.get('account.period').name_search(cr, uid, name=context.get('period_id',''))
             if len(period_candidate_ids) != 1:
-                raise osv.except_osv(_('Encoding error'), _('No period found or period given is ambigous.'))
+                raise osv.except_osv(_('Encoding error'), _('No period found or more than one period found for the given date.'))
             context['period_id'] = period_candidate_ids[0][0]
+        if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
+            context['journal_id'] = context.get('search_default_journal_id')            
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
         move_id = vals.get('move_id', False)
         journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)

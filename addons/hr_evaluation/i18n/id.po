@@ -7,26 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-02-07 08:54+0000\n"
 "Last-Translator: moelyana <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:41+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:14+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: hr_evaluation
-#: selection:hr.evaluation.report,state:0
-#: selection:hr_evaluation.evaluation,state:0
-msgid "Plan In Progress"
-msgstr "Rencana Sedang Dikerjakan"
+#: help:hr_evaluation.plan.phase,send_anonymous_manager:0
+msgid "Send an anonymous summary to the manager"
+msgstr ""
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan.phase,wait:0
-msgid "Wait Previous Phases"
-msgstr "Tunggu Tahapan Sebelumnya"
+#: view:hr_evaluation.evaluation:0
+msgid "Start Appraisal"
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -34,6 +33,11 @@ msgstr "Tunggu Tahapan Sebelumnya"
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "Dikelompokan berdasarkan ..."
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal that overpassed the deadline"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -48,23 +52,6 @@ msgid "Progress"
 msgstr "Progress"
 
 #. module: hr_evaluation
-#: view:board.board:0
-#: model:ir.actions.act_window,name:hr_evaluation.act_hr_evaluation_tree
-msgid "My Evaluation Remaining"
-msgstr "Penilaian saya yang tersisa"
-
-#. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:0
-msgid "Legend"
-msgstr ""
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:311
-#, python-format
-msgid "You cannot start evaluation without Evaluation."
-msgstr "Anda tidak dapat memulai evaluasi tanpa Penilaian."
-
-#. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "March"
 msgstr ""
@@ -75,14 +62,13 @@ msgid "Delay to Start"
 msgstr "Tunda untuk memulai"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr_evaluation.evaluation,rating:0
-msgid "Appreciation"
-msgstr "Appreciation"
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal that are in waiting appreciation state"
+msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:242
-#: code:addons/hr_evaluation/hr_evaluation.py:311
+#: code:addons/hr_evaluation/hr_evaluation.py:244
+#: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "Warning !"
 msgstr "Peringatan !"
@@ -95,11 +81,7 @@ msgid "Company"
 msgstr "Perusahaan"
 
 #. module: hr_evaluation
-#: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
-msgid "Evaluation Interviews"
-msgstr ""
-
-#. module: hr_evaluation
+#: field:hr.evaluation.interview,evaluation_id:0
 #: field:hr_evaluation.plan.phase,survey_id:0
 msgid "Appraisal Form"
 msgstr "Formulir Penilaian"
@@ -111,14 +93,10 @@ msgid "Day"
 msgstr "Hari"
 
 #. module: hr_evaluation
-#: field:hr.evaluation.interview,evaluation_id:0
-msgid "Evaluation Form"
-msgstr "Formulir Penilaian"
-
-#. module: hr_evaluation
-#: help:hr_evaluation.plan.phase,send_anonymous_employee:0
-msgid "Send an anonymous summary to the employee"
-msgstr "Kirim ringkasan anonim untuk karyawan"
+#: view:hr_evaluation.plan:0
+#: field:hr_evaluation.plan,phase_ids:0
+msgid "Appraisal Phases"
+msgstr ""
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan,month_first:0
@@ -135,16 +113,19 @@ msgid "Notes"
 msgstr "Catatan"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-msgid "Interview Request"
-msgstr "Permintaan Wawancara"
+#: view:hr_evaluation.plan.phase:0
+msgid "(eval_name)s:Appraisal Name"
+msgstr ""
 
 #. module: hr_evaluation
-#: constraint:hr.employee:0
+#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
 msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
+"Each employee may be assigned an Appraisal Plan. Such a plan defines the "
+"frequency and the way you manage your periodic personnel evaluation. You "
+"will be able to define steps and attach interviews to each step. OpenERP "
+"manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
+"final evaluation by the manager."
 msgstr ""
-"Error! Anda tidak dapat memilih  departemen  yang karyawan adalah manajer."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -152,11 +133,14 @@ msgid "Mail Body"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_report_all
-#: model:ir.ui.menu,name:hr_evaluation.menu_evaluation_report_all
-msgid "Evaluations Analysis"
-msgstr "Analisis Evaluasi"
+#: field:hr_evaluation.plan.phase,wait:0
+msgid "Wait Previous Phases"
+msgstr "Tunggu Tahapan Sebelumnya"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_evaluation
+msgid "Employee Appraisal"
+msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -165,40 +149,24 @@ msgid "Cancelled"
 msgstr "Dibatalkan"
 
 #. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_hr_evaluation_reminder
-msgid "Sends Reminders to employess to fill the evaluations"
-msgstr "Kirim Reminders untuk karyawan yang tersebar untuk mengisi evaluasi"
-
-#. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
 #: selection:hr_evaluation.evaluation,rating:0
 msgid "Did not meet expectations"
 msgstr "Tidak memenuhi harapan"
 
 #. module: hr_evaluation
+#: view:hr.employee:0
 #: view:hr_evaluation.evaluation:0
+#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Appraisal"
 msgstr "Appraisal"
 
 #. module: hr_evaluation
-#: selection:hr.evaluation.report,month:0
-msgid "July"
-msgstr "Juli"
-
-#. module: hr_evaluation
-#: field:hr_evaluation.plan,month_next:0
-msgid "Periodicity of Evaluations (months)"
-msgstr "Periodisitas Evaluasi (bulan)"
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:242
-#, python-format
-msgid ""
-"You cannot change state, because some appraisal in waiting answer or draft "
-"state"
+#: view:hr_evaluation.plan.phase:0
+msgid "Send to Managers"
 msgstr ""
-"Anda tidak dapat mengubah kondisi, karena beberapa penilaian di kondisi "
-"menunggu jawabannya atau konsep"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date_close:0
@@ -206,12 +174,20 @@ msgid "Ending Date"
 msgstr "Tanggal Akhir"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_first:0
-msgid "First Evaluation in (months)"
-msgstr "Penilaian pertama dalam (bulan)"
+#: help:hr_evaluation.evaluation,note_action:0
+msgid ""
+"If the evaluation does not meet the expectations, you can proposean action "
+"plan"
+msgstr ""
+"Jika evaluasi tidak memenuhi harapan, Anda dapat proposean rencana aksi"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:81
+#: view:hr_evaluation.plan.phase:0
+msgid "Send to Employees"
+msgstr "Kirim untuk Karyawan"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:82
 #, python-format
 msgid ""
 "\n"
@@ -232,9 +208,14 @@ msgid ""
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:0
-msgid "Send to Employees"
-msgstr "Kirim untuk Karyawan"
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal that are in Plan In Progress state"
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Reset to Draft"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,deadline:0
@@ -247,50 +228,14 @@ msgid " Month "
 msgstr ""
 
 #. module: hr_evaluation
-#: help:hr_evaluation.plan,month_next:0
-msgid ""
-"The number of month that depicts the delay between each evaluation of this "
-"plan (after the first one)."
+#: view:hr.evaluation.report:0
+msgid "In progress Evaluations"
 msgstr ""
-"Jumlah bulan yang menggambarkan penundaan antara setiap evaluasi rencana ini "
-"(setelah yang pertama)."
 
 #. module: hr_evaluation
-#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
-msgid "Periodic Evaluations"
-msgstr "Evaluasi berkala"
-
-#. module: hr_evaluation
-#: view:hr.evaluation.reminder:0
-msgid "Send evaluation reminder"
-msgstr "Kirim pengingat evaluasi"
-
-#. module: hr_evaluation
-#: model:ir.module.module,description:hr_evaluation.module_meta_information
-msgid ""
-"\n"
-"          Ability to create employees evaluation.\n"
-"          An evaluation can be created by employee for subordinates,\n"
-"          juniors as well as his manager.The evaluation is done under a "
-"plan\n"
-"          in which various surveys can be created and it can be defined "
-"which\n"
-"          level of employee hierarchy fills what and final review and "
-"evaluation\n"
-"          is done by the manager.Every evaluation filled by the employees "
-"can be viewed\n"
-"          in the form of.Implements a dashboard for My Current Evaluations\n"
-"         "
-msgstr ""
-"\n"
-"          Kemampuan untuk membuat evaluasi karyawan.\n"
-"Sebuah evaluasi dapat dibuat oleh karyawan untuk bawahan,\n"
-"yunior serta evaluasi manager.The nya dilakukan di bawah rencana\n"
-"di mana berbagai survei dapat diciptakan dan dapat didefinisikan yang\n"
-"tingkat hirarki karyawan mengisi apa dan akhir peninjauan dan evaluasi\n"
-"dilakukan dengan evaluasi manager.Every diisi oleh karyawan dapat dilihat\n"
-"di bentuk of.Implements dashboard untuk Evaluasi Lancar saya\n"
-"         "
+#: model:ir.model,name:hr_evaluation.model_survey_request
+msgid "survey.request"
+msgstr "Survei permintaan"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -298,7 +243,12 @@ msgid "(date)s: Current Date"
 msgstr "(Tanggal) s: Tanggal saat ini"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:80
+#: help:hr_evaluation.plan.phase,send_anonymous_employee:0
+msgid "Send an anonymous summary to the employee"
+msgstr "Kirim ringkasan anonim untuk karyawan"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:81
 #, python-format
 msgid "Regarding "
 msgstr "Perihal "
@@ -313,11 +263,6 @@ msgid "State"
 msgstr "Status"
 
 #. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan_phase
-msgid "Evaluation Plan Phase"
-msgstr "Tahap Rencana Penilaian"
-
-#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 #: field:hr.evaluation.report,employee_id:0
 #: view:hr_evaluation.evaluation:0
@@ -327,8 +272,8 @@ msgid "Employee"
 msgstr "Karyawan"
 
 #. module: hr_evaluation
-#: field:hr.evaluation.report,overpass_delay:0
-msgid "Overpassed Deadline"
+#: selection:hr_evaluation.evaluation,state:0
+msgid "New"
 msgstr ""
 
 #. module: hr_evaluation
@@ -351,14 +296,30 @@ msgstr ""
 "tahap  ini"
 
 #. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Evaluation done in last month"
+msgstr ""
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_mail_compose_message
+msgid "E-mail composition wizard"
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Creation Date"
+msgstr ""
+
+#. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_answer_manager:0
 msgid "Send all answers to the manager"
 msgstr "Kirim semua jawaban terhadap manajer"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-msgid "    Month-1    "
-msgstr ""
+#: selection:hr.evaluation.report,state:0
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Plan In Progress"
+msgstr "Rencana Sedang Dikerjakan"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -366,15 +327,26 @@ msgid "Public Notes"
 msgstr "Catatan Umum"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.evaluation,date:0
-msgid "Evaluation Deadline"
+#: view:hr.evaluation.interview:0
+msgid "Send Reminder Email"
 msgstr ""
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+#: field:hr_evaluation.evaluation,rating:0
+msgid "Appreciation"
+msgstr "Appreciation"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Print Interview"
 msgstr "Cetak Wawancara"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Pending"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,closed:0
@@ -394,26 +366,19 @@ msgid "# of Requests"
 msgstr ""
 
 #. module: hr_evaluation
-#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_tree
-#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
-#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
-msgid "Evaluations"
-msgstr "Evaluasi"
+#: selection:hr.evaluation.report,month:0
+msgid "July"
+msgstr "Juli"
 
 #. module: hr_evaluation
-#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
-msgid ""
-"Each employee may be assigned an evaluation plan. Such a plan defines the "
-"frequency and the way you manage your periodic personnel evaluation. You "
-"will be able to define steps and attach interviews to each step. OpenERP "
-"manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
-"final evaluation by the manager."
+#: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_plans_installer
+msgid "Review Appraisal Plans"
 msgstr ""
-"Setiap karyawan dapat diberikan rencana evaluasi. Rencana seperti  "
-"mendefinisikan  frekuensi  dan cara Anda pengelolaan evaluasi berkala Anda "
-"personil. Anda akan dapat menentukan langkah-langkah  dan melampirkan  "
-"wawancara  untuk  setiap langkah.  OpenERP  mengelola  semua  jenis  "
-"evaluasi: bottom-up, top-down, evaluasi diri dan evaluasi akhir oleh manajer."
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "    Month-1    "
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -426,8 +391,13 @@ msgid "Action Plan"
 msgstr "Rencanakan tindakan"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:0
-msgid "(eval_name)s:Evaluation Name"
+#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
+msgid "Periodic Appraisal"
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal to close within the next 7 days"
 msgstr ""
 
 #. module: hr_evaluation
@@ -442,9 +412,22 @@ msgid "Significantly exceeds expectations"
 msgstr "Secara signifikan melebihi harapan"
 
 #. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"Interview Requests are generated automatically by OpenERP according to an "
+"employee's Appraisal Plan. Each user receives automatic emails and requests "
+"to evaluate their colleagues periodically."
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "In progress"
 msgstr "Dalam proses"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "Interview Request"
+msgstr "Permintaan Wawancara"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_answer_employee:0
@@ -464,14 +447,14 @@ msgstr "Desember"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
+msgid "Evaluation done in current year"
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
 #: field:hr.evaluation.report,month:0
 msgid "Month"
 msgstr "Bulan"
-
-#. module: hr_evaluation
-#: model:ir.module.module,shortdesc:hr_evaluation.module_meta_information
-msgid "Human Resources Evaluation"
-msgstr "Penilaian Sumber Daya Manusia"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -484,25 +467,15 @@ msgid "Mail Settings"
 msgstr "Setting Mail"
 
 #. module: hr_evaluation
-#: field:hr.evaluation.interview,user_to_review_id:0
-msgid "Employee to Interview"
-msgstr "Karyawan untuk Wawancara"
+#: model:ir.actions.act_window,name:hr_evaluation.evaluation_reminders
+msgid "Appraisal Reminders"
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Interview Question"
 msgstr ""
-
-#. module: hr_evaluation
-#: field:survey.request,is_evaluation:0
-msgid "Is Evaluation?"
-msgstr "Merupakan Penilaian?"
-
-#. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_survey_request
-msgid "survey.request"
-msgstr "Survei permintaan"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,wait:0
@@ -514,28 +487,19 @@ msgstr ""
 "selesai sebelum meluncurkan  Tahap  ini."
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:0
-msgid "Evaluation Data"
-msgstr "Data Penilaian"
+#: view:hr_evaluation.plan.phase:0
+msgid "Legend"
+msgstr ""
 
 #. module: hr_evaluation
-#: help:hr_evaluation.evaluation,note_action:0
-msgid ""
-"If the evaluation does not meet the expectations, you can proposean action "
-"plan"
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Appraisal in (months)"
 msgstr ""
-"Jika evaluasi tidak memenuhi harapan, Anda dapat proposean rencana aksi"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
-#: selection:hr_evaluation.evaluation,state:0
 msgid "Draft"
 msgstr "Konsep"
-
-#. module: hr_evaluation
-#: field:hr_evaluation.evaluation,note_summary:0
-msgid "Evaluation Summary"
-msgstr "Ringkasan Penilaian"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_anonymous_employee:0
@@ -544,35 +508,23 @@ msgid "Anonymous Summary"
 msgstr "Anonim Ringkasan"
 
 #. module: hr_evaluation
-#: view:hr.employee:0
-#: view:hr_evaluation.evaluation:0
-msgid "Evaluation"
-msgstr "Evaluasi"
-
-#. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "7 Days"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-msgid " Year "
+#: field:hr.employee,evaluation_plan_id:0
+#: view:hr_evaluation.plan:0
+#: field:hr_evaluation.plan,name:0
+#: field:hr_evaluation.plan.phase,plan_id:0
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
+msgid "Appraisal Plan"
 msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "August"
 msgstr ""
-
-#. module: hr_evaluation
-#: view:hr_evaluation.evaluation:0
-msgid "Start Evaluation"
-msgstr "Mulai Penilaian"
-
-#. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-msgid "To Do"
-msgstr "Yang harus dilakukan .."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -620,9 +572,9 @@ msgstr ""
 "Error! Anda tidak dapat  membuat  Hirarki Karyawan secara rekursif  ."
 
 #. module: hr_evaluation
-#: selection:hr.evaluation.report,month:0
-msgid "October"
-msgstr "Oktober"
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan_phase
+msgid "Appraisal Plan Phase"
+msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -630,25 +582,8 @@ msgid "January"
 msgstr "Januari"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.reminder:0
-msgid "Send Mail"
-msgstr "Kirim Surat"
-
-#. module: hr_evaluation
-#: help:hr_evaluation.plan.phase,send_anonymous_manager:0
-msgid "Send an anonymous summary to the manager"
-msgstr ""
-
-#. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
-msgid "Interview Evaluation"
-msgstr ""
-
-#. module: hr_evaluation
-#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_plan_tree
-#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_plan_tree
-msgid "Evaluation Plans"
+#: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
+msgid "Appraisal Interviews"
 msgstr ""
 
 #. module: hr_evaluation
@@ -683,8 +618,15 @@ msgid "Waiting Appreciation"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan.phase,mail_feature:0
-msgid "Send mail for this phase"
+#: view:hr.evaluation.report:0
+#: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_report_all
+#: model:ir.ui.menu,name:hr_evaluation.menu_evaluation_report_all
+msgid "Appraisal Analysis"
+msgstr ""
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,date:0
+msgid "Appraisal Deadline"
 msgstr ""
 
 #. module: hr_evaluation
@@ -693,9 +635,8 @@ msgid "Overall Rating"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
-msgid "Late"
+#: field:hr_evaluation.plan.phase,email_subject:0
+msgid "char"
 msgstr ""
 
 #. module: hr_evaluation
@@ -715,8 +656,28 @@ msgid "Deadline Date"
 msgstr ""
 
 #. module: hr_evaluation
+#: code:addons/hr_evaluation/wizard/mail_compose_message.py:45
+#, python-format
+msgid ""
+"Hello %s, \n"
+"\n"
+" Kindly post your response for '%s' survey interview. \n"
+"\n"
+" Thanks,"
+msgstr ""
+
+#. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Top-Down Appraisal Requests"
+msgstr ""
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_evaluation_plans_installer
+msgid ""
+"You can define appraisal plans (ex: first interview after 6 months, then "
+"every year). Then, each employee can be linked to an appraisal plan so that "
+"OpenERP can automatically generate interview requests to managers and/or "
+"subordinates."
 msgstr ""
 
 #. module: hr_evaluation
@@ -730,8 +691,8 @@ msgid "Send all answers to the employee"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr.employee,evaluation_date:0
-msgid "Next Evaluation Date"
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal Data"
 msgstr ""
 
 #. module: hr_evaluation
@@ -743,14 +704,25 @@ msgid "Done"
 msgstr "Selesai"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:0
-msgid "Evaluation Plan Phases"
+#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_plan_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_plan_tree
+msgid "Appraisal Plans"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.reminder:0
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
+msgid "Appraisal Interview"
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Cancel"
+msgstr ""
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/wizard/mail_compose_message.py:49
+#, python-format
+msgid "Reminder to fill up Survey"
 msgstr ""
 
 #. module: hr_evaluation
@@ -759,48 +731,60 @@ msgid "In Progress"
 msgstr ""
 
 #. module: hr_evaluation
-#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
-msgid ""
-"Interview Requests are generated automatically by OpenERP according to an "
-"employee's evaluation plan. Each user receives automatic emails and requests "
-"to evaluate their colleagues periodically."
+#: view:hr.evaluation.interview:0
+msgid "To Do"
+msgstr "Yang harus dilakukan .."
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Final Validation Evaluations"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:0
-#: field:hr_evaluation.plan,phase_ids:0
-msgid "Evaluation Phases"
+#: field:hr_evaluation.plan.phase,mail_feature:0
+msgid "Send mail for this phase"
 msgstr ""
 
 #. module: hr_evaluation
+#: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
-msgid "Current"
+msgid "Late"
 msgstr ""
 
 #. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
-msgid "Evaluation Interview"
+#: selection:hr.evaluation.report,month:0
+msgid "October"
+msgstr "Oktober"
+
+#. module: hr_evaluation
+#: help:hr.employee,evaluation_date:0
+msgid ""
+"The date of the next appraisal is computed by the appraisal plan's dates "
+"(first appraisal + periodicity)."
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr.evaluation.reminder,evaluation_id:0
-msgid "Interview"
+#: field:hr.evaluation.report,overpass_delay:0
+msgid "Overpassed Deadline"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.reminder:0
-#: model:ir.ui.menu,name:hr_evaluation.menu_eval_send_mail
-msgid "Evaluation Reminders"
+#: help:hr_evaluation.plan,month_next:0
+msgid ""
+"The number of month that depicts the delay between each evaluation of this "
+"plan (after the first one)."
+msgstr ""
+"Jumlah bulan yang menggambarkan penundaan antara setiap evaluasi rencana ini "
+"(setelah yang pertama)."
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,month_next:0
+msgid "Periodicity of Appraisal (months)"
 msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Self Appraisal Requests"
-msgstr ""
-
-#. module: hr_evaluation
-#: field:hr_evaluation.plan.phase,email_subject:0
-msgid "char"
 msgstr ""
 
 #. module: hr_evaluation
@@ -819,11 +803,6 @@ msgid "Internal Notes"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:0
-msgid "Validate Evaluation"
-msgstr ""
-
-#. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Final Interview"
 msgstr ""
@@ -839,19 +818,14 @@ msgid "Bottom-Up Appraisal Requests"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
-msgid "Search Evaluation"
+#: code:addons/hr_evaluation/hr_evaluation.py:244
+#, python-format
+msgid ""
+"You cannot change state, because some appraisal in waiting answer or draft "
+"state"
 msgstr ""
-
-#. module: hr_evaluation
-#: field:hr.employee,evaluation_plan_id:0
-#: view:hr_evaluation.plan:0
-#: field:hr_evaluation.plan,name:0
-#: field:hr_evaluation.plan.phase,plan_id:0
-#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
-msgid "Evaluation Plan"
-msgstr ""
+"Anda tidak dapat mengubah kondisi, karena beberapa penilaian di kondisi "
+"menunggu jawabannya atau konsep"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -859,14 +833,31 @@ msgid "February"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:0
-msgid "Send to Managers"
+#: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
+msgid "Interview Appraisal"
 msgstr ""
 
 #. module: hr_evaluation
-#: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_send_mail
-msgid "Evaluation Send Mail"
+#: field:survey.request,is_evaluation:0
+msgid "Is Appraisal?"
 msgstr ""
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:320
+#, python-format
+msgid "You cannot start evaluation without Appraisal."
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Evaluation done in current month"
+msgstr ""
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,user_to_review_id:0
+msgid "Employee to Interview"
+msgstr "Karyawan untuk Wawancara"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -874,18 +865,19 @@ msgid "April"
 msgstr ""
 
 #. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_hr_evaluation_evaluation
-msgid "Employee Evaluation"
+#: view:hr_evaluation.plan.phase:0
+msgid "Appraisal Plan Phases"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:0
-msgid "Search Evaluation Plan"
+#: view:hr_evaluation.evaluation:0
+msgid "Validate Appraisal"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:0
-msgid "(months)"
+#: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
+msgid "Search Appraisal"
 msgstr ""
 
 #. module: hr_evaluation
@@ -899,6 +891,8 @@ msgid "(user_signature)s: User name"
 msgstr ""
 
 #. module: hr_evaluation
+#: view:board.board:0
+#: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_board
 #: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_hr_evaluation_interview_requests
 msgid "Interview Requests"
@@ -916,10 +910,13 @@ msgid "Year"
 msgstr ""
 
 #. module: hr_evaluation
-#: help:hr.employee,evaluation_date:0
-msgid ""
-"The date of the next evaluation is computed by the evaluation plan's dates "
-"(first evaluation + periodicity)."
+#: field:hr_evaluation.evaluation,note_summary:0
+msgid "Appraisal Summary"
+msgstr ""
+
+#. module: hr_evaluation
+#: field:hr.employee,evaluation_date:0
+msgid "Next Appraisal Date"
 msgstr ""
 
 #~ msgid "Information"
@@ -936,6 +933,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Nama Objek harus berawalan dengan x_ dan tidak mengandung karakter khusus !"
 
+#~ msgid "Evaluation"
+#~ msgstr "Evaluasi"
+
 #~ msgid "Evaluation Type"
 #~ msgstr "Tipe Evaluasi"
 
@@ -951,8 +951,103 @@ msgstr ""
 #~ msgid "Configuration"
 #~ msgstr "Konfigurasi"
 
+#~ msgid "Evaluations"
+#~ msgstr "Evaluasi"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML tidak sah untuk Menampilkan Arsitektur!"
 
 #~ msgid "Type"
 #~ msgstr "Jenis"
+
+#~ msgid "My Evaluation Remaining"
+#~ msgstr "Penilaian saya yang tersisa"
+
+#, python-format
+#~ msgid "You cannot start evaluation without Evaluation."
+#~ msgstr "Anda tidak dapat memulai evaluasi tanpa Penilaian."
+
+#~ msgid "Evaluation Form"
+#~ msgstr "Formulir Penilaian"
+
+#~ msgid ""
+#~ "Error ! You cannot select a department for which the employee is the manager."
+#~ msgstr ""
+#~ "Error! Anda tidak dapat memilih  departemen  yang karyawan adalah manajer."
+
+#~ msgid "Evaluations Analysis"
+#~ msgstr "Analisis Evaluasi"
+
+#~ msgid "Sends Reminders to employess to fill the evaluations"
+#~ msgstr "Kirim Reminders untuk karyawan yang tersebar untuk mengisi evaluasi"
+
+#~ msgid "Periodicity of Evaluations (months)"
+#~ msgstr "Periodisitas Evaluasi (bulan)"
+
+#~ msgid "Periodic Evaluations"
+#~ msgstr "Evaluasi berkala"
+
+#~ msgid "Send evaluation reminder"
+#~ msgstr "Kirim pengingat evaluasi"
+
+#~ msgid "First Evaluation in (months)"
+#~ msgstr "Penilaian pertama dalam (bulan)"
+
+#~ msgid ""
+#~ "\n"
+#~ "          Ability to create employees evaluation.\n"
+#~ "          An evaluation can be created by employee for subordinates,\n"
+#~ "          juniors as well as his manager.The evaluation is done under a "
+#~ "plan\n"
+#~ "          in which various surveys can be created and it can be defined "
+#~ "which\n"
+#~ "          level of employee hierarchy fills what and final review and "
+#~ "evaluation\n"
+#~ "          is done by the manager.Every evaluation filled by the employees "
+#~ "can be viewed\n"
+#~ "          in the form of.Implements a dashboard for My Current Evaluations\n"
+#~ "         "
+#~ msgstr ""
+#~ "\n"
+#~ "          Kemampuan untuk membuat evaluasi karyawan.\n"
+#~ "Sebuah evaluasi dapat dibuat oleh karyawan untuk bawahan,\n"
+#~ "yunior serta evaluasi manager.The nya dilakukan di bawah rencana\n"
+#~ "di mana berbagai survei dapat diciptakan dan dapat didefinisikan yang\n"
+#~ "tingkat hirarki karyawan mengisi apa dan akhir peninjauan dan evaluasi\n"
+#~ "dilakukan dengan evaluasi manager.Every diisi oleh karyawan dapat dilihat\n"
+#~ "di bentuk of.Implements dashboard untuk Evaluasi Lancar saya\n"
+#~ "         "
+
+#~ msgid "Evaluation Plan Phase"
+#~ msgstr "Tahap Rencana Penilaian"
+
+#~ msgid ""
+#~ "Each employee may be assigned an evaluation plan. Such a plan defines the "
+#~ "frequency and the way you manage your periodic personnel evaluation. You "
+#~ "will be able to define steps and attach interviews to each step. OpenERP "
+#~ "manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
+#~ "final evaluation by the manager."
+#~ msgstr ""
+#~ "Setiap karyawan dapat diberikan rencana evaluasi. Rencana seperti  "
+#~ "mendefinisikan  frekuensi  dan cara Anda pengelolaan evaluasi berkala Anda "
+#~ "personil. Anda akan dapat menentukan langkah-langkah  dan melampirkan  "
+#~ "wawancara  untuk  setiap langkah.  OpenERP  mengelola  semua  jenis  "
+#~ "evaluasi: bottom-up, top-down, evaluasi diri dan evaluasi akhir oleh manajer."
+
+#~ msgid "Evaluation Data"
+#~ msgstr "Data Penilaian"
+
+#~ msgid "Is Evaluation?"
+#~ msgstr "Merupakan Penilaian?"
+
+#~ msgid "Human Resources Evaluation"
+#~ msgstr "Penilaian Sumber Daya Manusia"
+
+#~ msgid "Start Evaluation"
+#~ msgstr "Mulai Penilaian"
+
+#~ msgid "Evaluation Summary"
+#~ msgstr "Ringkasan Penilaian"
+
+#~ msgid "Send Mail"
+#~ msgstr "Kirim Surat"

@@ -305,10 +305,13 @@
                         <field name="response" readonly="1"/>
                         <field name="user_to_review_id"/>
                         <field name="user_id" string="Interviewer"/>
-                        <button string="Send Reminder Email"
-                        name="%(mail.action_email_compose_message_wizard)d"
-                        icon="terp-mail-message-new" type="action" colspan="2"
-                        states="waiting_answer"/>
+                        <group col="2" colspan="2">
+                            <button string="Send Reminder Email"
+                            name="%(mail.action_email_compose_message_wizard)d"
+                            icon="terp-mail-message-new" type="action"
+                            states="waiting_answer"/>
+                            <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                        </group>
                     </group>
                     <newline/>
                     <separator string="State" colspan="4"/>
@@ -332,6 +335,7 @@
                     <field name="response" readonly="1" invisible="True"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done" icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0}" attrs="{'readonly':[('response','=',False)]}" />
+                    <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <button name="%(mail.action_email_compose_message_wizard)d" string="Send Reminder Email" icon="terp-mail-message-new" type="action" colspan="2" states="waiting_answer"/>
                     <field name="state"/>
                 </tree>
@@ -365,7 +369,7 @@
         </record>
 
         <record id="view_evaluation_calendar" model="ir.ui.view">
-            <field name="name">Interview Request</field>
+            <field name="name">Interview Requests</field>
             <field name="model">hr.evaluation.interview</field>
             <field name="type">calendar</field>
             <field name="arch" type="xml">
@@ -379,7 +383,7 @@
             <field name="name">Interview Requests</field>
             <field name="res_model">hr.evaluation.interview</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="view_hr_evaluation_interview_form"/>
+            <field name="view_id" eval="False"/>
             <field name="domain">[('is_evaluation' ,'=', True)]</field>
             <field name="context">{'default_is_evaluation': True, "search_default_todo":1,"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>

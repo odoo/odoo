@@ -23,7 +23,7 @@
 {
     'name': 'Sales and MRP Management',
     'version': '1.0',
-    'category': 'Hidden/Link',
+    'category': 'Hidden/Links',
     'complexity': "easy",
     'description': """
 This module provides facility to the user to install mrp and sales modulesat a time.
@@ -39,7 +39,6 @@ It adds sales name and sales Reference on production order.
     'depends': ['mrp', 'sale'],
     'init_xml': [],
     'update_xml': [
-        'security/sale_mrp_security.xml',
         'security/ir.model.access.csv',
         'sale_mrp_view.xml',
     ],

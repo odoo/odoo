@@ -34,6 +34,7 @@ class stock_move_consume(osv.osv_memory):
         'location_id': fields.many2one('stock.location', 'Location', required=True)
     }
 
+    #TOFIX: product_uom should not have differemt category of default UOM of product. Qty should be convert into UOM of original move line before going in consume and scrap
     def default_get(self, cr, uid, fields, context=None):
         """ Get default values
         @param self: The object pointer.

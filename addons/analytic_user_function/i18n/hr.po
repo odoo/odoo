@@ -6,36 +6,34 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2010-08-03 02:55+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"PO-Revision-Date: 2011-12-08 15:51+0000\n"
+"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: Vinteh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:36+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:09+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 "Language: hr\n"
 
 #. module: analytic_user_function
-#: field:analytic_user_funct_grid,product_id:0
+#: field:analytic.user.funct.grid,product_id:0
 msgid "Product"
 msgstr "Proizvod"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:96
-#: code:addons/analytic_user_function/analytic_user_function.py:131
-#, python-format
-msgid "Error !"
+#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
+msgid "Relation table between users and products on a analytic account"
+msgstr "Veza između korisnika i proizvoda na  analitičkom kontu."
+
+#. module: analytic_user_function
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
 msgstr ""
 
 #. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr ""
-
-#. module: analytic_user_function
-#: field:analytic_user_funct_grid,account_id:0
+#: field:analytic.user.funct.grid,account_id:0
 #: model:ir.model,name:analytic_user_function.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Analitički Konto"
@@ -47,7 +45,7 @@ msgid "Users/Products Rel."
 msgstr "veza Korisnici/Proizvodi"
 
 #. module: analytic_user_function
-#: field:analytic_user_funct_grid,user_id:0
+#: field:analytic.user.funct.grid,user_id:0
 msgid "User"
 msgstr "Korisnik"
 
@@ -56,51 +54,36 @@ msgstr "Korisnik"
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "Greška! Valuta ne odgovara valuti organizacije."
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:97
-#: code:addons/analytic_user_function/analytic_user_function.py:132
+#: code:addons/analytic_user_function/analytic_user_function.py:96
+#: code:addons/analytic_user_function/analytic_user_function.py:131
 #, python-format
 msgid "There is no expense account define for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "nije definiran konto troška za ovaj proizvod: \"%s\" (id:%d)"
 
 #. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
-msgid "Relation table between users and products on a analytic account"
-msgstr "Vza između korisnika i proizvoda kod Analitičkog konta."
-
-#. module: analytic_user_function
-#: model:ir.module.module,description:analytic_user_function.module_meta_information
-msgid ""
-"\n"
-"\n"
-"    This module allows you to define what is the default function of a "
-"specific user on a given account. This is mostly used when a user encodes "
-"his timesheet: the values are retrieved and the fields are auto-filled... "
-"but the possibility to change these values is still available.\n"
-"\n"
-"    Obviously if no data has been recorded for the current account, the "
-"default value is given as usual by the employee data so that this module is "
-"perfectly compatible with older configurations.\n"
-"\n"
-"    "
-msgstr ""
-
-#. module: analytic_user_function
-#: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
-msgid "Analytic User Function"
-msgstr "Funkcija Analitičkog Korisnika"
+#: code:addons/analytic_user_function/analytic_user_function.py:95
+#: code:addons/analytic_user_function/analytic_user_function.py:130
+#, python-format
+msgid "Error !"
+msgstr "Greška !"
 
 #. module: analytic_user_function
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
+msgstr "Greška! Ne možete kreirati rekurzivna analitička konta."
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
+msgid "Timesheet Line"
 msgstr ""
 
 #. module: analytic_user_function
-#: view:analytic_user_funct_grid:0
+#: view:analytic.user.funct.grid:0
 msgid "User's Product for this Analytic Account"
-msgstr "Korisnikov Proizvod za ovaj Analitički konto."
+msgstr "Proizvod  rada"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Nepravilan XML format za View Architecture!"
@@ -109,3 +92,6 @@ msgstr "Korisnikov Proizvod za ovaj Analitički konto."
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Naziv Objekta mora početi s x_ i ne smije sadržavati bilo koji posebni znak !"
+
+#~ msgid "Analytic User Function"
+#~ msgstr "Funkcija Analitičkog Korisnika"

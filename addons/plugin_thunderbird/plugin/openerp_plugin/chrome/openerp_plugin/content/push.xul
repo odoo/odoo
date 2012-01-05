@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<?xml-stylesheet href="style.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/plugin.dtd">
+<window id="pluginwindows" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	title="&title.label;" onload="getDocumentType()" >
+
+    <script type="text/javascript" src="chrome://openerp_plugin/content/js/tiny_xmlrpc.js"></script>
+    <script type="text/javascript" src="chrome://openerp_plugin/content/js/tools.js"></script>
+    <script type="text/javascript" src="chrome://openerp_plugin/content/js/push.js"></script>
+    <description></description>
+        <vbox>
+        	<separator class="groove-thin" orient="horizontal"/>
+            	<grid flex="1">
+  					<columns>
+						<column />
+						<column />
+						<column flex="1"/>
+					</columns>
+  					<rows>
+    					<row>
+	    					<label id="lblex3" align="right" control="section" value="&object.label;" class="text-prompt" />
+	                        <menulist id="menu_model_list" >
+	                            <menupopup id="model_list">
+	                                <menuitem id="first_model_list" value="" label=""/>
+	                            </menupopup>
+	                        </menulist>
+    					</row>
+    					<row>
+    						<label id="lblsearch" control="txtvalueobj" value="&search.label;" class="text-prompt"/>
+	                        <textbox id="txtvalueobj" />
+	                        <button label="&bsearch.label;" oncommand="searchCheckbox()" image="&imagesearch.value;" accesskey="s" id="search_button"/> 
+    					</row>
+					</rows>
+				</grid>
+                <hbox >
+                	<caption label="&document.label;"  id="label_box"/>
+                </hbox>
+                <vbox >
+                	<listbox height="200"  id="listSearchBox" style="border:1px solid red" seltype="multiple">
+                    	<listhead>
+                        	<listheader label="&listSearchBox.header;"/>
+                        </listhead>
+                        <listcols>
+                        	<listcol flex="1"/>
+                        </listcols>
+                       </listbox>
+                </vbox>
+                <hbox align="right" >
+                	<button label="&attach.label;" accesskey="u" image="&imagearchive.value;" oncommand="push('add');"/>
+                </hbox>
+                <separator class="groove-thin" orient="horizontal"/>  
+        </vbox>
+    
+</window>

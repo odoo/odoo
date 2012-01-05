@@ -350,7 +350,7 @@ class product_product(osv.osv):
         'virtual_available': fields.function(_product_available, multi='qty_available',
             type='float',  digits_compute=dp.get_precision('Product UoM'),
             string='Quantity Available',
-            help="Forcasted quantity (computed as Quantity On Hand "
+            help="Forecast quantity (computed as Quantity On Hand "
                  "- Outgoing + Incoming)\n"
                  "In a context with a single Stock Location, this includes "
                  "goods stored at this Location, or any of its children.\n"
@@ -403,7 +403,7 @@ class product_product(osv.osv):
     }
 
     _defaults = {
-        'valuation': lambda *a: 'manual_periodic',
+        'valuation': 'manual_periodic',
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

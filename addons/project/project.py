@@ -114,12 +114,6 @@ class project(osv.osv):
             if task.project_id: result[task.project_id.id] = True
         return result.keys()
 
-    def _get_project_work(self, cr, uid, ids, context=None):
-        result = {}
-        for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
-            if work.task_id and work.task_id.project_id: result[work.task_id.project_id.id] = True
-        return result.keys()
-
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:
@@ -132,7 +126,7 @@ class project(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying the list of projects"),
-        'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive an email each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
 
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -360,7 +354,7 @@ def Project():
     working_days = %s
     resource = %s
 """       % (
-            project.id, 
+            project.id,
             project.date_start, working_days,
             '|'.join(['User_'+str(x) for x in puids])
         )
@@ -523,7 +517,7 @@ class task(osv.osv):
         if not project_id:
             return {}
         data = self.pool.get('project.project').browse(cr, uid, [project_id])
-        partner_id=data and data[0].parent_id.partner_id
+        partner_id=data and data[0].partner_id
         if partner_id:
             return {'value':{'partner_id':partner_id.id}}
         return {}
@@ -586,10 +580,10 @@ class task(osv.osv):
 
     _columns = {
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
-        'name': fields.char('Task Summary', size=128, required=True),
+        'name': fields.char('Task Summary', size=128, required=True, select=True),
         'description': fields.text('Description'),
-        'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
+        'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
+        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'type_id': fields.many2one('project.task.type', 'Stage'),
         'state': fields.selection([('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done'), ('cancelled', 'Cancelled')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
@@ -879,14 +873,24 @@ class task(osv.osv):
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         return True
 
+
+    def _delegate_task_attachments(self, cr, uid, task_id, delegated_task_id, context=None):
+        attachment = self.pool.get('ir.attachment')
+        attachment_ids = attachment.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', task_id)], context=context)
+        new_attachment_ids = []
+        for attachment_id in attachment_ids:
+            new_attachment_ids.append(attachment.copy(cr, uid, attachment_id, default={'res_id': delegated_task_id}, context=context))
+        return new_attachment_ids
+        
+
     def do_delegate(self, cr, uid, ids, delegate_data={}, context=None):
         """
         Delegate Task to another users.
         """
         assert delegate_data['user_id'], _("Delegated User should be specified")
-        delegrated_tasks = {}
+        delegated_tasks = {}
         for task in self.browse(cr, uid, ids, context=context):
-            delegrated_task_id = self.copy(cr, uid, task.id, {
+            delegated_task_id = self.copy(cr, uid, task.id, {
                 'name': delegate_data['name'],
                 'project_id': delegate_data['project_id'] and delegate_data['project_id'][0] or False,
                 'user_id': delegate_data['user_id'] and delegate_data['user_id'][0] or False,
@@ -897,6 +901,7 @@ class task(osv.osv):
                 'child_ids': [],
                 'work_ids': []
             }, context=context)
+            self._delegate_task_attachments(cr, uid, task.id, delegated_task_id, context=context)
             newname = delegate_data['prefix'] or ''
             task.write({
                 'remaining_hours': delegate_data['planned_hours_me'],
@@ -910,8 +915,8 @@ class task(osv.osv):
             
             message = _("The task '%s' has been delegated to %s.") % (delegate_data['name'], delegate_data['user_id'][1])
             self.log(cr, uid, task.id, message)
-            delegrated_tasks[task.id] = delegrated_task_id
-        return delegrated_tasks
+            delegated_tasks[task.id] = delegated_task_id
+        return delegated_tasks
 
     def do_pending(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'pending'}, context=context)
@@ -920,21 +925,24 @@ class task(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
-    def set_remaining_time_1(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'remaining_hours': 1.0}, context=context)
+    def set_remaining_time(self, cr, uid, ids, remaining_time=1.0, context=None):
+        for task in self.browse(cr, uid, ids, context=context):
+            if (task.state=='draft') or (task.planned_hours==0.0):
+                self.write(cr, uid, [task.id], {'planned_hours': remaining_time}, context=context)
+        self.write(cr, uid, ids, {'remaining_hours': remaining_time}, context=context)
         return True
+
+    def set_remaining_time_1(self, cr, uid, ids, context=None):
+        return self.set_remaining_time(cr, uid, ids, 1.0, context)
 
     def set_remaining_time_2(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'remaining_hours': 2.0}, context=context)
-        return True
+        return self.set_remaining_time(cr, uid, ids, 2.0, context)
 
     def set_remaining_time_5(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'remaining_hours': 5.0}, context=context)
-        return True
+        return self.set_remaining_time(cr, uid, ids, 5.0, context)
 
     def set_remaining_time_10(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'remaining_hours': 10.0}, context=context)
-        return True
+        return self.set_remaining_time(cr, uid, ids, 10.0, context)
 
     def set_kanban_state_blocked(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
@@ -979,6 +987,7 @@ class task(osv.osv):
             self.pool.get('project.task.history').create(cr, uid, {
                 'task_id': task.id,
                 'remaining_hours': task.remaining_hours,
+                'planned_hours': task.planned_hours,
                 'kanban_state': task.kanban_state,
                 'type_id': task.type_id.id,
                 'state': task.state,
@@ -1096,7 +1105,7 @@ class account_analytic_account(osv.osv):
         if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
             vals['child_ids'] = []
         return super(account_analytic_account, self).create(cr, uid, vals, context=context)
-    
+
     def unlink(self, cr, uid, ids, *args, **kwargs):
         project_obj = self.pool.get('project.project')
         analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
@@ -1158,7 +1167,8 @@ class project_task_history(osv.osv):
         'end_date': fields.function(_get_date, string='End Date', type="date", store={
             'project.task.history': (_get_related_date, None, 20)
         }),
-        'remaining_hours': fields.float('Remaining Hours', digits=(16,2)),
+        'remaining_hours': fields.float('Remaining Time', digits=(16,2)),
+        'planned_hours': fields.float('Planned Time', digits=(16,2)),
         'user_id': fields.many2one('res.users', 'Responsible'),
     }
     _defaults = {
@@ -1186,7 +1196,7 @@ class project_task_history_cumulative(osv.osv):
                     id as history_id,
                     date+generate_series(0, CAST((coalesce(end_date,DATE 'tomorrow')::date - date)AS integer)-1) as date,
                     task_id, type_id, user_id, kanban_state, state,
-                    remaining_hours
+                    remaining_hours, planned_hours
                 FROM
                     project_task_history
             ) as history

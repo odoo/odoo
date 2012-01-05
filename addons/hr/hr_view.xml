@@ -126,57 +126,38 @@
              </field>
          </record>
         <!-- HR Kanban View  -->
+
     <record model="ir.ui.view" id="hr_kanban_view_employees">
         <field name="name">HR - Employess Kanban</field>
         <field name="model">hr.employee</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="job_id">
-                <field name="color"/>
+
+            <kanban>
                 <templates>
-                    <t t-name="employee_details">
-                        <ul class="oe_kanban_tooltip" t-if="record.job_id.raw_value">
-                            <li><b>Job:</b> <field name="job_id"/></li>
-                        </ul>
-                    </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
-                            <div class="oe_kanban_box oe_kanban_color_border">
-                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle oe_kanban_title" tooltip="employee_details">
-                                    <field name="name"/>
-                                </div>
-                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                    <img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" width="48" style="float: left;"/>
-                                    <span t-if="record.parent_id.raw_value" class="oe_kanban_highlight">
-                                        ❖ <field name="parent_id"/>
-                                    </span>
-                                    <span t-if="record.work_location.raw_value" class="oe_kanban_highlight">
-                                        ✜ <field name="work_location"/>
-                                    </span>
-                                    <span t-if="record.work_email.raw_value" class="oe_kanban_highlight">
-                                        ✉ <a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a>
-                                    </span>
-                                    <span t-if="record.mobile_phone.raw_value" class="oe_kanban_highlight">
-                                        ☎ <field name="mobile_phone"/>
-                                    </span>
-                                    <span t-if="record.work_phone.raw_value" class="oe_kanban_highlight">
-                                        ☏ <field name="work_phone"/>
-                                    </span>
-                                    <div class="oe_kanban_clear"/>
-                                </div>
-                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                    <div class="oe_kanban_left">
-                                        <a string="Edit" icon="gtk-edit" type="edit"/>
-                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                        <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
-                                    </div>
-                                    <div class="oe_kanban_clear"/>
-                                </div>
+                        <div class="oe_employee_vignette">
+                            <div class="oe_employee_image">
+                                <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
+                            </div>
+                            <div class="oe_employee_details">
+                                <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>
+                                <ul>
+                                    <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
+                                    <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
+                                    <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
+                                    <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
+                                    <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
+                                </ul>
                             </div>
                         </div>
+                        <script>
+                            $('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
+                        </script>
                     </t>
                 </templates>
             </kanban>
+
         </field>
     </record>
         <record id="open_view_employee_tree" model="ir.actions.act_window">
@@ -202,21 +183,26 @@
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[]</field>
             <field name="context">{"search_default_department_id": department_id,"search_default_active":eval('True')}</field>
-            <field name="view_id" ref="view_employee_tree"/>
+            <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="help">Here you can manage your work force by creating employees and assigning them specific properties in the system. Maintain all employee related information and keep track of anything that needs to be recorded for them. The personal information tab will help you maintain their identity data. The Categories tab gives you the opportunity to assign them related employee categories depending on their position and activities within the company. A category can be a seniority level within the company or a department. The Timesheets tab allows to assign them a specific timesheet and analytic journal where they will be able to enter time through the system. In the note tab, you can enter text data that should be recorded for a specific employee.</field>
         </record>
-        
+
+        <record id="open_view_employee_list_my_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="open_view_employee_list_my"/>
+        </record>
         <record id="open_view_employee_list_my_tree2" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_employee_tree"/>
             <field name="act_window_id" ref="open_view_employee_list_my"/>
         </record>
-        
+
         <record id="open_view_employee_list_my_form2" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>

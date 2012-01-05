@@ -22,7 +22,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_stock_incoming_product_delay">
-            <field name="name">Incoming Products Delay</field>
+            <field name="name">Incoming Products</field>
             <field name="res_model">report.stock.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
@@ -31,7 +31,7 @@
             <field name="context">{'search_default_in':1}</field>
          </record>
         <record model="ir.actions.act_window" id="action_stock_outgoing_product_delay">
-            <field name="name">Outgoing Products Delay</field>
+            <field name="name">Outgoing Products</field>
             <field name="res_model">report.stock.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
@@ -47,13 +47,13 @@
                 <form string="Warehouse board">
                     <board style="2-1">
                         <column>
-                            <action name="%(action_incoming_product_board)d" string="Incoming Shipments"/>
-                            <action name="%(action_outgoing_product_board)d" string="Delivery Orders"/>
+                            <action name="%(action_incoming_product_board)d" string="Incoming Shipments" creatable="true"/>
+                            <action name="%(action_outgoing_product_board)d" string="Delivery Orders" creatable="true"/>
                         </column>
 
                         <column>
-                            <action name="%(action_stock_incoming_product_delay)d" string="Incoming Products Delay"/>
-                            <action name="%(action_stock_outgoing_product_delay)d" string="Outgoing Products Delay"/>
+                            <action name="%(action_stock_incoming_product_delay)d" string="Incoming Products"/>
+                            <action name="%(action_stock_outgoing_product_delay)d" string="Outgoing Products"/>
                         </column>
                     </board>
                 </form>

@@ -103,7 +103,7 @@ class delivery_carrier(osv.osv):
         grid_line_pool = self.pool.get('delivery.grid.line')
         grid_pool = self.pool.get('delivery.grid')
         for record in self.browse(cr, uid, ids, context=context):
-            grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id),('sequence','=',9999)], context=context)
+            grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
 
             if grid_id and not (record.normal_price or record.free_if_more_than):
                 grid_pool.unlink(cr, uid, grid_id, context=context)
@@ -115,7 +115,7 @@ class delivery_carrier(osv.osv):
                 record_data = {
                     'name': record.name,
                     'carrier_id': record.id,
-                    'sequence': 9999,
+                    'sequence': 10,
                 }
                 new_grid_id = grid_pool.create(cr, uid, record_data, context=context)
                 grid_id = [new_grid_id]
@@ -212,7 +212,7 @@ class delivery_grid(osv.osv):
                 ok = True
                 break
         if not ok:
-            raise osv.except_osv(_('No price available !'), _('No line matched this order in the choosed delivery grids !'))
+            raise osv.except_osv(_('No price available!'), _('No line matched this product or order in the choosed delivery grid.'))
 
         return price
 
