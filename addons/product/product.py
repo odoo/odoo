@@ -218,6 +218,8 @@ class product_category(osv.osv):
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
+        'parent_left': fields.integer('Left Parent', select=1),
+        'parent_right': fields.integer('Right Parent', select=1),
     }
 
 
@@ -225,7 +227,11 @@ class product_category(osv.osv):
         'type' : lambda *a : 'normal',
     }
 
-    _order = "sequence, name"
+    _parent_name = "parent_id"
+    _parent_store = True
+    _parent_order = 'sequence, name'
+    _order = 'parent_left'
+    
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
@@ -406,10 +412,11 @@ class product_product(osv.osv):
             context = {}
         quantity = context.get('quantity') or 1.0
         pricelist = context.get('pricelist', False)
+        partner = context.get('partner', False)
         if pricelist:
             for id in ids:
                 try:
-                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, context=context)[pricelist]
+                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, partner=partner, context=context)[pricelist]
                 except:
                     price = 0.0
                 res[id] = price
