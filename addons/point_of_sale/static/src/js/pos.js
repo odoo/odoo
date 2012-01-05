@@ -90,6 +90,7 @@ openerp.point_of_sale = function(db) {
                 this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
                     [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
                 this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
+                this.fetch('account.tax', ['amount', 'price_include', 'type']),
                 this.get_app_data())
                 .pipe(_.bind(this.build_tree, this));
         },
@@ -300,6 +301,57 @@ openerp.point_of_sale = function(db) {
         },
         getTotal: function() {
             return (this.get('quantity')) * (this.get('list_price')) * (1 - (this.get('discount')) / 100);
+        },
+        getPriceWithoutTax: function() {
+            return getAllPrices().priceWithoutTax;
+        },
+        getPriceWithTax: function() {
+            return getAllPrices().priceWithTax;
+        },
+        getTax: function() {
+            return getAllPrices().tax;
+        },
+        getAllPrices: function() {
+            var self = this;
+            var totalTax = (this.get('quantity')) * (this.get('list_price')) * (1 - (this.get('discount')) / 100);
+            var totalNoTax = totalTax;
+            
+            var products = pos.store.get('product.product');
+            var product = _.detect(products, function(el) {return el.id === self.get('id');});
+            var taxes_ids = product.taxes_id;
+            var taxes =  pos.store.get('account.tax');
+            var taxtotal = 0;
+            _.each(taxes_ids, function(el) {
+                var tax = _.detect(taxes, function(t) {return t.id === el;});
+                if (tax.price_include) {
+                    var tmp;
+                    if (tax.type === "percent") {
+                        tmp =  tax.amount / (1 + self.getTotalWithoutTax());
+                    } else if (tax.type === "fixed") {
+                        tmp = tax.amount * self.get('quantity');
+                    } else {
+                        throw "This type of tax is not supported by the point of sale: " + tax.type;
+                    }
+                    taxtotal += tmp;
+                    totalNoTax -= tmp;
+                } else {
+                    var tmp;
+                    if (tax.type === "percent") {
+                        tmp = tax.amount * self.getTotalWithoutTax();
+                    } else if (tax.type === "fixed") {
+                        tmp = tax.amount * self.get('quantity');
+                    } else {
+                        throw "This type of tax is not supported by the point of sale: " + tax.type;
+                    }
+                    taxtotal += tmp;
+                    totalTax += tmp;
+                }
+            });
+            return {
+                "priceWithTax": totalTax,
+                "priceWithoutTax": totalNoTax,
+                "tax": taxtotal,
+            };
         },
         exportAsJSON: function() {
             var result;
