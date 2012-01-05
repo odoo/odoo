@@ -213,14 +213,13 @@ class product_category(osv.osv):
     _description = "Product Category"
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
-        'complete_name': fields.function(_name_get_fnc, type="char", string='Name',size=256, 
-                store={
-                    'product.category': (lambda self, cr, uid, ids, c={}: ids, ['name','parent_id'], 10),
-                   }),
-        'parent_id': fields.many2one('product.category','Parent Category', select=True),
+        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
+        'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
+        'parent_left': fields.integer('Left Parent', select=1),
+        'parent_right': fields.integer('Right Parent', select=1),
     }
 
 
@@ -228,7 +227,11 @@ class product_category(osv.osv):
         'type' : lambda *a : 'normal',
     }
 
-    _order = 'complete_name'
+    _parent_name = "parent_id"
+    _parent_store = True
+    _parent_order = 'sequence,name'
+    _order = 'parent_left'
+    
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
