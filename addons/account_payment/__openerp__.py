@@ -51,8 +51,10 @@ This module provides :
     ],
     'demo_xml': ['account_payment_demo.xml'],
     'test': [
-             'test/account_payment.yml',
-             'test/account_payment_report.yml'
+        'test/account_payment_demo.yml',
+        'test/cancel_payment_order.yml',
+        'test/payment_order_process.yml',
+        'test/account_payment_report.yml',
     ],
     'installable': True,
     'active': False,
