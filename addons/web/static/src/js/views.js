@@ -359,6 +359,10 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
         // after saving, go to page view (don't come back in list)"
         if (created && current_view === 'form' && previous_view === 'list') {
             return this.on_mode_switch('page');
+        } else if(created && this.action && this.action.flags.default_view == 'form') {
+            //Special case: dashboad creatable attrs,
+            // no previous view for creatable action.
+            return this.on_mode_switch('page');
         }
         return this.on_mode_switch(previous_view, true);
     },
