@@ -1,0 +1,75 @@
+-
+  In order to check the calculation of price of the products according to pricelist,
+-
+  I check sale price of PC2.
+-
+  !python {model: product.product}: |
+    context.update({'pricelist': ref("customer_pricelist"), 'quantity':1})
+    product = self.browse(cr, uid, ref("product_product_pc2"), context=context)
+    assert product.price == product.lst_price-product.lst_price*(0.10), "Sell price is not correspond."
+-
+  I check sale price of PC3.
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref("product_product_pc3"), context=context)
+    assert product.price == product.lst_price + 1, "Sell price is not correspond."
+-
+  I check sale price of IT componet.
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref("product_product_mb1"), context=context)
+    assert product.price == product.lst_price, "Sell price is not correspond."
+
+-
+  I check sale price of IT componet if more than 3 PCE.
+-
+  !python {model: product.product}: |
+    context.update({'quantity':5})
+    product = self.browse(cr, uid, ref("product_product_mb1"), context=context)
+    assert product.price == product.lst_price-product.lst_price*(0.05), "Sell price is not correspond."
+-
+  I check sale price of PC4.
+-
+  !python {model: product.product}: |
+    context.update({'quantity':1})
+    product = self.browse(cr, uid, ref("product_product_pc4"), context=context)
+    assert product.price == product.lst_price, "Sell price is not correspond."
+
+-
+  I check sale price of PC4 on end of year.
+-
+  !python {model: product.product}: |
+    context.update({'quantity':1, 'date': '2011-12-31'})
+    product = self.browse(cr, uid, ref("product_product_pc4"), context=context)
+    assert product.price == product.lst_price-product.lst_price*(0.30), "Sell price is not correspond."
+
+-
+  I check cost price of PC2.
+-
+  !python {model: product.product}: |
+    context.update({'quantity':1, 'date': False, 'partner': ref('base.res_partner_4'), 'pricelist': ref("supplier_pricelist")})
+    product = self.browse(cr, uid, ref("product_product_pc2"), context=context)
+    assert product.price == 450, "cost price is not correspond."
+-
+  I check cost price of PC2 if more than 3 PCE.
+-
+  !python {model: product.product}: |
+    context.update({'quantity':3})
+    product = self.browse(cr, uid, ref("product_product_pc2"), context=context)
+    assert product.price == 400, "cost price is not correspond."
+
+-
+ I print the sale prices report.
+-
+  !python {model: product.product}: |
+    ctx = {}
+    ctx.update({'model': 'product.product','date':'2011-12-30','active_ids': [ref('product.product_product_pc1'), ref('product.product_product_pc2'), ref('product.product_product_pc3'), ref('product.product_product_pc4')]})
+    data_dict = {'qty1': 1,
+        'qty2': 5,
+        'qty3': 10,
+        'qty4': 15,
+        'qty5': 30,
+        'price_list':ref('customer_pricelist')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_product_price_list',wiz_data=data_dict, context=ctx, our_module='product')
+

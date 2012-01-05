@@ -61,7 +61,13 @@ Print product labels with barcode.
         'partner_view.xml',
         'process/product_process.xml'
     ],
-    'test':['test/product_report.yml','test/product_test.yml'],
+    'test':[
+            "product_pricelist_demo.yml",
+            'test/product_uom.yml',
+            'test/product_pricelist.yml',
+    ],
+            
+    
     'installable': True,
     'active': False,
     'certificate': '0068861431437',
