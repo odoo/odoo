@@ -229,9 +229,11 @@
         <field name="arch" type="xml">
             <tree string="Meetings"
                 colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                <field name="state" invisible="1"/>
                 <field name="name" string="Subject" />
                 <field name="user_id"/>
                 <field name="date"/>
+                <field name="state"/>
                 <field name="duration" />
                 <field name="partner_id" string="Partner" />
                 <field name="location" />
