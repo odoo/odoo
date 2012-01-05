@@ -48,6 +48,11 @@ class stock_picking(osv.osv):
         else:
             return super(stock_picking, self).get_currency_id(cursor, user, picking)
 
+    def _get_partner_to_invoice(self, cr, uid, picking, context=None):
+        if picking.sale_id:
+            return picking.sale_id.partner_id
+        return super(stock_picking, self)._get_partner_to_invoice(cr, uid, picking, context=context)
+
     def _get_payment_term(self, cursor, user, picking):
         if picking.sale_id and picking.sale_id.payment_term:
             return picking.sale_id.payment_term.id

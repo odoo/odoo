@@ -874,6 +874,13 @@ class stock_picking(osv.osv):
     def get_currency_id(self, cr, uid, picking):
         return False
 
+    def _get_partner_to_invoice(self, cr, uid, picking, context=None):
+        """ Gets the partner that will be invoiced
+        Note that this function is inherited in the sale module
+        @return: partner object
+        """
+        return picking.address_id and picking.address_id.partner_id
+
     def _get_payment_term(self, cr, uid, picking):
         """ Gets payment term from partner.
         @return: Payment term
@@ -1030,7 +1037,7 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
-            partner =  picking.address_id and picking.address_id.partner_id
+            partner = self._get_partner_to_invoice(cr, uid, picking, context=context)
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
