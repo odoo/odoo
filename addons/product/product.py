@@ -214,7 +214,7 @@ class product_category(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
+        'parent_id': fields.many2one('product.category','Parent Category', select=True),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
@@ -229,7 +229,7 @@ class product_category(osv.osv):
 
     _parent_name = "parent_id"
     _parent_store = True
-    _parent_order = 'sequence,name'
+    _parent_order = 'sequence, name'
     _order = 'parent_left'
     
     def _check_recursion(self, cr, uid, ids, context=None):
