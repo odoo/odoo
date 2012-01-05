@@ -881,22 +881,6 @@ class stock_picking(osv.osv):
         """
         return picking.address_id and picking.address_id.partner_id
 
-    def _get_payment_term(self, cr, uid, picking):
-        """ Gets payment term from partner.
-        @return: Payment term
-        """
-        partner = picking.address_id.partner_id
-        return partner.property_payment_term and partner.property_payment_term.id or False
-
-    def _get_address_invoice(self, cr, uid, picking):
-        """ Gets invoice address of a partner
-        @return {'contact': address, 'invoice': address} for invoice
-        """
-        partner_obj = self.pool.get('res.partner')
-        partner = picking.address_id.partner_id
-        return partner_obj.address_get(cr, uid, [partner.id],
-                ['contact', 'invoice'])
-
     def _get_comment_invoice(self, cr, uid, picking):
         """
         @return: comment string for invoice
@@ -994,7 +978,8 @@ class stock_picking(osv.osv):
         else:
             account_id = partner.property_account_payable.id
         address_contact_id, address_invoice_id = \
-                self._get_address_invoice(cr, uid, picking).values()
+                self.pool.get('res.partner').address_get(cr, uid, [partner.id],
+                        ['contact', 'invoice']).values()
         comment = self._get_comment_invoice(cr, uid, picking)
         invoice_vals = {
             'name': picking.name,
@@ -1005,7 +990,8 @@ class stock_picking(osv.osv):
             'address_invoice_id': address_invoice_id,
             'address_contact_id': address_contact_id,
             'comment': comment,
-            'payment_term': self._get_payment_term(cr, uid, picking),
+            'payment_term': partner.property_payment_term and partner.property_payment_term.id
+                    or False,
             'fiscal_position': partner.property_account_position.id,
             'date_invoice': context.get('date_inv', False),
             'company_id': picking.company_id.id,
