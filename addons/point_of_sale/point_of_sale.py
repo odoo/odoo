@@ -55,6 +55,8 @@ class pos_order(osv.osv):
         list = []
         for order in orders:
             list.append(self.create(cr, uid, order, context))
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'pos.order', list[-1], 'paid', cr)
         return list
 
     def unlink(self, cr, uid, ids, context=None):
