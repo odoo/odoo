@@ -385,7 +385,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         }
         else {
             var pop = new openerp.web.form.FormOpenPopup(this);
-            pop.show_element(this.model, event_id, this.context || this.dataset.context, {});
+            pop.show_element(this.model, event_id, this.context || this.dataset.context, {'title' : _t("Open: ") + this.name});
             pop.on_write.add(function(id, data) {
                 var get_project = _.find(self.database_projects, function(project){ return project.id == id});
                 if (get_project) {
