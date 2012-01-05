@@ -396,7 +396,7 @@ class pos_order(osv.osv):
             'name': _('Customer Invoice'),
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': res_id,
+            'view_id': [res_id],
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
@@ -732,7 +732,6 @@ class product_product(osv.osv):
     _columns = {
         'income_pdt': fields.boolean('PoS Cash Input', help="This is a product you can use to put cash into a statement for the point of sale backend."),
         'expense_pdt': fields.boolean('PoS Cash Output', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
-        'img': fields.binary('Product Image, must be 50x50', help="Use an image size of 50x50."),
         'pos_categ_id': fields.many2one('pos.category','PoS Category',
             help="If you want to sell this product through the point of sale, select the category it belongs to.")
     }

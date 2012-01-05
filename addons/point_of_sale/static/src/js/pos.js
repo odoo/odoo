@@ -86,7 +86,7 @@ openerp.point_of_sale = function(db) {
                 }, this));
             }, this));
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
-                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
+                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image'], [['pos_categ_id', '!=', 'false']]),
                 this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
                     [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
                 this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
@@ -364,6 +364,7 @@ openerp.point_of_sale = function(db) {
             step: 'products',
         };
         Order.prototype.initialize = function() {
+            this.set({creationDate: new Date});
             this.set({
                 orderLines: new OrderlineCollection
             });
@@ -742,7 +743,12 @@ openerp.point_of_sale = function(db) {
         setValue: function(val) {
         	var param = {};
         	param[this.numpadState.get('mode')] = val;
-        	this.shop.get('selectedOrder').selected.set(param);
+        	var order = this.shop.get('selectedOrder');
+        	if (order.get('orderLines').length !== 0) {
+        	   order.selected.set(param);
+        	} else {
+        	    this.shop.get('selectedOrder').destroy();
+        	}
         },
         changeSelectedOrder: function() {
             this.currentOrderLines.unbind();
@@ -1019,7 +1025,11 @@ openerp.point_of_sale = function(db) {
         render_element: function() {
             this.$element.html(qweb_template('pos-receipt-view'));
             $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
-            $('button#print-the-ticket', this.$element).click(function(){window.print();});
+            $('button#print-the-ticket', this.$element).click(_.bind(this.print, this));
+        },
+        print: function() {
+            window.print();
+            this.finishOrder();
         },
         finishOrder: function() {
             this.shop.get('selectedOrder').destroy();
@@ -1077,7 +1087,7 @@ openerp.point_of_sale = function(db) {
             this.order.destroy();
         },
         render_element: function() {
-            this.$element.html(this.template_fct(this.order.toJSON()));
+            this.$element.html(this.template_fct({widget:this}));
             this.$element.addClass('order-selector-button');
         }
     });

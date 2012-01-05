@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import logging
@@ -29,20 +29,20 @@ class NhException(Exception):
 
 class indexer(object):
     """ An indexer knows how to parse the content of some file.
-    
+
         Typically, one indexer should be instantiated per file
         type.
         Override this class to add more functionality. Note that
         you should only override the Content or the File methods
         that give an optimal result. """
-        
+
     def _getMimeTypes(self):
         """ Return supported mimetypes """
         return []
-    
+
     def _getExtensions(self):
         return []
-    
+
     def _getDefMime(self, ext):
         """ Return a mimetype for this document type, ideally the
             closest to the extension ext. """
@@ -63,23 +63,23 @@ class indexer(object):
                 return self._doIndexContent(content)
         except NhException:
             pass
-        
+
         if realfile != None:
             try:
                 return self._doIndexFile(realfile)
             except NhException:
                 pass
-            
+
             fp = open(realfile,'rb')
             try:
                 content2 = fp.read()
-            finally:    
+            finally:
                 fp.close()
-            
+
             # The not-handled exception may be raised here
             return self._doIndexContent(content2)
-            
-            
+
+
         # last try, with a tmp file
         if content:
             try:
@@ -94,7 +94,7 @@ class indexer(object):
                 pass
 
         raise NhException('No appropriate method to index file')
-    
+
     def _doIndexContent(self,content):
         raise NhException("Content not handled here")
 
@@ -103,7 +103,7 @@ class indexer(object):
 
     def __repr__(self):
         return "<indexer %s.%s>" %(self.__module__, self.__class__.__name__)
-        
+
 
 def mime_match(mime, mdict):
     if mdict.has_key(mime):
@@ -112,7 +112,7 @@ def mime_match(mime, mdict):
         mpat = mime.split('/')[0]+'/*'
         if mdict.has_key(mpat):
             return (mime, mdict[mpat])
-    
+
     return (None, None)
 
 class contentIndex(object):
@@ -120,22 +120,22 @@ class contentIndex(object):
     def __init__(self):
         self.mimes = {}
         self.exts = {}
-    
+
     def register(self, obj):
         f = False
         for mime in obj._getMimeTypes():
             self.mimes[mime] = obj
             f = True
-            
+
         for ext in obj._getExtensions():
             self.exts[ext] = obj
             f = True
-            
+
         if f:
             self.__logger.debug('Register content indexer: %r', obj)
         if not f:
             raise Exception("Your indexer should at least suport a mimetype or extension")
-    
+
     def doIndex(self, content, filename=None, content_type=None, realfname = None, debug=False):
         fobj = None
         fname = None
@@ -148,10 +148,10 @@ class contentIndex(object):
             if self.exts.has_key(ext):
                 fobj = self.exts[ext]
                 mime = fobj._getDefMime(ext)
-        
+
         if content_type and not fobj:
             mime,fobj = mime_match(content_type, self.mimes)
-        
+
         if not fobj:
             try:
                 if realfname :
@@ -164,10 +164,10 @@ class contentIndex(object):
                     fd, fname = tempfile.mkstemp(suffix=ext)
                     os.write(fd, content)
                     os.close(fd)
-            
+
                 pop = Popen(['file','-b','--mime',fname], shell=False, stdout=PIPE)
                 (result, _) = pop.communicate()
-                
+
                 mime2 = result.split(';')[0]
                 self.__logger.debug('File gave us: %s', mime2)
                 # Note that the temporary file still exists now.
@@ -176,7 +176,7 @@ class contentIndex(object):
                     mime = mime2
             except Exception:
                 self.__logger.exception('Cannot determine mime type')
-        
+
         try:
             if fobj:
                 res = (mime, fobj.indexContent(content,filename,fname or realfname) )
@@ -187,14 +187,14 @@ class contentIndex(object):
             self.__logger.exception("Could not index file %s (%s)",
                                     filename, fname or realfname)
             res = None
-        
+
         # If we created a tmp file, unlink it now
         if not realfname and fname:
             try:
                 os.unlink(fname)
             except Exception:
                 self.__logger.exception("Could not unlink %s", fname)
-        
+
         return res
 
 cntIndex = contentIndex()

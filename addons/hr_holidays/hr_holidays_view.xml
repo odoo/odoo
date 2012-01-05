@@ -12,7 +12,8 @@
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
                         <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
                         <separator orientation="vertical"/>
-                        <filter string="This Month" icon="terp-go-month" name="This Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
+                        <filter icon="terp-go-year" name="year" string="Year" domain="[('create_date','&gt;=',time.strftime('%%Y-1-1')),('create_date','&lt;=',time.strftime('%%Y-12-31'))]"/>
+                        <filter string="Month" icon="terp-go-month" name="This Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
                         <field name="employee_id">
                             <filter icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
@@ -311,7 +312,7 @@
             <field name="name">Allocation Requests</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="context">{"search_default_my_leaves": 1,'default_type':'add',"search_default_department_id": department_id}</field>
+            <field name="context">{'default_type':'add',"search_default_department_id": department_id}</field>
             <field name="domain">[('type','=','add')]</field>
             <field name="view_id" ref="allocation_leave_new"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
@@ -339,7 +340,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_holiday_simple"/>
-            <field name="context">{'search_default_my_leaves': 1, 'search_default_group_type': 1, 'search_default_validated': 1}</field>
+            <field name="context">{'search_default_group_type': 1, 'search_default_validated': 1}</field>
             <field name="domain">[('holiday_type','=','employee')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>

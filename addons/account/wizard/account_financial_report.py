@@ -39,6 +39,7 @@ class accounting_report(osv.osv_memory):
     }
 
     def _get_account_report(self, cr, uid, context=None):
+        # TODO deprecate this it doesnt work in web
         menu_obj = self.pool.get('ir.ui.menu')
         report_obj = self.pool.get('account.financial.report')
         report_ids = []

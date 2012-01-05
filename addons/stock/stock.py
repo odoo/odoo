@@ -447,14 +447,12 @@ class stock_location(osv.osv):
                        """,
                        (id, id, product_id))
             results += cr.dictfetchall()
-
             total = 0.0
             results2 = 0.0
             for r in results:
                 amount = self.pool.get('product.uom')._compute_qty(cr, uid, r['product_uom'], r['product_qty'], context.get('uom', False))
                 results2 += amount
                 total += amount
-
             if total <= 0.0:
                 continue
 
@@ -822,6 +820,7 @@ class stock_picking(osv.osv):
         """ Tests whether the move is in assigned state or not.
         @return: True or False
         """
+        #TOFIX: assignment of move lines should be call before testing assigment otherwise picking never gone in assign state
         ok = True
         for pick in self.browse(cr, uid, ids):
             mt = pick.move_type
@@ -1178,9 +1177,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             new_picking = None
             complete, too_many, too_few = [], [], []
-            move_product_qty = {}
-            prodlot_ids = {}
-            product_avail = {}
+            move_product_qty, prodlot_ids, product_avail, partial_qty, product_uoms = {}, {}, {}, {}, {}
             for move in pick.move_lines:
                 if move.state in ('done', 'cancel'):
                     continue
@@ -1192,9 +1189,11 @@ class stock_picking(osv.osv):
                 product_currency = partial_data.get('product_currency',False)
                 prodlot_id = partial_data.get('prodlot_id')
                 prodlot_ids[move.id] = prodlot_id
-                if move.product_qty == product_qty:
+                product_uoms[move.id] = product_uom
+                partial_qty[move.id] = uom_obj._compute_qty(cr, uid, product_uoms[move.id], product_qty, move.product_uom.id)
+                if move.product_qty == partial_qty[move.id]:
                     complete.append(move)
-                elif move.product_qty > product_qty:
+                elif move.product_qty > partial_qty[move.id]:
                     too_few.append(move)
                 else:
                     too_many.append(move)
@@ -1235,7 +1234,6 @@ class stock_picking(osv.osv):
 
             for move in too_few:
                 product_qty = move_product_qty[move.id]
-
                 if not new_picking:
                     new_picking = self.copy(cr, uid, pick.id,
                             {
@@ -1251,28 +1249,32 @@ class stock_picking(osv.osv):
                             'state': 'assigned',
                             'move_dest_id': False,
                             'price_unit': move.price_unit,
+                            'product_uom': product_uoms[move.id]
                     }
                     prodlot_id = prodlot_ids[move.id]
                     if prodlot_id:
                         defaults.update(prodlot_id=prodlot_id)
                     move_obj.copy(cr, uid, move.id, defaults)
-
                 move_obj.write(cr, uid, [move.id],
                         {
-                            'product_qty' : move.product_qty - product_qty,
-                            'product_uos_qty':move.product_qty - product_qty, #TODO: put correct uos_qty
+                            'product_qty' : move.product_qty - partial_qty[move.id],
+                            'product_uos_qty': move.product_qty - partial_qty[move.id], #TODO: put correct uos_qty
+                            
                         })
 
             if new_picking:
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
             for move in complete:
+                defaults = {'product_uom': product_uoms[move.id], 'product_qty': move_product_qty[move.id]}
                 if prodlot_ids.get(move.id):
-                    move_obj.write(cr, uid, [move.id], {'prodlot_id': prodlot_ids[move.id]})
+                    defaults.update({'prodlot_id': prodlot_ids[move.id]})
+                move_obj.write(cr, uid, [move.id], defaults)
             for move in too_many:
                 product_qty = move_product_qty[move.id]
                 defaults = {
                     'product_qty' : product_qty,
                     'product_uos_qty': product_qty, #TODO: put correct uos_qty
+                    'product_uom': product_uoms[move.id]
                 }
                 prodlot_id = prodlot_ids.get(move.id)
                 if prodlot_ids.get(move.id):
@@ -1280,7 +1282,6 @@ class stock_picking(osv.osv):
                 if new_picking:
                     defaults.update(picking_id=new_picking)
                 move_obj.write(cr, uid, [move.id], defaults)
-
 
             # At first we confirm the new picking (if necessary)
             if new_picking:
@@ -2319,6 +2320,7 @@ class stock_move(osv.osv):
         @param context: context arguments
         @return: Scraped lines
         """
+        #quantity should in MOVE UOM
         if quantity <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide a positive quantity to scrap!'))
         res = []
@@ -2419,6 +2421,7 @@ class stock_move(osv.osv):
         @param context: context arguments
         @return: Consumed lines
         """
+        #quantity should in MOVE UOM
         if context is None:
             context = {}
         if quantity <= 0:
@@ -2437,13 +2440,14 @@ class stock_move(osv.osv):
                 quantity = move.product_qty
 
             uos_qty = quantity / move_qty * move.product_uos_qty
-
+            location_dest_id = move.product_id.property_stock_production or move.location_dest_id
             if quantity_rest > 0:
                 default_val = {
                     'product_qty': quantity,
                     'product_uos_qty': uos_qty,
                     'state': move.state,
                     'location_id': location_id or move.location_id.id,
+                    'location_dest_id': location_dest_id.id,
                 }
                 current_move = self.copy(cr, uid, move.id, default_val)
                 res += [current_move]
@@ -2459,7 +2463,8 @@ class stock_move(osv.osv):
                 update_val = {
                         'product_qty' : quantity_rest,
                         'product_uos_qty' : uos_qty_rest,
-                        'location_id': location_id or move.location_id.id
+                        'location_id': location_id or move.location_id.id,
+                        'location_dest_id': location_dest_id.id,
                 }
                 self.write(cr, uid, [move.id], update_val)
 
@@ -2673,6 +2678,7 @@ class stock_inventory(osv.osv):
             message = _("Inventory '%s' is done.") %(inv.name)
             self.log(cr, uid, inv.id, message)
             self.write(cr, uid, [inv.id], {'state': 'confirm', 'move_ids': [(6, 0, move_ids)]})
+            self.pool.get('stock.move').action_confirm(cr, uid, move_ids, context=context)
         return True
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
@@ -2684,7 +2690,7 @@ class stock_inventory(osv.osv):
             self.write(cr, uid, [inv.id], {'state':'draft'}, context=context)
         return True
 
-    def action_cancel_inventary(self, cr, uid, ids, context=None):
+    def action_cancel_inventory(self, cr, uid, ids, context=None):
         """ Cancels both stock move and inventory
         @return: True
         """

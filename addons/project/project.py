@@ -517,7 +517,7 @@ class task(osv.osv):
         if not project_id:
             return {}
         data = self.pool.get('project.project').browse(cr, uid, [project_id])
-        partner_id=data and data[0].parent_id.partner_id
+        partner_id=data and data[0].partner_id
         if partner_id:
             return {'value':{'partner_id':partner_id.id}}
         return {}
