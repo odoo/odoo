@@ -135,11 +135,10 @@ openerp.point_of_sale = function(db) {
             if (ops.length === 0)
                 return $.when();
             var op = ops[0];
-            var dataSet = new db.web.DataSet(this, 'pos.order', null);
             /* we prevent the default error handler and assume errors
              * are a normal use case, except we stop the current iteration
              */
-            return dataSet.create(op).fail(function(unused, event) {
+            return new db.web.Model("pos.order").get_func("create_from_ui")([op]).fail(function(unused, event) {
                 event.preventDefault();
             }).pipe(_.bind(function() {
                 console.debug('saved 1 record');
