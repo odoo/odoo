@@ -299,22 +299,20 @@ openerp.point_of_sale = function(db) {
                 quantity: (this.get('quantity')) + 1
             });
         },
-        getTotal: function() {
-            return (this.get('quantity')) * (this.get('list_price')) * (1 - (this.get('discount')) / 100);
-        },
         getPriceWithoutTax: function() {
-            return getAllPrices().priceWithoutTax;
+            return this.getAllPrices().priceWithoutTax;
         },
         getPriceWithTax: function() {
-            return getAllPrices().priceWithTax;
+            return this.getAllPrices().priceWithTax;
         },
         getTax: function() {
-            return getAllPrices().tax;
+            return this.getAllPrices().tax;
         },
         getAllPrices: function() {
             var self = this;
-            var totalTax = (this.get('quantity')) * (this.get('list_price')) * (1 - (this.get('discount')) / 100);
-            var totalNoTax = totalTax;
+            var base = (this.get('quantity')) * (this.get('list_price')) * (1 - (this.get('discount')) / 100);
+            var totalTax = base;
+            var totalNoTax = base;
             
             var products = pos.store.get('product.product');
             var product = _.detect(products, function(el) {return el.id === self.get('id');});
@@ -326,7 +324,7 @@ openerp.point_of_sale = function(db) {
                 if (tax.price_include) {
                     var tmp;
                     if (tax.type === "percent") {
-                        tmp =  tax.amount / (1 + self.getTotalWithoutTax());
+                        tmp =  base - (base / (1 + tax.amount));
                     } else if (tax.type === "fixed") {
                         tmp = tax.amount * self.get('quantity');
                     } else {
@@ -337,7 +335,7 @@ openerp.point_of_sale = function(db) {
                 } else {
                     var tmp;
                     if (tax.type === "percent") {
-                        tmp = tax.amount * self.getTotalWithoutTax();
+                        tmp = tax.amount * base;
                     } else if (tax.type === "fixed") {
                         tmp = tax.amount * self.get('quantity');
                     } else {
@@ -465,14 +463,18 @@ openerp.point_of_sale = function(db) {
         };
         Order.prototype.getTotal = function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
-                return sum + orderLine.getTotal();
+                return sum + orderLine.getPriceWithTax();
             }), 0);
         };
         Order.prototype.getTotalTaxExcluded = function() {
-            return this.getTotal() / 1.21;
+            return (this.get('orderLines')).reduce((function(sum, orderLine) {
+                return sum + orderLine.getPriceWithoutTax();
+            }), 0);
         };
         Order.prototype.getTax = function() {
-            return this.getTotal() / 1.21 * 0.21;
+            return (this.get('orderLines')).reduce((function(sum, orderLine) {
+                return sum + orderLine.getTax();
+            }), 0);
         };
         Order.prototype.getPaidTotal = function() {
             return (this.get('paymentLines')).reduce((function(sum, paymentLine) {
