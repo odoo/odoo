@@ -4,28 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2011-01-13 12:19+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-01-05 09:45+0000\n"
+"PO-Revision-Date: 2012-01-05 09:45+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:24+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: sale_order_dates
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
-
-#. module: sale_order_dates
-#: help:sale.order,requested_date:0
-msgid "Date on which customer has requested for sales."
-msgstr "Date à laquelle le client a fait une demande d'achat."
+msgstr "La référence de commande doit être unique dans la société !"
 
 #. module: sale_order_dates
 #: field:sale.order,commitment_date:0
@@ -33,14 +26,35 @@ msgid "Commitment Date"
 msgstr "Date d'engagement"
 
 #. module: sale_order_dates
+#: help:sale.order,effective_date:0
+msgid "Date on which the first Delivery Order was created."
+msgstr "Date de la première livraison."
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/sale_order_dates.py:91
+#, python-format
+msgid "The date requested by the customer is sooner than the commitment date. You may be unable to honor the customer's request."
+msgstr "La date demandée par le client est avant la date d'engagement : il vous sera peut-être impossible de respecter la demande du client."
+
+#. module: sale_order_dates
+#: help:sale.order,requested_date:0
+msgid "Date by which the customer has requested the items to be delivered.\n"
+"When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
+"Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
+msgstr "Date à laquelle le client souhaite que les produits soient livrés.\n"
+"Lorsque la commande sera validée, la date prévue pour le bon de livraison sera calculée en fonction de cette date et du délai de sécurité de la société.\n"
+"Laissez ce champ vide si vous souhaitez que la livraison soit effectuée dès que possible. Dans ce cas la date prévue sera calculée selon la méthode par défaut : selon les délais de livraison des produits et le délai de sécurité de la société."
+
+#. module: sale_order_dates
 #: field:sale.order,effective_date:0
 msgid "Effective Date"
 msgstr "Date effective"
 
 #. module: sale_order_dates
-#: help:sale.order,effective_date:0
-msgid "Date on which picking is created."
-msgstr "Date à laquelle le prélèvement a été créé."
+#: code:addons/sale_order_dates/sale_order_dates.py:90
+#, python-format
+msgid "Requested date is too soon!"
+msgstr "La date demandée est trop tôt !"
 
 #. module: sale_order_dates
 #: field:sale.order,requested_date:0
@@ -50,23 +64,10 @@ msgstr "Date demandée"
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
 msgid "Sales Order"
-msgstr "Commande de ventes"
+msgstr "Commande de vente"
 
 #. module: sale_order_dates
 #: help:sale.order,commitment_date:0
-msgid "Date on which delivery of products is to be made."
-msgstr "Date à laquelle la livraison des produits doit être faite."
+msgid "Date by which the products is sure to be delivered. This is a date that you can promise to the customer, based on the Product Lead Times."
+msgstr "Date à laquelle on est certain que le produit sera livré. C'est une date que vous promettez de tenir au client, en fonction des délais de livraison des produits."
 
-#~ msgid "Sales Order Dates"
-#~ msgstr "Dates de commande de ventes"
-
-#~ msgid ""
-#~ "\n"
-#~ "Add commitment, requested and effective dates on the sales order.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Ajoute les dates d'engagement, demandée et effective sur le bon de "
-#~ "commande.\n"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "La référence de la commande doit être unique !"

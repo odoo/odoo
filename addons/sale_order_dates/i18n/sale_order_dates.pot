@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-01-05 09:44+0000\n"
+"PO-Revision-Date: 2012-01-05 09:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,13 +21,26 @@ msgid "Order Reference must be unique per Company!"
 msgstr ""
 
 #. module: sale_order_dates
-#: help:sale.order,requested_date:0
-msgid "Date on which customer has requested for sales."
+#: field:sale.order,commitment_date:0
+msgid "Commitment Date"
 msgstr ""
 
 #. module: sale_order_dates
-#: field:sale.order,commitment_date:0
-msgid "Commitment Date"
+#: help:sale.order,effective_date:0
+msgid "Date on which the first Delivery Order was created."
+msgstr ""
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/sale_order_dates.py:91
+#, python-format
+msgid "The date requested by the customer is sooner than the commitment date. You may be unable to honor the customer's request."
+msgstr ""
+
+#. module: sale_order_dates
+#: help:sale.order,requested_date:0
+msgid "Date by which the customer has requested the items to be delivered.\n"
+"When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
+"Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
 msgstr ""
 
 #. module: sale_order_dates
@@ -36,8 +49,9 @@ msgid "Effective Date"
 msgstr ""
 
 #. module: sale_order_dates
-#: help:sale.order,effective_date:0
-msgid "Date on which picking is created."
+#: code:addons/sale_order_dates/sale_order_dates.py:90
+#, python-format
+msgid "Requested date is too soon!"
 msgstr ""
 
 #. module: sale_order_dates
@@ -52,6 +66,6 @@ msgstr ""
 
 #. module: sale_order_dates
 #: help:sale.order,commitment_date:0
-msgid "Date on which delivery of products is to be made."
+msgid "Date by which the products is sure to be delivered. This is a date that you can promise to the customer, based on the Product Lead Times."
 msgstr ""
 
