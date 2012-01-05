@@ -71,6 +71,12 @@ class stock_picking(osv.osv):
             return picking.note or picking.sale_id.note
         return super(stock_picking, self)._get_comment_invoice(cursor, user, picking)
 
+    def _prepare_invoice(self, cr, uid, picking, partner, inv_type, journal_id, context=None):
+        invoice_vals = super(stock_picking, self)._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
+        if picking.sale_id and picking.sale_id.fiscal_position:
+            invoice_vals['fiscal_position'] = picking.sale_id.fiscal_position.id
+        return invoice_vals
+
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
         if move_line.sale_line_id and move_line.sale_line_id.product_id.id == move_line.product_id.id:
             uom_id = move_line.product_id.uom_id.id
