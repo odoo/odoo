@@ -1136,7 +1136,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     on_logout: function() {
         this.session.session_logout();
-        this.header.do_update();
         $(window).unbind('hashchange', this.on_hashchange);
         this.do_push_state({});
         //would be cool to be able to do this, but I think it will make addons do strange things
