@@ -119,9 +119,9 @@ openerp.point_of_sale = function(db) {
                 self.set({'user': result});
             }));
         },
-        push: function(osvModel, record) {
+        pushOrder: function(record) {
             var ops = _.clone(this.get('pending_operations'));
-            ops.push({model: osvModel, record: record});
+            ops.push(record);
             this.set({pending_operations: ops});
             return this.flush();
         },
@@ -135,11 +135,11 @@ openerp.point_of_sale = function(db) {
             if (ops.length === 0)
                 return $.when();
             var op = ops[0];
-            var dataSet = new db.web.DataSet(this, op.model, null);
+            var dataSet = new db.web.DataSet(this, 'pos.order', null);
             /* we prevent the default error handler and assume errors
              * are a normal use case, except we stop the current iteration
              */
-            return dataSet.create(op.record).fail(function(unused, event) {
+            return dataSet.create(op).fail(function(unused, event) {
                 event.preventDefault();
             }).pipe(_.bind(function() {
                 console.debug('saved 1 record');
@@ -937,7 +937,7 @@ openerp.point_of_sale = function(db) {
             var callback, currentOrder;
             currentOrder = this.shop.get('selectedOrder');
             $('button#validate-order', this.$element).attr('disabled', 'disabled');
-            pos.push('pos.order', currentOrder.exportAsJSON()).then(_.bind(function() {
+            pos.pushOrder(currentOrder.exportAsJSON()).then(_.bind(function() {
                 $('button#validate-order', this.$element).removeAttr('disabled');
                 return currentOrder.set({
                     validated: true
