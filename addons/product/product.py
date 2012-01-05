@@ -412,10 +412,11 @@ class product_product(osv.osv):
             context = {}
         quantity = context.get('quantity') or 1.0
         pricelist = context.get('pricelist', False)
+        partner = context.get('partner', False)
         if pricelist:
             for id in ids:
                 try:
-                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, context=context)[pricelist]
+                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, partner=partner, context=context)[pricelist]
                 except:
                     price = 0.0
                 res[id] = price
