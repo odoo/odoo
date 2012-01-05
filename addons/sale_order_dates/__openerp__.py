@@ -30,7 +30,7 @@ Add additional date information to the sales order.
 ===================================================
 
 You can add the following additional dates to a sale order:
-    * Requested Date
+    * Requested Date (will be used as the expected date on pickings)
     * Commitment Date
     * Effective Date
 """,
