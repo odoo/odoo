@@ -66,8 +66,6 @@ Print product labels with barcode.
             'test/product_uom.yml',
             'test/product_pricelist.yml',
     ],
-            
-    
     'installable': True,
     'active': False,
     'certificate': '0068861431437',
