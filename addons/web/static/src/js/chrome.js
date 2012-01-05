@@ -1139,7 +1139,9 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.header.do_update();
         $(window).unbind('hashchange', this.on_hashchange);
         this.do_push_state({});
-        this.show_login();
+        //would be cool to be able to do this, but I think it will make addons do strange things
+        //this.show_login();
+        window.location.reload();
     },
     bind_hashchange: function() {
         $(window).bind('hashchange', this.on_hashchange);
