@@ -35,6 +35,7 @@ class one2many_mod2(fields.one2many):
         if values is None:
             values = {}
 
+        # res6 = {id: date_current, ...}
         res6 = dict([(rec['id'], rec['date_current'])
             for rec in obj.read(cr, user, ids, ['date_current'], context=context)])
 
@@ -107,15 +108,13 @@ class hr_timesheet_sheet(osv.osv):
     _description="Timesheet"
 
     def _total_attendances(self, cr, uid, ids, name, args, context=None):
-        """
-         Get the total attendance for the timesheets
-         Returns a dict like :
-         {id: {'date_current': '2011-06-17',
-               'totals_per_day': {
-                    day: timedelta,
-                    day: timedelta}
-               }
-         }
+        """ Get the total attendance for the timesheets
+            Returns a dict like :
+                {id: {'date_current': '2011-06-17',
+                      'total_per_day': {day: timedelta, ...},
+                     },
+                 ...
+                }
         """
         context = context or {}
         attendance_obj = self.pool.get('hr.attendance')
@@ -156,15 +155,13 @@ class hr_timesheet_sheet(osv.osv):
                         total_attendance[day] += timedelta(days=1)
 
             res[sheet_id] = {'date_current': date_current,
-                             'totals_per_day': total_attendance}
+                             'total_per_day': total_attendance}
         return res
 
     def _total_timesheet(self, cr, uid, ids, name, args, context=None):
-        """
-         Get the total of analytic lines for the timesheets
-         Returns a dict like :
-         {id: {day: timedelta,
-               day: timedelta,}}
+        """ Get the total of analytic lines for the timesheets
+            Returns a dict like :
+                {id: {day: timedelta, ...}}
         """
         context = context or {}
         sheet_line_obj = self.pool.get('hr.analytic.timesheet')
@@ -185,9 +182,8 @@ class hr_timesheet_sheet(osv.osv):
         return res
 
     def _total(self, cr, uid, ids, name, args, context=None):
-        """
-         Compute the attendances, analytic lines timesheets and differences between them
-         for all the days of a timesheet and the current day
+        """ Compute the attendances, analytic lines timesheets and differences between them
+            for all the days of a timesheet and the current day
         """
         def sum_all_days(sheet_amounts):
             if not sheet_amounts:
@@ -214,7 +210,7 @@ class hr_timesheet_sheet(osv.osv):
             all_attendances_sheet = all_timesheet_attendances[id]
 
             date_current = all_attendances_sheet['date_current']
-            total_attendances_sheet = all_attendances_sheet['totals_per_day']
+            total_attendances_sheet = all_attendances_sheet['total_per_day']
             total_attendances_all_days = sum_all_days(total_attendances_sheet)
             total_attendances_day = total_attendances_sheet.get(date_current, timedelta(seconds=0))
 
@@ -485,9 +481,9 @@ class hr_timesheet_line(osv.osv):
         res = {}.fromkeys(ids, False)
         for ts_line in self.browse(cursor, user, ids, context=context):
             sheet_ids = sheet_obj.search(cursor, user,
-            [('date_to', '>=', ts_line.date),
-            ('date_from', '<=', ts_line.date),
-            ('employee_id.user_id', '=', ts_line.user_id.id)], context=context)
+                [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
+                 ('employee_id.user_id', '=', ts_line.user_id.id)],
+                context=context)
             if sheet_ids:
             # [0] because only one sheet possible for an employee between 2 dates
                 res[ts_line.id] = sheet_obj.name_get(cursor, user, sheet_ids, context=context)[0]
@@ -520,7 +516,7 @@ class hr_timesheet_line(osv.osv):
             store={
                     'hr_timesheet_sheet.sheet': (_get_hr_timesheet_sheet, ['employee_id', 'date_from', 'date_to'], 10),
                     'account.analytic.line': (_get_account_analytic_line, ['user_id', 'date'], 10),
-                    'hr.analytic.timesheet': (lambda self,cr,uid,ids,c={}: ids, ['line_id'], 10),
+                    'hr.analytic.timesheet': (lambda self,cr,uid,ids,context=None: ids, ['line_id'], 10),
                   },
             ),
     }
@@ -589,9 +585,9 @@ class hr_attendance(osv.osv):
         for attendance in self.browse(cursor, user, ids, context=context):
             date_to = datetime.strftime(datetime.strptime(attendance.name[0:10], '%Y-%m-%d'), '%Y-%m-%d %H:%M:%S')
             sheet_ids = sheet_obj.search(cursor, user,
-                [('date_to', '>=', date_to),
-                 ('date_from', '<=', attendance.name),
-                 ('employee_id', '=', attendance.employee_id.id)], context=context)
+                [('date_to', '>=', date_to), ('date_from', '<=', attendance.name),
+                 ('employee_id', '=', attendance.employee_id.id)],
+                context=context)
             if sheet_ids:
                 # [0] because only one sheet possible for an employee between 2 dates
                 res[attendance.id] = sheet_obj.name_get(cursor, user, sheet_ids, context=context)[0]
@@ -602,7 +598,7 @@ class hr_attendance(osv.osv):
             type='many2one', relation='hr_timesheet_sheet.sheet',
             store={
                       'hr_timesheet_sheet.sheet': (_get_hr_timesheet_sheet, ['employee_id', 'date_from', 'date_to'], 10),
-                      'hr.attendance': (lambda self,cr,uid,ids,c={}: ids, ['employee_id', 'name', 'day'], 10),
+                      'hr.attendance': (lambda self,cr,uid,ids,context=None: ids, ['employee_id', 'name', 'day'], 10),
                   },
             )
     }
