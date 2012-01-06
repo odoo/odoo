@@ -816,43 +816,23 @@ openerp.web.Model = openerp.web.CallbackEnabled.extend({
         var c = openerp.connection;
         return c.rpc.apply(c, arguments);
     },
+    /*
+     * deprecated because it does not allow to specify kwargs, directly use call() instead
+     */
     get_func: function(method_name) {
         var self = this;
         return function() {
-            if (method_name == "search_read")
-                return self._search_read.apply(self, arguments);
-            return self._call(method_name, _.toArray(arguments));
+            return self.call(method_name, _.toArray(arguments), {});
         };
     },
-    _call: function (method, args) {
-        return this.rpc('/web/dataset/call', {
+    call: function (method, args, kwargs) {
+        return this.rpc('/web/dataset/call_kw', {
             model: this.model_name,
             method: method,
-            args: args
-        }).pipe(function(result) {
-            if (method == "read" && result instanceof Array && result.length > 0 && result[0]["id"]) {
-                var index = {};
-                _.each(_.range(result.length), function(i) {
-                    index[result[i]["id"]] = result[i];
-                });
-                result = _.map(args[0], function(x) {return index[x];});
-            }
-            return result;
+            args: args,
+            kwargs: kwargs,
         });
     },
-    _search_read: function(domain, fields, offset, limit, order, context) {
-        return this.rpc('/web/dataset/search_read', {
-            model: this.model_name,
-            fields: fields,
-            offset: offset,
-            limit: limit,
-            domain: domain,
-            sort: order,
-            context: context
-        }).pipe(function(result) {
-            return result.records;
-        });
-    }
 });
 
 openerp.web.CompoundContext = openerp.web.Class.extend({
