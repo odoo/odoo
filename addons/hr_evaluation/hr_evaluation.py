@@ -276,9 +276,6 @@ class survey_request(osv.osv):
     _columns = {
         'is_evaluation': fields.boolean('Is Appraisal?'),
     }
-    _defaults = {
-        'state': 'draft',
-    }
 
 survey_request()
 
