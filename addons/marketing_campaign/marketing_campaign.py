@@ -404,7 +404,7 @@ class marketing_campaign_activity(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
-                                            required = True, ondelete='cascade', select=1),
+                                            ondelete='cascade', select=1),
         'object_id': fields.related('campaign_id','object_id',
                                       type='many2one', relation='ir.model',
                                       string='Object', readonly=True),
