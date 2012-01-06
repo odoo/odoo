@@ -688,9 +688,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         this.cache = _.reject(this.cache, function(x) { return _.include(ids, x.id);});
         this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
         this.on_change();
-        var to_return = $.Deferred().then(callback);
-        $.async_when().then(function () {to_return.resolve({result: true});});
-        return to_return.promise();
+        return $.async_when({result: true}).then(callback);
     },
     reset_ids: function(ids) {
         this.set_ids(ids);
@@ -787,9 +785,7 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
             return this.create_function(data, callback, error_callback);
         } else {
             console.warn("trying to create a record using default proxy dataset behavior");
-            var to_return = $.Deferred().then(callback);
-            $.async_when().then(function () {to_return.resolve({"result": undefined});});
-            return to_return.promise();
+            return $.async_when({"result": undefined}).then(callback);
         }
     },
     on_create: function(data) {},
@@ -799,18 +795,14 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
             return this.write_function(id, data, options, callback);
         } else {
             console.warn("trying to write a record using default proxy dataset behavior");
-            var to_return = $.Deferred().then(callback);
-            $.async_when().then(function () {to_return.resolve({"result": true});});
-            return to_return.promise();
+            return $.async_when({"result": true}).then(callback);
         }
     },
     on_write: function(id, data) {},
     unlink: function(ids, callback, error_callback) {
         this.on_unlink(ids);
         console.warn("trying to unlink a record using default proxy dataset behavior");
-        var to_return = $.Deferred().then(callback);
-        $.async_when().then(function () {to_return.resolve({"result": true});});
-        return to_return.promise();
+        return $.async_when({"result": true}).then(callback);
     },
     on_unlink: function(ids) {}
 });
