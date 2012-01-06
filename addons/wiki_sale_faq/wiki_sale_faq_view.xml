@@ -12,7 +12,7 @@
            <field name="type">ir.actions.act_window</field>
            <field name="res_model">ir.attachment</field>
            <field name="view_type">form</field>
-           <field name="domain" eval="[('parent_id','=',ref('dir_sale'))]"></field>
+           <field name="context" eval="{'default_parent_id':ref('dir_sale')}"/>
            <field name="help">Documents give you access to all files attached to any record. It is a repository of all documents such as emails, project-related attachments or any other documents. From this view, you can search through the content of the documents. OpenERP automatically assign meta data based on the record like the related partner and indexes the content of .DOC, .ODT, .TXT, .SXW and .PDF documents.</field>
        </record>
 

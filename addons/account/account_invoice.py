@@ -824,8 +824,9 @@ class account_invoice(osv.osv):
             compute_taxes = ait_obj.compute(cr, uid, inv.id, context=ctx)
             self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
 
-            if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
-                raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
+            # I disabled the check_total feature
+            #if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
+            #    raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
 
             if inv.payment_term:
                 total_fixed = total_percent = 0
@@ -1267,7 +1268,7 @@ class account_invoice_line(osv.osv):
     def _price_unit_default(self, cr, uid, context=None):
         if context is None:
             context = {}
-        if 'check_total' in context:
+        if context.get('check_total', False):
             t = context['check_total']
             for l in context.get('invoice_line', {}):
                 if isinstance(l, (list, tuple)) and len(l) >= 3 and l[2]:
