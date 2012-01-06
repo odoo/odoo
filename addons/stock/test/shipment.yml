@@ -150,6 +150,23 @@
         assert move.product_qty == 10, "qty is not correspond per production lot."
     context.update({'active_model':'stock.move', 'active_id':move_ids[0],'active_ids': move_ids})
 -
+  I check the stock valuation account entries.
+-
+  !python {model: account.move}: |
+    incomming_shipment = self.pool.get('stock.picking').browse(cr, uid, ref('incomming_shipment'), context=context)
+    account_move_ids = self.search(cr, uid, [('ref','=',incomming_shipment.name)])
+    assert len(account_move_ids), "account move should be created."
+    account_move = self.browse(cr, uid, account_move_ids[0], context=context)
+    assert len(account_move.line_id) == len(incomming_shipment.move_lines) + 1, 'accuont entries are not correspond.'
+    for account_move_line in account_move.line_id:
+        for stock_move in incomming_shipment.move_lines:
+            if account_move_line.account_id.id == stock_move.product_id.property_stock_account_input.id:
+                assert account_move_line.credit == 800.0, "Credit amount is not correspond."
+                assert account_move_line.debit == 0.0, "Debit amount is not correspond."
+            else:
+                assert account_move_line.credit == 0.0, "Credit amount is not correspond."
+                assert account_move_line.debit == 800.0, "Debit amount is not correspond."
+-
   I consume 1 kgm ice-cream from each incoming lots into internal production.
 -
   !record {model: stock.move.consume, id: consume_lot_incomming}:
