@@ -56,7 +56,6 @@ class survey_question_wiz(osv.osv_memory):
         que_col_head = self.pool.get('survey.question.column.heading')
         user_obj = self.pool.get('res.users')
         mail_message = self.pool.get('mail.message')
-        obj_module = self.pool.get('ir.module.module')
         
         if view_type in ['form']:
             wiz_id = 0
@@ -395,11 +394,9 @@ class survey_question_wiz(osv.osv_memory):
                         survey_data = survey_obj.browse(cr, uid, survey_id)
                         response_id = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))['response']
                         context.update({'response_id':response_id})
-                        module_id = obj_module.search(cr, uid, [('name', '=', 'hr_evaluation')])
-                        state = obj_module.browse(cr, uid, module_id, context=context)[0].state
-                        if state == 'installed':
-                            interview_id = context.get('active_ids',False)
-                            eval_inter_obj = self.pool.get('hr.evaluation.interview').survey_req_done(cr, uid, interview_id, context=context)
+                        survey_req_obj = self.pool.get(context.get('active_model'))
+                        if survey_req_obj and hasattr(survey_req_obj, 'survey_req_done'):
+                            survey_req_obj.survey_req_done(cr, uid, context.get('active_ids', []), context=context)
                         report = self.create_report(cr, uid, [survey_id], 'report.survey.browse.response', survey_data.title,context)
                         attachments = {}
                         file = open(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
