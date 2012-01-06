@@ -35,6 +35,8 @@
         "l10n_us_account_type.xml",
         'account_chart_template.xml',
         'account.account.template.csv',
+        'account_tax_code_template.xml',
+        'account_tax_template.xml',
         'account_chart_template_after.xml',
         'l10n_us_wizard.xml'
     ],

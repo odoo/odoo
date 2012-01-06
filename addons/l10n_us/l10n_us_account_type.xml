@@ -60,41 +60,35 @@
             <field name="code">account -pay</field>
             <field name="report_type">liability</field>
             <field name="close_method">unreconciled</field>
-            <field name="sign" eval="-1"/>            
         </record>
         <record id="user_type_credit_card" model="account.account.type">
             <field name="name">Credit Card</field>
             <field name="code">credit -card</field>
-            <field name="report_type">liability</field>            
+            <field name="report_type">liability</field>
             <field name="close_method">balance</field>
-            <field name="sign" eval="-1" />            
         </record>
         <record id="user_type_current_liability" model="account.account.type">
             <field name="name">Current Liability</field>
             <field name="code">current -liability</field>
-            <field name="report_type">liability</field>            
+            <field name="report_type">liability</field>
             <field name="close_method">balance</field>
-            <field name="sign" eval="-1" />            
         </record>
         <record id="user_type_other_current_liability" model="account.account.type">
             <field name="name">Other Current Liability</field>
             <field name="code">other current -liability</field>
-            <field name="report_type">liability</field>            
-            <field name="sign" eval="-1"/>            
+            <field name="report_type">liability</field>
             <field name="close_method">balance</field>
         </record>
         <record id="user_type_long_term_liability" model="account.account.type">
             <field name="name">Long term Liability</field>
             <field name="code">long term -liability</field>
-            <field name="report_type">liability</field>            
-            <field name="sign" eval="-1"/>            
+            <field name="report_type">liability</field>
             <field name="close_method">balance</field>
         </record>
         <record id="user_type_liability" model="account.account.type">
             <field name="name">Liability</field>
             <field name="code">liability</field>
-            <field name="report_type">liability</field>            
-            <field name="sign" eval="-1"/>            
+            <field name="report_type">liability</field>
             <field name="close_method">balance</field>
         </record>
         <!-- Equity -->
@@ -111,14 +105,12 @@
             <field name="code">income</field>
             <field name="report_type">income</field>
             <field name="close_method">none</field>
-            <field name="sign" eval="-1"/>
         </record>
         <record id="user_type_other_income" model="account.account.type">
             <field name="name">Other Income</field>
             <field name="code">other -income</field>
             <field name="report_type">income</field>
             <field name="close_method">none</field>
-            <field name="sign" eval="-1"/>            
         </record>
 
         <!-- Expense -->  
