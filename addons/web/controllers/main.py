@@ -833,17 +833,29 @@ class DataSet(openerpweb.Controller):
         if has_context:
             args[context_id] = c
 
+        return self._call_kw(req, model, method, args, {})
+    
+    def _call_kw(self, req, model, method, args, kwargs):
         for i in xrange(len(args)):
             if isinstance(args[i], web.common.nonliterals.BaseContext):
                 args[i] = req.session.eval_context(args[i])
-            if isinstance(args[i], web.common.nonliterals.BaseDomain):
+            elif isinstance(args[i], web.common.nonliterals.BaseDomain):
                 args[i] = req.session.eval_domain(args[i])
+        for k in kwargs.keys():
+            if isinstance(kwargs[k], web.common.nonliterals.BaseContext):
+                kwargs[k] = req.session.eval_context(kwargs[k])
+            elif isinstance(kwargs[k], web.common.nonliterals.BaseDomain):
+                kwargs[k] = req.session.eval_domain(kwargs[k])
 
-        return getattr(req.session.model(model), method)(*args)
+        return getattr(req.session.model(model), method)(*args, **kwargs)
 
     @openerpweb.jsonrequest
     def call(self, req, model, method, args, domain_id=None, context_id=None):
         return self.call_common(req, model, method, args, domain_id, context_id)
+    
+    @openerpweb.jsonrequest
+    def call_kw(self, req, model, method, args, kwargs):
+        return self._call_kw(req, model, method, args, kwargs)
 
     @openerpweb.jsonrequest
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
