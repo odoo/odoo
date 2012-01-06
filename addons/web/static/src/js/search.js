@@ -255,7 +255,9 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             val = val.slice(4);
             val = parseInt(val, 10);
             var filter = this.managed_filters[val];
-            this.on_search([filter.domain], [filter.context], []);
+            this.do_clear().then(_.bind(function() {
+                this.on_search([filter.domain], [filter.context], []);
+            }, this));
         } else {
             select.val('');
         }
@@ -417,7 +419,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 input.datewidget.set_value(false);
             }
         });
-        setTimeout(this.on_clear, 0);
+        return $.async_when().pipe(this.on_clear);
     },
     /**
      * Triggered when the search view gets cleared
