@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-10-20 09:49+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2012-01-03 20:36+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:26+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-04 05:21+0000\n"
+"X-Generator: Launchpad (build 14616)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -114,9 +115,7 @@ msgid "Fixed"
 msgstr "Fixé"
 
 #. module: product
-#: code:addons/product/pricelist.py:186
-#: code:addons/product/pricelist.py:342
-#: code:addons/product/pricelist.py:360
+#: code:addons/product/pricelist.py:178
 #, python-format
 msgid "Warning !"
 msgstr "Avertissement !"
@@ -270,7 +269,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  par exemple : 1 x (cette unité) = ratio x (unité de référence)"
 
 #. module: product
-#: code:addons/product/product.py:380
+#: code:addons/product/product.py:400
 #, python-format
 msgid "Products: "
 msgstr "Produits: "
@@ -328,7 +327,7 @@ msgstr "Fournisseur principal"
 #: view:product.product:0
 #: view:product.ul:0
 msgid "Packaging"
-msgstr "Unité logistique"
+msgstr "Colisage"
 
 #. module: product
 #: view:product.product:0
@@ -428,8 +427,8 @@ msgstr ""
 "Les produits peuvent être achetés et/ou vendus. Ils peuvent être des "
 "matières premières, des produits stockables, des consommables ou des "
 "services. Le formulaire du produit contient des informations détaillées à "
-"propos de vos produits en lien avec les approvisionnements logistiques, les "
-"prix de vente, les catégories de produit, les fournisseurs, etc."
+"propos de vos produits en lien avec la logistique des approvisionnements, "
+"les prix de vente, les catégories de produit, les fournisseurs, etc."
 
 #. module: product
 #: view:product.pricelist:0
@@ -531,6 +530,7 @@ msgstr "Temps de travail"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
+#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
 msgid ""
 "A price list contains rules to be evaluated in order to compute the purchase "
 "or sales price for all the partners assigned to a price list. Price lists "
@@ -813,6 +813,7 @@ msgstr "Type"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action2
 #: model:ir.ui.menu,name:product.menu_product_pricelist_main
 msgid "Pricelists"
@@ -913,6 +914,8 @@ msgid "DDR 256MB PC400"
 msgstr "DDR 256MB PC400"
 
 #. module: product
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model:ir.ui.menu,name:product.menu_product_category_action_form
 #: view:product.category:0
 msgid "Product Categories"
 msgstr "Catégories de produits"
@@ -1145,6 +1148,7 @@ msgstr "Linteau en bois de 4m"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
 msgid ""
 "You must define a Product for everything you buy or sell. Products can be "
 "raw materials, stockable products, consumables or services. The Product form "
@@ -1276,7 +1280,7 @@ msgstr ""
 "informations\n"
 "    à propos des fournisseurs, les méthodes d'approvisionnement (production "
 "sur stock/à la demande), différentes unités de mesure,\n"
-"    différents emballages et propriétés.\n"
+"    différents conditionnements et propriétés.\n"
 "\n"
 "    Les listes de prix supportent :\n"
 "    * Le multi-niveaux de remise (par produit, par catégorie ou quantités)\n"
@@ -1310,7 +1314,6 @@ msgstr ""
 "fournisseurs."
 
 #. module: product
-#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Services"
@@ -1323,6 +1326,7 @@ msgstr "Si autre liste de prix"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_puchased
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:0
@@ -1346,7 +1350,7 @@ msgid "Pallet Dimension"
 msgstr "Dimension d'une Palette"
 
 #. module: product
-#: code:addons/product/product.py:618
+#: code:addons/product/product.py:641
 #, python-format
 msgid " (copy)"
 msgstr " (copie)"
@@ -1374,7 +1378,7 @@ msgid "Second UoM"
 msgstr "UdM secondaire"
 
 #. module: product
-#: code:addons/product/product.py:142
+#: code:addons/product/product.py:143
 #, python-format
 msgid "Error !"
 msgstr "Erreur !"
@@ -1837,6 +1841,7 @@ msgstr "Listes de prix"
 #: field:product.pricelist,company_id:0
 #: field:product.pricelist.item,company_id:0
 #: field:product.pricelist.version,company_id:0
+#: view:product.product:0
 #: field:product.supplierinfo,company_id:0
 #: field:product.template,company_id:0
 msgid "Company"
@@ -1851,7 +1856,7 @@ msgstr ""
 "Prix de base pour le calcul du prix client. Parfois appelé prix catalogue."
 
 #. module: product
-#: code:addons/product/pricelist.py:518
+#: code:addons/product/pricelist.py:376
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Section partenaire dans le formulaire produit"
@@ -1903,7 +1908,6 @@ msgstr "Intervention sénior sur site"
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
 #: field:product.pricelist,type:0
-#: view:product.pricelist.type:0
 msgid "Pricelist Type"
 msgstr "Type de liste de prix"
 
@@ -2032,7 +2036,7 @@ msgid ""
 "Create and manage your packaging dimensions and types you want to be "
 "maintained in your system."
 msgstr ""
-"Créez et gérez les dimensions et les types des emballages à utiliser dans le "
+"Créez et gérez les dimensions et les types de colisage à utiliser dans le "
 "système."
 
 #. module: product
@@ -2157,7 +2161,7 @@ msgstr "Casier de 100 cm"
 #. module: product
 #: help:product.packaging,sequence:0
 msgid "Gives the sequence order when displaying a list of packaging."
-msgstr "Donne l'ordre d'affichage d'une liste d'emballages."
+msgstr "Donne l'ordre d'affichage d'une liste de colisage."
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -2329,6 +2333,7 @@ msgstr "Cas"
 
 #. module: product
 #: view:product.product:0
+#: model:res.groups,name:product.group_product_variant
 msgid "Product Variant"
 msgstr "Variante de produit"
 
@@ -2338,7 +2343,7 @@ msgid "Shelves"
 msgstr "Étagères"
 
 #. module: product
-#: code:addons/product/pricelist.py:517
+#: code:addons/product/pricelist.py:375
 #, python-format
 msgid "Other Pricelist"
 msgstr "Autre liste de prix"

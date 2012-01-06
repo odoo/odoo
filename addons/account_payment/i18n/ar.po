@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: <>\n"
+"PO-Revision-Date: 2012-01-05 15:07+0000\n"
+"Last-Translator: kifcaliph <kifcaliph@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:50+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-06 05:27+0000\n"
+"X-Generator: Launchpad (build 14637)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -40,7 +40,7 @@ msgstr ""
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "تجميع حسب..."
 
 #. module: account_payment
 #: model:ir.module.module,description:account_payment.module_meta_information
@@ -80,9 +80,11 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
+#: field:payment.line,company_id:0
 #: field:payment.mode,company_id:0
+#: field:payment.order,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "شركة"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -92,12 +94,12 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr ""
+msgstr "مجاني"
 
 #. module: account_payment
 #: field:payment.order.create,entries:0
 msgid "Entries"
-msgstr ""
+msgstr "مُدخلات"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -108,17 +110,17 @@ msgstr ""
 #: field:payment.line,ml_maturity_date:0
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
-msgstr ""
+msgstr "تاريخ الإستحقاق"
 
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "لا يمكنك إنشاء حركة سطر علي حساب مغلق."
 
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr ""
+msgstr "خط إدخال الحساب"
 
 #. module: account_payment
 #: view:payment.order.create:0
@@ -135,12 +137,12 @@ msgstr ""
 #: report:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
-msgstr ""
+msgstr "المقدار"
 
 #. module: account_payment
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "قيمة دائنة أو مدينة خاطئة في القيد المحاسبي !"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -150,7 +152,7 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "ملغي"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
@@ -161,7 +163,7 @@ msgstr ""
 #: report:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
-msgstr ""
+msgstr "المرجع"
 
 #. module: account_payment
 #: sql_constraint:payment.line:0
@@ -196,7 +198,7 @@ msgstr ""
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "مؤكد"
 
 #. module: account_payment
 #: help:payment.line,ml_date_created:0
@@ -217,7 +219,7 @@ msgstr ""
 #: view:payment.order:0
 #: field:payment.order,state:0
 msgid "State"
-msgstr ""
+msgstr "الحالة"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -237,7 +239,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,ml_date_created:0
 msgid "Effective Date"
-msgstr ""
+msgstr "تاريخ السريان"
 
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
@@ -256,12 +258,12 @@ msgstr ""
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "خطأ !"
 
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr ""
+msgstr "إجمالي الخصم"
 
 #. module: account_payment
 #: field:payment.order,date_done:0
@@ -297,7 +299,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
-msgstr ""
+msgstr "تمً انشاءه"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -332,7 +334,7 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Due date"
-msgstr ""
+msgstr "تاريخ الإستحقاق"
 
 #. module: account_payment
 #: field:account.invoice,amount_to_pay:0
@@ -342,12 +344,12 @@ msgstr ""
 #. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
-msgstr ""
+msgstr "العملة"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Yes"
-msgstr ""
+msgstr "نعم"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
@@ -379,7 +381,7 @@ msgstr ""
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Type"
-msgstr ""
+msgstr "نوع الدفع"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
@@ -390,7 +392,7 @@ msgstr ""
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Draft"
-msgstr ""
+msgstr "مسودة"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -416,7 +418,7 @@ msgstr ""
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Total credit"
-msgstr ""
+msgstr "إجمالي الإئتمان"
 
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
@@ -426,18 +428,17 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "User"
-msgstr ""
+msgstr "المستخدم"
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
-#: model:ir.actions.act_window,name:account_payment.act_account_invoice_2_payment_line
 msgid "Payment Lines"
 msgstr ""
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "عناصر اليومية"
 
 #. module: account_payment
 #: constraint:account.move.line:0
@@ -454,28 +455,28 @@ msgstr ""
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "Search"
-msgstr ""
+msgstr "بحث"
 
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
 msgid "Payment Order"
-msgstr ""
+msgstr "أمر الدفع"
 
 #. module: account_payment
 #: field:payment.line,date:0
 msgid "Payment Date"
-msgstr ""
+msgstr "تاريخ الدفع"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Total:"
-msgstr ""
+msgstr "الإجمالي:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation date"
-msgstr ""
+msgstr "تاريخ الإنشاء"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -515,7 +516,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
-msgstr ""
+msgstr "مرجعك"
 
 #. module: account_payment
 #: field:payment.order,mode:0
@@ -531,23 +532,23 @@ msgstr ""
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "General Information"
-msgstr ""
+msgstr "معلومات عامة"
 
 #. module: account_payment
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Done"
-msgstr ""
+msgstr "تم"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "فاتورة"
 
 #. module: account_payment
 #: field:payment.line,communication:0
 msgid "Communication"
-msgstr ""
+msgstr "التواصل"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -555,13 +556,13 @@ msgstr ""
 #: view:payment.order:0
 #: view:payment.order.create:0
 msgid "Cancel"
-msgstr ""
+msgstr "إلغاء"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
-msgstr ""
+msgstr "معلومات"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -606,12 +607,12 @@ msgstr ""
 #: view:payment.mode:0
 #: field:payment.mode,journal:0
 msgid "Journal"
-msgstr ""
+msgstr "يومية"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
 msgid "Bank account"
-msgstr ""
+msgstr "الحساب المصرفي"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -622,14 +623,14 @@ msgstr ""
 #: field:payment.line,company_currency:0
 #: report:payment.order:0
 msgid "Company Currency"
-msgstr ""
+msgstr "عملة الشركة"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.menu_main_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Payment"
-msgstr ""
+msgstr "الدفع"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -651,12 +652,12 @@ msgstr ""
 #. module: account_payment
 #: field:payment.mode,name:0
 msgid "Name"
-msgstr ""
+msgstr "الاسم"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
-msgstr ""
+msgstr "حساب البنك"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -672,12 +673,12 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,order_id:0
 msgid "Order"
-msgstr ""
+msgstr "أمر"
 
 #. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
-msgstr ""
+msgstr "الإجمالي"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -687,9 +688,10 @@ msgstr ""
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
+#: field:payment.mode,partner_id:0
 #: report:payment.order:0
 msgid "Partner"
-msgstr ""
+msgstr "الشريك"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order

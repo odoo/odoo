@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-09-13 10:03+0000\n"
-"Last-Translator: Quentin THEURET <Unknown>\n"
+"PO-Revision-Date: 2012-01-03 20:47+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:30+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-04 05:21+0000\n"
+"X-Generator: Launchpad (build 14616)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -47,6 +47,26 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Le module de gestion de Projets à Long Terme permet de suivre "
+"l'organisation, la planification et l'allocation des ressources sur des "
+"projets.\n"
+"Permet de :\n"
+"    - gérer de gros projets\n"
+"    - définir les différentes phases d'un projet.\n"
+"    - calculer le planning des phases : calculer les dates de départ et de "
+"fin des phases d'un projet donné qui sont en brouillon, ouvertes ou en "
+"attente.\n"
+"      Si aucun projet n'est fourni, alors toutes les phases en brouillon, "
+"ouvertes ou en attente seront prises en compte\n"
+"    - calculer le planning des tâches : fonctionne comme le bouton de "
+"planification sur les phases d'un projet. Demande un projet en paramètre et "
+"calcule toutes les tâches en brouillon, ouvertes ou en attente\n"
+"    - planifier des tâches : Toutes les tâches qui sont en brouillon, "
+"ouvertes ou en attente sont planifiées en prenant en compte la date de "
+"départ de la phase\n"
+"\n"
+"    "
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -66,7 +86,7 @@ msgstr "Phases"
 
 #. module: project_long_term
 #: view:project.phase:0
-#: view:project.resource.allocation:0
+#: view:project.user.allocation:0
 msgid "Group By..."
 msgstr "Regrouper par..."
 
@@ -110,7 +130,7 @@ msgstr ""
 "Erreur ! Vous ne pouvez pas attribuer une escalade sur le même projet !"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:128
+#: code:addons/project_long_term/project_long_term.py:126
 #, python-format
 msgid "Day"
 msgstr "Jour"
@@ -149,14 +169,14 @@ msgstr ""
 #: field:project.compute.tasks,project_id:0
 #: view:project.phase:0
 #: field:project.phase,project_id:0
-#: view:project.resource.allocation:0
-#: field:project.resource.allocation,project_id:0
 #: view:project.task:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,project_id:0
 msgid "Project"
 msgstr "Projet"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:50
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Error!"
 msgstr "Erreur!"
@@ -174,7 +194,7 @@ msgid "Warning !"
 msgstr "Avertissement"
 
 #. module: project_long_term
-#: help:project.resource.allocation,date_end:0
+#: help:project.user.allocation,date_end:0
 msgid "Ending Date"
 msgstr "Date de fin"
 
@@ -201,7 +221,7 @@ msgid "Compute Phase Scheduling"
 msgstr "Calculer la planification des phases"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:190
+#: code:addons/project_long_term/project_long_term.py:141
 #, python-format
 msgid " (copy)"
 msgstr " (copie)"
@@ -272,10 +292,8 @@ msgid "Compute Scheduling of Task"
 msgstr "Calculer l'ordonnancement des tâches"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_project_resource
-#: model:ir.ui.menu,name:project_long_term.menu_pm_resources_project1
+#: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource
-#: view:project.resource.allocation:0
 msgid "Resources"
 msgstr "Ressources"
 
@@ -291,7 +309,7 @@ msgstr ""
 "\t           "
 
 #. module: project_long_term
-#: help:project.resource.allocation,date_start:0
+#: help:project.user.allocation,date_start:0
 msgid "Starting Date"
 msgstr "Date de début"
 
@@ -396,7 +414,7 @@ msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
-#: field:project.resource.allocation,date_start:0
+#: field:project.user.allocation,date_start:0
 msgid "Start Date"
 msgstr "Date de début"
 
@@ -412,7 +430,6 @@ msgstr "Forcer la phase à se terminer avant cette date"
 
 #. module: project_long_term
 #: view:project.phase:0
-#: selection:project.phase,state:0
 msgid "Draft"
 msgstr "Brouillon"
 
@@ -428,7 +445,8 @@ msgid "unknown"
 msgstr "inconnue"
 
 #. module: project_long_term
-#: field:project.resource.allocation,user_id:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,user_id:0
 msgid "User"
 msgstr "Utilisateur"
 
@@ -506,7 +524,6 @@ msgstr "Responsable"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
-#: field:project.project,resource_calendar_id:0
 msgid "Working Time"
 msgstr "Horaires de travail"
 
@@ -528,7 +545,6 @@ msgstr "Veuillez définir le projet à planifier"
 
 #. module: project_long_term
 #: view:project.phase:0
-#: field:project.phase,total_hours:0
 msgid "Total Hours"
 msgstr "Heures Totales"
 
@@ -543,7 +559,7 @@ msgid "Compute Scheduling of Task for specified project."
 msgstr "Calculer l'ordonnancement des tâches pour un projet spécifié."
 
 #. module: project_long_term
-#: view:project.resource.allocation:0
+#: view:project.user.allocation:0
 msgid "Phase"
 msgstr "Phase"
 
@@ -563,7 +579,7 @@ msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,date_end:0
-#: field:project.resource.allocation,date_end:0
+#: field:project.user.allocation,date_end:0
 msgid "End Date"
 msgstr "Date de fin"
 
@@ -596,9 +612,9 @@ msgstr "Ordonnancement"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
 #: view:project.phase:0
-#: field:project.resource.allocation,phase_id:0
 #: view:project.task:0
 #: field:project.task,phase_id:0
+#: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
 msgstr "Phase du projet"
 
@@ -640,9 +656,9 @@ msgid "Resource Leaves"
 msgstr "Congés de la ressource"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.action_project_schedule_tasks
-#: view:project.phase:0
-#: view:project.schedule.tasks:0
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
+#: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
+#: view:project.compute.tasks:0
 msgid "Schedule Tasks"
 msgstr "Planifier les tâches"
 
@@ -655,47 +671,3 @@ msgstr "Par défaut en jour"
 #: field:project.phase,duration:0
 msgid "Duration"
 msgstr "Durée"
-
-#~ msgid "Working Period"
-#~ msgstr "Période de travail"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "        Long Term Project management module that tracks planning, "
-#~ "scheduling, resources allocation.\n"
-#~ "        Mainly used with Big project management.\n"
-#~ "            - Project Phases will be maintained by Manager of the project\n"
-#~ "            - Compute Phase Scheduling: Compute start date and end date of "
-#~ "the phases which are in draft,open and pending state of the project given.\n"
-#~ "                                        If no project given then all the "
-#~ "draft,open and pending state phases will be taken\n"
-#~ "            - Compute Task Scheduling: This works same as the scheduler "
-#~ "button on project.phase. It takes the project as argument and computes all "
-#~ "the open,draft and pending tasks\n"
-#~ "            - Schedule Tasks: All the tasks which are in draft,pending and "
-#~ "open state are scheduled with taking the phase's start date\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "        Module de gestion de projet à long terme, qui fait le suivi de la "
-#~ "planification, de l'ordonnancement, de l'allocation des ressources.\n"
-#~ "        Principalement utilisé pour la gestion de gros projet.\n"
-#~ "            - Les phases du projet seront maintenues par le chef de projet\n"
-#~ "            - Calcule l'ordonnancement des phases : calcule les dates de "
-#~ "début et de fin des phases dans l'état brouillon, ouverte ou en attente pour "
-#~ "un projet donné.\n"
-#~ "                                        Si aucun projet n'est spécifié, "
-#~ "alors toutes les phases dans l'état brouillon, ouverte et en attente seront "
-#~ "considérées\n"
-#~ "            - Calcule l'ordonnancement des tâches : Fonctionne de la même "
-#~ "façon que le bouton d'ordonnancement sur les projets. Il prend le projet "
-#~ "comme argument et calcule toutes les tâches ouvertes, en brouillon et en "
-#~ "attente\n"
-#~ "            - Ordonnance les tâches : Toutes les tâches dans l'état "
-#~ "brouillon, ouverte et en attente sont planifiés avec la date de début de la "
-#~ "phase.\n"
-#~ "\n"
-#~ "    "

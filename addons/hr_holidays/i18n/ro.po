@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-09-05 21:29+0000\n"
-"Last-Translator: Mihai Satmarean <Unknown>\n"
+"PO-Revision-Date: 2012-01-05 21:13+0000\n"
+"Last-Translator: Fekete Mihai <mihai.fekete@etotalpc.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:12+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-06 05:27+0000\n"
+"X-Generator: Launchpad (build 14637)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -22,12 +22,12 @@ msgid "Blue"
 msgstr "Albastru"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
 #: field:hr.holidays,holiday_type:0
 msgid "Allocation Type"
-msgstr "Typul alocării"
+msgstr "Tipul alocării"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr "Se așteaptă a doua aprobare"
@@ -40,7 +40,7 @@ msgstr "Maximum de concedii permise - Concedii deja luate"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Leaves Management"
-msgstr "Administrarea concediilor"
+msgstr "Managementul concediilor"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -59,9 +59,10 @@ msgid "Department"
 msgstr "Departament"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Refused"
-msgstr "Refuzat"
+msgstr "Respins"
 
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
@@ -89,20 +90,20 @@ msgid ""
 "Leave Manager can let this field empty if this leave request/allocation is "
 "for every employee"
 msgstr ""
-"Administratorul de concedii poate lăsa acest câmp necompletat dacă această "
+"Administratorul concediilor poate lăsa acest câmp necompletat dacă această "
 "cerere/alocare de concediu este pentru fiecare angajat"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Set to Draft"
-msgstr "Schimbă în ciornă"
+msgstr "Setare ca ciornă"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Holidays"
-msgstr "Vacanţe"
+msgstr "Concedii"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -130,9 +131,10 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
 msgid "Summary Of Leaves"
-msgstr "Sumar al concediilor"
+msgstr "Rezumat concedii"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: view:hr.holidays:0
 #: selection:hr.holidays,state:0
 msgid "Approved"
@@ -141,10 +143,10 @@ msgstr "Aprobat"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Refuse"
-msgstr "Refuzat"
+msgstr "Respingeti"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:337
 #, python-format
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
@@ -153,7 +155,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:board.board:0
-#: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Leaves"
 msgstr "Concedii"
 
@@ -165,12 +169,13 @@ msgstr "Concediu"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
 msgid "Leaves by Department"
-msgstr "Concedii dupădepartament"
+msgstr "Concedii după departament"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Cancelled"
-msgstr "Anulată"
+msgstr "Anulat(ă)"
 
 #. module: hr_holidays
 #: help:hr.holidays,type:0
@@ -179,9 +184,9 @@ msgid ""
 "Choose 'Allocation Request' if you want to increase the number of leaves "
 "available for someone"
 msgstr ""
-"Selectați 'Cerere de concediu' cănd cineva dorește o zi liberă. \n"
-"Selectați 'Cerere de alocare' dacă doriți să mariți să mariți numarul de "
-"concedii disponibile pentru cineva"
+"Selectați 'Cerere de concediu' cănd cineva dorește o zi liberă. Selectați "
+"'Cerere de alocare' dacă doriți să mariți numarul de concedii disponibile "
+"pentru cineva"
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -196,10 +201,9 @@ msgstr "Culoare în raport"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Holidays Summary Report By Employee"
-msgstr "Sumar al concediilor pe angajat"
+msgstr "Resurse Umane Raport Rezumat Concedii pe angajat"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
@@ -212,11 +216,11 @@ msgid "Leave Type"
 msgstr "Tipul de concediu"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:186
-#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:199
+#: code:addons/hr_holidays/hr_holidays.py:337
 #, python-format
 msgid "Warning!"
-msgstr "Atenţie!"
+msgstr "Avertisment!"
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -226,7 +230,7 @@ msgstr "Ciornă"
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Magenta"
-msgstr "Purpuriu"
+msgstr "Magenta (culoare)"
 
 #. module: hr_holidays
 #: help:hr.holidays,state:0
@@ -358,9 +362,11 @@ msgid "Total holidays by type"
 msgstr "Totalul vacantelor după tip"
 
 #. module: hr_holidays
+#: view:hr.employee:0
 #: view:hr.holidays:0
 #: field:hr.holidays,employee_id:0
 #: field:hr.holidays.remaining.leaves.user,name:0
+#: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
 msgstr "Salariat"
 
@@ -419,6 +425,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Waiting Approval"
 msgstr "Așteaptă aprobare"
@@ -451,6 +458,7 @@ msgid "Lavender"
 msgstr "Lavandă"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "Leave Requests"
@@ -468,6 +476,7 @@ msgid "Employee's Holidays"
 msgstr "Vacantele angajatului"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: field:hr.holidays,category_id:0
 msgid "Category"
 msgstr "Categorie"
@@ -565,6 +574,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
 msgstr ""
@@ -609,6 +619,7 @@ msgid "Reasons"
 msgstr "Motive"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
 msgstr ""
@@ -645,6 +656,7 @@ msgid "Leave Detail"
 msgstr ""
 
 #. module: hr_holidays
+#: field:hr.holidays,double_validation:0
 #: field:hr.holidays.status,double_validation:0
 msgid "Apply Double Validation"
 msgstr ""
@@ -661,6 +673,7 @@ msgid "Details"
 msgstr "Detalii"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
 msgstr ""
@@ -689,7 +702,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:186
+#: code:addons/hr_holidays/hr_holidays.py:199
 #, python-format
 msgid "You cannot delete a leave which is not in draft state !"
 msgstr ""
@@ -786,6 +799,7 @@ msgid "Start Date"
 msgstr "Data de început"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"

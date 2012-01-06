@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-12-09 14:24+0000\n"
-"Last-Translator: Paulino Ascenção <Unknown>\n"
+"PO-Revision-Date: 2012-01-02 12:10+0000\n"
+"Last-Translator: Tiago Baptista <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:51+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-03 05:06+0000\n"
+"X-Generator: Launchpad (build 14616)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -51,6 +51,12 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo permite:\n"
+"* uma forma mais eficiente de gerir o pagamento de facturas.\n"
+"* um mecanismo que permite uma fácil ligação a vários sistemas de pagamento "
+"automático.\n"
+"    "
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -71,6 +77,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"Quando uma ordem de pagamento é criada, o estado inicial é 'Rascunho'.\n"
+" Quando é feita a confirmação dos dados, o estado passa para 'Confirmado'.\n"
+" No final é feito o pagamento e o estado passa para 'Feito'."
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -82,7 +91,9 @@ msgstr ""
 "menos o que está já na ordem de pagamento"
 
 #. module: account_payment
+#: field:payment.line,company_id:0
 #: field:payment.mode,company_id:0
+#: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Empresa"
 
@@ -413,7 +424,7 @@ msgstr "Sem terceiro definido na linha de entrada"
 #. module: account_payment
 #: help:payment.line,info_partner:0
 msgid "Address of the Ordering Customer."
-msgstr ""
+msgstr "Morada do cliente que faz a encomenda."
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -437,7 +448,6 @@ msgstr "Utilizador"
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
-#: model:ir.actions.act_window,name:account_payment.act_account_invoice_2_payment_line
 msgid "Payment Lines"
 msgstr "Linhas de pagamento"
 
@@ -694,6 +704,7 @@ msgstr "Fazer pagamento"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
+#: field:payment.mode,partner_id:0
 #: report:payment.order:0
 msgid "Partner"
 msgstr "Terceiro"

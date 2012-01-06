@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-11-09 05:46+0000\n"
+"PO-Revision-Date: 2012-01-05 14:55+0000\n"
 "Last-Translator: kifcaliph <kifcaliph@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:51+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-06 05:27+0000\n"
+"X-Generator: Launchpad (build 14637)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -22,7 +22,7 @@ msgid "Unreconciliation transactions"
 msgstr "إلغاء تسوية المعاملات"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:247
+#: code:addons/account_voucher/account_voucher.py:306
 #, python-format
 msgid "Write-Off"
 msgstr "إلغاء"
@@ -35,7 +35,7 @@ msgstr "مرجع الدفع"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Customer Journal Entries"
-msgstr ""
+msgstr "tj"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -54,7 +54,7 @@ msgid "Group By..."
 msgstr "تجميع حسب ..."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:596
+#: code:addons/account_voucher/account_voucher.py:779
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr "لا يمكن حذف إيصال أو إيصالات مصدرة أو مدفوعة !"
@@ -88,7 +88,7 @@ msgid "Bill Payment"
 msgstr "مدفوعات الفاتورة"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:746
+#: code:addons/account_voucher/account_voucher.py:1045
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -207,7 +207,7 @@ msgstr ""
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,date_due:0
 msgid "Due Date"
-msgstr ""
+msgstr "تاريخ الإستحقاق"
 
 #. module: account_voucher
 #: field:account.voucher,narration:0
@@ -392,7 +392,8 @@ msgid "Voucher Entries"
 msgstr "قيود الإيصال"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:645
+#: code:addons/account_voucher/account_voucher.py:444
+#: code:addons/account_voucher/account_voucher.py:876
 #, python-format
 msgid "Error !"
 msgstr "خطأ !"
@@ -420,7 +421,7 @@ msgid "Sales Receipt"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:596
+#: code:addons/account_voucher/account_voucher.py:779
 #, python-format
 msgid "Invalid action !"
 msgstr "لا يمكن إجراء هذه العملية!"
@@ -454,7 +455,7 @@ msgid "Pay Invoice"
 msgstr "دفع الفاتورة"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:746
+#: code:addons/account_voucher/account_voucher.py:1045
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr ""
@@ -492,6 +493,7 @@ msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
+#: field:account.voucher,audit:0
 msgid "To Review"
 msgstr "للمراجعة"
 
@@ -526,6 +528,7 @@ msgstr "شهر"
 
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
+#: field:account.voucher.line,currency_id:0
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
 msgstr "العملة"
@@ -558,7 +561,6 @@ msgstr "متوسط المتأخرات للدفع"
 #: selection:account.voucher,state:0
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
-#: report:voucher.print:0
 msgid "Draft"
 msgstr "مسودة"
 
@@ -640,7 +642,6 @@ msgid "November"
 msgstr "نوفمبر"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: view:sale.receipt.report:0
 msgid "Extended Filters..."
 msgstr "مرشحات مفصلة..."
@@ -698,7 +699,7 @@ msgid "Credit"
 msgstr "دائن"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:645
+#: code:addons/account_voucher/account_voucher.py:877
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr "قم بتعريف التتابع في اليومية!"
@@ -815,7 +816,7 @@ msgstr "إلغاء"
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
 msgid "Pro-forma"
-msgstr ""
+msgstr "كمسألة شكلية"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -840,7 +841,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Pay"
-msgstr ""
+msgstr "ادفع"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -910,7 +911,6 @@ msgstr "الولاية:"
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
 #: view:account.invoice:0
-#: view:account.voucher:0
 #: field:account.voucher,pay_now:0
 #: selection:account.voucher,type:0
 #: field:sale.receipt.report,pay_now:0
@@ -923,7 +923,6 @@ msgstr "الدفع"
 #: selection:account.voucher,state:0
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
-#: report:voucher.print:0
 msgid "Posted"
 msgstr "مرحَلة"
 
@@ -989,6 +988,8 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disable"
 msgstr ""
+"إذا قمت إلغاء تسوية العمليات، عليك أيضاً التحقق من كل الإجراءات المتعلقة لكل "
+"هذه المعاملات لأنهم لن يتم إيقافها"
 
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
@@ -1007,7 +1008,6 @@ msgid "Year"
 msgstr "سنة"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
 msgstr "فتح رصيد"

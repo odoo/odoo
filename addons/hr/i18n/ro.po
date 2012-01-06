@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-08-17 05:16+0000\n"
-"Last-Translator: Mihai Satmarean <Unknown>\n"
+"PO-Revision-Date: 2012-01-05 14:51+0000\n"
+"Last-Translator: Fekete Mihai <mihai.fekete@etotalpc.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:10+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-06 05:27+0000\n"
+"X-Generator: Launchpad (build 14637)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -35,16 +35,14 @@ msgstr "Eroare! Nu puteţi crea departamente recursive."
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr "Asociază angajat la informaţii"
+msgstr "Conectează angajatul la informaţii"
 
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr "CNP"
+msgstr "Nr SIN"
 
 #. module: hr
-#: model:ir.module.module,shortdesc:hr.module_meta_information
-#: model:ir.ui.menu,name:hr.menu_hr_deshboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
 #: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_root
@@ -66,11 +64,11 @@ msgid ""
 "will be used in the recruitment process to evaluate the applicants for this "
 "job position."
 msgstr ""
-"Pozitii de locuri de muncă sunt folosite pentru a defini posturile şi "
-"cerinţele lor. Puteţi ţine evidenţa numărului de salariaţi per post şi câţi "
-"vă aşteptaţi în viitor. Aveţi posibilitatea să ataşaţi, de asemenea, un "
+"Pozitiile de locuri de muncă sunt folosite pentru a defini posturile şi "
+"cerinţele lor. Puteţi ţine evidenţa numărului de salariaţi per post şi la "
+"câţi vă aşteptaţi în viitor. De asemenea, aveţi posibilitatea să ataşaţi un "
 "sondaj la un post de muncă care va fi utilizat în procesul de recrutare "
-"pentru a evalua solicitanţii de locuri de muncă pentru această poziţie."
+"pentru a evalua candidatii pentru acest loc de muncă."
 
 #. module: hr
 #: view:hr.employee:0
@@ -84,7 +82,7 @@ msgstr "Departament"
 #. module: hr
 #: help:hr.installer,hr_attendance:0
 msgid "Simplifies the management of employee's attendances."
-msgstr ""
+msgstr "Simplifica gestionarea prezentei angajatilor."
 
 #. module: hr
 #: view:hr.job:0
@@ -94,12 +92,12 @@ msgstr "Marchează ca veche"
 #. module: hr
 #: view:hr.job:0
 msgid "Jobs"
-msgstr "Sarcini"
+msgstr "Locuri de muncă"
 
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr ""
+msgstr "In recrutare"
 
 #. module: hr
 #: view:hr.installer:0
@@ -117,17 +115,19 @@ msgstr "Companie"
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr ""
+msgstr "Asteptat in recrutare"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Holidays"
-msgstr "Vacanțe"
+msgstr "Concedii"
 
 #. module: hr
 #: help:hr.installer,hr_holidays:0
 msgid "Tracks employee leaves, allocation requests and planning."
 msgstr ""
+"Tine evidenta liberelor angajatilor, a cererilor de alocare si a "
+"planificarii."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_marital_status
@@ -140,11 +140,13 @@ msgid ""
 "Partner that is related to the current employee. Accounting transaction will "
 "be written on this partner belongs to employee."
 msgstr ""
+"Partenerul asociat angajatului curent. Tranzactia contabila va fi scrisa "
+"acelui partener de care apartine angajatul."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr ""
+msgstr "Leaga un utilizator de un angajat"
 
 #. module: hr
 #: field:hr.installer,hr_contract:0
@@ -159,10 +161,10 @@ msgstr "Sistem salarizare generic."
 #. module: hr
 #: view:hr.employee:0
 msgid "My Departments Employee"
-msgstr ""
+msgstr "Angajatii departamentelor mele"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
+#: selection:hr.employee,marital:0
 msgid "Married"
 msgstr "Căsătorit(ă)"
 
@@ -171,6 +173,7 @@ msgstr "Căsătorit(ă)"
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
+"Eroare ! Nu puteti selecta un departament la care angajatul este managerul."
 
 #. module: hr
 #: help:hr.employee,passport_id:0
@@ -184,11 +187,15 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"Structura Departamentelor Companiei dumenavoastra este folosita pentru a "
+"gestiona toate documentele referitoare la angajati per departamente: "
+"validarea cheltuielilor si a foii de pontaj, managementul zilelor libere, "
+"recrutari, etc."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Position"
-msgstr "Poziţia"
+msgstr "Poziție"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
@@ -201,17 +208,19 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
+"Campul asociat utilizatorului in formularul Angajatului permite conectarea "
+"utilizatorului OpenERP (si drepturile acestuia/acesteia) la angajat."
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Recruitement"
-msgstr ""
+msgstr "In recrutare"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr "CI/BI nr."
+msgstr "CNP"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
@@ -228,8 +237,8 @@ msgstr "Feminin"
 msgid ""
 "Tracks and helps employees encode and validate timesheets and attendances."
 msgstr ""
-"Urmărește şi îi ajută pe angajaţi în a codifica și valida pontajul şi "
-"frecvența."
+"Urmărește şi îi ajută pe angajaţi sa codifice și sa valideze foile de pontaj "
+"şi prezenta."
 
 #. module: hr
 #: field:hr.installer,hr_evaluation:0
@@ -249,17 +258,17 @@ msgstr "Structură angajaţi"
 #. module: hr
 #: view:hr.employee:0
 msgid "Social IDs"
-msgstr "CNP (cod numeric personal)"
+msgstr "ID-uri sociale"
 
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employee with that job."
-msgstr ""
+msgstr "Numarul de angajati cu acel loc de munca."
 
 #. module: hr
 #: field:hr.employee,work_phone:0
 msgid "Work Phone"
-msgstr "Telefon serviciu"
+msgstr "Telefon birou"
 
 #. module: hr
 #: field:hr.employee.category,child_ids:0
@@ -280,7 +289,6 @@ msgstr "Locaţie birou"
 
 #. module: hr
 #: view:hr.employee:0
-#: view:hr.job:0
 #: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
@@ -294,7 +302,7 @@ msgstr "Alte informații"
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
-msgstr "E-mail servici"
+msgstr "E-mail serviciu"
 
 #. module: hr
 #: field:hr.department,complete_name:0
@@ -315,22 +323,22 @@ msgstr "Raportare"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
 msgid "Human Resources Dashboard"
-msgstr "Tablou de bord Resurse umane"
+msgstr "Tablou de bord Resurse Umane"
 
 #. module: hr
 #: view:hr.employee:0
 #: field:hr.employee,job_id:0
 #: view:hr.job:0
 msgid "Job"
-msgstr "Post"
+msgstr "Loc de muncă"
 
 #. module: hr
-#: view:hr.department:0
 #: field:hr.department,member_ids:0
 msgid "Members"
 msgstr "Membri"
@@ -346,19 +354,21 @@ msgid ""
 "You can enhance the base HR Application by installing few HR-related "
 "functionalities."
 msgstr ""
+"Puteti mari baza Aplicatiei RU instaland niste functionalitati asociate RU."
 
 #. module: hr
 #: view:hr.employee:0
+#: field:hr.employee,category_ids:0
 msgid "Categories"
 msgstr "Categorii"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr ""
+msgstr "Angajati estimati"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
+#: selection:hr.employee,marital:0
 msgid "Divorced"
 msgstr "Divorțat(ă)"
 
@@ -370,13 +380,12 @@ msgstr "Categorie părinte"
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error ! You cannot create recursive Categories."
-msgstr ""
+msgstr "Eroare ! Nu puteti crea Categorii recursive."
 
 #. module: hr
 #: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: view:res.users:0
 #: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "Departamente"
@@ -389,7 +398,7 @@ msgstr "Contact angajat"
 #. module: hr
 #: view:board.board:0
 msgid "My Board"
-msgstr "Panoul meu"
+msgstr "Consiliul meu"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -421,7 +430,7 @@ msgstr "Imagine"
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
-msgstr ""
+msgstr "Contract angajat"
 
 #. module: hr
 #: help:hr.installer,hr_evaluation:0
@@ -429,26 +438,25 @@ msgid ""
 "Lets you create and manage the periodic evaluation and performance review of "
 "employees."
 msgstr ""
-"Vă permite să creaţi şi să gestionaţi evaluarea periodică şi a "
-"performanţelor angajaţilor."
+"Vă permite să creaţi şi să gestionaţi evaluarea periodică şi performanţele "
+"angajaţilor."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "hr.department"
-msgstr "hr.department"
+msgstr "hr.department (departament.resurse_umane)"
 
 #. module: hr
 #: help:hr.employee,parent_id:0
 msgid "It is linked with manager of Department"
-msgstr ""
+msgstr "Este conectat cu managerul Departamentului"
 
 #. module: hr
 #: field:hr.installer,hr_recruitment:0
 msgid "Recruitment Process"
-msgstr ""
+msgstr "Procesul recrutarii"
 
 #. module: hr
-#: field:hr.employee,category_ids:0
 #: field:hr.employee.category,name:0
 msgid "Category"
 msgstr "Categorie"
@@ -467,11 +475,22 @@ msgid ""
 "they will be able to enter time through the system. In the note tab, you can "
 "enter text data that should be recorded for a specific employee."
 msgstr ""
+"Aici va puteti gestiona forta de munca creand angajati si atribuindu-le "
+"proprietari specifice in sistem. Pastrati toate informatiile legate de "
+"angajati si tineti evidenta a tot ceea ce trebuie sa fie inregistrat pentru "
+"ei. Tabul informatiilor personale va va ajuta sa pastrati datele lor de "
+"identificare. Tabul Categorii va da posibilitatea de a le atribui categorii "
+"asociate de angajati in functie de pozitia si activitatile lor in cadrul "
+"companiei. O categorie poate fi un nivel superior in cadul companiei sau a "
+"unui departament. Tabul Foi de pontaj va permite sa le atribuiti o foaie de "
+"pontaj specifica si un jurnal analitic unde vor putea introduce timpul in "
+"sistem. In tabul note, puteti introduce date text care vor fi inregistrate "
+"pentru un anumit angajat."
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr ""
+msgstr "Cont bancar pentru salariu al angajatului"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -482,6 +501,7 @@ msgstr "Notă"
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"Compania aleasa nu se afla printre companiile permise acestui utilizator"
 
 #. module: hr
 #: view:hr.employee:0
@@ -495,13 +515,14 @@ msgstr "Adresă serviciu"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
 msgid "HR Manager Dashboard"
-msgstr ""
+msgstr "Tablou de bord Manager Resurse Umane"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Status"
-msgstr "Stare"
+msgstr "Status"
 
 #. module: hr
 #: view:hr.installer:0
@@ -517,12 +538,12 @@ msgstr "Structura categoriilor"
 #. module: hr
 #: field:hr.employee,partner_id:0
 msgid "unknown"
-msgstr "necunoscut"
+msgstr "necunoscut(ă)"
 
 #. module: hr
 #: field:hr.installer,hr_holidays:0
 msgid "Holidays / Leaves Management"
-msgstr "Managementul Vacanțelor / Plecărilor"
+msgstr "Managementul Concediilor / Liberelor"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -537,7 +558,7 @@ msgstr "Activ"
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Eroare ! Nu puteţi crea organigrame recursive"
+msgstr "Eroare ! Nu puteti crea Ierarhii recursive ale angajatilor."
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
@@ -560,6 +581,13 @@ msgid ""
 "    * HR Jobs\n"
 "    "
 msgstr ""
+"\n"
+"    Modulul pentru managementul resurselor umane. Puteti gestiona:\n"
+"    * Angajati si ierarhii : Va puteti defini angajatii cu Utilizator si sa "
+"afisati ierarhiile\n"
+"    * Departamente Resurse Umane\n"
+"    * Locuri de munca Resurse Umane\n"
+"    "
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -567,26 +595,28 @@ msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
 msgstr ""
+"In formularul Angajatului, exista mai multe tipuri de informatii, cum ar fi "
+"Informatii de contact."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid "Required number of Employees in total for that job."
-msgstr "Numarul necesar de angajați pentru acea sarcină/funcție"
+msgstr "Numarul total necesar de angajați pentru acea funcție."
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Old"
-msgstr "Vechi"
+msgstr "Vechi (veche)"
 
 #. module: hr
 #: field:hr.employee.marital.status,description:0
 msgid "Status Description"
-msgstr "Descriere stare"
+msgstr "Descriere status"
 
 #. module: hr
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr "Nu pot exista doi utilizatori cu același nume de conectare !"
+msgstr "Nu pot exista doi utilizatori cu acelasi nume de autentificare !"
 
 #. module: hr
 #: view:hr.job:0
@@ -596,17 +626,13 @@ msgstr "Stare"
 
 #. module: hr
 #: field:hr.employee,marital:0
-#: view:hr.employee.marital.status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.actions.act_window,name:hr.action_hr_marital_status
-#: model:ir.ui.menu,name:hr.hr_menu_marital_status
 msgid "Marital Status"
 msgstr "Stare civilă"
 
 #. module: hr
 #: help:hr.installer,hr_recruitment:0
 msgid "Helps you manage and streamline your recruitment process."
-msgstr ""
+msgstr "Va ajuta sa gestionati si sa eficientizati procesul de recrutate."
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
@@ -621,7 +647,7 @@ msgstr "Fotografie"
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users (res.utilizatori)"
 
 #. module: hr
 #: field:hr.installer,hr_payroll_account:0
@@ -649,6 +675,8 @@ msgid ""
 "Tracks and manages employee expenses, and can automatically re-invoice "
 "clients if the expenses are project-related."
 msgstr ""
+"Tine evidenta si gestioneaza cheltuielile angajatilor, si poate re-factura "
+"automat clienti daca cheltuielile au legatura cu proiectul."
 
 #. module: hr
 #: view:hr.job:0
@@ -668,7 +696,7 @@ msgstr "Categorii salariaţi"
 #. module: hr
 #: field:hr.employee,address_home_id:0
 msgid "Home Address"
-msgstr "Adresă acasă"
+msgstr "Adresa de acasă"
 
 #. module: hr
 #: field:hr.installer,hr_attendance:0
@@ -677,7 +705,6 @@ msgid "Attendances"
 msgstr "Prezența"
 
 #. module: hr
-#: view:hr.employee.marital.status:0
 #: view:hr.job:0
 msgid "Description"
 msgstr "Descriere"
@@ -686,6 +713,8 @@ msgstr "Descriere"
 #: help:hr.installer,hr_contract:0
 msgid "Extends employee profiles to help manage their contracts."
 msgstr ""
+"Extinde profilele angajatilor pentru a va ajuta sa gestionati contractele "
+"lor."
 
 #. module: hr
 #: field:hr.installer,hr_payroll:0
@@ -693,9 +722,9 @@ msgid "Payroll"
 msgstr "Stat de plata"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
+#: selection:hr.employee,marital:0
 msgid "Single"
-msgstr "Ne-căsatorit"
+msgstr "Necăsatorit(ă)"
 
 #. module: hr
 #: field:hr.job,name:0
@@ -706,7 +735,7 @@ msgstr "Nume post"
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Position"
-msgstr ""
+msgstr "In pozitie"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
@@ -724,7 +753,6 @@ msgid "Nationality"
 msgstr "Naţionalitate"
 
 #. module: hr
-#: view:hr.department:0
 #: view:hr.employee:0
 #: field:hr.employee,notes:0
 msgid "Notes"
@@ -733,12 +761,12 @@ msgstr "Note"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_installer
 msgid "hr.installer"
-msgstr ""
+msgstr "hr.installer (ru.program de instalare)"
 
 #. module: hr
 #: view:board.board:0
 msgid "HR Manager Board"
-msgstr ""
+msgstr "Manager consiliu RU"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
@@ -749,7 +777,7 @@ msgstr "Resursă"
 #: view:hr.installer:0
 #: model:ir.actions.act_window,name:hr.action_hr_installer
 msgid "Human Resources Application Configuration"
-msgstr ""
+msgstr "Configurare Aplicatie Resurse Umane"
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -758,6 +786,9 @@ msgstr "Sex"
 
 #. module: hr
 #: view:hr.employee:0
+#: view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0
+#: view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -780,7 +811,7 @@ msgstr "Nume departament"
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr "Număr de securitate socială"
+msgstr "Număr Asigurare Socială"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
@@ -796,23 +827,23 @@ msgstr "Departamente subordonate"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "Pozitii functie"
 
 #. module: hr
 #: view:hr.employee:0
 #: field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr "Mentor"
+msgstr "Instructor"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure Your Human Resources Application"
-msgstr ""
+msgstr "Configurati-va Aplicatia Resurselor Umane"
 
 #. module: hr
 #: field:hr.installer,hr_expense:0
 msgid "Expenses"
-msgstr ""
+msgstr "Cheltuieli"
 
 #. module: hr
 #: field:hr.department,manager_id:0
@@ -822,14 +853,14 @@ msgid "Manager"
 msgstr "Manager"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
+#: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr ""
+msgstr "Văduv"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
-msgstr ""
+msgstr "Sistemul General de Salarizare integrat cu Contabilitatea."
 
 #. module: hr
 #: field:hr.employee,child_ids:0

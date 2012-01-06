@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-12-29 14:43+0000\n"
+"Last-Translator: Fekete Mihai <mihai.fekete@etotalpc.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:47+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2011-12-30 05:56+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_analytic_default
 #: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
@@ -28,6 +28,10 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
+"selectati un partener care va folosi contul analitic specificat ca default "
+"(de exemplu crearea unei noi facturi a clientului sau a unei Comenzi de "
+"vanzare daca selectati acest partener, va fi considerata automat drept cont "
+"analitic)"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -39,7 +43,7 @@ msgstr "Reguli analitice"
 #. module: account_analytic_default
 #: help:account.analytic.default,analytic_id:0
 msgid "Analytical Account"
-msgstr ""
+msgstr "Cont Analitic"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -54,7 +58,7 @@ msgstr "Grupează după..."
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
 msgid "Default end date for this Analytical Account"
-msgstr ""
+msgstr "Data de sfarsit predefinita pentru acest Cont Analitic"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
@@ -73,11 +77,15 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "company, it will automatically take this as an analytical account)"
 msgstr ""
+"selectati o companie care va folosi contul analitic specificat ca default "
+"(de exemplu crearea unei noi facturi a clientului sau a unei Comenzi de "
+"vanzare daca selectati acest partener, va fi considerata automat drept cont "
+"analitic)"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
 msgid "Default start date for this Analytical Account"
-msgstr ""
+msgstr "Data de inceput predefinita pentru acest Cont Analitic"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -88,7 +96,7 @@ msgstr "Produs"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Distribuție analitică"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -117,6 +125,8 @@ msgstr "Dată de sfârșit"
 msgid ""
 "select a user which will use analytical account specified in analytic default"
 msgstr ""
+"selectati un utilizator care va folosi contul analitic specificat ca default "
+"analitic"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -137,6 +147,14 @@ msgid ""
 "* Date\n"
 "    "
 msgstr ""
+"\n"
+"Permite selectarea automata a conturilor analitice pe baza criteriilor: \n"
+"* Produs \n"
+"* Partener\n"
+"* Utilizator\n"
+"* Companie \n"
+"* Data\n"
+"    "
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -145,6 +163,10 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "product, it will automatically take this as an analytical account)"
 msgstr ""
+"selectati un produs care va folosi contul analitic specificat in "
+"predefinirea analitica (de exemplu crearea unei noi facturi a clientului sau "
+"a unei Comenzi de vanzare daca selectati acest partener, va fi considerata "
+"automat drept cont analitic)"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
@@ -183,6 +205,7 @@ msgstr "Dată de început"
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr ""
+"Da ordinea secventei atunci cand afiseaza o lista a distribuirii analitice"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line

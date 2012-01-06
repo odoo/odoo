@@ -1,41 +1,41 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* stock
+# Traducerea Serverului OpenERP.
+# Acest fisier contine traducerea modulelor urmatoare:
+#	* stock (stoc)
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-10-03 14:08+0000\n"
-"PO-Revision-Date: 2011-02-12 18:49+0000\n"
-"Last-Translator: Dorin <dhongu@gmail.com>\n"
+"PO-Revision-Date: 2011-12-29 08:12+0000\n"
+"Last-Translator: Fekete Mihai <mihai.fekete@etotalpc.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:39+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2011-12-30 05:56+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
 msgid "Track Outgoing Lots"
-msgstr "Urmărire loturi în vânzare"
+msgstr "Tineti evidenta loturilor expediate"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_upload
 msgid "Stock ups upload"
-msgstr ""
+msgstr "Incarcare stoc in sus"
 
 #. module: stock
 #: code:addons/stock/product.py:76
 #, python-format
 msgid "Variation Account is not specified for Product Category: %s"
-msgstr ""
+msgstr "Contul varierii nu este specificat pentru Categoria Produsului: %s"
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
 msgid "Chained Location If Fixed"
-msgstr ""
+msgstr "Locatie inchisa daca este fixa"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -47,10 +47,12 @@ msgstr "Puneţi într-un ambalaj nou"
 #. module: stock
 #: field:stock.move.split.lines,action:0
 msgid "Action"
-msgstr "Acțiune"
+msgstr "Actiune"
 
 #. module: stock
+#: code:addons/stock/wizard/stock_traceability.py:53
 #: view:stock.production.lot:0
+#, python-format
 msgid "Upstream Traceability"
 msgstr "Trasabilitate în sus"
 
@@ -58,7 +60,7 @@ msgstr "Trasabilitate în sus"
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Last Product Inventories"
-msgstr ""
+msgstr "Inventarele Ultimului Produs"
 
 #. module: stock
 #: view:stock.move:0
@@ -71,17 +73,19 @@ msgid "Revision Number"
 msgstr "Numărul reviziei"
 
 #. module: stock
-#: view:stock.move.memory.in:0
-#: view:stock.move.memory.out:0
+#: view:stock.partial.move.line:0
+#: field:stock.partial.picking,move_ids:0
+#: view:stock.partial.picking.line:0
+#: view:stock.return.picking.memory:0
 msgid "Product Moves"
-msgstr "Mișcări produs"
+msgstr "Miscări produs"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_move_report
 #: model:ir.ui.menu,name:stock.menu_action_stock_move_report
 #: view:report.stock.move:0
 msgid "Moves Analysis"
-msgstr "Analiza mișcărilor"
+msgstr "Analiza miscărilor"
 
 #. module: stock
 #: help:stock.production.lot,ref:0
@@ -89,7 +93,7 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's serial "
 "number"
 msgstr ""
-"Numărul intern de referința în cazul în care diferă de numărul de serie al "
+"Numărul intern de referinta în cazul în care diferă de numărul de serie al "
 "producătorului"
 
 #. module: stock
@@ -99,15 +103,15 @@ msgid ""
 "per location. You can use it once a year when you do the general inventory "
 "or whenever you need it, to correct the current stock level of a product."
 msgstr ""
-"Inventarele periodice sunt folosite pentru a contoriza numărul de produse "
-"disponibile pe locaţie. Îl puteţi folosi o dată pe an, atunci când face "
-"inventarul general sau ori de câte ori aveţi nevoie de el, pentru a corecta "
-"nivelul stocul curent al unui produs."
+"Inventarele periodice sunt folosite pentru a contoriza numărul produselor "
+"disponibile pe locaţie. Le puteţi folosi o dată pe an, atunci când faceti "
+"inventarierea generala sau ori de câte ori aveţi nevoie, pentru a corecta "
+"nivelul stocului curent al unui produs."
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Picking list"
-msgstr "Lista de preluare"
+msgstr "Lista de ridicare"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -117,18 +121,19 @@ msgstr "Lista de preluare"
 #: field:stock.change.product.qty,new_quantity:0
 #: field:stock.inventory.line,product_qty:0
 #: field:stock.inventory.line.split,qty:0
+#: field:stock.inventory.line.split.lines,quantity:0
 #: report:stock.inventory.move:0
 #: field:stock.move,product_qty:0
 #: field:stock.move.consume,product_qty:0
-#: field:stock.move.memory.in,quantity:0
-#: field:stock.move.memory.out,quantity:0
 #: field:stock.move.scrap,product_qty:0
 #: field:stock.move.split,qty:0
 #: field:stock.move.split.lines,quantity:0
-#: field:stock.move.split.lines.exist,quantity:0
+#: field:stock.partial.move.line,quantity:0
+#: field:stock.partial.picking.line,quantity:0
 #: report:stock.picking.list:0
 #: field:stock.report.prodlots,qty:0
 #: field:stock.report.tracklots,name:0
+#: field:stock.return.picking.memory,quantity:0
 #: field:stock.split.into,quantity:0
 msgid "Quantity"
 msgstr "Cantitate"
@@ -139,8 +144,8 @@ msgid ""
 "This is the list of all delivery orders that have to be prepared, according "
 "to your different sales orders and your logistics rules."
 msgstr ""
-"Aceasta este lista cu toate livrările care trebuie să fie pregătite, în "
-"acord cu diferite comenzi de vânzare și reguli logistice."
+"Aceasta este lista cu toate livrările care trebuie să fie pregătite, conform "
+"diferitelor comenzi de vânzare si reguli logistice."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -156,15 +161,13 @@ msgstr "Zi"
 #: view:stock.picking:0
 #: view:stock.production.lot:0
 msgid "UoM"
-msgstr "UM"
+msgstr "UdeM (Unitatea de masura)"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:90
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
-#, python-format
 msgid "Physical Inventories"
-msgstr "Stocurile fizice"
+msgstr "Inventarele fizice"
 
 #. module: stock
 #: field:product.category,property_stock_journal:0
@@ -186,25 +189,29 @@ msgid ""
 "value for all products in this category, it can also directly be set on each "
 "product."
 msgstr ""
+"Atunci cand faceti evaluarea inventarului in timp real, elementele "
+"corespondente din Jurnal pentru toate miscarile de iesire ale stocului vor "
+"fi afisate in acest cont. Aceasta este valoarea predefinita pentru toate "
+"produsele din aceasta categorie, si poate fi de asemenea setata direct pe "
+"fiecare produs."
 
 #. module: stock
-#: code:addons/stock/stock.py:1176
-#: code:addons/stock/stock.py:2378
+#: code:addons/stock/stock.py:2499
 #, python-format
 msgid "Missing partial picking data for move #%s"
-msgstr ""
+msgstr "Lipsesc date partiale de preluare pentru miscarea #%s"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_partial_move
+#: model:ir.actions.server,name:stock.action_partial_move_server
 msgid "Deliver/Receive Products"
-msgstr "Livrează / Primește Produse"
+msgstr "Livrare / Primire Produse"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
 #: code:addons/stock/report/report_stock.py:135
 #, python-format
 msgid "You cannot delete any record!"
-msgstr "Nu puteți șterge nici o înregistrare!"
+msgstr "Nu puteti sterge nici o înregistrare!"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_splitinto.py:49
@@ -214,11 +221,14 @@ msgid ""
 "if you really want to change it '             #                        'for "
 "this product: \"%s\" (id: %d)"
 msgstr ""
+"Linia miscarii actuale este deja atribuita unui pachet, va rugam mai intai "
+"sa o stergeti daca doriti intr-adevar sa o schimbati pentru acest produs: "
+"\"%s\" (id: %d)"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "Not Applicable"
-msgstr "Ne-aplicabil"
+msgstr "Nu este aplicabil"
 
 #. module: stock
 #: help:stock.tracking,serial:0
@@ -235,7 +245,7 @@ msgstr "Origine"
 #. module: stock
 #: view:report.stock.lines.date:0
 msgid "Non Inv"
-msgstr ""
+msgstr "Non Inventar"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -248,10 +258,11 @@ msgstr "Identificare Pachet"
 #: field:stock.picking,name:0
 #: view:stock.production.lot:0
 msgid "Reference"
-msgstr "Referință"
+msgstr "Referintă"
 
 #. module: stock
-#: code:addons/stock/stock.py:661
+#: code:addons/stock/stock.py:681
+#: code:addons/stock/stock.py:1503
 #, python-format
 msgid "Products to Process"
 msgstr "Produse de procesat"
@@ -267,8 +278,8 @@ msgid ""
 "If checked, all product quantities will be set to zero to help ensure a real "
 "physical inventory is done"
 msgstr ""
-"Dacă este bifat, toate cantităţile de produse vor fi setate la zero pentru "
-"asigurarea că e făcut inventar fizic real."
+"Dacă este bifat, toate cantităţile produselor vor fi setate pe zero pentru a "
+"asigura efectuarea unui inventar fizic real."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
@@ -276,19 +287,21 @@ msgid "Split lines"
 msgstr "Separare linii"
 
 #. module: stock
-#: code:addons/stock/stock.py:1127
+#: code:addons/stock/stock.py:1138
 #, python-format
 msgid "You cannot cancel picking because stock move is in done state !"
 msgstr ""
-"Nu puteţi anula preluarea, deoarece mișcările de stoc sunt efectuate."
+"Nu puteţi anula preluarea, deoarece miscarea stocului este efectuate."
 
 #. module: stock
-#: code:addons/stock/stock.py:2198
-#: code:addons/stock/stock.py:2237
-#: code:addons/stock/stock.py:2297
+#: code:addons/stock/stock.py:2323
+#: code:addons/stock/stock.py:2365
+#: code:addons/stock/stock.py:2425
+#: code:addons/stock/wizard/stock_change_product_qty.py:87
+#: code:addons/stock/wizard/stock_fill_inventory.py:53
 #, python-format
 msgid "Warning!"
-msgstr "Atenție!"
+msgstr "Atentie!"
 
 #. module: stock
 #: field:stock.invoice.onshipping,group:0
@@ -309,16 +322,15 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: stock
-#: help:stock.move.memory.in,currency:0
-#: help:stock.move.memory.out,currency:0
+#: help:stock.partial.move.line,currency:0
+#: help:stock.partial.picking.line,currency:0
 msgid "Currency in which Unit cost is expressed"
 msgstr "Moneda în care Unitatea de cost este exprimată"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:135
-#, python-format
+#: selection:stock.return.picking,invoice_state:0
 msgid "No invoicing"
-msgstr "Nefacturat"
+msgstr "Nefacturare"
 
 #. module: stock
 #: help:stock.location,valuation_out_account_id:0
@@ -337,7 +349,7 @@ msgstr "Lot de producţie"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr "Categorii Unități de Măsură"
+msgstr "Categorii Unităti de Măsură"
 
 #. module: stock
 #: help:stock.incoterms,code:0
@@ -353,7 +365,7 @@ msgstr "Mutări pentru acest pachet"
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Internal Location"
-msgstr "Locație internă"
+msgstr "Locatie internă"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -389,22 +401,22 @@ msgstr "Valoarea stocului real"
 #. module: stock
 #: field:report.stock.move,day_diff2:0
 msgid "Lag (Days)"
-msgstr "Lag (zile)"
+msgstr "Intarziere (Zile)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_action_traceability
 msgid "Action traceability "
-msgstr "Acțiune trasabilitate "
+msgstr "Trasabilitatea actiunii "
 
 #. module: stock
 #: field:stock.location,posy:0
 msgid "Shelves (Y)"
-msgstr "Raft (Y)"
+msgstr "Rafturi (Y)"
 
 #. module: stock
 #: view:stock.move:0
 msgid "UOM"
-msgstr "UM"
+msgstr "UdeM"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -412,7 +424,6 @@ msgstr "UM"
 #: view:stock.move:0
 #: selection:stock.move,state:0
 #: view:stock.picking:0
-#: selection:stock.picking,state:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,stock_available:0
 msgid "Available"
@@ -422,35 +433,37 @@ msgstr "Disponibil"
 #: view:stock.picking:0
 #: field:stock.picking,min_date:0
 msgid "Expected Date"
-msgstr "Dată aşteptată"
+msgstr "Dată preevazută"
 
 #. module: stock
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_outgoing_product_board
 msgid "Outgoing Product"
-msgstr "Ieșire produs"
+msgstr "Iesire produs"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
 msgid ""
 "Create and manage your warehouses and assign them a location from here"
 msgstr ""
+"Creeaza si gestioneaza depozitele dumneavoastra si le atribuie o locatie de "
+"aici"
 
 #. module: stock
 #: field:report.stock.move,product_qty_in:0
 msgid "In Qty"
-msgstr "In cant"
+msgstr "In cantitate"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_fill_inventory.py:115
+#: code:addons/stock/wizard/stock_fill_inventory.py:116
 #, python-format
 msgid "No product in this location."
-msgstr "Nici un produs în acestă locație."
+msgstr "Nici un produs în acestă locatie."
 
 #. module: stock
 #: field:stock.warehouse,lot_output_id:0
 msgid "Location Output"
-msgstr "Loc de iesire"
+msgstr "Locatie de iesire"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.split_into
@@ -461,7 +474,7 @@ msgstr "Separare în"
 #. module: stock
 #: field:stock.move,price_currency_id:0
 msgid "Currency for average price"
-msgstr "Moneda pentru prețul mediu"
+msgstr "Moneda pentru pretul mediu"
 
 #. module: stock
 #: help:product.template,property_stock_account_input:0
@@ -470,28 +483,32 @@ msgid ""
 "incoming stock moves will be posted in this account. If not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"Atunci cand faceti evaluarea inventarului in timp real, Elementele "
+"corespondente ale Jurnalului pentru toate miscarile de intrare in stoc vor "
+"fi afisate in acest cont. Daca nu este setat pe produs, va fi folosit cel "
+"din categoria produsului."
 
 #. module: stock
 #: field:report.stock.inventory,location_type:0
 #: field:stock.location,usage:0
 msgid "Location Type"
-msgstr "Tip locație"
+msgstr "Tip locatie"
 
 #. module: stock
 #: help:report.stock.move,type:0
 #: help:stock.picking,type:0
 msgid "Shipping type specify, goods coming in or going out."
-msgstr ""
+msgstr "Specificare tip transport, bunurile intra sau ies."
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_move_labels
 msgid "Item Labels"
-msgstr "Etichete poziție"
+msgstr "Etichete articol"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_move
 msgid "Moves Statistics"
-msgstr "Statistici mișcări"
+msgstr "Statistici miscări"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -519,21 +536,23 @@ msgid ""
 "Current quantity of products with this Production Lot Number available in "
 "company warehouses"
 msgstr ""
-"Cantitatea actuală de produs cu acest lot de producție disponibil în "
-"depozitele companiei"
+"Cantitatea actuală de produse cu acest Numar de Lot de productie disponibil "
+"în depozitele companiei"
 
 #. module: stock
 #: field:stock.move,move_history_ids:0
 msgid "Move History (child moves)"
-msgstr "Istorie mișcări (mișcări copil)"
+msgstr "Istoric miscări (miscări subordonate)"
 
 #. module: stock
-#: code:addons/stock/stock.py:1984
+#: code:addons/stock/stock.py:2112
 #, python-format
 msgid ""
 "There is no stock output account defined for this product or its category: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Nu exista un cont de iesire din stoc definit pentru acest produs sau "
+"categoria lui \"%s\" (id: %d)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
@@ -548,10 +567,10 @@ msgid "Destination Location"
 msgstr "Locaţie destinaţie"
 
 #. module: stock
-#: code:addons/stock/stock.py:751
+#: code:addons/stock/stock.py:771
 #, python-format
 msgid "You can not process picking without stock moves"
-msgstr "Nu puteți procesa preluarea fără mișcări de stoc"
+msgstr "Nu puteti procesa preluarea fără miscările de stoc"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
@@ -578,11 +597,11 @@ msgid ""
 "buttons on the right of each line. You can filter the products to deliver by "
 "customer, products or sale order (using the Origin field)."
 msgstr ""
-"Veţi găsi în această listă toate produsele pe care le puteți oferi "
-"clienţilor dumneavoastră. Puteţi procesa livrări direct din această listă "
-"folosind butoanele de pe dreapta de pe fiecare linie. Puteţi filtra "
-"produsele după client, produse sau comenzi de vânzare (utilizând câmpul "
-"origine)."
+"Veţi găsi în această listă toate produsele pe care trebuie sa le livrati "
+"clienţilor dumneavoastră. Puteţi procesa livrările direct din această listă "
+"folosind butoanele din partea dreapta a fiecarei linii. Puteţi filtra "
+"produsele care trebuie livrate după client, produse sau comanda de vânzare "
+"(utilizând câmpul Origine)."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -599,10 +618,10 @@ msgstr "Informatii supplimentare"
 #: report:lot.stock.overview:0
 #: report:lot.stock.overview_all:0
 msgid "Location / Product"
-msgstr "Locație / Produs"
+msgstr "Locatie / Produs"
 
 #. module: stock
-#: code:addons/stock/stock.py:1306
+#: code:addons/stock/stock.py:1320
 #, python-format
 msgid "Reception"
 msgstr "Recepţie"
@@ -610,12 +629,12 @@ msgstr "Recepţie"
 #. module: stock
 #: field:stock.tracking,serial:0
 msgid "Additional Reference"
-msgstr "Referință adițională"
+msgstr "Referintă suplimentară"
 
 #. module: stock
 #: view:stock.production.lot.revision:0
 msgid "Production Lot Revisions"
-msgstr "Revizii lot de producție"
+msgstr "Revizii lot de productie"
 
 #. module: stock
 #: help:product.product,track_outgoing:0
@@ -623,6 +642,8 @@ msgid ""
 "Forces to specify a Production Lot for all moves containing this product and "
 "going to a Customer Location"
 msgstr ""
+"Obliga specificarea unui Lot de Productie pentru toate miscarile care contin "
+"acest produs si care merge intro Locatie a clientului"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_journal_form
@@ -632,6 +653,11 @@ msgid ""
 "worker/team that should perform the operation. Examples of stock journals "
 "may be: quality control, pick lists, packing, etc."
 msgstr ""
+"Sistemul jurnalului de stoc va permite sa atribuiti fiecarei operatiuni a "
+"stocului un jurnal specific in functie de tipul operatiunii care va fi "
+"efectuata sau de muncitorul/echipa care va efectua operatiunea respectiva. "
+"Exemple de jurnale de stoc pot fi: controlul calitatii, liste de preluare, "
+"ambalare, etc."
 
 #. module: stock
 #: field:stock.location,complete_name:0
@@ -642,7 +668,7 @@ msgstr "Nume locaţie"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Posted Inventory"
-msgstr "Inventarul înregistrat"
+msgstr "Inventarul afisat"
 
 #. module: stock
 #: view:stock.move:0
@@ -656,6 +682,7 @@ msgid "Outgoing"
 msgstr "Expediere"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "August"
 msgstr "August"
@@ -679,6 +706,7 @@ msgid "Sales & Purchases"
 msgstr "Vânzări & Achiziţii"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "June"
 msgstr "Iunie"
@@ -686,7 +714,7 @@ msgstr "Iunie"
 #. module: stock
 #: field:product.template,property_stock_procurement:0
 msgid "Procurement Location"
-msgstr "Locație aprovizionare"
+msgstr "Locatie aprovizionare"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -707,7 +735,7 @@ msgstr "Destinatar"
 #: model:ir.actions.act_window,name:stock.action_location_tree
 #: model:ir.ui.menu,name:stock.menu_action_location_tree
 msgid "Location Structure"
-msgstr "Structură locație"
+msgstr "Structură locatie"
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -725,6 +753,9 @@ msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"Atunci cand faceti evaluarea inventarului in timp real, acesta este Jurnalul "
+"Contabil in care inregistrarile vor fi afisate automat atunci cand sunt "
+"procesate miscarile stocului."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_picking
@@ -732,10 +763,10 @@ msgid "Process Picking"
 msgstr "Procesare preluare"
 
 #. module: stock
-#: code:addons/stock/product.py:355
+#: code:addons/stock/product.py:419
 #, python-format
 msgid "Future Receptions"
-msgstr "Recepții viitoare"
+msgstr "Receptii viitoare"
 
 #. module: stock
 #: help:stock.inventory.line.split,use_exist:0
@@ -744,11 +775,13 @@ msgid ""
 "Check this option to select existing lots in the list below, otherwise you "
 "should enter new ones line by line."
 msgstr ""
+"Bifati aceasta optiune pentru a selecta loturile existente in lista de mai "
+"jos, altfel va trebui sa introduceti unele moi linie cu linie."
 
 #. module: stock
 #: field:stock.move,move_dest_id:0
 msgid "Destination Move"
-msgstr "Destinație mișcare"
+msgstr "Miscare Destinat"
 
 #. module: stock
 #: view:stock.move:0
@@ -765,13 +798,13 @@ msgstr "Adresă locaţie"
 #: code:addons/stock/stock.py:2406
 #, python-format
 msgid "is consumed with"
-msgstr "este consumat cu"
+msgstr "este epuizat cu"
 
 #. module: stock
 #: help:stock.move,prodlot_id:0
 msgid "Production lot is used to put a serial number on the production"
 msgstr ""
-"Un lot de producţie este folosit pentru a da un număr de serie în producție"
+"Lotul de producţie este folosit pentru a da un număr de serie productiei"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:261
@@ -783,7 +816,7 @@ msgstr ""
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
 msgid "Location Input"
-msgstr "Loc de intrare"
+msgstr "Locatie de intrare"
 
 #. module: stock
 #: help:stock.picking,date:0
@@ -803,43 +836,45 @@ msgstr "Aprovizionare"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_3
 msgid "IT Suppliers"
-msgstr ""
+msgstr "Furnizori IT"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form_draft
 msgid "Draft Physical Inventories"
-msgstr "Ciornă inventar fizic"
+msgstr "Ciornă inventare fizice"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Transit Location for Inter-Companies Transfers"
-msgstr ""
+msgstr "Locatie de tranzit pentru Transferurile intre companii"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
 #: model:ir.model,name:stock.model_stock_change_product_qty
 #: view:stock.change.product.qty:0
 msgid "Change Product Quantity"
-msgstr "Schimbă cantitate produs"
+msgstr "Schimbă cantitatea produsului"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
 msgid "Merge Inventory"
-msgstr "Unire inventar"
+msgstr "Fuzionare inventar"
 
 #. module: stock
-#: code:addons/stock/product.py:371
+#: code:addons/stock/product.py:435
 #, python-format
 msgid "Future P&L"
-msgstr ""
+msgstr "P&L viitor"
 
 #. module: stock
+#: view:board.board:0
+#: model:ir.actions.act_window,name:stock.action_incoming_product_board
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 #: view:stock.picking:0
 msgid "Incoming Shipments"
-msgstr "Recepții"
+msgstr "Incarcaturi primite"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -851,12 +886,12 @@ msgstr "Rebut"
 #. module: stock
 #: field:stock.location,child_ids:0
 msgid "Contains"
-msgstr "Conține"
+msgstr "Contine"
 
 #. module: stock
 #: view:board.board:0
 msgid "Incoming Products Delay"
-msgstr ""
+msgstr "Intarziere Primire produse"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:65
@@ -869,7 +904,7 @@ msgstr ""
 #. module: stock
 #: view:stock.location:0
 msgid "Stock Locations"
-msgstr "Locații stoc"
+msgstr "Locatii ale stocului"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -881,7 +916,7 @@ msgstr "Preţ unitar"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines_exist
 msgid "Exist Split lines"
-msgstr ""
+msgstr "Exista linii de separare"
 
 #. module: stock
 #: field:stock.move,date_expected:0
@@ -891,7 +926,7 @@ msgstr "Dată programată"
 #. module: stock
 #: view:stock.tracking:0
 msgid "Pack Search"
-msgstr "Căutare pachete"
+msgstr "Căutare pachet"
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -911,21 +946,24 @@ msgid ""
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
+"Lasati necompletat daca produceti in locatia unde sunt necesare produsele "
+"finite. Setati o locatie daca produceti intr-o locatie fixa. Aceasta poate "
+"fi o locatie partenera daca subcontractati operatiunile de fabricatie."
 
 #. module: stock
 #: view:res.partner:0
 msgid "Inventory Properties"
-msgstr "Proprietăți inventar"
+msgstr "Proprietăti inventar"
 
 #. module: stock
 #: field:report.stock.move,day_diff:0
 msgid "Execution Lead Time (Days)"
-msgstr "Timpul de execuție (zile)"
+msgstr "Timpul de executie (zile)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
 msgid "Stock by Location"
-msgstr "Stoc pe locație"
+msgstr "Stoc dupa locatie"
 
 #. module: stock
 #: help:stock.move,address_id:0
@@ -933,8 +971,11 @@ msgid ""
 "Optional address where goods are to be delivered, specifically used for "
 "allotment"
 msgstr ""
+"Adresa optionala unde bunurile urmeaza a fi livrate, folosita mai exact "
+"pentru alocare"
 
 #. module: stock
+#: view:report.stock.inventory:0
 #: view:report.stock.move:0
 msgid "Month-1"
 msgstr "Luna-1"
@@ -944,11 +985,12 @@ msgstr "Luna-1"
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
+"Daca nu bifati campul activ, puteti ascunde o locatie fara a o sterge."
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
 msgid "Packing list"
-msgstr "Listă preluare"
+msgstr "Listă ambalare"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -959,7 +1001,7 @@ msgstr "Stoc Virtual"
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "View"
-msgstr "Vedere"
+msgstr "Vizualizare"
 
 #. module: stock
 #: field:stock.location,parent_left:0
@@ -970,19 +1012,21 @@ msgstr "Părinte stânga"
 #: code:addons/stock/wizard/stock_partial_move.py:132
 #, python-format
 msgid "Delivery Information"
-msgstr "Informații livrare"
+msgstr "Informatii livrare"
 
 #. module: stock
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "Eroare: cod EAN invalid"
+msgstr "Eroare: cod ean invalid"
 
 #. module: stock
-#: code:addons/stock/product.py:148
+#: code:addons/stock/product.py:147
 #, python-format
 msgid ""
 "There is no stock output account defined for this product: \"%s\" (id: %d)"
 msgstr ""
+"Nu exista un cont de iesire din stoc definit pentru acest produs: \"%s\" "
+"(id: %d)"
 
 #. module: stock
 #: field:product.template,property_stock_production:0
@@ -997,7 +1041,7 @@ msgstr "Adresa partenerului"
 #. module: stock
 #: field:report.stock.lines.date,date:0
 msgid "Latest Inventory Date"
-msgstr "Ultima dată de inventariere"
+msgstr "Data ultimului inventar"
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -1026,6 +1070,30 @@ msgid ""
 "location consumes the raw material and produces finished products\n"
 "                      "
 msgstr ""
+"*Locatia Furnizorului: Locatie virtuala reprezentand locatia sursa pentru "
+"produsele care sosesc de la furnizori\n"
+"\t\t\t\t\t\t\n"
+"*Vizualizare: Locatie virtuala folosita pentru a crea structuri ierarhice "
+"pentru depozitul dumneavoastra, reunind locatiile sale subordonate; nu poate "
+"contine produse in mod direct\n"
+"\t\t\t\t\t\t\n"
+"*Locatia Interna: Locatii fizice in interiorul propriilor depozite,\n"
+"\t\t\t\t\t\t\n"
+"*Locatia Clientului: Locatie virtuala reprezentand locatia destinatie pentru "
+"produsele trimise clientilor dumneavoastra\n"
+"\t\t\t\t\t\t\n"
+"Inventar: Locatie virtuala care serveste drept corespondent pentru "
+"operatiile inventarului si este folosita pentru a corecta nivelurile "
+"stocului (Inventare fizice)\n"
+"\t\t\t\t\t\t\n"
+"Aprovizionare: Locatie virtuala care serveste ca si corespondent temporar "
+"pentru operatiunile de aprovizionare cand sursa (furnizor sau productie) nu "
+"se cunoaste inca. Aceasta locatie ar trebui sa fie goala atunci cand "
+"programarea aprovizionarii nu mai ruleaza.\n"
+"\t\t\t\t\t\t\n"
+"Productie: Locatie corespondenta virtuala pentru operatiunile de productie: "
+"in aceasta locatie se consuma materia prima si se produc produsele finite\n"
+"                      "
 
 #. module: stock
 #: field:stock.production.lot.revision,author_id:0
@@ -1033,7 +1101,7 @@ msgid "Author"
 msgstr "Autor"
 
 #. module: stock
-#: code:addons/stock/stock.py:1305
+#: code:addons/stock/stock.py:1319
 #, python-format
 msgid "Delivery Order"
 msgstr "Comandă de livrare"
@@ -1062,7 +1130,7 @@ msgstr "Data executării"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Expected Shipping Date"
-msgstr "Data expediere așteptată"
+msgstr "Data estimată a transportului"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -1070,6 +1138,7 @@ msgid "Not Available"
 msgstr "Nu este disponibil"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "March"
 msgstr "Martie"
@@ -1080,7 +1149,7 @@ msgstr "Martie"
 #: view:stock.inventory:0
 #: view:stock.inventory.line:0
 msgid "Split inventory lines"
-msgstr "Împarte liniile de inventar"
+msgstr "Separare linii inventar"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1093,6 +1162,9 @@ msgid ""
 "The company the Picking List containing the chained move will belong to "
 "(leave empty to use the default company determination rules"
 msgstr ""
+"Compania careia ii va apartine Lista de preluare care contine miscarea in "
+"lant (lasati necompletat pentru a folosi regulile implicite de determinare "
+"ale companiei)"
 
 #. module: stock
 #: help:stock.location,chained_picking_type:0
@@ -1101,6 +1173,9 @@ msgid ""
 "empty to automatically detect the type based on the source and destination "
 "locations)."
 msgstr ""
+"Tipul de transport al Listei de preluare care va contine miscarea in lant "
+"(lasati necompletat pentru a detecta automat tipul bazat pe locatiile sursa "
+"si destinatie)."
 
 #. module: stock
 #: view:stock.move.split:0
@@ -1112,39 +1187,39 @@ msgstr "Număr lot"
 #: field:stock.move.consume,product_uom:0
 #: field:stock.move.scrap,product_uom:0
 msgid "Product UOM"
-msgstr "UM Produs"
+msgstr "UdeM Produs"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
 msgid "Partner Locations"
-msgstr "Locații partener"
+msgstr "Locatii partener"
 
 #. module: stock
 #: view:report.stock.inventory:0
 #: view:report.stock.move:0
 msgid "Total quantity"
-msgstr "Cantitate totală"
+msgstr "Cantitatea totală"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_consume
 #: view:stock.move.consume:0
 msgid "Consume Move"
-msgstr "Mișcare consum"
+msgstr "Miscare consum"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_7
 msgid "European Customers"
-msgstr "Clienți Europeni"
+msgstr "Clienti europeni"
 
 #. module: stock
 #: help:stock.location,chained_delay:0
 msgid "Delay between original move and chained move in days"
-msgstr ""
+msgstr "Intarzierea in zile dintre miscarea originala si miscarea in lant"
 
 #. module: stock
 #: view:stock.fill.inventory:0
 msgid "Import current product inventory from the following location"
-msgstr ""
+msgstr "Importa inventarul curent al produselor din locatia urmatoare"
 
 #. module: stock
 #: help:stock.location,chained_auto_packing:0
@@ -1155,9 +1230,16 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
+"Acesta se foloseste doar daca selectati un tip de locatie in lant.\n"
+"Valoarea 'Micarii Automate' va crea o miscare a stocului dupa cea curenta "
+"care va fi validata automat. Cu 'Operatiunea Manuala', miscarea stocului "
+"trebuie sa fie validata de catre un muncitor. Cu 'Nici un pas adaugat "
+"automat' locatia este inlocuita in miscarea originala."
 
 #. module: stock
+#: code:addons/stock/wizard/stock_traceability.py:53
 #: view:stock.production.lot:0
+#, python-format
 msgid "Downstream Traceability"
 msgstr "Trasabilitate în jos"
 
@@ -1168,6 +1250,9 @@ msgid ""
 "default one, as the source location for stock moves generated by production "
 "orders"
 msgstr ""
+"Pentru produsul curent, va fi folosita aceasta locatie a stocului, in locul "
+"celei predefinite, drept locatia sursa pentru miscarile stocului generate de "
+"comenzile de productie"
 
 #. module: stock
 #: code:addons/stock/stock.py:1975
@@ -1176,9 +1261,12 @@ msgid ""
 "Can not create Journal Entry, Output Account defined on this product and "
 "Variant account on category of this product are same."
 msgstr ""
+"Nu se poate crea Inregistrareain Jurnal, deoarece Contul pentru Iesiri "
+"definit pentru acest produs si Contul varianta din categoria acestui produs "
+"sunt aceleasi."
 
 #. module: stock
-#: code:addons/stock/stock.py:1322
+#: code:addons/stock/stock.py:1337
 #, python-format
 msgid "is in draft state."
 msgstr "este în starea de ciornă."
@@ -1189,22 +1277,24 @@ msgid ""
 "This is the list of all your packs. When you select a Pack, you can get the "
 "upstream or downstream traceability of the products contained in the pack."
 msgstr ""
+"Aceasta este lista tuturor pachetelor dumneavoastra. Atunci cand selectati "
+"un Pachet, puteti obtine trasabilitatea in sus sau in jos a produselor "
+"continute in pachet."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_final
 msgid "Stock ups final"
-msgstr ""
+msgstr "Stoc final in sus"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:135
-#, python-format
+#: selection:stock.return.picking,invoice_state:0
 msgid "To be refunded/invoiced"
-msgstr "Pentru rambursat/facturat"
+msgstr "De rambursat/facturat"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
 msgid "Shop 1"
-msgstr ""
+msgstr "Magazin 1"
 
 #. module: stock
 #: view:stock.change.product.qty:0
@@ -1214,14 +1304,17 @@ msgstr ""
 #: view:stock.invoice.onshipping:0
 #: view:stock.location.product:0
 #: view:stock.move:0
-#: view:stock.move.track:0
+#: view:stock.partial.move:0
+#: view:stock.partial.picking:0
 #: view:stock.picking:0
+#: view:stock.return.picking:0
 #: view:stock.split.into:0
 msgid "_Cancel"
 msgstr "_Anulează"
 
 #. module: stock
 #: view:stock.move:0
+#: view:stock.picking:0
 msgid "Ready"
 msgstr "Pregătit"
 
@@ -1233,13 +1326,14 @@ msgstr "Vizualizare calendar"
 #. module: stock
 #: view:stock.picking:0
 msgid "Additional Info"
-msgstr "Info adiționale"
+msgstr "Informatii suplimentare"
 
 #. module: stock
-#: field:stock.move.memory.in,move_id:0
-#: field:stock.move.memory.out,move_id:0
+#: field:stock.partial.move.line,move_id:0
+#: field:stock.partial.picking.line,move_id:0
+#: field:stock.return.picking.memory,move_id:0
 msgid "Move"
-msgstr "Mișcă"
+msgstr "Miscare"
 
 #. module: stock
 #: field:stock.location.product,from_date:0
@@ -1247,10 +1341,12 @@ msgid "From"
 msgstr "De la"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:79
+#: code:addons/stock/wizard/stock_return_picking.py:99
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
+"Puteti doar sa returnati preluari care sunt Confirmate, Disponibile sau "
+"Efectuate!"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1261,54 +1357,51 @@ msgstr "Control factură"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot_revision
 msgid "Production lot revisions"
-msgstr "Revizii loturi de producție"
+msgstr "Revizii loturi de productie"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Picking List"
-msgstr "Listă de preluare internă"
+msgstr "Listă internă de preluare"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
 #: selection:report.stock.move,state:0
-#: selection:stock.move,state:0
-#: selection:stock.picking,state:0
+#: view:stock.picking:0
 msgid "Waiting"
-msgstr "Aştept"
+msgstr "In aşteptare"
 
 #. module: stock
 #: view:stock.move:0
-#: selection:stock.move.split.lines,action:0
 #: view:stock.picking:0
 msgid "Split"
-msgstr "Împarte"
+msgstr "Separare"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Search Stock Picking"
-msgstr ""
+msgstr "Cautare Preluare Stoc"
 
 #. module: stock
-#: code:addons/stock/product.py:93
+#: code:addons/stock/product.py:92
 #, python-format
 msgid "Company is not specified in Location"
-msgstr "Compania nu este specificată în locație"
+msgstr "Compania nu este specificată în Locatie"
 
 #. module: stock
 #: view:report.stock.move:0
-#: field:stock.partial.move,type:0
 msgid "Type"
 msgstr "Tip"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
 msgid "Generic IT Suppliers"
-msgstr ""
+msgstr "Furnizori IT generali"
 
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Picking List:"
-msgstr "Listă preluare:"
+msgstr "Listă ridicare:"
 
 #. module: stock
 #: field:stock.inventory,date:0
@@ -1326,20 +1419,20 @@ msgstr "Id linie inventar"
 #. module: stock
 #: help:stock.location,address_id:0
 msgid "Address of  customer or supplier."
-msgstr ""
+msgstr "Adresa clientului sau a furnizorului"
 
 #. module: stock
 #: view:report.stock.move:0
 #: field:report.stock.move,picking_id:0
 msgid "Packing"
-msgstr "Împachetare"
+msgstr "Ambalare"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
 #: field:res.partner,property_stock_customer:0
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Locație client"
+msgstr "Locatie client"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:85
@@ -1351,18 +1444,18 @@ msgstr "Acţiune invalidă !"
 #: code:addons/stock/wizard/stock_partial_move.py:139
 #, python-format
 msgid "Receive Information"
-msgstr "Informații primite"
+msgstr "Informatii primite"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview
 #: report:lot.stock.overview:0
 msgid "Location Inventory Overview"
-msgstr ""
+msgstr "Vedere de ansamblu asupra inventarului locatiei"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replacement
 msgid "Stock Replacement"
-msgstr ""
+msgstr "Inlocuire stoc"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1375,12 +1468,13 @@ msgid "None"
 msgstr "Nespecificat"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action3
 #: view:stock.tracking:0
 msgid "Downstream traceability"
 msgstr "Trasabilitate în jos"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:113
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #, python-format
 msgid "No Invoices were created"
 msgstr "Nu au fost create facturi"
@@ -1394,13 +1488,14 @@ msgstr "OpenERP S.A."
 #: code:addons/stock/wizard/stock_partial_move.py:140
 #, python-format
 msgid "Receive"
-msgstr "Recepţionează"
+msgstr "Primire"
 
 #. module: stock
 #: help:stock.incoterms,active:0
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM without deleting it."
 msgstr ""
+"Lasand campul activ nebifat, puteti ascunde un INCOTERM fara a-l sterge."
 
 #. module: stock
 #: view:stock.move:0
@@ -1410,9 +1505,10 @@ msgid "Order Date"
 msgstr "Data comenzii"
 
 #. module: stock
+#: view:stock.location:0
 #: field:stock.location,location_id:0
 msgid "Parent Location"
-msgstr "Locație părinte"
+msgstr "Locatie părinte"
 
 #. module: stock
 #: help:stock.picking,state:0
@@ -1425,33 +1521,43 @@ msgid ""
 "* Done: has been processed, can't be modified or cancelled anymore\n"
 "* Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"* Ciorna: inca neconfirmat si nu va fi programat pana cand nu va fi "
+"confirmat\n"
+"* Confirmat: inca in asteptarea disponibilitatii produselor\n"
+"* Disponibil: produse rezervate, care mai asteapta doar confirmarea.\n"
+"* In asteptare: in asteptarea unei miscari pentru a continua inainte de a "
+"deveni disponibil automat (de exemplu in fluxurile Facut-la-Comanda)\n"
+"* Efectuat: a fost procesat, nu mai poate fi modificat sau anulat\n"
+"* Anulat: a fost anulat, nu mai poate fi confirmat"
 
 #. module: stock
 #: help:stock.location,company_id:0
 msgid "Let this field empty if this location is shared between all companies"
 msgstr ""
+"Lasati acest camp necompletat daca aceasta locatie este comuna tuturor "
+"companiilor"
 
 #. module: stock
-#: code:addons/stock/stock.py:2198
+#: code:addons/stock/stock.py:2323
 #, python-format
 msgid "Please provide a positive quantity to scrap!"
-msgstr ""
+msgstr "Va rugam sa furnizati o cantitate pozitiva pentru rebut!"
 
 #. module: stock
 #: field:stock.location,chained_delay:0
 msgid "Chaining Lead Time"
-msgstr ""
+msgstr "Timp inlantuire"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:85
 #, python-format
 msgid "Cannot deliver products which are already delivered !"
-msgstr ""
+msgstr "Nu se pot livra produsele care au fost deja livrate !"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_invoice_onshipping
 msgid "Stock Invoice Onshipping"
-msgstr ""
+msgstr "Factura transport stoc"
 
 #. module: stock
 #: help:stock.move,state:0
@@ -1463,21 +1569,28 @@ msgid ""
 " When the picking is done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"Atunci cand este creata miscarea stocului, ea este in stare 'Ciorna'.\n"
+"Dupa aceea, este setata pe starea 'Nu este disponibil' daca programatorul nu "
+"a gasit produsele.\n"
+"Cand produsele sunt rezervate, este setata pe 'Disponibil'.\n"
+"Cand se face preluarea, starea este 'Efectuat'.\n"
+"Starea este 'In asteptare' daca miscarea este in asteptarea altei miscari."
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
 #: field:res.partner,property_stock_supplier:0
 #: selection:stock.location,usage:0
 msgid "Supplier Location"
-msgstr "Locație furnizor"
+msgstr "Locatie furnizor"
 
 #. module: stock
-#: code:addons/stock/stock.py:2217
+#: code:addons/stock/stock.py:2344
 #, python-format
 msgid "were scrapped"
-msgstr ""
+msgstr "au fost casate"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "September"
 msgstr "Septembrie"
@@ -1488,6 +1601,8 @@ msgid ""
 "If this picking was split this field links to the picking that contains the "
 "other part that has been processed already."
 msgstr ""
+"Daca aceasta preluare a fost impartita, acest camp face legatura cu "
+"preluarea care contine cealalta parte care a fost deja procesata."
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
@@ -1495,15 +1610,15 @@ msgid "Stock Statistics"
 msgstr "Statistici stoc"
 
 #. module: stock
-#: field:stock.move.memory.in,currency:0
-#: field:stock.move.memory.out,currency:0
+#: field:stock.partial.move.line,currency:0
+#: field:stock.partial.picking.line,currency:0
 msgid "Currency"
 msgstr "Moneda"
 
 #. module: stock
 #: field:product.product,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr "Urmărire loturi producție"
+msgstr "Urmărire loturi productie"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:44
@@ -1511,6 +1626,8 @@ msgstr "Urmărire loturi producție"
 msgid ""
 "Please select multiple physical inventories to merge in the list view."
 msgstr ""
+"Va rugam sa selectati inventare fizice multimple pentru fuzionare in "
+"vizualizarea listei."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -1539,17 +1656,17 @@ msgstr "Anulare disponibilitate"
 #. module: stock
 #: help:stock.move,date_expected:0
 msgid "Scheduled date for the processing of this move"
-msgstr "Data programată pentru procesarea acestei mișcări"
+msgstr "Data programată pentru procesarea acestei miscări"
 
 #. module: stock
 #: field:stock.inventory,move_ids:0
 msgid "Created Moves"
-msgstr "Creare mișcări"
+msgstr "Miscari create"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_14
 msgid "Shelf 2"
-msgstr ""
+msgstr "Raft 2"
 
 #. module: stock
 #: field:stock.report.tracklots,tracking_id:0
@@ -1559,13 +1676,13 @@ msgstr "Urmărire lot"
 #. module: stock
 #: view:stock.picking:0
 msgid "Back Orders"
-msgstr ""
+msgstr "Confirma comenzile"
 
 #. module: stock
 #: view:product.product:0
 #: view:product.template:0
 msgid "Counter-Part Locations Properties"
-msgstr ""
+msgstr "Proprietatile Locatiilor corespondente"
 
 #. module: stock
 #: view:stock.location:0
@@ -1575,25 +1692,25 @@ msgstr "Localizare"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
 msgid "Stock report by tracking lots"
-msgstr "Raport stoc după loturi"
+msgstr "Raport stoc prin urmarirea loturilor"
 
 #. module: stock
-#: code:addons/stock/product.py:367
+#: code:addons/stock/product.py:431
 #, python-format
 msgid "Delivered Qty"
-msgstr "Cant. Livrată"
+msgstr "Cantitatea Livrată"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.track_line
 #: view:stock.inventory.line.split:0
 #: view:stock.move.split:0
 msgid "Split in lots"
-msgstr "Împărțire în loturi"
+msgstr "Împărtire în loturi"
 
 #. module: stock
 #: view:stock.move.split:0
 msgid "Production Lot Numbers"
-msgstr "Numere loturi producție"
+msgstr "Numerele loturilor de productie"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1612,21 +1729,19 @@ msgstr "Data"
 #. module: stock
 #: view:report.stock.inventory:0
 #: view:report.stock.move:0
-#: view:stock.move:0
-#: view:stock.picking:0
 msgid "Extended Filters..."
 msgstr "Filtre extinse..."
 
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
 msgid "Location Stock"
-msgstr "Loc de stoc"
+msgstr "Locatia stocului"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:64
 #, python-format
 msgid "Merging is only allowed on draft inventories."
-msgstr ""
+msgstr "Fuzionarea este permisa doar in cazul inventarelor ciorna."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_dashboard_stock
@@ -1636,7 +1751,7 @@ msgstr "Tablou de bord"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_track
 msgid "Track moves"
-msgstr "Urmărește mișcări"
+msgstr "Urmărire miscări"
 
 #. module: stock
 #: field:stock.incoterms,code:0
@@ -1646,13 +1761,13 @@ msgstr "Cod"
 #. module: stock
 #: view:stock.inventory.line.split:0
 msgid "Lots Number"
-msgstr "Numere loturi"
+msgstr "Numar loturi"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.open_board_warehouse
 #: model:ir.ui.menu,name:stock.menu_board_warehouse
 msgid "Warehouse Dashboard"
-msgstr "Panou de bord depozit"
+msgstr "Tablou de bord Depozit"
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_shop0
@@ -1667,10 +1782,10 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:510
+#: code:addons/stock/stock.py:523
 #, python-format
 msgid "You can not remove a lot line !"
-msgstr ""
+msgstr "Nu puteti sterge o linie a lotului !"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_scrap
@@ -1681,10 +1796,10 @@ msgid "Scrap Products"
 msgstr "Produse rebuturi"
 
 #. module: stock
-#: code:addons/stock/stock.py:1135
+#: code:addons/stock/stock.py:1146
 #, python-format
 msgid "You cannot remove the picking which is in %s state !"
-msgstr ""
+msgstr "Nu puteti sterge preluarea care se afla in starea %s !"
 
 #. module: stock
 #: view:stock.inventory.line.split:0
@@ -1693,23 +1808,24 @@ msgstr ""
 #: view:stock.move.split:0
 #: view:stock.picking:0
 msgid "Cancel"
-msgstr "Renunţă"
+msgstr "Anulează"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Retur Ridicare"
 
 #. module: stock
 #: view:stock.inventory:0
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Split in production lots"
-msgstr "Împarte în loturi de producție"
+msgstr "Împarte în loturi de productie"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
+#: field:product.product,location_id:0
 #: view:report.stock.inventory:0
 #: field:report.stock.inventory,location_id:0
 #: field:stock.change.product.qty,location_id:0
@@ -1720,28 +1836,29 @@ msgstr "Împarte în loturi de producție"
 #: view:stock.move:0
 #: field:stock.move.consume,location_id:0
 #: field:stock.move.scrap,location_id:0
+#: field:stock.partial.move.line,location_id:0
+#: field:stock.partial.picking.line,location_id:0
 #: field:stock.picking,location_id:0
 #: report:stock.picking.list:0
 #: field:stock.report.prodlots,location_id:0
 #: field:stock.report.tracklots,location_id:0
 msgid "Location"
-msgstr "Locație"
+msgstr "Locatie"
 
 #. module: stock
 #: view:product.template:0
 msgid "Information"
-msgstr "Informații"
+msgstr "Informatii"
 
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Shipping Address :"
-msgstr "Adresă expediere:"
+msgstr "Adresă de livrare:"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:120
-#, python-format
+#: view:stock.return.picking:0
 msgid "Provide the quantities of the returned products."
-msgstr ""
+msgstr "Furnizati cantitatile produselor returnate."
 
 #. module: stock
 #: code:addons/stock/stock.py:1978
@@ -1750,11 +1867,13 @@ msgid ""
 "Can not create Journal Entry, Input Account defined on this product and "
 "Variant account on category of this product are same."
 msgstr ""
+"Nu se poate crea Inregistrarea in Jurnal, Contul de intrare definit pentru "
+"acest produs si Contul varianta din categoria acestui produs sunt aceleasi."
 
 #. module: stock
 #: view:stock.change.standard.price:0
 msgid "Cost Price"
-msgstr "Preţ standard"
+msgstr "Preţ de cost"
 
 #. module: stock
 #: view:product.product:0
@@ -1771,7 +1890,7 @@ msgstr "Creează factură"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Process Later"
-msgstr "Operează mai târziu"
+msgstr "Procesează mai târziu"
 
 #. module: stock
 #: help:res.partner,property_stock_supplier:0
@@ -1779,6 +1898,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
 msgstr ""
+"Aceasta locatie a stocului va fi folosita in locul celei default drept "
+"locatia sursa pentru bunurile pe care le primiti de la partenerul curent"
 
 #. module: stock
 #: field:stock.warehouse,partner_address_id:0
@@ -1791,6 +1912,9 @@ msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when average price costing method is used)"
 msgstr ""
+"Campul tehnic folosit pentru a inregistra costul produsului setat de catre "
+"utilizator in timpul unei confirmari a ridicarii produsului (atunci cand "
+"este folosita metoda calcularii pretului mediu)"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_move_report
@@ -1799,19 +1923,20 @@ msgid ""
 "moves. Use this report when you want to analyse the different routes taken "
 "by your products and inventory management performance."
 msgstr ""
-"Analiza mișcărilor ​​vă permite să verificați şi analizați cu ușurința "
-"mișcările de stoci. Folosiţi acest raport atunci când doriţi să analizați "
-"trasabilitatea și performanța managementului."
+"Analiza miscărilor ​​vă permite să verificati şi sa analizati cu usurinta "
+"miscările stocului companiei dumneavoastra. Folosiţi acest raport atunci "
+"când doriţi să analizati diferitele trasee ale produselor dumneavoastra si "
+"performanta managementului inventarului."
 
 #. module: stock
 #: field:report.stock.move,day_diff1:0
 msgid "Planned Lead Time (Days)"
-msgstr ""
+msgstr "Planificare Timp (Zile)"
 
 #. module: stock
 #: field:stock.change.standard.price,new_price:0
 msgid "Price"
-msgstr "Preț"
+msgstr "Pret"
 
 #. module: stock
 #: view:stock.location:0
@@ -1821,26 +1946,28 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0
 msgid "Search Inventory"
-msgstr "Caută inventar"
+msgstr "Caută Inventar"
 
 #. module: stock
 #: field:stock.move.track,quantity:0
 msgid "Quantity per lot"
-msgstr "Cantitate pe lot"
+msgstr "Cantitate per lot"
 
 #. module: stock
-#: code:addons/stock/stock.py:1981
+#: code:addons/stock/stock.py:2109
 #, python-format
 msgid ""
 "There is no stock input account defined for this product or its category: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Nu exista nici un cont de intrare a stocului definit pentru acest produs sau "
+"categorie: \"%s\" (id: %d)"
 
 #. module: stock
-#: code:addons/stock/product.py:357
+#: code:addons/stock/product.py:421
 #, python-format
 msgid "Received Qty"
-msgstr "Cant. recepționată"
+msgstr "Cantitatea primită"
 
 #. module: stock
 #: field:stock.production.lot,ref:0
@@ -1853,6 +1980,8 @@ msgid ""
 "Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL "
 "[INT_REF]"
 msgstr ""
+"Prefix optional de adaugat la afisarea numarului de serie: PREFIX/SERIAL "
+"[INT_REF]"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
@@ -1897,6 +2026,26 @@ msgid ""
 "day)\n"
 "    "
 msgstr ""
+"Modulul OpenERP de Management al Inventarului poate gestiona multi-depozite, "
+"multi-locatii structurate ale stocului.\n"
+"Datorita managementului intrarii duble, controlul inventarului este puternic "
+"si flexibil:\n"
+"* Istoric miscari si planificari,\n"
+"* Diferite metode de inventariere (FIFO, LIFO, ...)\n"
+"* Inventarierea stocului (pret standard sau mediu, ...)\n"
+"* Robustetea confruntata cu diferentele de inventar\n"
+"* Reguli de repetare automata a comenzii (nivel stoc, JIT, ...)\n"
+"* Cod de bare acceptat\n"
+"* Detectarea rapida a greselilor prin sistemul intrarii duble\n"
+"* Trasabilitate (in sus/in jos, loturi de productie, numar de serie, ...)\n"
+"* Tablou de bord pentru depozit care include:\n"
+"\t\t* Produse primite cu intarziere (data < = astazi)\n"
+"\t\t* Aprovizionare in exceptie\n"
+"\t\t* Grafic : Numarul produselor primite vs planificate (bara grafic pe "
+"saptamana per zi)\n"
+"\t\t* Grafic : Numarul produselor livrate vs planificate (bara grafic pe "
+"sapatamana per zi)\n"
+"    "
 
 #. module: stock
 #: help:product.template,property_stock_inventory:0
@@ -1905,6 +2054,9 @@ msgid ""
 "default one, as the source location for stock moves generated when you do an "
 "inventory"
 msgstr ""
+"Pentru produsul curent va fi folosita aceasta locatie a stocului in locul "
+"celei predefinite, drept locatia sursa pentru miscarile stocului geenerate "
+"atunci cand faceti un inventar"
 
 #. module: stock
 #: view:report.stock.lines.date:0
@@ -1919,7 +2071,7 @@ msgstr "Timp real (automat)"
 #. module: stock
 #: help:stock.move,tracking_id:0
 msgid "Logistical shipping unit: pallet, box, pack ..."
-msgstr ""
+msgstr "Unitate logistica de transport: palet, cutie, pachet ..."
 
 #. module: stock
 #: view:stock.change.product.qty:0
@@ -1938,7 +2090,7 @@ msgstr "]"
 #. module: stock
 #: field:product.template,property_stock_inventory:0
 msgid "Inventory Location"
-msgstr "Locație inventar"
+msgstr "Locatie inventar"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1952,6 +2104,9 @@ msgid ""
 "Inventory Journal in which the chained move will be written, if the Chaining "
 "Type is not Transparent (no journal is used if left empty)"
 msgstr ""
+"Jurnalul de inventar in care va fi scrisa miscarea in lant, daca Tipul "
+"inlantuirii nu este Transparent (nici un jurnal nu va fi folosit daca ramane "
+"necompletat)"
 
 #. module: stock
 #: view:board.board:0
@@ -1965,8 +2120,8 @@ msgid "Creation"
 msgstr "Creare"
 
 #. module: stock
-#: field:stock.move.memory.in,cost:0
-#: field:stock.move.memory.out,cost:0
+#: field:stock.partial.move.line,cost:0
+#: field:stock.partial.picking.line,cost:0
 msgid "Cost"
 msgstr "Cost"
 
@@ -1975,13 +2130,13 @@ msgstr "Cost"
 #: field:product.template,property_stock_account_input:0
 #: field:stock.change.standard.price,stock_account_input:0
 msgid "Stock Input Account"
-msgstr "Cont intrare stoc"
+msgstr "Cont de intrare stoc"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
-msgstr "Gestiune depozit"
+msgstr "Gestiunea depozitului"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -1991,7 +2146,7 @@ msgstr "Livrare parţială"
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
-msgstr "Automatic fără adăugare de paşi"
+msgstr "Fără adăugare de paşi automata"
 
 #. module: stock
 #: code:addons/stock/stock.py:2406
@@ -2002,7 +2157,7 @@ msgstr "Produs "
 #. module: stock
 #: view:stock.location.product:0
 msgid "Stock Location Analysis"
-msgstr "Analize locație stoc"
+msgstr "Analiza Locatiei stocului"
 
 #. module: stock
 #: help:stock.move,date:0
@@ -2010,13 +2165,13 @@ msgid ""
 "Move date: scheduled date until move is done, then date of actual move "
 "processing"
 msgstr ""
-"Data mișcării: data planificată dacă mișcarea nu este efectuată, după care "
-"este data procesării."
+"Data miscării: data planificată pana cand miscarea este efectuată, apoi data "
+"procesarii miscarii actuale."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_out
 msgid "stock.move.memory.out"
-msgstr "stock.move.memory.ou"
+msgstr "stock.move.memory.out"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2031,15 +2186,15 @@ msgstr "Grupează după..."
 #. module: stock
 #: view:stock.location:0
 msgid "Chained Locations"
-msgstr ""
+msgstr "Locatii in lant"
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
 msgid "Inventory loss"
-msgstr ""
+msgstr "Pierdere la inventar"
 
 #. module: stock
-#: code:addons/stock/stock.py:1314
+#: code:addons/stock/stock.py:1328
 #, python-format
 msgid "Document"
 msgstr "Document"
@@ -2047,17 +2202,17 @@ msgstr "Document"
 #. module: stock
 #: view:stock.picking:0
 msgid "Input Picking List"
-msgstr "Intrare listă preluare"
+msgstr "Intrare listă de ridicare"
 
 #. module: stock
 #: field:stock.move,product_uom:0
-#: field:stock.move.memory.in,product_uom:0
-#: field:stock.move.memory.out,product_uom:0
+#: field:stock.partial.move.line,product_uom:0
+#: field:stock.partial.picking.line,product_uom:0
 msgid "Unit of Measure"
 msgstr "Unitate de măsură"
 
 #. module: stock
-#: code:addons/stock/product.py:176
+#: code:addons/stock/product.py:175
 #, python-format
 msgid "Products: "
 msgstr "Produse: "
@@ -2068,28 +2223,30 @@ msgid ""
 "Forces to specify a Production Lot for all moves containing this product and "
 "generated by a Manufacturing Order"
 msgstr ""
+"Obliga la specificarea unui Lot de productie pentru toate miscarile care "
+"contin acest produs si care sunt generate de o Comanda de Fabricare"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.track_line_old
 #: view:stock.move.track:0
 msgid "Tracking a move"
-msgstr "Urmărire mișcare"
+msgstr "Urmărirea unei miscari"
 
 #. module: stock
 #: view:product.product:0
 msgid "Update"
-msgstr "Actualizează"
+msgstr "Actualizare"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Set to Draft"
-msgstr "Schimbă în ciornă"
+msgstr "Setare pe ciornă"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_journal_form
 #: model:ir.ui.menu,name:stock.menu_action_stock_journal_form
 msgid "Stock Journals"
-msgstr "Jurnale stoc"
+msgstr "Jurnale de stoc"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -2097,15 +2254,16 @@ msgid "Others"
 msgstr "Altele"
 
 #. module: stock
-#: code:addons/stock/product.py:90
+#: code:addons/stock/product.py:89
 #, python-format
 msgid "Could not find any difference between standard price and new price!"
 msgstr ""
+"Nu a putut fi gasita vreo diferenta intre pretul standard si noul pret!"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr "Parțial preluat"
+msgstr "Ridicare partiala"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_scrapped
@@ -2121,7 +2279,7 @@ msgstr "Produse "
 #. module: stock
 #: field:product.product,track_incoming:0
 msgid "Track Incoming Lots"
-msgstr "Urmărire loturi aprovizionare"
+msgstr "Urmărire loturi la intrare"
 
 #. module: stock
 #: view:board.board:0
@@ -2129,15 +2287,15 @@ msgid "Warehouse board"
 msgstr "Panou depozit"
 
 #. module: stock
-#: code:addons/stock/product.py:377
+#: code:addons/stock/product.py:441
 #, python-format
 msgid "Future Qty"
-msgstr "Cant. viitoare"
+msgstr "Cantitatea viitoare"
 
 #. module: stock
 #: field:product.category,property_stock_variation:0
 msgid "Stock Variation Account"
-msgstr "Cont variații de stoc"
+msgstr "Cont variatii de stoc"
 
 #. module: stock
 #: field:stock.move,note:0
@@ -2160,37 +2318,39 @@ msgid "Shipping Type"
 msgstr "Tip expediere"
 
 #. module: stock
-#: code:addons/stock/stock.py:2175
+#: code:addons/stock/stock.py:2299
 #, python-format
 msgid "You can only delete draft moves."
-msgstr "Puteți șterge doar mișcări în starea ciornă."
+msgstr "Puteti sterge doar miscări în starea ciornă."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:74
 #: model:ir.actions.act_window,name:stock.act_product_location_open
+#: model:ir.ui.menu,name:stock.menu_product_in_config_stock
+#: model:ir.ui.menu,name:stock.menu_stock_product
 #: model:ir.ui.menu,name:stock.menu_stock_products_menu
 #: view:stock.inventory:0
+#: view:stock.partial.move:0
+#: view:stock.partial.picking:0
 #: view:stock.picking:0
-#, python-format
 msgid "Products"
 msgstr "Produse"
 
 #. module: stock
 #: view:stock.change.standard.price:0
 msgid "Change Price"
-msgstr "Schimbă prețul"
+msgstr "Schimbă pretul"
 
 #. module: stock
 #: field:stock.picking,move_type:0
 msgid "Delivery Method"
-msgstr "Metodă livrare"
+msgstr "Metoda de livrare"
 
 #. module: stock
 #: help:report.stock.move,location_dest_id:0
 #: help:stock.move,location_dest_id:0
 #: help:stock.picking,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr "Locația în care sistemul va stoca produsele finite."
+msgstr "Locatia în care sistemul va stoca produsele finite."
 
 #. module: stock
 #: help:product.category,property_stock_valuation_account_id:0
@@ -2198,6 +2358,8 @@ msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Atunci cand evaluarea inventarului in timp real este activata pentru un "
+"produs, acest cont va pastra valoarea curenta a produselor."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_reception_picking_move
@@ -2208,6 +2370,12 @@ msgid ""
 "the supplier or the purchase order reference. Then you can confirm all "
 "products received using the buttons on the right of each line."
 msgstr ""
+"Aici puteti primi produse individuale, indiferent din ce comanda de "
+"achizitii sau de ridicare provin. Veti gasi lista tuturor produselor pe care "
+"le asteptati. Odata ce primiti o comanda, puteti face filtrarea pe baza "
+"numelui furnizorului sau a referintei comenzii de achizitie. Apoi puteti "
+"confirma toate produsele primite folosind butoanele din partea dreapta a "
+"fiecarei linii."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -2217,24 +2385,24 @@ msgstr "Mişcare stoc"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Delay(Days)"
-msgstr "Așteptare (zile)"
+msgstr "Intarziere(Zile)"
 
 #. module: stock
-#: code:addons/stock/stock.py:1602
+#: code:addons/stock/stock.py:1684
 #, python-format
 msgid "Operation forbidden"
-msgstr "Operație interzisă"
+msgstr "Operatiune interzisă"
 
 #. module: stock
 #: help:stock.picking,min_date:0
 msgid "Expected date for the picking to be processed"
-msgstr ""
+msgstr "Data estimata pentru ridicare va fi procesata"
 
 #. module: stock
-#: code:addons/stock/product.py:373
+#: code:addons/stock/product.py:437
 #, python-format
 msgid "P&L Qty"
-msgstr ""
+msgstr "Cantitate P&L"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -2245,7 +2413,7 @@ msgstr "Revizii"
 #. module: stock
 #: view:stock.picking:0
 msgid "This operation will cancel the shipment. Do you want to continue?"
-msgstr ""
+msgstr "Aceasta operatiune va anula transportul. Doriti sa continuati?"
 
 #. module: stock
 #: help:product.product,valuation:0
@@ -2256,6 +2424,12 @@ msgid ""
 "current inventory value, and the stock input and stock output account will "
 "hold the counterpart moves for incoming and outgoing products."
 msgstr ""
+"Daca activati inventarierea in timp real pentru un produs, sistemul va scrie "
+"automat inregistrari in jurnal corespunzatoare miscarilor stocului. Contul "
+"varierii inventarului setat in categoria produsului va reprezenta valoarea "
+"curenta a inventarierii, iar contul pentru stocul de intrare si contul de "
+"iesire din stoc va pastra miscarile corespunzatoare pentru produsele primite "
+"si pentru cele expediate."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_inventory_report
@@ -2264,6 +2438,10 @@ msgid ""
 "levels. Sort and group by selection criteria in order to better analyse and "
 "manage your company  activities."
 msgstr ""
+"Analiza inventarierii va permite sa verificati si sa analizati usor "
+"nivelurile de stoc ale companiei dumneavoastra. Selectati si grupati dupa "
+"criterii de selectie pentru a analiza si gestiona mai bine activitatile "
+"companiei dumneavoastra."
 
 #. module: stock
 #: help:report.stock.move,location_id:0
@@ -2272,6 +2450,8 @@ msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
+"Setati o locatie daca produceti intr-o locatie fixa. Aceasta poate fi o "
+"locatie partener daca subcontractati operatiunile de fabricare."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
@@ -2286,6 +2466,15 @@ msgid ""
 "location to the Stock location. Each report can be performed on physical, "
 "partner or virtual locations."
 msgstr ""
+"Definiti-va locatiile pentru a reflecta structura si organizarea depozitului "
+"dumneavoastra.OpenERP poate gestiona locatii fizice (depozite, rafturi, "
+"containere, etc), locatii partenere (clienti, furnizori) si locatii virtuale "
+"care sunt omoloage operatiunilor stocului precum comenzile de fabricare, "
+"consum, inventarieri, etc. FIecare operatiune a stocului in OpenERP muta "
+"produsul dintr-o locatie in alta. De exemplu, daca primiti produse de la un "
+"furnizor, OpenERP va muta produsele din Locatia Furnizorului in Locatia "
+"stocului. Fiecare raport poate fi efectuat pe locatiile fizice, partenere "
+"sau virtuale."
 
 #. module: stock
 #: view:stock.invoice.onshipping:0
@@ -2309,47 +2498,47 @@ msgid "Source"
 msgstr "Sursă"
 
 #. module: stock
-#: code:addons/stock/stock.py:2557
 #: model:ir.model,name:stock.model_stock_inventory
 #: selection:report.stock.inventory,location_type:0
 #: field:stock.inventory.line,inventory_id:0
 #: report:stock.inventory.move:0
 #: selection:stock.location,usage:0
-#, python-format
 msgid "Inventory"
 msgstr "Inventar"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
 msgid "Picking List"
-msgstr "Listă preluare"
+msgstr "Listă riidcare"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
 msgid ""
 "The combination of serial number and internal reference must be unique !"
 msgstr ""
+"Combinatia dintre numarul de serie si referinta interna trebuie sa fie unica "
+"!"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups
 msgid "Stock ups"
-msgstr ""
+msgstr "Stoc in sus"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Cancel Inventory"
-msgstr "Anularea inventar"
+msgstr "Anulare inventariere"
 
 #. module: stock
 #: field:stock.move.split.lines,name:0
 #: field:stock.move.split.lines.exist,name:0
 msgid "Tracking serial"
-msgstr "Urmărire serial"
+msgstr "Urmărire serie"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
 #: code:addons/stock/report/report_stock.py:135
-#: code:addons/stock/stock.py:751
+#: code:addons/stock/stock.py:771
 #, python-format
 msgid "Error !"
 msgstr "Eroare !"
@@ -2357,7 +2546,7 @@ msgstr "Eroare !"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replacement_result
 msgid "Stock Replacement result"
-msgstr ""
+msgstr "Rezultat Inlocuire stoc"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
@@ -2368,9 +2557,10 @@ msgstr "Unităţi de măsură"
 #. module: stock
 #: selection:stock.location,chained_location_type:0
 msgid "Fixed Location"
-msgstr ""
+msgstr "Locatie fixa"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "July"
 msgstr "Iulie"
@@ -2388,11 +2578,15 @@ msgid ""
 "need this report in order to ensure that the stock of each product is "
 "controlled at least once a year."
 msgstr ""
+"Afiseaza ultimele inventarieri efectuate produselor dumneavoastra si le "
+"aranjeaza dupa criterii specifice de filtrare. Daca faceti inventarieri "
+"frecvente si partiale, aveti nevoie de acest raport pentru a va asigura ca "
+"stocul fiecarui produs este controlat cel putin odata pe an."
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
 msgid "Stock Level Forecast"
-msgstr "Nivel stoc prognozat"
+msgstr "Prognoza Nivel stoc"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_journal
@@ -2401,7 +2595,7 @@ msgstr "Nivel stoc prognozat"
 #: field:stock.journal,name:0
 #: field:stock.picking,stock_journal_id:0
 msgid "Stock Journal"
-msgstr "Jurnal stoc"
+msgstr "Jurnal de stoc"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -2412,47 +2606,43 @@ msgstr "Aprovizionare"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
 msgid "Maxtor Suppliers"
-msgstr ""
+msgstr "Furnizori Maxtor"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:66
-#: code:addons/stock/wizard/stock_change_standard_price.py:106
+#: code:addons/stock/wizard/stock_change_product_qty.py:78
+#: code:addons/stock/wizard/stock_change_standard_price.py:107
 #, python-format
 msgid "Active ID is not set in Context"
-msgstr ""
+msgstr "ID-ul activ nu este setat in context"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Force Availability"
-msgstr "Forțare disponibilitate"
+msgstr "Fortare disponibilitate"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_scrap
 #: view:stock.move.scrap:0
 msgid "Scrap Move"
-msgstr ""
+msgstr "Miscare rebuturi"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_move.py:138
 #: model:ir.actions.act_window,name:stock.action_reception_picking_move
 #: model:ir.ui.menu,name:stock.menu_action_pdct_in
 #: view:stock.move:0
-#, python-format
 msgid "Receive Products"
-msgstr "Recepții produse"
+msgstr "Primire produse"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_move.py:131
 #: model:ir.actions.act_window,name:stock.action_out_picking_move
 #: model:ir.ui.menu,name:stock.menu_action_pdct_out
-#, python-format
 msgid "Deliver Products"
-msgstr "Livrări produse"
+msgstr "Livrare produse"
 
 #. module: stock
 #: view:stock.location.product:0
 msgid "View Stock of Products"
-msgstr "Afişare stoc după produse"
+msgstr "Vizualizare Stoc de Produse"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2460,6 +2650,7 @@ msgid "Internal Picking list"
 msgstr "Liste interne de preluare"
 
 #. module: stock
+#: view:report.stock.inventory:0
 #: view:report.stock.move:0
 #: field:report.stock.move,month:0
 msgid "Month"
@@ -2468,18 +2659,19 @@ msgstr "Luna"
 #. module: stock
 #: help:stock.picking,date_done:0
 msgid "Date of Completion"
-msgstr ""
+msgstr "Data finalizarii"
 
 #. module: stock
 #: help:stock.production.lot,name:0
 msgid "Unique production lot, will be displayed as: PREFIX/SERIAL [INT_REF]"
-msgstr ""
+msgstr "Lot de productie unic, va fi afisat ca: PREFIX/SERIE [INT_REF]"
 
 #. module: stock
 #: help:stock.tracking,active:0
 msgid ""
 "By unchecking the active field, you may hide a pack without deleting it."
 msgstr ""
+"Lasand campul activ nebifat, puteti ascunde un pachet fara sa-l stergeti."
 
 #. module: stock
 #: view:stock.inventory.merge:0
@@ -2489,7 +2681,7 @@ msgstr "Da"
 #. module: stock
 #: field:stock.inventory,inventory_line_id:0
 msgid "Inventories"
-msgstr "Inventare"
+msgstr "Inventarieri"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2510,7 +2702,7 @@ msgstr "De Făcut"
 #: field:stock.production.lot.revision,company_id:0
 #: field:stock.warehouse,company_id:0
 msgid "Company"
-msgstr "Firmă"
+msgstr "Companie"
 
 #. module: stock
 #: view:stock.move:0
@@ -2519,17 +2711,18 @@ msgid "Unit Of Measure"
 msgstr "Unitate de măsură"
 
 #. module: stock
-#: code:addons/stock/product.py:122
+#: code:addons/stock/product.py:121
 #, python-format
 msgid ""
 "There is no stock input account defined for this product: \"%s\" (id: %d)"
 msgstr ""
+"Nu exista cont de intrare stoc definit pentru acest produs: \"%s\" (id: %d)"
 
 #. module: stock
-#: code:addons/stock/stock.py:2302
+#: code:addons/stock/stock.py:2430
 #, python-format
 msgid "Can not consume a move with negative or zero quantity !"
-msgstr ""
+msgstr "Nu se poate epuiza o miscare cu cantitate negativa sau zero !"
 
 #. module: stock
 #: field:stock.location,stock_real:0
@@ -2539,14 +2732,14 @@ msgstr "Stoc real"
 #. module: stock
 #: view:stock.fill.inventory:0
 msgid "Fill Inventory"
-msgstr ""
+msgstr "Completare inventar"
 
 #. module: stock
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
-"Eroare: unitatea de masură implicită și unitatea de masură de aprovizionare "
+"Eroare: Unitatea de masură implicită si unitatea de masură de achizitii "
 "trebuie să facă parte din aceeasi categorie."
 
 #. module: stock
@@ -2557,6 +2750,10 @@ msgid ""
 "value for all products in this category, it can also directly be set on each "
 "product."
 msgstr ""
+"Atunci cand faceti evaluarea inventarierii in timp real, Elementele omoloage "
+"ale Jurnalului pentru miscarile stocului la intrare vor fi afisate in acest "
+"cont. Aceasta este valoarea predefinita pentru toate produsele din aceasta "
+"categorie, si poate fi, de asemenea, setata direct pe fiecare produs."
 
 #. module: stock
 #: field:stock.production.lot.revision,date:0
@@ -2567,8 +2764,6 @@ msgstr "Dată revizie"
 #: view:report.stock.inventory:0
 #: field:report.stock.inventory,prodlot_id:0
 #: view:stock.move:0
-#: field:stock.move.split.lines,lot_id:0
-#: field:stock.move.split.lines.exist,lot_id:0
 #: report:stock.picking.list:0
 msgid "Lot"
 msgstr "Lot"
@@ -2576,7 +2771,7 @@ msgstr "Lot"
 #. module: stock
 #: view:stock.move.split:0
 msgid "Production Lot Number"
-msgstr "Număr lot producție"
+msgstr "Număr lot de productie"
 
 #. module: stock
 #: field:stock.move,product_uos_qty:0
@@ -2584,16 +2779,17 @@ msgid "Quantity (UOS)"
 msgstr "Cantitate (UOS)"
 
 #. module: stock
-#: code:addons/stock/stock.py:1647
+#: code:addons/stock/stock.py:1730
 #, python-format
 msgid ""
 "You are moving %.2f %s products but only %.2f %s available in this lot."
 msgstr ""
+"Mutati %.2f %s produse, dar numai %.2f %s sunt disponibile in acest lot."
 
 #. module: stock
 #: view:stock.move:0
 msgid "Set Available"
-msgstr ""
+msgstr "Setati Disponibil"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -2603,7 +2799,7 @@ msgstr "Adresă contact:"
 #. module: stock
 #: field:stock.move,backorder_id:0
 msgid "Back Order"
-msgstr ""
+msgstr "Confirma comanda"
 
 #. module: stock
 #: field:stock.incoterms,active:0
@@ -2623,7 +2819,7 @@ msgid "Properties"
 msgstr "Proprietăţi"
 
 #. module: stock
-#: code:addons/stock/stock.py:982
+#: code:addons/stock/stock.py:994
 #, python-format
 msgid "Error, no partner !"
 msgstr "Eroare, fără partener!"
@@ -2637,9 +2833,10 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
 #: model:ir.model,name:stock.model_stock_incoterms
+#: model:ir.ui.menu,name:stock.menu_action_incoterm_open
 #: view:stock.incoterms:0
 msgid "Incoterms"
-msgstr ""
+msgstr "Incotermeni"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -2655,6 +2852,9 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-the-"
 "art transportation practices."
 msgstr ""
+"Incotermenii sunt serii de termeni de vanzare. Ei sunt folositi pentru a "
+"imparti costurile tranzactiei si responsabilitatile intre cumparator si "
+"vanzator si reflecta practicile de transport state-of-the-art."
 
 #. module: stock
 #: help:stock.fill.inventory,recursive:0
@@ -2662,32 +2862,34 @@ msgid ""
 "If checked, products contained in child locations of selected location will "
 "be included as well."
 msgstr ""
+"Daca bifati, produsele continute in locatiile subordonate locatiei selectate "
+"vor fi de asemenea incluse."
 
 #. module: stock
 #: field:stock.move.track,tracking_prefix:0
 msgid "Tracking prefix"
-msgstr "Prefix urmărire"
+msgstr "Urmarire prefix"
 
 #. module: stock
 #: field:stock.inventory,name:0
 msgid "Inventory Reference"
-msgstr "Referință inventar"
+msgstr "Referintă inventar"
 
 #. module: stock
-#: code:addons/stock/stock.py:1307
+#: code:addons/stock/stock.py:1321
 #, python-format
 msgid "Internal picking"
-msgstr "Preluare internă"
+msgstr "Ridicare internă"
 
 #. module: stock
 #: view:stock.location.product:0
 msgid "Open Product"
-msgstr ""
+msgstr "Deschide Produs"
 
 #. module: stock
 #: field:stock.location.product,to_date:0
 msgid "To"
-msgstr "La"
+msgstr "Catre"
 
 #. module: stock
 #: view:stock.move:0
@@ -2703,6 +2905,7 @@ msgstr "Nume revizie"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
 #: model:ir.ui.menu,name:stock.menu_stock_root
+#: field:product.product,warehouse_id:0
 #: view:stock.warehouse:0
 msgid "Warehouse"
 msgstr "Depozit"
@@ -2714,16 +2917,19 @@ msgid ""
 "filter all resources of the day for the 'From' date and 23:59:59 for the "
 "'To' date)"
 msgstr ""
+"Lasati necompletat pentru a deschide situatia actuala. Reglati HH:MM:SS in "
+"00:00:00 pentru a filtra toate resursele zilei pentru data 'De la' si "
+"23:59:59 pentru data 'Catre')"
 
 #. module: stock
 #: view:product.category:0
 msgid "Accounting Stock Properties"
-msgstr ""
+msgstr "Proprietati contabile stoc"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_out
 msgid "Customers Packings"
-msgstr ""
+msgstr "Impachetare clienti"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -2757,15 +2963,15 @@ msgstr "Va fi facturat"
 #. module: stock
 #: field:stock.inventory,date_done:0
 msgid "Date done"
-msgstr "Data execuției"
+msgstr "Data executiei"
 
 #. module: stock
-#: code:addons/stock/stock.py:983
+#: code:addons/stock/stock.py:995
 #, python-format
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
 msgstr ""
-"Vă rog să treceţi un partener în lista de ridicare dacă doriţi să generaţi "
+"Vă rugam să treceţi un partener în lista de ridicare dacă doriţi să generaţi "
 "factura."
 
 #. module: stock
@@ -2794,12 +3000,12 @@ msgstr "Responsabil"
 #: model:ir.ui.menu,name:stock.menu_action_stock_inventory_report
 #: view:report.stock.inventory:0
 msgid "Inventory Analysis"
-msgstr "Analize inventar"
+msgstr "Analiza inventariere"
 
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
 msgid "Destination Journal"
-msgstr ""
+msgstr "Jurnal destinatie"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_tracking_lot_2_stock_report_tracklots
@@ -2809,8 +3015,6 @@ msgstr "Stoc"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
-#: model:ir.ui.menu,name:stock.menu_product_in_config_stock
-#: model:ir.ui.menu,name:stock.menu_stock_product
 #: view:report.stock.inventory:0
 #: field:report.stock.inventory,product_id:0
 #: field:report.stock.lines.date,product_id:0
@@ -2823,14 +3027,15 @@ msgstr "Stoc"
 #: view:stock.move:0
 #: field:stock.move,product_id:0
 #: field:stock.move.consume,product_id:0
-#: field:stock.move.memory.in,product_id:0
-#: field:stock.move.memory.out,product_id:0
 #: field:stock.move.scrap,product_id:0
 #: field:stock.move.split,product_id:0
+#: field:stock.partial.move.line,product_id:0
+#: field:stock.partial.picking.line,product_id:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,product_id:0
 #: field:stock.report.prodlots,product_id:0
 #: field:stock.report.tracklots,product_id:0
+#: field:stock.return.picking.memory,product_id:0
 msgid "Product"
 msgstr "Produs"
 
@@ -2843,17 +3048,16 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:135
-#, python-format
+#: field:stock.return.picking,invoice_state:0
 msgid "Invoicing"
 msgstr "Facturare"
 
 #. module: stock
-#: code:addons/stock/stock.py:2237
-#: code:addons/stock/stock.py:2297
+#: code:addons/stock/stock.py:2365
+#: code:addons/stock/stock.py:2425
 #, python-format
 msgid "Please provide Proper Quantity !"
-msgstr ""
+msgstr "Va rugam introduceti Cantitatea corecta !"
 
 #. module: stock
 #: field:stock.move,product_uos:0
@@ -2868,24 +3072,24 @@ msgstr "Înălţime (Z)"
 #. module: stock
 #: field:stock.ups,weight:0
 msgid "Lot weight"
-msgstr ""
+msgstr "Greutate lot"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_consume
 #: view:stock.move.consume:0
 msgid "Consume Products"
-msgstr "Consumă produse"
+msgstr "Epuizare produse"
 
 #. module: stock
-#: code:addons/stock/stock.py:1646
+#: code:addons/stock/stock.py:1729
 #, python-format
 msgid "Insufficient Stock in Lot !"
-msgstr ""
+msgstr "Stoc insuficient in Lot !"
 
 #. module: stock
 #: field:stock.location,parent_right:0
 msgid "Right Parent"
-msgstr ""
+msgstr "Parinte Dreapta"
 
 #. module: stock
 #: field:stock.picking,address_id:0
@@ -2925,26 +3129,27 @@ msgid "Products Categories"
 msgstr "Categorii Produse"
 
 #. module: stock
-#: field:stock.move.memory.in,wizard_id:0
-#: field:stock.move.memory.out,wizard_id:0
+#: field:stock.partial.move.line,wizard_id:0
+#: field:stock.partial.picking.line,wizard_id:0
+#: field:stock.return.picking.memory,wizard_id:0
 msgid "Wizard"
-msgstr "Expert"
+msgstr "Wizard"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
 #: model:ir.model,name:stock.model_stock_location_product
 msgid "Products by Location"
-msgstr "Produse după locaţie"
+msgstr "Produse după Locaţie"
 
 #. module: stock
 #: field:stock.fill.inventory,recursive:0
 msgid "Include children"
-msgstr ""
+msgstr "Include subordonati"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_components
 msgid "Shelf 1"
-msgstr ""
+msgstr "Raft 1"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree6
@@ -2956,6 +3161,13 @@ msgid ""
 "preconfigured logistics rules, but you can also record manual stock "
 "operations."
 msgstr ""
+"Miscarile Interne afiseaza toate operatiunile de inventariere pe care "
+"trebuie sa le efectuati in depozitul dumneavoastra. Toate operatiunile pot "
+"fi clasificate in jurnale de stoc, astfel incat fiecare muncitor are propria "
+"lista de operatiuni de efectuat in jurnalul sau. Majoritatea operatiunilor "
+"sunt pregatite automat de catre OpenERP in functie de regulile logistice "
+"preconfigurate de dumneavoastra, dar puteti de asemenea inregistra manual "
+"operatiuni ale stocului."
 
 #. module: stock
 #: view:stock.move:0
@@ -2965,19 +3177,21 @@ msgstr "Comandă"
 #. module: stock
 #: field:stock.tracking,name:0
 msgid "Pack Reference"
-msgstr "Referință pachet"
+msgstr "Referintă pachet"
 
 #. module: stock
 #: view:report.stock.move:0
 #: field:report.stock.move,location_id:0
+#: field:stock.inventory.line.split,location_id:0
 #: field:stock.move,location_id:0
+#: field:stock.move.split,location_id:0
 msgid "Source Location"
-msgstr "Locaţie Sursă"
+msgstr "Locaţia Sursă"
 
 #. module: stock
 #: view:product.template:0
 msgid "Accounting Entries"
-msgstr "Înregistrări contabilitate"
+msgstr "Înregistrări contabile"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -2992,7 +3206,7 @@ msgstr "Expedieri interne"
 #. module: stock
 #: field:stock.change.standard.price,enable_stock_in_out_acc:0
 msgid "Enable Related Account"
-msgstr ""
+msgstr "Activeaza Contul asociat"
 
 #. module: stock
 #: field:stock.location,stock_virtual_value:0
@@ -3023,12 +3237,15 @@ msgid "All at once"
 msgstr "Toate deodată"
 
 #. module: stock
-#: code:addons/stock/stock.py:1603
+#: code:addons/stock/stock.py:1685
 #, python-format
 msgid ""
 "Quantities, UoMs, Products and Locations cannot be modified on stock moves "
 "that have already been processed (except by the Administrator)"
 msgstr ""
+"Cantitatile, Unitatile de masura si Locatiile nu pot fi modificate in "
+"miscarile stocului care au fost deja procesate (cu exceptia "
+"Administratorului)"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:180
@@ -3037,10 +3254,10 @@ msgid "Can not process quantity %s for Product %s !"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:383
+#: code:addons/stock/product.py:447
 #, python-format
 msgid "Future Productions"
-msgstr "Producția viitoare"
+msgstr "Productii viitoare"
 
 #. module: stock
 #: view:stock.picking:0
@@ -3048,8 +3265,7 @@ msgid "To Invoice"
 msgstr "De facturat"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:120
-#, python-format
+#: view:stock.return.picking:0
 msgid "Return lines"
 msgstr "Linii retur"
 
@@ -3057,22 +3273,22 @@ msgstr "Linii retur"
 #: model:ir.model,name:stock.model_report_stock_lines_date
 #: view:report.stock.lines.date:0
 msgid "Dates of Inventories"
-msgstr ""
+msgstr "Datele Inventarelor"
 
 #. module: stock
 #: view:report.stock.move:0
 msgid "Total incoming quantity"
-msgstr ""
+msgstr "Cantitatea totala care intra"
 
 #. module: stock
 #: field:report.stock.move,product_qty_out:0
 msgid "Out Qty"
-msgstr "Cant Ieșită"
+msgstr "Cantitatea iesită"
 
 #. module: stock
 #: field:stock.production.lot,move_ids:0
 msgid "Moves for this production lot"
-msgstr ""
+msgstr "Miscari pentru acest loc de productie"
 
 #. module: stock
 #: view:stock.move:0
@@ -3105,30 +3321,30 @@ msgid ""
 "'Available' button to get all the lots you produced, received or delivered "
 "to customers."
 msgstr ""
-"Aceasta este lista cu toate loturile de producție (numere seriale) "
-"înregistrate. Când selectaţi un lot, puteţi obţine trasabilitatea în sus sau "
-"în jos de produse cuprinse în lot. În mod implicit, lista este filtrată pe "
-"loturile care sunt disponibile în depozit, dar dumneavoastră aveţi "
-"posibilitatea să debifaţi butonul \"disponibile\" pentru a obţine toate "
-"loturile produse, primite sau livrate clienţilor."
+"Aceasta este lista cu toate loturile de productie (numere de serie) pe care "
+"le-atiînregistrat. Când selectaţi un lot, puteţi obţine trasabilitatea în "
+"sus sau în jos a produselor cuprinse în lot. În mod implicit, lista este "
+"filtrată pe numerele de serie care sunt disponibile în depozitul "
+"dumneavoastra, dar puteti să nu bifaţi butonul 'Disponibil' pentru a obţine "
+"toate loturile produse, primite sau livrate clienţilor."
 
 #. module: stock
 #: field:stock.location,icon:0
 msgid "Icon"
-msgstr "Iconiţă"
+msgstr "Pictogramă"
 
 #. module: stock
-#: code:addons/stock/stock.py:2174
+#: code:addons/stock/stock.py:2298
+#: code:addons/stock/stock.py:2701
 #, python-format
 msgid "UserError"
-msgstr "Eroare Utilizator"
+msgstr "EroareUtilizator"
 
 #. module: stock
 #: view:stock.inventory.line.split:0
 #: view:stock.move.consume:0
 #: view:stock.move.scrap:0
 #: view:stock.move.split:0
-#: view:stock.move.track:0
 #: view:stock.split.into:0
 msgid "Ok"
 msgstr "Ok"
@@ -3136,23 +3352,23 @@ msgstr "Ok"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
 msgid "Non European Customers"
-msgstr ""
+msgstr "Clienti care nu sunt europeni"
 
 #. module: stock
-#: code:addons/stock/product.py:76
-#: code:addons/stock/product.py:90
-#: code:addons/stock/product.py:93
-#: code:addons/stock/product.py:100
-#: code:addons/stock/product.py:121
-#: code:addons/stock/product.py:147
-#: code:addons/stock/stock.py:1975
-#: code:addons/stock/stock.py:1978
-#: code:addons/stock/stock.py:1981
-#: code:addons/stock/stock.py:1984
-#: code:addons/stock/stock.py:1987
-#: code:addons/stock/stock.py:1990
-#: code:addons/stock/stock.py:2302
-#: code:addons/stock/wizard/stock_fill_inventory.py:48
+#: code:addons/stock/product.py:75
+#: code:addons/stock/product.py:89
+#: code:addons/stock/product.py:92
+#: code:addons/stock/product.py:99
+#: code:addons/stock/product.py:120
+#: code:addons/stock/product.py:146
+#: code:addons/stock/stock.py:2103
+#: code:addons/stock/stock.py:2106
+#: code:addons/stock/stock.py:2109
+#: code:addons/stock/stock.py:2112
+#: code:addons/stock/stock.py:2115
+#: code:addons/stock/stock.py:2118
+#: code:addons/stock/stock.py:2430
+#: code:addons/stock/wizard/stock_fill_inventory.py:47
 #: code:addons/stock/wizard/stock_splitinto.py:49
 #: code:addons/stock/wizard/stock_splitinto.py:53
 #, python-format
@@ -3166,11 +3382,13 @@ msgid ""
 "There is no inventory variation account defined on the product category: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Nu exista un cont al varierii inventarului definit in categoria produsului: "
+"\"%s\" (id: %d)"
 
 #. module: stock
 #: view:stock.inventory.merge:0
 msgid "Do you want to merge theses inventories ?"
-msgstr ""
+msgstr "Doriti sa uniti aceste inventare ?"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -3183,19 +3401,22 @@ msgstr "Anulat"
 
 #. module: stock
 #: view:stock.move:0
+#: field:stock.partial.move,picking_id:0
+#: field:stock.partial.picking,picking_id:0
 msgid "Picking"
-msgstr "Preluare"
+msgstr "Ridicare"
 
 #. module: stock
 #: help:stock.picking,move_type:0
 msgid "It specifies goods to be delivered all at once or by direct delivery"
 msgstr ""
+"Specifica bunurile care trebuie livrate toate odata sau prin livrare directa"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:83
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:96
 #, python-format
 msgid "This picking list does not require invoicing."
-msgstr ""
+msgstr "Aceasta lista de ridicare nu necesita facturare."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:172
@@ -3210,7 +3431,7 @@ msgstr ""
 #: selection:stock.location,chained_picking_type:0
 #: selection:stock.picking,type:0
 msgid "Getting Goods"
-msgstr "Obţinerea de bunuri"
+msgstr "Obţinere bunuri"
 
 #. module: stock
 #: help:stock.location,chained_location_type:0
@@ -3226,27 +3447,38 @@ msgid ""
 "* Fixed Location: The chained location is taken from the next field: Chained "
 "Location if Fixed."
 msgstr ""
+"Determina daca aceasta locatie este legata de alta locatie, adica daca "
+"exista vreun produs intrat in acea locatie\n"
+"ar trebui sa mearga in locatia in lant. Aceasta este determinata in functie "
+"de tipul ei :\n"
+"* Nici unul: Nici o inlantuire\n"
+"* Client: Locatia in lant va fi luata din campul Locatiei clientului in "
+"formularul Partenerului al Partenerului care este specificat in lista de "
+"ridicare a produselor intrate.\n"
+"* Locatia fixa: Locatia fixa este luata din campul urmator: Locatia "
+"inlantuita daca este Fixa."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
 #: code:addons/stock/wizard/stock_inventory_merge.py:63
 #, python-format
 msgid "Warning"
-msgstr "Atenție"
+msgstr "Avertisment"
 
 #. module: stock
-#: code:addons/stock/stock.py:1321
-#: code:addons/stock/stock.py:2557
+#: code:addons/stock/stock.py:1335
 #, python-format
 msgid "is done."
 msgstr "este gata."
 
 #. module: stock
+#: view:board.board:0
+#: model:ir.actions.act_window,name:stock.action_outgoing_product_board
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree
 #: view:stock.picking:0
 msgid "Delivery Orders"
-msgstr "Livrări"
+msgstr "Comenzi de Livrare"
 
 #. module: stock
 #: help:res.partner,property_stock_customer:0
@@ -3254,13 +3486,14 @@ msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
 msgstr ""
+"Locatia stocului va fi folosita, in locul celei predefinita, drept locatia "
+"destinatie pentru bunurile pe care le trimiteti acestui partener"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
 #: selection:report.stock.move,state:0
 #: selection:stock.inventory,state:0
 #: view:stock.picking:0
-#: selection:stock.picking,state:0
 msgid "Confirmed"
 msgstr "Confirmat"
 
@@ -3272,7 +3505,7 @@ msgstr "Confirmă"
 #. module: stock
 #: help:stock.location,icon:0
 msgid "Icon show in  hierarchical tree view"
-msgstr ""
+msgstr "Vizualizare pictograma in vizualizarea arbore ierarhica"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
@@ -3283,39 +3516,41 @@ msgstr "Unire inventare"
 #. module: stock
 #: help:stock.change.product.qty,new_quantity:0
 msgid "This quantity is expressed in the Default UoM of the product."
-msgstr ""
+msgstr "Aceasta cantitate este exprimata in UdeM predefinita a produsului."
 
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Reception:"
-msgstr "Recepție:"
+msgstr "Receptie:"
 
 #. module: stock
 #: help:stock.location,scrap_location:0
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
 msgstr ""
+"Bifati aceasta casuta pentru a permite folosirea acestei locatii pentru "
+"bunurile defecte'rabaturi."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
 msgid "Related Picking"
-msgstr "Preluari asociate"
+msgstr "Ridicari asociate"
 
 #. module: stock
 #: view:report.stock.move:0
 msgid "Total outgoing quantity"
-msgstr ""
+msgstr "Cantitatea totala care iese"
 
 #. module: stock
 #: field:stock.picking,backorder_id:0
 msgid "Back Order of"
-msgstr ""
+msgstr "Confirmare comanda"
 
 #. module: stock
-#: help:stock.move.memory.in,cost:0
-#: help:stock.move.memory.out,cost:0
+#: help:stock.partial.move.line,cost:0
+#: help:stock.partial.picking.line,cost:0
 msgid "Unit Cost for this product line"
-msgstr ""
+msgstr "Costul unitatii pentru aceasta linie a produsului"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
@@ -3324,7 +3559,7 @@ msgstr ""
 #: view:report.stock.move:0
 #: field:report.stock.move,categ_id:0
 msgid "Product Category"
-msgstr "Categorie Produs"
+msgstr "Categoria Produsului"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:88
@@ -3338,15 +3573,15 @@ msgid "Reporting"
 msgstr "Raportare"
 
 #. module: stock
-#: code:addons/stock/stock.py:1316
+#: code:addons/stock/stock.py:1330
 #, python-format
 msgid " for the "
-msgstr ""
+msgstr " pentru "
 
 #. module: stock
 #: view:stock.split.into:0
 msgid "Quantity to leave in the current pack"
-msgstr ""
+msgstr "Cantitatea care trebuie sa plece in pachetul actual"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
@@ -3366,7 +3601,6 @@ msgid "Existing Lots"
 msgstr "Loturi existente"
 
 #. module: stock
-#: field:product.product,location_id:0
 #: view:stock.location:0
 msgid "Stock Location"
 msgstr "Locaţie stoc"
@@ -3380,17 +3614,22 @@ msgid ""
 "If cost price is decreased, stock variation account will be creadited and "
 "stock input account will be debited."
 msgstr ""
+"Daca pretul de cost creste, contul variatiei stocului va fi debitat, iar "
+"contul de iesire din stoc va fi creditat cu valoarea = (diferenta sumei "
+"cantitatii disponibile). \n"
+"Daca pretul de cost scade, contul variatiei stocului va fi creditat, iar "
+"contul de intrare al stocului va fi debitat."
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
 msgid "Chaining Journal"
-msgstr ""
+msgstr "Jurnal inlantuire"
 
 #. module: stock
-#: code:addons/stock/stock.py:729
+#: code:addons/stock/stock.py:749
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
-msgstr "Stoc insuficient, nu se poate face rezervarea produsului."
+msgstr "Stoc insuficient, nu se poate face rezervarea produselor."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
@@ -3398,7 +3637,7 @@ msgid "Customers"
 msgstr "Clienţi"
 
 #. module: stock
-#: code:addons/stock/stock.py:1320
+#: code:addons/stock/stock.py:1334
 #, python-format
 msgid "is cancelled."
 msgstr "este anulat."
@@ -3406,16 +3645,16 @@ msgstr "este anulat."
 #. module: stock
 #: view:stock.inventory.line:0
 msgid "Stock Inventory Lines"
-msgstr ""
+msgstr "Linii inventar stoc"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:74
 #, python-format
 msgid "Process Document"
-msgstr "Document proces"
+msgstr "Procesare document"
 
 #. module: stock
-#: code:addons/stock/product.py:365
+#: code:addons/stock/product.py:429
 #, python-format
 msgid "Future Deliveries"
 msgstr "Livrări viitoare"
@@ -3423,7 +3662,7 @@ msgstr "Livrări viitoare"
 #. module: stock
 #: view:stock.picking:0
 msgid "Additional info"
-msgstr "Informații adiționale"
+msgstr "Informatii suplimentare"
 
 #. module: stock
 #: view:stock.move:0
@@ -3435,7 +3674,7 @@ msgstr "Pachet"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Date Expected"
-msgstr "Dată așteptată"
+msgstr "Dată asteptată"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree4
@@ -3445,6 +3684,10 @@ msgid ""
 "according to the original purchase order. You can validate the shipment "
 "totally or partially."
 msgstr ""
+"Primire Livrari este lista tuturor comenzilor pe care o veti primi de la "
+"furnizorul dumneavoastra. O livrare la primire contine o lista cu produsele "
+"care trebuie primite conform comenzii de achizitie originala. Puteti valida "
+"livrarea total sau partial."
 
 #. module: stock
 #: field:stock.move,auto_validate:0
@@ -3459,7 +3702,7 @@ msgstr "Greutate"
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
 msgid "Product Template"
-msgstr "Șablon produs"
+msgstr "Sablon produs"
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -3478,9 +3721,9 @@ msgid ""
 "specific product. You can filter on the product to see all the past or "
 "future movements for the product."
 msgstr ""
-"Acest meniu vă oferă trasabilitatea completă a operaţiunilor de stoc pe un "
-"anumit produs. Puteţi filtra pe produs pentru a vedea toate mişcările "
-"trecute sau în viitoare pentru produs."
+"Acest meniu vă oferă trasabilitatea completă a operaţiunilor de inventariere "
+"ale unui produs anume. Puteţi filtra pe produs pentru a vedea toate "
+"mişcările trecute sau viitoare pentru produs."
 
 #. module: stock
 #: view:stock.picking:0
@@ -3498,6 +3741,9 @@ msgid ""
 "Technical field used to record the currency chosen by the user during a "
 "picking confirmation (when average price costing method is used)"
 msgstr ""
+"Camp tehnic folosit pentru a inregistra moneda aleasa de catre utilizator in "
+"timpul confirmarii ridicarii (atunci cand este folosita metoda de estimare a "
+"pretului mediu)"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:53
@@ -3508,7 +3754,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
 msgid "Products Moves"
-msgstr "Mișcări produse"
+msgstr "Miscări produse"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -3523,22 +3769,22 @@ msgstr "Adresă destinaţie"
 #. module: stock
 #: field:stock.picking,max_date:0
 msgid "Max. Expected Date"
-msgstr ""
+msgstr "Data maxima estimata"
 
 #. module: stock
 #: field:stock.picking,auto_picking:0
 msgid "Auto-Picking"
-msgstr "Preluare automată"
+msgstr "Ridicare automată"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
 msgid "Shop 2"
-msgstr ""
+msgstr "Magazin 2"
 
 #. module: stock
 #: field:stock.location,chained_auto_packing:0
 msgid "Chaining Type"
-msgstr ""
+msgstr "Tip inlantuire"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -3554,8 +3800,6 @@ msgstr "Intern"
 #: selection:report.stock.inventory,state:0
 #: selection:report.stock.move,state:0
 #: selection:stock.inventory,state:0
-#: selection:stock.move,state:0
-#: selection:stock.picking,state:0
 msgid "Draft"
 msgstr "Ciornă"
 
@@ -3574,22 +3818,27 @@ msgid ""
 " When the picking it done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"Dupa ce miscarea stocului este creata, se afla in stare 'Ciorna'.\n"
+"Dupa aceea este setata pe starea 'Confirmat'.\n"
+"Daca stocul este disponibil, starea este setata pe 'Disponibil'.\n"
+"Cand se face ridicarea, starea este 'Efectuat'.\n"
+"Starea este 'In asteptare' daca miscarea asteapta o alta miscare."
 
 #. module: stock
 #: view:board.board:0
 msgid "Outgoing Products Delay"
-msgstr ""
+msgstr "Intarziere iesire produse"
 
 #. module: stock
 #: field:stock.move.split.lines,use_exist:0
 msgid "Existing Lot"
-msgstr ""
+msgstr "Lot existent"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:204
+#: code:addons/stock/wizard/stock_return_picking.py:189
 #, python-format
 msgid "Please specify at least one non-zero quantity!"
-msgstr "Văr rog să specificați o cantitate diferită de zero!"
+msgstr "Vă rugam să specificati cel putin o cantitate diferită de zero!"
 
 #. module: stock
 #: help:product.template,property_stock_procurement:0
@@ -3597,28 +3846,31 @@ msgid ""
 "For the current product, this stock location will be used, instead of the "
 "default one, as the source location for stock moves generated by procurements"
 msgstr ""
+"Pentru produsul actual, va fi folosita aceasta locatie a stocului, in locul "
+"celei predefinite, drept locatia sursa pentru miscarile stocului generate de "
+"aprovizionari"
 
 #. module: stock
-#: code:addons/stock/stock.py:1319
+#: code:addons/stock/stock.py:1333
 #, python-format
 msgid "is ready to process."
-msgstr ""
+msgstr "este gata pentru procesare."
 
 #. module: stock
 #: help:stock.picking,origin:0
 msgid "Reference of the document that produced this picking."
-msgstr ""
+msgstr "Referinta documentului care a produs aceasta ridicare."
 
 #. module: stock
 #: field:stock.fill.inventory,set_stock_zero:0
 msgid "Set to zero"
-msgstr ""
+msgstr "Setat pe zero"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:85
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:98
 #, python-format
 msgid "None of these picking lists require invoicing."
-msgstr ""
+msgstr "Nici una dintre aceste liste de ridicare  nu necesita facturare."
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -3626,17 +3878,18 @@ msgid "November"
 msgstr "Noiembrie"
 
 #. module: stock
-#: code:addons/stock/product.py:101
-#: code:addons/stock/stock.py:1987
+#: code:addons/stock/product.py:100
+#: code:addons/stock/stock.py:2115
 #, python-format
 msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
 msgstr ""
+"Nu exista nici un jurnal definit pentru categoria produsului: \"%s\" (id: %d)"
 
 #. module: stock
-#: code:addons/stock/product.py:379
+#: code:addons/stock/product.py:443
 #, python-format
 msgid "Unplanned Qty"
-msgstr "Cant neplanificată"
+msgstr "Cantitate neplanificată"
 
 #. module: stock
 #: code:addons/stock/stock.py:1335
@@ -3647,7 +3900,7 @@ msgstr "este programat"
 #. module: stock
 #: field:stock.location,chained_company_id:0
 msgid "Chained Company"
-msgstr ""
+msgstr "Companie conectata"
 
 #. module: stock
 #: view:stock.picking:0
@@ -3655,6 +3908,7 @@ msgid "Check Availability"
 msgstr "Verifică disponibilitatea"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "January"
 msgstr "Ianuarie"
@@ -3665,28 +3919,30 @@ msgid ""
 "Forces to specify a Production Lot for all moves containing this product and "
 "coming from a Supplier Location"
 msgstr ""
+"Obliga specificarea unui Lot de productie pentru toate miscarile care contin "
+"acest produs si care provin dintr-o Locatie a furnizorului"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_futur_open
 msgid "Future Stock Moves"
-msgstr "Mișcări de stoc viitoare"
+msgstr "Miscări viitoare de stoc"
 
 #. module: stock
 #: field:stock.move,move_history_ids2:0
 msgid "Move History (parent moves)"
-msgstr "Istoric mișcări (mișcări părinte)"
+msgstr "Istoric miscări (miscări părinte)"
 
 #. module: stock
-#: code:addons/stock/product.py:361
+#: code:addons/stock/product.py:425
 #, python-format
 msgid "Future Stock"
 msgstr "Stoc viitor"
 
 #. module: stock
-#: code:addons/stock/stock.py:510
-#: code:addons/stock/stock.py:1127
-#: code:addons/stock/stock.py:1135
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:113
+#: code:addons/stock/stock.py:523
+#: code:addons/stock/stock.py:1138
+#: code:addons/stock/stock.py:1146
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #, python-format
 msgid "Error"
 msgstr "Eroare"
@@ -3694,12 +3950,12 @@ msgstr "Eroare"
 #. module: stock
 #: field:stock.ups.final,xmlfile:0
 msgid "XML File"
-msgstr "Fișier XML"
+msgstr "Fisier XML"
 
 #. module: stock
 #: view:stock.change.product.qty:0
 msgid "Select Quantity"
-msgstr "Selectează cantitate"
+msgstr "Selectează cantitatea"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_tree
@@ -3708,20 +3964,27 @@ msgid ""
 "click on a location to get the list of the products and their stock level in "
 "this particular location and all its children."
 msgstr ""
+"Aceasta este structura depozitelor si a locatiilor companiei dumneavoastra. "
+"Dumneavoastra puteti face click pe o locatie pentru a obtine lista "
+"produselor si nivelul lor de stoc in aceasta locatie anume si in toate "
+"locatiile subordonate  ale ei."
 
 #. module: stock
 #: model:res.request.link,name:stock.req_link_tracking
 #: field:stock.change.product.qty,prodlot_id:0
 #: field:stock.inventory.line,prod_lot_id:0
+#: field:stock.inventory.line.split.lines,name:0
+#: field:stock.inventory.line.split.lines,prodlot_id:0
 #: report:stock.inventory.move:0
 #: field:stock.move,prodlot_id:0
-#: field:stock.move.memory.in,prodlot_id:0
-#: field:stock.move.memory.out,prodlot_id:0
-#: field:stock.move.split.lines.exist,prodlot_id:0
+#: field:stock.move.split.lines,name:0
+#: field:stock.move.split.lines,prodlot_id:0
+#: field:stock.partial.move.line,prodlot_id:0
+#: field:stock.partial.picking.line,prodlot_id:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,name:0
 msgid "Production Lot"
-msgstr "Lot producţie"
+msgstr "Lot de producţie"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_traceability
@@ -3761,28 +4024,30 @@ msgid ""
 "Total quantity after split exceeds the quantity to split for this product: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Cantitatea totala dupa impartire depaseste cantitatea care trebuie impartita "
+"pentru acest produs: \"%s\" (id: %d)"
 
 #. module: stock
 #: view:stock.move:0
-#: field:stock.partial.move,product_moves_in:0
-#: field:stock.partial.move,product_moves_out:0
-#: field:stock.partial.picking,product_moves_in:0
-#: field:stock.partial.picking,product_moves_out:0
+#: field:stock.partial.move,move_ids:0
+#: field:stock.return.picking,product_return_moves:0
 msgid "Moves"
 msgstr "Mişcări"
 
 #. module: stock
 #: view:report.stock.move:0
 #: field:report.stock.move,location_dest_id:0
+#: field:stock.partial.move.line,location_dest_id:0
+#: field:stock.partial.picking.line,location_dest_id:0
 #: field:stock.picking,location_dest_id:0
 msgid "Dest. Location"
-msgstr "Locaţie dest."
+msgstr "Locaţie destinatie"
 
 #. module: stock
 #: help:stock.move,product_packaging:0
 msgid ""
 "It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr ""
+msgstr "Specifica atributele ambalarii, precum tipul, cantitatea, etc."
 
 #. module: stock
 #: code:addons/stock/stock.py:2406
@@ -3798,7 +4063,7 @@ msgstr "Trebuie să atribuiţi un lot de producţie pentru acest produs"
 #. module: stock
 #: view:stock.move:0
 msgid "Expected"
-msgstr "Așteptat"
+msgstr "Estimat"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -3810,15 +4075,17 @@ msgstr "Producţie"
 #. module: stock
 #: view:stock.split.into:0
 msgid "Split Move"
-msgstr "Împarte mișcarea"
+msgstr "Împarte miscarea"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:97
+#: code:addons/stock/wizard/stock_return_picking.py:106
 #, python-format
 msgid ""
 "There are no products to return (only lines in Done state and not fully "
 "returned yet can be returned)!"
 msgstr ""
+"Nu exista produse de returnat (doar liniile care sunt in starea 'Efectuat' "
+"si care nu sunt inca complet returnate pot fi returnate)!"
 
 #. module: stock
 #: help:stock.location,valuation_in_account_id:0
@@ -3830,7 +4097,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split
 msgid "Split in Production lots"
-msgstr "Împărţit în loturi de producţie"
+msgstr "Împărţire în loturi de producţie"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:261
@@ -3854,6 +4121,7 @@ msgid "Description"
 msgstr "Descriere"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "May"
 msgstr "Mai"
@@ -3871,40 +4139,45 @@ msgid ""
 "outgoing stock moves will be posted in this account. If not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"Atunci cand faceti evaluarea inventarului in timp real, Elementele "
+"corespondente ale Jurnalului pentru toate miscarile de iesire a stocului vor "
+"fi afisate in acest cont. Daca nu este setat pe produs, va fi folosit cel "
+"din categoria produsului."
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action5
 #: view:stock.tracking:0
 msgid "Upstream traceability"
-msgstr "Trasabulitate în sus"
+msgstr "Trasabilitate în sus"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview_all
 #: report:lot.stock.overview_all:0
 msgid "Location Content"
-msgstr "Locația curentă"
+msgstr "Locatia curentă"
 
 #. module: stock
-#: code:addons/stock/product.py:385
+#: code:addons/stock/product.py:449
 #, python-format
 msgid "Produced Qty"
-msgstr ""
+msgstr "Cantitatea produsa"
 
 #. module: stock
 #: field:product.category,property_stock_account_output_categ:0
 #: field:product.template,property_stock_account_output:0
 #: field:stock.change.standard.price,stock_account_output:0
 msgid "Stock Output Account"
-msgstr "Cont ieșire din stoc"
+msgstr "Cont iesire din stoc"
 
 #. module: stock
 #: field:stock.location,chained_location_type:0
 msgid "Chained Location Type"
-msgstr ""
+msgstr "Tip locatie inlantuita"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
 msgid "Stock report by production lots"
-msgstr ""
+msgstr "Raport al stocului dupa loturile de productie"
 
 #. module: stock
 #: view:stock.location:0
@@ -3914,6 +4187,7 @@ msgid "Customer"
 msgstr "Client"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "February"
 msgstr "Februarie"
@@ -3921,15 +4195,16 @@ msgstr "Februarie"
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Production Lot Identification"
-msgstr ""
+msgstr "Idenitificarea lotului de productie"
 
 #. module: stock
 #: field:stock.location,scrap_location:0
 #: view:stock.move.scrap:0
 msgid "Scrap Location"
-msgstr "Locație rebut"
+msgstr "Locatie rebut"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "April"
 msgstr "Aprilie"
@@ -3943,40 +4218,43 @@ msgstr "Viitor"
 #. module: stock
 #: field:stock.invoice.onshipping,invoice_date:0
 msgid "Invoiced date"
-msgstr "Dată facură"
+msgstr "Dată factură"
 
 #. module: stock
-#: code:addons/stock/stock.py:729
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:83
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:85
-#: code:addons/stock/wizard/stock_return_picking.py:79
-#: code:addons/stock/wizard/stock_return_picking.py:97
-#: code:addons/stock/wizard/stock_return_picking.py:204
+#: code:addons/stock/stock.py:749
+#: code:addons/stock/wizard/stock_fill_inventory.py:116
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:96
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:98
+#: code:addons/stock/wizard/stock_return_picking.py:99
+#: code:addons/stock/wizard/stock_return_picking.py:106
+#: code:addons/stock/wizard/stock_return_picking.py:189
 #, python-format
 msgid "Warning !"
-msgstr "Atenţie !"
+msgstr "Avertisment !"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_output
 msgid "Output"
-msgstr "Ieșire"
+msgstr "Iesire"
 
 #. module: stock
 #: selection:stock.move.split.lines,action:0
 msgid "Keep in one lot"
-msgstr ""
+msgstr "Pastrati un lot"
 
 #. module: stock
 #: view:product.product:0
 msgid "Cost Price:"
-msgstr "Preț"
+msgstr "Pret de cost:"
 
 #. module: stock
 #: help:stock.move,move_dest_id:0
 msgid "Optional: next stock move when chaining them"
-msgstr ""
+msgstr "Optional: urmatoarea miscare a stocului cand se face inlantuirea"
 
 #. module: stock
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,year:0
 #: view:report.stock.move:0
 #: field:report.stock.move,year:0
 msgid "Year"
@@ -3990,25 +4268,15 @@ msgstr "Locaţii fizice"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move
 msgid "Partial Move"
-msgstr "Mișcare parțială"
+msgstr "Miscare partială"
 
 #. module: stock
 #: help:stock.location,posx:0
 #: help:stock.location,posy:0
 #: help:stock.location,posz:0
 msgid "Optional localization details, for information purpose only"
-msgstr ""
-
-#~ msgid "Partial"
-#~ msgstr "Parțial"
+msgstr "Optional - detalii localizare, in scop pur informativ"
 
 #, python-format
 #~ msgid "Message !"
 #~ msgstr "Mesaj !"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Eroare ! Nu puteţi crea membri asociaţi recursiv."
-
-#, python-format
-#~ msgid "Stock Inventory is done"
-#~ msgstr "Inventarul stocului este gata"
