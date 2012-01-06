@@ -53,7 +53,7 @@ class OpenERPSession(object):
 
     def build_connection(self):
         conn = openerplib.Connection(self.config.connector, database=self._db, login=self._login,
-                   user_id=self._uid, password=self._password, auto_context=False)
+                   user_id=self._uid, password=self._password)
         return conn
 
     def proxy(self, service):
