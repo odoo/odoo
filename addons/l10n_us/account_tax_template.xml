@@ -61,12 +61,12 @@
         <!-- = = = = = = = = = = = = = = = -->
 
 
-        <record id="fiscal_position_normal_taxes_template1" model="account.fiscal.position.template">
+        <record id="fiscal_position_normal_taxes_template" model="account.fiscal.position.template">
             <field name="name">Normal Taxes</field>
             <field name="chart_template_id" ref="l10n_us.account_chart_template_basic"/>
         </record>
 
-        <record id="fiscal_position_tax_exempt_template2" model="account.fiscal.position.template">
+        <record id="fiscal_position_tax_exempt_template" model="account.fiscal.position.template">
             <field name="name">Tax Exempt</field>
             <field name="chart_template_id" ref="l10n_us.account_chart_template_basic"/>
         </record>
@@ -77,13 +77,13 @@
 
 
         <record id="fiscal_position_tax_exempt" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_tax_exempt_template2"/>
+            <field name="position_id" ref="fiscal_position_tax_exempt_template"/>
             <field name="tax_src_id" ref="itaxs"/>
             <field name="tax_dest_id" ref="itaxx"/>
         </record>
 
         <record id="fiscal_position_tax_exempt2" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_normal_taxes_template1"/>
+            <field name="position_id" ref="fiscal_position_tax_exempt_template"/>
             <field name="tax_src_id" ref="otaxs"/>
             <field name="tax_dest_id" ref="otaxx"/>
         </record>
