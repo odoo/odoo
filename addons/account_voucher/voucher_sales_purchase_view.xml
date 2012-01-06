@@ -93,7 +93,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Information">
-                            <field name="line_cr_ids" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_cr_ids" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Sales Lines" editable="bottom">
                                     <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection"/>
                                     <field name="name"/>
@@ -222,7 +222,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Bill Information">
-                            <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" default_get="{'journal_id':journal_id,'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" context="{'journal_id':journal_id,'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Expense Lines" editable="bottom">
                                     <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"/>
                                     <field name="name"/>
