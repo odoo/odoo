@@ -23,6 +23,7 @@ import datetime
 from lxml import etree
 from time import strftime
 
+import base64
 import tools
 import netsvc
 from osv import osv
@@ -441,6 +442,18 @@ class survey_question_wiz(osv.osv_memory):
             fp = open(ret_file_name, 'wb+');
             fp.write(result);
             fp.close();
+            
+            # hr.applicant: if survey answered directly in system: attach report to applicant
+            if context.get('active_model') == 'hr.applicant':
+                result = base64.b64encode(result)
+                file_name = file_name + '.pdf'
+                ir_attachment = self.pool.get('ir.attachment').create(cr, uid, 
+                                                                      {'name': file_name,
+                                                                       'datas': result,
+                                                                       'datas_fname': file_name,
+                                                                       'res_model': context.get('active_model'),
+                                                                       'res_id': context.get('active_ids')[0]},
+                                                                      context=context)
 
         except Exception,e:
             return (False, str(e))
