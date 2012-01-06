@@ -806,7 +806,7 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
                         self.display_error(result);
                         return;
                     } else {
-                        self.session.logout();
+                        openerp.webclient.on_logout();
                     }
                 });
             }
