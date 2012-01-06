@@ -240,9 +240,9 @@ def return_options(environ, start_response):
     # Microsoft specific header, see
     # http://www.ibm.com/developerworks/rational/library/2089.html
     if 'Microsoft' in environ.get('User-Agent', ''):
-        option = [('MS-Author-Via', 'DAV')]
+        options = [('MS-Author-Via', 'DAV')]
     else:
-        option = []
+        options = []
     options += [('DAV', '1 2'), ('Allow', 'GET HEAD PROPFIND OPTIONS REPORT')]
     start_response("200 OK", [('Content-Length', str(0))] + options)
     return []
