@@ -1390,7 +1390,7 @@ class account_move(osv.osv):
         cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
 
         #adjust also the amount in currency if needed
-        cr.execute("select currency_id, sum(amount_currency) as amount_currency from account_move_line where move_id = %s and currency_id is not null group by currency_id", (move.id,))
+        cr.execute("select currency_id, COALESCE(sum(amount_currency),0.0) as amount_currency from account_move_line where move_id = %s and currency_id is not null group by currency_id", (move.id,))
         for row in cr.dictfetchall():
             currency_id = currency_obj.browse(cr, uid, row['currency_id'], context=context)
             if not currency_obj.is_zero(cr, uid, currency_id, row['amount_currency']):
