@@ -89,7 +89,7 @@ class event_event(osv.osv):
         """
         register_pool = self.pool.get('event.registration')
         for event in self.browse(cr, uid, ids, context=context):
-            if event.mail_auto_confirm:
+           # if event.mail_auto_confirm:
                 #send reminder that will confirm the event for all the people that were already confirmed
                 reg_ids = register_pool.search(cr, uid, [
                                ('event_id', '=', event.id),
@@ -542,10 +542,11 @@ class event_registration(osv.osv):
     def mail_user(self, cr, uid, ids, confirm=False, context=None):
         """
         Send email to user
-        """
-        mail_message = self.pool.get('mail.message')
+"""
+        
+        mail_message = self.pool.get('email.template')
         for registration in self.browse(cr, uid, ids, context=context):
-            src = registration.event_id.reply_to or False
+          #  src = registration.reply_to or False
             email_to = []
             email_cc = []
             if registration.email_from:
@@ -568,7 +569,7 @@ class event_registration(osv.osv):
                     body = registration.event_id.mail_confirm
             if subject or body:
                 mail_message.schedule_with_attach(cr, uid, src, email_to, subject, body, model='event.registration', email_cc=email_cc, res_id=registration.id)
-
+        
         return True
 
     def mail_user_confirm(self, cr, uid, ids, context=None):
