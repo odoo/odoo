@@ -206,7 +206,6 @@ class event_event(osv.osv):
         'parent_id': fields.many2one('event.event', 'Parent Event', readonly=False, states={'done': [('readonly', True)]}),
         'section_id': fields.many2one('crm.case.section', 'Sale Team', readonly=False, states={'done': [('readonly', True)]}),
         'child_ids': fields.one2many('event.event', 'parent_id', 'Child Events', readonly=False, states={'done': [('readonly', True)]}),
-        'reply_to': fields.char('Reply-To', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address put in the 'Reply-To' of all emails sent by OpenERP"),
         'type': fields.many2one('event.type', 'Type', help="Type of Event like Seminar, Exhibition, Conference, Training.", readonly=False, states={'done': [('readonly', True)]}),
         'register_max': fields.integer('Maximum Registrations', help="Provide Maximum Number of Registrations", readonly=True, states={'draft': [('readonly', False)]}),
         'register_min': fields.integer('Minimum Registrations', help="Provide Minimum Number of Registrations", readonly=True, states={'draft': [('readonly', False)]}),
@@ -224,10 +223,10 @@ class event_event(osv.osv):
             ('cancel', 'Cancelled')],
             'State', readonly=True, required=True,
             help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
-        'mail_auto_registr': fields.boolean('Mail Auto Register', readonly=False, states={'done': [('readonly', True)]}, help='Check this box if you want to use automatic emailing for new registration.'),
-        'mail_auto_confirm': fields.boolean('Mail Auto Confirm', readonly=False, states={'done': [('readonly', True)]}, help='Check this box if you want to use automatic confirmation emailing or reminder.'),
-        'mail_registr': fields.text('Registration Email', readonly=False, states={'done': [('readonly', True)]}, help='This email will be sent when someone subscribes to the event.'),
-        'mail_confirm': fields.text('Confirmation Email', readonly=False, states={'done': [('readonly', True)]}, help="This email will be sent when the event gets confirmed or when someone subscribes to a confirmed event. This is also the email sent to remind someone about the event."),
+       
+        'email_registration_id' : fields.many2one('email.template','Email registration'),
+        'email_confirmation_id' : fields.many2one('email.template','Email registration'),
+       
         'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="The invoices of this event registration will be created with this Product. Thus it allows you to set the default label and the accounting info you want by default on these invoices."),
         'note': fields.text('Notes', help="Description or Summary of Event", readonly=False, states={'done': [('readonly', True)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True, states={'draft': [('readonly', False)]}, help="Pricelist version for current event."),

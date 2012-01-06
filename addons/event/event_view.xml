@@ -137,24 +137,13 @@
                         </field>
                     </page>
                     <page string="Mailing">
-                        <field name="reply_to" />
                         <newline/>
                         <group col="4" colspan="4">
                             <group col="2" colspan="2">
-                                <separator string="Auto Registration Email" colspan="4"/>
-                                <field name="mail_auto_registr" colspan="4"/>
-                                <group colspan="4" attrs="{'readonly':[('mail_auto_registr','=',False)]}">
-                                    <separator string="Registration Email Body" colspan="4"/>
-                                    <field name="mail_registr" colspan="4" nolabel="1" />
-                                </group>
+                                <field name="email_registration_id"/>
                             </group>
                             <group col="2" colspan="2">
-                                <separator string="Auto Confirmation Email" colspan="4"/>
-                                <field name="mail_auto_confirm" colspan="4"/>
-                                <group colspan="4" attrs="{'readonly':[('mail_auto_confirm','=',False)]}">
-                                    <separator string="Confirmation Email Body" colspan="4"/>
-                                    <field name="mail_confirm" nolabel="1" colspan="4"/>
-                                </group>
+                                <field name="email_confirmation_id"/>
                             </group>
                         </group>
                     </page>
