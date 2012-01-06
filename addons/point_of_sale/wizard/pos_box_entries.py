@@ -44,7 +44,6 @@ def get_journal(self, cr, uid, context=None):
     res = [(r['journal_id']) for r in res]
     if not len(res):
         raise osv.except_osv(_('Error !'), _('You do not have any open cash register. You must create a payment method or open a cash register.'))
-    res.insert(0, ('', ''))
     return res
 
 class pos_box_entries(osv.osv_memory):
@@ -70,8 +69,8 @@ class pos_box_entries(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Reason', size=32, required=True),
-        'journal_id': fields.selection(get_journal, "Cash Register", required=True),
-        'product_id': fields.selection(_get_income_product, "Operation", required=True),
+        'journal_id': fields.selection(get_journal, "Cash Register", required=True, size=-1),
+        'product_id': fields.selection(_get_income_product, "Operation", required=True, size=-1),
         'amount': fields.float('Amount', digits=(16, 2), required=True),
         'ref': fields.char('Ref', size=32),
     }
@@ -100,7 +99,8 @@ class pos_box_entries(osv.osv_memory):
             if not statement_id:
                 raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
 
-            acc_id = product_obj.browse(cr, uid, int(data['product_id'])).property_account_income
+            product = product_obj.browse(cr, uid, int(data['product_id']))
+            acc_id = product.property_account_income or product.categ_id.property_account_income_categ
             if not acc_id:
                 raise osv.except_osv(_('Error !'), _('Please check that income account is set to %s')%(product_obj.browse(cr, uid, data['product_id']).name))
             if statement_id:
@@ -125,3 +125,5 @@ class pos_box_entries(osv.osv_memory):
 
 pos_box_entries()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

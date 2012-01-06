@@ -110,6 +110,7 @@
             <field name="arch" type="xml">
                 <tree string="Templates">
                     <field name="model_id"/>
+                    <field name="mail_server_id" invisible="1"/>
                     <field name="name"/>
                     <field name="subject"/>
                     <field name="email_from"/>
@@ -138,7 +139,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group by...">
-                        <filter string="SMTP Server" domain="[]" context="{'group_by':'smtp_server_id'}" icon="terp-folder-orange"/>
+                        <filter string="SMTP Server" domain="[]" context="{'group_by':'mail_server_id'}" icon="terp-folder-orange"/>
                         <separator orientation="vertical"/>
                         <filter string="Model" domain="[]" context="{'group_by':'model_id'}" icon="terp-accessories-archiver"/>
                     </group>
@@ -155,9 +156,8 @@
             <field name="search_view_id" ref="view_email_template_search"/>
         </record>
 
-        <menuitem name="Templates" id="menu_email_template_all_tools"
-            parent="mail.menu_email_message_tools" action="action_email_template_tree_all" />
-
+        <menuitem id="menu_email_templates" parent="base.menu_email" action="action_email_template_tree_all"
+                  sequence="20"/>
 
     </data>
 </openerp>

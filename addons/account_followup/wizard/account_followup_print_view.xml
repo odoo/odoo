@@ -13,7 +13,6 @@
                 <group col="4" colspan="6">
                     <field name="followup_id"/>
                     <field name="date"/>
-                    <newline/>
                 </group>
                 <separator colspan="4"/>
                 <group col="2" colspan="4">
@@ -81,7 +80,7 @@
                         <notebook>
                             <page string="Partner Selection">
                                 <separator string="Select Partners to Remind" colspan="4"/>
-                                <field name="partner_ids" colspan="4" nolabel="1" context="{'search_default_balance_positive': 1}"/>
+                                <field name="partner_ids" colspan="4" nolabel="1" context="{'search_default_balance_positive': 1}" domain="[('company_id','=',context.get('company_id',False))]"/>
                             </page>
                             <page string="Email Settings">
                                 <field name="email_conf" colspan="4"/>
@@ -137,7 +136,5 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-
-
     </data>
 </openerp>

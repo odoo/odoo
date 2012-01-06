@@ -1418,3 +1418,5 @@ class get_attendee_listResponse:
         self._return = None
         return
 get_attendee_listResponse.typecode.pyclass = get_attendee_listResponse
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -109,3 +109,5 @@ class TextListenerProcAdapter( unohelper.Base, XTextListener ):
             apply( self.oProcToCall, (oTextEvent,) + self.tParams )
 
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

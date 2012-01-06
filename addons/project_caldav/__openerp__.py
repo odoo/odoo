@@ -23,7 +23,7 @@
     "name": "CalDAV for Task Management",
     "version": "1.1",
     "author": "OpenERP SA",
-    "category": "Hidden",
+    "category": "Project Management",
     "description": """
 Synchronization between Project Task and Caldav Vtodo.
 ======================================================
@@ -41,3 +41,5 @@ on a remote server.
     "certificate" : "001114200456808204637",
     'images': ['images/project_tasks_caldav.jpeg','images/project_tasks_caldav_attendees.jpeg','images/project_caldav_calendars.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

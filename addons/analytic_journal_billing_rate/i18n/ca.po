@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2009-09-29 06:30+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,38 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:34+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:07+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: analytic_journal_billing_rate
-#: model:ir.module.module,description:analytic_journal_billing_rate.module_meta_information
-msgid ""
-"\n"
-"\n"
-"    This module allows you to define what is the default invoicing rate for "
-"a specific journal on a given account. This is mostly used when a user "
-"encodes his timesheet: the values are retrieved and the fields are auto-"
-"filled... but the possibility to change these values is still available.\n"
-"\n"
-"    Obviously if no data has been recorded for the current account, the "
-"default value is given as usual by the account data so that this module is "
-"perfectly compatible with older configurations.\n"
-"\n"
-"    "
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
 msgstr ""
-"\n"
-"\n"
-"    Aquest mòdul us permet definir el percentatge de facturació per a un "
-"cert diari en un compte donat. S'utilitza principalment quan un usuari "
-"codifica el seu full de serveis: els valors són recuperats i els camps són "
-"auto emplenats tot i que la possibilitat de canviar-los està encara "
-"disponible.\n"
-"\n"
-"Òbviament si no s'ha guardat dades per al compte actual, es proporciona el "
-"valor per defecte per a les dades del compte com sempre, pel que aquest "
-"mòdul és perfectament compatible amb configuracions anteriors.\n"
-"\n"
-"    "
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,journal_id:0
@@ -56,6 +31,11 @@ msgstr "Diari analític"
 #: model:ir.model,name:analytic_journal_billing_rate.model_account_invoice
 msgid "Invoice"
 msgstr "Factura"
+
+#. module: analytic_journal_billing_rate
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
 
 #. module: analytic_journal_billing_rate
 #: view:analytic_journal_rate_grid:0
@@ -79,15 +59,6 @@ msgid "Invoicing Rate per Journal"
 msgstr "Taxa de facturació per diari"
 
 #. module: analytic_journal_billing_rate
-#: model:ir.module.module,shortdesc:analytic_journal_billing_rate.module_meta_information
-msgid ""
-"Analytic Journal Billing Rate, Define the default invoicing rate for a "
-"specific journal"
-msgstr ""
-"Taxa de facturació d'un diari analític. Defineix la taxa de facturació per "
-"defecte per a un diari en concret."
-
-#. module: analytic_journal_billing_rate
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
@@ -95,6 +66,11 @@ msgid ""
 msgstr ""
 "Error! La moneda ha de ser la mateixa que la moneda de la companyia "
 "seleccionada"
+
+#. module: analytic_journal_billing_rate
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
+msgstr ""
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,rate_id:0
@@ -122,3 +98,38 @@ msgstr "Línia del full de serveis"
 
 #~ msgid "Analytic Journal Billing Rate"
 #~ msgstr "Rati facturació diari analític"
+
+#~ msgid ""
+#~ "Analytic Journal Billing Rate, Define the default invoicing rate for a "
+#~ "specific journal"
+#~ msgstr ""
+#~ "Taxa de facturació d'un diari analític. Defineix la taxa de facturació per "
+#~ "defecte per a un diari en concret."
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "    This module allows you to define what is the default invoicing rate for "
+#~ "a specific journal on a given account. This is mostly used when a user "
+#~ "encodes his timesheet: the values are retrieved and the fields are auto-"
+#~ "filled... but the possibility to change these values is still available.\n"
+#~ "\n"
+#~ "    Obviously if no data has been recorded for the current account, the "
+#~ "default value is given as usual by the account data so that this module is "
+#~ "perfectly compatible with older configurations.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "    Aquest mòdul us permet definir el percentatge de facturació per a un "
+#~ "cert diari en un compte donat. S'utilitza principalment quan un usuari "
+#~ "codifica el seu full de serveis: els valors són recuperats i els camps són "
+#~ "auto emplenats tot i que la possibilitat de canviar-los està encara "
+#~ "disponible.\n"
+#~ "\n"
+#~ "Òbviament si no s'ha guardat dades per al compte actual, es proporciona el "
+#~ "valor per defecte per a les dades del compte com sempre, pel que aquest "
+#~ "mòdul és perfectament compatible amb configuracions anteriors.\n"
+#~ "\n"
+#~ "    "

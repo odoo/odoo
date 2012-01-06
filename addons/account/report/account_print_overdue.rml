@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="Overdue Payments.pdf">
-  <template pageSize="(595.0,842.0)" title="Overdue Payments" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template title="Overdue Payments" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="42.0" y1="28.0" width="511" height="786"/>
     </pageTemplate>
@@ -219,7 +219,7 @@
             <para style="terp_default_Right_9">[[ (line['account_id']['type'] == 'receivable' and formatLang(line['credit']) or 0) or (line['account_id']['type'] == 'payable' and formatLang(line['debit'] * -1) or 0) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang((line['date_maturity'] &lt; time.strftime('%Y-%m-%d'))) and formatLang(line['debit'] - line['credit'], currency_obj=company.currency_id) ]</para>
+             <para style="terp_default_Right_9">[[ time.strftime('%Y-%m-%d') > formatLang((line['date_maturity'])) and formatLang(line['debit'] - line['credit']) ]] [[ company.currency_id.symbol ]] </para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ line['blocked'] and 'X' or '' ]]</para>

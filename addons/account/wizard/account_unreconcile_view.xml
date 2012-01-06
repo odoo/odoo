@@ -31,7 +31,6 @@
 
         <record model="ir.values" id="account_unreconcile_values">
             <field name="model_id" ref="account.model_account_move_line" />
-            <field name="object" eval="1" />
             <field name="name">Unreconcile Entries</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_unreconcile'))" />
@@ -70,7 +69,6 @@
 
         <record model="ir.values" id="account_unreconcile_reconcile_values">
             <field name="model_id" ref="account.model_account_move_reconcile" />
-            <field name="object" eval="1" />
             <field name="name">Unreconcile Entries</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_unreconcile_reconcile'))" />

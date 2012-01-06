@@ -7,212 +7,198 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-07-04 14:16+0000\n"
-"PO-Revision-Date: 2011-07-11 09:51+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"PO-Revision-Date: 2011-11-29 07:47+0000\n"
+"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:57+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:35+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:51
+#, python-format
+msgid "Please select at least one user to share with"
+msgstr "Bitte wählen Sie mindestens einen Benutzer zum Teilen"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:55
 #, python-format
-msgid "Please select at least one user to share with"
-msgstr ""
-
-#. module: portal
-#: code:addons/portal/wizard/share_wizard.py:59
-#, python-format
 msgid "Please select at least one group to share with"
-msgstr ""
+msgstr "Bitte wählen Sie mindestens eine Gruppe zum Teilen"
 
 #. module: portal
 #: field:res.portal,group_id:0
 msgid "Group"
-msgstr ""
-
-#. module: portal
-#: help:res.portal,other_group_ids:0
-msgid "Those groups are assigned to the portal's users"
-msgstr ""
+msgstr "Gruppe"
 
 #. module: portal
 #: view:share.wizard:0
 #: field:share.wizard,group_ids:0
 msgid "Existing groups"
-msgstr ""
+msgstr "Vorhandene Gruppen"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "Portalbenutzer Konfiguration"
 
 #. module: portal
 #: view:res.portal.wizard.user:0
 msgid "Portal User"
+msgstr "Portalbenutzer"
+
+#. module: portal
+#: model:res.groups,comment:portal.group_portal_manager
+msgid ""
+"Portal managers have access to the portal definitions, and can easily "
+"configure the users, access rights and menus of portal users."
 msgstr ""
 
 #. module: portal
 #: help:res.portal,override_menu:0
 msgid "Enable this option to override the Menu Action of portal users"
-msgstr ""
+msgstr "Aktivieren, um die Menü Aktion für Portalbenutzer zu überschreiben"
 
 #. module: portal
 #: field:res.portal.wizard.user,user_email:0
 msgid "E-mail"
-msgstr ""
-
-#. module: portal
-#: view:res.portal:0
-msgid "Other Groups assigned to Users"
-msgstr ""
+msgstr "E-Mail"
 
 #. module: portal
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"Die gewählte Firma ist nicht in der Liste der erlaubten Firmen für diesen "
+"Benutzer"
 
 #. module: portal
 #: view:res.portal:0
 #: field:res.portal,widget_ids:0
 msgid "Widgets"
-msgstr ""
-
-#. module: portal
-#: model:ir.module.module,description:portal.module_meta_information
-msgid ""
-"\n"
-"This module defines 'portals' to customize the access to your OpenERP "
-"database\n"
-"for external users.\n"
-"\n"
-"A portal defines customized user menu and access rights for a group of "
-"users\n"
-"(the ones associated to that portal).  It also associates user groups to "
-"the\n"
-"portal users (adding a group in the portal automatically adds it to the "
-"portal\n"
-"users, etc).  That feature is very handy when used in combination with the\n"
-"module 'share'.\n"
-"    "
-msgstr ""
-
-#. module: portal
-#: view:share.wizard:0
-msgid "Who do you want to share with?"
-msgstr ""
+msgstr "Oberflächenelemente"
 
 #. module: portal
 #: view:res.portal.wizard:0
 msgid "Send Invitations"
-msgstr ""
+msgstr "Versende Einladungen"
+
+#. module: portal
+#: view:res.portal:0
+msgid "Widgets assigned to Users"
+msgstr "Oberflächenelemente, die Benutzern zugeordnet sind"
 
 #. module: portal
 #: help:res.portal,url:0
 msgid "The url where portal users can connect to the server"
-msgstr ""
+msgstr "Die URL, mit der  sich Portalbenutzer anmelden können"
 
 #. module: portal
-#: field:res.portal.widget,widget_id:0
-msgid "Widget"
+#: model:res.groups,comment:portal.group_portal_officer
+msgid "Portal officers can create new portal users with the portal wizard."
 msgstr ""
 
 #. module: portal
 #: help:res.portal.wizard,message:0
 msgid "This text is included in the welcome email sent to the users"
-msgstr ""
+msgstr "Dieser Text ist Bestandteil der Willkommen E-Mail an den Benutzer"
 
 #. module: portal
 #: help:res.portal,menu_action_id:0
 msgid "If set, replaces the standard menu for the portal's users"
 msgstr ""
+"Wenn definiert, dann ersetzt dies das Standardmenü für Portalbenutzer"
 
 #. module: portal
-#: field:res.portal,parent_menu_id:0
-msgid "Parent Menu"
-msgstr ""
+#: field:res.portal.wizard.user,lang:0
+msgid "Language"
+msgstr "Sprache"
 
 #. module: portal
 #: view:res.portal:0
 msgid "Portal Name"
-msgstr ""
+msgstr "Portalname"
 
 #. module: portal
 #: view:res.portal.wizard.user:0
 msgid "Portal Users"
-msgstr ""
+msgstr "Portalbenutzer"
 
 #. module: portal
 #: field:res.portal,override_menu:0
 msgid "Override Menu Action of Users"
-msgstr ""
+msgstr "Überschreibe Die Menü-Aktion für Benutzer"
 
 #. module: portal
 #: field:res.portal,menu_action_id:0
 msgid "Menu Action"
-msgstr ""
+msgstr "Menü Aktion"
 
 #. module: portal
 #: field:res.portal.wizard.user,name:0
 msgid "User Name"
-msgstr ""
+msgstr "Benutzer Name"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_portal_widget
 msgid "Portal Widgets"
-msgstr ""
+msgstr "Portal Oberflächenelemente"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_portal
-#: model:ir.module.module,shortdesc:portal.module_meta_information
+#: model:ir.module.category,name:portal.module_category_portal
 #: view:res.portal:0
 #: field:res.portal.widget,portal_id:0
 #: field:res.portal.wizard,portal_id:0
 msgid "Portal"
-msgstr ""
+msgstr "Portal"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:35
 #, python-format
 msgid "Your OpenERP account at %(company)s"
-msgstr ""
+msgstr "Ihr OpenERP Konto bei %(company)s"
 
 #. module: portal
-#: code:addons/portal/portal.py:110
-#: code:addons/portal/portal.py:184
+#: code:addons/portal/portal.py:106
+#: code:addons/portal/portal.py:177
 #, python-format
 msgid "%s Menu"
-msgstr ""
+msgstr "%s Menü"
 
 #. module: portal
 #: help:res.portal.wizard,portal_id:0
 msgid "The portal in which new users must be added"
-msgstr ""
+msgstr "Das Portal, zu dem neue Benutzer hinzugefügt werden müssen"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_portal_wizard
+msgid "Portal Wizard"
+msgstr "Portal Assistent"
 
 #. module: portal
 #: help:res.portal,widget_ids:0
 msgid "Widgets assigned to portal users"
-msgstr ""
+msgstr "Oberflächenelemente, die Portalbenutzern zugeordnet sind"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:163
 #, python-format
 msgid "(missing url)"
-msgstr ""
+msgstr "(fehlende URL)"
 
 #. module: portal
 #: view:share.wizard:0
 #: field:share.wizard,user_ids:0
 msgid "Existing users"
-msgstr ""
+msgstr "Bestehende Benutzer"
 
 #. module: portal
 #: field:res.portal.wizard.user,wizard_id:0
 msgid "Wizard"
-msgstr ""
+msgstr "Assistent"
 
 #. module: portal
 #: help:res.portal.wizard.user,user_email:0
@@ -220,63 +206,65 @@ msgid ""
 "Will be used as user login.  Also necessary to send the account information "
 "to new users"
 msgstr ""
+"Wird als Benutzer Login verwendet. Ebenso notwendig die Kontoinformation an "
+"neue Benutzer zu senden."
 
 #. module: portal
-#: field:res.portal.wizard.user,lang:0
-msgid "Language"
-msgstr ""
+#: field:res.portal,parent_menu_id:0
+msgid "Parent Menu"
+msgstr "Obermenü"
 
 #. module: portal
 #: field:res.portal,url:0
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: portal
-#: view:res.portal:0
-msgid "Widgets assigned to Users"
-msgstr ""
+#: field:res.portal.widget,widget_id:0
+msgid "Widget"
+msgstr "Oberflächenelement"
 
 #. module: portal
 #: help:res.portal.wizard.user,lang:0
 msgid "The language for the user's user interface"
-msgstr ""
+msgstr "Die Sprache für die Benutzerschnittstelle"
 
 #. module: portal
 #: view:res.portal.wizard:0
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #. module: portal
 #: view:res.portal:0
 msgid "Website"
-msgstr ""
+msgstr "Webseite"
 
 #. module: portal
 #: view:res.portal:0
 msgid "Create Parent Menu"
-msgstr ""
+msgstr "Erstelle Obermenü"
 
 #. module: portal
 #: view:res.portal.wizard:0
 msgid ""
 "The following text will be included in the welcome email sent to users."
-msgstr ""
+msgstr "Der folgende Text wird im Willkommen E-Mail verwendet werden"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:135
 #, python-format
 msgid "Email required"
-msgstr ""
+msgstr "E-Mail ist erforderlich"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: portal
 #: constraint:res.portal.wizard.user:0
 msgid "Invalid email address"
-msgstr ""
+msgstr "Ungültige E-Mail Adresse"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:136
@@ -284,28 +272,25 @@ msgstr ""
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
+"Sie müssen Ihre  E-Mail Adresse in den Benuztereinstellungen erfassen um E-"
+"Mails senden zu können."
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_menu
 msgid "ir.ui.menu"
-msgstr ""
+msgstr "ir.ui.menu"
 
 #. module: portal
 #: help:res.portal,group_id:0
 msgid "The group extended by this portal"
-msgstr ""
+msgstr "Die diesem Portal zugeordnete Gruppe"
 
 #. module: portal
 #: view:res.portal:0
 #: view:res.portal.wizard:0
 #: field:res.portal.wizard,user_ids:0
 msgid "Users"
-msgstr ""
-
-#. module: portal
-#: field:res.portal,other_group_ids:0
-msgid "Other User Groups"
-msgstr ""
+msgstr "Benutzer"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.portal_list_action
@@ -313,38 +298,38 @@ msgstr ""
 #: model:ir.ui.menu,name:portal.portal_menu
 #: view:res.portal:0
 msgid "Portals"
-msgstr ""
+msgstr "Portale"
 
 #. module: portal
 #: help:res.portal,parent_menu_id:0
 msgid "The menu action opens the submenus of this menu item"
-msgstr ""
+msgstr "Die Menü-Aktion öffnet Unter-Menüeinträge dieses Menüeintrags"
 
 #. module: portal
 #: field:res.portal.widget,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sequenz"
 
 #. module: portal
 #: field:res.users,partner_id:0
 msgid "Related Partner"
-msgstr ""
+msgstr "referenzierter Geschäftspartner"
 
 #. module: portal
 #: view:res.portal:0
 msgid "Portal Menu"
-msgstr ""
+msgstr "Portal Menü"
 
 #. module: portal
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "2 Benuzter können nicht den gleichen Login Code haben."
 
 #. module: portal
 #: view:res.portal.wizard:0
 #: field:res.portal.wizard,message:0
 msgid "Invitation message"
-msgstr ""
+msgstr "Einladungstext"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:36
@@ -367,26 +352,26 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: model:ir.model,name:portal.model_res_portal_wizard
-msgid "Portal Wizard"
+#: model:res.groups,name:portal.group_portal_manager
+msgid "Manager"
 msgstr ""
 
 #. module: portal
 #: help:res.portal.wizard.user,name:0
 msgid "The user's real name"
-msgstr ""
+msgstr "Der vollständige Name des Benutzers"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.address_wizard_action
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: view:res.portal.wizard:0
 msgid "Add Portal Access"
-msgstr ""
+msgstr "Füge Portalberechtigung hinzu"
 
 #. module: portal
 #: field:res.portal.wizard.user,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: portal
 #: model:ir.actions.act_window,help:portal.portal_list_action
@@ -398,8 +383,19 @@ msgid ""
 "the portal's users.\n"
 "            "
 msgstr ""
+"\n"
+"Ein Portal erlaubt die Zuordnung von bestimmten Sichten und Regeln zu einer "
+"Benutzergruppe (die Portalgruppe).\n"
+"Ein Portalmenu, Oberflächenelemente und einzelne Gruppen können "
+"Portalbenutzern zugeordnet werden.\n"
+"            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_share_wizard
 msgid "Share Wizard"
+msgstr "Freigabeassistent"
+
+#. module: portal
+#: model:res.groups,name:portal.group_portal_officer
+msgid "Officer"
 msgstr ""

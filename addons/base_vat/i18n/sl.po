@@ -6,61 +6,48 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2009-11-17 08:49+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:05+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:03+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:87
+#: code:addons/base_vat/base_vat.py:125
 #, python-format
 msgid ""
-"The Vat does not seems to be correct. You should have entered something like "
-"this %s"
-msgstr "DDV ni pravilen. Vnesti morate podobno kot je to%s"
-
-#. module: base_vat
-#: model:ir.module.module,description:base_vat.module_meta_information
-msgid ""
-"\n"
-"    Enable the VAT Number for the partner. Check the validity of that VAT "
-"Number.\n"
-"\n"
-"    This module follows the methods stated at http://sima-pc.com/nif.php "
-"for\n"
-"    checking the validity of VAT Number assigned to partners in European "
-"countries.\n"
-"    "
+"This VAT number does not seem to be valid.\n"
+"Note: the expected format is %s"
 msgstr ""
-"\n"
-"    Omoogčite DDV številko za vaše stranke. Preverite veljavnost DDV "
-"številk.\n"
-"\n"
-"    Ta modul upošteva metodo opisano na http://sima-pc.com/nif.php za\n"
-"    preverjanje veljavnosti VAT številk dodeljenih strankam iz evropskih "
-"držav.\n"
-"    "
 
 #. module: base_vat
-#: model:ir.module.module,shortdesc:base_vat.module_meta_information
-msgid "Base VAT - To check VAT number validity"
-msgstr "Osnovni DDV - za preverjanje veljavnosti DDV številk"
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr ""
 
 #. module: base_vat
 #: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Napaka! Ni mogoče rekurzivno kreirati pridruženih članov"
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:88
-#, python-format
-msgid "The VAT is invalid, It should begin with the country code"
-msgstr "DDV številka je napačna. Začeti se mora s kodo države"
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: base_vat
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -77,6 +64,13 @@ msgid "Partner"
 msgstr "Stranka"
 
 #. module: base_vat
+#: help:res.company,vat_check_vies:0
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr ""
+
+#. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
 msgstr "Izkaz DDV-ja"
@@ -91,3 +85,39 @@ msgstr "Izkaz DDV-ja"
 #~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
 #~ msgstr ""
 #~ "Omogoči identifikacijo za DDV partnerja. Preveri veljavnost DDV številke."
+
+#, python-format
+#~ msgid ""
+#~ "The Vat does not seems to be correct. You should have entered something like "
+#~ "this %s"
+#~ msgstr "DDV ni pravilen. Vnesti morate podobno kot je to%s"
+
+#~ msgid "Base VAT - To check VAT number validity"
+#~ msgstr "Osnovni DDV - za preverjanje veljavnosti DDV številk"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Napaka! Ni mogoče rekurzivno kreirati pridruženih članov"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Enable the VAT Number for the partner. Check the validity of that VAT "
+#~ "Number.\n"
+#~ "\n"
+#~ "    This module follows the methods stated at http://sima-pc.com/nif.php "
+#~ "for\n"
+#~ "    checking the validity of VAT Number assigned to partners in European "
+#~ "countries.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Omoogčite DDV številko za vaše stranke. Preverite veljavnost DDV "
+#~ "številk.\n"
+#~ "\n"
+#~ "    Ta modul upošteva metodo opisano na http://sima-pc.com/nif.php za\n"
+#~ "    preverjanje veljavnosti VAT številk dodeljenih strankam iz evropskih "
+#~ "držav.\n"
+#~ "    "
+
+#, python-format
+#~ msgid "The VAT is invalid, It should begin with the country code"
+#~ msgstr "DDV številka je napačna. Začeti se mora s kodo države"

@@ -23,7 +23,7 @@
 {
     'name': 'Multi-Company',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'complexity': "expert",
     'description': """
 This module is for managing a multicompany environment.

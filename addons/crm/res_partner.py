@@ -33,6 +33,44 @@ class res_partner(osv.osv):
         'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
             'Phonecalls'),
     }
+
+    def redirect_partner_form(self, cr, uid, partner_id, context=None):
+        search_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'view_res_partner_filter')
+        value = {
+            'domain': "[]",
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'res.partner',
+            'res_id': int(partner_id),
+            'view_id': False,
+            'context': context,
+            'type': 'ir.actions.act_window',
+            'search_view_id': search_view and search_view[1] or False
+        }
+        return value
+
+    def make_opportunity(self, cr, uid, ids, opportunity_summary, planned_revenue=0.0, probability=0.0, partner_id=None, context=None):
+        categ = self.pool.get('crm.case.categ')
+        address = self.address_get(cr, uid, ids)
+        categ_ids = categ.search(cr, uid, [('object_id.model','=','crm.lead')])
+        lead = self.pool.get('crm.lead')
+        opportunity_ids = {}
+        for partner in self.browse(cr, uid, ids, context=context):
+            address = self.address_get(cr, uid, [partner.id])['default']
+            if not partner_id:
+                partner_id = partner.id
+            opportunity_id = lead.create(cr, uid, {
+                'name' : opportunity_summary,
+                'planned_revenue' : planned_revenue,
+                'probability' : probability,
+                'partner_id' : partner_id,
+                'partner_address_id' : address,
+                'categ_id' : categ_ids and categ_ids[0] or '',
+                'state' :'draft',
+                'type': 'opportunity'
+            }, context=context)
+            opportunity_ids[partner_id] = opportunity_id
+        return opportunity_ids
 res_partner()
 
 

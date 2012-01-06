@@ -5,7 +5,6 @@
     account_id: account.cash
     amount: 1000.0
     company_id: base.main_company
-    currency_id: base.EUR
     journal_id: account.bank_journal
     name: Voucher for Axelor
     narration: Basic Pc
@@ -48,7 +47,7 @@
 -
   Now I create a Vendor Voucher
 -
-  !record {model: account.voucher, id: account_voucher_voucheraxelor0}:
+  !record {model: account.voucher, id: account_voucher_voucheraxelor0, view: False}:
     account_id: account.cash
     amount: 1000.0
     company_id: base.main_company

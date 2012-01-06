@@ -7,30 +7,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="sale.board_sales_form"/>
             <field name="arch" type="xml">
-            <xpath expr="/form/hpaned/child1/action[@string='My Quotations']" position="before">
-                <action
-                     string="My Open Opportunities"
-                     name="%(crm.act_my_oppor)d"
-                     colspan="4"
-                     height="150"
-                     groups="base.group_sale_salesman,base.group_sale_manager"
-                     width="510"/>
-            </xpath>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="board_crm_form_inherit_replace2">
-            <field name="name">board.crm.form.inherit.replace1</field>
-            <field name="model">board.board</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="sale.board_sales_form"/>
-            <field name="arch" type="xml">
-            <xpath expr="/form/hpaned/child1/action[@string='My Quotations']" position="after">
-                <action
-                     string="My Meetings"
-                     name="%(crm.act_my_meetings)d"
-                     height="150"
-                     colspan="4"/>
+            <xpath expr="/form/board/column/action[@string='My Quotations']" position="before">
+                <action name="%(crm.act_my_oppor)d"
+                     string="My Opportunities"
+                    creatable="true"
+                     />
             </xpath>
             </field>
         </record>
@@ -41,16 +22,14 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="sale.board_sales_form"/>
             <field name="arch" type="xml">
-            <xpath expr="/form/hpaned/child2/action[@string='Monthly Turnover']" position="before">
-                <action
+            <xpath expr="/form/board/column/action[@string='Monthly Turnover']" position="before">
+                <action name="%(crm.act_my_oppor_stage)d"
                      string="My Planned Revenues by Stage"
-                     name="%(crm.act_my_oppor_stage)d"
-                     groups="base.group_sale_salesman,base.group_sale_manager"
-                     colspan="4"/>
+                     />
             </xpath>
             </field>
         </record>
-        <menuitem icon="terp-partner"
+        <menuitem name="Sales"
             id="base.menu_base_partner" action="sale.open_board_sales"/>
     </data>
 </openerp>

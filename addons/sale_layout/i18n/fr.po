@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-01-13 07:32+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -15,37 +15,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:44+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:17+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
+
+#. module: sale_layout
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
 msgid "Sub Total"
 msgstr "Sous-total"
-
-#. module: sale_layout
-#: model:ir.module.module,description:sale_layout.module_meta_information
-msgid ""
-"\n"
-"    This module provides features to improve the layout of the Sales Order.\n"
-"\n"
-"    It gives you the possibility to\n"
-"        * order all the lines of a sales order\n"
-"        * add titles, comment lines, sub total lines\n"
-"        * draw horizontal lines and put page breaks\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"    Ce module permet d'améliorer la disposition des bons de commandes.\n"
-"\n"
-"    Il donne la possibilité\n"
-"        * de commander toutes les lignes d'un bon de commande\n"
-"        * d'ajouter des titres des lignes de commentaires, des lignes de "
-"sous-total\n"
-"        * d'ajouter des lignes horizontales et des sauts de page\n"
-"\n"
-"    "
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -63,9 +44,9 @@ msgid "Note"
 msgstr "Remarque"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Unit Price"
-msgstr "Prix unitaire"
+#: field:sale.order.line,layout_type:0
+msgid "Line Type"
+msgstr ""
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -83,14 +64,14 @@ msgid "Disc.(%)"
 msgstr "Rem.(%)"
 
 #. module: sale_layout
-#: field:sale.order.line,layout_type:0
-msgid "Layout Type"
-msgstr "Mise en page"
+#: report:sale.order.layout:0
+msgid "Unit Price"
+msgstr "Prix unitaire"
 
 #. module: sale_layout
 #: view:sale.order:0
-msgid "Seq."
-msgstr "Séq."
+msgid "Invoice Lines"
+msgstr "Lignes de facture"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -103,19 +84,9 @@ msgid "Product"
 msgstr "Produit"
 
 #. module: sale_layout
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "La référence de la commande doit être unique !"
-
-#. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Description"
 msgstr "Description"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Manual Description"
-msgstr "Description manuelle"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -123,14 +94,9 @@ msgid "Our Salesman"
 msgstr "Notre vendeur"
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "Automatic Declaration"
-msgstr "Déclaration automatique"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Invoice Lines"
-msgstr "Lignes de facture"
+#: report:sale.order.layout:0
+msgid "Tel. :"
+msgstr "Tél. :"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -163,14 +129,9 @@ msgid "Invoice address :"
 msgstr "Adresse de facturation :"
 
 #. module: sale_layout
-#: model:ir.module.module,shortdesc:sale_layout.module_meta_information
-msgid "Sale Order Layout"
-msgstr "Présentation du bon bon de commandes"
-
-#. module: sale_layout
-#: selection:sale.order.line,layout_type:0
-msgid "Page Break"
-msgstr "Saut de page"
+#: report:sale.order.layout:0
+msgid "Fax :"
+msgstr "Fax :"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -188,6 +149,7 @@ msgid "Shipping address :"
 msgstr "Adresse de livraison :"
 
 #. module: sale_layout
+#: view:sale.order:0
 #: report:sale.order.layout:0
 msgid "Taxes"
 msgstr "Taxes"
@@ -196,11 +158,6 @@ msgstr "Taxes"
 #: report:sale.order.layout:0
 msgid "Net Total :"
 msgstr "Total net :"
-
-#. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Tel. :"
-msgstr "Tél. :"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -216,11 +173,6 @@ msgstr "Conditions de paiement"
 #: view:sale.order:0
 msgid "History"
 msgstr "Historique"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Sale Order Lines"
-msgstr "Lignes de commande"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -273,9 +225,9 @@ msgid "Taxes :"
 msgstr "Taxes :"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Fax :"
-msgstr "Fax :"
+#: selection:sale.order.line,layout_type:0
+msgid "Page Break"
+msgstr "Saut de page"
 
 #. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order
@@ -302,6 +254,9 @@ msgstr "Ligne de bon de commande"
 msgid "Stock Moves"
 msgstr "Mouvements de stocks"
 
+#~ msgid "Sale Order Lines"
+#~ msgstr "Lignes de commande"
+
 #~ msgid ""
 #~ "\n"
 #~ "    This module provides some features to improve the layout of the Sale "
@@ -326,8 +281,48 @@ msgstr "Mouvements de stocks"
 #~ "\n"
 #~ "    "
 
+#~ msgid "Layout Type"
+#~ msgstr "Mise en page"
+
+#~ msgid "Manual Description"
+#~ msgstr "Description manuelle"
+
+#~ msgid "Automatic Declaration"
+#~ msgstr "Déclaration automatique"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valide pour l'architecture de la vue"
 
+#~ msgid "Seq."
+#~ msgstr "Séq."
+
 #~ msgid "sale_layout"
 #~ msgstr "sale_layout"
+
+#~ msgid "Sale Order Layout"
+#~ msgstr "Présentation du bon bon de commandes"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "La référence de la commande doit être unique !"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module provides features to improve the layout of the Sales Order.\n"
+#~ "\n"
+#~ "    It gives you the possibility to\n"
+#~ "        * order all the lines of a sales order\n"
+#~ "        * add titles, comment lines, sub total lines\n"
+#~ "        * draw horizontal lines and put page breaks\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Ce module permet d'améliorer la disposition des bons de commandes.\n"
+#~ "\n"
+#~ "    Il donne la possibilité\n"
+#~ "        * de commander toutes les lignes d'un bon de commande\n"
+#~ "        * d'ajouter des titres des lignes de commentaires, des lignes de "
+#~ "sous-total\n"
+#~ "        * d'ajouter des lignes horizontales et des sauts de page\n"
+#~ "\n"
+#~ "    "

@@ -42,8 +42,8 @@ class action_traceability(osv.osv_memory):
         lot_id = ids
         if context is None:
             context = {}
-        type1 = context['type'] or 'move_history_ids2'
-        field = context['field'] or 'tracking_id'
+        type1 = context.get('type', 'move_history_ids2')
+        field = context.get('field', 'tracking_id')
         obj = self.pool.get('stock.move')
         ids = obj.search(cr, uid, [(field, 'in',lot_id)])
         cr.execute('select id from ir_ui_view where model=%s and field_parent=%s and type=%s', ('stock.move', type1, 'tree'))

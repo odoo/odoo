@@ -35,30 +35,29 @@ class report_rappel(report_sxw.rml_parse):
             'get_text': self._get_text
         })
 
-    def _ids_to_objects(self, partner_ids):
+    def _ids_to_objects(self, ids):
         pool = pooler.get_pool(self.cr.dbname)
-        all_partners = []
-        for partner in pool.get('res.partner').browse(self.cr, self.uid, partner_ids):
-            if partner not in all_partners:
-                all_partners.append(partner)
-        return all_partners
+        all_lines = []
+        for line in pool.get('account_followup.stat.by.partner').browse(self.cr, self.uid, ids):
+            if line not in all_lines:
+                all_lines.append(line)
+        return all_lines
 
-    def _adr_get(self, partner, type):
+    def _adr_get(self, stat_line, type):
         res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
         res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')
-        adr = res_partner.address_get(self.cr, self.uid, [partner.id], [type])[type]
+        adr = res_partner.address_get(self.cr, self.uid, [stat_line.partner_id.id], [type])[type]
         return adr and res_partner_address.read(self.cr, self.uid, [adr]) or [{}]
 
-    def _lines_get(self, partner):
+    def _lines_get(self, stat_by_partner_line):
         pool = pooler.get_pool(self.cr.dbname)
         moveline_obj = pool.get('account.move.line')
         company_obj = pool.get('res.company')
         obj_currency =  pool.get('res.currency')
-        #FIXME: search on company accounting entries only
         movelines = moveline_obj.search(self.cr, self.uid,
-                [('partner_id', '=', partner.id),
+                [('partner_id', '=', stat_by_partner_line.partner_id.id),
                     ('account_id.type', '=', 'receivable'),
-                    ('reconcile_id', '=', False), ('state', '<>', 'draft')])
+                    ('reconcile_id', '=', False), ('state', '<>', 'draft'),('company_id','=', stat_by_partner_line.company_id.id)])
         movelines = moveline_obj.browse(self.cr, self.uid, movelines)
         base_currency = movelines[0].company_id.currency_id
         final_res = []
@@ -73,7 +72,7 @@ class report_rappel(report_sxw.rml_parse):
                          'ref': line.ref,
                          'date':line.date,
                          'date_maturity': line.date_maturity,
-                         'balance': line.currency_id and line.amount_currency or (line.debit - line.credit),
+                         'balance': currency.id <> line.company_id.currency_id.id and line.amount_currency or (line.debit - line.credit),
                          'blocked': line.blocked,
                          'currency_id': currency.symbol or currency.name,
                          }
@@ -85,7 +84,7 @@ class report_rappel(report_sxw.rml_parse):
         return final_res
 
 
-    def _get_text(self, partner, followup_id, context=None):
+    def _get_text(self, stat_line, followup_id, context=None):
         if context is None:
             context = {}
         fp_obj = pooler.get_pool(self.cr.dbname).get('account_followup.followup')
@@ -96,10 +95,10 @@ class report_rappel(report_sxw.rml_parse):
         li_delay.sort(reverse=True)
         text = ""
         a = {}
-        partner_line = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',partner.id),('reconcile_id','=',False)])
+        partner_line_ids = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',stat_line.partner_id.id),('reconcile_id','=',False),('company_id','=',stat_line.company_id.id)])
         partner_delay = []
-        context.update({'lang': partner.lang})
-        for i in pooler.get_pool(self.cr.dbname).get('account.move.line').browse(self.cr, self.uid, partner_line, context):
+        context.update({'lang': stat_line.partner_id.lang})
+        for i in pooler.get_pool(self.cr.dbname).get('account.move.line').browse(self.cr, self.uid, partner_line_ids, context):
             for delay in li_delay:
                 if  i.followup_line_id and str(i.followup_line_id.delay)==str(delay):
                     text = i.followup_line_id.description
@@ -108,16 +107,16 @@ class report_rappel(report_sxw.rml_parse):
         text = partner_delay and a[max(partner_delay)] or ''
         if text:
             text = text % {
-                'partner_name': partner.name,
+                'partner_name': stat_line.partner_id.name,
                 'date': time.strftime('%Y-%m-%d'),
-                'company_name': fp_obj.browse(self.cr, self.uid, followup_id).company_id.name,
+                'company_name': stat_line.company_id.name,
                 'user_signature': pooler.get_pool(self.cr.dbname).get('res.users').browse(self.cr, self.uid, self.uid, context).signature or '',
             }
 
         return text
 
 report_sxw.report_sxw('report.account_followup.followup.print',
-        'res.partner', 'addons/account_followup/report/account_followup_print.rml',
+        'account_followup.stat.by.partner', 'addons/account_followup/report/account_followup_print.rml',
         parser=report_rappel)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

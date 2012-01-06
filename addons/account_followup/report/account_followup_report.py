@@ -68,7 +68,7 @@ class account_followup_stat(osv.osv):
         cr.execute("""
             create or replace view account_followup_stat as (
                 SELECT
-                    l.partner_id as id,
+                    l.partner_id AS id,
                     l.partner_id AS partner_id,
                     min(l.date) AS date_move,
                     max(l.date) AS date_move_last,

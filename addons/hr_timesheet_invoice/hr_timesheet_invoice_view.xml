@@ -7,23 +7,27 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
-                <field name="user_id" position="after">
-                    <group colspan="4" col="4">
-                        <separator colspan="4" string="Invoicing Data"/>
-                        <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection"/>
-                        <field name="to_invoice" widget="selection" />
+                <group name="contract" position="after">
+                    <group colspan="2" col="2" name="invoice_data">
+                        <separator colspan="2" string="Invoicing Data"/>
+                        <field name="to_invoice" widget="selection"/>
+                        <field name="pricelist_id" domain="[('type','=','sale')]" attrs="{'required':[('to_invoice','!=',False)]}"/>
                         <field name="amount_max"/>
-                        <field name="amount_invoiced"/>
-                        <separator colspan="4"/>
-                        <group col="9" colspan="8">
-	                        <field name="state" readonly="1"/>
-	                        <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
-	                        <button name="set_open" string="Reactivate Account" type="object" states="pending,cancelled,close,draft" icon="gtk-ok"/>
-	                        <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
-	                        <button name="set_close" string="Close" type="object" states="open,pending" icon="terp-dialog-close"/>
-                        </group>
                     </group>
-                </field>
+                    <group colspan="2" col="2" name="invoice_stats">
+                        <separator colspan="4" string="Invoicing Statistics"/>
+                        <field name="amount_invoiced"/>
+                    </group>
+                    <separator colspan="4"/>
+                    <group col="9" colspan="8">
+                        <field name="state" readonly="1" widget="statusbar"
+                            statusbar_visible="open,pending,close" statusbar_colors='{"pending":"red", "template":"blue"}'/>
+                        <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
+                        <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close,draft" icon="gtk-ok"/>
+                        <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
+                        <button name="set_close" string="Close" type="object" states="open,pending" icon="terp-dialog-close"/>
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -85,7 +89,8 @@
             <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
                 <field name="date" position="before">
-                    <filter name="to_invoice" string="To Invoice" context="{'to_invoice': 1}" domain="[('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/>
+                    <filter name="to_invoice" string="To Invoice" context="{'to_invoice': 1}" domain="[('invoice_id','=',False), ('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/>
+                    <filter name="invoiced" string="Invoiced" domain="[('invoice_id','!=',False), ('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/> 
                     <separator orientation="vertical"/>
                 </field>
             </field>
@@ -123,7 +128,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
             <field name="context">{'search_default_to_invoice': 1}</field>
- 			<field name="search_view_id" ref="account.view_account_analytic_line_filter"/>            
+            <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>            
             <field name="help">This list shows you every task you can invoice to the customer. Select the lines and click the Action button to generate the invoices automatically.</field>
         </record>
         <menuitem

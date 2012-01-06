@@ -40,7 +40,7 @@ Dashboard for purchase management that includes:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images' : ['images/purchase_order.jpeg', 'images/purchase_analysis.jpeg', 'images/request_for_quotation.jpeg'],
-    'depends': ['base', 'account', 'stock', 'process', 'procurement'],
+    'depends': ['stock', 'process', 'procurement'],
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
@@ -58,15 +58,18 @@ Dashboard for purchase management that includes:
         'process/purchase_process.xml',
         'report/purchase_report_view.xml',
         'board_purchase_view.xml',
+        'edi/purchase_order_action_data.xml',
     ],
     'test': [
-        'test/process/cancel_order.yml', 
+        'test/process/cancel_order.yml',
         'test/process/rfq2order2done.yml',
         'test/process/generate_invoice_from_reception.yml',
-        'test/process/run_scheduler.yml', 
-        'test/process/merge_order.yml', 
+        'test/process/run_scheduler.yml',
+        'test/process/merge_order.yml',
+        'test/process/edi_purchase_order.yml',
+        'test/process/invoice_on_poline.yml',
         'test/ui/print_report.yml',
-        'test/ui/duplicate_order.yml', 
+        'test/ui/duplicate_order.yml',
         'test/ui/delete_order.yml',
     ],
     'demo': [
@@ -76,5 +79,6 @@ Dashboard for purchase management that includes:
     'installable': True,
     'active': False,
     'certificate': '0057234283549',
+    'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

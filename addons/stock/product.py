@@ -350,7 +350,7 @@ class product_product(osv.osv):
         'virtual_available': fields.function(_product_available, multi='qty_available',
             type='float',  digits_compute=dp.get_precision('Product UoM'),
             string='Quantity Available',
-            help="Forcasted quantity (computed as Quantity On Hand "
+            help="Forecast quantity (computed as Quantity On Hand "
                  "- Outgoing + Incoming)\n"
                  "In a context with a single Stock Location, this includes "
                  "goods stored at this Location, or any of its children.\n"
@@ -403,7 +403,7 @@ class product_product(osv.osv):
     }
 
     _defaults = {
-        'valuation': lambda *a: 'manual_periodic',
+        'valuation': 'manual_periodic',
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -482,11 +482,13 @@ class product_template(osv.osv):
         'property_stock_account_input': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Input Account', view_load=True,
-            help='When doing real-time inventory valuation, counterpart Journal Items for all incoming stock moves will be posted in this account. If not set on the product, the one from the product category is used.'),
+            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used."),
         'property_stock_account_output': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Output Account', view_load=True,
-            help='When doing real-time inventory valuation, counterpart Journal Items for all outgoing stock moves will be posted in this account. If not set on the product, the one from the product category is used.'),
+            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
     }
 
 product_template()
@@ -502,11 +504,15 @@ class product_category(osv.osv):
         'property_stock_account_input_categ': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Input Account', view_load=True,
-            help='When doing real-time inventory valuation, counterpart Journal Items for all incoming stock moves will be posted in this account. This is the default value for all products in this category, it can also directly be set on each product.'),
+            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
+                 "can also directly be set on each product"),
         'property_stock_account_output_categ': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Output Account', view_load=True,
-            help='When doing real-time inventory valuation, counterpart Journal Items for all outgoing stock moves will be posted in this account. This is the default value for all products in this category, it can also directly be set on each product.'),
+            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
+                 "can also directly be set on each product"),
         'property_stock_valuation_account_id': fields.property('account.account',
             type='many2one',
             relation='account.account',

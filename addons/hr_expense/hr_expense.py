@@ -57,6 +57,7 @@ class hr_expense_expense(osv.osv):
 
     _name = "hr.expense.expense"
     _description = "Expense"
+    _order = "id desc"
     _columns = {
         'name': fields.char('Description', size=128, required=True),
         'id': fields.integer('Sheet ID', readonly=True),
@@ -87,6 +88,7 @@ class hr_expense_expense(osv.osv):
             \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
     }
     _defaults = {
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'draft',
         'employee_id': _employee_get,
@@ -137,8 +139,9 @@ class hr_expense_expense(osv.osv):
             inv_ids.append(self.browse(cr, uid, id).invoice_id.id)
         return {
             'name': _('Supplier Invoices'),
+            'view_type': 'form',
             'view_mode': 'form',
-            'view_id': [res[1] if res else False],
+            'view_id': [res and res[1] or False],
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice', 'journal_type': 'purchase'}",
             'type': 'ir.actions.act_window',
@@ -265,7 +268,7 @@ class hr_expense_line(osv.osv):
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
         'ref': fields.char('Reference', size=32),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of expense lines."),
+        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of expense lines."),
         }
     _defaults = {
         'unit_quantity': 1,

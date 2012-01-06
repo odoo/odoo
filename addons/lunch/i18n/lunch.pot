@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15:37+0000\n"
-"PO-Revision-Date: 2011-01-11 11:15:37+0000\n"
+"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-12-22 18:45+0000\n"
+"PO-Revision-Date: 2011-12-22 18:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,11 @@ msgstr ""
 #. module: lunch
 #: view:lunch.cashbox.clean:0
 msgid "Reset cashbox"
+msgstr ""
+
+#. module: lunch
+#: view:report.lunch.amount:0
+msgid "Box amount in current year"
 msgstr ""
 
 #. module: lunch
@@ -57,16 +62,6 @@ msgid "    7 Days    "
 msgstr ""
 
 #. module: lunch
-#: model:ir.module.module,description:lunch.module_meta_information
-msgid "\n"
-"    The base module to manage lunch\n"
-"\n"
-"    keep track for the Lunch Order ,Cash Moves ,CashBox ,Product.\n"
-"    Apply Different Category for the product.\n"
-"    "
-msgstr ""
-
-#. module: lunch
 #: view:lunch.cashmove:0
 #: view:lunch.order:0
 msgid "Today"
@@ -97,6 +92,11 @@ msgstr ""
 #: view:lunch.order:0
 #: view:lunch.order.cancel:0
 msgid "Cancel Order"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_create_cashbox
+msgid "You can create on cashbox by employee if you want to keep track of the amount due by employee according to what have been ordered."
 msgstr ""
 
 #. module: lunch
@@ -145,11 +145,6 @@ msgid "Confirm"
 msgstr ""
 
 #. module: lunch
-#: model:ir.module.module,shortdesc:lunch.module_meta_information
-msgid "Lunch Module"
-msgstr ""
-
-#. module: lunch
 #: view:lunch.order:0
 msgid "Search Lunch Order"
 msgstr ""
@@ -157,6 +152,11 @@ msgstr ""
 #. module: lunch
 #: field:lunch.order,state:0
 msgid "State"
+msgstr ""
+
+#. module: lunch
+#: selection:lunch.order,state:0
+msgid "New"
 msgstr ""
 
 #. module: lunch
@@ -182,6 +182,11 @@ msgstr ""
 #. module: lunch
 #: field:lunch.order,descript:0
 msgid "Description Order"
+msgstr ""
+
+#. module: lunch
+#: view:report.lunch.amount:0
+msgid "Box amount in last month"
 msgstr ""
 
 #. module: lunch
@@ -233,6 +238,11 @@ msgstr ""
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove
 msgid "Cash Move"
+msgstr ""
+
+#. module: lunch
+#: view:report.lunch.order:0
+msgid "Tasks performed in last 365 days"
 msgstr ""
 
 #. module: lunch
@@ -306,8 +316,8 @@ msgid "Are you sure you want to reset this cashbox ?"
 msgstr ""
 
 #. module: lunch
-#: selection:lunch.order,state:0
-msgid "Draft"
+#: model:ir.actions.act_window,help:lunch.view_lunch_product_form_installer
+msgid "Define all products that the employees can order for the lunch time. If you order lunch at several places, you can use the product categories to split by supplier. It will be easier for the lunch manager to filter lunch orders by categories."
 msgstr ""
 
 #. module: lunch
@@ -377,6 +387,12 @@ msgid "January"
 msgstr ""
 
 #. module: lunch
+#: field:lunch.cashmove,box:0
+#: field:report.lunch.amount,box:0
+msgid "Box Name"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashbox_clean
 msgid "clean cashbox"
 msgstr ""
@@ -404,9 +420,8 @@ msgid "Set CashBox to Zero"
 msgstr ""
 
 #. module: lunch
-#: field:lunch.cashmove,box:0
-#: field:report.lunch.amount,box:0
-msgid "Box Name"
+#: view:lunch.product:0
+msgid "General Information"
 msgstr ""
 
 #. module: lunch
@@ -432,6 +447,7 @@ msgstr ""
 #. module: lunch
 #: field:lunch.cashmove,name:0
 #: report:lunch.order:0
+#: view:lunch.product:0
 #: field:lunch.product,description:0
 msgid "Description"
 msgstr ""
@@ -493,6 +509,11 @@ msgid "Total amount"
 msgstr ""
 
 #. module: lunch
+#: view:report.lunch.order:0
+msgid "Tasks performed in last 30 days"
+msgstr ""
+
+#. module: lunch
 #: view:lunch.category:0
 msgid "Category related to Products"
 msgstr ""
@@ -516,6 +537,21 @@ msgstr ""
 #: model:ir.ui.menu,name:lunch.menu_lunch
 #: report:lunch.order:0
 msgid "Lunch Order"
+msgstr ""
+
+#. module: lunch
+#: view:report.lunch.amount:0
+msgid "Box amount in current month"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.view_lunch_product_form_installer
+msgid "Define Your Lunch Products"
+msgstr ""
+
+#. module: lunch
+#: view:report.lunch.order:0
+msgid "Tasks during last 7 days"
 msgstr ""
 
 #. module: lunch
@@ -544,5 +580,10 @@ msgstr ""
 #: view:report.lunch.order:0
 #: field:report.lunch.order,year:0
 msgid "Year"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_create_cashbox
+msgid "Create Lunch Cash Boxes"
 msgstr ""
 

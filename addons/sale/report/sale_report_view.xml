@@ -51,10 +51,11 @@
         <field name="arch" type="xml">
             <search string="Sales Analysis">
                 <group>
-                    <filter icon="terp-go-year" string="  Year  "
+                    <filter icon="terp-go-year" string="Year" name="year"
                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
                         help="Sales order created in current year"/>
-                    <filter icon="terp-go-month" string="   Month   "
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-go-month" string="Month"
                         name="month"
                         domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                         help="Sales order created in current month"/>
@@ -123,12 +124,12 @@
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_order_product_search"/>
         <field name="view_id" ref="view_order_product_tree"/>
-        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 
-    <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="11"/>
-    <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="1" groups="base.group_sale_manager"/>
+    <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="11" groups="base.group_sale_manager"/>
+    <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="1"/>
 
     <!--This views used in board_sale module -->
     <record id="view_sales_by_partner_graph" model="ir.ui.view">

@@ -1,0 +1,31 @@
+-
+  In order to test attendance process in OpenERP, I entry of SignIn of employee.
+-
+  !python {model: hr.sign.in.out}: |
+    context.update({'emp_id': [ref('hr.employee_al')]}) #TOFIX: emp_ids instead of 'emp_id'
+-
+  !record {model: hr.sign.in.out, id: employee_sign_in}:
+    {}
+-
+  Employee Signs In.
+-
+  !python {model: hr.sign.in.out}: |
+    self.si_check(cr, uid, [ref("employee_sign_in")], context=context)
+-
+  I check that Employee is "Present".
+-
+  !assert {model: hr.employee, id: hr.employee_al, severity: error, string: Employee should be in present state}:
+    - state == 'present'
+-
+  After few seconds, employee sign's out.
+-
+  !python {model: hr.sign.in.out}: |
+    import time
+    time.sleep(2)
+    self.so_check(cr, uid, [ref("employee_sign_in")], context=context)
+-
+  I check that Employee is "Absent".
+-
+  !assert {model: hr.employee, id: hr.employee_al, severity: error, string: Employee should be in absent state}:
+    - state == 'absent'
+

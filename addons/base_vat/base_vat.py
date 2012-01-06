@@ -61,27 +61,48 @@ class res_partner(osv.osv):
         vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
         return vat_country, vat_number
 
-    def check_vat(self, cr, uid, ids, context=None):
+    def simple_vat_check(self, cr, uid, country_code, vat_number, context=None):
         '''
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
-        country_obj = self.pool.get('res.country')
+        check_func_name = 'check_vat_' + country_code
+        check_func = getattr(self, check_func_name, None) or \
+                        getattr(vatnumber, check_func_name, None)
+        if not check_func:
+            # No VAT validation available, default to check that the country code exists
+            res_country = self.pool.get('res.country')
+            return bool(res_country.search(cr, uid, [('code', '=ilike', country_code)], context=context))
+        return check_func(vat_number)
+
+    def vies_vat_check(self, cr, uid, country_code, vat_number, context=None):
+        try:
+            # Validate against  VAT Information Exchange System (VIES)
+            # see also http://ec.europa.eu/taxation_customs/vies/
+            return vatnumber.check_vies(country_code.upper()+vat_number)
+        except Exception:
+            # see http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl
+            # Fault code may contain INVALID_INPUT, SERVICE_UNAVAILABLE, MS_UNAVAILABLE,
+            # TIMEOUT or SERVER_BUSY. There is no way we can validate the input
+            # with VIES if any of these arise, including the first one (it means invalid
+            # country code or empty VAT number), so we fall back to the simple check.
+            return self.simple_vat_check(cr, uid, country_code, vat_number, context=context)
+
+    def check_vat(self, cr, uid, ids, context=None):
+        user_company = self.pool.get('res.users').browse(cr, uid, uid).company_id
+        if user_company.vat_check_vies:
+            # force full VIES online check
+            check_func = self.vies_vat_check
+        else:
+            # quick and partial off-line checksum validation
+            check_func = self.simple_vat_check
+
         for partner in self.browse(cr, uid, ids, context=context):
             if not partner.vat:
                 continue
             vat_country, vat_number = self._split_vat(partner.vat)
-            check_func_name = 'check_vat_' + vat_country
-            check_func = getattr(self, check_func_name, None) or \
-                            getattr(vatnumber, check_func_name, None)
-            if not check_func:
-                # No VAT validation available, default to check that the country code
-                # exists.
-                if country_obj.search(cr, uid, [('code', 'ilike', vat_country)], context=context):
-                    continue
-                # Country code not found, considered invalid
+            if not check_func(cr, uid, vat_country, vat_number, context=context):
                 return False
-            return check_func(vat_number)
         return True
 
     def vat_change(self, cr, uid, ids, value, context=None):

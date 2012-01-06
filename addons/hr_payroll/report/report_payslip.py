@@ -44,6 +44,6 @@ class payslip_report(report_sxw.rml_parse):
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 
-report_sxw.report_sxw('report.test.pdf', 'hr.payslip', 'hr_payroll/report/report_payslip.rml', parser=payslip_report)
+report_sxw.report_sxw('report.payslip', 'hr.payslip', 'hr_payroll/report/report_payslip.rml', parser=payslip_report)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

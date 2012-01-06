@@ -154,8 +154,8 @@ class crm_case_categ(osv.osv):
     def _find_object_id(self, cr, uid, context=None):
         """Finds id for case object"""
         object_id = context and context.get('object_id', False) or False
-        ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
-        return ids and ids[0]
+        ids = self.pool.get('ir.model').search(cr, uid, [('id', '=', object_id)])
+        return ids and ids[0] or False
 
     _defaults = {
         'object_id' : _find_object_id
@@ -241,6 +241,8 @@ class crm_base(object):
             address = self.pool.get('res.partner.address').browse(cr, uid, add)
             data['value'] = {'email_from': address and address.email or False ,
                              'phone':  address and address.phone or False}
+        if 'phone' not in self._columns:
+            del data['value']['phone']
         return data
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
@@ -425,7 +427,7 @@ class crm_case(crm_base):
                     if case.section_id.parent_id.user_id:
                         data['user_id'] = case.section_id.parent_id.user_id.id
             else:
-                raise osv.except_osv(_('Error !'), _('You can not escalate, You are already at the top level regarding your sales-team category.'))
+                raise osv.except_osv(_('Error !'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data)
         cases = self.browse(cr, uid, ids)
         self.message_append(cr, uid, cases, _('Escalate'))
@@ -576,3 +578,5 @@ class users(osv.osv):
         return res
 
 users()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

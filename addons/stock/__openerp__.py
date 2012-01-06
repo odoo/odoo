@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Inventory Management",
+    "name" : "Warehouse Management",
     "version" : "1.1",
     "author" : "OpenERP SA",
     'complexity': "easy",
@@ -51,7 +51,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
     "init_xml" : [],
     "demo_xml" : [
         "stock_demo.xml",
-        "stock_demo_picking.yml",
+        "stock_demo.yml",
     ],
     "update_xml" : [
         "security/stock_security.xml",
@@ -79,15 +79,18 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "partner_view.xml",
         "report/report_stock_move_view.xml",
         "report/report_stock_view.xml",
-        "board_warehouse_view.xml"
+        "board_warehouse_view.xml",
     ],
     'test': [
-        'test/stock_test.yml',
+        'test/opening_stock.yml',
+        'test/shipment.yml',
         'test/stock_report.yml',
-        'test/stock_test_wizard.yml',
-        'test/stock_demo_backorder.yml'
     ],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '0055421559965',
+    "css": [ 'static/src/css/stock.css' ],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

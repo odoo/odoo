@@ -74,7 +74,7 @@
 -
   I click on the "Make Payment" wizard to pay the PoS order with a partial amount of 100.0 EUR
 - 
-  !record {model: pos.make.payment, id: pos_make_payment_0, context: {'active_id': ref('pos_order_pos0'), 'active_ids': [ref('pos_order_pos0')]} }:
+  !record {model: pos.make.payment, id: pos_make_payment_0, context: '{"active_id": ref("pos_order_pos0"), "active_ids": [ref("pos_order_pos0")]}' }:
     amount: 100.0
 -
   I click on the validate button to register the payment.
@@ -95,7 +95,7 @@
 -
   I pay the remaining balance.
 - 
-  !record {model: pos.make.payment, id: pos_make_payment_1, context: {'active_id': [ref('pos_order_pos0')], 'active_ids': [ref('pos_order_pos0')]} }:
+  !record {model: pos.make.payment, id: pos_make_payment_1, context: '{"active_id": ref("pos_order_pos0"), "active_ids": [ref("pos_order_pos0")]}' }:
     amount: !eval >
       (450*2 + 300*3*1.05)*0.95-100.0
 -

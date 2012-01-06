@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-02-07 18:31+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
 "<openerp@novotrade.hu>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:54+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:26+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: project_planning
 #: constraint:account.analytic.account:0
@@ -73,11 +73,6 @@ msgstr "Saját projektek tervezése"
 #: field:report_account_analytic.planning.user,timesheet:0
 msgid "Timesheet"
 msgstr "Munkaidő-kimutatás"
-
-#. module: project_planning
-#: model:ir.module.module,shortdesc:project_planning.module_meta_information
-msgid "Planning Management Module"
-msgstr "Tervezéskezelés modul"
 
 #. module: project_planning
 #: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
@@ -422,42 +417,6 @@ msgid "Total Remaining Tasks"
 msgstr "Összes hátralévő feladat"
 
 #. module: project_planning
-#: model:ir.module.module,description:project_planning.module_meta_information
-msgid ""
-"\n"
-"This module helps you to manage your plannings.\n"
-"\n"
-"This module is based on the analytic accounting and is totally integrated "
-"with\n"
-"* the timesheets encoding\n"
-"* the holidays management\n"
-"* the project management\n"
-"\n"
-"So that, each department manager can know if someone in his team has still "
-"unallocated time for a given planning (taking in consideration the validated "
-"leaves) or if he still needs to encode tasks.\n"
-"\n"
-"At the end of the month, the planning manager can also check if the encoded "
-"timesheets are respecting the planned time on each analytic account.\n"
-msgstr ""
-"\n"
-"Ez a modul a tervezés kezelését segíti.\n"
-"\n"
-"A vezetői számvitelre épül, és teljesen integrálva van az alábbi "
-"területekbe:\n"
-"* munkaidő-kimutatások berögzítése\n"
-"* szabadságok kezelése\n"
-"* projektmenedzsment\n"
-"\n"
-"Segítségével minden részlegvezető tudomást szerezhet arról, ha valamelyik "
-"beosztottjának még van kiosztatlan ideje az adott tervezésre (figyelembe "
-"véve a jóváhagyott szabadságokat), vagy ha még feladatokat kell "
-"berögzítenie.\n"
-"\n"
-"Hónap végén a tervezési vezető ellenőrizheti a berögzített munkaidő-"
-"kimutatásokat a gyűjtőkódokra tervezett idő vonatkozásában.\n"
-
-#. module: project_planning
 #: model:ir.model,name:project_planning.model_res_company
 msgid "Companies"
 msgstr "Vállalatok"
@@ -537,6 +496,11 @@ msgid "Reactivate"
 msgstr "Újraaktíválás"
 
 #. module: project_planning
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
+
+#. module: project_planning
 #: field:report_account_analytic.planning,user_id:0
 msgid "Responsible"
 msgstr "Felelős"
@@ -575,6 +539,11 @@ msgstr "Feladatok időkiosztása összesen"
 #: field:report_account_analytic.planning,date_to:0
 msgid "End Date"
 msgstr "Záró dátum"
+
+#. module: project_planning
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr ""
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -617,3 +586,40 @@ msgid ""
 "This value is given by the sum of time allocation with task(s) linked, "
 "expressed in days."
 msgstr "Feladatokkal kapcsolatos időkiosztás összege, napokban kifejezve."
+
+#~ msgid "Planning Management Module"
+#~ msgstr "Tervezéskezelés modul"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module helps you to manage your plannings.\n"
+#~ "\n"
+#~ "This module is based on the analytic accounting and is totally integrated "
+#~ "with\n"
+#~ "* the timesheets encoding\n"
+#~ "* the holidays management\n"
+#~ "* the project management\n"
+#~ "\n"
+#~ "So that, each department manager can know if someone in his team has still "
+#~ "unallocated time for a given planning (taking in consideration the validated "
+#~ "leaves) or if he still needs to encode tasks.\n"
+#~ "\n"
+#~ "At the end of the month, the planning manager can also check if the encoded "
+#~ "timesheets are respecting the planned time on each analytic account.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Ez a modul a tervezés kezelését segíti.\n"
+#~ "\n"
+#~ "A vezetői számvitelre épül, és teljesen integrálva van az alábbi "
+#~ "területekbe:\n"
+#~ "* munkaidő-kimutatások berögzítése\n"
+#~ "* szabadságok kezelése\n"
+#~ "* projektmenedzsment\n"
+#~ "\n"
+#~ "Segítségével minden részlegvezető tudomást szerezhet arról, ha valamelyik "
+#~ "beosztottjának még van kiosztatlan ideje az adott tervezésre (figyelembe "
+#~ "véve a jóváhagyott szabadságokat), vagy ha még feladatokat kell "
+#~ "berögzítenie.\n"
+#~ "\n"
+#~ "Hónap végén a tervezési vezető ellenőrizheti a berögzített munkaidő-"
+#~ "kimutatásokat a gyűjtőkódokra tervezett idő vonatkozásában.\n"

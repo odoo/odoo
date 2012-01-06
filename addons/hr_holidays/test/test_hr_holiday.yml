@@ -1,140 +1,34 @@
 -
   In order to test the hr_holiday module in OpenERP, I will  Allocate leaves for Employee and manage leaves and leaves requests.
 -
-  I create new user "test_holiday_user1" who will make leave request.
--
-  !record {model: res.users, id: test_holiday_user1}:
-    company_id: base.main_company
-    context_lang: en_US
-    groups_id:
-      - base.group_user
-      - base.group_hr_manager
-      - base.group_hr_user
-    login: test_holiday_user1
-    name: test_holiday_user1
-    password: test_holiday_user1
--
-  I create a new employee “Mark Johnshon” as Manager to validate employee leave.
--
-  !record {model: hr.employee, id: hr_employee_employee0}:
-    address_home_id: base.res_partner_address_1
-    company_id: base.main_company
-    gender: male
-    name: Mark Johnson
-    user_id: base.user_root
--
-  I Create another employee "Phil Graves" as "test_holiday_user1".
--
-  !record {model: hr.employee, id: hr_employee_philgraves0}:
-    address_home_id: base.res_partner_address_8
-    name: Phil Graves
-    parent_id: 'hr_employee_employee0'
-    user_id: 'test_holiday_user1'
--
-  I create a new Leave type "Sick Leave".
--
-  !record {model: hr.holidays.status, id: hr_holidays_status_sick0}:
-    color_name: red
-    name: Sick Leave.
-    limit: 12
-
--
-  I allocate leave request for employee "Phil Graves".
--
-  !record {model: hr.holidays, id: hr_holidays_allocateleaveforuser0}:
-    holiday_status_id: hr_holidays_status_sick0
-    name: Sick Leaves for Phil Graves
-    number_of_days_temp: 12.0
-    date_from: !eval "'%s-05-20 13:59:00' %(datetime.now().year)"
-    date_to: !eval "'%s-05-22 13:59:00' %(datetime.now().year)"
-    type: add
--
-  I assign allocation type as 'Employee'.
--
-  !python {model: hr.holidays}: |
-    self.onchange_type(cr, uid, [ref('hr_holidays_allocateleaveforuser0')], 'employee')
--
-  I change Leave Type of the employee.
--
-  !python {model: hr.holidays}: |
-    res = self.onchange_sec_id(cr, uid, [ref('hr_holidays_allocateleaveforuser0')], ref('holiday_status_sl'))
-    values = dict([('holiday_status_id', ref('holiday_status_sl'))] + res['value'].items())
-    self.write(cr, uid, [ref('hr_holidays_allocateleaveforuser0')], values, None)
--
   I assign the dates in the holiday request.
 -
-  !python {model: hr.holidays}: |
-    from datetime import datetime
-    date_from = '%s-%s-%s 14:00:00' %(datetime.now().year, datetime.now().month, datetime.now().day)
-    date_to = '%s-%s-%s 19:59:00' %(datetime.now().year, datetime.now().month, datetime.now().day)
-    res = self.onchange_date_from(cr, uid, [ref('hr_holidays_allocateleaveforuser0')], date_to, date_from)
-    values = dict([('date_from', date_from),('date_to',date_to)] + res['value'].items())
-    self.write(cr, uid, [ref('hr_holidays_allocateleaveforuser0')], values, None)
+  !record {model: hr.holidays, id: hr_holiday1}:
+    name: Sick Leave
+    holiday_status_id: holiday_status_cl
+    date_from: !eval time.strftime('%Y-%m-10 10:00:00')
+    date_to: !eval time.strftime('%Y-%m-11 19:00:00')
+    employee_id: hr.employee_fp
+    type: remove
 -
-  I confirmed the allocation by clicking on "Confirm" button.
+  I confirmed the holiday request by clicking on "Confirm" button.
 -
-  !workflow {model: hr.holidays, action: confirm, ref: hr_holidays_allocateleaveforuser0}
-
+  !workflow {model: hr.holidays, action: confirm, ref: hr_holidays_employee1_cl}
 -
-  I find a small mistake on my leave request to I refuse the leave request to correct a mistake.
+  I find a small mistake on my leave request to I click on "Refuse" button to correct a mistake.
 -
-  !workflow {model: hr.holidays, action: refuse, ref: hr_holidays_allocateleaveforuser0}
-
+  !workflow {model: hr.holidays, action: refuse, ref: hr_holidays_employee1_cl}
 -
   I again set to draft and then confirm.
 -
   !python {model: hr.holidays}: |
      import netsvc
      wf_service = netsvc.LocalService("workflow")
-     self.set_to_draft(cr, uid, [ref('hr_holidays_allocateleaveforuser0')])
-     wf_service.trg_validate(uid, 'hr.holidays', ref('hr_holidays_allocateleaveforuser0'), 'confirm', cr)
+     self.set_to_draft(cr, uid, [ref('hr_holidays_employee1_cl')])
+     wf_service.trg_validate(uid, 'hr.holidays', ref('hr_holidays_employee1_cl'), 'confirm', cr)
 -
-  I validate the allocation by clicking on "To Approve" button.
+  I validate the holiday request by clicking on "To Approve" button.
 -
-  !workflow {model: hr.holidays, action: validate,  ref: hr_holidays_allocateleaveforuser0}
-
+  !workflow {model: hr.holidays, action: validate,  ref: hr_holidays_employee1_cl}
 -
-  I connect as "test_holiday_user1", and create a new leave request for employee "Phil Graves".
--
-  !record {model: hr.holidays, id: hr_holidays_iwanttoleaveforgotohospital0}:
-    date_from: !eval "'%s-05-20 11:48:00' %(datetime.now().year)"
-    date_to: !eval "'%s-05-21 11:48:00' %(datetime.now().year)"
-    employee_id: 'hr_employee_philgraves0'
-    holiday_status_id: 'hr_holidays_status_sick0'
-    name: Appointment with Doctor
-    notes: My appointment with the doctor is confirmed. So please accept my leave.
-    number_of_days_temp: 2.0
-    type: remove
-    user_id: 'test_holiday_user1'
--
-  I check that Leave Request is in "Draft" state.
--
-  !assert {model: hr.holidays, id: hr_holidays_iwanttoleaveforgotohospital0}:
-    - state == 'draft'
-
--
-  I confirm leave Request by click on "Confirm" button.
--
-  !workflow {model: hr.holidays, action: confirm, ref: hr_holidays_iwanttoleaveforgotohospital0}
-
--
-  I connect as "Admin" user and Open Leave request of "Phil Graves" and "validate" it by click on "Approve" button.
--
-  !workflow {model: hr.holidays, action: validate,  ref: hr_holidays_iwanttoleaveforgotohospital0}
-
--
-  I check that "Leave Manager" field is automatically filled by the user who validate the leave'.
--
-  !python {model: hr.holidays}: |
-     ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
-     obj = self.browse(cr, uid, ref('hr_holidays_iwanttoleaveforgotohospital0'))
-     assert ids2[0] == obj.manager_id.id
-
--
-  I check that Leave request state is "Validated".
--
-  !assert {model: hr.holidays, id: hr_holidays_iwanttoleaveforgotohospital0}:
-    - state == "validate"
-
--
-  I can also see Summary of Employee's holiday by using 'Employee's Holidays' Report. This report will allows to choose to print holidays with state Confirmed, Validated or both.
+  I can also see Summary of Employee's holiday by using "Employee's Holidays" Report. This report will allows to choose to print holidays with state Confirmed, Validated or both.

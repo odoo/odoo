@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class account_period_close(osv.osv_memory):
     """
@@ -39,11 +40,16 @@ class account_period_close(osv.osv_memory):
         @param ids: account period close’s ID or list of IDs
          """
         period_pool = self.pool.get('account.period')
+        account_move_obj = self.pool.get('account.move')
 
         mode = 'done'
         for form in self.read(cr, uid, ids, context=context):
             if form['sure']:
                 for id in context['active_ids']:
+                    account_move_ids = account_move_obj.search(cr, uid, [('period_id', '=', id), ('state', '=', "draft")], context=context)
+                    if account_move_ids:
+                        raise osv.except_osv(_('Invalid action !'), _('In order to close a period, you must first post related journal entries.'))
+
                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
 

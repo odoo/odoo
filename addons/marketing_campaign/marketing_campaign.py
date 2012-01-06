@@ -133,7 +133,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         campaign = self.browse(cr, uid, ids[0])
 
         if not campaign.activity_ids:
-            raise osv.except_osv(_("Error"), _("The campaign cannot be started: there are no activities in it"))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started: there are no activities in it."))
 
         has_start = False
         has_signal_without_from = False
@@ -145,7 +145,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                 has_signal_without_from = True
 
         if not has_start and not has_signal_without_from:
-            raise osv.except_osv(_("Error"), _("The campaign cannot be started: it doesn't have any starting activity (or any activity with a signal and no previous activity)"))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started: it doesn't have any starting activity. Modify campaign's activities to mark one as the starting point."))
 
         return self.write(cr, uid, ids, {'state': 'running'})
 
@@ -155,7 +155,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                             [('campaign_id', 'in', ids),
                                             ('state', '=', 'running')])
         if segment_ids :
-            raise osv.except_osv(_("Error"), _("The campaign cannot be marked as done before all segments are done"))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be marked as done before all segments are closed."))
         self.write(cr, uid, ids, {'state': 'done'})
         return True
 
@@ -164,11 +164,12 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         self.write(cr, uid, ids, {'state': 'cancelled'})
         return True
 
-
+    # dead code
     def signal(self, cr, uid, model, res_id, signal, run_existing=True, context=None):
         record = self.pool.get(model).browse(cr, uid, res_id, context)
         return self._signal(cr, uid, record, signal, run_existing, context)
 
+    #dead code
     def _signal(self, cr, uid, record, signal, run_existing=True, context=None):
         if not signal:
             raise ValueError('signal cannot be False')
@@ -210,7 +211,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
     # prevent duplication until the server properly duplicates several levels of nested o2m
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_("Operation not supported"), _("Sorry, campaign duplication is not supported at the moment."))
+        raise osv.except_osv(_("Operation not supported"), _("You can not duplicate a campaign, it's not supported yet."))
 
     def _find_duplicate_workitems(self, cr, uid, record, campaign_rec, context=None):
         """Finds possible duplicates workitems for a record in this campaign, based on a uniqueness
@@ -461,6 +462,7 @@ class marketing_campaign_activity(osv.osv):
         return super(marketing_campaign_activity, self).search(cr, uid, args,
                                            offset, limit, order, context, count)
 
+    #dead code
     def _process_wi_report(self, cr, uid, activity, workitem, context=None):
         service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
         (report_data, format) = service.create(cr, uid, [], {}, {})
@@ -481,6 +483,7 @@ class marketing_campaign_activity(osv.osv):
                                             activity.email_template_id.id,
                                             workitem.res_id, context=context)
 
+    #dead code
     def _process_wi_action(self, cr, uid, activity, workitem, context=None):
         if context is None:
             context = {}
@@ -670,7 +673,7 @@ class marketing_campaign_workitem(osv.osv):
 
     def _process_one(self, cr, uid, workitem, context=None):
         if workitem.state != 'todo':
-            return
+            return False
 
         activity = workitem.activity_id
         proxy = self.pool.get(workitem.object_id.model)
@@ -707,7 +710,7 @@ class marketing_campaign_workitem(osv.osv):
 
             if result:
                 # process _chain
-                workitem = workitem.browse(context)[0] # reload
+                workitem = workitem.browse(context=context)[0] # reload
                 date = datetime.strptime(workitem.date, DT_FMT)
 
                 for transition in activity.to_ids:
@@ -784,11 +787,7 @@ class marketing_campaign_workitem(osv.osv):
         res = {}
         wi_obj = self.browse(cr, uid, ids[0], context=context)
         if wi_obj.activity_id.type == 'email':
-            data_obj = self.pool.get('ir.model.data')
-            data_id = data_obj._get_id(cr, uid, 'email_template', 'email_template_preview_form')
-            view_id = 0
-            if data_id:
-                view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
+            view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'email_template', 'email_template_preview_form')
             res = {
                 'name': _('Email Preview'),
                 'view_type': 'form',
@@ -796,7 +795,7 @@ class marketing_campaign_workitem(osv.osv):
                 'res_model': 'email_template.preview',
                 'view_id': False,
                 'context': context,
-                'views': [(view_id, 'form')],
+                'views': [(view_id and view_id[1] or 0, 'form')],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy':True,
@@ -844,3 +843,5 @@ class report_xml(osv.osv):
 
 report_xml()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
