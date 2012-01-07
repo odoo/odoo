@@ -265,7 +265,7 @@
                 <group colspan='4' col='4'>
                     <separator string="Action" colspan="4"/>
                     <field name="type"/>
-                    <group colspan='2' col='1'>
+                    <group colspan='2' col='2'>
                         <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
                                context="{'default_model_id':object_id}" />
                         <group attrs="{'invisible':[('type','!=','report')]}" >
