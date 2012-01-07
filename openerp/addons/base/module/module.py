@@ -437,6 +437,8 @@ class module(osv.osv):
             'license': terp.get('license', 'AGPL-3'),
             'certificate': terp.get('certificate') or False,
             'complexity': terp.get('complexity', ''),
+            'sequence': terp.get('sequence', 100),
+            'application': terp.get('application', False),
         }
 
     # update the list of available packages
