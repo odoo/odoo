@@ -356,9 +356,12 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
     on_prev_view: function (created) {
         var current_view = this.views_history.pop();
         var previous_view = this.views_history[this.views_history.length - 1];
-        // APR special case: "If creation mode from list (and only from a list),
-        // after saving, go to page view (don't come back in list)"
         if (created && current_view === 'form' && previous_view === 'list') {
+            // APR special case: "If creation mode from list (and only from a list),
+            // after saving, go to page view (don't come back in list)"
+            return this.on_mode_switch('page');
+        } else if (created && !previous_view && this.action && this.action.flags.default_view === 'form') {
+            // APR special case: "If creation from dashboard, we have no previous view
             return this.on_mode_switch('page');
         }
         return this.on_mode_switch(previous_view, true);
