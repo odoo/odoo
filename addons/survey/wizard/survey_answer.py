@@ -390,13 +390,15 @@ class survey_question_wiz(osv.osv_memory):
                     survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec.tot_comp_survey + 1})
                     sur_response_obj.write(cr, uid, [sur_name_read.response], {'state' : 'done'})
 
+                    # mark the survey request as done; call 'survey_req_done' on its actual model
+                    survey_req_obj = self.pool.get(context.get('active_model'))
+                    if survey_req_obj and hasattr(survey_req_obj, 'survey_req_done'):
+                        survey_req_obj.survey_req_done(cr, uid, context.get('active_ids', []), context=context)
+
                     if sur_rec.send_response:
                         survey_data = survey_obj.browse(cr, uid, survey_id)
                         response_id = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))['response']
                         context.update({'response_id':response_id})
-                        survey_req_obj = self.pool.get(context.get('active_model'))
-                        if survey_req_obj and hasattr(survey_req_obj, 'survey_req_done'):
-                            survey_req_obj.survey_req_done(cr, uid, context.get('active_ids', []), context=context)
                         report = self.create_report(cr, uid, [survey_id], 'report.survey.browse.response', survey_data.title,context)
                         attachments = {}
                         file = open(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
