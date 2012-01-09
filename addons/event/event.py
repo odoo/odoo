@@ -178,7 +178,7 @@ class event_event(osv.osv):
         """
         register_pool = self.pool.get('event.registration')
         res = super(event_event, self).write(cr, uid, ids, vals, context=context)
-        if vals.get('date_begin', False) or vals.get('mail_auto_confirm', False) or vals.get('mail_confirm', False):
+        if vals.get('date_begin', False) or vals.get('mail_confirm', False):
             for event in self.browse(cr, uid, ids, context=context):
                 #change the deadlines of the registration linked to this event
                 register_values = {}
@@ -186,6 +186,8 @@ class event_event(osv.osv):
                     register_values['date_deadline'] = vals['date_begin']
 
                 #change the description of the registration linked to this event
+                
+                """
                 if vals.get('mail_auto_confirm', False):
                     if vals['mail_auto_confirm']:
                         if 'mail_confirm' not in vals:
@@ -194,7 +196,7 @@ class event_event(osv.osv):
                         vals['mail_confirm'] = False
                 if 'mail_confirm' in vals:
                     register_values['description'] = vals['mail_confirm']
-
+"""
                 if register_values:
                     reg_ids = register_pool.search(cr, uid, [('event_id', '=', event.id)], context=context)
                     register_pool.write(cr, uid, reg_ids, register_values, context=context)

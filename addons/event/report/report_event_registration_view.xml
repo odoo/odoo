@@ -22,7 +22,8 @@
                     <field name="confirm_state"/>
                     <field name="registration_state" invisible="1"/>
                     <field name="user_id_registration" invisible="1"/>
-                    <field name="price_subtotal" invisible="1"/>
+                    <field name="price_subtotal"/>
+                    <field name="average_subtotal"/>
                     <field name="register_max" invisible="context.get('max_reg_event_visible', True)"/>
                     <field name="company_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
@@ -123,7 +124,6 @@
                     <newline/>
                     <group expand="1" string="Group By Registration...">
                         <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'registration_state'}" help="Events States"/>
-                        <filter string="price_subtotal" icon="terp-stock_effects-object-colorize" context="{'group_by':'price_subtotal'}" help="Events States"/>
                         <filter string="user" icon="terp-stock_effects-object-colorize" context="{'group_by':'user_id_registration'}" help="Events States"/>
 
                     </group>

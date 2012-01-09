@@ -37,7 +37,7 @@ class report_event_registration(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'draft_state': fields.integer(' # No of Draft Registrations', size=20),
-        'state': fields.integer(' # No of Draft Registrations', size=20),
+        'average_subtotal': fields.integer('average_subtotal', size=20),
         'confirm_state': fields.integer(' # No of Confirmed Registrations', size=20),
         'register_max': fields.integer('Maximum Registrations'),
         'nbevent': fields.integer('Number Of Events'),
@@ -84,6 +84,7 @@ class report_event_registration(osv.osv):
                 
                 e.type AS type,
                 r.price_subtotal,
+                AVG(r.price_subtotal) AS average_subtotal,
                 e.register_max AS register_max,
                 e.state AS  event_state,
                 r.state AS  registration_state
