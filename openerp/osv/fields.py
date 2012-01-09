@@ -510,11 +510,15 @@ class one2many(_column):
             elif act[0] == 5:
                 reverse_rel = obj._all_columns.get(self._fields_id)
                 assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
-                # if the model has on delete cascade, just delete the rows
+                # if the o2m has a static domain we must respect it when unlinking
+                extra_domain = self._domain if isinstance(getattr(self, '_domain', None), list) else [] 
+                ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
+                # If the model has cascade deletion, we delete the rows because it is the intended behavior,
+                # otherwise we only nullify the reverse foreign key column.
                 if reverse_rel.column.ondelete == "cascade":
-                    obj.unlink(cr, user, obj.search(cr, user, [(self._fields_id,'=',id)], context=context), context=context)
+                    obj.unlink(cr, user, ids_to_unlink, context=context)
                 else:
-                    cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%s', (id,))
+                    obj.write(cr, user, ids_to_unlink, {self._fields_id: False}, context=context)
             elif act[0] == 6:
                 # Must use write() to recompute parent_store structure if needed
                 obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
