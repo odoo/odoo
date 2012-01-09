@@ -219,6 +219,28 @@ if __name__ == "__main__":
 
 
     class ImportHook(object):
+        """
+        Import hook to load OpenERP addons from multiple paths.
+
+        OpenERP implements its own import-hook to load its addons. OpenERP
+        addons are Python modules. Originally, they were each living in their
+        own top-level namespace, e.g. the sale module, or the hr module. For
+        backward compatibility, `import <module>` is still supported. Now they
+        are living in `openerp.addons`. The good way to import such modules is
+        thus `import openerp.addons.module`.
+
+        For backward compatibility, loading an addons puts it in `sys.modules`
+        under both the legacy (short) name, and the new (longer) name. This
+        ensures that
+            import hr
+            import openerp.addons.hr
+        loads the hr addons only once.
+
+        When an OpenERP addons name clashes with some other installed Python
+        module (for instance this is the case of the `resource` addons),
+        obtaining the OpenERP addons is only possible with the long name. The
+        short name will give the expected Python module.
+        """
 
         def find_module(self, module_name, package_path):
             module_parts = module_name.split('.')
@@ -230,7 +252,20 @@ if __name__ == "__main__":
             if len(module_parts) == 1 and \
                 openerp.modules.module.get_module_path(module_parts[0],
                     display_warning=False):
-                return self # We act as a loader too.
+                try:
+                    # Check if the bare module name clashes with another module.
+                    f, path, descr = imp.find_module(module_parts[0])
+                    logger = logging.getLogger('init')
+                    logger.warning("""
+    Ambiguous import: the OpenERP module `%s` is shadowed by another
+    module (available at %s).
+    To import it, use `import openerp.modules.<module>.`.""" % (module_name, path))
+                    return
+                except ImportError, e:
+                    # Using `import <module_name>` instead of
+                    # `import openerp.modules.<module_name>` is ugly but not harmful
+                    # and kept for backward compatibility.
+                    return self # We act as a loader too.
 
         def load_module(self, module_name):
 
@@ -245,21 +280,21 @@ if __name__ == "__main__":
                 if module_part in sys.modules:
                     return sys.modules[module_part]
 
-                try:
-                    # Check if the bare module name clashes with another module.
-                    f, path, descr = imp.find_module(module_part)
-                    logger = logging.getLogger('init')
-                    logger.warning("""
-    Ambiguous import: the OpenERP module `%s` is shadowing another module
-    (available at %s).""" % (module_name, path))
-                except ImportError, e:
-                    # Using `import <module_name>` instead of
-                    # `import openerp.modules.<module_name>` is ugly but not harmful.
-                    pass
+            try:
+                # Check if the bare module name shadows another module.
+                f, path, descr = imp.find_module(module_part)
+                is_shadowing = True
+            except ImportError, e:
+                # Using `import <module_name>` instead of
+                # `import openerp.modules.<module_name>` is ugly but not harmful
+                # and kept for backward compatibility.
+                is_shadowing = False
 
+            # Note: we don't support circular import.
             f, path, descr = imp.find_module(module_part, openerp.modules.module.ad_paths)
             mod = imp.load_module(module_name, f, path, descr)
-            sys.modules[module_part] = mod
+            if not is_shadowing:
+                sys.modules[module_part] = mod
             sys.modules['openerp.modules.' + module_part] = mod
             return mod
 

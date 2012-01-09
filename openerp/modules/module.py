@@ -314,7 +314,7 @@ def register_module_classes(m):
     try:
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
-            __import__(m)
+            __import__('openerp.modules.' + m)
         else:
             zimp = zipimport.zipimporter(zip_mod_path)
             zimp.load_module(m)
