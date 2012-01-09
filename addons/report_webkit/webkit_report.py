@@ -57,7 +57,7 @@ def mako_template(text):
 
     This template uses UTF-8 encoding
     """
-    tmp_lookup  = TemplateLookup()#we need it in order to allows inclusion and inheritance
+    tmp_lookup  = TemplateLookup() #we need it in order to allow inclusion and inheritance
     return Template(text, input_encoding='utf-8', output_encoding='utf-8', lookup=tmp_lookup)
 
 
