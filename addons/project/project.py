@@ -522,13 +522,6 @@ class task(osv.osv):
             return {'value':{'partner_id':partner_id.id}}
         return {}
 
-    def _default_project(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if 'project_id' in context and context['project_id']:
-            return int(context['project_id'])
-        return False
-
     def duplicate_task(self, cr, uid, map_ids, context=None):
         for new in map_ids.values():
             task = self.browse(cr, uid, new, context)
@@ -642,7 +635,6 @@ class task(osv.osv):
         'progress': 0,
         'sequence': 10,
         'active': True,
-        'project_id': _default_project,
         'user_id': lambda obj, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
