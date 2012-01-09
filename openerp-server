@@ -262,10 +262,6 @@ if __name__ == "__main__":
     openerp.modules.module.initialize_sys_path()
     sys.meta_path.append(ImportHook())
 
-    import openerp.addons.hr
-    print sys.modules.get('openerp.addons.hr')
-    print sys.modules.get('hr')
-
     check_postgres_user()
     openerp.netsvc.init_logger()
     report_configuration()
