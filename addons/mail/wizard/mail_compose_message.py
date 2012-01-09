@@ -22,12 +22,13 @@
 import re
 
 import tools
-from mail.mail_message import to_email
 from osv import osv
 from osv import fields
 from tools.safe_eval import safe_eval as eval
 from tools.safe_eval import literal_eval
 from tools.translate import _
+
+from ..mail_message import to_email
 
 # main mako-like expression pattern
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
