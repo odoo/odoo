@@ -244,7 +244,7 @@ if __name__ == "__main__":
 
         def find_module(self, module_name, package_path):
             module_parts = module_name.split('.')
-            if len(module_parts) == 3 and module_name.startswith('openerp.modules.'):
+            if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
                 return self # We act as a loader too.
 
             # TODO list of loadable modules can be cached instead of always
@@ -259,18 +259,18 @@ if __name__ == "__main__":
                     logger.warning("""
     Ambiguous import: the OpenERP module `%s` is shadowed by another
     module (available at %s).
-    To import it, use `import openerp.modules.<module>.`.""" % (module_name, path))
+    To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
                     return
                 except ImportError, e:
                     # Using `import <module_name>` instead of
-                    # `import openerp.modules.<module_name>` is ugly but not harmful
+                    # `import openerp.addons.<module_name>` is ugly but not harmful
                     # and kept for backward compatibility.
                     return self # We act as a loader too.
 
         def load_module(self, module_name):
 
             module_parts = module_name.split('.')
-            if len(module_parts) == 3 and module_name.startswith('openerp.modules.'):
+            if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
                 module_part = module_parts[2]
                 if module_name in sys.modules:
                     return sys.modules[module_name]
@@ -286,7 +286,7 @@ if __name__ == "__main__":
                 is_shadowing = True
             except ImportError, e:
                 # Using `import <module_name>` instead of
-                # `import openerp.modules.<module_name>` is ugly but not harmful
+                # `import openerp.addons.<module_name>` is ugly but not harmful
                 # and kept for backward compatibility.
                 is_shadowing = False
 
@@ -295,7 +295,7 @@ if __name__ == "__main__":
             mod = imp.load_module(module_name, f, path, descr)
             if not is_shadowing:
                 sys.modules[module_part] = mod
-            sys.modules['openerp.modules.' + module_part] = mod
+            sys.modules['openerp.addons.' + module_part] = mod
             return mod
 
     openerp.modules.module.initialize_sys_path()

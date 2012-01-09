@@ -608,13 +608,13 @@ class MetaModel(type):
             super(MetaModel, self).__init__(name, bases, attrs)
             return
 
-        # The (OpenERP) module name can be in the `openerp.modules` namespace
+        # The (OpenERP) module name can be in the `openerp.addons` namespace
         # or not. For instance module `sale` can be imported as
-        # `openerp.modules.sale` (the good way) or `sale` (for backward
+        # `openerp.addons.sale` (the good way) or `sale` (for backward
         # compatibility).
         module_parts = self.__module__.split('.')
         if len(module_parts) > 2 and module_parts[0] == 'openerp' and \
-            module_parts[1] == 'modules':
+            module_parts[1] == 'addons':
             module_name = self.__module__.split('.')[2]
         else:
             module_name = self.__module__.split('.')[0]

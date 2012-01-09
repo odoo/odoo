@@ -25,7 +25,7 @@
 This module serves to contain all OpenERP addons, across all configured addons
 paths. For the code to manage those addons, see openerp.modules.
 
-Addons are made available under `openerp.modules` after
+Addons are made available under `openerp.addons` after
 openerp.tools.config.parse_config() is called (so that the addons paths are
 known).
 
