@@ -985,6 +985,10 @@ openerp.point_of_sale = function(db) {
         },
         start: function() {
             $('button#validate-order', this.$element).click(_.bind(this.validateCurrentOrder, this));
+            $('.oe-back-to-products', this.$element).click(_.bind(this.back, this));
+        },
+        back: function() {
+            this.shop.get('selectedOrder').set({"step": "products"});
         },
         validateCurrentOrder: function() {
             var callback, currentOrder;
