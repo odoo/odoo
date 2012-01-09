@@ -63,21 +63,11 @@ def initialize_sys_path():
     not in the PYTHONPATH.
     """
     global ad_paths
-
     if ad_paths:
         return
 
     ad_paths = map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
-
-    sys.path.insert(1, _ad)
-
-    ad_cnt=1
-    for adp in ad_paths:
-        if adp != _ad:
-            sys.path.insert(ad_cnt, adp)
-            ad_cnt+=1
-
-    ad_paths.append(_ad)    # for get_module_path
+    ad_paths.append(_ad) # for get_module_path
 
 
 def get_module_path(module, downloaded=False):
@@ -297,17 +287,6 @@ def init_module_models(cr, module_name, obj_list):
     for t in todo:
         t[1](cr, *t[2])
     cr.commit()
-
-# Import hook to write a addon m in both sys.modules['m'] and
-# sys.modules['openerp.addons.m']. Otherwise it could be loaded twice
-# if imported twice using different names.
-#class MyImportHook(object):
-#    def find_module(self, module_name, package_path):
-#       print ">>>", module_name, package_path
-#    def load_module(self, module_name):
-#       raise ImportError("Restricted")
-
-#sys.meta_path.append(MyImportHook())
 
 def register_module_classes(m):
     """ Register module named m, if not already registered.

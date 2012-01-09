@@ -42,6 +42,9 @@ import openerp
 __author__ = openerp.release.author
 __version__ = openerp.release.version
 
+import sys
+import imp
+
 def check_root_user():
     """ Exit if the process's user is 'root' (on POSIX system)."""
     if os.name == 'posix':
@@ -213,6 +216,56 @@ if __name__ == "__main__":
 
     check_root_user()
     openerp.tools.config.parse_config(sys.argv[1:])
+
+
+    class ImportHook(object):
+
+        def find_module(self, module_name, package_path):
+            module_parts = module_name.split('.')
+            if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
+                return self # We act as a loader too.
+
+            # TODO list of loadable modules can be cached instead of always
+            # calling get_module_path().
+            if len(module_parts) == 1 and \
+                openerp.modules.module.get_module_path(module_parts[0]):
+                return self # We act as a loader too.
+
+        def load_module(self, module_name):
+
+            module_parts = module_name.split('.')
+            if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
+                module_part = module_parts[2]
+                if module_name in sys.modules:
+                    return sys.modules[module_name]
+
+            if len(module_parts) == 1:
+                module_part = module_parts[0]
+                if module_part in sys.modules:
+                    return sys.modules[module_part]
+
+                try:
+                    # Check if the bare module name clashes with another module.
+                    f, path, descr = imp.find_module(module_part)
+                    print "Warning: ambiguous import:", module_name, f, path, descr
+                except ImportError, e:
+                    # Using `import openerp.addons.<module_name>` instead of
+                    # `import <module_name>` is ugly but not harmful.
+                    pass
+
+            f, path, descr = imp.find_module(module_part, openerp.modules.module.ad_paths)
+            mod = imp.load_module(module_name, f, path, descr)
+            sys.modules[module_part] = mod
+            sys.modules['openerp.addons.' + module_part] = mod
+            return mod
+
+    openerp.modules.module.initialize_sys_path()
+    sys.meta_path.append(ImportHook())
+
+    import openerp.addons.hr
+    print sys.modules.get('openerp.addons.hr')
+    print sys.modules.get('hr')
+
     check_postgres_user()
     openerp.netsvc.init_logger()
     report_configuration()
