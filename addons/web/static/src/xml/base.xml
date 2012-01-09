@@ -18,26 +18,11 @@
     </div>
 </t>
 <t t-name="Interface">
-    <div id="oe_loading"></div>
-
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
         <td colspan="2" valign="top">
             <div id="oe_header" class="header"></div>
             <div id="oe_menu" class="menu"></div>
-        </td>
-    </tr>
-    <tr>
-        <td valign="top" class="login-container" colspan="2">
-            <div id="oe_login" class="login"></div>
-        </td>
-    </tr>
-    <tr class="db_options_row">
-        <td valign="top" class="db_container">
-            <div id="oe_database" class="database"></div>
-        </td>
-        <td valign="top">
-         <div id="oe_db_options"></div>
         </td>
     </tr>
     <tr>
@@ -63,19 +48,11 @@
     </table>
 </t>
 <t t-name="Loading">
-    <div class="loading">
-    Loading...
+    <div id="oe_loading">
+        <div class="loading">
+        Loading...
+        </div>
     </div>
-</t>
-<t t-name="Database">
-    <ul class="db_options" style="padding: 0px; display: inline;">
-        <li id="db-create">Create</li>
-        <li id="db-drop">Drop</li>
-        <li id="db-backup">Backup</li>
-        <li id="db-restore">Restore</li>
-        <li id="db-change-password">Password</li>
-        <li id="back-to-login">Back to Login</li>
-    </ul>
 </t>
 <t t-name="Database.CreateDB">
     <form name="create_db_form" class="oe_forms" method="POST">
@@ -310,7 +287,7 @@
 </t>
 
 <t t-name="Login">
-  <div>
+  <div class="login">
     <div class="bottom"> </div>
     <div class="login_error_message">Invalid username or password</div>
     <div class="pane">
@@ -318,13 +295,13 @@
       <form action="" method="post">
         <div class="dbpane" >
           Database:
-          <input name="db"/>
+          <input name="db" t-att-value="widget.selected_db || ''"/>
         </div>
         <ul>
           <li>Username</li>
-          <li><input type="text" name="login" autofocus="autofocus"/></li>
+          <li><input type="text" name="login" t-att-value="widget.selected_login || ''" autofocus="autofocus"/></li>
           <li>Password</li>
-          <li><input type="password" name="password" value=""/></li>
+          <li><input type="password" name="password" t-att-value="widget.selected_password || ''"/></li>
           <li><button name="submit">Log in</button></li>
         </ul>
       </form>
@@ -334,6 +311,24 @@
       </div>
     </div>
   </div>
+</t>
+<t t-name="DatabaseManager">
+    <div class="oe-database-manager">
+        <div class="database">
+            <a class="company_logo_link" href="/?">
+                <div class="company_logo"></div>
+            </a>
+            <ul class="db_options">
+                <li id="db-create">Create</li>
+                <li id="db-drop">Drop</li>
+                <li id="db-backup">Backup</li>
+                <li id="db-restore">Restore</li>
+                <li id="db-change-password">Password</li>
+                <li id="back-to-login">Back to Login</li>
+            </ul>
+        </div>
+        <div id="oe_db_options" class="oe_db_options"></div>
+    </div>
 </t>
 <t t-name="Header">
     <div>
@@ -360,7 +355,7 @@
             </li>
         </ul>
         <div class="block">
-            <a href="#logout" class="logout">LOGOUT</a>
+            <a href="javascript:void(0)" class="logout">LOGOUT</a>
         </div>
 
     </div>
@@ -1182,14 +1177,14 @@
     </form>
 </t>
 <t t-name="SearchView.managed-filters">
-    <option/>
+    <option class="oe-filters-title">Filters</option>
     <optgroup label="-- Filters --">
         <t t-foreach="filters" t-as="filter">
             <option t-attf-value="get:#{filter_index}"><t t-esc="filter.name"/></option>
         </t>
     </optgroup>
     <optgroup label="-- Actions --">
-        <option value="advanced_filter">Advanced Filter</option>
+        <option value="advanced_filter">Add Advanced Filter</option>
         <option value="save_filter">Save Filter</option>
         <option value="add_to_dashboard">Add to Dashboard</option>
         <option value="manage_filters">Manage Filters</option>

@@ -226,6 +226,8 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             _.each(data.domains, function(x) {
                 domain.add(x);
             });
+            var groupbys = _.pluck(data.groupbys, "group_by").join();
+            context.add({"group_by": groupbys});
             var dial_html = QWeb.render("SearchView.managed-filters.add");
             var $dial = $(dial_html);
             $dial.dialog({
@@ -255,7 +257,12 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             val = val.slice(4);
             val = parseInt(val, 10);
             var filter = this.managed_filters[val];
-            this.on_search([filter.domain], [filter.context], []);
+            this.do_clear().then(_.bind(function() {
+                var groupbys = _.map(filter.context.group_by.split(","), function(el) {
+                    return {"group_by": el};
+                });
+                this.on_search([filter.domain], [filter.context], groupbys);
+            }, this));
         } else {
             select.val('');
         }
@@ -417,7 +424,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 input.datewidget.set_value(false);
             }
         });
-        setTimeout(this.on_clear, 0);
+        return $.async_when().pipe(this.on_clear);
     },
     /**
      * Triggered when the search view gets cleared

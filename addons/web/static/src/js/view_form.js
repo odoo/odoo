@@ -135,21 +135,24 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
 
     do_show: function () {
-        var self = this,
-            deferred = $.Deferred().resolve();
-        this.has_been_loaded.then(function() {
+        var self = this;
+        this.$element.hide();
+        return this.has_been_loaded.pipe(function() {
+            var result;
             if (self.dataset.index === null) {
                 // null index means we should start a new record
-                deferred.pipe(self.on_button_new());
+                result = self.on_button_new();
             } else {
-                deferred.pipe(self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded));
+                result = self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded);
             }
-            self.$element.show();
+            result.pipe(function() {
+                self.$element.show();
+            });
             if (self.sidebar) {
                 self.sidebar.$element.show();
             }
+            return result;
         });
-        return deferred;
     },
     do_hide: function () {
         this._super();
@@ -172,7 +175,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 field.validate();
             });
         });
-        return $.when.apply(null, set_values).then(function() {
+        return $.when.apply(null, set_values).pipe(function() {
             if (!record.id) {
                 self.show_invalid = false;
                 // New record: Second pass in order to trigger the onchanges
@@ -443,15 +446,15 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             } else {
                 var save_deferral;
                 if (!self.datarecord.id) {
-                    openerp.log("FormView(", self, ") : About to create", values);
+                    console.log("FormView(", self, ") : About to create", values);
                     save_deferral = self.dataset.create(values).pipe(function(r) {
                         return self.on_created(r, undefined, prepend_on_create);
                     }, null);
                 } else if (_.isEmpty(values)) {
-                    openerp.log("FormView(", self, ") : Nothing to save");
+                    console.log("FormView(", self, ") : Nothing to save");
                     save_deferral = $.Deferred().resolve({}).promise();
                 } else {
-                    openerp.log("FormView(", self, ") : About to save", values);
+                    console.log("FormView(", self, ") : About to save", values);
                     save_deferral = self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
                         return self.on_saved(r);
                     }, null);
@@ -807,9 +810,9 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
             }, options || {});
         trigger.tipTip(options);
     },
-    _build_view_fields_values: function() {
+    _build_view_fields_values: function(blacklist) {
         var a_dataset = this.view.dataset;
-        var fields_values = this.view.get_fields_values();
+        var fields_values = this.view.get_fields_values(blacklist);
         var active_id = a_dataset.ids[a_dataset.index];
         _.extend(fields_values, {
             active_id: active_id || false,
@@ -822,27 +825,27 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         }
         return fields_values;
     },
-    _build_eval_context: function() {
+    _build_eval_context: function(blacklist) {
         var a_dataset = this.view.dataset;
-        return new openerp.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values());
+        return new openerp.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values(blacklist));
     },
     /**
      * Builds a new context usable for operations related to fields by merging
      * the fields'context with the action's context.
      */
-    build_context: function() {
+    build_context: function(blacklist) {
         var f_context = (this.field || {}).context || {};
-        if (!!f_context.__ref) {
-            var fields_values = this._build_eval_context();
-            f_context = new openerp.web.CompoundDomain(f_context).set_eval_context(fields_values);
+        if (!!f_context.__ref || true) { //TODO: remove true
+            var fields_values = this._build_eval_context(blacklist);
+            f_context = new openerp.web.CompoundContext(f_context).set_eval_context(fields_values);
         }
         // maybe the default_get should only be used when we do a default_get?
         var v_contexts = _.compact([this.node.attrs.default_get || null,
             this.node.attrs.context || null]);
         var v_context = new openerp.web.CompoundContext();
         _.each(v_contexts, function(x) {v_context.add(x);});
-        if (_.detect(v_contexts, function(x) {return !!x.__ref;})) {
-            var fields_values = this._build_eval_context();
+        if (_.detect(v_contexts, function(x) {return !!x.__ref;}) || true) { //TODO: remove true
+            var fields_values = this._build_eval_context(blacklist);
             v_context.set_eval_context(fields_values);
         }
         // if there is a context on the node, overrides the model's context
@@ -854,7 +857,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         var n_domain = this.node.attrs.domain || null;
         // if there is a domain on the node, overrides the model's domain
         var final_domain = n_domain !== null ? n_domain : f_domain;
-        if (!(final_domain instanceof Array)) {
+        if (!(final_domain instanceof Array) || true) { //TODO: remove true
             var fields_values = this._build_eval_context();
             final_domain = new openerp.web.CompoundDomain(final_domain).set_eval_context(fields_values);
         }
@@ -2100,12 +2103,18 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.dataset.child_name = this.name;
         //this.dataset.child_name = 
         this.dataset.on_change.add_last(function() {
-            self.on_ui_change();
+            self.trigger_on_change();
         });
 
         this.is_setted.then(function() {
             self.load_views();
         });
+    },
+    trigger_on_change: function() {
+        var tmp = this.doing_on_change;
+        this.doing_on_change = true;
+        this.on_ui_change();
+        this.doing_on_change = tmp;
     },
     is_readonly: function() {
         return this.readonly || this.force_readonly;
@@ -2289,6 +2298,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 return commands['delete'](x.id);}));
     },
     save_any_view: function() {
+        if (this.doing_on_change)
+            return false;
     	return this.session.synchronized_mode(_.bind(function() {
 	        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
 	            this.viewmanager.views[this.viewmanager.active_view] &&
@@ -2353,7 +2364,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
 
 openerp.web.form.One2ManyDataSet = openerp.web.BufferedDataSet.extend({
     get_context: function() {
-        this.context = this.o2m.build_context();
+        this.context = this.o2m.build_context([this.o2m.name]);
         return this.context;
     }
 });
@@ -2383,6 +2394,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
                         return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
                     },
                     parent_view: self.o2m.view,
+                    child_name: self.o2m.name,
                     form_view_options: {'not_interactible_on_create':true}
                 },
                 self.o2m.build_domain(),

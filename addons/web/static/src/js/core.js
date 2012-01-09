@@ -160,6 +160,12 @@ openerp.web.callback = function(obj, method) {
             position: "last"
         });
     };
+    callback.remove = function(f) {
+        callback.callback_chain = _.difference(callback.callback_chain, _.filter(callback.callback_chain, function(el) {
+            return el.callback === f;
+        }));
+        return callback;
+    };
 
     return callback.add({
         callback: method,
@@ -379,7 +385,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
-        this.ready = $.Deferred();
         return this.session_init();
     },
     /**
@@ -567,7 +572,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     /**
      * The session is validated either by login or by restoration of a previous session
      */
-    session_authenticate: function(db, login, password, volatile) {
+    session_authenticate: function(db, login, password, _volatile) {
         var self = this;
         var base_location = document.location.protocol + '//' + document.location.host;
         var params = { db: db, login: login, password: password, base_location: base_location };
@@ -580,7 +585,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 user_context: result.context,
                 openerp_entreprise: result.openerp_entreprise
             });
-            if (!volatile) {
+            if (!_volatile) {
                 self.set_cookie('session_id', self.session_id);
             }
             return self.load_modules();
@@ -588,7 +593,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
     session_logout: function() {
         this.set_cookie('session_id', '');
-        window.location.reload();
+    },
+    on_session_valid: function() {
     },
     /**
      * Called when a rpc call fail due to an invalid session.
@@ -653,7 +659,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     });
                 })
             ).then(function() {
-                self.ready.resolve();
+                self.on_session_valid();
             });
         });
     },

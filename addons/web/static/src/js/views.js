@@ -109,7 +109,8 @@ session.web.ActionManager = session.web.Widget.extend({
             search_view : !popup,
             action_buttons : !popup,
             sidebar : !popup,
-            pager : !popup
+            pager : !popup,
+            display_title : !popup
         }, action.flags || {});
         if (!(type in this)) {
             console.error("Action manager can't handle action of type " + action.type, action);
