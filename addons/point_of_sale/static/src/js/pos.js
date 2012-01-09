@@ -709,7 +709,7 @@ openerp.point_of_sale = function(db) {
      It should be possible to go back to any step as long as step 3 hasn't been completed.
      Modifying an order after validation shouldn't be allowed.
      */
-    var StepsWidget = db.web.Widget.extend({
+    var StepSwitcher = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -1188,9 +1188,7 @@ openerp.point_of_sale = function(db) {
                 shop: this.shop,
             });
             this.receiptView.replace($('#receipt-screen'));
-            this.stepsView = new StepsWidget(null, {shop: this.shop});
-            this.stepsView.$element = $('#steps');
-            this.stepsView.start();
+            this.stepSwitcher = new StepSwitcher(this, {shop: this.shop});
             this.shop.bind('change:selectedOrder', this.changedSelectedOrder, this);
             this.changedSelectedOrder();
         },
@@ -1326,8 +1324,6 @@ openerp.point_of_sale = function(db) {
                 this.$element.find("#loggedas button").click(function() {
                     self.try_close();
                 });
-    
-                this.$element.find('#steps').buttonset();
 
                 pos.app = new App(self.$element);
                 $('.oe_toggle_secondary_menu').hide();
