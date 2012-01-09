@@ -208,6 +208,12 @@ openerp.web.page = function (openerp) {
     openerp.web.page.FieldOne2ManyReadonly = openerp.web.form.FieldOne2Many.extend({
         force_readonly: true
     });
+    openerp.web.page.FieldBinaryImageReaonly = openerp.web.form.FieldBinaryImage.extend({
+        update_dom: function() {
+            this._super.apply(this, arguments);
+            this.$element.find('.oe-binary').hide();
+        }
+    });
     openerp.web.page.FieldBinaryFileReadonly = openerp.web.form.FieldBinary.extend({
         template: 'FieldURI.readonly',
         start: function() {
@@ -249,5 +255,6 @@ openerp.web.page = function (openerp) {
         'integer': 'openerp.web.page.FieldCharReadonly',
         'float_time': 'openerp.web.page.FieldCharReadonly',
         'binary': 'openerp.web.page.FieldBinaryFileReadonly',
+        'image': 'openerp.web.page.FieldBinaryImageReaonly'
     });
 };
