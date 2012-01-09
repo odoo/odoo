@@ -229,7 +229,7 @@ Section "Uninstall"
     sleep 2
 
     ; Uninstall the OpenERP Service
-    nsExec::Exec '"$INSTDIR\service\OpenERPServerService.exe" -remove'
+    nsExec::Exec '"$INSTDIR\..\service\OpenERPServerService.exe" -remove'
     sleep 2
 
     Rmdir /r "$INSTDIR\service"

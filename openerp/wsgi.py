@@ -462,6 +462,22 @@ def on_starting(server):
     openerp.netsvc.init_logger()
     openerp.osv.osv.start_object_proxy()
     openerp.service.web_services.start_web_services()
+    openerp.modules.module.initialize_sys_path()
+    openerp.modules.loading.open_openerp_namespace()
+    for m in openerp.conf.server_wide_modules:
+        try:
+            __import__(m)
+            # Call any post_load hook.
+            info = openerp.modules.module.load_information_from_description_file(m)
+            if info['post_load']:
+                getattr(sys.modules[m], info['post_load'])()
+        except Exception:
+            msg = ''
+            if m == 'web':
+                msg = """
+The `web` module is provided by the addons found in the `openerp-web` project.
+Maybe you forgot to add those addons in your addons_path configuration."""
+            logging.exception('Failed to load server-wide module `%s`.%s', m, msg)
 
 # Install our own signal handler on the master process.
 def when_ready(server):
