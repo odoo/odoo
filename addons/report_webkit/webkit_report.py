@@ -38,6 +38,7 @@ import time
 import logging
 
 from mako.template import Template
+from mako.lookup import TemplateLookup
 from mako import exceptions
 
 import netsvc
@@ -56,8 +57,8 @@ def mako_template(text):
 
     This template uses UTF-8 encoding
     """
-    # default_filters=['unicode', 'h'] can be used to set global filters
-    return Template(text, input_encoding='utf-8', output_encoding='utf-8')
+    tmp_lookup  = TemplateLookup()#we need it in order to allows inclusion and inheritance
+    return Template(text, input_encoding='utf-8', output_encoding='utf-8', lookup=tmp_lookup)
 
 
 class WebKitParser(report_sxw):
