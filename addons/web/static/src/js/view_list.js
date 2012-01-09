@@ -1232,6 +1232,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             if (self.options.selectable) {
                 $row.append('<td>');
             }
+            if (self.options.isClarkGable) {
+                $row.append('<td>');
+            }
             _(self.columns).chain()
                 .filter(function (column) {return !column.invisible;})
                 .each(function (column) {
