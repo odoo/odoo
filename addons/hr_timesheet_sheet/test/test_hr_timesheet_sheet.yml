@@ -2,6 +2,11 @@
   In order to test hr_timesheet_sheet module in OpenERP,
   I create Timesheet and check validation process done by manager.
 -
+  I set TimeSheet allowed difference for company
+-
+  !record {model: res.company, id: base.main_company}:
+    timesheet_max_difference: 1.00
+-
   I assign this product(Service on Timesheet) and journal(Timesheet Journal) to employee "Quentin Paolino"
 -
   !record {model: hr.employee, id: hr.employee_qdp}:
@@ -55,7 +60,7 @@
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
     employee_id: 'hr.employee_qdp'
-    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(min(23,datetime.now().hour+2),min(59,datetime.now().minute+1),min(59,datetime.now().second+1))
+    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(min(23,datetime.now().hour+8),min(59,datetime.now().minute+1),min(59,datetime.now().second+1))
 -
   I create Timesheet Entry for time spend on today work.
 -
@@ -64,7 +69,7 @@
       - account_id: account.analytic_sednacom
         date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
-        unit_amount: 3.00
+        unit_amount: 6.00
         amount: -90.00
         product_id: product.product_consultant
         general_account_id: account.a_expense
@@ -91,7 +96,7 @@
       - account_id: account.analytic_sednacom
         date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
-        unit_amount: 2.0
+        unit_amount: 2.00
         amount: -90.00
         product_id: product.product_consultant
         general_account_id: account.a_expense
