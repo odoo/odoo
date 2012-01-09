@@ -608,7 +608,16 @@ class MetaModel(type):
             super(MetaModel, self).__init__(name, bases, attrs)
             return
 
-        module_name = self.__module__.split('.')[0]
+        # The (OpenERP) module name can be in the `openerp.modules` namespace
+        # or not. For instance module `sale` can be imported as
+        # `openerp.modules.sale` (the good way) or `sale` (for backward
+        # compatibility).
+        module_parts = self.__module__.split('.')
+        if len(module_parts) > 2 and module_parts[0] == 'openerp' and \
+            module_parts[1] == 'modules':
+            module_name = self.__module__.split('.')[2]
+        else:
+            module_name = self.__module__.split('.')[0]
         if not hasattr(self, '_module'):
             self._module = module_name
 

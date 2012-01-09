@@ -70,7 +70,7 @@ def initialize_sys_path():
     ad_paths.append(_ad) # for get_module_path
 
 
-def get_module_path(module, downloaded=False):
+def get_module_path(module, downloaded=False, display_warning=True):
     """Return the path of the given module.
 
     Search the addons paths and return the first path where the given
@@ -85,7 +85,8 @@ def get_module_path(module, downloaded=False):
 
     if downloaded:
         return opj(_ad, module)
-    logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
+    if display_warning:
+        logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
     return False
 
 

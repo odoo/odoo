@@ -222,19 +222,20 @@ if __name__ == "__main__":
 
         def find_module(self, module_name, package_path):
             module_parts = module_name.split('.')
-            if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
+            if len(module_parts) == 3 and module_name.startswith('openerp.modules.'):
                 return self # We act as a loader too.
 
             # TODO list of loadable modules can be cached instead of always
             # calling get_module_path().
             if len(module_parts) == 1 and \
-                openerp.modules.module.get_module_path(module_parts[0]):
+                openerp.modules.module.get_module_path(module_parts[0],
+                    display_warning=False):
                 return self # We act as a loader too.
 
         def load_module(self, module_name):
 
             module_parts = module_name.split('.')
-            if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
+            if len(module_parts) == 3 and module_name.startswith('openerp.modules.'):
                 module_part = module_parts[2]
                 if module_name in sys.modules:
                     return sys.modules[module_name]
@@ -247,16 +248,19 @@ if __name__ == "__main__":
                 try:
                     # Check if the bare module name clashes with another module.
                     f, path, descr = imp.find_module(module_part)
-                    print "Warning: ambiguous import:", module_name, f, path, descr
+                    logger = logging.getLogger('init')
+                    logger.warning("""
+    Ambiguous import: the OpenERP module `%s` is shadowing another module
+    (available at %s).""" % (module_name, path))
                 except ImportError, e:
-                    # Using `import openerp.addons.<module_name>` instead of
-                    # `import <module_name>` is ugly but not harmful.
+                    # Using `import <module_name>` instead of
+                    # `import openerp.modules.<module_name>` is ugly but not harmful.
                     pass
 
             f, path, descr = imp.find_module(module_part, openerp.modules.module.ad_paths)
             mod = imp.load_module(module_name, f, path, descr)
             sys.modules[module_part] = mod
-            sys.modules['openerp.addons.' + module_part] = mod
+            sys.modules['openerp.modules.' + module_part] = mod
             return mod
 
     openerp.modules.module.initialize_sys_path()
