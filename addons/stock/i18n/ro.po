@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-10-03 14:08+0000\n"
-"PO-Revision-Date: 2011-12-29 08:12+0000\n"
+"PO-Revision-Date: 2012-01-07 22:19+0000\n"
 "Last-Translator: Fekete Mihai <mihai.fekete@etotalpc.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-30 05:56+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-01-08 05:32+0000\n"
+"X-Generator: Launchpad (build 14640)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -338,6 +338,8 @@ msgid ""
 "This account will be used to value stock moves that have this location as "
 "source, instead of the stock input account from the product."
 msgstr ""
+"Acest cont va fi folosit pentru a evalua miscările stocului care au această "
+"locatie drept sursă, in locul contului de intrare a stocului din produs."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -391,7 +393,7 @@ msgstr "Stare"
 #. module: stock
 #: view:stock.location:0
 msgid "Accounting Information"
-msgstr ""
+msgstr "Informatii contabile"
 
 #. module: stock
 #: field:stock.location,stock_real_value:0
@@ -521,6 +523,8 @@ msgstr "Filtru loturi produs"
 msgid ""
 "You can not cancel inventory which has any account move with posted state."
 msgstr ""
+"Nu puteti anula un inventar care are orice miscare a contului cu starea "
+"afisată."
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -812,6 +816,8 @@ msgstr ""
 msgid ""
 "Processing quantity %s for %s is larger than the available quantity %s!"
 msgstr ""
+"Cantitatea de prelucrare %s pentru %s este mai mare decat cantitatea "
+"disponibilă %s!"
 
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
@@ -900,6 +906,8 @@ msgid ""
 "Either there are no moves linked to the picking or Accounting Journals are "
 "misconfigured!"
 msgstr ""
+"Sau nu există miscări asociate ridicării sau Jurnalele Contabile sunt "
+"configurate gresit!"
 
 #. module: stock
 #: view:stock.location:0
@@ -1780,6 +1788,12 @@ msgid ""
 "Would your payment have been carried out after this mail was sent, please "
 "consider the present one as void."
 msgstr ""
+"Vă rugăm să observati că următoarele plăti au devenit scadente. Dacă plata "
+"dumneavoastră a fost trimisă, vă rugăm să ne transmiteti detaliile plătii "
+"dumneavoastră. Dacă plata va intarzia in continuare, vă rugăm să ne "
+"contactati pentru a discuta.                          \n"
+"Dacă plata dumneavoastră a fost efectuată după ce acest email a fost trimis, "
+"vă rugăm să nu luati in considerare această notificare."
 
 #. module: stock
 #: code:addons/stock/stock.py:523
@@ -1941,7 +1955,7 @@ msgstr "Pret"
 #. module: stock
 #: view:stock.location:0
 msgid "Chained Location"
-msgstr ""
+msgstr "Locatie in lant"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2829,6 +2843,8 @@ msgstr "Eroare, fără partener!"
 #, python-format
 msgid "You cannot perform this operation on more than one Stock Inventories."
 msgstr ""
+"Nu puteti efectua această operatiune decat intr-un singur Inventar al "
+"Stocului."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -3046,6 +3062,8 @@ msgid ""
 "You cannot add any new move while validating the picking, rather you can "
 "split the lines prior to validation!"
 msgstr ""
+"Nu puteti adăuga nici o nouă miscare in timpul validării ridicării, dar "
+"puteti separa liniile anterioare validării!"
 
 #. module: stock
 #: field:stock.return.picking,invoice_state:0
@@ -3251,7 +3269,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_picking.py:180
 #, python-format
 msgid "Can not process quantity %s for Product %s !"
-msgstr ""
+msgstr "Nu se poate procesa cantitatea %s pentru Produsul %s !"
 
 #. module: stock
 #: code:addons/stock/product.py:447
@@ -3425,6 +3443,8 @@ msgid ""
 "Processing quantity %s %s for %s is larger than the available quantity %s %s "
 "!"
 msgstr ""
+"Cantitatea de porcesare %s %s pentru %s este mai mare decat cantitatea "
+"disponibilă %s %s !"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -3749,7 +3769,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_fill_inventory.py:53
 #, python-format
 msgid "Stock Inventory is already Validated."
-msgstr ""
+msgstr "Inventarul Stocului este deja Validat."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
@@ -4093,6 +4113,8 @@ msgid ""
 "This account will be used to value stock moves that have this location as "
 "destination, instead of the stock output account from the product."
 msgstr ""
+"Acest cont va fi folosit pentru a evalua miscările de stoc care au această "
+"locatie drept destinatie, in locul contului de iesire al stocului din produs."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split
@@ -4106,7 +4128,7 @@ msgstr "Împărţire în loturi de producţie"
 #: code:addons/stock/wizard/stock_partial_picking.py:179
 #, python-format
 msgid "Processing Error"
-msgstr ""
+msgstr "Eroare de procesare"
 
 #. module: stock
 #: view:report.stock.inventory:0

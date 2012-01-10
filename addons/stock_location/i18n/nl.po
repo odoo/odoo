@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-08-26 07:28+0000\n"
-"Last-Translator: Mark van Deursen (Neobis) <mark@neobis.nl>\n"
+"PO-Revision-Date: 2012-01-08 13:38+0000\n"
+"Last-Translator: Erwin (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:40+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-09 05:12+0000\n"
+"X-Generator: Launchpad (build 14640)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -25,22 +25,22 @@ msgstr "Goederen verzenden"
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled Paths"
-msgstr ""
+msgstr "'Pulled' pad"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
-msgstr "Mutatie"
+msgstr "Verplaats"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "Pushed Flows"
-msgstr ""
+msgstr "'Pushed' pad"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr "Automatisch"
+msgstr "Automatisch, geen stap toegevoegd"
 
 #. module: stock_location
 #: view:product.product:0
@@ -48,6 +48,7 @@ msgid "Parameters"
 msgstr "Parameters"
 
 #. module: stock_location
+#: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
 msgstr "Bronlocatie"
@@ -134,17 +135,17 @@ msgstr "Voorwaarden"
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
-msgstr ""
+msgstr "Inpakgebied"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
 msgid "Gate B"
-msgstr ""
+msgstr "Toegang B"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_a
 msgid "Gate A"
-msgstr ""
+msgstr "Toegang A"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -159,12 +160,12 @@ msgstr ""
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
 msgid "Dispatch Zone"
-msgstr ""
+msgstr "Leveringsgebied"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Voorraad Verplaatsing"
 
 #. module: stock_location
 #: view:product.product:0
@@ -180,12 +181,14 @@ msgstr "Bedrijf"
 #. module: stock_location
 #: view:product.product:0
 msgid "Logistics Flows"
-msgstr ""
+msgstr "Logistieke bewegingen"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
+"Indien aangevinkt en de verplaatsing wordt geannuleerd, annuleer dan tevens "
+"de gekoppelde verplaatsing."
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -315,6 +318,8 @@ msgstr "Verwervingswijze"
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company belong packings and moves"
 msgstr ""
+"Wordt gebruikt om te bepalen in welk bedrijf de verpakingen en "
+"verplaatsingen horen."
 
 #. module: stock_location
 #: field:product.pulled.flow,name:0
@@ -357,11 +362,14 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
+"'Maak op voorraad': wanneer nodig, neem uit de voorraad of wacht op "
+"herbevoorrading. 'Maak op bestelling': wanneer nodig, bestel of produceer "
+"voor het verwervingsverzoek."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
-msgstr ""
+msgstr "Is de bestemmingslocatie dat bevoorraad moet worden."
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -377,13 +385,13 @@ msgstr ""
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
 msgid "Quality Control"
-msgstr ""
+msgstr "Kwaliteitscontrole"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Niet van toepassing"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
@@ -419,9 +427,10 @@ msgstr ""
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Verwerving"
 
 #. module: stock_location
+#: field:product.pulled.flow,location_id:0
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
 msgstr "Bestemming"
@@ -436,17 +445,17 @@ msgstr "Automatische verwerking"
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
-msgstr ""
+msgstr "Verkrijgen grondstoffen"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
-msgstr ""
+msgstr "Actiesoort"
 
 #. module: stock_location
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fout: Ongeldige EAN-code"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -459,7 +468,7 @@ msgstr ""
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order
 msgid "Order Processing"
-msgstr ""
+msgstr "Order verwerking"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -467,8 +476,6 @@ msgid "Operation"
 msgstr "Bewerking"
 
 #. module: stock_location
-#: view:product.product:0
-#: field:product.product,path_ids:0
 #: view:stock.location.path:0
 msgid "Location Paths"
 msgstr "Locatiepaden"
@@ -489,4 +496,4 @@ msgstr ""
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Gefactureerd"
