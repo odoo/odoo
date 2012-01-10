@@ -834,23 +834,17 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
      * the fields'context with the action's context.
      */
     build_context: function(blacklist) {
-        var f_context = (this.field || {}).context || {};
-        if (!!f_context.__ref || true) { //TODO: remove true
-            var fields_values = this._build_eval_context(blacklist);
-            f_context = new openerp.web.CompoundContext(f_context).set_eval_context(fields_values);
+        // only use the model's context if there is not context on the node
+        var v_context = this.node.attrs.context;
+        if (! v_context) {
+            v_context = (this.field || {}).context || {};
         }
-        // maybe the default_get should only be used when we do a default_get?
-        var v_contexts = _.compact([this.node.attrs.default_get || null,
-            this.node.attrs.context || null]);
-        var v_context = new openerp.web.CompoundContext();
-        _.each(v_contexts, function(x) {v_context.add(x);});
-        if (_.detect(v_contexts, function(x) {return !!x.__ref;}) || true) { //TODO: remove true
+        
+        if (v_context.__ref || true) { //TODO: remove true
             var fields_values = this._build_eval_context(blacklist);
-            v_context.set_eval_context(fields_values);
+            v_context = new openerp.web.CompoundContext(v_context).set_eval_context(fields_values);
         }
-        // if there is a context on the node, overrides the model's context
-        var ctx = v_contexts.length > 0 ? v_context : f_context;
-        return ctx;
+        return v_context;
     },
     build_domain: function() {
         var f_domain = this.field.domain || [];
