@@ -543,41 +543,45 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         return manager_ready;
     },
     on_debug_changed: function (evt) {
-        var $sel = $(evt.currentTarget),
+        var self = this,
+            $sel = $(evt.currentTarget),
             $option = $sel.find('option:selected'),
-            val = $sel.val();
+            val = $sel.val(),
+            current_view = this.views[this.active_view].controller;
         switch (val) {
             case 'fvg':
-                $('<pre>').text(session.web.json_node_to_xml(
-                    this.views[this.active_view].controller.fields_view.arch, true)
-                ).dialog({ width: '95%'});
+                var dialog = new session.web.Dialog(this, { title: "Fields View Get", width: '95%' }).open();
+                $('<pre>').text(session.web.json_node_to_xml(current_view.fields_view.arch, true)).appendTo(dialog.$element);
+                break;
+            case 'customize_object':
+                this.rpc('/web/dataset/search_read', {
+                    model: 'ir.model',
+                    fields: ['id'],
+                    domain: [['model', '=', this.dataset.model]]
+                }, function (result) {
+                    self.do_edit_resource('ir.model', result.ids[0], { name : "Customize Object" });
+                });
+                break;
+            case 'manage_views':
+                if (current_view.fields_view && current_view.fields_view.arch) {
+                    var view_editor = new session.web.ViewEditor(current_view, current_view.$element, this.dataset, current_view.fields_view.arch);
+                    view_editor.start();
+                } else {
+                    this.do_warn("Manage Views", "Could not find current view declaration");
+                }
+                break;
+            case 'edit_workflow':
+                return this.do_action({
+                    res_model : 'workflow',
+                    domain : [['osv', '=', this.dataset.model]],
+                    views: [[false, 'list'], [false, 'form'], [false, 'diagram']],
+                    type : 'ir.actions.act_window',
+                    view_type : 'list',
+                    view_mode : 'list'
+                });
                 break;
             case 'edit':
-                var model = $option.data('model'),
-                    id = $option.data('id'),
-                    domain = $option.data('domain'),
-                    action = {
-                        res_model : model,
-                        type : 'ir.actions.act_window',
-                        view_type : 'form',
-                        view_mode : 'form',
-                        target : 'new',
-                        flags : {
-                            action_buttons : true,
-                            form : {
-                                resize_textareas : true
-                            }
-                        }
-                    };
-                if (id) {
-                    action.res_id = id,
-                    action.views = [[false, 'form']];
-                } else if (domain) {
-                    action.views = [[false, 'list'], [false, 'form']];
-                    action.domain = domain;
-                    action.flags.views_switcher = true;
-                }
-                this.do_action(action);
+                this.do_edit_resource($option.data('model'), $option.data('id'), { name : $option.text() });
                 break;
             default:
                 if (val) {
@@ -585,6 +589,24 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                 }
         }
         evt.currentTarget.selectedIndex = 0;
+    },
+    do_edit_resource: function(model, id, action) {
+        var action = _.extend({
+            res_model : model,
+            res_id : id,
+            type : 'ir.actions.act_window',
+            view_type : 'form',
+            view_mode : 'form',
+            views : [[false, 'form']],
+            target : 'new',
+            flags : {
+                action_buttons : true,
+                form : {
+                    resize_textareas : true
+                }
+            }
+        }, action || {});
+        this.do_action(action);
     },
     on_mode_switch: function (view_type, no_store) {
         var self = this;
@@ -733,26 +755,11 @@ session.web.Sidebar = session.web.Widget.extend({
             action = view_manager.action;
         if (this.session.uid === 1) {
             this.add_section(_t('Customize'), 'customize');
-            this.add_items('customize', [
-                {
-                    label: _t("Manage Views"),
-                    callback: view.on_sidebar_manage_views,
-                    title: _t("Manage views of the current object")
-                }, {
-                    label: _t("Edit Workflow"),
-                    callback: view.on_sidebar_edit_workflow,
-                    title: _t("Manage views of the current object"),
-                    classname: 'oe_sidebar_edit_workflow'
-                }, {
-                    label: _t("Customize Object"),
-                    callback: view.on_sidebar_customize_object,
-                    title: _t("Manage views of the current object")
-                }, {
-                    label: _t("Translate"),
-                    callback: view.on_sidebar_translate,
-                    title: _t("Technical translation")
-                }
-            ]);
+            this.add_items('customize', [{
+                label: _t("Translate"),
+                callback: view.on_sidebar_translate,
+                title: _t("Technical translation")
+            }]);
         }
 
         this.add_section(_t('Other Options'), 'other');
@@ -1136,34 +1143,6 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     set_common_sidebar_sections: function(sidebar) {
         sidebar.add_default_sections();
     },
-    on_sidebar_manage_views: function() {
-        if (this.fields_view && this.fields_view.arch) {
-            var view_editor = new session.web.ViewEditor(this, this.$element, this.dataset, this.fields_view.arch);
-            view_editor.start();
-        } else {
-            this.do_warn("Manage Views", "Could not find current view declaration");
-        }
-    },
-    on_sidebar_edit_workflow: function() {
-        return this.do_action({
-            res_model : 'workflow',
-            domain : [['osv', '=', this.dataset.model]],
-            views: [[false, 'list'], [false, 'form']],
-            type : 'ir.actions.act_window',
-            view_type : "list",
-            view_mode : "list"
-        });
-    },
-    on_sidebar_customize_object: function() {
-        var self = this;
-        this.rpc('/web/dataset/search_read', {
-            model: 'ir.model',
-            fields: ['id'],
-            domain: [['model', '=', self.dataset.model]]
-        }, function (result) {
-            self.on_sidebar_edit_resource('ir.model', result.ids[0]);
-        });
-    },
     on_sidebar_import: function() {
         var import_view = new session.web.DataImport(this, this.dataset);
         import_view.start();
@@ -1181,27 +1160,6 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             view_type : "list",
             view_mode : "list"
         });
-    },
-    on_sidebar_edit_resource: function(model, id, domain) {
-        var action = {
-            res_model : model,
-            type : 'ir.actions.act_window',
-            view_type : 'form',
-            view_mode : 'form',
-            target : 'new',
-            flags : {
-                action_buttons : true
-            }
-        }
-        if (id) {
-            action.res_id = id,
-            action.views = [[false, 'form']];
-        } else if (domain) {
-            action.views = [[false, 'list'], [false, 'form']];
-            action.domain = domain;
-            action.flags.views_switcher = true;
-        }
-        this.do_action(action);
     },
     on_sidebar_view_log: function() {
     },
