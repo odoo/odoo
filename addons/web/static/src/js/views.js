@@ -134,13 +134,14 @@ session.web.ActionManager = session.web.Widget.extend({
         }
         if (action.target === 'new') {
             if (this.dialog == null) {
-                this.dialog = new session.web.Dialog(this, { title: action.name, width: '80%' });
+                this.dialog = new session.web.Dialog(this, { width: '80%' });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
                 this.dialog.start();
             } else {
                 this.dialog_viewmanager.stop();
             }
+            this.dialog.dialog_title = action.name;
             this.dialog_viewmanager = new session.web.ViewManagerAction(this, action);
             this.dialog_viewmanager.appendTo(this.dialog.$element);
             this.dialog.open();
