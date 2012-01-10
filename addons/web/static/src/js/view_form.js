@@ -2739,7 +2739,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save-new");
             $nbutton.click(function() {
                 $.when(self.view_form.do_save()).then(function() {
-                    self.view_form.reload_lock.then(function() {
+                    self.view_form.reload_mutex.exec(function() {
                         self.view_form.on_button_new();
                     });
                 });
@@ -2747,7 +2747,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save");
             $nbutton.click(function() {
                 $.when(self.view_form.do_save()).then(function() {
-                    self.view_form.reload_lock.then(function() {
+                    self.view_form.reload_mutex.exec(function() {
                         self.check_exit();
                     });
                 });
