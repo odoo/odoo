@@ -52,8 +52,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
         this.is_initialized = $.Deferred();
         this.mutating_mutex = new $.Mutex();
-        this.on_change_lock = $.Deferred().resolve();
-        this.reload_lock = $.Deferred().resolve();
+        this.on_change_mutex = new $.Mutex();
+        this.reload_mutex = new $.Mutex();
     },
     start: function() {
         this._super();
@@ -334,8 +334,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 return $.Deferred().reject();
             }
         };
-        this.on_change_lock = this.on_change_lock.pipe(act, act);
-        return this.on_change_lock;
+        return this.on_change_mutex.exec(act);
     },
     on_processed_onchange: function(response, processed) {
         try {
@@ -534,8 +533,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 return self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded);
             }
         };
-        this.reload_lock = this.reload_lock.pipe(act, act);
-        return this.reload_lock;
+        return this.reload_mutex.exec(act);
     },
     get_fields_values: function(blacklist) {
     	blacklist = blacklist || [];
