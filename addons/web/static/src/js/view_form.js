@@ -136,7 +136,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
 
     do_show: function () {
         var self = this;
-        this.$element.hide();
+        this.$element.show().css('visibility', 'hidden');
         return this.has_been_loaded.pipe(function() {
             var result;
             if (self.dataset.index === null) {
@@ -146,7 +146,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 result = self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded);
             }
             result.pipe(function() {
-                self.$element.show();
+                self.$element.css('visibility', 'visible');
             });
             if (self.sidebar) {
                 self.sidebar.$element.show();
