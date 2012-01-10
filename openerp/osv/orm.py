@@ -335,8 +335,8 @@ class browse_record(object):
         cache.setdefault(table._name, {})
         self._data = cache[table._name]
 
-        if not (id and isinstance(id, (int, long,))):
-            raise BrowseRecordError(_('Wrong ID for the browse record, got %r, expected an integer.') % (id,))
+#        if not (id and isinstance(id, (int, long,))):
+#            raise BrowseRecordError(_('Wrong ID for the browse record, got %r, expected an integer.') % (id,))
 #        if not table.exists(cr, uid, id, context):
 #            raise BrowseRecordError(_('Object %s does not exists') % (self,))
 
@@ -551,6 +551,7 @@ FIELDS_TO_PGTYPES = {
     fields.datetime: 'timestamp',
     fields.binary: 'bytea',
     fields.many2one: 'int4',
+    fields.serialized: 'text',
 }
 
 def get_pg_type(f, type_override=None):
@@ -753,7 +754,11 @@ class BaseModel(object):
         for rec in cr.dictfetchall():
             cols[rec['name']] = rec
 
-        for (k, f) in self._columns.items():
+        ir_model_fields_obj = self.pool.get('ir.model.fields')
+
+        # sparse field should be created at the end, as it depends on its serialized field already existing
+        model_fields = sorted(self._columns.items(), key=lambda x: 1 if x[1]._type == 'sparse' else 0)
+        for (k, f) in model_fields:
             vals = {
                 'model_id': model_id,
                 'model': self._name,
@@ -768,7 +773,15 @@ class BaseModel(object):
                 'selectable': (f.selectable and 1) or 0,
                 'translate': (f.translate and 1) or 0,
                 'relation_field': (f._type=='one2many' and isinstance(f, fields.one2many)) and f._fields_id or '',
+                'serialization_field_id': None,
             }
+            if getattr(f, 'serialization_field', None):
+                # resolve link to serialization_field if specified by name
+                serialization_field_id = ir_model_fields_obj.search(cr, 1, [('model','=',vals['model']), ('name', '=', f.serialization_field)])
+                if not serialization_field_id:
+                    raise except_orm(_('Error'), _("Serialization field `%s` not found for sparse field `%s`!") % (f.serialization_field, k))
+                vals['serialization_field_id'] = serialization_field_id[0]
+
             # When its a custom field,it does not contain f.select
             if context.get('field_state', 'base') == 'manual':
                 if context.get('field_name', '') == k:
@@ -783,13 +796,13 @@ class BaseModel(object):
                 vals['id'] = id
                 cr.execute("""INSERT INTO ir_model_fields (
                     id, model_id, model, name, field_description, ttype,
-                    relation,view_load,state,select_level,relation_field, translate
+                    relation,view_load,state,select_level,relation_field, translate, serialization_field_id
                 ) VALUES (
-                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
                 )""", (
                     id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
                      vals['relation'], bool(vals['view_load']), 'base',
-                    vals['select_level'], vals['relation_field'], bool(vals['translate'])
+                    vals['select_level'], vals['relation_field'], bool(vals['translate']), vals['serialization_field_id']
                 ))
                 if 'module' in context:
                     name1 = 'field_' + self._table + '_' + k
@@ -806,12 +819,12 @@ class BaseModel(object):
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relation=%s,
-                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s
+                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field_id=%s
                         WHERE
                             model=%s AND name=%s""", (
                                 vals['model_id'], vals['field_description'], vals['ttype'],
                                 vals['relation'], bool(vals['view_load']),
-                                vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['model'], vals['name']
+                                vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
                             ))
                         break
         cr.commit()
@@ -1000,7 +1013,13 @@ class BaseModel(object):
                     #'select': int(field['select_level'])
                 }
 
-                if field['ttype'] == 'selection':
+                if field['serialization_field_id']:
+                    cr.execute('SELECT name FROM ir_model_fields WHERE id=%s', (field['serialization_field_id'],))
+                    attrs.update({'serialization_field': cr.fetchone()[0], 'type': field['ttype']})
+                    if field['ttype'] in ['many2one', 'one2many', 'many2many']:
+                        attrs.update({'relation': field['relation']})
+                    self._columns[field['name']] = fields.sparse(**attrs)
+                elif field['ttype'] == 'selection':
                     self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
                 elif field['ttype'] == 'reference':
                     self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
@@ -1054,6 +1073,31 @@ class BaseModel(object):
             else:
                 return False
 
+        def _get_xml_id(self, cr, uid, r):
+            model_data = self.pool.get('ir.model.data')
+            data_ids = model_data.search(cr, uid, [('model', '=', r._table_name), ('res_id', '=', r['id'])])
+            if len(data_ids):
+                d = model_data.read(cr, uid, data_ids, ['name', 'module'])[0]
+                if d['module']:
+                    r = '%s.%s' % (d['module'], d['name'])
+                else:
+                    r = d['name']
+            else:
+                postfix = 0
+                while True:
+                    n = self._table+'_'+str(r['id']) + (postfix and ('_'+str(postfix)) or '' )
+                    if not model_data.search(cr, uid, [('name', '=', n)]):
+                        break
+                    postfix += 1
+                model_data.create(cr, uid, {
+                    'name': n,
+                    'model': self._name,
+                    'res_id': r['id'],
+                    'module': '__export__',
+                })
+                r = '__export__.'+n
+            return r
+
         lines = []
         data = map(lambda x: '', range(len(fields)))
         done = []
@@ -1063,35 +1107,14 @@ class BaseModel(object):
                 r = row
                 i = 0
                 while i < len(f):
+                    cols = False
                     if f[i] == '.id':
                         r = r['id']
                     elif f[i] == 'id':
-                        model_data = self.pool.get('ir.model.data')
-                        data_ids = model_data.search(cr, uid, [('model', '=', r._table_name), ('res_id', '=', r['id'])])
-                        if len(data_ids):
-                            d = model_data.read(cr, uid, data_ids, ['name', 'module'])[0]
-                            if d['module']:
-                                r = '%s.%s' % (d['module'], d['name'])
-                            else:
-                                r = d['name']
-                        else:
-                            postfix = 0
-                            while True:
-                                n = self._table+'_'+str(r['id']) + (postfix and ('_'+str(postfix)) or '' )
-                                if not model_data.search(cr, uid, [('name', '=', n)]):
-                                    break
-                                postfix += 1
-                            model_data.create(cr, uid, {
-                                'name': n,
-                                'model': self._name,
-                                'res_id': r['id'],
-                                'module': '__export__',
-                            })
-                            r = n
+                        r = _get_xml_id(self, cr, uid, r)
                     else:
                         r = r[f[i]]
                         # To display external name of selection field when its exported
-                        cols = False
                         if f[i] in self._columns.keys():
                             cols = self._columns[f[i]]
                         elif f[i] in self._inherit_fields.keys():
@@ -1116,8 +1139,12 @@ class BaseModel(object):
                             if [x for x in fields2 if x]:
                                 break
                         done.append(fields2)
+                        if cols and cols._type=='many2many' and len(fields[fpos])>(i+1) and (fields[fpos][i+1]=='id'):
+                            data[fpos] = ','.join([_get_xml_id(self, cr, uid, x) for x in r])
+                            break
+
                         for row2 in r:
-                            lines2 = self.__export_row(cr, uid, row2, fields2,
+                            lines2 = row2._model.__export_row(cr, uid, row2, fields2,
                                     context)
                             if first:
                                 for fpos2 in range(len(fields)):
@@ -1311,7 +1338,7 @@ class BaseModel(object):
                     newfd = relation_obj.fields_get( cr, uid, context=context )
                     pos = position
 
-                    res = many_ids(line[i], relation, current_module, mode)
+                    res = []
 
                     first = 0
                     while pos < len(datas):
@@ -1322,9 +1349,6 @@ class BaseModel(object):
                         nbrmax = max(nbrmax, pos)
                         warning += w2
                         first += 1
-
-                        if data_res_id2:
-                            res.append((4, data_res_id2))
 
                         if (not newrow) or not reduce(lambda x, y: x or y, newrow.values(), 0):
                             break
@@ -2479,10 +2503,13 @@ class BaseModel(object):
         group_count = group_by = groupby
         if groupby:
             if fget.get(groupby):
-                if fget[groupby]['type'] in ('date', 'datetime'):
-                    flist = "to_char(%s,'yyyy-mm') as %s " % (qualified_groupby_field, groupby)
-                    groupby = "to_char(%s,'yyyy-mm')" % (qualified_groupby_field)
-                    qualified_groupby_field = groupby
+                groupby_type = fget[groupby]['type']
+                if groupby_type in ('date', 'datetime'):
+                    qualified_groupby_field = "to_char(%s,'yyyy-mm')" % qualified_groupby_field
+                    flist = "%s as %s " % (qualified_groupby_field, groupby)
+                elif groupby_type == 'boolean':
+                    qualified_groupby_field = "coalesce(%s,false)" % qualified_groupby_field
+                    flist = "%s as %s " % (qualified_groupby_field, groupby)
                 else:
                     flist = qualified_groupby_field
             else:
@@ -3783,10 +3810,6 @@ class BaseModel(object):
                     if readonly[0][0] >= 1:
                         edit = True
                         break
-                    elif readonly[0][0] == 0:
-                        edit = False
-                    else:
-                        edit = False
 
                 if not edit:
                     vals.pop(field)

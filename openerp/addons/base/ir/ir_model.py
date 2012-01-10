@@ -21,6 +21,7 @@
 import logging
 import re
 import time
+import types
 
 from osv import fields,osv
 import netsvc
@@ -32,13 +33,12 @@ from tools.translate import _
 import pooler
 
 def _get_fields_type(self, cr, uid, context=None):
-    cr.execute('select distinct ttype,ttype from ir_model_fields')
-    field_types = cr.fetchall()
-    field_types_copy = field_types
-    for types in field_types_copy:
-        if not hasattr(fields,types[0]):
-            field_types.remove(types)
-    return field_types
+    return sorted([(k,k) for k,v in fields.__dict__.iteritems()
+                      if type(v) == types.TypeType
+                      if issubclass(v, fields._column)
+                      if v != fields._column
+                      if not v._deprecated
+                      if not issubclass(v, fields.function)])
 
 def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
     #pseudo-method used by fields.function in ir.model/ir.model.fields
@@ -91,11 +91,11 @@ class ir_model(osv.osv):
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
-        'osv_memory': fields.function(_is_osv_memory, method=True, string='In-memory model', type='boolean',
+        'osv_memory': fields.function(_is_osv_memory, string='In-memory model', type='boolean',
             fnct_search=_search_osv_memory,
             help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)"),
-        'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the object is defined or inherited'),
-        'view_ids': fields.function(_view_ids, method=True, type='one2many', obj='ir.ui.view', string='Views'),
+        'modules': fields.function(_in_modules, type='char', size=128, string='In modules', help='List of modules in which the object is defined or inherited'),
+        'view_ids': fields.function(_view_ids, type='one2many', obj='ir.ui.view', string='Views'),
     }
 
     _defaults = {
@@ -206,7 +206,12 @@ class ir_model_fields(osv.osv):
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'view_load': fields.boolean('View Auto-Load'),
         'selectable': fields.boolean('Selectable'),
-        'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the field is defined'),
+        'modules': fields.function(_in_modules, type='char', size=128, string='In modules', help='List of modules in which the field is defined'),
+        'serialization_field_id': fields.many2one('ir.model.fields', 'Serialization Field', domain = "[('ttype','=','serialized')]",
+                                                  ondelete='cascade', help="If set, this field will be stored in the sparse "
+                                                                           "structure of the serialization field, instead "
+                                                                           "of having its own database column. This cannot be "
+                                                                           "changed after creation."),
     }
     _rec_name='field_description'
     _defaults = {
@@ -299,6 +304,14 @@ class ir_model_fields(osv.osv):
         if context and context.get('manual',False):
             vals['state'] = 'manual'
 
+        #For the moment renaming a sparse field or changing the storing system is not allowed. This may be done later
+        if 'serialization_field_id' in vals or 'name' in vals:
+            for field in self.browse(cr, user, ids, context=context):
+                if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
+                    raise except_orm(_('Error!'),  _('Changing the storing system for the field "%s" is not allowed.'%field.name))
+                if field.serialization_field_id and (field.name != vals['name']):
+                    raise except_orm(_('Error!'),  _('Renaming the sparse field "%s" is not allowed'%field.name))           
+                
         column_rename = None # if set, *one* column can be renamed here
         obj = None
         models_patch = {}    # structs of (obj, [(field, prop, change_to),..])

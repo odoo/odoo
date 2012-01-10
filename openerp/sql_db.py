@@ -175,18 +175,18 @@ class Cursor(object):
 
         self._cnx = pool.borrow(dsn(dbname))
         self._obj = self._cnx.cursor(cursor_factory=psycopg1cursor)
-        self.__closed = False   # real initialisation value
-        self.autocommit(False)
         if self.sql_log:
             self.__caller = frame_codeinfo(currentframe(),2)
         else:
             self.__caller = False
+        self.__closed = False   # real initialisation value
+        self.autocommit(False)
         self.__closer = False
 
         self._default_log_exceptions = True
 
     def __del__(self):
-        if not self.__closed:
+        if not self.__closed and not self._cnx.closed:
             # Oops. 'self' has not been closed explicitly.
             # The cursor will be deleted by the garbage collector,
             # but the database connection is not put back into the connection
@@ -390,6 +390,10 @@ class ConnectionPool(object):
 
         # free leaked connections
         for i, (cnx, _) in tools.reverse_enumerate(self._connections):
+            if cnx.closed:
+                self._connections.pop(i)
+                self._debug('Removing closed connection at index %d: %r', i, cnx.dsn)
+                continue
             if getattr(cnx, 'leaked', False):
                 delattr(cnx, 'leaked')
                 self._connections.pop(i)

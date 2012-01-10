@@ -34,10 +34,10 @@ import thread
 
 class OpenERPServerService(win32serviceutil.ServiceFramework):
     # required info
-    _svc_name_ = "openerp-server-6.0"
-    _svc_display_name_ = "OpenERP Server 6.0"
+    _svc_name_ = "openerp-server-6.1"
+    _svc_display_name_ = "OpenERP Server 6.1"
     # optionnal info
-    _svc_description_ = "OpenERP Server 6.0 service"
+    _svc_description_ = "OpenERP Server 6.1 service"
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
@@ -66,7 +66,7 @@ class OpenERPServerService(win32serviceutil.ServiceFramework):
         # The server's binary must be one directory above the service's binary (when py2exe'd the python libraries shouldn' mix)
         service_dir = os.path.dirname(sys.argv[0])
         server_dir = os.path.split(service_dir)[0]
-        server_path = os.path.join(server_dir, 'openerp-server.exe')
+        server_path = os.path.join(server_dir, 'server', 'openerp-server.exe')
         self.terpprocess = subprocess.Popen([server_path], cwd=server_dir, creationflags=win32process.CREATE_NO_WINDOW)
 
 

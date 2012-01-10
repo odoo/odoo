@@ -572,7 +572,7 @@ class objects_proxy(netsvc.ExportService):
         params = params[3:]
         if method == 'obj_list':
             raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")
-        if method not in ['execute','exec_workflow']:
+        if method not in ['execute', 'execute_kw', 'exec_workflow']:
             raise NameError("Method not available %s" % method)
         security.check(db,uid,passwd)
         assert openerp.osv.osv.service, "The object_proxy class must be started with start_object_proxy."

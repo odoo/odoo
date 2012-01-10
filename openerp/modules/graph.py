@@ -146,7 +146,7 @@ class Graph(dict):
         level = 0
         done = set(self.keys())
         while done:
-            level_modules = [(name, module) for name, module in self.items() if module.depth==level]
+            level_modules = sorted((name, module) for name, module in self.items() if module.depth==level)
             for name, module in level_modules:
                 done.remove(name)
                 yield module

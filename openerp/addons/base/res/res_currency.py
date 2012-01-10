@@ -24,7 +24,7 @@ import netsvc
 from osv import fields, osv
 import tools
 
-from tools.misc import currency
+from tools import float_round, float_is_zero, float_compare
 from tools.translate import _
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
@@ -57,7 +57,7 @@ class res_currency(osv.osv):
         # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
         'name': fields.char('Currency', size=32, required=True, help="Currency Code (ISO 4217)"),
         'symbol': fields.char('Symbol', size=3, help="Currency sign, to be used when printing amounts."),
-        'rate': fields.function(_current_rate, method=True, string='Current Rate', digits=(12,6),
+        'rate': fields.function(_current_rate, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1.'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
         'accuracy': fields.integer('Computational Accuracy'),
@@ -127,15 +127,49 @@ class res_currency(osv.osv):
         return [(x['id'], tools.ustr(x['name']) + (x['symbol'] and (' (' + tools.ustr(x['symbol']) + ')') or '')) for x in reads]
 
     def round(self, cr, uid, currency, amount):
-        if currency.rounding == 0:
-            return 0.0
-        else:
-            # /!\ First member below must be rounded to full unit!
-            # Do not pass a rounding digits value to round()
-            return round(amount / currency.rounding) * currency.rounding
+        """Return ``amount`` rounded  according to ``currency``'s
+           rounding rules.
+
+           :param browse_record currency: currency for which we are rounding
+           :param float amount: the amount to round
+           :return: rounded float
+        """
+        return float_round(amount, precision_rounding=currency.rounding)
+
+    def compare_amounts(self, cr, uid, currency, amount1, amount2):
+        """Compare ``amount1`` and ``amount2`` after rounding them according to the
+           given currency's precision..
+           An amount is considered lower/greater than another amount if their rounded
+           value is different. This is not the same as having a non-zero difference!
+
+           For example 1.432 and 1.431 are equal at 2 digits precision,
+           so this method would return 0.
+           However 0.006 and 0.002 are considered different (returns 1) because
+           they respectively round to 0.01 and 0.0, even though
+           0.006-0.002 = 0.004 which would be considered zero at 2 digits precision.
+
+           :param browse_record currency: currency for which we are rounding
+           :param float amount1: first amount to compare
+           :param float amount2: second amount to compare
+           :return: (resp.) -1, 0 or 1, if ``amount1`` is (resp.) lower than,
+                    equal to, or greater than ``amount2``, according to
+                    ``currency``'s rounding.
+        """
+        return float_compare(amount1, amount2, precision_rounding=currency.rounding)
 
     def is_zero(self, cr, uid, currency, amount):
-        return abs(self.round(cr, uid, currency, amount)) < currency.rounding
+        """Returns true if ``amount`` is small enough to be treated as
+           zero according to ``currency``'s rounding rules.
+
+           Warning: ``is_zero(amount1-amount2)`` is not always equivalent to 
+           ``compare_amounts(amount1,amount2) == 0``, as the former will round after
+           computing the difference, while the latter will round before, giving
+           different results for e.g. 0.006 and 0.002 at 2 digits precision.
+
+           :param browse_record currency: currency for which we are rounding
+           :param float amount: amount to compare with currency's zero
+        """
+        return float_is_zero(amount, precision_rounding=currency.rounding)
 
     def _get_conversion_rate(self, cr, uid, from_currency, to_currency, context=None):
         if context is None:

@@ -36,9 +36,20 @@ class res_payterm(osv.osv):
 res_payterm()
 
 class res_partner_category(osv.osv):
+
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
+        """Return the categories' display name, including their direct
+           parent by default.
+
+        :param dict context: the ``partner_category_display`` key can be
+                             used to select the short version of the
+                             category name (without the direct parent),
+                             when set to ``'short'``. The default is
+                             the long version.""" 
+        if context is None:
+            context = {}
+        if context.get('partner_category_display') == 'short':
+            return super(res_partner_category, self).name_get(cr, uid, ids, context=context)
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
@@ -71,7 +82,7 @@ class res_partner_category(osv.osv):
     _columns = {
         'name': fields.char('Category Name', required=True, size=64, translate=True),
         'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True, ondelete='cascade'),
-        'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Full Name'),
+        'complete_name': fields.function(_name_get_fnc, type="char", string='Full Name'),
         'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Child Categories'),
         'active' : fields.boolean('Active', help="The active field allows you to hide the category without removing it."),
         'parent_left' : fields.integer('Left parent', select=True),
@@ -141,7 +152,6 @@ class res_partner(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
     }
-
     def _default_category(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -235,7 +245,7 @@ class res_partner(osv.osv):
         address_obj = self.pool.get('res.partner.address')
         address_ids = address_obj.search(cr, uid, [('partner_id', 'in', ids)])
         address_rec = address_obj.read(cr, uid, address_ids, ['type'])
-        res = list(tuple(addr.values()) for addr in address_rec)
+        res = list((addr['type'],addr['id']) for addr in address_rec)
         adr = dict(res)
         # get the id of the (first) default address if there is one,
         # otherwise get the id of the first address in the list
@@ -289,7 +299,7 @@ class res_partner_address(osv.osv):
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
-        'function': fields.char('Function', size=64),
+        'function': fields.char('Function', size=128),
         'title': fields.many2one('res.partner.title','Title'),
         'name': fields.char('Contact Name', size=64, select=1),
         'street': fields.char('Street', size=128),
@@ -314,7 +324,6 @@ class res_partner_address(osv.osv):
         'active': lambda *a: 1,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner.address', context=c),
     }
-
     def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}

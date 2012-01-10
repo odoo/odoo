@@ -86,7 +86,7 @@ class publisher_warranty_contract(osv.osv):
             db_create_date = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.create_date')
             user = self.pool.get("res.users").browse(cr, uid, uid)
             user_name = user.name
-            email = user.email
+            email = user.user_email
 
             msg = {'contract_name': valid_contract.name,
                 'tb': tb,

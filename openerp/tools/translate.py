@@ -840,7 +840,7 @@ def trans_generate(lang, modules, cr):
 def trans_load(cr, filename, lang, verbose=True, context=None):
     logger = logging.getLogger('i18n')
     try:
-        fileobj = open(filename,'r')
+        fileobj = misc.file_open(filename)
         logger.info("loading %s", filename)
         fileformat = os.path.splitext(filename)[-1][1:].lower()
         r = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, context=context)
@@ -852,9 +852,7 @@ def trans_load(cr, filename, lang, verbose=True, context=None):
         return None
 
 def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True, context=None):
-    """Populates the ir_translation table. Fixing the res_ids so that they point
-    correctly to ir_model_data is done in a separate step, using the
-    'trans_update_res_ids' function below."""
+    """Populates the ir_translation table."""
     logger = logging.getLogger('i18n')
     if verbose:
         logger.info('loading translation file for language %s', lang)
@@ -891,6 +889,8 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
         # read the rest of the file
         line = 1
+        irt_cursor = trans_obj._get_import_cursor(cr, uid, context=context)
+
         for row in reader:
             line += 1
             # skip empty rows and rows where the translation field (=last fiefd) is empty
@@ -901,56 +901,46 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             # {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
             #  'src': ..., 'value': ...}
             dic = {'lang': lang}
+            dic_module = False
             for i in range(len(f)):
                 if f[i] in ('module',):
                     continue
                 dic[f[i]] = row[i]
 
-            try:
-                dic['res_id'] = dic['res_id'] and int(dic['res_id']) or 0
-                dic['module'] = False
-                dic['xml_id'] = False
-            except:
-                split_id = dic['res_id'].split('.', 1)
-                dic['module'] = split_id[0]
-                dic['xml_id'] = split_id[1]
-                dic['res_id'] = False
+            # This would skip terms that fail to specify a res_id
+            if not dic.get('res_id', False):
+                continue
 
-            args = [
-                ('lang', '=', lang),
-                ('type', '=', dic['type']),
-                ('name', '=', dic['name']),
-                ('src', '=', dic['src']),
-            ]
-            if dic['type'] == 'model':
-                if dic['res_id'] is False:
-                    args.append(('module', '=', dic['module']))
-                    args.append(('xml_id', '=', dic['xml_id']))
-                else:
-                    args.append(('res_id', '=', dic['res_id']))
-            ids = trans_obj.search(cr, uid, args)
-            if ids:
-                if context.get('overwrite') and dic['value']:
-                    trans_obj.write(cr, uid, ids, {'value': dic['value']})
+            res_id = dic.pop('res_id')
+            if res_id and isinstance(res_id, (int, long)) \
+                or (isinstance(res_id, basestring) and res_id.isdigit()):
+                    dic['res_id'] = int(res_id)
             else:
-                trans_obj.create(cr, uid, dic)
+                try:
+                    tmodel = dic['name'].split(',')[0]
+                    if '.' in res_id:
+                        tmodule, tname = res_id.split('.', 1)
+                    else:
+                        tmodule = dic_module
+                        tname = res_id
+                    dic['imd_model'] = tmodel
+                    dic['imd_module'] = tmodule
+                    dic['imd_name'] =  tname
+
+                    dic['res_id'] = None
+                except Exception:
+                    logger.warning("Could not decode resource for %s, please fix the po file.",
+                                    dic['res_id'], exc_info=True)
+                    dic['res_id'] = None
+
+            irt_cursor.push(dic)
+
+        irt_cursor.finish()
         if verbose:
             logger.info("translation file loaded succesfully")
     except IOError:
         filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
         logger.exception("couldn't read translation file %s", filename)
-
-def trans_update_res_ids(cr):
-    cr.execute("""
-            UPDATE ir_translation
-            SET res_id = COALESCE ((SELECT ir_model_data.res_id
-                          FROM ir_model_data
-                          WHERE ir_translation.module = ir_model_data.module
-                              AND ir_translation.xml_id = ir_model_data.name), 0)
-            WHERE ir_translation.module is not null
-                AND ir_translation.xml_id is not null
-                AND ir_translation.res_id = 0;
-    """)
 
 def get_locales(lang=None):
     if lang is None:

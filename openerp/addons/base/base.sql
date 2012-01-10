@@ -49,6 +49,8 @@ CREATE TABLE ir_model_fields (
   primary key(id)
 );
 
+ALTER TABLE ir_model_fields ADD column serialization_field_id int references ir_model_fields on delete cascade;
+
 
 -------------------------------------------------------------------------
 -- Actions
@@ -287,6 +289,7 @@ CREATE TABLE ir_module_module (
     name character varying(128) NOT NULL,
     author character varying(128),
     url character varying(128),
+    icon character varying(64),
     state character varying(16),
     latest_version character varying(64),
     shortdesc character varying(256),
@@ -294,9 +297,11 @@ CREATE TABLE ir_module_module (
     category_id integer REFERENCES ir_module_category ON DELETE SET NULL,
     certificate character varying(64),
     description text,
+    application boolean default False,
     demo boolean default False,
     web boolean DEFAULT FALSE,
     license character varying(32),
+    sequence integer DEFAULT 100,
     primary key(id)
 );
 ALTER TABLE ir_module_module add constraint name_uniq unique (name);
@@ -318,6 +323,12 @@ CREATE TABLE res_company (
     name character varying(64) not null,
     parent_id integer references res_company on delete set null,
     primary key(id)
+);
+
+CREATE TABLE res_lang (
+    id serial PRIMARY KEY,
+    name VARCHAR(64) NOT NULL UNIQUE,
+    code VARCHAR(16) NOT NULL UNIQUE
 );
 
 CREATE TABLE ir_model_data (
