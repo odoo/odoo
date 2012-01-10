@@ -27,7 +27,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
         }
         this.dataset = new openerp.web.DataSetSearch(this, model, null, null);
         var context = new openerp.web.CompoundContext(this.dataset.get_context());
-        this.dataset.read_slice([],{}, function (result) {
+        this.dataset.read_slice([]).then(function (result) {
             for (var i = 0; i < result.length; i++) {
                 if (result[i].id == id) {
                     self.datarecord = result[i];
@@ -73,7 +73,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                 var list_ids = [];
                 var datasearch = new openerp.web.DataSetSearch(self, rel_field.relation, rel_field.context);
                 datasearch.domain=[['id', 'in', rel_ids]];
-                datasearch.read_slice(['name'], {context:rel_field.context, domain: datasearch.domain, limit:80}, function(listrec){
+                datasearch.read_slice(['name'], {context:rel_field.context, domain: datasearch.domain, limit:80}).then(function(listrec){
                     _.each(listrec, function(i) {
                         list_ids.push(i.id);
                     });

@@ -918,7 +918,7 @@ session.web.TranslateDialog = session.web.Dialog.extend({
         this.languages = null;
         this.languages_loaded = $.Deferred();
         (new session.web.DataSetSearch(this, 'res.lang', this.view.dataset.get_context(),
-            [['translatable', '=', '1']])).read_slice(['code', 'name'], { sort: 'id' }, this.on_languages_loaded);
+            [['translatable', '=', '1']])).read_slice(['code', 'name'], { sort: 'id' }).then(this.on_languages_loaded);
     },
     start: function() {
         var self = this;

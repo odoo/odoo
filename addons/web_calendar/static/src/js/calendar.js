@@ -392,7 +392,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
                 offset: 0,
                 domain: self.get_range_domain(),
                 context: self.last_search[1]
-            }, function(events) {
+            }).then(function(events) {
                 self.dataset_events = events;
                 self.on_events_loaded(events);
             });
