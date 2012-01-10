@@ -60,7 +60,7 @@
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
     employee_id: 'hr.employee_qdp'
-    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(min(23,datetime.now().hour+8),min(59,datetime.now().minute+1),min(59,datetime.now().second+1))
+    name: !eval (datetime.now() + timedelta(hours=8.25)).strftime('%Y-%m-%d %H:%M:%S')
 -
   I create Timesheet Entry for time spend on today work.
 -
