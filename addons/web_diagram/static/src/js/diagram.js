@@ -74,6 +74,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
             'shape': this.nodes.attrs.shape,
             'src_node': this.connectors.attrs.source,
             'des_node': this.connectors.attrs.destination,
+            'label': this.connectors.attrs.label || false,
             'visible_nodes': [],
             'invisible_nodes': [],
             'node_fields': [],
