@@ -192,7 +192,7 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
     getdata: function (id, children_ids) {
         var self = this;
 
-        self.dataset.read_ids(children_ids, this.fields_list(), function (records) {
+        self.dataset.read_ids(children_ids, this.fields_list()).then(function(records) {
             _(records).each(function (record) {
                 self.records[record.id] = record;
             });

@@ -227,7 +227,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     get_arch: function() {
         var self = this;
         var view_arch_list = [];
-        this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function(arch) {
+        this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type']).then(function(arch) {
             if (arch.length) {
                 var arch_object = self.parse_xml(arch[0].arch, self.main_view_id);
                 self.main_view_type = arch[0].type == 'tree'? 'list': arch[0].type;
@@ -939,7 +939,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             controller.do_set_readonly.add_last(function(){
                 action_manager.stop();
                 new_fields_name = new openerp.web.DataSetSearch(self,'ir.model.fields', null, null);
-                new_fields_name.read_ids([controller.datarecord.id], ['name'], function(result) {
+                new_fields_name.read_ids([controller.datarecord.id], ['name']).then(function(result) {
                 self.add_node_dialog.$element.find('select[id=field_value]').append($("<option selected></option>").attr("value", result[0].name).text(result[0].name));
                     _.detect(self.add_widget,function(widget){
                         widget.name == "field_value"? widget.selection.push(result[0].name): false;

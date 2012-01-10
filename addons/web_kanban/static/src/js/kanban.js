@@ -491,7 +491,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     },
     do_reload: function() {
         var self = this;
-        this.view.dataset.read_ids([this.id], this.view.fields_keys, function(records) {
+        this.view.dataset.read_ids([this.id], this.view.fields_keys).then(function(records) {
             if (records.length) {
                 self.set_record(records[0]);
                 self.do_render();

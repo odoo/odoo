@@ -373,8 +373,8 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
     },
     start: function () {
         this._super();
-        return new openerp.web.DataSet(this, 'res.widget').read_ids(
-                [this.widget_id], ['title'], this.on_widget_loaded);
+        var ds = new openerp.web.DataSet(this, 'res.widget');
+        return ds.read_ids([this.widget_id], ['title']).then(this.on_widget_loaded);
     },
     on_widget_loaded: function (widgets) {
         var widget = widgets[0];

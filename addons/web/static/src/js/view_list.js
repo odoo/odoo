@@ -1007,14 +1007,13 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
-                }), 'name'),
-            function (records) {
-                _(records[0]).each(function (value, key) {
-                    record.set(key, value, {silent: true});
-                });
-                record.trigger('change', record);
-            }
-        );
+                }), 'name')
+        ).then(function (records) {
+            _(records[0]).each(function (value, key) {
+                record.set(key, value, {silent: true});
+            });
+            record.trigger('change', record);
+        });
     },
     /**
      * Renders a list record to HTML

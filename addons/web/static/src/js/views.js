@@ -519,7 +519,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                 }
             });
             if (!(self.action.id in self.session.hidden_menutips)) {
-                Users.read_ids([this.session.uid], ['menu_tips'], function(users) {
+                Users.read_ids([this.session.uid], ['menu_tips']).then(function(users) {
                     var user = users[0];
                     if (!(user && user.id === self.session.uid)) {
                         return;
