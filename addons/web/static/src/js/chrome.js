@@ -474,7 +474,10 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                             error: error[1]
                         });
                     },
-                    complete: $.proxy(self, 'unblockUI')
+                    complete: function() {
+                        self.unblockUI();
+                        self.do_notify(_t("Backed"), _t("Database backed up successfully"));
+                    }
                 });
             }
         });
@@ -510,7 +513,10 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                             })
                         }
                     },
-                    complete: $.proxy(self, 'unblockUI')
+                    complete: function() {
+                        self.unblockUI();
+                        self.do_notify(_t("Restored"), _t("Database restored successfully"));
+                    }
                 });
             }
         });
