@@ -50,8 +50,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         _.defaults(this.options, {
             "not_interactible_on_create": false
         });
-        this.mutating_lock = $.Deferred();
-        this.initial_mutating_lock = this.mutating_lock;
+        this.is_initialized = $.Deferred();
+        this.mutating_mutex = new $.Mutex();
         this.on_change_lock = $.Deferred().resolve();
         this.reload_lock = $.Deferred().resolve();
     },
@@ -189,7 +189,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 });
             }
             self.on_form_changed();
-            self.initial_mutating_lock.resolve();
+            self.is_initialized.resolve();
             self.show_invalid = true;
             self.do_update_pager(record.id == null);
             if (self.sidebar) {
@@ -419,8 +419,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var self = this;
         var action = function() {
             try {
-            if (!self.initial_mutating_lock.isResolved() && !self.initial_mutating_lock.isRejected())
-                return;
             var form_invalid = false,
                 values = {},
                 first_invalid_field = null;
@@ -466,8 +464,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 return $.Deferred().reject();
             }
         };
-        this.mutating_lock = this.mutating_lock.pipe(action, action);
-        return this.mutating_lock;
+        return this.mutating_mutex.exec(function() {
+            return self.is_initialized.pipe(action);
+        });
     },
     on_invalid: function() {
         var msg = "<ul>";
