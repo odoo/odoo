@@ -237,7 +237,15 @@ openerp.web.auto_date_to_str = function(value, type) {
 };
 
 /**
- * Formats a provided cell based on its field type
+ * Formats a provided cell based on its field type. Most of the field types
+ * return a correctly formatted value, but some tags and fields are
+ * special-cased in their handling:
+ *
+ * * buttons will return an actual ``<button>`` tag with a bunch of error handling
+ *
+ * * boolean fields will return a checkbox input, potentially disabled
+ *
+ * * binary fields will return a link to download the binary data as a file
  *
  * @param {Object} row_data record whose values should be displayed in the cell
  * @param {Object} column column descriptor
@@ -245,20 +253,20 @@ openerp.web.auto_date_to_str = function(value, type) {
  * @param {String} column.type widget type for a field control
  * @param {String} [column.string] button label
  * @param {String} [column.icon] button icon
- * @param {String} [value_if_empty=''] what to display if the field's value is ``false``
- * @param {Boolean} [process_modifiers=true] should the modifiers be computed ?
+ * @param {Object} [options]
+ * @param {String} [options.value_if_empty=''] what to display if the field's value is ``false``
+ * @param {Boolean} [options.process_modifiers=true] should the modifiers be computed ?
+ * @param {String} [options.model] current record's model
+ * @param {Number} [options.id] current record's id
+ *
  */
-openerp.web.format_cell = function (row_data, column, value_if_empty, process_modifiers) {
+openerp.web.format_cell = function (row_data, column, options) {
+    options = options || {};
     var attrs = {};
-    if (process_modifiers !== false) {
+    if (options.process_modifiers !== false) {
         attrs = column.modifiers_for(row_data);
     }
     if (attrs.invisible) { return ''; }
-
-    if (column.type === "boolean") {
-        return _.str.sprintf('<input type="checkbox" %s disabled="disabled"/>',
-                 row_data[column.id].value ? 'checked="checked"' : '');
-    }
 
     if (column.tag === 'button') {
         return _.template('<button type="button" title="<%-title%>" <%=additional_attributes%> >' +
@@ -269,14 +277,29 @@ openerp.web.format_cell = function (row_data, column, value_if_empty, process_mo
                     'disabled="disabled" class="oe-listview-button-disabled"' : '',
                 prefix: openerp.connection.prefix,
                 icon: column.icon,
-                alt: column.string || '',
+                alt: column.string || ''
             });
     }
     if (!row_data[column.id]) {
-        return value_if_empty === undefined ? '' : value_if_empty;
+        return options.value_if_empty === undefined ? '' : options.value_if_empty;
     }
+
+    switch (column.type) {
+    case "boolean":
+        return _.str.sprintf('<input type="checkbox" %s disabled="disabled"/>',
+                 row_data[column.id].value ? 'checked="checked"' : '');
+    case "binary":
+        return _.str.sprintf('<a href="%(href)s">%(text)s</a> (%(size)s)', {
+            text: _t("Download"),
+            href: _.str.sprintf('/web/binary/saveas?session_id=%s&model=%s&field=%s&id=%d',
+                    openerp.connection.session_id, options.model,
+                    column.id, options.id),
+            size: row_data[column.id].value
+        });
+    }
+
     return openerp.web.format_value(
-            row_data[column.id].value, column, value_if_empty);
+            row_data[column.id].value, column, options.value_if_empty);
 }
 
 };
