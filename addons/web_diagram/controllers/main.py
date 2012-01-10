@@ -64,13 +64,13 @@ class DiagramView(View):
 
 
         for tr in data_connectors:
-            t = connectors.get(str(tr['id']))
-            t.update({
-                      'source': tr[src_node][1],
-                      'destination': tr[des_node][1],
-                      'options': {},
-                      'signal': tr['signal']
-                      })
+            t = connectors[str(tr['id'])]
+            t.update(
+                source=tr[src_node][1],
+                destination=tr[des_node][1],
+                options={},
+                signal=tr.get('signal')
+            )
 
             for i, fld in enumerate(connector_fields):
                 t['options'][connector_fields_string[i]] = tr[fld]
@@ -87,7 +87,7 @@ class DiagramView(View):
             if not n:
                 n = isolate_nodes.get(act['id'], {})
                 y_max += 140
-                n.update({'x': 20, 'y': y_max})
+                n.update(x=20, y=y_max)
                 nodes[act['id']] = n
 
             n.update(
