@@ -1289,7 +1289,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             page = this.datagroup.openable ? this.page : view.page;
 
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
-        var options = { offset: page * limit, limit: limit };
+        var options = { offset: page * limit, limit: limit, context: {bin_size: true} };
         //TODO xmo: investigate why we need to put the setTimeout
         $.async_when().then(function() {dataset.read_slice(fields, options , function (records) {
             // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
