@@ -16,9 +16,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.init_view_editor();
     },
     init_view_editor: function() {
-        var self = this;
+        var self = this,
+            action_title = _.str.sprintf(_t("Manage Views (%s)"), this.model);
         var action = {
-            name: _.str.sprintf("Manage Views (%s)", this.model),
+            name: action_title,
             context: this.session.user_context,
             domain: [["model", "=", this.model]],
             res_model: 'ir.ui.view',
@@ -39,7 +40,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
         };
         this.view_edit_dialog = new openerp.web.Dialog(this, {
-            title: _t(_.str.sprintf("Manage Views (%s)", this.model)),
+            title: action_title,
             width: 850,
             buttons: [
                 {text: _t("Create"), click: function() { self.on_create_view(); }},
