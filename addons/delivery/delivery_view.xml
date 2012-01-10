@@ -194,7 +194,7 @@
                     <field name="carrier_tracking_ref" groups="base.group_extended"/>
                     <field name="number_of_packages" groups="base.group_extended"/>
                     <field name="weight"/>
-                    <field name="weight_net"/>
+                    <field name="weight_net" groups="base.group_extended/>
                 </field>
             </field>
         </record>
@@ -207,7 +207,7 @@
             <field name="arch" type="xml">
                 <field name="type" position="after">
                     <field name="weight"/>
-                    <field name="weight_net"/>
+                    <field name="weight_net" groups="base.group_extended/>
                 </field>
             </field>
         </record>
@@ -220,7 +220,7 @@
             <field name="arch" type="xml">
                 <field name="type" position="after">
                     <field name="weight"/>
-                    <field name="weight_net"/>
+                    <field name="weight_net" groups="base.group_extended"/>
                 </field>
             </field>
         </record>
@@ -245,7 +245,7 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
                     <field name="weight"/>
-                    <field name="weight_net"/>
+                    <field name="weight_net" groups="base.group_extended"/>
                 </xpath>
             </field>
         </record>
@@ -258,7 +258,7 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
                     <field name="weight"/>
-                    <field name="weight_net"/>
+                    <field name="weight_net" groups="base.group_extended"/>
                 </xpath>
             </field>
         </record>
@@ -271,7 +271,7 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
                     <field name="weight"/>
-                    <field name="weight_net"/>
+                    <field name="weight_net" groups="base.group_extended"/>
                 </xpath>
             </field>
         </record>
