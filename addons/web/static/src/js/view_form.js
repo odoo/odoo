@@ -1696,7 +1696,7 @@ openerp.web.form.dialog = function(content, options) {
     options = _.extend({
         autoOpen: true,
         width: '90%',
-        height: '90%',
+        height: 'auto',
         min_width: '800px',
         min_height: '600px'
     }, options || {});
