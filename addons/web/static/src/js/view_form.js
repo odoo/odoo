@@ -306,7 +306,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     do_onchange: function(widget, processed) {
         var self = this;
-        var act = function() {
+        return this.on_change_mutex.exec(function() {
             try {
                 processed = processed || [];
                 var on_change = widget.node.attrs.on_change;
@@ -333,8 +333,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 console.error(e);
                 return $.Deferred().reject();
             }
-        };
-        return this.on_change_mutex.exec(act);
+        });
     },
     on_processed_onchange: function(response, processed) {
         try {
@@ -416,7 +415,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      */
     do_save: function(success, prepend_on_create) {
         var self = this;
-        var action = function() {
+        return this.mutating_mutex.exec(function() { return self.is_initialized.pipe(function() {
             try {
             var form_invalid = false,
                 values = {},
@@ -462,10 +461,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 console.error(e);
                 return $.Deferred().reject();
             }
-        };
-        return this.mutating_mutex.exec(function() {
-            return self.is_initialized.pipe(action);
-        });
+        });});
     },
     on_invalid: function() {
         var msg = "<ul>";
@@ -526,14 +522,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     reload: function() {
         var self = this;
-        var act = function() {
+        return this.reload_mutex.exec(function() {
             if (self.dataset.index == null || self.dataset.index < 0) {
                 return $.when(self.on_button_new());
             } else {
                 return self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded);
             }
-        };
-        return this.reload_mutex.exec(act);
+        });
     },
     get_fields_values: function(blacklist) {
     	blacklist = blacklist || [];
