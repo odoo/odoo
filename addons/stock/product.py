@@ -184,6 +184,7 @@ class product_product(osv.osv):
         
         location_obj = self.pool.get('stock.location')
         warehouse_obj = self.pool.get('stock.warehouse')
+        shop_obj = self.pool.get('sale.shop')
         
         states = context.get('states',[])
         what = context.get('what',())
@@ -193,18 +194,16 @@ class product_product(osv.osv):
         if not ids:
             return res
 
-    # TODO: write in more ORM way, less queries, more pg84 magic
+    # CHECK: sale.shop object is called but is present installing sale module, its not in deps
         if context.get('shop', False):
-            cr.execute('select warehouse_id from sale_shop where id=%s', (int(context['shop']),))
-            res2 = cr.fetchone()
-            if res2:
-                context['warehouse'] = res2[0]
+            warehouse_id = shop_obj.read(cr, uid, int(context['shop']), ['warehouse_id'])['warehouse_id'][0]
+            if warehouse_id:
+                context['warehouse'] = warehouse_id
 
         if context.get('warehouse', False):
-            cr.execute('select lot_stock_id from stock_warehouse where id=%s', (int(context['warehouse']),))
-            res2 = cr.fetchone()
-            if res2:
-                context['location'] = res2[0]
+            lot_id = warehouse_obj.read(cr, uid, int(context['warehouse']), ['lot_stock_id'])['lot_stock_id'][0]
+            if lot_id:
+                context['location'] = lot_id
 
         if context.get('location', False):
             if type(context['location']) == type(1):
