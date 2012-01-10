@@ -1217,7 +1217,7 @@ class Binary(openerpweb.Controller):
                 filename = res.get(filename_field, '') or filename
             return req.make_response(filecontent,
                 [('Content-Type', 'application/octet-stream'),
-                 ('Content-Disposition', 'attachment; filename=' +  filename)])
+                 ('Content-Disposition', 'attachment; filename="%s"' % filename)])
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):

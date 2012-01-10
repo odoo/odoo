@@ -289,11 +289,18 @@ openerp.web.format_cell = function (row_data, column, options) {
         return _.str.sprintf('<input type="checkbox" %s disabled="disabled"/>',
                  row_data[column.id].value ? 'checked="checked"' : '');
     case "binary":
+        var text = _t("Download"),
+            download_url = _.str.sprintf('/web/binary/saveas?session_id=%s&model=%s&field=%s&id=%d', openerp.connection.session_id, options.model, column.id, options.id);
+        if (column.filename) {
+            download_url += '&filename_field=' + column.filename;
+            if (row_data[column.filename]) {
+                text = _.str.sprintf(_t("Download \"%s\""), openerp.web.format_value(
+                        row_data[column.filename].value, {type: 'char'}));
+            }
+        }
         return _.str.sprintf('<a href="%(href)s">%(text)s</a> (%(size)s)', {
-            text: _t("Download"),
-            href: _.str.sprintf('/web/binary/saveas?session_id=%s&model=%s&field=%s&id=%d',
-                    openerp.connection.session_id, options.model,
-                    column.id, options.id),
+            text: text,
+            href: download_url,
             size: row_data[column.id].value
         });
     }
