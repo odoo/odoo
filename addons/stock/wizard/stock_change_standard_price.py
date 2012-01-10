@@ -105,12 +105,14 @@ class change_standard_price(osv.osv_memory):
         rec_id = context and context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context')
         prod_obj = self.pool.get('product.product')
+        product_obj = prod_obj.browse(cr, uid, rec_id, context)
         res = self.browse(cr, uid, ids, context=context)
         datas = {
             'new_price' : res[0].new_price,
             'stock_output_account' : res[0].stock_account_output.id,
             'stock_input_account' : res[0].stock_account_input.id,
-            'stock_journal' : res[0].stock_journal.id
+            'stock_journal' : res[0].stock_journal.id,
+            'stock_price_diff_account': product_obj.property_account_creditor_price_difference and product_obj.property_account_creditor_price_difference.id or False
         }
         prod_obj.do_change_standard_price(cr, uid, [rec_id], datas, context)
         return {'type': 'ir.actions.act_window_close'}
