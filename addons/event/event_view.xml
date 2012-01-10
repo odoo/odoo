@@ -315,7 +315,8 @@
                 <form string="Registration">
                     <group col="6" colspan="4">
                         <field name="event_id" on_change="onchange_event(event_id, partner_invoice_id)" domain="[('state','in',('draft','confirm'))]"/>
-                        <field name="create_date" string="Registration Date"/>
+                        <field name="date" />
+                        <field name="date_deadline" />
                         <field name="name"/>
                         <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" required="1" on_change="onchange_partner_id(partner_id,event_id)" />
                         <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}" />
@@ -323,13 +324,12 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Registration">
-                            <field name="date" />
-                            <field name="date_deadline" />
+
                             <group colspan="2" col="2">
                                 <separator string="Registration Cost" colspan="4"/>
-                                <field name="nb_register"/>
+                                <field name="nb_register" invisible="1"/>
                                 <field name="unit_price"/>
-                                <field name="price_subtotal"/>
+                                <field name="price_subtotal" invisible="1"/>
                             </group>
                             <group colspan="2" col="2" attrs="{'invisible':[('tobe_invoiced','=',False)]}">
                                 <separator string="Invoice" colspan="4"/>
@@ -337,8 +337,8 @@
                                 <field name="partner_invoice_id" attrs="{'required':[('tobe_invoiced','=',True)]}" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
                                 <field name="invoice_id"/>
                            </group>
-                            <separator string="Description" colspan="4"/>
-                            <field name="description" colspan="4" nolabel="1"/>
+
+
                             <separator string="" colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state" select="1" colspan="2"/>
@@ -348,7 +348,10 @@
                             </group>
                         </page>
                         <page string="Extra Info">
+                            
+                            <field name="create_date" string="Registration Date"/>
                             <separator string="Contact" colspan="4"/>
+                            
                             <field name="contact_id" on_change="onchange_contact_id(contact_id, partner_id)" />
                             <field name="email_from"/>
                             <field name="badge_ids" colspan="4" nolabel="1">
@@ -395,6 +398,9 @@
                             <button string="Send New Email"
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" type="action"/>
+                           </page>
+                           <page string="Note">
+                                <field name="description" colspan="4" nolabel="1"/>
                            </page>
                     </notebook>
                 </form>

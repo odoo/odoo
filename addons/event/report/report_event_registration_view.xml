@@ -16,7 +16,7 @@
                     <field name="month" invisible="1"/>
                     <field name="event_id" invisible="1"/>
                     <field name="event_state" invisible="1"/>
-                    <field name="type" invisible="1"/>
+                    <field name="event_type" invisible="1"/>
                     <field name="nbevent"/>
                     <field name="draft_state" invisible="context.get('no_of_draft_invisible', False)"/>
                     <field name="confirm_state"/>
@@ -96,7 +96,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                        <field name="type" widget="selection"/>
+                        <field name="event_type" widget="selection"/>
                         <field name="event_date"/>
                     </group>
                     <newline/>
@@ -109,7 +109,7 @@
                         <filter string="Event" name="event" icon="terp-crm" context="{'group_by':'event_id', 'max_reg_event_visible':0}"/>
                         <filter string="Product"  icon="terp-accessories-archiver" context="{'group_by': 'product_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
+                        <filter string="Event Type" icon="terp-crm"  context="{'group_by':'event_type'}"/>
                         <filter string="event_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'event_state'}" help="Events States"/>
                         <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -124,7 +124,7 @@
                     <newline/>
                     <group expand="1" string="Group By Registration...">
                         <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'registration_state'}" help="Events States"/>
-                        <filter string="user" icon="terp-stock_effects-object-colorize" context="{'group_by':'user_id_registration'}" help="Events States"/>
+                        <filter string="user" icon="terp-personal" context="{'group_by':'user_id_registration'}" help="Events States"/>
 
                     </group>
                 </search>

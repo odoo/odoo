@@ -203,7 +203,7 @@ class event_event(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Summary', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
+        'name': fields.char('Origin', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
         'parent_id': fields.many2one('event.event', 'Parent Event', readonly=False, states={'done': [('readonly', True)]}),
         'section_id': fields.many2one('crm.case.section', 'Sale Team', readonly=False, states={'done': [('readonly', True)]}),
@@ -298,7 +298,7 @@ class event_registration(osv.osv):
 
     _columns = {
         'id': fields.integer('ID'),
-        'name': fields.char('Summary', size=124,  readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.char('Origin', size=124,  readonly=True, states={'draft': [('readonly', False)]}),
         'email_cc': fields.text('CC', size=252, readonly=False, states={'done': [('readonly', True)]}, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'nb_register': fields.integer('Quantity', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Number of Registrations or Tickets"),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),

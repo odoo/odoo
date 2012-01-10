@@ -21,7 +21,7 @@
             <field name="name">Events Filling Status</field>
             <field name="res_model">report.event.registration</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','not in',('cancel','done'))]</field>
+            <field name="domain">[('event_state','not in',('cancel','done'))]</field>
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_report_event_reg_graph"/>
         </record>

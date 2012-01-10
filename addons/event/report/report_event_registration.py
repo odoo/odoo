@@ -41,7 +41,7 @@ class report_event_registration(osv.osv):
         'confirm_state': fields.integer(' # No of Confirmed Registrations', size=20),
         'register_max': fields.integer('Maximum Registrations'),
         'nbevent': fields.integer('Number Of Events'),
-        'type': fields.many2one('event.type', 'Event Type'),
+        'event_type': fields.many2one('event.type', 'Event Type'),
         'registration_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
         'event_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
         'user_id': fields.many2one('res.users', 'Responsible', readonly=True),
@@ -63,7 +63,6 @@ class report_event_registration(osv.osv):
          CREATE OR REPLACE view report_event_registration AS (
                 SELECT
                 event_id,
-
                 r.id,
                 e.date_begin AS event_date,
                 e.user_id AS user_id,
@@ -82,7 +81,7 @@ class report_event_registration(osv.osv):
                 CASE WHEN r.state IN ('done') THEN r.price_subtotal ELSE 0 END AS total,
 
                 
-                e.type AS type,
+                e.type AS event_type,
                 r.price_subtotal,
                 AVG(r.price_subtotal) AS average_subtotal,
                 e.register_max AS register_max,
@@ -102,18 +101,18 @@ class report_event_registration(osv.osv):
                 r.id,
                 registration_state,
                 r.nb_register,
-                e.type, e.id, e.date_begin, e.main_speaker_id,
-                e.register_max, e.type, e.state,event_id, e.user_id,e.company_id,e.product_id,e.section_id, r.price_subtotal,
+                event_type, e.id, e.date_begin, e.main_speaker_id,
+                e.register_max,event_id, e.user_id,e.company_id,e.product_id,e.section_id, r.price_subtotal,
                 e.user_id,
                 e.section_id,
+                event_state,
                 e.company_id,
                 e.product_id,
                 e.main_speaker_id,
                 year,
                 month,
-                e.type,
-                e.register_max,
-                e.state
+                e.register_max
+
               )
                 """)
 
