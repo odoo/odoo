@@ -3009,7 +3009,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
     on_save_as: function() {
         var url = '/web/binary/saveas?session_id=' + this.session.session_id + '&model=' +
             this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
-            '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime());
+            '&filename_field=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime());
         window.open(url);
     },
     on_clear: function() {
