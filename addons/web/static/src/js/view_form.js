@@ -1694,16 +1694,13 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
 
 openerp.web.form.dialog = function(content, options) {
     options = _.extend({
-        autoOpen: true,
         width: '90%',
         height: 'auto',
-        min_width: '800px',
-        min_height: '600px'
+        min_width: '800px'
     }, options || {});
     options.autoOpen = true;
-    var dialog = new openerp.web.Dialog(null, options);
-    dialog.$element = $(content).dialog(dialog.dialog_options);
-    return dialog.$element;
+    var dialog = new openerp.web.Dialog(null, options).open();
+    return dialog.$element.html(content);
 };
 
 openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
