@@ -142,10 +142,13 @@ To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
         return mod
 
 def initialize_sys_path():
-    """ Add all addons paths in sys.path.
+    """
+    Setup an import-hook to be able to import OpenERP addons from the different
+    addons paths.
 
-    This ensures something like ``import crm`` works even if the addons are
-    not in the PYTHONPATH.
+    This ensures something like ``import crm`` (or even
+    ``import openerp.addons.crm``) works even if the addons are not in the
+    PYTHONPATH.
     """
     global ad_paths
     if ad_paths:
