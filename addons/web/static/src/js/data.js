@@ -322,16 +322,17 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      * Reads the current dataset record (from its index)
      *
      * @params {Array} [fields] fields to read and return, by default all fields are returned
+     * @param {Object} [options.context] context data to add to the request payload, on top of the DataSet's own context
      * @params {Function} callback function called with read_index result
      * @returns {$.Deferred}
      */
-    read_index: function (fields, callback) {
+    read_index: function (fields, options, callback) {
         var def = $.Deferred().then(callback);
         if (_.isEmpty(this.ids)) {
             def.reject();
         } else {
             fields = fields || false;
-            this.read_ids([this.ids[this.index]], fields).then(function(records) {
+            this.read_ids([this.ids[this.index]], fields, options).then(function(records) {
                 def.resolve(records[0]);
             }, function() {
                 def.reject.apply(def, arguments);

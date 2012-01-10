@@ -219,7 +219,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
                 this.context || this.dataset.context
             );
             pop.on_select_elements.add_last(function(element_ids) {
-                self.dataset.read_index(_.keys(self.fields_view.fields), self.on_diagram_loaded);
+                self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
             });
         } else {
             pop = new openerp.web.form.FormOpenPopup(this);
@@ -232,7 +232,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
                 }
             );
             pop.on_write.add(function() {
-                self.dataset.read_index(_.keys(self.fields_view.fields), self.on_diagram_loaded);
+                self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
             });
         }
 
@@ -292,7 +292,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
                 this.dataset.index = this.dataset.ids.length - 1;
                 break;
         }
-        this.dataset.read_index(_.keys(this.fields_view.fields), this.on_diagram_loaded);
+        this.dataset.read_index(_.keys(this.fields_view.fields)).pipe(this.on_diagram_loaded);
         this.do_update_pager();
     },
 

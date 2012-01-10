@@ -290,7 +290,7 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
     start: function () {
         this._super();
         var self = this;
-        return this.user.read_index(['groups_id']).pipe(function (record) {
+        return this.user.read_index(['groups_id']).pipe(function(record) {
             var todos_filter = [
                 ['type', '!=', 'automatic'],
                 '|', ['groups_id', '=', false],
