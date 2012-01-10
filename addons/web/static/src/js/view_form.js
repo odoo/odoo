@@ -2292,6 +2292,9 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
 	            this.viewmanager.views[this.viewmanager.active_view].controller) {
 	            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
 	            if (this.viewmanager.active_view === "form") {
+	                if (!view.is_initialized.isResolved()) {
+	                    return false;
+	                }
 	                var res = $.when(view.do_save());
 	                if (!res.isResolved() && !res.isRejected()) {
 	                    console.warn("Asynchronous get_value() is not supported in form view.");
