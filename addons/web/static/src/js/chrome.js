@@ -44,9 +44,9 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
      * @extends openerp.web.OldWidget
      *
      * @param parent
-     * @param dialog_options
+     * @param options
      */
-    init: function (parent, dialog_options) {
+    init: function (parent, options) {
         var self = this;
         this._super(parent);
         this.dialog_options = {
@@ -57,10 +57,9 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
             max_width: '95%',
             height: 'auto',
             min_height: 0,
-            max_height: '95%',
+            max_height: this.get_height('100%') - 140,
             autoOpen: false,
             position: [false, 50],
-            autoResize : 'auto',
             buttons: {},
             beforeClose: function () { self.on_close(); },
             resizeStop: this.on_resized
@@ -70,31 +69,24 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
                 this.dialog_options.buttons[f.substr(10)] = this[f];
             }
         }
-        if (dialog_options) {
-            this.set_options(dialog_options);
+        if (options) {
+            _.extend(this.dialog_options, options);
         }
     },
-    set_options: function(options) {
-        options = options || {};
-        options.width = this.get_width(options.width || this.dialog_options.width);
-        options.min_width = this.get_width(options.min_width || this.dialog_options.min_width);
-        options.max_width = this.get_width(options.max_width || this.dialog_options.max_width);
-        options.height = this.get_height(options.height || this.dialog_options.height);
-        options.min_height = this.get_height(options.min_height || this.dialog_options.min_height);
-        options.max_height = this.get_height(options.max_height || this.dialog_options.max_height);
-
-        if (options.width !== 'auto') {
-            if (options.width > options.max_width) options.width = options.max_width;
-            if (options.width < options.min_width) options.width = options.min_width;
+    get_options: function(options) {
+        var self = this,
+            o = _.extend({}, this.dialog_options, options || {});
+        _.each(['width', 'height'], function(unit) {
+            o[unit] = self['get_' + unit](o[unit]);
+            o['min_' + unit] = self['get_' + unit](o['min_' + unit] || 0);
+            o['max_' + unit] = self['get_' + unit](o['max_' + unit] || 0);
+            if (o[unit] !== 'auto' && o['min_' + unit] && o[unit] < o['min_' + unit]) o[unit] = o['min_' + unit];
+            if (o[unit] !== 'auto' && o['max_' + unit] && o[unit] > o['max_' + unit]) o[unit] = o['max_' + unit];
+        });
+        if (!o.title && this.dialog_title) {
+            o.title = this.dialog_title;
         }
-        if (options.height !== 'auto') {
-            if (options.height > options.max_height) options.height = options.max_height;
-            if (options.height < options.min_height) options.height = options.min_height;
-        }
-        if (!options.title && this.dialog_title) {
-            options.title = this.dialog_title;
-        }
-        _.extend(this.dialog_options, options);
+        return o;
     },
     get_width: function(val) {
         return this.get_size(val.toString(), $(window.top).width());
@@ -116,13 +108,16 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         this._super();
         return this;
     },
-    open: function(dialog_options) {
+    open: function(options) {
         // TODO fme: bind window on resize
         if (this.template) {
             this.$element.html(this.render());
         }
-        this.set_options(dialog_options);
-        this.$element.dialog(this.dialog_options).dialog('open');
+        var o = this.get_options(options);
+        this.$element.dialog(o).dialog('open');
+        if (o.height === 'auto' && o.max_height) {
+            this.$element.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
+        }
         return this;
     },
     close: function() {
@@ -134,9 +129,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         }
     },
     on_resized: function() {
-        if (openerp.connection.debug) {
-            console.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
-        }
+        openerp.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
     },
     stop: function () {
         // Destroy widget
