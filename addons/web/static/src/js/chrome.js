@@ -483,7 +483,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                     },
                     complete: function() {
                         self.unblockUI();
-                        self.do_notify("Backed","Database backed up successfully !");
+                        self.do_notify(_t("Backed"), _t("Database backed up successfully"));
                     }
                 });
             }
@@ -522,7 +522,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                     },
                     complete: function() {
                         self.unblockUI();
-                        self.do_notify("Restored","Database restored successfully !");
+                        self.do_notify(_t("Restored"), _t("Database restored successfully"));
                     }
                 });
             }
