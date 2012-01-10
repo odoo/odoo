@@ -114,7 +114,7 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
                 if (value) {
                     self.do_save_export_list(value);
                 } else {
-                    alert(_t("Please Enter Save Field List Name"));
+                    alert(_t("Please enter save field list name"));
                 }
             });
         } else {
@@ -354,7 +354,6 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         return export_field;
     },
     on_click_export_data: function() {
-        
         var exported_fields = [], self = this;
         this.$element.find("#fields_list option").each(function() {
             var fieldname = self.records[$(this).val()];
@@ -367,9 +366,9 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
 
         exported_fields.unshift({name: 'id', label: 'External ID'});
         var export_format = this.$element.find("#export_format").val();
+        $.blockUI();
         this.session.get_file({
             url: '/web/export/' + export_format,
-            beforeSend: $.blockUI(this.$element),
             data: {data: JSON.stringify({
                 model: this.dataset.model,
                 fields: exported_fields,
