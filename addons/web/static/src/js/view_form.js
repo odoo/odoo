@@ -143,7 +143,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 // null index means we should start a new record
                 result = self.on_button_new();
             } else {
-                result = self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded);
+                result = self.dataset.read_index(_.keys(self.fields_view.fields), {
+                    context : { 'bin_size' : true }
+                }).pipe(self.on_record_loaded);
             }
             result.pipe(function() {
                 self.$element.css('visibility', 'visible');
@@ -526,7 +528,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (self.dataset.index == null || self.dataset.index < 0) {
                 return $.when(self.on_button_new());
             } else {
-                return self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded);
+                return self.dataset.read_index(_.keys(self.fields_view.fields), {
+                    context : { 'bin_size' : true }
+                }).pipe(self.on_record_loaded);
             }
         });
     },
