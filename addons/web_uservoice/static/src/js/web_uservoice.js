@@ -40,7 +40,7 @@ instance.web_uservoice.UserVoice = instance.web.Widget.extend({
 
         var ds = new instance.web.DataSetSearch(this, 'ir.ui.menu', {lang: 'NO_LANG'}, [['parent_id', '=', false]]);
 
-        ds.read_slice(['name'], null, function(result) {
+        ds.read_slice(['name']).then(function(result) {
             _.each(result, function(menu) {
                 self.uservoiceForums[menu.id] = forum_mapping[menu.name.toLowerCase()] || self.default_forum;
             });
