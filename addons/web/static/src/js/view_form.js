@@ -50,10 +50,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         _.defaults(this.options, {
             "not_interactible_on_create": false
         });
-        this.mutating_lock = $.Deferred();
-        this.initial_mutating_lock = this.mutating_lock;
-        this.on_change_lock = $.Deferred().resolve();
-        this.reload_lock = $.Deferred().resolve();
+        this.is_initialized = $.Deferred();
+        this.mutating_mutex = new $.Mutex();
+        this.on_change_mutex = new $.Mutex();
+        this.reload_mutex = new $.Mutex();
     },
     start: function() {
         this._super();
@@ -136,6 +136,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
 
     do_show: function () {
         var self = this;
+        this.$element.show().css('visibility', 'hidden');
         return this.has_been_loaded.pipe(function() {
             var result;
             if (self.dataset.index === null) {
@@ -144,7 +145,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             } else {
                 result = self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded);
             }
-            self.$element.show();
+            result.pipe(function() {
+                self.$element.css('visibility', 'visible');
+            });
             if (self.sidebar) {
                 self.sidebar.$element.show();
             }
@@ -186,7 +189,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 });
             }
             self.on_form_changed();
-            self.initial_mutating_lock.resolve();
+            self.is_initialized.resolve();
             self.show_invalid = true;
             self.do_update_pager(record.id == null);
             if (self.sidebar) {
@@ -303,7 +306,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     do_onchange: function(widget, processed) {
         var self = this;
-        var act = function() {
+        return this.on_change_mutex.exec(function() {
             try {
                 processed = processed || [];
                 var on_change = widget.node.attrs.on_change;
@@ -330,9 +333,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 console.error(e);
                 return $.Deferred().reject();
             }
-        };
-        this.on_change_lock = this.on_change_lock.pipe(act, act);
-        return this.on_change_lock;
+        });
     },
     on_processed_onchange: function(response, processed) {
         try {
@@ -414,10 +415,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      */
     do_save: function(success, prepend_on_create) {
         var self = this;
-        var action = function() {
+        return this.mutating_mutex.exec(function() { return self.is_initialized.pipe(function() {
             try {
-            if (!self.initial_mutating_lock.isResolved() && !self.initial_mutating_lock.isRejected())
-                return;
             var form_invalid = false,
                 values = {},
                 first_invalid_field = null;
@@ -462,9 +461,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 console.error(e);
                 return $.Deferred().reject();
             }
-        };
-        this.mutating_lock = this.mutating_lock.pipe(action, action);
-        return this.mutating_lock;
+        });});
     },
     on_invalid: function() {
         var msg = "<ul>";
@@ -525,15 +522,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     reload: function() {
         var self = this;
-        var act = function() {
+        return this.reload_mutex.exec(function() {
             if (self.dataset.index == null || self.dataset.index < 0) {
                 return $.when(self.on_button_new());
             } else {
                 return self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_record_loaded);
             }
-        };
-        this.reload_lock = this.reload_lock.pipe(act, act);
-        return this.reload_lock;
+        });
     },
     get_fields_values: function(blacklist) {
     	blacklist = blacklist || [];
@@ -831,23 +826,17 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
      * the fields'context with the action's context.
      */
     build_context: function(blacklist) {
-        var f_context = (this.field || {}).context || {};
-        if (!!f_context.__ref || true) { //TODO: remove true
-            var fields_values = this._build_eval_context(blacklist);
-            f_context = new openerp.web.CompoundContext(f_context).set_eval_context(fields_values);
+        // only use the model's context if there is not context on the node
+        var v_context = this.node.attrs.context;
+        if (! v_context) {
+            v_context = (this.field || {}).context || {};
         }
-        // maybe the default_get should only be used when we do a default_get?
-        var v_contexts = _.compact([this.node.attrs.default_get || null,
-            this.node.attrs.context || null]);
-        var v_context = new openerp.web.CompoundContext();
-        _.each(v_contexts, function(x) {v_context.add(x);});
-        if (_.detect(v_contexts, function(x) {return !!x.__ref;}) || true) { //TODO: remove true
+        
+        if (v_context.__ref || true) { //TODO: remove true
             var fields_values = this._build_eval_context(blacklist);
-            v_context.set_eval_context(fields_values);
+            v_context = new openerp.web.CompoundContext(v_context).set_eval_context(fields_values);
         }
-        // if there is a context on the node, overrides the model's context
-        var ctx = v_contexts.length > 0 ? v_context : f_context;
-        return ctx;
+        return v_context;
     },
     build_domain: function() {
         var f_domain = this.field.domain || [];
@@ -1705,16 +1694,13 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
 
 openerp.web.form.dialog = function(content, options) {
     options = _.extend({
-        autoOpen: true,
         width: '90%',
-        height: '90%',
-        min_width: '800px',
-        min_height: '600px'
+        height: 'auto',
+        min_width: '800px'
     }, options || {});
     options.autoOpen = true;
-    var dialog = new openerp.web.Dialog(null, options);
-    dialog.$element = $(content).dialog(dialog.dialog_options);
-    return dialog.$element;
+    var dialog = new openerp.web.Dialog(null, options).open();
+    return dialog.$element.html(content);
 };
 
 openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
@@ -2303,6 +2289,9 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
 	            this.viewmanager.views[this.viewmanager.active_view].controller) {
 	            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
 	            if (this.viewmanager.active_view === "form") {
+	                if (!view.is_initialized.isResolved()) {
+	                    return false;
+	                }
 	                var res = $.when(view.do_save());
 	                if (!res.isResolved() && !res.isRejected()) {
 	                    console.warn("Asynchronous get_value() is not supported in form view.");
@@ -2750,7 +2739,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save-new");
             $nbutton.click(function() {
                 $.when(self.view_form.do_save()).then(function() {
-                    self.view_form.reload_lock.then(function() {
+                    self.view_form.reload_mutex.exec(function() {
                         self.view_form.on_button_new();
                     });
                 });
@@ -2758,7 +2747,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save");
             $nbutton.click(function() {
                 $.when(self.view_form.do_save()).then(function() {
-                    self.view_form.reload_lock.then(function() {
+                    self.view_form.reload_mutex.exec(function() {
                         self.check_exit();
                     });
                 });
@@ -3020,7 +3009,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
     on_save_as: function() {
         var url = '/web/binary/saveas?session_id=' + this.session.session_id + '&model=' +
             this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
-            '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime());
+            '&filename_field=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime());
         window.open(url);
     },
     on_clear: function() {

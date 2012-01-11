@@ -470,10 +470,15 @@
 </t>
 <t t-name="ViewManagerDebug">
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
-    <option value="fvg"> - Fields View Get</option>
-    <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id"> - Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
-    <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id"> - Edit SearchView</option>
-    <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id"> - Edit Action</option>
+    <option value="fvg">Fields View Get</option>
+    <t t-if="view_manager.session.uid === 1">
+        <option value="manage_views">Manage Views</option>
+        <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
+        <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</option>
+        <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id">Edit Action</option>
+        <option value="customize_object">Customize Object</option>
+        <option value="edit_workflow">Edit Workflow</option>
+    </t>
 </t>
 <t t-extend="ViewManager" t-name="One2Many.viewmanager">
     <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
@@ -743,7 +748,7 @@
         <li t-foreach="attachments" t-as="attachment">
             <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="_s + '/web/binary/saveas?session_id='
                 + session.session_id + '&amp;model=ir.attachment&amp;id=' + attachment.id
-                + '&amp;field=datas&amp;fieldname=name&amp;t=' + (new Date().getTime())"/>
+                + '&amp;field=datas&amp;filename_field=name&amp;t=' + (new Date().getTime())"/>
             <a class="oe-sidebar-attachments-link" t-att-href="attachment.url" target="_blank">
                 <t t-esc="attachment.name"/>
             </a>

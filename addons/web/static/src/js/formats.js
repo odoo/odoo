@@ -102,10 +102,6 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             return _.str.sprintf("%02d:%02d",
                     Math.floor(value),
                     Math.round((value % 1) * 60));
-        case 'progressbar':
-            return _.str.sprintf(
-                '<progress value="%.2f" max="100.0">%.2f%%</progress>',
-                    value, value);
         case 'many2one':
             // name_get value format
             return value[1];
@@ -237,7 +233,15 @@ openerp.web.auto_date_to_str = function(value, type) {
 };
 
 /**
- * Formats a provided cell based on its field type
+ * Formats a provided cell based on its field type. Most of the field types
+ * return a correctly formatted value, but some tags and fields are
+ * special-cased in their handling:
+ *
+ * * buttons will return an actual ``<button>`` tag with a bunch of error handling
+ *
+ * * boolean fields will return a checkbox input, potentially disabled
+ *
+ * * binary fields will return a link to download the binary data as a file
  *
  * @param {Object} row_data record whose values should be displayed in the cell
  * @param {Object} column column descriptor
@@ -245,15 +249,21 @@ openerp.web.auto_date_to_str = function(value, type) {
  * @param {String} column.type widget type for a field control
  * @param {String} [column.string] button label
  * @param {String} [column.icon] button icon
- * @param {String} [value_if_empty=''] what to display if the field's value is ``false``
- * @param {Boolean} [process_modifiers=true] should the modifiers be computed ?
+ * @param {Object} [options]
+ * @param {String} [options.value_if_empty=''] what to display if the field's value is ``false``
+ * @param {Boolean} [options.process_modifiers=true] should the modifiers be computed ?
+ * @param {String} [options.model] current record's model
+ * @param {Number} [options.id] current record's id
+ *
  */
-openerp.web.format_cell = function (row_data, column, value_if_empty, process_modifiers) {
+openerp.web.format_cell = function (row_data, column, options) {
+    options = options || {};
     var attrs = {};
-    if (process_modifiers !== false) {
+    if (options.process_modifiers !== false) {
         attrs = column.modifiers_for(row_data);
     }
     if (attrs.invisible) { return ''; }
+
     if (column.tag === 'button') {
         return _.template('<button type="button" title="<%-title%>" <%=additional_attributes%> >' +
             '<img src="<%-prefix%>/web/static/src/img/icons/<%-icon%>.png" alt="<%-alt%>"/>' +
@@ -263,14 +273,41 @@ openerp.web.format_cell = function (row_data, column, value_if_empty, process_mo
                     'disabled="disabled" class="oe-listview-button-disabled"' : '',
                 prefix: openerp.connection.prefix,
                 icon: column.icon,
-                alt: column.string || '',
+                alt: column.string || ''
             });
     }
     if (!row_data[column.id]) {
-        return value_if_empty === undefined ? '' : value_if_empty;
+        return options.value_if_empty === undefined ? '' : options.value_if_empty;
     }
-    return openerp.web.format_value(
-            row_data[column.id].value, column, value_if_empty);
+
+    switch (column.widget || column.type) {
+    case "boolean":
+        return _.str.sprintf('<input type="checkbox" %s disabled="disabled"/>',
+                 row_data[column.id].value ? 'checked="checked"' : '');
+    case "binary":
+        var text = _t("Download"),
+            download_url = _.str.sprintf('/web/binary/saveas?session_id=%s&model=%s&field=%s&id=%d', openerp.connection.session_id, options.model, column.id, options.id);
+        if (column.filename) {
+            download_url += '&filename_field=' + column.filename;
+            if (row_data[column.filename]) {
+                text = _.str.sprintf(_t("Download \"%s\""), openerp.web.format_value(
+                        row_data[column.filename].value, {type: 'char'}));
+            }
+        }
+        return _.template('<a href="<%-href%>"><%-text%></a> (%<-size%>)', {
+            text: text,
+            href: download_url,
+            size: row_data[column.id].value
+        });
+    case 'progressbar':
+        return _.template(
+            '<progress value="<%-value%>" max="100"><%-value%>%</progress>', {
+                value: row_data[column.id].value
+            });
+    }
+
+    return _.escape(openerp.web.format_value(
+            row_data[column.id].value, column, options.value_if_empty));
 }
-    
+
 };

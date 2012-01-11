@@ -1184,23 +1184,40 @@ class Binary(openerpweb.Controller):
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
     @openerpweb.httprequest
-    def saveas(self, req, model, id, field, fieldname, **kw):
+    def saveas(self, req, model, field, id=None, filename_field=None, **kw):
+        """ Download link for files stored as binary fields.
+
+        If the ``id`` parameter is omitted, fetches the default value for the
+        binary field (via ``default_get``), otherwise fetches the field for
+        that precise record.
+
+        :param req: OpenERP request
+        :type req: :class:`web.common.http.HttpRequest`
+        :param str model: name of the model to fetch the binary from
+        :param str field: binary field
+        :param str id: id of the record from which to fetch the binary
+        :param str filename_field: field holding the file's name, if any
+        :returns: :class:`werkzeug.wrappers.Response`
+        """
         Model = req.session.model(model)
         context = req.session.eval_context(req.context)
+        fields = [field]
+        if filename_field:
+            fields.append(filename_field)
         if id:
-            res = Model.read([int(id)], [field, fieldname], context)[0]
+            res = Model.read([int(id)], fields, context)[0]
         else:
-            res = Model.default_get([field, fieldname], context)
+            res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field, ''))
         if not filecontent:
             return req.not_found()
         else:
             filename = '%s_%s' % (model.replace('.', '_'), id)
-            if fieldname:
-                filename = res.get(fieldname, '') or filename
+            if filename_field:
+                filename = res.get(filename_field, '') or filename
             return req.make_response(filecontent,
                 [('Content-Type', 'application/octet-stream'),
-                 ('Content-Disposition', 'attachment; filename=' +  filename)])
+                 ('Content-Disposition', 'attachment; filename="%s"' % filename)])
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):
