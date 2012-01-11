@@ -33,13 +33,13 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Survey">
-                            <field name="page_ids" colspan="4" nolabel="1" mode="form,tree" context="{'line_order': page_ids}">
+                            <field name="page_ids" colspan="4" nolabel="1" mode="form,tree" default_get="{'line_order': page_ids}">
                                 <form string="Survey Page">
                                     <field name="title" select="1"/>
                                     <field name="sequence" groups="base.group_extended"/>
                                     <separator string="Description" colspan="4"/>
                                     <field name="note" colspan="4" nolabel="1"/>
-                                    <field name="question_ids" height="200" width="200" colspan="4" nolabel="1" context="{'line_order': question_ids}">
+                                    <field name="question_ids" height="200" width="200" colspan="4" nolabel="1" default_get="{'line_order': question_ids}">
                                         <form string="Survey Question" >
                                             <group col="6" colspan="6" height="600" width="200">
                                             <field name="question" colspan="4" select="1"/>
@@ -54,7 +54,7 @@
                                                     <group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
                                                       <separator string="Answer" colspan="4"/>
                                                        <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
-                                                           <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids, 'in_visible_answer_type': in_visible_answer_type}"/>
+                                                           <field name="answer_choice_ids" nolabel="1" colspan="4" default_get="{'line_order': answer_choice_ids, 'in_visible_answer_type': in_visible_answer_type}"/>
                                                        </group>
                                                        <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
                                                            <field name="column_heading_ids" colspan="4" nolabel="1" context="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
@@ -310,7 +310,7 @@
                     <field name="sequence"/>
                     <separator string="Description" colspan="4"/>
                     <field name="note" colspan="4" nolabel="1"/>
-                    <field name="question_ids" colspan="4" nolabel="1" context="{'line_order': question_ids}">
+                    <field name="question_ids" colspan="4" nolabel="1" default_get="{'line_order': question_ids}">
                     <form string="Survey Question">
                         <field name="question" colspan="4" select="1"/>
                         <field name="sequence"/>
@@ -324,7 +324,7 @@
                                 <group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
                                   <separator string="Answer" colspan="4"/>
                                    <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
-                                       <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids, 'in_visible_answer_type': in_visible_answer_type}"/>
+                                       <field name="answer_choice_ids" nolabel="1" colspan="4" default_get="{'line_order': answer_choice_ids, 'in_visible_answer_type': in_visible_answer_type}"/>
                                    </group>
                                    <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
                                        <field name="column_heading_ids" colspan="4" nolabel="1" context="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
