@@ -307,13 +307,14 @@
               </group>
               <notebook colspan="4">
                   <page string="Catalog">
-                      <separator string="Inventory" colspan="2"/>
                       <group colspan="4" col="6">
                           <group colspan="2" col="4">
+                            <separator string="Inventory" colspan="4"/>
                             <field name="product_id" colspan="4"/>
                             <field name="lot_num" select="1" />
                             <field name="bord_vnd_id"/>
                           </group>
+                          <separator string="Image" colspan="2"/>
                           <group colspan="2" col="1">
                             <field name="image" widget='image' nolabel="1"/>
                           </group>
@@ -560,7 +561,8 @@
                                 <field name="state" readonly="1" colspan="4"/>
                               </page>
                               <page string="Photos">
-                                  <field name="image" colspan="4" widget="image"/>
+                                  <separator string="Image" colspan="4"/>
+                                  <field name="image" colspan="4" widget="image" nolabel="1"/>
                               </page>
                           </notebook>
                       </form>
