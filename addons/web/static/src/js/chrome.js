@@ -175,7 +175,7 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
         var buttons = {};
         if (openerp.connection.openerp_entreprise) {
             buttons[_t("Send OpenERP Enterprise Report")] = function() {
-                $this = $(this);
+                var $this = $(this);
                 var issuename = $('#issuename').val();
                 var explanation = $('#explanation').val();
                 var remark = $('#remark').val();
