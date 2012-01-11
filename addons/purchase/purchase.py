@@ -718,9 +718,8 @@ class purchase_order_line(osv.osv):
         lang=False
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, partner_id, ['lang'])['lang']
-        context={'lang':lang}
-        context['partner_id'] = partner_id
-
+            
+        context_partner = {'lang':lang, 'partner_id': partner_id}
         prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
         prod_uom_po = prod.uom_po_id.id
         if not uom:
@@ -734,8 +733,8 @@ class purchase_order_line(osv.osv):
             uom2_cat = product_uom_pool.browse(cr, uid, uom).category_id.id
             if uom1_cat != uom2_cat:
                 uom = False
-
-        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context)[0][1]
+                
+        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context_partner)[0][1]
         res = {}
         for s in prod.seller_ids:
             if s.name.id == partner_id:
