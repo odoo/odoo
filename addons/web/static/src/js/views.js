@@ -128,8 +128,7 @@ session.web.ActionManager = session.web.Widget.extend({
                 .contains(action.res_model)) {
             var old_close = on_close;
             on_close = function () {
-                session.webclient.do_reload();
-                if (old_close) { old_close(); }
+                session.webclient.do_reload().then(old_close);
             };
         }
         if (action.target === 'new') {
