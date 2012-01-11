@@ -625,7 +625,7 @@ openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
                     ['res_model', '=', this.view.dataset.model],
                     ['res_id', '=', this.view.datarecord.id],
                     ['type', 'in', ['binary', 'url']]
-                ])).read_slice(['name', 'url', 'type'], {}, this.on_attachments_loaded);
+                ])).read_slice(['name', 'url', 'type'], {}).then(this.on_attachments_loaded);
         }
     },
     on_attachments_loaded: function(attachments) {
@@ -1698,9 +1698,8 @@ openerp.web.form.dialog = function(content, options) {
         height: 'auto',
         min_width: '800px'
     }, options || {});
-    options.autoOpen = true;
-    var dialog = new openerp.web.Dialog(null, options).open();
-    return dialog.$element.html(content);
+    var dialog = new openerp.web.Dialog(null, options, content).open();
+    return dialog.$element;
 };
 
 openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({

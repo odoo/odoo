@@ -33,7 +33,7 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
         var list_ids = [];
         var datasearch = new openerp.web.DataSetSearch(self, self.action.res_model,self.action.context);
         datasearch.domain = self.action.domain;
-        datasearch.read_slice(['name'], {context:datasearch.context, domain: datasearch.domain, limit:80}, function(listresult){
+        datasearch.read_slice(['name'], {context:datasearch.context, domain: datasearch.domain, limit:80}).then(function(listresult){
             _.each(listresult, function(i) {
                 list_ids.push(i.id);
             });

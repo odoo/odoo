@@ -47,7 +47,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 {text: _t("Remove"), click: function() { self.do_delete_view(); }},
                 {text: _t("Close"), click: function() { self.view_edit_dialog.close(); }}
             ]
-        }).start().open();
+        }).open();
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new openerp.web.ActionManager(this);
         this.action_manager.appendTo(this.view_edit_dialog);
@@ -92,8 +92,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }},
                 {text: _t("Cancel"), click: function () { self.create_view_dialog.close(); }}
             ]
-        });
-        this.create_view_dialog.start().open();
+        }).open();
         var view_widget = [{'name': 'view_name', 'string':'View Name', 'type': 'char', 'required': true, 'value' : this.model + '.custom_' + Math.round(Math.random() * 1000)},
                            {'name': 'view_type', 'string': 'View Type', 'type': 'selection', 'required': true, 'value': 'Form', 'selection': [['',''],['tree', 'Tree'],['form', 'Form'],['graph', 'Graph'],['calendar', 'Calender']]},
                            {'name': 'proirity', 'string': 'Priority', 'type': 'float', 'required': true, 'value':'16'}];
@@ -125,7 +124,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }
             });
             if (field_name) {
-                model_dataset.read_slice(['name','field_id'], {"domain": [['model','=',self.model]]}, function(records) {
+                model_dataset.read_slice(['name','field_id'], {"domain": [['model','=',self.model]]}).then(function(records) {
                     if (records) {view_string = records[0].name;}
                     var arch = _.str.sprintf("<?xml version='1.0'?>\n<%s string='%s'>\n\t<field name='%s'/>\n</%s>", values.view_type, view_string, field_name, values.view_type);
                     var vals = {'model': self.model, 'name': values.view_name, 'priority': values.priority, 'type': values.view_type, 'arch': arch};
@@ -228,12 +227,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     get_arch: function() {
         var self = this;
         var view_arch_list = [];
-        this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function(arch) {
+        this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type']).then(function(arch) {
             if (arch.length) {
                 var arch_object = self.parse_xml(arch[0].arch, self.main_view_id);
                 self.main_view_type = arch[0].type == 'tree'? 'list': arch[0].type;
                 view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch});
-                self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}, function(result) {
+                self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}).then(function(result) {
                     _.each(result, function(res) {
                         view_arch_list.push({"view_id": res.id, "arch": res.arch});
                         self.inherit_view(arch_object, res);
@@ -382,7 +381,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     self.edit_xml_dialog.close();
                 }}
             ]
-        }).start().open();
+        }).open();
         var no_property_att = [];
         _.each(_PROPERTIES, function(val, key) {
             if (! val.length) no_property_att.push(key);
@@ -769,8 +768,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }},
                 {text: _t("Cancel"), click: function () { self.edit_node_dialog.close(); }}
             ]
-        });
-        this.edit_node_dialog.start().open();
+        }).open();
         var _PROPERTIES_ATTRIBUTES = {
             'name' : {'name':'name', 'string': 'Name', 'type': 'char'},
             'string' : {'name':'string', 'string': 'String', 'type': 'char'},
@@ -896,7 +894,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }},
                 {text: _t("Cancel"), click: function() { self.add_node_dialog.close(); }}
             ]
-        }).start().open();
+        }).open();
         this.add_node_dialog.$element.append('<table id="rec_table"  style="width:420px" class="oe_forms"><tbody><tr></tbody></table>');
         var table_selector = self.add_node_dialog.$element.find('table[id=rec_table] tbody');
         _.each(render_list, function(node) {
@@ -916,7 +914,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         table_selector.find("td[id^=]").attr("width","100px");
         self.add_node_dialog.$element.find('#new_field').click(function() {
             model_data = new openerp.web.DataSetSearch(self,'ir.model', null, null);
-            model_data.read_slice([], {domain: [['model','=', self.model]]}, function(result) {
+            model_data.read_slice([], {domain: [['model','=', self.model]]}).then(function(result) {
                 self.render_new_field(result[0].id);
             });
         });
@@ -940,7 +938,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             controller.do_set_readonly.add_last(function(){
                 action_manager.stop();
                 new_fields_name = new openerp.web.DataSetSearch(self,'ir.model.fields', null, null);
-                new_fields_name.read_ids([controller.datarecord.id], ['name'], function(result) {
+                new_fields_name.read_ids([controller.datarecord.id], ['name']).then(function(result) {
                 self.add_node_dialog.$element.find('select[id=field_value]').append($("<option selected></option>").attr("value", result[0].name).text(result[0].name));
                     _.detect(self.add_widget,function(widget){
                         widget.name == "field_value"? widget.selection.push(result[0].name): false;

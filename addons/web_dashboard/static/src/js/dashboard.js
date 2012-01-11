@@ -296,8 +296,10 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
                 '|', ['groups_id', '=', false],
                      ['groups_id', 'in', record['groups_id']]];
             return $.when(
-                self.dataset.read_slice(['state', 'action_id', 'category_id'],{
-                        domain: todos_filter }),
+                self.dataset.read_slice(
+                    ['state', 'action_id', 'category_id'],
+                    { domain: todos_filter }
+                ),
                 self.dataset.call('progress').pipe(
                         function (arg) { return arg; }, null))
         }, null).then(this.on_records_loaded);
@@ -373,8 +375,8 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
     },
     start: function () {
         this._super();
-        return new openerp.web.DataSet(this, 'res.widget').read_ids(
-                [this.widget_id], ['title'], this.on_widget_loaded);
+        var ds = new openerp.web.DataSet(this, 'res.widget');
+        return ds.read_ids([this.widget_id], ['title']).then(this.on_widget_loaded);
     },
     on_widget_loaded: function (widgets) {
         var widget = widgets[0];
@@ -403,7 +405,7 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.Widget.extend({
         openerp.webclient.menu.do_hide_secondary();
         var domain = [['application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
         var ds = new openerp.web.DataSetSearch(this, 'ir.module.module',{},domain);
-        ds.read_slice(['id'], {}, function(result) {
+        ds.read_slice(['id']).then(function(result) {
             if(result.length) {
                 self.on_installed_database();
             } else {
@@ -418,7 +420,7 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.Widget.extend({
     on_installed_database: function() {
         var self = this;
         var ds = new openerp.web.DataSetSearch(this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
-        var r = ds.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data', 'module'], {}, function (applications) {
+        var r = ds.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data', 'module']).then(function (applications) {
             //// Create a matrix of 3*x applications
             //var rows = [];
             //while (applications.length) {

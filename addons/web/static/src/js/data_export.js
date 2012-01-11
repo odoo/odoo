@@ -74,7 +74,7 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         }
         return this.exports.read_slice(['name'], {
             domain: [['resource', '=', this.dataset.model]]
-        }, function (export_list) {
+        }).then(function (export_list) {
             if (!export_list.length) {
                 return;
             }

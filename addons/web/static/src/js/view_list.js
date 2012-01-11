@@ -1016,14 +1016,13 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
-                }), 'name'),
-            function (records) {
-                _(records[0]).each(function (value, key) {
-                    record.set(key, value, {silent: true});
-                });
-                record.trigger('change', record);
-            }
-        );
+                }), 'name')
+        ).then(function (records) {
+            _(records[0]).each(function (value, key) {
+                record.set(key, value, {silent: true});
+            });
+            record.trigger('change', record);
+        });
     },
     /**
      * Renders a list record to HTML
@@ -1303,7 +1302,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
         var options = { offset: page * limit, limit: limit, context: {bin_size: true} };
         //TODO xmo: investigate why we need to put the setTimeout
-        $.async_when().then(function() {dataset.read_slice(fields, options , function (records) {
+        $.async_when().then(function() {dataset.read_slice(fields, options).then(function (records) {
             // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
             if (self.records.length) {
                 self.records.reset(null, {silent: true});

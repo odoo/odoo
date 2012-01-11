@@ -36,7 +36,7 @@ openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Not
 
 });
 
-openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog# */{
+openerp.web.Dialog = openerp.web.Widget.extend(/** @lends openerp.web.Dialog# */{
     dialog_title: "",
     identifier_prefix: 'dialog',
     /**
@@ -46,9 +46,12 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
      * @param parent
      * @param options
      */
-    init: function (parent, options) {
+    init: function (parent, options, content) {
         var self = this;
         this._super(parent);
+        if (content) {
+            this.$element = content instanceof $ ? content : $(content);
+        }
         this.dialog_options = {
             modal: true,
             destroy_on_close: true,
@@ -71,6 +74,11 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         }
         if (options) {
             _.extend(this.dialog_options, options);
+        }
+        if (this.dialog_options.autoOpen) {
+            this.open();
+        } else {
+            this.$element.dialog(this.get_options());
         }
     },
     get_options: function(options) {
@@ -102,11 +110,6 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         } else {
             return parseInt(val, 10);
         }
-    },
-    start: function () {
-        this.$element.dialog(this.dialog_options);
-        this._super();
-        return this;
     },
     open: function(options) {
         // TODO fme: bind window on resize
@@ -195,13 +198,12 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
         }
         var dialog = new openerp.web.Dialog(this, {
             title: "OpenERP " + _.str.capitalize(this.error.type),
-            autoOpen: true,
             width: '80%',
             height: '50%',
             min_width: '800px',
             min_height: '600px',
             buttons: buttons
-        }).start();
+        }).open();
         dialog.$element.html(QWeb.render('CrashManagerError', {session: openerp.connection, error: error}));
     },
 });
@@ -782,8 +784,7 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
                     }
                 }
             ]
-        });
-       this.dialog.start().open();
+        }).open();
        action_manager.appendTo(this.dialog);
        action_manager.render(this.dialog);
     },
@@ -793,8 +794,7 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
         this.dialog = new openerp.web.Dialog(this, {
             title: _t("Change Password"),
             width : 'auto'
-        });
-        this.dialog.start().open();
+        }).open();
         this.dialog.$element.html(QWeb.render("Change_Pwd", self));
         this.dialog.$element.find("form[name=change_password_form]").validate({
             submitHandler: function (form) {

@@ -422,7 +422,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             } else {
                 self.abscissa = self.first_field;
             }
-            return self.dataset.read_slice(self.list_fields(), {}, $.proxy(self, 'schedule_chart'));
+            return self.dataset.read_slice(self.list_fields()).then($.proxy(self, 'schedule_chart'));
         });
     },
 
