@@ -286,7 +286,7 @@ openerp.web_process = function (openerp) {
                         $(this).dialog('destroy');
                     }}
                 ]
-            }).start().open();
+            }).open();
 
             action_manager.appendTo(dialog.$element);
             action_manager.do_action({

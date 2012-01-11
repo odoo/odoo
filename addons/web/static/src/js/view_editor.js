@@ -47,7 +47,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 {text: _t("Remove"), click: function() { self.do_delete_view(); }},
                 {text: _t("Close"), click: function() { self.view_edit_dialog.close(); }}
             ]
-        }).start().open();
+        }).open();
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new openerp.web.ActionManager(this);
         this.action_manager.appendTo(this.view_edit_dialog);
@@ -92,8 +92,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }},
                 {text: _t("Cancel"), click: function () { self.create_view_dialog.close(); }}
             ]
-        });
-        this.create_view_dialog.start().open();
+        }).open();
         var view_widget = [{'name': 'view_name', 'string':'View Name', 'type': 'char', 'required': true, 'value' : this.model + '.custom_' + Math.round(Math.random() * 1000)},
                            {'name': 'view_type', 'string': 'View Type', 'type': 'selection', 'required': true, 'value': 'Form', 'selection': [['',''],['tree', 'Tree'],['form', 'Form'],['graph', 'Graph'],['calendar', 'Calender']]},
                            {'name': 'proirity', 'string': 'Priority', 'type': 'float', 'required': true, 'value':'16'}];
@@ -382,7 +381,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     self.edit_xml_dialog.close();
                 }}
             ]
-        }).start().open();
+        }).open();
         var no_property_att = [];
         _.each(_PROPERTIES, function(val, key) {
             if (! val.length) no_property_att.push(key);
@@ -769,8 +768,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }},
                 {text: _t("Cancel"), click: function () { self.edit_node_dialog.close(); }}
             ]
-        });
-        this.edit_node_dialog.start().open();
+        }).open();
         var _PROPERTIES_ATTRIBUTES = {
             'name' : {'name':'name', 'string': 'Name', 'type': 'char'},
             'string' : {'name':'string', 'string': 'String', 'type': 'char'},
@@ -896,7 +894,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }},
                 {text: _t("Cancel"), click: function() { self.add_node_dialog.close(); }}
             ]
-        }).start().open();
+        }).open();
         this.add_node_dialog.$element.append('<table id="rec_table"  style="width:420px" class="oe_forms"><tbody><tr></tbody></table>');
         var table_selector = self.add_node_dialog.$element.find('table[id=rec_table] tbody');
         _.each(render_list, function(node) {

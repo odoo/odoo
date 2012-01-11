@@ -137,7 +137,6 @@ session.web.ActionManager = session.web.Widget.extend({
                 this.dialog = new session.web.Dialog(this, { width: '80%' });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
-                this.dialog.start();
             } else {
                 this.dialog_viewmanager.stop();
             }

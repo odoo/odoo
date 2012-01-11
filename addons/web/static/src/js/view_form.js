@@ -1698,9 +1698,8 @@ openerp.web.form.dialog = function(content, options) {
         height: 'auto',
         min_width: '800px'
     }, options || {});
-    options.autoOpen = true;
-    var dialog = new openerp.web.Dialog(null, options).open();
-    return dialog.$element.html(content);
+    var dialog = new openerp.web.Dialog(null, options, content).open();
+    return dialog.$element;
 };
 
 openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
