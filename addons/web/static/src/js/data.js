@@ -629,8 +629,8 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         this.reset_ids([]);
         this.last_default_get = {};
     },
-    default_get: function(fields, callback) {
-        return this._super(fields).then(this.on_default_get).then(callback);
+    default_get: function(fields, options) {
+        return this._super(fields, options).then(this.on_default_get);
     },
     on_default_get: function(res) {
         this.last_default_get = res;
@@ -698,7 +698,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         this.delete_all = false;
     },
     on_change: function() {},
-    read_ids: function (ids, fields) {
+    read_ids: function (ids, fields, options) {
         var self = this;
         var to_get = [];
         _.each(ids, function(id) {
@@ -725,7 +725,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
             completion.resolve(records);
         };
         if(to_get.length > 0) {
-            var rpc_promise = this._super(to_get, fields, function(records) {
+            var rpc_promise = this._super(to_get, fields, options).then(function(records) {
                 _.each(records, function(record, index) {
                     var id = to_get[index];
                     var cached = _.detect(self.cache, function(x) {return x.id === id;});
@@ -774,8 +774,8 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
             return this._super.apply(this, arguments);
         }
     },
-    default_get: function(fields, callback) {
-        return this._super(fields, callback).then(this.on_default_get);
+    default_get: function(fields, options) {
+        return this._super(fields, options).then(this.on_default_get);
     },
     on_default_get: function(result) {},
     create: function(data, callback, error_callback) {
