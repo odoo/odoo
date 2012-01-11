@@ -529,9 +529,8 @@ class stock_tracking(osv.osv):
         @param context: A standard dictionary
         @return: A dictionary of values
         """
-        value={}
-        value=self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
-        return value
+        return self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
+
 stock_tracking()
 
 #----------------------------------------------------------
