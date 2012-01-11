@@ -63,30 +63,25 @@ class hr_attendance(osv.osv):
         'employee_id': _employee_get,
     }
 
-    def write(self, cr, uid, ids, vals, context=None):
-        current_attendance_data = self.browse(cr, uid, ids, context=context)[0]
-        obj_attendance_ids = self.search(cr, uid, [('employee_id', '=', current_attendance_data.employee_id.id)], context=context)
-        if obj_attendance_ids[0] != ids[0]:
-            if ('name' in vals) or ('action' in vals):
-                raise osv.except_osv(_('Warning !'), _('You can not modify existing entries. To modify the entry , remove the prior entries.'))
-        return super(hr_attendance, self).write(cr, uid, ids, vals, context=context)
-
     def _altern_si_so(self, cr, uid, ids, context=None):
-        current_attendance_data = self.browse(cr, uid, ids, context=context)[0]
-        obj_attendance_ids = self.search(cr, uid, [('employee_id', '=', current_attendance_data.employee_id.id)], context=context)
-        obj_attendance_ids.remove(ids[0])
-        hr_attendance_data = self.browse(cr, uid, obj_attendance_ids, context=context)
-
-        for old_attendance in hr_attendance_data:
-            if old_attendance.action == current_attendance_data['action']:
+        """ Alternance sign_in/sign_out check
+        Previous (if exists) must be of opposite action
+        Next (if exists) must be of opposite action
+        """
+        atts = self.browse(cr, uid, ids, context=context)
+        for att in atts:
+            # search and browse for first previous and first next records
+            prev_att_ids = self.search(cr, uid, [('employee_id', '=', att.employee_id.id), ('name', '<', att.name), ('action', 'in', ('sign_in', 'sign_out'))], limit=1, order='name DESC')
+            next_add_ids = self.search(cr, uid, [('employee_id', '=', att.employee_id.id), ('name', '>', att.name), ('action', 'in', ('sign_in', 'sign_out'))], limit=1, order='name ASC')
+            prev_atts = self.browse(cr, uid, prev_att_ids, context=context) if (len(prev_att_ids) != 0) else []
+            next_atts = self.browse(cr, uid, next_add_ids, context=context) if (len(next_add_ids) != 0) else []
+            # perform alternance check, return False if at least one condition is not satisfied
+            if len(prev_atts) != 0 and prev_atts[0].action == att.action: # previous exists and is same action
                 return False
-            elif old_attendance.name >= current_attendance_data['name']:
+            if len(next_atts) != 0 and next_atts[0].action == att.action: # next exists and is same action
                 return False
-            else:
-                return True
-        # First entry in the system must not be 'sign_out'
-        if current_attendance_data['action'] == 'sign_out':
-            return False
+            if len(prev_atts) == 0 and len(next_atts) == 0 and att.action != 'sign_in': # first attendance must be sign_in
+                return False
         return True
 
     _constraints = [(_altern_si_so, 'Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)', ['action'])]
