@@ -109,7 +109,7 @@
                                 <field name="partner_invoice_id" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
                                 <group colspan="4" col="4">
                                     <field name="event_product"/>
-                                    <field name="nb_register"/>
+                                    <field name="nb_register" invisible="1"/>
                                     <field name="unit_price"/>
                                     <field name="price_subtotal"/>
                                 </group>
@@ -126,7 +126,7 @@
                                     <field name="create_date" string="Registration Date"/>
                                     <field name="partner_id" required="1" string="Partner" on_change="onchange_partner_id(partner_id,event_id)"/>
                                     <field name="event_product"/>
-                                    <field name="nb_register"/>
+                                    <field name="nb_register" invisible="1"/>
                                     <field name="unit_price"/>
                                     <field name="price_subtotal"/>
                                     <field name="state"/>
@@ -296,7 +296,7 @@
                 <tree string="Registration">
                     <field name="partner_id"/>
                     <field name="event_id"/>
-                    <field name="nb_register"/>
+                    <field name="nb_register" invisible="1"/>
                     <field name="price_subtotal" sum="Total"/>
                     <field name="user_id"/>
                     <field name="state"/>
@@ -318,26 +318,23 @@
                         <field name="date" />
                         <field name="date_deadline" />
                         <field name="name"/>
-                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" required="1" on_change="onchange_partner_id(partner_id,event_id)" />
                         <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}" />
                         <field name="tobe_invoiced"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Registration">
+                            <group colspan="2" col="2">
+                            <separator string="partner" colspan="4"/>
+                            <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" required="1" on_change="onchange_partner_id(partner_id,event_id)" />
+                            <field name="partner_id_address" colspan="4" />
 
+                            </group>
                             <group colspan="2" col="2">
                                 <separator string="Registration Cost" colspan="4"/>
                                 <field name="nb_register" invisible="1"/>
                                 <field name="unit_price"/>
                                 <field name="price_subtotal" invisible="1"/>
                             </group>
-                            <group colspan="2" col="2" attrs="{'invisible':[('tobe_invoiced','=',False)]}">
-                                <separator string="Invoice" colspan="4"/>
-                                <field name="event_product" attrs="{'required':[('tobe_invoiced','=',True)]}"/>
-                                <field name="partner_invoice_id" attrs="{'required':[('tobe_invoiced','=',True)]}" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
-                                <field name="invoice_id"/>
-                           </group>
-
 
                             <separator string="" colspan="4"/>
                             <group col="8" colspan="4">
@@ -346,6 +343,11 @@
                                 <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                                 <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                             </group>
+                        </page>
+                        <page string='invoice'>
+                                <field name="event_product" attrs="{'required':[('tobe_invoiced','=',True)]}"/>
+                                <field name="partner_invoice_id" attrs="{'required':[('tobe_invoiced','=',True)]}" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
+                                <field name="invoice_id"/>
                         </page>
                         <page string="Extra Info">
                             
@@ -448,7 +450,7 @@
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
                         <separator orientation="vertical"/>
                         <field name="partner_id" />
-                        <field name="event_id" widget="selection"/>
+                        <field name="event_id" widget="seemaillection"/>
                         <field name="user_id" widget="selection">
                         <filter icon="terp-personal"
                               string="My Registrations"

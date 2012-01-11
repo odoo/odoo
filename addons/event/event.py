@@ -186,7 +186,7 @@ class event_event(osv.osv):
                     register_values['date_deadline'] = vals['date_begin']
 
                 #change the description of the registration linked to this event
-                
+
                 """
                 if vals.get('mail_auto_confirm', False):
                     if vals['mail_auto_confirm']:
@@ -227,7 +227,9 @@ class event_event(osv.osv):
             help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
        
         'email_registration_id' : fields.many2one('email.template','Email registration'),
-        'email_confirmation_id' : fields.many2one('email.template','Email registration'),
+        'email_confirmation_id' : fields.many2one('email.template','Email confirmation'),
+        'reply_to': fields.char('Reply-To', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address put in the 'Reply-To' of all emails sent by OpenERP"),
+        
        
         'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="The invoices of this event registration will be created with this Product. Thus it allows you to set the default label and the accounting info you want by default on these invoices."),
         'note': fields.text('Notes', help="Description or Summary of Event", readonly=False, states={'done': [('readonly', True)]}),
@@ -303,6 +305,7 @@ class event_registration(osv.osv):
         'nb_register': fields.integer('Quantity', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Number of Registrations or Tickets"),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
+        'partner_id_address': fields.many2one('res.partner.address', 'Partner', states={'done': [('readonly', True)]}),
         "partner_invoice_id": fields.many2one('res.partner', 'Partner Invoiced', readonly=True, states={'draft': [('readonly', False)]}),
         "contact_id": fields.many2one('res.partner.address', 'Partner Contact', readonly=False, states={'done': [('readonly', True)]}), #TODO: filter only the contacts that have a function into the selected partner_id
         "unit_price": fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Sale Price'), readonly=True, states={'draft': [('readonly', False)]}),
@@ -545,33 +548,15 @@ class event_registration(osv.osv):
         """
         Send email to user
 """
-        
-        mail_message = self.pool.get('email.template')
         for registration in self.browse(cr, uid, ids, context=context):
-          #  src = registration.reply_to or False
-            email_to = []
-            email_cc = []
-            if registration.email_from:
-                email_to = [registration.email_from]
-            if registration.email_cc:
-                email_cc += [registration.email_cc]
-            if not (email_to or email_cc):
-                continue
-            subject = ""
-            body = ""
-            if confirm:
-                subject = _('Auto Confirmation: [%s] %s') %(registration.id, registration.name)
-                body = registration.event_id.mail_confirm
-            elif registration.event_id.mail_auto_confirm or registration.event_id.mail_auto_registr:
-                if registration.event_id.state in ['draft', 'fixed', 'open', 'confirm', 'running'] and registration.event_id.mail_auto_registr:
-                    subject = _('Auto Registration: [%s] %s') %(registration.id, registration.name)
-                    body = registration.event_id.mail_registr
-                if (registration.event_id.state in ['confirm', 'running']) and registration.event_id.mail_auto_confirm:
-                    subject = _('Auto Confirmation: [%s] %s') %(registration.id, registration.name)
-                    body = registration.event_id.mail_confirm
+            subject =  registration.event_id.email_confirmation_id.subject
+            reply_to =  registration.event_id.email_confirmation_id.reply_to
+            email_cc = registration.event_id.email_confirmation_id.email_cc
+            email_to =registration.event_id.email_confirmation_id.email_to
+            body = registration.event_id.email_confirmation_id.body_html        
             if subject or body:
                 mail_message.schedule_with_attach(cr, uid, src, email_to, subject, body, model='event.registration', email_cc=email_cc, res_id=registration.id)
-        
+
         return True
 
     def mail_user_confirm(self, cr, uid, ids, context=None):
