@@ -72,10 +72,8 @@
                 <li t-foreach="category_value" t-as="todo"
                     t-att-class="todo.done ? 'oe-done' : undefined"
                     t-att-data-id="todo.id"
-                    t-att-title="!todo.done ? 'Execute task \'' + todo.name + '\'' : undefined">
-                    <input type="checkbox" t-att-value="todo.id"
-                       t-att-title="!todo.done ? 'Mark this task as done' : undefined"
-                       t-att-checked="todo.done ? 'checked' : undefined"/>
+                    t-att-title="!todo.done ? _t('Execute task') + ' \'' + todo.name + '\'' : undefined">
+                    <span t-att-class="todo.done ? 'oe-label' : 'oe-label oe-todo'"><t t-esc="todo.done ? _t('Done') : _t('To do')"/></span>
                     <t t-esc="todo.name"/>
                 </li>
             </ul></dd>
