@@ -779,6 +779,7 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
                         inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
                         .then(function() {
                             self.dialog.stop();
+                            // needs to refresh interface in case language changed
                             window.location.reload();
                         });
                     }
