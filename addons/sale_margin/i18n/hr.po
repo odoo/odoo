@@ -7,100 +7,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-12-10 07:37+0000\n"
 "Last-Translator: Tomislav Bosnjakovic <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-11 05:36+0000\n"
-"X-Generator: Launchpad (build 14450)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:16+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
-msgid "Category"
-msgstr "Kategorija"
-
-#. module: sale_margin
-#: selection:report.account.invoice,type:0
-#: selection:report.account.invoice.category,type:0
-#: selection:report.account.invoice.partner,type:0
-#: selection:report.account.invoice.partner.product,type:0
-#: selection:report.account.invoice.product,type:0
-msgid "Customer Refund"
-msgstr "Odobrenje kupcu"
-
-#. module: sale_margin
-#: selection:report.account.invoice,type:0
-#: selection:report.account.invoice.category,type:0
-#: selection:report.account.invoice.partner,type:0
-#: selection:report.account.invoice.partner.product,type:0
-#: selection:report.account.invoice.product,type:0
-msgid "Customer Invoice"
-msgstr "Izlazni račun"
-
-#. module: sale_margin
-#: selection:report.account.invoice.product,month:0
-msgid "February"
-msgstr "veljača"
-
-#. module: sale_margin
-#: view:report.account.invoice.product:0
-msgid "Current"
-msgstr "Trenutno"
-
-#. module: sale_margin
-#: view:report.account.invoice.product:0
-msgid "Group By..."
-msgstr "Grupiraj po..."
-
-#. module: sale_margin
-#: field:report.account.invoice,state:0
-#: field:report.account.invoice.category,state:0
-#: field:report.account.invoice.partner,state:0
-#: field:report.account.invoice.partner.product,state:0
-#: field:report.account.invoice.product,state:0
-msgid "State"
-msgstr "Status"
-
-#. module: sale_margin
-#: model:ir.module.module,description:sale_margin.module_meta_information
-msgid ""
-" \n"
-"    This module adds the 'Margin' on sales order,\n"
-"    which gives the profitability by calculating the difference between the "
-"Unit Price and Cost Price\n"
-"    "
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
 msgstr ""
-" \n"
-"    Ovaj modul dodaje RUC na prodajni nalog\n"
-"     koji  prikazuje profitabilnost računajući razliku između jedinične "
-"cijene i troška.\n"
-"    "
 
 #. module: sale_margin
-#: selection:report.account.invoice,state:0
-#: selection:report.account.invoice.category,state:0
-#: selection:report.account.invoice.partner,state:0
-#: selection:report.account.invoice.partner.product,state:0
-#: selection:report.account.invoice.product,state:0
-msgid "Draft"
-msgstr "Nacrt"
+#: field:sale.order.line,purchase_price:0
+msgid "Cost Price"
+msgstr "Cijena koštanja"
 
 #. module: sale_margin
-#: selection:report.account.invoice,state:0
-#: selection:report.account.invoice.category,state:0
-#: selection:report.account.invoice.partner,state:0
-#: selection:report.account.invoice.partner.product,state:0
-#: selection:report.account.invoice.product,state:0
-msgid "Paid"
-msgstr "Plaćeno"
-
-#. module: sale_margin
-#: model:ir.model,name:sale_margin.model_stock_picking
-msgid "Picking List"
-msgstr ""
+#: model:ir.model,name:sale_margin.model_sale_order
+msgid "Sales Order"
+msgstr "Prodajni nalog"
 
 #. module: sale_margin
 #: help:sale.order,margin:0
@@ -112,304 +42,190 @@ msgstr ""
 "troška."
 
 #. module: sale_margin
-#: field:report.account.invoice,type:0
-#: field:report.account.invoice.category,type:0
-#: field:report.account.invoice.partner,type:0
-#: field:report.account.invoice.partner.product,type:0
-#: field:report.account.invoice.product,type:0
-#: wizard_field:stock.invoice_onshipping,init,type:0
-msgid "Type"
-msgstr "Vrsta"
-
-#. module: sale_margin
-#: model:ir.model,name:sale_margin.model_report_account_invoice_product
-msgid "Invoice Statistics"
-msgstr "Statistika računa"
-
-#. module: sale_margin
-#: field:report.account.invoice.partner.product,product_id:0
-#: field:report.account.invoice.product,product_id:0
-msgid "Product"
-msgstr "Artikl"
-
-#. module: sale_margin
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "Referenca naloga mora biti jedinstvena"
-
-#. module: sale_margin
-#: view:report.account.invoice.product:0
-msgid "Invoice by Partner"
-msgstr "Računi po partneru"
-
-#. module: sale_margin
-#: selection:report.account.invoice.product,month:0
-msgid "August"
-msgstr "kolovoz"
-
-#. module: sale_margin
-#: selection:report.account.invoice,state:0
-#: selection:report.account.invoice.category,state:0
-#: selection:report.account.invoice.partner,state:0
-#: selection:report.account.invoice.partner.product,state:0
-#: selection:report.account.invoice.product,state:0
-msgid "Pro-forma"
-msgstr "Pro-forma"
-
-#. module: sale_margin
-#: selection:report.account.invoice.product,month:0
-msgid "May"
-msgstr "svibanj"
-
-#. module: sale_margin
-#: selection:report.account.invoice.product,month:0
-msgid "June"
-msgstr "lipanj"
-
-#. module: sale_margin
-#: view:report.account.invoice.product:0
-msgid "Date Invoiced"
-msgstr "Datum fakturiranja"
-
-#. module: sale_margin
-#: model:ir.module.module,shortdesc:sale_margin.module_meta_information
-msgid "Margins in Sales Order"
-msgstr "RUC u prodajnim nalozima"
-
-#. module: sale_margin
-#: view:report.account.invoice.product:0
-msgid "Search Margin"
-msgstr "Traži RUC"
-
-#. module: sale_margin
-#: view:report.account.invoice.product:0
-msgid "This Year"
-msgstr "Ove godine"
-
-#. module: sale_margin
-#: field:report.account.invoice.product,date:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: sale_margin
-#: selection:report.account.invoice.product,month:0
-msgid "July"
-msgstr "srpanj"
-
-#. module: sale_margin
-#: view:report.account.invoice.product:0
-msgid "Extended Filters..."
-msgstr "Prošireni filtri..."
-
-#. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_this_month_product
-msgid "This Month"
-msgstr "Ovaj mjesec"
-
-#. module: sale_margin
-#: view:report.account.invoice.product:0
-#: field:report.account.invoice.product,day:0
-msgid "Day"
-msgstr "Dan"
-
-#. module: sale_margin
-#: field:report.account.invoice.category,categ_id:0
-msgid "Categories"
-msgstr "Kategorije"
-
-#. module: sale_margin
-#: field:account.invoice.line,cost_price:0
-#: field:report.account.invoice,cost_price:0
-#: field:report.account.invoice.category,cost_price:0
-#: field:report.account.invoice.partner,cost_price:0
-#: field:report.account.invoice.partner.product,cost_price:0
-#: field:report.account.invoice.product,cost_price:0
-#: field:sale.order.line,purchase_price:0
-msgid "Cost Price"
-msgstr "Cijena koštanja"
-
-#. module: sale_margin
-#: selection:report.account.invoice.product,month:0
-msgid "October"
-msgstr "listopad"
-
-#. module: sale_margin
-#: selection:report.account.invoice.product,month:0
-msgid "January"
-msgstr "siječanj"
-
-#. module: sale_margin
-#: view:report.account.invoice.product:0
-#: field:report.account.invoice.product,year:0
-msgid "Year"
-msgstr "Godina"
-
-#. module: sale_margin
-#: selection:report.account.invoice.product,month:0
-msgid "September"
-msgstr "rujan"
-
-#. module: sale_margin
-#: selection:report.account.invoice.product,month:0
-msgid "April"
-msgstr "travanj"
-
-#. module: sale_margin
-#: field:report.account.invoice,amount:0
-#: field:report.account.invoice.category,amount:0
-#: field:report.account.invoice.partner,amount:0
-#: field:report.account.invoice.partner.product,amount:0
-#: field:report.account.invoice.product,amount:0
-msgid "Amount"
-msgstr "Iznos"
-
-#. module: sale_margin
-#: selection:report.account.invoice,type:0
-#: selection:report.account.invoice.category,type:0
-#: selection:report.account.invoice.partner,type:0
-#: selection:report.account.invoice.partner.product,type:0
-#: selection:report.account.invoice.product,type:0
-msgid "Supplier Refund"
-msgstr "Odobrenje dobavljača"
-
-#. module: sale_margin
-#: selection:report.account.invoice.product,month:0
-msgid "March"
-msgstr "ožujak"
-
-#. module: sale_margin
-#: field:report.account.invoice,margin:0
-#: field:report.account.invoice.category,margin:0
-#: field:report.account.invoice.partner,margin:0
-#: field:report.account.invoice.partner.product,margin:0
-#: field:report.account.invoice.product,margin:0
 #: field:sale.order,margin:0
 #: field:sale.order.line,margin:0
 msgid "Margin"
 msgstr "RUC"
 
 #. module: sale_margin
-#: selection:report.account.invoice.product,month:0
-msgid "November"
-msgstr "studeni"
-
-#. module: sale_margin
-#: field:report.account.invoice,quantity:0
-#: field:report.account.invoice.category,quantity:0
-#: field:report.account.invoice.partner,quantity:0
-#: field:report.account.invoice.partner.product,quantity:0
-#: field:report.account.invoice.product,quantity:0
-msgid "Quantity"
-msgstr "Količina"
-
-#. module: sale_margin
-#: view:report.account.invoice.product:0
-msgid "Invoices by product"
-msgstr "Računi po artiklu"
-
-#. module: sale_margin
-#: selection:report.account.invoice,type:0
-#: selection:report.account.invoice.category,type:0
-#: selection:report.account.invoice.partner,type:0
-#: selection:report.account.invoice.partner.product,type:0
-#: selection:report.account.invoice.product,type:0
-msgid "Supplier Invoice"
-msgstr "Ulazni račun"
-
-#. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_all_invoice_by_invoices
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_by_invoices
-#: view:report.account.invoice:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_ids:0
-msgid "Invoices"
-msgstr "Računi"
-
-#. module: sale_margin
-#: selection:report.account.invoice.product,month:0
-msgid "December"
-msgstr "prosinac"
-
-#. module: sale_margin
-#: model:ir.model,name:sale_margin.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Stavka računa"
-
-#. module: sale_margin
-#: field:report.account.invoice,name:0
-#: field:report.account.invoice.category,name:0
-#: field:report.account.invoice.partner,name:0
-#: field:report.account.invoice.partner.product,name:0
-#: field:report.account.invoice.product,name:0
-msgid "Month"
-msgstr "Mjesec"
-
-#. module: sale_margin
-#: selection:report.account.invoice,state:0
-#: selection:report.account.invoice.category,state:0
-#: selection:report.account.invoice.partner,state:0
-#: selection:report.account.invoice.partner.product,state:0
-#: selection:report.account.invoice.product,state:0
-msgid "Canceled"
-msgstr "Poništeno"
-
-#. module: sale_margin
-#: model:ir.actions.act_window,help:sale_margin.action_report_account_invoice_report
-msgid ""
-"This report gives you an overview of all the invoices generated by the "
-"system. You can sort and group your results by specific selection criteria "
-"to quickly find what you are looking for."
-msgstr ""
-"Ovaj izvještaj vam daje pregled svih računa napravljenih u sustavu. Možete "
-"sortirati i grupirati rezultate prema\r\n"
-"specifičnim kriterijima kako bi brzo pronašli ono što tražite."
-
-#. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_product
-msgid "Invoice Report"
-msgstr "Izvještaj računa"
-
-#. module: sale_margin
-#: view:report.account.invoice.product:0
-msgid "Done"
-msgstr "Izvršeno"
-
-#. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_product
-msgid "Invoice"
-msgstr "Račun"
-
-#. module: sale_margin
-#: view:stock.picking:0
-msgid "Customer Invoices"
-msgstr "Izlazni računi"
-
-#. module: sale_margin
-#: field:report.account.invoice.partner,partner_id:0
-#: field:report.account.invoice.partner.product,partner_id:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: sale_margin
-#: model:ir.model,name:sale_margin.model_sale_order
-msgid "Sales Order"
-msgstr "Prodajni nalog"
-
-#. module: sale_margin
-#: selection:report.account.invoice,state:0
-#: selection:report.account.invoice.category,state:0
-#: selection:report.account.invoice.partner,state:0
-#: selection:report.account.invoice.partner.product,state:0
-#: selection:report.account.invoice.product,state:0
-msgid "Open"
-msgstr "Otvoren"
-
-#. module: sale_margin
-#: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_report
-msgid "Invoice Analysis"
-msgstr "Analiza računa"
-
-#. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Stavka prodajnog naloga"
+
+#~ msgid ""
+#~ " \n"
+#~ "    This module adds the 'Margin' on sales order,\n"
+#~ "    which gives the profitability by calculating the difference between the "
+#~ "Unit Price and Cost Price\n"
+#~ "    "
+#~ msgstr ""
+#~ " \n"
+#~ "    Ovaj modul dodaje RUC na prodajni nalog\n"
+#~ "     koji  prikazuje profitabilnost računajući razliku između jedinične "
+#~ "cijene i troška.\n"
+#~ "    "
+
+#~ msgid "Paid"
+#~ msgstr "Plaćeno"
+
+#~ msgid "Customer Refund"
+#~ msgstr "Odobrenje kupcu"
+
+#~ msgid "Customer Invoice"
+#~ msgstr "Izlazni račun"
+
+#~ msgid "Current"
+#~ msgstr "Trenutno"
+
+#~ msgid "Group By..."
+#~ msgstr "Grupiraj po..."
+
+#~ msgid "Category"
+#~ msgstr "Kategorija"
+
+#~ msgid "February"
+#~ msgstr "veljača"
+
+#~ msgid "Draft"
+#~ msgstr "Nacrt"
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#~ msgid "Pro-forma"
+#~ msgstr "Pro-forma"
+
+#~ msgid "Invoice Statistics"
+#~ msgstr "Statistika računa"
+
+#~ msgid "August"
+#~ msgstr "kolovoz"
+
+#~ msgid "Invoice by Partner"
+#~ msgstr "Računi po partneru"
+
+#~ msgid "May"
+#~ msgstr "svibanj"
+
+#~ msgid "Type"
+#~ msgstr "Vrsta"
+
+#~ msgid "Product"
+#~ msgstr "Artikl"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Referenca naloga mora biti jedinstvena"
+
+#~ msgid "This Year"
+#~ msgstr "Ove godine"
+
+#~ msgid "Search Margin"
+#~ msgstr "Traži RUC"
+
+#~ msgid "June"
+#~ msgstr "lipanj"
+
+#~ msgid "Margins in Sales Order"
+#~ msgstr "RUC u prodajnim nalozima"
+
+#~ msgid "Date Invoiced"
+#~ msgstr "Datum fakturiranja"
+
+#~ msgid "This Month"
+#~ msgstr "Ovaj mjesec"
+
+#~ msgid "Date"
+#~ msgstr "Datum"
+
+#~ msgid "July"
+#~ msgstr "srpanj"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Prošireni filtri..."
+
+#~ msgid "Day"
+#~ msgstr "Dan"
+
+#~ msgid "Categories"
+#~ msgstr "Kategorije"
+
+#~ msgid "April"
+#~ msgstr "travanj"
+
+#~ msgid "March"
+#~ msgstr "ožujak"
+
+#~ msgid "Supplier Refund"
+#~ msgstr "Odobrenje dobavljača"
+
+#~ msgid "Amount"
+#~ msgstr "Iznos"
+
+#~ msgid "September"
+#~ msgstr "rujan"
+
+#~ msgid "October"
+#~ msgstr "listopad"
+
+#~ msgid "Year"
+#~ msgstr "Godina"
+
+#~ msgid "January"
+#~ msgstr "siječanj"
+
+#~ msgid "Invoices"
+#~ msgstr "Računi"
+
+#~ msgid "Canceled"
+#~ msgstr "Poništeno"
+
+#~ msgid "Quantity"
+#~ msgstr "Količina"
+
+#~ msgid "Invoices by product"
+#~ msgstr "Računi po artiklu"
+
+#~ msgid "Supplier Invoice"
+#~ msgstr "Ulazni račun"
+
+#~ msgid "Invoice Line"
+#~ msgstr "Stavka računa"
+
+#~ msgid "December"
+#~ msgstr "prosinac"
+
+#~ msgid "November"
+#~ msgstr "studeni"
+
+#~ msgid "Month"
+#~ msgstr "Mjesec"
+
+#~ msgid "Invoice"
+#~ msgstr "Račun"
+
+#~ msgid "Customer Invoices"
+#~ msgstr "Izlazni računi"
+
+#~ msgid "Done"
+#~ msgstr "Izvršeno"
+
+#~ msgid "Invoice Report"
+#~ msgstr "Izvještaj računa"
+
+#~ msgid "Invoice Analysis"
+#~ msgstr "Analiza računa"
+
+#~ msgid "Open"
+#~ msgstr "Otvoren"
+
+#~ msgid "Partner"
+#~ msgstr "Partner"
+
+#~ msgid ""
+#~ "This report gives you an overview of all the invoices generated by the "
+#~ "system. You can sort and group your results by specific selection criteria "
+#~ "to quickly find what you are looking for."
+#~ msgstr ""
+#~ "Ovaj izvještaj vam daje pregled svih računa napravljenih u sustavu. Možete "
+#~ "sortirati i grupirati rezultate prema\r\n"
+#~ "specifičnim kriterijima kako bi brzo pronašli ono što tražite."

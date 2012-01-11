@@ -2,32 +2,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-12-29 10:18+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 04:53+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 05:50+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #. module: base_iban
-#: model:ir.module.module,shortdesc:base_iban.module_meta_information
-msgid "Create IBAN bank accounts"
-msgstr "Δημιουργία λογαριασμών IBAN"
+#: constraint:res.partner.bank:0
+msgid ""
+"\n"
+"Please define BIC/Swift code on bank for bank type IBAN Account to make "
+"valid payments"
+msgstr ""
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:120
-#, python-format
-msgid ""
-"The IBAN does not seems to be correct. You should have entered something "
-"like this %s"
+#: model:res.partner.bank.type,format_layout:base_iban.bank_iban
+msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
 msgstr ""
-"Ο IBAN δεν φαίνεται να είναι σωστός. Θα πρέπει να είχατε εισάγει κάτι σαν %s"
+
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
+msgid "bank_bic"
+msgstr ""
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
@@ -50,21 +54,12 @@ msgid "country_id"
 msgstr "κωδικός_χώρας"
 
 #. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
-msgid "bic"
-msgstr "bic"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_iban_field
-msgid "iban"
-msgstr "iban"
-
-#. module: base_iban
-#: code:addons/base_iban/base_iban.py:121
+#: code:addons/base_iban/base_iban.py:130
 #, python-format
-msgid "The IBAN is invalid, It should begin with the country code"
+msgid ""
+"The IBAN does not seem to be correct. You should have entered something like "
+"this %s"
 msgstr ""
-"Ο IBAN δεν είναι έγκυρος, θα πρέπει να ξεκινά με τον κωδικό της χώρας"
 
 #. module: base_iban
 #: field:res.partner.bank,iban:0
@@ -72,24 +67,39 @@ msgid "IBAN"
 msgstr "IBAN"
 
 #. module: base_iban
+#: code:addons/base_iban/base_iban.py:131
+#, python-format
+msgid "The IBAN is invalid, it should begin with the country code"
+msgstr ""
+
+#. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
 msgstr "Λογαριασμού IBAN"
 
-#. module: base_iban
-#: model:ir.module.module,description:base_iban.module_meta_information
-msgid ""
-"\n"
-"This module installs the base for IBAN (International Bank Account Number) "
-"bank accounts and checks for its validity.\n"
-"\n"
-"    "
-msgstr ""
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_acc_number_field
-msgid "acc_number"
-msgstr "acc_number"
-
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Μη έγκυρη XML Προβολή Αρχιτεκτονικής!"
+
+#~ msgid "bic"
+#~ msgstr "bic"
+
+#~ msgid "iban"
+#~ msgstr "iban"
+
+#~ msgid "acc_number"
+#~ msgstr "acc_number"
+
+#, python-format
+#~ msgid "The IBAN is invalid, It should begin with the country code"
+#~ msgstr ""
+#~ "Ο IBAN δεν είναι έγκυρος, θα πρέπει να ξεκινά με τον κωδικό της χώρας"
+
+#, python-format
+#~ msgid ""
+#~ "The IBAN does not seems to be correct. You should have entered something "
+#~ "like this %s"
+#~ msgstr ""
+#~ "Ο IBAN δεν φαίνεται να είναι σωστός. Θα πρέπει να είχατε εισάγει κάτι σαν %s"
+
+#~ msgid "Create IBAN bank accounts"
+#~ msgstr "Δημιουργία λογαριασμών IBAN"

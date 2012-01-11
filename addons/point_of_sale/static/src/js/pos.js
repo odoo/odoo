@@ -86,10 +86,11 @@ openerp.point_of_sale = function(db) {
                 }, this));
             }, this));
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
-                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
+                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image'], [['pos_categ_id', '!=', 'false']]),
                 this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
                     [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
                 this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
+                this.fetch('account.tax', ['amount', 'price_include', 'type']),
                 this.get_app_data())
                 .pipe(_.bind(this.build_tree, this));
         },
@@ -119,9 +120,9 @@ openerp.point_of_sale = function(db) {
                 self.set({'user': result});
             }));
         },
-        push: function(osvModel, record) {
+        pushOrder: function(record) {
             var ops = _.clone(this.get('pending_operations'));
-            ops.push({model: osvModel, record: record});
+            ops.push(record);
             this.set({pending_operations: ops});
             return this.flush();
         },
@@ -135,11 +136,10 @@ openerp.point_of_sale = function(db) {
             if (ops.length === 0)
                 return $.when();
             var op = ops[0];
-            var dataSet = new db.web.DataSet(this, op.model, null);
             /* we prevent the default error handler and assume errors
              * are a normal use case, except we stop the current iteration
              */
-            return dataSet.create(op.record).fail(function(unused, event) {
+            return new db.web.Model("pos.order").get_func("create_from_ui")([op]).fail(function(unused, event) {
                 event.preventDefault();
             }).pipe(_.bind(function() {
                 console.debug('saved 1 record');
@@ -299,8 +299,57 @@ openerp.point_of_sale = function(db) {
                 quantity: (this.get('quantity')) + 1
             });
         },
-        getTotal: function() {
-            return (this.get('quantity')) * (this.get('list_price')) * (1 - (this.get('discount')) / 100);
+        getPriceWithoutTax: function() {
+            return this.getAllPrices().priceWithoutTax;
+        },
+        getPriceWithTax: function() {
+            return this.getAllPrices().priceWithTax;
+        },
+        getTax: function() {
+            return this.getAllPrices().tax;
+        },
+        getAllPrices: function() {
+            var self = this;
+            var base = (this.get('quantity')) * (this.get('list_price')) * (1 - (this.get('discount')) / 100);
+            var totalTax = base;
+            var totalNoTax = base;
+            
+            var products = pos.store.get('product.product');
+            var product = _.detect(products, function(el) {return el.id === self.get('id');});
+            var taxes_ids = product.taxes_id;
+            var taxes =  pos.store.get('account.tax');
+            var taxtotal = 0;
+            _.each(taxes_ids, function(el) {
+                var tax = _.detect(taxes, function(t) {return t.id === el;});
+                if (tax.price_include) {
+                    var tmp;
+                    if (tax.type === "percent") {
+                        tmp =  base - (base / (1 + tax.amount));
+                    } else if (tax.type === "fixed") {
+                        tmp = tax.amount * self.get('quantity');
+                    } else {
+                        throw "This type of tax is not supported by the point of sale: " + tax.type;
+                    }
+                    taxtotal += tmp;
+                    totalNoTax -= tmp;
+                } else {
+                    var tmp;
+                    if (tax.type === "percent") {
+                        tmp = tax.amount * base;
+                    } else if (tax.type === "fixed") {
+                        tmp = tax.amount * self.get('quantity');
+                    } else {
+                        throw "This type of tax is not supported by the point of sale: " + tax.type;
+                    }
+                    taxtotal += tmp;
+                    totalTax += tmp;
+                }
+            });
+            return {
+                "priceWithTax": totalTax,
+                "priceWithoutTax": totalNoTax,
+                "tax": taxtotal,
+            };
         },
         exportAsJSON: function() {
             var result;
@@ -364,6 +413,7 @@ openerp.point_of_sale = function(db) {
             step: 'products',
         };
         Order.prototype.initialize = function() {
+            this.set({creationDate: new Date});
             this.set({
                 orderLines: new OrderlineCollection
             });
@@ -413,14 +463,18 @@ openerp.point_of_sale = function(db) {
         };
         Order.prototype.getTotal = function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
-                return sum + orderLine.getTotal();
+                return sum + orderLine.getPriceWithTax();
             }), 0);
         };
         Order.prototype.getTotalTaxExcluded = function() {
-            return this.getTotal() / 1.21;
+            return (this.get('orderLines')).reduce((function(sum, orderLine) {
+                return sum + orderLine.getPriceWithoutTax();
+            }), 0);
         };
         Order.prototype.getTax = function() {
-            return this.getTotal() / 1.21 * 0.21;
+            return (this.get('orderLines')).reduce((function(sum, orderLine) {
+                return sum + orderLine.getTax();
+            }), 0);
         };
         Order.prototype.getPaidTotal = function() {
             return (this.get('paymentLines')).reduce((function(sum, paymentLine) {
@@ -590,7 +644,7 @@ openerp.point_of_sale = function(db) {
         },
         clickAppendNewChar: function(event) {
             var newChar;
-            newChar = event.currentTarget.innerText;
+            newChar = event.currentTarget.innerText || event.currentTarget.textContent;
             return this.state.appendNewChar(newChar);
         },
         clickChangeMode: function(event) {
@@ -615,6 +669,8 @@ openerp.point_of_sale = function(db) {
             this.$element.find('button').click(_.bind(this.performPayment, this));
         },
         performPayment: function(event) {
+            if (this.shop.get('selectedOrder').get('step') === 'receipt')
+                return;
             var cashRegister, cashRegisterCollection, cashRegisterId;
             /* set correct view */
             this.shop.get('selectedOrder').set({'step': 'payment'});
@@ -653,7 +709,7 @@ openerp.point_of_sale = function(db) {
      It should be possible to go back to any step as long as step 3 hasn't been completed.
      Modifying an order after validation shouldn't be allowed.
      */
-    var StepsWidget = db.web.Widget.extend({
+    var StepSwitcher = db.web.Widget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -686,25 +742,30 @@ openerp.point_of_sale = function(db) {
             this._super(parent);
             this.model = options.model;
             this.model.bind('change', _.bind( function() {
-                this.$element.hide();
-                this.render_element();
+                this.refresh();
             }, this));
             this.model.bind('remove', _.bind( function() {
-                return this.$element.remove();
+                this.$element.remove();
             }, this));
             this.order = options.order;
         },
         start: function() {
             this.$element.click(_.bind(this.clickHandler, this));
+            this.refresh();
         },
         clickHandler: function() {
             this.select();
         },
         render_element: function() {
+            this.$element.html(this.template_fct(this.model.toJSON()));
             this.select();
-            return this.$element.html(this.template_fct(this.model.toJSON())).fadeIn(400, function() {
-                return $('#current-order').scrollTop($(this).offset().top);
-            });
+        },
+        refresh: function() {
+            this.render_element();
+            var heights = _.map(this.$element.prevAll(), function(el) {return $(el).outerHeight();});
+            heights.push($('#current-order thead').outerHeight());
+            var position = _.reduce(heights, function(memo, num){ return memo + num; }, 0);
+            $('#current-order').scrollTop(position);
         },
         select: function() {
             $('tr.selected').removeClass('selected');
@@ -735,7 +796,12 @@ openerp.point_of_sale = function(db) {
         setValue: function(val) {
         	var param = {};
         	param[this.numpadState.get('mode')] = val;
-        	this.shop.get('selectedOrder').selected.set(param);
+        	var order = this.shop.get('selectedOrder');
+        	if (order.get('orderLines').length !== 0) {
+        	   order.selected.set(param);
+        	} else {
+        	    this.shop.get('selectedOrder').destroy();
+        	}
         },
         changeSelectedOrder: function() {
             this.currentOrderLines.unbind();
@@ -919,12 +985,16 @@ openerp.point_of_sale = function(db) {
         },
         start: function() {
             $('button#validate-order', this.$element).click(_.bind(this.validateCurrentOrder, this));
+            $('.oe-back-to-products', this.$element).click(_.bind(this.back, this));
+        },
+        back: function() {
+            this.shop.get('selectedOrder').set({"step": "products"});
         },
         validateCurrentOrder: function() {
             var callback, currentOrder;
             currentOrder = this.shop.get('selectedOrder');
             $('button#validate-order', this.$element).attr('disabled', 'disabled');
-            pos.push('pos.order', currentOrder.exportAsJSON()).then(_.bind(function() {
+            pos.pushOrder(currentOrder.exportAsJSON()).then(_.bind(function() {
                 $('button#validate-order', this.$element).removeAttr('disabled');
                 return currentOrder.set({
                     validated: true
@@ -1012,7 +1082,11 @@ openerp.point_of_sale = function(db) {
         render_element: function() {
             this.$element.html(qweb_template('pos-receipt-view'));
             $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
-            $('button#print-the-ticket', this.$element).click(function(){window.print();});
+            $('button#print-the-ticket', this.$element).click(_.bind(this.print, this));
+        },
+        print: function() {
+            window.print();
+            this.finishOrder();
         },
         finishOrder: function() {
             this.shop.get('selectedOrder').destroy();
@@ -1070,7 +1144,7 @@ openerp.point_of_sale = function(db) {
             this.order.destroy();
         },
         render_element: function() {
-            this.$element.html(this.template_fct(this.order.toJSON()));
+            this.$element.html(this.template_fct({widget:this}));
             this.$element.addClass('order-selector-button');
         }
     });
@@ -1114,9 +1188,7 @@ openerp.point_of_sale = function(db) {
                 shop: this.shop,
             });
             this.receiptView.replace($('#receipt-screen'));
-            this.stepsView = new StepsWidget(null, {shop: this.shop});
-            this.stepsView.$element = $('#steps');
-            this.stepsView.start();
+            this.stepSwitcher = new StepSwitcher(this, {shop: this.shop});
             this.shop.bind('change:selectedOrder', this.changedSelectedOrder, this);
             this.changedSelectedOrder();
         },
@@ -1252,8 +1324,6 @@ openerp.point_of_sale = function(db) {
                 this.$element.find("#loggedas button").click(function() {
                     self.try_close();
                 });
-    
-                this.$element.find('#steps').buttonset();
 
                 pos.app = new App(self.$element);
                 $('.oe_toggle_secondary_menu').hide();

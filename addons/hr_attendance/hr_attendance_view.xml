@@ -7,7 +7,7 @@
             <field name="model">hr.attendance</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employee attendance">
+                <form string="Employee attendances">
                     <field name="employee_id"  />
                     <field name="name"  />
                     <field name="action"  />
@@ -35,7 +35,7 @@
             <field name="type">tree</field>
             <field eval="3" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Employee attendance">
+                <tree string="Employee attendances">
                     <field name="employee_id"/>
                     <field name="name"/>
                     <field name="action"/>
@@ -68,7 +68,7 @@
         </record>
 
         <record id="open_view_attendance" model="ir.actions.act_window">
-            <field name="name">Attendance</field>
+            <field name="name">Attendances</field>
             <field name="res_model">hr.attendance</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -79,7 +79,7 @@
 
         <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="3" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
 
-        <menuitem id="menu_hr_attendance" name="Attendance" parent="hr.menu_hr_root" sequence="4" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
+        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root" sequence="4" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
 
         <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance" sequence="20"/>
 

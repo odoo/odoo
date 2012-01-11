@@ -35,7 +35,7 @@ class res_partner_contact(osv.osv):
         return result
 
     _columns = {
-        'name': fields.function(_name_get_full, string='Name', size=64, type="char", store=True),
+        'name': fields.function(_name_get_full, string='Name', size=64, type="char", store=True, select=True),
         'last_name': fields.char('Last Name', size=64, required=True),
         'first_name': fields.char('First Name', size=64),
         'mobile': fields.char('Mobile', size=64),
@@ -65,7 +65,7 @@ class res_partner_contact(osv.osv):
         'active' : lambda *a: True,
     }
 
-    _order = "name,first_name"
+    _order = "name"
 
     def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=None):
         if not args:
@@ -169,7 +169,8 @@ class res_partner_address(osv.osv):
     _inherit = 'res.partner.address'
 
     def _default_location_id(self, cr, uid, context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         if not context.get('default_partner_id',False):
             return False
         ids = self.pool.get('res.partner.location').search(cr, uid, [('partner_id','=',context['default_partner_id'])], context=context)
@@ -242,7 +243,8 @@ class res_partner_address(osv.osv):
     }
 
     def default_get(self, cr, uid, fields=[], context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         if 'default_type' in context:
             del context['default_type']
         return super(res_partner_address, self).default_get(cr, uid, fields, context)

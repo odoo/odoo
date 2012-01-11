@@ -23,6 +23,7 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Accounting & Finance',
+    "sequence": 10,
     'complexity': "normal",
     "description": """
 Accounting Access Rights.

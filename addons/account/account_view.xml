@@ -477,7 +477,7 @@
                                 <separator string="Company" colspan="4"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="user_id" groups="base.group_extended"/>
-                                <field name="currency"/>
+                                <field name="currency" groups="base.group_extended"/>
                             </group>
                             <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Validations" colspan="4"/>
@@ -1363,7 +1363,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Items">
-                            <field colspan="4" name="line_id" nolabel="1" height="250" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
+                            <field colspan="4" name="line_id" nolabel="1" height="250" widget="one2many_list" context="{'lines':line_id ,'journal':journal_id }">
                                 <form string="Journal Item">
                                     <group col="6" colspan="4">
                                         <field name="name"/>
@@ -2451,7 +2451,8 @@
                     <field name ="seq_journal" groups="base.group_extended"/>
                     <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                     <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
-                    <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
+                    <newline/>
+                    <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}" on_change="onchange_tax_rate(sale_tax_rate)"/>
                     <field name ="purchase_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                     <field name ="complete_tax_set" invisible="1"/>
                     <newline/> <!-- extended view because the web UI is not good for one2many -->

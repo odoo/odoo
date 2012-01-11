@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+
+    <record id="account_coda_import_view" model="ir.ui.view">
+      <field name="name">Import CODA File</field>
+      <field name="model">account.coda.import</field>
+      <field name="type">form</field>
+      <field name="priority">1</field>
+      <field name="arch" type="xml">
+        <form string="Import CODA File">
+          <group col="2">
+            <separator string="Select your file :" colspan="4"/>
+            <field name="coda_data" filename="coda_fname"/>
+            <field name="coda_fname"/>
+          </group>
+          <separator colspan="4"/>
+          <group colspan="4">
+            <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+            <button name="coda_parsing" string="_Import" type="object" icon="gtk-ok"/>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <record id="account_coda_import_result_view" model="ir.ui.view">
+      <field name="name">Import CODA File</field>
+      <field name="model">account.coda.import</field>
+      <field name="type">form</field>
+      <field name="priority">2</field>
+      <field name="arch" type="xml">
+        <form string="Import CODA File">
+          <separator colspan="4" string="Results :" />
+          <field name="note" colspan="4" nolabel="1" width="850" height="400"/>
+          <newline/>
+          <separator colspan="6"/>
+          <button special="cancel" string="Close" icon="gtk-cancel"/>
+          <button name="action_open_coda_statements" string="View CODA Bank Statement(s)" type="object" icon="gtk-apply"/>
+          <button name="action_open_bank_statements" string="View Bank Statement(s)" type="object" icon="gtk-apply"/>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_account_coda_import" model="ir.actions.act_window">
+      <field name="name">Import CODA File</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">account.coda.import</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+      <field name="view_id" ref="account_coda_import_view"/>
+    </record>
+
+    <act_window name="Import CODA File"
+      res_model="account.coda.import"
+      src_model="coda.bank.statement"
+      view_type="form" view_mode="form" target="new"
+      key2="client_action_multi" multi="True"
+      id="wizard_account_coda_import_1"/>
+
+    <act_window name="Import CODA File"
+      res_model="account.coda.import"
+      src_model="account.coda"
+      view_type="form" view_mode="form" target="new"
+      key2="client_action_multi" multi="True"
+      id="wizard_account_coda_import_2"/>
+    
+  </data> 
+</openerp>

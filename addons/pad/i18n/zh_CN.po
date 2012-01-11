@@ -7,32 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-07-07 16:37+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:55+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:27+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: pad
-#: code:addons/pad/web/editors.py:32
-#, python-format
-msgid "Ok"
-msgstr "确定"
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr ""
 
 #. module: pad
-#: code:addons/pad/web/editors.py:29
-#, python-format
-msgid "Name"
-msgstr "名称"
-
-#. module: pad
-#: help:res.company,pad_index:0
-msgid "The root URL of the company's pad instance"
-msgstr "公司PAD实例的根网址"
+#: help:res.company,pad_url_template:0
+msgid "Template used to generate pad URL."
+msgstr ""
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -45,29 +38,9 @@ msgid "Error! You can not create recursive companies."
 msgstr "错误！您不能创建递归公司."
 
 #. module: pad
-#: code:addons/pad/web/editors.py:17
-#, python-format
-msgid "Write"
-msgstr "写"
-
-#. module: pad
-#: model:ir.module.module,description:pad.module_meta_information
-msgid ""
-"\n"
-"Adds enhanced support for (Ether)Pad attachments in the web client, lets "
-"the\n"
-"company customize which Pad installation should be used to link to new pads\n"
-"(by default, pad.openerp.com)\n"
-"    "
+#: model:ir.model,name:pad.model_ir_attachment
+msgid "ir.attachment"
 msgstr ""
-"\n"
-"在Web客户端加入增强的PAD附件支持，让公司自定义PAD的安装可以链接到新的PAD\n"
-"    "
-
-#. module: pad
-#: field:res.company,pad_index:0
-msgid "Pad root URL"
-msgstr "PAD根网址"
 
 #. module: pad
 #: view:res.company:0
@@ -75,6 +48,39 @@ msgid "Pad"
 msgstr "Pad"
 
 #. module: pad
-#: model:ir.module.module,shortdesc:pad.module_meta_information
-msgid "Enhanced support for (Ether)Pad attachments"
-msgstr "增强支持PAD附件"
+#: field:res.company,pad_url_template:0
+msgid "Pad URL Template"
+msgstr ""
+
+#, python-format
+#~ msgid "Ok"
+#~ msgstr "确定"
+
+#~ msgid "Enhanced support for (Ether)Pad attachments"
+#~ msgstr "增强支持PAD附件"
+
+#, python-format
+#~ msgid "Write"
+#~ msgstr "写"
+
+#~ msgid "The root URL of the company's pad instance"
+#~ msgstr "公司PAD实例的根网址"
+
+#~ msgid ""
+#~ "\n"
+#~ "Adds enhanced support for (Ether)Pad attachments in the web client, lets "
+#~ "the\n"
+#~ "company customize which Pad installation should be used to link to new pads\n"
+#~ "(by default, pad.openerp.com)\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "在Web客户端加入增强的PAD附件支持，让公司自定义PAD的安装可以链接到新的PAD\n"
+#~ "    "
+
+#, python-format
+#~ msgid "Name"
+#~ msgstr "名称"
+
+#~ msgid "Pad root URL"
+#~ msgstr "PAD根网址"

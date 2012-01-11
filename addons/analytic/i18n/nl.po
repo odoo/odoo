@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-01-13 12:33+0000\n"
 "Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:44+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:16+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -33,15 +33,6 @@ msgid "Specifies the amount of quantity to count."
 msgstr "Het aantal te rekenen eenheden"
 
 #. module: analytic
-#: model:ir.module.module,description:analytic.module_meta_information
-msgid ""
-"Module for defining analytic accounting object.\n"
-"    "
-msgstr ""
-"Module voor het definiëren van kostenplaatsen.\n"
-"    "
-
-#. module: analytic
 #: field:account.analytic.account,state:0
 msgid "State"
 msgstr "Status"
@@ -50,11 +41,6 @@ msgstr "Status"
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
 msgstr "Rekeningbeheerder"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Draft"
-msgstr "Concept"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -100,14 +86,14 @@ msgstr ""
 " Als het project klaar is dan is de status 'Klaar'."
 
 #. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr ""
+
+#. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
 msgstr "Rekeningsoort"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "Sjabloon"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -137,9 +123,16 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Maximum Quantity"
-msgstr "Maximum aantal"
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really usefull for "
+"consolidation purposes of several companies charts with different "
+"currencies, for example."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -157,9 +150,9 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: analytic
-#: field:account.analytic.account,currency_id:0
-msgid "Account currency"
-msgstr "Kostenplaats valuta"
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "Sjabloon"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -177,9 +170,14 @@ msgstr ""
 "product. Altijd uitgedrukt in de hoofdvaluta van het bedrijf."
 
 #. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr ""
+
+#. module: analytic
 #: help:account.analytic.account,quantity_max:0
-msgid "Sets the higher limit of quantity of hours."
-msgstr "Stelt de bovengrens in van het aantal uren."
+msgid "Sets the higher limit of time to work on the contract."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -206,9 +204,20 @@ msgstr ""
 "geselecteerde bedrijf"
 
 #. module: analytic
+#: field:account.analytic.account,code:0
+msgid "Code/Reference"
+msgstr ""
+
+#. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
 msgstr "Geannuleerd"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -235,9 +244,14 @@ msgid "Date End"
 msgstr "Einddatum"
 
 #. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Account Code"
-msgstr "Rekeningcode"
+#: field:account.analytic.account,quantity_max:0
+msgid "Maximum Time"
+msgstr ""
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -247,9 +261,18 @@ msgstr "Volledige naam kostenplaats"
 #. module: analytic
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.module.module,shortdesc:analytic.module_meta_information
 msgid "Analytic Account"
 msgstr "Kostenplaats"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr ""
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -275,3 +298,25 @@ msgstr "Open"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Kostenplaatsboekingen"
+
+#~ msgid ""
+#~ "Module for defining analytic accounting object.\n"
+#~ "    "
+#~ msgstr ""
+#~ "Module voor het definiëren van kostenplaatsen.\n"
+#~ "    "
+
+#~ msgid "Draft"
+#~ msgstr "Concept"
+
+#~ msgid "Sets the higher limit of quantity of hours."
+#~ msgstr "Stelt de bovengrens in van het aantal uren."
+
+#~ msgid "Account currency"
+#~ msgstr "Kostenplaats valuta"
+
+#~ msgid "Account Code"
+#~ msgstr "Rekeningcode"
+
+#~ msgid "Maximum Quantity"
+#~ msgstr "Maximum aantal"

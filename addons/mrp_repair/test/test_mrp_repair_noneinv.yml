@@ -1,0 +1,27 @@
+-
+  In order to test "mrp_repair" module, I start from confirm it, and start repair.
+-
+  I Confirm Repair order for Invoice Type 'None'.
+-
+  !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rmrp1}
+-
+  I start the repairing  process by click on "Start Repair" Button For Invoice Type None.
+-
+  !workflow {model: mrp.repair, action: repair_ready, ref: mrp_repair_rmrp1}
+-
+  I check that state is "Under Repair".
+-
+  !assert {model: mrp.repair, id: mrp_repair_rmrp1}:
+      - state == 'under_repair'
+-
+  Repairing Process for product is Done and I End Repair process by click on "End Repair" button.
+-
+  !workflow {model: mrp.repair, action: action_repair_end, ref: mrp_repair_rmrp1}
+-
+  I define invoiced none option in this Repair order.
+  So, I check that Invoice should not be created for this repair order.
+-
+  !python {model: mrp.repair}: |
+     repair_id = self.browse(cr, uid, [ref('mrp_repair_rmrp1')], context=context)[0]
+     assert not repair_id.invoice_id.id, _("Invoice should not be exists for this repair order")
+

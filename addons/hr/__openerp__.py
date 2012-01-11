@@ -20,10 +20,11 @@
 ##############################################################################
 
 {
-    "name": "Employee Address Book",
+    "name": "Employee Directory",
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Human Resources",
+    "sequence": 12,
     'complexity': "easy",
     "website": "http://www.openerp.com",
     "description": """
@@ -52,14 +53,15 @@ You can manage:
     ],
     'demo_xml': [
         'hr_demo.xml',
-        'hr_department_demo.xml',
     ],
     'test': [
              'test/open2recruit2close_job.yml',
              'test/hr_demo.yml',
              ],
     'installable': True,
+    'application': True,
     'active': False,
     'certificate': '0086710558965',
+    "css": [ 'static/src/css/hr.css' ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

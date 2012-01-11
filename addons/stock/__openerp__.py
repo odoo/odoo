@@ -48,10 +48,11 @@ Thanks to the double entry management, the inventory controlling is powerful and
     "images" : ["images/stock_forecast_report.png", "images/delivery_orders.jpeg", "images/inventory_analysis.jpeg","images/location.jpeg","images/moves_analysis.jpeg","images/physical_inventories.jpeg","images/warehouse_dashboard.jpeg"],
     "depends" : ["product", "account"],
     "category" : "Warehouse Management",
+    "sequence": 16,
     "init_xml" : [],
     "demo_xml" : [
         "stock_demo.xml",
-        "stock_demo_picking.yml",
+        "stock_demo.yml",
     ],
     "update_xml" : [
         "security/stock_security.xml",
@@ -82,10 +83,9 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "board_warehouse_view.xml",
     ],
     'test': [
-        'test/stock_test.yml',
+        'test/opening_stock.yml',
+        'test/shipment.yml',
         'test/stock_report.yml',
-        'test/stock_test_wizard.yml',
-        'test/stock_demo_backorder.yml'
     ],
     'installable': True,
     'application': True,

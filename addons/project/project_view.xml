@@ -41,7 +41,7 @@
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
                                 <field name="warn_manager"/>
                                 <field name="priority"/>
-                                <field name="active"/>
+                                <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                             </group>
                             <newline/>
                             <separator colspan="4"/>
@@ -49,7 +49,7 @@
                                 <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' select="1" readonly="1"/>
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert" groups="base.group_extended"/>
-                                <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
+                                <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
                                 <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending" icon="terp-dialog-close"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
@@ -110,6 +110,9 @@
                    <group>
                        <filter icon="terp-check" string="Open" name="Current" domain="[('state', '=','open')]" help="Open Projects"/>
                        <filter icon="gtk-media-pause" string="Pending" name="Pending" domain="[('state', '=','pending')]" help="Pending Projects"/>
+                       <filter icon="gtk-media-pause" string="Template"
+                            name="Template" domain="[('state', '=','template')]" help="Templates of Projects"
+                            groups="base.group_extended"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-personal+" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member."/>
                        <separator orientation="vertical"/>
@@ -648,7 +651,7 @@
             <field name="arch" type="xml">
                 <page string="Configuration" position="inside">
                     <separator string="Project Management" colspan="4"/>
-                    <field name="project_time_mode_id"/>
+                    <field name="project_time_mode_id" domain="[('category_id','=','Working Time')]"/>
                     <newline/>
                 </page>
             </field>
