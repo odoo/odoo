@@ -2425,7 +2425,10 @@ openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
     form_template: 'One2Many.formview',
     on_loaded: function(data) {
         this._super(data);
-        this.$form_header.find('button.oe_form_button_create').click(this.on_button_new);
+        var self = this;
+        this.$form_header.find('button.oe_form_button_create').click(function() {
+            self.do_save().then(self.on_button_new);
+        });
     }
 });
 
