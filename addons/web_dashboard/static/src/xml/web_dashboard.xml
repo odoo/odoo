@@ -73,9 +73,7 @@
                     t-att-class="todo.done ? 'oe-done' : undefined"
                     t-att-data-id="todo.id"
                     t-att-title="!todo.done ? 'Execute task \'' + todo.name + '\'' : undefined">
-                    <input type="checkbox" t-att-value="todo.id"
-                       t-att-title="!todo.done ? 'Mark this task as done' : undefined"
-                       t-att-checked="todo.done ? 'checked' : undefined"/>
+                    <span t-att-class="todo.done ? 'oe-label' : 'oe-label oe-todo'"><t t-esc="todo.done ? 'Done' : 'To do'"/></span>
                     <t t-esc="todo.name"/>
                 </li>
             </ul></dd>
