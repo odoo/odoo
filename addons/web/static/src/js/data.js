@@ -422,7 +422,7 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      * @param {Number} [domain_index] index of a domain to evaluate in the args array
      * @param {Number} [context_index] index of a context to evaluate in the args array
      * @param {Function} callback
-     * @param {Function }error_callback
+     * @param {Function} error_callback
      * @returns {$.Deferred}
      */
     call_and_eval: function (method, args, domain_index, context_index, callback, error_callback) {
