@@ -547,7 +547,24 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         var self = this;
         // TODO: session store in cookie should be optional
         this.session_id = this.get_cookie('session_id');
-        return this.rpc("/web/session/get_session_info", {}).pipe(function(result) {
+        return this.session_reload().pipe(function(result) {
+            var modules = openerp._modules.join(',');
+            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb);
+            if(self.session_is_valid()) {
+                return deferred.pipe(function() { return self.load_modules(); });
+            }
+            return deferred;
+        });
+    },
+    /**
+     * (re)loads the content of a session: db name, username, user id, session
+     * context and status of the support contract
+     *
+     * @returns {$.Deferred} deferred indicating the session is done reloading
+     */
+    session_reload: function () {
+        var self = this;
+        return this.rpc("/web/session/get_session_info", {}).then(function(result) {
             // If immediately follows a login (triggered by trying to restore
             // an invalid session or no session at all), refresh session data
             // (should not change, but just in case...)
@@ -558,12 +575,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 user_context: result.context,
                 openerp_entreprise: result.openerp_entreprise
             });
-            var modules = openerp._modules.join(',');
-            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb);
-            if(self.session_is_valid()) {
-                return deferred.pipe(function() { self.load_modules(); });
-            }
-            return deferred;
         });
     },
     session_is_valid: function() {

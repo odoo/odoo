@@ -1123,7 +1123,8 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.$element.children().remove();
     },
     do_reload: function() {
-        return this.session.session_init().pipe(_.bind(function() {this.menu.do_reload();}, this));
+        return this.session.session_reload().pipe(
+            $.proxy(this.menu, 'do_reload'));
     },
     do_notify: function() {
         var n = this.notification;
@@ -1174,7 +1175,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
                 self.menu.on_menu_click(null, action.menu_id);
             });
         }
-    },
+    }
 });
 
 openerp.web.EmbeddedClient = openerp.web.Widget.extend({
