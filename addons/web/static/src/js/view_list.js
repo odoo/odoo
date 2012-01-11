@@ -685,6 +685,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.display_aggregates(aggregates);
     },
     display_aggregates: function (aggregation) {
+        var self = this;
         var $footer_cells = this.$element.find('.oe-list-footer');
         _(this.aggregate_columns).each(function (column) {
             if (!column['function']) {
@@ -692,7 +693,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }
 
             $footer_cells.filter(_.str.sprintf('[data-field=%s]', column.id))
-                .html(openerp.web.format_cell(aggregation, column, undefined, false));
+                .html(openerp.web.format_cell(aggregation, column, {
+                    process_modifiers: false
+            }));
         });
     },
     get_selected_ids: function() {
@@ -846,6 +849,9 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                     return self.reload_record(self.records.get(record_id));
                 }]);
             })
+            .delegate('a', 'click', function (e) {
+                e.stopPropagation();
+            })
             .delegate('tr', 'click', function (e) {
                 e.stopPropagation();
                 var row_id = self.row_id(e.currentTarget);
@@ -905,7 +911,10 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 });
             }
         }
-        return openerp.web.format_cell(record.toForm().data, column);
+        return openerp.web.format_cell(record.toForm().data, column, {
+            model: this.dataset.model,
+            id: record.get('id')
+        });
     },
     render: function () {
         if (this.$current) {
@@ -1210,7 +1219,10 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     return column.id === group.grouped_on; });
                 try {
                     $group_column.html(openerp.web.format_cell(
-                        row_data, group_column, _t("Undefined"), false));
+                        row_data, group_column, {
+                            value_if_empty: _t("Undefined"),
+                            process_modifiers: false
+                    }));
                 } catch (e) {
                     $group_column.html(row_data[group_column.id].value);
                 }
@@ -1288,7 +1300,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             page = this.datagroup.openable ? this.page : view.page;
 
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
-        var options = { offset: page * limit, limit: limit };
+        var options = { offset: page * limit, limit: limit, context: {bin_size: true} };
         //TODO xmo: investigate why we need to put the setTimeout
         $.async_when().then(function() {dataset.read_slice(fields, options).then(function (records) {
             // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
