@@ -65,8 +65,10 @@
                 display(index,this,e,options);
             return false;
         };
-        $(this).bind('contextmenu', callback);
-        if(options.leftClickToo) {
+        if (!options.noRightClick) {
+            $(this).bind('contextmenu', callback);
+        }
+        if (options.leftClickToo || options.noRightClick) {
             $(this).click(callback);
         }
         return this

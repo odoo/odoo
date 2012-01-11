@@ -1762,7 +1762,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                         self.open_related(self.related_entries[i]);
                     };
                 });
-                var cmenu = self.$menu_btn.contextMenu(self.cm_id, {'leftClickToo': true,
+                var cmenu = self.$menu_btn.contextMenu(self.cm_id, {'noRightClick': true,
                     bindings: bindings, itemStyle: {"color": ""},
                     onContextMenu: function() {
                         if(self.value) {
@@ -1782,7 +1782,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             });
         });
         var ctx_callback = function(e) {init_context_menu_def.resolve(e); e.preventDefault()};
-        this.$menu_btn.bind('contextmenu', ctx_callback);
         this.$menu_btn.click(ctx_callback);
 
         // some behavior for input
