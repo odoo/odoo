@@ -160,6 +160,12 @@ openerp.web.callback = function(obj, method) {
             position: "last"
         });
     };
+    callback.remove = function(f) {
+        callback.callback_chain = _.difference(callback.callback_chain, _.filter(callback.callback_chain, function(el) {
+            return el.callback === f;
+        }));
+        return callback;
+    };
 
     return callback.add({
         callback: method,
@@ -373,12 +379,12 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.username = false;
         this.user_context= {};
         this.db = false;
+        this.openerp_entreprise = false;
         this.module_list = [];
         this.module_loaded = {"web": true};
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
-        this.ready = $.Deferred();
         return this.session_init();
     },
     /**
@@ -549,11 +555,13 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
-                user_context: result.context
+                user_context: result.context,
+                openerp_entreprise: result.openerp_entreprise
             });
-            var deferred = self.do_load_qweb(['/web/webclient/qweb']);
+            var modules = openerp._modules.join(',');
+            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb);
             if(self.session_is_valid()) {
-                return deferred.pipe(_.bind(function() { this.load_modules(); }, self));
+                return deferred.pipe(function() { self.load_modules(); });
             }
             return deferred;
         });
@@ -564,7 +572,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     /**
      * The session is validated either by login or by restoration of a previous session
      */
-    session_authenticate: function(db, login, password, volatile) {
+    session_authenticate: function(db, login, password, _volatile) {
         var self = this;
         var base_location = document.location.protocol + '//' + document.location.host;
         var params = { db: db, login: login, password: password, base_location: base_location };
@@ -574,9 +582,10 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
-                user_context: result.context
+                user_context: result.context,
+                openerp_entreprise: result.openerp_entreprise
             });
-            if (!volatile) {
+            if (!_volatile) {
                 self.set_cookie('session_id', self.session_id);
             }
             return self.load_modules();
@@ -584,7 +593,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
     session_logout: function() {
         this.set_cookie('session_id', '');
-        window.location.reload();
+    },
+    on_session_valid: function() {
     },
     /**
      * Called when a rpc call fail due to an invalid session.
@@ -633,9 +643,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      */
     load_modules: function() {
         var self = this;
-        if(openerp._modules_loaded) {
-            return $.when();
-        }
         return this.rpc('/web/session/modules', {}).pipe(function(result) {
             self.module_list = result;
             var lang = self.user_context.lang;
@@ -652,7 +659,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     });
                 })
             ).then(function() {
-                self.ready.resolve();
+                self.on_session_valid();
             });
         });
     },

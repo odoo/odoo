@@ -408,7 +408,7 @@ class Root(object):
         self.config = options
 
         if self.config.backend == 'local':
-            conn = openerplib.get_connector(protocol='local')
+            conn = LocalConnector()
         else:
             conn = openerplib.get_connector(hostname=self.config.server_host,
                    port=self.config.server_port)
@@ -448,7 +448,7 @@ class Root(object):
             params = urllib.urlencode(request.args)
             return werkzeug.utils.redirect(self.root + '?' + params, 301)(
                 environ, start_response)
-        elif request.path == '/mobile' or ('#' in request.path):
+        elif request.path == '/mobile':
             return werkzeug.utils.redirect(
                 '/web_mobile/static/src/web_mobile.html', 301)(environ, start_response)
 
@@ -522,4 +522,58 @@ class Root(object):
                         return m
         return None
 
-#
+class LibException(Exception):
+    """ Base of all client lib exceptions """
+    def __init__(self,code=None,message=None):
+        self.code = code
+        self.message = message
+
+class ApplicationError(LibException):
+    """ maps to code: 1, server side: Exception or openerp.exceptions.DeferredException"""
+
+class Warning(LibException):
+    """ maps to code: 2, server side: openerp.exceptions.Warning"""
+
+class AccessError(LibException):
+    """ maps to code: 3, server side:  openerp.exceptions.AccessError"""
+
+class AccessDenied(LibException):
+    """ maps to code: 4, server side: openerp.exceptions.AccessDenied"""
+
+
+class LocalConnector(openerplib.Connector):
+    """
+    A type of connector that uses the XMLRPC protocol.
+    """
+    PROTOCOL = 'local'
+
+    def __init__(self):
+        pass
+
+    def send(self, service_name, method, *args):
+        import openerp
+        import traceback
+        import xmlrpclib
+        try:
+            result = openerp.netsvc.dispatch_rpc(service_name, method, args)
+        except Exception,e:
+        # TODO change the except to raise LibException instead of their emulated xmlrpc fault
+            if isinstance(e, openerp.osv.osv.except_osv):
+                fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
+            elif isinstance(e, openerp.exceptions.Warning):
+                fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
+            elif isinstance(e, openerp.exceptions.AccessError):
+                fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
+            elif isinstance(e, openerp.exceptions.AccessDenied):
+                fault = xmlrpclib.Fault('AccessDenied', str(e))
+            elif isinstance(e, openerp.exceptions.DeferredException):
+                info = e.traceback
+                formatted_info = "".join(traceback.format_exception(*info))
+                fault = xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
+            else:
+                info = sys.exc_info()
+                formatted_info = "".join(traceback.format_exception(*info))
+                fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
+            raise fault
+        return result
+

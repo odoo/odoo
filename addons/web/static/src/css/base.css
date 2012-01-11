@@ -39,7 +39,7 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
     text-align: right !important;
 }
 .oe-listview-header-columns {
-    background: #444; /* Old browsers */
+    background: #d1d1d1; /* Old browsers */
     background: -moz-linear-gradient(top, #ffffff 0%, #d1d1d1 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#d1d1d1)); /* Chrome,Safari4+ */
     background: -webkit-linear-gradient(top, #ffffff 0%,#d1d1d1 100%); /* Chrome10+,Safari5.1+ */
@@ -88,47 +88,165 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
     color: white;
 }
 
-/* Login */
+/* Login page */
+
+.login {
+    padding: 0;
+    margin: 0;
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
+    background: url("/web/static/src/img/pattern.png") repeat;
+    color: #eee;
+    font-size: 14px;
+    height: 100%;
+}
+
+.login ul, ol {
+    padding: 0;
+    margin: 0;
+}
+
+.login li {
+    list-style-type: none;
+    padding-bottom: 4px;
+}
+
+.login a {
+    color: #eee;
+    text-decoration: none;
+}
+
+.login button {
+    float: right;
+    display: inline-block;
+    cursor: pointer;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
+    border: 1px solid #222222;
+    color: white;
+    margin: 0;
+    background: #600606;
+    background: -moz-linear-gradient(#b92020, #600606);
+    background: -webkit-gradient(linear, left top, left bottom, from(#b92020), to(#600606));
+    background: -ms-linear-gradient(top, #b92020, #600606);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b92020', endColorstr='#600606',GradientType=0 );
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(155, 155, 155, 0.4) inset;
+    -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+}
+
+.login input, .login select {
+    width: 252px;
+    font-size: 14px;
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
+    border: 1px solid #999999;
+    background: whitesmoke;
+    -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    -box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.login input {
+    margin-bottom: 9px;
+    padding: 5px 6px;
+}
+
+.login select {
+    padding: 1px;
+}
+
+.login .dbpane {
+    position: fixed;
+    top: 0;
+    right: 8px;
+    padding: 5px 10px;
+    color: #eee;
+    border: solid 1px #333;
+    background: rgba(30,30,30,0.94);
+    -moz-border-radius: 0 0 8px 8px;
+    -webkit-border-radius: 0 0 8px 8px;
+    border-radius: 0 0 8px 8px;
+}
+
+.login .bottom {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-shadow: 0 1px 1px #999999;
+    background: #600606;
+    background: -moz-linear-gradient(#b41616, #600606);
+    background: -webkit-gradient(linear, left top, left bottom, from(#b41616), to(#600606));
+    background: -ms-linear-gradient(top, #b41616, #600606);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b41616', endColorstr='#600606',GradientType=0 );
+}
+
+.login .pane {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -160px -166px;
+    border: solid 1px #333333;
+    background: rgba(30,30,30,0.94);
+    padding: 22px 32px;
+    text-align: left;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    -moz-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+    -webkit-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+    -box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+}
+
+.login .pane h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.login #logo {
+    position: absolute;
+    top: -70px;
+    left: 0;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.login .footer {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.login .footer a {
+    font-size: 13px;
+    margin: 0 8px;
+}
+
+.login .footer a:hover {
+    text-decoration: underline;
+}
+
+.login .openerp {
+    font-weight: bold;
+    font-family: serif;
+    font-size: 16px;
+}
+
 .openerp .login {
-    display: none;
+    text-align: center;
 }
-.openerp .login fieldset {
-    padding-bottom: 5px;
-    min-width: 100px;
-    margin-top: 60px;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-}
-.openerp .login fieldset legend {
-    padding: 4px;
-}
-.openerp .login .oe_box2 {
-    padding: 5px 5px 20px 5px;
-}
-.openerp .login .oe_box2 table {
-    width: 100%;
-    border:none;
-}
-.openerp .login .oe_box2 td {
-    padding: 3px;
-    text-align: right;
-}
-.openerp .login .oe_box2 td input,
-.openerp .login .oe_box2 td select {
-    width: 100%;
-}
-.openerp .login .oe_box2 td.oe_remember {
-    text-align:left;
-}
-.openerp .login .oe_box2 td.oe_remember input {
-    width: inherit;
-}
-.openerp .login .oe_login_right_pane {
-    padding:70px 35px 5px 10px;
-    min-width: 200px;
-    margin-left: 500px;
-}
+
 .openerp .login .login_error_message {
     display: none;
     background-color: #b41616;
@@ -138,53 +256,49 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-    filter: alpha(opacity=95);
-    -khtml-opacity: 0.95;
-    -moz-opacity: 0.95;
     color: #eee;
-    font-size: 16px;
-    padding: 8px 12px;
+    font-size: 14px;
+    padding: 14px 18px;
     margin-top: 15px;
     text-align: center;
 }
-.openerp .login .login_invalid {
-    text-align: center;
-}
-.openerp .login .login_invalid .login_error_message {
+
+.openerp .login.login_invalid .login_error_message {
     display: inline-block;
 }
 
-.openerp.login-mode .login-container {
-    height: 100%;
-}
-.openerp.login-mode .login {
-    display: block;
-}
-.openerp.login-mode .menu,
-.openerp.login-mode .secondary_menu,
-.openerp.login-mode .oe-application,
-.openerp.login-mode .oe_footer,
-.openerp.login-mode .header,
-.openerp.login-mode .db_options_row {
-    display: none;
-}
+
 
 /* Database */
-.openerp.database_block .db_options_row {
+.login .oe-database-manager {
+    display: none;
     height: 100%;
-    display: table-row;
+    width: 100%;
+    background-color: white;
 }
-
-.openerp.database_block .menu,
-.openerp.database_block .secondary_menu,
-.openerp.database_block .oe-application,
-.openerp.database_block .login-container {
+.login.database_block .bottom,
+.login.database_block .login_error_message,
+.login.database_block .pane {
     display: none;
 }
+.login.database_block .oe-database-manager {
+    display: block;
+}
 
-.db_container {
-    width: 196px;
+.login .database {
+    float: left;
+    width: 202px;
+    height: 100%;
     background: #666666;
+}
+.login .oe_db_options {
+    margin-left: 202px;
+    color: black;
+    padding-top: 20px;
+}
+
+.login .database ul {
+    margin-top: 65px;
 }
 
 ul.db_options li {
@@ -208,7 +322,7 @@ ul.db_options li {
     margin: 1px;
     color: #EEEEEE;
     cursor: pointer;
-    width: 196px;
+    width: 195px;
     font-size: 12px;
 }
 
@@ -1888,6 +2002,25 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     display: block;
 }
 
+/* Dialog traceback cases */
+.openerp .oe_error_detail{
+    display: block;
+}
+.openerp .oe_error_send{
+    display:block;
+}
+.openerp .oe_fielddiv{
+    display:inline-block;
+    width:100%;
+}
+.openerp .oe_fielddiv input[type=text],textarea{
+    width:100%;
+}
+/* for Alignment center */
+.openerp .oe_centeralign{
+    text-align:center;
+}
+
 .openerp .oe_applications_tiles {
   color: #4C4C4C;
   text-shadow: #EEE 0 1px 0;
@@ -2014,6 +2147,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     background: none, -moz-linear-gradient(#efefef, #d8d8d8);
     background: none, -o-linear-gradient(top, #efefef, #d8d8d8);
     background: none, -khtml-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
+    background: -ms-linear-gradient(top, #efefef, #d8d8d8);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#efefef', endColorstr='#d8d8d8',GradientType=0 );
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     -o-border-radius: 3px;
@@ -2039,6 +2174,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     background: none, -moz-linear-gradient(#f6f6f6, #e3e3e3);
     background: none, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
     background: none, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    background: -ms-linear-gradient(top, #f6f6f6, #e3e3e3);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#e3e3e3',GradientType=0 );
     cursor: pointer;
 }
 
@@ -2054,6 +2191,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     background: none, -moz-linear-gradient(#f6f6f6, #e3e3e3);
     background: none, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
     background: none, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
+    background: -ms-linear-gradient(top, #f6f6f6, #e3e3e3);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#e3e3e3',GradientType=0 );
     -moz-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
     -webkit-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
     -o-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
@@ -2066,6 +2205,8 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
     background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f;
     background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
+    background: -ms-linear-gradient(top, #e3e3e3, #f6f6f6);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e3e3e3', endColorstr='#f6f6f6',GradientType=0 );
     -moz-box-shadow: none, 0 0 0 transparent;
     -webkit-box-shadow: none, 0 0 0 transparent;
     -o-box-shadow: none, 0 0 0 transparent;
@@ -2087,160 +2228,19 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     text-shadow: 0 1px 1px white !important;
 }
 
-/* Login page */
-
-.login {
-    padding: 0;
-    margin: 0;
-    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
-    background: url("/web/static/src/img/pattern.png") repeat;
-    color: #eee;
-    font-size: 14px;
-    height: 100%;
+.openerp select.oe_search-view-filters-management {
+    font-style: oblique;
+    color: #999999;
 }
 
-.login ul, ol {
-    padding: 0;
-    margin: 0;
+.openerp .oe_search-view-filters-management option,
+.openerp .oe_search-view-filters-management optgroup {
+    font-style: normal;
+    color: black;
 }
 
-.login li {
-    list-style-type: none;
-    padding-bottom: 4px;
-}
 
-.login a {
-    color: #eee;
-    text-decoration: none;
-}
-
-.login button {
-    float: right;
-    display: inline-block;
-    cursor: pointer;
-    padding: 6px 16px;
-    font-size: 13px;
-    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
-    border: 1px solid #222222;
-    color: white;
-    margin: 0;
-    background: #600606;
-    background: -moz-linear-gradient(#b92020, #600606);
-    background: -webkit-gradient(linear, left top, left bottom, from(#b92020), to(#600606));
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
-    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(155, 155, 155, 0.4) inset;
-    -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
-}
-
-.login input, #oe_login select {
-    width: 250px;
-    font-size: 14px;
-    border: 1px solid #999999;
-    background: whitesmoke;
-    -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
-    -box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-}
-
-.login input {
-    margin-bottom: 9px;
-    padding: 5px 6px;
-}
-
-#oe_login select {
-    padding: 1px;
-}
-
-.login .dbpane {
-    position: fixed;
-    top: 0;
-    right: 8px;
-    padding: 8px;
-    color: #eee;
-    border: solid 1px #333;
-    background: #101010;
-    filter: alpha(opacity=95);
-    -khtml-opacity: 0.95;
-    -moz-opacity: 0.95;
-    opacity: 0.95;
-    -moz-border-radius: 0 0 8px 8px;
-    -webkit-border-radius: 0 0 8px 8px;
-    border-radius: 0 0 8px 8px;
-}
-
-.login .bottom {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    text-shadow: 0 1px 1px #999999;
-    background: #600606;
-    background: -moz-linear-gradient(#b41616, #600606);
-    background: -webkit-gradient(linear, left top, left bottom, from(#b41616), to(#600606));
-}
-
-.login .pane {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -160px -166px;
-    border: solid 1px #333333;
-    background: #101010;
-    padding: 22px 32px;
-    text-align: left;
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-    -moz-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
-    -webkit-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
-    -box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
-    filter: alpha(opacity=95);
-    -khtml-opacity: 0.95;
-    -moz-opacity: 0.95;
-    opacity: 0.95;
-}
-
-.login .pane h2 {
-    margin-top: 0;
-    font-size: 18px;
-}
-
-.login #logo {
-    position: absolute;
-    top: -70px;
-    left: 0;
-    width: 100%;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.login .footer {
-    position: absolute;
-    bottom: -40px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-}
-
-.login .footer a {
-    font-size: 13px;
-    margin: 0 8px;
-}
-
-.login .footer a:hover {
-    text-decoration: underline;
-}
-
-.login .openerp {
-    font-weight: bold;
-    font-family: serif;
-    font-size: 16px;
+/* Internet Explorer Fix */
+a img {
+   border: none;
 }

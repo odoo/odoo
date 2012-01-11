@@ -22,20 +22,20 @@
          * @param {Array} modules list of modules to initialize
          */
         init: function(modules) {
+            // By default only web will be loaded, the rest will be by loaded
+            // by openerp.web.Connection on the first session_authenticate
+            modules = modules || ["web"];
             var new_instance = {
                 // links to the global openerp
                 _openerp: openerp,
-                // Only web will be loaded, the rest will be by loaded by
-                // openerp.web.Connection on the first connection
-                _modules_loaded: false,
                 // this unique id will be replaced by hostname_databasename by
                 // openerp.web.Connection on the first connection
                 _session_id: "session" + session_counter++,
+                _modules: modules,
                 web: {},
                 web_mobile: {}
             };
             openerp.sessions[new_instance._session_id] = new_instance;
-            modules = modules || ["web"];
             for(var i=0; i < modules.length; i++) {
                 openerp[modules[i]](new_instance);
             }

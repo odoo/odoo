@@ -322,16 +322,17 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      * Reads the current dataset record (from its index)
      *
      * @params {Array} [fields] fields to read and return, by default all fields are returned
+     * @param {Object} [options.context] context data to add to the request payload, on top of the DataSet's own context
      * @params {Function} callback function called with read_index result
      * @returns {$.Deferred}
      */
-    read_index: function (fields, callback) {
+    read_index: function (fields, options, callback) {
         var def = $.Deferred().then(callback);
         if (_.isEmpty(this.ids)) {
             def.reject();
         } else {
             fields = fields || false;
-            this.read_ids([this.ids[this.index]], fields).then(function(records) {
+            this.read_ids([this.ids[this.index]], fields, options).then(function(records) {
                 def.resolve(records[0]);
             }, function() {
                 def.reject.apply(def, arguments);
@@ -688,9 +689,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         this.cache = _.reject(this.cache, function(x) { return _.include(ids, x.id);});
         this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
         this.on_change();
-        var to_return = $.Deferred().then(callback);
-        $.async_when().then(function () {to_return.resolve({result: true});});
-        return to_return.promise();
+        return $.async_when({result: true}).then(callback);
     },
     reset_ids: function(ids) {
         this.set_ids(ids);
@@ -787,9 +786,7 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
             return this.create_function(data, callback, error_callback);
         } else {
             console.warn("trying to create a record using default proxy dataset behavior");
-            var to_return = $.Deferred().then(callback);
-            $.async_when().then(function () {to_return.resolve({"result": undefined});});
-            return to_return.promise();
+            return $.async_when({"result": undefined}).then(callback);
         }
     },
     on_create: function(data) {},
@@ -799,18 +796,14 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
             return this.write_function(id, data, options, callback);
         } else {
             console.warn("trying to write a record using default proxy dataset behavior");
-            var to_return = $.Deferred().then(callback);
-            $.async_when().then(function () {to_return.resolve({"result": true});});
-            return to_return.promise();
+            return $.async_when({"result": true}).then(callback);
         }
     },
     on_write: function(id, data) {},
     unlink: function(ids, callback, error_callback) {
         this.on_unlink(ids);
         console.warn("trying to unlink a record using default proxy dataset behavior");
-        var to_return = $.Deferred().then(callback);
-        $.async_when().then(function () {to_return.resolve({"result": true});});
-        return to_return.promise();
+        return $.async_when({"result": true}).then(callback);
     },
     on_unlink: function(ids) {}
 });
@@ -824,43 +817,23 @@ openerp.web.Model = openerp.web.CallbackEnabled.extend({
         var c = openerp.connection;
         return c.rpc.apply(c, arguments);
     },
+    /*
+     * deprecated because it does not allow to specify kwargs, directly use call() instead
+     */
     get_func: function(method_name) {
         var self = this;
         return function() {
-            if (method_name == "search_read")
-                return self._search_read.apply(self, arguments);
-            return self._call(method_name, _.toArray(arguments));
+            return self.call(method_name, _.toArray(arguments), {});
         };
     },
-    _call: function (method, args) {
-        return this.rpc('/web/dataset/call', {
+    call: function (method, args, kwargs) {
+        return this.rpc('/web/dataset/call_kw', {
             model: this.model_name,
             method: method,
-            args: args
-        }).pipe(function(result) {
-            if (method == "read" && result instanceof Array && result.length > 0 && result[0]["id"]) {
-                var index = {};
-                _.each(_.range(result.length), function(i) {
-                    index[result[i]["id"]] = result[i];
-                });
-                result = _.map(args[0], function(x) {return index[x];});
-            }
-            return result;
+            args: args,
+            kwargs: kwargs,
         });
     },
-    _search_read: function(domain, fields, offset, limit, order, context) {
-        return this.rpc('/web/dataset/search_read', {
-            model: this.model_name,
-            fields: fields,
-            offset: offset,
-            limit: limit,
-            domain: domain,
-            sort: order,
-            context: context
-        }).pipe(function(result) {
-            return result.records;
-        });
-    }
 });
 
 openerp.web.CompoundContext = openerp.web.Class.extend({

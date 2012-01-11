@@ -89,7 +89,7 @@ html_template = """<!DOCTYPE html>
             });
         </script>
     </head>
-    <body id="oe" class="openerp"></body>
+    <body></body>
 </html>
 """
 
@@ -197,7 +197,7 @@ class WebClient(openerpweb.Controller):
             'js': js,
             'css': css,
             'modules': simplejson.dumps(self.server_wide_modules(req)),
-            'init': 'new s.web.WebClient("oe").start();',
+            'init': 'new s.web.WebClient().replace($("body"));',
         }
         return r
 
@@ -365,6 +365,20 @@ class Database(openerpweb.Controller):
 class Session(openerpweb.Controller):
     _cp_path = "/web/session"
 
+    def session_info(self, req):
+        return {
+            "session_id": req.session_id,
+            "uid": req.session._uid,
+            "context": req.session.get_context() if req.session._uid else {},
+            "db": req.session._db,
+            "login": req.session._login,
+            "openerp_entreprise": req.session.openerp_entreprise(),
+        }
+
+    @openerpweb.jsonrequest
+    def get_session_info(self, req):
+        return self.session_info(req)
+
     @openerpweb.jsonrequest
     def authenticate(self, req, db, login, password, base_location=None):
         wsgienv = req.httprequest.environ
@@ -376,24 +390,8 @@ class Session(openerpweb.Controller):
             user_agent="%s / %s" % (release.name, release.version),
         )
         req.session.authenticate(db, login, password, env)
-        ctx = req.session.get_context() if req.session._uid else {}
 
-        return {
-            "session_id": req.session_id,
-            "uid": req.session._uid,
-            "context": ctx,
-            "db": req.session._db,
-            "login": req.session._login
-        }
-
-    @openerpweb.jsonrequest
-    def get_session_info(self, req):
-        return {
-            "uid": req.session._uid,
-            "context": req.session.get_context() if req.session._uid else False,
-            "db": req.session._db,
-            "login": req.session._login
-        }
+        return self.session_info(req)
 
     @openerpweb.jsonrequest
     def change_password (self,req,fields):
@@ -835,17 +833,29 @@ class DataSet(openerpweb.Controller):
         if has_context:
             args[context_id] = c
 
+        return self._call_kw(req, model, method, args, {})
+    
+    def _call_kw(self, req, model, method, args, kwargs):
         for i in xrange(len(args)):
             if isinstance(args[i], web.common.nonliterals.BaseContext):
                 args[i] = req.session.eval_context(args[i])
-            if isinstance(args[i], web.common.nonliterals.BaseDomain):
+            elif isinstance(args[i], web.common.nonliterals.BaseDomain):
                 args[i] = req.session.eval_domain(args[i])
+        for k in kwargs.keys():
+            if isinstance(kwargs[k], web.common.nonliterals.BaseContext):
+                kwargs[k] = req.session.eval_context(kwargs[k])
+            elif isinstance(kwargs[k], web.common.nonliterals.BaseDomain):
+                kwargs[k] = req.session.eval_domain(kwargs[k])
 
-        return getattr(req.session.model(model), method)(*args)
+        return getattr(req.session.model(model), method)(*args, **kwargs)
 
     @openerpweb.jsonrequest
     def call(self, req, model, method, args, domain_id=None, context_id=None):
         return self.call_common(req, model, method, args, domain_id, context_id)
+    
+    @openerpweb.jsonrequest
+    def call_kw(self, req, model, method, args, kwargs):
+        return self._call_kw(req, model, method, args, kwargs)
 
     @openerpweb.jsonrequest
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
@@ -1174,23 +1184,40 @@ class Binary(openerpweb.Controller):
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
     @openerpweb.httprequest
-    def saveas(self, req, model, id, field, fieldname, **kw):
+    def saveas(self, req, model, field, id=None, filename_field=None, **kw):
+        """ Download link for files stored as binary fields.
+
+        If the ``id`` parameter is omitted, fetches the default value for the
+        binary field (via ``default_get``), otherwise fetches the field for
+        that precise record.
+
+        :param req: OpenERP request
+        :type req: :class:`web.common.http.HttpRequest`
+        :param str model: name of the model to fetch the binary from
+        :param str field: binary field
+        :param str id: id of the record from which to fetch the binary
+        :param str filename_field: field holding the file's name, if any
+        :returns: :class:`werkzeug.wrappers.Response`
+        """
         Model = req.session.model(model)
         context = req.session.eval_context(req.context)
+        fields = [field]
+        if filename_field:
+            fields.append(filename_field)
         if id:
-            res = Model.read([int(id)], [field, fieldname], context)[0]
+            res = Model.read([int(id)], fields, context)[0]
         else:
-            res = Model.default_get([field, fieldname], context)
+            res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field, ''))
         if not filecontent:
             return req.not_found()
         else:
             filename = '%s_%s' % (model.replace('.', '_'), id)
-            if fieldname:
-                filename = res.get(fieldname, '') or filename
+            if filename_field:
+                filename = res.get(filename_field, '') or filename
             return req.make_response(filecontent,
                 [('Content-Type', 'application/octet-stream'),
-                 ('Content-Disposition', 'attachment; filename=' +  filename)])
+                 ('Content-Disposition', 'attachment; filename="%s"' % filename)])
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):

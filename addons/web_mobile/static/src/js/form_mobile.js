@@ -47,6 +47,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                 var notebooks = view_fields[j];
             }
         }
+        self.hidden_fields(get_fields,fields);
         self.$element.html(self.render({'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : values ,'temp_flag':'1'}));
         self.$element.find("[data-role=header]").find('h1').html(self.head_title);
         self.$element.find("[data-role=header]").find('#home').click(function(){
@@ -56,11 +57,12 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
             for (var k = 0; k < notebooks.children.length; k++) {
                 if (notebooks.children[k].attrs.string == $(this).attr('id')) {
                     get_fields_notebook = self.get_fields(notebooks.children[k].children);
+                    self.hidden_fields(get_fields_notebook,fields);
                     $(this).find('div#page_content').html(self.render({'get_fields': get_fields_notebook,'fields' : fields, 'values' : values}));
                 }
             }
         });
-        self.$element.find('#o2m_m2m').click(function(ev) { 
+        self.$element.find('#o2m_m2m').click(function(ev) {
             ev.preventDefault();
             ev.stopPropagation();
             var relational = $(this).attr('for');
@@ -68,12 +70,16 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
             var rel_ids = values[relational];
             var head = rel_field.string;
             if (rel_ids) {
+                var list_ids = [];
                 var datasearch = new openerp.web.DataSetSearch(self, rel_field.relation, rel_field.context);
                 datasearch.domain=[['id', 'in', rel_ids]];
                 datasearch.read_slice(['name'], {context:rel_field.context, domain: datasearch.domain, limit:80}, function(listrec){
+                    _.each(listrec, function(i) {
+                        list_ids.push(i.id);
+                    });
                     _.extend(rel_field.context,{"html_name_get" : true});
                     var dataset = new openerp.web.DataSet(self, rel_field.relation,rel_field.context);
-                    dataset.name_get(listrec,function(res){
+                    dataset.name_get(list_ids,function(res){
                         var additional = "";
                         if(res['html_name_get']){
                             additional = res['display'];
@@ -99,6 +105,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                 }
                             });
                             $.mobile.changePage("#oe_list_"+relational+"_"+self.element_id, "slide", false, true);
+                            $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("a#list-id").find('span').addClass('desc');
                         }else{
                             $.mobile.changePage("#oe_list_"+relational+"_"+self.element_id, "slide", false, true);
                         }
@@ -194,6 +201,13 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                     $(this).css('left', '-9999px');
                 });
             });
+        }
+    },
+    hidden_fields: function(get_fields, fields) {
+        for(var i=0;i<get_fields.length;i++){
+            if(get_fields[i].attrs.invisible){
+                fields[get_fields[i].attrs.name].type='hidden';
+            }
         }
     }
 });

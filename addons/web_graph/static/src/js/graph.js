@@ -424,6 +424,11 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             }
             return self.dataset.read_slice(self.list_fields(), {}, $.proxy(self, 'schedule_chart'));
         });
+    },
+
+    do_show: function() {
+        this.do_push_state({});
+        return this._super();
     }
 });
 };

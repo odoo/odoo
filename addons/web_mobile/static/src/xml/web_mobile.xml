@@ -132,23 +132,22 @@
         <t t-if="!(records.length>0)">
             There are no records to show.
         </t>
+
         <t t-if="records.length>0">
             <ul data-role="listview" data-inset="true" data-theme="d" data-filter="true">
                 <li data-theme="c" t-foreach="records" t-as="record">
-                    <t t-foreach="record[1].split(',')" t-as="data1">
-                        <t t-if="record[1].split(',')[0]==data1">
-                            <a id="list-id" t-att-data-id="record[0]" href="#">
-                                <t t-esc="data1" />
-                            </a>
-                        </t>
-                    </t>
-                    <p>
+                    <a id="list-id" t-att-data-id="record[0]" href="#">
                         <t t-foreach="record[1].split(',')" t-as="data1">
+                            <t t-if="record[1].split(',')[0]==data1">
+                                <t t-esc="data1" /><br/>
+                            </t>
                             <t t-if="record[1].split(',')[0]!=data1">
-                                <t t-esc="data1" />
+                                <span>
+                                    <t t-esc="data1" />
+                                </span>
                             </t>
                         </t>
-                    </p>
+                    </a>
                     <t t-foreach="data" t-as="data1">
                         <t t-esc="data1[0]" />
                     </t>

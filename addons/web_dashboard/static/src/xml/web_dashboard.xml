@@ -1,13 +1,13 @@
 <template>
 <t t-name="DashBoard">
     <div class="oe-dashboard-links">
-        <button type="button" class="oe_button oe-dashboard-link-reset" t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
-            <img src="/web/static/src/img/icons/STOCK_GOTO_FIRST.png" width="16" height="16"/>
-            <span>Reset</span>
+        <button type="button" class="button oe-dashboard-link-reset" title="Reset Layout.." t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
+            <img src="/web_dashboard/static/src/img/layout_2-1.png" width="16" height="16"/>
+            <span> Reset </span>
         </button>
-        <button type="button" class="oe_button oe-dashboard-link-change_layout">
-            <img src="/web/static/src/img/icons/gtk-edit.png" width="16" height="16"/>
-            <span>Change layout</span>
+        <button type="button" class="button oe-dashboard-link-change_layout" title="Change Layout..">
+            <img src="/web_dashboard/static/src/img/layout_1-1-1.png" width="16" height="16"/>
+            <span> Change Layout </span>
         </button>
     </div>
     <table t-att-data-layout="node.attrs.style" t-attf-class="oe-dashboard oe-dashboard-layout_#{node.attrs.style}" cellspacing="0" cellpadding="0" border="0">
@@ -105,19 +105,22 @@
 </t>
 
 <t t-name="web_dashboard.ApplicationTiles">
-    <div class="oe_applications_tiles">
-    <h1>Welcome to OpenERP</h1>
+    <div>
+        <div class="oe_applications_tiles">
+        <h1 class="oe_welcome_message">Welcome to OpenERP</h1>
+        </div>
     </div>
 </t>
 
 <div t-name="web_dashboard.ApplicationInstaller">
-    <ul>
-        <li>Remember to bookmark this page.</li>
-        <li>Remember your login: <t t-esc="widget.session.username"/></li>
-        <li>Choose the first OpenERP Application you want to install..</li>
-    </ul>
-    <h3>Please choose the first application to install.</h3>
+    <div class="oe_initial_welcome_message">
+        <ul>
+            <li>Remember to bookmark 
+                <a class="oe_welcome_url" t-att-href="widget.session.origin">This url</a>
+            </li>
+            <li>Your login: <t t-esc="widget.session.username"/></li>
+        </ul>
+    </div>
     <div class="oe_installer" />
 </div>
-
 </template>

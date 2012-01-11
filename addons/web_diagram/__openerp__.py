@@ -3,7 +3,7 @@
     "category" : "Hidden",
     "description":'Openerp web Diagram view',
     "version" : "2.0",
-    "depends" : ["base"],
+    "depends" : ["web"],
     "js": [
         'static/lib/js/raphael-min.js',
         'static/lib/js/dracula_graffle.js',

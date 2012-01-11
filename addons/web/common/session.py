@@ -45,6 +45,12 @@ class OpenERPSession(object):
             del state['config']
         return state
 
+    def openerp_entreprise(self):
+        if not self._uid:
+            return False
+        else:
+            return self.model('publisher_warranty.contract').status()['status'] == 'full'
+
     def build_connection(self):
         conn = openerplib.Connection(self.config.connector, database=self._db, login=self._login,
                    user_id=self._uid, password=self._password)
@@ -101,8 +107,7 @@ class OpenERPSession(object):
         :returns: the new context
         """
         assert self._uid, "The user needs to be logged-in to initialize his context"
-        self.context = self.model('res.users').context_get(self.context)
-        self.context = self.context or {}
+        self.context = self.build_connection().get_user_context() or {}
 
         return self.context
 

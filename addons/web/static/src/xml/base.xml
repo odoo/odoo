@@ -18,26 +18,11 @@
     </div>
 </t>
 <t t-name="Interface">
-    <div id="oe_loading"></div>
-
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
         <td colspan="2" valign="top">
             <div id="oe_header" class="header"></div>
             <div id="oe_menu" class="menu"></div>
-        </td>
-    </tr>
-    <tr>
-        <td valign="top" class="login-container" colspan="2">
-            <div id="oe_login" class="login"></div>
-        </td>
-    </tr>
-    <tr class="db_options_row">
-        <td valign="top" class="db_container">
-            <div id="oe_database" class="database"></div>
-        </td>
-        <td valign="top">
-         <div id="oe_db_options"></div>
         </td>
     </tr>
     <tr>
@@ -56,26 +41,18 @@
     <tr>
         <td colspan="2">
             <div id="oe_footer" class="oe_footer">
-                <p class="oe_footer_powered">Powered by <a href="http://www.openerp.com">openerp.com</a>.</p>
+                <p class="oe_footer_powered">Powered by <a href="http://www.openerp.com">OpenERP</a></p>
             </div>
         </td>
     </tr>
     </table>
 </t>
 <t t-name="Loading">
-    <div class="loading">
-    Loading...
+    <div id="oe_loading">
+        <div class="loading">
+        Loading...
+        </div>
     </div>
-</t>
-<t t-name="Database">
-    <ul class="db_options" style="padding: 0px; display: inline;">
-        <li id="db-create">Create</li>
-        <li id="db-drop">Drop</li>
-        <li id="db-backup">Backup</li>
-        <li id="db-restore">Restore</li>
-        <li id="db-change-password">Password</li>
-        <li id="back-to-login">Back to Login</li>
-    </ul>
 </t>
 <t t-name="Database.CreateDB">
     <form name="create_db_form" class="oe_forms" method="POST">
@@ -247,6 +224,54 @@
     </form>
 </t>
 
+<t t-name="CrashManagerWarning">
+    <table cellspacing="0" cellpadding="0" border="0" class="oe-dialog-warning">
+    <tr>
+        <td><img t-att-src='_s + "/web/static/src/img/warning.png"' class="oe-dialog-icon"/></td>
+        <td>
+            <p>
+                <t t-js="d">
+                    var message = d.message ? d.message : d.error.data.fault_code;
+                    d.html_error = context.engine.tools.html_escape(message)
+                        .replace(/\n/g, '<br/>');
+                </t>
+                <t t-raw="html_error"/>
+            </p>
+        </td>
+    </tr>
+    </table>
+</t>
+<t t-name="CrashManagerError">
+    <t t-if="!session.openerp_entreprise">
+        <span>Your version of OpenERP is unsupported. Support &amp; maintenance services are available here: <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">OpenERP Entreprise</a>.</span>
+    </t>
+    <t t-if="session.openerp_entreprise">
+        <div class="oe_error_send">
+            <div>
+                <div class="oe_centeralign"><b>OpenERP Enterprise Contract.</b></div>
+                <div><br/>Your report will be sent to the OpenERP Enterprise team.<br/></div><br/>
+                <div>
+                    <label>Summary:</label><br/>
+                    <input id="issuename" type="text" class="oe_fielddiv"/>
+                </div><br/><br/>
+                <div>
+                    <label>Description:</label><br/>
+                    <textarea id="explanation" rows="6"></textarea>
+                </div><br/><br/>
+                <div>
+                    <label>What you did:</label><br/>
+                    <textarea id="remark" rows="6" ></textarea>
+                </div>
+            </div>
+        </div><br/>
+    </t>
+    <div class="oe_error_detail">
+        <pre><t t-esc="error.message"/></pre>
+        <hr/>
+        <pre><t t-esc="error.data.debug"/></pre>
+    </div>
+</t>
+
 <t t-name="Login_dblist">
     <select name="db">
         <t t-foreach="db_list" t-as="db">
@@ -262,7 +287,7 @@
 </t>
 
 <t t-name="Login">
-  <div>
+  <div class="login">
     <div class="bottom"> </div>
     <div class="login_error_message">Invalid username or password</div>
     <div class="pane">
@@ -270,13 +295,13 @@
       <form action="" method="post">
         <div class="dbpane" >
           Database:
-          <input name="db"/>
+          <input name="db" t-att-value="widget.selected_db || ''"/>
         </div>
         <ul>
           <li>Username</li>
-          <li><input type="text" name="login" autofocus="autofocus"/></li>
+          <li><input type="text" name="login" t-att-value="widget.selected_login || ''" autofocus="autofocus"/></li>
           <li>Password</li>
-          <li><input type="password" name="password" value=""/></li>
+          <li><input type="password" name="password" t-att-value="widget.selected_password || ''"/></li>
           <li><button name="submit">Log in</button></li>
         </ul>
       </form>
@@ -286,6 +311,24 @@
       </div>
     </div>
   </div>
+</t>
+<t t-name="DatabaseManager">
+    <div class="oe-database-manager">
+        <div class="database">
+            <a class="company_logo_link" href="/?">
+                <div class="company_logo"></div>
+            </a>
+            <ul class="db_options">
+                <li id="db-create">Create</li>
+                <li id="db-drop">Drop</li>
+                <li id="db-backup">Backup</li>
+                <li id="db-restore">Restore</li>
+                <li id="db-change-password">Password</li>
+                <li id="back-to-login">Back to Login</li>
+            </ul>
+        </div>
+        <div id="oe_db_options" class="oe_db_options"></div>
+    </div>
 </t>
 <t t-name="Header">
     <div>
@@ -312,7 +355,7 @@
             </li>
         </ul>
         <div class="block">
-            <a href="#logout" class="logout">LOGOUT</a>
+            <a href="javascript:void(0)" class="logout">LOGOUT</a>
         </div>
 
     </div>
@@ -427,10 +470,15 @@
 </t>
 <t t-name="ViewManagerDebug">
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
-    <option value="fvg"> - Fields View Get</option>
-    <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id"> - Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
-    <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id"> - Edit SearchView</option>
-    <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id"> - Edit Action</option>
+    <option value="fvg">Fields View Get</option>
+    <t t-if="view_manager.session.uid === 1">
+        <option value="manage_views">Manage Views</option>
+        <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
+        <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</option>
+        <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id">Edit Action</option>
+        <option value="customize_object">Customize Object</option>
+        <option value="edit_workflow">Edit Workflow</option>
+    </t>
 </t>
 <t t-extend="ViewManager" t-name="One2Many.viewmanager">
     <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
@@ -665,7 +713,7 @@
 </t>
 <t t-name="One2Many.formview" t-extend="FormView">
     <t t-jquery=".oe_form_buttons" t-operation="inner">
-        <button type="button" class="oe_button oe_form_button_create">Create</button>
+        <button type="button" class="oe_button oe_form_button_create">Add</button>
     </t>
 </t>
 <t t-name="PageView" t-extend="FormView">
@@ -700,7 +748,7 @@
         <li t-foreach="attachments" t-as="attachment">
             <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="_s + '/web/binary/saveas?session_id='
                 + session.session_id + '&amp;model=ir.attachment&amp;id=' + attachment.id
-                + '&amp;field=datas&amp;fieldname=name&amp;t=' + (new Date().getTime())"/>
+                + '&amp;field=datas&amp;filename_field=name&amp;t=' + (new Date().getTime())"/>
             <a class="oe-sidebar-attachments-link" t-att-href="attachment.url" target="_blank">
                 <t t-esc="attachment.name"/>
             </a>
@@ -935,7 +983,7 @@
         </td>
         <td>
             <button class="oe_button oe_field_button oe-m2o-cm-button" t-att-id="widget.name + '_open'">
-                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
+                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY_MENU.png"'/>
             </button>
             <div t-att-id="widget.cm_id" class="contextMenu" style="display:none">
             </div>
@@ -1134,14 +1182,14 @@
     </form>
 </t>
 <t t-name="SearchView.managed-filters">
-    <option/>
+    <option class="oe-filters-title">Filters</option>
     <optgroup label="-- Filters --">
         <t t-foreach="filters" t-as="filter">
             <option t-attf-value="get:#{filter_index}"><t t-esc="filter.name"/></option>
         </t>
     </optgroup>
     <optgroup label="-- Actions --">
-        <option value="advanced_filter">Advanced Filter</option>
+        <option value="advanced_filter">Add Advanced Filter</option>
         <option value="save_filter">Save Filter</option>
         <option value="add_to_dashboard">Add to Dashboard</option>
         <option value="manage_filters">Manage Filters</option>
@@ -1326,28 +1374,6 @@
         <option t-att-value="element[0]"><t t-esc="element[1]"/></option>
         </t>
     </select>
-</t>
-<t t-name="DialogWarning">
-    <table cellspacing="0" cellpadding="0" border="0" class="oe-dialog-warning">
-    <tr>
-        <td><img t-att-src='_s + "/web/static/src/img/warning.png"' class="oe-dialog-icon"/></td>
-        <td>
-            <p>
-                <t t-js="d">
-                    var message = d.message ? d.message : d.error.data.fault_code;
-                    d.html_error = context.engine.tools.html_escape(message)
-                        .replace(/\n/g, '<br/>');
-                </t>
-                <t t-raw="html_error"/>
-            </p>
-        </td>
-    </tr>
-    </table>
-</t>
-<t t-name="DialogTraceback">
-    <pre><t t-esc="error.message"/></pre>
-    <hr/>
-    <pre><t t-esc="error.data.debug"/></pre>
 </t>
 <t t-name="SelectCreatePopup">
     <div t-att-id="element_id">

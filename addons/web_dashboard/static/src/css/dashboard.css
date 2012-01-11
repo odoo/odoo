@@ -368,5 +368,49 @@
   -o-box-shadow: 0 1px 2px #bbb;
   box-shadow: 0 1px 2px #bbb;
 }
+/* changing icon for the change layout button */
 
+.openerp .oe-dashboard-link-change_layout, .openerp .oe-dashboard-link-reset {
+    padding-top: 1px;
+    height: 22px;
+}
+.openerp .oe-dashboard-link-change_layout > *, .openerp .oe-dashboard-link-reset > *{
+    vertical-align: middle;
+}
 
+.openerp .oe_welcome_message {
+    display:none;
+}
+.openerp .oe_initial_welcome_message {
+    width:30%;
+    text-align:center;
+    margin:10px 35% 0 35%;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    background: #eeeded;
+    box-shadow: 0 1px 0 #fff;
+    -moz-box-shadow: 0 1px 0 #fff;
+    -webkit-box-shadow: 0 1px 0 #fff;
+    color: #8c8c8c;
+    font-size: 90%;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-shadow: #fff 0 1px 0;
+}
+
+.openerp .oe_initial_welcome_message ul{
+    padding:10px 0 0 0;
+    margin:0;
+    list-style-type: none;
+    padding: 7px 0 5px 5px;
+    background-position: 0 50%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+.openerp .oe_initial_welcome_message ul a, .openerp .initial_welcome_message ul a:hover, .openerp .initial_welcome_message ul a:active, .openerp .initial_welcome_message ul a:focus {
+    color:#222;
+    text-decoration:none;
+}
