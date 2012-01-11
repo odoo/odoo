@@ -694,8 +694,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
             $footer_cells.filter(_.str.sprintf('[data-field=%s]', column.id))
                 .html(openerp.web.format_cell(aggregation, column, {
-                    process_modifiers: false,
-                    model: self.dataset.model
+                    process_modifiers: false
             }));
         });
     },
@@ -1223,9 +1222,8 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     $group_column.html(openerp.web.format_cell(
                         row_data, group_column, {
                             value_if_empty: _t("Undefined"),
-                            process_modifiers: false,
-                            model: self.dataset.model
-                        }));
+                            process_modifiers: false
+                    }));
                 } catch (e) {
                     $group_column.html(row_data[group_column.id].value);
                 }
