@@ -162,7 +162,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 group_aggregates[value] = group.aggregates[key];
             });
             var dataset = new openerp.web.DataSetSearch(self, self.dataset.model, group.context, group.domain);
-            dataset.read_slice(self.fields_keys, {'domain': group.domain, 'context': group.context}, function(records) {
+            dataset.read_slice(self.fields_keys, {'domain': group.domain, 'context': group.context}).then(function(records) {
                 self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                 groups_array[index] = new openerp.web_kanban.KanbanGroup(self, records, group_value, group_name, group_aggregates);
                 if (!remaining--) {
@@ -175,7 +175,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     do_process_dataset: function(dataset) {
         var self = this;
         this.do_clear_groups();
-        this.dataset.read_slice(this.fields_keys, {}, function(records) {
+        this.dataset.read_slice(this.fields_keys).then(function(records) {
             var groups = [];
             while (records.length) {
                 for (var i = 0; i < self.default_nr_columns; i++) {
@@ -491,7 +491,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     },
     do_reload: function() {
         var self = this;
-        this.view.dataset.read_ids([this.id], this.view.fields_keys, function(records) {
+        this.view.dataset.read_ids([this.id], this.view.fields_keys).then(function(records) {
             if (records.length) {
                 self.set_record(records[0]);
                 self.do_render();

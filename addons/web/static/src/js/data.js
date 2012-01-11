@@ -293,16 +293,16 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      *
      * @param {Array} ids identifiers of the records to read
      * @param {Array} fields fields to read and return, by default all fields are returned
-     * @param {Function} callback function called with read result
      * @returns {$.Deferred}
      */
-    read_ids: function (ids, fields, callback) {
+    read_ids: function (ids, fields, options) {
+        var options = options || {};
         return this.rpc('/web/dataset/get', {
             model: this.model,
             ids: ids,
             fields: fields,
-            context: this.get_context()
-        }, callback);
+            context: this.get_context(options.context)
+        });
     },
     /**
      * Read a slice of the records represented by this DataSet, based on its
@@ -312,22 +312,20 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      * @params {Object} options
      * @param {Number} [options.offset=0] The index from which selected records should be returned
      * @param {Number} [options.limit=null] The maximum number of records to return
-     * @param {Function} callback function called with read_slice result
      * @returns {$.Deferred}
      */
-    read_slice: function (fields, options, callback) { 
-        return null; 
+    read_slice: function (fields, options) {
+        return null;
     },
     /**
      * Reads the current dataset record (from its index)
      *
      * @params {Array} [fields] fields to read and return, by default all fields are returned
      * @param {Object} [options.context] context data to add to the request payload, on top of the DataSet's own context
-     * @params {Function} callback function called with read_index result
      * @returns {$.Deferred}
      */
-    read_index: function (fields, options, callback) {
-        var def = $.Deferred().then(callback);
+    read_index: function (fields, options) {
+        var def = $.Deferred();
         if (_.isEmpty(this.ids)) {
             def.reject();
         } else {
@@ -344,15 +342,16 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      * Reads default values for the current model
      *
      * @param {Array} [fields] fields to get default values for, by default all defaults are read
-     * @param {Function} callback function called with default_get result
+     * @param {Object} [options.context] context data to add to the request payload, on top of the DataSet's own context
      * @returns {$.Deferred}
      */
-    default_get: function(fields, callback) {
+    default_get: function(fields, options) {
+        var options = options || {};
         return this.rpc('/web/dataset/default_get', {
             model: this.model,
             fields: fields,
-            context: this.get_context()
-        }, callback);
+            context: this.get_context(options.context)
+        });
     },
     /**
      * Creates a new record in db
@@ -504,14 +503,14 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
         // all local records
         this.ids = ids || [];
     },
-    read_slice: function (fields, options, callback) {
+    read_slice: function (fields, options) {
         // TODO remove fields from options
         var self = this,
             offset = options.offset || 0,
             limit = options.limit || false,
             fields = fields || false;
         var end_pos = limit && limit !== -1 ? offset + limit : this.ids.length;
-        return this.read_ids(this.ids.slice(offset, end_pos), fields, callback);
+        return this.read_ids(this.ids.slice(offset, end_pos), fields);
     },
     set_ids: function (ids) {
         this.ids = ids;
@@ -558,10 +557,9 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
      * @param {Array} [options.domain] domain data to add to the request payload, ANDed with the dataset's domain
      * @param {Number} [options.offset=0] The index from which selected records should be returned
      * @param {Number} [options.limit=null] The maximum number of records to return
-     * @param {Function} callback function called with read_slice result
      * @returns {$.Deferred}
      */
-    read_slice: function (fields, options, callback) {
+    read_slice: function (fields, options) {
         var self = this;
         var options = options || {};
         var offset = options.offset || 0;
@@ -577,7 +575,7 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
             self.ids = result.ids;
             self.offset = offset;
             return result.records;
-        }).then(callback);
+        });
     },
     get_domain: function (other_domain) {
         if (other_domain) {
@@ -631,8 +629,8 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         this.reset_ids([]);
         this.last_default_get = {};
     },
-    default_get: function(fields, callback) {
-        return this._super(fields).then(this.on_default_get).then(callback);
+    default_get: function(fields, options) {
+        return this._super(fields, options).then(this.on_default_get);
     },
     on_default_get: function(res) {
         this.last_default_get = res;
@@ -700,7 +698,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         this.delete_all = false;
     },
     on_change: function() {},
-    read_ids: function (ids, fields, callback) {
+    read_ids: function (ids, fields, options) {
         var self = this;
         var to_get = [];
         _.each(ids, function(id) {
@@ -714,7 +712,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                     to_get.push(id);
             }
         });
-        var completion = $.Deferred().then(callback);
+        var completion = $.Deferred();
         var return_records = function() {
             var records = _.map(ids, function(id) {
                 return _.extend({}, _.detect(self.cache, function(c) {return c.id === id;}).values, {"id": id});
@@ -727,7 +725,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
             completion.resolve(records);
         };
         if(to_get.length > 0) {
-            var rpc_promise = this._super(to_get, fields, function(records) {
+            var rpc_promise = this._super(to_get, fields, options).then(function(records) {
                 _.each(records, function(record, index) {
                     var id = to_get[index];
                     var cached = _.detect(self.cache, function(x) {return x.id === id;});
@@ -776,8 +774,8 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
             return this._super.apply(this, arguments);
         }
     },
-    default_get: function(fields, callback) {
-        return this._super(fields, callback).then(this.on_default_get);
+    default_get: function(fields, options) {
+        return this._super(fields, options).then(this.on_default_get);
     },
     on_default_get: function(result) {},
     create: function(data, callback, error_callback) {

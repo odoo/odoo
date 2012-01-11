@@ -171,7 +171,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
     },
     reload_event: function(id) {
-        this.dataset.read_ids([id], _.keys(this.fields), this.on_events_loaded);
+        this.dataset.read_ids([id], _.keys(this.fields)).then(this.on_events_loaded);
     },
     get_color: function(key) {
         if (this.color_map[key]) {
@@ -392,7 +392,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
                 offset: 0,
                 domain: self.get_range_domain(),
                 context: self.last_search[1]
-            }, function(events) {
+            }).then(function(events) {
                 self.dataset_events = events;
                 self.on_events_loaded(events);
             });
