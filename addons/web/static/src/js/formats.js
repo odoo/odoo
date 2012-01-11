@@ -102,10 +102,6 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             return _.str.sprintf("%02d:%02d",
                     Math.floor(value),
                     Math.round((value % 1) * 60));
-        case 'progressbar':
-            return _.str.sprintf(
-                '<progress value="%.2f" max="100.0">%.2f%%</progress>',
-                    value, value);
         case 'many2one':
             // name_get value format
             return value[1];
@@ -284,7 +280,7 @@ openerp.web.format_cell = function (row_data, column, options) {
         return options.value_if_empty === undefined ? '' : options.value_if_empty;
     }
 
-    switch (column.type) {
+    switch (column.widget || column.type) {
     case "boolean":
         return _.str.sprintf('<input type="checkbox" %s disabled="disabled"/>',
                  row_data[column.id].value ? 'checked="checked"' : '');
@@ -298,15 +294,20 @@ openerp.web.format_cell = function (row_data, column, options) {
                         row_data[column.filename].value, {type: 'char'}));
             }
         }
-        return _.str.sprintf('<a href="%(href)s">%(text)s</a> (%(size)s)', {
+        return _.template('<a href="<%-href%>"><%-text%></a> (%<-size%>)', {
             text: text,
             href: download_url,
             size: row_data[column.id].value
         });
+    case 'progressbar':
+        return _.template(
+            '<progress value="<%-value%>" max="100"><%-value%>%</progress>', {
+                value: row_data[column.id].value
+            });
     }
 
-    return openerp.web.format_value(
-            row_data[column.id].value, column, options.value_if_empty);
+    return _.escape(openerp.web.format_value(
+            row_data[column.id].value, column, options.value_if_empty));
 }
 
 };
