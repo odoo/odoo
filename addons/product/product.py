@@ -257,20 +257,23 @@ product_category()
 class product_template(osv.osv):
     _name = "product.template"
     _description = "Product Template"
+
+    def _get_main_product_supplier(self, cr, uid, product, context=None):
+        sellers = [(seller_info.sequence, seller_info)
+                       for seller_info in product.seller_ids or []
+                       if seller_info and isinstance(seller_info.sequence, (int, long))]
+        return sellers and sellers[0][1] or False
+
     def _calc_seller(self, cr, uid, ids, fields, arg, context=None):
         result = {}
         for product in self.browse(cr, uid, ids, context=context):
-            for field in fields:
-                result[product.id] = {field:False}
-            result[product.id]['seller_delay'] = 1
-            if product.seller_ids:
-                partner_list = [(partner_id.sequence, partner_id)
-                                       for partner_id in  product.seller_ids
-                                       if partner_id and isinstance(partner_id.sequence, (int, long))]
-                main_supplier = partner_list and partner_list[0] and partner_list[0][1] or False
-                result[product.id]['seller_delay'] =  main_supplier and main_supplier.delay or 1
-                result[product.id]['seller_qty'] =  main_supplier and main_supplier.qty or 0.0
-                result[product.id]['seller_id'] = main_supplier and main_supplier.name.id or False
+            main_supplier = self._get_main_product_supplier(cr, uid, product, context=context)
+            result[product.id] = {
+                'seller_info_id': main_supplier and main_supplier.id or False,
+                'seller_delay': main_supplier and main_supplier.delay or 1,
+                'seller_qty': main_supplier and main_supplier.qty or 0.0,
+                'seller_id': main_supplier and main_supplier.name.id or False
+                }
         return result
 
     _columns = {
@@ -317,6 +320,7 @@ class product_template(osv.osv):
         'loc_row': fields.char('Row', size=16),
         'loc_case': fields.char('Case', size=16),
         'company_id': fields.many2one('res.company', 'Company',select=1),
+        'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", multi="seller_info"),
     }
 
     def _get_uom_id(self, cr, uid, *args):
