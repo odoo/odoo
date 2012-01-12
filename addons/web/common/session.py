@@ -29,6 +29,7 @@ class OpenERPSession(object):
         round-tripped to the client browser.
     """
     def __init__(self):
+        self._creation_time = time.time()
         self.config = None
         self._db = False
         self._uid = False

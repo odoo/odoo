@@ -10,6 +10,7 @@ import os
 import pprint
 import sys
 import threading
+import time
 import traceback
 import urllib
 import uuid
@@ -331,8 +332,9 @@ def session_context(request, storage_path, session_cookie='sessionid'):
             if (isinstance(value, session.OpenERPSession) 
                 and not value._uid
                 and not value.jsonp_requests
+                and value._creation_time + (60*5) < time.time()  # FIXME do not use a fixed value
             ):
-                _logger.info('remove session %s: %r', key, value.jsonp_requests)
+                _logger.info('remove session %s', key)
                 del request.session[key]
 
         with session_lock:
