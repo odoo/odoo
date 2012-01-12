@@ -1694,6 +1694,7 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
             proxy.reset();
         });
         this._proxies = {};
+        _(this.records).invoke('unbind', null, this._onRecordEvent);
         this.length = 0;
         this.records = [];
         this._byId = {};
@@ -1712,7 +1713,6 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
      * @returns this
      */
     remove: function (record) {
-        var self = this;
         var index = _(this.records).indexOf(record);
         if (index === -1) {
             _(this._proxies).each(function (proxy) {
@@ -1721,6 +1721,7 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
             return this;
         }
 
+        record.unbind(null, this._onRecordEvent);
         this.records.splice(index, 1);
         delete this._byId[record.get('id')];
         this.length--;
