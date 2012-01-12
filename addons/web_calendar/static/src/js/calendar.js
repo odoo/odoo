@@ -36,6 +36,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.range_start = null;
         this.range_stop = null;
         this.update_range_dates(Date.today());
+        this.selected_filters = [];
     },
     start: function() {
         this._super();
@@ -63,11 +64,17 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.date_delay = this.fields_view.arch.attrs.date_delay;
         this.date_stop = this.fields_view.arch.attrs.date_stop;
 
-        this.colors = this.fields_view.arch.attrs.colors;
         this.day_length = this.fields_view.arch.attrs.day_length || 8;
         this.color_field = this.fields_view.arch.attrs.color;
+
+        if (this.color_field && this.selected_filters.length === 0) {
+            var default_filter;
+            if (default_filter = this.dataset.context['calendar_default_' + this.color_field]) {
+                this.selected_filters.push(default_filter + '');
+            }
+        }
         this.fields =  this.fields_view.fields;
-        
+
         if (!this.date_start) {
             throw new Error("Calendar view has not defined 'date_start' attribute.");
         }
@@ -475,13 +482,22 @@ openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
         this.$element.delegate('input:checkbox', 'change', this.on_filter_click);
     },
     on_events_loaded: function(filters) {
+        var selected_filters = this.view.selected_filters.slice(0);
         this.$div.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
+        this.$element.find('div.oe_calendar_responsible input').each(function() {
+            if (_.indexOf(selected_filters, $(this).val()) > -1) {
+                $(this).click();
+            }
+        });
     },
     on_filter_click: function(e) {
-        var responsibles = [],
+        var self = this,
+            responsibles = [],
             $e = $(e.target);
+        this.view.selected_filters = [];
         this.$element.find('div.oe_calendar_responsible input:checked').each(function() {
             responsibles.push($(this).val());
+            self.view.selected_filters.push($(this).val());
         });
         scheduler.clearAll();
         if (responsibles.length) {
