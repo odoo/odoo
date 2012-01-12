@@ -24,6 +24,7 @@
     'name': 'Expenses Management',
     'version': '1.0',
     'category': 'Human Resources',
+    "sequence": 30,
     'complexity': "easy",
     'description': """
 This module aims to manage employee's expenses.

@@ -743,10 +743,8 @@ class purchase_order_line(osv.osv):
 
         # - determine name and notes based on product in partner lang.
         lang = res_partner.browse(cr, uid, partner_id).lang
-        if lang:
-            context['lang'] = lang
-        context['partner_id'] = partner_id
-        product = product_product.browse(cr, uid, product_id, context=context)
+        context_partner = {'lang': lang, 'partner_id': partner_id}
+        product = product_product.browse(cr, uid, product_id, context=context_partner)
         res_value.update({'name': product.name, 'notes': notes or product.description_purchase})
         
         # - set a domain on product_uom
@@ -770,7 +768,6 @@ class purchase_order_line(osv.osv):
 
         qty = qty or 1.0
         seller_delay = 0
-            
         supplierinfo_ids = product_supplierinfo.search(cr, uid, [('name','=',partner_id),('product_id','=',product.id)])
         for supplierinfo in product_supplierinfo.browse(cr, uid, supplierinfo_ids, context=context):
             seller_delay = supplierinfo.delay

@@ -25,6 +25,7 @@
     "version": "1.5",
     "author": "OpenERP SA",
     "category": "Human Resources",
+    "sequence": 28,
     'complexity': "easy",
     "website": "http://www.openerp.com",
     "description": """

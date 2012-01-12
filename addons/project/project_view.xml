@@ -651,7 +651,7 @@
             <field name="arch" type="xml">
                 <page string="Configuration" position="inside">
                     <separator string="Project Management" colspan="4"/>
-                    <field name="project_time_mode_id"/>
+                    <field name="project_time_mode_id" domain="[('category_id','=','Working Time')]"/>
                     <newline/>
                 </page>
             </field>

@@ -24,6 +24,7 @@
     'name': 'CRM',
     'version': '1.0',
     'category': 'Customer Relationship Management',
+    "sequence": 2,
     'complexity': "easy",
     'description': """
 The generic OpenERP Customer Relationship Management.

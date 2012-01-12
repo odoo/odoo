@@ -22,12 +22,15 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import logging
 
 import netsvc
 from osv import fields, osv
 from tools.translate import _
 from decimal import Decimal
 import decimal_precision as dp
+
+_logger = logging.getLogger(__name__)
 
 class pos_config_journal(osv.osv):
     """ Point of Sale journal configuration"""
@@ -46,6 +49,15 @@ class pos_order(osv.osv):
     _name = "pos.order"
     _description = "Point of Sale"
     _order = "id desc"
+    
+    def create_from_ui(self, cr, uid, orders, context=None):
+        #_logger.info("orders: %r", orders)
+        list = []
+        for order in orders:
+            list.append(self.create(cr, uid, order, context))
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'pos.order', list[-1], 'paid', cr)
+        return list
 
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):

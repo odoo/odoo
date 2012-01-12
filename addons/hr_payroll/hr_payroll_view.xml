@@ -486,6 +486,7 @@
             <field name="name">Salary Rule Categories Hierarchy</field>
             <field name="res_model">hr.salary.rule.category</field>
             <field name="view_type">tree</field>
+            <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_id" ref="hr_salary_rule_category_tree_view"/>
         </record>
         <menuitem
