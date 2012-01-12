@@ -35,7 +35,7 @@ conf = openerp.tools.config
 
 # Path to the OpenERP Addons repository (comma-separated for
 # multiple locations)
-conf['addons_path'] = '/home/openerp/addons/trunk,/home/openerp/web/trunk/addons'
+conf['addons_path'] = '/home/thu/repos/addons/trunk-import-hook,/home/thu/repos/web/trunk-import-hook/addons'
 
 # Optional database config if not using local socket
 #conf['db_name'] = 'mycompany'
