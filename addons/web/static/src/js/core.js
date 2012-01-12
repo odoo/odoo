@@ -695,6 +695,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     });
                 })
             ).then(function() {
+                self.on_modules_loaded();
                 self.on_session_valid();
             });
         });
@@ -728,7 +729,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             var head = document.head || document.getElementsByTagName('head')[0];
             head.appendChild(tag);
         } else {
-            self.on_modules_loaded();
             d.resolve();
         }
         return d;
