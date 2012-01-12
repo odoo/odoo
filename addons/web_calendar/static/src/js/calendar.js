@@ -296,36 +296,25 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         var self = this,
             data = this.get_event_data(event_obj),
             form = self.form_dialog.form,
-            fields_to_fetch = _(form.fields_view.fields).keys(),
-            set_values = [], 
-            fields_names = [];
+            fields_to_fetch = _(form.fields_view.fields).keys();
         this.dataset.index = null;
         self.creating_event_id = event_id;
         this.form_dialog.form.do_show().then(function() {
             form.show_invalid = false;
-            _.each(['date_start', 'date_stop', 'date_delay'], function(field) {
+            _.each(['date_start', 'date_delay', 'date_stop'], function(field) {
                 var field_name = self[field];
                 if (field_name && form.fields[field_name]) {
                     var ffield = form.fields[field_name];
                     ffield.reset();
-                    var result = ffield.set_value(data[field_name]);
-                    set_values.push(result);
-                    fields_names.push(field_name);
-                    $.when(result).then(function() {
+                    $.when(ffield.set_value(data[field_name])).then(function() {
                         ffield.validate();
+                        ffield.dirty = true;
+                        form.do_onchange(ffield);
                     });
                 }
             });
-
-            $.when(set_values).then(function() {
-                _.each(fields_names, function(fn) {
-                    var field = form.fields[fn];
-                    field.dirty = true;
-                    form.do_onchange(field);
-                });
-                form.show_invalid = true;
-                self.form_dialog.open();
-            });
+            form.show_invalid = true;
+            self.form_dialog.open();
         });
     },
     do_save_event: function(event_id, event_obj) {
