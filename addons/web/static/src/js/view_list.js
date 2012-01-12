@@ -924,7 +924,8 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
         this.$current = this.$_element.clone(true);
         this.$current.empty().append(
             QWeb.render('ListView.rows', _.extend({
-                    render_cell: function () { return self.render_cell(); }
+                    render_cell: function () {
+                        return self.render_cell.apply(self, arguments); }
                 }, this)));
         this.pad_table_to(5);
     },
@@ -1040,7 +1041,8 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             record: record,
             row_parity: (index % 2 === 0) ? 'even' : 'odd',
             view: this.view,
-            render_cell: function () { return this.render_cell(); }
+            render_cell: function () {
+                return this.render_cell.apply(this, arguments); }
         });
     },
     /**

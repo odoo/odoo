@@ -211,7 +211,8 @@ openerp.web.list_editable = function (openerp) {
                     .delegate('button', 'keyup', function (e) {
                         e.stopImmediatePropagation();
                     })
-                    .keyup(function () { return self.on_row_keyup(); });
+                    .keyup(function () {
+                        return self.on_row_keyup.apply(self, arguments); });
                 if (row) {
                     $new_row.replaceAll(row);
                 } else if (self.options.editable) {
@@ -368,7 +369,8 @@ openerp.web.list_editable = function (openerp) {
                 record: record,
                 row_parity: (index % 2 === 0) ? 'even' : 'odd',
                 view: this.view,
-                render_cell: function () { return self.render_cell(); },
+                render_cell: function () {
+                    return self.render_cell.apply(self, arguments); },
                 edited: !!this.edition_form
             });
         }
