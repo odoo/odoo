@@ -1102,11 +1102,11 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         self.$table = $(QWeb.render("Interface", {}));
         self.$element.append(self.$table);
         self.header = new openerp.web.Header(self);
-        self.header.on_logout.add(self.on_logout);
-        self.header.on_action.add(self.on_menu_action);
+        self.header.on_logout.add(this.proxy('on_logout'));
+        self.header.on_action.add(this.proxy('on_menu_action'));
         self.header.appendTo($("#oe_header"));
         self.menu = new openerp.web.Menu(self, "oe_menu", "oe_secondary_menu");
-        self.menu.on_action.add(self.on_menu_action);
+        self.menu.on_action.add(this.proxy('on_menu_action'));
         self.menu.start();
     },
     show_common: function() {
