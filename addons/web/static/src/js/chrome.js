@@ -132,7 +132,7 @@ openerp.web.Dialog = openerp.web.Widget.extend(/** @lends openerp.web.Dialog# */
         }
     },
     on_resized: function() {
-        openerp.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
+        //openerp.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
     },
     stop: function () {
         // Destroy widget
