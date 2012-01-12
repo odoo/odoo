@@ -1262,7 +1262,12 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
     validate: function() {
         this.invalid = false;
     },
-    focus: function() {
+    focus: function($element) {
+        if ($element) {
+            setTimeout(function() {
+                $element.focus();
+            }, 50);
+        }
     },
     reset: function() {
         this.dirty = false;
@@ -1309,8 +1314,8 @@ openerp.web.form.FieldChar = openerp.web.form.Field.extend({
             this.invalid = true;
         }
     },
-    focus: function() {
-        this.$element.find('input').focus();
+    focus: function($element) {
+        this._super($element || this.$element.find('input:first'));
     }
 });
 
@@ -1434,8 +1439,8 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
             }
         }
     },
-    focus: function() {
-        this.$input.focus();
+    focus: function($element) {
+        this._super($element || this.$input);
     },
     parse_client: function(v) {
         return openerp.web.parse_value(v, {"widget": this.type_of_date});
@@ -1481,8 +1486,8 @@ openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
     validate: function() {
         this.invalid = !this.datewidget.is_valid(this.required);
     },
-    focus: function() {
-        this.datewidget.focus();
+    focus: function($element) {
+        this._super($element || this.datewidget);
     }
 });
 
@@ -1525,8 +1530,8 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
             this.invalid = true;
         }
     },
-    focus: function() {
-        this.$element.find('textarea').focus();
+    focus: function($element) {
+        this._super($element || this.$element.find('textarea:first'));
     },
     do_resize: function(max_height) {
         max_height = parseInt(max_height, 10);
@@ -1572,8 +1577,8 @@ openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
         this._super.apply(this, arguments);
         this.$element.find('input').prop('disabled', this.readonly);
     },
-    focus: function() {
-        this.$element.find('input').focus();
+    focus: function($element) {
+        this._super($element || this.$element.find('input:first'));
     }
 });
 
@@ -1659,8 +1664,8 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
         var value = this.values[this.$element.find('select')[0].selectedIndex];
         this.invalid = !(value && !(this.required && value[0] === false));
     },
-    focus: function() {
-        this.$element.find('select').focus();
+    focus: function($element) {
+        this._super($element || this.$element.find('select:first'));
     }
 });
 
@@ -2011,8 +2016,8 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             self.do_action(result.result);
         });
     },
-    focus: function () {
-        this.$input.focus();
+    focus: function ($element) {
+        this._super($element || this.$input);
     },
     update_dom: function() {
         this._super.apply(this, arguments);
