@@ -546,7 +546,7 @@ class event_registration(osv.osv):
 
     def mail_user(self, cr, uid, ids, confirm=False, context=None):
         """
-        Send email to user
+        Send email to user with email_template
 """
         for registration in self.browse(cr, uid, ids, context=context):
             subject =  registration.event_id.email_confirmation_id.subject

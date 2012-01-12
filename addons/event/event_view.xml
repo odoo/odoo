@@ -105,7 +105,7 @@
                             <form string="Registration">
                                 <field name="name"/>
                                 <field name="date" string="Date"/>
-                                <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id,event_id)"/>
+                                <field name="partner_id_address" required="1" on_change="onchange_partner_id(partner_id_address,event_id)"/>
                                 <field name="partner_invoice_id" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
                                 <group colspan="4" col="4">
                                     <field name="event_product"/>
@@ -124,7 +124,7 @@
                             </form>
                             <tree string="Registration">
                                     <field name="create_date" string="Registration Date"/>
-                                    <field name="partner_id" required="1" string="Partner" on_change="onchange_partner_id(partner_id,event_id)"/>
+                                    <field name="partner_id" required="1" string="Partner" on_change="onchange_partner_id(partner_id_address,event_id)"/>
                                     <field name="event_product"/>
                                     <field name="nb_register" invisible="1"/>
                                     <field name="unit_price"/>
@@ -293,11 +293,11 @@
             <field name="model">event.registration</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Registration">
-                    <field name="partner_id"/>
+                <tree string="Registration" >
+                    <field name="partner_id_address"/>
                     <field name="event_id"/>
                     <field name="nb_register" invisible="1"/>
-                    <field name="price_subtotal" sum="Total"/>
+                    <field name="unit_price"/>
                     <field name="user_id"/>
                     <field name="state"/>
                     <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
@@ -325,8 +325,7 @@
                         <page string="Registration">
                             <group colspan="2" col="2">
                             <separator string="partner" colspan="4"/>
-                            <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" required="1" on_change="onchange_partner_id(partner_id,event_id)" />
-                            <field name="partner_id_address" colspan="4" />
+                            <field name="partner_id_address" attrs="{'readonly':[('state','!=', 'draft')]}" required="1" on_change="onchange_partner_id(partner_id_address,event_id)" />
 
                             </group>
                             <group colspan="2" col="2">
@@ -350,27 +349,11 @@
                                 <field name="invoice_id"/>
                         </page>
                         <page string="Extra Info">
-                            
-                            <field name="create_date" string="Registration Date"/>
-                            <separator string="Contact" colspan="4"/>
-                            
-                            <field name="contact_id" on_change="onchange_contact_id(contact_id, partner_id)" />
-                            <field name="email_from"/>
-                            <field name="badge_ids" colspan="4" nolabel="1">
-                                <tree string="Badges" editable="bottom">
-                                    <field name="name"/>
-                                    <field name="title"/>
-                                    <field name="address_id"/>
-                                </tree>
-                                <form string="Badges">
-                                    <field name="name"/>
-                                    <field name="title"/>
-                                    <field name="address_id"/>
-                                </form>
-                            </field>
+
                             <group col="2" colspan="2" groups="base.group_extended">
                                <separator string="Dates" colspan="2"/>
                                <field name="date_closed"/>
+                               <field name="create_date" string="Registration Date"/>
                             </group>
                             <group col="2" colspan="2" groups="base.group_extended">
                                <separator string="Misc" colspan="2"/>
