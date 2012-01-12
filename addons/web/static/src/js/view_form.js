@@ -514,7 +514,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (this.sidebar) {
                 this.sidebar.attachments.do_update();
             }
-            openerp.log("The record has been created with id #" + this.datarecord.id);
+            //openerp.log("The record has been created with id #" + this.datarecord.id);
             this.reload();
             return $.when(_.extend(r, {created: true})).then(success);
         }
