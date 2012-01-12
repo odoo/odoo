@@ -1257,6 +1257,7 @@ class Binary(openerpweb.Controller):
             attachment_id = Model.create({
                 'name': ufile.filename,
                 'datas': base64.encodestring(ufile.read()),
+                'datas_fname': ufile.filename,
                 'res_model': model,
                 'res_id': int(id)
             }, context)
