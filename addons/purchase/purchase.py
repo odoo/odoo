@@ -697,56 +697,74 @@ class purchase_order_line(osv.osv):
         default.update({'state':'draft', 'move_ids':[],'invoiced':0,'invoice_lines':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
-    #TOFIX:
-    # - name of method should "onchange_product_id"
-    # - docstring
-    # - split into small internal methods for clearity
-    def product_id_change(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
+
+    def _onchange_check_partner_pricelist(self, pricelist_id, partner_id):
+        return True 
+
+    def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
             name=False, price_unit=False, notes=False, context=None):
+        """
+        onchange handler of product_uom.
+        """
+        if not uom_id:
+            return {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'notes': notes or'', 'product_uom' : uom_id or False}}
+        return self.onchange_product_id(cr, uid, ids, pricelist_id, product_id, qty, uom_id,
+            partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned,
+            name=name, price_unit=price_unit, notes=notes, context=context)
+
+    def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
+            partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
+            name=False, price_unit=False, notes=False, context=None):
+        """
+        onchange handler of product_id.
+        """
+        res = {}
         if context is None:
             context = {}
-
-        res = {'price_unit': price_unit or 0.0, 'name': name or '', 'notes': notes or'', 'product_uom' : uom_id or False}
-        uom_change = context.get('uom_change', False)
         
+        res_value = {'price_unit': price_unit or 0.0, 'name': name or '', 'notes': notes or'', 'product_uom' : uom_id or False}
+        if not product_id:
+            return {'value': res_value}
+
+        product_product = self.pool.get('product.product')
+        product_uom = self.pool.get('product.uom')
+        res_partner = self.pool.get('res.partner')
+        product_supplierinfo = self.pool.get('product.supplierinfo')
+        product_pricelist = self.pool.get('product.pricelist')
+        account_fiscal_position = self.pool.get('account.fiscal.position')
+        account_tax = self.pool.get('account.tax')
+
+        # - check for the presence of partner_id and pricelist_id
         if not pricelist_id:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist or a supplier in the purchase form !\nPlease set one before choosing a product.'))
         if not partner_id:
             raise osv.except_osv(_('No Partner!'), _('You have to select a partner in the purchase form !\nPlease set one partner before choosing a product.'))
-        if not product_id:
-            return {'value': res}
 
-        
-        product_uom_pool = self.pool.get('product.uom')
-        product_supplierinfo = self.pool.get('product.supplierinfo')
-        res_partner = self.pool.get('res.partner')
-        product_product = self.pool.get('product.product')
-        account_fiscal_position = self.pool.get('account.fiscal.position')
-        account_tax = self.pool.get('account.tax')
-            
-        # set supplier langauage in context
+        # - determine name and notes based on product in partner lang.
         lang = res_partner.browse(cr, uid, partner_id).lang
         if lang:
             context['lang'] = lang
         context['partner_id'] = partner_id
-
         product = product_product.browse(cr, uid, product_id, context=context)
+        res_value.update({'name': product.name, 'notes': notes or product.description_purchase})
+        
+        # - set a domain on product_uom
         domain = {'product_uom':[('category_id','=',product.uom_id.category_id.id)]}
-        res['domain'] = domain
+        res.update({'domain': domain})
 
-        if uom_change and not uom_id:
-            return {'value': res}
-
+        # - check that uom and product uom belong to the same category
         product_uom_po_id = product.uom_po_id.id
         if not uom_id:
             uom_id = product_uom_po_id
         
-        # checking UOM category
-        if product.uom_id.category_id.id != product_uom_pool.browse(cr, uid, uom_id).category_id.id:
+        if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:
             res.update({'warning': {'title': _('Warning'), 'message': _('Selected UOM does not have same category of default UOM')}})
             uom_id = product_uom_po_id
-        
+
+        res_value.update({'product_uom': uom_id})
+
+        # - determine product_qty and date_planned based on seller info
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
 
@@ -758,31 +776,32 @@ class purchase_order_line(osv.osv):
             seller_delay = supplierinfo.delay
             if supplierinfo.product_uom.id != uom_id:
                 res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }})
-            min_qty = product_uom_pool._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
+            min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
             if qty < min_qty: # If the supplier quantity is greater than entered from user, set minimal.
                 res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}})
                 qty = min_qty
-        
-        price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id],
+
+        dt = (datetime.strptime(date_order, '%Y-%m-%d') + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
+        res_value.update({'date_planned': date_planned or dt, 'product_qty': qty})
+
+        # - determine price_unit and taxes_id
+        price = product_pricelist.price_get(cr, uid, [pricelist_id],
                     product.id, qty or 1.0, partner_id, {
                         'uom': uom_id,
                         'date': date_order,
                         })[pricelist_id]
-        dt = (datetime.now() + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
-
-
-        res.update({'value': {'price_unit': price, 'name': product.name,
-            'taxes_id':map(lambda x: x.id, product.supplier_taxes_id),
-            'date_planned': date_planned or dt,'notes': notes or product.description_purchase,
-            'product_qty': qty,
-            'product_uom': uom_id}})
-
+        
         taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
-        res['value']['taxes_id'] = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
+        taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
+        res_value.update({'price_unit': price, 'taxes_id': taxes_ids})
+
+
+        res.update({'value': res_value})
         return res
 
-    product_uom_change = product_id_change
+    product_id_change = onchange_product_id
+    product_uom_change = onchange_product_uom
 
     def action_confirm(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
