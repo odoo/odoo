@@ -257,7 +257,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             'None': function () {return null;},
             'context': function (i) {
                 context_index = i;
-                var ctx = widget.build_context ? widget.build_context() : {};
+                var ctx = new openerp.web.CompoundContext(self.dataset.get_context(), widget.build_context() ? widget.build_context() : {});
                 return ctx;
             }
         };
