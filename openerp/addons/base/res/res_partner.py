@@ -87,6 +87,7 @@ class res_partner_category(osv.osv):
         'active' : fields.boolean('Active', help="The active field allows you to hide the category without removing it."),
         'parent_left' : fields.integer('Left parent', select=True),
         'parent_right' : fields.integer('Right parent', select=True),
+        'partner_ids': fields.many2many('res.partner', 'res_partner_category_rel', 'category_id', 'partner_id', 'Partners'),
     }
     _constraints = [
         (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
@@ -393,13 +394,6 @@ class res_partner_address(osv.osv):
 
 res_partner_address()
 
-class res_partner_category(osv.osv):
-    _inherit = 'res.partner.category'
-    _columns = {
-        'partner_ids': fields.many2many('res.partner', 'res_partner_category_rel', 'category_id', 'partner_id', 'Partners'),
-    }
-
-res_partner_category()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
