@@ -45,6 +45,8 @@ class make_invoice(osv.osv_memory):
         order_obj = self.pool.get('mrp.repair')
         newinv = order_obj.action_invoice_create(cr, uid, context['active_ids'],
                                                  group=inv.group,context=context)
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'mrp.repair', context.get('active_id'), 'action_invoice_create' , cr)
 
         return {
             'domain': [('id','in', newinv.values())],
