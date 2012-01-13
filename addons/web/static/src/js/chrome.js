@@ -689,6 +689,11 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
         var self = this;
         self.rpc("/web/webclient/version_info", {}).then(function(res) {
             var $help = $(QWeb.render("About-Page", {version_info: res}));
+            $help.find('a.oe_activate_debug_mode').click(function (e) {
+                e.preventDefault();
+                window.location = $.param.querystring(
+                        window.location.href, 'debug');
+            });
             $help.dialog({autoOpen: true,
                 modal: true, width: 960, title: _t("About")});
         });
