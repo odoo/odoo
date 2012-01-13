@@ -109,7 +109,7 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
 
 openerp.edi.edi_view = function (db, token) {
     openerp.connection.bind().then(function () {
-        new openerp.edi.EdiView(null,db,token).appendTo($("body"));
+        new openerp.edi.EdiView(null,db,token).appendTo($("body").addClass('openerp'));
     });
 }
 
@@ -172,7 +172,7 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
 
 openerp.edi.edi_import = function (url) {
     openerp.connection.bind().then(function () {
-        new openerp.edi.EdiImport(null,url).appendTo($("body"));
+        new openerp.edi.EdiImport(null,url).appendTo($("body").addClass('openerp'));
     });
 }
 
