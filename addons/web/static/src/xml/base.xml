@@ -1416,14 +1416,10 @@
     <button type="button" class="oe_button oe_formopenpopup-form-close">Cancel</button>
 </t>
 <t t-extend="ListView.row">
-    <!-- adds front & back padding to row being rendered after edition, if
-         necessary (if not selectable add front padding and if not deletable
-         add back padding), otherwise the row being added is missing columns
+    <!-- adds back padding to row being rendered after edition, if necessary
+         (if not deletable add back padding), otherwise the row being added is
+         missing columns
      -->
-    <t t-jquery="&gt; :first" t-operation="before">
-        <td t-if="edited and !options.selectable" class="oe-listview-padding"/>
-        <td t-if="edited and !options.isClarkGable" class="oe-listview-padding"/>
-    </t>
     <t t-jquery="&gt; :last" t-operation="after">
         <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
     </t>
