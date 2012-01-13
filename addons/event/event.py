@@ -187,16 +187,9 @@ class event_event(osv.osv):
 
                 #change the description of the registration linked to this event
 
-                """
-                if vals.get('mail_auto_confirm', False):
-                    if vals['mail_auto_confirm']:
-                        if 'mail_confirm' not in vals:
-                            vals['mail_confirm'] = event.mail_confirm
-                    else:
-                        vals['mail_confirm'] = False
                 if 'mail_confirm' in vals:
                     register_values['description'] = vals['mail_confirm']
-"""
+
                 if register_values:
                     reg_ids = register_pool.search(cr, uid, [('event_id', '=', event.id)], context=context)
                     register_pool.write(cr, uid, reg_ids, register_values, context=context)
