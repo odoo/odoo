@@ -63,7 +63,15 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
     do_setup_export_formats: function (formats) {
         var $fmts = this.$element.find('#export_format');
         _(formats).each(function (format) {
-            $fmts.append(new Option(format[1], format[0]));
+            var opt = new Option(format.label, format.tag);
+            if (format.error) {
+                opt.disabled = true;
+                opt.replaceChild(
+                    document.createTextNode(
+                        _.str.sprintf("%s — %s", format.label, format.error)),
+                    opt.childNodes[0])
+            }
+            $fmts.append(opt);
         });
     },
     show_exports_list: function() {

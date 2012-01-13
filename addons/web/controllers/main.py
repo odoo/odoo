@@ -18,6 +18,10 @@ from cStringIO import StringIO
 
 import babel.messages.pofile
 import werkzeug.utils
+try:
+    import xlwt
+except ImportError:
+    xlwt = None
 
 import web.common
 openerpweb = web.common.http
@@ -1308,7 +1312,7 @@ class Export(View):
             for path, controller in openerpweb.controllers_path.iteritems()
             if path.startswith(self._cp_path)
             if hasattr(controller, 'fmt')
-        ], key=operator.itemgetter(1))
+        ], key=operator.itemgetter("label"))
 
     def fields_get(self, req, model):
         Model = req.session.model(model)
@@ -1484,7 +1488,7 @@ class Export(View):
 
 class CSVExport(Export):
     _cp_path = '/web/export/csv'
-    fmt = ('csv', 'CSV')
+    fmt = {'tag': 'csv', 'label': 'CSV'}
 
     @property
     def content_type(self):
@@ -1519,7 +1523,11 @@ class CSVExport(Export):
 
 class ExcelExport(Export):
     _cp_path = '/web/export/xls'
-    fmt = ('xls', 'Excel')
+    fmt = {
+        'tag': 'xls',
+        'label': 'Excel',
+        'error': None if xlwt else "XLWT required"
+    }
 
     @property
     def content_type(self):
@@ -1529,8 +1537,6 @@ class ExcelExport(Export):
         return base + '.xls'
 
     def from_data(self, fields, rows):
-        import xlwt
-
         workbook = xlwt.Workbook()
         worksheet = workbook.add_sheet('Sheet 1')
 
