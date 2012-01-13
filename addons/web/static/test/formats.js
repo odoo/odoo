@@ -61,6 +61,17 @@ $(document).ready(function () {
         var str = openerp.web.format_value(date, {type:"time"});
         equal(str, date.toString("HH:mm:ss"));
     });
+    test("format_float_time", function () {
+        strictEqual(
+            openerp.web.format_value(1.0, {type:'float', widget:'float_time'}),
+            '01:00');
+        strictEqual(
+            openerp.web.format_value(0.9853, {type:'float', widget:'float_time'}),
+            '00:59');
+        strictEqual(
+            openerp.web.format_value(0.0085, {type:'float', widget:'float_time'}),
+            '00:01');
+    });
     test("format_float", function () {
         var fl = 12.1234;
         var str = openerp.web.format_value(fl, {type:"float"});
