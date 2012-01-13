@@ -46,23 +46,18 @@ class survey_name_wiz(osv.osv_memory):
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        
         survey_obj = self.pool.get('survey')
-        lines_ids=[]
-        res = super(survey_name_wiz, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-        survey_user_group_id = self.pool.get('res.groups').search(cr, uid, [('name', '=', 'Survey / User')])
-        group_id = self.pool.get('res.groups').search(cr, uid, [('name', 'in', ('Tools / Manager','Tools / User','Survey / User'))])
-        user_obj = self.pool.get('res.users')
-        user_rec = user_obj.read(cr, uid, uid)
-        if uid!=1:
-            if survey_user_group_id:
-                if survey_user_group_id == user_rec['groups_id']:
-                    lines_ids=survey_obj.search(cr, uid,  [ ('invited_user_ids','in',uid)], context=context)
-                    domain = '[("id", "in", '+ str(lines_ids)+')]'
-                    doc = etree.XML(res['arch'])
-                    nodes = doc.xpath("//field[@name='survey_id']")
-                    for node in nodes:
-                        node.set('domain', domain)
-                        res['arch'] = etree.tostring(doc)
+        lines_ids = []
+        res = super(survey_name_wiz, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)        
+        if uid != 1:
+            lines_ids = survey_obj.search(cr, uid,[('invited_user_ids','in',uid)], context=context)
+            domain = '[("id", "in", '+ str(lines_ids)+')]'
+            doc = etree.XML(res['arch'])
+            nodes = doc.xpath("//field[@name='survey_id']")
+            for node in nodes:
+                node.set('domain',domain)
+                res['arch'] = etree.tostring(doc)
         return res
 
 
@@ -110,6 +105,4 @@ class survey_name_wiz(osv.osv_memory):
         notes = self.pool.get('survey').read(cr, uid, survey_id, ['note'])['note']
         return {'value': {'note': notes}}
     
-survey_name_wiz()    
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
