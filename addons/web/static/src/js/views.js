@@ -548,7 +548,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             current_view = this.views[this.active_view].controller;
         switch (val) {
             case 'fvg':
-                var dialog = new session.web.Dialog(this, { title: "Fields View Get", width: '95%' }).open();
+                var dialog = new session.web.Dialog(this, { title: _t("Fields View Get"), width: '95%' }).open();
                 $('<pre>').text(session.web.json_node_to_xml(current_view.fields_view.arch, true)).appendTo(dialog.$element);
                 break;
             case 'fields':
@@ -580,7 +580,8 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                     fields: ['id'],
                     domain: [['model', '=', this.dataset.model]]
                 }, function (result) {
-                    self.do_edit_resource('ir.model', result.ids[0], { name : "Customize Object" });
+                    self.do_edit_resource('ir.model', result.ids[0], {
+                        name : _t("Customize Object") });
                 });
                 break;
             case 'manage_views':
@@ -588,7 +589,8 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                     var view_editor = new session.web.ViewEditor(current_view, current_view.$element, this.dataset, current_view.fields_view.arch);
                     view_editor.start();
                 } else {
-                    this.do_warn("Manage Views", "Could not find current view declaration");
+                    this.do_warn(_t("Manage Views"),
+                            _t("Could not find current view declaration"));
                 }
                 break;
             case 'edit_workflow':
