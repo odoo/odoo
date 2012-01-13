@@ -170,6 +170,16 @@ $(document).ready(function () {
         equal(c.get(2), undefined);
         strictEqual(c.at(1).get('value'), 20);
     });
+    test('Remove unbind', function () {
+        var changed = false,
+            c = new openerp.web.list.Collection([ {id: 1, value: 5} ]);
+        c.bind('change', function () { changed = true; });
+        var record = c.get(1);
+        c.remove(record);
+        record.set('value', 42);
+        ok(!changed, 'removed records should not trigger events in their ' +
+                     'parent collection');
+    });
     test('Reset', function () {
         var event, obj, c = new openerp.web.list.Collection([
             {id: 1, value: 5},
@@ -189,6 +199,16 @@ $(document).ready(function () {
         c.reset([{id: 42, value: 55}]);
         strictEqual(c.length, 1);
         strictEqual(c.get(42).get('value'), 55);
+    });
+    test('Reset unbind', function () {
+        var changed = false,
+            c = new openerp.web.list.Collection([ {id: 1, value: 5} ]);
+        c.bind('change', function () { changed = true; });
+        var record = c.get(1);
+        c.reset();
+        record.set('value', 42);
+        ok(!changed, 'removed records should not trigger events in their ' +
+                     'parent collection');
     });
 
     test('Events propagation', function () {
