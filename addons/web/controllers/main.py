@@ -37,6 +37,9 @@ def concat_xml(file_list):
     concat: concatenation of file content
     timestamp: max(os.path.getmtime of file_list)
     """
+    if not file_list:
+        return '', None
+
     root = None
     files_timestamp = 0
     for fname in file_list:
@@ -56,12 +59,15 @@ def concat_xml(file_list):
     return ElementTree.tostring(root, 'utf-8'), files_timestamp
 
 
-def concat_files(file_list, reader=None):
+def concat_files(file_list, reader=None, intersperse=""):
     """ Concatenate file content
     return (concat,timestamp)
     concat: concatenation of file content, read by `reader`
     timestamp: max(os.path.getmtime of file_list)
     """
+    if not file_list:
+        return '', None
+
     if reader is None:
         def reader(f):
             with open(f) as fp:
@@ -75,7 +81,7 @@ def concat_files(file_list, reader=None):
             files_timestamp = ftime
 
         files_content.append(reader(fname))
-    files_concat = "".join(files_content)
+    files_concat = intersperse.join(files_content)
     return files_concat,files_timestamp
 
 html_template = """<!DOCTYPE html>
@@ -180,7 +186,7 @@ class WebClient(openerpweb.Controller):
     @openerpweb.httprequest
     def js(self, req, mods=None):
         files = [f[0] for f in self.manifest_glob(req, mods, 'js')]
-        content,timestamp = concat_files(files)
+        content, timestamp = concat_files(files, intersperse=';')
         # TODO use timestamp to set Last mofified date and E-tag
         return req.make_response(content, [('Content-Type', 'application/javascript')])
 
@@ -431,7 +437,7 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def modules(self, req):
         # Compute available candidates module
-        loadable = openerpweb.addons_manifest.iterkeys()
+        loadable = openerpweb.addons_manifest
         loaded = req.config.server_wide_modules
         candidates = [mod for mod in loadable if mod not in loaded]
 

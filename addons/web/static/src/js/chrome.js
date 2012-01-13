@@ -1124,8 +1124,11 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.$element.children().remove();
     },
     do_reload: function() {
-        return this.session.session_reload().pipe(
-            $.proxy(this.menu, 'do_reload'));
+        var self = this;
+        return this.session.session_reload().pipe(function () {
+            openerp.connection.load_modules(true).pipe(
+                self.menu.proxy('do_reload')); });
+
     },
     do_notify: function() {
         var n = this.notification;
