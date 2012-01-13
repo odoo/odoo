@@ -676,27 +676,31 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
     /**
      * Load additional web addons of that instance and init them
+     *
+     * @param {Boolean} [no_session_valid_signal=false] prevents load_module from triggering ``on_session_valid``.
      */
-    load_modules: function() {
+    load_modules: function(no_session_valid_signal) {
         var self = this;
         return this.rpc('/web/session/modules', {}).pipe(function(result) {
-            self.module_list = result;
             var lang = self.user_context.lang;
             var params = { mods: ["web"].concat(result), lang: lang};
-            var modules = self.module_list.join(',');
+            var to_load = _.difference(result, self.module_list).join(',');
+            self.module_list = result;
             return $.when(
-                self.rpc('/web/webclient/csslist', {mods: modules}, self.do_load_css),
-                self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb),
+                self.rpc('/web/webclient/csslist', {mods: to_load}, self.do_load_css),
+                self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
                 self.rpc('/web/webclient/translations', params).pipe(function(trans) {
                     openerp.web._t.database.set_bundle(trans);
                     var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
-                    return self.rpc('/web/webclient/jslist', {mods: modules}).pipe(function(files) {
+                    return self.rpc('/web/webclient/jslist', {mods: to_load}).pipe(function(files) {
                         return self.do_load_js(file_list.concat(files)); 
                     });
                 })
             ).then(function() {
                 self.on_modules_loaded();
-                self.on_session_valid();
+                if (!no_session_valid_signal) {
+                    self.on_session_valid();
+                }
             });
         });
     },
