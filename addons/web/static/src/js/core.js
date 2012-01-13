@@ -738,6 +738,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         _.each(files, function(file) {
             self.qweb_mutex.exec(function() {
                 return self.rpc('/web/proxy/load', {path: file}).pipe(function(xml) {
+                    if (!xml) { return; }
                     openerp.web.qweb.add_template(_.str.trim(xml));
                 });
             });

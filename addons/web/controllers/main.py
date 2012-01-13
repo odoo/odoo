@@ -37,6 +37,9 @@ def concat_xml(file_list):
     concat: concatenation of file content
     timestamp: max(os.path.getmtime of file_list)
     """
+    if not file_list:
+        return '', None
+
     root = None
     files_timestamp = 0
     for fname in file_list:
