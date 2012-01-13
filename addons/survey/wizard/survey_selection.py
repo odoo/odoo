@@ -22,12 +22,13 @@
 from osv import osv
 from osv import fields
 from tools.translate import _
+from lxml import etree
 
 class survey_name_wiz(osv.osv_memory):
     _name = 'survey.name.wiz'
 
     _columns = {
-        'survey_id': fields.many2one('survey', 'Survey', required=True, ondelete='cascade'),
+        'survey_id': fields.many2one('survey', 'Survey', required=True, ondelete='cascade' ,domain= [('state', '=', 'open')]),
         'page_no': fields.integer('Page Number'),
         'note': fields.text("Description"),
         'page': fields.char('Page Position',size = 12),
@@ -43,6 +44,27 @@ class survey_name_wiz(osv.osv_memory):
         'survey_id': lambda self,cr,uid,context:context.get('survey_id',False),
         'store_ans': '{}' #Setting the default pattern as '{}' as the field is of type text. The field always gets the value in dict format
     }
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        survey_obj = self.pool.get('survey')
+        lines_ids=[]
+        res = super(survey_name_wiz, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
+        survey_user_group_id = self.pool.get('res.groups').search(cr, uid, [('name', '=', 'Survey / User')])
+        group_id = self.pool.get('res.groups').search(cr, uid, [('name', 'in', ('Tools / Manager','Tools / User','Survey / User'))])
+        user_obj = self.pool.get('res.users')
+        user_rec = user_obj.read(cr, uid, uid)
+        if uid!=1:
+            if survey_user_group_id:
+                if survey_user_group_id == user_rec['groups_id']:
+                    lines_ids=survey_obj.search(cr, uid,  [ ('invited_user_ids','in',uid)], context=context)
+                    domain = '[("id", "in", '+ str(lines_ids)+')]'
+                    doc = etree.XML(res['arch'])
+                    nodes = doc.xpath("//field[@name='survey_id']")
+                    for node in nodes:
+                        node.set('domain', domain)
+                        res['arch'] = etree.tostring(doc)
+        return res
+
 
     def action_next(self, cr, uid, ids, context=None):
         """
@@ -87,5 +109,7 @@ class survey_name_wiz(osv.osv_memory):
             return {}
         notes = self.pool.get('survey').read(cr, uid, survey_id, ['note'])['note']
         return {'value': {'note': notes}}
+    
+survey_name_wiz()    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
