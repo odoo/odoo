@@ -1439,8 +1439,8 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
             }
         }
     },
-    focus: function($element) {
-        this._super($element || this.$input);
+    focus: function() {
+        this.$input.focus();
     },
     parse_client: function(v) {
         return openerp.web.parse_value(v, {"widget": this.type_of_date});
