@@ -334,7 +334,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                 and not value.jsonp_requests
                 and value._creation_time + (60*5) < time.time()  # FIXME do not use a fixed value
             ):
-                _logger.info('remove session %s', key)
+                _logger.debug('remove session %s', key)
                 del request.session[key]
 
         with session_lock:
