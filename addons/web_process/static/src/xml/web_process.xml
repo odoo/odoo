@@ -107,37 +107,6 @@
             <tr t-if="process_id">
                 <td>
                     <button class="oe_button" id="edit_process">Edit Process</button>
-                    <button class="oe_button toggle_fields">
-                        <span>Show Fields</span>
-                        <span>Hide Fields</span>
-                    </button>
-                </td>
-            </tr>
-            <tr t-if="process_id">
-                <td class="process_fields">
-                    <table>
-                        <t t-foreach="process_fields" t-as="field">
-                            <tr>
-                                <td>
-                                    <t t-esc="field"/>
-                                </td>
-                                <td>
-                                    <table>
-                                        <t t-foreach="field_value" t-as="fld">
-                                            <tr>
-                                                <td>
-                                                    <t t-esc="fld"/>:
-                                                </td>
-                                                <td>
-                                                    <t t-esc="fld_value"/>
-                                                </td>
-                                            </tr>
-                                        </t>
-                                    </table>
-                                </td>
-                            </tr>
-                        </t>
-                    </table>
                 </td>
             </tr>
         </table>

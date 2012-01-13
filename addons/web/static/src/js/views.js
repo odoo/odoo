@@ -551,6 +551,29 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                 var dialog = new session.web.Dialog(this, { title: "Fields View Get", width: '95%' }).open();
                 $('<pre>').text(session.web.json_node_to_xml(current_view.fields_view.arch, true)).appendTo(dialog.$element);
                 break;
+            case 'fields':
+                this.dataset.call_and_eval(
+                        'fields_get', [false, {}], null, 1).then(function (fields) {
+                    var $root = $('<dl>');
+                    _(fields).each(function (attributes, name) {
+                        $root.append($('<dt>').append($('<h4>').text(name)));
+                        var $attrs = $('<dl>').appendTo(
+                                $('<dd>').appendTo($root));
+                        _(attributes).each(function (def, name) {
+                            if (def instanceof Object) {
+                                def = JSON.stringify(def);
+                            }
+                            $attrs
+                                .append($('<dt>').text(name))
+                                .append($('<dd style="white-space: pre-wrap;">').text(def));
+                        });
+                    });
+                    new session.web.Dialog(self, {
+                        title: _.str.sprintf(_t("Model %s fields"),
+                                             self.dataset.model),
+                        width: '95%'}, $root).open();
+                });
+                break;
             case 'customize_object':
                 this.rpc('/web/dataset/search_read', {
                     model: 'ir.model',
