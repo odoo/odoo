@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import time
-import unittest2
 import xmlrpclib
 
 import openerp

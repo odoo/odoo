@@ -37,8 +37,7 @@ __all__ = ['db_connect', 'close_db']
 
 from threading import currentThread
 import logging
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_SERIALIZABLE,\
-    ISOLATION_LEVEL_REPEATABLE_READ
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.psycopg1 import cursor as psycopg1cursor
 from psycopg2.pool import PoolError
 
@@ -421,7 +420,7 @@ class ConnectionPool(object):
 
         try:
             result = psycopg2.connect(dsn=dsn, connection_factory=PsycoConnection)
-        except psycopg2.Error, e:
+        except psycopg2.Error:
             self.__logger.exception('Connection to the database failed')
             raise
         self._connections.append((result, True))

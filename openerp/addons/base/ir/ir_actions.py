@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import ast
 import copy
 import logging
 import os
@@ -31,7 +30,7 @@ import netsvc
 from osv import fields,osv
 from report.report_sxw import report_sxw, report_rml
 from tools.config import config
-from tools.safe_eval import safe_eval as eval
+from tools.safe_eval import safe_eval as eval, literal_eval
 from tools.translate import _
 from socket import gethostname
 
@@ -920,7 +919,7 @@ class act_client(osv.osv):
 
     def _get_params(self, cr, uid, ids, field_name, arg, context):
         return dict([
-            ((record.id, ast.literal_eval(record.params_store))
+            ((record.id, literal_eval(record.params_store))
              if record.params_store else (record.id, False))
             for record in self.browse(cr, uid, ids, context=context)
         ])

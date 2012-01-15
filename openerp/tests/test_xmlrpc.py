@@ -6,7 +6,6 @@
 #      OPENERP_DATABASE=yy nosetests tests/test_xmlrpc.py
 #    > OPENERP_ADDONS_PATH='../../../addons/trunk' OPENERP_PORT=8069 \
 #      OPENERP_DATABASE=yy PYTHONPATH=../:. unit2 test_xmlrpc
-import os
 import time
 import unittest2
 import xmlrpclib
