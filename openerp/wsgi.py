@@ -152,7 +152,7 @@ def wsgi_xmlrpc_1(environ, start_response):
 
         path = environ['PATH_INFO'][len(XML_RPC_PATH_1):]
         if path.startswith('/'): path = path[1:]
-        if path.endswith('/'): p = path[:-1]
+        if path.endswith('/'): path = path[:-1]
         path = path.split('/')
 
         # All routes are hard-coded.
@@ -196,7 +196,7 @@ def wsgi_xmlrpc(environ, start_response):
 
         path = environ['PATH_INFO'][len(XML_RPC_PATH):]
         if path.startswith('/'): path = path[1:]
-        if path.endswith('/'): p = path[:-1]
+        if path.endswith('/'): path = path[:-1]
         path = path.split('/')
 
         # All routes are hard-coded.
