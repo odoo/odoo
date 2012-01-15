@@ -46,7 +46,7 @@ import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.translate import _
 from openerp.tools import float_round, float_repr
-import json
+import simplejson as json
 
 def _symbol_set(symb):
     if symb == None or symb == False:
