@@ -593,10 +593,6 @@ class account_voucher(osv.osv):
         account_move_lines = move_line_pool.browse(cr, uid, ids, context=context)
 
         for line in account_move_lines:
-            if line.credit and line.reconcile_partial_id and ttype == 'receipt':
-                continue
-            if line.debit and line.reconcile_partial_id and ttype == 'payment':
-                continue
             if invoice_id:
                 if line.invoice.id == invoice_id:
                     #if the invoice linked to the voucher line is equal to the invoice_id in context
@@ -622,10 +618,6 @@ class account_voucher(osv.osv):
 
         #voucher line creation
         for line in account_move_lines:
-            if line.credit and line.reconcile_partial_id and ttype == 'receipt':
-                continue
-            if line.debit and line.reconcile_partial_id and ttype == 'payment':
-                continue
             if line.currency_id and currency_id==line.currency_id.id:
                 amount_original = abs(line.amount_currency)
                 amount_unreconciled = abs(line.amount_residual_currency)
@@ -1051,7 +1043,7 @@ class account_voucher(osv.osv):
                 voucher_currency = voucher_brw.currency_id and voucher_brw.currency_id.id or voucher_brw.journal_id.company_id.currency_id.id
                 # We want to set it on the account move line as soon as the original line had a foreign currency
                 if line.move_line_id.currency_id and line.move_line_id.currency_id.id != company_currency:
-                    # we compute the amount in that foreign currency. 
+                    # we compute the amount in that foreign currency.
                     if line.move_line_id.currency_id.id == current_currency:
                         # if the voucher and the voucher line share the same currency, there is no computation to do
                         sign = (move_line['debit'] - move_line['credit']) < 0 and -1 or 1
@@ -1270,7 +1262,7 @@ class account_voucher_line(osv.osv):
 
     def _currency_id(self, cr, uid, ids, name, args, context=None):
         '''
-        This function returns the currency id of a voucher line. It's either the currency of the 
+        This function returns the currency id of a voucher line. It's either the currency of the
         associated move line (if any) or the currency of the voucher or the company currency.
         '''
         res = {}
