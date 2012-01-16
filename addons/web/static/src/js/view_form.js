@@ -713,9 +713,11 @@ openerp.web.form.compute_domain = function(expr, fields) {
                 stack.push(field_value >= val);
                 break;
             case 'in':
+                if (!_.isArray(val)) val = [val];
                 stack.push(_(val).contains(field_value));
                 break;
             case 'not in':
+                if (!_.isArray(val)) val = [val];
                 stack.push(!_(val).contains(field_value));
                 break;
             default:
