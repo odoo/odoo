@@ -389,6 +389,11 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         // unconditionally nuke tooltips before switching view
         $(".dhx_tooltip").remove('div');
         id = id[this.abscissa];
+        if(this.fields[this.abscissa].type == "selection"){
+            id = _.detect(this.fields[this.abscissa].selection,function(select_value){
+                return _.include(select_value, id);
+            });
+        }
         if (typeof id == 'object'){
             id = id[0];
         }
