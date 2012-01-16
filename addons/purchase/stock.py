@@ -72,8 +72,7 @@ class stock_picking(osv.osv):
             invoice_vals['address_contact_id'], invoice_vals['address_invoice_id'] = \
                     self.pool.get('res.partner').address_get(cr, uid, [partner.id],
                             ['contact', 'invoice']).values()
-            if picking.purchase_id.fiscal_position:
-                invoice_vals['fiscal_position'] = picking.purchase_id.fiscal_position.id
+            invoice_vals['fiscal_position'] = picking.purchase_id.fiscal_position.id
         return invoice_vals
 
     def get_currency_id(self, cursor, user, picking):

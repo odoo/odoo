@@ -66,12 +66,9 @@ class stock_picking(osv.osv):
         if picking.sale_id:
             invoice_vals['address_contact_id'] = picking.sale_id.partner_order_id.id
             invoice_vals['address_invoice_id'] = picking.sale_id.partner_invoice_id.id
-            if picking.sale_id.fiscal_position:
-                invoice_vals['fiscal_position'] = picking.sale_id.fiscal_position.id
-            if picking.sale_id.payment_term:
-                invoice_vals['payment_term'] = picking.sale_id.payment_term.id
-            if picking.sale_id.user_id:
-                invoice_vals['user_id'] = picking.sale_id.user_id.id
+            invoice_vals['fiscal_position'] = picking.sale_id.fiscal_position.id
+            invoice_vals['payment_term'] = picking.sale_id.payment_term.id
+            invoice_vals['user_id'] = picking.sale_id.user_id.id
         return invoice_vals
 
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
