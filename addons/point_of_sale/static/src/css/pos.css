@@ -76,7 +76,7 @@
     background: -moz-linear-gradient(#b2b3d7, #7f82ac);
     background: -webkit-gradient(linear, left top, left bottom, from(#b2b3d7), to(#7f82ac));
 }
-.point-of-sale #branding, .point-of-sale #steps, .point-of-sale #rightheader {
+.point-of-sale #branding, .point-of-sale #rightheader {
     float: left;
     overflow: hidden;
     height: 35px;
@@ -84,48 +84,17 @@
 }
 .point-of-sale #rightheader {
     float: none;
+    margin-left: 440px;
 }
 .point-of-sale #branding {
     border-right: 1px solid #373737;
-    text-align: center;
+    text-align: left;
+    width: 419px;
 }
 .point-of-sale #branding img {
     height: 32px;
     width: 116px;
-}
-.point-of-sale #steps {
-    padding: 10px 17px;
-    border-right: solid 1px #3b3b3b;
-    vertical-align: top;
-}
-.point-of-sale #steps label {
-    width: 80px;
-    color: #A5A5A5;
-    font-weight: bold;
-    border-color: #454545;
-    background-color: #454545;
-    background-image: none;
-    border-bottom: solid 1px #5c5c5c;
-    border-top: solid 1px #373737;
-    vertical-align: top;
-}
-.point-of-sale #steps label:first-child {
-    border-left: solid 1px #373737;
-}
-.point-of-sale #steps label:last-child {
-    border-right: solid 1px #373737;
-}
-.point-of-sale #steps span {
-    padding: 2px 6px;
-}
-.point-of-sale #steps img {
-    height: 32px;
-}
-.point-of-sale #steps .ui-button, .point-of-sale #steps .ui-button-text-only {
-    padding-top: 4px;
-    height: 26px;
-    margin: 0 -4px;
-}
+} 
 .point-of-sale #neworder-button {
     width: 32px;
     padding: 4px 10px;
@@ -490,6 +459,10 @@
 
 .receipt-buttons {
 	white-space: nowrap;
+}
+
+.pos-payment-buttons {
+    white-space: nowrap;
 }
 
 @media print {

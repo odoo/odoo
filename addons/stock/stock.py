@@ -74,35 +74,22 @@ class stock_location(osv.osv):
     _order = 'parent_left'
 
     def name_get(self, cr, uid, ids, context=None):
-        res = []
-        if context is None:
-            context = {}
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['name','location_id'], context=context)
-        for record in reads:
-            name = record['name']
-            if context.get('full',False):
-                if record['location_id']:
-                    name = record['location_id'][1] + ' / ' + name
-                res.append((record['id'], name))
-            else:
-                res.append((record['id'], name))
-        return res
+        # always return the full hierarchical name
+        res = self._complete_name(cr, uid, ids, 'complete_name', None, context=context)
+        return res.items()
 
     def _complete_name(self, cr, uid, ids, name, args, context=None):
         """ Forms complete name of location from parent location to child location.
         @return: Dictionary of values
         """
-        def _get_one_full_name(location, level=4):
-            if location.location_id:
-                parent_path = _get_one_full_name(location.location_id, level-1) + "/"
-            else:
-                parent_path = ''
-            return parent_path + location.name
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = _get_one_full_name(m)
+            names = [m.name]
+            parent = m.location_id
+            while parent:
+                names.append(parent.name)
+                parent = parent.location_id
+            res[m.id] = ' / '.join(reversed(names))
         return res
 
 
@@ -529,9 +516,8 @@ class stock_tracking(osv.osv):
         @param context: A standard dictionary
         @return: A dictionary of values
         """
-        value={}
-        value=self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
-        return value
+        return self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
+
 stock_tracking()
 
 #----------------------------------------------------------
@@ -2612,6 +2598,13 @@ class stock_inventory(osv.osv):
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c)
     }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.update({'move_ids': [], 'date_done': False})
+        return super(stock_inventory, self).copy(cr, uid, id, default, context=context)
 
     def _inventory_line_hook(self, cr, uid, inventory_line, move_vals):
         """ Creates a stock move from an inventory line

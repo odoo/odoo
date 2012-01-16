@@ -176,5 +176,5 @@ openerp.edi.edi_import = function (url) {
     });
 }
 
-}
+};
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
