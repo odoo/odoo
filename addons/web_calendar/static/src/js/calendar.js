@@ -300,7 +300,6 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.dataset.index = null;
         self.creating_event_id = event_id;
         this.form_dialog.form.do_show().then(function() {
-            form.show_invalid = false;
             _.each(['date_start', 'date_delay', 'date_stop'], function(field) {
                 var field_name = self[field];
                 if (field_name && form.fields[field_name]) {
@@ -313,7 +312,6 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
                     });
                 }
             });
-            form.show_invalid = true;
             self.form_dialog.open();
         });
     },

@@ -40,7 +40,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.fields = {};
         this.fields_order = [];
         this.datarecord = {};
-        this.show_invalid = true;
         this.default_focus_field = null;
         this.default_focus_button = null;
         this.registry = openerp.web.form.widgets;
@@ -179,7 +178,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
         return $.when.apply(null, set_values).pipe(function() {
             if (!record.id) {
-                self.show_invalid = false;
                 // New record: Second pass in order to trigger the onchanges
                 // respecting the fields order defined in the view
                 _.each(self.fields_order, function(field_name) {
@@ -192,7 +190,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
             self.on_form_changed();
             self.is_initialized.resolve();
-            self.show_invalid = true;
             self.do_update_pager(record.id == null);
             if (self.sidebar) {
                 self.sidebar.attachments.do_update();
@@ -429,7 +426,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 f = self.fields[f];
                 if (!f.is_valid()) {
                     form_invalid = true;
-                    f.update_dom();
+                    f.update_dom(true);
                     if (!first_invalid_field) {
                         first_invalid_field = f;
                     }
@@ -1116,7 +1113,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
             });
     },
     update_dom: function() {
-        this._super();
+        this._super.apply(this, arguments);
         this.check_disable();
     },
     check_disable: function() {
@@ -1238,7 +1235,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
     get_on_change_value: function() {
         return this.get_value();
     },
-    update_dom: function() {
+    update_dom: function(show_invalid) {
         this._super.apply(this, arguments);
         if (this.field.translate) {
             this.$element.find('.oe_field_translate').toggle(!!this.view.datarecord.id);
@@ -1246,7 +1243,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         if (!this.disable_utility_classes) {
             this.$element.toggleClass('disabled', this.readonly);
             this.$element.toggleClass('required', this.required);
-            if (this.view.show_invalid) {
+            if (show_invalid) {
                 this.$element.toggleClass('invalid', !this.is_valid());
             }
         }
@@ -1259,7 +1256,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
             this.view.do_onchange(this);
             this.view.on_form_changed();
         } else {
-            this.update_dom();
+            this.update_dom(true);
         }
     },
     validate: function() {
