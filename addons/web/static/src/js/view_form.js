@@ -209,6 +209,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         for (var w in this.widgets) {
             w = this.widgets[w];
             w.process_modifiers();
+            if (w.field) {
+                w.validate();
+            }
             w.update_dom();
         }
     },
