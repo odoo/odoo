@@ -87,10 +87,10 @@ class l10n_be_vat_declaration(osv.osv_memory):
         account_period = obj_acc_period.browse(cr, uid, data['period_id'][0], context=context)
 
         send_ref = str(obj_company.partner_id.id) + str(account_period.date_start[5:7]) + str(account_period.date_stop[:4])
-        data_of_file = '<?xml version="1.0"?>\n<VATSENDING xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MultiDeclarationTVA-NoSignature-16.xml">'
-        data_of_file +='\n\t<DECLARER>\n\t\t<VATNUMBER>'+str(vat_no)+'</VATNUMBER>\n\t\t<NAME>'+ obj_company.name +'</NAME>\n\t\t<ADDRESS>'+address+'</ADDRESS>'
-        data_of_file +='\n\t\t<POSTCODE>'+post_code+'</POSTCODE>\n\t\t<CITY>'+city+'</CITY>\n\t\t<COUNTRY>'+country_code+'</COUNTRY>\n\t\t<SENDINGREFERENCE>'+send_ref+'</SENDINGREFERENCE>\n\t</DECLARER>'
-        data_of_file +='\n\t<VATRECORD>\n\t\t<RECNUM>1</RECNUM>\n\t\t<VATNUMBER>'+((vat_no and str(vat_no[2:])) or '')+'</VATNUMBER>\n\t\t<DPERIODE>\n\t\t\t'
+        data_of_file = '<?xml version="1.0"?>\n<VATConsignment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MultiDeclarationTVA-NoSignature-16.xml">'
+        data_of_file +='\n\t<VATDeclaration>' 
+        data_of_file +='\n\t\t<Declarant>\n\t\t\t<VATNUMBER xmlns="http://www.minfin.fgov.be/InputCommon">'+str(vat_no)+'</VATNUMBER>\n\t\t</Declarant>'
+        data_of_file +='\n\t\t<Period>\n\t\t'
 
         starting_month = account_period.date_start[5:7]
         ending_month = account_period.date_stop[5:7]
@@ -98,13 +98,12 @@ class l10n_be_vat_declaration(osv.osv_memory):
             #starting month and ending month of selected period are not the same
             #it means that the accounting isn't based on periods of 1 month but on quarters
             quarter = str(((int(starting_month) - 1) / 3) + 1)
-            data_of_file += '<QUARTER>'+quarter+'</QUARTER>\n\t\t\t'
+            data_of_file += '<Quarter>'+quarter+'</Quarter>\n\t\t\t'
         else:
-            data_of_file += '<MONTH>'+starting_month+'</MONTH>\n\t\t\t'
-        data_of_file += '<YEAR>' + str(account_period.date_stop[:4]) + '</YEAR>\n\t\t</DPERIODE>\n'
-        data_of_file += '\t\t<ASK RESTITUTION="' + (data['ask_restitution'] and 'YES' or 'NO') + '" PAYMENT="' + (data['ask_payment'] and 'YES' or 'NO') +'"/>'
-        data_of_file += '\n\t\t<ClientListingNihil>'+ (data['client_nihil'] and 'YES' or 'NO') +'</ClientListingNihil>'
-        data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
+            data_of_file += '\t<Month>'+starting_month+'</Month>\n\t\t\t'
+        data_of_file += '<Year>' + str(account_period.date_stop[:4]) + '</Year>\n\t\t</Period>\n'
+        data_of_file +='\t\t<Data>\t'
+        data_of_file +='\n\t\t\t<Amount>\t'
 
         cases_list = []
         for item in tax_info:
@@ -121,9 +120,13 @@ class l10n_be_vat_declaration(osv.osv_memory):
                     cases_list.append(item)
         cases_list.sort()
         for item in cases_list:
-            data_of_file +='\n\t\t\t\t<D'+str(int(item['code'])) +'>' + str(abs(int(round(item['sum_period']*100)))) +  '</D'+str(int(item['code'])) +'>'
-
-        data_of_file += '\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
+            data_of_file +='\n\t\t\t\t<Amount GridNumber="'+str(int(item['code'])) +'">' + str(abs(int(round(item['sum_period']*100)))) +  '</Amount''>'
+            
+        data_of_file +='\n\t\t\t</Amount>\t'
+        data_of_file += '\n\t\t</Data>'
+        data_of_file += '\n\t\t<ClientListingNihil>'+ (data['client_nihil'] and 'YES' or 'NO') +'</ClientListingNihil>'
+        data_of_file += '\n\t\t<ASK Restitution="' + (data['ask_restitution'] and 'YES' or 'NO') + '" Payment="' + (data['ask_payment'] and 'YES' or 'NO') +'"/>'
+        data_of_file += '\n\t</VATDeclaration> \n</VATConsignment>'
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_vat_save')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context['file_save'] = data_of_file
