@@ -44,41 +44,61 @@
     name: !eval time.strftime('%Y-%m-%d 09:59:25')
     action: 'sign_in'
 -
+  In order to check that first attendance must be Sign In.
+-
+  !python {model: hr.attendance}: |
+    import time
+    try:
+      self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 09:59:25'), 'action': 'sign_out'}, None)
+    except Exception, e:
+      assert e[0]=='ValidateError', e
+-
+  First of all, Employee Sign's In.
+-
+  !record {model: hr.attendance, id: hr_attendance_0}:
+    employee_id: hr.employee_niv
+    name: !eval time.strftime('%Y-%m-%d 09:59:25')
+    action: 'sign_in'
+-
   Now Employee is going to Sign In prior to First Sign In.
 -
    !python {model: hr.attendance}: |
+     import time
      try:
-       self.create(cr, uid, {employee_id: hr.employee_fp, name: time.strftime('%Y-%m-%d 08:59:25'), action: 'sign_in'}, None)
+       self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 08:59:25'), 'action': 'sign_in'}, None)
      except Exception, e:
-       assert e, 'Sign In (resp. Sign Out) must follow Sign Out (resp. Sign In)'
+       assert e[0]=='ValidateError', e
 -
   After that Employee is going to Sign In after First Sign In.
 -
    !python {model: hr.attendance}: |
+     import time
      try:
-       self.create(cr, uid, {employee_id: hr.employee_fp, name: time.strftime('%Y-%m-%d 10:59:25'), action: 'sign_in'}, None)
+       self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 10:59:25'), 'action': 'sign_in'}, None)
      except Exception, e:
-       assert e, 'Sign In (resp. Sign Out) must follow Sign Out (resp. Sign In)'
+       assert e[0]=='ValidateError', e
 -
   After two hours, Employee Sign's Out.
 -
-  !record {model: hr.attendance, id: hr_attendance_4}:
-    employee_id: hr.employee_fp
+  !record {model: hr.attendance, id: hr_attendance_1}:
+    employee_id: hr.employee_niv
     name: !eval time.strftime('%Y-%m-%d 11:59:25')
     action: 'sign_out'
 -
   Now Employee is going to Sign Out prior to First Sign Out.
 -
    !python {model: hr.attendance}: |
+     import time
      try:
-       self.create(cr, uid, {employee_id: hr.employee_fp, name: time.strftime('%Y-%m-%d 10:59:25'), action: 'sign_out'}, None)
+       self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 10:59:25'), 'action': 'sign_out'}, None)
      except Exception, e:
-       assert e, 'Sign In (resp. Sign Out) must follow Sign Out (resp. Sign In)'
+       assert e[0]=='ValidateError', e
 -
   After that Employee is going to Sign Out After First Sign Out.
 -
    !python {model: hr.attendance}: |
+     import time
      try:
-       self.create(cr, uid, {employee_id: hr.employee_fp, name: time.strftime('%Y-%m-%d 12:59:25'), action: 'sign_out'}, None)
+       self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 12:59:25'), 'action': 'sign_out'}, None)
      except Exception, e:
-       assert e, 'Sign In (resp. Sign Out) must follow Sign Out (resp. Sign In)'
+       assert e[0]=='ValidateError', e
