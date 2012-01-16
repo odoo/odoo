@@ -325,15 +325,19 @@
                         <page string="Registration">
                             <group colspan="2" col="2">
                             <separator string="partner" colspan="4"/>
-                            <field name="partner_id_address" attrs="{'readonly':[('state','!=', 'draft')]}" required="1" on_change="onchange_partner_id(partner_id_address,event_id)" />
-
-
+                            <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id_address,event_id)" />
+                            <field name="city"/>
+                            <field name="street"/>
+                            <field name="email"/>
+                            <field name="mobile"/>
+                            <field name="phone"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Registration Cost" colspan="4"/>
-                                <field name="nb_register" invisible="1"/>
+                                <field name="nb_register"/>
                                 <field name="unit_price"/>
-                                <field name="price_subtotal" invisible="1"/>
+                                <field name="price_subtotal"/>
+                                <field name="invoice_id"/>
                             </group>
 
                             <separator string="" colspan="4"/>
@@ -343,11 +347,6 @@
                                 <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                                 <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                             </group>
-                        </page>
-                        <page string='invoice'>
-                                <field name="event_product" attrs="{'required':[('tobe_invoiced','=',True)]}"/>
-                                <field name="partner_invoice_id" attrs="{'required':[('tobe_invoiced','=',True)]}" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
-                                <field name="invoice_id"/>
                         </page>
                         <page string="Extra Info">
 
@@ -385,9 +384,7 @@
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" type="action"/>
                            </page>
-                           <page string="Note">
-                                <field name="description" colspan="4" nolabel="1"/>
-                           </page>
+
                     </notebook>
                 </form>
             </field>

@@ -45,6 +45,7 @@ class event_event(osv.osv):
     _name = 'event.event'
     _description = __doc__
     _order = 'date_begin'
+    
 
     def copy(self, cr, uid, id, default=None, context=None):
         """ Copy record of Given id
@@ -196,7 +197,7 @@ class event_event(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Origin', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
+        'name': fields.char('name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
         'parent_id': fields.many2one('event.event', 'Parent Event', readonly=False, states={'done': [('readonly', True)]}),
         'section_id': fields.many2one('crm.case.section', 'Sale Team', readonly=False, states={'done': [('readonly', True)]}),
@@ -279,7 +280,8 @@ class event_registration(osv.osv):
     """Event Registration"""
     _name= 'event.registration'
     _description = __doc__
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread','res.partner.address']
+
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('res.currency')
@@ -541,6 +543,7 @@ class event_registration(osv.osv):
         """
         Send email to user with email_template
 """
+        mail_message = self.pool.get('email.template')
         for registration in self.browse(cr, uid, ids, context=context):
             subject =  registration.event_id.email_confirmation_id.subject
             reply_to =  registration.event_id.email_confirmation_id.reply_to
@@ -548,7 +551,7 @@ class event_registration(osv.osv):
             email_to =registration.event_id.email_confirmation_id.email_to
             body = registration.event_id.email_confirmation_id.body_html        
             if subject or body:
-                mail_message.schedule_with_attach(cr, uid, src, email_to, subject, body, model='event.registration', email_cc=email_cc, res_id=registration.id)
+                mail_message.schedule_with_attach(cr, uid, reply_to, email_to, subject, body, model='event.registration', email_cc=email_cc, res_id=registration.id)
 
         return True
 
