@@ -1,7 +1,6 @@
 import common
 import controllers
 import logging
-import optparse
 
 _logger = logging.getLogger(__name__)
 

@@ -8,7 +8,7 @@ import binascii
 import hashlib
 import simplejson.encoder
 
-__all__ = ['Domain', 'Context', 'NonLiteralEncoder, non_literal_decoder', 'CompoundDomain', 'CompoundContext']
+__all__ = ['Domain', 'Context', 'NonLiteralEncoder', 'non_literal_decoder', 'CompoundDomain', 'CompoundContext']
 
 #: 48 bits should be sufficient to have almost no chance of collision
 #: with a million hashes, according to hg@67081329d49a
