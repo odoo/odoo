@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2012-01-07 11:44+0000\n"
+"PO-Revision-Date: 2012-01-11 11:19+0000\n"
 "Last-Translator: Fekete Mihai <mihai.fekete@etotalpc.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-08 05:31+0000\n"
+"X-Launchpad-Export-Date: 2012-01-12 06:09+0000\n"
 "X-Generator: Launchpad (build 14640)\n"
 
 #. module: membership
@@ -62,7 +62,7 @@ msgstr "Martie"
 #. module: membership
 #: model:process.node,note:membership.process_node_setassociation0
 msgid "Set an associate member of partner."
-msgstr "Setează un membru asociat al partenerului"
+msgstr "Setează un membru asociat al partenerului."
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetopaid0
@@ -74,7 +74,7 @@ msgstr "Factura va fi plătită"
 #: view:report.membership:0
 #: field:report.membership,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Companie"
 
 #. module: membership
 #: field:product.product,membership_date_to:0
@@ -89,22 +89,22 @@ msgstr "În aşteptarea facturării"
 #. module: membership
 #: help:report.membership,date_to:0
 msgid "End membership date"
-msgstr ""
+msgstr "Data de sfarsit a calitătii de membru"
 
 #. module: membership
 #: view:res.partner:0
 msgid "Suppliers"
-msgstr ""
+msgstr "Furnizori"
 
 #. module: membership
 #: view:res.partner:0
 msgid "All Members"
-msgstr ""
+msgstr "Toti membrii"
 
 #. module: membership
 #: field:res.partner,membership_stop:0
 msgid "Stop membership date"
-msgstr "Data de încheiere a apartenenţei"
+msgstr "Data de încheiere a calitătii de membru"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -114,7 +114,7 @@ msgstr "Produs la membru"
 #. module: membership
 #: view:res.partner:0
 msgid "Join Membership"
-msgstr ""
+msgstr "Aderare ca membru"
 
 #. module: membership
 #: field:res.partner,associate_member:0
@@ -129,7 +129,7 @@ msgstr "Membrul este asociat"
 #. module: membership
 #: field:report.membership,tot_pending:0
 msgid "Pending Amount"
-msgstr ""
+msgstr "Sumă in asteptare"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_associationpartner0
@@ -139,18 +139,18 @@ msgstr "Partener asociat"
 #. module: membership
 #: field:report.membership,num_invoiced:0
 msgid "# Invoiced"
-msgstr ""
+msgstr "# Facturat"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
 #: model:ir.ui.menu,name:membership.menu_report_membership
 msgid "Members Analysis"
-msgstr ""
+msgstr "Analiza Membrilor"
 
 #. module: membership
 #: view:res.partner:0
 msgid "End Membership Date"
-msgstr ""
+msgstr "Data de sfarsit a calitătii de membru"
 
 #. module: membership
 #: field:product.product,membership_date_from:0
@@ -161,7 +161,7 @@ msgstr "Data de la"
 #: code:addons/membership/membership.py:414
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
-msgstr ""
+msgstr "Partenerul nu are o adresă pentru a face factura."
 
 #. module: membership
 #: model:ir.model,name:membership.model_res_partner
@@ -187,7 +187,7 @@ msgstr "De la"
 #. module: membership
 #: constraint:membership.membership_line:0
 msgid "Error, this membership product is out of date"
-msgstr "Eroare, această apartenenţă este expirată"
+msgstr "Eroare, acest produs de apartenentă este expirat"
 
 #. module: membership
 #: help:res.partner,membership_state:0
@@ -206,29 +206,42 @@ msgid ""
 "                    -Paid Member: A member who has paid the membership "
 "amount."
 msgstr ""
+"Indică starea calitătii de membru.\n"
+"                    - Non-membru: Un membru care nu a aplicat pentru vreo "
+"apartenentă ca membru.\n"
+"                    - Membru revocat: Un membru care si-a anulat apartenenta "
+"ca membru.\n"
+"                    - Membru vechi: Un membru al cărui dată de apartenentă a "
+"expirat.\n"
+"                    - Membru in asteptare: Un membru care a aplicat pentru "
+"apartenentă si a cărui factură urmează a fi creată.\n"
+"                    - Membru facturat: Un membru a cărui factură a fost "
+"creată.\n"
+"                    - Membru cotizant: Un membru care a plătit suma pentru "
+"apartenenta ca membru."
 
 #. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
 msgid "Create"
-msgstr "Creare"
+msgstr "Creează"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "Member line"
-msgstr "Rând membru"
+msgstr "Linie membru"
 
 #. module: membership
 #: help:report.membership,date_from:0
 #: field:res.partner,membership_start:0
 msgid "Start membership date"
-msgstr "Data de începere a apartenenţei"
+msgstr "Data de începere a apartenenţei ca membru"
 
 #. module: membership
 #: code:addons/membership/membership.py:410
 #: code:addons/membership/membership.py:413
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Eroare !"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
@@ -238,7 +251,7 @@ msgstr "Membru cotizant"
 #. module: membership
 #: field:report.membership,num_waiting:0
 msgid "# Waiting"
-msgstr ""
+msgstr "# In asteptare"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
@@ -252,22 +265,22 @@ msgstr "Membri"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Non Member"
-msgstr "Nemembri"
+msgstr "Non-membri"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_invoicedmember0
 msgid "Open invoice."
-msgstr "Deschidere factură"
+msgstr "Deschide factura"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "July"
-msgstr ""
+msgstr "Iulie"
 
 #. module: membership
 #: model:product.template,name:membership.membership_0_product_template
 msgid "Golden Membership"
-msgstr ""
+msgstr "Calitatea de membru Golden"
 
 #. module: membership
 #: help:res.partner,associate_member:0
@@ -275,34 +288,36 @@ msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Un membru cu care doriti să vă asociati apartenenta. Va lua in considerare "
+"starea apartenentei membrului asociat."
 
 #. module: membership
 #: field:membership.membership_line,membership_id:0
 #: view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
-msgstr ""
+msgstr "Produs de apartenentă"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_producttomember0
 msgid "Define product for membership."
-msgstr "Definire apartenenţă ca produs"
+msgstr "Defineste produsul pentru apartenentă."
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetoassociate0
 msgid "Invoiced member may be Associated member."
-msgstr "Membrul facturat poate fi membru asociat"
+msgstr "Membrul facturat poate fi Membru asociat"
 
 #. module: membership
 #: view:membership.invoice:0
 msgid "Join"
-msgstr ""
+msgstr "Aderare"
 
 #. module: membership
 #: help:product.product,membership_date_to:0
 #: help:res.partner,membership_stop:0
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Data pană cand rămane activă calitatea de membru."
 
 #. module: membership
 #: view:product.product:0
@@ -312,12 +327,12 @@ msgstr "Produse tip apartenenţă"
 #. module: membership
 #: field:membership.membership_line,date:0
 msgid "Join Date"
-msgstr ""
+msgstr "Data aderării"
 
 #. module: membership
 #: help:res.partner,free_member:0
 msgid "Select if you want to give membership free of cost."
-msgstr ""
+msgstr "Selectati dacă doriti să acordati apartenentă gratuită ca membru."
 
 #. module: membership
 #: model:process.node,name:membership.process_node_setassociation0
@@ -327,12 +342,12 @@ msgstr "Stabilire asociere"
 #. module: membership
 #: view:res.partner:0
 msgid " Membership State"
-msgstr ""
+msgstr " Starea apartenentei ca membru"
 
 #. module: membership
 #: view:res.partner:0
 msgid "Memberships"
-msgstr ""
+msgstr "Apartenente ca membru"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_paidmember0
@@ -342,12 +357,12 @@ msgstr "Cotizaţia de membru plătită"
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Șablon produs"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "September"
-msgstr ""
+msgstr "Septembrie"
 
 #. module: membership
 #: model:ir.module.module,description:membership.module_meta_information
@@ -365,11 +380,25 @@ msgid ""
 "invoice and send propositions for membership renewal.\n"
 "    "
 msgstr ""
+"\n"
+"Acest modul vă permite să gestionati toate operatiunile pentru gestionarea "
+"apartenentelor ca membru.\n"
+"Acceptă tipuri diferite de membri:\n"
+"* Membru gratuit\n"
+"* Membru asociat (de exemplu: un grup se abonează pentru aderare pentru "
+"toate\n"
+"  filialele)\n"
+"*Membri cotizanti,\n"
+"*Preturi speciale pentru membri, ...\n"
+"\n"
+"Este integrat cu vanzări si contabilitate pentru a vă permite să facturati\n"
+"automat si să trimiteti ofertele pentru reinnoirea apartenentei ca membru.\n"
+"    "
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Linie factură"
 
 #. module: membership
 #: help:membership.membership_line,state:0
@@ -388,23 +417,36 @@ msgid ""
 "                        -Paid Member: A member who has paid the membership "
 "amount."
 msgstr ""
+"Indică starea apartenentei ca membru.\n"
+"                    - Non-membru: Un membru care nu a aplicat pentru vreo "
+"apartenentă ca membru.\n"
+"                    - Membru revocat: Un membru care si-a anulat apartenenta "
+"ca membru.\n"
+"                    - Membru vechi: Un membru al cărui dată de apartenentă a "
+"expirat.\n"
+"                    - Membru in asteptare: Un membru care a aplicat pentru "
+"apartenentă si a cărui factură urmează a fi creată.\n"
+"                    - Membru facturat: Un membru a cărui factură a fost "
+"creată.\n"
+"                    - Membru cotizant: Un membru care a plătit suma pentru "
+"apartenenta ca membru."
 
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,month:0
 msgid "Month"
-msgstr ""
+msgstr "Luna"
 
 #. module: membership
 #: view:product.product:0
 msgid "Group by..."
-msgstr ""
+msgstr "Grupează după..."
 
 #. module: membership
 #: code:addons/membership/membership.py:411
 #, python-format
 msgid "Partner is a free Member."
-msgstr ""
+msgstr "Partenerul este Membru gratuit."
 
 #. module: membership
 #: model:product.pricelist,name:membership.list1m
@@ -415,47 +457,47 @@ msgstr "Listă de preţuri membri"
 #: field:report.membership,associate_member_id:0
 #: view:res.partner:0
 msgid "Associate Member"
-msgstr ""
+msgstr "Membru asociat"
 
 #. module: membership
 #: help:product.product,membership_date_from:0
 #: help:res.partner,membership_start:0
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "Data de cand apartenenta ca membru devine activă."
 
 #. module: membership
 #: view:report.membership:0
 msgid "Associated Partner"
-msgstr ""
+msgstr "Partener asociat"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_invoice
 #: view:membership.invoice:0
 msgid "Membership Invoice"
-msgstr ""
+msgstr "Factură apartenentă"
 
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,user_id:0
 #: view:res.partner:0
 msgid "Salesman"
-msgstr ""
+msgstr "Agent comercial"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_membershipproduct0
 msgid "Define membership product."
-msgstr "Definire apartenenţă membru ca produs"
+msgstr "Defineste apartenenta ca produs."
 
 #. module: membership
 #: view:product.product:0
 msgid "Category"
-msgstr ""
+msgstr "Categorie"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice
 #: field:membership.membership_line,account_invoice_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Factură"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -474,28 +516,28 @@ msgstr "Versiune listă de preţuri membri"
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
-"Eroare: UM implictă şi UM la aprovizionare trebuie să fie în aceeaşi "
-"categorie."
+"Eroare: Unitatea de masură implicită si unitatea de masură de achizitii "
+"trebuie să facă parte din aceeasi categorie."
 
 #. module: membership
 #: view:report.membership:0
 msgid "Forecast"
-msgstr ""
+msgstr "Estimare"
 
 #. module: membership
 #: field:report.membership,partner_id:0
 msgid "Member"
-msgstr ""
+msgstr "Membru"
 
 #. module: membership
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Eroare ! Nu puteţi crea membri asociaţi recursiv."
 
 #. module: membership
 #: view:product.product:0
 msgid "Date From"
-msgstr ""
+msgstr "Data de la"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
@@ -505,34 +547,34 @@ msgstr "Membru asociat"
 #. module: membership
 #: view:product.product:0
 msgid "Accounting Info"
-msgstr ""
+msgstr "Informatii contabile"
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
 msgid "Cancel membership date"
-msgstr "Revocare dată apartenenţă"
+msgstr "Anulează data apartenentei ca membru"
 
 #. module: membership
 #: view:res.partner:0
 msgid "Customers"
-msgstr ""
+msgstr "Clienţi"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
 #: model:ir.ui.menu,name:membership.menu_membership_products
 #: view:product.product:0
 msgid "Membership Products"
-msgstr "Produse apartenenţă"
+msgstr "Produse de apartenentă"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "June"
-msgstr ""
+msgstr "Iunie"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_membership
@@ -543,7 +585,7 @@ msgstr ""
 #: view:res.partner:0
 #: field:res.partner,member_lines:0
 msgid "Membership"
-msgstr "Apartenenţă"
+msgstr "Calitate de membru"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -555,7 +597,7 @@ msgstr "Membru Facturat"
 #. module: membership
 #: help:membership.membership_line,date:0
 msgid "Date on which member has joined the membership"
-msgstr ""
+msgstr "Data aderării membrului"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -572,116 +614,116 @@ msgstr "Partener de asociere"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "November"
-msgstr ""
+msgstr "Noiembrie"
 
 #. module: membership
 #: view:product.product:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtre extinse..."
 
 #. module: membership
 #: field:membership.membership_line,state:0
 msgid "Membership State"
-msgstr ""
+msgstr "Stare apartenentă"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "October"
-msgstr ""
+msgstr "Octombrie"
 
 #. module: membership
 #: view:product.product:0
 msgid "Sale Description"
-msgstr ""
+msgstr "Descriere vânzare"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "January"
-msgstr ""
+msgstr "Ianuarie"
 
 #. module: membership
 #: view:product.product:0
 msgid "Membership Fee"
-msgstr ""
+msgstr "Taxă de membru"
 
 #. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership amount"
-msgstr "Cotizaţie de membru"
+msgstr "Cotizaţia de membru"
 
 #. module: membership
 #: help:res.partner,membership_amount:0
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "Pretul negociat de către partener"
 
 #. module: membership
 #: model:product.template,name:membership.membership_2_product_template
 msgid "Basic Membership"
-msgstr ""
+msgstr "Taxă de aderare de bază"
 
 #. module: membership
 #: help:product.product,membership:0
 msgid "Select if a product is a membership product."
-msgstr ""
+msgstr "Selectati dacă un produs este un produs de apartenentă."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Old Member"
-msgstr "Membru veterran"
+msgstr "Membru vechi"
 
 #. module: membership
 #: field:membership.membership_line,date_to:0
 msgid "To"
-msgstr "La"
+msgstr "Către"
 
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,membership_state:0
 #: field:res.partner,membership_state:0
 msgid "Current Membership State"
-msgstr ""
+msgstr "Starea apartenentei curente"
 
 #. module: membership
 #: view:report.membership:0
 msgid "Last 365 Days"
-msgstr ""
+msgstr "Ultimele 365 de zile"
 
 #. module: membership
 #: view:product.product:0
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
 msgid "Draft invoice is now open."
-msgstr "Factură ciornă este deschisă"
+msgstr "Factura ciornă este acum deschisă."
 
 #. module: membership
 #: view:product.product:0
 msgid "Inactive"
-msgstr ""
+msgstr "Inactiv"
 
 #. module: membership
 #: view:report.membership:0
 msgid "Last 30 Days"
-msgstr ""
+msgstr "Ultimele 30 de zile"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "December"
-msgstr ""
+msgstr "Decembrie"
 
 #. module: membership
 #: view:membership.invoice:0
 msgid "Close"
-msgstr ""
+msgstr "Închide"
 
 #. module: membership
 #: view:res.partner:0
 msgid "All non Members"
-msgstr ""
+msgstr "Toti non-membrii"
 
 #. module: membership
 #: view:product.product:0
@@ -691,17 +733,17 @@ msgstr "Informații"
 #. module: membership
 #: field:membership.membership_line,account_invoice_line:0
 msgid "Account Invoice line"
-msgstr "Rând facturare cont"
+msgstr "Linie Factură Cont"
 
 #. module: membership
 #: view:product.product:0
 msgid "Categorization"
-msgstr ""
+msgstr "Categorizare"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
 msgid "Draft invoice for membership."
-msgstr "Factură ciornă pentru cotizaţie"
+msgstr "Factura ciornă pentru aderare"
 
 #. module: membership
 #: field:membership.invoice,member_price:0
@@ -714,17 +756,17 @@ msgstr "Cotizaţie de membru"
 #. module: membership
 #: view:product.product:0
 msgid "Purchase Description"
-msgstr ""
+msgstr "Descriere achizitie"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Produs"
 
 #. module: membership
 #: view:product.product:0
 msgid "Description"
-msgstr ""
+msgstr "Descriere"
 
 #. module: membership
 #: field:res.partner,free_member:0
@@ -734,28 +776,28 @@ msgstr "Membru necotizant"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #. module: membership
 #: model:product.template,name:membership.membership_1_product_template
 msgid "Silver Membership"
-msgstr ""
+msgstr "Calitatea de membru Silver"
 
 #. module: membership
 #: view:product.product:0
 msgid "Sale Taxes"
-msgstr ""
+msgstr "Taxe vânzare"
 
 #. module: membership
 #: field:report.membership,date_to:0
 #: view:res.partner:0
 msgid "End Date"
-msgstr ""
+msgstr "Data de sfârșit"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "February"
-msgstr ""
+msgstr "Februarie"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_invoicedmember0
@@ -765,17 +807,17 @@ msgstr "Membri facturaţi"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "April"
-msgstr ""
+msgstr "Aprilie"
 
 #. module: membership
 #: help:res.partner,membership_cancel:0
 msgid "Date on which membership has been cancelled"
-msgstr ""
+msgstr "Data la care a fost anulată calitatea de membru"
 
 #. module: membership
 #: field:membership.membership_line,date_cancel:0
 msgid "Cancel date"
-msgstr "Data revocării"
+msgstr "Data anulării"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_waitingmember0
@@ -786,7 +828,7 @@ msgstr "Membru în aşteptare"
 #: field:report.membership,date_from:0
 #: view:res.partner:0
 msgid "Start Date"
-msgstr ""
+msgstr "Dată de începere"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_membershipproduct0
@@ -796,14 +838,14 @@ msgstr "Produs apartenenţă"
 #. module: membership
 #: help:membership.membership_line,member_price:0
 msgid "Amount for the membership"
-msgstr ""
+msgstr "Taxă cotizatie de membru"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Cancelled Member"
-msgstr ""
+msgstr "Membru anulat"
 
 #. module: membership
 #: constraint:product.product:0
@@ -814,9 +856,9 @@ msgstr "Eroare : cod EAN invalid"
 #: view:report.membership:0
 #: field:report.membership,year:0
 msgid "Year"
-msgstr "Anul"
+msgstr "An"
 
 #. module: membership
 #: view:report.membership:0
 msgid "Revenue Done"
-msgstr ""
+msgstr "Venituri efectuate"

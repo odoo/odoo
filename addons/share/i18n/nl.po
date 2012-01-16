@@ -8,18 +8,17 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-01-24 07:45+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-01-15 13:18+0000\n"
+"Last-Translator: Erwin (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:37+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-16 05:31+0000\n"
+"X-Generator: Launchpad (build 14664)\n"
 
 #. module: share
-#: code:addons/share/web/editors.py:15
-#, python-format
+#: model:ir.module.category,name:share.module_category_share
 msgid "Sharing"
 msgstr "Delen"
 
@@ -114,7 +113,7 @@ msgid "Congratulations, you have successfully setup a new shared access!"
 msgstr "Gefeliciteerd, u heeft met succes een gedeelde toegang ingesteld!"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:275
+#: code:addons/share/wizard/share_wizard.py:527
 #, python-format
 msgid "(Copy for sharing)"
 msgstr "(Kopie voor delen)"
@@ -165,8 +164,7 @@ msgid "Share wizard: step 1"
 msgstr "Deel assistent - stap 1"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:458
-#: field:share.wizard.result.line,login:0
+#: code:addons/share/wizard/share_wizard.py:778
 #, python-format
 msgid "Username"
 msgstr "Gebruikersnaam"
@@ -223,10 +221,10 @@ msgstr "De naam van de groep moet uniek zijn !"
 #. module: share
 #: model:ir.module.module,shortdesc:share.module_meta_information
 msgid "Sharing Tools"
-msgstr ""
+msgstr "Deel gereedschappen"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:460
+#: code:addons/share/wizard/share_wizard.py:780
 #, python-format
 msgid "Database"
 msgstr "Database"
@@ -237,7 +235,7 @@ msgid "Send Email Notification(s)"
 msgstr "Email melding(en) versturen"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:418
+#: code:addons/share/wizard/share_wizard.py:580
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr "Deel-filter gemaakt door gebruiker %s (%s) voor groep %s"
@@ -258,7 +256,7 @@ msgid "Share Group"
 msgstr "Delen groep"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:459
+#: code:addons/share/wizard/share_wizard.py:779
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
@@ -278,12 +276,12 @@ msgstr "Gebruiker bestaat al"
 #. module: share
 #: field:share.wizard,user_ids:0
 msgid "Existing users"
-msgstr ""
+msgstr "Bestaande gebruikers"
 
 #. module: share
 #: model:ir.model,name:share.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Toegang groepen"
 
 #. module: share
 #: view:share.wizard:0
@@ -306,19 +304,19 @@ msgid "Summary"
 msgstr "Samenvatting"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:304
+#: code:addons/share/wizard/share_wizard.py:617
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr "Indirect deel-filter gemaakt door gebruiker %s (%s) voor groep %s"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:448
+#: code:addons/share/wizard/share_wizard.py:757
 #, python-format
 msgid "Email required"
 msgstr "Email verplicht"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:240
+#: code:addons/share/wizard/share_wizard.py:494
 #, python-format
 msgid "Copied access for sharing"
 msgstr "Toegang gekopieerd voor delen"
@@ -362,7 +360,7 @@ msgid ""
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:448
+#: code:addons/share/wizard/share_wizard.py:757
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
@@ -377,6 +375,7 @@ msgid "Regular users only (no share user)"
 msgstr "Alleen gewone gebruikers (geen deel-gebruiker)"
 
 #. module: share
+#: field:share.wizard,embed_url:0
 #: field:share.wizard.result.line,share_url:0
 msgid "Share URL"
 msgstr "Deel URL"
@@ -387,7 +386,7 @@ msgid "Domain"
 msgstr "Domein"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:314
+#: code:addons/share/wizard/share_wizard.py:637
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -424,8 +423,7 @@ msgid "Action to share"
 msgstr "Actie voor delen"
 
 #. module: share
-#: code:addons/share/web/editors.py:18
-#, python-format
+#: view:share.wizard:0
 msgid "Share"
 msgstr "Delen"
 
@@ -454,9 +452,7 @@ msgstr "Gedeelde toegang kon niet worden ingesteld"
 
 #. module: share
 #: model:ir.actions.act_window,name:share.action_share_wizard
-#: model:ir.actions.act_window,name:share.action_share_wizard_step1
 #: model:ir.model,name:share.model_share_wizard
-#: model:ir.ui.menu,name:share.menu_action_share_wizard
 #: field:share.wizard.result.line,share_wizard_id:0
 msgid "Share Wizard"
 msgstr "Deel assistent"
@@ -500,37 +496,3 @@ msgstr "Alleen lezen"
 #, python-format
 msgid "*usual password*"
 msgstr "*gebruikelijk wachtwoord*"
-
-#~ msgid "Users"
-#~ msgstr "Gebruikers"
-
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
-
-#~ msgid "share.wizard.user"
-#~ msgstr "share.wizard.user"
-
-#~ msgid ""
-#~ "The goal is to implement a generic sharing mechanism, where user of OpenERP\n"
-#~ "can share data from OpenERP to their colleagues, customers, or friends.\n"
-#~ "The system will work by creating new users and groups on the fly, and by\n"
-#~ "combining the appropriate access rights and ir.rules to ensure that the "
-#~ "/shared\n"
-#~ "users/ will only have access to the correct data.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Het doel is om een generiek deelmechanisme te implementeren, waarbij OpenERP "
-#~ "gebruikers\n"
-#~ "gegevens uit OpenERP kunnen delen met hum collega's, klanten of vrienden.\n"
-#~ "Het systeem werkt door meteen nieuwe gebruikers en groepen te maken en door "
-#~ "de \n"
-#~ "betreffende toegangsrechten en ir.rules te combineren zodat de 'gedeelde "
-#~ "gebruikers' alleen\n"
-#~ "toegang hebben tot de juiste gegevens.\n"
-#~ "    "
-
-#~ msgid "Share Management"
-#~ msgstr "Delen beheer"
-
-#~ msgid "Share Access Rules"
-#~ msgstr "Delen toegangregels"
