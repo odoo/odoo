@@ -143,7 +143,6 @@ def import_translation():
     cr = openerp.pooler.get_db(dbname).cursor()
     openerp.tools.trans_load( cr, config["translate_in"], config["language"],
         context=context)
-    openerp.tools.trans_update_res_ids(cr)
     cr.commit()
     cr.close()
 

@@ -471,12 +471,17 @@ class users(osv.osv):
             return False
         cr = pooler.get_db(db).cursor()
         try:
+            # We autocommit: our single request will be performed atomically.
+            # (In this way, there is no opportunity to have two transactions
+            # interleaving ther cr.execute()..cr.commit() calls and have one
+            # of them rollbacked due to a concurrent access.)
+            # We effectively unconditionally write the res_users line.
+            cr.autocommit(True)
             cr.execute("""UPDATE res_users
                             SET date = now() AT TIME ZONE 'UTC'
                             WHERE login=%s AND password=%s AND active RETURNING id""",
                        (tools.ustr(login), tools.ustr(password)))
             res = cr.fetchone()
-            cr.commit()
             if res:
                 return res[0]
             else:

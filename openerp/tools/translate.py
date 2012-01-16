@@ -852,9 +852,7 @@ def trans_load(cr, filename, lang, verbose=True, context=None):
         return None
 
 def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True, context=None):
-    """Populates the ir_translation table. Fixing the res_ids so that they point
-    correctly to ir_model_data is done in a separate step, using the
-    'trans_update_res_ids' function below."""
+    """Populates the ir_translation table."""
     logger = logging.getLogger('i18n')
     if verbose:
         logger.info('loading translation file for language %s', lang)
