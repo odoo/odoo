@@ -146,7 +146,8 @@ class JsonRequest(WebRequest):
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             self.init(args)
-            req.session.jsonp_requests[args.get('id')] = self.httprequest.form['r']
+            request_id = args.get('id')
+            self.session.jsonp_requests[request_id] = self.httprequest.form['r']
             headers=[('Content-Type', 'text/plain; charset=utf-8')]
             r = werkzeug.wrappers.Response(request_id, headers=headers)
             return r
