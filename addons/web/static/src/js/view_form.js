@@ -1594,7 +1594,8 @@ openerp.web.form.FieldProgressBar = openerp.web.form.Field.extend({
         if (isNaN(show_value)) {
             show_value = 0;
         }
-        this.$element.find('div').progressbar('option', 'value', show_value).find('span').html(show_value + '%');
+        var formatted_value = openerp.web.format_value(show_value, { type : 'float' }, '0');
+        this.$element.find('div').progressbar('option', 'value', show_value).find('span').html(formatted_value + '%');
     }
 });
 
