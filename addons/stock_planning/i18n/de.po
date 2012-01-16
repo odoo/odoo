@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2012-01-13 18:17+0000\n"
+"PO-Revision-Date: 2012-01-14 14:53+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-14 05:12+0000\n"
+"X-Launchpad-Export-Date: 2012-01-15 05:20+0000\n"
 "X-Generator: Launchpad (build 14664)\n"
 
 #. module: stock_planning
@@ -418,6 +418,24 @@ msgid ""
 "  \n"
 " Stock Simulation: %s    Minimum stock: %s"
 msgstr ""
+" Beschaffungsauftag erstell aufgrund des Materialplanungssstems für "
+"Benutzer: %s   Erstellungsdatum: %s                                         "
+"\n"
+" Für Periode: %s                                         \n"
+" entsprechend Status:                                         \n"
+" Lagervorschau: %s                                         \n"
+" Anfangsbestand: %s                                         \n"
+" geplante Ausgänge: %s   Geplante Eingänge: %s                               "
+"          \n"
+" erledigte Ausgänge: %s    Erledigte Eingänge: %s                            "
+"             \n"
+" Bestätigte Ausgänge: %s    Bestätigte Eingänge: %s                          "
+"               \n"
+" Geplante Ausgänge vor: %s    Geplante Eingänge vor: %s                      "
+"                   \n"
+" Erwartete Ausgänge: %s   Restliche Eingänge: %s                             "
+"            \n"
+" Lager Simulation: %s    Minimum Bestand: %s"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:626
@@ -472,6 +490,8 @@ msgid ""
 "Unit of Measure used to show the quantities of stock calculation.You can use "
 "units from default category or from second category (UoS category)."
 msgstr ""
+"Masseinheit für die Lagerkalkulation. Sie können entweder diese oder die "
+"sekundäre Kategorie (Verkaufseinheit) verwenden"
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -485,6 +505,9 @@ msgid ""
 "account periods. You can use wizard for creating periods and review them "
 "here."
 msgstr ""
+"Lagerperioden werden für die Lagerplanung verwendet und sind unabhängig von "
+"den Buchhaltungsperioden. Mit dem Assistenten können Sie diese erstellen und "
+"überwachen"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -514,7 +537,7 @@ msgstr "Unternehmens Prognose"
 #. module: stock_planning
 #: help:stock.planning,minimum_op:0
 msgid "Minimum quantity set in Minimum Stock Rules for this Warehouse"
-msgstr ""
+msgstr "Minimum Bestand der in den Regeln für dieses Lager definiert ist."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -550,7 +573,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:146
 #, python-format
 msgid "Cannot delete a validated sales forecast!"
-msgstr ""
+msgstr "Kann bestätigte Verkaufsvorschau nicht löschen!"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
@@ -642,6 +665,8 @@ msgid ""
 "Unit of Measure used to show the quantities of stock calculation.You can use "
 "units form default category or from second category (UoS category)."
 msgstr ""
+"Masseinheit für die Lagermengen. Sie können diese oder die sekundäre "
+"Kategorie (Verkaufseinheit) verwenden."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -716,6 +741,9 @@ msgid ""
 "warehouse, so you don't have to create them one by one. The wizard doesn't "
 "duplicate lines if they already exist for this selection."
 msgstr ""
+"Dieser Assistent hilft MPS Zeilen für  bestimmte Perioden und Lager zu "
+"erzeugen um diese nicht einzeln anlegen zu müssen.  Bestehende Zeilen werden "
+"nicht dupliziert."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
@@ -807,6 +835,8 @@ msgid ""
 "manual procurement with this forecast when some periods are exceptional for "
 "usual minimum stock rules."
 msgstr ""
+"Masseinheit für die Lagerkalkulation. Sie können entweder diese oder die "
+"sekundäre Kategorie (Verkaufseinheit) verwenden"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_view_stock_planning_form
@@ -822,6 +852,14 @@ msgid ""
 "can trigger the procurement of what is missing to reach your desired "
 "quantities"
 msgstr ""
+"Der Einkaufsgeneralplan kann der hauptsächliche Treiber für die "
+"Lagernachbeschaffung sein oder die automatischen Bestellungen ergänzen( "
+"Minimale Lagermenge,...)\n"
+"Jede Zeile gibt einen Überblick über die eingehenden und ausgehenden Mengen "
+"in einer Lagerperiode für ein bestimmtes Lager und basierende auf den "
+"geplanten Lagerbuchungen.\n"
+"Die errechneten Mengen können manuell verändert werden und in einen "
+"Beschaffungsauftrag umgewandelt werden um die geplanten Mengen zu erreichen."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:685
@@ -973,6 +1011,9 @@ msgid ""
 "supply will be made from Output location of Supply Warehouse. Used in "
 "'Supply from Another Warehouse' with Supply Warehouse."
 msgstr ""
+"Aktiveren, um vom Lagerort des Lagers zu liefern. Sonst wird das "
+"Ausgangslager des Lieferlagers verwendet. Wird in \"Lieferung von anderem "
+"lager\" verwendet."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
@@ -1005,6 +1046,8 @@ msgid ""
 "Warehouse used as source in supply pick move created by 'Supply from Another "
 "Warehouse'."
 msgstr ""
+"Dieses Lager wird als Herkunft für einen Beschaffungsvorgang verwendet, wenn "
+"\"Beschaffung von anderem Lager\" gewählt wird."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
@@ -1178,7 +1221,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:631
 #, python-format
 msgid "MPS planning for %s"
-msgstr ""
+msgstr "MPS für %s"
 
 #. module: stock_planning
 #: field:stock.planning,stock_start:0
@@ -1239,6 +1282,9 @@ msgid ""
 "difference between Planned Out and Confirmed Out. For current period Already "
 "Out is also calculated"
 msgstr ""
+"Auslieferungsmengen die zusätzlich zum bestätigen Warenausgang erwartet "
+"werden als Differenz zwischen geplantem und bestätigtem Ausgang. Für die "
+"laufende Periode wird auch der tatsächlich stattgefundene Ausgang berechnet."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1252,6 +1298,9 @@ msgid ""
 "you only have to fill in the forecast quantities. The wizard doesn't "
 "duplicate the line when another one exist for the same selection."
 msgstr ""
+"Dieser Assistent erzeugt viele Vorschauzeilen auf einmal. Danach müssen Sie "
+"nur die Mengen eintragen. Der Assistent erzeugt keine Duplikate für die "
+"selben Auswahlkriterien."
 
 #~ msgid "This Copmany Period1"
 #~ msgstr "Dieses Unternehmen Periode1"
