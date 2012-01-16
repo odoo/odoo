@@ -31,21 +31,6 @@
 -
   In order to check that first attendance must be Sign In.
 -
-   !python {model: hr.attendance}: |
-     try:
-       self.create(cr, uid, {employee_id: hr.employee_fp, name: time.strftime('%Y-%m-%d 09:59:25'), action: 'sign_out'}, None)
-     except Exception, e:
-       assert e, 'The first attendance must be Sign In'
--
-  First of all, Employee Sign's In.
--
-  !record {model: hr.attendance, id: hr_attendance_1}:
-    employee_id: hr.employee_fp
-    name: !eval time.strftime('%Y-%m-%d 09:59:25')
-    action: 'sign_in'
--
-  In order to check that first attendance must be Sign In.
--
   !python {model: hr.attendance}: |
     import time
     try:
