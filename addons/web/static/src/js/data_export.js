@@ -362,11 +362,12 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         return export_field;
     },
     on_click_export_data: function() {
-        var exported_fields = [], self = this;
-        this.$element.find("#fields_list option").each(function() {
-            var fieldname = self.records[$(this).val()];
-            exported_fields.push({name: fieldname, label: $(this).text()});
-        });
+        var exported_fields = this.$element.find('#fields_list option').map(function () {
+            // DOM property is textContent, but IE8 only knows innerText
+            return {name: this.value,
+                    label: this.textContent || this.innerText};
+        }).get();
+
         if (_.isEmpty(exported_fields)) {
             alert(_t("Please select fields to export..."));
             return;
@@ -383,7 +384,7 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
                 ids: this.dataset.ids,
                 domain: this.dataset.domain,
                 import_compat: Boolean(
-                        this.$element.find("#import_compat").val())
+                    this.$element.find("#import_compat").val())
             })},
             complete: $.unblockUI
         });
