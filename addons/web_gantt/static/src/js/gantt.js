@@ -111,7 +111,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             var name = started_projects[0][self.parent];
             self.name = name instanceof Array? name[name.length - 1] : name;
         }
-        this.$element.find('#add_task').click(function(){
+        this.$element.find('#add_task').click(function() {
             self.editTask();
         });
         
@@ -364,19 +364,38 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         }
         if(event_id) event_id = parseInt(event_id, 10);
         
-        var pop = new openerp.web.form.FormOpenPopup(this);
-        
-        pop.show_element(this.model, event_id, this.context || this.dataset.context, {});
-        
-        pop.on_write.add(function(id, data) {
-            var get_project = _.find(self.database_projects, function(project){ return project.id == id});
-            if (get_project) {
-                _.extend(get_project, data);
-            } else {
-                _.extend(self.database_projects, _.extend(data, {'id': id}));
-            }
-            self.reloadView();
-        });
+        if (!event_id) {
+            var pop = new openerp.web.form.SelectCreatePopup(this);
+            pop.select_element(
+                this.model,
+                {
+                    title: _t("Create: ") + this.name,
+                    initial_view: 'form',
+                    disable_multiple_selection: true
+                },
+                this.dataset.domain,
+                this.context || this.dataset.context
+            )
+            pop.on_select_elements.add_last(function(element_ids) {
+                self.dataset.read_ids(element_ids,[]).done(function(projects) {
+                    self.database_projects.concat(projects);
+                    self.reloadView();
+                });
+            });
+        }
+        else {
+            var pop = new openerp.web.form.FormOpenPopup(this);
+            pop.show_element(this.model, event_id, this.context || this.dataset.context, {'title' : _t("Open: ") + this.name});
+            pop.on_write.add(function(id, data) {
+                var get_project = _.find(self.database_projects, function(project){ return project.id == id});
+                if (get_project) {
+                    _.extend(get_project, data);
+                } else {
+                    _.extend(self.database_projects, _.extend(data, {'id': id}));
+                }
+                self.reloadView();
+            });
+        }
     },
 
     set_width: function() {
@@ -506,12 +525,17 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         if (groupbys.length) {
             this.group_by = groupbys;
         }
-        
+        var fields = _.compact(_.map(this.fields_view.arch.attrs,function(value,key) {
+            if (key != 'string' && key != 'default_group_by') {
+                return value || '';
+            }
+        }));
+        fields = _.uniq(fields.concat(_.keys(this.fields), this.text, this.group_by));
         $.when(this.has_been_loaded).then(function() {
-                self.dataset.read_slice([], {
+                self.dataset.read_slice(fields, {
                     domain: domains,
                     context: contexts
-                }).done(function(projects){
+                }).done(function(projects) {
                     self.on_project_loaded(projects);
                 });
         });

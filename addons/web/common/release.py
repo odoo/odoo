@@ -1,5 +1,5 @@
 name = 'openerp-web'
-version = '6.1.0 alpha'
+version = '6.1rc1'
 description = "Web Client of OpenERP, the Enterprise Management Software"
 long_description = "OpenERP Web is the web client of the OpenERP, a free enterprise management software"
 author = "OpenERP SA"

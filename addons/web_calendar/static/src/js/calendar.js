@@ -36,6 +36,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.range_start = null;
         this.range_stop = null;
         this.update_range_dates(Date.today());
+        this.selected_filters = [];
     },
     start: function() {
         this._super();
@@ -63,11 +64,17 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.date_delay = this.fields_view.arch.attrs.date_delay;
         this.date_stop = this.fields_view.arch.attrs.date_stop;
 
-        this.colors = this.fields_view.arch.attrs.colors;
         this.day_length = this.fields_view.arch.attrs.day_length || 8;
         this.color_field = this.fields_view.arch.attrs.color;
+
+        if (this.color_field && this.selected_filters.length === 0) {
+            var default_filter;
+            if (default_filter = this.dataset.context['calendar_default_' + this.color_field]) {
+                this.selected_filters.push(default_filter + '');
+            }
+        }
         this.fields =  this.fields_view.fields;
-        
+
         if (!this.date_start) {
             throw new Error("Calendar view has not defined 'date_start' attribute.");
         }
@@ -171,7 +178,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
     },
     reload_event: function(id) {
-        this.dataset.read_ids([id], _.keys(this.fields), this.on_events_loaded);
+        this.dataset.read_ids([id], _.keys(this.fields)).then(this.on_events_loaded);
     },
     get_color: function(key) {
         if (this.color_map[key]) {
@@ -289,36 +296,25 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         var self = this,
             data = this.get_event_data(event_obj),
             form = self.form_dialog.form,
-            fields_to_fetch = _(form.fields_view.fields).keys(),
-            set_values = [], 
-            fields_names = [];
+            fields_to_fetch = _(form.fields_view.fields).keys();
         this.dataset.index = null;
         self.creating_event_id = event_id;
         this.form_dialog.form.do_show().then(function() {
             form.show_invalid = false;
-            _.each(['date_start', 'date_stop', 'date_delay'], function(field) {
+            _.each(['date_start', 'date_delay', 'date_stop'], function(field) {
                 var field_name = self[field];
                 if (field_name && form.fields[field_name]) {
                     var ffield = form.fields[field_name];
                     ffield.reset();
-                    var result = ffield.set_value(data[field_name]);
-                    set_values.push(result);
-                    fields_names.push(field_name);
-                    $.when(result).then(function() {
+                    $.when(ffield.set_value(data[field_name])).then(function() {
                         ffield.validate();
+                        ffield.dirty = true;
+                        form.do_onchange(ffield);
                     });
                 }
             });
-
-            $.when(set_values).then(function() {
-                _.each(fields_names, function(fn) {
-                    var field = form.fields[fn];
-                    field.dirty = true;
-                    form.do_onchange(field);
-                });
-                form.show_invalid = true;
-                self.form_dialog.open();
-            });
+            form.show_invalid = true;
+            self.form_dialog.open();
         });
     },
     do_save_event: function(event_id, event_obj) {
@@ -355,6 +351,8 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
                 event_obj['start_date'].addHours(8);
                 event_obj['end_date'] = new Date(event_obj['start_date']);
                 event_obj['end_date'].addHours(1);
+            } else {
+                event_obj['end_date'].addSeconds(-1);
             }
             this.do_create_event_with_formdialog(event_id, event_obj);
             // return false;
@@ -392,7 +390,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
                 offset: 0,
                 domain: self.get_range_domain(),
                 context: self.last_search[1]
-            }, function(events) {
+            }).then(function(events) {
                 self.dataset_events = events;
                 self.on_events_loaded(events);
             });
@@ -475,13 +473,22 @@ openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
         this.$element.delegate('input:checkbox', 'change', this.on_filter_click);
     },
     on_events_loaded: function(filters) {
+        var selected_filters = this.view.selected_filters.slice(0);
         this.$div.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
+        this.$element.find('div.oe_calendar_responsible input').each(function() {
+            if (_.indexOf(selected_filters, $(this).val()) > -1) {
+                $(this).click();
+            }
+        });
     },
     on_filter_click: function(e) {
-        var responsibles = [],
+        var self = this,
+            responsibles = [],
             $e = $(e.target);
+        this.view.selected_filters = [];
         this.$element.find('div.oe_calendar_responsible input:checked').each(function() {
             responsibles.push($(this).val());
+            self.view.selected_filters.push($(this).val());
         });
         scheduler.clearAll();
         if (responsibles.length) {

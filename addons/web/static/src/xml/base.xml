@@ -470,10 +470,16 @@
 </t>
 <t t-name="ViewManagerDebug">
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
-    <option value="fvg"> - Fields View Get</option>
-    <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id"> - Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
-    <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id"> - Edit SearchView</option>
-    <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id"> - Edit Action</option>
+    <option value="fvg">Fields View Get</option>
+    <option value="fields">View Fields</option>
+    <t t-if="view_manager.session.uid === 1">
+        <option value="manage_views">Manage Views</option>
+        <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
+        <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</option>
+        <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id">Edit Action</option>
+        <option value="customize_object">Customize Object</option>
+        <option value="edit_workflow">Edit Workflow</option>
+    </t>
 </t>
 <t t-extend="ViewManager" t-name="One2Many.viewmanager">
     <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
@@ -743,7 +749,7 @@
         <li t-foreach="attachments" t-as="attachment">
             <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="_s + '/web/binary/saveas?session_id='
                 + session.session_id + '&amp;model=ir.attachment&amp;id=' + attachment.id
-                + '&amp;field=datas&amp;fieldname=name&amp;t=' + (new Date().getTime())"/>
+                + '&amp;field=datas&amp;filename_field=name&amp;t=' + (new Date().getTime())"/>
             <a class="oe-sidebar-attachments-link" t-att-href="attachment.url" target="_blank">
                 <t t-esc="attachment.name"/>
             </a>
@@ -1411,14 +1417,10 @@
     <button type="button" class="oe_button oe_formopenpopup-form-close">Cancel</button>
 </t>
 <t t-extend="ListView.row">
-    <!-- adds front & back padding to row being rendered after edition, if
-         necessary (if not selectable add front padding and if not deletable
-         add back padding), otherwise the row being added is missing columns
+    <!-- adds back padding to row being rendered after edition, if necessary
+         (if not deletable add back padding), otherwise the row being added is
+         missing columns
      -->
-    <t t-jquery="&gt; :first" t-operation="before">
-        <td t-if="edited and !options.selectable" class="oe-listview-padding"/>
-        <td t-if="edited and !options.isClarkGable" class="oe-listview-padding"/>
-    </t>
     <t t-jquery="&gt; :last" t-operation="after">
         <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
     </t>
@@ -1644,7 +1646,7 @@
 <t t-name="ImportDataView">
 <form name="import_data" id="import_data" action="" method="post" enctype="multipart/form-data"
         class="oe-import oe-import-no-result">
-    <input type="hidden" name="session_id" t-att-value="session.session_id"/>
+    <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
     <h2 class="separator horizontal">1. Import a .CSV file</h2>
     <p>Select a .CSV file to import. If you need a sample of file to import,
        you should use the export tool with the "Import Compatible" option.
@@ -1715,6 +1717,7 @@
 
 <t t-name="About-Page">
     <div>
+        <a class="oe_activate_debug_mode" href="?debug">Debug mode</a>
         <h1>OpenERP Web</h1>
         <h3 style="padding:0 5px 5px">Version <t t-esc="version_info.version"/></h3>
         <p>

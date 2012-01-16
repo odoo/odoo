@@ -10,7 +10,8 @@ class DiagramView(View):
         return {'fields_view': fields_view}
 
     @openerpweb.jsonrequest
-    def get_diagram_info(self, req, id, model, node, connector, src_node, des_node, **kw):
+    def get_diagram_info(self, req, id, model, node, connector,
+                         src_node, des_node, label, **kw):
 
         visible_node_fields = kw.get('visible_node_fields',[])
         invisible_node_fields = kw.get('invisible_node_fields',[])
@@ -36,8 +37,9 @@ class DiagramView(View):
                     shapes[shape_colour] = shape_color_state
 
         ir_view = req.session.model('ir.ui.view')
-        graphs = ir_view.graph_get(int(id), model, node, connector, src_node, des_node, False,
-                          (140, 180), req.session.context)
+        graphs = ir_view.graph_get(
+            int(id), model, node, connector, src_node, des_node, label,
+            (140, 180), req.session.context)
         nodes = graphs['nodes']
         transitions = graphs['transitions']
         isolate_nodes = {}
@@ -62,15 +64,16 @@ class DiagramView(View):
 
         data_connectors =connector_tr.read(connector_ids, connector_fields, req.session.context)
 
-
         for tr in data_connectors:
-            t = connectors.get(str(tr['id']))
-            t.update({
-                      'source': tr[src_node][1],
-                      'destination': tr[des_node][1],
-                      'options': {},
-                      'signal': tr['signal']
-                      })
+            transition_id = str(tr['id'])
+            _sourceid, label = graphs['label'][transition_id]
+            t = connectors[transition_id]
+            t.update(
+                source=tr[src_node][1],
+                destination=tr[des_node][1],
+                options={},
+                signal=label
+            )
 
             for i, fld in enumerate(connector_fields):
                 t['options'][connector_fields_string[i]] = tr[fld]
@@ -87,7 +90,7 @@ class DiagramView(View):
             if not n:
                 n = isolate_nodes.get(act['id'], {})
                 y_max += 140
-                n.update({'x': 20, 'y': y_max})
+                n.update(x=20, y=y_max)
                 nodes[act['id']] = n
 
             n.update(

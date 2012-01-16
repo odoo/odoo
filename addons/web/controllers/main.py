@@ -18,6 +18,10 @@ from cStringIO import StringIO
 
 import babel.messages.pofile
 import werkzeug.utils
+try:
+    import xlwt
+except ImportError:
+    xlwt = None
 
 from .. import common
 openerpweb = common.http
@@ -33,6 +37,9 @@ def concat_xml(file_list):
     concat: concatenation of file content
     timestamp: max(os.path.getmtime of file_list)
     """
+    if not file_list:
+        return '', None
+
     root = None
     files_timestamp = 0
     for fname in file_list:
@@ -52,12 +59,15 @@ def concat_xml(file_list):
     return ElementTree.tostring(root, 'utf-8'), files_timestamp
 
 
-def concat_files(file_list, reader=None):
+def concat_files(file_list, reader=None, intersperse=""):
     """ Concatenate file content
     return (concat,timestamp)
     concat: concatenation of file content, read by `reader`
     timestamp: max(os.path.getmtime of file_list)
     """
+    if not file_list:
+        return '', None
+
     if reader is None:
         def reader(f):
             with open(f) as fp:
@@ -71,7 +81,7 @@ def concat_files(file_list, reader=None):
             files_timestamp = ftime
 
         files_content.append(reader(fname))
-    files_concat = "".join(files_content)
+    files_concat = intersperse.join(files_content)
     return files_concat,files_timestamp
 
 html_template = """<!DOCTYPE html>
@@ -176,7 +186,7 @@ class WebClient(openerpweb.Controller):
     @openerpweb.httprequest
     def js(self, req, mods=None):
         files = [f[0] for f in self.manifest_glob(req, mods, 'js')]
-        content,timestamp = concat_files(files)
+        content, timestamp = concat_files(files, intersperse=';')
         # TODO use timestamp to set Last mofified date and E-tag
         return req.make_response(content, [('Content-Type', 'application/javascript')])
 
@@ -427,7 +437,7 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def modules(self, req):
         # Compute available candidates module
-        loadable = openerpweb.addons_manifest.iterkeys()
+        loadable = openerpweb.addons_manifest
         loaded = req.config.server_wide_modules
         candidates = [mod for mod in loadable if mod not in loaded]
 
@@ -1184,23 +1194,40 @@ class Binary(openerpweb.Controller):
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
     @openerpweb.httprequest
-    def saveas(self, req, model, id, field, fieldname, **kw):
+    def saveas(self, req, model, field, id=None, filename_field=None, **kw):
+        """ Download link for files stored as binary fields.
+
+        If the ``id`` parameter is omitted, fetches the default value for the
+        binary field (via ``default_get``), otherwise fetches the field for
+        that precise record.
+
+        :param req: OpenERP request
+        :type req: :class:`web.common.http.HttpRequest`
+        :param str model: name of the model to fetch the binary from
+        :param str field: binary field
+        :param str id: id of the record from which to fetch the binary
+        :param str filename_field: field holding the file's name, if any
+        :returns: :class:`werkzeug.wrappers.Response`
+        """
         Model = req.session.model(model)
         context = req.session.eval_context(req.context)
+        fields = [field]
+        if filename_field:
+            fields.append(filename_field)
         if id:
-            res = Model.read([int(id)], [field, fieldname], context)[0]
+            res = Model.read([int(id)], fields, context)[0]
         else:
-            res = Model.default_get([field, fieldname], context)
+            res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field, ''))
         if not filecontent:
             return req.not_found()
         else:
             filename = '%s_%s' % (model.replace('.', '_'), id)
-            if fieldname:
-                filename = res.get(fieldname, '') or filename
+            if filename_field:
+                filename = res.get(filename_field, '') or filename
             return req.make_response(filecontent,
                 [('Content-Type', 'application/octet-stream'),
-                 ('Content-Disposition', 'attachment; filename=' +  filename)])
+                 ('Content-Disposition', 'attachment; filename="%s"' % filename)])
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):
@@ -1240,6 +1267,7 @@ class Binary(openerpweb.Controller):
             attachment_id = Model.create({
                 'name': ufile.filename,
                 'datas': base64.encodestring(ufile.read()),
+                'datas_fname': ufile.filename,
                 'res_model': model,
                 'res_id': int(id)
             }, context)
@@ -1290,7 +1318,7 @@ class Export(View):
             for path, controller in openerpweb.controllers_path.iteritems()
             if path.startswith(self._cp_path)
             if hasattr(controller, 'fmt')
-        ], key=operator.itemgetter(1))
+        ], key=operator.itemgetter("label"))
 
     def fields_get(self, req, model):
         Model = req.session.model(model)
@@ -1466,7 +1494,7 @@ class Export(View):
 
 class CSVExport(Export):
     _cp_path = '/web/export/csv'
-    fmt = ('csv', 'CSV')
+    fmt = {'tag': 'csv', 'label': 'CSV'}
 
     @property
     def content_type(self):
@@ -1501,7 +1529,11 @@ class CSVExport(Export):
 
 class ExcelExport(Export):
     _cp_path = '/web/export/xls'
-    fmt = ('xls', 'Excel')
+    fmt = {
+        'tag': 'xls',
+        'label': 'Excel',
+        'error': None if xlwt else "XLWT required"
+    }
 
     @property
     def content_type(self):
@@ -1511,8 +1543,6 @@ class ExcelExport(Export):
         return base + '.xls'
 
     def from_data(self, fields, rows):
-        import xlwt
-
         workbook = xlwt.Workbook()
         worksheet = workbook.add_sheet('Sheet 1')
 

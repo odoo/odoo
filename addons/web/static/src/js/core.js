@@ -348,6 +348,31 @@ openerp.web.CallbackEnabled = openerp.web.Class.extend(/** @lends openerp.web.Ca
                 }
             }
         }
+    },
+    /**
+     * Proxies a method of the object, in order to keep the right ``this`` on
+     * method invocations.
+     *
+     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
+     * even more so to ``jQuery.proxy`` with a fundamental difference: its
+     * resolution of the method being called is lazy, meaning it will use the
+     * method as it is when the proxy is called, not when the proxy is created.
+     *
+     * Other methods will fix the bound method to what it is when creating the
+     * binding/proxy, which is fine in most javascript code but problematic in
+     * OpenERP Web where developers may want to replace existing callbacks with
+     * theirs.
+     *
+     * The semantics of this precisely replace closing over the method call.
+     *
+     * @param {String} method_name name of the method to invoke
+     * @returns {Function} proxied method
+     */
+    proxy: function (method_name) {
+        var self = this;
+        return function () {
+            return self[method_name].apply(self, arguments);
+        }
     }
 });
 
@@ -547,7 +572,24 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         var self = this;
         // TODO: session store in cookie should be optional
         this.session_id = this.get_cookie('session_id');
-        return this.rpc("/web/session/get_session_info", {}).pipe(function(result) {
+        return this.session_reload().pipe(function(result) {
+            var modules = openerp._modules.join(',');
+            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb);
+            if(self.session_is_valid()) {
+                return deferred.pipe(function() { return self.load_modules(); });
+            }
+            return deferred;
+        });
+    },
+    /**
+     * (re)loads the content of a session: db name, username, user id, session
+     * context and status of the support contract
+     *
+     * @returns {$.Deferred} deferred indicating the session is done reloading
+     */
+    session_reload: function () {
+        var self = this;
+        return this.rpc("/web/session/get_session_info", {}).then(function(result) {
             // If immediately follows a login (triggered by trying to restore
             // an invalid session or no session at all), refresh session data
             // (should not change, but just in case...)
@@ -558,12 +600,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 user_context: result.context,
                 openerp_entreprise: result.openerp_entreprise
             });
-            var modules = openerp._modules.join(',');
-            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb);
-            if(self.session_is_valid()) {
-                return deferred.pipe(function() { self.load_modules(); });
-            }
-            return deferred;
         });
     },
     session_is_valid: function() {
@@ -640,26 +676,31 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
     /**
      * Load additional web addons of that instance and init them
+     *
+     * @param {Boolean} [no_session_valid_signal=false] prevents load_module from triggering ``on_session_valid``.
      */
-    load_modules: function() {
+    load_modules: function(no_session_valid_signal) {
         var self = this;
         return this.rpc('/web/session/modules', {}).pipe(function(result) {
-            self.module_list = result;
             var lang = self.user_context.lang;
             var params = { mods: ["web"].concat(result), lang: lang};
-            var modules = self.module_list.join(',');
+            var to_load = _.difference(result, self.module_list).join(',');
+            self.module_list = result;
             return $.when(
-                self.rpc('/web/webclient/csslist', {mods: modules}, self.do_load_css),
-                self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb),
+                self.rpc('/web/webclient/csslist', {mods: to_load}, self.do_load_css),
+                self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
                 self.rpc('/web/webclient/translations', params).pipe(function(trans) {
                     openerp.web._t.database.set_bundle(trans);
                     var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
-                    return self.rpc('/web/webclient/jslist', {mods: modules}).pipe(function(files) {
+                    return self.rpc('/web/webclient/jslist', {mods: to_load}).pipe(function(files) {
                         return self.do_load_js(file_list.concat(files)); 
                     });
                 })
             ).then(function() {
-                self.on_session_valid();
+                self.on_modules_loaded();
+                if (!no_session_valid_signal) {
+                    self.on_session_valid();
+                }
             });
         });
     },
@@ -692,7 +733,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             var head = document.head || document.getElementsByTagName('head')[0];
             head.appendChild(tag);
         } else {
-            self.on_modules_loaded();
             d.resolve();
         }
         return d;
@@ -702,6 +742,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         _.each(files, function(file) {
             self.qweb_mutex.exec(function() {
                 return self.rpc('/web/proxy/load', {path: file}).pipe(function(xml) {
+                    if (!xml) { return; }
                     openerp.web.qweb.add_template(_.str.trim(xml));
                 });
             });

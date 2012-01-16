@@ -437,6 +437,7 @@ label.error {
     position: absolute;
     cursor: pointer;
     border-left: 1px solid #282828;
+    border-bottom: 1px solid #282828;
     width: 21px;
     height: 21px;
     z-index: 10;
@@ -517,6 +518,11 @@ label.error {
 }
 .openerp a.oe_secondary_submenu_item {
     padding: 0 5px 2px 10px;
+}
+.openerp a.oe_secondary_submenu_item,
+.openerp a.oe_secondary_menu_item {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .openerp a.oe_secondary_submenu_item:hover,
 .openerp a.oe_secondary_submenu_item.leaf.active {
@@ -2033,6 +2039,7 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 
 .openerp .oe_vm_switch_form,
 .openerp .oe_vm_switch_page,
+.openerp .oe_vm_switch_tree,
 .openerp .oe_vm_switch_list,
 .openerp .oe_vm_switch_graph,
 .openerp .oe_vm_switch_gantt,
@@ -2049,6 +2056,7 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
 
 .openerp .oe_vm_switch_form span,
 .openerp .oe_vm_switch_page span,
+.openerp .oe_vm_switch_tree span,
 .openerp .oe_vm_switch_list span,
 .openerp .oe_vm_switch_graph span,
 .openerp .oe_vm_switch_gantt span,
@@ -2068,6 +2076,16 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     background-position: 0px -21px;
 }
 
+.openerp .oe_vm_switch_tree {
+    background-position: 0px 0px;
+}
+.openerp .oe_vm_switch_tree:active,
+.openerp .oe_vm_switch_tree:hover,
+.openerp .oe_vm_switch_tree:focus,
+.openerp .oe_vm_switch_tree[disabled="disabled"] {
+    background-position: 0px -21px;
+}
+
 .openerp .oe_vm_switch_form {
     background-position: -22px 0px;
 }
@@ -2078,6 +2096,15 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     background-position: -22px -21px;
 }
 
+.openerp .oe_vm_switch_page {
+    background-position: -22px 0px;
+}
+.openerp .oe_vm_switch_page:active,
+.openerp .oe_vm_switch_page:hover,
+.openerp .oe_vm_switch_page:focus,
+.openerp .oe_vm_switch_page[disabled="disabled"] {
+    background-position: -22px -21px;
+}
 .openerp .oe_vm_switch_graph {
     background-position: -44px 0px;
 }

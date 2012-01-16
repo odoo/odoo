@@ -28,8 +28,7 @@ openerp.web_process = function (openerp) {
         },
         initialize_process_view: function() {
             var self = this;
-            $.when(this.fields_get(), this.help(), this.get_process_object()).pipe(function(fields, help, process) {
-                self.process_fields = fields;
+            $.when(this.help(), this.get_process_object()).pipe(function(help, process) {
                 self.process_help = help;
                 if(process && process.length) {
                     if(process.length > 1) {
@@ -46,9 +45,9 @@ openerp.web_process = function (openerp) {
                     self.graph_get().done(function(res) {
                         self.process_notes = res.notes;
                         self.process_title = res.name;
-                        self.process_subflows = _.filter(res.nodes, function(x) {
-                            return x.subflow != false;
-                        });
+                        self.process_subflows = _(res.nodes).chain()
+                              .filter(function (node) { return node['subflow'] !== false; })
+                              .uniq(false, function (node) { return node['subflow'][0]; }).value();
                         self.process_related = res.related;
                         def.resolve(res);
                     });
@@ -76,17 +75,6 @@ openerp.web_process = function (openerp) {
                         def.resolve(res);
                     });
             });
-            return def.promise();
-        },
-        fields_get : function() {
-            var self = this,
-                def = $.Deferred(),
-                dataset = new openerp.web.DataSetStatic(this, this.model || this.dataset.model, this.session.context);
-            dataset
-                .call('fields_get',[])
-                .done(function(fields) {
-                    def.resolve(fields);
-                }).fail(def.reject);
             return def.promise();
         },
         help : function() {
@@ -143,11 +131,6 @@ openerp.web_process = function (openerp) {
                 self.process_id = $parent.find('#select_process').val(),
                 self.process_title = $.trim($parent.find('#select_process option:selected').text());
                 self.initialize_process_view();
-            });
-
-            this.$element.find(".toggle_fields").click(function() {
-                $(this).children().toggle();
-                self.$element.find('.process_fields').toggle();
             });
 
             this.$element.find(".process_subflow").click(function() {
@@ -286,7 +269,7 @@ openerp.web_process = function (openerp) {
                         $(this).dialog('destroy');
                     }}
                 ]
-            }).start().open();
+            }).open();
 
             action_manager.appendTo(dialog.$element);
             action_manager.do_action({

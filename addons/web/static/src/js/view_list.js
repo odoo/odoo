@@ -217,11 +217,11 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         });
 
         this.$element.find('.oe-list-add')
-                .click(this.do_add_record)
+                .click(this.proxy('do_add_record'))
                 .attr('disabled', grouped && this.options.editable);
         this.$element.find('.oe-list-delete')
                 .attr('disabled', true)
-                .click(this.do_delete_selected);
+                .click(this.proxy('do_delete_selected'));
         this.$element.find('thead').delegate('th.oe-sortable[data-id]', 'click', function (e) {
             e.stopPropagation();
 
@@ -512,7 +512,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.no_leaf = !!context['group_by_no_leaf'];
 
         this.reload_view(!!group_by, context).then(
-            $.proxy(this, 'reload_content'));
+            this.proxy('reload_content'));
     },
     /**
      * Handles the signal to delete lines from the records list
@@ -685,6 +685,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.display_aggregates(aggregates);
     },
     display_aggregates: function (aggregation) {
+        var self = this;
         var $footer_cells = this.$element.find('.oe-list-footer');
         _(this.aggregate_columns).each(function (column) {
             if (!column['function']) {
@@ -692,7 +693,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }
 
             $footer_cells.filter(_.str.sprintf('[data-field=%s]', column.id))
-                .html(openerp.web.format_cell(aggregation, column, undefined, false));
+                .html(openerp.web.format_cell(aggregation, column, {
+                    process_modifiers: false
+            }));
         });
     },
     get_selected_ids: function() {
@@ -792,7 +795,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 $row.remove();
                 self.refresh_zebra(index);
             },
-            'reset': $.proxy(this, 'on_records_reset'),
+            'reset': function () { return self.on_records_reset(); },
             'change': function (event, record) {
                 var $row = self.$current.find('[data-id=' + record.get('id') + ']');
                 $row.replaceWith(self.render_record(record));
@@ -845,6 +848,9 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 $(self).trigger('action', [field.toString(), record_id, function () {
                     return self.reload_record(self.records.get(record_id));
                 }]);
+            })
+            .delegate('a', 'click', function (e) {
+                e.stopPropagation();
             })
             .delegate('tr', 'click', function (e) {
                 e.stopPropagation();
@@ -905,16 +911,22 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 });
             }
         }
-        return openerp.web.format_cell(record.toForm().data, column);
+        return openerp.web.format_cell(record.toForm().data, column, {
+            model: this.dataset.model,
+            id: record.get('id')
+        });
     },
     render: function () {
+        var self = this;
         if (this.$current) {
             this.$current.remove();
         }
         this.$current = this.$_element.clone(true);
         this.$current.empty().append(
             QWeb.render('ListView.rows', _.extend({
-                render_cell: $.proxy(this, 'render_cell')}, this)));
+                    render_cell: function () {
+                        return self.render_cell.apply(self, arguments); }
+                }, this)));
         this.pad_table_to(5);
     },
     pad_table_to: function (count) {
@@ -1007,14 +1019,13 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
-                }), 'name'),
-            function (records) {
-                _(records[0]).each(function (value, key) {
-                    record.set(key, value, {silent: true});
-                });
-                record.trigger('change', record);
-            }
-        );
+                }), 'name')
+        ).then(function (records) {
+            _(records[0]).each(function (value, key) {
+                record.set(key, value, {silent: true});
+            });
+            record.trigger('change', record);
+        });
     },
     /**
      * Renders a list record to HTML
@@ -1030,7 +1041,8 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             record: record,
             row_parity: (index % 2 === 0) ? 'even' : 'odd',
             view: this.view,
-            render_cell: $.proxy(this, 'render_cell')
+            render_cell: function () {
+                return this.render_cell.apply(this, arguments); }
         });
     },
     /**
@@ -1084,7 +1096,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
 
         this.page = 0;
 
-        this.records.bind('reset', $.proxy(this, 'on_records_reset'));
+        var self = this;
+        this.records.bind('reset', function () {
+            return self.on_records_reset(); });
     },
     make_fragment: function () {
         return document.createDocumentFragment();
@@ -1211,7 +1225,10 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     return column.id === group.grouped_on; });
                 try {
                     $group_column.html(openerp.web.format_cell(
-                        row_data, group_column, _t("Undefined"), false));
+                        row_data, group_column, {
+                            value_if_empty: _t("Undefined"),
+                            process_modifiers: false
+                    }));
                 } catch (e) {
                     $group_column.html(row_data[group_column.id].value);
                 }
@@ -1230,6 +1247,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             $('<td>').text(group.length).appendTo($row);
 
             if (self.options.selectable) {
+                $row.append('<td>');
+            }
+            if (self.options.isClarkGable) {
                 $row.append('<td>');
             }
             _(self.columns).chain()
@@ -1286,9 +1306,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             page = this.datagroup.openable ? this.page : view.page;
 
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
-        var options = { offset: page * limit, limit: limit };
+        var options = { offset: page * limit, limit: limit, context: {bin_size: true} };
         //TODO xmo: investigate why we need to put the setTimeout
-        $.async_when().then(function() {dataset.read_slice(fields, options , function (records) {
+        $.async_when().then(function() {dataset.read_slice(fields, options).then(function (records) {
             // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
             if (self.records.length) {
                 self.records.reset(null, {silent: true});
@@ -1674,6 +1694,7 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
             proxy.reset();
         });
         this._proxies = {};
+        _(this.records).invoke('unbind', null, this._onRecordEvent);
         this.length = 0;
         this.records = [];
         this._byId = {};
@@ -1692,7 +1713,6 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
      * @returns this
      */
     remove: function (record) {
-        var self = this;
         var index = _(this.records).indexOf(record);
         if (index === -1) {
             _(this._proxies).each(function (proxy) {
@@ -1701,6 +1721,7 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
             return this;
         }
 
+        record.unbind(null, this._onRecordEvent);
         this.records.splice(index, 1);
         delete this._byId[record.get('id')];
         this.length--;

@@ -74,6 +74,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
             'shape': this.nodes.attrs.shape,
             'src_node': this.connectors.attrs.source,
             'des_node': this.connectors.attrs.destination,
+            'label': this.connectors.attrs.label || false,
             'visible_nodes': [],
             'invisible_nodes': [],
             'node_fields': [],
@@ -202,38 +203,40 @@ openerp.web.DiagramView = openerp.web.View.extend({
             model = self.node;
         if(id)
             id = parseInt(id, 10);
-        var action_manager = new openerp.web.ActionManager(this);
-        var dialog = new openerp.web.Dialog(this, {
-            width: 850,
-            buttons : [
-                {text: _t("Cancel"), click: function() { $(this).dialog('destroy'); }},
-                {text: _t("Save"), click: function() {
-                        var form_view = action_manager.inner_viewmanager.views.form.controller;
-
-                        form_view.do_save(function() {
-                            self.dataset.read_index(_.keys(self.fields_view.fields), self.on_diagram_loaded);
-                        });
-                        $(this).dialog('destroy');
-                    }
+        
+        var pop,
+            title = model == self.node ? _t('Activity') : _t('Transition');
+        if(!id) {
+            pop = new openerp.web.form.SelectCreatePopup(this);
+            pop.select_element(
+                model,
+                {
+                    title: _t("Create:") + title,
+                    initial_view: 'form',
+                    disable_multiple_selection: true
+                },
+                this.dataset.domain,
+                this.context || this.dataset.context
+            );
+            pop.on_select_elements.add_last(function(element_ids) {
+                self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+            });
+        } else {
+            pop = new openerp.web.form.FormOpenPopup(this);
+            pop.show_element(
+                model,
+                id,
+                this.context || this.dataset.context,
+                {
+                    title: _t("Open: ") + title
                 }
-            ]
-        }).start().open();
-        action_manager.appendTo(dialog.$element);
-        action_manager.do_action({
-            res_model : model,
-            res_id: id,
-            views : [[false, 'form']],
-            type : 'ir.actions.act_window',
-            flags : {
-                search_view: false,
-                sidebar : false,
-                views_switcher : false,
-                action_buttons : false,
-                pager: false
-            }
-        });
+            );
+            pop.on_write.add(function() {
+                self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+            });
+        }
 
-        var form_controller = action_manager.inner_viewmanager.views.form.controller;
+        var form_controller = pop.view_form;
 
         var form_fields;
 
@@ -270,6 +273,8 @@ openerp.web.DiagramView = openerp.web.View.extend({
                 });
             });
         }
+        
+        
     },
 
     on_pager_action: function(action) {
@@ -287,7 +292,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
                 this.dataset.index = this.dataset.ids.length - 1;
                 break;
         }
-        this.dataset.read_index(_.keys(this.fields_view.fields), this.on_diagram_loaded);
+        this.dataset.read_index(_.keys(this.fields_view.fields)).pipe(this.on_diagram_loaded);
         this.do_update_pager();
     },
 
