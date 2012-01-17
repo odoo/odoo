@@ -124,9 +124,8 @@ class delivery_carrier(osv.osv):
                 grid_line_pool.unlink(cr, uid, lines, context=context)
 
             #create the grid lines
-            line_data = None
             if record.free_if_more_than:
-                line_data = {
+                data = {
                     'grid_id': grid_id and grid_id[0],
                     'name': _('Free if more than %.2f') % record.amount,
                     'type': 'price',
@@ -135,6 +134,7 @@ class delivery_carrier(osv.osv):
                     'standard_price': 0.0,
                     'list_price': 0.0,
                 }
+                grid_line_pool.create(cr, uid, data, context=context)
             if record.normal_price:
                 line_data = {
                     'grid_id': grid_id and grid_id[0],
