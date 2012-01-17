@@ -661,7 +661,9 @@ class purchase_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
-            name=False, price_unit=False, notes=False):
+            name=False, price_unit=False, notes=False, context=None):
+        if not context:
+            context = {}
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist or a supplier in the purchase form !\nPlease set one before choosing a product.'))
         if not  partner_id:
@@ -676,9 +678,8 @@ class purchase_order_line(osv.osv):
         lang=False
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, partner_id, ['lang'])['lang']
-        context={'lang':lang}
-        context['partner_id'] = partner_id
-
+            
+        context_partner = {'lang':lang, 'partner_id': partner_id}
         prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
         prod_uom_po = prod.uom_po_id.id
         if not uom:
@@ -688,7 +689,7 @@ class purchase_order_line(osv.osv):
         qty = qty or 1.0
         seller_delay = 0
 
-        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context)[0][1]
+        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context_partner)[0][1]
         res = {}
         for s in prod.seller_ids:
             if s.name.id == partner_id:
@@ -739,10 +740,10 @@ class purchase_order_line(osv.osv):
 
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
-            name=False, price_unit=False, notes=False):
+            name=False, price_unit=False, notes=False, context=None):
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
                 partner_id, date_order=date_order, fiscal_position=fiscal_position, date_planned=date_planned,
-            name=name, price_unit=price_unit, notes=notes)
+            name=name, price_unit=price_unit, notes=notes, context=context)
         if 'product_uom' in res['value']:
             if uom and (uom != res['value']['product_uom']) and res['value']['product_uom']:
                 seller_uom_name = self.pool.get('product.uom').read(cr, uid, [res['value']['product_uom']], ['name'])[0]['name']
