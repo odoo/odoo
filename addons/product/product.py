@@ -513,7 +513,6 @@ class product_product(osv.osv):
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True, select=True),
         'color': fields.integer('Color Index'),
         'product_image': fields.binary('Image'),
-        'write_date': fields.datetime('Update Date' , readonly=True),
     }
     
     def unlink(self, cr, uid, ids, context=None):
