@@ -419,20 +419,12 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
         if action.act_email_to:
             email_to = tools.ustr(action.act_email_to)
-            try:
-                email_to = safe_eval(tools.ustr(action.act_email_to), {}, locals_for_emails)
-            except:
-                pass
             emails.append(email_to)
 
         emails = filter(None, emails)
         if len(emails) and action.act_mail_body:
             emails = list(set(emails))
             from_email= tools.ustr(action.act_email_from)
-            try:
-                from_email= safe_eval(tools.ustr(action.act_email_from), {}, locals_for_emails)
-            except:
-                pass    
             email_from = from_email
 
             def to_email(text):
