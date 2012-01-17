@@ -7,26 +7,25 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2012-01-03 20:19+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2012-01-16 15:11+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-04 05:21+0000\n"
-"X-Generator: Launchpad (build 14616)\n"
+"X-Launchpad-Export-Date: 2012-01-17 05:13+0000\n"
+"X-Generator: Launchpad (build 14676)\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:298
 #, python-format
 msgid "Follwoup Summary"
-msgstr "Sommaire des suivis"
+msgstr "Récaputilatif des relances"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Followup"
-msgstr "Recherche de suivi"
+msgstr "Recherche de relance"
 
 #. module: account_followup
 #: model:ir.module.module,description:account_followup.module_meta_information
@@ -57,12 +56,12 @@ msgstr ""
 "rappels multi-niveaux.\n"
 "\n"
 "    Vous pouvez définir de multiples niveaux de rappel via le menu:\n"
-"        Comptabilité / Configuration / Divers / Suivis\n"
+"        Comptabilité / Configuration / Divers / Relances\n"
 "\n"
 "    Une fois défini, les rappels peuvent être imprimés quotidiennement\n"
 "    par simple clic sur le menu :\n"
-"        Comptabilité / Périodique de traitement / Facturation / Émettre "
-"rappels\n"
+"        Comptabilité / Périodique de traitement / Facturation / Envoyer les "
+"relances\n"
 "\n"
 "    Cela génère un fichier PDF comportant toutes les lettres selon les\n"
 "   différents niveaux de rappel définis. Vous pouvez définir différentes "
@@ -98,7 +97,7 @@ msgstr ""
 #: view:account_followup.followup:0
 #: field:account_followup.followup,followup_line:0
 msgid "Follow-Up"
-msgstr "Suivis"
+msgstr "Relance"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -106,17 +105,17 @@ msgstr "Suivis"
 #: field:account_followup.stat,company_id:0
 #: field:account_followup.stat.by.partner,company_id:0
 msgid "Company"
-msgstr "Entreprise"
+msgstr "Société"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Invoice Date"
-msgstr "Date de Facturation"
+msgstr "Date de facturation"
 
 #. module: account_followup
 #: field:account.followup.print.all,email_subject:0
 msgid "Email Subject"
-msgstr "Sujet du Message"
+msgstr "Sujet du courriel"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_followup_stat
@@ -223,7 +222,7 @@ msgstr "Rappel de facture"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow Up"
-msgstr "Suivi"
+msgstr "Relances"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -278,7 +277,7 @@ msgstr "Corps du Message"
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 msgid "Follow-up Level"
-msgstr "Dernier suivi"
+msgstr "Derniere relance"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
@@ -362,7 +361,7 @@ msgstr "Partenaire à rappeler"
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr "Suivis"
+msgstr "Relances"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -441,7 +440,7 @@ msgstr "Devise"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Followup Statistics by Partner"
-msgstr "Statistiques des suivis par partenaire"
+msgstr "Statistiques des relances par partenaire"
 
 #. module: account_followup
 #: model:ir.module.module,shortdesc:account_followup.module_meta_information
@@ -479,12 +478,12 @@ msgstr "Paramètres du Courriel"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Print Follow Ups"
-msgstr "Imprimer les suivis"
+msgstr "Imprimer les relances"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr "Date de suivi"
+msgstr "Date de relance"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -499,7 +498,7 @@ msgstr "Solde dû :"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Followup Statistics"
-msgstr "Statistiques de suivi"
+msgstr "Statistiques de relance"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -554,7 +553,7 @@ msgstr "Sociétés"
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Followup Lines"
-msgstr "Lignes de suivi"
+msgstr "Lignes de relance"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -597,7 +596,7 @@ msgstr "Type de terme"
 #: model:ir.model,name:account_followup.model_account_followup_print
 #: model:ir.model,name:account_followup.model_account_followup_print_all
 msgid "Print Followup & Send Mail to Customers"
-msgstr "Imprimer les suivis et envoyer les courriers aux clients"
+msgstr "Imprimer les relances et envoyer les courriers aux clients"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -634,7 +633,7 @@ msgstr "Litige"
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr "Niveau de suivi maximal"
+msgstr "Niveau de relance maximal"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -655,7 +654,7 @@ msgstr "%(date)s: Date Courante"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Followup Level"
-msgstr "Niveau de suivi"
+msgstr "Niveau de relance"
 
 #. module: account_followup
 #: field:account_followup.followup,description:0
@@ -692,7 +691,7 @@ msgstr "Eléments à recevoir"
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
-msgstr "Suivis envoyés"
+msgstr "Relances envoyées"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -780,12 +779,12 @@ msgstr "%(partner_name)s: nom du Partenaire"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Latest Followup Date"
-msgstr "Date du dernier suivi"
+msgstr "Date de la dernière relance"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
-msgstr "Critère de suivi"
+msgstr "Critère de relance"
 
 #. module: account_followup
 #: constraint:account.move.line:0

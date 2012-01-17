@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-09-20 09:48+0000\n"
-"Last-Translator: lholivier <olivier.lenoir@free.fr>\n"
+"PO-Revision-Date: 2012-01-16 17:18+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:34+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-17 05:13+0000\n"
+"X-Generator: Launchpad (build 14676)\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -24,7 +24,7 @@ msgid "In Progress"
 msgstr "En cours"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
 #, python-format
 msgid "No Product in Tender"
 msgstr "Pas de produit dans l'appel d'offres"
@@ -82,6 +82,7 @@ msgstr "Date de demande"
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: model:ir.actions.report.xml,name:purchase_requisition.report_purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
+#: model:ir.module.category,name:purchase_requisition.module_category_purchase_requisition
 #: field:product.product,purchase_requisition:0
 #: field:purchase.order,requisition_id:0
 #: view:purchase.requisition:0
@@ -193,11 +194,11 @@ msgid ""
 "negotiation, once you have reviewed all the supplier's offers, you can "
 "validate some and cancel others."
 msgstr ""
-"La demande d'achat précède la demande de devis.  La demande d'achat "
-"répertorie les produits dont on a besoin et on peut y déclencher des "
-"demandes de devis auprès des fournisseurs. Aprés la négociation, lorsque "
-"toutes les offres des fournisseurs ont été examinées, vous pouvez valider "
-"certaines offres et éliminer les autres."
+"L'appel d'offres précède la demande de prix.  L'appel d'offres répertorie "
+"les produits dont on a besoin et déclenche les demandes de prix auprès des "
+"fournisseurs. Après la négociation, lorsque toutes les offres des "
+"fournisseurs ont été examinées, vous pouvez valider certaines offres et "
+"éliminer les autres."
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_qty:0
@@ -273,7 +274,7 @@ msgid "Purchase Order"
 msgstr "Bon de commande"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
 #, python-format
 msgid "Error!"
 msgstr "Erreur!"
@@ -317,7 +318,7 @@ msgstr "]"
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Quotation Detail"
-msgstr "Détail de l'offre de prix"
+msgstr "Détail du devis"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -354,7 +355,7 @@ msgstr "Entrepôt"
 #. module: purchase_requisition
 #: field:procurement.order,requisition_id:0
 msgid "Latest Requisition"
-msgstr "Dernière demande"
+msgstr "Dernièr appel d'offres"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -374,7 +375,7 @@ msgstr "Appel d'offres (exclusif)"
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
 msgid "Create Quotation"
-msgstr "Céer une demander de prix"
+msgstr "Céer un devis"
 
 #. module: purchase_requisition
 #: constraint:product.product:0
