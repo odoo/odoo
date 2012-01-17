@@ -1092,7 +1092,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.bind_hashchange();
             if (!self.session.openerp_entreprise) {
                 self.$element.find('.oe_footer_powered').append('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">Unsupported/Community Version</a></span>');
-                $('title').html('OpenERP - Unsupported/Community Version');
+                document.title = _t("OpenERP - Unsupported/Community Version");
             }
         });
     },
