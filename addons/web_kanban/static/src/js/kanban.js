@@ -47,7 +47,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     },
     on_loaded: function(data) {
         this.fields_view = data;
-        this.fields_keys = _.keys(this.fields_view.fields).concat(['write_date']);
+        this.fields_keys = _.keys(this.fields_view.fields);
         this.add_qweb_template();
         this.has_been_loaded.resolve();
     },
@@ -162,7 +162,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 group_aggregates[value] = group.aggregates[key];
             });
             var dataset = new openerp.web.DataSetSearch(self, self.dataset.model, group.context, group.domain);
-            dataset.read_slice(self.fields_keys, {'domain': group.domain, 'context': group.context}).then(function(records) {
+            dataset.read_slice(self.fields_keys.concat(['__last_update']), {'domain': group.domain, 'context': group.context}).then(function(records) {
                 self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                 groups_array[index] = new openerp.web_kanban.KanbanGroup(self, records, group_value, group_name, group_aggregates);
                 if (!remaining--) {
@@ -175,7 +175,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     do_process_dataset: function(dataset) {
         var self = this;
         this.do_clear_groups();
-        this.dataset.read_slice(this.fields_keys).then(function(records) {
+        this.dataset.read_slice(this.fields_keys.concat(['__last_update'])).then(function(records) {
             var groups = [];
             while (records.length) {
                 for (var i = 0; i < self.default_nr_columns; i++) {
@@ -355,6 +355,7 @@ openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
 openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     template: 'KanbanView.record',
     init: function (parent, record) {
+        console.log(record.__last_update, record.name)
         this._super(parent);
         this.group = parent;
         this.view = parent.view;
@@ -491,7 +492,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     },
     do_reload: function() {
         var self = this;
-        this.view.dataset.read_ids([this.id], this.view.fields_keys).then(function(records) {
+        this.view.dataset.read_ids([this.id], this.view.fields_keys.concat(['__last_update'])).then(function(records) {
             if (records.length) {
                 self.set_record(records[0]);
                 self.do_render();
@@ -532,8 +533,8 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     kanban_image: function(model, field, id) {
         id = id || '';
         var url = openerp.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
-        if (this.record.write_date && this.record.write_date.raw_value) {
-            var time = openerp.web.str_to_datetime(this.record.write_date.raw_value).getTime();
+        if (this.record.__last_update && this.record.__last_update.raw_value) {
+            var time = openerp.web.str_to_datetime(this.record.__last_update.raw_value).getTime();
             url += '&t=' + time;
         }
         return url;
