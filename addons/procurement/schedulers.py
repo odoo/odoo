@@ -180,10 +180,11 @@ class procurement_order(osv.osv):
 
         for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
             context['warehouse'] = warehouse
-            for product in product_obj.browse(cr, uid, products_id, context=context):
-                if product.virtual_available >= 0.0:
+            for product_availability in product_obj.read(cr, uid, products_id, ['virtual_available'], context=context):
+                if product_availability['virtual_available'] >= 0.0:
                     continue
 
+                product = product_obj.browse(cr, uid, [product_availability['id']], context=context)[0]
                 if product.supply_method == 'buy':
                     location_id = warehouse.lot_input_id.id
                 elif product.supply_method == 'produce':
