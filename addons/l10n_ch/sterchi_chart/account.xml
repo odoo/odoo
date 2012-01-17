@@ -177,12 +177,14 @@
         <record model="account.account.type" id="account_type_receivable">
             <field name="name">Bilan : Debiteurs</field>
             <field name="code">receivable</field>
+            <field name="partner_account">True</field>
             <field name="close_method">unreconciled</field>
             <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_payable">
             <field name="name">Bilan : Fournisseurs</field>
             <field name="code">payable</field>
+            <field name="partner_account">True</field>
             <field name="close_method">unreconciled</field>
             <field name="report_type">none</field>
         </record>
@@ -11802,7 +11804,12 @@
             <field name="property_account_receivable" ref="ch_1100"/>
             <field name="property_account_payable" ref="ch_2000"/>
             <field name="property_account_expense_categ" ref="ch_4200"/>
-            <field name="property_account_income_categ" ref="ch_1000"/>
+            <field name="property_account_income_categ" ref="ch_3200"/>
+            <field name="property_account_expense" ref="ch_4200"/>
+            <field name="property_account_income" ref="ch_3200"/>
+            <field name="property_account_income_opening" ref="ch_2990"/>
+            <field name="property_account_expense_opening" ref="ch_2990"/>
+            <field name="property_reserve_and_surplus_account" ref="ch_2991"/>
         </record>
         
         <!-- journal configuration of account -->
