@@ -194,7 +194,7 @@ var QWeb2 = {
 
 QWeb2.Engine = (function() {
     function Engine() {
-        // TODO: handle prefix at template level : t-prefix="x"
+        // TODO: handle prefix at template level : t-prefix="x", don't forget to lowercase it
         this.prefix = 't';
         this.debug = false;
         this.templates_resources = []; // TODO: implement this.reload()
@@ -620,7 +620,7 @@ QWeb2.Element = (function() {
                     }
                 }
             }
-            if (this.tag !== this.engine.prefix) {
+            if (this.tag.toLowerCase() !== this.engine.prefix) {
                 var tag = "<" + this.tag;
                 for (var a in this.attributes) {
                     tag += this.engine.tools.gen_attribute([a, this.attributes[a]]);
