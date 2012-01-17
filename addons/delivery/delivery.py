@@ -145,7 +145,6 @@ class delivery_carrier(osv.osv):
                     'standard_price': record.normal_price,
                     'list_price': record.normal_price,
                 }
-            if line_data:
                 grid_line_pool.create(cr, uid, line_data, context=context)
         return True
 
