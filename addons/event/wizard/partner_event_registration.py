@@ -76,7 +76,6 @@ class partner_event_registration(osv.osv_memory):
                         'event_id': current.event_id and current.event_id.id or False,
                         'unit_price': current.unit_price,
                         'partner_id': partner.id,
-                        'partner_invoice_id':  partner.id,
                         'event_product': current.event_id.product_id.name,
                         'contact_id': contact_id,
                         'email_from': email,

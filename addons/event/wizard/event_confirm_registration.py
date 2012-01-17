@@ -36,33 +36,9 @@ class event_confirm_registration(osv.osv_memory):
         'msg': 'The event limit is reached. What do you want to do?'
      }
 
-    def default_get(self, cr, uid, fields, context=None):
-        """
-        This function gets default values
-        """
-        if context is None:
-            context = {}
-        registration_pool = self.pool.get('event.registration')
-        registration_ids = context.get('registration_ids', [])
-        res = super(event_confirm_registration, self).default_get(cr, uid, fields, context=context)
-        msg = ""
-        overlimit_event_ids = []
-        for registration in registration_pool.browse(cr, uid, registration_ids, context=context):
-            register_max = registration.event_id.register_max
-            if registration.event_id.id not in overlimit_event_ids:
-                overlimit_event_ids.append(registration.event_id.id)
-                msg += _("Warning: The Event '%s' has reached its Maximum Limit (%s).") \
-                            %(registration.event_id.name, register_max)
-        if 'msg' in fields:
-            res.update({'msg': msg})
-        return res
+
 
     def confirm(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        registration_pool = self.pool.get('event.registration')
-        registration_ids = context.get('registration_ids', [])
-        registration_pool.do_open(cr, uid, registration_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 event_confirm_registration()

@@ -456,7 +456,7 @@ class event_registration(osv.osv):
     # event uses add_note wizard from crm, which expects case_* methods
     def case_close(self, cr, uid, ids, context=None):
         self.do_close(cr, uid, ids, context)
-    
+        return self.write(cr, uid, ids, {'state': 'done'})
     # event uses add_note wizard from crm, which expects case_* methods
     def case_cancel(self, cr, uid, ids, context=None):
         """ Cancel Registration
@@ -511,30 +511,7 @@ class event_registration(osv.osv):
     def button_reg_close(self, cr, uid, ids, context=None):
         """This Function Close Event Registration.
         """
-        data_pool = self.pool.get('ir.model.data')
-        unclosed_ids = []
-        for registration in self.browse(cr, uid, ids, context=context):
-            if registration.tobe_invoiced and not registration.invoice_id:
-                unclosed_ids.append(registration.id)
-            else:
-                self.do_close(cr, uid, [registration.id], context=context)
-        if unclosed_ids:
-            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_make_invoice')
-            view_id = view_id and view_id[1] or False
-            context['active_ids'] = unclosed_ids
-            return {
-                'name': _('Close Registration'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'event.make.invoice',
-                'views': [(view_id, 'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'context': context,
-                'nodestroy': True
-            }
-        return True
+        return self.case_close(cr, uid, ids)
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
         return self.case_cancel(cr, uid, ids)

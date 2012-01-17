@@ -58,7 +58,9 @@
                         <field name="date_end"/>
                         <field name="type" widget="selection"/>
                         <field name="language"/>
-                        <field name="parent_id"/>
+                        <field name="user_id"/>
+                        <field name="country_id" />
+                        <field name="address_id" domain="[('country_id','=',country_id)]"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Event">
@@ -66,19 +68,6 @@
                             <separator string="Invoice Information" colspan="4"/>
                             <field name="product_id" on_change="onchange_product(product_id)" colspan="4"/>
                             <field name="unit_price"/>
-                            <field name="pricelist_id" widget="selection" domain="[('type','=','sale')]" groups="base.group_extended"/>
-                        </group>
-                        <group colspan="2" col="2">
-                            <separator string="Contact" colspan="4"/>
-                            <field name="user_id"/>
-                            <field name="section_id" widget="selection" on_change="do_team_change(section_id)"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                        </group>
-                        <group colspan="2" col="2">
-                            <separator string="Location" colspan="4"/>
-                            <field name="country_id" />
-                            <field name="address_id" domain="[('country_id','=',country_id)]"/>
-
                         </group>
                         <separator string="Description" colspan="4"/>
                         <field name="note" colspan="4" nolabel="1"/>
