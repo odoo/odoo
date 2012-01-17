@@ -1062,7 +1062,6 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         this.execute_action().always(function() {
             self.force_disabled = false;
             self.check_disable();
-            $.tipTipClear();
         });
     },
     execute_action: function() {

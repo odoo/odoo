@@ -13,15 +13,15 @@
 }
 
 #tiptip_holder.tip_bottom {
-	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 #tiptip_holder.tip_right {
-	padding-left: 5px;
+	padding-right: 5px;
 }
 
 #tiptip_holder.tip_left {
-	padding-right: 5px;
+	padding-left: 5px;
 }
 
 #tiptip_content {
@@ -110,4 +110,25 @@
 	#tiptip_holder.tip_top #tiptip_arrow_inner { 
 		border-top-color: rgba(20,20,20,0.92);
 	}
+}
+
+/* Alternative theme for TipTip */
+#tiptip_holder.alt.tip_top #tiptip_arrow_inner {
+	border-top-color: #444444;
+}
+
+#tiptip_holder.alt.tip_bottom #tiptip_arrow_inner {
+	border-bottom-color: #444444;
+}
+
+#tiptip_holder.alt.tip_right #tiptip_arrow_inner {
+	border-right-color: #444444;	
+}
+
+#tiptip_holder.alt.tip_left #tiptip_arrow_inner {
+	border-left-color: #444444;
+}
+
+#tiptip_holder.alt #tiptip_content {
+	background-color: #444444; border: 1px solid White; border-radius: 3px; box-shadow: 0 0 3px #555555; color: #FFFFFF; font-size: 11px; padding: 4px 8px; text-shadow: 0 0 1px Black;
 }
