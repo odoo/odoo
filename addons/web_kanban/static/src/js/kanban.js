@@ -355,7 +355,6 @@ openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
 openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     template: 'KanbanView.record',
     init: function (parent, record) {
-        console.log(record.__last_update, record.name)
         this._super(parent);
         this.group = parent;
         this.view = parent.view;
