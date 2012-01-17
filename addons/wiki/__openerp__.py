@@ -53,5 +53,6 @@ Keep track of Wiki groups, pages, and history.
     'certificate': '0086363630317',
     'web': True,
     'images': ['images/create_index.jpeg','images/page_history.jpeg','images/wiki_groups.jpeg','images/wiki_pages.jpeg'],
+    'js': ['static/src/lib/wiky/wiky.js', 'static/src/js/wiki.js'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
