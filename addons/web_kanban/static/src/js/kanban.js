@@ -47,7 +47,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     },
     on_loaded: function(data) {
         this.fields_view = data;
-        this.fields_keys = _.keys(this.fields_view.fields);
+        this.fields_keys = _.keys(this.fields_view.fields).concat(['write_date']);
         this.add_qweb_template();
         this.has_been_loaded.resolve();
     },
@@ -531,7 +531,12 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     },
     kanban_image: function(model, field, id) {
         id = id || '';
-        return openerp.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+        var url = openerp.connection.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+        if (this.record.write_date && this.record.write_date.raw_value) {
+            var time = openerp.web.str_to_datetime(this.record.write_date.raw_value).getTime();
+            url += '&t=' + time;
+        }
+        return url;
     },
     kanban_text_ellipsis: function(s, size) {
         size = size || 160;
