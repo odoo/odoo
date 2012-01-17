@@ -933,7 +933,7 @@ class View(openerpweb.Controller):
             xml = self.transform_view(arch, session, evaluation_context)
         else:
             xml = ElementTree.fromstring(arch)
-        fvg['arch'] = web.common.xml2json.Xml2Json.convert_element(xml, preserve_whitespaces)
+        fvg['arch'] = web.common.xml2json.from_elementtree(xml, preserve_whitespaces)
 
         for field in fvg['fields'].itervalues():
             if field.get('views'):
