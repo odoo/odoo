@@ -806,7 +806,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             'widget' : {'name':'widget', 'string': 'widget', 'type': 'selection'},
             'colors' : {'name':'colors', 'string': 'Colors', 'type': 'char'},
             'editable' : {'name':'editable', 'string': 'Editable', 'type': 'selection', 'selection': [["",""],["top","Top"],["bottom", "Bottom"]]},
-            'groups' : {'name':'groups', 'string': 'Groups', 'type': 'seleciton_multi'},
+            'groups' : {'name':'groups', 'string': 'Groups', 'type': 'seleciton_multi'}
         };
         var arch_val = self.get_object_by_id(this.one_object.clicked_tr_id,this.one_object['main_object'], []);
         this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
@@ -928,7 +928,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             type: 'ir.actions.act_window',
             target: "new",
             flags: {
-                action_buttons: true,
+                action_buttons: true
             }
         }
         var action_manager = new openerp.web.ActionManager(self);
@@ -982,7 +982,7 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
     },
     render: function() {
         return _.str.sprintf("<td id = %s>%s</td>", this.name, QWeb.render(this.template, {widget: this}))
-    },
+    }
 });
 openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
     template : "vieweditor_boolean",
@@ -1084,7 +1084,7 @@ var _PROPERTIES = {
     'action' : ['name', 'string', 'colspan', 'groups'],
     'tree' : ['string', 'colors', 'editable', 'link', 'limit', 'min_rows'],
     'graph' : ['string', 'type'],
-    'calendar' : ['string', 'date_start', 'date_stop', 'date_delay', 'day_length', 'color', 'mode'],
+    'calendar' : ['string', 'date_start', 'date_stop', 'date_delay', 'day_length', 'color', 'mode']
 };
 var _CHILDREN = {
     'form': ['notebook', 'group', 'field', 'label', 'button','board', 'newline', 'separator'],
@@ -1100,7 +1100,7 @@ var _CHILDREN = {
     'label': [],
     'button' : [],
     'newline': [],
-    'separator': [],
+    'separator': []
 };
 var _ICONS = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
             'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
@@ -1134,6 +1134,6 @@ openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
     'seleciton_multi' : 'openerp.web.ViewEditor.FieldSelectMulti',
     'selection' : 'openerp.web.ViewEditor.FieldSelect',
     'char' : 'openerp.web.ViewEditor.FieldChar',
-    'float' : 'openerp.web.ViewEditor.FieldFloat',
+    'float' : 'openerp.web.ViewEditor.FieldFloat'
 });
 };

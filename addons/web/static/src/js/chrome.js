@@ -205,7 +205,7 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
             buttons: buttons
         }).open();
         dialog.$element.html(QWeb.render('CrashManagerError', {session: openerp.connection, error: error}));
-    },
+    }
 });
 
 openerp.web.Loading = openerp.web.Widget.extend(/** @lends openerp.web.Loading# */{
@@ -649,7 +649,7 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
                 }
             }
         });
-    },
+    }
 });
 
 openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
@@ -1062,13 +1062,9 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
 
         this._current_state = null;
     },
-    render_element: function() {
-        this.$element = $('<body/>');
-        this.$element.attr("id", "oe");
-        this.$element.addClass("openerp");
-    },
     start: function() {
         var self = this;
+        this.$element = $(document.body);
         if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
             this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
@@ -1092,7 +1088,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.bind_hashchange();
             if (!self.session.openerp_entreprise) {
                 self.$element.find('.oe_footer_powered').append('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">Unsupported/Community Version</a></span>');
-                $('title').html('OpenERP - Unsupported/Community Version');
+                document.title = _t("OpenERP - Unsupported/Community Version");
             }
         });
     },
@@ -1215,7 +1211,7 @@ openerp.web.EmbeddedClient = openerp.web.Widget.extend({
 
             self.am.do_action(action);
         });
-    },
+    }
 
 });
 

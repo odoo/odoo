@@ -829,9 +829,9 @@ openerp.web.Model = openerp.web.CallbackEnabled.extend({
             model: this.model_name,
             method: method,
             args: args,
-            kwargs: kwargs,
+            kwargs: kwargs
         });
-    },
+    }
 });
 
 openerp.web.CompoundContext = openerp.web.Class.extend({
