@@ -329,12 +329,11 @@ QWeb2.Engine = (function() {
                     "   return r.join('');";
         },
         render : function(template, dict) {
-            var ndict = QWeb2.tools.extend({}, this.default_dict);
-            QWeb2.tools.extend(ndict, dict);
+            QWeb2.tools.extend(dict, this.default_dict);
             /*if (this.debug && window['console'] !== undefined) {
                 console.time("QWeb render template " + template);
             }*/
-            var r = this._render(template, ndict);
+            var r = this._render(template, dict);
             /*if (this.debug && window['console'] !== undefined) {
                 console.timeEnd("QWeb render template " + template);
             }*/
