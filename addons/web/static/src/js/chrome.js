@@ -1062,13 +1062,9 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
 
         this._current_state = null;
     },
-    render_element: function() {
-        this.$element = $('<body/>');
-        this.$element.attr("id", "oe");
-        this.$element.addClass("openerp");
-    },
     start: function() {
         var self = this;
+        this.$element = $(document.body);
         if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
             this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
