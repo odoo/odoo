@@ -337,6 +337,7 @@ class event_registration(osv.osv):
         'active': 1,
         'user_id': lambda self, cr, uid, ctx: uid,
     }
+       
 
     def _make_invoice(self, cr, uid, reg, lines, context=None):
         """ Create Invoice from Invoice lines
