@@ -329,7 +329,7 @@ QWeb2.Engine = (function() {
                     "   return r.join('');";
         },
         render : function(template, dict) {
-            QWeb2.tools.extend(dict, this.default_dict);
+            QWeb2.tools.extend(dict || {}, this.default_dict);
             /*if (this.debug && window['console'] !== undefined) {
                 console.time("QWeb render template " + template);
             }*/
