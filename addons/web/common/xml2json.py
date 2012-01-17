@@ -3,6 +3,8 @@
 # New BSD Licensed
 #
 # URL: http://code.google.com/p/xml2json-direct/
+import simplejson
+from xml.etree import ElementTree
 
 class Xml2Json(object):
     @staticmethod
