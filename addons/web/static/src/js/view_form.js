@@ -1078,15 +1078,15 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
                     title: _t('Confirm'),
                     modal: true,
                     buttons: [
+                        {text: _t("Cancel"), click: function() {
+                                def.resolve();
+                                $(this).dialog("close");
+                            }
+                        },
                         {text: _t("Ok"), click: function() {
                                 self.on_confirmed().then(function() {
                                     def.resolve();
                                 });
-                                $(this).dialog("close");
-                            }
-                        },
-                        {text: _t("Cancel"), click: function() {
-                                def.resolve();
                                 $(this).dialog("close");
                             }
                         }
