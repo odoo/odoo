@@ -302,7 +302,9 @@ class Cursor(object):
         if leak:
             self._cnx.leaked = True
         else:
-            keep_in_pool = self.dbname not in ('template1', 'template0', 'postgres')
+            chosen_template = tools.config['db_template']
+            templates_list = tuple(set(['template0', 'template1', 'postgres', chosen_template]))
+            keep_in_pool = self.dbname not in templates_list
             self._pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
     @check

@@ -116,9 +116,10 @@ class db(netsvc.ExportService):
     def _create_empty_database(self, name):
         db = sql_db.db_connect('template1')
         cr = db.cursor()
+        chosen_template = tools.config['db_template']
         try:
             cr.autocommit(True) # avoid transaction block
-            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "template0" """ % name)
+            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
         finally:
             cr.close()
 
@@ -304,7 +305,8 @@ class db(netsvc.ExportService):
     def exp_list(self, document=False):
         if not tools.config['list_db'] and not document:
             raise openerp.exceptions.AccessDenied()
-
+        chosen_template = tools.config['db_template']
+        templates_list = tuple(set(['template0', 'template1', 'postgres', chosen_template]))
         db = sql_db.db_connect('template1')
         cr = db.cursor()
         try:
@@ -318,9 +320,9 @@ class db(netsvc.ExportService):
                     res = cr.fetchone()
                     db_user = res and str(res[0])
                 if db_user:
-                    cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres') order by datname", (db_user,))
+                    cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in %s order by datname", (db_user, templates_list))
                 else:
-                    cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres') order by datname")
+                    cr.execute("select decode(datname, 'escape') from pg_database where datname not in %s order by datname", (templates_list,))
                 res = [str(name) for (name,) in cr.fetchall()]
             except Exception:
                 res = []

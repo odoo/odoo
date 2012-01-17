@@ -35,14 +35,14 @@ conf = openerp.tools.config
 
 # Path to the OpenERP Addons repository (comma-separated for
 # multiple locations)
-conf['addons_path'] = '/home/openerp/addons/trunk,/home/openerp/web/trunk/addons'
+conf['addons_path'] = '/opt/openerp_61Launchpad/src/webclient/addons/,/opt/openerp_61Launchpad/src/server/openerp/addons'
 
 # Optional database config if not using local socket
 #conf['db_name'] = 'mycompany'
 #conf['db_host'] = 'localhost'
-#conf['db_user'] = 'foo'
+conf['db_user'] = 'openerp_geoengine'
 #conf['db_port'] = 5432
-#conf['db_password'] = 'secret'
+conf['db_password'] = 'toto'
 
 # OpenERP Log Level
 # DEBUG=10, DEBUG_RPC=8, DEBUG_RPC_ANSWER=6, DEBUG_SQL=5, INFO=20,

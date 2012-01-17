@@ -68,6 +68,7 @@ class configmanager(object):
             'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty/',
             'reportgz': False,
             'root_path': None,
+            'db_template': 'template0',
         }
 
         # Not exposed in the configuration file.
@@ -217,6 +218,8 @@ class configmanager(object):
                          help="specify the database port", type="int")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
                          help="specify the the maximum number of physical connections to posgresql")
+        group.add_option("--db_template", dest="db_template", my_default='template0',
+                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Internationalisation options",
@@ -346,7 +349,7 @@ class configmanager(object):
             self.options['pidfile'] = False
 
         keys = ['xmlrpc_interface', 'xmlrpc_port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
+                'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
