@@ -241,7 +241,6 @@ openerp.web.page = function (openerp) {
         'email': 'openerp.web.page.FieldEmailReadonly',
         'url': 'openerp.web.page.FieldUrlReadonly',
         'text': 'openerp.web.page.FieldCharReadonly',
-        'text_wiki' : 'openerp.web.page.FieldCharReadonly',
         'date': 'openerp.web.page.FieldCharReadonly',
         'datetime': 'openerp.web.page.FieldCharReadonly',
         'selection' : 'openerp.web.page.FieldSelectionReadonly',

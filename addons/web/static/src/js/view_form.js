@@ -3212,7 +3212,6 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'email' : 'openerp.web.form.FieldEmail',
     'url' : 'openerp.web.form.FieldUrl',
     'text' : 'openerp.web.form.FieldText',
-    'text_wiki' : 'openerp.web.form.FieldText',
     'date' : 'openerp.web.form.FieldDate',
     'datetime' : 'openerp.web.form.FieldDatetime',
     'selection' : 'openerp.web.form.FieldSelection',
