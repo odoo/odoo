@@ -328,6 +328,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
         # Remove all OpenERPSession instances with no uid, they're generated
         # either by login process or by HTTP requests without an OpenERP
         # session id, and are generally noise
+        removed_sessions = []
         for key, value in request.session.items():
             if (isinstance(value, session.OpenERPSession) 
                 and not value._uid
@@ -335,6 +336,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                 and value._creation_time + (60*5) < time.time()  # FIXME do not use a fixed value
             ):
                 _logger.debug('remove session %s', key)
+                removed_sessions.append(key)
                 del request.session[key]
 
         with session_lock:
@@ -364,7 +366,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
 
                 # add missing keys
                 for k, v in in_store.iteritems():
-                    if k not in request.session:
+                    if k not in request.session and k not in removed_sessions:
                         request.session[k] = v
 
             session_store.save(request.session)
