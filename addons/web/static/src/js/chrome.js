@@ -280,6 +280,9 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
     init: function(parent, element_id, option_id) {
         this._super(parent, element_id);
         this.unblockUIFunction = $.unblockUI;
+        $.validator.addMethod('matches', function (s, _, re) {
+            return new RegExp(re).test(s);
+        }, _t("Invalid database name"));
     },
     start: function() {
         this.$option_id = $("#oe_db_options");
