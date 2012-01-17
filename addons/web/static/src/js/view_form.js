@@ -1279,7 +1279,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
             this.definition_options = JSON.parse(str);
         }
         return this.definition_options;
-    },
+    }
 });
 
 openerp.web.form.FieldChar = openerp.web.form.Field.extend({
@@ -2422,7 +2422,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
         var self = this;
         var def = $.Deferred().then(callback).then(function() {self.o2m.view.reload();});
         return this._super(name, id, _.bind(def.resolve, def));
-    },
+    }
 });
 
 openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({

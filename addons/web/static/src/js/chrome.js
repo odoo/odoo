@@ -205,7 +205,7 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
             buttons: buttons
         }).open();
         dialog.$element.html(QWeb.render('CrashManagerError', {session: openerp.connection, error: error}));
-    },
+    }
 });
 
 openerp.web.Loading = openerp.web.Widget.extend(/** @lends openerp.web.Loading# */{
@@ -649,7 +649,7 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
                 }
             }
         });
-    },
+    }
 });
 
 openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
@@ -1215,7 +1215,7 @@ openerp.web.EmbeddedClient = openerp.web.Widget.extend({
 
             self.am.do_action(action);
         });
-    },
+    }
 
 });
 

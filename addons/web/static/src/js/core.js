@@ -491,7 +491,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             dataType: 'json',
             contentType: 'application/json',
             data: JSON.stringify(payload),
-            processData: false,
+            processData: false
         }, url);
         if (this.synch)
         	ajax.async = false;
@@ -502,7 +502,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         // extracted from payload to set on the url
         var data = {
             session_id: this.session_id,
-            id: payload.id,
+            id: payload.id
         };
         url.url = this.get_url(url.url);
         var ajax = _.extend({
@@ -864,7 +864,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     	} finally {
     		this.synch = synch;
     	}
-    },
+    }
 });
 
 /**
