@@ -3265,14 +3265,20 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_tax_temp = self.pool.get('account.tax.template')
         chart_template = obj_wizard.chart_template_id
         vals = {}
+        # get the ids of all the parents of the selected account chart template
+        current_chart_template = chart_template
+        all_parents = [current_chart_template.id]
+        while current_chart_template.parent_id:
+            current_chart_template = current_chart_template.parent_id
+            all_parents.append(current_chart_template.id)
         # create tax templates and tax code templates from purchase_tax_rate and sale_tax_rate fields
         if not chart_template.complete_tax_set:
-            if obj_wizard.sale_tax:
-                value = obj_wizard.sale_tax_rate
-                obj_tax_temp.write(cr, uid, [obj_wizard.sale_tax.id], {'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
-            if obj_wizard.purchase_tax:
-                value = obj_wizard.purchase_tax_rate
-                obj_tax_temp.write(cr, uid, [obj_wizard.purchase_tax.id], {'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
+            value = obj_wizard.sale_tax_rate
+            ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('sale','all')), ('chart_template_id', 'in', all_parents)], context=context, order="sequence, id desc", limit=1)
+            obj_tax_temp.write(cr, uid, ref_tax_ids, {'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
+            value = obj_wizard.purchase_tax_rate
+            ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('purchase','all')), ('chart_template_id', 'in', all_parents)], context=context, order="sequence, id desc", limit=1)
+            obj_tax_temp.write(cr, uid, ref_tax_ids, {'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
         return True
 
     def execute(self, cr, uid, ids, context=None):

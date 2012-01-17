@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -216,7 +216,7 @@ class OpenIDController(openerpweb.Controller):
 
 
         fragment = '#loginerror' if not user_id else ''
-        return werkzeug.utils.redirect('/web/webclient/home?debug=1'+fragment)
+        return werkzeug.utils.redirect('/'+fragment)
 
     @openerpweb.jsonrequest
     def status(self, req):

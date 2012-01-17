@@ -44,7 +44,9 @@ When creating invoices from picking, OpenERP is able to add and compute the ship
         'partner_view.xml'
     ],
     'demo_xml': ['delivery_demo.xml'],
-    'test':['test/delivery_report.yml'],
+    'test': [
+        'test/delivery_cost.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '0033981912253',

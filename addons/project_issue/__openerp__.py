@@ -24,6 +24,7 @@
     'name': 'Issues Tracker',
     'version': '1.0',
     'category': 'Project Management',
+    "sequence": 22,
     'complexity': "easy",
     'description': """
 This module provides Issues/Bugs Management in Project.

@@ -33,9 +33,7 @@ class account_analytic_account(osv.osv):
     def _analysis_all(self, cr, uid, ids, fields, arg, context=None):
         dp = 2
         res = dict([(i, {}) for i in ids])
-
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
-        res.update(dict([(i, {}) for i in parent_ids]))
+        parent_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         accounts = self.browse(cr, uid, ids, context=context)
 
         for f in fields:
@@ -72,10 +70,6 @@ class account_analytic_account(osv.osv):
                         if account_id not in res:
                             res[account_id] = {}
                         res[account_id][f] = sum
-                for account in accounts:
-                    for child in account.child_ids:
-                        if res[account.id][f] < res.get(child.id, {}).get(f):
-                            res[account.id][f] = res.get(child.id, {}).get(f, False)
             elif f == 'ca_to_invoice':
                 for id in ids:
                     res[id][f] = 0.0
@@ -111,13 +105,6 @@ class account_analytic_account(osv.osv):
                             res[account_id] = {}
                         res[account_id][f] = round(sum, dp)
 
-                for account in accounts:
-                    #res.setdefault(account.id, 0.0)
-                    res2.setdefault(account.id, 0.0)
-                    for child in account.child_ids:
-                        if child.id != account.id:
-                            res[account.id][f] += res.get(child.id, {}).get(f, 0.0)
-                            res2[account.id] += res2.get(child.id, 0.0)
                 # sum both result on account_id
                 for id in ids:
                     res[id][f] = round(res.get(id, {}).get(f, 0.0), dp) + round(res2.get(id, 0.0), 2)
@@ -135,10 +122,6 @@ class account_analytic_account(osv.osv):
                             GROUP BY account_analytic_line.account_id",(parent_ids,))
                     for account_id, lid in cr.fetchall():
                         res[account_id][f] = lid
-                for account in accounts:
-                    for child in account.child_ids:
-                        if res[account.id][f] < res.get(child.id, {}).get(f):
-                            res[account.id][f] = res.get(child.id, {}).get(f, False)
             elif f == 'last_worked_date':
                 for id in ids:
                     res[id][f] = False
@@ -152,10 +135,6 @@ class account_analytic_account(osv.osv):
                         if account_id not in res:
                             res[account_id] = {}
                         res[account_id][f] = lwd
-                for account in accounts:
-                    for child in account.child_ids:
-                        if res[account.id][f] < res.get(child.id, {}).get(f):
-                            res[account.id][f] = res.get(child.id, {}).get(f, False)
             elif f == 'hours_qtt_non_invoiced':
                 for id in ids:
                     res[id][f] = 0.0
@@ -173,10 +152,6 @@ class account_analytic_account(osv.osv):
                         if account_id not in res:
                             res[account_id] = {}
                         res[account_id][f] = round(sua, dp)
-                for account in accounts:
-                    for child in account.child_ids:
-                        if account.id != child.id:
-                            res[account.id][f] += res.get(child.id, {}).get(f, 0.0)
                 for id in ids:
                     res[id][f] = round(res[id][f], dp)
             elif f == 'hours_quantity':
@@ -195,19 +170,12 @@ class account_analytic_account(osv.osv):
                         if account_id not in res:
                             res[account_id] = {}
                         res[account_id][f] = round(hq, dp)
-                for account in accounts:
-                    for child in account.child_ids:
-                        if account.id != child.id:
-                            if account.id not in res:
-                                res[account.id] = {f: 0.0}
-                            res[account.id][f] += res.get(child.id, {}).get(f, 0.0)
                 for id in ids:
                     res[id][f] = round(res[id][f], dp)
             elif f == 'ca_theorical':
                 # TODO Take care of pricelist and purchase !
                 for id in ids:
                     res[id][f] = 0.0
-                res2 = {}
                 # Warning
                 # This computation doesn't take care of pricelist !
                 # Just consider list_price
@@ -232,31 +200,15 @@ class account_analytic_account(osv.osv):
                             AND account_analytic_journal.type IN ('purchase', 'general')
                         GROUP BY account_analytic_line.account_id""",(parent_ids,))
                     for account_id, sum in cr.fetchall():
-                        res2[account_id] = round(sum, dp)
-
-                for account in accounts:
-                    res2.setdefault(account.id, 0.0)
-                    for child in account.child_ids:
-                        if account.id != child.id:
-                            if account.id not in res:
-                                res[account.id] = {f: 0.0}
-                            res[account.id][f] += res.get(child.id, {}).get(f, 0.0)
-                            res[account.id][f] += res2.get(child.id, 0.0)
-
-                # sum both result on account_id
-                for id in ids:
-                    res[id][f] = round(res[id][f], dp) + round(res2.get(id, 0.0), dp)
-
+                        res[account_id][f] = round(sum, dp)
         return res
 
     def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res_final = {}
-        child_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
+        child_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         for i in child_ids:
-            res[i] =  {}
-            for n in [name]:
-                res[i][n] = 0.0
+            res[i] =  0.0
         if not child_ids:
             return res
 
@@ -269,24 +221,18 @@ class account_analytic_account(osv.osv):
                         AND account_analytic_journal.type = 'sale' \
                     GROUP BY account_analytic_line.account_id", (child_ids,))
             for account_id, sum in cr.fetchall():
-                res[account_id][name] = round(sum,2)
-        data = self._compute_level_tree(cr, uid, ids, child_ids, res, [name], context=context)
-        for i in data:
-            res_final[i] = data[i][name]
+                res[account_id] = round(sum,2)
+        res_final = res
         return res_final
 
     def _total_cost_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res_final = {}
-        child_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
-
+        child_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         for i in child_ids:
-            res[i] =  {}
-            for n in [name]:
-                res[i][n] = 0.0
+            res[i] =  0.0
         if not child_ids:
             return res
-
         if child_ids:
             cr.execute("""SELECT account_analytic_line.account_id, COALESCE(SUM(amount), 0.0) \
                     FROM account_analytic_line \
@@ -296,10 +242,8 @@ class account_analytic_account(osv.osv):
                         AND amount<0 \
                     GROUP BY account_analytic_line.account_id""",(child_ids,))
             for account_id, sum in cr.fetchall():
-                res[account_id][name] = round(sum,2)
-        data = self._compute_level_tree(cr, uid, ids, child_ids, res, [name], context)
-        for i in data:
-            res_final[i] = data[i][name]
+                res[account_id] = round(sum,2)
+        res_final = res
         return res_final
 
     def _remaining_hours_calc(self, cr, uid, ids, name, arg, context=None):
@@ -455,7 +399,7 @@ class account_analytic_account_summary_user(osv.osv):
         max_user = cr.fetchone()[0]
         account_ids = [int(str(x/max_user - (x%max_user == 0 and 1 or 0))) for x in ids]
         user_ids = [int(str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user))) for x in ids]
-        parent_ids = tuple(account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)], context=context))
+        parent_ids = tuple(account_ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         if parent_ids:
             cr.execute('SELECT id, unit_amount ' \
                     'FROM account_analytic_analysis_summary_user ' \
@@ -463,12 +407,6 @@ class account_analytic_account_summary_user(osv.osv):
                         'AND "user" IN %s',(parent_ids, tuple(user_ids),))
             for sum_id, unit_amount in cr.fetchall():
                 res[sum_id] = unit_amount
-        for obj_id in ids:
-            res.setdefault(obj_id, 0.0)
-            for child_id in account_obj.search(cr, uid,
-                    [('parent_id', 'child_of', [int(str(obj_id/max_user - (obj_id%max_user == 0 and 1 or 0)))])]):
-                if child_id != int(str(obj_id/max_user - (obj_id%max_user == 0 and 1 or 0))):
-                    res[obj_id] += res.get((child_id * max_user) + obj_id -((obj_id/max_user - (obj_id%max_user == 0 and 1 or 0)) * max_user), 0.0)
         for id in ids:
             res[id] = round(res.get(id, 0.0), 2)
         return res
@@ -619,7 +557,7 @@ class account_analytic_account_summary_month(osv.osv):
         account_obj = self.pool.get('account.analytic.account')
         account_ids = [int(str(int(x))[:-6]) for x in ids]
         month_ids = [int(str(int(x))[-6:]) for x in ids]
-        parent_ids = tuple(account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)], context=context))
+        parent_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         if parent_ids:
             cr.execute('SELECT id, unit_amount ' \
                     'FROM account_analytic_analysis_summary_month ' \
@@ -627,12 +565,6 @@ class account_analytic_account_summary_month(osv.osv):
                         'AND month_id IN %s ',(parent_ids, tuple(month_ids),))
             for sum_id, unit_amount in cr.fetchall():
                 res[sum_id] = unit_amount
-        for obj_id in ids:
-            res.setdefault(obj_id, 0.0)
-            for child_id in account_obj.search(cr, uid,
-                    [('parent_id', 'child_of', [int(str(int(obj_id))[:-6])])]):
-                if child_id != int(str(int(obj_id))[:-6]):
-                    res[obj_id] += res.get(int(child_id * 1000000 + int(str(int(obj_id))[-6:])), 0.0)
         for id in ids:
             res[id] = round(res.get(id, 0.0), 2)
         return res
@@ -778,5 +710,4 @@ class account_analytic_account_summary_month(osv.osv):
         return res
 
 account_analytic_account_summary_month()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

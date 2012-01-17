@@ -89,11 +89,10 @@ class account_statement_from_invoice_lines(osv.osv_memory):
             voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
 
             voucher_line_dict =  {}
-            if result['value']['line_ids']:
-                for line_dict in result['value']['line_ids']:
-                    move_line = line_obj.browse(cr, uid, line_dict['move_line_id'], context)
-                    if line.move_id.id == move_line.move_id.id:
-                        voucher_line_dict = line_dict
+            for line_dict in result['value']['line_cr_ids'] + result['value']['line_dr_ids']:
+                move_line = line_obj.browse(cr, uid, line_dict['move_line_id'], context)
+                if line.move_id.id == move_line.move_id.id:
+                    voucher_line_dict = line_dict
 
             if voucher_line_dict:
                 voucher_line_dict.update({'voucher_id': voucher_id})

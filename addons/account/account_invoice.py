@@ -259,7 +259,7 @@ class account_invoice(osv.osv):
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             }, help="It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment."),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
-            help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Partner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
+            help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Supplier Refund, otherwise a Partner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines, type='many2many', relation='account.move.line', string='Entry Lines'),
         'residual': fields.function(_amount_residual, digits_compute=dp.get_precision('Account'), string='Balance',
             store={

@@ -112,21 +112,21 @@ class delivery_carrier(osv.osv):
                 continue
 
             if not grid_id:
-                record_data = {
+                grid_data = {
                     'name': record.name,
                     'carrier_id': record.id,
                     'sequence': 10,
                 }
-                new_grid_id = grid_pool.create(cr, uid, record_data, context=context)
-                grid_id = [new_grid_id]
+                grid_id = [grid_pool.create(cr, uid, grid_data, context=context)]
 
             lines = grid_line_pool.search(cr, uid, [('grid_id','in',grid_id)], context=context)
             if lines:
                 grid_line_pool.unlink(cr, uid, lines, context=context)
 
             #create the grid lines
+            line_data = None
             if record.free_if_more_than:
-                data = {
+                line_data = {
                     'grid_id': grid_id and grid_id[0],
                     'name': _('Free if more than %.2f') % record.amount,
                     'type': 'price',
@@ -135,10 +135,8 @@ class delivery_carrier(osv.osv):
                     'standard_price': 0.0,
                     'list_price': 0.0,
                 }
-                grid_line_pool.create(cr, uid, data, context=context)
-
             if record.normal_price:
-                default_data = {
+                line_data = {
                     'grid_id': grid_id and grid_id[0],
                     'name': _('Default price'),
                     'type': 'price',
@@ -147,7 +145,8 @@ class delivery_carrier(osv.osv):
                     'standard_price': record.normal_price,
                     'list_price': record.normal_price,
                 }
-                grid_line_pool.create(cr, uid, default_data, context=context)
+            if line_data:
+                grid_line_pool.create(cr, uid, line_data, context=context)
         return True
 
     def write(self, cr, uid, ids, vals, context=None):

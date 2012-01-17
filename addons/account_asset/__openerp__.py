@@ -30,6 +30,7 @@
     """,
     "website" : "http://www.openerp.com",
     "category" : "Accounting & Finance",
+    "sequence": 32,
     "init_xml" : [
     ],
     "demo_xml" : [ 'account_asset_demo.xml'

@@ -40,7 +40,7 @@ instance.web_uservoice.UserVoice = instance.web.Widget.extend({
 
         var ds = new instance.web.DataSetSearch(this, 'ir.ui.menu', {lang: 'NO_LANG'}, [['parent_id', '=', false]]);
 
-        ds.read_slice(['name'], null, function(result) {
+        ds.read_slice(['name']).then(function(result) {
             _.each(result, function(menu) {
                 self.uservoiceForums[menu.id] = forum_mapping[menu.name.toLowerCase()] || self.default_forum;
             });
@@ -55,12 +55,28 @@ instance.web_uservoice.UserVoice = instance.web.Widget.extend({
 
 
     do_menu_click: function($clicked_menu, manual) {
-        var id = $clicked_menu.attr('data-menu');
-        if (id) {
+        var id = $clicked_menu.attr('data-menu'),
+            root = $clicked_menu.parents('div.menu').length === 1;
+        if (id && root) {
             this.uservoiceOptions.forum = this.uservoiceForums[id] || this.default_forum;
         }
     },
 
+});
+
+
+instance.web.Header.include({
+    do_update: function() {
+        var self = this;
+        this._super();
+        this.update_promise.then(function() {
+            if (self.uservoice) {
+                self.uservoice.stop();
+            }
+            self.uservoice = new instance.web_uservoice.UserVoice(self);
+            self.uservoice.prependTo(self.$element.find('div.header_corner'));
+        });
+    }
 });
 
 
@@ -69,9 +85,6 @@ if (instance.webclient) {
         var src = ("https:" == document.location.protocol ? "https://" : "http://") + "cdn.uservoice.com/javascripts/widgets/tab.js";
         $.getScript(src);
     });
-
-    instance.webclient.uservoice = new instance.web_uservoice.UserVoice(instance.webclient);
-    instance.webclient.uservoice.prependTo('div.header_corner');
 }
 
 };

@@ -214,7 +214,7 @@ class product_category(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('product.category','Parent Category', select=True),
+        'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
@@ -412,10 +412,11 @@ class product_product(osv.osv):
             context = {}
         quantity = context.get('quantity') or 1.0
         pricelist = context.get('pricelist', False)
+        partner = context.get('partner', False)
         if pricelist:
             for id in ids:
                 try:
-                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, context=context)[pricelist]
+                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, partner=partner, context=context)[pricelist]
                 except:
                     price = 0.0
                 res[id] = price
