@@ -97,7 +97,7 @@ class mrp_production_workcenter_line(osv.osv):
        'date_planned_end': fields.function(_get_date_end, string='End Date', type='datetime'),
        'date_start': fields.datetime('Start Date'),
        'date_finished': fields.datetime('End Date'),
-       'delay': fields.float('Working Hours',help="This is lead time between operation start and stop in this Work Center",readonly=True),
+       'delay': fields.float('Working Hours',help="This is delay time between operation start and stop in this Work Center",readonly=True),
        'production_state':fields.related('production_id','state',
             type='selection',
             selection=[('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],
