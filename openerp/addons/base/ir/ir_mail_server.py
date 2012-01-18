@@ -34,7 +34,6 @@ from osv import osv
 from osv import fields
 from openerp.tools.translate import _
 from openerp.tools import html2text
-from openerp.tools.func import wraps
 import openerp.tools as tools
 
 # ustr was originally from tools.misc.

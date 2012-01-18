@@ -19,8 +19,9 @@
 #
 ##############################################################################
 
+import copy
+
 import openerp.netsvc as netsvc
-from openerp.tools import copy
 from openerp.tools.misc import UpdateableStr, UpdateableDict
 from openerp.tools.translate import translate
 from lxml import etree

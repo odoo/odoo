@@ -26,6 +26,7 @@
 Miscelleanous tools used by OpenERP.
 """
 
+from functools import wraps
 import inspect
 import subprocess
 import logging
@@ -50,10 +51,7 @@ from email import Encoders
 from itertools import islice, izip
 from lxml import etree
 from which import which
-if sys.version_info[:2] < (2, 4):
-    from threadinglocal import local
-else:
-    from threading import local
+from threading import local
 try:
     from html2text import html2text
 except ImportError:
@@ -547,28 +545,6 @@ class currency(float):
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
-# to be compatible with python 2.4
-import __builtin__
-if not hasattr(__builtin__, 'all'):
-    def all(iterable):
-        for element in iterable:
-            if not element:
-                return False
-        return True
-
-    __builtin__.all = all
-    del all
-
-if not hasattr(__builtin__, 'any'):
-    def any(iterable):
-        for element in iterable:
-            if element:
-                return True
-        return False
-
-    __builtin__.any = any
-    del any
-
 def get_iso_codes(lang):
     if lang.find('_') != -1:
         if lang.split('_')[0] == lang.split('_')[1].lower():
@@ -715,8 +691,6 @@ def human_size(sz):
     return "%0.2f %s" % (s, units[i])
 
 def logged(f):
-    from func import wraps
-
     @wraps(f)
     def wrapper(*args, **kwargs):
         from pprint import pformat
@@ -742,8 +716,6 @@ class profile(object):
         self.fname = fname
 
     def __call__(self, f):
-        from func import wraps
-
         @wraps(f)
         def wrapper(*args, **kwargs):
             class profile_wrapper(object):
@@ -758,40 +730,6 @@ class profile(object):
             return pw.result
 
         return wrapper
-
-def debug(what):
-    """
-        This method allow you to debug your code without print
-        Example:
-        >>> def func_foo(bar)
-        ...     baz = bar
-        ...     debug(baz)
-        ...     qnx = (baz, bar)
-        ...     debug(qnx)
-        ...
-        >>> func_foo(42)
-
-        This will output on the logger:
-
-            [Wed Dec 25 00:00:00 2008] DEBUG:func_foo:baz = 42
-            [Wed Dec 25 00:00:00 2008] DEBUG:func_foo:qnx = (42, 42)
-
-        To view the DEBUG lines in the logger you must start the server with the option
-            --log-level=debug
-
-    """
-    warnings.warn("The tools.debug() method is deprecated, please use logging.",
-                      DeprecationWarning, stacklevel=2)
-    from inspect import stack
-    from pprint import pformat
-    st = stack()[1]
-    param = re.split("debug *\((.+)\)", st[4][0].strip())[1].strip()
-    while param.count(')') > param.count('('): param = param[:param.rfind(')')]
-    what = pformat(what)
-    if param != what:
-        what = "%s = %s" % (param, what)
-    logging.getLogger(st[3]).debug(what)
-
 
 __icons_list = ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
 'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',

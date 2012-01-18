@@ -39,20 +39,16 @@
     static HTTP, DAV or other.
 """
 
-from websrv_lib import *
-import openerp.netsvc as netsvc
-import errno
-import threading
-import openerp.tools as tools
+import base64
 import posixpath
 import urllib
 import os
-import select
-import socket
-import xmlrpclib
 import logging
-
 from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
+
+from websrv_lib import *
+import openerp.netsvc as netsvc
+import openerp.tools as tools
 
 try:
     import fcntl

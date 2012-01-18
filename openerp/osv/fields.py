@@ -46,7 +46,7 @@ import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.translate import _
 from openerp.tools import float_round, float_repr
-import json
+import simplejson
 
 def _symbol_set(symb):
     if symb == None or symb == False:
@@ -1324,10 +1324,10 @@ class serialized(_column):
     """
     
     def _symbol_set_struct(val):
-        return json.dumps(val)
+        return simplejson.dumps(val)
 
     def _symbol_get_struct(self, val):
-        return json.loads(val or '{}')
+        return simplejson.loads(val or '{}')
     
     _prefetch = False
     _type = 'serialized'

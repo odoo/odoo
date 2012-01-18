@@ -7,11 +7,8 @@
 #    > OPENERP_ADDONS_PATH='../../../addons/trunk' OPENERP_PORT=8069 \
 #      OPENERP_DATABASE=yy PYTHONPATH=../:. unit2 test_ir_sequence
 # This assume an existing database.
-import os
 import psycopg2
-import time
 import unittest2
-import xmlrpclib
 
 import openerp
 import common

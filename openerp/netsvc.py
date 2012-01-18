@@ -30,7 +30,6 @@ import socket
 import sys
 import threading
 import time
-import traceback
 import types
 from pprint import pformat
 
