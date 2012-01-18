@@ -6,7 +6,19 @@ var _t = openerp.web._t,
    _lt = openerp.web._lt;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('gantt', 'openerp.web_gantt.GanttView');
+
 openerp.web_gantt.GanttView = openerp.web.View.extend({
+    display_name: _lt('Gantt'),
+    template: "GanttView",
+    start: function() {
+        return this.rpc("/web/view/load", {"model": this.dataset.model, "view_id": this.view_id, "view_type": "gantt"}, this.on_loaded);
+    },
+    on_loaded: function(data) {
+        this.fields_view = data;
+    },
+});
+
+openerp.web_gantt.GanttViewOld = openerp.web.View.extend({
     display_name: _lt('Gantt'),
 
     init: function(parent, dataset, view_id) {
@@ -52,7 +64,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             return;
         }
         
-        this.$element.html(QWeb.render("GanttView", {'height': $('.oe-application-container').height(), 'width': $('.oe-application-container').width()}));
+        this.$element.html(QWeb.render("GanttViewOld", {'height': $('.oe-application-container').height(), 'width': $('.oe-application-container').width()}));
         this.has_been_loaded.resolve();
     },
 

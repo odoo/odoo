@@ -1,6 +1,14 @@
-<template>
-<t t-name="GanttView">
-    <button class="oe_button" id="add_task">Create</button>
-    <div t-att-style="'width:'+ width + 'px; height:' + height + 'px; padding-top:6px;position:relative;'" id="GanttView"/>
-</t>
-</template>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="GanttView">
+        <div>
+            <button class="oe_button oe-gantt-view-create">Create</button>
+            <div class="oe-gantt-view-view"/>
+        </div>
+    </t>
+    <t t-name="GanttViewOld">
+        <button class="oe_button" id="add_task">Create</button>
+        <div t-att-style="'width:'+ width + 'px; height:' + height + 'px; padding-top:6px;position:relative;'" id="GanttView"/>
+    </t>
+</templates>

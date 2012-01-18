@@ -1038,6 +1038,12 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     template: "EmptyComponent",
     // name displayed in view switchers
     display_name: '',
+    init: function(parent, dataset, view_id, options) {
+        this._super(parent);
+        this.dataset = dataset;
+        this.view_id = view_id;
+        this.set_default_options(options);
+    },
     set_default_options: function(options) {
         this.options = options || {};
         _.defaults(this.options, {
