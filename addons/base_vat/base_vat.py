@@ -36,22 +36,38 @@ from tools.misc import ustr
 from tools.translate import _
 
 _ref_vat = {
-    'be': 'BE0477472701', 'at': 'ATU12345675',
-    'bg': 'BG1234567892', 'cy': 'CY12345678F',
-    'cz': 'CZ12345679', 'de': 'DE123456788',
-    'dk': 'DK12345674', 'ee': 'EE123456780',
-    'es': 'ESA12345674', 'fi': 'FI12345671',
-    'fr': 'FR32123456789', 'gb': 'GB123456782',
-    'gr': 'GR12345670', 'hu': 'HU12345676',
-    'ie': 'IE1234567T', 'it': 'IT12345670017',
-    'lt': 'LT123456715', 'lu': 'LU12345613',
-    'lv': 'LV41234567891', 'mt': 'MT12345634',
-    'nl': 'NL123456782B90', 'pl': 'PL1234567883',
-    'pt': 'PT123456789', 'ro': 'RO1234567897',
-    'se': 'SE123456789701', 'si': 'SI12345679',
-    'sk': 'SK0012345675', 'el': 'EL12345670',
-    'mx': 'MXABC123456T1B', 'no': 'NO123456785',
+    'be': 'BE0477472701',
+    'at': 'ATU12345675',
+    'bg': 'BG1234567892',
+    'ch': 'CHE-123.456.788 TVA or CH TVA 123456', #Swiss by Yannick Vaucher @ Camptocamp
+    'cy': 'CY12345678F',
+    'cz': 'CZ12345679',
+    'de': 'DE123456788',
+    'dk': 'DK12345674',
+    'ee': 'EE123456780',
+    'el': 'EL12345670',
+    'es': 'ESA12345674',
+    'fi': 'FI12345671',
+    'fr': 'FR32123456789',
+    'gb': 'GB123456782',
+    'gr': 'GR12345670',
+    'hu': 'HU12345676',
     'hr': 'HR01234567896', # Croatia, contributed by Milan Tribuson 
+    'ie': 'IE1234567T',
+    'it': 'IT12345670017',
+    'lt': 'LT123456715',
+    'lu': 'LU12345613',
+    'lv': 'LV41234567891',
+    'mt': 'MT12345634',
+    'mx': 'MXABC123456T1B',
+    'nl': 'NL123456782B90',
+    'no': 'NO123456785',
+    'pl': 'PL1234567883',
+    'pt': 'PT123456789',
+    'ro': 'RO1234567897',
+    'se': 'SE123456789701',
+    'si': 'SI12345679',
+    'sk': 'SK0012345675',
 }
 
 class res_partner(osv.osv):
@@ -134,6 +150,54 @@ class res_partner(osv.osv):
                                     r"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
                                     r"[ \-_]?" \
                                     r"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
+
+    def check_vat_ch(self, vat):
+        '''
+        Check Switzerland VAT number.
+        '''
+        # VAT number in Switzerland will change between 2011 and 2013 
+        # http://www.estv.admin.ch/mwst/themen/00154/00589/01107/index.html?lang=fr
+        # Old format is "TVA 123456" we will admit the user has to enter ch before the number
+        # Format will becomes such as "CHE-999.999.99C TVA"
+        # Both old and new format will be accepted till end of 2013
+        # Accepted format are:
+        #     CHTVA######
+        #     CH TVA ######
+        #
+        #     CHE#########MWST
+        #     CHE#########TVA
+        #     CHE#########IVA
+        #     CHE-###.###.### MWST
+        #     CHE-###.###.### TVA
+        #     CHE-###.###.### IVA
+        #     
+
+        vat = vat.replace('-','').replace('.','')
+        if len(vat) in (13,14):
+            if not vat[0] == 'E':
+                return False
+            if vat[10:] not in ('TVA','IVA','MWST'):
+                return False
+            num = vat[1:10]
+        elif len(vat) in (9,10):
+            if vat[:-6] not in ('TVA','IVA','MWST'):
+                return False
+            num = vat[-6:]
+        else:
+            return False
+        # For new TVA numbers, do a mod11 check
+        if len(num) == 9:
+            def is_mod11(num):
+                factor = (5,4,3,2,7,6,5,4)
+                csum = sum([int(num[i]) * factor[i] for i in range(8)])
+                check = 11 - (csum % 11)
+                return check == int(num[8])
+
+            if not is_mod11(num):
+                return False
+        return True
+
+
     def check_vat_mx(self, vat):
         ''' Mexican VAT verification
 
