@@ -310,8 +310,9 @@ QWeb2.Engine = (function() {
         },
         convert_xml_to_html: function (node) {
             switch (node.nodeType) {
-            case 3: return document.createTextNode(node.data);
-            case 4: return document.createCDATASection(node.data);
+            case 3:
+            case 4:
+                return document.createTextNode(node.data);
             case 8: return document.createComment(node.data);
             }
 
