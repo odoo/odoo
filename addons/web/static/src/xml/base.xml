@@ -682,7 +682,9 @@
         </td>
     </t>
     <th t-if="options.selectable" class="oe-record-selector" width="1">
-        <input t-att-type="options.radio? 'radio': 'checkbox'" name ="radiogroup" t-att-checked="options.select_view_id == record.get('id')? true: null"/>
+        <t t-set="checked" t-value="options.select_view_id == record.get('id') ? 'checked' : null"/>
+        <input t-if="options.radio" type="radio" name="radiogroup" t-att-checked="checked"/>
+        <input t-if="!options.radio" type="checkbox" name="radiogroup" t-att-checked="checked"/>
     </th>
     <th t-if="options.isClarkGable" class="oe-record-edit-link" width="1">
         <img src="/web/static/src/img/pencil.gif" width="12" height="12" class="oe-record-edit-link-img"/>
