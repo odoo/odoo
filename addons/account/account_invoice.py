@@ -316,6 +316,15 @@ class account_invoice(osv.osv):
                 res['fields'][field]['selection'] = journal_select
 
         doc = etree.XML(res['arch'])
+        
+        if context.get('type', False):
+            for node in doc.xpath("//field[@name='partner_bank_id']"):
+                if context['type'] == 'in_refund':
+                    node.set('domain', "[('partner_id.ref_companies', 'in', [company_id])]")
+                if context['type'] == 'out_refund':
+                    node.set('domain', "[('parnter_id', '=', parnter_id)]")
+            res['arch'] = etree.tostring(doc)
+                
         if view_type == 'search':
             if context.get('type', 'in_invoice') in ('out_invoice', 'out_refund'):
                 for node in doc.xpath("//group[@name='extended filter']"):
