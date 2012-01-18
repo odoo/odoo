@@ -407,7 +407,7 @@ class Root(object):
                       only used in case the list of databases is requested
                       by the server, will be filtered by this pattern
     """
-    def __init__(self, options):
+    def __init__(self, options, openerp_addons_namespace=True):
         self.root = '/web/webclient/home'
         self.config = options
 
@@ -421,7 +421,7 @@ class Root(object):
         self.session_cookie = 'sessionid'
         self.addons = {}
 
-        static_dirs = self._load_addons()
+        static_dirs = self._load_addons(openerp_addons_namespace)
         if options.serve_static:
             self.dispatch = werkzeug.wsgi.SharedDataMiddleware(
                 self.dispatch, static_dirs)
@@ -475,15 +475,13 @@ class Root(object):
 
         return response(environ, start_response)
 
-    def _load_addons(self):
+    def _load_addons(self, openerp_addons_namespace=True):
         """
         Loads all addons at the specified addons path, returns a mapping of
         static URLs to the corresponding directories
         """
         statics = {}
         for addons_path in self.config.addons_path:
-            if addons_path not in sys.path:
-                sys.path.insert(0, addons_path)
             for module in os.listdir(addons_path):
                 if module not in addons_module:
                     manifest_path = os.path.join(addons_path, module, '__openerp__.py')
@@ -492,7 +490,10 @@ class Root(object):
                         manifest = ast.literal_eval(open(manifest_path).read())
                         manifest['addons_path'] = addons_path
                         _logger.info("Loading %s", module)
-                        m = __import__(module)
+                        if openerp_addons_namespace:
+                            m = __import__('openerp.addons.' + module)
+                        else:
+                            m = __import__(module)
                         addons_module[module] = m
                         addons_manifest[module] = manifest
                         statics['/%s/static' % module] = path_static

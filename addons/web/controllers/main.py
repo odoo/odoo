@@ -23,8 +23,8 @@ try:
 except ImportError:
     xlwt = None
 
-import web.common
-openerpweb = web.common.http
+from .. import common
+openerpweb = common.http
 
 #----------------------------------------------------------
 # OpenERP Web web Controllers
@@ -259,7 +259,7 @@ class WebClient(openerpweb.Controller):
     @openerpweb.jsonrequest
     def version_info(self, req):
         return {
-            "version": web.common.release.version
+            "version": common.release.version
         }
 
 class Proxy(openerpweb.Controller):
@@ -392,7 +392,7 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def authenticate(self, req, db, login, password, base_location=None):
         wsgienv = req.httprequest.environ
-        release = web.common.release
+        release = common.release
         env = dict(
             base_location=base_location,
             HTTP_HOST=wsgienv['HTTP_HOST'],
@@ -486,8 +486,8 @@ class Session(openerpweb.Controller):
                 no group by should be performed)
         """
         context, domain = eval_context_and_domain(req.session,
-                                                  web.common.nonliterals.CompoundContext(*(contexts or [])),
-                                                  web.common.nonliterals.CompoundDomain(*(domains or [])))
+                                                  common.nonliterals.CompoundContext(*(contexts or [])),
+                                                  common.nonliterals.CompoundDomain(*(domains or [])))
 
         group_by_sequence = []
         for candidate in (group_by_seq or []):
@@ -847,14 +847,14 @@ class DataSet(openerpweb.Controller):
     
     def _call_kw(self, req, model, method, args, kwargs):
         for i in xrange(len(args)):
-            if isinstance(args[i], web.common.nonliterals.BaseContext):
+            if isinstance(args[i], common.nonliterals.BaseContext):
                 args[i] = req.session.eval_context(args[i])
-            elif isinstance(args[i], web.common.nonliterals.BaseDomain):
+            elif isinstance(args[i], common.nonliterals.BaseDomain):
                 args[i] = req.session.eval_domain(args[i])
         for k in kwargs.keys():
-            if isinstance(kwargs[k], web.common.nonliterals.BaseContext):
+            if isinstance(kwargs[k], common.nonliterals.BaseContext):
                 kwargs[k] = req.session.eval_context(kwargs[k])
-            elif isinstance(kwargs[k], web.common.nonliterals.BaseDomain):
+            elif isinstance(kwargs[k], common.nonliterals.BaseDomain):
                 kwargs[k] = req.session.eval_domain(kwargs[k])
 
         return getattr(req.session.model(model), method)(*args, **kwargs)
@@ -933,7 +933,7 @@ class View(openerpweb.Controller):
             xml = self.transform_view(arch, session, evaluation_context)
         else:
             xml = ElementTree.fromstring(arch)
-        fvg['arch'] = web.common.xml2json.from_elementtree(xml, preserve_whitespaces)
+        fvg['arch'] = common.xml2json.from_elementtree(xml, preserve_whitespaces)
 
         for field in fvg['fields'].itervalues():
             if field.get('views'):
@@ -1024,7 +1024,7 @@ class View(openerpweb.Controller):
 
 def parse_domain(domain, session):
     """ Parses an arbitrary string containing a domain, transforms it
-    to either a literal domain or a :class:`web.common.nonliterals.Domain`
+    to either a literal domain or a :class:`common.nonliterals.Domain`
 
     :param domain: the domain to parse, if the domain is not a string it
                    is assumed to be a literal domain and is returned as-is
@@ -1037,11 +1037,11 @@ def parse_domain(domain, session):
         return ast.literal_eval(domain)
     except ValueError:
         # not a literal
-        return web.common.nonliterals.Domain(session, domain)
+        return common.nonliterals.Domain(session, domain)
 
 def parse_context(context, session):
     """ Parses an arbitrary string containing a context, transforms it
-    to either a literal context or a :class:`web.common.nonliterals.Context`
+    to either a literal context or a :class:`common.nonliterals.Context`
 
     :param context: the context to parse, if the context is not a string it
            is assumed to be a literal domain and is returned as-is
@@ -1053,7 +1053,7 @@ def parse_context(context, session):
     try:
         return ast.literal_eval(context)
     except ValueError:
-        return web.common.nonliterals.Context(session, context)
+        return common.nonliterals.Context(session, context)
 
 class ListView(View):
     _cp_path = "/web/listview"
@@ -1117,10 +1117,10 @@ class SearchView(View):
     @openerpweb.jsonrequest
     def save_filter(self, req, model, name, context_to_save, domain):
         Model = req.session.model("ir.filters")
-        ctx = web.common.nonliterals.CompoundContext(context_to_save)
+        ctx = common.nonliterals.CompoundContext(context_to_save)
         ctx.session = req.session
         ctx = ctx.evaluate()
-        domain = web.common.nonliterals.CompoundDomain(domain)
+        domain = common.nonliterals.CompoundDomain(domain)
         domain.session = req.session
         domain = domain.evaluate()
         uid = req.session._uid
@@ -1135,10 +1135,10 @@ class SearchView(View):
 
     @openerpweb.jsonrequest
     def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
-        ctx = web.common.nonliterals.CompoundContext(context_to_save)
+        ctx = common.nonliterals.CompoundContext(context_to_save)
         ctx.session = req.session
         ctx = ctx.evaluate()
-        domain = web.common.nonliterals.CompoundDomain(domain)
+        domain = common.nonliterals.CompoundDomain(domain)
         domain.session = req.session
         domain = domain.evaluate()
 
@@ -1584,7 +1584,7 @@ class Reports(View):
 
         report_srv = req.session.proxy("report")
         context = req.session.eval_context(
-            web.common.nonliterals.CompoundContext(
+            common.nonliterals.CompoundContext(
                 req.context or {}, action[ "context"]))
 
         report_data = {}
