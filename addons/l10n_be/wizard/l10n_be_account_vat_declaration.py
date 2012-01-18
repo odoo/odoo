@@ -81,12 +81,9 @@ class l10n_be_vat_declaration(osv.osv_memory):
         ctx['period_id'] = data['period_id'][0] #added context here
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
-        address = post_code = city = country_code = ''
-        city, post_code, address, country_code = self.pool.get('res.company')._get_default_ad(obj_company.partner_id.address)
+        name = email = phone = address = post_code = city = country_code = ''
+        name, email, phone, city, post_code, address, country_code = self.pool.get('res.company')._get_default_ad(obj_company.partner_id.address)
 
-        name = obj_company.partner_id.address[0].name
-        email = obj_company.partner_id.address[0].email
-        phone = obj_company.partner_id.address[0].phone
         account_period = obj_acc_period.browse(cr, uid, data['period_id'][0], context=context)
 
         send_ref = str(obj_company.partner_id.id) + str(account_period.date_start[5:7]) + str(account_period.date_stop[:4])
