@@ -96,7 +96,13 @@ var QWeb2 = {
                 if (typeof XMLSerializer !== 'undefined') {
                     return (new XMLSerializer()).serializeToString(node);
                 } else {
-                    return node.outerHTML;
+                    switch(node.nodeType) {
+                    case 1: return node.outerHTML;
+                    case 3: return node.data;
+                    case 4: return '<![CDATA[' + node.data + ']]>';
+                    case 8: return '<!-- ' + node.data + '-->';
+                    }
+                    throw new Error('Unknown node type ' + node.nodeType);
                 }
             }
         },
