@@ -545,28 +545,6 @@ class currency(float):
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
-# to be compatible with python 2.4
-import __builtin__
-if not hasattr(__builtin__, 'all'):
-    def all(iterable):
-        for element in iterable:
-            if not element:
-                return False
-        return True
-
-    __builtin__.all = all
-    del all
-
-if not hasattr(__builtin__, 'any'):
-    def any(iterable):
-        for element in iterable:
-            if element:
-                return True
-        return False
-
-    __builtin__.any = any
-    del any
-
 def get_iso_codes(lang):
     if lang.find('_') != -1:
         if lang.split('_')[0] == lang.split('_')[1].lower():
