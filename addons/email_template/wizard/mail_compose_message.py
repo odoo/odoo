@@ -69,6 +69,10 @@ class mail_compose_message(osv.osv_memory):
                                         size=-1 # means we want an int db column
                                         ),
     }
+    
+    _defaults = {
+        'template_id' : lambda self, cr, uid, context={} : context.get('mail.compose.template_id', False)          
+    }
 
     def on_change_template(self, cr, uid, ids, use_template, template_id, email_from=None, email_to=None, context=None):
         if context is None:
