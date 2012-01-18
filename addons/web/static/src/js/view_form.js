@@ -537,6 +537,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     get_fields_values: function(blacklist) {
     	blacklist = blacklist || [];
         var values = {};
+        var ids = this.get_selected_ids();
+        values["id"] = ids.length > 0 ? ids[0] : false;
         _.each(this.fields, function(value, key) {
         	if (_.include(blacklist, key))
         		return;
