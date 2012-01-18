@@ -31,7 +31,7 @@ class hr_so_project(osv.osv_memory):
         'info': fields.char('Work Description', size=256, required=True),
         'date_start': fields.datetime('Starting Date', readonly=True),
         'date': fields.datetime('Closing Date'),
-        'analytic_amount': fields.float('Minimum Analytic Amount'),
+        'analytic_amount': fields.float('Minimum Time Interval', help='This field rounds to the minimum interval specified.\n Example: specify 0.25 and work less than 15 minutes, the working time will be rounded to 15 minutes. If you work 25 minutes, time will be rounded to 30 minutes.'),
         'name': fields.char('Employees name', size=32, required=True, readonly=True),
         'state': fields.related('emp_id', 'state', string='Current state', type='char', required=True, readonly=True),
         'server_date': fields.datetime('Current Date', required=True, readonly=True),
@@ -70,7 +70,7 @@ class hr_so_project(osv.osv_memory):
             time.mktime(time.strptime(data['date_start'], '%Y-%m-%d %H:%M:%S'))) / 3600.0
         minimum = data['analytic_amount']
         if minimum:
-            hour = round(round((hour + minimum / 2) / minimum) * minimum, 2)
+            hour = round(round((hour + minimum / 2 - 0.00001) / minimum) * minimum, 2)
         res = timesheet_obj.default_get(cr, uid, ['product_id','product_uom_id'], context=context)
 
         if not res['product_uom_id']:
