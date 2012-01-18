@@ -364,9 +364,8 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
     on_click_export_data: function() {
         var self = this;
         var exported_fields = this.$element.find('#fields_list option').map(function () {
-            var name = self.records[this.value] || this.value
             // DOM property is textContent, but IE8 only knows innerText
-            return {name: this.value,
+            return {name: self.records[this.value] || this.value,
                     label: this.textContent || this.innerText};
         }).get();
 

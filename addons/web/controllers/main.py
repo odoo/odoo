@@ -99,7 +99,7 @@ html_template = """<!DOCTYPE html>
             });
         </script>
     </head>
-    <body></body>
+    <body class="openerp" id="oe"></body>
 </html>
 """
 
@@ -207,7 +207,7 @@ class WebClient(openerpweb.Controller):
             'js': js,
             'css': css,
             'modules': simplejson.dumps(self.server_wide_modules(req)),
-            'init': 'new s.web.WebClient().replace($("body"));',
+            'init': 'new s.web.WebClient().start();',
         }
         return r
 
@@ -933,7 +933,7 @@ class View(openerpweb.Controller):
             xml = self.transform_view(arch, session, evaluation_context)
         else:
             xml = ElementTree.fromstring(arch)
-        fvg['arch'] = common.xml2json.Xml2Json.convert_element(xml, preserve_whitespaces)
+        fvg['arch'] = common.xml2json.from_elementtree(xml, preserve_whitespaces)
 
         for field in fvg['fields'].itervalues():
             if field.get('views'):

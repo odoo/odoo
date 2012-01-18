@@ -106,7 +106,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         this.do_save_dashboard();
     },
     on_close_action: function(e) {
-        if (confirm("Are you sure you want to remove this item ?")) {
+        if (confirm(_t("Are you sure you want to remove this item ?"))) {
             $(e.currentTarget).parents('.oe-dashboard-action:first').remove();
             this.do_save_dashboard();
         }

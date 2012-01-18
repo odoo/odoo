@@ -40,7 +40,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.fields = {};
         this.fields_order = [];
         this.datarecord = {};
-        this.show_invalid = true;
         this.default_focus_field = null;
         this.default_focus_button = null;
         this.registry = openerp.web.form.widgets;
@@ -179,7 +178,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
         return $.when.apply(null, set_values).pipe(function() {
             if (!record.id) {
-                self.show_invalid = false;
                 // New record: Second pass in order to trigger the onchanges
                 // respecting the fields order defined in the view
                 _.each(self.fields_order, function(field_name) {
@@ -192,7 +190,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
             self.on_form_changed();
             self.is_initialized.resolve();
-            self.show_invalid = true;
             self.do_update_pager(record.id == null);
             if (self.sidebar) {
                 self.sidebar.attachments.do_update();
@@ -429,7 +426,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 f = self.fields[f];
                 if (!f.is_valid()) {
                     form_invalid = true;
-                    f.update_dom();
+                    f.update_dom(true);
                     if (!first_invalid_field) {
                         first_invalid_field = f;
                     }
@@ -716,9 +713,11 @@ openerp.web.form.compute_domain = function(expr, fields) {
                 stack.push(field_value >= val);
                 break;
             case 'in':
+                if (!_.isArray(val)) val = [val];
                 stack.push(_(val).contains(field_value));
                 break;
             case 'not in':
+                if (!_.isArray(val)) val = [val];
                 stack.push(!_(val).contains(field_value));
                 break;
             default:
@@ -791,6 +790,11 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         return QWeb.render(template, { "widget": this });
     },
     do_attach_tooltip: function(widget, trigger, options) {
+        if ($.browser.mozilla && parseInt($.browser.version.split('.')[0], 10) < 2) {
+            // Unknown bug in old version of firefox :
+            // input type=text onchange event not fired when tootip is shown
+            return;
+        }
         widget = widget || this;
         trigger = trigger || this.$element;
         options = _.extend({
@@ -1063,7 +1067,6 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         this.execute_action().always(function() {
             self.force_disabled = false;
             self.check_disable();
-            $.tipTipClear();
         });
     },
     execute_action: function() {
@@ -1075,15 +1078,15 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
                     title: _t('Confirm'),
                     modal: true,
                     buttons: [
+                        {text: _t("Cancel"), click: function() {
+                                def.resolve();
+                                $(this).dialog("close");
+                            }
+                        },
                         {text: _t("Ok"), click: function() {
                                 self.on_confirmed().then(function() {
                                     def.resolve();
                                 });
-                                $(this).dialog("close");
-                            }
-                        },
-                        {text: _t("Cancel"), click: function() {
-                                def.resolve();
                                 $(this).dialog("close");
                             }
                         }
@@ -1116,7 +1119,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
             });
     },
     update_dom: function() {
-        this._super();
+        this._super.apply(this, arguments);
         this.check_disable();
     },
     check_disable: function() {
@@ -1238,7 +1241,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
     get_on_change_value: function() {
         return this.get_value();
     },
-    update_dom: function() {
+    update_dom: function(show_invalid) {
         this._super.apply(this, arguments);
         if (this.field.translate) {
             this.$element.find('.oe_field_translate').toggle(!!this.view.datarecord.id);
@@ -1246,7 +1249,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         if (!this.disable_utility_classes) {
             this.$element.toggleClass('disabled', this.readonly);
             this.$element.toggleClass('required', this.required);
-            if (this.view.show_invalid) {
+            if (show_invalid) {
                 this.$element.toggleClass('invalid', !this.is_valid());
             }
         }
@@ -1259,7 +1262,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
             this.view.do_onchange(this);
             this.view.on_form_changed();
         } else {
-            this.update_dom();
+            this.update_dom(true);
         }
     },
     validate: function() {
@@ -1281,7 +1284,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
             this.definition_options = JSON.parse(str);
         }
         return this.definition_options;
-    },
+    }
 });
 
 openerp.web.form.FieldChar = openerp.web.form.Field.extend({
@@ -2424,7 +2427,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
         var self = this;
         var def = $.Deferred().then(callback).then(function() {self.o2m.view.reload();});
         return this._super(name, id, _.bind(def.resolve, def));
-    },
+    }
 });
 
 openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
@@ -3214,7 +3217,6 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'email' : 'openerp.web.form.FieldEmail',
     'url' : 'openerp.web.form.FieldUrl',
     'text' : 'openerp.web.form.FieldText',
-    'text_wiki' : 'openerp.web.form.FieldText',
     'date' : 'openerp.web.form.FieldDate',
     'datetime' : 'openerp.web.form.FieldDatetime',
     'selection' : 'openerp.web.form.FieldSelection',

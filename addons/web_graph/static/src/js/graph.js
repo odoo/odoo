@@ -389,27 +389,33 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         // unconditionally nuke tooltips before switching view
         $(".dhx_tooltip").remove('div');
         id = id[this.abscissa];
+        if(this.fields[this.abscissa].type == "selection"){
+            id = _.detect(this.fields[this.abscissa].selection,function(select_value){
+                return _.include(select_value, id);
+            });
+        }
         if (typeof id == 'object'){
             id = id[0];
         }
 
-        var record_id = this.abscissa;
-        var modes = ["list", "form", "graph"];
-        var views = [];
-        _.each(modes, function(mode) {
-            var view = [false, mode];
-            if (self.fields.views && self.fields.views[mode]) {
-                view.push(self.fields.views[mode]);
+        var views;
+        if (this.widget_parent.action) {
+            views = this.widget_parent.action.views;
+            if (!_(views).detect(function (view) {
+                    return view[1] === 'list' })) {
+                views = [[false, 'list']].concat(views);
             }
-            views.push(view);
-        });
+        } else {
+            views = _(["list", "form", "graph"]).map(function(mode) {
+                return [false, mode];
+            });
+        }
         this.do_action({
-            "res_model" : this.dataset.model,
-            "domain" : [[record_id, '=', id], ['id','in',this.dataset.ids]],
-            "views" : views,
-            "type" : "ir.actions.act_window",
-            "view_type" : "list",
-            "view_mode" : "list"
+            res_model : this.dataset.model,
+            domain: [[this.abscissa, '=', id], ['id','in',this.dataset.ids]],
+            views: views,
+            type: "ir.actions.act_window",
+            flags: {default_view: 'list'}
         });
     },
 

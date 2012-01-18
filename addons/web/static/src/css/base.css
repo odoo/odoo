@@ -1,4 +1,5 @@
-body.openerp {
+body { padding: 0; margin: 0; }
+.openerp {
     padding: 0;
     margin: 0;
     height: 100%;
@@ -7,7 +8,8 @@ body.openerp {
     font-family: Ubuntu, Helvetica, sans-serif;
 }
 
-body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp option, .openerp button, .openerp .ui-widget {
+.openerp, .openerp textarea, .openerp input, .openerp select, .openerp option,
+.openerp button, .openerp .ui-widget {
     font-family: Ubuntu, Helvetica, sans-serif;
     font-size:85%;
 }
@@ -1416,7 +1418,7 @@ label.error {
 }
 @-moz-document url-prefix() {
     /* Strange firefox behaviour on width: 100% + white-space: nowrap */
-    .openerp .oe_forms .oe_button {
+    .openerp .oe_forms .oe_form_button .oe_button {
         width: auto;
     }
 }
@@ -1851,15 +1853,28 @@ label.error {
 }
 .openerp .oe-treeview-table {
     width: 100%;
+    background-color : #FFFFFF;
+    border-spacing: 0;
+}
+.openerp .oe-treeview-table tr:hover{
+    color: blue;
+    background-color : #D8D8D8;
 }
 .treeview-tr, .treeview-td {
     cursor: pointer;
     vertical-align: top;
     text-align: left;
+    border-bottom: 1px solid #CFCCCC;
+}
+.oe-number{
+   text-align: right !important;
 }
 .treeview-tr span, .treeview-td span {
+    font-size: 90%;
+    font-weight: normal;
+    white-space: nowrap;
     display: block;
-}
+    }
 .treeview-tr:first-of-type {
     background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat;
 }
@@ -1872,8 +1887,11 @@ label.error {
 }
 
 .treeview-header {
-    text-align: left;
     vertical-align: top;
+    background-color : #D8D8D8;
+    white-space: nowrap;
+    text-align: left;
+    padding: 4px 5px;
 }
 /* Shortcuts*/
 .oe-shortcut-toggle {

@@ -70,7 +70,8 @@
             </tr>
             <tr>
                 <td><label for="db_name">New database name:</label></td>
-                <td><input type="text" name="db_name" class="required"/></td>
+                <td><input type="text" name="db_name"
+                           class="required" matches="^[a-zA-Z][a-zA-Z0-9_]+$"/></td>
             </tr>
             <tr>
                 <td><label for="demo_data">Load Demonstration data:</label></td>
@@ -553,16 +554,21 @@
         t-att-data-id="record.id" t-att-data-level="level + 1">
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
+    <t t-set="style" t-value="'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px;'"/>
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
         t-att-data-id="record.id"
-        t-att-style="color_for(record) + (!field_index ? 'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px;' : '')"
-        t-att-class="class">
-        <span t-if="!field.attrs.modifiers.invisible">
+        t-att-style="color_for(record) + style "
+        t-att-class="(fields[field.attrs.name].type === 'float') or (fields[field.attrs.name].type === 'integer')
+                    ? (class +' ' +'oe-number') : class">
+
+        <span t-if="!field.attrs.modifiers.invisible" >
             <t t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
         </span>
+
         <t t-set="class" t-value="'treeview-td'"/>
+        <t t-set="style" t-value="''"/>
     </td>
 </tr>
 
@@ -1717,32 +1723,18 @@
 
 <t t-name="About-Page">
     <div>
-        <a class="oe_activate_debug_mode" href="?debug">Debug mode</a>
-        <h1>OpenERP Web</h1>
-        <h3 style="padding:0 5px 5px">Version <t t-esc="version_info.version"/></h3>
+        <a class="oe_activate_debug_mode" href="?debug" style="float:right; font-size: 80%;">Activate the developper mode</a>
+        <h1 style="margin:0;">OpenERP</h1>
+        <h3 style="margin:15px 0;padding:0;">Version <t t-esc="version_info.version"/></h3>
         <p>
-            Copyright © 2011-TODAY OpenERP SA. All Rights Reserved.<br />
+            Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.<br />
             OpenERP is a trademark of the <a target="_blank" href="http://openerp.com/" style="text-decoration: underline;">OpenERP SA Company</a>.
         </p>
         <p>
             Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/agpl.html" style="text-decoration: underline;">GNU Affero General Public License</a>
         </p>
-        <br />
-        <h1>About OpenERP</h1>
         <p>
-            <a target="_blank" href="http://openerp.com/" style="text-decoration: underline;">OpenERP</a> is a free enterprise-scale software system that is designed to boost
-            productivity and profit through data integration. It connects, improves and
-            manages business processes in areas such as sales, finance, supply chain,
-            project management, production, services, CRM, etc...
-        </p>
-        <p>
-            The system is platform-independent, and can be installed on Windows, Mac OS X,
-            and various Linux and other Unix-based distributions. Its architecture enables
-            new functionality to be rapidly created, modifications to be made to a
-            production system and migration to a new version to be straightforward.
-        </p>
-        <p>
-            Depending on your needs, OpenERP is available through a web or application client.
+            For more information visit <a target="_blank" href="http://openerp.com/" style="text-decoration: underline;">OpenERP.com</a>
         </p>
     </div>
 </t>

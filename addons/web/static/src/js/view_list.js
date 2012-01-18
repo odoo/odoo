@@ -1316,19 +1316,24 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             if (!self.datagroup.openable) {
                 view.configure_pager(dataset);
             } else {
-                var pages = Math.ceil(dataset.ids.length / limit);
-                self.$row
-                    .find('.oe-pager-state')
-                        .text(_.str.sprintf(_t("%(page)d/%(page_count)d"), {
-                            page: page + 1,
-                            page_count: pages
-                        }))
-                    .end()
-                    .find('button[data-pager-action=previous]')
-                        .attr('disabled', page === 0)
-                    .end()
-                    .find('button[data-pager-action=next]')
-                        .attr('disabled', page === pages - 1);
+                if (dataset.ids.length == records.length) {
+                    // only one page
+                    self.$row.find('td.oe-group-pagination').empty();
+                } else {
+                    var pages = Math.ceil(dataset.ids.length / limit);
+                    self.$row
+                        .find('.oe-pager-state')
+                            .text(_.str.sprintf(_t("%(page)d/%(page_count)d"), {
+                                page: page + 1,
+                                page_count: pages
+                            }))
+                        .end()
+                        .find('button[data-pager-action=previous]')
+                            .attr('disabled', page === 0)
+                        .end()
+                        .find('button[data-pager-action=next]')
+                            .attr('disabled', page === pages - 1);
+                }
             }
 
             self.records.add(records, {silent: true});
