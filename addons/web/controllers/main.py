@@ -84,24 +84,9 @@ def concat_files(file_list, reader=None, intersperse=""):
     files_concat = intersperse.join(files_content)
     return files_concat,files_timestamp
 
-html_template = """<!DOCTYPE html>
-<html style="height: 100%%">
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>OpenERP</title>
-        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-        %(css)s
-        %(js)s
-        <script type="text/javascript">
-            $(function() {
-                var s = new openerp.init(%(modules)s);
-                %(init)s
-            });
-        </script>
-    </head>
-    <body class="openerp" id="oe"></body>
-</html>
-"""
+html_template = None
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "main.html")) as html_file:
+    html_template = html_file.read()
 
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
@@ -207,7 +192,6 @@ class WebClient(openerpweb.Controller):
             'js': js,
             'css': css,
             'modules': simplejson.dumps(self.server_wide_modules(req)),
-            'init': 'new s.web.WebClient().start();',
         }
         return r
 

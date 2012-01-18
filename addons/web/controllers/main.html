@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html style="height: 100%%">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>OpenERP</title>
+        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+        %(css)s
+        %(js)s
+        <script type="text/javascript">
+            $(function() {
+                var s = new openerp.init(%(modules)s);
+                var webclient = new s.web.WebClient();
+                webclient.$element = $(document.body);
+                webclient.start();
+            });
+        </script>
+    </head>
+    <body class="openerp" id="oe">
+        <!-- should add a loading message? -->
+    </body>
+</html>
