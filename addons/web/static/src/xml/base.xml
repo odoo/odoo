@@ -747,7 +747,7 @@
                 <input type="file" class="oe-binary-file" name="ufile" title="Add attachment"
                     t-att-onclick="view.datarecord.id ? null : 'alert(\'No record selected ! You can only attach to existing record.\'); return false;'"/>
             </form>
-            <iframe t-attf-id="#{element_id}_iframe" t-attf-name="#{element_id}_iframe" style="display: none"> </iframe>
+            <iframe t-attf-id="#{element_id}_iframe" t-attf-name="#{element_id}_iframe" style="display: none"/>
         </div>
     </div>
     <br style="clear: both"/>
@@ -1084,7 +1084,7 @@
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
             </div>
-            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
+            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
         </td>
     </tr>
     </table>
@@ -1134,7 +1134,7 @@
         <td class="oe-binary-progress" style="display: none" nowrap="true">
             <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
             <b>Uploading ...</b>
-            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
+            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
         </td>
     </tr>
     </table>
