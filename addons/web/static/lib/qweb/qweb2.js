@@ -303,13 +303,10 @@ QWeb2.Engine = (function() {
             return this.convert_xml_to_html(xDoc.documentElement);
         },
         convert_xml_to_html: function (node) {
-            var character_data = {
-                3: document.createTextNode,
-                4: document.createCDATASection,
-                8: document.createComment
-            };
-            if (node.nodeType in character_data) {
-                return character_data[node.nodeType](node.data);
+            switch (node.nodeType) {
+            case 3: return document.createTextNode(node.data);
+            case 4: return document.createCDATASection(node.data);
+            case 8: return document.createComment(node.data);
             }
 
             var hnode = document.createElement(node.nodeName);
