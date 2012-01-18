@@ -30,12 +30,12 @@ import urllib
 import xmlrpclib
 import StringIO
 
+import errno
 import logging
 import os
 import signal
 import sys
 import threading
-import time
 import traceback
 
 import openerp
@@ -152,7 +152,7 @@ def wsgi_xmlrpc_1(environ, start_response):
 
         path = environ['PATH_INFO'][len(XML_RPC_PATH_1):]
         if path.startswith('/'): path = path[1:]
-        if path.endswith('/'): p = path[:-1]
+        if path.endswith('/'): path = path[:-1]
         path = path.split('/')
 
         # All routes are hard-coded.
@@ -196,7 +196,7 @@ def wsgi_xmlrpc(environ, start_response):
 
         path = environ['PATH_INFO'][len(XML_RPC_PATH):]
         if path.startswith('/'): path = path[1:]
-        if path.endswith('/'): p = path[:-1]
+        if path.endswith('/'): path = path[:-1]
         path = path.split('/')
 
         # All routes are hard-coded.
@@ -259,9 +259,6 @@ def http_to_wsgi(http_dir):
     document_webdav addon) have to be WSGIfied.
     """
     def wsgi_handler(environ, start_response):
-
-        # Extract from the WSGI environment the necessary data.
-        scheme = environ['wsgi.url_scheme']
 
         headers = {}
         for key, value in environ.items():
@@ -426,7 +423,7 @@ def serve():
         import werkzeug.serving
         httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
         logging.getLogger('wsgi').info('HTTP service (werkzeug) running on %s:%s', interface, port)
-    except ImportError, e:
+    except ImportError:
         import wsgiref.simple_server
         logging.getLogger('wsgi').warn('Werkzeug module unavailable, falling back to wsgiref.')
         httpd = wsgiref.simple_server.make_server(interface, port, application)
@@ -457,7 +454,6 @@ arbiter_pid = None
 def on_starting(server):
     global arbiter_pid
     arbiter_pid = os.getpid() # TODO check if this is true even after replacing the executable
-    config = openerp.tools.config
     #openerp.tools.cache = kill_workers_cache
     openerp.netsvc.init_logger()
     openerp.osv.osv.start_object_proxy()
@@ -499,7 +495,7 @@ def kill_workers():
     except OSError, e:
         if e.errno == errno.ESRCH: # no such pid
             return
-        raise            
+        raise
 
 class kill_workers_cache(openerp.tools.ormcache):
     def clear(self, dbname, *args, **kwargs):
