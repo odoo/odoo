@@ -26,6 +26,7 @@
 Miscelleanous tools used by OpenERP.
 """
 
+from functools import wraps
 import inspect
 import subprocess
 import logging
@@ -50,10 +51,7 @@ from email import Encoders
 from itertools import islice, izip
 from lxml import etree
 from which import which
-if sys.version_info[:2] < (2, 4):
-    from threadinglocal import local
-else:
-    from threading import local
+from threading import local
 try:
     from html2text import html2text
 except ImportError:
@@ -715,8 +713,6 @@ def human_size(sz):
     return "%0.2f %s" % (s, units[i])
 
 def logged(f):
-    from func import wraps
-
     @wraps(f)
     def wrapper(*args, **kwargs):
         from pprint import pformat
@@ -742,8 +738,6 @@ class profile(object):
         self.fname = fname
 
     def __call__(self, f):
-        from func import wraps
-
         @wraps(f)
         def wrapper(*args, **kwargs):
             class profile_wrapper(object):

@@ -35,13 +35,13 @@ See also: the `pooler` module
 
 __all__ = ['db_connect', 'close_db']
 
-from threading import currentThread
+from functools import wraps
 import logging
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
-from psycopg2.psycopg1 import cursor as psycopg1cursor
-from psycopg2.pool import PoolError
-
 import psycopg2.extensions
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
+from psycopg2.pool import PoolError
+from psycopg2.psycopg1 import cursor as psycopg1cursor
+from threading import currentThread
 import warnings
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
@@ -66,7 +66,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 
 import tools
-from tools.func import wraps, frame_codeinfo
+from tools.func import frame_codeinfo
 from datetime import datetime as mdt
 from datetime import timedelta
 import threading

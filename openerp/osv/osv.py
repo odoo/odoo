@@ -21,6 +21,7 @@
 
 #.apidoc title: Objects Services (OSV)
 
+from functools import wraps
 import logging
 from psycopg2 import IntegrityError, errorcodes
 
@@ -29,7 +30,6 @@ import openerp
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 import openerp.sql_db as sql_db
-from openerp.tools.func import wraps
 from openerp.tools.translate import translate
 from openerp.osv.orm import MetaModel, Model, TransientModel, AbstractModel
 import openerp.exceptions
