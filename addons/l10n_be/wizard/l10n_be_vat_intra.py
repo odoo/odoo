@@ -114,21 +114,13 @@ class partner_vat_intra(osv.osv_memory):
         dnum = cref + seq_declarantnum[-5:]
 
         addr = obj_partner.address_get(cr, uid, [data_cmpny.partner_id.id], ['invoice'])
-        email = data_cmpny.partner_id.email
-        phone = data_cmpny.partner_id.phone
-        if email == False:
-            email = ''
-        if phone == False:
-            phone = ''
+        email = data_cmpny.partner_id.email or ''
+        phone = data_cmpny.partner_id.phone or ''
 
         if addr.get('invoice',False):
             ads = obj_partner_add.browse(cr, uid, [addr['invoice']])[0]
             city = (ads.city or '')
             post_code = (ads.zip or '')
-            if city == ' ':
-                city = ''
-            if post_code == ' ':
-                post_code = ''
             if ads.street:
                 street = ads.street
             if ads.street2:
@@ -210,11 +202,11 @@ class partner_vat_intra(osv.osv_memory):
 
         # Can't we do this by etree?
         data_head = """<?xml version="1.0"?>
-<IntraConsignment xmlns="http://www.minfin.fgov.be/IntraConsignment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" RecipientId="VAT-ADMIN" SenderId="%(company_vat)s" ControlRef="%(controlref)s" IntraListingsNbr="%(mand_id)s" SenderDate="%(sender_date)s" VersionTech="1.3">
+<IntraConsignment xmlns="http://www.minfin.fgov.be/IntraConsignment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" IntraListingsNbr="1">
 	<Representative>%(company_name)s</Representative>
 	<RepresentativeReference>%(mand_id)s</RepresentativeReference>""" % (xml_data)
     
-        data_comp_period = '\n\t\t<Declarant>\n\t\t\t<VATNumber xmlns="http://www.minfin.fgov.be/InputCommon">%(vatnum)s</VATNumber>\n\t\t\t<Name>%(company_name)s</Name>\n\t\t\t<Street>%(street)s</Street>\n\t\t\t<PostCode>%(post_code)s</PostCode>\n\t\t\t<City>%(city)s</City>\n\t\t\t<CountryCode>%(country)s</CountryCode>\n\t\t<EmailAddress>%(email)s</EmailAddress>\n\t\t<Phone>%(phone)s</Phone></Declarant>' % (xml_data)
+        data_comp_period = '\n\t\t<ReplacedIntraListing></ReplacedIntraListing>\n\t\t<Declarant>\n\t\t\t<VATNumber xmlns="http://www.minfin.fgov.be/InputCommon">%(vatnum)s</VATNumber>\n\t\t\t<Name>%(company_name)s</Name>\n\t\t\t<Street>%(street)s</Street>\n\t\t\t<PostCode>%(post_code)s</PostCode>\n\t\t\t<City>%(city)s</City>\n\t\t\t<CountryCode>%(country)s</CountryCode>\n\t\t<EmailAddress>%(email)s</EmailAddress>\n\t\t<Phone>%(phone)s</Phone></Declarant>' % (xml_data)
         if month_quarter.startswith('3'):
             data_comp_period += '\n\t\t<Period>\n\t<Quarter>'+month_quarter+'</Quarter> \n\t<Year>'+year+'</Year></Period>'
         elif month_quarter.startswith('0') and month_quarter.endswith('0'):
