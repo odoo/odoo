@@ -32,9 +32,6 @@
     usable in other projects, too.
 """
 
-import socket
-import base64
-import errno
 import SocketServer
 from BaseHTTPServer import *
 from SimpleHTTPServer import SimpleHTTPRequestHandler

@@ -39,6 +39,7 @@ import openerp.sql_db as sql_db
 import openerp.tools as tools
 import openerp.modules
 import openerp.exceptions
+from openerp.service import http_server
 
 #.apidoc title: Exported Service methods
 #.apidoc module-mods: member-order: bysource
