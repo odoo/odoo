@@ -42,6 +42,9 @@ import openerp
 __author__ = openerp.release.author
 __version__ = openerp.release.version
 
+import sys
+import imp
+
 def check_root_user():
     """ Exit if the process's user is 'root' (on POSIX system)."""
     if os.name == 'posix':
@@ -212,6 +215,7 @@ if __name__ == "__main__":
 
     check_root_user()
     openerp.tools.config.parse_config(sys.argv[1:])
+
     check_postgres_user()
     openerp.netsvc.init_logger()
     report_configuration()

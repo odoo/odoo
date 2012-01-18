@@ -461,9 +461,6 @@ class configmanager(object):
         if complete:
             openerp.modules.module.initialize_sys_path()
             openerp.modules.loading.open_openerp_namespace()
-            # openerp.addons.__path__.extend(openerp.conf.addons_paths) # This
-            # is not compatible with initialize_sys_path(): import crm and
-            # import openerp.addons.crm load twice the module.
 
     def _generate_pgpassfile(self):
         """

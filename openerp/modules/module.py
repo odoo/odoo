@@ -56,31 +56,109 @@ loaded = []
 
 logger = netsvc.Logger()
 
-def initialize_sys_path():
-    """ Add all addons paths in sys.path.
+class AddonsImportHook(object):
+    """
+    Import hook to load OpenERP addons from multiple paths.
 
-    This ensures something like ``import crm`` works even if the addons are
-    not in the PYTHONPATH.
+    OpenERP implements its own import-hook to load its addons. OpenERP
+    addons are Python modules. Originally, they were each living in their
+    own top-level namespace, e.g. the sale module, or the hr module. For
+    backward compatibility, `import <module>` is still supported. Now they
+    are living in `openerp.addons`. The good way to import such modules is
+    thus `import openerp.addons.module`.
+
+    For backward compatibility, loading an addons puts it in `sys.modules`
+    under both the legacy (short) name, and the new (longer) name. This
+    ensures that
+        import hr
+        import openerp.addons.hr
+    loads the hr addons only once.
+
+    When an OpenERP addons name clashes with some other installed Python
+    module (for instance this is the case of the `resource` addons),
+    obtaining the OpenERP addons is only possible with the long name. The
+    short name will give the expected Python module.
+
+    Instead of relying on some addons path, an alternative approach would be
+    to use pkg_resources entry points from already installed Python libraries
+    (and install our addons as such). Even when implemented, we would still
+    have to support the addons path approach for backward compatibility.
+    """
+
+    def find_module(self, module_name, package_path):
+        module_parts = module_name.split('.')
+        if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
+            return self # We act as a loader too.
+
+        # TODO list of loadable modules can be cached instead of always
+        # calling get_module_path().
+        if len(module_parts) == 1 and \
+            get_module_path(module_parts[0],
+                display_warning=False):
+            try:
+                # Check if the bare module name clashes with another module.
+                f, path, descr = imp.find_module(module_parts[0])
+                logger = logging.getLogger('init')
+                logger.warning("""
+Ambiguous import: the OpenERP module `%s` is shadowed by another
+module (available at %s).
+To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
+                return
+            except ImportError, e:
+                # Using `import <module_name>` instead of
+                # `import openerp.addons.<module_name>` is ugly but not harmful
+                # and kept for backward compatibility.
+                return self # We act as a loader too.
+
+    def load_module(self, module_name):
+
+        module_parts = module_name.split('.')
+        if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
+            module_part = module_parts[2]
+            if module_name in sys.modules:
+                return sys.modules[module_name]
+
+        if len(module_parts) == 1:
+            module_part = module_parts[0]
+            if module_part in sys.modules:
+                return sys.modules[module_part]
+
+        try:
+            # Check if the bare module name shadows another module.
+            f, path, descr = imp.find_module(module_part)
+            is_shadowing = True
+        except ImportError, e:
+            # Using `import <module_name>` instead of
+            # `import openerp.addons.<module_name>` is ugly but not harmful
+            # and kept for backward compatibility.
+            is_shadowing = False
+
+        # Note: we don't support circular import.
+        f, path, descr = imp.find_module(module_part, ad_paths)
+        mod = imp.load_module(module_name, f, path, descr)
+        if not is_shadowing:
+            sys.modules[module_part] = mod
+        sys.modules['openerp.addons.' + module_part] = mod
+        return mod
+
+def initialize_sys_path():
+    """
+    Setup an import-hook to be able to import OpenERP addons from the different
+    addons paths.
+
+    This ensures something like ``import crm`` (or even
+    ``import openerp.addons.crm``) works even if the addons are not in the
+    PYTHONPATH.
     """
     global ad_paths
-
     if ad_paths:
         return
 
     ad_paths = map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
+    ad_paths.append(_ad) # for get_module_path
+    sys.meta_path.append(AddonsImportHook())
 
-    sys.path.insert(1, _ad)
-
-    ad_cnt=1
-    for adp in ad_paths:
-        if adp != _ad:
-            sys.path.insert(ad_cnt, adp)
-            ad_cnt+=1
-
-    ad_paths.append(_ad)    # for get_module_path
-
-
-def get_module_path(module, downloaded=False):
+def get_module_path(module, downloaded=False, display_warning=True):
     """Return the path of the given module.
 
     Search the addons paths and return the first path where the given
@@ -95,7 +173,8 @@ def get_module_path(module, downloaded=False):
 
     if downloaded:
         return opj(_ad, module)
-    logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
+    if display_warning:
+        logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
     return False
 
 
@@ -299,17 +378,6 @@ def init_module_models(cr, module_name, obj_list):
         t[1](cr, *t[2])
     cr.commit()
 
-# Import hook to write a addon m in both sys.modules['m'] and
-# sys.modules['openerp.addons.m']. Otherwise it could be loaded twice
-# if imported twice using different names.
-#class MyImportHook(object):
-#    def find_module(self, module_name, package_path):
-#       print ">>>", module_name, package_path
-#    def load_module(self, module_name):
-#       raise ImportError("Restricted")
-
-#sys.meta_path.append(MyImportHook())
-
 def register_module_classes(m):
     """ Register module named m, if not already registered.
 
@@ -334,7 +402,7 @@ def register_module_classes(m):
     try:
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
-            __import__(m)
+            __import__('openerp.addons.' + m)
         else:
             zimp = zipimport.zipimporter(zip_mod_path)
             zimp.load_module(m)
