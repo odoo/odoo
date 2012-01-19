@@ -386,7 +386,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
                        smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password,
                        smtp_encryption=('ssl' if ssl else None), debug=debug)
     except Exception:
-        _log.exception("tools.email_send failed to deliver email")
+        _logger.exception("tools.email_send failed to deliver email")
         return False
     finally:
         cr.close()
