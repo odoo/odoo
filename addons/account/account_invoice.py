@@ -322,7 +322,7 @@ class account_invoice(osv.osv):
                 if context['type'] == 'in_refund':
                     node.set('domain', "[('partner_id.ref_companies', 'in', [company_id])]")
                 if context['type'] == 'out_refund':
-                    node.set('domain', "[('parnter_id', '=', parnter_id)]")
+                    node.set('domain', "[('partner_id', '=', partner_id)]")
             res['arch'] = etree.tostring(doc)
                 
         if view_type == 'search':
