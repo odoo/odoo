@@ -49,6 +49,9 @@ class stock_picking(osv.osv):
             return super(stock_picking, self).get_currency_id(cursor, user, picking)
 
     def _get_partner_to_invoice(self, cr, uid, picking, context=None):
+        """Inherit the original function of the 'stock' module
+        We select the partner of the sale order as the partner of the customer invoice
+        """
         if picking.sale_id:
             return picking.sale_id.partner_id
         return super(stock_picking, self)._get_partner_to_invoice(cr, uid, picking, context=context)

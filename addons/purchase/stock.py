@@ -59,6 +59,9 @@ class stock_picking(osv.osv):
     }
 
     def _get_partner_to_invoice(self, cr, uid, picking, context=None):
+        """Inherit the original function of the 'stock' module
+        We select the partner of the sale order as the partner of the customer invoice
+        """
         if picking.purchase_id:
             return picking.purchase_id.partner_id
         return super(stock_picking, self)._get_partner_to_invoice(cr, uid, picking, context=context)

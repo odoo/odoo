@@ -878,7 +878,8 @@ class stock_picking(osv.osv):
     def _get_partner_to_invoice(self, cr, uid, picking, context=None):
         """ Gets the partner that will be invoiced
         Note that this function is inherited in the sale module
-        @return: partner object
+        @param picking: object of the picking for which we are selecting the partner to invoice
+        @return: object of the partner to invoice
         """
         return picking.address_id and picking.address_id.partner_id
 
@@ -961,7 +962,12 @@ class stock_picking(osv.osv):
         return inv_type
 
     def _prepare_invoice_group(self, cr, uid, picking, partner, invoice, context=None):
-        """Builds the dict for grouped invoices"""
+        """Builds the dict for grouped invoices
+        @param picking: picking object
+        @param partner: object of the partner to invoice (not used here, but may be usefull if this function is inherited)
+        @param invoice: object of the invoice that we are updating
+        @return: dict that will be used to update the invoice
+        """
         comment = self._get_comment_invoice(cr, uid, picking)
 
         return {
@@ -973,7 +979,13 @@ class stock_picking(osv.osv):
         }
 
     def _prepare_invoice(self, cr, uid, picking, partner, inv_type, journal_id, context=None):
-        """Builds the dict containing the values for the invoice"""
+        """Builds the dict containing the values for the invoice
+        @param picking: picking object
+        @param partner: object of the partner to invoice
+        @param inv_type: type of the invoice ('out_invoice', 'in_invoice', ...)
+        @param journal_id: ID of the accounting journal
+        @return: dict that will be used to create the invoice object
+        """
         if inv_type in ('out_invoice', 'out_refund'):
             account_id = partner.property_account_receivable.id
         else:
@@ -1007,7 +1019,14 @@ class stock_picking(osv.osv):
 
     def _prepare_invoice_line(self, cr, uid, group, picking, move_line, invoice_id,
         invoice_vals, context=None):
-        """Builds the dict containing the values for the invoice line"""
+        """Builds the dict containing the values for the invoice line
+        @param group: True or False
+        @param picking: picking object
+        @param: move_line: move_line object
+        @param: invoice_id: ID of the related invoice
+        @param: invoice_vals: dict used to created the invoice
+        @return: dict that will be used to create the invoice line
+        """
         if group:
             name = (picking.name or '') + '-' + move_line.name
         else:
@@ -1092,7 +1111,6 @@ class stock_picking(osv.osv):
             for move_line in picking.move_lines:
                 if move_line.state == 'cancel':
                     continue
-                print "invoice_vals=", invoice_vals
                 invoice_line_id = invoice_line_obj.create(cr, uid,
                         self._prepare_invoice_line(cr, uid, group, picking, move_line,
                                 invoice_id, invoice_vals, context=context),
