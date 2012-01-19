@@ -6,7 +6,6 @@ import csv
 import glob
 import itertools
 import operator
-import traceback
 import os
 import re
 import simplejson
@@ -18,7 +17,6 @@ from xml.etree import ElementTree
 from cStringIO import StringIO
 
 import babel.messages.pofile
-import werkzeug.exceptions
 import werkzeug.utils
 try:
     import xlwt
