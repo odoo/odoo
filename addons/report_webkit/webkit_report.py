@@ -182,7 +182,7 @@ class WebKitParser(report_sxw):
         """Translate String."""
         ir_translation = self.pool.get('ir.translation')
         res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid,
-                                         self.name, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
+                                         None, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
         if not res :
             return src
         return res
