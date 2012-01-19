@@ -249,7 +249,7 @@ class Model(object):
                                                     method,
                                                     args, kw)
             if method == "read":
-                if isinstance(result, list) and len(result) > 0 and "id" in result[0]:
+                if result and isinstance(result, list) and "id" in result[0]:
                     index = {}
                     for r in result:
                         index[r['id']] = r
