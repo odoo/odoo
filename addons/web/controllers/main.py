@@ -213,7 +213,7 @@ class WebClient(openerpweb.Controller):
         else:
             lang_obj = None
 
-        if lang.count("_") > 0:
+        if "_" in lang:
             separator = "_"
         else:
             separator = "@"
@@ -224,15 +224,15 @@ class WebClient(openerpweb.Controller):
         for addon_name in mods:
             transl = {"messages":[]}
             transs[addon_name] = transl
+            addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
             for l in langs:
-                addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
                 f_name = os.path.join(addons_path, addon_name, "po", l + ".po")
                 if not os.path.exists(f_name):
                     continue
                 try:
                     with open(f_name) as t_file:
                         po = babel.messages.pofile.read_po(t_file)
-                except:
+                except Exception:
                     continue
                 for x in po:
                     if x.id and x.string:
@@ -399,7 +399,7 @@ class Session(openerpweb.Controller):
             if req.session.model('res.users').change_password(
                 old_password, new_password):
                 return {'new_password':new_password}
-        except:
+        except Exception:
             return {'error': 'Original password incorrect, your password was not changed.', 'title': 'Change Password'}
         return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
@@ -508,7 +508,7 @@ class Session(openerpweb.Controller):
             req.httpsession['saved_actions'] = saved_actions
         # we don't allow more than 10 stored actions
         if len(saved_actions["actions"]) >= 10:
-            del saved_actions["actions"][min(saved_actions["actions"].keys())]
+            del saved_actions["actions"][min(saved_actions["actions"])]
         key = saved_actions["next"]
         saved_actions["actions"][key] = the_action
         saved_actions["next"] = key + 1
@@ -569,10 +569,8 @@ def clean_action(req, action, do_not_eval=False):
         if 'domain' in action:
             action['domain'] = parse_domain(action['domain'], req.session)
 
-    if 'type' not in action:
-       action['type'] = 'ir.actions.act_window_close'
-
-    if action['type'] == 'ir.actions.act_window':
+    action_type = action.setdefault('type', 'ir.actions.act_window_close')
+    if action_type == 'ir.actions.act_window':
         return fix_view_modes(action)
     return action
 
@@ -691,7 +689,7 @@ class Menu(openerpweb.Controller):
         # sort by sequence a tree using parent_id
         for menu_item in menu_items:
             menu_item.setdefault('children', []).sort(
-                key=lambda x:x["sequence"])
+                key=operator.itemgetter('sequence'))
 
         return menu_root
 
@@ -744,7 +742,7 @@ class DataSet(openerpweb.Controller):
             # shortcut read if we only want the ids
             return {
                 'ids': ids,
-                'records': map(lambda id: {'id': id}, paginated_ids)
+                'records': [{'id': id} for id in paginated_ids]
             }
 
         records = Model.read(paginated_ids, fields or False, context)
@@ -1015,7 +1013,7 @@ def parse_domain(domain, session):
     :param session: Current OpenERP session
     :type session: openerpweb.openerpweb.OpenERPSession
     """
-    if not isinstance(domain, (str, unicode)):
+    if not isinstance(domain, basestring):
         return domain
     try:
         return ast.literal_eval(domain)
@@ -1032,7 +1030,7 @@ def parse_context(context, session):
     :param session: Current OpenERP session
     :type session: openerpweb.openerpweb.OpenERPSession
     """
-    if not isinstance(context, (str, unicode)):
+    if not isinstance(context, basestring):
         return context
     try:
         return ast.literal_eval(context)
@@ -1500,7 +1498,7 @@ class CSVExport(Export):
                     d = d.replace('\n',' ').replace('\t',' ')
                     try:
                         d = d.encode('utf-8')
-                    except:
+                    except UnicodeError:
                         pass
                 if d is False: d = None
                 row.append(d)
