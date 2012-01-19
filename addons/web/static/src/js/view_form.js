@@ -792,7 +792,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         return QWeb.render(template, { "widget": this });
     },
     do_attach_tooltip: function(widget, trigger, options) {
-        if ($.browser.mozilla && parseInt($.browser.version.split('.')[0], 10) < 2) {
+        if ($.browser.mozilla) {
             // Unknown bug in old version of firefox :
             // input type=text onchange event not fired when tootip is shown
             return;
