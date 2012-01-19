@@ -321,7 +321,7 @@ class account_invoice(osv.osv):
             for node in doc.xpath("//field[@name='partner_bank_id']"):
                 if context['type'] == 'in_refund':
                     node.set('domain', "[('partner_id.ref_companies', 'in', [company_id])]")
-                if context['type'] == 'out_refund':
+                elif context['type'] == 'out_refund':
                     node.set('domain', "[('partner_id', '=', partner_id)]")
             res['arch'] = etree.tostring(doc)
                 
