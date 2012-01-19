@@ -35,14 +35,11 @@
 import base64
 import datetime as DT
 import re
-import string
-import sys
 import warnings
 import xmlrpclib
 from psycopg2 import Binary
 
 import openerp
-import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.translate import _
 from openerp.tools import float_round, float_repr
