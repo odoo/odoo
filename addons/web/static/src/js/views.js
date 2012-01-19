@@ -195,7 +195,8 @@ session.web.ActionManager = session.web.Widget.extend({
                         on_closed();
                     }
                     self.dialog_stop();
-                }
+                },
+                error: session.webclient.crashmanager.on_rpc_error
             })
         });
     },

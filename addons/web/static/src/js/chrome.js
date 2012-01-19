@@ -472,16 +472,13 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                 self.blockUI();
                 self.session.get_file({
                     form: form,
-                    error: function (body) {
-                        var error = body.firstChild.data.split('|');
-                        self.display_error({
-                            title: error[0],
-                            error: error[1]
-                        });
+                    success: function () {
+                        self.do_notify(_t("Backed"),
+                            _t("Database backed up successfully"));
                     },
+                    error: openerp.webclient.crashmanager.on_rpc_error,
                     complete: function() {
                         self.unblockUI();
-                        self.do_notify(_t("Backed"), _t("Database backed up successfully"));
                     }
                 });
             }

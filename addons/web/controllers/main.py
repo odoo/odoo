@@ -6,6 +6,7 @@ import csv
 import glob
 import itertools
 import operator
+import traceback
 import os
 import re
 import simplejson
@@ -17,6 +18,7 @@ from xml.etree import ElementTree
 from cStringIO import StringIO
 
 import babel.messages.pofile
+import werkzeug.exceptions
 import werkzeug.utils
 try:
     import xlwt
@@ -321,18 +323,13 @@ class Database(openerpweb.Controller):
 
     @openerpweb.httprequest
     def backup(self, req, backup_db, backup_pwd, token):
-        try:
-            db_dump = base64.b64decode(
-                req.session.proxy("db").dump(backup_pwd, backup_db))
-            return req.make_response(db_dump,
-                [('Content-Type', 'application/octet-stream; charset=binary'),
-                 ('Content-Disposition', 'attachment; filename="' + backup_db + '.dump"')],
-                {'fileToken': int(token)}
-            )
-        except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return 'Backup Database|' + e.faultCode
-        return 'Backup Database|Could not generate database backup'
+        db_dump = base64.b64decode(
+            req.session.proxy("db").dump(backup_pwd, backup_db))
+        return req.make_response(db_dump,
+            [('Content-Type', 'application/octet-stream; charset=binary'),
+             ('Content-Disposition', 'attachment; filename="' + backup_db + '.dump"')],
+            {'fileToken': int(token)}
+        )
 
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
