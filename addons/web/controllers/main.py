@@ -360,6 +360,7 @@ class Session(openerpweb.Controller):
     _cp_path = "/web/session"
 
     def session_info(self, req):
+        req.session.ensure_valid()
         return {
             "session_id": req.session_id,
             "uid": req.session._uid,
