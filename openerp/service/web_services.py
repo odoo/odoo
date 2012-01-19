@@ -521,11 +521,11 @@ GNU Public Licence.
                      'OS Name : %s\n' \
                      %(platform.platform(), platform.os.name)
         if os.name == 'posix':
-          if platform.system() == 'Linux':
-             lsbinfo = os.popen('lsb_release -a').read()
-             environment += '%s'%(lsbinfo)
-          else:
-             environment += 'Your System is not lsb compliant\n'
+            if platform.system() == 'Linux':
+                lsbinfo = os.popen('lsb_release -a').read()
+                environment += '%s'%(lsbinfo)
+            else:
+                environment += 'Your System is not lsb compliant\n'
         environment += 'Operating System Release : %s\n' \
                     'Operating System Version : %s\n' \
                     'Operating System Architecture : %s\n' \

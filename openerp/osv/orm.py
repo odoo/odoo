@@ -98,10 +98,10 @@ def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False
 
     if node.get('states'):
         if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
-             # TODO combine with AND or OR, use implicit AND for now.
-             modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
+            # TODO combine with AND or OR, use implicit AND for now.
+            modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
         else:
-             modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
+            modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
 
     for a in ('invisible', 'readonly', 'required'):
         if node.get(a):
@@ -894,8 +894,8 @@ class BaseModel(object):
                         for c in cls.__dict__.get(s, []):
                             exist = False
                             for c2 in range(len(new)):
-                                 #For _constraints, we should check field and methods as well
-                                 if new[c2][2]==c[2] and (new[c2][0] == c[0] \
+                                #For _constraints, we should check field and methods as well
+                                if new[c2][2]==c[2] and (new[c2][0] == c[0] \
                                         or getattr(new[c2][0],'__name__', True) == \
                                             getattr(c[0],'__name__', False)):
                                     # If new class defines a constraint with
@@ -2690,7 +2690,7 @@ class BaseModel(object):
         elif val in dict(self._columns[field].selection(self, cr, uid, context=context)):
             return
         raise except_orm(_('ValidateError'),
-			_('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
+                         _('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
 
     def _check_removed_columns(self, cr, log=False):
         # iterate on the database columns to drop the NOT NULL constraints

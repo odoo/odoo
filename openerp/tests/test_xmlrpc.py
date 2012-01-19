@@ -19,8 +19,8 @@ ADMIN_USER_ID = common.ADMIN_USER_ID
 ADMIN_PASSWORD = common.ADMIN_PASSWORD
 
 def setUpModule():
-  common.start_openerp()
-  common.create_xmlrpc_proxies()
+    common.start_openerp()
+    common.create_xmlrpc_proxies()
 
 tearDownModule = common.tearDownModule
 

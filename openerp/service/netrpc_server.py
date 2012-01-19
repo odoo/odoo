@@ -125,9 +125,9 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
                 ct.start()
                 lt = len(self.threads)
                 if (lt > 10) and (lt % 10 == 0):
-                     # Not many threads should be serving at the same time, so log
-                     # their abuse.
-                     netsvc.Logger().notifyChannel("web-services", netsvc.LOG_DEBUG,
+                    # Not many threads should be serving at the same time, so log
+                    # their abuse.
+                    netsvc.Logger().notifyChannel("web-services", netsvc.LOG_DEBUG,
                         "Netrpc: %d threads" % len(self.threads))
             self.socket.close()
         except Exception, e:

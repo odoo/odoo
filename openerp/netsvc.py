@@ -84,12 +84,12 @@ class Service(object):
             cls._services.pop(name)
 
 def LocalService(name):
-  # Special case for addons support, will be removed in a few days when addons
-  # are updated to directly use openerp.osv.osv.service.
-  if name == 'object_proxy':
-      return openerp.osv.osv.service
+    # Special case for addons support, will be removed in a few days when addons
+    # are updated to directly use openerp.osv.osv.service.
+    if name == 'object_proxy':
+        return openerp.osv.osv.service
 
-  return Service._services[name]
+    return Service._services[name]
 
 class ExportService(object):
     """ Proxy for exported services.
@@ -198,9 +198,9 @@ def init_logger():
 # server intended to test it.
 def init_alternative_logger():
     class H(logging.Handler):
-      def emit(self, record):
-        if record.levelno > 20:
-          print record.levelno, record.pathname, record.msg
+        def emit(self, record):
+            if record.levelno > 20:
+                print record.levelno, record.pathname, record.msg
     handler = H()
     logger = logging.getLogger()
     logger.handlers = []
