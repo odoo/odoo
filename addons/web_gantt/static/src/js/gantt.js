@@ -69,16 +69,26 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         }
         
         // get the groups
-        var groups = [];
-        _.each(tasks, function(task) {
-            var group_name = task[group_bys[0]];
-            var group = _.find(groups, function(group) { return _.isEqual(group.name, group_name); });
-            if (group === undefined) {
-                group = {name:group_name, tasks: []};
-                groups.push(group);
-            }
-            group.tasks.push(task);
-        });
+        var split_groups = function(tasks, group_bys) {
+            if (group_bys.length === 0)
+                return tasks;
+            var groups = [];
+            _.each(tasks, function(task) {
+                var group_name = task[_.first(group_bys)];
+                var group = _.find(groups, function(group) { return _.isEqual(group.name, group_name); });
+                if (group === undefined) {
+                    group = {name:group_name, tasks: [], __is_group: true};
+                    groups.push(group);
+                }
+                group.tasks.push(task);
+            });
+            _.each(groups, function(group) {
+                group.tasks = split_groups(group.tasks, _.rest(group_bys));
+            });
+            return groups;
+        }
+        var groups = split_groups(tasks, group_bys);
+        debugger;
         
         // creation of the chart
         var gantt = new GanttChart();
