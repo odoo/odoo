@@ -27,6 +27,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             type: 'ir.actions.act_window',
             target: "current",
             limit: this.dataset.limit || 80,
+            auto_search : true,
             flags: {
                 sidebar: false,
                 deletable: false,
