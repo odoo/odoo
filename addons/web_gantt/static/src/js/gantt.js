@@ -17,11 +17,13 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
     },
     start: function() {
         return $.when(this.rpc("/web/view/load", {"model": this.dataset.model, "view_id": this.view_id, "view_type": "gantt"}),
-            this.rpc("/web/searchview/fields_get", {"model": this.model})).pipe(this.on_loaded);
+            this.rpc("/web/searchview/fields_get", {"model": this.dataset.model})).pipe(this.on_loaded);
     },
     on_loaded: function(fields_view, fields_get) {
-        this.fields_view = fields_view;
-        this.fields = fields_get.fields;
+        this.fields_view = fields_view[0];
+        this.fields = fields_get[0].fields;
+        this.field_name = 'name';
+        
         this.has_been_loaded.resolve();
     },
     do_search: function (domains, contexts, group_bys) {
@@ -38,7 +40,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         var fields = _.compact(_.map(["date_start", "date_delay", "date_stop", "color", "colors"], function(key) {
             return self.fields_view.arch.attrs[key] || '';
         }));
-        fields = _.uniq(fields.concat(["name"], n_group_bys));
+        fields = _.uniq(fields.concat([this.field_name], n_group_bys));
         
         return $.when(this.has_been_loaded).pipe(function() {
             return self.dataset.read_slice(fields, {
@@ -63,6 +65,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             _.each(tasks, function(el) {
                 el._pseudo_group_by = "Gantt View";
             });
+            this.fields._pseudo_group_by = {type: "string"};
         }
         
         // get the groups
@@ -81,10 +84,19 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         debugger;
         var gantt = new GanttChart();
         _.each(groups, function(group) {
-            var project_1 = new GanttProjectInfo(1, "Yopla", new Date(2006, 5, 11));
-            var task_1 = new GanttTaskInfo(1, "Old code review", new Date(2006, 5, 11), 208, 50, "");
-            project_1.addTask(task_1);
-            gantt.addProject(project_1);
+            var project_name = openerp.web.format_value(group.name, self.fields[group_bys[0]]);
+            var project = new GanttProjectInfo(1, project_name);
+            var id_count = 0;
+            _.each(group.tasks, function(task) {
+                var task_name = openerp.web.format_value(task[self.field_name], self.fields[self.field_name]);
+                var task_start = openerp.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_start]);
+                if (!task_start)
+                    return;
+                var task = new GanttTaskInfo(id_count, task_name, task_start, 24, 100);
+                id_count += 1;
+                project.addTask(task);
+            });
+            gantt.addProject(project);
         })
  
         gantt.create(this.chart_id);
