@@ -80,6 +80,13 @@ class OpenERPSession(object):
         """
         self.build_connection().check_login(force)
 
+    def ensure_valid(self):
+        if self._uid:
+            try:
+                self.assert_valid(True)
+            except Exception:
+                self._uid = None
+
     def execute(self, model, func, *l, **d):
         self.assert_valid()
         model = self.build_connection().get_model(model)

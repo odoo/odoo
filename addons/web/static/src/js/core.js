@@ -809,8 +809,15 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             .attr({id: id, name: id})
             .appendTo(document.body)
             .load(function () {
-                if (options.error) { options.error(this.contentDocument.body); }
-                complete();
+                try {
+                    if (options.error) {
+                        options.error(JSON.parse(
+                            this.contentDocument.body.childNodes[1].textContent
+                        ));
+                    }
+                } finally {
+                    complete();
+                }
             });
 
         if (options.form) {

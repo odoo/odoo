@@ -84,24 +84,9 @@ def concat_files(file_list, reader=None, intersperse=""):
     files_concat = intersperse.join(files_content)
     return files_concat,files_timestamp
 
-html_template = """<!DOCTYPE html>
-<html style="height: 100%%">
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>OpenERP</title>
-        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-        %(css)s
-        %(js)s
-        <script type="text/javascript">
-            $(function() {
-                var s = new openerp.init(%(modules)s);
-                %(init)s
-            });
-        </script>
-    </head>
-    <body class="openerp" id="oe"></body>
-</html>
-"""
+html_template = None
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "main.html")) as html_file:
+    html_template = html_file.read()
 
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
@@ -207,7 +192,6 @@ class WebClient(openerpweb.Controller):
             'js': js,
             'css': css,
             'modules': simplejson.dumps(self.server_wide_modules(req)),
-            'init': 'new s.web.WebClient().start();',
         }
         return r
 
@@ -229,7 +213,7 @@ class WebClient(openerpweb.Controller):
         else:
             lang_obj = None
 
-        if lang.count("_") > 0:
+        if "_" in lang:
             separator = "_"
         else:
             separator = "@"
@@ -240,15 +224,15 @@ class WebClient(openerpweb.Controller):
         for addon_name in mods:
             transl = {"messages":[]}
             transs[addon_name] = transl
+            addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
             for l in langs:
-                addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
                 f_name = os.path.join(addons_path, addon_name, "po", l + ".po")
                 if not os.path.exists(f_name):
                     continue
                 try:
                     with open(f_name) as t_file:
                         po = babel.messages.pofile.read_po(t_file)
-                except:
+                except Exception:
                     continue
                 for x in po:
                     if x.id and x.string:
@@ -337,18 +321,13 @@ class Database(openerpweb.Controller):
 
     @openerpweb.httprequest
     def backup(self, req, backup_db, backup_pwd, token):
-        try:
-            db_dump = base64.b64decode(
-                req.session.proxy("db").dump(backup_pwd, backup_db))
-            return req.make_response(db_dump,
-                [('Content-Type', 'application/octet-stream; charset=binary'),
-                 ('Content-Disposition', 'attachment; filename="' + backup_db + '.dump"')],
-                {'fileToken': int(token)}
-            )
-        except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return 'Backup Database|' + e.faultCode
-        return 'Backup Database|Could not generate database backup'
+        db_dump = base64.b64decode(
+            req.session.proxy("db").dump(backup_pwd, backup_db))
+        return req.make_response(db_dump,
+            [('Content-Type', 'application/octet-stream; charset=binary'),
+             ('Content-Disposition', 'attachment; filename="' + backup_db + '.dump"')],
+            {'fileToken': int(token)}
+        )
 
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
@@ -376,6 +355,7 @@ class Session(openerpweb.Controller):
     _cp_path = "/web/session"
 
     def session_info(self, req):
+        req.session.ensure_valid()
         return {
             "session_id": req.session_id,
             "uid": req.session._uid,
@@ -415,7 +395,7 @@ class Session(openerpweb.Controller):
             if req.session.model('res.users').change_password(
                 old_password, new_password):
                 return {'new_password':new_password}
-        except:
+        except Exception:
             return {'error': 'Original password incorrect, your password was not changed.', 'title': 'Change Password'}
         return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
@@ -524,7 +504,7 @@ class Session(openerpweb.Controller):
             req.httpsession['saved_actions'] = saved_actions
         # we don't allow more than 10 stored actions
         if len(saved_actions["actions"]) >= 10:
-            del saved_actions["actions"][min(saved_actions["actions"].keys())]
+            del saved_actions["actions"][min(saved_actions["actions"])]
         key = saved_actions["next"]
         saved_actions["actions"][key] = the_action
         saved_actions["next"] = key + 1
@@ -585,10 +565,8 @@ def clean_action(req, action, do_not_eval=False):
         if 'domain' in action:
             action['domain'] = parse_domain(action['domain'], req.session)
 
-    if 'type' not in action:
-       action['type'] = 'ir.actions.act_window_close'
-
-    if action['type'] == 'ir.actions.act_window':
+    action_type = action.setdefault('type', 'ir.actions.act_window_close')
+    if action_type == 'ir.actions.act_window':
         return fix_view_modes(action)
     return action
 
@@ -707,7 +685,7 @@ class Menu(openerpweb.Controller):
         # sort by sequence a tree using parent_id
         for menu_item in menu_items:
             menu_item.setdefault('children', []).sort(
-                key=lambda x:x["sequence"])
+                key=operator.itemgetter('sequence'))
 
         return menu_root
 
@@ -760,7 +738,7 @@ class DataSet(openerpweb.Controller):
             # shortcut read if we only want the ids
             return {
                 'ids': ids,
-                'records': map(lambda id: {'id': id}, paginated_ids)
+                'records': [{'id': id} for id in paginated_ids]
             }
 
         records = Model.read(paginated_ids, fields or False, context)
@@ -858,6 +836,36 @@ class DataSet(openerpweb.Controller):
                 kwargs[k] = req.session.eval_domain(kwargs[k])
 
         return getattr(req.session.model(model), method)(*args, **kwargs)
+
+    @openerpweb.jsonrequest
+    def onchange(self, req, model, method, args, context_id=None):
+        """ Support method for handling onchange calls: behaves much like call
+        with the following differences:
+
+        * Does not take a domain_id
+        * Is aware of the return value's structure, and will parse the domains
+          if needed in order to return either parsed literal domains (in JSON)
+          or non-literal domain instances, allowing those domains to be used
+          from JS
+
+        :param req:
+        :type req: web.common.http.JsonRequest
+        :param str model: object type on which to call the method
+        :param str method: name of the onchange handler method
+        :param list args: arguments to call the onchange handler with
+        :param int context_id: index of the context object in the list of
+                               arguments
+        :return: result of the onchange call with all domains parsed
+        """
+        result = self.call_common(req, model, method, args, context_id=context_id)
+        if 'domain' not in result:
+            return result
+
+        result['domain'] = dict(
+            (k, parse_domain(v, req.session))
+            for k, v in result['domain'].iteritems())
+
+        return result
 
     @openerpweb.jsonrequest
     def call(self, req, model, method, args, domain_id=None, context_id=None):
@@ -1031,7 +1039,7 @@ def parse_domain(domain, session):
     :param session: Current OpenERP session
     :type session: openerpweb.openerpweb.OpenERPSession
     """
-    if not isinstance(domain, (str, unicode)):
+    if not isinstance(domain, basestring):
         return domain
     try:
         return ast.literal_eval(domain)
@@ -1048,7 +1056,7 @@ def parse_context(context, session):
     :param session: Current OpenERP session
     :type session: openerpweb.openerpweb.OpenERPSession
     """
-    if not isinstance(context, (str, unicode)):
+    if not isinstance(context, basestring):
         return context
     try:
         return ast.literal_eval(context)
@@ -1516,7 +1524,7 @@ class CSVExport(Export):
                     d = d.replace('\n',' ').replace('\t',' ')
                     try:
                         d = d.encode('utf-8')
-                    except:
+                    except UnicodeError:
                         pass
                 if d is False: d = None
                 row.append(d)

@@ -3,6 +3,7 @@
 # OpenERP Web HTTP layer
 #----------------------------------------------------------
 import ast
+import cgi
 import contextlib
 import functools
 import logging
@@ -92,7 +93,9 @@ class WebRequest(object):
         self.params = dict(params)
         # OpenERP session setup
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
-        self.session = self.httpsession.setdefault(self.session_id, session.OpenERPSession())
+        self.session = self.httpsession.get(self.session_id)
+        if not self.session:
+            self.httpsession[self.session_id] = self.session = session.OpenERPSession()
         self.session.config = self.config
         self.context = self.params.pop('context', None)
         self.debug = self.params.pop('debug', False) != False
@@ -252,7 +255,30 @@ class HttpRequest(WebRequest):
             else:
                 akw[key] = type(value)
         _logger.debug("%s --> %s.%s %r", self.httprequest.method, controller.__class__.__name__, method.__name__, akw)
-        r = method(controller, self, **self.params)
+        try:
+            r = method(controller, self, **self.params)
+        except xmlrpclib.Fault, e:
+            r = werkzeug.exceptions.InternalServerError(cgi.escape(simplejson.dumps({
+                'code': 200,
+                'message': "OpenERP Server Error",
+                'data': {
+                    'type': 'server_exception',
+                    'fault_code': e.faultCode,
+                    'debug': "Server %s\nClient %s" % (
+                        e.faultString, traceback.format_exc())
+                }
+            })))
+        except Exception:
+            logging.getLogger(__name__ + '.HttpRequest.dispatch').exception(
+                    "An error occurred while handling a json request")
+            r = werkzeug.exceptions.InternalServerError(cgi.escape(simplejson.dumps({
+                'code': 300,
+                'message': "OpenERP WebClient Error",
+                'data': {
+                    'type': 'client_exception',
+                    'debug': "Client %s" % traceback.format_exc()
+                }
+            })))
         if self.debug or 1:
             if isinstance(r, (werkzeug.wrappers.BaseResponse, werkzeug.exceptions.HTTPException)):
                 _logger.debug('<-- %s', r)

@@ -195,7 +195,8 @@ session.web.ActionManager = session.web.Widget.extend({
                         on_closed();
                     }
                     self.dialog_stop();
-                }
+                },
+                error: session.webclient.crashmanager.on_rpc_error
             })
         });
     },
@@ -310,11 +311,15 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             this.views[view_type].deferred.resolve(view_type);
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
-                if (self.searchview && view.controller.searchable !== false) {
+                if (self.searchview
+                        && self.flags.auto_search !== false
+                        && view.controller.searchable !== false) {
                     self.searchview.ready.then(self.searchview.do_search);
                 }
             });
-        } else if (this.searchview && view.controller.searchable !== false) {
+        } else if (this.searchview
+                && self.flags.auto_search !== false
+                && view.controller.searchable !== false) {
             this.searchview.ready.then(this.searchview.do_search);
         }
 
@@ -448,6 +453,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         // do not have it yet (and we don't, because we've not called our own
         // ``_super()``) rpc requests will blow up.
         var flags = action.flags || {};
+        flags.auto_search = !!action.auto_search;
         if (action.res_model == 'board.board' && action.view_mode === 'form') {
             // Special case for Dashboards
             _.extend(flags, {
