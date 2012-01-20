@@ -68,7 +68,7 @@
                             </field>
                         </page>
                         <page string="Billing" groups="account.group_account_invoice">
-                            <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"/>
+                            <field colspan="4" name="partner_id" on_change="on_change_partner_id(partner_id)" select="1" string="Customer"/>
                             <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Invoice Address"/>
                             <field name="warn_customer"/>
                             <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
