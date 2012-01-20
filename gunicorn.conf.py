@@ -23,6 +23,7 @@ workers = 1
 on_starting = openerp.wsgi.on_starting
 when_ready = openerp.wsgi.when_ready
 pre_request = openerp.wsgi.pre_request
+post_request = openerp.wsgi.post_request
 
 # openerp request-response cycle can be quite long for
 # big reports for example

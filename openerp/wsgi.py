@@ -491,17 +491,22 @@ def pre_request(worker, req):
     rss, vms = psutil.Process(os.getpid()).get_memory_info()
     soft, hard = resource.getrlimit(resource.RLIMIT_AS)
     print ">>>>>> [%s] %s %s %s %s %s" % (os.getpid(), vms, req.method, req.path, req.query, req.fragment)
-    print ">>>>>>   %s" % (req.body,)
     resource.setrlimit(resource.RLIMIT_AS, (config['virtual_memory_limit'], hard))
-    if vms > config['virtual_memory_reset']:
-        print ">>> Worker eating too much memory, reset it after the request."
-        worker.alive = False # Commit suicide after the request.
 
     r = resource.getrusage(resource.RUSAGE_SELF)
     cpu_time = r.ru_utime + r.ru_stime
     signal.signal(signal.SIGXCPU, time_expired)
     soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
     resource.setrlimit(resource.RLIMIT_CPU, (cpu_time + config['cpu_time_limit'], hard))
+
+# Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
+def post_request(worker, req, environ):
+    import os
+    import psutil
+    rss, vms = psutil.Process(os.getpid()).get_memory_info()
+    if vms > config['virtual_memory_reset']:
+        print ">>> Worker eating too much memory, reset it after the request."
+        worker.alive = False # Commit suicide after the request.
 
 # Our signal handler will signal a SGIQUIT to all workers.
 def make_winch_handler(server):
