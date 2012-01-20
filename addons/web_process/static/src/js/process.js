@@ -241,14 +241,13 @@ openerp.web_process = function (openerp) {
             dataset.call('get',
                 ['action', 'tree_but_open',[['ir.ui.menu', id]], dataset.context],
                 function(res) {
-                    self.$element.empty();
                     var action = res[0][res[0].length - 1];
                     self.rpc("/web/action/load", {
                         action_id: action.id,
                         context: dataset.context
                         }, function(result) {
                             var action_manager = new openerp.web.ActionManager(self);
-                            action_manager.appendTo(self.widget_parent.$element);
+                            action_manager.replace(self.$element);
                             action_manager.do_action(result.result);
                         });
                 });
