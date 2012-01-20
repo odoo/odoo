@@ -34,7 +34,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             n_group_bys = this.fields_view.arch.attrs.default_group_by.split(',');
         }
         if (group_bys.length) {
-            n_group_bys = groupbys;
+            n_group_bys = group_bys;
         }
         // gather the fields to get
         var fields = _.compact(_.map(["date_start", "date_delay", "date_stop", "color", "colors"], function(key) {
@@ -93,10 +93,24 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                     return;
                 if (smaller_task_start === undefined || task_start < smaller_task_start)
                     smaller_task_start = task_start;
-                var task_info = new GanttTaskInfo(id_count, task_name, task_start, 24, 100);
+                var duration;
+                if (self.fields_view.arch.attrs.date_delay) {
+                    duration = openerp.web.format_value(task[self.fields_view.arch.attrs.date_delay],
+                        self.fields[self.fields_view.arch.attrs.date_delay]);
+                    if (!duration)
+                        return;
+                } else { // we assume date_stop is defined
+                    var task_stop = openerp.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_stop]);
+                    if (!task_stop)
+                        return;
+                    duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
+                }
+                var task_info = new GanttTaskInfo(id_count, task_name, task_start, duration, 100);
                 id_count += 1;
                 task_infos.push(task_info);
             });
+            if (task_infos.length == 0)
+                return;
             var project_name = openerp.web.format_value(group.name, self.fields[group_bys[0]]);
             var project = new GanttProjectInfo(1, project_name, smaller_task_start || new Date());
             _.each(task_infos, function(el) {
