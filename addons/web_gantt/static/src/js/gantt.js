@@ -88,7 +88,6 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             return groups;
         }
         var groups = split_groups(tasks, group_bys);
-        debugger;
         
         // creation of the chart
         var gantt = new GanttChart();
