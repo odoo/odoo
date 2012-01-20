@@ -838,6 +838,36 @@ class DataSet(openerpweb.Controller):
         return getattr(req.session.model(model), method)(*args, **kwargs)
 
     @openerpweb.jsonrequest
+    def onchange(self, req, model, method, args, context_id=None):
+        """ Support method for handling onchange calls: behaves much like call
+        with the following differences:
+
+        * Does not take a domain_id
+        * Is aware of the return value's structure, and will parse the domains
+          if needed in order to return either parsed literal domains (in JSON)
+          or non-literal domain instances, allowing those domains to be used
+          from JS
+
+        :param req:
+        :type req: web.common.http.JsonRequest
+        :param str model: object type on which to call the method
+        :param str method: name of the onchange handler method
+        :param list args: arguments to call the onchange handler with
+        :param int context_id: index of the context object in the list of
+                               arguments
+        :return: result of the onchange call with all domains parsed
+        """
+        result = self.call_common(req, model, method, args, context_id=context_id)
+        if 'domain' not in result:
+            return result
+
+        result['domain'] = dict(
+            (k, parse_domain(v, req.session))
+            for k, v in result['domain'].iteritems())
+
+        return result
+
+    @openerpweb.jsonrequest
     def call(self, req, model, method, args, domain_id=None, context_id=None):
         return self.call_common(req, model, method, args, domain_id, context_id)
     
