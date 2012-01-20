@@ -481,11 +481,40 @@ def when_ready(server):
     # Hijack gunicorn's SIGWINCH handling; we can choose another one.
     signal.signal(signal.SIGWINCH, make_winch_handler(server))
 
+# Install limits on virtual memory and CPU time consumption.
+def pre_request(worker, req):
+    import os
+    import psutil
+    import resource
+    import signal
+    # VMS and RLIMIT_AS are the same thing: virtual memory, a.k.a. address space
+    rss, vms = psutil.Process(os.getpid()).get_memory_info()
+    soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+    print ">>>>>> [%s] %s %s %s %s %s" % (os.getpid(), vms, req.method, req.path, req.query, req.fragment)
+    print ">>>>>>   %s" % (req.body,)
+    resource.setrlimit(resource.RLIMIT_AS, (config['virtual_memory_limit'], hard))
+    if vms > config['virtual_memory_reset']:
+        print ">>> Worker eating too much memory, reset it after the request."
+        worker.alive = False # Commit suicide after the request.
+
+    r = resource.getrusage(resource.RUSAGE_SELF)
+    cpu_time = r.ru_utime + r.ru_stime
+    signal.signal(signal.SIGXCPU, time_expired)
+    soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
+    resource.setrlimit(resource.RLIMIT_CPU, (cpu_time + config['cpu_time_limit'], hard))
+
 # Our signal handler will signal a SGIQUIT to all workers.
 def make_winch_handler(server):
     def handle_winch(sig, fram):
         server.kill_workers(signal.SIGQUIT) # This is gunicorn specific.
     return handle_winch
+
+# SIGXCPU (exceeded CPU time) signal handler will raise an exception.
+def time_expired(n, stack):
+    import os
+    import time
+    print '>>> [%s] time ran out.' % (os.getpid())
+    raise Exception('(time ran out)') # TODO one of openerp.exception
 
 # Kill gracefuly the workers (e.g. because we want to clear their cache).
 # This is done by signaling a SIGWINCH to the master process, so it can be
