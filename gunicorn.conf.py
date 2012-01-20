@@ -17,7 +17,7 @@ pidfile = '.gunicorn.pid'
 # Gunicorn recommends 2-4 x number_of_cpu_cores, but
 # you'll want to vary this a bit to find the best for your
 # particular work load.
-workers = 4
+workers = 1
 
 # Some application-wide initialization is needed.
 on_starting = openerp.wsgi.on_starting
@@ -27,6 +27,8 @@ when_ready = openerp.wsgi.when_ready
 # big reports for example
 timeout = 240
 
+#max_requests = 150
+
 # Equivalent of --load command-line option
 openerp.conf.server_wide_modules = ['web']
 
@@ -35,7 +37,7 @@ conf = openerp.tools.config
 
 # Path to the OpenERP Addons repository (comma-separated for
 # multiple locations)
-conf['addons_path'] = '/home/openerp/addons/trunk,/home/openerp/web/trunk/addons'
+conf['addons_path'] = '/home/thu/repos/addons/trunk,/home/thu/repos/web/trunk/addons,/home/thu/repos/server/trunk-limits/openerp/tests/addons'
 
 # Optional database config if not using local socket
 #conf['db_name'] = 'mycompany'
@@ -52,5 +54,33 @@ conf['addons_path'] = '/home/openerp/addons/trunk,/home/openerp/web/trunk/addons
 # If --static-http-enable is used, path for the static web directory
 #conf['static_http_document_root'] = '/var/www'
 
+def time_expired(n, stack):
+    import os
+    import time
+    print '>>> [%s] time ran out.' % (os.getpid())
+    raise Exception('(time ran out)')
+
+def pre_request(worker, req):
+    import os
+    import psutil
+    import resource
+    import signal
+    # VMS and RLIMIT_AS are the same thing: virtual memory, a.k.a. address space
+    rss, vms = psutil.Process(os.getpid()).get_memory_info()
+    soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+    print ">>>>>> [%s] %s %s %s %s %s" % (os.getpid(), vms, req.method, req.path, req.query, req.fragment)
+    print ">>>>>>   %s" % (req.body,)
+    # Let's say 512MB is ok, 768 is a hard limit (will raise MemoryError),
+    # 640 will nicely restart the process.
+    resource.setrlimit(resource.RLIMIT_AS, (768 * 1024 * 1024, hard))
+    if vms > 640 * 1024 * 1024:
+        print ">>> Worker eating too much memory, reset it after the request."
+        worker.alive = False # Commit suicide after the request.
+
+    r = resource.getrusage(resource.RUSAGE_SELF)
+    cpu_time = r.ru_utime + r.ru_stime
+    signal.signal(signal.SIGXCPU, time_expired)
+    soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
+    resource.setrlimit(resource.RLIMIT_CPU, (cpu_time + 15, hard))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

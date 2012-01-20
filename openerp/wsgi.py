@@ -460,6 +460,7 @@ def on_starting(server):
     openerp.service.web_services.start_web_services()
     openerp.modules.module.initialize_sys_path()
     openerp.modules.loading.open_openerp_namespace()
+    openerp.pooler.get_db_and_pool('xx', update_module=False, pooljobs=False)
     for m in openerp.conf.server_wide_modules:
         try:
             __import__(m)
