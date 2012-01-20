@@ -490,7 +490,6 @@ def pre_request(worker, req):
     # VMS and RLIMIT_AS are the same thing: virtual memory, a.k.a. address space
     rss, vms = psutil.Process(os.getpid()).get_memory_info()
     soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-    print ">>>>>> [%s] %s %s %s %s %s" % (os.getpid(), vms, req.method, req.path, req.query, req.fragment)
     resource.setrlimit(resource.RLIMIT_AS, (config['virtual_memory_limit'], hard))
 
     r = resource.getrusage(resource.RUSAGE_SELF)
@@ -505,7 +504,8 @@ def post_request(worker, req, environ):
     import psutil
     rss, vms = psutil.Process(os.getpid()).get_memory_info()
     if vms > config['virtual_memory_reset']:
-        print ">>> Worker eating too much memory, reset it after the request."
+        logging.getLogger('wsgi.worker').info('Virtual memory consumption '
+            'too high, rebooting the worker.')
         worker.alive = False # Commit suicide after the request.
 
 # Our signal handler will signal a SGIQUIT to all workers.
@@ -516,10 +516,8 @@ def make_winch_handler(server):
 
 # SIGXCPU (exceeded CPU time) signal handler will raise an exception.
 def time_expired(n, stack):
-    import os
-    import time
-    print '>>> [%s] time ran out.' % (os.getpid())
-    raise Exception('(time ran out)') # TODO one of openerp.exception
+    logging.getLogger('wsgi.worker').info('CPU time limit exceeded.')
+    raise Exception('CPU time limit exceeded.') # TODO one of openerp.exception
 
 # Kill gracefuly the workers (e.g. because we want to clear their cache).
 # This is done by signaling a SIGWINCH to the master process, so it can be

@@ -20,7 +20,6 @@ class m(openerp.osv.osv.Model):
         if not hasattr(self, 'l'):
             self.l = []
         self.l.append([0] * size)
-        print ">>>", len(self.l)
         return True
 
     def consume_time(self, cr, uid, seconds, context=None):
@@ -31,13 +30,9 @@ class m(openerp.osv.osv.Model):
         import os
         t0 = time.clock()
         t1 = time.clock()
-#        try:
         while t1 - t0 < seconds:
-            print "[%s] ..." % os.getpid()
             for i in xrange(10000000):
                 x = i * i
             t1 = time.clock()
-#        except Exception, e:
-#            print "+++", e
         return True
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -17,7 +17,7 @@ pidfile = '.gunicorn.pid'
 # Gunicorn recommends 2-4 x number_of_cpu_cores, but
 # you'll want to vary this a bit to find the best for your
 # particular work load.
-workers = 1
+workers = 4
 
 # Some application-wide initialization is needed.
 on_starting = openerp.wsgi.on_starting
