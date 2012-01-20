@@ -266,6 +266,20 @@ class configmanager(object):
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=4,
                          help="Maximum number of threads processing concurrently cron jobs.",
                          type="int")
+        # TODO sensible default for the three following limits.
+        group.add_option("--virtual-memory-limit", dest="virtual_memory_limit", my_default=768 * 1024 * 1024,
+                         help="Maximum allowed virtual memory per Gunicorn process. "
+                         "When the limit is reached, any memory allocation will fail.",
+                         type="int")
+        group.add_option("--virtual-memory-reset", dest="virtual_memory_reset", my_default=640 * 1024 * 1024,
+                         help="Maximum allowed virtual memory per Gunicorn process. "
+                         "When the limit is reached, the worker will be reset after "
+                         "the current request.",
+                         type="int")
+        group.add_option("--cpu-time-limit", dest="cpu_time_limit", my_default=60,
+                         help="Maximum allowed CPU time per Gunicorn process. "
+                         "When the limit is reached, an exception is raised.",
+                         type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
 
@@ -371,7 +385,8 @@ class configmanager(object):
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs',
             'test_file', 'test_disable', 'test_commit', 'test_report_directory',
-            'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
+            'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads',
+            'virtual_memory_limit', 'virtual_memory_reset', 'cpu_time_limit', 'unaccent',
         ]
 
         for arg in keys:
