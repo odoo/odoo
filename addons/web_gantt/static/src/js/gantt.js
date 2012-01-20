@@ -10,37 +10,84 @@ openerp.web.views.add('gantt', 'openerp.web_gantt.GanttView');
 openerp.web_gantt.GanttView = openerp.web.View.extend({
     display_name: _lt('Gantt'),
     template: "GanttView",
+    init: function() {
+        this._super.apply(this, arguments);
+        this.has_been_loaded = $.Deferred();
+        this.chart_id = _.uniqueId();
+    },
     start: function() {
-        return this.rpc("/web/view/load", {"model": this.dataset.model, "view_id": this.view_id, "view_type": "gantt"}, this.on_loaded);
+        return $.when(this.rpc("/web/view/load", {"model": this.dataset.model, "view_id": this.view_id, "view_type": "gantt"}),
+            this.rpc("/web/searchview/fields_get", {"model": this.model})).pipe(this.on_loaded);
     },
-    on_loaded: function(data) {
-        this.fields_view = data;
+    on_loaded: function(fields_view, fields_get) {
+        this.fields_view = fields_view;
+        this.fields = fields_get.fields;
+        this.has_been_loaded.resolve();
     },
-    do_search: function (domains, contexts, groupbys) {
+    do_search: function (domains, contexts, group_bys) {
         var self = this;
-        var group_by = [];
+        // select the group by
+        var n_group_bys = [];
         if (this.fields_view.arch.attrs.default_group_by) {
-            group_by = this.fields_view.arch.attrs.default_group_by.split(',');
+            n_group_bys = this.fields_view.arch.attrs.default_group_by.split(',');
+        }
+        if (group_bys.length) {
+            n_group_bys = groupbys;
+        }
+        // gather the fields to get
+        var fields = _.compact(_.map(["date_start", "date_delay", "date_stop", "color", "colors"], function(key) {
+            return self.fields_view.arch.attrs[key] || '';
+        }));
+        fields = _.uniq(fields.concat(["name"], n_group_bys));
+        
+        return $.when(this.has_been_loaded).pipe(function() {
+            return self.dataset.read_slice(fields, {
+                domain: domains,
+                context: contexts
+            }).pipe(function(data) {
+                return self.on_data_loaded(data, n_group_bys);
+            });
+        });
+    },
+    on_data_loaded: function(tasks, group_bys) {
+        var self = this;
+        $(".oe-gantt-view-view", this.$element).html("");
+        
+        //prevent more that 1 group by
+        if (group_bys.length > 0) {
+            group_bys = [group_bys[0]];
+        }
+        // if there is no group by, simulate it
+        if (group_bys.length == 0) {
+            group_bys = ["_pseudo_group_by"];
+            _.each(tasks, function(el) {
+                el._pseudo_group_by = "Gantt View";
+            });
         }
         
-        if (groupbys.length) {
-            group_by = groupbys;
-        }
-        // make something better
-        var fields = _.compact(_.map(this.fields_view.arch.attrs,function(value,key) {
-            if (key != 'string' && key != 'default_group_by') {
-                return value || '';
+        // get the groups
+        var groups = [];
+        _.each(tasks, function(task) {
+            var group_name = task[group_bys[0]];
+            var group = _.find(groups, function(group) { return _.isEqual(group.name, group_name); });
+            if (group === undefined) {
+                group = {name:group_name, tasks: []};
+                groups.push(group);
             }
-        }));
-        fields = _.uniq(fields.concat(_.keys(this.fields), this.text, this.group_by));
-        $.when(this.has_been_loaded).then(function() {
-                self.dataset.read_slice(fields, {
-                    domain: domains,
-                    context: contexts
-                }).done(function(projects) {
-                    self.on_project_loaded(projects);
-                });
+            group.tasks.push(task);
         });
+        
+        // creation of the chart
+        debugger;
+        var gantt = new GanttChart();
+        _.each(groups, function(group) {
+            var project_1 = new GanttProjectInfo(1, "Yopla", new Date(2006, 5, 11));
+            var task_1 = new GanttTaskInfo(1, "Old code review", new Date(2006, 5, 11), 208, 50, "");
+            project_1.addTask(task_1);
+            gantt.addProject(project_1);
+        })
+ 
+        gantt.create(this.chart_id);
     },
 });
 
