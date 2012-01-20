@@ -838,6 +838,18 @@ class DataSet(openerpweb.Controller):
         return getattr(req.session.model(model), method)(*args, **kwargs)
 
     @openerpweb.jsonrequest
+    def onchange(self, req, model, method, args, context_id=None):
+        result = self.call_common(req, model, method, args, context_id=context_id)
+        if 'domain' not in result:
+            return result
+
+        result['domain'] = dict(
+            (k, parse_domain(v, req.session))
+            for k, v in result['domain'].iteritems())
+
+        return result
+
+    @openerpweb.jsonrequest
     def call(self, req, model, method, args, domain_id=None, context_id=None):
         return self.call_common(req, model, method, args, domain_id, context_id)
     

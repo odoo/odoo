@@ -316,7 +316,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     var change_spec = self.parse_on_change(on_change, widget);
                     if (change_spec) {
                         var ajax = {
-                            url: '/web/dataset/call',
+                            url: '/web/dataset/onchange',
                             async: false
                         };
                         return self.rpc(ajax, {
@@ -342,6 +342,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var result = response;
         if (result.value) {
             for (var f in result.value) {
+                if (!result.value.hasOwnProperty(f)) { continue; }
                 var field = this.fields[f];
                 // If field is not defined in the view, just ignore it
                 if (field) {
@@ -367,7 +368,14 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             });
         }
         if (result.domain) {
-            // TODO:
+            function edit_domain(node) {
+                var new_domain = result.domain[node.attrs.name];
+                if (new_domain) {
+                    node.attrs.domain = new_domain;
+                }
+                _(node.children).each(edit_domain);
+            }
+            edit_domain(this.fields_view.arch);
         }
         return $.Deferred().resolve();
         } catch(e) {
