@@ -33,7 +33,7 @@
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-02-01'" name="date_start"/>
-            <field eval="time.strftime('%Y')+'-02-28'" name="date_stop"/>
+            <field eval="time.strftime('%Y')+'-02-29'" name="date_stop"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_3" model="account.period">
