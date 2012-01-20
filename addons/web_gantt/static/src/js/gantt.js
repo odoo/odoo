@@ -16,6 +16,32 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
     on_loaded: function(data) {
         this.fields_view = data;
     },
+    do_search: function (domains, contexts, groupbys) {
+        var self = this;
+        var group_by = [];
+        if (this.fields_view.arch.attrs.default_group_by) {
+            group_by = this.fields_view.arch.attrs.default_group_by.split(',');
+        }
+        
+        if (groupbys.length) {
+            group_by = groupbys;
+        }
+        // make something better
+        var fields = _.compact(_.map(this.fields_view.arch.attrs,function(value,key) {
+            if (key != 'string' && key != 'default_group_by') {
+                return value || '';
+            }
+        }));
+        fields = _.uniq(fields.concat(_.keys(this.fields), this.text, this.group_by));
+        $.when(this.has_been_loaded).then(function() {
+                self.dataset.read_slice(fields, {
+                    domain: domains,
+                    context: contexts
+                }).done(function(projects) {
+                    self.on_project_loaded(projects);
+                });
+        });
+    },
 });
 
 openerp.web_gantt.GanttViewOld = openerp.web.View.extend({
