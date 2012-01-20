@@ -309,7 +309,7 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      * domain and context.
      *
      * @param {Array} [fields] fields to read and return, by default all fields are returned
-     * @params {Object} options
+     * @params {Object} [options]
      * @param {Number} [options.offset=0] The index from which selected records should be returned
      * @param {Number} [options.limit=null] The maximum number of records to return
      * @returns {$.Deferred}
@@ -504,11 +504,11 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
         this.ids = ids || [];
     },
     read_slice: function (fields, options) {
+        options = options || {};
+        fields = fields || {};
         // TODO remove fields from options
-        var self = this,
-            offset = options.offset || 0,
-            limit = options.limit || false,
-            fields = fields || false;
+        var offset = options.offset || 0,
+            limit = options.limit || false;
         var end_pos = limit && limit !== -1 ? offset + limit : this.ids.length;
         return this.read_ids(this.ids.slice(offset, end_pos), fields);
     },
@@ -560,8 +560,8 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
      * @returns {$.Deferred}
      */
     read_slice: function (fields, options) {
+        options = options || {};
         var self = this;
-        var options = options || {};
         var offset = options.offset || 0;
         return this.rpc('/web/dataset/search_read', {
             model: this.model,
