@@ -81,20 +81,26 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         });
         
         // creation of the chart
-        debugger;
         var gantt = new GanttChart();
         _.each(groups, function(group) {
-            var project_name = openerp.web.format_value(group.name, self.fields[group_bys[0]]);
-            var project = new GanttProjectInfo(1, project_name);
             var id_count = 0;
+            var smaller_task_start = undefined;
+            var task_infos = [];
             _.each(group.tasks, function(task) {
                 var task_name = openerp.web.format_value(task[self.field_name], self.fields[self.field_name]);
                 var task_start = openerp.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_start]);
                 if (!task_start)
                     return;
-                var task = new GanttTaskInfo(id_count, task_name, task_start, 24, 100);
+                if (smaller_task_start === undefined || task_start < smaller_task_start)
+                    smaller_task_start = task_start;
+                var task_info = new GanttTaskInfo(id_count, task_name, task_start, 24, 100);
                 id_count += 1;
-                project.addTask(task);
+                task_infos.push(task_info);
+            });
+            var project_name = openerp.web.format_value(group.name, self.fields[group_bys[0]]);
+            var project = new GanttProjectInfo(1, project_name, smaller_task_start || new Date());
+            _.each(task_infos, function(el) {
+                project.addTask(el);
             });
             gantt.addProject(project);
         })
