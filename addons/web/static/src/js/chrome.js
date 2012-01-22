@@ -1061,6 +1061,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     start: function() {
         var self = this;
+        this.$element = $(document.body);
         if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
             this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
