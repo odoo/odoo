@@ -6,6 +6,7 @@ import csv
 import glob
 import itertools
 import operator
+import datetime
 import os
 import re
 import simplejson
@@ -339,9 +340,14 @@ class Database(openerpweb.Controller):
     def backup(self, req, backup_db, backup_pwd, token):
         db_dump = base64.b64decode(
             req.session.proxy("db").dump(backup_pwd, backup_db))
+        filename = "%(db)s_%(timestamp)s.dump" % {
+            'db': backup_db,
+            'timestamp': datetime.datetime.utcnow().strftime(
+                "%Y-%m-%d_%H-%M-%SZ")
+        }
         return req.make_response(db_dump,
             [('Content-Type', 'application/octet-stream; charset=binary'),
-             ('Content-Disposition', 'attachment; filename="' + backup_db + '.dump"')],
+             ('Content-Disposition', 'attachment; filename="' + filename + '"')],
             {'fileToken': int(token)}
         )
 
