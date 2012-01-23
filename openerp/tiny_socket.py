@@ -28,6 +28,10 @@ import netsvc
 
 #.apidoc title: Net-RPC classes
 
+# Pickle protocol version 2 is optimized compared to default (version 0)
+PICKLE_PROTOCOL = 2
+
+
 class Myexception(Exception):
     """
     custom exception object store
@@ -63,8 +67,8 @@ class mysocket:
         netsvc.close_socket(self.sock)
         
     def mysend(self, msg, exception=False, traceback=None):
-        msg = cPickle.dumps([msg,traceback])
-        self.sock.sendall('%8d%s%s' % (len(msg), exception and "1" or "0", msg))
+        msg = cPickle.dumps([msg, traceback], PICKLE_PROTOCOL)
+        self.sock.sendall('%8d%d%s' % (len(msg), bool(exception), msg))
             
     def myreceive(self):
         buf=''
