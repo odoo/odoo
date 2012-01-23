@@ -145,7 +145,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             var id = res['id'];
             var text = res[this.text];
             var start_date = res[this.date_start];
-            var progress = res[this.progress];
+            var progress = res[this.progress] || 100;
 
             if (this.date_stop != undefined){
                 if (res[this.date_stop] != false){
