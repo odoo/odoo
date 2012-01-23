@@ -46,7 +46,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 {text: _t("Create"), click: function() { self.on_create_view(); }},
                 {text: _t("Edit"), click: function() { self.xml_element_id = 0; self.get_arch(); }},
                 {text: _t("Remove"), click: function() { self.do_delete_view(); }},
-                {text: _t("Close"), click: function() { self.view_edit_dialog.close(); }}
+                {text: _t("Close"), click: function() {self.view_edit_dialog.close(); }}
             ]
         }).open();
         this.main_view_id = this.parent.fields_view.view_id;
@@ -935,16 +935,16 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var action_manager = new openerp.web.ActionManager(self);
         $.when(action_manager.do_action(action)).then(function() {
             var controller = action_manager.dialog_viewmanager.views['form'].controller;
-            // TODO NIV: use page view
-            controller.do_set_readonly.add_last(function(){
+            controller.on_button_cancel.add_last(function(){
+                action_manager.stop()
+            });
+            controller.do_save.add_last(function(){
                 action_manager.stop();
-                new_fields_name = new openerp.web.DataSetSearch(self,'ir.model.fields', null, null);
-                new_fields_name.read_ids([controller.datarecord.id], ['name']).then(function(result) {
-                self.add_node_dialog.$element.find('select[id=field_value]').append($("<option selected></option>").attr("value", result[0].name).text(result[0].name));
+                var value =controller.fields.name.value;
+                self.add_node_dialog.$element.find('select[id=field_value]').append($("<option selected></option>").attr("value",value).text(value));
                     _.detect(self.add_widget,function(widget){
-                        widget.name == "field_value"? widget.selection.push(result[0].name): false;
+                        widget.name == "field_value"? widget.selection.push(value): false;
                     });
-                });
             });
         });
     }
