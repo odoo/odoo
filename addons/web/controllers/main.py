@@ -880,7 +880,7 @@ class DataSet(openerpweb.Controller):
         :return: result of the onchange call with all domains parsed
         """
         result = self.call_common(req, model, method, args, context_id=context_id)
-        if 'domain' not in result:
+        if not result or 'domain' not in result:
             return result
 
         result['domain'] = dict(
