@@ -40,6 +40,7 @@ mail into mail.message with attachments.
     'update_xml' : ['plugin_outlook.xml'],
     'active': False,
     'installable': True,
+    'certificate' : '001278773815818292125',
     'images': ['images/config_outlook.jpeg','images/outlook_config_openerp.jpeg','images/outlook_push.jpeg'],
 
 }
