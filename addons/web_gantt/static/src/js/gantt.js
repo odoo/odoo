@@ -90,42 +90,62 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         var groups = split_groups(tasks, group_bys);
         
         // creation of the chart
-        var gantt = new GanttChart();
-        _.each(groups, function(group) {
-            var smaller_task_start = undefined;
-            var task_infos = [];
-            _.each(group.tasks, function(task) {
+        var generate_task_info = function(task, plevel) {
+            var level = plevel || 0;
+            if (task.__is_group) {
+                var task_infos = _.compact(_.map(task.tasks, function(sub_task) {
+                    return generate_task_info(sub_task, level + 1);
+                }));
+                if (task_infos.length == 0)
+                    return;
+                var task_start = _.reduce(_.pluck(task_infos, "task_start"), function(date, memo) {
+                    return memo === undefined || date < memo ? date : memo;
+                }, undefined);
+                var task_stop = _.reduce(_.pluck(task_infos, "task_stop"), function(date, memo) {
+                    return memo === undefined || date > memo ? date : memo;
+                }, undefined);
+                var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
+                var group_name = openerp.web.format_value(task.name, self.fields[group_bys[level]]);
+                if (level == 0) {
+                    var group = new GanttProjectInfo(_.uniqueId(), group_name, task_start);
+                    _.each(task_infos, function(el) {
+                        group.addTask(el.task_info);
+                    });
+                    return group;
+                } else {
+                    var group = new GanttTaskInfo(_.uniqueId(), group_name, task_start, duration, 100);
+                    _.each(task_infos, function(el) {
+                        group.addChildTask(el.task_info);
+                    });
+                    return {task_info: group, task_start: task_start, task_stop: task_stop};
+                }
+            } else {
                 var task_name = openerp.web.format_value(task[self.field_name], self.fields[self.field_name]);
                 var task_start = openerp.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_start]);
                 if (!task_start)
                     return;
-                if (smaller_task_start === undefined || task_start < smaller_task_start)
-                    smaller_task_start = task_start;
-                var duration;
-                if (self.fields_view.arch.attrs.date_delay) {
-                    duration = openerp.web.format_value(task[self.fields_view.arch.attrs.date_delay],
-                        self.fields[self.fields_view.arch.attrs.date_delay]);
-                    if (!duration)
-                        return;
-                } else { // we assume date_stop is defined
-                    var task_stop = openerp.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_stop]);
+                var task_stop;
+                if (self.fields_view.arch.attrs.date_stop) {
+                    task_stop = openerp.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_stop]);
                     if (!task_stop)
                         return;
-                    duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
+                } else { // we assume date_duration is defined
+                    var tmp = openerp.web.format_value(task[self.fields_view.arch.attrs.date_delay],
+                        self.fields[self.fields_view.arch.attrs.date_delay]);
+                    if (!tmp)
+                        return;
+                    task_stop = task_start.clone().addMilliseconds(tmp * 60 * 60 * 1000);
                 }
+                var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
                 var task_info = new GanttTaskInfo(_.uniqueId(), task_name, task_start, duration, 100);
-                task_infos.push(task_info);
-            });
-            if (task_infos.length == 0)
-                return;
-            var project_name = openerp.web.format_value(group.name, self.fields[group_bys[0]]);
-            var project = new GanttProjectInfo(_.uniqueId(), project_name, smaller_task_start || new Date());
-            _.each(task_infos, function(el) {
-                project.addTask(el);
-            });
-            gantt.addProject(project);
-        })
- 
+                return {task_info: task_info, task_start: task_start, task_stop: task_stop};
+            }
+        }
+        var gantt = new GanttChart();
+        _.each(_.compact(_.map(groups, function(e) {return generate_task_info(e, 0);})), function(project) {
+            gantt.addProject(project)
+        });
+        gantt.setImagePath("/web_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
         gantt.create(this.chart_id);
     },
 });
