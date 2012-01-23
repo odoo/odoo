@@ -1331,15 +1331,18 @@ class account_move(osv.osv):
     def button_validate(self, cursor, user, ids, context=None):
         for move in self.browse(cursor, user, ids, context=context):
             top = None
+            acc_line = None
             for line in move.line_id:
                 account = line.account_id
+                if not acc_line:
+                    acc_line = account
                 while account:
                     account2 = account
                     account = account.parent_id
                 if not top:
                     top = account2.id
                 elif top<>account2.id:
-                    raise osv.except_osv(_('Error !'), _('You can not validate a journal entry unless all journal items belongs to the same chart of accounts !'))
+                    raise osv.except_osv(_('Error !'), _('You can not validate a journal entry because account "%s" does not belong to the chart of accounts "%s"!'% (acc_line.name,account2.name)))
         return self.post(cursor, user, ids, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
