@@ -71,7 +71,7 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
             __lc_buttons.push({
                 elementId: lc_id, //'livechat_status',
                 language: 'en',
-                skill: '0',
+                skill: '2',
                 type: 'text',
                 labels: {
                     online: '<img src="/web_livechat/static/src/img/available.png"/>Support',
