@@ -48,6 +48,10 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a resitution is to made or not?'),
         'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to made or not?'),
         'client_nihil': fields.boolean('Last Declaration of Enterprise',help='Tick this case only if it concerns only the last statement on the civil or cessation of activity'),
+        'vat_declarations_nbr': fields.integer('VATDeclarationsNbr'),
+        'comments': fields.text('Comments'),
+        'identification_type': fields.selection([('tin','TIN'), ('nvat','NVAT'), ('other','Other')], 'Identification Type', required=True),
+        'other': fields.char('Specify', size=16),
     }
     _defaults = {
         'msg': 'Save the File with '".xml"' extension.',
@@ -85,15 +89,21 @@ class l10n_be_vat_declaration(osv.osv_memory):
         name, email, phone, city, post_code, address, country_code = self.pool.get('res.company')._get_default_ad(obj_company.partner_id.address)
 
         account_period = obj_acc_period.browse(cr, uid, data['period_id'][0], context=context)
-
+        issued_by = vat_no[:2] 
+        comments = data['comments'] or ''
+        type = data['identification_type'] or ''
+        val = data['other'] or ''
+            
         send_ref = str(obj_company.partner_id.id) + str(account_period.date_start[5:7]) + str(account_period.date_stop[:4])
-        data_of_file = '<?xml version="1.0"?>\n<VATConsignment VATDeclarationsNbr="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MultiDeclarationTVA-NoSignature-16.xml">'
-        data_of_file +='\n\t<Representative>'+ obj_company.name +'</Representative>'
-        data_of_file +='\n\t<RepresentativeReference>'+ send_ref +'</RepresentativeReference>' 
-        data_of_file +='\n\t<VATDeclaration SequenceNumber="1" DeclarantReference="">'
-        data_of_file +='\n\t\t<ReplacedVATDeclaration>''</ReplacedVATDeclaration>' 
+        
+        data_of_file = '<?xml version="1.0"?>\n<VATConsignment xmlns="http://www.minfin.fgov.be/VATConsignment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" VATDeclarationsNbr="'+str(data['vat_declarations_nbr'])+'">'
+        print "val", val
+        data_of_file +='\n\t<Representative> \n\t\t<RepresentativeID identificationType="'+type.upper()+'" issuedBy="'+issued_by+'" otherQlf="'+val+'">'+obj_company.company_registry+'</RepresentativeID> \n\t\t<Name>'+obj_company.name+'</Name> \n\t\t<Street>'+address+'</Street> \n\t\t<PostCode>'+post_code+'</PostCode> \n\t\t<City>'+city+'</City> \n\t\t<CountryCode>'+country_code+'</CountryCode> \n\t\t<EmailAddress>'+email+'</EmailAddress> \n\t\t<Phone>'+phone+'</Phone> \n\t</Representative>'
+        data_of_file +='\n\t<RepresentativeReference></RepresentativeReference>'
+        data_of_file +='\n\t<VATDeclaration SequenceNumber="1" DeclarantReference="'+send_ref+'">'
+        data_of_file +='\n\t\t<ReplacedVATDeclaration></ReplacedVATDeclaration>'
         data_of_file +='\n\t\t<Declarant>\n\t\t\t<VATNUMBER xmlns="http://www.minfin.fgov.be/InputCommon">'+str(vat_no)+'</VATNUMBER>'
-        data_of_file +='\n\t\t\t<Name>'+name+'</Name>'
+        data_of_file +='\n\t\t\t<Name>'+obj_company.name+'</Name>'
         data_of_file +='\n\t\t\t<Street>'+address+'</Street>'
         data_of_file +='\n\t\t\t<PostCode>'+post_code+'</PostCode>'
         data_of_file +='\n\t\t\t<City>'+city+'</City>'
@@ -114,7 +124,6 @@ class l10n_be_vat_declaration(osv.osv_memory):
             data_of_file += '\t<Month>'+starting_month+'</Month>\n\t\t\t'
         data_of_file += '<Year>' + str(account_period.date_stop[:4]) + '</Year>\n\t\t</Period>\n'
         data_of_file +='\t\t<Data>\t'
-        data_of_file +='\n\t\t\t<Amount>\t'
 
         cases_list = []
         for item in tax_info:
@@ -131,14 +140,13 @@ class l10n_be_vat_declaration(osv.osv_memory):
                     cases_list.append(item)
         cases_list.sort()
         for item in cases_list:
-            data_of_file +='\n\t\t\t\t<Amount GridNumber="'+str(int(item['code'])) +'">' + str(abs(int(round(item['sum_period']*100)))) +  '</Amount''>'
+            data_of_file +='\n\t\t\t<Amount GridNumber="'+str(int(item['code'])) +'">' + str(abs(int(round(item['sum_period']*100)))) +  '</Amount''>'
             
-        data_of_file +='\n\t\t\t</Amount>\t'
         data_of_file += '\n\t\t</Data>'
         data_of_file += '\n\t\t<ClientListingNihil>'+ (data['client_nihil'] and 'YES' or 'NO') +'</ClientListingNihil>'
         data_of_file += '\n\t\t<Ask Restitution="' + (data['ask_restitution'] and 'YES' or 'NO') + '" Payment="' + (data['ask_payment'] and 'YES' or 'NO') +'"/>'
         data_of_file +='\n\t\t<FileAttachment>''</FileAttachment>'
-        data_of_file +='\n\t\t<Comment>''</Comment>'
+        data_of_file +='\n\t\t<Comment>'+ comments +'</Comment>'
         data_of_file += '\n\t</VATDeclaration> \n</VATConsignment>'
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_vat_save')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']

@@ -16,7 +16,10 @@
 					<group>
 					   <group colspan="4">
  							<separator string="Declare Periodical VAT" colspan="4"/><newline/>
+ 							<field name="vat_declarations_nbr"/>
     						<field name="period_id" widget="selection"/>
+							<field name="identification_type"/>
+							<field name="other" attrs="{'invisible':[('identification_type','!=','other')], 'required':[('identification_type','=','other')]}"/>
 							<field name="tax_code_id" string="Company" widget="selection" groups="base.group_multi_company"/>
 							<newline/>
 						</group>
@@ -24,8 +27,11 @@
 							<field name="ask_restitution" colspan="1"/>
 							<field name="ask_payment" colspan="1"/>
 							<field name="client_nihil" string="Is Last Declaration" colspan="1" /><label/>
+							<newline/>
+							<field colspan="4" name="comments"/>
 	            		</group>
 	            		<newline/>
+	            		
 					<group>
 					<separator colspan="4"/>
 					<newline/>
