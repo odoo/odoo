@@ -12,5 +12,36 @@
                 </field>
             </field>
         </record>
+        <record id="invoice_form_cancel_inherit" model="ir.ui.view">
+            <field name="name">invoice.form.cancel.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page/group/group/button[@name='%(account.action_account_state_open)d']" position="replace">
+                    <button name='%(account.action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="account.group_account_invoice"/>
+                </xpath>
+                <xpath expr="/form/notebook/page/group/group/button[@name='invoice_cancel']" position="replace">
+                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel" groups="account.group_account_invoice"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="invoice_supplier_cancel_form_inherit" model="ir.ui.view">
+            <field name="name">invoice.supplier.cancel.form.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page/group/group/button[@name='%(account.action_account_state_open)d']" position="replace">
+                    <button name='%(account.action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="account.group_account_invoice"/>
+                </xpath>
+                <xpath expr="/form/notebook/page/group/group/button[@name='invoice_cancel']" position="replace">
+                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel" groups="account.group_account_invoice"/>
+                </xpath>
+            </field>
+        </record>        
+        
+        
     </data>
 </openerp>
