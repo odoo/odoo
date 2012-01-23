@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2012-01-10 19:26+0000\n"
+"PO-Revision-Date: 2012-01-23 04:07+0000\n"
 "Last-Translator: kifcaliph <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-11 04:58+0000\n"
-"X-Generator: Launchpad (build 14640)\n"
+"X-Launchpad-Export-Date: 2012-01-23 05:35+0000\n"
+"X-Generator: Launchpad (build 14700)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -335,6 +335,10 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration/Financial Accounting/Accounts/Journals."
 msgstr ""
+"لايمكن العثور على دفتر حسابات من النوع %s لهذه الشركة.\n"
+"\n"
+"يمكنك إضافة دفتر من القائمة:\n"
+"إعدادات > حسابات مالية > حسابات > دفاتر"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -368,6 +372,9 @@ msgid ""
 "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
 "Cash Registers, or Customer/Supplier payments."
 msgstr ""
+"طريقة العرض هذه يتم استخدامها بواسطة المحاسبين لإدخال مجموعة بيانات دفعة "
+"واحدة. أما بنود الدفتر يتم إنشاءها في حالة استخدام كشف حساف، تسجيل نقدية أو "
+"مدفوعات مورد/عميل."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -410,7 +417,7 @@ msgstr "فتح سنة مالية"
 msgid ""
 "This field contains the informatin related to the numbering of the journal "
 "entries of this journal."
-msgstr ""
+msgstr "هذا الحقل يحتوي على معلومات مرتبطة بترقيم بنود هذا الدفتر."
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
@@ -555,7 +562,7 @@ msgstr "رصيد النقدية لايساوي الرصيد الحسابي"
 #: field:account.fiscal.position,tax_ids:0
 #: field:account.fiscal.position.template,tax_ids:0
 msgid "Tax Mapping"
-msgstr ""
+msgstr "تخصيص الضريبة"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close_state
@@ -609,7 +616,7 @@ msgstr "المتواليات"
 #. module: account
 #: view:account.fiscal.position.template:0
 msgid "Taxes Mapping"
-msgstr ""
+msgstr "تخصيص الضرائب"
 
 #. module: account
 #: report:account.central.journal:0
@@ -986,7 +993,7 @@ msgstr "اسبوع السنة"
 #. module: account
 #: field:account.report.general.ledger,landscape:0
 msgid "Landscape Mode"
-msgstr ""
+msgstr "وضع أفقي"
 
 #. module: account
 #: view:board.board:0
@@ -1375,7 +1382,7 @@ msgstr "جدول م}قت يستخدم لعرض اللوحة الرئيسية"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr ""
+msgstr "رد مال للمورد"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -1418,7 +1425,7 @@ msgstr "قوالب للمركز المالي"
 #. module: account
 #: model:account.tax.code,name:account.account_tax_code_0
 msgid "Tax Code Test"
-msgstr ""
+msgstr "اختبار رمز الضريبة"
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -1921,7 +1928,7 @@ msgstr "الحسابات للتسوية"
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
 msgid "Import of the statement in the system from an electronic file"
-msgstr ""
+msgstr "استيراد القائمة في النظام من ملف إلكتروني"
 
 #. module: account
 #: model:process.node,name:account.process_node_importinvoice0
@@ -2325,7 +2332,7 @@ msgstr "المركز المالي لتحديد الضرائب و حسابات ا
 #: view:account.print.journal:0
 msgid ""
 "This report gives you an overview of the situation of a specific journal"
-msgstr ""
+msgstr "هذا التقرير يعطي لمحة عامة عن وضع  يومية محددة"
 
 #. module: account
 #: constraint:product.category:0
@@ -3656,7 +3663,7 @@ msgstr "بحث قوالب الضريبة"
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_journal_entries_validation
 msgid "Draft Entries"
-msgstr ""
+msgstr "مسودة المدخلات"
 
 #. module: account
 #: field:account.account,shortcut:0
@@ -3717,18 +3724,18 @@ msgstr ""
 #. module: account
 #: view:account.bank.statement:0
 msgid "Close CashBox"
-msgstr ""
+msgstr "غلق خزينة النقدية"
 
 #. module: account
 #: view:account.invoice.report:0
 #: field:account.invoice.report,due_delay:0
 msgid "Avg. Due Delay"
-msgstr ""
+msgstr "متوسط تأخير المستحقات"
 
 #. module: account
 #: view:account.entries.report:0
 msgid "Acc.Type"
-msgstr ""
+msgstr "نوع الحساب"
 
 #. module: account
 #: code:addons/account/account_invoice.py:733
@@ -3847,7 +3854,7 @@ msgstr "نطاق الشهر"
 #. module: account
 #: help:account.analytic.balance,empty_acc:0
 msgid "Check if you want to display Accounts with 0 balance too."
-msgstr ""
+msgstr "الاختيار إذا كنت ترغب في عرض حسابات دون رصيد."
 
 #. module: account
 #: view:account.tax:0
@@ -3863,7 +3870,7 @@ msgstr ""
 #: code:addons/account/account_invoice.py:86
 #, python-format
 msgid "Free Reference"
-msgstr ""
+msgstr "مرجع حر"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
@@ -3949,7 +3956,7 @@ msgstr "غير مطبق"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
 msgid "Account Journal Select"
-msgstr ""
+msgstr "أختر اليومية المحاسبية"
 
 #. module: account
 #: view:account.invoice:0
@@ -4117,7 +4124,7 @@ msgstr ""
 #: field:account.fiscal.position,account_ids:0
 #: field:account.fiscal.position.template,account_ids:0
 msgid "Account Mapping"
-msgstr ""
+msgstr "تخصيص الحساب"
 
 #. module: account
 #: selection:account.bank.statement.line,type:0
@@ -4156,7 +4163,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.refund,date:0
 msgid "Operation date"
-msgstr ""
+msgstr "تاريخ العملية"
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
@@ -4264,7 +4271,7 @@ msgstr "اتركه فارغ لإستخدام التاريخ الحالي"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Bank and Cheques"
-msgstr ""
+msgstr "البنك و الشيكات المصرفية"
 
 #. module: account
 #: view:account.period.close:0
@@ -4274,7 +4281,7 @@ msgstr "هل أنت متأكد؟"
 #. module: account
 #: help:account.move.line,statement_id:0
 msgid "The bank statement used for bank reconciliation"
-msgstr ""
+msgstr "قائمة البنك المستخدمة لتسوية  البنك"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliercustomerinvoice0
@@ -4371,7 +4378,7 @@ msgstr ""
 #. module: account
 #: view:account.fiscalyear.close:0
 msgid "Generate Fiscal Year Opening Entries"
-msgstr ""
+msgstr "إنشاء القيود الإفتتاحية للسنة المالية"
 
 #. module: account
 #: field:account.journal,group_invoice_lines:0
@@ -4403,7 +4410,7 @@ msgstr "للغلق"
 #. module: account
 #: field:account.journal,allow_date:0
 msgid "Check Date not in the Period"
-msgstr ""
+msgstr "التحقق من تاريخ في غير الفترة"
 
 #. module: account
 #: code:addons/account/account.py:1348
@@ -4613,7 +4620,7 @@ msgstr "وحدة القياس"
 #: code:addons/account/wizard/account_invoice_refund.py:146
 #, python-format
 msgid "No Period found on Invoice!"
-msgstr ""
+msgstr "لا توجد فترة على الفاتورة !"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4804,14 +4811,14 @@ msgstr "محاسبة تحليلية"
 #: selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Customer Refund"
-msgstr ""
+msgstr "رد مال للعميل"
 
 #. module: account
 #: view:account.account:0
 #: field:account.account,tax_ids:0
 #: field:account.account.template,tax_ids:0
 msgid "Default Taxes"
-msgstr ""
+msgstr "ضرائب إفتراضية"
 
 #. module: account
 #: field:account.tax,ref_tax_sign:0
@@ -4994,7 +5001,7 @@ msgstr ""
 #: view:account.chart:0
 #: view:account.tax.chart:0
 msgid "Open Charts"
-msgstr ""
+msgstr "فتح المخططات"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -5485,7 +5492,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "خط بياني"
+msgstr "خط تحليلي"
 
 #. module: account
 #: field:product.template,taxes_id:0

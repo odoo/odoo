@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2012-01-16 17:15+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2012-01-20 15:25+0000\n"
+"Last-Translator: GEOS <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-17 05:13+0000\n"
-"X-Generator: Launchpad (build 14676)\n"
+"X-Launchpad-Export-Date: 2012-01-21 06:18+0000\n"
+"X-Generator: Launchpad (build 14700)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -86,7 +86,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Picking"
-msgstr "Sur marchandise reçue"
+msgstr "Sur bon de réception"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -403,7 +403,7 @@ msgstr "Lignes de facture"
 #: model:process.node,name:purchase.process_node_packinglist0
 #: model:process.node,name:purchase.process_node_productrecept0
 msgid "Incoming Products"
-msgstr "Produits Entrants"
+msgstr "Produits entrants"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
@@ -652,12 +652,12 @@ msgid ""
 "Manual: allows you to generate suppliers invoices by chosing in the "
 "uninvoiced lines of all manual purchase orders."
 msgstr ""
-"À partir de la commande, une facture brouillon sera pré-générée. Le "
-"comptable devra valider la facture pour contrôle.\n"
-"À partr de la réception : une facture brouillon sera pré-générée basée sur "
-"la validation de la réception.\n"
-"Manuel : vous permet de générer les factures fournisseurs en choisissant les "
-"lignes non facturées de tous les bons de commandes manuels."
+"Sur commande, une facture brouillon sera pré-enregistrée en se basant sur le "
+"bon de commande. Le comptable n'aura qu'à valider la facture pour contrôle.\n"
+"Sur bon de réception : une facture brouillon sera pré-enregistrée en se "
+"basant sur le bon de réception validé.\n"
+"Manuel : vous permet d'enregistrer les factures fournisseurs en choisissant "
+"les lignes non facturées de tous les bons de commandes manuels."
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -715,7 +715,7 @@ msgid ""
 msgstr ""
 "La facture est créée automatiquement si le contrôle de facture du bon de "
 "commande est basée sur la réception. La facture peut aussi être générée "
-"manuellement par le comptable (contröle de facturation = \"Manuel\")."
+"manuellement par le comptable (contrôle de facturation = \"Manuel\")."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -842,7 +842,8 @@ msgstr "Manuel"
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
-"Vous devez d'abord annuler tous les transfers associés à ce bon de commande."
+"Vous devez d'abord annuler toutes les réceptions associées à ce bon de "
+"commande."
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1209,7 +1210,7 @@ msgstr ""
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Pick list generated"
-msgstr "Liste de transfers générée"
+msgstr "Bon de réception"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1284,7 +1285,7 @@ msgstr "Vous devez affecter un lot de fabrication à ce produit."
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "A pick list is generated to track the incoming products."
-msgstr "un bon de transfert est généré pour gérer les produits entrants"
+msgstr "un bon de transfert est enregistré pour suivre les produits entrants"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_deshboard
@@ -1876,7 +1877,7 @@ msgid ""
 msgstr ""
 "La facture est générée automatiquement si la méthode de contrôle facture du "
 "bon de commande est 'à la commande'. La facture peut aussi être générée "
-"manuellement par le comptable (contrôle facture = 'Manuel')"
+"manuellement par le comptable (contrôle facture = \"Manuel\")"
 
 #. module: purchase
 #: model:process.process,name:purchase.process_process_purchaseprocess0
