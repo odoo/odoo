@@ -72,15 +72,14 @@ class mysocket:
             
     def myreceive(self):
         buf=''
-        while len(buf) < 8:
-            chunk = self.sock.recv(8 - len(buf))
+        while len(buf) < 9:
+            chunk = self.sock.recv(9 - len(buf))
             if not chunk:
                 raise socket.timeout
             buf += chunk
-        size = int(buf)
-        buf = self.sock.recv(1)
-        if buf != "0":
-            exception = buf
+        size = int(buf[:8])
+        if buf[8] != "0":
+            exception = buf[8]
         else:
             exception = False
         msg = ''
