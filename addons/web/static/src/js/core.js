@@ -1113,8 +1113,11 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
     }
 });
 
+/**
+ * Deprecated. Do not use any more.
+ */
 openerp.web.OldWidget = openerp.web.Widget.extend({
-    init: function(parent, /** @deprecated */ element_id) {
+    init: function(parent, element_id) {
         this._super(parent);
         this.element_id = element_id;
         this.element_id = this.element_id || _.uniqueId('widget-');
