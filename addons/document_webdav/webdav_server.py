@@ -55,6 +55,8 @@ from DAV.propfind import PROPFIND
 from xml.dom import minidom
 from redirect import RedirectHTTPHandler
 
+_logger = logging.getLogger(__name__)
+
 khtml_re = re.compile(r' KHTML/([0-9\.]+) ')
 
 def OpenDAVConfig(**kw):
@@ -73,7 +75,6 @@ def OpenDAVConfig(**kw):
 
 class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
     verbose = False
-    _logger = logging.getLogger('webdav')
     protocol_version = 'HTTP/1.1'
     _HTTP_OPTIONS= { 'DAV' : ['1', '2'],
                     'Allow' : [ 'GET', 'HEAD', 'COPY', 'MOVE', 'POST', 'PUT',
@@ -85,7 +86,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         return False
 
     def _log(self, message):
-        self._logger.debug(message)
+        _logger.debug(message)
 
     def handle(self):
         self._init_buffer()
@@ -106,7 +107,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             if hasattr(self.request, 'getsockname'):
                 addr, port = self.request.getsockname()
         except Exception, e:
-            self.log_error("Cannot calculate own address: %s" , e)
+            _logger.warning("Cannot calculate own address: %s", e)
         # Too early here to use self.headers
         self.baseuri = "%s://%s:%d/"% (server_proto, addr, port)
         self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
@@ -126,12 +127,6 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
     def get_davpath(self):
         return self.davpath
 
-    def log_message(self, format, *args):
-        self._logger.log(netsvc.logging.DEBUG_RPC,format % args)
-
-    def log_error(self, format, *args):
-        self._logger.warning(format % args)
-
     def _prep_OPTIONS(self, opts):
         ret = opts
         dc=self.IFACE_CLASS
@@ -142,7 +137,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         except DAV_Error, (ec,dd):
             pass
         except Exception,e:
-            self.log_error("Error at options: %s", str(e))
+            _logger.warning("Error at options: %s", str(e))
             raise
         return ret
 
@@ -245,7 +240,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         try:
             location = dc.put(uri, body, ct)
         except DAV_Error, (ec,dd):
-            self.log_error("Cannot PUT to %s: %s", uri, dd)
+            _logger.warning("Cannot PUT to %s: %s", uri, dd)
             return self.send_status(ec)
 
         headers = {}
@@ -284,7 +279,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         """ Unlocks given resource """
 
         dc = self.IFACE_CLASS
-        self.log_message('UNLOCKing resource %s' % self.headers)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'UNLOCKing resource %s' % self.headers)
 
         uri = urlparse.urljoin(self.get_baseuri(dc), self.path)
         uri = urllib.unquote(uri)
@@ -318,7 +313,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         dc = self.IFACE_CLASS
         lock_data = {}
 
-        self.log_message('LOCKing resource %s' % self.headers)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'LOCKing resource %s' % self.headers)
 
         body = None
         if self.headers.has_key('Content-Length'):
@@ -329,7 +324,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
 
         uri = urlparse.urljoin(self.get_baseuri(dc), self.path)
         uri = urllib.unquote(uri)
-        self.log_message('do_LOCK: uri = %s' % uri)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'do_LOCK: uri = %s' % uri)
 
         ifheader = self.headers.get('If')
 
@@ -477,7 +472,7 @@ class dummy_dav_interface(object):
         uri2 = uri.split('/')
         if len(uri2) < 3:
             return True
-        logging.getLogger('webdav').debug("Requested uri: %s", uri)
+        _logger.debug("Requested uri: %s", uri)
         return None # no
 
     def is_collection(self, uri):
@@ -532,7 +527,7 @@ class DAVStaticHandler(http_server.StaticHTTPHandler):
         except DAV_Error, (ec,dd):
             return self.send_error(ec,dd)
         except Exception:
-            self.log_exception("Cannot PROPFIND")
+            _logger.exception("Cannot PROPFIND")
             raise
 
         # work around MSIE DAV bug for creation and modified date
@@ -573,7 +568,7 @@ try:
         conf = OpenDAVConfig(**_dc)
         handler._config = conf
         reg_http_service(directory, DAVHandler, DAVAuthProvider)
-        logging.getLogger('webdav').info("WebDAV service registered at path: %s/ "% directory)
+        _logger.info("WebDAV service registered at path: %s/ ", directory)
         
         if not (config.get_misc('webdav', 'no_root_hack', False)):
             # Now, replace the static http handler with the dav-enabled one.
@@ -595,7 +590,7 @@ try:
             reg_http_service('/', DAVStaticHandler)
 
 except Exception, e:
-    logging.getLogger('webdav').error('Cannot launch webdav: %s' % e)
+    _logger.error('Cannot launch webdav: %s', e)
 
 
 def init_well_known():
@@ -639,9 +634,9 @@ def init_principals_redirect():
     if dbname:
         PrincipalsRedirect.redirect_paths[''] = '/webdav/%s/principals' % dbname
         reg_http_service('/principals', PrincipalsRedirect)
-        logging.getLogger("web-services").info(
-                "Registered HTTP redirect handler for /principals to the %s db.",
-                dbname)
+        _logger.info(
+            "Registered HTTP redirect handler for /principals to the %s db.",
+            dbname)
 
 init_principals_redirect()
 
