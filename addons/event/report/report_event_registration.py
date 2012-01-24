@@ -99,7 +99,7 @@ class report_event_registration(osv.osv):
                 registration_state,
                 r.nb_register,
                 event_type, e.id, e.date_begin, e.main_speaker_id,
-                e.register_max,event_id, e.user_id,e.company_id,e.product_id,e.section_id, r.price_subtotal,
+                e.register_max,event_id, e.user_id,e.company_id,e.section_id, r.price_subtotal,
                 e.user_id,
                 e.section_id,
                 event_state,
