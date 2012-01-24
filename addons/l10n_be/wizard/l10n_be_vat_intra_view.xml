@@ -23,12 +23,17 @@
 								<newline/>
 								<field name="mand_id" colspan="4"/>
 								<newline/>
-								<field name="tax_code_id" string="Company" colspan="4" widget="selection"/>
+								<field name="identification_type"/>
 								<newline/>
+								<field name="other" attrs="{'invisible':[('identification_type','!=','other')], 'required':[('identification_type','=','other')]}"/>
+								<newline/>
+								<field name="tax_code_id" string="Company" colspan="4" widget="selection"/>
 								</group>
 								<separator string="Periods" colspan="4"/>
 								<field name="period_ids" nolabel="1" colspan="4"/>
 								<newline/><label/>
+								<separator string="Comments" colspan="4"/>
+								<field colspan="4" name="comments" nolabel="1"/>
 								</page>
 								<page string="European Countries">
 									<field name="country_ids" colspan="4" nolabel="1"/>
