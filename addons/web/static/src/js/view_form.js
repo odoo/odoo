@@ -13,7 +13,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     searchable: false,
     readonly : false,
     form_template: "FormView",
-    identifier_prefix: 'formview-',
     display_name: _lt('Form'),
     /**
      * @constructs openerp.web.FormView
@@ -739,7 +738,6 @@ openerp.web.form.compute_domain = function(expr, fields) {
 
 openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.form.Widget# */{
     template: 'Widget',
-    identifier_prefix: 'formview-widget-',
     /**
      * @constructs openerp.web.form.Widget
      * @extends openerp.web.OldWidget
@@ -2593,7 +2591,6 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends open
  * @extends openerp.web.OldWidget
  */
 openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends openerp.web.form.SelectCreatePopup# */{
-    identifier_prefix: "selectcreatepopup",
     template: "SelectCreatePopup",
     /**
      * options:
@@ -2811,7 +2808,6 @@ openerp.web.form.SelectCreateListView = openerp.web.ListView.extend({
  * @extends openerp.web.OldWidget
  */
 openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp.web.form.FormOpenPopup# */{
-    identifier_prefix: "formopenpopup",
     template: "FormOpenPopup",
     /**
      * options:

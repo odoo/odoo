@@ -17,7 +17,6 @@ session.web.client_actions = new session.web.Registry();
 session.web.views = new session.web.Registry();
 
 session.web.ActionManager = session.web.OldWidget.extend({
-    identifier_prefix: "actionmanager",
     init: function(parent) {
         this._super(parent);
         this.inner_action = null;
@@ -209,7 +208,6 @@ session.web.ActionManager = session.web.OldWidget.extend({
 });
 
 session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.ViewManager# */{
-    identifier_prefix: "viewmanager",
     template: "ViewManager",
     /**
      * @constructs session.web.ViewManager

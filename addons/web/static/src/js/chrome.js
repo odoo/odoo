@@ -7,7 +7,6 @@ var QWeb = openerp.web.qweb,
 
 openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.Notification# */{
     template: 'Notification',
-    identifier_prefix: 'notification-',
 
     init: function() {
         this._super.apply(this, arguments);
@@ -38,7 +37,6 @@ openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.
 
 openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog# */{
     dialog_title: "",
-    identifier_prefix: 'dialog',
     /**
      * @constructs openerp.web.Dialog
      * @extends openerp.web.OldWidget
@@ -555,7 +553,6 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
     remember_credentials: true,
     
     template: "Login",
-    identifier_prefix: 'oe-app-login-',
     /**
      * @constructs openerp.web.Login
      * @extends openerp.web.OldWidget
@@ -651,7 +648,6 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
 
 openerp.web.Header =  openerp.web.OldWidget.extend(/** @lends openerp.web.Header# */{
     template: "Header",
-    identifier_prefix: 'oe-app-header-',
     /**
      * @constructs openerp.web.Header
      * @extends openerp.web.OldWidget

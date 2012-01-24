@@ -892,8 +892,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
  * MyWidget = openerp.base.Widget.extend({
  *     // the name of the QWeb template to use for rendering
  *     template: "MyQWebTemplate",
- *     // identifier prefix, it is useful to put an obvious one for debugging
- *     identifier_prefix: 'my-id-prefix-',
  *
  *     init: function(parent) {
  *         this._super(parent);
@@ -1116,11 +1114,10 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
 });
 
 openerp.web.OldWidget = openerp.web.Widget.extend({
-    identifier_prefix: 'generic-identifier-',
     init: function(parent, /** @deprecated */ element_id) {
         this._super(parent);
         this.element_id = element_id;
-        this.element_id = this.element_id || _.uniqueId(this.identifier_prefix);
+        this.element_id = this.element_id || _.uniqueId('widget-');
         var tmp = document.getElementById(this.element_id);
         this.$element = tmp ? $(tmp) : $(document.createElement(this.tag_name));
     },

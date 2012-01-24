@@ -1040,7 +1040,6 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
 
 openerp.web.search.ExtendedSearch = openerp.web.search.Widget.extend({
     template: 'SearchView.extended_search',
-    identifier_prefix: 'extended-search',
     init: function (parent, model) {
         this._super(parent);
         this.model = model;
@@ -1107,7 +1106,6 @@ openerp.web.search.ExtendedSearch = openerp.web.search.Widget.extend({
 
 openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
     template: 'SearchView.extended_search.group',
-    identifier_prefix: 'extended-search-group',
     init: function (parent, fields) {
         this._super(parent);
         this.fields = fields;
@@ -1152,7 +1150,6 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
 
 openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** @lends openerp.web.search.ExtendedSearchProposition# */{
     template: 'SearchView.extended_search.proposition',
-    identifier_prefix: 'extended-search-proposition',
     /**
      * @constructs openerp.web.search.ExtendedSearchProposition
      * @extends openerp.web.OldWidget
@@ -1253,7 +1250,6 @@ openerp.web.search.ExtendedSearchProposition.Field = openerp.web.OldWidget.exten
 });
 openerp.web.search.ExtendedSearchProposition.Char = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.char',
-    identifier_prefix: 'extended-search-proposition-char',
     operators: [
         {value: "ilike", text: _lt("contains")},
         {value: "not ilike", text: _lt("doesn't contain")},
@@ -1270,7 +1266,6 @@ openerp.web.search.ExtendedSearchProposition.Char = openerp.web.search.ExtendedS
 });
 openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.empty',
-    identifier_prefix: 'extended-search-proposition-datetime',
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
@@ -1290,7 +1285,6 @@ openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.search.Exten
 });
 openerp.web.search.ExtendedSearchProposition.Date = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.empty',
-    identifier_prefix: 'extended-search-proposition-date',
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
@@ -1310,7 +1304,6 @@ openerp.web.search.ExtendedSearchProposition.Date = openerp.web.search.ExtendedS
 });
 openerp.web.search.ExtendedSearchProposition.Integer = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.integer',
-    identifier_prefix: 'extended-search-proposition-integer',
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
@@ -1332,7 +1325,6 @@ openerp.web.search.ExtendedSearchProposition.Id = openerp.web.search.ExtendedSea
 });
 openerp.web.search.ExtendedSearchProposition.Float = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.float',
-    identifier_prefix: 'extended-search-proposition-float',
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
@@ -1351,7 +1343,6 @@ openerp.web.search.ExtendedSearchProposition.Float = openerp.web.search.Extended
 });
 openerp.web.search.ExtendedSearchProposition.Selection = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.selection',
-    identifier_prefix: 'extended-search-proposition-selection',
     operators: [
         {value: "=", text: _lt("is")},
         {value: "!=", text: _lt("is not")}
@@ -1365,7 +1356,6 @@ openerp.web.search.ExtendedSearchProposition.Selection = openerp.web.search.Exte
 });
 openerp.web.search.ExtendedSearchProposition.Boolean = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.boolean',
-    identifier_prefix: 'extended-search-proposition-boolean',
     operators: [
         {value: "=", text: _lt("is true")},
         {value: "!=", text: _lt("is false")}

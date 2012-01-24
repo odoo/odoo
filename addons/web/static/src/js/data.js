@@ -234,7 +234,6 @@ openerp.web.StaticDataGroup = openerp.web.GrouplessDataGroup.extend( /** @lends 
 });
 
 openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.DataSet# */{
-    identifier_prefix: "dataset",
     /**
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
