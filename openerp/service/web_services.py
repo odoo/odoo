@@ -339,10 +339,9 @@ class db(netsvc.ExportService):
         from openerp.osv.orm import except_orm
         from openerp.osv.osv import except_osv
 
-        l = netsvc.Logger()
         for db in databases:
             try:
-                l.notifyChannel('migration', netsvc.LOG_INFO, 'migrate database %s' % (db,))
+                _logger.info('migrate database %s', db)
                 tools.config['update']['base'] = True
                 pooler.restart_pool(db, force_demo=False, update_module=True)
             except except_orm, inst:
@@ -352,7 +351,7 @@ class db(netsvc.ExportService):
             except Exception:
                 import traceback
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
-                l.notifyChannel('web-services', netsvc.LOG_ERROR, tb_s)
+                _logger.error(tb_s)
                 raise
         return True
 
@@ -428,7 +427,6 @@ GNU Public Licence.
 
 
     def exp_get_migration_scripts(self, contract_id, contract_password):
-        l = netsvc.Logger()
         import openerp.tools.maintenance as tm
         try:
             rc = tm.remote_contract(contract_id, contract_password)
@@ -437,7 +435,7 @@ GNU Public Licence.
             if rc.status != 'full':
                 raise tm.RemoteContractException('Can not get updates for a partial contract')
 
-            l.notifyChannel('migration', netsvc.LOG_INFO, 'starting migration with contract %s' % (rc.name,))
+            _logger.info('starting migration with contract %s', rc.name)
 
             zips = rc.retrieve_updates(rc.id, openerp.modules.get_modules_with_version())
 
@@ -445,12 +443,12 @@ GNU Public Licence.
 
             backup_directory = os.path.join(tools.config['root_path'], 'backup', time.strftime('%Y-%m-%d-%H-%M'))
             if zips and not os.path.isdir(backup_directory):
-                l.notifyChannel('migration', netsvc.LOG_INFO, 'create a new backup directory to \
-                                store the old modules: %s' % (backup_directory,))
+                _logger.info('create a new backup directory to \
+                                store the old modules: %s', backup_directory)
                 os.makedirs(backup_directory)
 
             for module in zips:
-                l.notifyChannel('migration', netsvc.LOG_INFO, 'upgrade module %s' % (module,))
+                _logger.info('upgrade module %s', module)
                 mp = openerp.modules.get_module_path(module)
                 if mp:
                     if os.path.isdir(mp):
@@ -467,7 +465,7 @@ GNU Public Licence.
                     try:
                         base64_decoded = base64.decodestring(zips[module])
                     except Exception:
-                        l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to read the module %s' % (module,))
+                        _logger.error('unable to read the module %s', module)
                         raise
 
                     zip_contents = StringIO(base64_decoded)
@@ -476,13 +474,13 @@ GNU Public Licence.
                         try:
                             tools.extract_zip_file(zip_contents, tools.config['addons_path'] )
                         except Exception:
-                            l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to extract the module %s' % (module, ))
+                            _logger.error('unable to extract the module %s', module)
                             rmtree(module)
                             raise
                     finally:
                         zip_contents.close()
                 except Exception:
-                    l.notifyChannel('migration', netsvc.LOG_ERROR, 'restore the previous version of the module %s' % (module, ))
+                    _logger.error('restore the previous version of the module %s', module)
                     nmp = os.path.join(backup_directory, module)
                     if os.path.isdir(nmp):
                         copytree(nmp, tools.config['addons_path'])
@@ -496,7 +494,7 @@ GNU Public Licence.
         except Exception, e:
             import traceback
             tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
-            l.notifyChannel('migration', netsvc.LOG_ERROR, tb_s)
+            _logger.error(tb_s)
             raise
 
     def exp_get_server_environment(self):
@@ -527,8 +525,8 @@ GNU Public Licence.
         return tools.config.get('login_message', False)
 
     def exp_set_loglevel(self, loglevel, logger=None):
-        l = netsvc.Logger()
-        l.set_loglevel(int(loglevel), logger)
+        # TODO Previously, the level was set on the now deprecated
+        # `openerp.netsvc.Logger` class.
         return True
 
     def exp_get_stats(self):

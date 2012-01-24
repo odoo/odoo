@@ -110,8 +110,7 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
         self.socket.bind((self.__interface, self.__port))
         self.socket.listen(5)
         self.threads = []
-        netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
-                         "starting NET-RPC service on %s:%s" % (interface or '0.0.0.0', port,))
+        _logger.info("starting NET-RPC service on %s:%s", interface or '0.0.0.0', port)
 
     def run(self):
         try:

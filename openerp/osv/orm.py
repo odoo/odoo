@@ -1797,7 +1797,7 @@ class BaseModel(object):
                 res.insert(0, ("Can't find field '%s' in the following view parts composing the view of object model '%s':" % (field, model), None))
                 msg = "\n * ".join([r[0] for r in res])
                 msg += "\n\nEither you wrongly customized this view, or some modules bringing those views are not compatible with your current data model"
-                netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, msg)
+                _logger.error(msg)
                 raise except_orm('View error', msg)
         return arch, fields
 
@@ -2970,7 +2970,7 @@ class BaseModel(object):
                                 query = 'UPDATE "%s" SET "%s"=%s' % (self._table, k, ss[0])
                                 cr.execute(query, (ss[1](default),))
                                 cr.commit()
-                                netsvc.Logger().notifyChannel('data', netsvc.LOG_DEBUG, "Table '%s': setting default value of new column %s" % (self._table, k))
+                                _logger.debug("Table '%s': setting default value of new column %s", self._table, k)
 
                             # remember the functions to call for the stored fields
                             if isinstance(f, fields.function):

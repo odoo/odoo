@@ -20,6 +20,7 @@
 ##############################################################################
 
 import copy
+import logging
 
 import openerp.netsvc as netsvc
 from openerp.tools.misc import UpdateableStr, UpdateableDict
@@ -30,9 +31,10 @@ import openerp.pooler as pooler
 
 from openerp.osv.osv import except_osv
 from openerp.osv.orm import except_orm
-from openerp.netsvc import Logger, LOG_ERROR
 import sys
 import warnings
+
+_logger = logging.getLogger(__name__)
 
 class except_wizard(Exception):
     def __init__(self, name, value):
@@ -170,9 +172,7 @@ class interface(netsvc.Service):
                 import traceback
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
                     sys.exc_type, sys.exc_value, sys.exc_traceback))
-                logger = Logger()
-                logger.notifyChannel("web-services", LOG_ERROR,
-                        'Exception in call: ' + tb_s)
+                _logger.error('Exception in call: ' + tb_s)
                 raise
 
         return res

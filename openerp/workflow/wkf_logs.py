@@ -34,8 +34,6 @@ def log(cr,ident,act_id,info=''):
     #info: %s
     #""" % (ident[1], ident[2], ident[0], act_id, info)
 
-    #netsvc.Logger().notifyChannel('wkf_log', netsvc.LOG_DEBUG, msg)
-
     #cr.execute('insert into wkf_logs (res_type, res_id, uid, act_id, time, info) values (%s,%s,%s,%s,current_time,%s)', (ident[1],int(ident[2]),int(ident[0]),int(act_id),info))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

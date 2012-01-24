@@ -19,10 +19,14 @@
 #
 ##############################################################################
 
+import logging
+from translate import _
+
+_logger = logging.getLogger(__name__)
+
 #-------------------------------------------------------------
 #ENGLISH
 #-------------------------------------------------------------
-from translate import _
 
 to_19 = ( 'Zero',  'One',   'Two',  'Three', 'Four',   'Five',   'Six',
           'Seven', 'Eight', 'Nine', 'Ten',   'Eleven', 'Twelve', 'Thirteen',
@@ -105,11 +109,11 @@ def amount_to_text(nbr, lang='en', currency='euro'):
     """
     import openerp.loglevels as loglevels
 #    if nbr > 10000000:
-#        netsvc.Logger().notifyChannel('translate', netsvc.LOG_WARNING, _("Number too large '%d', can not translate it"))
+#        _logger.warning(_("Number too large '%d', can not translate it"))
 #        return str(nbr)
     
     if not _translate_funcs.has_key(lang):
-        loglevels.Logger().notifyChannel('translate', loglevels.LOG_WARNING, _("no translation function found for lang: '%s'" % (lang,)))
+        _logger.warning(_("no translation function found for lang: '%s'"), lang)
         #TODO: (default should be en) same as above
         lang = 'en'
     return _translate_funcs[lang](abs(nbr), currency)
