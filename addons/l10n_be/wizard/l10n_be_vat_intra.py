@@ -157,7 +157,6 @@ class partner_vat_intra(osv.osv_memory):
                         'type': type.upper(),
                         'other': other,
                         'issued_by': issued_by,
-                        'company_registry': data_cmpny.company_registry,
                         })
         
         codes = ('44', '46L', '46T')
@@ -217,7 +216,7 @@ class partner_vat_intra(osv.osv_memory):
         data_head = """<?xml version="1.0"?>
 <IntraConsignment xmlns="http://www.minfin.fgov.be/IntraConsignment" IntraListingsNbr="1">
 	<Representative>
-	    <RepresentativeID identificationType="%(type)s" issuedBy="%(issued_by)s" otherQlf="%(other)s">%(company_registry)s</RepresentativeID>
+	    <RepresentativeID identificationType="%(type)s" issuedBy="%(issued_by)s" otherQlf="%(other)s">%(company_vat)s</RepresentativeID>
 	    <Name>%(company_name)s</Name>
 	    <Street>%(street)s</Street>
 	    <PostCode>%(post_code)s</PostCode>
