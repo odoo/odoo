@@ -23,6 +23,8 @@
 import openerp.modules
 import logging
 
+_logger = logging.getLogger(__name__)
+
 def is_initialized(cr):
     """ Check if a database has been initialized for the ORM.
 
@@ -43,7 +45,7 @@ def initialize(cr):
     f = openerp.modules.get_module_resource('base', 'base.sql')
     if not f:
         m = "File not found: 'base.sql' (provided by module 'base')."
-        logging.getLogger('init').critical(m)
+        _logger.critical(m)
         raise IOError(m)
     base_sql_file = openerp.tools.misc.file_open(f)
     try:
