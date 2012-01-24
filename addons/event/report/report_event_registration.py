@@ -70,7 +70,6 @@ class report_event_registration(osv.osv):
                 r.name AS name_registration,
                 e.section_id AS section_id,
                 e.company_id AS company_id,
-                e.product_id AS product_id,
                 e.main_speaker_id AS speaker_id,
                 to_char(e.date_begin, 'YYYY') AS year,
                 to_char(e.date_begin, 'MM') AS month,
@@ -105,7 +104,7 @@ class report_event_registration(osv.osv):
                 e.section_id,
                 event_state,
                 e.company_id,
-                e.product_id,
+
                 e.main_speaker_id,
                 year,
                 month,
