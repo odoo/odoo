@@ -42,7 +42,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
     _columns = {
         'name': fields.char('File Name', size=32),
         'period_id': fields.many2one('account.period','Period', required=True),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)]),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], help="Keep empty to use the company from partner"),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
         'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a resitution is to made or not?'),
@@ -94,12 +94,12 @@ class l10n_be_vat_declaration(osv.osv_memory):
         issued_by = vat_no[:2] 
         comments = data['comments'] or ''
         type = data['identification_type'] or ''
-        val = data['other'] or ''
+        other = data['other'] or ''
             
         send_ref = str(obj_company.partner_id.id) + str(account_period.date_start[5:7]) + str(account_period.date_stop[:4])
         
         data_of_file = '<?xml version="1.0"?>\n<VATConsignment xmlns="http://www.minfin.fgov.be/VATConsignment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" VATDeclarationsNbr="'+str(data['vat_declarations_nbr'])+'">'
-        data_of_file +='\n\t<Representative> \n\t\t<RepresentativeID identificationType="'+type.upper()+'" issuedBy="'+issued_by+'" otherQlf="'+val+'">'+obj_company.company_registry+'</RepresentativeID> \n\t\t<Name>'+obj_company.name+'</Name> \n\t\t<Street>'+address+'</Street> \n\t\t<PostCode>'+post_code+'</PostCode> \n\t\t<City>'+city+'</City> \n\t\t<CountryCode>'+country_code+'</CountryCode> \n\t\t<EmailAddress>'+email+'</EmailAddress> \n\t\t<Phone>'+phone+'</Phone> \n\t</Representative>'
+        data_of_file +='\n\t<Representative> \n\t\t<RepresentativeID identificationType="'+type.upper()+'" issuedBy="'+issued_by+'" otherQlf="'+other+'">'+obj_company.company_registry+'</RepresentativeID> \n\t\t<Name>'+obj_company.name+'</Name> \n\t\t<Street>'+address+'</Street> \n\t\t<PostCode>'+post_code+'</PostCode> \n\t\t<City>'+city+'</City> \n\t\t<CountryCode>'+country_code+'</CountryCode> \n\t\t<EmailAddress>'+email+'</EmailAddress> \n\t\t<Phone>'+phone+'</Phone> \n\t</Representative>'
         data_of_file +='\n\t<RepresentativeReference></RepresentativeReference>'
         data_of_file +='\n\t<VATDeclaration SequenceNumber="1" DeclarantReference="'+send_ref+'">'
         data_of_file +='\n\t\t<ReplacedVATDeclaration></ReplacedVATDeclaration>'
