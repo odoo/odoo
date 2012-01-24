@@ -80,6 +80,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         if not vat_no:
             raise osv.except_osv(_('Data Insufficient'), _('No VAT Number Associated with Main Company!'))
         vat_no = vat_no.replace(' ','').upper()
+        vat = vat_no[2:]
 
         tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
         ctx = context.copy()
@@ -103,7 +104,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         data_of_file +='\n\t<RepresentativeReference></RepresentativeReference>'
         data_of_file +='\n\t<VATDeclaration SequenceNumber="1" DeclarantReference="'+send_ref+'">'
         data_of_file +='\n\t\t<ReplacedVATDeclaration></ReplacedVATDeclaration>'
-        data_of_file +='\n\t\t<Declarant>\n\t\t\t<VATNUMBER xmlns="http://www.minfin.fgov.be/InputCommon">'+str(vat_no)+'</VATNUMBER>'
+        data_of_file +='\n\t\t<Declarant>\n\t\t\t<VATNUMBER xmlns="http://www.minfin.fgov.be/InputCommon">'+str(vat)+'</VATNUMBER>'
         data_of_file +='\n\t\t\t<Name>'+obj_company.name+'</Name>'
         data_of_file +='\n\t\t\t<Street>'+address+'</Street>'
         data_of_file +='\n\t\t\t<PostCode>'+post_code+'</PostCode>'
