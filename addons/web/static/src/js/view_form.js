@@ -1873,6 +1873,10 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         var search_val = request.term;
         var self = this;
 
+        if (this.abort_last) {
+            this.abort_last();
+            delete this.abort_last;
+        }
         var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
 
         dataset.name_search(search_val, self.build_domain(), 'ilike',
@@ -1912,6 +1916,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
 
             response(values);
         });
+        this.abort_last = dataset.abort_last;
     },
     _quick_create: function(name) {
         var self = this;

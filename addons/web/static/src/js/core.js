@@ -443,7 +443,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         };
         var deferred = $.Deferred();
         this.on_rpc_request();
-        this.rpc_function(url, payload).then(
+        var aborter = params.aborter;
+        delete params.aborter;
+        var request = this.rpc_function(url, payload).then(
             function (response, textStatus, jqXHR) {
                 self.on_rpc_response();
                 if (!response.error) {
@@ -469,6 +471,16 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 };
                 deferred.reject(error, $.Event());
             });
+        if (aborter) {
+            aborter.abort_last = function () {
+                if (!(request.isResolved() || request.isRejected())) {
+                    deferred.fail(function (error, event) {
+                        event.preventDefault();
+                    });
+                    request.abort();
+                }
+            };
+        }
         // Allow deferred user to disable on_rpc_error in fail
         deferred.fail(function() {
             deferred.fail(function(error, event) {

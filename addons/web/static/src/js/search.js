@@ -989,12 +989,17 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
         var self = this;
         this.$element.autocomplete({
             source: function (req, resp) {
+                if (self.abort_last) {
+                    self.abort_last();
+                    delete self.abort_last;
+                }
                 self.dataset.name_search(
                     req.term, self.attrs.domain, 'ilike', 8, function (data) {
                         resp(_.map(data, function (result) {
                             return {id: result[0], label: result[1]}
                         }));
                 });
+                self.abort_last = self.dataset.abort_last;
             },
             select: function (event, ui) {
                 self.id = ui.item.id;
