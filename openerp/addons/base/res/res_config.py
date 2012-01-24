@@ -27,6 +27,7 @@ import netsvc
 from tools import ustr
 import pooler
 
+_logger = logging.getLogger(__name__)
 
 class res_config_configurable(osv.osv_memory):
     ''' Base classes for new-style configuration items
@@ -37,11 +38,10 @@ class res_config_configurable(osv.osv_memory):
     '''
     _name = 'res.config'
     _inherit = 'ir.wizard.screen'
-    __logger = logging.getLogger(_name)
 
     def _next_action(self, cr, uid, context=None):
         Todos = self.pool['ir.actions.todo']
-        self.__logger.info('getting next %s', Todos)
+        _logger.info('getting next %s', Todos)
 
         active_todos = Todos.browse(cr, uid,
             Todos.search(cr, uid, ['&', ('type', '=', 'automatic'), ('state','=','open')]),
@@ -63,9 +63,9 @@ class res_config_configurable(osv.osv_memory):
         return None
 
     def _next(self, cr, uid, context=None):
-        self.__logger.info('getting next operation')
+        _logger.info('getting next operation')
         next = self._next_action(cr, uid, context=context)
-        self.__logger.info('next action is %s', next)
+        _logger.info('next action is %s', next)
         if next:
             res = next.action_launch(context=context)
             res['nodestroy'] = False
@@ -244,7 +244,6 @@ class res_config_installer(osv.osv_memory):
     """
     _name = 'res.config.installer'
     _inherit = 'res.config'
-    __logger = logging.getLogger(_name)
 
     _install_if = {}
 
@@ -352,7 +351,7 @@ class res_config_installer(osv.osv_memory):
         modules = self.pool.get('ir.module.module')
         to_install = list(self.modules_to_install(
             cr, uid, ids, context=context))
-        self.__logger.info('Selecting addons %s to install', to_install)
+        _logger.info('Selecting addons %s to install', to_install)
         modules.state_update(
             cr, uid,
             modules.search(cr, uid, [('name','in',to_install)]),
@@ -374,7 +373,6 @@ class ir_actions_configuration_wizard(osv.osv_memory):
     '''
     _name='ir.actions.configuration.wizard'
     _inherit = 'res.config'
-    __logger = logging.getLogger(_name)
 
     def _next_action_note(self, cr, uid, ids, context=None):
         next = self._next_action(cr, uid)
@@ -394,7 +392,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
         }
 
     def execute(self, cr, uid, ids, context=None):
-        self.__logger.warn(DEPRECATION_MESSAGE)
+        _logger.warn(DEPRECATION_MESSAGE)
 
 ir_actions_configuration_wizard()
 
