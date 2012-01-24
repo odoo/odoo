@@ -471,16 +471,38 @@
 </t>
 <t t-name="ViewManagerDebug">
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
-    <option value="fvg">Fields View Get</option>
+    <option t-if="_.indexOf(['form', 'page'], view_manager.active_view) gt -1" value="perm_read" data-views="form,page">View Log (perm_read)</option>
     <option value="fields">View Fields</option>
+    <option value="fvg">Fields View Get</option>
     <t t-if="view_manager.session.uid === 1">
         <option value="manage_views">Manage Views</option>
         <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
         <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</option>
         <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id">Edit Action</option>
-        <option value="customize_object">Customize Object</option>
         <option value="edit_workflow">Edit Workflow</option>
+        <option value="customize_object">Customize Object</option>
     </t>
+</t>
+<t t-name="ViewManagerDebugViewLog">
+    <div class="oe_debug_view_log">
+        <label>ID:</label>
+        <span><t t-esc="perm.id"/></span>
+
+        <label>XML ID:</label>
+        <span><t t-esc="perm.xmlid"/></span>
+
+        <label>Creation User:</label>
+        <span><t t-esc="format(perm.create_uid, { 'type' : 'many2one' }, '/')"/></span>
+
+        <label>Creation Date:</label>
+        <span><t t-esc="format(perm.create_date, { 'type' : 'datetime' }, '/')"/></span>
+
+        <label>Latest Modification by:</label>
+        <span><t t-esc="format(perm.write_uid, { 'type' : 'many2one' }, '/')"/></span>
+
+        <label>Latest Modification Date:</label>
+        <span><t t-esc="format(perm.write_date, { 'type' : 'datetime' }, '/')"/></span>
+    </div>
 </t>
 <t t-extend="ViewManager" t-name="One2Many.viewmanager">
     <t t-jquery="span.oe_view_title_text" t-operation="replace"/>
