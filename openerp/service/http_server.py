@@ -60,6 +60,8 @@ try:
 except ImportError:
     class SSLError(Exception): pass
 
+_logger = logging.getLogger(__name__)
+
 class HttpLogHandler:
     """ helper class for uniform log handling
     Please define self._logger at each class that is derived from this
@@ -120,8 +122,7 @@ def init_static_http():
     
     reg_http_service(base_path, StaticHTTPHandler)
     
-    logging.getLogger("web-services").info("Registered HTTP dir %s for %s" % \
-                        (document_root, base_path))
+    _logger.info("Registered HTTP dir %s for %s", document_root, base_path)
 
 import security
 
@@ -140,11 +141,11 @@ class OpenERPAuthProvider(AuthProvider):
                 return False
             return (user, passwd, db, uid)
         except Exception,e:
-            logging.getLogger("auth").debug("Fail auth: %s" % e )
+            _logger.debug("Fail auth: %s" % e )
             return False
 
     def log(self, msg, lvl=logging.INFO):
-        logging.getLogger("auth").log(lvl,msg)
+        _logger.log(lvl,msg)
 
     def checkRequest(self,handler,path, db=False):        
         auth_str = handler.headers.get('Authorization',False)

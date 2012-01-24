@@ -50,6 +50,8 @@ from openerp.service import http_server
     procedures to be called. Each method has its own arguments footprint.
 """
 
+_logger = logging.getLogger(__name__)
+
 RPC_VERSION_1 = {'server_version': '6.1', 'protocol_version': 1}
 
 # This should be moved to openerp.modules.db, along side initialize().
@@ -83,7 +85,7 @@ def _initialize_db(serv, id, db_name, demo, lang, user_password):
         cr.close()
     except Exception, e:
         serv.actions[id].update(clean=False, exception=e)
-        logging.getLogger('db.create').exception('CREATE DATABASE failed:')
+        _logger.exception('CREATE DATABASE failed:')
         serv.actions[id]['traceback'] = traceback.format_exc()
         if cr:
             cr.close()
@@ -134,7 +136,7 @@ class db(netsvc.ExportService):
 
         self._create_empty_database(db_name)
 
-        logging.getLogger('db.create').info('CREATE DATABASE %s', db_name.lower())
+        _logger.info('CREATE DATABASE %s', db_name.lower())
         create_thread = threading.Thread(target=_initialize_db,
                 args=(self, id, db_name, demo, lang, user_password))
         create_thread.start()
@@ -150,7 +152,7 @@ class db(netsvc.ExportService):
 
         self.actions[id] = {'clean': False}
 
-        logging.getLogger('db.create').info('CREATE DATABASE %s', db_name.lower())
+        _logger.info('CREATE DATABASE %s', db_name.lower())
         self._create_empty_database(db_name)
         _initialize_db(self, id, db_name, demo, lang, user_password)
         return True
@@ -173,7 +175,6 @@ class db(netsvc.ExportService):
     def exp_drop(self, db_name):
         openerp.modules.registry.RegistryManager.delete(db_name)
         sql_db.close_db(db_name)
-        logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
         cr = db.cursor()
@@ -182,12 +183,10 @@ class db(netsvc.ExportService):
             try:
                 cr.execute('DROP DATABASE "%s"' % db_name)
             except Exception, e:
-                logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                        'DROP DB: %s failed:\n%s' % (db_name, e))
+                _logger.error('DROP DB: %s failed:\n%s', db_name, e)
                 raise Exception("Couldn't drop database %s: %s" % (db_name, e))
             else:
-                logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                    'DROP DB: %s' % (db_name))
+                _logger.info('DROP DB: %s', db_name)
         finally:
             cr.close()
         return True
@@ -202,8 +201,6 @@ class db(netsvc.ExportService):
             os.environ['PGPASSWORD'] = ''
 
     def exp_dump(self, db_name):
-        logger = netsvc.Logger()
-
         self._set_pg_psw_env_var()
 
         cmd = ['pg_dump', '--format=c', '--no-owner']
@@ -220,24 +217,19 @@ class db(netsvc.ExportService):
         data = stdout.read()
         res = stdout.close()
         if res:
-            logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                    'DUMP DB: %s failed\n%s' % (db_name, data))
+            _logger.error('DUMP DB: %s failed\n%s', db_name, data)
             raise Exception, "Couldn't dump database"
-        logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                'DUMP DB: %s' % (db_name))
+        _logger.info('DUMP DB: %s', db_name)
 
         self._unset_pg_psw_env_var()
 
         return base64.encodestring(data)
 
     def exp_restore(self, db_name, data):
-        logger = netsvc.Logger()
-
         self._set_pg_psw_env_var()
 
         if self.exp_db_exist(db_name):
-            logger.notifyChannel("web-services", netsvc.LOG_WARNING,
-                    'RESTORE DB: %s already exists' % (db_name,))
+            _logger.warning('RESTORE DB: %s already exists', db_name)
             raise Exception, "Database already exists"
 
         self._create_empty_database(db_name)
@@ -266,8 +258,7 @@ class db(netsvc.ExportService):
         res = stdout.close()
         if res:
             raise Exception, "Couldn't restore database"
-        logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                'RESTORE DB: %s' % (db_name))
+        _logger.info('RESTORE DB: %s', db_name)
 
         self._unset_pg_psw_env_var()
 
@@ -276,7 +267,6 @@ class db(netsvc.ExportService):
     def exp_rename(self, old_name, new_name):
         openerp.modules.registry.RegistryManager.delete(old_name)
         sql_db.close_db(old_name)
-        logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
         cr = db.cursor()
@@ -285,16 +275,14 @@ class db(netsvc.ExportService):
             try:
                 cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
             except Exception, e:
-                logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                        'RENAME DB: %s -> %s failed:\n%s' % (old_name, new_name, e))
+                _logger.error('RENAME DB: %s -> %s failed:\n%s', old_name, new_name, e)
                 raise Exception("Couldn't rename database %s to %s: %s" % (old_name, new_name, e))
             else:
                 fs = os.path.join(tools.config['root_path'], 'filestore')
                 if os.path.exists(os.path.join(fs, old_name)):
                     os.rename(os.path.join(fs, old_name), os.path.join(fs, new_name))
 
-                logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                    'RENAME DB: %s -> %s' % (old_name, new_name))
+                _logger.info('RENAME DB: %s -> %s', old_name, new_name)
         finally:
             cr.close()
         return True
@@ -369,7 +357,6 @@ class db(netsvc.ExportService):
         return True
 
 class common(netsvc.ExportService):
-    _logger = logging.getLogger('web-services')
 
     def __init__(self,name="common"):
         netsvc.ExportService.__init__(self,name)
@@ -394,7 +381,7 @@ class common(netsvc.ExportService):
         # the res.users model
         res = security.login(db, login, password)
         msg = res and 'successful login' or 'bad login or password'
-        self._logger.info("%s from '%s' using database '%s'", msg, login, db.lower())
+        _logger.info("%s from '%s' using database '%s'", msg, login, db.lower())
         return res or False
 
     def exp_authenticate(self, db, login, password, user_agent_env):
@@ -560,9 +547,8 @@ GNU Public Licence.
         return os.times()
 
     def exp_get_sqlcount(self):
-        logger = logging.getLogger('db.cursor')
-        if not logger.isEnabledFor(logging.DEBUG_SQL):
-            logger.warning("Counters of SQL will not be reliable unless DEBUG_SQL is set at the server's config.")
+        if not _logger.isEnabledFor(logging.DEBUG_SQL):
+            _logger.warning("Counters of SQL will not be reliable unless DEBUG_SQL is set at the server's config.")
         return sql_db.sql_counter
 
 
@@ -693,9 +679,7 @@ class report_spool(netsvc.ExportService):
 
             tb = sys.exc_info()
             tb_s = "".join(traceback.format_exception(*tb))
-            logger = netsvc.Logger()
-            logger.notifyChannel('web-services', netsvc.LOG_ERROR,
-                    'Exception: %s\n%s' % (str(exception), tb_s))
+            _logger.error('Exception: %s\n%s', str(exception), tb_s)
             if hasattr(exception, 'name') and hasattr(exception, 'value'):
                 self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
             else:
@@ -736,9 +720,7 @@ class report_spool(netsvc.ExportService):
 
                 tb = sys.exc_info()
                 tb_s = "".join(traceback.format_exception(*tb))
-                logger = netsvc.Logger()
-                logger.notifyChannel('web-services', netsvc.LOG_ERROR,
-                        'Exception: %s\n%s' % (str(exception), tb_s))
+                _logger.errro('Exception: %s\n%s', str(exception), tb_s)
                 if hasattr(exception, 'name') and hasattr(exception, 'value'):
                     self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
                 else:
