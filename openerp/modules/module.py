@@ -135,7 +135,7 @@ To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
 
         # Note: we don't support circular import.
         f, path, descr = imp.find_module(module_part, ad_paths)
-        mod = imp.load_module(module_name, f, path, descr)
+        mod = imp.load_module('openerp.addons.' + module_part, f, path, descr)
         if not is_shadowing:
             sys.modules[module_part] = mod
         sys.modules['openerp.addons.' + module_part] = mod
