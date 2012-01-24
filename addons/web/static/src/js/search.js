@@ -1038,7 +1038,7 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
     }
 });
 
-openerp.web.search.ExtendedSearch = openerp.web.OldWidget.extend({
+openerp.web.search.ExtendedSearch = openerp.web.search.Widget.extend({
     template: 'SearchView.extended_search',
     identifier_prefix: 'extended-search',
     init: function (parent, model) {
@@ -1051,7 +1051,7 @@ openerp.web.search.ExtendedSearch = openerp.web.OldWidget.extend({
         this.check_last_element();
     },
     start: function () {
-        this.$element = $("#" + this.element_id);
+        this._super();
         this.$element.closest("table.oe-searchview-render-line").css("display", "none");
         var self = this;
         this.rpc("/web/searchview/fields_get",
@@ -1105,7 +1105,7 @@ openerp.web.search.ExtendedSearch = openerp.web.OldWidget.extend({
     }
 });
 
-openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
+openerp.web.search.ExtendedSearchGroup = openerp.web.Widget.extend({
     template: 'SearchView.extended_search.group',
     identifier_prefix: 'extended-search-group',
     init: function (parent, fields) {
@@ -1119,7 +1119,6 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
         prop.start();
     },
     start: function () {
-        this.$element = $("#" + this.element_id);
         var _this = this;
         this.add_prop();
         this.$element.find('.searchview_extended_add_proposition').click(function () {
@@ -1151,12 +1150,12 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
     }
 });
 
-openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** @lends openerp.web.search.ExtendedSearchProposition# */{
+openerp.web.search.ExtendedSearchProposition = openerp.web.Widget.extend(/** @lends openerp.web.search.ExtendedSearchProposition# */{
     template: 'SearchView.extended_search.proposition',
     identifier_prefix: 'extended-search-proposition',
     /**
      * @constructs openerp.web.search.ExtendedSearchProposition
-     * @extends openerp.web.OldWidget
+     * @extends openerp.web.Widget
      *
      * @param parent
      * @param fields
@@ -1247,7 +1246,7 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
     }
 });
 
-openerp.web.search.ExtendedSearchProposition.Field = openerp.web.OldWidget.extend({
+openerp.web.search.ExtendedSearchProposition.Field = openerp.web.Widget.extend({
     start: function () {
         this.$element = $("#" + this.element_id);
     }

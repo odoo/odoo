@@ -41,7 +41,7 @@ openerp.web.Dialog = openerp.web.Widget.extend(/** @lends openerp.web.Dialog# */
     identifier_prefix: 'dialog',
     /**
      * @constructs openerp.web.Dialog
-     * @extends openerp.web.OldWidget
+     * @extends openerp.web.Widget
      *
      * @param parent
      * @param options
