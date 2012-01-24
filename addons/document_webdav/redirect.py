@@ -23,10 +23,10 @@
 import logging
 import urlparse
 from service.websrv_lib import FixSendError, HTTPHandler, HttpOptions
-from service.http_server import HttpLogHandler
 
-class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler):
-    _logger = logging.getLogger('httpd.well-known')
+_logger = logging.getLogger(__name__)
+
+class RedirectHTTPHandler(FixSendError, HttpOptions, HTTPHandler):
     _HTTP_OPTIONS = { 'Allow': ['OPTIONS', 'GET', 'HEAD', 'PROPFIND'] }
     redirect_paths = {}
 
@@ -62,7 +62,7 @@ class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler
         try:
             addr, port = self.request.getsockname()
         except Exception, e:
-            self.log_error("Cannot calculate own address:" , e)
+            _logger.error("Cannot calculate own address:", e)
         
         if self.headers.has_key('Host'):
             uparts = list(urlparse.urlparse("%s://%s:%d"% (server_proto, addr,port)))
@@ -80,7 +80,7 @@ class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler
         self.send_header("Content-Length", 0)
         self.end_headers()
         # Do we need a Cache-content: header here?
-        self._logger.debug("redirecting %s to %s", self.path, redir_path)
+        _logger.debug("redirecting %s to %s", self.path, redir_path)
         return None
 
     def do_PROPFIND(self):

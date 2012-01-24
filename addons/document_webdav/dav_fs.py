@@ -175,7 +175,7 @@ class openerp_dav_handler(dav_interface):
 
     def get_propnames(self, uri):
         props = self.PROPS
-        self.parent.log_message('get propnames: %s' % uri)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'get propnames: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
@@ -203,21 +203,21 @@ class openerp_dav_handler(dav_interface):
         except NotImplementedError, e:
             if cr: cr.close()
             import traceback
-            self.parent.log_error("Cannot %s: %s", opname, str(e))
-            self.parent.log_message("Exc: %s",traceback.format_exc())
+            _logger.warning("Cannot %s: %s", opname, str(e))
+            _logger.log(netsvc.logging.DEBUG_RPC, "Exc: %s" % traceback.format_exc())
             # see par 9.3.1 of rfc
             raise DAV_Error(403, str(e) or 'Not supported at this path')
         except EnvironmentError, err:
             if cr: cr.close()
             import traceback
-            self.parent.log_error("Cannot %s: %s", opname, err.strerror)
-            self.parent.log_message("Exc: %s",traceback.format_exc())
+            _logger.warning("Cannot %s: %s", opname, err.strerror)
+            _logger.log(netsvc.logging.DEBUG_RPC, "Exc: %s" % traceback.format_exc())
             raise default_exc(err.strerror)
         except Exception, e:
             import traceback
             if cr: cr.close()
-            self.parent.log_error("Cannot %s: %s", opname, str(e))
-            self.parent.log_message("Exc: %s",traceback.format_exc())
+            _logger.warning("Cannot %s: %s", opname, str(e))
+            _logger.log(netsvc.logging.DEBUG_RPC, "Exc: %s" % traceback.format_exc())
             raise default_exc("Operation failed")
 
     def _get_dav_lockdiscovery(self, uri):
@@ -245,7 +245,7 @@ class openerp_dav_handler(dav_interface):
 
     def prep_http_options(self, uri, opts):
         """see HttpOptions._prep_OPTIONS """
-        self.parent.log_message('get options: %s' % uri)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'get options: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri, allow_last=True)
 
         if not dbname:
@@ -268,7 +268,7 @@ class openerp_dav_handler(dav_interface):
                         ret[key] = []
                     ret[key].extend(val)
 
-                self.parent.log_message('options: %s' % ret)
+                _logger.log(netsvc.logging.DEBUG_RPC, 'options: %s' % ret)
             else:
                 ret = opts
             cr.close()
@@ -369,7 +369,7 @@ class openerp_dav_handler(dav_interface):
                 if res and len(res):
                     self.db_name_list.append(db_name)
             except Exception, e:
-                self.parent.log_error("Exception in db list: %s" % e)
+                _logger.warning("Exception in db list: %s", e)
             finally:
                 if cr:
                     cr.close()
@@ -377,7 +377,7 @@ class openerp_dav_handler(dav_interface):
 
     def get_childs(self,uri, filters=None):
         """ return the child objects as self.baseuris for the given URI """
-        self.parent.log_message('get children: %s' % uri)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'get children: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri, allow_last=True)
 
         if not dbname:
@@ -394,7 +394,7 @@ class openerp_dav_handler(dav_interface):
                 fp = node.full_path()
                 if fp and len(fp):
                     fp = '/'.join(fp)
-                    self.parent.log_message('children for: %s' % fp)
+                    _logger.log(netsvc.logging.DEBUG_RPC, 'children for: %s' % fp)
                 else:
                     fp = None
                 domain = None
@@ -420,13 +420,13 @@ class openerp_dav_handler(dav_interface):
                                 if turi.startswith(ul):
                                     result.append( turi[len(self.parent.davpath):])
                                 else:
-                                    self.parent.log_error("ignore href %s because it is not under request path %s", turi, ul)
+                                    _logger.warning("ignore href %s because it is not under request path %s", turi, ul)
                             return result
                             # We don't want to continue with the children found below
                             # Note the exceptions and that 'finally' will close the
                             # cursor
                 for d in node.children(cr, domain):
-                    self.parent.log_message('child: %s' % d.path)
+                    _logger.log(netsvc.logging.DEBUG_RPC, 'child: %s' % d.path)
                     if fp:
                         result.append( self.urijoin(dbname,fp,d.path) )
                     else:
@@ -434,7 +434,7 @@ class openerp_dav_handler(dav_interface):
         except DAV_Error:
             raise
         except Exception, e:
-            self.parent.log_error("cannot get_children: "+ str(e))
+            _logger.warning("cannot get_children: "+ str(e))
             raise
         finally:
             if cr: cr.close()
@@ -479,7 +479,7 @@ class openerp_dav_handler(dav_interface):
         return pool.get('document.directory').get_object(cr, uid, uri, context=context)
 
     def get_data(self,uri, rrange=None):
-        self.parent.log_message('GET: %s' % uri)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'GET: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         try:
             if not dbname:
@@ -499,7 +499,7 @@ class openerp_dav_handler(dav_interface):
                         start = 0
                     assert start >= 0
                     if end and end < start:
-                        self.parent.log_error("Invalid range for data: %s-%s" %(start, end))
+                        _logger.warning("Invalid range for data: %s-%s" %(start, end))
                         raise DAV_Error(416, "Invalid range for data")
                     if end:
                         if end >= res.size():
@@ -514,12 +514,12 @@ class openerp_dav_handler(dav_interface):
                 # says we'd better just return 200 OK with empty data
                 return ''
             except IndexError,e :
-                self.parent.log_error("GET IndexError: %s", str(e))
+                _logger.warning("GET IndexError: %s", str(e))
                 raise DAV_NotFound2(uri2)
             except Exception,e:
                 import traceback
-                self.parent.log_error("GET exception: %s",str(e))
-                self.parent.log_message("Exc: %s", traceback.format_exc())
+                _logger.warning("GET exception: %s",str(e))
+                _logger.log(netsvc.logging.DEBUG_RPC, "Exc: %s" % traceback.format_exc())
                 raise DAV_Error, 409
             return res
         finally:
@@ -528,7 +528,7 @@ class openerp_dav_handler(dav_interface):
     @memoize(CACHE_SIZE)
     def _get_dav_resourcetype(self, uri):
         """ return type of object """
-        self.parent.log_message('get RT: %s' % uri)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'get RT: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         try:
             if not dbname:
@@ -546,7 +546,7 @@ class openerp_dav_handler(dav_interface):
             if cr: cr.close()
 
     def _get_dav_displayname(self,uri):
-        self.parent.log_message('get DN: %s' % uri)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'get DN: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
@@ -565,7 +565,7 @@ class openerp_dav_handler(dav_interface):
     @memoize(CACHE_SIZE)
     def _get_dav_getcontentlength(self, uri):
         """ return the content length of an object """        
-        self.parent.log_message('get length: %s' % uri)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'get length: %s' % uri)
         result = 0
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)        
         if not dbname:
@@ -582,7 +582,7 @@ class openerp_dav_handler(dav_interface):
     @memoize(CACHE_SIZE)
     def _get_dav_getetag(self,uri):
         """ return the ETag of an object """
-        self.parent.log_message('get etag: %s' % uri)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'get etag: %s' % uri)
         result = 0
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
@@ -638,7 +638,7 @@ class openerp_dav_handler(dav_interface):
 
     @memoize(CACHE_SIZE)
     def _get_dav_getcontenttype(self,uri):
-        self.parent.log_message('get contenttype: %s' % uri)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'get contenttype: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
@@ -657,7 +657,7 @@ class openerp_dav_handler(dav_interface):
         """ create a new collection
             see par. 9.3 of rfc4918
         """
-        self.parent.log_message('MKCOL: %s' % uri)
+        _logger.log(netsvc.logging.DEBUG_RPC, 'MKCOL: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not uri2[-1]:
             if cr: cr.close()
@@ -681,7 +681,8 @@ class openerp_dav_handler(dav_interface):
 
     def put(self, uri, data, content_type=None):
         """ put the object into the filesystem """
-        self.parent.log_message('Putting %s (%d), %s'%( misc.ustr(uri), data and len(data) or 0, content_type))
+        _logger.log(netsvc.logging.DEBUG_RPC, 'Putting %s (%d), %s' % \
+            (misc.ustr(uri), data and len(data) or 0, content_type))
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
@@ -723,7 +724,7 @@ class openerp_dav_handler(dav_interface):
             try:
                 etag = str(newchild.get_etag(cr))
             except Exception, e:
-                self.parent.log_error("Cannot get etag for node: %s" % e)
+                _logger.warning("Cannot get etag for node: %s", e)
             ret = (str(hurl), etag)
         else:
             self._try_function(node.set_data, (cr, data), "save %s" % objname, cr=cr)
