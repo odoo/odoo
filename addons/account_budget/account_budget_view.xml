@@ -66,13 +66,13 @@
                         <page string="Budget Lines">
                             <field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="graph,tree">
                                 <graph type="bar" string="Lines">
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account_id"/>
                                     <field name="planned_amount" operator="+"/>
                                     <field group="True" name="general_budget_id"/>
                                 </graph>
                                 <tree string="Budget Lines"  editable="top">
                                     <field name="crossovered_budget_id"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
@@ -83,7 +83,7 @@
                                 </tree>
                                 <form string="Budget Lines">
                                     <field name="crossovered_budget_id"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
+                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" />
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
@@ -114,7 +114,7 @@
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="crossovered_budget_line" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
                                 <tree string="Budget Lines">
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account_id"/>
                                     <field name="general_budget_id"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
@@ -125,7 +125,7 @@
                                     <field name="percentage"/>
                                 </tree>
                                 <form string="Budget Lines">
-                                    <field name="analytic_account_id" select="1" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account_id" select="1"/>
                                     <field name="general_budget_id" select="1"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
@@ -203,7 +203,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Budget Lines">
-                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_account_id"/>
                     <field name="general_budget_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
