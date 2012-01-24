@@ -136,17 +136,47 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                         return;
                     task_stop = task_start.clone().addMilliseconds(tmp * 60 * 60 * 1000);
                 }
+                if (task.id == 23)
+                    console.log("loading", task.id, task_start.toString(), task_stop.toString());
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
                 var task_info = new GanttTaskInfo(_.uniqueId(), task_name, task_start, duration, 100);
+                task_info.internal_task = task;
                 return {task_info: task_info, task_start: task_start, task_stop: task_stop};
             }
         }
         var gantt = new GanttChart();
         _.each(_.compact(_.map(groups, function(e) {return generate_task_info(e, 0);})), function(project) {
-            gantt.addProject(project)
+            gantt.addProject(project);
         });
+        gantt.setEditable(true);
         gantt.setImagePath("/web_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
         gantt.create(this.chart_id);
+        gantt.attachEvent("onTaskEndDrag", function(task) {
+            self.on_task_changed(task);
+        });
+        gantt.attachEvent("onTaskEndResize", function(task) {
+            self.on_task_changed(task);
+        });
+    },
+    on_task_changed: function(task_obj) {
+        var self = this;
+        var itask = task_obj.TaskInfo.internal_task;
+        var start = task_obj.getEST();
+        var end = task_obj.getFinishDate();
+        console.log("saving", itask.id, start.toString(), end.toString());
+        var duration = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+        var data = {};
+        data[self.fields_view.arch.attrs.date_start] =
+            openerp.web.auto_date_to_str(start, self.fields[self.fields_view.arch.attrs.date_start].type);
+        if (self.fields_view.arch.attrs.date_stop) {
+            data[self.fields_view.arch.attrs.date_stop] = 
+                openerp.web.auto_date_to_str(end, self.fields[self.fields_view.arch.attrs.date_stop].type);
+        } else { // we assume date_duration is defined
+            data[self.fields_view.arch.attrs.date_delay] = duration;
+        }
+        this.dataset.write(itask.id, data).then(function() {
+            console.log("task edited");
+        });
     },
 });
 
