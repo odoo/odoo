@@ -64,18 +64,22 @@ class hr_attendance(osv.osv):
     }
 
     def _altern_si_so(self, cr, uid, ids, context=None):
-        for id in ids:
-            sql = '''
-            SELECT action, name
-            FROM hr_attendance AS att
-            WHERE employee_id = (SELECT employee_id FROM hr_attendance WHERE id=%s)
-            AND action IN ('sign_in','sign_out')
-            AND name <= (SELECT name FROM hr_attendance WHERE id=%s)
-            ORDER BY name DESC
-            LIMIT 2 '''
-            cr.execute(sql,(id,id))
-            atts = cr.fetchall()
-            if not ((len(atts)==1 and atts[0][0] == 'sign_in') or (len(atts)==2 and atts[0][0] != atts[1][0] and atts[0][1] != atts[1][1])):
+        """ Alternance sign_in/sign_out check.
+            Previous (if exists) must be of opposite action.
+            Next (if exists) must be of opposite action.
+        """
+        for att in self.browse(cr, uid, ids, context=context):
+            # search and browse for first previous and first next records
+            prev_att_ids = self.search(cr, uid, [('employee_id', '=', att.employee_id.id), ('name', '<', att.name), ('action', 'in', ('sign_in', 'sign_out'))], limit=1, order='name DESC')
+            next_add_ids = self.search(cr, uid, [('employee_id', '=', att.employee_id.id), ('name', '>', att.name), ('action', 'in', ('sign_in', 'sign_out'))], limit=1, order='name ASC')
+            prev_atts = self.browse(cr, uid, prev_att_ids, context=context)
+            next_atts = self.browse(cr, uid, next_add_ids, context=context)
+            # check for alternance, return False if at least one condition is not satisfied
+            if prev_atts and prev_atts[0].action == att.action: # previous exists and is same action
+                return False
+            if next_atts and next_atts[0].action == att.action: # next exists and is same action
+                return False
+            if (not prev_atts) and (not next_atts) and att.action != 'sign_in': # first attendance must be sign_in
                 return False
         return True
 
