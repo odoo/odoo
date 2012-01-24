@@ -21,7 +21,7 @@
 
 from osv import fields,osv
 import tools
-from crm import crm
+from .. import crm
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
