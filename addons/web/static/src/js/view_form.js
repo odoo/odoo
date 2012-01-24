@@ -386,11 +386,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_button_save: function() {
         var self = this;
         return this.do_save().then(function(result) {
-            self.do_prev_view(result.created);
+            self.do_prev_view({'created': result.created, 'default': 'page'});
         });
     },
     on_button_cancel: function() {
-        return this.do_prev_view();
+        return this.do_prev_view({'default': 'page'});
     },
     on_button_new: function() {
         var self = this;
