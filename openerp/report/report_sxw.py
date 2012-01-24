@@ -37,6 +37,8 @@ from openerp.osv.fields import float as float_class, function as function_class
 from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
 
+_logger = logging.getLogger(__name__)
+
 DT_FORMAT = '%Y-%m-%d'
 DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
 HM_FORMAT = '%H:%M:%S'
@@ -483,7 +485,7 @@ class report_sxw(report_rml, preprocess.report):
                         )
                     except Exception:
                         #TODO: should probably raise a proper osv_except instead, shouldn't we? see LP bug #325632
-                        logging.getLogger('report').error('Could not create saved report attachment', exc_info=True)
+                        _logger.error('Could not create saved report attachment', exc_info=True)
                 results.append(result)
             if results:
                 if results[0][1]=='pdf':

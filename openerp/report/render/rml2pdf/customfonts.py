@@ -40,6 +40,8 @@ Due to an awful configuration that ships with reportlab at many Linux
 and Ubuntu distros, we have to override the search path, too.
 """
 
+_logger = logging.getLogger(__name__)
+
 CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Helvetica',"DejaVu Sans Bold", "DejaVuSans-Bold.ttf", 'bold'),
         ('Helvetica',"DejaVu Sans Oblique", "DejaVuSans-Oblique.ttf", 'italic'),
@@ -97,7 +99,6 @@ def FindCustomFonts():
        meanwhile, the server must be restarted eventually.
     """
     dirpath =  []
-    log = logging.getLogger('report.fonts')
     global __foundFonts
     __foundFonts = {}
     searchpath = []
@@ -127,7 +128,7 @@ def FindCustomFonts():
         for d in dirpath:
             abs_filename = os.path.join(d, filename)
             if os.path.exists(abs_filename):
-                log.debug("Found font %s at %s", filename, abs_filename)
+                _logger.debug("Found font %s at %s", filename, abs_filename)
                 __foundFonts[filename] = abs_filename
                 break
 
