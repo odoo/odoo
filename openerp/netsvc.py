@@ -38,6 +38,8 @@ from loglevels import *
 import tools
 import openerp
 
+_logger = logging.getLogger(__name__)
+
 def close_socket(sock):
     """ Closes a socket instance cleanly
 
@@ -100,12 +102,11 @@ class ExportService(object):
     """
 
     _services = {}
-    _logger = logging.getLogger('web-services')
     
     def __init__(self, name):
         ExportService._services[name] = self
         self.__name = name
-        self._logger.debug("Registered an exported service: %s" % name)
+        _logger.debug("Registered an exported service: %s" % name)
 
     @classmethod
     def getService(cls,name):
@@ -224,9 +225,6 @@ class Server:
     # all I/O blocking operations
     _busywait_timeout = 0.5
 
-
-    __logger = logging.getLogger('server')
-
     def __init__(self):
         Server.__servers.append(self)
         if Server.__is_started:
@@ -241,7 +239,7 @@ class Server:
             t.start()
 
     def start(self):
-        self.__logger.debug("called stub Server.start")
+        _logger.debug("called stub Server.start")
 
     def _late_start(self):
         self.start()
@@ -250,7 +248,7 @@ class Server:
                 Server.__starter_threads.remove(thr)
 
     def stop(self):
-        self.__logger.debug("called stub Server.stop")
+        _logger.debug("called stub Server.stop")
 
     def stats(self):
         """ This function should return statistics about the server """
@@ -260,7 +258,7 @@ class Server:
     def startAll(cls):
         if cls.__is_started:
             return
-        cls.__logger.info("Starting %d services" % len(cls.__servers))
+        _logger.info("Starting %d services" % len(cls.__servers))
         for srv in cls.__servers:
             srv.start()
         cls.__is_started = True
@@ -269,7 +267,7 @@ class Server:
     def quitAll(cls):
         if not cls.__is_started:
             return
-        cls.__logger.info("Stopping %d services" % len(cls.__servers))
+        _logger.info("Stopping %d services" % len(cls.__servers))
         for thr in cls.__starter_threads:
             if not thr.finished.is_set():
                 thr.cancel()
@@ -312,18 +310,17 @@ def dispatch_rpc(service_name, method, params):
     NET-RPC) is done in a upper layer.
     """
     def _log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
-        log(title, msg, channel=channel, depth=depth, fn=fn)
+        log(__name__, msg, channel=channel, depth=depth, fn=fn)
     try:
-        logger = logging.getLogger('result')
         start_time = end_time = 0
-        if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
+        if _logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
             _log('service', tuple(replace_request_password(params)), depth=None, fn='%s.%s'%(service_name,method))
-        if logger.isEnabledFor(logging.DEBUG_RPC):
+        if _logger.isEnabledFor(logging.DEBUG_RPC):
             start_time = time.time()
         result = ExportService.getService(service_name).dispatch(method, params)
-        if logger.isEnabledFor(logging.DEBUG_RPC):
+        if _logger.isEnabledFor(logging.DEBUG_RPC):
             end_time = time.time()
-        if not logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
+        if not _logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
             _log('service (%.3fs)' % (end_time - start_time), tuple(replace_request_password(params)), depth=1, fn='%s.%s'%(service_name,method))
         _log('execution time', '%.3fs' % (end_time - start_time), channel=logging.DEBUG_RPC_ANSWER)
         _log('result', result, channel=logging.DEBUG_RPC_ANSWER)
