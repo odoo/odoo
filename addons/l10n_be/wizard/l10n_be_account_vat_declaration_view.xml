@@ -22,17 +22,14 @@
 							<field name="other" attrs="{'invisible':[('identification_type','!=','other')], 'required':[('identification_type','=','other')]}"/>
 							<field name="tax_code_id" string="Company" widget="selection" groups="base.group_multi_company"/>
 							<newline/>
+							<field name="ask_restitution"/>
+							<field name="ask_payment"/>
+							<field name="client_nihil" string="Is Last Declaration"/><label/>
 						</group>
-						<group>
-							<field name="ask_restitution" colspan="1"/>
-							<field name="ask_payment" colspan="1"/>
-							<field name="client_nihil" string="Is Last Declaration" colspan="1" /><label/>
-							<newline/>
+						<group colspan="4">
 							<separator string="Comments" colspan="4"/>
 							<field colspan="4" name="comments" nolabel="1"/>
 	            		</group>
-	            		<newline/>
-	            		
 					<group>
 					<separator colspan="4"/>
 					<newline/>
