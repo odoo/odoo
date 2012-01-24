@@ -48,7 +48,7 @@
     assert backorder, "Backorder should be created after partial shipment."
     assert backorder.state == 'done', "Backorder should be close after received."
     for move_line in backorder.move_lines:
-        assert move_line.product_qty == 40, "Qty in backorder is not correspond."
+        assert move_line.product_qty == 40, "Qty in backorder does not correspond."
         assert move_line.state == 'done', "Move line of backorder should be closed."
 -
   I receive another 10kgm Ice-cream.
@@ -72,7 +72,7 @@
     shipment = self.browse(cr, uid, ref("incomming_shipment"))
     assert shipment.state == 'done', "shipment should be close after received."
     for move_line in shipment.move_lines:
-        assert move_line.product_qty == 10, "Qty is not correspond."
+        assert move_line.product_qty == 10, "Qty does not correspond."
         assert move_line.state == 'done', "Move line should be closed."
 
 -
@@ -111,8 +111,8 @@
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_icecream'), context=context)
-    assert product.qty_available == 140, "Stock is not correspond."
-    assert product.virtual_available == 10, "Vitual stock is not correspond."
+    assert product.qty_available == 140, "Stock does not correspond."
+    assert product.virtual_available == 10, "Vitual stock does not correspond."
 
 -
   I split incomming shipment into lots. each lot contain 10 kgm Ice-cream.
@@ -146,8 +146,8 @@
     move_ids = self.search(cr, uid, [('location_dest_id','=',ref('location_refrigerator')),('prodlot_id','in',lot_ids)])
     assert len(move_ids) == 4, 'move lines are not correspond per prodcution lot after splited.'
     for move in self.browse(cr, uid, move_ids, context=context):
-        assert move.prodlot_id.name in ['incoming_lot0', 'incoming_lot1', 'incoming_lot2', 'incoming_lot3'], "lot is not correspond." 
-        assert move.product_qty == 10, "qty is not correspond per production lot."
+        assert move.prodlot_id.name in ['incoming_lot0', 'incoming_lot1', 'incoming_lot2', 'incoming_lot3'], "lot does not correspond." 
+        assert move.product_qty == 10, "qty does not correspond per production lot."
     context.update({'active_model':'stock.move', 'active_id':move_ids[0],'active_ids': move_ids})
 -
   I check the stock valuation account entries.
@@ -161,11 +161,11 @@
     for account_move_line in account_move.line_id:
         for stock_move in incomming_shipment.move_lines:
             if account_move_line.account_id.id == stock_move.product_id.property_stock_account_input.id:
-                assert account_move_line.credit == 800.0, "Credit amount is not correspond."
-                assert account_move_line.debit == 0.0, "Debit amount is not correspond."
+                assert account_move_line.credit == 800.0, "Credit amount does not correspond."
+                assert account_move_line.debit == 0.0, "Debit amount does not correspond."
             else:
-                assert account_move_line.credit == 0.0, "Credit amount is not correspond."
-                assert account_move_line.debit == 800.0, "Debit amount is not correspond."
+                assert account_move_line.credit == 0.0, "Credit amount does not correspond."
+                assert account_move_line.debit == 800.0, "Debit amount does not correspond."
 -
   I consume 1 kgm ice-cream from each incoming lots into internal production.
 -
@@ -189,19 +189,19 @@
   !python {model: stock.location}: |
     ctx = {'product_id': ref('product_icecream')}
     refrigerator_location = self.browse(cr, uid, ref('location_refrigerator'), context=ctx)
-    assert refrigerator_location.stock_real == 131.96, 'stock is not correspond in refrigerator location.'
+    assert refrigerator_location.stock_real == 131.96, 'stock does not correspond in refrigerator location.'
     scrapped_location = self.browse(cr, uid, ref('stock_location_scrapped'), context=ctx)
-    assert scrapped_location.stock_real == 0.010*4, 'scraped stock is not correspond in scrap location.'
+    assert scrapped_location.stock_real == 0.010*4, 'scraped stock does not correspond in scrap location.'
     production_location = self.browse(cr, uid, ref('location_production'), context=ctx)
-    assert production_location.stock_real == 1*4, 'consume stock is not correspond in production location.' #TOFIX: consume stock is not updated in default production location of product.
+    assert production_location.stock_real == 1*4, 'consume stock does not correspond in production location.' #TOFIX: consume stock is not updated in default production location of product.
     
 -
   I check availabile stock after consumed and scraped.
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_icecream'), context=context)
-    assert product.qty_available == 131.96, "Stock is not correspond."
-    assert round(product.virtual_available, 2) == 1.96, "Vitual stock is not correspond."
+    assert product.qty_available == 131.96, "Stock does not correspond."
+    assert round(product.virtual_available, 2) == 1.96, "Vitual stock does not correspond."
 -
   I trace all incoming lots.
 -
@@ -276,5 +276,5 @@
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_icecream'), context=context)
-    assert round(product.qty_available, 2) == 1.96, "Stock is not correspond."
-    assert round(product.virtual_available, 2) == 1.96, "Vitual stock is not correspond."
+    assert round(product.qty_available, 2) == 1.96, "Stock does not correspond."
+    assert round(product.virtual_available, 2) == 1.96, "Vitual stock does not correspond."
