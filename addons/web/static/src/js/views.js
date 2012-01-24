@@ -1040,7 +1040,7 @@ session.web.TranslateDialog = session.web.Dialog.extend({
     }
 });
 
-session.web.View = session.web.OldWidget.extend(/** @lends session.web.View# */{
+session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     template: "EmptyComponent",
     // name displayed in view switchers
     display_name: '',

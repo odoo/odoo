@@ -952,6 +952,8 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
     init: function(parent) {
         this._super();
         this.session = openerp.connection;
+        
+        this.$element = $(document.createElement(this.tag_name));
 
         this.widget_parent = parent;
         this.widget_children = [];
