@@ -21,7 +21,7 @@
                     <field name="draft_state" invisible="context.get('no_of_draft_invisible', False)"/>
                     <field name="confirm_state"/>
                     <field name="registration_state" invisible="1"/>
-                    <field name="user_id_registration" invisible="1"/>
+                    <field name="name_registration" invisible="1"/>
                     <field name="price_subtotal"/>
                     <field name="average_subtotal"/>
                     <field name="register_max" invisible="context.get('max_reg_event_visible', True)"/>
@@ -81,10 +81,7 @@
                           string="Confirmed Registrations"
                           help="Registrations in confirmed or done state"
                           context="{'no_of_draft_invisible':1}"/>
-                    <filter string="Invoiced"
-                        name="invoiced"
-                        icon="terp-dolar"
-                        help = "Invoiced Registrations only" context="{'total_invisible':0, 'no_of_draft_invisible':1}"/>
+                   
                     <separator orientation="vertical"/>
                     <field name="event_id" string="Event"/>
                     <field name="user_id" widget="selection">
@@ -124,7 +121,7 @@
                     <newline/>
                     <group expand="1" string="Group By Registration...">
                         <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'registration_state'}" help="Events States"/>
-                        <filter string="user" icon="terp-personal" context="{'group_by':'user_id_registration'}" help="Events States"/>
+                        <filter string="name" icon="terp-personal" context="{'group_by':'name_registration'}" help="Registration contact"/>
 
                     </group>
                 </search>

@@ -45,7 +45,7 @@ class report_event_registration(osv.osv):
         'registration_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
         'event_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
         'user_id': fields.many2one('res.users', 'Responsible', readonly=True),
-        'user_id_registration': fields.many2one('res.users', 'Responsible', readonly=True),
+        'name_registration': fields.char('Register',size=45, readonly=True),
         'speaker_id': fields.many2one('res.partner', 'Speaker', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
@@ -67,6 +67,7 @@ class report_event_registration(osv.osv):
                 e.date_begin AS event_date,
                 e.user_id AS user_id,
                 r.user_id AS user_id_registration,
+                r.name AS name_registration,
                 e.section_id AS section_id,
                 e.company_id AS company_id,
                 e.product_id AS product_id,
@@ -74,13 +75,9 @@ class report_event_registration(osv.osv):
                 to_char(e.date_begin, 'YYYY') AS year,
                 to_char(e.date_begin, 'MM') AS month,
                 count(e.id) AS nbevent,
-                
-
                 CASE WHEN r.state IN ('draft') THEN r.nb_register ELSE 0 END AS draft_state,
                 CASE WHEN r.state IN ('open','done') THEN r.nb_register ELSE 0 END AS confirm_state,
                 CASE WHEN r.state IN ('done') THEN r.price_subtotal ELSE 0 END AS total,
-
-                
                 e.type AS event_type,
                 r.price_subtotal,
                 AVG(r.price_subtotal) AS average_subtotal,
@@ -89,6 +86,7 @@ class report_event_registration(osv.osv):
                 r.state AS  registration_state
                 FROM
                 event_event e
+                
                 LEFT JOIN
                     event_registration r ON (e.id=r.event_id)
 
@@ -111,7 +109,8 @@ class report_event_registration(osv.osv):
                 e.main_speaker_id,
                 year,
                 month,
-                e.register_max
+                e.register_max,
+                name_registration
 
               )
                 """)

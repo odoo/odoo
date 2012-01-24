@@ -52,26 +52,67 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Events">
+
+                    
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="date_begin"/>
                         <field name="date_end"/>
                         <field name="type" widget="selection"/>
-                        <field name="language"/>
                         <field name="user_id"/>
-                        <field name="country_id" />
                         <field name="address_id" domain="[('country_id','=',country_id)]"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Event">
-                        <group colspan="4" col="4">
-                            <separator string="Invoice Information" colspan="4"/>
-                            <field name="product_id" on_change="onchange_product(product_id)" colspan="4"/>
-                            <field name="unit_price"/>
-                        </group>
+
                         <separator string="Description" colspan="4"/>
                         <field name="note" colspan="4" nolabel="1"/>
-                        <field name="state" select="1"/>
+                        <field name="registration_ids" colspan="4" nolabel="1" >
+                            <form string="Registration" >
+                            <group colspan="4" col="4">    
+                            <separator string="partner" colspan="4"/>
+
+                            <field name="name"/>
+                            </group>
+                            <group colspan="4" col="4">
+                            <field name="street"/>
+                            <field name="city"/>
+                            </group>
+                            <group colspan="4" col="4">
+                            <field name="email"/>
+                            <field name="phone"/>
+                            </group>
+                            <group colspan="4" col="4">
+                                <field name="unit_price"/>
+                                <field name="nb_register"/>
+                            </group>
+                            <group colspan="4" col="4">
+                                <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id_address,event_id)" />
+                            </group>
+                                <group col="8" colspan="4">
+                                    <separator string="" colspan="4"/>
+                                    <newline/>
+                                    <field name="state" select="1" colspan="2"/>
+                                    <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
+                                    <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                                </group>
+                            </form>
+                            <tree string="Registration">
+                                    <field name="create_date" string="Registration Date" invisible="1"/>
+                                    <field name="name" />
+                                    <field name="email" />
+                                    <field name="nb_register" />
+                                    <field name="unit_price"/>
+                                    <field name="price_subtotal" invisible="1"/>
+                                    <field name="state"/>
+                                    <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
+                                    <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                            </tree>
+                            </field> 
+
+                        <field name="state" select="1" widget="statusbar"/>
                         <group col="4" colspan="2">
                            <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
                            <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
@@ -85,51 +126,17 @@
                         <separator string="Other Speakers" colspan="4"/>
                         <field name="speaker_ids" domain="[('speaker','=',True)]" colspan="4" nolabel="1"/>
                     </page>
-                    <page string="Registrations">
+                    <page string="Extra Info">
+                     
                         <field name="register_min"/>
                         <field name="register_max"/>
                         <field name="register_current"/>
                         <field name="register_prospect"/>
-                        <field name="registration_ids" colspan="4" nolabel="1" readonly="1">
-                            <form string="Registration">
-                                <field name="name"/>
-                                <field name="date" string="Date"/>
-                                <field name="partner_id_address" required="1" on_change="onchange_partner_id(partner_id_address,event_id)"/>
-                                <field name="partner_invoice_id" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
-                                <group colspan="4" col="4">
-                                    <field name="event_product"/>
-                                    <field name="nb_register" invisible="1"/>
-                                    <field name="unit_price"/>
-                                    <field name="price_subtotal"/>
-                                </group>
-                                <group col="8" colspan="4">
-                                    <separator string="" colspan="4"/>
-                                    <newline/>
-                                    <field name="state" select="1" colspan="2"/>
-                                    <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
-                                    <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                                </group>
-                            </form>
-                            <tree string="Registration">
-                                    <field name="create_date" string="Registration Date"/>
-                                    <field name="partner_id" required="1" string="Partner" on_change="onchange_partner_id(partner_id_address,event_id)"/>
-                                    <field name="event_product"/>
-                                    <field name="nb_register" invisible="1"/>
-                                    <field name="unit_price"/>
-                                    <field name="price_subtotal"/>
-                                    <field name="state"/>
-                                    <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
-                                    <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                            </tree>
-                        </field>
-                    </page>
-                    <page string="Mailing">
-                        <newline/>
+
+                    <separator string="Emails" colspan="4"/>                                                 
                         <group col="4" colspan="4">
                             <group col="2" colspan="2">
-                                <field name="email_registration_id"/>
+                                <field name="email_registration_id" domain="[('model_id','=','Event Registration')]"/>
                             </group>
                             <group col="2" colspan="2">
                                 <field name="email_confirmation_id"/>
@@ -283,7 +290,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Registration" >
-                    <field name="partner_id"/>
+                    <field name="name"/>
+                    <field name="email"/>
                     <field name="event_id"/>
                     <field name="nb_register" invisible="1"/>
                     <field name="unit_price"/>
@@ -306,32 +314,39 @@
                         <field name="event_id" on_change="onchange_event(event_id, partner_invoice_id)" domain="[('state','in',('draft','confirm'))]"/>
                         <field name="date" />
                         <field name="date_deadline" />
-                        <field name="name"/>
+                        <field name="origin"/>
                         <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}" />
-                        <field name="tobe_invoiced"/>
+
                     </group>
                     <notebook colspan="4">
                         <page string="Registration">
                             <group colspan="2" col="2">
-                            <separator string="partner" colspan="4"/>
-                            <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id_address,event_id)" />
-                            <field name="city"/>
+                            <separator string="Registration contact" colspan="4"/>  
+                            <group colspan="2" col="2">
+                            <field name="name"/>
+                            </group>
+                            <group colspan="4" col="4">
                             <field name="street"/>
+                            <field name="city"/>
                             <field name="email"/>
-                            <field name="mobile"/>
                             <field name="phone"/>
+                            </group>
+                            <group colspan="2" col="2">    
+                            <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id_address,event_id)" />
+                            </group>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Registration Cost" colspan="4"/>
-                                <field name="nb_register"/>
                                 <field name="unit_price"/>
+                                <field name="nb_register"/>
                                 <field name="price_subtotal"/>
                                 <field name="invoice_id"/>
                             </group>
+                            
 
                             <separator string="" colspan="4"/>
                             <group col="8" colspan="4">
-                                <field name="state" select="1" colspan="2"/>
+                                <field name="state" select="1" colspan="2" widget="statusbar"/>
                                 <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                 <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                                 <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
@@ -463,5 +478,12 @@
             action="action_registration"/>
 
         <menuitem name="Reporting" id="base.menu_report_association" parent="base.marketing_menu" sequence="20"/>
+        
+
+
+
+
+        
+        
     </data>
 </openerp>
