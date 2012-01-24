@@ -48,7 +48,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a resitution is to made or not?'),
         'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to made or not?'),
         'client_nihil': fields.boolean('Last Declaration of Enterprise',help='Tick this case only if it concerns only the last statement on the civil or cessation of activity'),
-        'vat_declarations_nbr': fields.integer('VAT Declarations Number', help="Number of periodic VAT returns in the shipment"),
+        'vat_declarations_nbr': fields.integer('VAT Declaration Number', help="Number of periodic VAT returns in the shipment"),
         'comments': fields.text('Comments'),
         'identification_type': fields.selection([('tin','TIN'), ('nvat','NVAT'), ('other','Other')], 'Identification Type', required=True),
         'other': fields.char('Other Qlf', size=16, help="Description of a Identification Type"),
@@ -58,7 +58,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'file_save': _get_xml_data,
         'name': 'vat_declaration.xml',
         'identification_type': 'tin',
-        'vat_declarations_nbr': 1,
+        'vat_declarations_nbr': 0,
     }
 
     def create_xml(self, cr, uid, ids, context=None):
