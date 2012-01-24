@@ -848,7 +848,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             .done(function(res_grp) {
                 _.each(res_grp,function(res){
                     var key = res.id;
-                    group_names[key]=res.name;
+                    group_names[key]=res.full_name;
                     group_ids.push(res.id);
                 });
                 model_data
