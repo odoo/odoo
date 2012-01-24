@@ -29,3 +29,6 @@ doc:
 cloc:
 	cloc addons/*/common/*.py addons/*/controllers/*.py addons/*/static/src/*.js addons/*/static/src/js/*.js addons/*/static/src/css/*.css addons/*/static/src/xml/*.xml
 
+blamestat:
+	echo addons/*/common/*.py addons/*/controllers/*.py addons/*/static/src/js/*.js addons/*/static/src/css/*.css addons/*/static/src/xml/*.xml  | xargs -t -n 1 bzr blame -v --long --all |  awk '{print $2}' | sort | uniq -c | sort -n
+

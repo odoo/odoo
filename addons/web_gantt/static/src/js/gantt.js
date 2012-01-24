@@ -35,6 +35,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         this.date_start = this.fields_view.arch.attrs.date_start,
         this.date_delay = this.fields_view.arch.attrs.date_delay,
         this.date_stop = this.fields_view.arch.attrs.date_stop,
+        this.progress = this.fields_view.arch.attrs.progress,
         this.day_length = this.fields_view.arch.attrs.day_length || 8;
 
         this.color_field = this.fields_view.arch.attrs.color,
@@ -144,6 +145,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             var id = res['id'];
             var text = res[this.text];
             var start_date = res[this.date_start];
+            var progress = res[this.progress] || 100;
 
             if (this.date_stop != undefined){
                 if (res[this.date_stop] != false){
@@ -179,7 +181,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                             var mod_id = i+ "_" +j;
                             parents[grp_key] = mod_id;
                             child_event[mod_id] = {};
-                            all_events[mod_id] = {'parent': "", 'evt':[mod_id , grp_key, start_date, start_date, 100, ""]};
+                            all_events[mod_id] = {'parent': "", 'evt':[mod_id , grp_key, start_date, start_date, progress, ""]};
                         }
                         else{
                             mod_id = parents[grp_key];
@@ -191,7 +193,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                             child_event[mod_id][grp_key] = ch_mod_id;
                             child_event[ch_mod_id] = {};
                             temp_id = ch_mod_id;
-                            all_events[ch_mod_id] = {'parent': mod_id, 'evt':[ch_mod_id , grp_key, start_date, start_date, 100, ""]};
+                            all_events[ch_mod_id] = {'parent': mod_id, 'evt':[ch_mod_id , grp_key, start_date, start_date, progress, ""]};
                             mod_id = ch_mod_id;
                         }
                         else{
@@ -200,15 +202,15 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                         }
                     }
                 }
-                all_events[id] = {'parent': temp_id, 'evt':[id , text, start_date, duration, 100, ""]};
+                all_events[id] = {'parent': temp_id, 'evt':[id , text, start_date, duration, progress, ""]};
                 final_events.push(id);
             }
             else {
                 if (i == 0) {
                     var mod_id = "_" + i;
-                    all_events[mod_id] = {'parent': "", 'evt': [mod_id, this.name, start_date, start_date, 100, ""]};
+                    all_events[mod_id] = {'parent': "", 'evt': [mod_id, this.name, start_date, start_date, progress, ""]};
                 }
-                all_events[id] = {'parent': mod_id, 'evt':[id , text, start_date, duration, 100, ""]};
+                all_events[id] = {'parent': mod_id, 'evt':[id , text, start_date, duration, progress, ""]};
                 final_events.push(id);
             }
         }

@@ -6,6 +6,7 @@ import csv
 import glob
 import itertools
 import operator
+import datetime
 import os
 import re
 import simplejson
@@ -84,9 +85,24 @@ def concat_files(file_list, reader=None, intersperse=""):
     files_concat = intersperse.join(files_content)
     return files_concat,files_timestamp
 
-html_template = None
-with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "main.html")) as html_file:
-    html_template = html_file.read()
+html_template = """<!DOCTYPE html>
+<html style="height: 100%%">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>OpenERP</title>
+        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+        %(css)s
+        %(js)s
+        <script type="text/javascript">
+            $(function() {
+                var s = new openerp.init(%(modules)s);
+                %(init)s
+            });
+        </script>
+    </head>
+    <body class="openerp" id="oe"></body>
+</html>
+"""
 
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
@@ -192,6 +208,7 @@ class WebClient(openerpweb.Controller):
             'js': js,
             'css': css,
             'modules': simplejson.dumps(self.server_wide_modules(req)),
+            'init': 'new s.web.WebClient().start();',
         }
         return r
 
@@ -323,9 +340,14 @@ class Database(openerpweb.Controller):
     def backup(self, req, backup_db, backup_pwd, token):
         db_dump = base64.b64decode(
             req.session.proxy("db").dump(backup_pwd, backup_db))
+        filename = "%(db)s_%(timestamp)s.dump" % {
+            'db': backup_db,
+            'timestamp': datetime.datetime.utcnow().strftime(
+                "%Y-%m-%d_%H-%M-%SZ")
+        }
         return req.make_response(db_dump,
             [('Content-Type', 'application/octet-stream; charset=binary'),
-             ('Content-Disposition', 'attachment; filename="' + backup_db + '.dump"')],
+             ('Content-Disposition', 'attachment; filename="' + filename + '"')],
             {'fileToken': int(token)}
         )
 
@@ -858,7 +880,7 @@ class DataSet(openerpweb.Controller):
         :return: result of the onchange call with all domains parsed
         """
         result = self.call_common(req, model, method, args, context_id=context_id)
-        if 'domain' not in result:
+        if not result or 'domain' not in result:
             return result
 
         result['domain'] = dict(

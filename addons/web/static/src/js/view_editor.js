@@ -808,7 +808,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             'widget' : {'name':'widget', 'string': 'widget', 'type': 'selection'},
             'colors' : {'name':'colors', 'string': 'Colors', 'type': 'char'},
             'editable' : {'name':'editable', 'string': 'Editable', 'type': 'selection', 'selection': [["",""],["top","Top"],["bottom", "Bottom"]]},
-            'groups' : {'name':'groups', 'string': 'Groups', 'type': 'seleciton_multi'}
+            'groups' : {'name':'groups', 'string': 'Groups', 'type': 'selection_multi'}
         };
         var arch_val = self.get_object_by_id(this.one_object.clicked_tr_id,this.one_object['main_object'], []);
         this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
@@ -1134,7 +1134,7 @@ var _ICONS = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
 ];
 openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
     'boolean' : 'openerp.web.ViewEditor.FieldBoolean',
-    'seleciton_multi' : 'openerp.web.ViewEditor.FieldSelectMulti',
+    'selection_multi' : 'openerp.web.ViewEditor.FieldSelectMulti',
     'selection' : 'openerp.web.ViewEditor.FieldSelect',
     'char' : 'openerp.web.ViewEditor.FieldChar',
     'float' : 'openerp.web.ViewEditor.FieldFloat'

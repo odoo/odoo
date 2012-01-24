@@ -145,21 +145,22 @@ class JsonRequest(WebRequest):
         jsonp = args.get('jsonp')
         requestf = None
         request = None
+        request_id = args.get('id')
 
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             self.init(args)
-            req.session.jsonp_requests[args.get('id')] = self.httprequest.form['r']
+            self.session.jsonp_requests[request_id] = self.httprequest.form['r']
             headers=[('Content-Type', 'text/plain; charset=utf-8')]
             r = werkzeug.wrappers.Response(request_id, headers=headers)
             return r
         elif jsonp and args.get('r'):
             # jsonp method GET
             request = args.get('r')
-        elif jsonp and args.get('id'):
+        elif jsonp and request_id:
             # jsonp 2 steps step2 GET: run and return result
             self.init(args)
-            request = self.session.jsonp_requests.pop(args.get(id), "")
+            request = self.session.jsonp_requests.pop(request_id, "")
         else:
             # regular jsonrpc2
             requestf = self.httprequest.stream
@@ -354,7 +355,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
         # Remove all OpenERPSession instances with no uid, they're generated
         # either by login process or by HTTP requests without an OpenERP
         # session id, and are generally noise
-        removed_sessions = []
+        removed_sessions = set()
         for key, value in request.session.items():
             if (isinstance(value, session.OpenERPSession) 
                 and not value._uid
@@ -362,7 +363,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                 and value._creation_time + (60*5) < time.time()  # FIXME do not use a fixed value
             ):
                 _logger.debug('remove session %s', key)
-                removed_sessions.append(key)
+                removed_sessions.add(key)
                 del request.session[key]
 
         with session_lock:

@@ -198,7 +198,14 @@ openerp.web.page = function (openerp) {
             if (!this.value) {
                 return null;
             }
-            return _.str.sprintf('%s,%d', this.field.relation, this.value[0]);
+            var id;
+            if (typeof this.value === 'number') {
+                // name_get has not run yet
+                id = this.value;
+            } else {
+                id = this.value[0];
+            }
+            return _.str.sprintf('%s,%d', this.field.relation, id);
         }
     });
 
