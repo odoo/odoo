@@ -188,9 +188,8 @@ def init_logger():
         formatter = DBFormatter(format)
     handler.setFormatter(formatter)
 
-    # add the handler to the root logger
-    logger = logging.getLogger()
-    logger.handlers = []
+    # Add the handler to the 'openerp' logger.
+    logger = logging.getLogger('openerp')
     logger.addHandler(handler)
     logger.setLevel(int(tools.config['log_level'] or '0'))
 
@@ -202,8 +201,8 @@ def init_alternative_logger():
         if record.levelno > 20:
           print record.levelno, record.pathname, record.msg
     handler = H()
-    logger = logging.getLogger()
-    logger.handlers = []
+    # Add the handler to the 'openerp' logger.
+    logger = logging.getLogger('openerp')
     logger.addHandler(handler)
     logger.setLevel(logging.ERROR)
 
