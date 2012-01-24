@@ -450,7 +450,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     },
     do_node_add: function(side){
         var self = this;
-        var tr = $(side).find('a').text();
+        var tr = self.get_object_by_id(this.one_object.clicked_tr_id, this.one_object['main_object'], [])[0].att_list[0];
         var parent_tr = ($(side).prevAll("tr[level=" + String(this.one_object.clicked_tr_level - 1) + "]"))[0];
         var field_dataset = new openerp.web.DataSetSearch(this, this.model, null, null);
         parent_tr = $(parent_tr).find('a').text();
