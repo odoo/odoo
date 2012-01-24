@@ -4,10 +4,10 @@
 
 openerp.web.view_help = function(openerp) {
 
-openerp.web.ProcessView = openerp.web.Widget.extend({
+openerp.web.ProcessView = openerp.web.OldWidget.extend({
 });
 
-openerp.web.HelpView = openerp.web.Widget.extend({
+openerp.web.HelpView = openerp.web.OldWidget.extend({
 });
 
 };

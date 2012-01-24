@@ -18,7 +18,7 @@ openerp.web.serialize_sort = function (criterion) {
         }).join(', ');
 };
 
-openerp.web.DataGroup =  openerp.web.Widget.extend( /** @lends openerp.web.DataGroup# */{
+openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.DataGroup# */{
     /**
      * Management interface between views and grouped collections of OpenERP
      * records.
@@ -30,9 +30,9 @@ openerp.web.DataGroup =  openerp.web.Widget.extend( /** @lends openerp.web.DataG
      * content of the current grouping level.
      *
      * @constructs openerp.web.DataGroup
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
-     * @param {openerp.web.Widget} parent widget
+     * @param {openerp.web.OldWidget} parent widget
      * @param {String} model name of the model managed by this DataGroup
      * @param {Array} domain search domain for this DataGroup
      * @param {Object} context context of the DataGroup's searches
@@ -233,14 +233,13 @@ openerp.web.StaticDataGroup = openerp.web.GrouplessDataGroup.extend( /** @lends 
     }
 });
 
-openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet# */{
-    identifier_prefix: "dataset",
+openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.DataSet# */{
     /**
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
      *
      * @constructs openerp.web.DataSet
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param {String} model the OpenERP model this dataset will manage
      */
@@ -309,7 +308,7 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      * domain and context.
      *
      * @param {Array} [fields] fields to read and return, by default all fields are returned
-     * @params {Object} options
+     * @params {Object} [options]
      * @param {Number} [options.offset=0] The index from which selected records should be returned
      * @param {Number} [options.limit=null] The maximum number of records to return
      * @returns {$.Deferred}
@@ -504,11 +503,11 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
         this.ids = ids || [];
     },
     read_slice: function (fields, options) {
+        options = options || {};
+        fields = fields || {};
         // TODO remove fields from options
-        var self = this,
-            offset = options.offset || 0,
-            limit = options.limit || false,
-            fields = fields || false;
+        var offset = options.offset || 0,
+            limit = options.limit || false;
         var end_pos = limit && limit !== -1 ? offset + limit : this.ids.length;
         return this.read_ids(this.ids.slice(offset, end_pos), fields);
     },
@@ -560,8 +559,8 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
      * @returns {$.Deferred}
      */
     read_slice: function (fields, options) {
+        options = options || {};
         var self = this;
-        var options = options || {};
         var offset = options.offset || 0;
         return this.rpc('/web/dataset/search_read', {
             model: this.model,

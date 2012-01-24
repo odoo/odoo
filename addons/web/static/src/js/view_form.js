@@ -13,7 +13,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     searchable: false,
     readonly : false,
     form_template: "FormView",
-    identifier_prefix: 'formview-',
     display_name: _lt('Form'),
     /**
      * @constructs openerp.web.FormView
@@ -386,11 +385,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_button_save: function() {
         var self = this;
         return this.do_save().then(function(result) {
-            self.do_prev_view(result.created);
+            self.do_prev_view({'created': result.created, 'default': 'page'});
         });
     },
     on_button_cancel: function() {
-        return this.do_prev_view();
+        return this.do_prev_view({'default': 'page'});
     },
     on_button_new: function() {
         var self = this;
@@ -620,7 +619,7 @@ openerp.web.FormDialog = openerp.web.Dialog.extend({
 /** @namespace */
 openerp.web.form = {};
 
-openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
+openerp.web.form.SidebarAttachments = openerp.web.OldWidget.extend({
     init: function(parent, form_view) {
         var $section = parent.add_section(_t('Attachments'), 'attachments');
         this.$div = $('<div class="oe-sidebar-attachments"></div>');
@@ -737,12 +736,11 @@ openerp.web.form.compute_domain = function(expr, fields) {
     return _.all(stack, _.identity);
 };
 
-openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.Widget# */{
+openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.form.Widget# */{
     template: 'Widget',
-    identifier_prefix: 'formview-widget-',
     /**
      * @constructs openerp.web.form.Widget
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param view
      * @param node
@@ -1388,7 +1386,7 @@ openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
     }
 });
 
-openerp.web.DateTimeWidget = openerp.web.Widget.extend({
+openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
     template: "web.datetimepicker",
     jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
@@ -2593,7 +2591,6 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends open
  * @extends openerp.web.OldWidget
  */
 openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends openerp.web.form.SelectCreatePopup# */{
-    identifier_prefix: "selectcreatepopup",
     template: "SelectCreatePopup",
     /**
      * options:
@@ -2811,7 +2808,6 @@ openerp.web.form.SelectCreateListView = openerp.web.ListView.extend({
  * @extends openerp.web.OldWidget
  */
 openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp.web.form.FormOpenPopup# */{
-    identifier_prefix: "formopenpopup",
     template: "FormOpenPopup",
     /**
      * options:
@@ -2917,6 +2913,7 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
             }
         };
         this.get_fields_values = view.get_fields_values;
+        this.get_selected_ids = view.get_selected_ids;
         this.do_onchange = this.on_form_changed = this.on_nop;
         this.dataset = this.view.dataset;
         this.widgets_counter = 0;

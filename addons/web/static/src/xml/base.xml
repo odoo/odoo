@@ -682,7 +682,9 @@
         </td>
     </t>
     <th t-if="options.selectable" class="oe-record-selector" width="1">
-        <input t-att-type="options.radio? 'radio': 'checkbox'" name ="radiogroup" t-att-checked="options.select_view_id == record.get('id')? true: null"/>
+        <t t-set="checked" t-value="options.select_view_id == record.get('id') ? 'checked' : null"/>
+        <input t-if="options.radio" type="radio" name="radiogroup" t-att-checked="checked"/>
+        <input t-if="!options.radio" type="checkbox" name="radiogroup" t-att-checked="checked"/>
     </th>
     <th t-if="options.isClarkGable" class="oe-record-edit-link" width="1">
         <img src="/web/static/src/img/pencil.gif" width="12" height="12" class="oe-record-edit-link-img"/>
@@ -747,7 +749,7 @@
                 <input type="file" class="oe-binary-file" name="ufile" title="Add attachment"
                     t-att-onclick="view.datarecord.id ? null : 'alert(\'No record selected ! You can only attach to existing record.\'); return false;'"/>
             </form>
-            <iframe t-attf-id="#{element_id}_iframe" t-attf-name="#{element_id}_iframe" style="display: none"> </iframe>
+            <iframe t-attf-id="#{element_id}_iframe" t-attf-name="#{element_id}_iframe" style="display: none"/>
         </div>
     </div>
     <br style="clear: both"/>
@@ -1084,7 +1086,7 @@
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
             </div>
-            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
+            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
         </td>
     </tr>
     </table>
@@ -1134,7 +1136,7 @@
         <td class="oe-binary-progress" style="display: none" nowrap="true">
             <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
             <b>Uploading ...</b>
-            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
+            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"/>
         </td>
     </tr>
     </table>
@@ -1329,7 +1331,7 @@
     </t>
 </t>
 <t t-name="SearchView.extended_search.group">
-    <div t-att-id="element_id" class="searchview_extended_group">
+    <div t-att-id="widget.element_id" class="searchview_extended_group">
         <select class="searchview_extended_group_choice">
             <option value="any">Any of the following conditions must match</option>
             <option value="all">All the following conditions must match</option>
@@ -1345,11 +1347,11 @@
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition">
-    <div t-att-id="element_id">
+    <div t-att-id="widget.element_id">
         <select class="searchview_extended_prop_field">
-            <t t-foreach="attrs.fields" t-as="field">
+            <t t-foreach="widget.attrs.fields" t-as="field">
                 <option t-if="typeof field.store === 'undefined' || field.store || field.fnct_search"
-                        t-att="{'selected': field === attrs.selected ? 'selected' : null}"
+                        t-att="{'selected': field === widget.attrs.selected ? 'selected' : null}"
                         t-att-value="field.name">
                     <t t-esc="field.string"/>
                 </option>
@@ -1362,41 +1364,41 @@
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
-    <input t-att-id="element_id" class="field_char"/>
+    <input t-att-id="widget.element_id" class="field_char"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.empty">
-    <span t-att-id="element_id"></span>
+    <span t-att-id="widget.element_id"></span>
 </t>
 <t t-name="SearchView.extended_search.proposition.integer">
-    <input type="number" t-att-id="element_id" class="field_integer" step="1"/>
+    <input type="number" t-att-id="widget.element_id" class="field_integer" step="1"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.float">
-    <input type="number" t-att-id="element_id" class="field_float" step="0.01"/>
+    <input type="number" t-att-id="widget.element_id" class="field_float" step="0.01"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.boolean">
 </t>
 <t t-name="SearchView.extended_search.proposition.selection">
-    <select t-att-id="element_id">
-        <t t-foreach="field.selection" t-as="element">
+    <select t-att-id="widget.element_id">
+        <t t-foreach="widget.field.selection" t-as="element">
         <option t-att-value="element[0]"><t t-esc="element[1]"/></option>
         </t>
     </select>
 </t>
 <t t-name="SelectCreatePopup">
-    <div t-att-id="element_id">
+    <div t-att-id="widget.element_id">
         <table style="width:100%">
             <tr style="width:100%">
                 <td style="width:100%">
-                    <div t-att-id="element_id + '_search'" style="width:100%"></div>
+                    <div t-att-id="widget.element_id + '_search'" style="width:100%"></div>
                 </td>
             </tr>
             <tr style="width:100%">
                 <td style="width:100%">
-                    <div t-att-id="element_id + '_view_list'" style="width:100%"></div>
+                    <div t-att-id="widget.element_id + '_view_list'" style="width:100%"></div>
                 </td>
             </tr>
         </table>
-        <div t-att-id="element_id + '_view_form'" style="width:100%"></div>
+        <div t-att-id="widget.element_id + '_view_form'" style="width:100%"></div>
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
@@ -1414,8 +1416,8 @@
     <button type="button" class="oe_button oe_selectcreatepopup-form-close">Cancel</button>
 </t>
 <t t-name="FormOpenPopup">
-    <div t-att-id="element_id">
-        <div t-att-id="element_id + '_view_form'" style="width:100%"></div>
+    <div t-att-id="widget.element_id">
+        <div t-att-id="widget.element_id + '_view_form'" style="width:100%"></div>
     </div>
 </t>
 <t t-name="FormOpenPopup.form.buttons">

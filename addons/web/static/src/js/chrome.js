@@ -5,9 +5,8 @@ openerp.web.chrome = function(openerp) {
 var QWeb = openerp.web.qweb,
     _t = openerp.web._t;
 
-openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Notification# */{
+openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.Notification# */{
     template: 'Notification',
-    identifier_prefix: 'notification-',
 
     init: function() {
         this._super.apply(this, arguments);
@@ -36,9 +35,8 @@ openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Not
 
 });
 
-openerp.web.Dialog = openerp.web.Widget.extend(/** @lends openerp.web.Dialog# */{
+openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog# */{
     dialog_title: "",
-    identifier_prefix: 'dialog',
     /**
      * @constructs openerp.web.Dialog
      * @extends openerp.web.OldWidget
@@ -208,11 +206,11 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
     }
 });
 
-openerp.web.Loading = openerp.web.Widget.extend(/** @lends openerp.web.Loading# */{
+openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loading# */{
     template: 'Loading',
     /**
      * @constructs openerp.web.Loading
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param parent
      * @param element_id
@@ -267,11 +265,11 @@ openerp.web.Loading = openerp.web.Widget.extend(/** @lends openerp.web.Loading# 
     }
 });
 
-openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database# */{
+openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Database# */{
     template: "DatabaseManager",
     /**
      * @constructs openerp.web.Database
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param parent
      * @param element_id
@@ -551,14 +549,13 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
     }
 });
 
-openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
+openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# */{
     remember_credentials: true,
     
     template: "Login",
-    identifier_prefix: 'oe-app-login-',
     /**
      * @constructs openerp.web.Login
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param parent
      * @param element_id
@@ -649,12 +646,11 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
     }
 });
 
-openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
+openerp.web.Header =  openerp.web.OldWidget.extend(/** @lends openerp.web.Header# */{
     template: "Header",
-    identifier_prefix: 'oe-app-header-',
     /**
      * @constructs openerp.web.Header
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param parent
      */
@@ -830,10 +826,10 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
     }
 });
 
-openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
+openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */{
     /**
      * @constructs openerp.web.Menu
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param parent
      * @param element_id
@@ -1045,10 +1041,10 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     }
 });
 
-openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClient */{
+openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebClient */{
     /**
      * @constructs openerp.web.WebClient
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param element_id
      */
@@ -1061,6 +1057,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     start: function() {
         var self = this;
+        this.$element = $(document.body);
         if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
             this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
@@ -1182,7 +1179,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     }
 });
 
-openerp.web.EmbeddedClient = openerp.web.Widget.extend({
+openerp.web.EmbeddedClient = openerp.web.OldWidget.extend({
     template: 'EmptyComponent',
     init: function(action_id, options) {
         this._super();

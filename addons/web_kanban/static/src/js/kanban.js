@@ -279,7 +279,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     }
 });
 
-openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
+openerp.web_kanban.KanbanGroup = openerp.web.OldWidget.extend({
     template: 'KanbanView.group_header',
     init: function (parent, records, value, title, aggregates) {
         var self = this;
@@ -352,7 +352,7 @@ openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
     }
 });
 
-openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
+openerp.web_kanban.KanbanRecord = openerp.web.OldWidget.extend({
     template: 'KanbanView.record',
     init: function (parent, record) {
         this._super(parent);

@@ -73,7 +73,7 @@
             arg = argv[cursor];
             for (k = 0; k < match[2].length; k++) {
               if (!arg.hasOwnProperty(match[2][k])) {
-                throw(sprintf('[_.sprintf] property "%s" does not exist', match[2][k]));
+                throw new Error(sprintf('[_.sprintf] property "%s" does not exist', match[2][k]));
               }
               arg = arg[match[2][k]];
             }
@@ -85,7 +85,7 @@
           }
 
           if (/[^s]/.test(match[8]) && (get_type(arg) != 'number')) {
-            throw(sprintf('[_.sprintf] expecting number but found %s', get_type(arg)));
+            throw new Error(sprintf('[_.sprintf] expecting number but found %s', get_type(arg)));
           }
           switch (match[8]) {
             case 'b': arg = arg.toString(2); break;
@@ -134,12 +134,12 @@
                   field_list.push(field_match[1]);
                 }
                 else {
-                  throw('[_.sprintf] huh?');
+                  throw new Error('[_.sprintf] huh?');
                 }
               }
             }
             else {
-              throw('[_.sprintf] huh?');
+              throw new Error('[_.sprintf] huh?');
             }
             match[2] = field_list;
           }
@@ -147,12 +147,12 @@
             arg_names |= 2;
           }
           if (arg_names === 3) {
-            throw('[_.sprintf] mixing positional and named placeholders is not (yet) supported');
+            throw new Error('[_.sprintf] mixing positional and named placeholders is not (yet) supported');
           }
           parse_tree.push(match);
         }
         else {
-          throw('[_.sprintf] huh?');
+          throw new Error('[_.sprintf] huh?');
         }
         _fmt = _fmt.substring(match[0].length);
       }

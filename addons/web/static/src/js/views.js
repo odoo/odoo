@@ -16,8 +16,7 @@ session.web.client_actions = new session.web.Registry();
  */
 session.web.views = new session.web.Registry();
 
-session.web.ActionManager = session.web.Widget.extend({
-    identifier_prefix: "actionmanager",
+session.web.ActionManager = session.web.OldWidget.extend({
     init: function(parent) {
         this._super(parent);
         this.inner_action = null;
@@ -208,12 +207,11 @@ session.web.ActionManager = session.web.Widget.extend({
     }
 });
 
-session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.ViewManager# */{
-    identifier_prefix: "viewmanager",
+session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.ViewManager# */{
     template: "ViewManager",
     /**
      * @constructs session.web.ViewManager
-     * @extends session.web.Widget
+     * @extends session.web.OldWidget
      *
      * @param parent
      * @param dataset
@@ -354,17 +352,19 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
      * navigation history (the navigation history is appended to via
      * on_mode_switch)
      *
-     * @param {Boolean} [created=false] returning from a creation
+     * @param {Object} [options]
+     * @param {Boolean} [options.created=false] resource was created
+     * @param {String} [options.default=null] view to switch to if no previous view
      * @returns {$.Deferred} switching end signal
      */
-    on_prev_view: function (created) {
+    on_prev_view: function (options) {
         var current_view = this.views_history.pop();
-        var previous_view = this.views_history[this.views_history.length - 1];
-        if (created && current_view === 'form' && previous_view === 'list') {
+        var previous_view = this.views_history[this.views_history.length - 1] || options['default'];
+        if (options.created && current_view === 'form' && previous_view === 'list') {
             // APR special case: "If creation mode from list (and only from a list),
             // after saving, go to page view (don't come back in list)"
             return this.on_mode_switch('page');
-        } else if (created && !previous_view && this.action && this.action.flags.default_view === 'form') {
+        } else if (options.created && !previous_view && this.action && this.action.flags.default_view === 'form') {
             // APR special case: "If creation from dashboard, we have no previous view
             return this.on_mode_switch('page');
         }
@@ -763,7 +763,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
     }
 });
 
-session.web.Sidebar = session.web.Widget.extend({
+session.web.Sidebar = session.web.OldWidget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.items = {};
@@ -1040,7 +1040,7 @@ session.web.TranslateDialog = session.web.Dialog.extend({
     }
 });
 
-session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
+session.web.View = session.web.OldWidget.extend(/** @lends session.web.View# */{
     template: "EmptyComponent",
     // name displayed in view switchers
     display_name: '',
@@ -1170,8 +1170,12 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     },
     /**
      * Cancels the switch to the current view, switches to the previous one
+     *
+     * @param {Object} [options]
+     * @param {Boolean} [options.created=false] resource was created
+     * @param {String} [options.default=null] view to switch to if no previous view
      */
-    do_prev_view: function () { 
+    do_prev_view: function (options) {
     },
     do_search: function(view) {
     },
@@ -1212,7 +1216,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
 
 session.web.json_node_to_xml = function(node, human_readable, indent) {
     // For debugging purpose, this function will convert a json node back to xml
-    // Maybe usefull for xml view editor
+    // Maybe useful for xml view editor
     indent = indent || 0;
     var sindent = (human_readable ? (new Array(indent + 1).join('\t')) : ''),
         r = sindent + '<' + node.tag,
