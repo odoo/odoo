@@ -1212,7 +1212,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
 
 session.web.json_node_to_xml = function(node, human_readable, indent) {
     // For debugging purpose, this function will convert a json node back to xml
-    // Maybe usefull for xml view editor
+    // Maybe useful for xml view editor
     indent = indent || 0;
     var sindent = (human_readable ? (new Array(indent + 1).join('\t')) : ''),
         r = sindent + '<' + node.tag,
