@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-
-    	<menuitem
-        id="menu_finance_belgian_statement"
-        name="Belgium Statements"
-        parent="account.menu_finance_legal_statement"/>
+	<data>
+		<menuitem
+		id="menu_finance_belgian_statement"
+		name="Belgium Statements"
+		parent="account.menu_finance_legal_statement"/>
 
 		<record id="view_vat_intra" model="ir.ui.view">
 			<field name="name">Partner VAT intra</field>
@@ -29,20 +28,20 @@
 									<newline/>
 									<field name="tax_code_id" string="Company" colspan="4" widget="selection"/>
 								</group>
-									<separator string="Periods" colspan="4"/>
-									<field name="period_ids" nolabel="1" colspan="4"/>
-								</page>
-								<page string="Comments">
-									<field name="comments" nolabel="1"/>
-								</page>
-								<page string="European Countries">
-									<field name="country_ids" colspan="4" nolabel="1"/>
-								</page>
-							</notebook>
-							<separator colspan="4"/><label/>
-							<button special="cancel" string="_Close" icon="gtk-cancel"/>
-							<button name="preview" string="_Preview" type="object" icon="gtk-print"/>
-							<button name="create_xml" string="Create _XML" type="object" icon="gtk-execute"/>
+								<separator string="Periods" colspan="4"/>
+								<field name="period_ids" nolabel="1" colspan="4"/>
+							</page>
+							<page string="Comments">
+								<field name="comments" nolabel="1"/>
+							</page>
+							<page string="European Countries">
+								<field name="country_ids" colspan="4" nolabel="1"/>
+							</page>
+						</notebook>
+						<separator colspan="4"/><label/>
+						<button special="cancel" string="_Close" icon="gtk-cancel"/>
+						<button name="preview" string="_Preview" type="object" icon="gtk-print"/>
+						<button name="create_xml" string="Create _XML" type="object" icon="gtk-execute"/>
 					</group>
 				</form>
 			</field>
@@ -54,38 +53,37 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Save XML">
-						<group width="450">
-							<separator colspan="2" string="Note: "/><newline/>
-							<label string="Save the File with '.xml' extension." colspan="2" align="0.0"/><newline/>
-							<field name="name" colspan="4"/>
-							<newline/>
-							<field name="file_save" colspan="4"/>
-							<newline/>
-							<separator string="Partner With No VAT" colspan="4"/>
-							<field nolabel="1" name="no_vat" colspan="4"/>
-							<separator colspan="4"/><label/>
+					<group width="450">
+						<separator colspan="2" string="Note: "/><newline/>
+						<label string="Save the File with '.xml' extension." colspan="2" align="0.0"/><newline/>
+						<field name="name" colspan="4"/>
+						<newline/>
+						<field name="file_save" colspan="4"/>
+						<newline/>
+						<separator string="Partner With No VAT" colspan="4"/>
+						<field nolabel="1" name="no_vat" colspan="4"/>
+						<separator colspan="4"/><label/>
 						<button special="cancel" string="Close" icon="gtk-cancel"/>
 					</group>
 				</form>
 			</field>
 		</record>
 
-
 		<record id="action_vat_intra" model="ir.actions.act_window">
-            <field name="name">Partner Vat Intra</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">partner.vat.intra</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_vat_intra"/>
-            <field name="target">new</field>
-    	</record>
+			<field name="name">Partner Vat Intra</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">partner.vat.intra</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_vat_intra"/>
+			<field name="target">new</field>
+		</record>
 
-	    <menuitem
-	        name="Partner VAT Intra"
-	        parent="menu_finance_belgian_statement"
-	        action="action_vat_intra"
-	        id="l10_be_vat_intra"/>
+		<menuitem
+			name="Partner VAT Intra"
+			parent="menu_finance_belgian_statement"
+			action="action_vat_intra"
+			id="l10_be_vat_intra"/>
 
-    </data>
+	</data>
 </openerp>
