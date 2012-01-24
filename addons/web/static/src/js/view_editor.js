@@ -46,7 +46,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 {text: _t("Create"), click: function() { self.on_create_view(); }},
                 {text: _t("Edit"), click: function() { self.xml_element_id = 0; self.get_arch(); }},
                 {text: _t("Remove"), click: function() { self.do_delete_view(); }},
-                {text: _t("Close"), click: function() {self.view_edit_dialog.close(); }}
+                {text: _t("Close"), click: function() { self.view_edit_dialog.close(); }}
             ]
         }).open();
         this.main_view_id = this.parent.fields_view.view_id;
@@ -369,6 +369,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         views: [[self.main_view_id, self.main_view_type]],
                         type: 'ir.actions.act_window',
                         target: "new",
+                        auto_search: true,
                         flags: {
                             sidebar: false,
                             views_switcher: false,
@@ -569,7 +570,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         arch_to_pass = _.filter($(arch.arch), function (child) {
             return child.nodeType == 1;
         });
-        return self.do_save_xml(arch_to_pass[0], obj[0].child_id[0],[], move_direct, update_values,arch);
+        return self.do_save_xml(arch_to_pass[0], obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
     },
     get_object_by_id: function(id, one_object, result) {
         var self = this;
@@ -824,6 +825,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
                     return res instanceof Array? _.include(res, widget.name): false;
                 });
+                
                 value = value instanceof Array ? value[1] : value;
                 self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + widget.string + ':</td>' + type_widget.render() + '</tr>');
                 type_widget.start();
@@ -1041,7 +1043,7 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         var index = 0;
         value = value === null? false: value;
         for (var i = 0, ii = this.selection.length; i < ii; i++) {
-            if ((this.selection[i] instanceof Array && this.selection[i][1] === value) || this.selection[i] === value) index = i;
+            if ((this.selection[i] instanceof Array && this.selection[i][0] === value) || this.selection[i] === value) index = i;
         }
         this.$element.find("select[id=" + this.name + "]")[0].selectedIndex = index;
     },
@@ -1094,7 +1096,7 @@ var _CHILDREN = {
     'calendar': ['field'],
     'notebook': ['page'],
     'page': ['notebook', 'group', 'field', 'label', 'button', 'newline', 'separator'],
-    'group': ['field', 'label', 'button', 'separator', 'newline'],
+    'group': ['field', 'label', 'button', 'separator', 'newline','group'],
     'board': ['column'],
     'action': [],
     'field': ['form', 'tree', 'graph'],
