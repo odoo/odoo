@@ -48,15 +48,17 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a resitution is to made or not?'),
         'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to made or not?'),
         'client_nihil': fields.boolean('Last Declaration of Enterprise',help='Tick this case only if it concerns only the last statement on the civil or cessation of activity'),
-        'vat_declarations_nbr': fields.integer('VATDeclarationsNbr'),
+        'vat_declarations_nbr': fields.integer('VAT Declarations Number', help="Number of periodic VAT returns in the shipment"),
         'comments': fields.text('Comments'),
         'identification_type': fields.selection([('tin','TIN'), ('nvat','NVAT'), ('other','Other')], 'Identification Type', required=True),
-        'other': fields.char('Specify', size=16),
+        'other': fields.char('Other Qlf', size=16, help="Description of a Identification Type"),
     }
     _defaults = {
         'msg': 'Save the File with '".xml"' extension.',
         'file_save': _get_xml_data,
         'name': 'vat_declaration.xml',
+        'identification_type': 'tin',
+        'vat_declarations_nbr': 1,
     }
 
     def create_xml(self, cr, uid, ids, context=None):
@@ -97,7 +99,6 @@ class l10n_be_vat_declaration(osv.osv_memory):
         send_ref = str(obj_company.partner_id.id) + str(account_period.date_start[5:7]) + str(account_period.date_stop[:4])
         
         data_of_file = '<?xml version="1.0"?>\n<VATConsignment xmlns="http://www.minfin.fgov.be/VATConsignment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" VATDeclarationsNbr="'+str(data['vat_declarations_nbr'])+'">'
-        print "val", val
         data_of_file +='\n\t<Representative> \n\t\t<RepresentativeID identificationType="'+type.upper()+'" issuedBy="'+issued_by+'" otherQlf="'+val+'">'+obj_company.company_registry+'</RepresentativeID> \n\t\t<Name>'+obj_company.name+'</Name> \n\t\t<Street>'+address+'</Street> \n\t\t<PostCode>'+post_code+'</PostCode> \n\t\t<City>'+city+'</City> \n\t\t<CountryCode>'+country_code+'</CountryCode> \n\t\t<EmailAddress>'+email+'</EmailAddress> \n\t\t<Phone>'+phone+'</Phone> \n\t</Representative>'
         data_of_file +='\n\t<RepresentativeReference></RepresentativeReference>'
         data_of_file +='\n\t<VATDeclaration SequenceNumber="1" DeclarantReference="'+send_ref+'">'
