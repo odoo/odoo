@@ -93,10 +93,16 @@ var QWeb2 = {
                 }
                 return r.join('');
             } else {
-                if (node.xml !== undefined) {
-                    return node.xml;
-                } else {
+                if (typeof XMLSerializer !== 'undefined') {
                     return (new XMLSerializer()).serializeToString(node);
+                } else {
+                    switch(node.nodeType) {
+                    case 1: return node.outerHTML;
+                    case 3: return node.data;
+                    case 4: return '<![CDATA[' + node.data + ']]>';
+                    case 8: return '<!-- ' + node.data + '-->';
+                    }
+                    throw new Error('Unknown node type ' + node.nodeType);
                 }
             }
         },
@@ -265,11 +271,16 @@ QWeb2.Engine = (function() {
                     }
                     req.open('GET', s, false);
                     req.send(null);
-                    if (req.responseXML) {
-                        if (req.responseXML.documentElement.nodeName == "parsererror") {
-                            return this.tools.exception(req.responseXML.documentElement.childNodes[0].nodeValue);
+                    var xDoc = req.responseXML;
+                    if (xDoc) {
+                        if (xDoc.documentElement.nodeName == "parsererror") {
+                            return this.tools.exception(xDoc.documentElement.childNodes[0].nodeValue);
                         }
-                        return req.responseXML;
+                        if (xDoc.xml !== undefined) {
+                            // MSIE
+                            return this.convert_xml_to_html(xDoc.documentElement);
+                        }
+                        return xDoc;
                     } else {
                         return this.load_xml_string(req.responseText);
                     }
@@ -295,7 +306,25 @@ QWeb2.Engine = (function() {
             xDoc.async = false;
             xDoc.preserveWhiteSpace = true;
             xDoc.loadXML(s);
-            return xDoc;
+            return this.convert_xml_to_html(xDoc.documentElement);
+        },
+        convert_xml_to_html: function (node) {
+            switch (node.nodeType) {
+            case 3:
+            case 4:
+                return document.createTextNode(node.data);
+            case 8: return document.createComment(node.data);
+            }
+
+            var hnode = document.createElement(node.nodeName);
+            for(var i=0, alen=node.attributes.length; i < alen; ++i) {
+                var attr = node.attributes[i];
+                hnode.setAttribute(attr.name, attr.value);
+            }
+            for(var j=0, clen=node.childNodes.length; j < clen; ++j) {
+                hnode.appendChild(this.convert_xml_to_html(node.childNodes[j]));
+            }
+            return hnode;
         },
         has_template : function(template) {
             return !!this.templates[template];
@@ -373,12 +402,7 @@ QWeb2.Engine = (function() {
             if (!this.jQuery) {
                 return this.tools.exception("Can't extend template " + template + " without jQuery");
             }
-            var template_dest = this.templates[template],
-                msie_trololo = false;
-            if (template_dest.xml !== undefined) {
-                template_dest = this.jQuery(template_dest.xml);
-                msie_trololo = true;
-            }
+            var template_dest = this.templates[template];
             for (var i = 0, ilen = extend_node.childNodes.length; i < ilen; i++) {
                 var child = extend_node.childNodes[i];
                 if (child.nodeType === 1) {
@@ -420,9 +444,6 @@ QWeb2.Engine = (function() {
                         }
                     }
                 }
-            }
-            if (msie_trololo) {
-                this.templates[template] = template_dest[0];
             }
         }
     });
