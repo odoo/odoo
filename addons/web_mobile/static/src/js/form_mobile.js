@@ -4,7 +4,7 @@
 
 openerp.web_mobile.form_mobile = function (openerp) {
 
-openerp.web_mobile.FormView = openerp.web.Widget.extend({
+openerp.web_mobile.FormView = openerp.web.OldWidget.extend({
 
     template: 'FormView',
 

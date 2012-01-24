@@ -620,7 +620,7 @@ openerp.web.FormDialog = openerp.web.Dialog.extend({
 /** @namespace */
 openerp.web.form = {};
 
-openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
+openerp.web.form.SidebarAttachments = openerp.web.OldWidget.extend({
     init: function(parent, form_view) {
         var $section = parent.add_section(_t('Attachments'), 'attachments');
         this.$div = $('<div class="oe-sidebar-attachments"></div>');
@@ -737,12 +737,12 @@ openerp.web.form.compute_domain = function(expr, fields) {
     return _.all(stack, _.identity);
 };
 
-openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.Widget# */{
+openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.form.Widget# */{
     template: 'Widget',
     identifier_prefix: 'formview-widget-',
     /**
      * @constructs openerp.web.form.Widget
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param view
      * @param node
@@ -1388,7 +1388,7 @@ openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
     }
 });
 
-openerp.web.DateTimeWidget = openerp.web.Widget.extend({
+openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
     template: "web.datetimepicker",
     jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",

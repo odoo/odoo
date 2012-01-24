@@ -18,7 +18,7 @@ openerp.web.serialize_sort = function (criterion) {
         }).join(', ');
 };
 
-openerp.web.DataGroup =  openerp.web.Widget.extend( /** @lends openerp.web.DataGroup# */{
+openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.DataGroup# */{
     /**
      * Management interface between views and grouped collections of OpenERP
      * records.
@@ -30,9 +30,9 @@ openerp.web.DataGroup =  openerp.web.Widget.extend( /** @lends openerp.web.DataG
      * content of the current grouping level.
      *
      * @constructs openerp.web.DataGroup
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
-     * @param {openerp.web.Widget} parent widget
+     * @param {openerp.web.OldWidget} parent widget
      * @param {String} model name of the model managed by this DataGroup
      * @param {Array} domain search domain for this DataGroup
      * @param {Object} context context of the DataGroup's searches
@@ -233,14 +233,14 @@ openerp.web.StaticDataGroup = openerp.web.GrouplessDataGroup.extend( /** @lends 
     }
 });
 
-openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet# */{
+openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.DataSet# */{
     identifier_prefix: "dataset",
     /**
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
      *
      * @constructs openerp.web.DataSet
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param {String} model the OpenERP model this dataset will manage
      */

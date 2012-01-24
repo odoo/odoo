@@ -1,7 +1,7 @@
 openerp.web.view_editor = function(openerp) {
 var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
-openerp.web.ViewEditor =   openerp.web.Widget.extend({
+openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
     init: function(parent, element_id, dataset, view, options) {
         this._super(parent);
         this.element_id = element_id

@@ -16,7 +16,7 @@ session.web.client_actions = new session.web.Registry();
  */
 session.web.views = new session.web.Registry();
 
-session.web.ActionManager = session.web.Widget.extend({
+session.web.ActionManager = session.web.OldWidget.extend({
     identifier_prefix: "actionmanager",
     init: function(parent) {
         this._super(parent);
@@ -208,12 +208,12 @@ session.web.ActionManager = session.web.Widget.extend({
     }
 });
 
-session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.ViewManager# */{
+session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.ViewManager# */{
     identifier_prefix: "viewmanager",
     template: "ViewManager",
     /**
      * @constructs session.web.ViewManager
-     * @extends session.web.Widget
+     * @extends session.web.OldWidget
      *
      * @param parent
      * @param dataset
@@ -765,7 +765,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
     }
 });
 
-session.web.Sidebar = session.web.Widget.extend({
+session.web.Sidebar = session.web.OldWidget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.items = {};
@@ -1042,7 +1042,7 @@ session.web.TranslateDialog = session.web.Dialog.extend({
     }
 });
 
-session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
+session.web.View = session.web.OldWidget.extend(/** @lends session.web.View# */{
     template: "EmptyComponent",
     // name displayed in view switchers
     display_name: '',

@@ -3,11 +3,11 @@ var QWeb = openerp.web.qweb,
       _t =  openerp.web._t,
      _lt = openerp.web._lt;
 
-openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.SearchView# */{
+openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.SearchView# */{
     template: "EmptyComponent",
     /**
      * @constructs openerp.web.SearchView
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param parent
      * @param element_id
@@ -499,13 +499,13 @@ openerp.web.search.Invalid = openerp.web.Class.extend( /** @lends openerp.web.se
         );
     }
 });
-openerp.web.search.Widget = openerp.web.Widget.extend( /** @lends openerp.web.search.Widget# */{
+openerp.web.search.Widget = openerp.web.OldWidget.extend( /** @lends openerp.web.search.Widget# */{
     template: null,
     /**
      * Root class of all search widgets
      *
      * @constructs openerp.web.search.Widget
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param view the ancestor view of this widget
      */
@@ -1105,7 +1105,7 @@ openerp.web.search.ExtendedSearch = openerp.web.search.Widget.extend({
     }
 });
 
-openerp.web.search.ExtendedSearchGroup = openerp.web.Widget.extend({
+openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
     template: 'SearchView.extended_search.group',
     identifier_prefix: 'extended-search-group',
     init: function (parent, fields) {
@@ -1150,12 +1150,12 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.Widget.extend({
     }
 });
 
-openerp.web.search.ExtendedSearchProposition = openerp.web.Widget.extend(/** @lends openerp.web.search.ExtendedSearchProposition# */{
+openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** @lends openerp.web.search.ExtendedSearchProposition# */{
     template: 'SearchView.extended_search.proposition',
     identifier_prefix: 'extended-search-proposition',
     /**
      * @constructs openerp.web.search.ExtendedSearchProposition
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param parent
      * @param fields
@@ -1246,7 +1246,7 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.Widget.extend(/** @le
     }
 });
 
-openerp.web.search.ExtendedSearchProposition.Field = openerp.web.Widget.extend({
+openerp.web.search.ExtendedSearchProposition.Field = openerp.web.OldWidget.extend({
     start: function () {
         this.$element = $("#" + this.element_id);
     }
