@@ -427,7 +427,7 @@ def serve():
         _logger.info('HTTP service (werkzeug) running on %s:%s', interface, port)
     except ImportError:
         import wsgiref.simple_server
-        logging.getLogger('wsgi').warn('Werkzeug module unavailable, falling back to wsgiref.')
+        _logger.warning('Werkzeug module unavailable, falling back to wsgiref.')
         httpd = wsgiref.simple_server.make_server(interface, port, application)
         _logger.info('HTTP service (wsgiref) running on %s:%s', interface, port)
 
