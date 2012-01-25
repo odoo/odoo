@@ -60,16 +60,14 @@ def mako_template(text):
     tmp_lookup  = TemplateLookup() #we need it in order to allow inclusion and inheritance
     return Template(text, input_encoding='utf-8', output_encoding='utf-8', lookup=tmp_lookup)
 
-
 class WebKitParser(report_sxw):
     """Custom class that use webkit to render HTML reports
        Code partially taken from report openoffice. Thanks guys :)
     """
-
     def __init__(self, name, table, rml=False, parser=False,
         header=True, store=False):
         self.parser_instance = False
-        self.localcontext={}
+        self.localcontext = {}
         report_sxw.__init__(self, name, table, rml, parser,
             header, store)
 
@@ -107,8 +105,7 @@ class WebKitParser(report_sxw):
         if not webkit_header:
             webkit_header = report_xml.webkit_header
         tmp_dir = tempfile.gettempdir()
-        out = report_xml.name+str(time.time())+'.pdf'
-        out = os.path.join(tmp_dir, out.replace(' ',''))
+        out_filename = tempfile.mktemp(suffix=".pdf", prefix="webkit.tmp.")
         files = []
         file_to_del = []
         if comm_path:
@@ -162,8 +159,7 @@ class WebKitParser(report_sxw):
             html_file.close()
             file_to_del.append(html_file.name)
             command.append(html_file.name)
-        command.append(out)
-        generate_command = ' '.join(command)
+        command.append(out_filename)
         try:
             status = subprocess.call(command, stderr=subprocess.PIPE) # ignore stderr
             if status :
@@ -175,18 +171,18 @@ class WebKitParser(report_sxw):
             for f_to_del in file_to_del :
                 os.unlink(f_to_del)
 
-        pdf = file(out, 'rb').read()
+        pdf = file(out_filename, 'rb').read()
         for f_to_del in file_to_del :
             os.unlink(f_to_del)
 
-        os.unlink(out)
+        os.unlink(out_filename)
         return pdf
 
     def translate_call(self, src):
         """Translate String."""
         ir_translation = self.pool.get('ir.translation')
         res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid,
-                                         self.name, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
+                                         None, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
         if not res :
             return src
         return res

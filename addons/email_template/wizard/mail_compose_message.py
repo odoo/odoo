@@ -37,7 +37,7 @@ def _reopen(self,res_id,model):
 
             # save original model in context, otherwise
             # it will be lost on the action's context switch
-            'mail.compose.target.model': model,
+            'context': {'mail.compose.target.model': model}
     }
 
 class mail_compose_message(osv.osv_memory):

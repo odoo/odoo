@@ -221,7 +221,7 @@ class delivery_grid_line(osv.osv):
     _name = "delivery.grid.line"
     _description = "Delivery Grid Line"
     _columns = {
-        'name': fields.char('Name', size=32, required=True),
+        'name': fields.char('Name', size=64, required=True),
         'grid_id': fields.many2one('delivery.grid', 'Grid',required=True, ondelete='cascade'),
         'type': fields.selection([('weight','Weight'),('volume','Volume'),\
                                   ('wv','Weight * Volume'), ('price','Price')],\
