@@ -231,7 +231,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 $this.find('span').toggleClass(
                     'ui-icon-triangle-1-s ui-icon-triangle-1-n');
             } else {
-                $this.append('<span class="ui-icon ui-icon-triangle-1-s">')
+                $this.append('<span class="ui-icon ui-icon-triangle-1-n">')
                      .siblings('.oe-sortable').find('span').remove();
             }
 
