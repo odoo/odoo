@@ -21,6 +21,7 @@
 ##############################################################################
 
 import base64
+import logging
 import re
 from sys import exc_info
 import time
