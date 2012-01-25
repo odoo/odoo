@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-12-22 20:22+0000\n"
-"PO-Revision-Date: 2011-11-25 11:49+0000\n"
+"PO-Revision-Date: 2012-01-23 09:27+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
-"Language-Team: \n"
+"Language-Team: openerp-i18n-czech <openerp-i18n-czech@lists.launchpad.net >\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-19 04:41+0000\n"
-"X-Generator: Launchpad (build 14692)\n"
+"X-Launchpad-Export-Date: 2012-01-24 05:28+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: base
@@ -839,11 +839,14 @@ msgid ""
 "Provide the field name that the record id refers to for the write operation. "
 "If it is empty it will refer to the active id of the object."
 msgstr ""
+"Poskytuje jméno pole, na které odkazuje id záznamu, pro operaci zápisu. "
+"Pokud je prázdné tak odkazuje na aktivní id objektu."
 
 #. module: base
 #: help:ir.actions.report.xml,report_type:0
 msgid "Report Type, e.g. pdf, html, raw, sxw, odt, html2html, mako2html, ..."
 msgstr ""
+"Typ výkazu, např. pdf, html, raw, sxw, odt, html2html, mako2html, ..."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document_webdav
@@ -906,7 +909,7 @@ msgstr ""
 #: help:ir.actions.act_window,domain:0
 msgid ""
 "Optional domain filtering of the destination data, as a Python expression"
-msgstr ""
+msgstr "Volitelné filtrování domény cílových dat jako výraz Pythonu"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
@@ -953,7 +956,7 @@ msgstr ""
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Other OSI Approved Licence"
-msgstr ""
+msgstr "Jiné schválené licence OSI"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -970,7 +973,7 @@ msgstr "Indie"
 #: model:ir.actions.act_window,name:base.res_request_link-act
 #: model:ir.ui.menu,name:base.menu_res_request_link_act
 msgid "Request Reference Types"
-msgstr ""
+msgstr "Požadavek referenčních typů"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_base_account
@@ -990,7 +993,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ad
 msgid "Andorra, Principality of"
-msgstr ""
+msgstr "Andorra, Knížectví"
 
 #. module: base
 #: field:res.partner.category,child_ids:0
@@ -1047,11 +1050,13 @@ msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
 "Define it through the Administration menu."
 msgstr ""
+"Kód jazyka \"%s\" není v systému určen !\n"
+"Určete jej přes Nabídku správy."
 
 #. module: base
 #: model:res.country,name:base.gu
 msgid "Guam (USA)"
-msgstr ""
+msgstr "Guam (USA)"
 
 #. module: base
 #: code:addons/base/res/res_users.py:541
@@ -1198,6 +1203,9 @@ msgid ""
 "decimal number [00,53]. All days in a new year preceding the first Monday "
 "are considered to be in week 0."
 msgstr ""
+"%W - Číslo týdne v roce (Pondělí jako první den v týdnu) jako dekadické "
+"číslo [00,53]. Všechny dny v novém roce předcházející první pondělí jsou "
+"považovány za týden 0."
 
 #. module: base
 #: code:addons/base/module/wizard/base_language_install.py:55
@@ -1218,7 +1226,7 @@ msgstr "Odkaz zdroje"
 #. module: base
 #: model:res.country,name:base.gs
 msgid "S. Georgia & S. Sandwich Isls."
-msgstr ""
+msgstr "Ostrovy S. Georgia a S. Sandwich"
 
 #. module: base
 #: field:ir.actions.url,url:0
@@ -1404,6 +1412,9 @@ msgid ""
 "system. After the contract has been registered, you will be able to send "
 "issues directly to OpenERP."
 msgstr ""
+"Tento průvodce vám pomůže registrovat záruční smlouvu vydavatele ve vašem "
+"systému OpenERP. Poté co bude smlouva registrována, budete moci odeslílat "
+"dotazy přímo do OpenERP."
 
 #. module: base
 #: view:wizard.ir.model.menu.create:0
@@ -1454,6 +1465,8 @@ msgid ""
 "If you check this box, your customized translations will be overwritten and "
 "replaced by the official ones."
 msgstr ""
+"Pokud toto zaškrtnete, vaše vlastní překlady budou přepsány a nahrazeny těmi "
+"oficiálními."
 
 #. module: base
 #: field:ir.actions.report.xml,report_rml:0
@@ -1474,6 +1487,8 @@ msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view."
 msgstr ""
+"Pokud je nastaveno na pravda, akce nebude zobrazena v pravm nástrojovém "
+"panelu formulářového pohledu."
 
 #. module: base
 #: field:workflow,on_create:0
@@ -1487,6 +1502,8 @@ msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
 "used to refer to other modules data, as in module.reference_id"
 msgstr ""
+"'%s' obsahuje příliš mnoho teček. Id XML by nemělo obsahovat tečky ! Tyto "
+"jsou použity pro odkazování na data jiných modulů, jako module.reference_id"
 
 #. module: base
 #: field:partner.sms.send,user:0
@@ -1500,6 +1517,8 @@ msgid ""
 "Access all the fields related to the current object using expressions, i.e. "
 "object.partner_id.name "
 msgstr ""
+"Přístup ke všem polím vztaženým k aktuálnímu objektu použitím výrazů, např. "
+"object.partner_id.name "
 
 #. module: base
 #: model:ir.module.module,description:base.module_event
@@ -1588,6 +1607,19 @@ msgid ""
 "%(user_signature)s\n"
 "%(company_name)s"
 msgstr ""
+"Datum : %(date)s\n"
+"\n"
+"Vážený %(partner_name)s,\n"
+"\n"
+"V příloze najdete upomínku vašich nezaplacených faktur s celkovou splatnou "
+"částkou:\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Děkujeme,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s"
 
 #. module: base
 #: model:ir.module.module,description:base.module_share
@@ -2017,6 +2049,8 @@ msgid ""
 "When using CSV format, please also check that the first line of your file is "
 "one of the following:"
 msgstr ""
+"Prosíme zkontrolujte také, že první řádek vašeho souboru je následující, "
+"pokud je použit formát CSV."
 
 #. module: base
 #: view:res.log:0
@@ -2039,6 +2073,8 @@ msgid ""
 "This wizard will scan all module repositories on the server side to detect "
 "newly added modules as well as any change to existing modules."
 msgstr ""
+"Průvodce prozkoumá všechny repozitáře modulů na straně serveru pro zjištění "
+"nově přidaných modulů stejně jako změn existujících modulů."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_journal
@@ -2132,6 +2168,7 @@ msgstr "Aktivní"
 msgid ""
 "Couldn't generate the next id because some partners have an alphabetic id !"
 msgstr ""
+"Nemůžu generovat další id, protože někteří partneři mají abecední id !"
 
 #. module: base
 #: view:ir.attachment:0
@@ -2169,6 +2206,8 @@ msgid ""
 "Views allows you to personalize each view of OpenERP. You can add new "
 "fields, move fields, rename them or delete the ones that you do not need."
 msgstr ""
+"Pohledy vám umožňují přizpůsobit každý pohled OpenERP. Můžete přidat nové "
+"pole, přesunout pole, přejmenovat je nebo smazat ty, které nepotřebujete."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_setup
@@ -2243,6 +2282,8 @@ msgid ""
 "Comma-separated list of allowed view modes, such as 'form', 'tree', "
 "'calendar', etc. (Default: tree,form)"
 msgstr ""
+"Čárkou oddělený seznam vám umožní prohlížet režimy jako 'form', 'tree', "
+"'calendar', aj. (Výchozí: tree, form)"
 
 #. module: base
 #: code:addons/orm.py:3582
@@ -2273,6 +2314,9 @@ msgid ""
 "order in Object, and you can have loop on the sales order line. Expression = "
 "`object.order_line`."
 msgstr ""
+"Zadejte pole/výraz, který vrátí seznam. Např. vyberte prodejní objednávku v "
+"objektu a můžete mít oprakování na řádcích prodejní objednávky. Výraz = "
+"`object.order_line`."
 
 #. module: base
 #: field:ir.mail_server,smtp_debug:0
@@ -2334,7 +2378,7 @@ msgstr "Zjednodušené"
 #. module: base
 #: model:res.country,name:base.st
 msgid "Saint Tome (Sao Tome) and Principe"
-msgstr ""
+msgstr "¨"
 
 #. module: base
 #: selection:res.partner.address,type:0
@@ -2461,7 +2505,7 @@ msgstr "Zimbabwe"
 #. module: base
 #: model:res.country,name:base.io
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "Teritorium indických britských ostrovů"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
@@ -2998,6 +3042,8 @@ msgid ""
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
 msgstr ""
+"Určeno neplatné \"pořadí\". Platné učení \"pořadí\" je čárkou oddělený "
+"seznam platných jmen polí (volitelně následovaný asc/desc pro směr)"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -3021,6 +3067,9 @@ msgid ""
 "way you want to print them in letters and other documents. Some example: "
 "Mr., Mrs. "
 msgstr ""
+"Spravuje tituly kontaktů, které chcete mít dostupné ve vašem systému a "
+"způsob, jakým je tisknout na dopisech a jiných dokumentech. Některé "
+"příklady: Pan, Paní "
 
 #. module: base
 #: view:ir.model.access:0
@@ -3036,6 +3085,8 @@ msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
+"Výraz výběru voleb není platný Pythonovský výraz. Prosíme poskytněte výraz "
+"ve formátu [('klíč', 'Titulek'), ...]."
 
 #. module: base
 #: model:res.groups,name:base.group_survey_user
@@ -3056,7 +3107,7 @@ msgstr "Hlavní společnost"
 #. module: base
 #: field:ir.ui.menu,web_icon_hover:0
 msgid "Web Icon File (hover)"
-msgstr ""
+msgstr "Jméno webové ikony (vznášející se)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_diagram
@@ -3143,6 +3194,8 @@ msgid ""
 "Please double-check that the file encoding is set to UTF-8 (sometimes called "
 "Unicode) when the translator exports it."
 msgstr ""
+"Prosíme dvakrát zkontrolujte, že kódování souboru je nastaveno na UTF-8 "
+"(někdy nazývané Unicode), když je překladatel exportoval."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -3165,6 +3218,7 @@ msgid ""
 "Reference of the target resource, whose model/table depends on the 'Resource "
 "Name' field."
 msgstr ""
+"Odkaz cílového zdroje, jehož model/tabulka závisí na poli 'jméno zdroje'."
 
 #. module: base
 #: field:ir.model.fields,select_level:0
@@ -3572,6 +3626,8 @@ msgid ""
 "Value Added Tax number. Check the box if the partner is subjected to the "
 "VAT. Used by the VAT legal statement."
 msgstr ""
+"Číslo daně s přidané hodnoty. Zaškrtněte políčko, pokud partner podléha DPH. "
+"Použito pro daňové přiznání DPH."
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -3732,6 +3788,8 @@ msgid ""
 "Operation prohibited by access rules, or performed on an already deleted "
 "document (Operation: read, Document type: %s)."
 msgstr ""
+"Operace zakázána díky přístupovým právům, nebo vykonáno nad již smazaným "
+"dokumentem (Operace: read, Typ dokumentu: %s)."
 
 #. module: base
 #: model:res.country,name:base.nr
@@ -3741,7 +3799,7 @@ msgstr "Nauru"
 #. module: base
 #: report:ir.module.reference.graph:0
 msgid "Introspection report on objects"
-msgstr ""
+msgstr "Výkaz vnitřního náhledu objektů"
 
 #. module: base
 #: code:addons/base/module/module.py:236
@@ -4207,6 +4265,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such "
 "as its usage and purpose."
 msgstr ""
+"Volitelný text nápovědy pro uživatele s popisem cílového pohledu, jako třeba "
+"jejich použití a účel."
 
 #. module: base
 #: model:res.country,name:base.va
@@ -4318,6 +4378,9 @@ msgid ""
 "groups. If this field is empty, OpenERP will compute visibility based on the "
 "related object's read access."
 msgstr ""
+"Pokud máte skupiny, viditelnost této nabídky bude založena na těchto "
+"skupinách. Pokud je toto pole prázdné, OpenERP spočítá viditelnost na "
+"základě přístupu pro čtení vztažených objektů."
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -4835,7 +4898,7 @@ msgstr "%M - Minuty [00,59]."
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Affero GPL-3"
-msgstr ""
+msgstr "Affero GPL-3"
 
 #. module: base
 #: field:ir.sequence,number_next:0
@@ -5419,7 +5482,7 @@ msgstr "Kód státu ve třech znacích.\n"
 #. module: base
 #: model:res.country,name:base.sj
 msgid "Svalbard and Jan Mayen Islands"
-msgstr ""
+msgstr "Ostrovy Svalbard a Jan Mayen"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden_test
@@ -5569,7 +5632,7 @@ msgstr "Seznam řízení přístupu (ACL)"
 #. module: base
 #: model:res.country,name:base.um
 msgid "USA Minor Outlying Islands"
-msgstr ""
+msgstr "Menší odlehlé ostrovy USA"
 
 #. module: base
 #: help:ir.cron,numbercall:0
@@ -5699,6 +5762,9 @@ msgid ""
 "form, signal tests the name of the pressed button. If signal is NULL, no "
 "button is necessary to validate this transition."
 msgstr ""
+"Když je operace přechodu přijde ze stisknutého tlačítka v klientském "
+"formuláři, signal otestuje jméno stisknutého tlačítka. Pokud je signál NULL, "
+"žádné tlačítko není potřeba ověřovat tímto přechodem."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_diagram
@@ -6233,7 +6299,7 @@ msgstr "res_config_contents"
 #. module: base
 #: help:res.partner.category,active:0
 msgid "The active field allows you to hide the category without removing it."
-msgstr ""
+msgstr "Aktivní pole vám umožní skrýt kategorii bez jejího odebrání."
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -6255,7 +6321,7 @@ msgstr "Jména společníků"
 #. module: base
 #: help:ir.actions.act_window,auto_refresh:0
 msgid "Add an auto-refresh on the view"
-msgstr ""
+msgstr "Přidá automatické obnovení u pohledu"
 
 #. module: base
 #: help:res.partner,employee:0
@@ -6340,6 +6406,8 @@ msgid ""
 "Whether values for this field can be translated (enables the translation "
 "mechanism for that field)"
 msgstr ""
+"Zda lze překládat hodnoty tohoto pole (povoluje překladový mechanizmus pro "
+"toto pole)"
 
 #. module: base
 #: selection:res.currency,position:0
@@ -6357,11 +6425,13 @@ msgid ""
 "Provide the field name where the record id is stored after the create "
 "operations. If it is empty, you can not track the new record."
 msgstr ""
+"Poskytuje jméno pole, kde je uloženo id záznamu po operacích vytvoření. "
+"Pokud je prázdné, nemůžete sledovat nové záznamy."
 
 #. module: base
 #: help:ir.model.fields,relation:0
 msgid "For relationship fields, the technical name of the target model"
-msgstr ""
+msgstr "Pro vztažené pole, technické jméno cílového modelu"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6398,12 +6468,12 @@ msgstr "Projekt"
 #. module: base
 #: field:ir.ui.menu,web_icon_hover_data:0
 msgid "Web Icon Image (hover)"
-msgstr ""
+msgstr "Obrázek webové ikona (vznášející se)"
 
 #. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
-msgstr ""
+msgstr "Soubor modulu úspěšně importován!"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -6513,7 +6583,7 @@ msgstr "Mapování polí"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Refresh Validation Dates"
-msgstr ""
+msgstr "Obnovit data platnosti"
 
 #. module: base
 #: field:ir.model.fields,ttype:0
@@ -6771,6 +6841,8 @@ msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
 "change your own password."
 msgstr ""
+"Ke změně vašeho vlastního hesla prosíme použijte průvodce změny hesla (v "
+"uživatelských předvolbách nebo uživatelské nabídce)."
 
 #. module: base
 #: code:addons/orm.py:1850
@@ -6789,6 +6861,8 @@ msgid ""
 "The path to the main report file (depending on Report Type) or NULL if the "
 "content is in another data field"
 msgstr ""
+"Cesta k hlavnímu souboru výkazu (závisí na typu výkazu) nebo NULL, pokud "
+"obsah je jiné datové pole"
 
 #. module: base
 #: help:res.users,company_id:0
@@ -7014,6 +7088,8 @@ msgid ""
 "federal states you are working on from here. Each state is attached to one "
 "country."
 msgstr ""
+"Pokud pracujete na Americkém trhu, můžete odsud spravovat různé federální "
+"státy, se kterými pracujete. Každý stát je přiřazen k jedné zemi."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -7037,7 +7113,7 @@ msgstr "Položky Pracovního postupu"
 #. module: base
 #: model:res.country,name:base.vc
 msgid "Saint Vincent & Grenadines"
-msgstr ""
+msgstr "Svatý Vincent & Grenady"
 
 #. module: base
 #: field:ir.mail_server,smtp_pass:0
@@ -7094,6 +7170,7 @@ msgstr "Zaměstnanci"
 msgid ""
 "If this log item has been read, get() should not send it to the client"
 msgstr ""
+"Pokud byla tato položka záznamu přečtena, get() by ji neměl odeslat klientovi"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_uservoice
@@ -7115,7 +7192,7 @@ msgstr "Vnitřní hlavička RML"
 #. module: base
 #: field:ir.actions.act_window,search_view_id:0
 msgid "Search View Ref."
-msgstr ""
+msgstr "Odkaz hledacího pohledu"
 
 #. module: base
 #: field:ir.module.module,installed_version:0
@@ -7269,7 +7346,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cc
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "Kokosové ostrovy"
 
 #. module: base
 #: selection:base.language.install,state:0
@@ -7766,6 +7843,9 @@ msgid ""
 "Keep empty to not save the printed reports. You can use a python expression "
 "with the object and time variables."
 msgstr ""
+"Toto je jméno souboru přílohy použité pro uchování výsledku tisku. "
+"Ponechejte prázdné pro neuložení tisknutých výkazů. Můžete použít výraz "
+"pythonu s objekty a časy proměnných."
 
 #. module: base
 #: sql_constraint:ir.model.data:0
@@ -8056,6 +8136,7 @@ msgstr "Aktualizovat seznam modulů"
 msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: %s"
 msgstr ""
+"Modul \"%s\" nelze povýšit, protože vnější závislost nebyla vyhověna: %s"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
@@ -8180,7 +8261,7 @@ msgstr "Soubor"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
 msgid "Module Upgrade Install"
-msgstr ""
+msgstr "Instalace povýšení modulu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_email_template
@@ -8464,7 +8545,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.re
 msgid "Reunion (French)"
-msgstr ""
+msgstr "Reunion (Francouzský)"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:348
@@ -8943,7 +9024,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bn
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Brunei Darussalam"
 
 #. module: base
 #: model:ir.module.module,description:base.module_fetchmail_crm
@@ -9765,7 +9846,7 @@ msgstr "res.log"
 #: help:ir.translation,module:0
 #: help:ir.translation,xml_id:0
 msgid "Maps to the ir_model_data for which this translation is provided."
-msgstr ""
+msgstr "Mapy k ir_model_data, pro který je poskytnut tento překlad."
 
 #. module: base
 #: view:workflow.activity:0
@@ -10242,6 +10323,8 @@ msgid ""
 "Manage the partner titles you want to have available in your system. The "
 "partner titles is the legal status of the company: Private Limited, SA, etc."
 msgstr ""
+"Spravuje tituly partnerů, které chcete mít dostupné ve vašem systému. Titul "
+"partnerů je zákonná forma společnosti: s.r.o., a.s., aj."
 
 #. module: base
 #: view:base.language.export:0
@@ -10409,7 +10492,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.kn
 msgid "Saint Kitts & Nevis Anguilla"
-msgstr ""
+msgstr "Saint Kitts & Nevis Anguilla"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_point_of_sale
@@ -10466,6 +10549,8 @@ msgid ""
 "Customized views are used when users reorganize the content of their "
 "dashboard views (via web client)"
 msgstr ""
+"Přizpůsobené pohledy jsou použity, pokud uživatelů přeorganizují obsah "
+"jejich pohledů nástěnek (přes webového klienta)"
 
 #. module: base
 #: help:publisher_warranty.contract,check_opw:0
@@ -10485,6 +10570,8 @@ msgid ""
 "Object in which you want to create / write the object. If it is empty then "
 "refer to the Object field."
 msgstr ""
+"Objekt, ve kterém chcete vytvořit / zapsat objekt. Pokud je prázdné, pak "
+"odkazuje na pole objektu."
 
 #. module: base
 #: view:ir.module.module:0
@@ -10754,7 +10841,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.tg
 msgid "Togo"
-msgstr ""
+msgstr "Togo"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -10934,7 +11021,7 @@ msgstr "Posloupnosti"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_miss
 msgid "Mss"
-msgstr ""
+msgstr "Paní"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view
@@ -11824,7 +11911,7 @@ msgstr "- type,name,res_id,src,value"
 #. module: base
 #: model:res.country,name:base.hm
 msgid "Heard and McDonald Islands"
-msgstr ""
+msgstr "Ostrovy Heard a McDonald"
 
 #. module: base
 #: help:ir.model.data,name:0
@@ -12293,6 +12380,9 @@ msgid ""
 "OpenERP. They are launched during the installation of new modules, but you "
 "can choose to restart some wizards manually from this menu."
 msgstr ""
+"Potvrzovací průvodce je použit, aby vám pomohl nastavit novou instanci "
+"OpenERP. Je spuštěn během instalace nových modulů, ale nemůžet zvolit ručně "
+"z této nabídky restart některých průvodců."
 
 #. module: base
 #: view:res.company:0
@@ -12316,6 +12406,8 @@ msgid ""
 "Important when you deal with multiple actions, the execution order will be "
 "decided based on this, low number is higher priority."
 msgstr ""
+"Důležité, pokud se vypořádáváte s více akcemi, pořadí vykonání bude "
+"rozhodnuto na základě tohoto, nízké číslo má vyšší přednost."
 
 #. module: base
 #: field:ir.actions.report.xml,header:0
@@ -12522,6 +12614,8 @@ msgid ""
 "Indicates whether this object model lives in memory only, i.e. is not "
 "persisted (osv.osv_memory)"
 msgstr ""
+"Indikuje, zda je tento model objektu je udržován pouze v paměti, např. není "
+"trvalý (osv.osv_memory)"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:416
@@ -12715,7 +12809,7 @@ msgstr ""
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
 "format!"
-msgstr ""
+msgstr "Výraz výběru voleb musí být ve formátu [('key','Label'], ...]!"
 
 #. module: base
 #: view:ir.filters:0
@@ -12774,6 +12868,8 @@ msgid ""
 "Create and manage the companies that will be managed by OpenERP from here. "
 "Shops or subsidiaries can be created and maintained from here."
 msgstr ""
+"Vytváří a spravuje společnosti, které budou odsud spravovány OpenERP. "
+"Obchody nebo pobočky mohou být vytvořeny a spravovány odsud."
 
 #. module: base
 #: model:res.country,name:base.id
@@ -12787,6 +12883,9 @@ msgid ""
 "you can then add translations manually or perform a complete export (as a "
 "template for a new language example)."
 msgstr ""
+"Tento průvodce zjistí nové termíny k překladu v aplikaci, takže pak budete "
+"moci ručně přidávat překlady nebo vykonávat celkové exporty (jako šablonu "
+"pro příklad nového jazyka)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -12841,6 +12940,8 @@ msgid ""
 "Expression, must be True to match\n"
 "use context.get or user (browse)"
 msgstr ""
+"Výraz musí být Pravda, aby odpovídal\n"
+"použitému kontextu.get nebo user (procházet)"
 
 #. module: base
 #: model:res.country,name:base.bg
@@ -13113,6 +13214,8 @@ msgid ""
 "Operation prohibited by access rules, or performed on an already deleted "
 "document (Operation: %s, Document type: %s)."
 msgstr ""
+"Operace zakázána díky přístupovým právům nebo prováděna na již smazaném "
+"dokumentu (Operace: %s, Typ dokumentu: %s)."
 
 #. module: base
 #: model:res.country,name:base.zr
@@ -13228,7 +13331,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.wf
 msgid "Wallis and Futuna Islands"
-msgstr ""
+msgstr "Ostrovy Wallis a Futuna"
 
 #. module: base
 #: help:multi_company.default,name:0
@@ -13339,7 +13442,7 @@ msgstr ""
 #. module: base
 #: help:ir.actions.report.xml,header:0
 msgid "Add or not the coporate RML header"
-msgstr ""
+msgstr "Přidat nebo nepřidat RML hlavičku společnosti"
 
 #. module: base
 #: help:workflow.transition,act_to:0
@@ -13538,6 +13641,8 @@ msgid ""
 "Save this document to a .tgz file. This archive containt UTF-8 %s files and "
 "may be uploaded to launchpad."
 msgstr ""
+"Uložit tento dokument do souboru .tgz. Tento archív obsahuje souboru UTF-8 "
+"%s a může být nahrán do launchpadu."
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -13591,6 +13696,8 @@ msgid ""
 "Invalid group_by specification: \"%s\".\n"
 "A group_by specification must be a list of valid fields."
 msgstr ""
+"Neplatná označení group_by: \"%s\".\n"
+"Označení group_by musí být seznam platných polí."
 
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
@@ -13623,6 +13730,8 @@ msgid ""
 "Check this box if the partner is a supplier. If it's not checked, purchase "
 "people will not see it when encoding a purchase order."
 msgstr ""
+"Zaškrtněte toto políčko, pokud je partner dodavatel. Pokud není zaškrtnuto, "
+"nakupující osoby ho neuvidí, když zadávají nákupní objednávku."
 
 #. module: base
 #: field:ir.actions.server,trigger_obj_id:0
@@ -13707,6 +13816,8 @@ msgid ""
 "3. If user belongs to several groups, the results from step 2 are combined "
 "with logical OR operator"
 msgstr ""
+"3. Pokud uživatel patří do více skupin, výsledky z kroku 2 jsou kombinovány "
+"s logickým operátorem OR"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_openid
@@ -13883,6 +13994,11 @@ msgid ""
 "be assigned to specific groups in order to make them accessible to some "
 "users within the system."
 msgstr ""
+"Spravuje a přizpůsobuje položky dostupné a zobrazované ve vaší nabídce "
+"systému OpenERP. Můžete mazat položky kliknutím na políčko na začátku "
+"každého řádku a pak jej smazat přes zjevené tlačítko. Položky mohou být "
+"přiřazeny k určitým skupinám za účelem nechání je přistupnými některým "
+"uživatelům v systému."
 
 #. module: base
 #: field:ir.ui.view,field_parent:0
@@ -13960,7 +14076,7 @@ msgstr "Pohled :"
 #. module: base
 #: field:ir.model.fields,view_load:0
 msgid "View Auto-Load"
-msgstr ""
+msgstr "Zobrazit automatické načtení"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:259
@@ -14275,6 +14391,10 @@ msgid ""
 "categories have a hierarchy structure: a partner belonging to a category "
 "also belong to his parent category."
 msgstr ""
+"Spravuje kategorie partnerů v pořadí pro jejich lepší třídění pro účely "
+"sledování a analýzy. Partner může patřit do několika kategorií a kategorie "
+"mají hierarchickou strukturu: partner patřící do kategorie také může patřit "
+"do jeho nadřazené kategorie."
 
 #. module: base
 #: model:res.country,name:base.az
@@ -14379,6 +14499,10 @@ msgid ""
 "uncheck the 'Suppliers' filter button in order to search in all your "
 "partners, including customers and prospects."
 msgstr ""
+"Můžete přistupovat ke všem informacím ohledně vašich dodavatelů z formuláče "
+"dodavatele: účetní data, historie emailů, setkání, nákupy, aj. Můžete "
+"odškrtnout filtrovací tlačítko 'Dodavatelé' za účelem hledání ve všech "
+"vašich partnerech, včetně zákazníků a vyhlídek."
 
 #. module: base
 #: model:res.country,name:base.rw
@@ -14531,6 +14655,8 @@ msgid ""
 "1. Global rules are combined together with a logical AND operator, and with "
 "the result of the following steps"
 msgstr ""
+"1. Globální pravidla jsou kombinována společně s logickým operátorem AND, a "
+"s výsledky následujících kroků"
 
 #. module: base
 #: view:res.partner:0
@@ -15511,3 +15637,121 @@ msgstr "Ruština / русский язык"
 
 #~ msgid "Client Actions Connections"
 #~ msgstr "Nastavení akcí klienta"
+
+#~ msgid ""
+#~ "Groups are used to define access rights on objects and the visibility of "
+#~ "screens and menus"
+#~ msgstr ""
+#~ "Skupiny jsou použity pro určení přístupových práv nad objekty a viditelnost "
+#~ "obrazovek a nabídek"
+
+#~ msgid ""
+#~ "Sets the language for the user's user interface, when UI translations are "
+#~ "available"
+#~ msgstr ""
+#~ "Pokud jsou dostupné překlady rozhraní, nastaví jazyk pro uživatelské "
+#~ "rozhraní uživatele."
+
+#~ msgid ""
+#~ "2. Group-specific rules are combined together with a logical AND operator"
+#~ msgstr ""
+#~ "2. Pravidla určitá pro skupinu jsou kombinována společně s logickým "
+#~ "operátorem AND"
+
+#~ msgid ""
+#~ "Provides the fields that will be used to fetch the email address, e.g. when "
+#~ "you select the invoice, then `object.invoice_address_id.email` is the field "
+#~ "which gives the correct address"
+#~ msgstr ""
+#~ "Poskytuje pole, která budou použita pro získání emailové adresy, např. když "
+#~ "vyberete fakturu, pak `object.invoice_address_id.email` je pole, které dává "
+#~ "platnou adresu"
+
+#, python-format
+#~ msgid "The search method is not implemented on this object !"
+#~ msgstr "Metoda hledání není u tohoto objektu realizována !"
+
+#~ msgid ""
+#~ "Condition that is to be tested before action is executed, e.g. "
+#~ "object.list_price > object.cost_price"
+#~ msgstr ""
+#~ "Podmínka, která musí být otestována před vykonáním akce, např. "
+#~ "object.list_price > object.cost_price"
+
+#~ msgid ""
+#~ "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
+#~ "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
+#~ msgstr ""
+#~ "Příklad: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
+#~ "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
+
+#~ msgid ""
+#~ "Create additional users and assign them groups that will allow them to have "
+#~ "access to selected functionalities within the system. Click on 'Done' if you "
+#~ "do not wish to add more users at this stage, you can always do this later."
+#~ msgstr ""
+#~ "Vytvoří dodatečné uživatele a přiřadí je do skupin, které vám umožní, aby "
+#~ "měly přístup k vybraným funkcím v systému. Klikněte na 'Dokončeno', pokud "
+#~ "již nechcete přidávat v této fázi další uživatele. Toto můžete vždy provést "
+#~ "později."
+
+#, python-format
+#~ msgid "\"email_from\" needs to be set to send welcome mails to users"
+#~ msgstr ""
+#~ "\"email_from\" potřebuje být nastaveno pro odeslání uvítacích dopisů "
+#~ "uživatelům"
+
+#~ msgid "Select the object from the model on which the workflow will executed."
+#~ msgstr "Vyberte objekty z modelu, u kterého bude vykonán pracovní tok."
+
+#~ msgid "Easy to Refer action by name e.g. One Sales Order -> Many Invoices"
+#~ msgstr ""
+#~ "Jednoduše odkazovaná jméno akce např. Jedena prodejní objednávka -> Mnoho "
+#~ "faktur"
+
+#, python-format
+#~ msgid ""
+#~ "Invalid value for reference field \"%s\" (last part must be a non-zero "
+#~ "integer): \"%s\""
+#~ msgstr ""
+#~ "Neplatná hodnota pole odkazu \"%s\" (poslední část musí být nenulové číslo): "
+#~ "\"%s\""
+
+#~ msgid ""
+#~ "If an email is provided, the user will be sent a message welcoming him.\n"
+#~ "\n"
+#~ "Warning: if \"email_from\" and \"smtp_server\" aren't configured, it won't "
+#~ "be possible to email new users."
+#~ msgstr ""
+#~ "Pokud je zadán email, uživateli bude zaslán uvítací email.\n"
+#~ "\n"
+#~ "Varování: pokud \"email_from\" a \"smtp_server\" nejsou nastaveny, nebude "
+#~ "možné odeslat email novým uživatelům."
+
+#~ msgid ""
+#~ "Number of time the function is called,\n"
+#~ "a negative number indicates no limit"
+#~ msgstr ""
+#~ "Počet kolikrát je volána funkce,\n"
+#~ "záporné číslo vyjadřuje bez limitu"
+
+#~ msgid "Open Source Service Company"
+#~ msgstr "Open Source servisní společnost"
+
+#~ msgid ""
+#~ "This wizard helps you add a new language to you OpenERP system. After "
+#~ "loading a new language it becomes available as default interface language "
+#~ "for users and partners."
+#~ msgstr ""
+#~ "Tento průvodce vám pomůže přidat nový jazyk do vašeho systému OpenERP. Po "
+#~ "načtení se nový jazyk stane dostupným jako výchozí jazyk rozhraní pro "
+#~ "uživatele a partnery."
+
+#~ msgid ""
+#~ "If you use OpenERP for the first time we strongly advise you to select the "
+#~ "simplified interface, which has less features but is easier. You can always "
+#~ "switch later from the user preferences."
+#~ msgstr ""
+#~ "Pokud používáte OpenERP poprvé, silně vám doporučujeme vybrat si "
+#~ "zjednodušené rozhraní, které má méně funkcí a je snadnější. Vždycky můžete "
+#~ "později přepnout z uživatelských předvoleb."
