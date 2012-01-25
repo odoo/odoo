@@ -38,8 +38,6 @@ def start_server():
         PASSIVE_PORTS = int(pps[0]), int(pps[1])
 
     class ftp_server(threading.Thread):
-        def log(self, level, message):
-            _logger.log(level, message)
 
         def run(self):
             autho = authorizer.authorizer()
@@ -50,9 +48,9 @@ def start_server():
             if PASSIVE_PORTS:
                 ftpserver.FTPHandler.passive_ports = PASSIVE_PORTS
 
-            ftpserver.log = lambda msg: self.log(netsvc.LOG_INFO, msg)
+            ftpserver.log = _logger.info
             ftpserver.logline = lambda msg: None
-            ftpserver.logerror = lambda msg: self.log(netsvc.LOG_ERROR, msg)
+            ftpserver.logerror = _logger.error
 
             ftpd = ftpserver.FTPServer((HOST, PORT), ftpserver.FTPHandler)
             ftpd.serve_forever()

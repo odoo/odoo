@@ -45,7 +45,6 @@ class partner_vat_13(osv.osv_memory):
         period = obj_period.search(cursor, user, [('date_start' ,'>=', date_start), ('date_stop','<=',date_stop)])
         if not period:
              raise osv.except_osv(_('Data Insufficient!'), _('No data for the selected Year.'))
-        #logger.notifyChannel('addons.'+self._name, netsvc.LOG_WARNING, 'period =  %s' %period ) 
         
         p_id_list = obj_partner.search(cursor, user, [('vat_subjected', '!=', False)], context=context)
         if not p_id_list:
