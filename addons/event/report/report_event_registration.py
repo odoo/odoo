@@ -45,10 +45,10 @@ class report_event_registration(osv.osv):
         'registration_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
         'event_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
         'user_id': fields.many2one('res.users', 'Responsible', readonly=True),
+        'user_id_registration': fields.many2one('res.users', 'Register', readonly=True),
         'name_registration': fields.char('Register',size=45, readonly=True),
         'speaker_id': fields.many2one('res.partner', 'Speaker', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'total': fields.float('Total'),
         'section_id': fields.related('event_id', 'section_id', type='many2one', relation='crm.case.section', string='Sale Team', store=True, readonly=True),
     }
@@ -104,7 +104,6 @@ class report_event_registration(osv.osv):
                 e.section_id,
                 event_state,
                 e.company_id,
-
                 e.main_speaker_id,
                 year,
                 month,
