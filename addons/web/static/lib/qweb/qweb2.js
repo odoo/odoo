@@ -301,7 +301,8 @@ QWeb2.Engine = (function() {
                 // new ActiveXObject("Msxml2.DOMDocument.4.0");
                 xDoc = new ActiveXObject("MSXML2.DOMDocument");
             } catch (e) {
-                return this.tools.exception("Could not find a DOM Parser");
+                return this.tools.exception(
+                    "Could not find a DOM Parser: " + e.message);
             }
             xDoc.async = false;
             xDoc.preserveWhiteSpace = true;
