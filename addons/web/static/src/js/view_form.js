@@ -3227,6 +3227,7 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'label' : 'openerp.web.form.WidgetLabel',
     'button' : 'openerp.web.form.WidgetButton',
     'char' : 'openerp.web.form.FieldChar',
+    'id' : 'openerp.web.form.FieldChar',
     'email' : 'openerp.web.form.FieldEmail',
     'url' : 'openerp.web.form.FieldUrl',
     'text' : 'openerp.web.form.FieldText',
