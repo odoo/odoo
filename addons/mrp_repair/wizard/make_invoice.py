@@ -46,6 +46,13 @@ class make_invoice(osv.osv_memory):
         newinv = order_obj.action_invoice_create(cr, uid, context['active_ids'],
                                                  group=inv.group,context=context)
 
+        # We have to trigger the workflow of the given repairs, otherwise they remain 'to be invoiced'.
+        # Note that the signal 'action_invoice_create' will trigger another call to the method 'action_invoice_create',
+        # but that second call will not do anything, since the repairs are already invoiced.
+        wf_service = netsvc.LocalService("workflow")
+        for repair_id in context['active_ids']:
+            wf_service.trg_validate(uid, 'mrp.repair', repair_id, 'action_invoice_create', cr)
+
         return {
             'domain': [('id','in', newinv.values())],
             'name': 'Invoices',

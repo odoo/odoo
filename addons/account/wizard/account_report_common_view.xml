@@ -10,8 +10,9 @@
             <form string="Report Options">
                   <label nolabel="1" string=""/>
                   <newline/>
-                   <field name="chart_account_id" widget='selection'/>
-                   <field name="fiscalyear_id"/>
+                   <field name="chart_account_id" widget='selection' on_change="onchange_chart_id(chart_account_id, context)"/>
+                   <field name="company_id" invisible="1"/>
+                   <field name="fiscalyear_id" domain="[('company_id','=',company_id)]"/>
                    <field name="target_move"/>
                        <notebook tabpos="up" colspan="4">
                             <page string="Filters" name="filters">
@@ -20,7 +21,7 @@
                                     <field name="date_from" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" colspan="4"/>
                                     <field name="date_to" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}"  colspan="4"/>
                                     <separator string="Periods"  colspan="4"/>
-                                    <field name="period_from"  domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
+                                    <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
                                     <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
                             </page>
                             <page string="Journals" name="journal_ids">

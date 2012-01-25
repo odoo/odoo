@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-01-13 06:26+0000\n"
-"Last-Translator: silas <Unknown>\n"
+"PO-Revision-Date: 2012-01-13 19:23+0000\n"
+"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:51+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-01-14 05:12+0000\n"
+"X-Generator: Launchpad (build 14664)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -98,7 +98,7 @@ msgstr "Konto2 ID"
 #. module: account_analytic_plans
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Die Rechnungsnummer muss je Firma eindeutig sein"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -111,6 +111,8 @@ msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
 msgstr ""
+"Konfigurationsfehler! Die gewählte Währung muss auch bei den Standardkonten "
+"verwendet werden"
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -135,12 +137,12 @@ msgstr "Bankauszug Buchungen"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
 msgid "Define your Analytic Plans"
-msgstr ""
+msgstr "Definieren Sie die Analsyskonten"
 
 #. module: account_analytic_plans
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "ungültige BBA Kommunikations Stuktur"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
@@ -265,7 +267,7 @@ msgstr "Start Datum"
 msgid ""
 "The selected account of your Journal Entry must receive a value in its "
 "secondary currency"
-msgstr ""
+msgstr "Das ausgewählte Konto muss auch in der 2.Währung bebucht werden."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -308,7 +310,7 @@ msgstr "analytic.plan.create.model.action"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Analyse Zeile"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -350,6 +352,8 @@ msgstr ""
 #: constraint:account.move.line:0
 msgid "The date of your Journal Entry is not in the defined period!"
 msgstr ""
+"Das Datum Ihrer Journalbuchung befindet sich nicht in der definierten "
+"Periode!"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
@@ -410,7 +414,7 @@ msgstr "Konto3 ID"
 #. module: account_analytic_plans
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "Für Sichten dürfen keine Analysezeilen erzeugt werden"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
