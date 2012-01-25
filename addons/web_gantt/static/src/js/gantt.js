@@ -28,6 +28,9 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
     },
     do_search: function (domains, contexts, group_bys) {
         var self = this;
+        self.last_domains = domains;
+        self.last_contexts = contexts;
+        self.last_group_bys = group_bys;
         // select the group by
         var n_group_bys = [];
         if (this.fields_view.arch.attrs.default_group_by) {
@@ -50,6 +53,9 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                 return self.on_data_loaded(data, n_group_bys);
             });
         });
+    },
+    reload: function() {
+        return this.do_search(this.last_domains, this.last_contexts, this.last_group_bys);
     },
     on_data_loaded: function(tasks, group_bys) {
         var self = this;
@@ -188,8 +194,17 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         });
     },
     on_task_display: function(task) {
-        //TODO niv
-        console.log(task);
+        var self = this;
+        var pop = new openerp.web.form.FormOpenPopup(self);
+        pop.on_write_completed.add_last(function() {
+            self.reload();
+        });
+        pop.show_element(
+            self.dataset.model,
+            task.id,
+            null,
+            {}
+        );
     },
 });
 
