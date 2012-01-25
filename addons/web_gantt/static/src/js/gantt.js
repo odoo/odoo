@@ -368,16 +368,11 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         
         if (!event_id) {
             var pop = new openerp.web.form.SelectCreatePopup(this);
-            pop.select_element(
-                this.model,
-                {
-                    title: _t("Create: ") + this.name,
-                    initial_view: 'form',
-                    disable_multiple_selection: true
-                },
-                this.dataset.domain,
-                this.context || this.dataset.context
-            )
+            pop.select_element(this.model, {
+                        title: _t("Create: ") + this.name,
+                        initial_view: 'form',
+                        disable_multiple_selection: true
+                    }, this.dataset.domain, this.context || this.dataset.context);
             pop.on_select_elements.add_last(function(element_ids) {
                 self.dataset.read_ids(element_ids,[]).done(function(projects) {
                     self.database_projects.concat(projects);

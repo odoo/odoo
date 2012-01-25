@@ -1223,7 +1223,7 @@ openerp.web.qweb.default_dict = {
     '_' : _,
     '_t' : openerp.web._t
 };
-openerp.web.qweb.format_text_node = function(s) {
+openerp.web.qweb.format_text_node = function (s) {
     // Note that 'this' is the Qweb Node of the text
     var translation = this.node.parentNode.attributes['t-translation'];
     if (translation && translation.value === 'off') {
@@ -1235,13 +1235,13 @@ openerp.web.qweb.format_text_node = function(s) {
     }
     var tr = openerp.web._t(ts);
     return tr === ts ? s : tr;
-}
+};
 
 /** Jquery extentions */
 $.Mutex = (function() {
     function Mutex() {
         this.def = $.Deferred().resolve();
-    };
+    }
     Mutex.prototype.exec = function(action) {
         var current = this.def;
         var next = this.def = $.Deferred();

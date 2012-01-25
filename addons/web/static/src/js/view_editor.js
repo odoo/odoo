@@ -4,8 +4,8 @@ var QWeb = openerp.web.qweb;
 openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
     init: function(parent, element_id, dataset, view, options) {
         this._super(parent);
-        this.element_id = element_id
-        this.parent = parent
+        this.element_id = element_id;
+        this.parent = parent;
         this.dataset = new openerp.web.DataSetSearch(this, 'ir.ui.view', null, null),
         this.model = dataset.model;
         this.xml_element_id = 0;
@@ -107,7 +107,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                 type_widget.dirty = true;
             }
             type_widget.start();
-            type_widget.set_value(value)
+            type_widget.set_value(value);
             self.create_view_widget.push(type_widget);
         });
     },
@@ -177,7 +177,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             'att_list': [],
             'name': this.add_node_name(node),
             'child_id': []
-        }
+        };
         ViewNode.att_list.push(node.tagName.toLowerCase());
         _.each(node.attributes, function(att) {
             ViewNode.att_list.push([att.nodeName, att.nodeValue]);
@@ -576,7 +576,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             var check = _.detect(one_object , function(obj) {
                 return id == obj.id;
             });
-            if (check) {result.push(check);};
+            if (check) {result.push(check);}
             _.each(one_object, function(obj) {
                self.get_object_by_id(id,obj.child_id, result);
             });
@@ -817,7 +817,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             values.push('');
             values.sort();
             _PROPERTIES_ATTRIBUTES['widget']['selection'] = values;
-            var widgets = _.filter(_PROPERTIES_ATTRIBUTES, function(property){ return _.include(properties, property.name)})
+            var widgets = _.filter(_PROPERTIES_ATTRIBUTES, function (property) { return _.include(properties, property.name)});
             _.each(widgets, function(widget) {
                 var type_widget =  new (self.property.get_any([widget.type])) (self.edit_node_dialog, widget);
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
@@ -842,24 +842,23 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         var group_ids = [], group_names = {}, groups = [];
         var res_groups = new openerp.web.DataSetSearch(this,'res.groups', null, null),
             model_data = new openerp.web.DataSetSearch(self,'ir.model.data', null, null);
-            res_groups
-            .read_slice([], {})
-            .done(function(res_grp) {
-                _.each(res_grp,function(res){
+            res_groups.read_slice([], {}).done(function (res_grp) {
+                _.each(res_grp, function (res) {
                     var key = res.id;
-                    group_names[key]=res.name;
+                    group_names[key] = res.name;
                     group_ids.push(res.id);
                 });
-                model_data
-                .read_slice([],{domain:[['res_id', 'in', group_ids],['model','=','res.groups']]})
-                .done(function(model_grp) {
-                    _.each(model_grp, function(res_group) {
-                        groups.push([res_group.module + "." + res_group.name,group_names[res_group.res_id]]);
+                model_data.read_slice([], {domain: [
+                    ['res_id', 'in', group_ids],
+                    ['model', '=', 'res.groups']
+                ]}).done(function (model_grp) {
+                    _.each(model_grp, function (res_group) {
+                        groups.push([res_group.module + "." + res_group.name, group_names[res_group.res_id]]);
                     });
                     self.groups = groups;
                     def.resolve();
                 });
-            })
+            });
         return def.promise();
     },
     on_add_node: function(properties, fields){
@@ -922,7 +921,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
     render_new_field :function(id){
         var self = this;
         var action = {
-            context: {'default_model_id': id, 'manual':true},
+            context: {'default_model_id': id, 'manual': true},
             res_model: "ir.model.fields",
             views: [[false, 'form']],
             type: 'ir.actions.act_window',
@@ -930,7 +929,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             flags: {
                 action_buttons: true
             }
-        }
+        };
         var action_manager = new openerp.web.ActionManager(self);
         $.when(action_manager.do_action(action)).then(function() {
             var controller = action_manager.dialog_viewmanager.views['form'].controller;

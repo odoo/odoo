@@ -153,7 +153,7 @@ openerp.web_mobile.Shortcuts =  openerp.web.OldWidget.extend({
     start: function() {
         var self = this;
         this.rpc('/web/session/sc_list',{} ,function(res){
-            self.$element.html(self.render({'sc' : res}))
+            self.$element.html(self.render({'sc': res}));
             self.$element.find("[data-role=header]").find('h1').html('Favourite');
             self.$element.find("[data-role=header]").find('#home').click(function(){
                 $.mobile.changePage("#oe_menu", "slide", false, true);

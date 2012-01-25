@@ -190,9 +190,9 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         this.action_managers.push(am);
         am.appendTo($action);
         am.do_action(action);
-        am.do_action = function(action) {
+        am.do_action = function (action) {
             self.do_action(action);
-        }
+        };
         if (action_attrs.creatable && action_attrs.creatable !== 'false') {
             var action_id = parseInt(action_attrs.creatable, 10);
             $action.parent().find('button.oe_dashboard_button_create').click(function() {

@@ -381,7 +381,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.do_ranged_search();
     },
     do_ranged_search: function() {
-        var self = this
+        var self = this;
         scheduler.clearAll();
         $.when(this.has_been_loaded, this.ready).then(function() {
             self.dataset.read_slice(_.keys(self.fields), {

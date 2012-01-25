@@ -169,7 +169,7 @@ openerp.web_process = function (openerp) {
                 // Node text
                 process_node_text =  r.text(n.node.x, n.node.y, (n.node.name))
                     .attr({"fill": "#fff", "font-weight": "bold", "cursor": "pointer"});
-                process_node_text.translate((process_node.getBBox().width/ 2) + 5, 10)
+                process_node_text.translate((process_node.getBBox().width / 2) + 5, 10);
                 if(n.node.subflow) {
                     process_node_text.click(function() {
                         self.process_id = n.node.subflow[0];

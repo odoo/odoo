@@ -78,7 +78,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 node.tag = qweb_prefix;
                 node.attrs[qweb_prefix + '-esc'] = 'record.' + node.attrs['name'] + '.value';
                 this.extract_aggregates(node);
-                break
+                break;
             case 'button':
             case 'a':
                 var type = node.attrs.type || '';
@@ -395,7 +395,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.OldWidget.extend({
         this.qweb_context = {
             record: this.record,
             widget: this
-        }
+        };
         for (var p in this) {
             if (_.str.startsWith(p, 'kanban_')) {
                 this.qweb_context[p] = _.bind(this[p], this);
@@ -444,7 +444,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.OldWidget.extend({
         var self = this;
         if (confirm(_t("Are you sure you want to delete this record ?"))) {
             return $.when(this.view.dataset.unlink([this.id])).then(function() {
-                self.group.remove_record(self.id)
+                self.group.remove_record(self.id);
                 self.stop();
             });
         }

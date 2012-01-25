@@ -125,7 +125,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         if (state.id && this.datarecord.id != state.id) {
             var idx = this.dataset.get_id_index(state.id);
             if (idx === null) {
-                this.dataset.ids.push(state.id)
+                this.dataset.ids.push(state.id);
                 this.dataset.index = this.dataset.ids.length - 1;
             }
             this.do_show();
@@ -233,7 +233,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     do_update_pager: function(hide_index) {
         var $pager = this.$form_header.find('div.oe_form_pager');
         var index = hide_index ? '-' : this.dataset.index + 1;
-        $pager.find('button').prop('disabled', this.dataset.ids.length < 2)
+        $pager.find('button').prop('disabled', this.dataset.ids.length < 2);
         $pager.find('span.oe_pager_index').html(index);
         $pager.find('span.oe_pager_count').html(this.dataset.ids.length);
     },
@@ -1920,10 +1920,10 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     },
     _quick_create: function(name) {
         var self = this;
-        var slow_create = function() {
+        var slow_create = function () {
             self._change_int_value(null);
             self._search_create_popup("form", undefined, {"default_name": name});
-        }
+        };
         if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
             var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
             dataset.name_create(name, function(data) {
