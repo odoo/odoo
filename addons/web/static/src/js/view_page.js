@@ -245,6 +245,7 @@ openerp.web.page = function (openerp) {
     openerp.web.page.readonly = openerp.web.form.widgets.clone({
         'frame': 'openerp.web.page.WidgetFrameReadonly',
         'char': 'openerp.web.page.FieldCharReadonly',
+        'id': 'openerp.web.page.FieldCharReadonly',
         'email': 'openerp.web.page.FieldEmailReadonly',
         'url': 'openerp.web.page.FieldUrlReadonly',
         'text': 'openerp.web.page.FieldCharReadonly',

@@ -965,6 +965,12 @@ class View(openerpweb.Controller):
             xml = ElementTree.fromstring(arch)
         fvg['arch'] = common.xml2json.from_elementtree(xml, preserve_whitespaces)
 
+        if 'id' in fvg['fields']:
+            # Special case for id's
+            id_field = fvg['fields']['id']
+            id_field['original_type'] = id_field['type']
+            id_field['type'] = 'id'
+
         for field in fvg['fields'].itervalues():
             if field.get('views'):
                 for view in field["views"].itervalues():

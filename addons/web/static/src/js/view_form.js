@@ -1333,6 +1333,13 @@ openerp.web.form.FieldChar = openerp.web.form.Field.extend({
     }
 });
 
+openerp.web.form.FieldID = openerp.web.form.FieldChar.extend({
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input').prop('disabled', true);
+    }
+});
+
 openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
     template: 'FieldEmail',
     start: function() {
@@ -3227,6 +3234,7 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'label' : 'openerp.web.form.WidgetLabel',
     'button' : 'openerp.web.form.WidgetButton',
     'char' : 'openerp.web.form.FieldChar',
+    'id' : 'openerp.web.form.FieldID',
     'email' : 'openerp.web.form.FieldEmail',
     'url' : 'openerp.web.form.FieldUrl',
     'text' : 'openerp.web.form.FieldText',
