@@ -170,6 +170,16 @@ class account_bank_statement(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement',context=c),
     }
 
+    def _check_company_id(self, cr, uid, ids, context=None):
+        for statement in self.browse(cr, uid, ids, context=context):
+            if statement.company_id.id != statement.period_id.company_id.id:
+                return False
+        return True
+
+    _constraints = [
+        (_check_company_id, 'The journal and period chosen have to belong to the same company.', ['journal_id','period_id']),
+    ]
+
     def onchange_date(self, cr, uid, ids, date, company_id, context=None):
         """
             Find the correct period to use for the given date and company_id, return it and set it in the context
