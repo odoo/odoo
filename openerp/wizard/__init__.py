@@ -53,7 +53,7 @@ class interface(netsvc.Service):
         _logger.warning(
             "The wizard %s uses the deprecated openerp.wizard.interface class.\n"
             "It must use the openerp.osv.TransientModel class instead." % \
-            name, DeprecationWarning, stacklevel=3)
+            name)
         super(interface, self).__init__('wizard.'+name)
         self.wiz_name = name
 
