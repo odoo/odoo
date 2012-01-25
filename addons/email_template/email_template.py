@@ -186,7 +186,7 @@ class email_template(osv.osv):
                  'res_model': 'mail.compose.message',
                  'src_model': src_obj,
                  'view_type': 'form',
-                 'context': "{'mail.compose.message.mode':'mass_mail'}",
+                 'context': "{'mail.compose.message.mode':'mass_mail', 'mail.compose.template_id' : %d}" % (template.id),
                  'view_mode':'form,tree',
                  'view_id': res_id,
                  'target': 'new',
