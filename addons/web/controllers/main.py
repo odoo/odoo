@@ -1543,7 +1543,7 @@ class CSVExport(Export):
         fp = StringIO()
         writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
 
-        writer.writerow(fields)
+        writer.writerow([name.encode('utf-8') for name in fields])
 
         for data in rows:
             row = []
@@ -1583,7 +1583,7 @@ class ExcelExport(Export):
         worksheet = workbook.add_sheet('Sheet 1')
 
         for i, fieldname in enumerate(fields):
-            worksheet.write(0, i, str(fieldname))
+            worksheet.write(0, i, fieldname)
             worksheet.col(i).width = 8000 # around 220 pixels
 
         style = xlwt.easyxf('align: wrap yes')
