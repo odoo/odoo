@@ -310,13 +310,13 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
                 if (self.searchview
-                        && self.flags.auto_search !== false
+                        && self.flags.auto_search
                         && view.controller.searchable !== false) {
                     self.searchview.ready.then(self.searchview.do_search);
                 }
             });
         } else if (this.searchview
-                && self.flags.auto_search !== false
+                && self.flags.auto_search
                 && view.controller.searchable !== false) {
             this.searchview.ready.then(this.searchview.do_search);
         }
@@ -453,7 +453,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         // do not have it yet (and we don't, because we've not called our own
         // ``_super()``) rpc requests will blow up.
         var flags = action.flags || {};
-        flags.auto_search = !!action.auto_search;
+        flags.auto_search = action.auto_search !== false;
         if (action.res_model == 'board.board' && action.view_mode === 'form') {
             // Special case for Dashboards
             _.extend(flags, {
