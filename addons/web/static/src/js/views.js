@@ -557,6 +557,20 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                 var dialog = new session.web.Dialog(this, { title: _t("Fields View Get"), width: '95%' }).open();
                 $('<pre>').text(session.web.json_node_to_xml(current_view.fields_view.arch, true)).appendTo(dialog.$element);
                 break;
+            case 'perm_read':
+                var ids = current_view.get_selected_ids();
+                if (ids.length === 1) {
+                    this.dataset.call('perm_read', [ids]).then(function(result) {
+                        var dialog = new session.web.Dialog(this, {
+                            title: _.str.sprintf(_t("View Log (%s)"), self.dataset.model),
+                            width: 400
+                        }, QWeb.render('ViewManagerDebugViewLog', {
+                            perm : result[0],
+                            format : session.web.format_value
+                        })).open();
+                    });
+                }
+                break;
             case 'fields':
                 this.dataset.call_and_eval(
                         'fields_get', [false, {}], null, 1).then(function (fields) {
@@ -1040,7 +1054,7 @@ session.web.TranslateDialog = session.web.Dialog.extend({
     }
 });
 
-session.web.View = session.web.OldWidget.extend(/** @lends session.web.View# */{
+session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     template: "EmptyComponent",
     // name displayed in view switchers
     display_name: '',

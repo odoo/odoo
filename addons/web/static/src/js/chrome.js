@@ -17,7 +17,7 @@ openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.
         this._super.apply(this, arguments);
         this.$element.notify({
             speed: 500,
-            expires: 1500
+            expires: 2500
         });
     },
     notify: function(title, text) {

@@ -83,7 +83,7 @@ body { padding: 0; margin: 0; }
     border-bottom-left-radius: 8px;
 }
 .openerp .oe_notification {
-    z-index: 1001;
+    z-index: 1050;
     display: none;
 }
 .openerp .oe_notification * {
@@ -2286,6 +2286,24 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     color: black;
 }
 
+/* Debug stuff */
+.openerp .oe_debug_view_log {
+    font-size: 95%;
+}
+.openerp .oe_debug_view_log label {
+    display: block;
+    width: 49%;
+    text-align: right;
+    float: left;
+    font-weight: bold;
+    color: #009;
+}
+.openerp .oe_debug_view_log span {
+    display: block;
+    width: 49%;
+    float: right;
+    color: #333;
+}
 
 /* Internet Explorer Fix */
 a img {
