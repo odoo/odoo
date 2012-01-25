@@ -1,6 +1,12 @@
-<template>
-<t t-name="GanttView">
-    <button class="oe_button" id="add_task">Create</button>
-    <div t-att-style="'width:'+ width + 'px; height:' + height + 'px; padding-top:6px;position:relative;'" id="GanttView"/>
-</t>
-</template>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="GanttView">
+        <div>
+            <div t-att-id="widget.chart_id" class="oe-gantt-view-view"/>
+        </div>
+    </t>
+    <t t-name="GanttView-create-button">
+        <button class="oe_button oe-gantt-view-create">Create</button>
+    </t>
+</templates>

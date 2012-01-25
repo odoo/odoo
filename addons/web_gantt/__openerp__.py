@@ -12,7 +12,7 @@
         'static/lib/dhtmlxGantt/sources/dhtmlxgantt.js',
         'static/src/js/gantt.js'
     ],
-    "css": ['static/lib/dhtmlxGantt/codebase/dhtmlxgantt.css'],
+    "css": ['static/src/css/gantt.css', 'static/lib/dhtmlxGantt/codebase/dhtmlxgantt.css'],
     'qweb' : [
         "static/src/xml/*.xml",
     ],
