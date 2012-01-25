@@ -2524,7 +2524,10 @@ class account_account_template(osv.osv):
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context.copy()
         ctx.update({'defer_parent_store_computation': True})
-        children_acc_template = self.search(cr, uid, ['|', ('chart_template_id','=', chart_template_id),'&',('parent_id','child_of', [template.account_root_id.id]),('chart_template_id','=', False), ('nocreate','!=',True)], order='id')
+        children_acc_criteria = [('chart_template_id','=', chart_template_id)]
+        if template.account_root_id.id:
+            children_acc_criteria = ['|'] + children_acc_criteria + ['&',('parent_id','child_of', [template.account_root_id.id]),('chart_template_id','=', False)]
+        children_acc_template = self.search(cr, uid, [('nocreate','!=',True)] + children_acc_criteria, order='id')
         for account_template in self.browse(cr, uid, children_acc_template, context=context):
             # skip the root of COA if it's not the main one
             if (template.account_root_id.id == account_template.id) and template.parent_id:
@@ -2982,7 +2985,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_templ_obj = self.pool.get('account.tax.template')
 
         if 'bank_accounts_id' in fields:
-            res.update({'bank_accounts_id': [{'acc_name': _('Cash'), 'account_type': 'cash'}]})
+            res.update({'bank_accounts_id': [{'acc_name': _('Cash'), 'account_type': 'cash'},{'acc_name': _('Bank'), 'account_type': 'bank'}]})
         if 'company_id' in fields:
             res.update({'company_id': self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0].company_id.id})
         if 'seq_journal' in fields:
