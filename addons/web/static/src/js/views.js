@@ -453,7 +453,9 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         // do not have it yet (and we don't, because we've not called our own
         // ``_super()``) rpc requests will blow up.
         var flags = action.flags || {};
-        flags.auto_search = action.auto_search !== false;
+        if (!('auto_search' in flags)) {
+            flags.auto_search = action.auto_search !== false;
+        }
         if (action.res_model == 'board.board' && action.view_mode === 'form') {
             // Special case for Dashboards
             _.extend(flags, {
