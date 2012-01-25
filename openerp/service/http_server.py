@@ -125,9 +125,6 @@ class OpenERPAuthProvider(AuthProvider):
             _logger.debug("Fail auth: %s" % e )
             return False
 
-    def log(self, msg, lvl=logging.INFO):
-        _logger.log(lvl,msg)
-
     def checkRequest(self,handler,path, db=False):        
         auth_str = handler.headers.get('Authorization',False)
         try:
@@ -141,21 +138,21 @@ class OpenERPAuthProvider(AuthProvider):
                 db = psp[0]
             else:
                 #FIXME!
-                self.log("Wrong path: %s, failing auth" %path)
+                _logger.info("Wrong path: %s, failing auth" %path)
                 raise AuthRejectedExc("Authorization failed. Wrong sub-path.") 
         if self.auth_creds.get(db):
             return True 
         if auth_str and auth_str.startswith('Basic '):
             auth_str=auth_str[len('Basic '):]
             (user,passwd) = base64.decodestring(auth_str).split(':')
-            self.log("Found user=\"%s\", passwd=\"***\" for db=\"%s\"" %(user,db))
+            _logger.info("Found user=\"%s\", passwd=\"***\" for db=\"%s\"", user, db)
             acd = self.authenticate(db,user,passwd,handler.client_address)
             if acd != False:
                 self.auth_creds[db] = acd
                 self.last_auth = db
                 return True
         if self.auth_tries > 5:
-            self.log("Failing authorization after 5 requests w/o password")
+            _logger.info("Failing authorization after 5 requests w/o password")
             raise AuthRejectedExc("Authorization failed.")
         self.auth_tries += 1
         raise AuthRequiredExc(atype='Basic', realm=self.realm)
