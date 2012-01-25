@@ -21,7 +21,6 @@
 
 import sys
 import logging
-import warnings
 
 LOG_NOTSET = 'notset'
 LOG_DEBUG_SQL = 'debug_sql'
@@ -44,20 +43,22 @@ logging.addLevelName(logging.DEBUG_SQL, 'DEBUG_SQL')
 logging.TEST = logging.INFO - 5
 logging.addLevelName(logging.TEST, 'TEST')
 
+_logger = logging.getLogger(__name__)
+
 class Logger(object):
     def __init__(self):
-        warnings.warn("The netsvc.Logger API shouldn't be used anymore, please "
-                      "use the standard `logging.getLogger` API instead",
-                      PendingDeprecationWarning, stacklevel=2)
+        _logger.warning(
+            "The netsvc.Logger API shouldn't be used anymore, please "
+            "use the standard `logging.getLogger` API instead.")
         super(Logger, self).__init__()
 
     def notifyChannel(self, name, level, msg):
-        warnings.warn("notifyChannel API shouldn't be used anymore, please use "
-                      "the standard `logging` module instead",
-                      PendingDeprecationWarning, stacklevel=2)
+        _logger.warning(
+            "notifyChannel API shouldn't be used anymore, please use "
+            "the standard `logging` module instead.")
         from service.web_services import common
 
-        log = logging.getLogger(ustr(name))
+        log = logging.getLogger(__name__ + '(deprecated channel: ' + ustr(name) + ')')
 
         if level in [LOG_DEBUG_RPC, LOG_TEST] and not hasattr(log, level):
             fct = lambda msg, *args, **kwargs: log.log(getattr(logging, level.upper()), msg, *args, **kwargs)

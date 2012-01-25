@@ -42,7 +42,6 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ
 from psycopg2.pool import PoolError
 from psycopg2.psycopg1 import cursor as psycopg1cursor
 from threading import currentThread
-import warnings
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
@@ -471,8 +470,7 @@ class Connection(object):
     def __nonzero__(self):
         """Check if connection is possible"""
         try:
-            warnings.warn("You use an expensive function to test a connection.",
-                      DeprecationWarning, stacklevel=1)
+            _logger.warning("__nonzero__() is deprecated. (It is too expensive to test a connection.)")
             cr = self.cursor()
             cr.close()
             return True

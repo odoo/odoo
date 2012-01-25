@@ -52,7 +52,6 @@ import re
 import simplejson
 import time
 import types
-import warnings
 from lxml import etree
 
 import fields
@@ -4745,8 +4744,8 @@ class BaseModel(object):
         return [x[0] for x in cr.fetchall()]
 
     def check_recursion(self, cr, uid, ids, context=None, parent=None):
-        warnings.warn("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \
-                        self._name, DeprecationWarning, stacklevel=3)
+        _logger.warning("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \
+                        self._name)
         assert parent is None or parent in self._columns or parent in self._inherit_fields,\
                     "The 'parent' parameter passed to check_recursion() must be None or a valid field name"
         return self._check_recursion(cr, uid, ids, context, parent)

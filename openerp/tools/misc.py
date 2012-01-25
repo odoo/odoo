@@ -37,7 +37,6 @@ import socket
 import sys
 import threading
 import time
-import warnings
 import zipfile
 from collections import defaultdict
 from datetime import datetime

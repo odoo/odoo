@@ -32,7 +32,6 @@ import openerp.pooler as pooler
 from openerp.osv.osv import except_osv
 from openerp.osv.orm import except_orm
 import sys
-import warnings
 
 _logger = logging.getLogger(__name__)
 
@@ -51,7 +50,7 @@ class interface(netsvc.Service):
 
     def __init__(self, name):
         assert not self.exists('wizard.'+name), 'The wizard "%s" already exists!' % (name,)
-        warnings.warn(
+        _logger.warning(
             "The wizard %s uses the deprecated openerp.wizard.interface class.\n"
             "It must use the openerp.osv.TransientModel class instead." % \
             name, DeprecationWarning, stacklevel=3)
