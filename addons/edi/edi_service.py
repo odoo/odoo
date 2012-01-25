@@ -23,7 +23,7 @@ import logging
 import netsvc
 import openerp
 
-_logger = logging.getLogger('edi.service')
+_logger = logging.getLogger(__name__)
 
 class edi(netsvc.ExportService):
 

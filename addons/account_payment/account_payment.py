@@ -19,10 +19,13 @@
 #
 ##############################################################################
 
+import logging
 import time
 
 from osv import osv, fields
 import netsvc
+
+_logger = logging.getLogger(__name__)
 
 class payment_mode(osv.osv):
     _name= 'payment.mode'
@@ -70,9 +73,7 @@ class payment_order(osv.osv):
 
     #dead code
     def get_wizard(self, type):
-        logger = netsvc.Logger()
-        logger.notifyChannel("warning", netsvc.LOG_WARNING,
-                "No wizard found for the payment type '%s'." % type)
+        _logger.warning("No wizard found for the payment type '%s'.", type)
         return None
 
     def _total(self, cursor, user, ids, name, args, context=None):

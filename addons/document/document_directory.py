@@ -19,12 +19,15 @@
 #
 ##############################################################################
 
+import logging
 
 from osv import osv, fields
 from osv.orm import except_orm
 
 import nodes
 from tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 class document_directory(osv.osv):
     _name = 'document.directory'
@@ -78,9 +81,7 @@ class document_directory(osv.osv):
             root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']
             return root_id
         except Exception, e:
-            import netsvc
-            logger = netsvc.Logger()
-            logger.notifyChannel("document", netsvc.LOG_WARNING, 'Cannot set directory root:'+ str(e))
+            _logger.warning('Cannot set directory root:' + str(e))
             return False
         return objid.browse(cr, uid, mid, context=context).res_id
 

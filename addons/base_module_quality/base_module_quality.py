@@ -25,6 +25,9 @@ from tools.translate import _
 from osv import osv, fields
 import logging
 import addons
+
+_logger = logging.getLogger(__name__)
+
 class abstract_quality_check(object):
     '''
         This Class is abstract class for all test
@@ -78,7 +81,6 @@ class abstract_quality_check(object):
 
         #This variable used to give message if test result is good or not
         self.message = ''
-        self.log = logging.getLogger('module.quality')
 
         #The tests have to subscribe itselfs in this list, that contains
         #all the test that have to be performed.
@@ -108,11 +110,11 @@ class abstract_quality_check(object):
         model_data = pool.get('ir.model.data').browse(cr, uid, ids2)
         for model in model_data:
             model_list.append(model.res_id)
-        self.log.debug('get_objects() model_list: %s', ','.join(map(str, model_list)))
+        _logger.debug('get_objects() model_list: %s', ','.join(map(str, model_list)))
         obj_list = []
         for mod in pool.get('ir.model').browse(cr, uid, model_list):
             obj_list.append(str(mod.model))
-        self.log.debug('get_objects() obj_list: %s', ','.join(obj_list))
+        _logger.debug('get_objects() obj_list: %s', ','.join(obj_list))
         return obj_list
 
     def get_model_ids(self, cr, uid, models=[]):
@@ -120,7 +122,7 @@ class abstract_quality_check(object):
         if not models:
             return []
         pool = pooler.get_pool(cr.dbname)
-        self.log.debug('get_model_ids([%s])', ', '.join(models))
+        _logger.debug('get_model_ids([%s])', ', '.join(models))
         return pool.get('ir.model').search(cr, uid, [('model', 'in', models)])
 
     def get_ids(self, cr, uid, object_list):
@@ -211,7 +213,6 @@ class module_quality_check(osv.osv):
         So here the detail result is in html format and summary will be in text_wiki format.
         '''
         pool = pooler.get_pool(cr.dbname)
-        log = logging.getLogger('module.quality')
         obj_module = pool.get('ir.module.module')
         if not module_state:
             module_id = obj_module.search(cr, uid, [('name', '=', module_name)])
@@ -223,14 +224,14 @@ class module_quality_check(osv.osv):
         ponderation_sum = 0.0
         create_ids = []
         module_path = addons.get_module_path(module_name)
-        log.info('Performing quality tests for %s', module_name)
+        _logger.info('Performing quality tests for %s', module_name)
         for test in abstract_obj.tests:
             val = test.quality_test()
             if not val.active:
-                log.info('Skipping inactive step %s for %s', val.name, module_name)
+                _logger.info('Skipping inactive step %s for %s', val.name, module_name)
                 continue
 
-            log.info('Performing step %s for %s', val.name, module_name)
+            _logger.info('Performing step %s for %s', val.name, module_name)
             # Get a separate cursor per test, so that an SQL error in one
             # will not block the others.
             cr2 = pooler.get_db(cr.dbname).cursor()
@@ -269,9 +270,9 @@ class module_quality_check(osv.osv):
                         'summary': _("The module has to be installed before running this test.")
                     }
                 create_ids.append((0, 0, data))
-                log.info('Finished quality test step')
+                _logger.info('Finished quality test step')
             except Exception, e:
-                log.exception("Could not finish test step %s due to %s", val.name, e)
+                _logger.exception("Could not finish test step %s due to %s", val.name, e)
             finally:
                 cr2.rollback()
                 cr2.close()

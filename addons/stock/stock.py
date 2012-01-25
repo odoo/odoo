@@ -31,6 +31,7 @@ import tools
 import decimal_precision as dp
 import logging
 
+_logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
 # Incoterms
@@ -408,9 +409,8 @@ class stock_location(osv.osv):
                     # so we ROLLBACK to the SAVEPOINT to restore the transaction to its earlier
                     # state, we return False as if the products were not available, and log it:
                     cr.execute("ROLLBACK TO stock_location_product_reserve")
-                    logger = logging.getLogger('stock.location')
-                    logger.warn("Failed attempt to reserve %s x product %s, likely due to another transaction already in progress. Next attempt is likely to work. Detailed error available at DEBUG level.", product_qty, product_id)
-                    logger.debug("Trace of the failed product reservation attempt: ", exc_info=True)
+                    _logger.warning("Failed attempt to reserve %s x product %s, likely due to another transaction already in progress. Next attempt is likely to work. Detailed error available at DEBUG level.", product_qty, product_id)
+                    _logger.debug("Trace of the failed product reservation attempt: ", exc_info=True)
                     return False
 
             # XXX TODO: rewrite this with one single query, possibly even the quantity conversion

@@ -36,6 +36,8 @@ from osv import osv,fields,orm
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
 
+_logger = logging.getLogger(__name__)
+
 EXTERNAL_ID_PATTERN = re.compile(r'^([^.:]+)(?::([^.]+))?\.(\S+)$')
 EDI_VIEW_WEB_URL = '%s/edi/view?debug=1&db=%s&token=%s'
 EDI_PROTOCOL_VERSION = 1 # arbitrary ever-increasing version number
@@ -71,8 +73,6 @@ def last_update_for(record):
         record_log = record.perm_read()[0]
         return record_log.get('write_date') or record_log.get('create_date') or False
     return False
-
-_logger = logging.getLogger('edi')
 
 class edi_document(osv.osv):
     _name = 'edi.document'

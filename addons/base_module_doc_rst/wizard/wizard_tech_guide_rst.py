@@ -18,17 +18,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from os.path import join
 import base64
-import tempfile
-import tarfile
 import httplib
+import logging
+import os
+from os.path import join
+import tarfile
+import tempfile
 
-import netsvc
 import wizard
 import pooler
-import os
-import tools
+
+_logger = logging.getLogger(__name__)
 
 choose_file_form = '''<?xml version="1.0"?>
 <form string="Create Technical Guide in rst format">
@@ -99,9 +100,8 @@ class RstDoc(object):
                 if res.status in (200, ):
                     status_good = True
             except (Exception, ), e:
-                logger = netsvc.Logger()
                 msg = "error connecting to server '%s' with link '%s'. Error message: %s" % (server, link, str(e))
-                logger.notifyChannel("base_module_doc_rst", netsvc.LOG_ERROR, msg)
+                _logger.error(msg)
                 status_good = False
             return status_good
 
@@ -241,9 +241,8 @@ class RstDoc(object):
     def _write_objects(self):
         def write_field(field_def):
             if not isinstance(field_def, tuple):
-                logger = netsvc.Logger()
                 msg = "Error on Object %s: field_def: %s [type: %s]" % (obj_name.encode('utf8'), field_def.encode('utf8'), type(field_def))
-                logger.notifyChannel("base_module_doc_rst", netsvc.LOG_ERROR, msg)
+                _logger.error(msg)
                 return ""
 
             field_name = field_def[0]
@@ -392,9 +391,8 @@ class wizard_tech_guide_rst(wizard.interface):
             try:
                 os.unlink(tgz_tmp_filename)
             except Exception, e:
-                logger = netsvc.Logger()
                 msg = "Temporary file %s could not be deleted. (%s)" % (tgz_tmp_filename, e)
-                logger.notifyChannel("warning", netsvc.LOG_WARNING, msg)
+                _logger.warning(msg)
 
         return {
             'rst_file': base64.encodestring(out),
@@ -483,9 +481,8 @@ class wizard_tech_guide_rst(wizard.interface):
             res = modobj.fields_get(cr, uid).items()
             return res
         else:
-            logger = netsvc.Logger()
             msg = "Object %s not found" % (obj)
-            logger.notifyChannel("base_module_doc_rst", netsvc.LOG_ERROR, msg)
+            _logger.error(msg)
             return ""
 
     states = {

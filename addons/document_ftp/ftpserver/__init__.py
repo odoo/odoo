@@ -19,12 +19,15 @@
 #
 ##############################################################################
 
+import logging
 import threading
 import ftpserver
 import authorizer
 import abstracted_fs
 import netsvc
 from tools import config
+
+_logger = logging.getLogger(__name__)
 
 def start_server():
     HOST = config.get('ftp_server_host', '127.0.0.1')
@@ -36,8 +39,7 @@ def start_server():
 
     class ftp_server(threading.Thread):
         def log(self, level, message):
-            logger = netsvc.Logger()
-            logger.notifyChannel('FTP', level, message)
+            _logger.log(level, message)
 
         def run(self):
             autho = authorizer.authorizer()
@@ -56,9 +58,9 @@ def start_server():
             ftpd.serve_forever()
 
     if HOST.lower() == 'none':
-        netsvc.Logger().notifyChannel("FTP", netsvc.LOG_INFO, "\n Server FTP Not Started\n")
+        _logger.info("\n Server FTP Not Started\n")
     else:
-        netsvc.Logger().notifyChannel("FTP", netsvc.LOG_INFO, "\n Serving FTP on %s:%s\n" % (HOST, PORT))
+        _logger.info(\n Serving FTP on %s:%s\n", HOST, PORT)
         ds = ftp_server()
         ds.daemon = True
         ds.start()

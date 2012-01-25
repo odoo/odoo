@@ -25,13 +25,10 @@ import base64
 import email
 from email.utils import parsedate
 
-import logging
 import xmlrpclib
 from osv import osv, fields
 from tools.translate import _
 from mail_message import decode, to_email
-
-_logger = logging.getLogger('mail')
 
 class mail_thread(osv.osv):
     '''Mixin model, meant to be inherited by any model that needs to

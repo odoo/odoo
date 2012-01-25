@@ -28,7 +28,7 @@ from models.edi import EDIMixin, edi_document
 try:
     import controllers
 except ImportError:
-    logging.getLogger('init.load').warn(
+    logging.getLogger(__name__).warning(
         """Could not load openerp-web section of EDI, EDI will not behave correctly
 
 To fix, launch openerp-web in embedded mode""")

@@ -30,6 +30,8 @@ from tools.translate import _
 import nodes
 import logging
 
+_logger = logging.getLogger(__name__)
+
 DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['root_path'], 'filestore'))
 
 class document_file(osv.osv):
@@ -54,7 +56,7 @@ class document_file(osv.osv):
 
         parent_id = self.pool.get('document.directory')._get_root_directory(cr,uid)
         if not parent_id:
-            logging.getLogger('document').warning("at _attach_parent_id(), still not able to set the parent!")
+            _logger.warning("at _attach_parent_id(), still not able to set the parent!")
             return False
 
         if ids is not None:
@@ -339,7 +341,7 @@ class document_file(osv.osv):
                 if r:
                     unres.append(r)
             else:
-                logging.getLogger('document').warning("Unlinking attachment #%s %s that has no storage",
+                _logger.warning("Unlinking attachment #%s %s that has no storage",
                                                 f.id, f.name)
         res = super(document_file, self).unlink(cr, uid, ids, context)
         stor.do_unlink(cr, uid, unres)

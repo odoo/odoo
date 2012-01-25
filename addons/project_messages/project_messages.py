@@ -20,14 +20,12 @@
 ##############################################################################
 
 from osv import fields, osv
-import netsvc
 
 class messages(osv.osv):
     """
     Message from one user to another within a project
     """
     _name = 'project.messages'
-    logger = netsvc.Logger()
 
     _columns = {
         'create_date': fields.datetime('Creation Date', readonly=True),

@@ -42,7 +42,7 @@ from StringIO import StringIO
 #   root: if we are at the first directory of a ressource
 #
 
-logger = logging.getLogger('doc2.nodes')
+_logger = logging.getLogger(__name__)
 
 def _str2time(cre):
     """ Convert a string with time representation (from db) into time (float)
@@ -328,7 +328,7 @@ class node_class(object):
         if self.DAV_M_NS.has_key(ns):
             prefix = self.DAV_M_NS[ns]
         else:
-            logger.debug('No namespace: %s ("%s")',ns, prop)
+            _logger.debug('No namespace: %s ("%s")',ns, prop)
             return None
 
         mname = prefix + "_" + prop.replace('-','_')
@@ -341,7 +341,7 @@ class node_class(object):
             r = m(cr)
             return r
         except AttributeError:
-            logger.debug('Property %s not supported' % prop, exc_info=True)
+            _logger.debug('Property %s not supported' % prop, exc_info=True)
         return None
 
     def get_dav_resourcetype(self, cr):
@@ -384,13 +384,13 @@ class node_class(object):
     def create_child(self, cr, path, data=None):
         """ Create a regular file under this node
         """
-        logger.warning("Attempted to create a file under %r, not possible.", self)
+        _logger.warning("Attempted to create a file under %r, not possible.", self)
         raise IOError(errno.EPERM, "Not allowed to create files here")
     
     def create_child_collection(self, cr, objname):
         """ Create a child collection (directory) under self
         """
-        logger.warning("Attempted to create a collection under %r, not possible.", self)
+        _logger.warning("Attempted to create a collection under %r, not possible.", self)
         raise IOError(errno.EPERM, "Not allowed to create folders here")
 
     def rm(self, cr):
@@ -725,7 +725,7 @@ class node_dir(node_database):
             assert self.parent
 
         if self.parent != ndir_node:
-            logger.debug('Cannot move dir %r from %r to %r', self, self.parent, ndir_node)
+            _logger.debug('Cannot move dir %r from %r to %r', self, self.parent, ndir_node)
             raise NotImplementedError('Cannot move dir to another dir')
 
         ret = {}
@@ -998,7 +998,7 @@ class node_res_obj(node_class):
     def get_dav_eprop_DEPR(self, cr, ns, prop):
         # Deprecated!
         if ns != 'http://groupdav.org/' or prop != 'resourcetype':
-            logger.warning("Who asked for %s:%s?" % (ns, prop))
+            _logger.warning("Who asked for %s:%s?" % (ns, prop))
             return None
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
@@ -1328,7 +1328,7 @@ class node_file(node_class):
         ret = {}
         if ndir_node and self.parent != ndir_node:
             if not (isinstance(self.parent, node_dir) and isinstance(ndir_node, node_dir)):
-                logger.debug('Cannot move file %r from %r to %r', self, self.parent, ndir_node)
+                _logger.debug('Cannot move file %r from %r to %r', self, self.parent, ndir_node)
                 raise NotImplementedError('Cannot move files between dynamic folders')
 
             if not ndir_obj:
@@ -1473,7 +1473,7 @@ class nodefd_content(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            logging.getLogger('document.content').error("Incorrect mode %s specified", mode)
+            _logger.error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
 
@@ -1499,7 +1499,7 @@ class nodefd_content(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            logging.getLogger('document.content').exception('Cannot update db content #%d for close:', par.cnt_id)
+            _logger.exception('Cannot update db content #%d for close:', par.cnt_id)
             raise
         finally:
             cr.close()
@@ -1526,7 +1526,7 @@ class nodefd_static(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            logging.getLogger('document.nodes').error("Incorrect mode %s specified", mode)
+            _logger.error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
 
@@ -1551,7 +1551,7 @@ class nodefd_static(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            logging.getLogger('document.nodes').exception('Cannot update db content #%d for close:', par.cnt_id)
+            _logger.exception('Cannot update db content #%d for close:', par.cnt_id)
             raise
         finally:
             cr.close()
