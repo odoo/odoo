@@ -89,6 +89,8 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         }
         var groups = split_groups(tasks, group_bys);
         
+        // track ids of task items for context menu
+        var task_ids = {};
         // creation of the chart
         var generate_task_info = function(task, plevel) {
             var level = plevel || 0;
@@ -107,13 +109,13 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
                 var group_name = openerp.web.format_value(task.name, self.fields[group_bys[level]]);
                 if (level == 0) {
-                    var group = new GanttProjectInfo(_.uniqueId(), group_name, task_start);
+                    var group = new GanttProjectInfo(_.uniqueId("gantt_project_"), group_name, task_start);
                     _.each(task_infos, function(el) {
                         group.addTask(el.task_info);
                     });
                     return group;
                 } else {
-                    var group = new GanttTaskInfo(_.uniqueId(), group_name, task_start, duration, 100);
+                    var group = new GanttTaskInfo(_.uniqueId("gantt_project_task_"), group_name, task_start, duration, 100);
                     _.each(task_infos, function(el) {
                         group.addChildTask(el.task_info);
                     });
@@ -137,8 +139,10 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                     task_stop = task_start.clone().addMilliseconds(tmp * 60 * 60 * 1000);
                 }
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
-                var task_info = new GanttTaskInfo(_.uniqueId(), task_name, task_start, ((duration / 24) * 8), 100);
+                var id = _.uniqueId("gantt_task_");
+                var task_info = new GanttTaskInfo(id, task_name, task_start, ((duration / 24) * 8), 100);
                 task_info.internal_task = task;
+                task_ids[id] = task_info;
                 return {task_info: task_info, task_start: task_start, task_stop: task_stop};
             }
         }
@@ -148,15 +152,20 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         });
         gantt.setEditable(true);
         gantt.setImagePath("/web_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
-        gantt.create(this.chart_id);
         gantt.attachEvent("onTaskEndDrag", function(task) {
             self.on_task_changed(task);
         });
         gantt.attachEvent("onTaskEndResize", function(task) {
             self.on_task_changed(task);
         });
-        gantt.attachEvent("onBeforeContextMenu", function(task) {
-            console.log("yop");
+        gantt.create(this.chart_id);
+        
+        // bind event to display task when we click the item in the tree
+        $(".taskNameItem", self.$element).click(function(event) {
+            var task_info = task_ids[event.target.id];
+            if (task_info) {
+                self.on_task_display(task_info.internal_task);
+            }
         });
     },
     on_task_changed: function(task_obj) {
@@ -177,6 +186,10 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         this.dataset.write(itask.id, data).then(function() {
             console.log("task edited");
         });
+    },
+    on_task_display: function(task) {
+        //TODO niv
+        console.log(task);
     },
 });
 
