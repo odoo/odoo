@@ -16,6 +16,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         this.chart_id = _.uniqueId();
     },
     start: function() {
+        $(".oe-gantt-view-create", this.$element).click(this.on_task_create);
         return $.when(this.rpc("/web/view/load", {"model": this.dataset.model, "view_id": this.view_id, "view_type": "gantt"}),
             this.rpc("/web/searchview/fields_get", {"model": this.dataset.model})).pipe(this.on_loaded);
     },
@@ -55,7 +56,8 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         });
     },
     reload: function() {
-        return this.do_search(this.last_domains, this.last_contexts, this.last_group_bys);
+        if (this.last_domains !== undefined)
+            return this.do_search(this.last_domains, this.last_contexts, this.last_group_bys);
     },
     on_data_loaded: function(tasks, group_bys) {
         var self = this;
@@ -204,6 +206,19 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             task.id,
             null,
             {}
+        );
+    },
+    on_task_create: function() {
+        var self = this;
+        var pop = new openerp.web.form.SelectCreatePopup(this);
+        pop.on_select_elements.add_last(function() {
+            self.reload();
+        });
+        pop.select_element(
+            self.dataset.model,
+            {
+                initial_view: "form",
+            }
         );
     },
 });
