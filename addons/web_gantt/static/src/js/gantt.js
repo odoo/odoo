@@ -137,8 +137,6 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                     task_stop = task_start.clone().addMilliseconds(tmp * 60 * 60 * 1000);
                 }
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
-                if (task.id == 23)
-                    console.log("loading", task.id, task_start.toString(), duration, task_start.clone().addMilliseconds(duration * 60 * 60 * 1000).toString());
                 var task_info = new GanttTaskInfo(_.uniqueId(), task_name, task_start, ((duration / 24) * 8), 100);
                 task_info.internal_task = task;
                 return {task_info: task_info, task_start: task_start, task_stop: task_stop};
@@ -157,6 +155,9 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         gantt.attachEvent("onTaskEndResize", function(task) {
             self.on_task_changed(task);
         });
+        gantt.attachEvent("onBeforeContextMenu", function(task) {
+            console.log("yop");
+        });
     },
     on_task_changed: function(task_obj) {
         var self = this;
@@ -164,7 +165,6 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         var start = task_obj.getEST();
         var duration = (task_obj.getDuration() / 8) * 24;
         var end = start.clone().addMilliseconds(duration * 60 * 60 * 1000);
-        console.log("saving", itask.id, start.toString(), end.toString());
         var data = {};
         data[self.fields_view.arch.attrs.date_start] =
             openerp.web.auto_date_to_str(start, self.fields[self.fields_view.arch.attrs.date_start].type);
