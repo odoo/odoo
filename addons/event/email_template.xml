@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+        
+        <record id="confirmation_event" model="email.template">
+		<field name="name">confirmation the event</field>
+<!--		<field name="model_id" ref="event.event_registration"/>-->
+		<field name="email_from" >${object.user_id.user_email or object.company_id.email or 'noreply@localhost'}</field>
+		<field name="email_to" >${object.email_from}</field>
+		<field name="subject">Ticket for ${object.event_id.name}</field>
+		<field name="body_text">thank you for your registration</field>
+        </record>
+        
+    </data>
+	<data>
+        
+        <record id="confirmation_registration" model="email.template">
+    	<field name="name">confirmation the registration</field>
+<!--		<field name="model_id" ref="event.event_registration"/>-->
+		<field name="email_from" >${object.user_id.user_email or object.company_id.email or 'noreply@localhost'}</field>
+		<field name="email_to" >${object.email_from}</field>
+		<field name="subject">Ticket for ${object.event_id.name}</field>
+		<field name="body_text">thank you for your registration</field>
+        </record>
+        
+    </data>
+</openerp>
