@@ -251,6 +251,7 @@ class crm_phonecall(crm_base, osv.osv):
                             'priority': call.priority,
                             'type': 'opportunity', 
                             'phone': call.partner_phone or False,
+                            'email_from': default_contact and default_contact.email,
                         })
             vals = {
                     'partner_id': partner_id,

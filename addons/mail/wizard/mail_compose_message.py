@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
+import ast
 import re
 
 import tools
-from mail.mail_message import to_email
 from osv import osv
 from osv import fields
 from tools.safe_eval import safe_eval as eval
-from tools.safe_eval import literal_eval
 from tools.translate import _
+
+from ..mail_message import to_email
 
 # main mako-like expression pattern
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
@@ -212,7 +213,7 @@ class mail_compose_message(osv.osv_memory):
                 else:
                     active_model = mail.model
                     active_model_pool = self.pool.get(active_model)
-                    active_ids = active_model_pool.search(cr, uid, literal_eval(mail.filter_id.domain), context=literal_eval(mail.filter_id.context))
+                    active_ids = active_model_pool.search(cr, uid, ast.literal_eval(mail.filter_id.domain), context=ast.literal_eval(mail.filter_id.context))
 
                 for active_id in active_ids:
                     subject = self.render_template(cr, uid, mail.subject, active_model, active_id)
