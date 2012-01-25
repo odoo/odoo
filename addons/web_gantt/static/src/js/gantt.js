@@ -16,7 +16,6 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
         this.chart_id = _.uniqueId();
     },
     start: function() {
-        $(".oe-gantt-view-create", this.$element).click(this.on_task_create);
         return $.when(this.rpc("/web/view/load", {"model": this.dataset.model, "view_id": this.view_id, "view_type": "gantt"}),
             this.rpc("/web/searchview/fields_get", {"model": this.dataset.model})).pipe(this.on_loaded);
     },
@@ -175,6 +174,12 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                 self.on_task_display(task_info.internal_task);
             }
         });
+        
+        // insertion of create button
+        var td = $($("table td", self.$element)[0]);
+        var rendered = QWeb.render("GanttView-create-button");
+        $(rendered).prependTo(td);
+        $(".oe-gantt-view-create", this.$element).click(this.on_task_create);
     },
     on_task_changed: function(task_obj) {
         var self = this;
