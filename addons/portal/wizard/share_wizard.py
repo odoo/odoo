@@ -19,8 +19,12 @@
 #
 ##############################################################################
 
+import logging
+
 from osv import osv, fields
 from tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 UID_ROOT = 1
 SHARED_DOCS_MENU = "Documents"
@@ -164,19 +168,19 @@ class share_wizard_portal(osv.osv_memory):
             # v6.1, the algorithm for combining them will OR the rules, hence
             # extending the visible data.
             Rules.write(cr, UID_ROOT, share_rule_ids, {'groups': [(4,target_group.id)]})
-            self._logger.debug("Linked sharing rules from temporary sharing group to group %s", target_group)
+            _logger.debug("Linked sharing rules from temporary sharing group to group %s", target_group)
 
             # Copy the access rights. This is appropriate too because
             # groups have the UNION of all permissions granted by their
             # access right lines.
             for access_line in share_group.model_access:
                 Rights.copy(cr, UID_ROOT, access_line.id, default={'group_id': target_group.id})
-            self._logger.debug("Copied access rights from temporary sharing group to group %s", target_group)
+            _logger.debug("Copied access rights from temporary sharing group to group %s", target_group)
 
         # finally, delete it after removing its users
         Groups.write(cr, UID_ROOT, [share_group_id], {'users': [(6,0,[])]})
         Groups.unlink(cr, UID_ROOT, [share_group_id])
-        self._logger.debug("Deleted temporary sharing group %s", share_group_id)
+        _logger.debug("Deleted temporary sharing group %s", share_group_id)
 
     def _finish_result_lines(self, cr, uid, wizard_data, share_group_id, context=None):
         super(share_wizard_portal,self)._finish_result_lines(cr, uid, wizard_data, share_group_id, context=context)

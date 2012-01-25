@@ -19,8 +19,12 @@
 #
 ##############################################################################
 
+import logging 
+
 from tools.translate import _
 import pooler
+
+_logger = logging.getLogger(__name__)
 
 from base_module_quality import base_module_quality
 
@@ -77,7 +81,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
         try:
             obj_ids = self.get_ids(cr, uid, obj_list)
         except Exception,e:
-            self.log.warning("Cannot get ids:", exc_info=True)
+            _logger.warning("Cannot get ids:", exc_info=True)
             obj_ids= {}
             self.result_details += e.message
         result_dict = {}
@@ -111,7 +115,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
                     code_size_complexity = ccr.count
 
                 except Exception, e:
-                    self.log.warning('Error in read method', exc_info=True)
+                    _logger.warning('Error in read method', exc_info=True)
                     list2 = [obj, _("Error in Read method")]
                     speed_list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, _("Error in Read method: %s") % e]
                 else:

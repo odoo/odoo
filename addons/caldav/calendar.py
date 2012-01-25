@@ -40,6 +40,8 @@ try:
 except ImportError:
     raise osv.except_osv(_('vobject Import Error!'), _('Please install python-vobject from http://vobject.skyhouseconsulting.com/'))
 
+_logger = logging.getLogger(__name__)
+
 # O-1  Optional and can come only once
 # O-n  Optional and can come more than once
 # R-1  Required and can come only once
@@ -240,7 +242,6 @@ def map_data(cr, uid, obj, context=None):
 
 class CalDAV(object):
     __attribute__ = {}
-    _logger = logging.getLogger('document.caldav')
 
     def ical_set(self, name, value, type):
         """ set calendar Attribute
@@ -725,13 +726,13 @@ class Calendar(CalDAV, osv.osv):
                 objs.append(cal_children[child.name.lower()])
             elif child.name.upper() == 'CALSCALE':
                 if child.value.upper() != 'GREGORIAN':
-                    self._logger.warning('How do I handle %s calendars?',child.value)
+                    _logger.warning('How do I handle %s calendars?',child.value)
             elif child.name.upper() in ('PRODID', 'VERSION'):
                 pass
             elif child.name.upper().startswith('X-'):
-                self._logger.debug("skipping custom node %s", child.name)
+                _logger.debug("skipping custom node %s", child.name)
             else:
-                self._logger.debug("skipping node %s", child.name)
+                _logger.debug("skipping node %s", child.name)
         
         res = []
         for obj_name in list(set(objs)):

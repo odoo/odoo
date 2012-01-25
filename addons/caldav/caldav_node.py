@@ -29,6 +29,8 @@ try:
 except ImportError:
     from document.dict_tools import  dict_merge2
 
+_logger = logging.getLogger(__name__)
+
 # TODO: implement DAV-aware errors, inherit from IOError
 
 # Assuming that we have set global properties right, we mark *all* 
@@ -223,7 +225,6 @@ class node_calendar(nodes.node_class):
         res = []
         if not filters:
             return res
-        _log = logging.getLogger('caldav.query')
         if filters.localName == 'calendar-query':
             res = []
             for filter_child in filters.childNodes:
@@ -245,27 +246,27 @@ class node_calendar(nodes.node_class):
                                         for cfe in vevent_filter.childNodes:
                                             if cfe.localName == 'time-range':
                                                 if cfe.getAttribute('start'):
-                                                    _log.warning("Ignore start.. ")
+                                                    _logger.warning("Ignore start.. ")
                                                     # No, it won't work in this API
                                                     #val = cfe.getAttribute('start')
                                                     #res += [('dtstart','=', cfe)]
                                                 elif cfe.getAttribute('end'):
-                                                    _log.warning("Ignore end.. ")
+                                                    _logger.warning("Ignore end.. ")
                                             else:
-                                                _log.debug("Unknown comp-filter: %s", cfe.localName)
+                                                _logger.debug("Unknown comp-filter: %s", cfe.localName)
                                     else:
-                                        _log.debug("Unknown comp-filter: %s", vevent_filter.localName)
+                                        _logger.debug("Unknown comp-filter: %s", vevent_filter.localName)
                         else:
-                            _log.debug("Unknown filter element: %s", vcalendar_filter.localName)
+                            _logger.debug("Unknown filter element: %s", vcalendar_filter.localName)
                 else:
-                    _log.debug("Unknown calendar-query element: %s", filter_child.localName)
+                    _logger.debug("Unknown calendar-query element: %s", filter_child.localName)
             return res
         elif filters.localName == 'calendar-multiget':
             # this is not the place to process, as it wouldn't support multi-level
             # hrefs. So, the code is moved to document_webdav/dav_fs.py
             pass
         else:
-            _log.debug("Unknown element in REPORT: %s", filters.localName)
+            _logger.debug("Unknown element in REPORT: %s", filters.localName)
         return res
 
     def children(self, cr, domain=None):

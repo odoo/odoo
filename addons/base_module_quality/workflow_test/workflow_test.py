@@ -19,12 +19,15 @@
 #
 ##############################################################################
 
+import loggging
 import xml.dom.minidom
 
 import tools
 from tools.translate import _
 from base_module_quality import base_module_quality
 import pooler
+
+_logger = logging.getLogger(__name__)
 
 class quality_test(base_module_quality.abstract_quality_check):
 
@@ -80,8 +83,8 @@ class quality_test(base_module_quality.abstract_quality_check):
             #Activity of workflow checking...
             activity_ids = wkf_activity_obj.search(cr, uid, [('wkf_id', 'in', wkf_ids)])
             activities = wkf_activity_obj.browse(cr, uid, activity_ids)
-        self.log.debug("quality test: wkf_ids = %r", wkf_ids)
-        self.log.debug("quality test: activity_ids = %r", activity_ids)
+        _logger.debug("quality test: wkf_ids = %r", wkf_ids)
+        _logger.debug("quality test: activity_ids = %r", activity_ids)
         for activity in activities:
             if activity.flow_start:
                 activity_chk[activity.wkf_id.osv]['start'] = 'ok'

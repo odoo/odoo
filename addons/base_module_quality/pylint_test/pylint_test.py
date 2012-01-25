@@ -19,10 +19,13 @@
 #
 ##############################################################################
 
+import logging
 import os
 import addons
 from tools.translate import _
 from base_module_quality import base_module_quality
+
+_logger = logging.getLogger(__name__)
 
 class quality_test(base_module_quality.abstract_quality_check):
 
@@ -57,7 +60,7 @@ class quality_test(base_module_quality.abstract_quality_check):
                     res = os.popen('pylint --rcfile=' + config_file_path + ' ' + file_path).read()
                 except Exception:
                     self.error = True
-                    self.log.exception("Cannot run pylint test for %s", file_path)
+                    _logger.exception("Cannot run pylint test for %s", file_path)
                     self.result += _("Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)")+"\n"
                     return None
                 count += 1
@@ -66,7 +69,7 @@ class quality_test(base_module_quality.abstract_quality_check):
                     score += float(scr)
                     dict_py[file_py] = [file_py, scr]
                 except Exception:
-                    self.log.warning("Cannot parse pylint result", exc_info=True)
+                    _logger.warning("Cannot parse pylint result", exc_info=True)
                     score += 0
                     dict_py[file_py] = [file_py, _("Unable to parse the result. Check the details.")]
                 replace_string = ''

@@ -23,6 +23,8 @@ from osv import fields, osv
 import logging
 import addons
 
+_logger = logging.getLogger(__name__)
+
 class hr_employee_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
@@ -270,7 +272,7 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
 
         return user_id
 

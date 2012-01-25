@@ -39,11 +39,7 @@ from openid.extensions import ax, sreg
 
 from .. import utils
 
-
-
-_logger = logging.getLogger('web.auth_openid')
-oidutil.log = logging.getLogger('openid').debug
-
+oidutil.log = logging.getLogger(__name__ + '(oidutil)').debug
 
 class GoogleAppsAwareConsumer(consumer.GenericConsumer):
     def complete(self, message, endpoint, return_to):

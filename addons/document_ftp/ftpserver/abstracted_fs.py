@@ -34,6 +34,7 @@ def _get_month_name(month):
 
 from ftpserver import _to_decode, _to_unicode
 
+_logger = logging.getLogger(__name__)
 
 class abstracted_fs(object):
     """A class used to interact with the file system, providing a high
@@ -56,7 +57,6 @@ class abstracted_fs(object):
         self.cwd = '/'
         self.cwd_node = None
         self.rnfr = None
-        self._log = logging.getLogger('FTP.fs')
 
     # Ok
     def db_list(self):
@@ -81,7 +81,7 @@ class abstracted_fs(object):
                         self.db_name_list.append(db_name)
                     cr.commit()
                 except Exception:
-                    self._log.warning('Cannot use db "%s"', db_name)
+                    _logger.warning('Cannot use db "%s"', db_name)
             finally:
                 if cr is not None:
                     cr.close()
@@ -152,7 +152,7 @@ class abstracted_fs(object):
         except EnvironmentError:
             raise
         except Exception:
-            self._log.exception('Cannot locate item %s at node %s', objname, repr(node))
+            _logger.exception('Cannot locate item %s at node %s', objname, repr(node))
             pass
 
         try:
@@ -164,7 +164,7 @@ class abstracted_fs(object):
         except EnvironmentError:
             raise
         except Exception:
-            self._log.exception('Cannot create item %s at node %s', objname, repr(node))
+            _logger.exception('Cannot create item %s at node %s', objname, repr(node))
             raise OSError(1, 'Operation not permited.')
 
     def open(self, datacr, mode):
@@ -228,10 +228,10 @@ class abstracted_fs(object):
         try:
             basename =_to_unicode(basename)
             cdir = node.create_child_collection(cr, basename)
-            self._log.debug("Created child dir: %r", cdir)
+            _logger.debug("Created child dir: %r", cdir)
             cr.commit()
         except Exception:
-            self._log.exception('Cannot create dir "%s" at node %s', basename, repr(node))
+            _logger.exception('Cannot create dir "%s" at node %s', basename, repr(node))
             raise OSError(1, 'Operation not permited.')
 
     def close_cr(self, data):
@@ -285,7 +285,7 @@ class abstracted_fs(object):
             # we have to start from root, again
             while p_parts and p_parts[0] == '':
                 p_parts = p_parts[1:]
-            # self._log.debug("Path parts: %r ", p_parts)
+            # _logger.debug("Path parts: %r ", p_parts)
             if not p_parts:
                 raise IOError(errno.EPERM, 'Cannot perform operation at root dir')
             dbname = p_parts[0]
@@ -399,7 +399,7 @@ class abstracted_fs(object):
         except EnvironmentError:
             raise
         except Exception:
-            self._log.exception('Cannot rename "%s" to "%s" at "%s"', src, datacr[2], datacr[1])
+            _logger.exception('Cannot rename "%s" to "%s" at "%s"', src, datacr[2], datacr[1])
             raise OSError(1,'Operation not permited.')
 
     def stat(self, node):

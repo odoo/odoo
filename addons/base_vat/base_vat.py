@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import logging
 import string
 import datetime
 import re
@@ -27,7 +26,8 @@ import re
 try:
     import vatnumber
 except ImportError:
-    logging.getLogger('base_vat').warning("VAT validation partially unavailable because the `vatnumber` Python library cannot be found. "
+    import logging
+    logging.getLogger(__name__).warning("VAT validation partially unavailable because the `vatnumber` Python library cannot be found. "
                                           "Install it to support more countries, for example with `easy_install vatnumber`.")
     vatnumber = None
 
