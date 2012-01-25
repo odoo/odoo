@@ -28,7 +28,7 @@ class purchase_config_wizard(osv.osv_memory):
         'default_method' : fields.selection(
             [('manual', 'Based on Purchase Order Lines'),
              ('picking', 'Based on Receptions'),
-             ('order', 'Pre-Generate Draft Invoices Based on Purchase Orders'),
+             ('order', 'Pre-Generate Draft Invoices based on Purchase Orders'),
             ], 'Default Invoicing Control Method', required=True,
         )
     }
