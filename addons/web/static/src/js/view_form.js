@@ -2936,6 +2936,7 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
             name: 'm2o',
             widget: 'many2one'
         }});
+        this.m2o.on_ui_change.add_last(this.on_ui_change);
     },
     on_nop: function() {
     },
