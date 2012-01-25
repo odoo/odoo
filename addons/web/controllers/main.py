@@ -967,7 +967,9 @@ class View(openerpweb.Controller):
 
         if 'id' in fvg['fields']:
             # Special case for id's
-            fvg['fields']['id']['type'] = 'id'
+            id_field = fvg['fields']['id']
+            id_field['original_type'] = id_field['type']
+            id_field['type'] = 'id'
 
         for field in fvg['fields'].itervalues():
             if field.get('views'):
