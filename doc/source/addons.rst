@@ -266,7 +266,7 @@ view managers can correctly communicate with them:
     hidden it. The view should refresh its data display upon receiving this
     notification
 
-``do_search(domains: Array, contexts: Array, groupbys: Array)``
+``do_search(domain: Array, context: Object, group_by: Array)``
     If the view is searchable, this method is called to notify it of a search
     against it.
 
