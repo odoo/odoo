@@ -74,6 +74,9 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 account_ids = account_obj.search(self.cr, self.uid, [('user_type','in', [x.id for x in report.account_type_ids])])
             if account_ids:
                 for account in account_obj.browse(self.cr, self.uid, account_ids, context=data['form']['used_context']):
+                    #if there are accounts to display, we add them to the lines with a level equals to their level in
+                    #the COA + 1 (to avoid having them with a too low level that would conflicts with the level of data
+                    #financial reports for Assets, liabilities...)
                     if report.display_detail == 'detail_flat' and account.type == 'view':
                         continue
                     flag = False
@@ -81,7 +84,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                         'name': account.code + ' ' + account.name,
                         'balance':  account.balance != 0 and account.balance * report.sign or account.balance,
                         'type': 'account',
-                        'level': report.display_detail == 'detail_with_hierarchy' and min(account.level,6) or 6,
+                        'level': report.display_detail == 'detail_with_hierarchy' and min(account.level + 1,6) or 6, #account.level + 1
                         'account_type': account.type,
                     }
                     if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance']):
