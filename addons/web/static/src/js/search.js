@@ -252,12 +252,15 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
                 ]
             });
             break;
+        case '':
+            this.do_clear();
         }
         if (val.slice(0, 4) == "get:") {
             val = val.slice(4);
             val = parseInt(val, 10);
             var filter = this.managed_filters[val];
-            this.do_clear().then(_.bind(function() {
+            this.do_clear(false).then(_.bind(function() {
+                select.val('get:' + val);
                 var groupbys = _.map(filter.context.group_by.split(","), function(el) {
                     return {"group_by": el};
                 });
@@ -409,7 +412,10 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
     on_invalid: function (errors) {
         this.do_notify(_t("Invalid Search"), _t("triggered from search view"));
     },
-    do_clear: function () {
+    /**
+     * @param {Boolean} [reload_view=true]
+     */
+    do_clear: function (reload_view) {
         this.$element.find('.filter_label, .filter_icon').removeClass('enabled');
         this.enabled_filters.splice(0);
         var string = $('a.searchview_group_string');
@@ -424,7 +430,8 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
                 input.datewidget.set_value(false);
             }
         });
-        return $.async_when().pipe(this.on_clear);
+        return $.async_when().pipe(
+            reload_view !== false ? this.on_clear : null);
     },
     /**
      * Triggered when the search view gets cleared

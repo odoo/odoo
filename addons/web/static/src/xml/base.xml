@@ -1213,7 +1213,7 @@
     </form>
 </t>
 <t t-name="SearchView.managed-filters">
-    <option class="oe-filters-title">Filters</option>
+    <option class="oe-filters-title" value="">Filters</option>
     <optgroup label="-- Filters --">
         <t t-foreach="filters" t-as="filter">
             <option t-attf-value="get:#{filter_index}"><t t-esc="filter.name"/></option>
