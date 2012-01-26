@@ -58,12 +58,16 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 'name': report.name,
                 'balance': report.balance,
                 'type': 'report',
-                'level': report.level,
+                'level': bool(report.style_overwrite) and report.style_overwrite or report.level,
+                'account_type': report.type =='sum' and 'view' or False, #used to underline the financial report balances
             }
             if data['form']['enable_filter']:
                 vals['balance_cmp'] = self.pool.get('account.financial.report').browse(self.cr, self.uid, report.id, context=data['form']['comparison_context']).balance
             lines.append(vals)
             account_ids = []
+            if report.display_detail == 'no_detail':
+                #the rest of the loop is used to display the details of the financial report, so it's not needed here.
+                continue
             if report.type == 'accounts' and report.account_ids:
                 account_ids = account_obj._get_children_and_consol(self.cr, self.uid, [x.id for x in report.account_ids])
             elif report.type == 'account_type' and report.account_type_ids:
