@@ -228,7 +228,7 @@ class mail_compose_message(osv.osv_memory):
                     # processed as soon as the mail scheduler runs.
                     mail_message.schedule_with_attach(cr, uid, email_from, to_email(email_to), subject, rendered_body,
                         model=mail.model, email_cc=to_email(email_cc), email_bcc=to_email(email_bcc), reply_to=reply_to,
-                        attachments=attachment, references=references, res_id=int(mail.res_id),
+                        attachments=attachment, references=references, res_id=active_id,
                         subtype=mail.subtype, headers=headers, context=context)
             else:
                 # normal mode - no mass-mailing
