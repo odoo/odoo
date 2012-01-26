@@ -252,6 +252,8 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
                 ]
             });
             break;
+        case '':
+            this.do_clear();
         }
         if (val.slice(0, 4) == "get:") {
             val = val.slice(4);
