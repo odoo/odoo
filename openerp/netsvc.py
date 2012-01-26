@@ -138,6 +138,7 @@ LEVEL_COLOR_MAPPING = {
 
 class DBFormatter(logging.Formatter):
     def format(self, record):
+        record.pid = os.getpid()
         record.dbname = getattr(threading.currentThread(), 'dbname', '?')
         return logging.Formatter.format(self, record)
 
@@ -153,6 +154,7 @@ def init_logger():
 
     # create a format for log messages and dates
     format = '[%(asctime)s][%(dbname)s] %(levelname)s:%(name)s:%(message)s'
+    format = '%(asctime)s %(levelname)s %(pid)s %(dbname)s %(name)s: %(message)s'
 
     if tools.config['syslog']:
         # SysLog Handler
@@ -191,6 +193,31 @@ def init_logger():
 
     # Add the handler to the 'openerp' logger.
     logger = logging.getLogger('openerp')
+    logger.addHandler(handler)
+    logger.setLevel(int(tools.config['log_level'] or '0'))
+
+    # We could do this ...
+    #logger = logging.getLogger('werkzeug')
+    #logger.addHandler(handler)
+    #logger.setLevel(int(tools.config['log_level'] or '0'))
+
+    # ... or this but they have the standard Combined log format
+    # and it is better to keep it.
+    # TODO gunicorn access logs are configured from the gunicorn config file.
+    # Offer something similar for the stand-alone Werkzeug mode.
+    #logger = logging.getLogger('gunicorn.access')
+    #logger.handlers = []
+    #logger.addHandler(handler)
+    #logger.setLevel(int(tools.config['log_level'] or '0'))
+
+    # For the other logs, use the same format than openerp.
+    logger = logging.getLogger('gunicorn.error')
+    logger.handlers = []
+    logger.addHandler(handler)
+    logger.setLevel(int(tools.config['log_level'] or '0'))
+
+    logger = logging.getLogger('gunicorn.http.wsgi')
+    logger.handlers = []
     logger.addHandler(handler)
     logger.setLevel(int(tools.config['log_level'] or '0'))
 
