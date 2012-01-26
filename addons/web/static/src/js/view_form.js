@@ -798,17 +798,13 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
         return QWeb.render(template, { "widget": this });
     },
     do_attach_tooltip: function(widget, trigger, options) {
-        if ($.browser.mozilla) {
-            // Unknown bug in old version of firefox :
-            // input type=text onchange event not fired when tootip is shown
-            return;
-        }
         widget = widget || this;
         trigger = trigger || this.$element;
         options = _.extend({
-                delay: 1000,
-                maxWidth: '500px',
-                content: function() {
+                delayIn: 500,
+                delayOut: 0,
+                fade: true,
+                title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
                         template = 'WidgetLabel.tooltip';
@@ -816,10 +812,13 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
                     return QWeb.render(template, {
                         debug: openerp.connection.debug,
                         widget: widget
-                    });
-                }
+                })},
+                gravity: $.fn.tipsy.autoNS,
+                html: true,
+                opacity: 0.85,
+                trigger: 'hover'
             }, options || {});
-        trigger.tipTip(options);
+        trigger.tipsy(options);
     },
     _build_view_fields_values: function(blacklist) {
         var a_dataset = this.view.dataset;
@@ -998,7 +997,7 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
         this.view.on_button_new.add_first(this.do_select_first_visible_tab);
         if (openerp.connection.debug) {
             this.do_attach_tooltip(this, this.$element.find('ul:first'), {
-                defaultPosition: 'top'
+                gravity: 's'
             });
         }
     },
@@ -1218,9 +1217,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
             this.$element.find('.oe_field_translate').click(this.on_translate);
         }
         if (this.nolabel && openerp.connection.debug) {
-            this.do_attach_tooltip(this, this.$element, {
-                defaultPosition: 'top'
-            });
+            this.do_attach_tooltip(this, this.$element);
         }
     },
     set_value: function(value) {

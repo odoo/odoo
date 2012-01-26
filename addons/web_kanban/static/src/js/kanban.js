@@ -414,16 +414,21 @@ openerp.web_kanban.KanbanRecord = openerp.web.OldWidget.extend({
             self.state.folded = !self.state.folded;
         });
 
-        this.$element.find('[tooltip]').tipTip({
-            maxWidth: 500,
-            defaultPosition: 'top',
-            content: function() {
+        this.$element.find('[tooltip]').tipsy({
+            delayIn: 500,
+            delayOut: 0,
+            fade: true,
+            title: function() {
                 var template = $(this).attr('tooltip');
                 if (!self.view.qweb.has_template(template)) {
                     return false;
                 }
                 return self.view.qweb.render(template, self.qweb_context);
-            }
+            },
+            gravity: 's',
+            html: true,
+            opacity: 0.8,
+            trigger: 'hover'
         });
 
         this.$element.find('.oe_kanban_action').click(function() {
