@@ -258,6 +258,7 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
             val = parseInt(val, 10);
             var filter = this.managed_filters[val];
             this.do_clear().then(_.bind(function() {
+                select.val('get:' + val);
                 var groupbys = _.map(filter.context.group_by.split(","), function(el) {
                     return {"group_by": el};
                 });
