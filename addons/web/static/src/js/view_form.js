@@ -784,6 +784,10 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
         this.$element = this.view.$element.find(
             '.' + this.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
     },
+    stop: function() {
+        this._super.apply(this, arguments);
+        $('div.tipsy').stop().remove();
+    },
     process_modifiers: function() {
         var compute_domain = openerp.web.form.compute_domain;
         for (var a in this.modifiers) {
