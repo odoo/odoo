@@ -192,6 +192,10 @@ class module(osv.osv):
         'sequence': fields.integer('Sequence'),
         'dependencies_id': fields.one2many('ir.module.module.dependency',
             'module_id', 'Dependencies', readonly=True),
+        'auto_installable': fields.boolean('Auto Installable',
+            help='An auto-installable module is automatically installed by the '
+            'system when all its dependencies are satisfied. '
+            'If the module has no dependency, it is always installed.'),
         'state': fields.selection([
             ('uninstallable','Not Installable'),
             ('uninstalled','Not Installed'),
@@ -318,20 +322,27 @@ class module(osv.osv):
         return demo
 
     def button_install(self, cr, uid, ids, context=None):
-        model_obj = self.pool.get('ir.model.data')
+
+        # Mark the given modules to be installed.
         self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
 
-        categ = model_obj.get_object(cr, uid, 'base', 'module_category_hidden_links', context=context)
-        todo = []
-        for mod in categ.module_ids:
-            if mod.state=='uninstalled':
-                ok = True
-                for dep in mod.dependencies_id:
-                    ok = ok and (dep.state in ('to install','installed'))
-                if ok:
-                    todo.append(mod.id)
-        if todo:
-            self.button_install(cr, uid, todo, context=context)
+        # Mark (recursively) the newly satisfied modules to also be installed:
+
+        # Select all auto-installable (but not yet installed) modules.
+        domain = [('state', '=', 'uninstalled'), ('auto_installable', '=', True),]
+        uninstalled_ids = self.search(cr, uid, domain, context=context)
+        uninstalled_modules = self.browse(cr, uid, uninstalled_ids, context=context)
+
+        # Keep those with all their dependencies satisfied.
+        def all_depencies_satisfied(m):
+            return all(x.state in ('to install', 'installed', 'to upgrade') for x in m.dependencies_id)
+        to_install_modules = filter(all_depencies_satisfied, uninstalled_modules)
+        to_install_ids = map(lambda m: m.id, to_install_modules)
+
+        # Mark them to be installed.
+        if to_install_ids:
+            self.button_install(cr, uid, to_install_ids, context=context)
+
         return dict(ACTION_DICT, name=_('Install'))
 
     def button_immediate_install(self, cr, uid, ids, context=None):
@@ -439,6 +450,7 @@ class module(osv.osv):
             'complexity': terp.get('complexity', ''),
             'sequence': terp.get('sequence', 100),
             'application': terp.get('application', False),
+            'auto_installable': terp.get('auto_installable', False),
         }
 
     # update the list of available packages
