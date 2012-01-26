@@ -6,68 +6,13 @@
         # Indian Accounts tree
         #
         -->
-        <!--
-        Account Type
-        -->
-         <record model="account.account.type" id="account_type_income_view">
-            <field name="name">Income View</field>
-            <field name="code">view</field>
-            <field name="report_type">income</field>
-        </record>
-        <record model="account.account.type" id="account_type_expense_view">
-            <field name="name">Expense View</field>
-            <field name="code">expense</field>
-            <field name="report_type">expense</field>
-        </record>
-        <record model="account.account.type" id="account_type_asset_view">
-            <field name="name">Asset View</field>
-            <field name="code">asset</field>
-            <field name="report_type">asset</field>
-        </record>
-        <record model="account.account.type" id="account_type_liability_view">
-            <field name="name">Liability View</field>
-            <field name="code">liability</field>
-            <field name="report_type">liability</field>
-        </record>
-
-        <record model="account.account.type" id="account_type_root_ind1">
-            <field name="name">View</field>
-            <field name="code">view</field>
-        </record>
-        <record model="account.account.type" id="account_type_asset1">
-            <field name="name">Asset</field>
-            <field name="code">asset</field>
-            <field name="close_method">unreconciled</field>
-            <field name="report_type">asset</field>
-        </record>
-        <record model="account.account.type" id="account_type_liability1">
-            <field name="name">Liability</field>
-            <field name="code">liability</field>
-            <field name="close_method">unreconciled</field>
-            <field name="report_type">liability</field>
-        </record>
-        <record model="account.account.type" id="account_type_expense1">
-            <field name="name">Expense</field>
-            <field name="code">expense</field>
-            <field name="report_type">expense</field>
-        </record>
-        <record model="account.account.type" id="account_type_income1" >
-            <field name="name">Income</field>
-            <field name="code">income</field>
-            <field name="report_type">income</field>
-        </record>
-        <record model="account.account.type" id="account_type_closed1">
-            <field name="name">Closed</field>
-            <field name="code">closed</field>
-        </record>
-
         <!-- ## account chart -->
 
         <record model="account.account.template" id="root">
             <field name="name">Indian Chart of Account</field>
             <field name="code">0</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_root_ind1"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field name="reconcile" eval="False"/>
         </record>
 
@@ -75,7 +20,7 @@
             <field name="name">Balance Sheet</field>
             <field name="code">IA_AC0</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_root_ind1"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="root"/>
         </record>
@@ -84,7 +29,7 @@
             <field name="name">Assets</field>
             <field name="code">IA_AC01</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_asset_view"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC0"/>
         </record>
@@ -93,7 +38,7 @@
             <field name="name">Current Assets</field>
             <field name="code">IA_AC011</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_asset1"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC01"/>
         </record>
@@ -102,7 +47,7 @@
             <field name="name">Bank Account</field>
             <field name="code">IA_AC0111</field>
             <field name="type">liquidity</field>
-            <field name="user_type" ref="account_type_asset1"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC011"/>
         </record>
@@ -111,7 +56,7 @@
             <field name="name">Cash In Hand Account</field>
             <field name="code">IA_AC0112</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_asset1"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC011"/>
         </record>
@@ -120,7 +65,7 @@
             <field name="name">Cash Account</field>
             <field name="code">IA_AC01121</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_asset1"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC0112"/>
         </record>
@@ -129,7 +74,7 @@
             <field name="name">Deposit Account</field>
             <field name="code">IA_AC0113</field>
             <field name="type">receivable</field>
-            <field name="user_type" ref="account_type_asset1"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC011"/>
         </record>
@@ -138,7 +83,7 @@
             <field name="name">Loan &amp; Advance(Assets) Account</field>
             <field name="code">IA_AC0114</field>
             <field name="type">receivable</field>
-            <field name="user_type" ref="account_type_asset1"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC011"/>
         </record>
@@ -147,7 +92,7 @@
             <field name="name">Total Sundry Debtors Account</field>
             <field name="code">IA_AC0116</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_asset1"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC011"/>
         </record>
@@ -156,7 +101,7 @@
             <field name="name">Sundry Debtors Account</field>
             <field name="code">IA_AC01161</field>
             <field name="type">receivable</field>
-            <field name="user_type" ref="account_type_asset1"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="IA_AC0116"/>
         </record>
@@ -165,7 +110,7 @@
             <field name="name">Fixed Assets</field>
             <field name="code">IA_AC012</field>
             <field name="type">receivable</field>
-            <field name="user_type" ref="account_type_asset1"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC01"/>
         </record>
@@ -174,7 +119,7 @@
             <field name="name">Investment</field>
             <field name="code">IA_AC013</field>
             <field name="type">receivable</field>
-            <field name="user_type" ref="account_type_asset1"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC01"/>
         </record>
@@ -183,7 +128,7 @@
             <field name="name">Misc. Expenses(Asset)</field>
             <field name="code">IA_AC014</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_asset1"/>
+            <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC01"/>
         </record>
@@ -192,7 +137,7 @@
             <field name="name">Liabilities</field>
             <field name="code">IA_AC02</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_liability_view"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC0"/>
         </record>
@@ -201,7 +146,7 @@
             <field name="name">Current Liabilities</field>
             <field name="code">IA_AC021</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC02"/>
         </record>
@@ -210,7 +155,7 @@
             <field name="name">Duties &amp; Taxes</field>
             <field name="code">IA_AC0211</field>
             <field name="type">payable</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC021"/>
         </record>
@@ -219,7 +164,7 @@
             <field name="name">Provision</field>
             <field name="code">IA_AC0212</field>
             <field name="type">payable</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC021"/>
         </record>
@@ -228,7 +173,7 @@
             <field name="name">Total Sundry Creditors</field>
             <field name="code">IA_AC0213</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC021"/>
         </record>
@@ -237,7 +182,7 @@
             <field name="name">Sundry Creditors Account</field>
             <field name="code">IA_AC02131</field>
             <field name="type">payable</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="IA_AC0213"/>
         </record>
@@ -246,7 +191,7 @@
             <field name="name">Branch/Division</field>
             <field name="code">IA_AC022</field>
             <field name="type">payable</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC02"/>
         </record>
@@ -255,7 +200,7 @@
             <field name="name">Share Holder/Owner Fund</field>
             <field name="code">IA_AC023</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC02"/>
         </record>
@@ -264,7 +209,7 @@
             <field name="name">Capital Account</field>
             <field name="code">IA_AC0231</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC023"/>
         </record>
@@ -273,7 +218,7 @@
             <field name="name">Reserve and Profit/Loss Account</field>
             <field name="code">IA_AC0232</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC023"/>
         </record>
@@ -282,7 +227,7 @@
             <field name="name">Loan(Liability) Account</field>
             <field name="code">IA_AC024</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC02"/>
         </record>
@@ -291,7 +236,7 @@
             <field name="name">Bank OD Account</field>
             <field name="code">IA_AC0241</field>
             <field name="type">payable</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC024"/>
         </record>
@@ -300,7 +245,7 @@
             <field name="name">Secured Loan Account</field>
             <field name="code">IA_AC0242</field>
             <field name="type">payable</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC024"/>
         </record>
@@ -309,7 +254,7 @@
             <field name="name">Unsecured Loan Account</field>
             <field name="code">IA_AC0243</field>
             <field name="type">payable</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC024"/>
         </record>
@@ -318,7 +263,7 @@
             <field name="name">Suspense Account</field>
             <field name="code">IA_AC025</field>
             <field name="type">payable</field>
-            <field name="user_type" ref="account_type_liability1"/>
+            <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC02"/>
         </record>
@@ -328,7 +273,7 @@
             <field name="name">Profit And Loss Account</field>
             <field name="code">IA_AC1</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_root_ind1"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="root"/>
         </record>
@@ -337,7 +282,7 @@
             <field name="name">Expense</field>
             <field name="code">IA_AC11</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_expense_view"/>
+            <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC1"/>
         </record>
@@ -346,7 +291,7 @@
             <field name="name">Direct Expenses</field>
             <field name="code">IA_AC111</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_expense1"/>
+            <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC11"/>
         </record>
@@ -355,7 +300,7 @@
             <field name="name">Indirect Expenses</field>
             <field name="code">IA_AC112</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_expense1"/>
+            <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC11"/>
         </record>
@@ -364,7 +309,7 @@
             <field name="name">Purchase</field>
             <field name="code">IA_AC113</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_expense1"/>
+            <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC11"/>
         </record>
@@ -373,7 +318,7 @@
             <field name="name">Opening Stock</field>
             <field name="code">IA_AC114</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_expense1"/>
+            <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC11"/>
         </record>
@@ -381,7 +326,7 @@
             <field name="name">Salary Expenses</field>
             <field name="code">IA_AC115</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_expense1"/>
+            <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC11"/>
         </record>
@@ -391,7 +336,7 @@
             <field name="name">Income</field>
             <field name="code">IA_AC12</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account_type_income_view"/>
+            <field name="user_type" ref="account.data_account_type_income"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC1"/>
         </record>
@@ -400,7 +345,7 @@
             <field name="name">Direct Incomes</field>
             <field name="code">IA_AC121</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_income1"/>
+            <field name="user_type" ref="account.data_account_type_income"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC12"/>
         </record>
@@ -409,7 +354,7 @@
             <field name="name">Indirect Incomes</field>
             <field name="code">IA_AC122</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_income1"/>
+            <field name="user_type" ref="account.data_account_type_income"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC12"/>
         </record>
@@ -418,7 +363,7 @@
             <field name="name">Sales Account</field>
             <field name="code">IA_AC123</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_income1"/>
+            <field name="user_type" ref="account.data_account_type_income"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC12"/>
         </record>
@@ -426,7 +371,7 @@
             <field name="name">Goods Given Account</field>
             <field name="code">IA_AC124</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_income1"/>
+            <field name="user_type" ref="account.data_account_type_income"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC12"/>
         </record>
@@ -495,6 +440,7 @@
             <field name="property_account_expense_categ" ref="IA_AC112"/>
             <field name="property_account_income_categ" ref="IA_AC122"/>
             <field name="property_reserve_and_surplus_account" ref="IA_AC0232"/>
+            <field name="complete_tax_set" eval="False"/>
         </record>
 
     </data>
