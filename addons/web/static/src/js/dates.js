@@ -5,8 +5,8 @@ openerp.web.dates = function(openerp) {
  * Converts a string to a Date javascript object using OpenERP's
  * datetime string format (exemple: '2011-12-01 15:12:35').
  * 
- * The timezone is assumed to be UTC (standard for OpenERP 6.1)
- * and will be converted to the browser's timezone.
+ * The time zone is assumed to be UTC (standard for OpenERP 6.1)
+ * and will be converted to the browser's time zone.
  * 
  * @param {String} str A string representing a datetime.
  * @returns {Date}
@@ -31,6 +31,10 @@ openerp.web.str_to_datetime = function(str) {
  * Converts a string to a Date javascript object using OpenERP's
  * date string format (exemple: '2011-12-01').
  * 
+ * As a date is not subject to time zones, we assume it should be
+ * represented as a Date javascript object at 00:00:00 in the
+ * time zone of the browser.
+ * 
  * @param {String} str A string representing a date.
  * @returns {Date}
  */
@@ -43,7 +47,7 @@ openerp.web.str_to_date = function(str) {
     if ( !res ) {
         throw new Error("'" + str + "' is not a valid date");
     }
-    var obj = Date.parseExact(str + ' UTC', 'yyyy-MM-dd zzz');
+    var obj = Date.parseExact(str, 'yyyy-MM-dd');
     if (! obj) {
         throw new Error("'" + str + "' is not a valid date");
     }
@@ -53,6 +57,10 @@ openerp.web.str_to_date = function(str) {
 /**
  * Converts a string to a Date javascript object using OpenERP's
  * time string format (exemple: '15:12:35').
+ * 
+ * The OpenERP times are supposed to always be naive times. We assume it is
+ * represented using a javascript Date with a date 1 of January 1970 and a
+ * time corresponding to the meant time in the browser's time zone.
  * 
  * @param {String} str A string representing a time.
  * @returns {Date}
@@ -66,7 +74,7 @@ openerp.web.str_to_time = function(str) {
     if ( !res ) {
         throw new Error("'" + str + "' is not a valid time");
     }
-    var obj = Date.parseExact(res[1] + ' UTC', 'HH:mm:ss zzz');
+    var obj = Date.parseExact("1970-01-01 " + res[1], 'yyyy-MM-dd HH:mm:ss');
     if (! obj) {
         throw new Error("'" + str + "' is not a valid time");
     }
@@ -90,7 +98,7 @@ var zpad = function(str, size) {
  * Converts a Date javascript object to a string using OpenERP's
  * datetime string format (exemple: '2011-12-01 15:12:35').
  * 
- * The timezone of the Date object is assumed to be the one of the
+ * The time zone of the Date object is assumed to be the one of the
  * browser and it will be converted to UTC (standard for OpenERP 6.1).
  * 
  * @param {Date} obj
@@ -108,6 +116,10 @@ openerp.web.datetime_to_str = function(obj) {
 /**
  * Converts a Date javascript object to a string using OpenERP's
  * date string format (exemple: '2011-12-01').
+ * 
+ * As a date is not subject to time zones, we assume it should be
+ * represented as a Date javascript object at 00:00:00 in the
+ * time zone of the browser.
  * 
  * @param {Date} obj
  * @returns {String} A string representing a date.
