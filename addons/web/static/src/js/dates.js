@@ -136,6 +136,10 @@ openerp.web.date_to_str = function(obj) {
  * Converts a Date javascript object to a string using OpenERP's
  * time string format (exemple: '15:12:35').
  * 
+ * The OpenERP times are supposed to always be naive times. We assume it is
+ * represented using a javascript Date with a date 1 of January 1970 and a
+ * time corresponding to the meant time in the browser's time zone.
+ * 
  * @param {Date} obj
  * @returns {String} A string representing a time.
  */
