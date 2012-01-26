@@ -53,7 +53,7 @@ class account_common_report(osv.osv_memory):
     def _check_company_id(self, cr, uid, ids, context=None):
         for wiz in self.browse(cr, uid, ids, context=context):
             company_id = wiz.company_id.id
-            if company_id != wiz.fiscalyear_id.company_id.id:
+            if wiz.fiscalyear_id and company_id != wiz.fiscalyear_id.company_id.id:
                 return False
             if wiz.period_from and company_id != wiz.period_from.company_id.id:
                 return False
