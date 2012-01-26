@@ -116,7 +116,7 @@ class OpenERPSession(object):
         """
         assert self._uid, "The user needs to be logged-in to initialize his context"
         self.context = self.build_connection().get_user_context() or {}
-
+        self.context['uid'] = self._uid
         return self.context
 
     @property
