@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
-    <data noupdate="1">
+    <data>
 
         <!-- - - - - - - - -->
         <!-- Balance Sheet -->
@@ -28,47 +28,49 @@
         </record>
         <record id="account_financial_report_fraisdtablissements1" model="account.financial.report">
             <field name="name">Frais d'établissements</field>
+            <field eval="20" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_actifsimmobilises0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
         </record>
         <record id="account_financial_report_immobilisationsincorporelles1" model="account.financial.report">
             <field name="name">Immobilisations incorporelles</field>
-            <field eval="2" name="sequence"/>
+            <field eval="21" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_actifsimmobilises0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
         </record>
         <record id="account_financial_report_immobilisationscorporelles1" model="account.financial.report">
             <field name="name">Immobilisations corporelles</field>
-            <field eval="3" name="sequence"/>
+            <field eval="22" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_actifsimmobilises0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">sum</field>
         </record>
         <record id="account_financial_report_terrainsetconstructions2" model="account.financial.report">
             <field name="name">Terrains et constructions</field>
+            <field eval="22" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_immobilisationscorporelles1"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
         </record>
         <record id="account_financial_report_installationsmachinesetoutillage2" model="account.financial.report">
             <field name="name">Installations, machines et outillage</field>
-            <field eval="2" name="sequence"/>
+            <field eval="23" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_immobilisationscorporelles1"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
         </record>
         <record id="account_financial_report_mobilieretmatrielroulant2" model="account.financial.report">
             <field name="name">Mobilier et matériel roulant</field>
-            <field eval="3" name="sequence"/>
+            <field eval="24" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_immobilisationscorporelles1"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
         </record>
         <record id="account_financial_report_locationfinancementetdroitssimilaires2" model="account.financial.report">
             <field name="name">Location-financement et droits similaires</field>
-            <field eval="4" name="sequence"/>
+            <field eval="25" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_immobilisationscorporelles1"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
@@ -196,6 +198,7 @@
         </record>
         <record id="account_financial_report_capitauxpropres1" model="account.financial.report">
             <field name="name">CAPITAUX PROPRES</field>
+            <field eval="10" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_passif0"/>
             <field name="display_detail">detail_flat</field>
             <field name="type">sum</field>
@@ -386,14 +389,14 @@
         <record id="account_financial_report_acomptesreussurcommandes6" model="account.financial.report">
             <field name="name">Acomptes reçus sur commandes</field>
             <field eval="176" name="sequence"/>
-            <field name="parent_id" ref="account_financial_report_dettesfinancires5"/>
+            <field name="parent_id" ref="account_financial_report_dettesplusdunan2"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
         </record>
         <record id="account_financial_report_autresdettes6" model="account.financial.report">
             <field name="name">Autres dettes</field>
             <field eval="178" name="sequence"/>
-            <field name="parent_id" ref="account_financial_report_dettesfinancires5"/>
+            <field name="parent_id" ref="account_financial_report_dettesplusdunan2"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
         </record>
@@ -510,9 +513,11 @@
         </record>
         <record id="account_financial_report_produitsetchargesdexploitation1" model="account.financial.report">
             <field name="name">Produits et charges d'exploitation</field>
+            <field eval="1" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">detail_flat</field>
             <field name="type">sum</field>
+            <field name="style_overwrite" eval="3"/>
         </record>
         <record id="account_financial_report_margebrutedexploitation2" model="account.financial.report">
             <field name="name">Marge brute d'exploitation</field>
@@ -520,6 +525,7 @@
             <field name="parent_id" ref="account_financial_report_produitsetchargesdexploitation1"/>
             <field name="display_detail">detail_flat</field>
             <field name="type">sum</field>
+            <field name="style_overwrite" eval="4"/>
         </record>
         <record id="account_financial_report_chiffredaffaires3" model="account.financial.report">
             <field name="name">Chiffre d'affaires</field>
@@ -527,6 +533,7 @@
             <field name="parent_id" ref="account_financial_report_margebrutedexploitation2"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="5"/>
         </record>
         <record id="account_financial_report_appro_mbsd3" model="account.financial.report">
             <field name="name">Approvisionnements, marchandises, services et biens divers</field>
@@ -534,6 +541,7 @@
             <field name="parent_id" ref="account_financial_report_margebrutedexploitation2"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="5"/>
         </record>
         <record id="account_financial_report_rmunrationschargessocialesetpensions2" model="account.financial.report">
             <field name="name">Rémunérations, charges sociales et pensions</field>
@@ -541,6 +549,7 @@
             <field name="parent_id" ref="account_financial_report_produitsetchargesdexploitation1"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="4"/>
         </record>
         <record id="account_financial_report_ammo2" model="account.financial.report">
             <field name="name">Amortissements et réductions de valeur sur frais d'établissement, sur immobilisations incorporelles et corporelles</field>
@@ -548,6 +557,7 @@
             <field name="parent_id" ref="account_financial_report_produitsetchargesdexploitation1"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="4"/>
         </record>
         <record id="account_financial_report_reduc_cmd_encours2g" model="account.financial.report">
             <field name="name">Réductions de valeur sur stocks, sur commandes en cours d'exécution et sur créances commerciales: dotations (reprises)</field>
@@ -555,6 +565,7 @@
             <field name="parent_id" ref="account_financial_report_produitsetchargesdexploitation1"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="4"/>
         </record>
         <record id="account_financial_report_prov_pr_chargesetdotations2" model="account.financial.report">
             <field name="name">Provisions pour riques et charges: dotations (utilisations et reprises)</field>
@@ -562,6 +573,7 @@
             <field name="parent_id" ref="account_financial_report_produitsetchargesdexploitation1"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="4"/>
         </record>
         <record id="account_financial_report_autreschargesdexploitation2" model="account.financial.report">
             <field name="name">Autres charges d'exploitation</field>
@@ -569,6 +581,7 @@
             <field name="parent_id" ref="account_financial_report_produitsetchargesdexploitation1"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="4"/>
         </record>
         <record id="account_financial_report_charges_expl_pr_restruct2" model="account.financial.report">
             <field name="name">Charges d'exploitation portées à l'actif au titre de frais de restructuration</field>
@@ -576,6 +589,7 @@
             <field name="parent_id" ref="account_financial_report_produitsetchargesdexploitation1"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="4"/>
         </record>
         <record id="account_financial_report_bnficepertedexploitation1" model="account.financial.report">
             <field name="name">Bénéfice (Perte) d'exploitation</field>
@@ -583,6 +597,7 @@
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="1"/>
         </record>
         <record id="account_financial_report_produitsfinanciers1" model="account.financial.report">
             <field name="name">Produits financiers</field>
@@ -590,6 +605,7 @@
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="2"/>
         </record>
         <record id="account_financial_report_chargesfinancires1" model="account.financial.report">
             <field name="name">Charges financières</field>
@@ -597,6 +613,7 @@
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="2"/>
         </record>
         <record id="account_financial_report_bnficepertecouranteavantimpts1" model="account.financial.report">
             <field name="name">Bénéfice (Perte) courant(e) avant impôts</field>
@@ -604,6 +621,7 @@
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="1"/>
         </record>
         <record id="account_financial_report_produitsexceptionnels1" model="account.financial.report">
             <field name="name">Produits exceptionnels</field>
@@ -611,6 +629,7 @@
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="2"/>
         </record>
         <record id="account_financial_report_chargesexceptionnelles1" model="account.financial.report">
             <field name="name">Charges exceptionnelles</field>
@@ -618,6 +637,7 @@
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="2"/>
         </record>
         <record id="account_financial_report_bnficepertedelexcerciceavantimpts1" model="account.financial.report">
             <field name="name">Bénéfice (Perte) de l'excercice avant impôts</field>
@@ -625,6 +645,7 @@
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="1"/>
         </record>
         <record id="account_financial_report_prlvementssurlesimptsdiffrs1" model="account.financial.report">
        <!-- currently unused, because we don't have such a thing in the COA, but it seems it should be there around 780 -->
@@ -633,6 +654,7 @@
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="2"/>
         </record>
         <record id="account_financial_report_transfertauximptsdiffrs1" model="account.financial.report">
        <!-- currently unused, because we don't have such a thing in the COA, but it seems it should be there around 680 -->
@@ -641,6 +663,7 @@
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="2"/>
         </record>
         <record id="account_financial_report_imptssurlersultat1" model="account.financial.report">
             <field name="name">Impôts sur le résultat</field>
@@ -648,6 +671,7 @@
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="2"/>
         </record>
         <record id="account_financial_report_bnficepertedelexcercice1" model="account.financial.report">
             <field name="name">Bénéfice (Perte) de l'excercice</field>
@@ -655,6 +679,7 @@
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="1"/>
         </record>
 
 
