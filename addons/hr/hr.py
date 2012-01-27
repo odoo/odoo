@@ -175,7 +175,6 @@ class hr_employee(osv.osv):
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
         'login': fields.related('user_id', 'login', type='char', string='Login', readonly=1),
-        'write_date': fields.datetime('Update Date' , readonly=True),
     }
 
     def unlink(self, cr, uid, ids, context=None):

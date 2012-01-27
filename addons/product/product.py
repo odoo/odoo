@@ -513,7 +513,6 @@ class product_product(osv.osv):
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True, select=True),
         'color': fields.integer('Color Index'),
         'product_image': fields.binary('Image'),
-        'write_date': fields.datetime('Update Date' , readonly=True),
     }
     
     def unlink(self, cr, uid, ids, context=None):
@@ -588,19 +587,27 @@ class product_product(osv.osv):
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
-            args=[]
+            args = []
         if name:
             ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
-            if not len(ids):
+            if not ids:
                 ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
-            if not len(ids):
-                ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
-                ids += self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
-            if not len(ids):
-               ptrn=re.compile('(\[(.*?)\])')
-               res = ptrn.search(name)
-               if res:
-                   ids = self.search(cr, user, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
+            if not ids:
+                # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
+                # on a database with thousands of matching products, due to the huge merge+unique needed for the
+                # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
+                # Performing a quick memory merge of ids in Python will give much better performance
+                ids = set()
+                ids.update(self.search(cr, user, args + [('default_code',operator,name)], limit=limit, context=context))
+                if len(ids) < limit:
+                    # we may underrun the limit because of dupes in the results, that's fine
+                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit-len(ids)), context=context))
+                ids = list(ids)
+            if not ids:
+                ptrn = re.compile('(\[(.*?)\])')
+                res = ptrn.search(name)
+                if res:
+                    ids = self.search(cr, user, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context=context)
