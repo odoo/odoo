@@ -106,6 +106,12 @@ class ir_values(osv.osv):
             value = pickle.dumps(value)
         if meta:
             meta = pickle.dumps(meta)
+        assert isinstance(models, (list, tuple)), models
+        assert not company or isinstance(company, int), "Parameter 'company' must be an integer (company ID)!"
+        if company and company is True:
+            current_user_obj = self.pool.get('res.users').browse(cr, uid, uid, context={})
+            company = current_user_obj.company_id.id
+            
         ids_res = []
         for model in models:
             if isinstance(model, (list, tuple)):
@@ -118,7 +124,9 @@ class ir_values(osv.osv):
                     ('key2', '=', key2),
                     ('model', '=', model),
                     ('res_id', '=', res_id),
-                    ('user_id', '=', preserve_user and uid)
+                    ('user_id', '=', preserve_user and uid),
+                    ('company_id' ,'=', company)
+                    
                 ]
                 if key in ('meta', 'default'):
                     search_criteria.append(('name', '=', name))
@@ -135,12 +143,10 @@ class ir_values(osv.osv):
                 'key2': key2 and key2[:200],
                 'meta': meta,
                 'user_id': preserve_user and uid,
+                'company_id':company
             }
-            if company:
-                cid = self.pool.get('res.users').browse(cr, uid, uid, context={}).company_id.id
-                vals['company_id']=cid
             if res_id:
-                vals['res_id']= res_id
+                vals['res_id'] = res_id
             ids_res.append(self.create(cr, uid, vals))
         return ids_res
 
@@ -173,8 +179,11 @@ class ir_values(osv.osv):
                     where.append('res_id=%s')
                     params.append(res_id)
 
-            where.append('(user_id=%s or (user_id IS NULL)) order by user_id')
-            params.append(uid)
+            order = 'user_id, company_id'
+            where.append('''(user_id=%s or (user_id IS NULL))
+                and (company_id is null or
+                company_id = (SELECT company_id FROM res_users WHERE id = %s)) order by '''+ order)
+            params += [uid, uid]
             clause = ' and '.join(where)
             cr.execute('select id,name,value,object,meta, key from ir_values where ' + clause, params)
             result = cr.fetchall()
