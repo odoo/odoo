@@ -25,7 +25,7 @@ from datetime import datetime, date
 
 from tools.translate import _
 from osv import fields, osv
-from resource.faces import task as Task
+from openerp.addons.resource.faces import task as Task
 
 # I think we can remove this in v6.1 since VMT's improvements in the framework ?
 #class project_project(osv.osv):
@@ -316,7 +316,7 @@ class project(osv.osv):
 
         resource_pool = self.pool.get('resource.resource')
 
-        result = "from resource.faces import *\n"
+        result = "from openerp.addons.resource.faces import *\n"
         result += "import datetime\n"
         for project in self.browse(cr, uid, ids, context=context):
             u_ids = [i.id for i in project.members]

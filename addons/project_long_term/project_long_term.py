@@ -22,7 +22,7 @@
 from datetime import datetime
 from tools.translate import _
 from osv import fields, osv
-from resource.faces import task as Task
+from openerp.addons.resource.faces import task as Task
 
 class project_phase(osv.osv):
     _name = "project.phase"

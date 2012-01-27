@@ -322,7 +322,7 @@ class account_analytic_account(osv.osv):
         result = dict.fromkeys(ids, 0)
         for record in self.browse(cr, uid, ids, context=context):
             if record.quantity_max > 0.0:
-                result[record.id] = int(record.quantity >= record.quantity_max)
+                result[record.id] = int(record.hours_quantity >= record.quantity_max)
             else:
                 result[record.id] = 0
         return result
@@ -413,8 +413,7 @@ class account_analytic_account_summary_user(osv.osv):
 
     _columns = {
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'unit_amount': fields.function(_unit_amount, type='float',
-            string='Total Time'),
+        'unit_amount': fields.float('Total Time'),
         'user': fields.many2one('res.users', 'User'),
     }
 
@@ -454,96 +453,6 @@ class account_analytic_account_summary_user(osv.osv):
                 'GROUP BY u."user", u.account_id, u.max_user' \
                 ')')
 
-    def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
-        if context is None:
-            context = {}
-        if not ids:
-            return []
-
-        if fields is None:
-            fields = self._columns.keys()
-        res_trans_obj = self.pool.get('ir.translation')
-
-        # construct a clause for the rules:
-        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
-
-        # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
-        fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
-        res = []
-        cr.execute('SELECT MAX(id) FROM res_users')
-        max_user = cr.fetchone()[0]
-        if fields_pre:
-            fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = ids[i:i+cr.IN_MAX]
-                if d1:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ' \
-                            'AND account_id IN (%s) ' \
-                            'AND "user" IN (%s) AND %s ORDER BY %s' % \
-                            (','.join(fields_pre2 + ['id']), self._table,
-                                ','.join([str(x) for x in sub_ids]),
-                                ','.join([str(x/max_user - (x%max_user == 0 and 1 or 0)) for x in sub_ids]),
-                                ','.join([str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user)) for x in sub_ids]), d1,
-                                self._order),d2)
-                    if not cr.rowcount == len({}.fromkeys(sub_ids)):
-                        raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule (Document type: %s).') % self._description)
-                else:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ' \
-                            'AND account_id IN (%s) ' \
-                            'AND "user" IN (%s) ORDER BY %s' % \
-                            (','.join(fields_pre2 + ['id']), self._table,
-                                ','.join([str(x) for x in sub_ids]),
-                                ','.join([str(x/max_user - (x%max_user == 0 and 1 or 0)) for x in sub_ids]),
-                                ','.join([str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user)) for x in sub_ids]),
-                                self._order))
-                res.extend(cr.dictfetchall())
-        else:
-            res = map(lambda x: {'id': x}, ids)
-        for f in fields_pre:
-            if self._columns[f].translate:
-                ids = map(lambda x: x['id'], res)
-                res_trans = res_trans_obj._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
-                for r in res:
-                    r[f] = res_trans.get(r['id'], False) or r[f]
-
-        for table in self._inherits:
-            col = self._inherits[table]
-            cols = intersect(self._inherit_fields.keys(), fields)
-            if not cols:
-                continue
-            res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
-
-            res3 = {}
-            for r in res2:
-                res3[r['id']] = r
-                del r['id']
-
-            for record in res:
-                record.update(res3[record[col]])
-                if col not in fields:
-                    del record[col]
-
-        # all fields which need to be post-processed by a simple function (symbol_get)
-        fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields)
-        if fields_post:
-            # maybe it would be faster to iterate on the fields then on res, so that we wouldn't need
-            # to get the _symbol_get in each occurence
-            for r in res:
-                for f in fields_post:
-                    r[f] = self.columns[f]._symbol_get(r[f])
-        ids = map(lambda x: x['id'], res)
-
-        # all non inherited fields for which the attribute whose name is in load is False
-        fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
-        for f in fields_post:
-            # get the value of that field for all records/ids
-            res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
-            for record in res:
-                record[f] = res2[record['id']]
-
-        return res
-
 account_analytic_account_summary_user()
 
 class account_analytic_account_summary_month(osv.osv):
@@ -552,26 +461,9 @@ class account_analytic_account_summary_month(osv.osv):
     _auto = False
     _rec_name = 'month'
 
-    def _unit_amount(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        account_obj = self.pool.get('account.analytic.account')
-        account_ids = [int(str(int(x))[:-6]) for x in ids]
-        month_ids = [int(str(int(x))[-6:]) for x in ids]
-        parent_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
-        if parent_ids:
-            cr.execute('SELECT id, unit_amount ' \
-                    'FROM account_analytic_analysis_summary_month ' \
-                    'WHERE account_id IN %s ' \
-                        'AND month_id IN %s ',(parent_ids, tuple(month_ids),))
-            for sum_id, unit_amount in cr.fetchall():
-                res[sum_id] = unit_amount
-        for id in ids:
-            res[id] = round(res.get(id, 0.0), 2)
-        return res
-
     _columns = {
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'unit_amount': fields.function(_unit_amount, type='float', string='Total Time'),
+        'unit_amount': fields.float('Total Time'),
         'month': fields.char('Month', size=32, readonly=True),
     }
 
@@ -622,92 +514,6 @@ class account_analytic_account_summary_month(osv.osv):
                 'GROUP BY d.month, d.account_id ' \
                 ')')
 
-    def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
-        if context is None:
-            context = {}
-        if not ids:
-            return []
-
-        if fields is None:
-            fields = self._columns.keys()
-        res_trans_obj = self.pool.get('ir.translation')
-        # construct a clause for the rules:
-        d1, d2, tables= self.pool.get('ir.rule').domain_get(cr, user, self._name)
-
-        # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
-        fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
-        res = []
-        if fields_pre:
-            fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = ids[i:i+cr.IN_MAX]
-                if d1:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ' \
-                            'AND account_id IN (%s) ' \
-                            'AND month_id IN (%s) AND %s ORDER BY %s' % \
-                            (','.join(fields_pre2 + ['id']), self._table,
-                                ','.join([str(x) for x in sub_ids]),
-                                ','.join([str(x)[:-6] for x in sub_ids]),
-                                ','.join([str(x)[-6:] for x in sub_ids]), d1,
-                                self._order),d2)
-                    if not cr.rowcount == len({}.fromkeys(sub_ids)):
-                        raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule (Document type: %s).') % self._description)
-                else:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ' \
-                            'AND account_id IN (%s) ' \
-                            'AND month_id IN (%s) ORDER BY %s' % \
-                            (','.join(fields_pre2 + ['id']), self._table,
-                                ','.join([str(x) for x in sub_ids]),
-                                ','.join([str(x)[:-6] for x in sub_ids]),
-                                ','.join([str(x)[-6:] for x in sub_ids]),
-                                self._order))
-                res.extend(cr.dictfetchall())
-        else:
-            res = map(lambda x: {'id': x}, ids)
-
-        for f in fields_pre:
-            if self._columns[f].translate:
-                ids = map(lambda x: x['id'], res)
-                res_trans = res_trans_obj._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
-                for r in res:
-                    r[f] = res_trans.get(r['id'], False) or r[f]
-
-        for table in self._inherits:
-            col = self._inherits[table]
-            cols = intersect(self._inherit_fields.keys(), fields)
-            if not cols:
-                continue
-            res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
-
-            res3 = {}
-            for r in res2:
-                res3[r['id']] = r
-                del r['id']
-
-            for record in res:
-                record.update(res3[record[col]])
-                if col not in fields:
-                    del record[col]
-
-        # all fields which need to be post-processed by a simple function (symbol_get)
-        fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields)
-        if fields_post:
-            # maybe it would be faster to iterate on the fields then on res, so that we wouldn't need
-            # to get the _symbol_get in each occurence
-            for r in res:
-                for f in fields_post:
-                    r[f] = self.columns[f]._symbol_get(r[f])
-        ids = map(lambda x: x['id'], res)
-
-        # all non inherited fields for which the attribute whose name is in load is False
-        fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
-        for f in fields_post:
-            # get the value of that field for all records/ids
-            res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
-            for record in res:
-                record[f] = res2[record['id']]
-        return res
 
 account_analytic_account_summary_month()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
