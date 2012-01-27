@@ -206,7 +206,7 @@ class sale_order(osv.osv):
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')
-            ], 'Order State', readonly=True, help="Givwizard = self.browse(cr, uid, ids)[0]es the state of the quotation or sales order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
+            ], 'Order State', readonly=True, help="Gives the state of the quotation or sales order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
         'date_order': fields.date('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)]}),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
@@ -981,10 +981,12 @@ class sale_order_line(osv.osv):
         'price_unit': 0.0,
     }
 
-    def invoice_line_create(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-
+    def _prepare_order_line_invoice_line(self, cr, uid, ids, line, account_id=False, context=None):
+        """Builds the invoice line dict from a sale order line
+        @param line: sale order line object
+        @param account_id: the id of the account to force eventually (the method is used for picking return including service)
+        @return: dict that will be used to create the invoice line"""
+        
         def _get_line_qty(line):
             if (line.order_id.invoice_quantity=='order') or not line.procurement_id:
                 if line.product_uos:
@@ -1003,48 +1005,59 @@ class sale_order_line(osv.osv):
                 return self.pool.get('procurement.order').uom_get(cr, uid,
                         line.procurement_id.id, context=context)
 
-        create_ids = []
-        sales = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            if not line.invoiced:
+        if not line.invoiced:
+            if not account_id:
                 if line.product_id:
-                    a = line.product_id.product_tmpl_id.property_account_income.id
-                    if not a:
-                        a = line.product_id.categ_id.property_account_income_categ.id
-                    if not a:
+                    account_id = line.product_id.product_tmpl_id.property_account_income.id
+                    if not account_id:
+                        account_id = line.product_id.categ_id.property_account_income_categ.id
+                    if not account_id:
                         raise osv.except_osv(_('Error !'),
                                 _('There is no income account defined ' \
-                                        'for this product: "%s" (id:%d)') % \
-                                        (line.product_id.name, line.product_id.id,))
+                                    'for this product: "%s" (id:%d)') % \
+                                    (line.product_id.name, line.product_id.id,))
                 else:
                     prop = self.pool.get('ir.property').get(cr, uid,
                             'property_account_income_categ', 'product.category',
                             context=context)
-                    a = prop and prop.id or False
-                uosqty = _get_line_qty(line)
-                uos_id = _get_line_uom(line)
-                pu = 0.0
-                if uosqty:
-                    pu = round(line.price_unit * line.product_uom_qty / uosqty,
-                            self.pool.get('decimal.precision').precision_get(cr, uid, 'Sale Price'))
-                fpos = line.order_id.fiscal_position or False
-                a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
-                if not a:
-                    raise osv.except_osv(_('Error !'),
-                                _('There is no income category account defined in default Properties for Product Category or Fiscal Position is not defined !'))
-                inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
-                    'name': line.name,
-                    'origin': line.order_id.name,
-                    'account_id': a,
-                    'price_unit': pu,
-                    'quantity': uosqty,
-                    'discount': line.discount,
-                    'uos_id': uos_id,
-                    'product_id': line.product_id.id or False,
-                    'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
-                    'note': line.notes,
-                    'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
-                })
+                    account_id = prop and prop.id or False
+            uosqty = _get_line_qty(line)
+            uos_id = _get_line_uom(line)
+            pu = 0.0
+            if uosqty:
+                pu = round(line.price_unit * line.product_uom_qty / uosqty,
+                        self.pool.get('decimal.precision').precision_get(cr, uid, 'Sale Price'))
+            fpos = line.order_id.fiscal_position or False
+            account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account_id)
+            if not account_id:
+                raise osv.except_osv(_('Error !'),
+                            _('There is no income category account defined in default Properties for Product Category or Fiscal Position is not defined !'))
+            return {
+                'name': line.name,
+                'origin': line.order_id.name,
+                'account_id': account_id,
+                'price_unit': pu,
+                'quantity': uosqty,
+                'discount': line.discount,
+                'uos_id': uos_id,
+                'product_id': line.product_id.id or False,
+                'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
+                'note': line.notes,
+                'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
+            }
+        else:
+            return False
+
+    def invoice_line_create(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+
+        create_ids = []
+        sales = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            vals = self._prepare_order_line_invoice_line(cr, uid, ids, line, False, context)
+            if vals:
+                inv_id = self.pool.get('account.invoice.line').create(cr, uid, vals, context=context)
                 cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
                 self.write(cr, uid, [line.id], {'invoiced': True})
                 sales[line.order_id.id] = True

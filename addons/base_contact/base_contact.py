@@ -120,7 +120,6 @@ class res_partner_location(osv.osv):
         'city': fields.char('City', size=128),
         'state_id': fields.many2one("res.country.state", 'Fed. State', domain="[('country_id','=',country_id)]"),
         'country_id': fields.many2one('res.country', 'Country'),
-        'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'company_id': fields.many2one('res.company', 'Company',select=1),
         'job_ids': fields.one2many('res.partner.address', 'location_id', 'Contacts'),
         'partner_id': fields.related('job_ids', 'partner_id', type='many2one',\

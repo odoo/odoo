@@ -2524,7 +2524,10 @@ class account_account_template(osv.osv):
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context.copy()
         ctx.update({'defer_parent_store_computation': True})
-        children_acc_template = self.search(cr, uid, ['|', ('chart_template_id','=', chart_template_id),'&',('parent_id','child_of', [template.account_root_id.id]),('chart_template_id','=', False), ('nocreate','!=',True)], order='id')
+        children_acc_criteria = [('chart_template_id','=', chart_template_id)]
+        if template.account_root_id.id:
+            children_acc_criteria = ['|'] + children_acc_criteria + ['&',('parent_id','child_of', [template.account_root_id.id]),('chart_template_id','=', False)]
+        children_acc_template = self.search(cr, uid, [('nocreate','!=',True)] + children_acc_criteria, order='id')
         for account_template in self.browse(cr, uid, children_acc_template, context=context):
             # skip the root of COA if it's not the main one
             if (template.account_root_id.id == account_template.id) and template.parent_id:
@@ -2651,7 +2654,7 @@ class account_tax_code_template(osv.osv):
         company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
 
         #find all the children of the tax_code_root_id
-        children_tax_code_template = obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
+        children_tax_code_template = tax_code_root_id and obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id') or []
         for tax_code_template in obj_tax_code_template.browse(cr, uid, children_tax_code_template, context=context):
             vals = {
                 'name': (tax_code_root_id == tax_code_template.id) and company.name or tax_code_template.name,
@@ -2982,7 +2985,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_templ_obj = self.pool.get('account.tax.template')
 
         if 'bank_accounts_id' in fields:
-            res.update({'bank_accounts_id': [{'acc_name': _('Cash'), 'account_type': 'cash'}]})
+            res.update({'bank_accounts_id': [{'acc_name': _('Cash'), 'account_type': 'cash'},{'acc_name': _('Bank'), 'account_type': 'bank'}]})
         if 'company_id' in fields:
             res.update({'company_id': self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0].company_id.id})
         if 'seq_journal' in fields:
@@ -3265,14 +3268,20 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_tax_temp = self.pool.get('account.tax.template')
         chart_template = obj_wizard.chart_template_id
         vals = {}
+        # get the ids of all the parents of the selected account chart template
+        current_chart_template = chart_template
+        all_parents = [current_chart_template.id]
+        while current_chart_template.parent_id:
+            current_chart_template = current_chart_template.parent_id
+            all_parents.append(current_chart_template.id)
         # create tax templates and tax code templates from purchase_tax_rate and sale_tax_rate fields
         if not chart_template.complete_tax_set:
-            if obj_wizard.sale_tax:
-                value = obj_wizard.sale_tax_rate
-                obj_tax_temp.write(cr, uid, [obj_wizard.sale_tax.id], {'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
-            if obj_wizard.purchase_tax:
-                value = obj_wizard.purchase_tax_rate
-                obj_tax_temp.write(cr, uid, [obj_wizard.purchase_tax.id], {'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
+            value = obj_wizard.sale_tax_rate
+            ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('sale','all')), ('chart_template_id', 'in', all_parents)], context=context, order="sequence, id desc", limit=1)
+            obj_tax_temp.write(cr, uid, ref_tax_ids, {'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
+            value = obj_wizard.purchase_tax_rate
+            ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('purchase','all')), ('chart_template_id', 'in', all_parents)], context=context, order="sequence, id desc", limit=1)
+            obj_tax_temp.write(cr, uid, ref_tax_ids, {'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
         return True
 
     def execute(self, cr, uid, ids, context=None):

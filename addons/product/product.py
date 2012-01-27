@@ -214,10 +214,12 @@ class product_category(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('product.category','Parent Category', select=True),
+        'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
+        'parent_left': fields.integer('Left Parent', select=1),
+        'parent_right': fields.integer('Right Parent', select=1),
     }
 
 
@@ -225,7 +227,11 @@ class product_category(osv.osv):
         'type' : lambda *a : 'normal',
     }
 
-    _order = "sequence, name"
+    _parent_name = "parent_id"
+    _parent_store = True
+    _parent_order = 'sequence, name'
+    _order = 'parent_left'
+    
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
@@ -406,10 +412,11 @@ class product_product(osv.osv):
             context = {}
         quantity = context.get('quantity') or 1.0
         pricelist = context.get('pricelist', False)
+        partner = context.get('partner', False)
         if pricelist:
             for id in ids:
                 try:
-                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, context=context)[pricelist]
+                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, partner=partner, context=context)[pricelist]
                 except:
                     price = 0.0
                 res[id] = price
@@ -580,19 +587,27 @@ class product_product(osv.osv):
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
-            args=[]
+            args = []
         if name:
             ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
-            if not len(ids):
+            if not ids:
                 ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
-            if not len(ids):
-                ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
-                ids += self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
-            if not len(ids):
-               ptrn=re.compile('(\[(.*?)\])')
-               res = ptrn.search(name)
-               if res:
-                   ids = self.search(cr, user, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
+            if not ids:
+                # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
+                # on a database with thousands of matching products, due to the huge merge+unique needed for the
+                # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
+                # Performing a quick memory merge of ids in Python will give much better performance
+                ids = set()
+                ids.update(self.search(cr, user, args + [('default_code',operator,name)], limit=limit, context=context))
+                if len(ids) < limit:
+                    # we may underrun the limit because of dupes in the results, that's fine
+                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit-len(ids)), context=context))
+                ids = list(ids)
+            if not ids:
+                ptrn = re.compile('(\[(.*?)\])')
+                res = ptrn.search(name)
+                if res:
+                    ids = self.search(cr, user, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context=context)

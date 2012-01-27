@@ -23,6 +23,7 @@
     'name': 'Recruitment Process',
     'version': '1.0',
     'category': 'Human Resources',
+    "sequence": 24,
     'complexity': "easy",
     'description': """
 Manages job positions and the recruitment process.

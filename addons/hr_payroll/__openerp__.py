@@ -23,6 +23,7 @@
     'name': 'Payroll',
     'version': '1.0',
     'category': 'Human Resources',
+    "sequence": 38,
     'complexity': "normal",
     'description': """
 Generic Payroll system.

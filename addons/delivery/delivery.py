@@ -103,7 +103,7 @@ class delivery_carrier(osv.osv):
         grid_line_pool = self.pool.get('delivery.grid.line')
         grid_pool = self.pool.get('delivery.grid')
         for record in self.browse(cr, uid, ids, context=context):
-            grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id),('sequence','=',9999)], context=context)
+            grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
 
             if grid_id and not (record.normal_price or record.free_if_more_than):
                 grid_pool.unlink(cr, uid, grid_id, context=context)
@@ -112,13 +112,12 @@ class delivery_carrier(osv.osv):
                 continue
 
             if not grid_id:
-                record_data = {
+                grid_data = {
                     'name': record.name,
                     'carrier_id': record.id,
-                    'sequence': 9999,
+                    'sequence': 10,
                 }
-                new_grid_id = grid_pool.create(cr, uid, record_data, context=context)
-                grid_id = [new_grid_id]
+                grid_id = [grid_pool.create(cr, uid, grid_data, context=context)]
 
             lines = grid_line_pool.search(cr, uid, [('grid_id','in',grid_id)], context=context)
             if lines:
@@ -126,7 +125,7 @@ class delivery_carrier(osv.osv):
 
             #create the grid lines
             if record.free_if_more_than:
-                data = {
+                line_data = {
                     'grid_id': grid_id and grid_id[0],
                     'name': _('Free if more than %.2f') % record.amount,
                     'type': 'price',
@@ -135,10 +134,9 @@ class delivery_carrier(osv.osv):
                     'standard_price': 0.0,
                     'list_price': 0.0,
                 }
-                grid_line_pool.create(cr, uid, data, context=context)
-
+                grid_line_pool.create(cr, uid, line_data, context=context)
             if record.normal_price:
-                default_data = {
+                line_data = {
                     'grid_id': grid_id and grid_id[0],
                     'name': _('Default price'),
                     'type': 'price',
@@ -147,7 +145,7 @@ class delivery_carrier(osv.osv):
                     'standard_price': record.normal_price,
                     'list_price': record.normal_price,
                 }
-                grid_line_pool.create(cr, uid, default_data, context=context)
+                grid_line_pool.create(cr, uid, line_data, context=context)
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -223,7 +221,7 @@ class delivery_grid_line(osv.osv):
     _name = "delivery.grid.line"
     _description = "Delivery Grid Line"
     _columns = {
-        'name': fields.char('Name', size=32, required=True),
+        'name': fields.char('Name', size=64, required=True),
         'grid_id': fields.many2one('delivery.grid', 'Grid',required=True, ondelete='cascade'),
         'type': fields.selection([('weight','Weight'),('volume','Volume'),\
                                   ('wv','Weight * Volume'), ('price','Price')],\
