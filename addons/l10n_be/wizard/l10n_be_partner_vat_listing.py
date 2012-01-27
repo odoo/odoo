@@ -148,6 +148,9 @@ class partner_vat_list_13(osv.osv_memory):
         'name': fields.char('File Name', size=32),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save' : fields.binary('Save File', readonly=True),
+        'identification_type': fields.selection([('tin','TIN'), ('nvat','NVAT'), ('other','Other')], 'Identification Type', required=True),
+        'other': fields.char('Other Qlf', size=16, help="Description of a Identification Type"),
+        'comments': fields.text('Comments'),
         }
 
     def _get_partners(self, cursor, user, context=None):
@@ -156,6 +159,7 @@ class partner_vat_list_13(osv.osv_memory):
     _defaults={
         # TODO the referenced model has been deleted at revno 4672.1.2.
         # 'partner_ids': _get_partners
+        'identification_type' : 'tin'
             }
 
     def create_xml(self, cursor, user, ids, context=None):
@@ -166,7 +170,7 @@ class partner_vat_list_13(osv.osv_memory):
         obj_fyear = self.pool.get('account.fiscalyear')
         obj_addr = self.pool.get('res.partner.address')
         obj_vat_lclient = self.pool.get('vat.listing.clients')
-
+        
         seq_controlref = obj_sequence.get(cursor, user, 'controlref')
         seq_declarantnum = obj_sequence.get(cursor, user, 'declarantnum')
         obj_cmpny = obj_users.browse(cursor, user, user, context=context).company_id
@@ -177,6 +181,7 @@ class partner_vat_list_13(osv.osv_memory):
 
         company_vat = company_vat.replace(' ','').upper()
         SenderId = company_vat[2:]
+        issued_by = company_vat[:2]
         cref = SenderId + seq_controlref
         dnum = cref + seq_declarantnum
         #obj_year= obj_fyear.browse(cursor, user, context['fyear'], context=context)
@@ -189,7 +194,7 @@ class partner_vat_list_13(osv.osv_memory):
             name = ads.name or ''
 
             city = obj_addr.get_city(cursor, user, ads.id)
-            zip = obj_addr.browse(cursor, user, ads.id, context=context).zip
+            zip = obj_addr.browse(cursor, user, ads.id, context=context).zip or ''
             if not city:
                 city = ''
             if ads.street:
@@ -198,16 +203,27 @@ class partner_vat_list_13(osv.osv_memory):
                 street += ads.street2
             if ads.country_id:
                 country = ads.country_id.code
-
+                
+        data = self.read(cursor, user, ids)[0]
+        other = data['other'] or ''
         sender_date = time.strftime('%Y-%m-%d')
         comp_name = obj_cmpny.name
-        data_file = '<?xml version="1.0"?>\n<ClientListingConsignment xmlns="http://www.minfin.fgov.be/VatList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ClientListingsNbr=""'
-        data_file += ' VersionTech="1.3">'
-        data_file += '\n<Representative>'+comp_name+'</Representative>\n<RepresentativeReference></RepresentativeReference>'
-        data_comp = '\n<Declarant>\n\t<VATNumber xmlns="http://www.minfin.fgov.be/InputCommon">'+SenderId+'</VATNumber>\n\t<Name>'+ name +'</Name>\n\t<Street>'+ street +'</Street>\n\t<PostCode>'+ zip +'</PostCode>\n\t<City>'+ city +'</City>\n\t<CountryCode>'+ country +'</CountryCode>\n\t<EmailAddress>'+ email +'</EmailAddress>\n\t<Phone>'+ phone +'</Phone>\n</Declarant>'
-        data_period = '\n<Period>' + context['year'] +'</Period> \n<TurnOver></TurnOver>\n<Farmer></Farmer>'
+        data_file = '<?xml version="1.0"?>\n<ClientListingConsignment xmlns="http://www.minfin.fgov.be/ClientListingConsignment" ClientListingsNbr="1">'
+        data_file += '\n\t<Representative>'
+        data_file += '\n\t\t<RepresentativeID identificationType="'+data['identification_type'].upper()+'" issuedBy="'+issued_by+'" otherQlf="'+other+'">'+company_vat+'</RepresentativeID>'
+        data_file += '\n\t\t<Name>'+ comp_name +'</Name>'
+        data_file += '\n\t\t<Street>'+ street +'</Street>'
+        data_file += '\n\t\t<PostCode>'+ zip +'</PostCode>'
+        data_file += '\n\t\t<City>'+ city +'</City>'
+        data_file += '\n\t\t<CountryCode>'+ country +'</CountryCode>'
+        data_file += '\n\t\t<EmailAddress>'+ email +'</EmailAddress>'
+        data_file += '\n\t\t<Phone>'+ phone +'</Phone>'
+        data_file += '\n\t</Representative>'
+        data_file += '\n\t<RepresentativeReference></RepresentativeReference>'
+        data_comp =  '\n\t\t<ReplacedClientListing></ReplacedClientListing> \n\t\t<Declarant>\n\t\t\t<VATNumber xmlns="http://www.minfin.fgov.be/InputCommon">'+SenderId+'</VATNumber> \n\t\t\t<Name>'+ comp_name +'</Name> \n\t\t\t<Street>'+ street +'</Street> \n\t\t\t<PostCode>'+ zip +'</PostCode> \n\t\t\t<City>'+ city +'</City> \n\t\t\t<CountryCode>'+ country +'</CountryCode> \n\t\t\t<EmailAddress>'+ email +'</EmailAddress> \n\t\t\t<Phone>'+ phone +'</Phone> \n\t\t</Declarant>'
+        data_period = '\n\t\t<Period>' + context['year'] +'</Period>'
         error_message = []
-        data = self.read(cursor, user, ids)[0]
+        
         for partner in data['partner_ids']:
             if isinstance(partner, list) and partner:
                 datas.append(partner[2])
@@ -233,10 +249,9 @@ class partner_vat_list_13(osv.osv_memory):
             seq += 1
             sum_tax += line['amount']
             sum_turnover += line['turnover']
-            data_clientinfo += '\n<Client SequenceNumber="'+str(seq)+'">\n\t<CompanyVATNumber issuedby="'+vat_issued+'">'+line['vat'].replace(' ','').upper()[2:] +'</CompanyVATNumber>\n\t<TurnOver>'+str(int(round(line['turnover'] * 100))) +'</TurnOver>\n\t<VATAmount>'+str(int(round(line['amount'] * 100))) +'</VATAmount>\n</Client>'
-        data_decl ='\n<ClientListing SequenceNumber="1" ClientsNbr="'+ str(seq) +'" DeclarantReference="'+ dnum + '" TurnOverSum="'+ str(int(round(sum_turnover * 100))) +'" VATAmountSum="'+ str(int(round(sum_tax * 100))) +'">'
-        data_decl +='\n\t<ReplacedClientListing></ReplacedClientListing>'
-        data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n\t<FileAttachment></FileAttachment>\n\t<Comment></Comment>\n</ClientListing>\n</ClientListingConsignment>'
+            data_clientinfo += '\n\t\t<Client SequenceNumber="'+str(seq)+'">\n\t\t\t<CompanyVATNumber issuedby="'+vat_issued+'">'+line['vat'].replace(' ','').upper()[2:] +'</CompanyVATNumber>\n\t\t\t<TurnOver>'+str(int(round(line['turnover'] * 100))) +'</TurnOver>\n\t\t\t<VATAmount>'+str(int(round(line['amount'] * 100))) +'</VATAmount>\n\t\t</Client>'
+        data_decl ='\n\t<ClientListing SequenceNumber="1" ClientsNbr="'+ str(seq) +'" DeclarantReference="'+ dnum + '" TurnOverSum="'+ str(int(round(sum_turnover * 100))) +'" VATAmountSum="'+ str(int(round(sum_tax * 100))) +'">'
+        data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n\t\t<FileAttachment></FileAttachment> \n\t\t<Comment>'+data['comments']+'</Comment>\n\t</ClientListing>\n</ClientListingConsignment>'
         msg = 'Save the File with '".xml"' extension.'
         file_save = base64.encodestring(data_file.encode('utf8'))
         self.write(cursor, user, ids, {'file_save':file_save, 'msg':msg, 'name':'vat_list.xml'}, context=context)
