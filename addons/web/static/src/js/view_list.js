@@ -1355,6 +1355,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             axis: 'y',
             items: '> tr[data-id]',
             containment: 'parent',
+            helper: 'clone',
             stop: function (event, ui) {
                 var to_move = list.records.get(ui.item.data('id')),
                     target_id = ui.item.prev().data('id'),
