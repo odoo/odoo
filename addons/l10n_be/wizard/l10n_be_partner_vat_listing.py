@@ -208,20 +208,54 @@ class partner_vat_list_13(osv.osv_memory):
         other = data['other'] or ''
         sender_date = time.strftime('%Y-%m-%d')
         comp_name = obj_cmpny.name
-        data_file = '<?xml version="1.0"?>\n<ClientListingConsignment xmlns="http://www.minfin.fgov.be/ClientListingConsignment" ClientListingsNbr="1">'
-        data_file += '\n\t<Representative>'
-        data_file += '\n\t\t<RepresentativeID identificationType="'+data['identification_type'].upper()+'" issuedBy="'+issued_by+'" otherQlf="'+other+'">'+company_vat+'</RepresentativeID>'
-        data_file += '\n\t\t<Name>'+ comp_name +'</Name>'
-        data_file += '\n\t\t<Street>'+ street +'</Street>'
-        data_file += '\n\t\t<PostCode>'+ zip +'</PostCode>'
-        data_file += '\n\t\t<City>'+ city +'</City>'
-        data_file += '\n\t\t<CountryCode>'+ country +'</CountryCode>'
-        data_file += '\n\t\t<EmailAddress>'+ email +'</EmailAddress>'
-        data_file += '\n\t\t<Phone>'+ phone +'</Phone>'
-        data_file += '\n\t</Representative>'
-        data_file += '\n\t<RepresentativeReference></RepresentativeReference>'
-        data_comp =  '\n\t\t<ReplacedClientListing></ReplacedClientListing> \n\t\t<Declarant>\n\t\t\t<VATNumber xmlns="http://www.minfin.fgov.be/InputCommon">'+SenderId+'</VATNumber> \n\t\t\t<Name>'+ comp_name +'</Name> \n\t\t\t<Street>'+ street +'</Street> \n\t\t\t<PostCode>'+ zip +'</PostCode> \n\t\t\t<City>'+ city +'</City> \n\t\t\t<CountryCode>'+ country +'</CountryCode> \n\t\t\t<EmailAddress>'+ email +'</EmailAddress> \n\t\t\t<Phone>'+ phone +'</Phone> \n\t\t</Declarant>'
-        data_period = '\n\t\t<Period>' + context['year'] +'</Period>'
+        
+        annual_listing_data = {
+                               'identificationType': data['identification_type'].upper(),
+                               'issued_by': issued_by,
+                               'other': other,
+                               'company_vat': company_vat,
+                               'comp_name': comp_name,
+                               'street': street,
+                               'zip': zip,
+                               'city': city,
+                               'country': country,
+                               'email': email,
+                               'phone': phone,
+                               'SenderId': SenderId,
+                               'period': context['year'],
+                               'comments': data['comments']
+                               }
+        
+        data_file = """<?xml version="1.0"?>
+<ClientListingConsignment xmlns="http://www.minfin.fgov.be/ClientListingConsignment" ClientListingsNbr="1">
+    <Representative>
+    <RepresentativeID identificationType="%(identificationType)s" issuedBy="%(issued_by)s" otherQlf="%(other)s">%(company_vat)s</RepresentativeID>
+    <Name>%(comp_name)s</Name>
+    <Street>%(street)s</Street>
+    <PostCode>%(zip)s</PostCode>
+    <City>%(city)s</City>
+    <CountryCode>%(country)s</CountryCode>
+    <EmailAddress>%(email)s</EmailAddress>
+    <Phone>%(phone)s</Phone>
+</Representative>
+<RepresentativeReference></RepresentativeReference>
+""" %(annual_listing_data)
+
+        data_comp =  """
+        <ReplacedClientListing></ReplacedClientListing> 
+         <Declarant>
+             <VATNumber xmlns="http://www.minfin.fgov.be/InputCommon">%(SenderId)s</VATNumber>
+             <Name>%(comp_name)s</Name>
+             <Street>%(street)s</Street>
+             <PostCode>%(zip)s</PostCode> 
+             <City>%(city)s</City> 
+             <CountryCode>%(country)s</CountryCode> 
+             <EmailAddress>%(email)s</EmailAddress> 
+             <Phone>%(phone)s</Phone> 
+         </Declarant>
+         <Period>%(period)s</Period>
+         """ %(annual_listing_data)
+
         error_message = []
         
         for partner in data['partner_ids']:
@@ -249,9 +283,27 @@ class partner_vat_list_13(osv.osv_memory):
             seq += 1
             sum_tax += line['amount']
             sum_turnover += line['turnover']
-            data_clientinfo += '\n\t\t<Client SequenceNumber="'+str(seq)+'">\n\t\t\t<CompanyVATNumber issuedby="'+vat_issued+'">'+line['vat'].replace(' ','').upper()[2:] +'</CompanyVATNumber>\n\t\t\t<TurnOver>'+str(int(round(line['turnover'] * 100))) +'</TurnOver>\n\t\t\t<VATAmount>'+str(int(round(line['amount'] * 100))) +'</VATAmount>\n\t\t</Client>'
-        data_decl ='\n\t<ClientListing SequenceNumber="1" ClientsNbr="'+ str(seq) +'" DeclarantReference="'+ dnum + '" TurnOverSum="'+ str(int(round(sum_turnover * 100))) +'" VATAmountSum="'+ str(int(round(sum_tax * 100))) +'">'
-        data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n\t\t<FileAttachment></FileAttachment> \n\t\t<Comment>'+data['comments']+'</Comment>\n\t</ClientListing>\n</ClientListingConsignment>'
+            
+            amount_data = {
+                           'seq': str(seq),
+                           'vat_issued': vat_issued,
+                           'only_vat': line['vat'].replace(' ','').upper()[2:],
+                           'turnover': str(int(round(line['turnover'] * 100))),
+                           'vat_amount': str(int(round(line['amount'] * 100))),
+                           'dnum': dnum,
+                           'sum_tax': str(int(round(sum_tax * 100))),
+                           'sum_turnover': str(int(round(sum_turnover * 100))),
+                           }
+            
+            data_clientinfo += """
+<Client SequenceNumber="%(seq)s">
+    <CompanyVATNumber issuedby="%(vat_issued)s">%(only_vat)s</CompanyVATNumber>
+    <TurnOver>%(turnover)s</TurnOver>
+    <VATAmount>%(vat_amount)s</VATAmount>
+</Client>""" %(amount_data)
+
+        data_decl ='<ClientListing SequenceNumber="1" ClientsNbr="%(seq)s" DeclarantReference="%(dnum)s" TurnOverSum="%(sum_turnover)s" VATAmountSum="%(sum_tax)s">' %(amount_data)
+        data_file += data_decl + data_comp + data_clientinfo + '\n\t\t<FileAttachment></FileAttachment> \n\t\t<Comment>%(comments)s</Comment>\n\t</ClientListing>\n</ClientListingConsignment>' %(annual_listing_data)
         msg = 'Save the File with '".xml"' extension.'
         file_save = base64.encodestring(data_file.encode('utf8'))
         self.write(cursor, user, ids, {'file_save':file_save, 'msg':msg, 'name':'vat_list.xml'}, context=context)
