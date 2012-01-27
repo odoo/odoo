@@ -1107,9 +1107,9 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
         self.menu.start();
     },
     show_common: function() {
-        if (this.initialized_common) { return; }
-        this.initialized_common = true;
-        this.crashmanager =  new openerp.web.CrashManager();
+        if (!this.crashmanager) {
+            this.crashmanager =  new openerp.web.CrashManager();
+        }
         this.notification = new openerp.web.Notification(this);
         this.notification.appendTo(this.$element);
         this.loading = new openerp.web.Loading(this);
