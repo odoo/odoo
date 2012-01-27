@@ -120,7 +120,7 @@ class report_xml(osv.osv):
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
         'auto': fields.boolean('Custom python parser'),
 
-        'header': fields.boolean('Add RML header', help="Add or not the coporate RML header"),
+        'header': fields.boolean('Add RML header', help="Add or not the corporate RML header"),
 
         'report_xsl': fields.char('XSL path', size=256),
         'report_xml': fields.char('XML path', size=256, help=''),
