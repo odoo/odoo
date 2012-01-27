@@ -2697,7 +2697,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                     contexts, groupbys);
                 self.initial_ids = undefined;
             } else {
-                self.do_search(domains.concat([self.domain]), contexts, groupbys);
+                self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
             }
         });
         this.searchview.on_loaded.add_last(function () {
