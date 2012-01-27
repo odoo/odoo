@@ -117,7 +117,8 @@ class res_partner_bank(osv.osv):
             elif not address.get('type'):
                 value = address.get(field, value)
         return value
-
+    
+    _rec_name = "acc_number"
     _columns = {
         'name': fields.char('Bank Account', size=64), # to be removed in v6.2 ?
         'acc_number': fields.char('Account Number', size=64, required=True),
