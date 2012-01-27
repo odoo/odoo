@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import datetime
+import babel
 import dateutil.relativedelta
 import logging
 import time
@@ -117,7 +118,28 @@ class OpenERPSession(object):
         assert self._uid, "The user needs to be logged-in to initialize his context"
         self.context = self.build_connection().get_user_context() or {}
         self.context['uid'] = self._uid
+        self._fix_lang(self.context)
         return self.context
+
+    def _fix_lang(self, context):
+        """ OpenERP provides languages which may not make sense and/or may not
+        be understood by the web client's libraries.
+
+        Fix those here.
+
+        :param dict context: context to fix
+        """
+        lang = context['lang']
+
+        # inane OpenERP locale
+        if lang == 'ar_AR':
+            lang = 'ar'
+
+        # lang to lang_REGION (datejs only handles lang_REGION, no bare langs)
+        if lang in babel.core.LOCALE_ALIASES:
+            lang = babel.core.LOCALE_ALIASES[lang]
+
+        context['lang'] = lang
 
     @property
     def base_eval_context(self):
