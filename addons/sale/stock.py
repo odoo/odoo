@@ -175,32 +175,15 @@ class stock_picking(osv.osv):
                         if not account_id:
                             account_id = sale_line.product_id.categ_id.\
                                     property_account_expense_categ.id
-                    price_unit = sale_line.price_unit
-                    discount = sale_line.discount
-                    tax_ids = sale_line.tax_id
-                    tax_ids = map(lambda x: x.id, tax_ids)
 
-                    account_analytic_id = self._get_account_analytic_invoice(cursor,
-                            user, picking, sale_line)
-
-                    account_id = fiscal_position_obj.map_account(cursor, user, picking.sale_id.partner_id.property_account_position, account_id)
-                    invoice = invoices[result[picking.id]]
-                    invoice_line_id = invoice_line_obj.create(cursor, user, {
-                        'name': name,
-                        'invoice_id': invoice.id,
-                        'uos_id': sale_line.product_uos.id or sale_line.product_uom.id,
-                        'product_id': sale_line.product_id.id,
-                        'account_id': account_id,
-                        'price_unit': price_unit,
-                        'discount': discount,
-                        'quantity': sale_line.product_uos_qty,
-                        'invoice_line_tax_id': [(6, 0, tax_ids)],
-                        'account_analytic_id': account_analytic_id,
-                        'notes':sale_line.notes
-                    }, context=context)
-                    order_line_obj.write(cursor, user, [sale_line.id], {'invoiced': True,
-                        'invoice_lines': [(6, 0, [invoice_line_id])],
-                    })
+                    vals = order_line_obj._prepare_order_line_invoice_line(cursor, user, ids, sale_line, account_id, context)
+                    if vals: #note: in some cases we may not want to include all service lines as invoice lines
+                        vals['name'] = name
+                        vals['account_analytic_id'] = self._get_account_analytic_invoice(cursor, user, picking, sale_line)
+                        vals['invoice_id'] = invoices[result[picking.id]].id
+                        invoice_line_id = invoice_line_obj.create(cursor, user, vals, context=context)
+                        order_line_obj.write(cursor, user, [sale_line.id], {'invoiced': True,
+                        'invoice_lines': [(6, 0, [invoice_line_id])]})
         return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
