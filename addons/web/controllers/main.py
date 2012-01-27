@@ -164,8 +164,9 @@ class WebClient(openerpweb.Controller):
             with open(f) as fp:
                 data = fp.read()
 
-            web_path = file_map[f]
-            web_dir = os.path.dirname(web_path)
+            path = file_map[f]
+            # convert FS path into web path
+            web_dir = '/'.join(os.path.dirname(path).split(os.path.sep))
 
             data = re.sub(
                 rx_import,
