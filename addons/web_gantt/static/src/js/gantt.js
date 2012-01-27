@@ -22,7 +22,6 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
     on_loaded: function(fields_view, fields_get) {
         this.fields_view = fields_view[0];
         this.fields = fields_get[0].fields;
-        this.field_name = 'name';
         
         this.has_been_loaded.resolve();
     },
@@ -40,10 +39,10 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             n_group_bys = group_bys;
         }
         // gather the fields to get
-        var fields = _.compact(_.map(["date_start", "date_delay", "date_stop", "color", "colors"], function(key) {
+        var fields = _.compact(_.map(["date_start", "date_delay", "date_stop"], function(key) {
             return self.fields_view.arch.attrs[key] || '';
         }));
-        fields = _.uniq(fields.concat([this.field_name], n_group_bys));
+        fields = _.uniq(fields.concat(n_group_bys));
         
         return $.when(this.has_been_loaded).pipe(function() {
             return self.dataset.read_slice(fields, {
@@ -59,6 +58,16 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
             return this.do_search(this.last_domains, this.last_contexts, this.last_group_bys);
     },
     on_data_loaded: function(tasks, group_bys) {
+        var self = this;
+        var ids = _.pluck(tasks, "id");
+        return this.dataset.name_get(ids).pipe(function(names) {
+            var ntasks = _.map(tasks, function(task) {
+                return _.extend({__name: _.detect(names, function(name) { return name[0] == task.id; })[1]}, task); 
+            });
+            return self.on_data_loaded_2(ntasks, group_bys);
+        });
+    },
+    on_data_loaded_2: function(tasks, group_bys) {
         var self = this;
         $(".oe-gantt-view-view", this.$element).html("");
         
@@ -129,7 +138,7 @@ openerp.web_gantt.GanttView = openerp.web.View.extend({
                     return {task_info: group, task_start: task_start, task_stop: task_stop};
                 }
             } else {
-                var task_name = openerp.web.format_value(task[self.field_name], self.fields[self.field_name]);
+                var task_name = task.__name;
                 var task_start = openerp.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_start]);
                 if (!task_start)
                     return;
