@@ -9,21 +9,23 @@
             <field name="name">RIB Bank Details</field>
             <field name="code">rib</field>
         </record>
-        
+
         <record id="rib_bank_code_field" model="res.partner.bank.type.field">
             <field name="name">bank_code</field>
             <field name="bank_type_id" ref="bank_rib"/>
             <field eval="True" name="required"/>
             <field eval="False" name="readonly"/>
+            <field name="size">5</field>
         </record>
         <record id="rib_office_field" model="res.partner.bank.type.field">
             <field name="name">office</field>
             <field name="bank_type_id" ref="bank_rib"/>
             <field eval="True" name="required"/>
             <field eval="False" name="readonly"/>
+            <field name="size">5</field>
         </record>
-        <record id="bank_acc_number_field" model="res.partner.bank.type.field">
-            <field name="name">acc_number</field>
+        <record id="rib_rib_acc_number_field" model="res.partner.bank.type.field">
+            <field name="name">rib_acc_number</field>
             <field name="bank_type_id" ref="bank_rib"/>
             <field eval="True" name="required"/>
             <field eval="False" name="readonly"/>
@@ -34,11 +36,66 @@
             <field name="bank_type_id" ref="bank_rib"/>
             <field eval="True" name="required"/>
             <field eval="False" name="readonly"/>
+            <field name="size">2</field>
+        </record>
+        <record id="rib_acc_number_field" model="res.partner.bank.type.field">
+            <field name="name">acc_number</field>
+            <field name="bank_type_id" ref="bank_rib"/>
+            <field eval="False" name="required"/>
+            <field eval="True" name="readonly"/>
         </record>
         <record id="rib_bic_field" model="res.partner.bank.type.field">
             <field name="name">bank_bic</field>
             <field name="bank_type_id" ref="bank_rib"/>
+            <field name="required" eval="False"/>
+        </record>
+
+        <!-- IBAN and RIB -->
+        <record id="bank_iban_rib" model="res.partner.bank.type">
+            <field name="name">IBAN and RIB</field>
+            <field name="code">iban-rib</field>
+        </record>
+
+        <record id="iban_rib_bank_code_field" model="res.partner.bank.type.field">
+            <field name="name">bank_code</field>
+            <field name="bank_type_id" ref="bank_iban_rib"/>
+            <field eval="True" name="required"/>
+            <field eval="False" name="readonly"/>
+            <field name="size">5</field>
+        </record>
+        <record id="iban_rib_office_field" model="res.partner.bank.type.field">
+            <field name="name">office</field>
+            <field name="bank_type_id" ref="bank_iban_rib"/>
+            <field eval="True" name="required"/>
+            <field eval="False" name="readonly"/>
+            <field name="size">5</field>
+        </record>
+        <record id="iban_rib_rib_acc_number_field" model="res.partner.bank.type.field">
+            <field name="name">rib_acc_number</field>
+            <field name="bank_type_id" ref="bank_iban_rib"/>
+            <field eval="True" name="required"/>
+            <field eval="False" name="readonly"/>
+            <field name="size">11</field>
+        </record>
+        <record id="iban_rib_key_field" model="res.partner.bank.type.field">
+            <field name="name">key</field>
+            <field name="bank_type_id" ref="bank_iban_rib"/>
+            <field eval="True" name="required"/>
+            <field eval="False" name="readonly"/>
+            <field name="size">2</field>
+        </record>
+        <record id="iban_rib_acc_number_field" model="res.partner.bank.type.field">
+            <field name="name">acc_number</field>
+            <field name="bank_type_id" ref="bank_iban_rib"/>
+            <field eval="True" name="required"/>
+            <field eval="False" name="readonly"/>
+        </record>
+        <record id="iban_rib_bic_field" model="res.partner.bank.type.field">
+            <field name="name">bank_bic</field>
+            <field name="bank_type_id" ref="bank_iban_rib"/>
             <field name="required" eval="0"/>
         </record>
+
+
     </data>
 </openerp>

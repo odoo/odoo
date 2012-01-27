@@ -100,7 +100,7 @@ class res_partner_bank(osv.osv):
         Check the IBAN number
         '''
         for bank_acc in self.browse(cr, uid, ids, context=context):
-            if bank_acc.state<>'iban':
+            if bank_acc.state not in ('iban', 'iban-rib'):
                 continue
             iban = _format_iban(bank_acc.acc_number).lower()
             if iban[:2] in _iban_len and len(iban) != _iban_len[iban[:2]]:
