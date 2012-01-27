@@ -36,7 +36,6 @@ Adds
 - bank statements balances report
 - performance improvements for digital import of bank statement (via 'ebanking_import' context flag)
 - name_search on res.partner.bank enhanced to allow search on bank and iban account numbers
-- new field bank_ids on res.company to facilitate search on company banks
     ''',
     'depends': ['account'],
     'demo_xml': [],
