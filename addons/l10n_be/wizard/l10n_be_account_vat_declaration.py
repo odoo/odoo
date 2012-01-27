@@ -94,7 +94,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
             data_of_file += '<QUARTER>'+quarter+'</QUARTER>\n\t\t\t'
         else:
             data_of_file += '<MONTH>'+starting_month+'</MONTH>\n\t\t\t'
-        data_of_file += '<YEAR>' + str(account_period.date_stop[:4]) + '</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="NO" PAYMENT="NO"/>'
+        data_of_file += '<YEAR>' + str(account_period.date_stop[:4]) + '</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="'+ (data['ask_resitution'] and 'YES' or 'NO') +'" PAYMENT="'+ (data['ask_payment'] and 'YES' or 'NO') +'"/>'
         data_of_file += '\n\t\t<ClientListingNihil>'+ (data['client_nihil'] and 'YES' or 'NO') +'</ClientListingNihil>'
         data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
 
