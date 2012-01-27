@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class Bank(osv.osv):
     _description='Bank'
@@ -183,6 +184,9 @@ class res_partner_bank(osv.osv):
                 if type_ids:
                     t = bank_type_obj.browse(cr, uid, type_ids[0], context=context)
                     try:
+                        # avoid the default format_layout to result in "False: ..."
+                        if not val._data[val.id]['bank_name']:
+                            val._data[val.id]['bank_name'] = _('BANK')
                         result = t.format_layout % val._data[val.id]
                     except:
                         result += ' [Formating Error]'
