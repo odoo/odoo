@@ -1097,11 +1097,11 @@ class stock_picking(osv.osv):
             for move_line in picking.move_lines:
                 if move_line.state == 'cancel':
                     continue
-                invoice_line_id = invoice_line_obj.create(cr, uid,
-                        self._prepare_invoice_line(cr, uid, group, picking, move_line,
+                vals = self._prepare_invoice_line(cr, uid, group, picking, move_line,
                                 invoice_id, invoice_vals, context=context),
-                        context=context)
-                self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
+                if vals:
+                    invoice_line_id = invoice_line_obj.create(cr, uid, vals, context=context)
+                    self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
 
             invoice_obj.button_compute(cr, uid, [invoice_id], context=context,
                     set_total=(inv_type in ('in_invoice', 'in_refund')))
