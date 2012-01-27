@@ -32,6 +32,7 @@ import logging
 import tarfile
 import tempfile
 import threading
+import sys
 from os.path import join
 
 from datetime import datetime
@@ -873,6 +874,8 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         # now, the serious things: we read the language file
         fileobj.seek(0)
         if fileformat == 'csv':
+            #Setting the limit of data while loading a CSV
+            csv.field_size_limit(sys.maxint)
             reader = csv.reader(fileobj, quotechar='"', delimiter=',')
             # read the first line of the file (it contains columns titles)
             for row in reader:
@@ -993,7 +996,7 @@ def resetlocale():
 def load_language(cr, lang):
     """Loads a translation terms for a language.
     Used mainly to automate language loading at db initialization.
-    
+
     :param lang: language ISO code with optional _underscore_ and l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
     :type lang: str
     """
