@@ -31,7 +31,7 @@ class res_partner_bank(osv.osv):
         """Check the RIB key"""
         for bank_acc in self.browse(cr, uid, ids):
             # Ignore the accounts of type other than rib
-            if bank_acc.state not in ('rib', 'iban-rib'):
+            if bank_acc.state <> 'rib':
                 continue
             # Fail if the needed values are empty of too short 
             if (not bank_acc.bank_code
@@ -56,8 +56,8 @@ class res_partner_bank(osv.osv):
                             "codes: %s %s %s.") %
                             (bank_acc.key, bank_acc.bank_code,
                             bank_acc.office, bank_acc.rib_acc_number) )
-            if bank_acc.state == 'iban-rib':
-                if not self.check_iban(cr, uid, [bank_acc.id]):
+            if bank_acc.acc_number:
+                if not self.is_iban_valid(cr, uid, bank_acc.acc_number):
                     raise osv.except_osv(_('Error'),
                         _("The IBAN %s is not valid.") % bank_acc.acc_number)
         return True
@@ -84,7 +84,7 @@ class res_partner_bank(osv.osv):
     }
 
     _constraints = [(_check_key, 'Error message in raise',
-        ['acc_number', 'rib_acc_number', 'bank_code', 'office', 'key'])]
+         ['rib_acc_number', 'bank_code', 'office', 'key'])]
 
 res_partner_bank()
 
