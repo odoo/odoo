@@ -767,6 +767,8 @@ class orm_template(object):
             done = {}
             for i in range(len(fields)):
                 res = False
+                if not line[i]:
+                    continue
                 if i >= len(line):
                     raise Exception(_('Please check that all your lines have %d columns.') % (len(fields),))
 
@@ -818,7 +820,7 @@ class orm_template(object):
                         mode = False
                     else:
                         mode = field[len(prefix)+1]
-                    res = line[i] and _get_id(relation, line[i], current_module, mode) or False
+                    res = _get_id(relation, line[i], current_module, mode)
 
                 elif fields_def[field[len(prefix)]]['type']=='many2many':
                     relation = fields_def[field[len(prefix)]]['relation']
@@ -829,9 +831,8 @@ class orm_template(object):
 
                     # TODO: improve this by using csv.csv_reader
                     res = []
-                    if line[i]:
-                        for db_id in line[i].split(config.get('csv_internal_sep')):
-                            res.append( _get_id(relation, db_id, current_module, mode) )
+                    for db_id in line[i].split(config.get('csv_internal_sep')):
+                        res.append( _get_id(relation, db_id, current_module, mode) )
                     res = [(6,0,res)]
 
                 elif fields_def[field[len(prefix)]]['type'] == 'integer':
