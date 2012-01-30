@@ -621,6 +621,7 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
      */
     do_login: function (db, login, password) {
         var self = this;
+        this.$element.removeClass('login_invalid');
         this.session.on_session_invalid.add({
             callback: function () {
                 self.$element.addClass("login_invalid");
