@@ -302,7 +302,7 @@ CREATE TABLE ir_module_module (
     web boolean DEFAULT FALSE,
     license character varying(32),
     sequence integer DEFAULT 100,
-    auto_installable boolean default False,
+    auto_install boolean default False,
     primary key(id)
 );
 ALTER TABLE ir_module_module add constraint name_uniq unique (name);

@@ -97,7 +97,7 @@
         # 'test/test_ir_cron.yml', # <-- These tests perform a roolback.
     ],
     'installable': True,
-    'auto_installable': True,
+    'auto_install': True,
     'certificate': '0076807797149',
     "css": [ 'static/src/css/modules.css' ],
 }

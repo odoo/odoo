@@ -192,7 +192,7 @@ class module(osv.osv):
         'sequence': fields.integer('Sequence'),
         'dependencies_id': fields.one2many('ir.module.module.dependency',
             'module_id', 'Dependencies', readonly=True),
-        'auto_installable': fields.boolean('Auto Installable',
+        'auto_install': fields.boolean('Automatic Installation',
             help='An auto-installable module is automatically installed by the '
             'system when all its dependencies are satisfied. '
             'If the module has no dependency, it is always installed.'),
@@ -329,7 +329,7 @@ class module(osv.osv):
         # Mark (recursively) the newly satisfied modules to also be installed:
 
         # Select all auto-installable (but not yet installed) modules.
-        domain = [('state', '=', 'uninstalled'), ('auto_installable', '=', True),]
+        domain = [('state', '=', 'uninstalled'), ('auto_install', '=', True),]
         uninstalled_ids = self.search(cr, uid, domain, context=context)
         uninstalled_modules = self.browse(cr, uid, uninstalled_ids, context=context)
 
@@ -450,7 +450,7 @@ class module(osv.osv):
             'complexity': terp.get('complexity', ''),
             'sequence': terp.get('sequence', 100),
             'application': terp.get('application', False),
-            'auto_installable': terp.get('auto_installable', False),
+            'auto_install': terp.get('auto_install', False),
         }
 
     # update the list of available packages
