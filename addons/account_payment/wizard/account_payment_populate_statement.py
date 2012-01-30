@@ -39,7 +39,7 @@ class account_payment_populate_statement(osv.osv_memory):
             ('move_line_id.reconcile_id', '=', False),
             ('bank_statement_line_id', '=', False),
             ('move_line_id.state','=','valid'),
-            ('order_id.state','=','open')])
+            ('order_id.state','in',('open','done'))])
         line_ids.extend(line_obj.search(cr, uid, [
             ('move_line_id.reconcile_id', '=', False),
             ('order_id.mode', '=', False),
