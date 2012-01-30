@@ -53,7 +53,7 @@ Pay attention that this module converts the existing addresses into "addresses +
         'test/base_contact00.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0031287885469',
     'images': ['images/base_contact1.jpeg','images/base_contact2.jpeg','images/base_contact3.jpeg'],
 }

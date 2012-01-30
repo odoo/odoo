@@ -62,7 +62,7 @@ to set up a management by affair.
         'test/hr_timesheet_demo.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0071405533469',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

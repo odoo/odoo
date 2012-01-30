@@ -42,7 +42,7 @@ Contains the installer for marketing-related modules.
     ],
     'demo_xml': ['marketing_demo.xml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00598574977629228189',
     'images': ['images/config_marketing.jpeg'],
 }

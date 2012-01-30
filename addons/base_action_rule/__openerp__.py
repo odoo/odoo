@@ -45,7 +45,7 @@ trigger an automatic reminder email.
     ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '001017908446466333429',
     'images': ['images/base_action_rule1.jpeg','images/base_action_rule2.jpeg','images/base_action_rule3.jpeg'],
 }

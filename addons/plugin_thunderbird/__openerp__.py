@@ -40,7 +40,7 @@ HR Applicant and Project Issue from selected mails.
     "demo_xml" : [],
     "update_xml" : ['thunderbird_installer.xml',
                     'security/ir.model.access.csv'],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "00899858104035139949",
     'images': ['images/config_thunderbird.jpeg','images/config_thunderbird_plugin.jpeg','images/thunderbird_document.jpeg'],

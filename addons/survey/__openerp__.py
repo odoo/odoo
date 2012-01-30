@@ -54,7 +54,7 @@ Partners are also sent mails with user name and password for the invitation of t
         'test/survey_report.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '001131639736864143245',
     'images': ['images/survey_answers.jpeg','images/survey_pages.jpeg','images/surveys.jpeg'],
 }

@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    "name" : "Calendar Layer",
-    "version" : "1.0",
-    "depends" : ["base", "mail"],
+    "name": "Calendar Layer",
+    "version": "1.0",
+    "depends": ["base", "mail"],
     'complexity': "easy",
     'description': """
 This is a full-featured calendar system.
@@ -36,23 +36,23 @@ It supports:
 
 If you need to manage your meetings, you should install the CRM module.
     """,
-    "author" : "OpenERP SA",
+    "author": "OpenERP SA",
     'category': 'Hidden/Dependency',
     'website': 'http://www.openerp.com',
-    "init_xml" : [
+    "init_xml": [
         'base_calendar_data.xml'
     ],
-    "demo_xml" : [],
-    "update_xml" : [
+    "demo_xml": [],
+    "update_xml": [
         'security/calendar_security.xml',
         'security/ir.model.access.csv',
         'wizard/base_calendar_invite_attendee_view.xml',
         'base_calendar_view.xml'
     ],
     "test" : ['test/base_calendar_test.yml'],
-    "installable" : True,
-    "active" : False,
-    "certificate" : "00694071962960352821",
+    "installable": True,
+    "auto_install": False,
+    "certificate": "00694071962960352821",
     'images': ['images/base_calendar1.jpeg','images/base_calendar2.jpeg','images/base_calendar3.jpeg','images/base_calendar4.jpeg',],
 }
 

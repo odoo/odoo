@@ -43,7 +43,7 @@ The RIB and IBAN codes for a single account can be entered by recording two Bank
     'update_xml': ['bank_view.xml', ],
     'installable': True,
     'certificate': '003407950790',
-    'active': False,
+    'auto_install': False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

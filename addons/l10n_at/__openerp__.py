@@ -29,7 +29,7 @@
     "description": "This module provides the standard Accounting Chart for Austria which is based on the Template from BMF.gv.at. Please keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.",
     "demo_xml" : [],
     "update_xml" : ['account_tax_code.xml',"account_chart.xml",'account_tax.xml',"l10n_chart_at_wizard.xml"],
-    "active": False,
+    "auto_install": False,
     "installable": True
 }
 

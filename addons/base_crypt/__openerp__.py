@@ -58,7 +58,7 @@ will disable LDAP authentication completely if installed at the same time.
                     """,
     "depends" : ["base"],
     "data" : [],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "00721290471310299725",
 }
