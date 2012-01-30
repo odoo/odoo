@@ -158,7 +158,7 @@ class partner_vat_list_13(osv.osv_memory):
 
     _defaults={
         # TODO the referenced model has been deleted at revno 4672.1.2.
-        # 'partner_ids': _get_partners
+        'partner_ids': _get_partners,
         'identification_type' : 'tin'
             }
 
@@ -223,7 +223,7 @@ class partner_vat_list_13(osv.osv_memory):
                                'phone': phone,
                                'SenderId': SenderId,
                                'period': context['year'],
-                               'comments': data['comments']
+                               'comments': data['comments'] or ''
                                }
         
         data_file = """<?xml version="1.0"?>
@@ -270,6 +270,12 @@ class partner_vat_list_13(osv.osv_memory):
         sum_turnover = 0.00
         if len(error_message):
             return 'Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
+        amount_data = {
+                   'seq': str(seq),
+                   'dnum': dnum,
+                   'sum_tax': str(0),
+                   'sum_turnover': str(0),
+                           }
         for line in datas:
             vat_issued = line['vat'][:2]
             if vat_issued == 'BE':
