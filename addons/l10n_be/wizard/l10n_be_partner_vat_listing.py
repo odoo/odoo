@@ -47,6 +47,7 @@ class vat_listing_clients(osv.osv_memory):
                     context, load='_classic_write')]
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        args.append(['id', 'in', context['partner_ids']])
         client = self.search(cr, uid, [('vat', '=', name)]+args, limit=limit, context=context)
         if not client:
             client = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)]+args, limit=limit, context=context)
