@@ -8,6 +8,7 @@
         <record id="bank_rib" model="res.partner.bank.type">
             <field name="name">RIB and optional IBAN</field>
             <field name="code">rib</field>
+            <field name="format_layout">%(bank_name)s: %(bank_code)s %(office)s %(rib_acc_number)s %(key)s</field>
         </record>
 
         <record id="rib_bank_code_field" model="res.partner.bank.type.field">
