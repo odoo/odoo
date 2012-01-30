@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:48+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:01+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -71,7 +71,7 @@ msgid "Analytic Plan Line"
 msgstr "Analytic Plan Line"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:60
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
 msgid "User Error"
 msgstr "User Error"
@@ -175,11 +175,12 @@ msgstr "Хэвлэх"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+#: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "Хувь"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #, python-format
 msgid "A model having this name and code already exists !"
 msgstr "A model having this name and code already exists !"
@@ -271,8 +272,8 @@ msgid "To Date"
 msgstr "Огноо"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:483
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "You have to define an analytic journal on the '%s' journal!"
@@ -404,7 +405,7 @@ msgid "Root account of this plan."
 msgstr "Root account of this plan."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
@@ -433,8 +434,8 @@ msgid "Print Crossovered Analytic"
 msgstr "Print Crossovered Analytic"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:483
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "No Analytic Journal !"
@@ -471,7 +472,7 @@ msgid "Analytic Distribution Lines"
 msgstr "Analytic Distribution Lines"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "The Total Should be Between %s and %s"
 msgstr "The Total Should be Between %s and %s"
@@ -548,7 +549,7 @@ msgid "The name of the journal must be unique per company !"
 msgstr "Бүртгэлийн нэр компани бүрт дахин давтагдахгүй байх ёстой."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "Value Error"
 msgstr "Value Error"
@@ -557,9 +558,3 @@ msgstr "Value Error"
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
 msgstr "Дансны харагдац дээр шилжих мөр үүсгэж болохгүй."
-
-#~ msgid ""
-#~ "You can not create move line on receivable/payable account without partner"
-#~ msgstr ""
-#~ "Харилцагчгүйгээр хүлээн авах / төлбөрийн дансан дээр шилжих мөр үүсгэж "
-#~ "болохгүй."

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:10+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:23+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -44,8 +44,6 @@ msgid "SIN No"
 msgstr "SIN Br"
 
 #. module: hr
-#: model:ir.module.module,shortdesc:hr.module_meta_information
-#: model:ir.ui.menu,name:hr.menu_hr_deshboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
 #: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_root
@@ -164,7 +162,7 @@ msgid "My Departments Employee"
 msgstr "Zaposleni Mog Odelenja"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
+#: selection:hr.employee,marital:0
 msgid "Married"
 msgstr "U braku"
 
@@ -288,7 +286,6 @@ msgstr "Lokacija Kancelarije"
 
 #. module: hr
 #: view:hr.employee:0
-#: view:hr.job:0
 #: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
@@ -327,6 +324,7 @@ msgstr "ir.actions.act_window"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
 msgid "Human Resources Dashboard"
 msgstr "Glavna Tabla Ljudskih Resursa"
 
@@ -338,7 +336,6 @@ msgid "Job"
 msgstr "Posao"
 
 #. module: hr
-#: view:hr.department:0
 #: field:hr.department,member_ids:0
 msgid "Members"
 msgstr "Članovi"
@@ -359,6 +356,7 @@ msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
+#: field:hr.employee,category_ids:0
 msgid "Categories"
 msgstr "Kategorije"
 
@@ -368,7 +366,7 @@ msgid "Expected Employees"
 msgstr "Očekivani zapošljeni"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
+#: selection:hr.employee,marital:0
 msgid "Divorced"
 msgstr "Razvedeni"
 
@@ -386,7 +384,6 @@ msgstr "Greška ! Ne možete da kreirate rekurzivne Kategorije."
 #: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: view:res.users:0
 #: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "Odeljenja"
@@ -458,7 +455,6 @@ msgid "Recruitment Process"
 msgstr "Proces Zapošljavanja"
 
 #. module: hr
-#: field:hr.employee,category_ids:0
 #: field:hr.employee.category,name:0
 msgid "Category"
 msgstr "Kategorija"
@@ -515,6 +511,7 @@ msgstr "Adresa Posla"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
 msgid "HR Manager Dashboard"
 msgstr "Glavna tabla Menadžmenta Ljudskim Resursima"
 
@@ -618,10 +615,6 @@ msgstr "Stanje"
 
 #. module: hr
 #: field:hr.employee,marital:0
-#: view:hr.employee.marital.status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.actions.act_window,name:hr.action_hr_marital_status
-#: model:ir.ui.menu,name:hr.hr_menu_marital_status
 msgid "Marital Status"
 msgstr "Bračno Stanje"
 
@@ -701,7 +694,6 @@ msgid "Attendances"
 msgstr "Prisutnost"
 
 #. module: hr
-#: view:hr.employee.marital.status:0
 #: view:hr.job:0
 msgid "Description"
 msgstr "Opis"
@@ -718,7 +710,7 @@ msgid "Payroll"
 msgstr "Platni Spisak"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
+#: selection:hr.employee,marital:0
 msgid "Single"
 msgstr "Sam/Sama"
 
@@ -749,7 +741,6 @@ msgid "Nationality"
 msgstr "Nacionalnost"
 
 #. module: hr
-#: view:hr.department:0
 #: view:hr.employee:0
 #: field:hr.employee,notes:0
 msgid "Notes"
@@ -783,6 +774,9 @@ msgstr "Pol"
 
 #. module: hr
 #: view:hr.employee:0
+#: view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0
+#: view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -847,7 +841,7 @@ msgid "Manager"
 msgstr "Menadžer"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
+#: selection:hr.employee,marital:0
 msgid "Widower"
 msgstr "Udovac"
 
@@ -860,6 +854,3 @@ msgstr "Generički sistem Platnih spiskova integrisanih sa Računovodstvom."
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
 msgstr "Podređeni"
-
-#~ msgid "Bank Account"
-#~ msgstr "Račun Banke"

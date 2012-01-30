@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:26+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:40+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -112,9 +112,7 @@ msgid "Fixed"
 msgstr "Fiksno"
 
 #. module: product
-#: code:addons/product/pricelist.py:186
-#: code:addons/product/pricelist.py:342
-#: code:addons/product/pricelist.py:360
+#: code:addons/product/pricelist.py:178
 #, python-format
 msgid "Warning !"
 msgstr "Upozorenje !"
@@ -264,7 +262,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  npr: 1* (ovaj komad) = odnos * (referentni komad)"
 
 #. module: product
-#: code:addons/product/product.py:380
+#: code:addons/product/product.py:400
 #, python-format
 msgid "Products: "
 msgstr "Proizvodi: "
@@ -518,6 +516,7 @@ msgstr "Vreme rada"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
+#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
 msgid ""
 "A price list contains rules to be evaluated in order to compute the purchase "
 "or sales price for all the partners assigned to a price list. Price lists "
@@ -786,6 +785,7 @@ msgstr "Tip"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action2
 #: model:ir.ui.menu,name:product.menu_product_pricelist_main
 msgid "Pricelists"
@@ -886,6 +886,8 @@ msgid "DDR 256MB PC400"
 msgstr "DDR 256MB PC400"
 
 #. module: product
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model:ir.ui.menu,name:product.menu_product_category_action_form
 #: view:product.category:0
 msgid "Product Categories"
 msgstr "Kategorije proizvoda"
@@ -1105,6 +1107,7 @@ msgstr "Drveni Stok 4m"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
 msgid ""
 "You must define a Product for everything you buy or sell. Products can be "
 "raw materials, stockable products, consumables or services. The Product form "
@@ -1240,7 +1243,6 @@ msgid "Main Supplier who has highest priority in Supplier List."
 msgstr "Glavni Dobavljac koji ima najvisi prioritet na listi Dobavljaca"
 
 #. module: product
-#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Usluge"
@@ -1253,6 +1255,7 @@ msgstr "Ako je drugi cjenik"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_puchased
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:0
@@ -1276,7 +1279,7 @@ msgid "Pallet Dimension"
 msgstr "Dimenzije palete"
 
 #. module: product
-#: code:addons/product/product.py:618
+#: code:addons/product/product.py:641
 #, python-format
 msgid " (copy)"
 msgstr " (kopiraj)"
@@ -1303,7 +1306,7 @@ msgid "Second UoM"
 msgstr "Druga JM"
 
 #. module: product
-#: code:addons/product/product.py:142
+#: code:addons/product/product.py:143
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -1750,6 +1753,7 @@ msgstr "Cenovnik proizvoda"
 #: field:product.pricelist,company_id:0
 #: field:product.pricelist.item,company_id:0
 #: field:product.pricelist.version,company_id:0
+#: view:product.product:0
 #: field:product.supplierinfo,company_id:0
 #: field:product.template,company_id:0
 msgid "Company"
@@ -1764,7 +1768,7 @@ msgstr ""
 "Osnovna cena za izračunavanje cene za kupca. Nekada se zove kataloška cena."
 
 #. module: product
-#: code:addons/product/pricelist.py:518
+#: code:addons/product/pricelist.py:376
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Deo za partnera u formi proizvoda"
@@ -1816,7 +1820,6 @@ msgstr "Intervencija stručnjaka na licu mesta"
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
 #: field:product.pricelist,type:0
-#: view:product.pricelist.type:0
 msgid "Pricelist Type"
 msgstr "Vrsta cenovnika"
 
@@ -2234,6 +2237,7 @@ msgstr "Kuciste"
 
 #. module: product
 #: view:product.product:0
+#: model:res.groups,name:product.group_product_variant
 msgid "Product Variant"
 msgstr "Varijante proizvoda"
 
@@ -2243,7 +2247,7 @@ msgid "Shelves"
 msgstr "Police"
 
 #. module: product
-#: code:addons/product/pricelist.py:517
+#: code:addons/product/pricelist.py:375
 #, python-format
 msgid "Other Pricelist"
 msgstr "Ostali cenovnici"

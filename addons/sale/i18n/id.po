@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:35+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:48+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -67,7 +67,7 @@ msgid "Configure Sales Order Logistics"
 msgstr "Konfigurasi Logistik Sales Order"
 
 #. module: sale
-#: code:addons/sale/sale.py:603
+#: code:addons/sale/sale.py:638
 #, python-format
 msgid "The quotation '%s' has been converted to a sales order."
 msgstr "quotation \"%s\" telah dikonversikan pada sales order"
@@ -99,7 +99,6 @@ msgid "All at Once"
 msgstr "Sekaligus"
 
 #. module: sale
-#: field:sale.order,project_id:0
 #: view:sale.report:0
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
@@ -288,7 +287,7 @@ msgid "Shop Name"
 msgstr "Nama toko"
 
 #. module: sale
-#: code:addons/sale/sale.py:1014
+#: code:addons/sale/sale.py:1158
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Nama konsumen tidak ditemukan"
@@ -337,7 +336,7 @@ msgstr ""
 "proses pengambilan."
 
 #. module: sale
-#: code:addons/sale/sale.py:939
+#: code:addons/sale/sale.py:1034
 #, python-format
 msgid ""
 "There is no income category account defined in default Properties for "
@@ -358,7 +357,7 @@ msgstr ""
 "Anda mencoba untuk menetapkan banyak yang tidak dari produk yang sama"
 
 #. module: sale
-#: code:addons/sale/sale.py:620
+#: code:addons/sale/sale.py:655
 #, python-format
 msgid "invalid mode for test_state"
 msgstr "mode tidak sah untuk test_state"
@@ -369,7 +368,7 @@ msgid "June"
 msgstr "Juni"
 
 #. module: sale
-#: code:addons/sale/sale.py:584
+#: code:addons/sale/sale.py:617
 #, python-format
 msgid "Could not cancel this sales order !"
 msgstr "Order penjualan ini tidak dapat dibatalkan"
@@ -391,7 +390,6 @@ msgstr "Oktober"
 
 #. module: sale
 #: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
@@ -433,6 +431,7 @@ msgstr "Posisi Fiskal"
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
+#: field:sale.report,product_uom:0
 msgid "UoM"
 msgstr "Satuan"
 
@@ -457,7 +456,7 @@ msgstr ""
 "proses \"atau\" Proses manual'."
 
 #. module: sale
-#: code:addons/sale/sale.py:971
+#: code:addons/sale/sale.py:1066
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
@@ -465,7 +464,7 @@ msgstr ""
 "penjualan."
 
 #. module: sale
-#: code:addons/sale/sale.py:1042
+#: code:addons/sale/sale.py:1134
 #, python-format
 msgid "(n/a)"
 msgstr "tidak tersedia"
@@ -666,9 +665,9 @@ msgid "My Sales"
 msgstr "Sales Saya"
 
 #. module: sale
-#: code:addons/sale/sale.py:290
-#: code:addons/sale/sale.py:966
-#: code:addons/sale/sale.py:1165
+#: code:addons/sale/sale.py:295
+#: code:addons/sale/sale.py:1061
+#: code:addons/sale/sale.py:1290
 #, python-format
 msgid "Invalid action !"
 msgstr "Tindakan tidak valid !"
@@ -693,7 +692,9 @@ msgstr "Tanggal Order"
 
 #. module: sale
 #: view:sale.order.line:0
+#: view:sale.report:0
 #: field:sale.report,shipped:0
+#: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "Dikirimkan"
 
@@ -751,7 +752,7 @@ msgid "Sales By Month"
 msgstr "Penjualan berdasarkan Bulan"
 
 #. module: sale
-#: code:addons/sale/sale.py:970
+#: code:addons/sale/sale.py:1065
 #, python-format
 msgid "Could not cancel sales order line!"
 msgstr "Daftar penjualan tidak dapat di batalkan !"
@@ -894,7 +895,6 @@ msgstr ""
 "Anda tidak dapan membatalkan daftar penjualan yang telah difakturkan !"
 
 #. module: sale
-#: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Qty"
 msgstr "Qty"
@@ -1185,15 +1185,17 @@ msgid "Picking List"
 msgstr "Daftar Jemput"
 
 #. module: sale
-#: code:addons/sale/sale.py:387
-#: code:addons/sale/sale.py:920
-#: code:addons/sale/sale.py:938
+#: code:addons/sale/sale.py:412
+#: code:addons/sale/sale.py:503
+#: code:addons/sale/sale.py:632
+#: code:addons/sale/sale.py:1015
+#: code:addons/sale/sale.py:1033
 #, python-format
 msgid "Error !"
 msgstr "Ada Kesalahan !!!"
 
 #. module: sale
-#: code:addons/sale/sale.py:570
+#: code:addons/sale/sale.py:603
 #, python-format
 msgid "Could not cancel sales order !"
 msgstr "Order Penjualan tidak dapat di batalkan !"
@@ -1253,7 +1255,6 @@ msgstr "Untuk di review oleh akuntan"
 
 #. module: sale
 #: view:sale.report:0
-#: field:sale.report,uom_name:0
 msgid "Reference UoM"
 msgstr "Referensi UoM"
 
@@ -1293,6 +1294,7 @@ msgid "Sales Analysis"
 msgstr "Analisa Penjualan"
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
 msgstr "Properti"
@@ -1325,7 +1327,6 @@ msgstr ""
 "pengiriman."
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 #: model:process.process,name:sale.process_process_salesprocess0
 #: view:sale.order:0
 #: view:sale.report:0
@@ -1358,7 +1359,7 @@ msgid "Invoice"
 msgstr "Invoice"
 
 #. module: sale
-#: code:addons/sale/sale.py:1014
+#: code:addons/sale/sale.py:1158
 #, python-format
 msgid ""
 "You have to select a customer in the sales form !\n"
@@ -1398,7 +1399,7 @@ msgid "The amount without tax."
 msgstr "Jumlah tanpa pajak"
 
 #. module: sale
-#: code:addons/sale/sale.py:571
+#: code:addons/sale/sale.py:604
 #, python-format
 msgid "You must first cancel all picking attached to this sales order."
 msgstr ""
@@ -1471,7 +1472,6 @@ msgid "Product UoS"
 msgstr "Produk UoS"
 
 #. module: sale
-#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
 msgstr "Proses Manual sedang berlangsung"
@@ -1492,7 +1492,8 @@ msgid "Order"
 msgstr "Pesanan"
 
 #. module: sale
-#: code:addons/sale/sale.py:921
+#: code:addons/sale/sale.py:1016
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:71
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
@@ -1517,7 +1518,7 @@ msgstr ""
 " secepat  itu dikonfirmasi  oleh penjual"
 
 #. module: sale
-#: code:addons/sale/sale.py:1116
+#: code:addons/sale/sale.py:1238
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -1549,7 +1550,7 @@ msgid "Total"
 msgstr "Total"
 
 #. module: sale
-#: code:addons/sale/sale.py:388
+#: code:addons/sale/sale.py:413
 #, python-format
 msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
 msgstr "Tidak ditemukan jurnal penjualan untuk perusahaan :\"%s\" (id:%d)"
@@ -1580,6 +1581,7 @@ msgstr "Buat Faktur"
 
 #. module: sale
 #: view:sale.order:0
+#: selection:sale.order,state:0
 #: view:sale.order.line:0
 msgid "To Invoice"
 msgstr "Pada Faktur"
@@ -1668,7 +1670,7 @@ msgid "Date Confirm"
 msgstr "Tanggal konfirmasi"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:111
+#: code:addons/sale/wizard/sale_line_invoice.py:113
 #, python-format
 msgid "Warning"
 msgstr "Peringatan"
@@ -1751,6 +1753,7 @@ msgid "Invoice Lines"
 msgstr "Detail Invoice"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
@@ -1793,7 +1796,7 @@ msgid "August"
 msgstr "Agustus"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:111
+#: code:addons/sale/wizard/sale_line_invoice.py:113
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -1826,7 +1829,6 @@ msgstr "Desember"
 
 #. module: sale
 #: field:sale.config.picking_policy,config_logo:0
-#: field:sale.installer,config_logo:0
 msgid "Image"
 msgstr "Gambar"
 
@@ -1869,7 +1871,7 @@ msgid "Untaxed Amount"
 msgstr "Jumlah sebelum kena pajak"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:163
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:170
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 #: view:sale.advance.payment.inv:0
 #: view:sale.order:0
@@ -1878,7 +1880,7 @@ msgid "Advance Invoice"
 msgstr "Faktur"
 
 #. module: sale
-#: code:addons/sale/sale.py:591
+#: code:addons/sale/sale.py:624
 #, python-format
 msgid "The sales order '%s' has been cancelled."
 msgstr "Order penjualan '%s' telah dibatalkan"
@@ -1972,7 +1974,7 @@ msgid "You invoice has been successfully created!"
 msgstr "Faktur Anda telah berhasil dibuat !"
 
 #. module: sale
-#: code:addons/sale/sale.py:585
+#: code:addons/sale/sale.py:618
 #, python-format
 msgid "You must first cancel all invoices attached to this sales order."
 msgstr ""
@@ -2042,7 +2044,7 @@ msgid "Cannot delete Sales Order(s) which are already confirmed !"
 msgstr "Tidak dapat menghapus Order Penjualan  yang sudah dikonfirmasi!"
 
 #. module: sale
-#: code:addons/sale/sale.py:316
+#: code:addons/sale/sale.py:322
 #, python-format
 msgid "The sales order '%s' has been set in draft state."
 msgstr "'%s ' sales order telah diatur di  bagian  draf"

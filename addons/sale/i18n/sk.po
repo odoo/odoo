@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:36+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:48+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -64,7 +64,7 @@ msgid "Configure Sales Order Logistics"
 msgstr "Nastavenie logistiky objednávok predaja"
 
 #. module: sale
-#: code:addons/sale/sale.py:603
+#: code:addons/sale/sale.py:638
 #, python-format
 msgid "The quotation '%s' has been converted to a sales order."
 msgstr "Cenová ponuka  '%s'  bola prevedená na objednávku predaja."
@@ -96,7 +96,6 @@ msgid "All at Once"
 msgstr "Všetky naraz"
 
 #. module: sale
-#: field:sale.order,project_id:0
 #: view:sale.report:0
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
@@ -271,7 +270,7 @@ msgid "Shop Name"
 msgstr "Názov obchodu"
 
 #. module: sale
-#: code:addons/sale/sale.py:1014
+#: code:addons/sale/sale.py:1158
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Nie je definovaný zákazník !"
@@ -307,7 +306,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:939
+#: code:addons/sale/sale.py:1034
 #, python-format
 msgid ""
 "There is no income category account defined in default Properties for "
@@ -325,7 +324,7 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:620
+#: code:addons/sale/sale.py:655
 #, python-format
 msgid "invalid mode for test_state"
 msgstr "neplatný režim pre test_state"
@@ -336,7 +335,7 @@ msgid "June"
 msgstr "Jún"
 
 #. module: sale
-#: code:addons/sale/sale.py:584
+#: code:addons/sale/sale.py:617
 #, python-format
 msgid "Could not cancel this sales order !"
 msgstr "Nemôžete zrušiť objednávku predaja !"
@@ -358,7 +357,6 @@ msgstr "Október"
 
 #. module: sale
 #: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
@@ -400,6 +398,7 @@ msgstr "Fiškálna pozícia"
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
+#: field:sale.report,product_uom:0
 msgid "UoM"
 msgstr "Jednotka"
 
@@ -422,13 +421,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:971
+#: code:addons/sale/sale.py:1066
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1042
+#: code:addons/sale/sale.py:1134
 #, python-format
 msgid "(n/a)"
 msgstr "(n/a)"
@@ -620,9 +619,9 @@ msgid "My Sales"
 msgstr "Môj predaj"
 
 #. module: sale
-#: code:addons/sale/sale.py:290
-#: code:addons/sale/sale.py:966
-#: code:addons/sale/sale.py:1165
+#: code:addons/sale/sale.py:295
+#: code:addons/sale/sale.py:1061
+#: code:addons/sale/sale.py:1290
 #, python-format
 msgid "Invalid action !"
 msgstr "Neplatná akcia!"
@@ -647,7 +646,9 @@ msgstr "Dátum objednávky"
 
 #. module: sale
 #: view:sale.order.line:0
+#: view:sale.report:0
 #: field:sale.report,shipped:0
+#: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "Dodané"
 
@@ -705,7 +706,7 @@ msgid "Sales By Month"
 msgstr "Predaj za mesiac"
 
 #. module: sale
-#: code:addons/sale/sale.py:970
+#: code:addons/sale/sale.py:1065
 #, python-format
 msgid "Could not cancel sales order line!"
 msgstr "Nie je možné zrušiť položku na objednávke!"
@@ -823,7 +824,6 @@ msgid "You cannot cancel a sales order line that has already been invoiced !"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Qty"
 msgstr "Množ."
@@ -1113,15 +1113,17 @@ msgid "Picking List"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:387
-#: code:addons/sale/sale.py:920
-#: code:addons/sale/sale.py:938
+#: code:addons/sale/sale.py:412
+#: code:addons/sale/sale.py:503
+#: code:addons/sale/sale.py:632
+#: code:addons/sale/sale.py:1015
+#: code:addons/sale/sale.py:1033
 #, python-format
 msgid "Error !"
 msgstr "Chyba !"
 
 #. module: sale
-#: code:addons/sale/sale.py:570
+#: code:addons/sale/sale.py:603
 #, python-format
 msgid "Could not cancel sales order !"
 msgstr "Nemôžem zrušiť objednávku predaja !"
@@ -1181,7 +1183,6 @@ msgstr ""
 
 #. module: sale
 #: view:sale.report:0
-#: field:sale.report,uom_name:0
 msgid "Reference UoM"
 msgstr "Referencie MJ"
 
@@ -1217,6 +1218,7 @@ msgid "Sales Analysis"
 msgstr "Analýza predaja"
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
 msgstr "Možnosti"
@@ -1245,7 +1247,6 @@ msgstr ""
 "dodania."
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 #: model:process.process,name:sale.process_process_salesprocess0
 #: view:sale.order:0
 #: view:sale.report:0
@@ -1278,7 +1279,7 @@ msgid "Invoice"
 msgstr "Faktúra"
 
 #. module: sale
-#: code:addons/sale/sale.py:1014
+#: code:addons/sale/sale.py:1158
 #, python-format
 msgid ""
 "You have to select a customer in the sales form !\n"
@@ -1318,7 +1319,7 @@ msgid "The amount without tax."
 msgstr "Suma bez dane."
 
 #. module: sale
-#: code:addons/sale/sale.py:571
+#: code:addons/sale/sale.py:604
 #, python-format
 msgid "You must first cancel all picking attached to this sales order."
 msgstr ""
@@ -1383,7 +1384,6 @@ msgid "Product UoS"
 msgstr ""
 
 #. module: sale
-#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
 msgstr "manuálne spracovanie"
@@ -1404,7 +1404,8 @@ msgid "Order"
 msgstr "Poradie"
 
 #. module: sale
-#: code:addons/sale/sale.py:921
+#: code:addons/sale/sale.py:1016
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:71
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
@@ -1425,7 +1426,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1116
+#: code:addons/sale/sale.py:1238
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -1456,7 +1457,7 @@ msgid "Total"
 msgstr "Celkom"
 
 #. module: sale
-#: code:addons/sale/sale.py:388
+#: code:addons/sale/sale.py:413
 #, python-format
 msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
 msgstr ""
@@ -1485,6 +1486,7 @@ msgstr ""
 
 #. module: sale
 #: view:sale.order:0
+#: selection:sale.order,state:0
 #: view:sale.order.line:0
 msgid "To Invoice"
 msgstr ""
@@ -1570,7 +1572,7 @@ msgid "Date Confirm"
 msgstr "Dátum potvrdenia"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:111
+#: code:addons/sale/wizard/sale_line_invoice.py:113
 #, python-format
 msgid "Warning"
 msgstr "Upozornenie"
@@ -1649,6 +1651,7 @@ msgid "Invoice Lines"
 msgstr "Položky faktúry"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
@@ -1688,7 +1691,7 @@ msgid "August"
 msgstr "August"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:111
+#: code:addons/sale/wizard/sale_line_invoice.py:113
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -1720,7 +1723,6 @@ msgstr "December"
 
 #. module: sale
 #: field:sale.config.picking_policy,config_logo:0
-#: field:sale.installer,config_logo:0
 msgid "Image"
 msgstr "Obrázok"
 
@@ -1760,7 +1762,7 @@ msgid "Untaxed Amount"
 msgstr "Suma bez DPH"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:163
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:170
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 #: view:sale.advance.payment.inv:0
 #: view:sale.order:0
@@ -1769,7 +1771,7 @@ msgid "Advance Invoice"
 msgstr "Zálohová faktúra"
 
 #. module: sale
-#: code:addons/sale/sale.py:591
+#: code:addons/sale/sale.py:624
 #, python-format
 msgid "The sales order '%s' has been cancelled."
 msgstr "'%s' objednávok predaja bolo zrušených."
@@ -1853,7 +1855,7 @@ msgid "You invoice has been successfully created!"
 msgstr "Faktúra bola úspešne vytvorená !"
 
 #. module: sale
-#: code:addons/sale/sale.py:585
+#: code:addons/sale/sale.py:618
 #, python-format
 msgid "You must first cancel all invoices attached to this sales order."
 msgstr ""
@@ -1920,7 +1922,7 @@ msgid "Cannot delete Sales Order(s) which are already confirmed !"
 msgstr "Nemôžete mazať objednávku(y), ktoré sú už potvrdené!"
 
 #. module: sale
-#: code:addons/sale/sale.py:316
+#: code:addons/sale/sale.py:322
 #, python-format
 msgid "The sales order '%s' has been set in draft state."
 msgstr ""

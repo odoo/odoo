@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:55+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:09+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -54,7 +54,6 @@ msgid "Title"
 msgstr "Otsikko"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Monthly"
@@ -83,7 +82,6 @@ msgid "Alarms"
 msgstr "Hälytykset"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Sunday"
@@ -102,7 +100,6 @@ msgid "Invitation details"
 msgstr "Kutsun yksityiskohdat"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Fourth"
@@ -115,8 +112,6 @@ msgid "Show as"
 msgstr "Näytä muodossa"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,day:0
-#: selection:base.calendar.set.exrule,select1:0
 #: field:calendar.event,day:0
 #: selection:calendar.event,select1:0
 #: field:calendar.todo,day:0
@@ -136,21 +131,19 @@ msgid " "
 msgstr " "
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "March"
 msgstr "Maaliskuu"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:414
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
+#: code:addons/base_calendar/base_calendar.py:418
+#: code:addons/base_calendar/base_calendar.py:1411
 #, python-format
 msgid "Warning !"
 msgstr "Varoitus !"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Friday"
@@ -163,7 +156,6 @@ msgid "All Day"
 msgstr "koko päivän"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,select1:0
 #: field:calendar.event,select1:0
 #: field:calendar.todo,select1:0
 msgid "Option"
@@ -198,7 +190,6 @@ msgid "Event Ref"
 msgstr "Tapahtuman viite"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,we:0
 #: field:calendar.event,we:0
 #: field:calendar.todo,we:0
 msgid "Wed"
@@ -210,7 +201,6 @@ msgid "Show time as"
 msgstr "Näytä aika muodossa"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,tu:0
 #: field:calendar.event,tu:0
 #: field:calendar.todo,tu:0
 msgid "Tue"
@@ -222,14 +212,12 @@ msgid "ir.attachment"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
 msgstr "Vuosittain"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Last"
@@ -247,8 +235,6 @@ msgstr "Huone"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Days"
 msgstr "Päivät"
@@ -260,11 +246,9 @@ msgid "Invitation Detail"
 msgstr "Kutsun yksityiskohdat"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1355
+#: code:addons/base_calendar/base_calendar.py:1194
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:136
 #, python-format
 msgid "Error!"
 msgstr "Virhe!"
@@ -367,9 +351,9 @@ msgid "Deadline"
 msgstr "Määräaika"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:385
-#: code:addons/base_calendar/base_calendar.py:1088
-#: code:addons/base_calendar/base_calendar.py:1090
+#: code:addons/base_calendar/base_calendar.py:389
+#: code:addons/base_calendar/base_calendar.py:1004
+#: code:addons/base_calendar/base_calendar.py:1006
 #, python-format
 msgid "Warning!"
 msgstr "Varoitus!"
@@ -453,7 +437,6 @@ msgid "Calendar Task"
 msgstr "Kalenteritehtävä"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,su:0
 #: field:calendar.event,su:0
 #: field:calendar.todo,su:0
 msgid "Sun"
@@ -480,7 +463,6 @@ msgid "Delegrated From"
 msgstr "Kuka delegoi"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,select1:0
 #: selection:calendar.event,select1:0
 #: selection:calendar.todo,select1:0
 msgid "Day of month"
@@ -489,7 +471,6 @@ msgstr "Kuukauden päivä"
 #. module: base_calendar
 #: view:calendar.event:0
 #: field:calendar.event,location:0
-#: field:calendar.event.edit.all,location:0
 #: field:calendar.todo,location:0
 msgid "Location"
 msgstr "Sijainti"
@@ -529,7 +510,6 @@ msgid "Confidential"
 msgstr "Luottamuksellinen"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,end_date:0
 #: field:calendar.event,end_date:0
 #: field:calendar.todo,end_date:0
 msgid "Repeat Until"
@@ -572,7 +552,6 @@ msgid "Recurrent ID"
 msgstr "Toiston ID"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "July"
@@ -585,7 +564,6 @@ msgid "Accepted"
 msgstr "Hyväksytty"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,th:0
 #: field:calendar.event,th:0
 #: field:calendar.todo,th:0
 msgid "Thu"
@@ -635,7 +613,6 @@ msgid "Private"
 msgstr "Yksityinen"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Daily"
@@ -690,7 +667,6 @@ msgid "_Ok"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "First"
@@ -718,14 +694,12 @@ msgid "Needs Action"
 msgstr "Vaatii toimia"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "September"
 msgstr "Syyskuu"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "December"
@@ -769,7 +743,6 @@ msgstr "Delegointitiedot"
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: field:calendar.event.edit.all,date:0
 msgid "Start Date"
 msgstr "Alkupäivä"
 
@@ -828,7 +801,6 @@ msgid "Basic Alarm Information"
 msgstr "Perus hälytyksen tiedot"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,fr:0
 #: field:calendar.event,fr:0
 #: field:calendar.todo,fr:0
 msgid "Fri"
@@ -836,8 +808,6 @@ msgstr "Pe"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Hours"
 msgstr "Tunnit"
@@ -887,7 +857,6 @@ msgstr "Toiston loppu"
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: field:calendar.event.edit.all,alarm_id:0
 msgid "Reminder"
 msgstr "Muistutus"
 
@@ -931,28 +900,24 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "August"
 msgstr "Elokuu"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Monday"
 msgstr "Maanantai"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Third"
 msgstr "Kolmas"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "June"
@@ -966,7 +931,6 @@ msgid "Event Date"
 msgstr "Tapahtuman päivä"
 
 #. module: base_calendar
-#: view:base.calendar.set.exrule:0
 #: view:calendar.event:0
 msgid "The"
 msgstr ""
@@ -989,7 +953,6 @@ msgid "Date"
 msgstr "Päivämäärä"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "November"
@@ -1006,7 +969,6 @@ msgid "Data"
 msgstr "Tiedot"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,mo:0
 #: field:calendar.event,mo:0
 #: field:calendar.todo,mo:0
 msgid "Mon"
@@ -1025,7 +987,6 @@ msgid "No Repeat"
 msgstr "Ei toistoa"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "October"
@@ -1049,7 +1010,6 @@ msgid "Triggers"
 msgstr "Liipaisimet"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "January"
@@ -1062,14 +1022,12 @@ msgid "Related to"
 msgstr "Liittyy"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,interval:0
 #: field:calendar.alarm,trigger_interval:0
 #: field:res.alarm,trigger_interval:0
 msgid "Interval"
 msgstr "Aikaväli"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Wednesday"
@@ -1158,7 +1116,6 @@ msgid "Recurrency Option"
 msgstr "Toiston asetukset"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Weekly"
@@ -1237,7 +1194,6 @@ msgstr "/"
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
 #: view:calendar.event:0
-#: view:calendar.event.edit.all:0
 msgid "Cancel"
 msgstr "Peruuta"
 
@@ -1247,7 +1203,6 @@ msgid "res.users"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Tuesday"
@@ -1269,10 +1224,12 @@ msgid "Responsible User"
 msgstr "Vastuukäyttäjä"
 
 #. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:1466
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
 #: selection:res.users,availability:0
+#, python-format
 msgid "Busy"
 msgstr "Kiireinen"
 
@@ -1319,7 +1276,6 @@ msgid "Event Invitations"
 msgstr "Tapahtumakutsut"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Thursday"
@@ -1353,7 +1309,6 @@ msgid ""
 msgstr "Määrittelee säännön toiston poikkeukset kuvaavan määrittelyn"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,month_list:0
 #: field:calendar.event,month_list:0
 #: field:calendar.todo,month_list:0
 msgid "Month"
@@ -1394,7 +1349,6 @@ msgid "Description"
 msgstr "Kuvaus"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "May"
@@ -1439,7 +1393,6 @@ msgid "Delegated"
 msgstr "Delegoitu"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,sa:0
 #: field:calendar.event,sa:0
 #: field:calendar.todo,sa:0
 msgid "Sat"
@@ -1462,12 +1415,10 @@ msgstr "Määrittele käyttäjä joka toimii kalenterikäyttäjän puolesta"
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: field:calendar.event.edit.all,date_deadline:0
 msgid "End Date"
 msgstr "Loppupvm"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "February"
@@ -1523,7 +1474,6 @@ msgid "Sent By User"
 msgstr "Lähettänyt käyttäjä"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "April"
@@ -1535,14 +1485,12 @@ msgid "Recurrency period"
 msgstr "Toiston jakso"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,week_list:0
 #: field:calendar.event,week_list:0
 #: field:calendar.todo,week_list:0
 msgid "Weekday"
 msgstr "Arkipäivä"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,byday:0
 #: field:calendar.event,byday:0
 #: field:calendar.todo,byday:0
 msgid "By day"
@@ -1585,7 +1533,7 @@ msgid "Resource ID"
 msgstr "Resurssi ID"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:414
+#: code:addons/base_calendar/base_calendar.py:418
 #, python-format
 msgid "Couldn't Invite because date is not specified!"
 msgstr "Ei voitu kutsua koska päivää ei ole määritelty!"
@@ -1619,7 +1567,6 @@ msgid "Accept"
 msgstr "Hyväksy"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Saturday"
@@ -1631,7 +1578,6 @@ msgid "Invitation To"
 msgstr "Kutsuttu"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Second"
@@ -1682,7 +1628,6 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Fifth"

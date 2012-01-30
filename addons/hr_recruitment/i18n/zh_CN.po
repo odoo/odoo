@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:14+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:27+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -50,7 +50,6 @@ msgstr "分组..."
 #: field:hr.applicant,department_id:0
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,department_id:0
-#: field:hr.recruitment.stage,department_id:0
 msgid "Department"
 msgstr "部门"
 
@@ -221,8 +220,7 @@ msgid "Previous"
 msgstr "上一个"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:107
-#: view:hr.applicant:0
+#: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:115
 #, python-format
 msgid "Phone Call"
 msgstr "电话拜访"
@@ -762,6 +760,7 @@ msgid "State"
 msgstr "状态"
 
 #. module: hr_recruitment
+#: view:hired.employee:0
 #: view:hr.recruitment.job2phonecall:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
@@ -869,20 +868,19 @@ msgid "Contract Signed"
 msgstr "签订合同"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
 #: selection:hr.applicant,state:0
 #: selection:hr.recruitment.report,state:0
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
 msgid "Refused"
 msgstr "已拒绝"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:412
+#: code:addons/hr_recruitment/hr_recruitment.py:414
 #, python-format
 msgid "Applicant '%s' is being hired."
 msgstr "申请人 '%s'被录用。"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
 #: selection:hr.applicant,state:0
 #: view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
@@ -944,7 +942,7 @@ msgid "Assign To"
 msgstr "分配给"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:396
+#: code:addons/hr_recruitment/hr_recruitment.py:407
 #, python-format
 msgid "The job request '%s' has been set 'in progress'."
 msgstr "这职位空缺 '%s'已被定义为 “进行中”"
@@ -963,6 +961,5 @@ msgstr "剩余天数"
 
 #. module: hr_recruitment
 #: field:hr.applicant,survey:0
-#: field:hr.job,survey_id:0
 msgid "Survey"
 msgstr "问卷"

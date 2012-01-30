@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:30+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:43+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -67,7 +67,7 @@ msgstr "Fases"
 
 #. module: project_long_term
 #: view:project.phase:0
-#: view:project.resource.allocation:0
+#: view:project.user.allocation:0
 msgid "Group By..."
 msgstr "Agrupar por..."
 
@@ -108,7 +108,7 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:128
+#: code:addons/project_long_term/project_long_term.py:126
 #, python-format
 msgid "Day"
 msgstr "Dia"
@@ -146,14 +146,14 @@ msgstr ""
 #: field:project.compute.tasks,project_id:0
 #: view:project.phase:0
 #: field:project.phase,project_id:0
-#: view:project.resource.allocation:0
-#: field:project.resource.allocation,project_id:0
 #: view:project.task:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,project_id:0
 msgid "Project"
 msgstr "Projeto"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:50
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Error!"
 msgstr "Erro!"
@@ -171,7 +171,7 @@ msgid "Warning !"
 msgstr ""
 
 #. module: project_long_term
-#: help:project.resource.allocation,date_end:0
+#: help:project.user.allocation,date_end:0
 msgid "Ending Date"
 msgstr "Data de fim"
 
@@ -198,7 +198,7 @@ msgid "Compute Phase Scheduling"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:190
+#: code:addons/project_long_term/project_long_term.py:141
 #, python-format
 msgid " (copy)"
 msgstr " (cópia)"
@@ -268,10 +268,8 @@ msgid "Compute Scheduling of Task"
 msgstr ""
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_project_resource
-#: model:ir.ui.menu,name:project_long_term.menu_pm_resources_project1
+#: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource
-#: view:project.resource.allocation:0
 msgid "Resources"
 msgstr "Recursos"
 
@@ -284,7 +282,7 @@ msgid ""
 msgstr ""
 
 #. module: project_long_term
-#: help:project.resource.allocation,date_start:0
+#: help:project.user.allocation,date_start:0
 msgid "Starting Date"
 msgstr "Data de início"
 
@@ -375,7 +373,7 @@ msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
-#: field:project.resource.allocation,date_start:0
+#: field:project.user.allocation,date_start:0
 msgid "Start Date"
 msgstr "Data de início"
 
@@ -391,7 +389,6 @@ msgstr "forçar o fim da fase para antes desta data"
 
 #. module: project_long_term
 #: view:project.phase:0
-#: selection:project.phase,state:0
 msgid "Draft"
 msgstr "Rascunho"
 
@@ -407,7 +404,8 @@ msgid "unknown"
 msgstr "desconhecido"
 
 #. module: project_long_term
-#: field:project.resource.allocation,user_id:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,user_id:0
 msgid "User"
 msgstr "Utilizador"
 
@@ -481,7 +479,6 @@ msgstr "Responsável"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
-#: field:project.project,resource_calendar_id:0
 msgid "Working Time"
 msgstr ""
 
@@ -503,7 +500,6 @@ msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
-#: field:project.phase,total_hours:0
 msgid "Total Hours"
 msgstr "Total de horas"
 
@@ -518,7 +514,7 @@ msgid "Compute Scheduling of Task for specified project."
 msgstr ""
 
 #. module: project_long_term
-#: view:project.resource.allocation:0
+#: view:project.user.allocation:0
 msgid "Phase"
 msgstr "Fase"
 
@@ -534,7 +530,7 @@ msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,date_end:0
-#: field:project.resource.allocation,date_end:0
+#: field:project.user.allocation,date_end:0
 msgid "End Date"
 msgstr "Data de fim"
 
@@ -567,9 +563,9 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
 #: view:project.phase:0
-#: field:project.resource.allocation,phase_id:0
 #: view:project.task:0
 #: field:project.task,phase_id:0
+#: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
 msgstr "Fase de projeto"
 
@@ -611,9 +607,9 @@ msgid "Resource Leaves"
 msgstr "Indisponibilidade do recurso"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.action_project_schedule_tasks
-#: view:project.phase:0
-#: view:project.schedule.tasks:0
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
+#: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
+#: view:project.compute.tasks:0
 msgid "Schedule Tasks"
 msgstr "Agendar tarefas"
 

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:10+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:23+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -44,8 +44,6 @@ msgid "SIN No"
 msgstr "Núm. SIN"
 
 #. module: hr
-#: model:ir.module.module,shortdesc:hr.module_meta_information
-#: model:ir.ui.menu,name:hr.menu_hr_deshboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
 #: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_root
@@ -167,7 +165,7 @@ msgid "My Departments Employee"
 msgstr "Mis departamentos del empleado"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
+#: selection:hr.employee,marital:0
 msgid "Married"
 msgstr "Casado (a)"
 
@@ -292,7 +290,6 @@ msgstr "Dirección oficina"
 
 #. module: hr
 #: view:hr.employee:0
-#: view:hr.job:0
 #: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
@@ -331,6 +328,7 @@ msgstr "ir.acciones.acc_ventana"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
 msgid "Human Resources Dashboard"
 msgstr "Tablero de recursos humanos"
 
@@ -342,7 +340,6 @@ msgid "Job"
 msgstr "Trabajo"
 
 #. module: hr
-#: view:hr.department:0
 #: field:hr.department,member_ids:0
 msgid "Members"
 msgstr "Miembros"
@@ -363,6 +360,7 @@ msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
+#: field:hr.employee,category_ids:0
 msgid "Categories"
 msgstr "Categorías"
 
@@ -372,7 +370,7 @@ msgid "Expected Employees"
 msgstr "Empleados previstos"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
+#: selection:hr.employee,marital:0
 msgid "Divorced"
 msgstr "Divorciado"
 
@@ -390,7 +388,6 @@ msgstr "¡Error! No puede crear categorías recursivas."
 #: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: view:res.users:0
 #: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "Departamentos"
@@ -462,7 +459,6 @@ msgid "Recruitment Process"
 msgstr "Proceso de selección"
 
 #. module: hr
-#: field:hr.employee,category_ids:0
 #: field:hr.employee.category,name:0
 msgid "Category"
 msgstr "Categoría"
@@ -523,6 +519,7 @@ msgstr "Dirección de trabajo"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
 msgid "HR Manager Dashboard"
 msgstr "Tablero director RRHH"
 
@@ -633,10 +630,6 @@ msgstr "Estado"
 
 #. module: hr
 #: field:hr.employee,marital:0
-#: view:hr.employee.marital.status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.actions.act_window,name:hr.action_hr_marital_status
-#: model:ir.ui.menu,name:hr.hr_menu_marital_status
 msgid "Marital Status"
 msgstr "Estado civil"
 
@@ -718,7 +711,6 @@ msgid "Attendances"
 msgstr "Asistencias"
 
 #. module: hr
-#: view:hr.employee.marital.status:0
 #: view:hr.job:0
 msgid "Description"
 msgstr "Descripción"
@@ -735,7 +727,7 @@ msgid "Payroll"
 msgstr "Nómina"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
+#: selection:hr.employee,marital:0
 msgid "Single"
 msgstr "Soltero(a)"
 
@@ -766,7 +758,6 @@ msgid "Nationality"
 msgstr "Nacionalidad"
 
 #. module: hr
-#: view:hr.department:0
 #: view:hr.employee:0
 #: field:hr.employee,notes:0
 msgid "Notes"
@@ -800,6 +791,9 @@ msgstr "Sexo"
 
 #. module: hr
 #: view:hr.employee:0
+#: view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0
+#: view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -864,7 +858,7 @@ msgid "Manager"
 msgstr "Director"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
+#: selection:hr.employee,marital:0
 msgid "Widower"
 msgstr "Viudo(a)"
 
@@ -877,6 +871,3 @@ msgstr "Sistema genérico de nóminas integrado con contabilidad."
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
 msgstr "Subordinados"
-
-#~ msgid "Bank Account"
-#~ msgstr "Cuenta bancaria"

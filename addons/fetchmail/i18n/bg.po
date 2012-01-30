@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:09+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:22+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: fetchmail
 #: constraint:email.server:0
@@ -27,7 +27,7 @@ msgstr ""
 "Моля, изберете валиден модел."
 
 #. module: fetchmail
-#: selection:email.server,state:0
+#: selection:fetchmail.server,state:0
 msgid "Confirmed"
 msgstr "Потвърден"
 
@@ -42,18 +42,17 @@ msgid "Group By..."
 msgstr "Групиране по..."
 
 #. module: fetchmail
-#: view:email.server:0
-#: field:email.server,state:0
+#: field:fetchmail.server,state:0
 msgid "State"
 msgstr "Състояние"
 
 #. module: fetchmail
-#: view:email.server:0
+#: view:fetchmail.server:0
 msgid "POP"
 msgstr "POP"
 
 #. module: fetchmail
-#: selection:email.server,state:0
+#: selection:fetchmail.server,state:0
 msgid "Not Confirmed"
 msgstr "Не потвърден"
 
@@ -63,7 +62,7 @@ msgid "Type"
 msgstr "Тип"
 
 #. module: fetchmail
-#: view:email.server:0
+#: view:fetchmail.server:0
 msgid "POP/IMAP Servers"
 msgstr "POP/IMAP Сървъри"
 
@@ -91,7 +90,7 @@ msgid "Add Attachments ?"
 msgstr "Добавете прикрепен файл"
 
 #. module: fetchmail
-#: view:email.server:0
+#: view:fetchmail.server:0
 msgid "# of emails"
 msgstr "# имейли"
 
@@ -116,7 +115,7 @@ msgid "Waiting for Verification"
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,password:0
+#: field:fetchmail.server,password:0
 msgid "Password"
 msgstr "Парола"
 
@@ -132,7 +131,7 @@ msgid "Search Email Servers"
 msgstr "Търсене на мейл сървъри"
 
 #. module: fetchmail
-#: view:email.server:0
+#: view:fetchmail.server:0
 msgid "Server & Login"
 msgstr "Сървъри и вход"
 
@@ -142,7 +141,7 @@ msgid "Auto Reply?"
 msgstr "Автоматичен отговор?"
 
 #. module: fetchmail
-#: field:email.server,name:0
+#: field:fetchmail.server,name:0
 msgid "Name"
 msgstr "Име"
 
@@ -157,8 +156,8 @@ msgid "Set to Draft"
 msgstr "Пращане в проект"
 
 #. module: fetchmail
-#: field:email.server,message_ids:0
-#: model:ir.actions.act_window,name:fetchmail.action_view_mail_message_emails
+#: field:fetchmail.server,message_ids:0
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
 msgid "Messages"
 msgstr "Съобщения"
 
@@ -174,7 +173,7 @@ msgid "Server"
 msgstr "Сървър"
 
 #. module: fetchmail
-#: field:email.server,active:0
+#: field:fetchmail.server,active:0
 msgid "Active"
 msgstr "Активен"
 
@@ -189,8 +188,7 @@ msgid "SSL ?"
 msgstr "SSL ?"
 
 #. module: fetchmail
-#: selection:email.server,type:0
-#: selection:mailgate.message,server_type:0
+#: selection:fetchmail.server,type:0
 msgid "IMAP Server"
 msgstr "IMAP Сървър"
 
@@ -200,13 +198,12 @@ msgid "Model"
 msgstr "Модел"
 
 #. module: fetchmail
-#: view:email.server:0
+#: view:fetchmail.server:0
 msgid "IMAP"
 msgstr "IMAP"
 
 #. module: fetchmail
-#: view:email.server:0
-#: model:ir.model,name:fetchmail.model_email_server
+#: model:ir.model,name:fetchmail.model_fetchmail_server
 msgid "POP/IMAP Server"
 msgstr "POP/IMAP Сървър"
 
@@ -216,18 +213,17 @@ msgid "Warning! Can't have duplicate server configuration!"
 msgstr "Внимание! Не може да се дублира конфигурация на сървър!"
 
 #. module: fetchmail
-#: field:email.server,type:0
-#: field:mailgate.message,server_type:0
+#: field:fetchmail.server,type:0
 msgid "Server Type"
 msgstr "Тип сървър"
 
 #. module: fetchmail
-#: view:email.server:0
+#: view:fetchmail.server:0
 msgid "Login Information"
 msgstr "Данни за вход"
 
 #. module: fetchmail
-#: view:email.server:0
+#: view:fetchmail.server:0
 msgid "Server Information"
 msgstr "Информация за сървър"
 
@@ -237,13 +233,12 @@ msgid "Fetches mail with attachments if true."
 msgstr ""
 
 #. module: fetchmail
-#: selection:email.server,type:0
-#: selection:mailgate.message,server_type:0
+#: selection:fetchmail.server,type:0
 msgid "POP Server"
 msgstr "POP Сървър"
 
 #. module: fetchmail
-#: field:email.server,port:0
+#: field:fetchmail.server,port:0
 msgid "Port"
 msgstr "Port"
 
@@ -260,7 +255,7 @@ msgid ""
 msgstr ""
 
 #. module: fetchmail
-#: view:email.server:0
+#: view:fetchmail.server:0
 msgid "SSL"
 msgstr "SSL"
 
@@ -282,13 +277,12 @@ msgid "Email Server Action"
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,priority:0
+#: field:fetchmail.server,priority:0
 msgid "Server Priority"
 msgstr "Приоритена на сървър"
 
 #. module: fetchmail
-#: view:mailgate.message:0
-#: field:mailgate.message,server_id:0
+#: view:mail.message:0
 msgid "Mail Server"
 msgstr "Пощенски сървър"
 
@@ -296,6 +290,3 @@ msgstr "Пощенски сървър"
 #: view:email.server:0
 msgid "Fetch Emails"
 msgstr ""
-
-#~ msgid "POP Servers"
-#~ msgstr "POP Сървъри"

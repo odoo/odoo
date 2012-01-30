@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:20+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:33+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -78,18 +78,17 @@ msgstr ""
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
-#: field:mrp.production.order,picking_id:0
 msgid "Picking list"
 msgstr "Keräilylista"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:121
+#: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Hourly Cost"
 msgstr "Tuntihinta"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Uom"
 msgstr "Kustannus yksikköä kohden"
@@ -197,8 +196,6 @@ msgstr "MRP alatuotteet"
 #. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,state:0
-#: view:mrp.production.order:0
-#: field:mrp.production.order,state:0
 msgid "State"
 msgstr "Tila"
 
@@ -225,8 +222,6 @@ msgstr "Mittayksikkö"
 #: field:change.production.qty,product_qty:0
 #: field:mrp.bom,product_qty:0
 #: field:mrp.production,product_qty:0
-#: view:mrp.production.order:0
-#: field:mrp.production.order,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Qty"
 msgstr "Tuotteen määrä"
@@ -261,7 +256,7 @@ msgid "Cycle Account"
 msgstr "Kierroksien tili"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:121
+#: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Work Cost"
 msgstr "Työkustannus"
@@ -377,7 +372,7 @@ msgid "Default UOM"
 msgstr "Oletusyksikkö"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:139
 #: report:bom.structure:0
 #: field:mrp.product_price,number:0
 #: report:mrp.production.order:0
@@ -442,9 +437,9 @@ msgstr ""
 "laskutukseen)."
 
 #. module: mrp
+#: view:mrp.production:0
 #: field:mrp.production,date_planned_date:0
 #: report:mrp.production.order:0
-#: field:mrp.production.order,date_planned:0
 msgid "Scheduled Date"
 msgstr "Suunniteltu päivämäärä"
 
@@ -573,7 +568,7 @@ msgid "Search Production"
 msgstr "Hae tuotannosta"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Supplier Price per Uom"
 msgstr "Toimittajan yksikköhinta"
@@ -602,8 +597,6 @@ msgstr "Määrittele työpisteen kulut sykliä kohden"
 
 #. module: mrp
 #: selection:mrp.production,state:0
-#: view:mrp.production.order:0
-#: selection:mrp.production.order,state:0
 msgid "Picking Exception"
 msgstr "Keräilyero"
 
@@ -635,7 +628,6 @@ msgstr "Materiaalien reititys"
 #: view:mrp.production:0
 #: field:mrp.production,move_lines2:0
 #: report:mrp.production.order:0
-#: field:mrp.production.order,consumed_products:0
 msgid "Consumed Products"
 msgstr "Kulutetut tuotteet"
 
@@ -652,7 +644,7 @@ msgid "Work Center Load"
 msgstr "Työpisteen kuormitus"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:45
+#: code:addons/mrp/procurement.py:43
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "Tuotteelle ei ole määritetty osalistaa!"
@@ -699,9 +691,6 @@ msgstr "BOM viite"
 
 #. module: mrp
 #: view:mrp.production:0
-#: selection:mrp.production,state:0
-#: view:mrp.production.order:0
-#: selection:mrp.production.order,state:0
 msgid "In Production"
 msgstr "Tuotannossa"
 
@@ -749,9 +738,9 @@ msgid "Per month"
 msgstr "Kuukaudessa"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
-#: code:addons/mrp/wizard/change_production_qty.py:77
-#: code:addons/mrp/wizard/change_production_qty.py:82
+#: code:addons/mrp/mrp.py:603
+#: code:addons/mrp/wizard/change_production_qty.py:78
+#: code:addons/mrp/wizard/change_production_qty.py:83
 #, python-format
 msgid "Couldn't find bill of material for product"
 msgstr "Tuotteelle ei löydy osaluetteloa"
@@ -762,7 +751,7 @@ msgid "Product Name"
 msgstr "Tuotteen nimi"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:503
 #, python-format
 msgid "Invalid action !"
 msgstr "Virheellinen toiminto!"
@@ -826,7 +815,6 @@ msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,priority:0
-#: selection:mrp.production.order,priority:0
 msgid "Urgent"
 msgstr "Kiireellinen"
 
@@ -862,8 +850,6 @@ msgstr "Kierrot yhteensä"
 
 #. module: mrp
 #: selection:mrp.production,state:0
-#: view:mrp.production.order:0
-#: selection:mrp.production.order,state:0
 msgid "Ready to Produce"
 msgstr "Valmis tuotantoon"
 
@@ -875,7 +861,6 @@ msgstr "Muutoksen nimi"
 #. module: mrp
 #: view:mrp.bom:0
 #: view:mrp.production:0
-#: field:mrp.production.order,date:0
 msgid "Date"
 msgstr "Päivämäärä"
 
@@ -890,7 +875,7 @@ msgid "Extended Filters..."
 msgstr "Laajennetut Suotimet..."
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:47
+#: code:addons/mrp/procurement.py:45
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -898,13 +883,12 @@ msgstr ""
 "Hankinnalla '%s' on poikkeus: 'BoM:ia ei ole määritelty tuotteelle !'"
 
 #. module: mrp
-#: view:mrp.production.order:0
 #: view:mrp.property:0
 msgid "Search"
 msgstr "Hae"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:619
+#: code:addons/mrp/mrp.py:626
 #, python-format
 msgid "Could not cancel manufacturing order !"
 msgstr "Valmistustilausta ei voitu peruuttaa!"
@@ -920,7 +904,7 @@ msgid "Companies"
 msgstr "Yritykset"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:620
+#: code:addons/mrp/mrp.py:627
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -953,7 +937,7 @@ msgid "Stockable Product"
 msgstr "Varastoitava tuote"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:121
+#: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Work Center name"
 msgstr "Työpisteen nimi"
@@ -1205,7 +1189,6 @@ msgstr "Valmistustilaukset odottavat tuotteita"
 #. module: mrp
 #: view:mrp.bom:0
 #: view:mrp.production:0
-#: view:mrp.production.order:0
 #: view:mrp.property:0
 #: view:mrp.routing:0
 #: view:mrp.workcenter:0
@@ -1213,7 +1196,7 @@ msgid "Group By..."
 msgstr "Ryhmittele"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:121
+#: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Cycles Cost"
 msgstr "Kiertojen kustannus"
@@ -1225,8 +1208,6 @@ msgstr "Määrä kierroissa"
 
 #. module: mrp
 #: field:mrp.production,location_dest_id:0
-#: view:mrp.production.order:0
-#: field:mrp.production.order,location_dest_id:0
 msgid "Finished Products Location"
 msgstr "Valmiiden tuotteiden paikka"
 
@@ -1280,7 +1261,6 @@ msgstr "Huomautukset"
 #: model:ir.model,name:mrp.model_mrp_bom
 #: view:mrp.bom:0
 #: field:mrp.production,bom_id:0
-#: field:mrp.production.order,bom_id:0
 #: model:process.node,name:mrp.process_node_billofmaterial0
 msgid "Bill of Material"
 msgstr "Osaluettelo"
@@ -1346,7 +1326,6 @@ msgstr "Määrittele valmistuksen suunnitteluohjelmasi (MRP)"
 
 #. module: mrp
 #: field:mrp.production,priority:0
-#: field:mrp.production.order,priority:0
 msgid "Priority"
 msgstr "Prioriteetti"
 
@@ -1361,7 +1340,7 @@ msgid "Month -1"
 msgstr "edellinen kk"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:914
+#: code:addons/mrp/mrp.py:1000
 #, python-format
 msgid "Manufacturing order '%s' is scheduled for the %s."
 msgstr "Valmistustilaus '%s' on aikataulutettu '%s':lle."
@@ -1372,7 +1351,7 @@ msgid "Production Order N° :"
 msgstr "Tuotantotilaus nro:"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:630
+#: code:addons/mrp/mrp.py:647
 #, python-format
 msgid "Manufacturing order '%s' is ready to produce."
 msgstr "Valmistustilaus '%s'on valmis tuotantoon."
@@ -1435,7 +1414,7 @@ msgid "Product Cost Structure"
 msgstr "Tuotteen kustannusrakenne"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Components suppliers"
 msgstr "Komponettien toimittajat"
@@ -1457,7 +1436,7 @@ msgid "Month"
 msgstr "Kuukausi"
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:62
+#: code:addons/mrp/wizard/change_production_qty.py:63
 #, python-format
 msgid "Active Id is not found"
 msgstr "Aktiivisia tunnisteita (id) ei löydy"
@@ -1474,7 +1453,6 @@ msgstr "Osaluettelon rakenne"
 
 #. module: mrp
 #: field:mrp.production,date_start:0
-#: field:mrp.production.order,date_start:0
 msgid "Start Date"
 msgstr "Aloituspäivämäärä"
 
@@ -1510,7 +1488,6 @@ msgid "Procure Products"
 msgstr "Hanki tuotteita"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
 #: view:report.workcenter.load:0
 msgid "Work Center Loads"
 msgstr "Työpisteen kuormitus"
@@ -1574,8 +1551,6 @@ msgstr "Myyntitilaus nro"
 
 #. module: mrp
 #: selection:mrp.production,state:0
-#: view:mrp.production.order:0
-#: selection:mrp.production.order,state:0
 msgid "Done"
 msgstr "Valmis"
 
@@ -1587,13 +1562,11 @@ msgstr "Muuta standardihintaa"
 #. module: mrp
 #: field:mrp.production,origin:0
 #: report:mrp.production.order:0
-#: field:mrp.production.order,origin:0
 msgid "Source Document"
 msgstr "Lähdedokumentti"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
-#: selection:mrp.production.order,priority:0
 msgid "Not urgent"
 msgstr "Ei kiireellinen"
 
@@ -1638,8 +1611,6 @@ msgstr "Kapasiteetti per kierros"
 #: view:mrp.production:0
 #: field:mrp.production,product_id:0
 #: report:mrp.production.order:0
-#: view:mrp.production.order:0
-#: field:mrp.production.order,product_id:0
 #: field:mrp.production.product.line,product_id:0
 msgid "Product"
 msgstr "Tuote"
@@ -1652,7 +1623,6 @@ msgstr "Tunnit yhteensä"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
-#: field:mrp.production.order,location_src_id:0
 msgid "Raw Materials Location"
 msgstr "Raaka-aineiden paikka"
 
@@ -1686,7 +1656,6 @@ msgstr "Käytä tuotteet"
 #. module: mrp
 #: field:mrp.bom,product_uom:0
 #: field:mrp.production,product_uom:0
-#: field:mrp.production.order,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 msgid "Product UOM"
 msgstr "Tuotteen mittayksikkö"
@@ -1705,7 +1674,7 @@ msgid "Production Analysis"
 msgstr "Tuotannon analyysi"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:345
+#: code:addons/mrp/mrp.py:358
 #, python-format
 msgid "Copy"
 msgstr "Kopioi"
@@ -1717,7 +1686,6 @@ msgstr "Tuotannon tuotteet"
 
 #. module: mrp
 #: field:mrp.production,date_finished:0
-#: field:mrp.production.order,date_finished:0
 msgid "End Date"
 msgstr "Lopetuspäivämäärä"
 
@@ -1746,7 +1714,6 @@ msgstr "Tilausrivien määrä"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
-#: selection:mrp.production.order,priority:0
 msgid "Very Urgent"
 msgstr "Erittäin kiireellinen"
 
@@ -1791,6 +1758,7 @@ msgid "Production Products Consommation"
 msgstr "Tuotannon tuotteiden kulutus"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
@@ -1828,7 +1796,6 @@ msgstr "Palvelu"
 
 #. module: mrp
 #: selection:mrp.production,state:0
-#: selection:mrp.production.order,state:0
 msgid "Cancelled"
 msgstr "Peruttu"
 
@@ -1856,8 +1823,6 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,company_id:0
 #: field:mrp.production,company_id:0
-#: view:mrp.production.order:0
-#: field:mrp.production.order,company_id:0
 #: field:mrp.routing,company_id:0
 #: field:mrp.routing.workcenter,company_id:0
 #: view:mrp.workcenter:0
@@ -1894,7 +1859,7 @@ msgid "Product UoS Qty"
 msgstr "Tuotteen myyntiyksikkö määrä"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:139
 #: view:mrp.bom:0
 #, python-format
 msgid "Components"
@@ -2120,8 +2085,6 @@ msgstr "Varastosta otto"
 
 #. module: mrp
 #: selection:mrp.production,state:0
-#: view:mrp.production.order:0
-#: selection:mrp.production.order,state:0
 msgid "Waiting Goods"
 msgstr "Odottaa tuotteita"
 
@@ -2155,7 +2118,6 @@ msgstr "Konfiguraation eteneminen"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
-#: selection:mrp.production.order,priority:0
 msgid "Normal"
 msgstr "Normaali"
 
@@ -2165,7 +2127,7 @@ msgid "Manufacturing Steps."
 msgstr "Valmistusvaiheet"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:136
+#: code:addons/mrp/report/price.py:146
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
@@ -2213,9 +2175,9 @@ msgid "Product type is Stockable or Consumable."
 msgstr "Tuotetyyppi on varastoitava tai käytettävä"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
-#: code:addons/mrp/wizard/change_production_qty.py:77
-#: code:addons/mrp/wizard/change_production_qty.py:82
+#: code:addons/mrp/mrp.py:603
+#: code:addons/mrp/wizard/change_production_qty.py:78
+#: code:addons/mrp/wizard/change_production_qty.py:83
 #, python-format
 msgid "Error"
 msgstr "Virhe"
@@ -2279,7 +2241,6 @@ msgstr "Työpisteen kuvaus. Kuvaa tähän mikä on työpisteen työnkulku."
 #: field:mrp.bom,routing_id:0
 #: view:mrp.production:0
 #: field:mrp.production,routing_id:0
-#: field:mrp.production.order,routing_id:0
 #: view:mrp.routing:0
 #: model:process.node,name:mrp.process_node_routing0
 msgid "Routing"
@@ -2311,7 +2272,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production.order:0
 #: field:stock.move,production_id:0
 msgid "Production"
 msgstr "Tuotanto"
@@ -2492,7 +2452,6 @@ msgstr ""
 #: view:mrp.production:0
 #: field:mrp.production,move_lines:0
 #: report:mrp.production.order:0
-#: field:mrp.production.order,products_to_consume:0
 msgid "Products to Consume"
 msgstr ""
 

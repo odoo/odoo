@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:27+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:40+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -113,9 +113,7 @@ msgid "Fixed"
 msgstr "Cố định"
 
 #. module: product
-#: code:addons/product/pricelist.py:186
-#: code:addons/product/pricelist.py:342
-#: code:addons/product/pricelist.py:360
+#: code:addons/product/pricelist.py:178
 #, python-format
 msgid "Warning !"
 msgstr "Cảnh báo !"
@@ -268,7 +266,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  e.g: 1 * (đơn vị) = ratio * (đơn vị tham chiếu)"
 
 #. module: product
-#: code:addons/product/product.py:380
+#: code:addons/product/product.py:400
 #, python-format
 msgid "Products: "
 msgstr "Sản phẩm: "
@@ -520,6 +518,7 @@ msgstr "Thời gian làm việc"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
+#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
 msgid ""
 "A price list contains rules to be evaluated in order to compute the purchase "
 "or sales price for all the partners assigned to a price list. Price lists "
@@ -780,6 +779,7 @@ msgstr "Loại"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action2
 #: model:ir.ui.menu,name:product.menu_product_pricelist_main
 msgid "Pricelists"
@@ -880,6 +880,8 @@ msgid "DDR 256MB PC400"
 msgstr ""
 
 #. module: product
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model:ir.ui.menu,name:product.menu_product_category_action_form
 #: view:product.category:0
 msgid "Product Categories"
 msgstr "Loại sản phẩm"
@@ -1094,6 +1096,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
 msgid ""
 "You must define a Product for everything you buy or sell. Products can be "
 "raw materials, stockable products, consumables or services. The Product form "
@@ -1230,7 +1233,6 @@ msgid "Main Supplier who has highest priority in Supplier List."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Các dịch vụ"
@@ -1243,6 +1245,7 @@ msgstr "Nếu bảng giá khác"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_puchased
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_products
 #: view:product.product:0
@@ -1266,7 +1269,7 @@ msgid "Pallet Dimension"
 msgstr "Kích thước pallet"
 
 #. module: product
-#: code:addons/product/product.py:618
+#: code:addons/product/product.py:641
 #, python-format
 msgid " (copy)"
 msgstr ""
@@ -1291,7 +1294,7 @@ msgid "Second UoM"
 msgstr "Đơn vị đo thứ hai"
 
 #. module: product
-#: code:addons/product/product.py:142
+#: code:addons/product/product.py:143
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -1729,6 +1732,7 @@ msgstr "Bảng giá sản phẩm"
 #: field:product.pricelist,company_id:0
 #: field:product.pricelist.item,company_id:0
 #: field:product.pricelist.version,company_id:0
+#: view:product.product:0
 #: field:product.supplierinfo,company_id:0
 #: field:product.template,company_id:0
 msgid "Company"
@@ -1743,7 +1747,7 @@ msgstr ""
 "Giá cơ bản để tính giá bán cho khách hàng. Đôi khi được gọi là giá catalog."
 
 #. module: product
-#: code:addons/product/pricelist.py:518
+#: code:addons/product/pricelist.py:376
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Mục đối tác của form sản phẩm"
@@ -1793,7 +1797,6 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
 #: field:product.pricelist,type:0
-#: view:product.pricelist.type:0
 msgid "Pricelist Type"
 msgstr "Loại bảng giá"
 
@@ -2197,6 +2200,7 @@ msgstr "Trường hợp"
 
 #. module: product
 #: view:product.product:0
+#: model:res.groups,name:product.group_product_variant
 msgid "Product Variant"
 msgstr "Sản phẩm biến thể"
 
@@ -2206,7 +2210,7 @@ msgid "Shelves"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:517
+#: code:addons/product/pricelist.py:375
 #, python-format
 msgid "Other Pricelist"
 msgstr "Bảng giá khác"

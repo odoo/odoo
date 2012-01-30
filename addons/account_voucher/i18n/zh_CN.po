@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:52+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:05+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -22,7 +22,7 @@ msgid "Unreconciliation transactions"
 msgstr "取消对账交易"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:247
+#: code:addons/account_voucher/account_voucher.py:306
 #, python-format
 msgid "Write-Off"
 msgstr "补差额"
@@ -54,7 +54,7 @@ msgid "Group By..."
 msgstr "分组..."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:596
+#: code:addons/account_voucher/account_voucher.py:779
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr "不能删除已经过账或对账的凭证"
@@ -93,7 +93,7 @@ msgid "Bill Payment"
 msgstr "付款"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:746
+#: code:addons/account_voucher/account_voucher.py:1045
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -397,7 +397,8 @@ msgid "Voucher Entries"
 msgstr "手工凭证"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:645
+#: code:addons/account_voucher/account_voucher.py:444
+#: code:addons/account_voucher/account_voucher.py:876
 #, python-format
 msgid "Error !"
 msgstr "错误！"
@@ -425,7 +426,7 @@ msgid "Sales Receipt"
 msgstr "销售收据"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:596
+#: code:addons/account_voucher/account_voucher.py:779
 #, python-format
 msgid "Invalid action !"
 msgstr "无效操作！"
@@ -459,7 +460,7 @@ msgid "Pay Invoice"
 msgstr "支付发票"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:746
+#: code:addons/account_voucher/account_voucher.py:1045
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "没有科目和税码！"
@@ -497,6 +498,7 @@ msgstr "凭证金额必须和对账单明细上的金额一致"
 
 #. module: account_voucher
 #: view:account.voucher:0
+#: field:account.voucher,audit:0
 msgid "To Review"
 msgstr "待审查"
 
@@ -531,6 +533,7 @@ msgstr "月份"
 
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
+#: field:account.voucher.line,currency_id:0
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
 msgstr "币别"
@@ -563,7 +566,6 @@ msgstr "延迟付款平均时间"
 #: selection:account.voucher,state:0
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
-#: report:voucher.print:0
 msgid "Draft"
 msgstr "草稿"
 
@@ -645,7 +647,6 @@ msgid "November"
 msgstr "11月"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: view:sale.receipt.report:0
 msgid "Extended Filters..."
 msgstr "增加筛选条件"
@@ -703,7 +704,7 @@ msgid "Credit"
 msgstr "贷方"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:645
+#: code:addons/account_voucher/account_voucher.py:877
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr "在该账簿请定义一个序列！"
@@ -919,7 +920,6 @@ msgstr "状态："
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
 #: view:account.invoice:0
-#: view:account.voucher:0
 #: field:account.voucher,pay_now:0
 #: selection:account.voucher,type:0
 #: field:sale.receipt.report,pay_now:0
@@ -932,7 +932,6 @@ msgstr "付款"
 #: selection:account.voucher,state:0
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
-#: report:voucher.print:0
 msgid "Posted"
 msgstr "已登账"
 
@@ -1016,7 +1015,6 @@ msgid "Year"
 msgstr "年"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
 msgstr "期初余额"

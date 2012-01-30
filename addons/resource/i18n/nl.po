@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:34+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:47+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: resource
 #: model:ir.module.module,description:resource.module_meta_information
@@ -68,6 +68,7 @@ msgstr "Afwezigheid resource"
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
+#: field:resource.resource,calendar_id:0
 msgid "Working Time"
 msgstr "Gewerkte tijd"
 
@@ -126,7 +127,6 @@ msgstr "Resource agenda"
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
-#: field:resource.resource,calendar_id:0
 msgid "Working Period"
 msgstr "Werkperiode"
 
@@ -196,7 +196,6 @@ msgid "Closing Days"
 msgstr "Dagen gesloten"
 
 #. module: resource
-#: model:ir.module.module,shortdesc:resource.module_meta_information
 #: model:ir.ui.menu,name:resource.menu_resource_config
 #: view:resource.calendar.leaves:0
 #: field:resource.calendar.leaves,resource_id:0
@@ -355,7 +354,7 @@ msgid "Start Date"
 msgstr "Startdatum"
 
 #. module: resource
-#: code:addons/resource/resource.py:246
+#: code:addons/resource/resource.py:310
 #, python-format
 msgid " (copy)"
 msgstr " (kopie)"
@@ -364,23 +363,3 @@ msgstr " (kopie)"
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Zaterdag"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Module for resource management\n"
-#~ "     A resource represent something that can be scheduled\n"
-#~ "     (a developer on a task or a workcenter on manufacturing orders).\n"
-#~ "     This module manages a resource calendar associated to every resource.\n"
-#~ "     It also manages the leaves of every resource.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Module voor resource beheer\n"
-#~ "     Een resource vertegenwoordigt iets dat kan worden gepland\n"
-#~ "     (een ontwikkelaar op een taak, een bewerkingsplaats op "
-#~ "productieorders).\n"
-#~ "     Deze module beheert een resource agenda gekoppeld aan elke resource.\n"
-#~ "     Het beheert ook de afwezigheid van elke resource.\n"
-#~ "\n"
-#~ "    "

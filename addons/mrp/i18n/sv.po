@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:21+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:34+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -71,18 +71,17 @@ msgstr ""
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
-#: field:mrp.production.order,picking_id:0
 msgid "Picking list"
 msgstr "Plocklista"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:121
+#: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Hourly Cost"
 msgstr "Timkostnad"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Uom"
 msgstr "Kostnad per enhet"
@@ -185,8 +184,6 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,state:0
-#: view:mrp.production.order:0
-#: field:mrp.production.order,state:0
 msgid "State"
 msgstr "Status"
 
@@ -211,8 +208,6 @@ msgstr "UOM"
 #: field:change.production.qty,product_qty:0
 #: field:mrp.bom,product_qty:0
 #: field:mrp.production,product_qty:0
-#: view:mrp.production.order:0
-#: field:mrp.production.order,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Qty"
 msgstr "Produkt antal"
@@ -245,7 +240,7 @@ msgid "Cycle Account"
 msgstr "Cycle Account"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:121
+#: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Work Cost"
 msgstr ""
@@ -359,7 +354,7 @@ msgid "Default UOM"
 msgstr "Standard enhet"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:139
 #: report:bom.structure:0
 #: field:mrp.product_price,number:0
 #: report:mrp.production.order:0
@@ -419,9 +414,9 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: view:mrp.production:0
 #: field:mrp.production,date_planned_date:0
 #: report:mrp.production.order:0
-#: field:mrp.production.order,date_planned:0
 msgid "Scheduled Date"
 msgstr "Scheduled Date"
 
@@ -548,7 +543,7 @@ msgid "Search Production"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Supplier Price per Uom"
 msgstr ""
@@ -577,8 +572,6 @@ msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
-#: view:mrp.production.order:0
-#: selection:mrp.production.order,state:0
 msgid "Picking Exception"
 msgstr ""
 
@@ -608,7 +601,6 @@ msgstr ""
 #: view:mrp.production:0
 #: field:mrp.production,move_lines2:0
 #: report:mrp.production.order:0
-#: field:mrp.production.order,consumed_products:0
 msgid "Consumed Products"
 msgstr "Consumed Products"
 
@@ -625,7 +617,7 @@ msgid "Work Center Load"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:45
+#: code:addons/mrp/procurement.py:43
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "No BoM defined for this product !"
@@ -672,9 +664,6 @@ msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
-#: selection:mrp.production,state:0
-#: view:mrp.production.order:0
-#: selection:mrp.production.order,state:0
 msgid "In Production"
 msgstr "I produktion"
 
@@ -720,9 +709,9 @@ msgid "Per month"
 msgstr "Per månad"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
-#: code:addons/mrp/wizard/change_production_qty.py:77
-#: code:addons/mrp/wizard/change_production_qty.py:82
+#: code:addons/mrp/mrp.py:603
+#: code:addons/mrp/wizard/change_production_qty.py:78
+#: code:addons/mrp/wizard/change_production_qty.py:83
 #, python-format
 msgid "Couldn't find bill of material for product"
 msgstr "Couldn't find bill of material for product"
@@ -733,7 +722,7 @@ msgid "Product Name"
 msgstr "Produktnamn"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:503
 #, python-format
 msgid "Invalid action !"
 msgstr "Invalid action !"
@@ -796,7 +785,6 @@ msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,priority:0
-#: selection:mrp.production.order,priority:0
 msgid "Urgent"
 msgstr "Bråttom"
 
@@ -830,8 +818,6 @@ msgstr "Total Cycles"
 
 #. module: mrp
 #: selection:mrp.production,state:0
-#: view:mrp.production.order:0
-#: selection:mrp.production.order,state:0
 msgid "Ready to Produce"
 msgstr "Klar att producera"
 
@@ -843,7 +829,6 @@ msgstr "Ändring"
 #. module: mrp
 #: view:mrp.bom:0
 #: view:mrp.production:0
-#: field:mrp.production.order,date:0
 msgid "Date"
 msgstr ""
 
@@ -858,20 +843,19 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:47
+#: code:addons/mrp/procurement.py:45
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production.order:0
 #: view:mrp.property:0
 msgid "Search"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:619
+#: code:addons/mrp/mrp.py:626
 #, python-format
 msgid "Could not cancel manufacturing order !"
 msgstr ""
@@ -887,7 +871,7 @@ msgid "Companies"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:620
+#: code:addons/mrp/mrp.py:627
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -918,7 +902,7 @@ msgid "Stockable Product"
 msgstr "Stockable Product"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:121
+#: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Work Center name"
 msgstr ""
@@ -1161,7 +1145,6 @@ msgstr ""
 #. module: mrp
 #: view:mrp.bom:0
 #: view:mrp.production:0
-#: view:mrp.production.order:0
 #: view:mrp.property:0
 #: view:mrp.routing:0
 #: view:mrp.workcenter:0
@@ -1169,7 +1152,7 @@ msgid "Group By..."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:121
+#: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Cycles Cost"
 msgstr "Cycles Cost"
@@ -1181,8 +1164,6 @@ msgstr "Amount in cycles"
 
 #. module: mrp
 #: field:mrp.production,location_dest_id:0
-#: view:mrp.production.order:0
-#: field:mrp.production.order,location_dest_id:0
 msgid "Finished Products Location"
 msgstr "Finished Products Location"
 
@@ -1236,7 +1217,6 @@ msgstr "Notes"
 #: model:ir.model,name:mrp.model_mrp_bom
 #: view:mrp.bom:0
 #: field:mrp.production,bom_id:0
-#: field:mrp.production.order,bom_id:0
 #: model:process.node,name:mrp.process_node_billofmaterial0
 msgid "Bill of Material"
 msgstr "Bill of Material"
@@ -1298,7 +1278,6 @@ msgstr ""
 
 #. module: mrp
 #: field:mrp.production,priority:0
-#: field:mrp.production.order,priority:0
 msgid "Priority"
 msgstr "Prioritet"
 
@@ -1313,7 +1292,7 @@ msgid "Month -1"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:914
+#: code:addons/mrp/mrp.py:1000
 #, python-format
 msgid "Manufacturing order '%s' is scheduled for the %s."
 msgstr ""
@@ -1324,7 +1303,7 @@ msgid "Production Order N° :"
 msgstr "Production Order N° :"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:630
+#: code:addons/mrp/mrp.py:647
 #, python-format
 msgid "Manufacturing order '%s' is ready to produce."
 msgstr ""
@@ -1385,7 +1364,7 @@ msgid "Product Cost Structure"
 msgstr "Product Cost Structure"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Components suppliers"
 msgstr ""
@@ -1407,7 +1386,7 @@ msgid "Month"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:62
+#: code:addons/mrp/wizard/change_production_qty.py:63
 #, python-format
 msgid "Active Id is not found"
 msgstr ""
@@ -1424,7 +1403,6 @@ msgstr "BoM Structure"
 
 #. module: mrp
 #: field:mrp.production,date_start:0
-#: field:mrp.production.order,date_start:0
 msgid "Start Date"
 msgstr "Startdatum"
 
@@ -1460,7 +1438,6 @@ msgid "Procure Products"
 msgstr "Procure Products"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
 #: view:report.workcenter.load:0
 msgid "Work Center Loads"
 msgstr ""
@@ -1522,8 +1499,6 @@ msgstr "SO Number"
 
 #. module: mrp
 #: selection:mrp.production,state:0
-#: view:mrp.production.order:0
-#: selection:mrp.production.order,state:0
 msgid "Done"
 msgstr "Klar"
 
@@ -1535,13 +1510,11 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,origin:0
 #: report:mrp.production.order:0
-#: field:mrp.production.order,origin:0
 msgid "Source Document"
 msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,priority:0
-#: selection:mrp.production.order,priority:0
 msgid "Not urgent"
 msgstr "Inte bråttom"
 
@@ -1584,8 +1557,6 @@ msgstr "Kapacitet per cykel"
 #: view:mrp.production:0
 #: field:mrp.production,product_id:0
 #: report:mrp.production.order:0
-#: view:mrp.production.order:0
-#: field:mrp.production.order,product_id:0
 #: field:mrp.production.product.line,product_id:0
 msgid "Product"
 msgstr "Produkt"
@@ -1598,7 +1569,6 @@ msgstr "Summa timmar"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
-#: field:mrp.production.order,location_src_id:0
 msgid "Raw Materials Location"
 msgstr "Raw Materials Location"
 
@@ -1629,7 +1599,6 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,product_uom:0
 #: field:mrp.production,product_uom:0
-#: field:mrp.production.order,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 msgid "Product UOM"
 msgstr "Product UOM"
@@ -1648,7 +1617,7 @@ msgid "Production Analysis"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:345
+#: code:addons/mrp/mrp.py:358
 #, python-format
 msgid "Copy"
 msgstr ""
@@ -1660,7 +1629,6 @@ msgstr "Production Products"
 
 #. module: mrp
 #: field:mrp.production,date_finished:0
-#: field:mrp.production.order,date_finished:0
 msgid "End Date"
 msgstr "Slutdatum"
 
@@ -1687,7 +1655,6 @@ msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,priority:0
-#: selection:mrp.production.order,priority:0
 msgid "Very Urgent"
 msgstr "Mycket bråttom"
 
@@ -1732,6 +1699,7 @@ msgid "Production Products Consommation"
 msgstr "Production Products Consommation"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
@@ -1769,7 +1737,6 @@ msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
-#: selection:mrp.production.order,state:0
 msgid "Cancelled"
 msgstr ""
 
@@ -1795,8 +1762,6 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,company_id:0
 #: field:mrp.production,company_id:0
-#: view:mrp.production.order:0
-#: field:mrp.production.order,company_id:0
 #: field:mrp.routing,company_id:0
 #: field:mrp.routing.workcenter,company_id:0
 #: view:mrp.workcenter:0
@@ -1833,7 +1798,7 @@ msgid "Product UoS Qty"
 msgstr "Product UoS Qty"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:139
 #: view:mrp.bom:0
 #, python-format
 msgid "Components"
@@ -2052,8 +2017,6 @@ msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
-#: view:mrp.production.order:0
-#: selection:mrp.production.order,state:0
 msgid "Waiting Goods"
 msgstr "Väntande varor"
 
@@ -2087,7 +2050,6 @@ msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,priority:0
-#: selection:mrp.production.order,priority:0
 msgid "Normal"
 msgstr "Normal"
 
@@ -2097,7 +2059,7 @@ msgid "Manufacturing Steps."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:136
+#: code:addons/mrp/report/price.py:146
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
@@ -2142,9 +2104,9 @@ msgid "Product type is Stockable or Consumable."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
-#: code:addons/mrp/wizard/change_production_qty.py:77
-#: code:addons/mrp/wizard/change_production_qty.py:82
+#: code:addons/mrp/mrp.py:603
+#: code:addons/mrp/wizard/change_production_qty.py:78
+#: code:addons/mrp/wizard/change_production_qty.py:83
 #, python-format
 msgid "Error"
 msgstr "Error"
@@ -2205,7 +2167,6 @@ msgstr ""
 #: field:mrp.bom,routing_id:0
 #: view:mrp.production:0
 #: field:mrp.production,routing_id:0
-#: field:mrp.production.order,routing_id:0
 #: view:mrp.routing:0
 #: model:process.node,name:mrp.process_node_routing0
 msgid "Routing"
@@ -2237,7 +2198,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production.order:0
 #: field:stock.move,production_id:0
 msgid "Production"
 msgstr "Produktion"
@@ -2411,7 +2371,6 @@ msgstr ""
 #: view:mrp.production:0
 #: field:mrp.production,move_lines:0
 #: report:mrp.production.order:0
-#: field:mrp.production.order,products_to_consume:0
 msgid "Products to Consume"
 msgstr ""
 

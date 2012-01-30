@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:35+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:48+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: resource
 #: model:ir.module.module,description:resource.module_meta_information
@@ -60,6 +60,7 @@ msgstr "Odsustva resursa"
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
+#: field:resource.resource,calendar_id:0
 msgid "Working Time"
 msgstr "Radno vrijeme"
 
@@ -119,7 +120,6 @@ msgstr "Kalendar resursa"
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
-#: field:resource.resource,calendar_id:0
 msgid "Working Period"
 msgstr ""
 
@@ -189,7 +189,6 @@ msgid "Closing Days"
 msgstr ""
 
 #. module: resource
-#: model:ir.module.module,shortdesc:resource.module_meta_information
 #: model:ir.ui.menu,name:resource.menu_resource_config
 #: view:resource.calendar.leaves:0
 #: field:resource.calendar.leaves,resource_id:0
@@ -346,7 +345,7 @@ msgid "Start Date"
 msgstr "Početni datum"
 
 #. module: resource
-#: code:addons/resource/resource.py:246
+#: code:addons/resource/resource.py:310
 #, python-format
 msgid " (copy)"
 msgstr " (kopija)"
@@ -355,24 +354,3 @@ msgstr " (kopija)"
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Subota"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Module for resource management\n"
-#~ "     A resource represent something that can be scheduled\n"
-#~ "     (a developer on a task or a workcenter on manufacturing orders).\n"
-#~ "     This module manages a resource calendar associated to every resource.\n"
-#~ "     It also manages the leaves of every resource.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Module for resource management\n"
-#~ "    Modul za upravljanje resursima\n"
-#~ "     Resurs predstavlja nešto što može biti dodjeljeno\n"
-#~ "     (programer na zadataku ili proizvodni centar na radnom nalogu "
-#~ "proizvodnje).\n"
-#~ "     Ovaj modul upravlja kalendarom resursa dodjeljenom svakom resursu.\n"
-#~ "     Također upravlja odsustvima svih resursa.\n"
-#~ "\n"
-#~ "    "

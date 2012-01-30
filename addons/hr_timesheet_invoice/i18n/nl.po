@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:14+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:27+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -199,7 +199,6 @@ msgstr "Groepeer op..."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
-#: view:hr.timesheet.invoice.create.final:0
 msgid "Create Invoices"
 msgstr "Maak facturen"
 
@@ -215,7 +214,7 @@ msgid "Final invoice for analytic account"
 msgstr "Definitieve factuur voor kostenplaats"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:76
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:64
 #, python-format
 msgid "Analytic Account incomplete"
 msgstr "Kostenplaats incompleet"
@@ -343,7 +342,7 @@ msgid "Lines to Invoice"
 msgstr "Te factureren boekingen"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:118
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:128
 #, python-format
 msgid "Error !"
 msgstr "Fout !"
@@ -390,7 +389,7 @@ msgid "Timesheet Profit"
 msgstr "Winst urenstaat"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:80
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:68
 #, python-format
 msgid "Partner incomplete"
 msgstr "Relatie incompleet"
@@ -479,7 +478,8 @@ msgstr ""
 "%s"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:191
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:55
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:220
 #, python-format
 msgid "Invoices"
 msgstr "Facturen"
@@ -606,7 +606,7 @@ msgid "Cost Ledger"
 msgstr "Kostenstaat"
 
 #. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
 msgid "50%"
 msgstr "50%"
 
@@ -643,7 +643,7 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:81
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:69
 #, python-format
 msgid "Please fill in the Address field in the Partner: %s."
 msgstr "Vul aub het adresveld in in de relatie: %s."
@@ -712,7 +712,7 @@ msgstr ""
 "geselecteerde bedrijf"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:120
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:108
 #, python-format
 msgid "Error"
 msgstr "Fout"
@@ -842,7 +842,7 @@ msgid "Billing Data"
 msgstr "Factuur gegevens"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:77
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:65
 #, python-format
 msgid ""
 "Please fill in the Partner or Customer and Sale Pricelist fields in the "
@@ -884,7 +884,7 @@ msgstr ""
 "De werkelijke datum van de werkzaamheden zal getoond worden op de factuur"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:120
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:108
 #, python-format
 msgid "At least one line has no product !"
 msgstr "Tenminste één regel heeft geen product !"
@@ -906,6 +906,7 @@ msgstr "Dagelijkse urenstaat per rekening"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,product:0
+#: field:hr.timesheet.invoice.create.final,product:0
 #: field:report.account.analytic.line.to.invoice,product_id:0
 #: view:report.timesheet.line:0
 #: field:report.timesheet.line,product_id:0
@@ -942,7 +943,7 @@ msgid "Journal"
 msgstr "Dagboek"
 
 #. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,balance_product:0
+#: help:hr.timesheet.invoice.create.final,product:0
 msgid "The product that will be used to invoice the remaining amount"
 msgstr ""
 "Het product dat gebruikt wordt voor het factureren van het resterende bedrag"
@@ -1095,9 +1096,6 @@ msgstr "Kosten"
 #: field:report_timesheet.user,name:0
 msgid "Year"
 msgstr "Jaar"
-
-#~ msgid "Employees"
-#~ msgstr "Medewerkers"
 
 #~ msgid "Employee or Journal Name"
 #~ msgstr "Naam medewerker of dagboek"

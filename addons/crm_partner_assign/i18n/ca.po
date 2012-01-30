@@ -14,11 +14,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:05+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:18+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,name:0
+#: field:crm.lead.forward.to.partner,send_to:0
 msgid "Send to"
 msgstr "Envia a"
 
@@ -39,12 +39,12 @@ msgstr "# de casos"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
+#: view:crm.partner.report.assign:0
 msgid "Group By..."
 msgstr "Agrupa per..."
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
-#: view:crm.lead.forward.to.partner:0
 msgid "Forward"
 msgstr "Endavant"
 
@@ -85,7 +85,7 @@ msgid "Company"
 msgstr "Companyia"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/partner_geo_assign.py:41
+#: code:addons/crm_partner_assign/partner_geo_assign.py:37
 #, python-format
 msgid ""
 "Could not contact geolocation servers, please make sure you have a working "
@@ -95,8 +95,7 @@ msgstr ""
 "assegureu-vos de tenir connexió a internet (%s)"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,partner_date:0
+#: field:crm.lead.report.assign,date_assign:0
 msgid "Partner Date"
 msgstr "Data empresa"
 
@@ -123,7 +122,6 @@ msgid "Geo Latitude"
 msgstr "Geo latitud"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Cancelled"
 msgstr "Cancel·lada"
@@ -163,14 +161,13 @@ msgstr ""
 "    "
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Pending"
 msgstr "Pendent"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,name:0
 #: field:crm.lead.forward.to.partner,partner_id:0
+#: selection:crm.lead.forward.to.partner,send_to:0
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,partner_assigned_id:0
 #: model:ir.model,name:crm_partner_assign.model_res_partner
@@ -188,7 +185,7 @@ msgid "Previous"
 msgstr "Previ"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/partner_geo_assign.py:40
+#: code:addons/crm_partner_assign/partner_geo_assign.py:36
 #, python-format
 msgid "Network error"
 msgstr "Error de la xarxa"
@@ -217,6 +214,7 @@ msgstr "Nivell de l'empresa"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
+#: view:crm.partner.report.assign:0
 msgid "Section"
 msgstr "Secció"
 
@@ -304,7 +302,7 @@ msgid "Stage"
 msgstr "Etapa"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:271
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:192
 #, python-format
 msgid "Fwd"
 msgstr "Reenviament"
@@ -316,6 +314,7 @@ msgstr "Geo localització"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
+#: view:crm.partner.report.assign:0
 msgid "Opportunities Assignment Analysis"
 msgstr "Anàlisi d'assignació d'oportunitats"
 
@@ -335,6 +334,7 @@ msgid "Contact"
 msgstr "Contacta"
 
 #. module: crm_partner_assign
+#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Close"
 msgstr "Tanca"
@@ -363,6 +363,8 @@ msgstr "Retard d'obertura"
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,grade_id:0
+#: view:crm.partner.report.assign:0
+#: field:crm.partner.report.assign,grade_id:0
 msgid "Grade"
 msgstr "Qualificació"
 
@@ -389,6 +391,7 @@ msgstr "Assumpte"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
+#: view:crm.partner.report.assign:0
 msgid "Salesman"
 msgstr "Venedor"
 
@@ -419,7 +422,6 @@ msgid "Error ! You can not create recursive associated members."
 msgstr "Error! No podeu crear membres associats recursivament."
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Draft"
 msgstr "Esborrany"
@@ -430,7 +432,6 @@ msgid "Low"
 msgstr "Baix"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,state:0
 #: view:crm.lead.report.assign:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Closed"
@@ -488,9 +489,10 @@ msgid "Delay to Open"
 msgstr "Retard d'obertura"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,name:0
+#: selection:crm.lead.forward.to.partner,send_to:0
 #: field:crm.lead.forward.to.partner,user_id:0
 #: field:crm.lead.report.assign,user_id:0
+#: field:crm.partner.report.assign,user_id:0
 msgid "User"
 msgstr "Usuari"
 
@@ -577,7 +579,6 @@ msgstr ""
 "Última data en la qual aquest cas va ser reenviat/assignat a una empresa"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 #: view:res.partner:0
 msgid "Open"
@@ -645,13 +646,15 @@ msgid "February"
 msgstr "Febrer"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,name:0
+#: selection:crm.lead.forward.to.partner,send_to:0
 msgid "Email Address"
 msgstr "Adreça de correu electrònic"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,country_id:0
+#: view:crm.partner.report.assign:0
+#: field:crm.partner.report.assign,country_id:0
 msgid "Country"
 msgstr "País"
 
@@ -702,6 +705,7 @@ msgstr "Alt"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,section_id:0
+#: field:crm.partner.report.assign,section_id:0
 msgid "Sales Team"
 msgstr "Equip de vendes"
 
@@ -717,6 +721,6 @@ msgstr "Estableix nou estat a"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,name:0
+#: field:crm.lead.report.assign,year:0
 msgid "Year"
 msgstr "Any"

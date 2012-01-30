@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:03+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:16+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -25,6 +25,7 @@ msgstr "# Iniciatívy"
 #. module: crm
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
+#: view:crm.lead.report:0
 #: selection:crm.lead.report,type:0
 msgid "Lead"
 msgstr "Iniciatíva"
@@ -77,6 +78,7 @@ msgid "Today"
 msgstr "Dnes"
 
 #. module: crm
+#: view:crm.lead2opportunity.partner:0
 #: view:crm.merge.opportunity:0
 msgid "Select Opportunities"
 msgstr "Vyberte príležitosti"
@@ -85,7 +87,6 @@ msgstr "Vyberte príležitosti"
 #: view:crm.meeting:0
 #: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
-#: view:crm.send.mail:0
 msgid " "
 msgstr " "
 
@@ -101,7 +102,7 @@ msgid "Previous Stage"
 msgstr "Predchádzajúca etapa"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_add_note.py:26
+#: code:addons/crm/wizard/crm_add_note.py:28
 #, python-format
 msgid "Can not add note!"
 msgstr "Nemôžete pridávať poznámky!"
@@ -113,7 +114,6 @@ msgstr "Názov etapy"
 
 #. module: crm
 #: view:crm.lead.report:0
-#: field:crm.lead.report,day:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,day:0
 msgid "Day"
@@ -125,13 +125,13 @@ msgid "The code of the sales team must be unique !"
 msgstr "Kód predajného tímu musí byť jedinečný!"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:95
+#: code:addons/crm/crm_lead.py:551
 #, python-format
 msgid "Lead '%s' has been converted to an opportunity."
 msgstr "Iniciatíva '%s' bola zmenená na príležitosť."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:228
+#: code:addons/crm/crm_lead.py:294
 #, python-format
 msgid "The lead '%s' has been closed."
 msgstr "Iniciatíva '%s' bola uzatvorená."
@@ -142,10 +142,10 @@ msgid "No Repeat"
 msgstr "Bez opakovania"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
-#: code:addons/crm/wizard/crm_lead_to_partner.py:55
-#: code:addons/crm/wizard/crm_phonecall_to_partner.py:52
+#: code:addons/crm/crm_lead.py:491
+#: code:addons/crm/crm_lead.py:826
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:104
+#: code:addons/crm/wizard/crm_lead_to_partner.py:47
 #, python-format
 msgid "Warning !"
 msgstr "Pozor!"
@@ -202,14 +202,16 @@ msgid "Opportunities Analysis"
 msgstr "Analýza príležitostí"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,partner_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,partner_id:0
-#: field:crm.lead2opportunity,partner_id:0
 #: field:crm.lead2opportunity.partner,partner_id:0
+#: field:crm.lead2opportunity.partner.mass,partner_id:0
 #: field:crm.lead2partner,partner_id:0
 #: view:crm.meeting:0
 #: field:crm.meeting,partner_id:0
+#: field:crm.opportunity2phonecall,partner_id:0
 #: field:crm.partner2opportunity,partner_id:0
 #: view:crm.phonecall:0
 #: field:crm.phonecall,partner_id:0
@@ -217,6 +219,7 @@ msgstr "Analýza príležitostí"
 #: field:crm.phonecall.report,partner_id:0
 #: field:crm.phonecall2opportunity,partner_id:0
 #: field:crm.phonecall2partner,partner_id:0
+#: field:crm.phonecall2phonecall,partner_id:0
 #: model:ir.model,name:crm.model_res_partner
 #: model:process.node,name:crm.process_node_partner0
 msgid "Partner"
@@ -230,9 +233,7 @@ msgstr "Organizér"
 
 #. module: crm
 #: view:crm.phonecall:0
-#: view:crm.phonecall2phonecall:0
 #: model:ir.actions.act_window,name:crm.phonecall_to_phonecall_act
-#: view:res.partner:0
 msgid "Schedule Other Call"
 msgstr "Naplánovať ostatné hovory"
 
@@ -242,12 +243,10 @@ msgid "Edit all Occurrences  of recurrent Meeting."
 msgstr "Upraviť všetky výskyty opakovaného stretnutia."
 
 #. module: crm
-#: code:addons/crm/wizard/crm_opportunity_to_phonecall.py:134
-#: code:addons/crm/wizard/crm_phonecall_to_phonecall.py:89
+#: code:addons/crm/crm_phonecall.py:216
 #: model:crm.case.categ,name:crm.categ_meet3
 #: view:crm.phonecall:0
 #: model:ir.ui.menu,name:crm.menu_crm_config_phonecall
-#: view:res.partner:0
 #, python-format
 msgid "Phone Call"
 msgstr "Telefón"
@@ -258,7 +257,7 @@ msgid "Opt-Out"
 msgstr "Nezasielať"
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:108
+#: code:addons/crm/crm_lead.py:323
 #, python-format
 msgid "The opportunity '%s' has been marked as lost."
 msgstr "Príležitosť '%s' bola označená ako stratená."
@@ -359,6 +358,7 @@ msgstr "Názov kontaktu"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.lead2partner,action:0
 #: selection:crm.phonecall2partner,action:0
 msgid "Link to an existing partner"
@@ -366,8 +366,11 @@ msgstr "Link na existujúceho partnera"
 
 #. module: crm
 #: view:crm.lead:0
+#: field:crm.lead,contact_id:0
 #: view:crm.meeting:0
+#: field:crm.opportunity2phonecall,contact_name:0
 #: field:crm.phonecall,partner_contact:0
+#: field:crm.phonecall2phonecall,contact_name:0
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -387,7 +390,7 @@ msgid "Regular Expression on Case History"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:209
+#: code:addons/crm/crm_lead.py:274
 #, python-format
 msgid "The lead '%s' has been opened."
 msgstr "Iniciatíva '%s' bola otvorená."
@@ -460,8 +463,8 @@ msgid "Update Date"
 msgstr "Dátum aktualizácie"
 
 #. module: crm
-#: view:crm.lead2opportunity.action:0
-#: field:crm.lead2opportunity.action,name:0
+#: field:crm.lead2opportunity.partner,name:0
+#: field:crm.lead2opportunity.partner.mass,name:0
 msgid "Select Action"
 msgstr "Vybrať akciu"
 
@@ -473,6 +476,7 @@ msgstr "Vybrať akciu"
 #: field:crm.lead.report,categ_id:0
 #: field:crm.opportunity2phonecall,categ_id:0
 #: field:crm.phonecall,categ_id:0
+#: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,categ_id:0
 #: field:crm.phonecall2phonecall,categ_id:0
 msgid "Category"
@@ -529,16 +533,10 @@ msgid "Very first contact with new prospect"
 msgstr "Úplne prvý kontakt s novou perspektívou"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:278
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:197
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:231
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:299
-#: view:crm.lead2opportunity:0
+#: view:crm.lead2opportunity.partner:0
 #: view:crm.partner2opportunity:0
-#: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity
 #: model:ir.actions.act_window,name:crm.action_view_crm_partner2opportunity
 #: model:ir.actions.act_window,name:crm.crm_partner2opportunity
-#, python-format
 msgid "Create Opportunity"
 msgstr "Vytvoriť príležitosť"
 
@@ -548,7 +546,7 @@ msgid "Configure"
 msgstr "Nastaviť"
 
 #. module: crm
-#: code:addons/crm/crm.py:378
+#: code:addons/crm/crm.py:433
 #: view:crm.lead:0
 #: view:res.partner:0
 #, python-format
@@ -561,7 +559,8 @@ msgid "Customer & Supplier Relationship Management"
 msgstr "Zákaznícke & dodávateľske riadenie vzťahov"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "June"
@@ -594,7 +593,8 @@ msgid "crm.send.mail.attachment"
 msgstr "crm.send.mail.attachment"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "October"
@@ -727,6 +727,7 @@ msgstr ""
 
 #. module: crm
 #: field:crm.case.section,resource_calendar_id:0
+#: model:ir.ui.menu,name:crm.menu_action_resource_calendar_form
 msgid "Working Time"
 msgstr "Pracovný čas"
 
@@ -806,21 +807,16 @@ msgstr ""
 
 #. module: crm
 #: view:board.board:0
-#: model:ir.ui.menu,name:crm.menu_board_statistics_dash
 msgid "Statistics Dashboard"
 msgstr "Nástenka štatistík"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:88
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:98
-#: code:addons/crm/wizard/crm_partner_to_opportunity.py:101
-#: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:117
+#: code:addons/crm/crm_lead.py:716
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
+#: view:crm.lead.report:0
 #: selection:crm.lead.report,type:0
-#: field:crm.lead2opportunity,name:0
 #: field:crm.meeting,opportunity_id:0
-#: field:crm.phonecall,opportunity_id:0
 #, python-format
 msgid "Opportunity"
 msgstr "Príležitosť"
@@ -846,7 +842,6 @@ msgid "Search Phonecalls"
 msgstr "Vyhľadávanie telefonických hovorov"
 
 #. module: crm
-#: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2partner:0
 #: view:crm.phonecall2partner:0
 msgid "Continue"
@@ -935,6 +930,8 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
+#: field:crm.lead2opportunity.partner,opportunity_ids:0
+#: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
 #: field:crm.merge.opportunity,opportunity_ids:0
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
 #: model:ir.ui.menu,name:crm.menu_crm_case_opp
@@ -979,7 +976,8 @@ msgid "Mark Lost"
 msgstr "Stratený"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "March"
@@ -1002,9 +1000,7 @@ msgid "Show time as"
 msgstr "Zobraziť čas ako"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:264
 #: view:crm.phonecall2partner:0
-#, python-format
 msgid "Create Partner"
 msgstr "Vytvoriť partnera"
 
@@ -1038,7 +1034,7 @@ msgid "Next Stage"
 msgstr "Nasledujúca etapa"
 
 #. module: crm
-#: view:board.board:0
+#: view:crm.meeting:0
 msgid "My Meetings"
 msgstr "Moje stretnutia"
 
@@ -1053,10 +1049,9 @@ msgid "Opt-In"
 msgstr "Zasielať"
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:208
-#: code:addons/crm/crm_phonecall.py:185
-#: code:addons/crm/wizard/crm_phonecall_to_meeting.py:55
-#: code:addons/crm/wizard/crm_phonecall_to_meeting.py:137
+#: code:addons/crm/crm_lead.py:809
+#: code:addons/crm/crm_phonecall.py:295
+#: code:addons/crm/wizard/crm_phonecall_to_meeting.py:83
 #: view:crm.meeting:0
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_meeting_new
 #: model:ir.actions.act_window,name:crm.crm_case_categ_meet
@@ -1110,7 +1105,6 @@ msgid "Partner Segmentations"
 msgstr "Segmentácie partnera"
 
 #. module: crm
-#: view:crm.meeting:0
 #: field:crm.meeting,user_id:0
 #: view:crm.phonecall:0
 #: field:crm.phonecall,user_id:0
@@ -1130,12 +1124,10 @@ msgstr "Štatistiky"
 
 #. module: crm
 #: view:crm.meeting:0
-#: field:crm.send.mail,email_from:0
 msgid "From"
 msgstr "Od"
 
 #. module: crm
-#: view:crm.lead2opportunity.action:0
 #: view:res.partner:0
 msgid "Next"
 msgstr "Ďalej"
@@ -1147,7 +1139,6 @@ msgstr "Etapa:"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead5
-#: model:crm.case.stage,name:crm.stage_opportunity5
 #: view:crm.lead:0
 msgid "Won"
 msgstr "Získaná"
@@ -1168,13 +1159,10 @@ msgid "HTML formatting?"
 msgstr "HTML formátovanie?"
 
 #. module: crm
-#: field:crm.case.stage,type:0
 #: field:crm.lead,type:0
 #: field:crm.lead.report,type:0
-#: view:crm.meeting:0
-#: view:crm.phonecall:0
-#: view:crm.phonecall.report:0
-#: view:res.partner:0
+#: view:crm.opportunity2phonecall:0
+#: view:crm.phonecall2phonecall:0
 msgid "Type"
 msgstr "Typ"
 
@@ -1199,17 +1187,17 @@ msgid "Attachment"
 msgstr "Príloha"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "August"
 msgstr "August"
 
 #. module: crm
-#: view:crm.lead:0
 #: field:crm.lead,create_date:0
-#: field:crm.lead.report,creation_date:0
 #: field:crm.meeting,create_date:0
+#: view:crm.phonecall:0
 #: field:crm.phonecall,create_date:0
 #: field:crm.phonecall.report,creation_date:0
 msgid "Creation Date"
@@ -1228,7 +1216,6 @@ msgstr "ID opakovania"
 #. module: crm
 #: view:crm.lead:0
 #: view:crm.meeting:0
-#: field:crm.send.mail,subject:0
 #: view:res.partner:0
 msgid "Subject"
 msgstr "Predmet"
@@ -1239,13 +1226,11 @@ msgid "Tue"
 msgstr "Ut"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:300
 #: view:crm.case.stage:0
 #: view:crm.lead:0
 #: field:crm.lead,stage_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,stage_id:0
-#, python-format
 msgid "Stage"
 msgstr "Etapa"
 
@@ -1355,15 +1340,12 @@ msgstr ""
 #: view:crm.case.stage:0
 #: model:ir.actions.act_window,name:crm.crm_case_stage_act
 #: model:ir.actions.act_window,name:crm.crm_lead_stage_act
-#: model:ir.actions.act_window,name:crm.crm_opportunity_stage_act
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
-#: model:ir.ui.menu,name:crm.menu_crm_opportunity_stage_act
 msgid "Stages"
 msgstr "Etapy"
 
 #. module: crm
 #: field:crm.lead,planned_revenue:0
-#: field:crm.lead2opportunity,planned_revenue:0
 #: field:crm.partner2opportunity,planned_revenue:0
 #: field:crm.phonecall2opportunity,planned_revenue:0
 msgid "Expected Revenue"
@@ -1379,7 +1361,8 @@ msgstr ""
 "sledovaných v systéme."
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "September"
@@ -1414,6 +1397,7 @@ msgstr ""
 
 #. module: crm
 #: field:crm.partner2opportunity,name:0
+#: field:crm.phonecall2opportunity,name:0
 msgid "Opportunity Name"
 msgstr "Názov príležitosti"
 
@@ -1468,13 +1452,12 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2partner:0
 #: view:crm.phonecall:0
 #: view:crm.phonecall2partner:0
+#: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
 #: model:ir.actions.act_window,name:crm.action_crm_lead2partner
 #: model:ir.actions.act_window,name:crm.action_crm_phonecall2partner
-#: view:res.partner:0
 msgid "Create a Partner"
 msgstr "Vytvoriť partnera"
 
@@ -1494,9 +1477,7 @@ msgid "Days to Close"
 msgstr "Dni do uzatvorenia"
 
 #. module: crm
-#: field:crm.add.note,attachment_ids:0
 #: field:crm.case.section,complete_name:0
-#: field:crm.send.mail,attachment_ids:0
 msgid "unknown"
 msgstr "neznámy"
 
@@ -1513,7 +1494,6 @@ msgid "Partner To Opportunity"
 msgstr "Partner pre príležitosť"
 
 #. module: crm
-#: view:crm.meeting:0
 #: field:crm.meeting,date:0
 #: field:crm.opportunity2phonecall,date:0
 #: view:crm.phonecall:0
@@ -1524,9 +1504,7 @@ msgid "Date"
 msgstr "Dátum"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.lead.report:0
-#: view:crm.meeting:0
 #: view:crm.phonecall.report:0
 msgid "Extended Filters..."
 msgstr "Rozšírené filtre..."
@@ -1585,7 +1563,6 @@ msgstr "Podriadené tímy"
 #: field:crm.lead,state:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,state:0
-#: view:crm.meeting:0
 #: field:crm.meeting,state:0
 #: field:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
@@ -1609,12 +1586,12 @@ msgid "References"
 msgstr "Ďalšie zdroje"
 
 #. module: crm
-#: code:addons/crm/crm.py:392
+#: code:addons/crm/crm.py:441
 #: view:crm.lead:0
-#: view:crm.lead2opportunity:0
-#: view:crm.lead2opportunity.action:0
 #: view:crm.lead2opportunity.partner:0
+#: view:crm.lead2opportunity.partner.mass:0
 #: view:crm.lead2partner:0
+#: view:crm.partner2opportunity:0
 #: view:crm.phonecall:0
 #: view:crm.phonecall2partner:0
 #: view:res.partner:0
@@ -1709,10 +1686,8 @@ msgstr ""
 
 #. module: crm
 #: field:crm.case.categ,name:0
-#: field:crm.installer,name:0
 #: field:crm.lead,name:0
 #: field:crm.segmentation,name:0
-#: field:crm.send.mail.attachment,name:0
 msgid "Name"
 msgstr "Názov"
 
@@ -1828,7 +1803,6 @@ msgstr "Plánované príjmy"
 #. module: crm
 #: view:crm.lead:0
 #: view:crm.lead.report:0
-#: view:crm.meeting:0
 #: view:crm.phonecall:0
 #: view:crm.phonecall.report:0
 msgid "Group By..."
@@ -1870,7 +1844,7 @@ msgid "Zip"
 msgstr "PSČ"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:213
+#: code:addons/crm/crm_lead.py:278
 #, python-format
 msgid "The case '%s' has been opened."
 msgstr "Udalosť '%s' bola otvorená."
@@ -1882,8 +1856,6 @@ msgstr "titul"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone1
-#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_incoming0
-#: model:ir.ui.menu,name:crm.menu_crm_case_phone_inbound
 msgid "Inbound"
 msgstr "Prichádzajúce"
 
@@ -1951,6 +1923,7 @@ msgstr "Opakované stretnutie"
 #: view:crm.case.section:0
 #: view:crm.lead:0
 #: field:crm.lead,description:0
+#: view:crm.opportunity2phonecall:0
 msgid "Notes"
 msgstr "Poznámky"
 
@@ -2007,23 +1980,21 @@ msgid "Prospect is converting to business partner"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead2opportunity:0
-#: view:crm.partner2opportunity:0
 #: model:ir.actions.act_window,name:crm.phonecall2opportunity_act
 msgid "Convert To Opportunity"
 msgstr "Zmeniť na príležitosť"
 
 #. module: crm
 #: view:crm.phonecall:0
+#: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
+#: selection:crm.phonecall.report,state:0
 #: view:res.partner:0
 msgid "Held"
 msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
-#: view:crm.phonecall:0
-#: view:res.partner:0
 msgid "Reset to Draft"
 msgstr "Reset pre návrh"
 
@@ -2097,6 +2068,7 @@ msgid "Lead To Opportunity Partner"
 msgstr ""
 
 #. module: crm
+#: field:crm.lead,location_id:0
 #: field:crm.meeting,location:0
 msgid "Location"
 msgstr "Miesto"
@@ -2117,7 +2089,7 @@ msgid "Schedule a normal or phone meeting"
 msgstr "Naplánovať normálne alebo telefonické stretnutie"
 
 #. module: crm
-#: code:addons/crm/crm.py:375
+#: code:addons/crm/crm.py:430
 #, python-format
 msgid "Error !"
 msgstr "Chyba !"
@@ -2168,7 +2140,8 @@ msgstr ""
 "Ste si istí, že chcete vytvoriť partnera na základe tohto telefónneho hovoru?"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "July"
@@ -2220,6 +2193,7 @@ msgstr "MS-Outlook"
 
 #. module: crm
 #: view:crm.phonecall:0
+#: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
 #: view:res.partner:0
 msgid "Not Held"
@@ -2232,7 +2206,6 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead.report:0
-#: field:crm.lead.report,month:0
 #: field:crm.meeting,month_list:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,month:0
@@ -2273,6 +2246,7 @@ msgstr ""
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.lead2partner,action:0
 #: selection:crm.phonecall2partner,action:0
 msgid "Create a new partner"
@@ -2285,8 +2259,11 @@ msgid "Start Date"
 msgstr "Počiatočný dátum"
 
 #. module: crm
+#: view:crm.phonecall:0
 #: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
+#: selection:crm.phonecall.report,state:0
+#: view:res.partner:0
 msgid "Todo"
 msgstr ""
 
@@ -2312,9 +2289,8 @@ msgid "Reset to Unconfirmed"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/wizard/crm_add_note.py:40
-#: view:crm.add.note:0
-#, python-format
+#: field:crm.opportunity2phonecall,note:0
+#: field:crm.phonecall2phonecall,note:0
 msgid "Note"
 msgstr "Poznámka"
 
@@ -2338,10 +2314,7 @@ msgstr "Nízka"
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
 #: field:crm.meeting,date_closed:0
-#: selection:crm.merge.opportunity,state:0
 #: field:crm.phonecall,date_closed:0
-#: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 msgid "Closed"
 msgstr "Uzavreté"
 
@@ -2356,16 +2329,13 @@ msgid "Internal Meeting"
 msgstr "Interné stretnutie"
 
 #. module: crm
-#: code:addons/crm/crm.py:411
+#: code:addons/crm/crm.py:454
 #: selection:crm.add.note,state:0
 #: view:crm.lead:0
 #: selection:crm.lead,state:0
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
-#: selection:crm.merge.opportunity,state:0
-#: selection:crm.phonecall,state:0
 #: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 #, python-format
 msgid "Pending"
 msgstr "Čaká sa"
@@ -2376,7 +2346,6 @@ msgid "Customer Meeting"
 msgstr "Stretnutie so zákazníkom"
 
 #. module: crm
-#: view:crm.lead:0
 #: field:crm.lead,email_cc:0
 msgid "Global CC"
 msgstr ""
@@ -2397,21 +2366,23 @@ msgstr "Počet dní na otvorenie prípadu"
 
 #. module: crm
 #: field:crm.lead,phone:0
+#: field:crm.opportunity2phonecall,phone:0
 #: field:crm.phonecall,partner_phone:0
+#: field:crm.phonecall2phonecall,phone:0
 msgid "Phone"
 msgstr "Telefón"
 
 #. module: crm
+#: field:crm.case.channel,active:0
 #: field:crm.case.section,active:0
 #: field:crm.lead,active:0
-#: view:crm.lead.report:0
 #: field:crm.meeting,active:0
 #: field:crm.phonecall,active:0
 msgid "Active"
 msgstr "Aktívna"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:306
+#: code:addons/crm/crm_lead.py:847
 #, python-format
 msgid "The stage of opportunity '%s' has been changed to '%s'."
 msgstr "Etapa príležitosti '%s' bola zmenená na '%s'."
@@ -2461,8 +2432,11 @@ msgstr ""
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,action:0
+#: field:crm.lead2opportunity.partner.mass,action:0
 #: field:crm.lead2partner,action:0
+#: field:crm.opportunity2phonecall,action:0
 #: field:crm.phonecall2partner,action:0
+#: field:crm.phonecall2phonecall,action:0
 msgid "Action"
 msgstr "Akcia"
 
@@ -2510,7 +2484,6 @@ msgstr ""
 #. module: crm
 #: view:crm.meeting:0
 #: selection:crm.meeting,state:0
-#: selection:crm.phonecall,state:0
 msgid "Done"
 msgstr "Dokončený"
 
@@ -2530,15 +2503,10 @@ msgid "_Schedule Call"
 msgstr "_Schedule Call"
 
 #. module: crm
-#: code:addons/crm/crm.py:326
-#: selection:crm.add.note,state:0
+#: code:addons/crm/crm.py:396
 #: view:crm.lead:0
-#: selection:crm.lead,state:0
+#: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
-#: selection:crm.merge.opportunity,state:0
-#: view:crm.phonecall:0
-#: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 #: view:res.partner:0
 #, python-format
 msgid "Open"
@@ -2575,7 +2543,7 @@ msgid "Recurrent"
 msgstr "Opakovať"
 
 #. module: crm
-#: code:addons/crm/crm.py:397
+#: code:addons/crm/crm.py:446
 #, python-format
 msgid "The case '%s' has been cancelled."
 msgstr "Udalosť '%s' bola zrušená."
@@ -2591,7 +2559,6 @@ msgid "Send new email"
 msgstr "Odoslať nový email"
 
 #. module: crm
-#: view:board.board:0
 #: model:ir.actions.act_window,name:crm.act_my_oppor
 msgid "My Open Opportunities"
 msgstr "Moje otvorené príležitosti"
@@ -2640,7 +2607,6 @@ msgstr "Spojenie s existujúcou príležitosťou"
 
 #. module: crm
 #: help:crm.lead,state:0
-#: help:crm.phonecall,state:0
 msgid ""
 "The state is set to 'Draft', when a case is created.                         "
 "         \n"
@@ -2757,7 +2723,6 @@ msgstr ""
 
 #. module: crm
 #: field:crm.add.note,state:0
-#: field:crm.send.mail,state:0
 msgid "Set New State To"
 msgstr "Nastaviť nový stav pre"
 
@@ -2782,8 +2747,6 @@ msgstr ""
 
 #. module: crm
 #: view:board.board:0
-#: model:ir.actions.act_window,name:crm.open_board_crm
-#: model:ir.ui.menu,name:crm.menu_board_crm
 msgid "Sales Dashboard"
 msgstr "Nástenka obchodu"
 
@@ -2817,8 +2780,6 @@ msgstr ""
 
 #. module: crm
 #: selection:crm.add.note,state:0
-#: selection:crm.merge.opportunity,state:0
-#: selection:crm.send.mail,state:0
 msgid "Unchanged"
 msgstr ""
 
@@ -2907,7 +2868,7 @@ msgid "Add Internal Note"
 msgstr "Pridať internú poznámka"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:304
+#: code:addons/crm/crm_lead.py:845
 #, python-format
 msgid "The stage of lead '%s' has been changed to '%s'."
 msgstr ""
@@ -2930,10 +2891,7 @@ msgid "Change Probability on next and previous stages."
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm.py:455
-#: code:addons/crm/crm.py:457
-#: code:addons/crm/crm_action_rule.py:66
-#: code:addons/crm/wizard/crm_send_email.py:141
+#: code:addons/crm/crm_action_rule.py:61
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -2949,10 +2907,8 @@ msgstr "Súhrn hovoru"
 #: selection:crm.lead,state:0
 #: selection:crm.lead.report,state:0
 #: selection:crm.meeting,state:0
-#: selection:crm.merge.opportunity,state:0
 #: selection:crm.phonecall,state:0
 #: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 msgid "Cancelled"
 msgstr "Zrušené"
 
@@ -3047,6 +3003,7 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
+#: model:ir.actions.act_window,name:crm.opportunity2phonecall_act
 msgid "Schedule/Log Call"
 msgstr "Rozpis / hovorov"
 
@@ -3088,7 +3045,7 @@ msgid "Total of Planned Revenue"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm.py:375
+#: code:addons/crm/crm.py:430
 #, python-format
 msgid ""
 "You can not escalate, You are already at the top level regarding your sales-"
@@ -3111,8 +3068,11 @@ msgid "Success Rate (%)"
 msgstr "Úspešnosť (%)"
 
 #. module: crm
+#: selection:crm.add.note,state:0
 #: model:crm.case.stage,name:crm.stage_lead1
-#: model:crm.case.stage,name:crm.stage_opportunity1
+#: view:crm.lead:0
+#: selection:crm.lead,state:0
+#: view:crm.lead.report:0
 msgid "New"
 msgstr ""
 
@@ -3130,11 +3090,11 @@ msgid "Email"
 msgstr "Email"
 
 #. module: crm
+#: view:crm.case.channel:0
 #: view:crm.lead:0
 #: field:crm.lead,channel_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,channel_id:0
-#: field:crm.phonecall,canal_id:0
 msgid "Channel"
 msgstr "Kanál"
 
@@ -3231,10 +3191,8 @@ msgstr ""
 #: view:crm.add.note:0
 #: view:crm.merge.opportunity:0
 #: view:crm.opportunity2phonecall:0
-#: view:crm.partner2opportunity:0
 #: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
-#: view:crm.send.mail:0
 msgid "_Cancel"
 msgstr ""
 
@@ -3256,7 +3214,6 @@ msgstr "Denne"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
-#: model:crm.case.stage,name:crm.stage_opportunity2
 msgid "Qualification"
 msgstr ""
 
@@ -3271,7 +3228,8 @@ msgid "First"
 msgstr ""
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "December"
@@ -3330,6 +3288,7 @@ msgid "Salesman"
 msgstr ""
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,date_deadline:0
 msgid "Expected Closing"
 msgstr ""
@@ -3356,8 +3315,6 @@ msgstr "Meno partnera"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone2
-#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
-#: model:ir.ui.menu,name:crm.menu_crm_case_phone_outbound
 msgid "Outbound"
 msgstr "Odchádzajúce"
 
@@ -3375,10 +3332,8 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
-#: field:crm.lead,job_ids:0
 #: view:crm.meeting:0
 #: view:crm.phonecall:0
-#: view:res.partner:0
 msgid "Contacts"
 msgstr "Kontakty"
 
@@ -3417,14 +3372,10 @@ msgid "Success Probability"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm.py:426
-#: selection:crm.add.note,state:0
-#: selection:crm.lead,state:0
+#: code:addons/crm/crm.py:466
 #: selection:crm.lead.report,state:0
-#: selection:crm.merge.opportunity,state:0
 #: selection:crm.phonecall,state:0
 #: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 #, python-format
 msgid "Draft"
 msgstr "Návrh"
@@ -3499,8 +3450,6 @@ msgid "Meeting Categories"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead2opportunity.partner:0
-#: view:crm.lead2partner:0
 #: view:crm.phonecall2partner:0
 msgid "You may have to verify that this partner does not exist already."
 msgstr ""
@@ -3517,7 +3466,8 @@ msgid "User"
 msgstr ""
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "November"
@@ -3531,6 +3481,7 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead.report:0
+#: model:ir.actions.act_window,name:crm.act_opportunity_stage
 msgid "Opportunities By Stage"
 msgstr "Príležitosti podľa etapy"
 
@@ -3540,7 +3491,8 @@ msgid "Schedule Phone Call"
 msgstr "Naplánovať hovor"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "January"
@@ -3566,10 +3518,7 @@ msgid "Twitter Ads"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/wizard/crm_add_note.py:26
-#: code:addons/crm/wizard/crm_send_email.py:72
-#: code:addons/crm/wizard/crm_send_email.py:169
-#: code:addons/crm/wizard/crm_send_email.py:270
+#: code:addons/crm/wizard/crm_add_note.py:28
 #, python-format
 msgid "Error"
 msgstr ""
@@ -3590,7 +3539,7 @@ msgid "Error ! You can not create recursive profiles."
 msgstr "Chyba! Nemôžete vytvárať rekurzívne profily."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:232
+#: code:addons/crm/crm_lead.py:296
 #, python-format
 msgid "The case '%s' has been closed."
 msgstr "Udalosť '%s' bola uzavretá."
@@ -3619,7 +3568,7 @@ msgid "Merged into Opportunity: %s"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm.py:347
+#: code:addons/crm/crm.py:409
 #: view:crm.lead:0
 #: view:res.partner:0
 #, python-format
@@ -3629,7 +3578,6 @@ msgstr "Zatvorené"
 #. module: crm
 #: view:crm.lead:0
 #: view:crm.phonecall:0
-#: view:res.partner:0
 msgid "Categorization"
 msgstr "Kategorizácia"
 
@@ -3655,7 +3603,6 @@ msgstr ""
 
 #. module: crm
 #: view:crm.meeting:0
-#: field:crm.send.mail,email_to:0
 msgid "To"
 msgstr ""
 
@@ -3686,7 +3633,6 @@ msgstr ""
 #: view:crm.phonecall:0
 #: field:crm.phonecall,description:0
 #: field:crm.segmentation,description:0
-#: view:res.partner:0
 msgid "Description"
 msgstr "Opis"
 
@@ -3696,9 +3642,11 @@ msgstr "Opis"
 #: field:crm.case.resource.type,section_id:0
 #: view:crm.case.section:0
 #: field:crm.case.section,name:0
+#: view:crm.lead:0
 #: field:crm.lead,section_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,section_id:0
+#: field:crm.lead2opportunity.partner.mass,section_id:0
 #: field:crm.meeting,section_id:0
 #: field:crm.opportunity2phonecall,section_id:0
 #: view:crm.phonecall:0
@@ -3711,7 +3659,8 @@ msgid "Sales Team"
 msgstr ""
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "May"
@@ -3723,7 +3672,7 @@ msgid "Interest in Accessories"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:211
+#: code:addons/crm/crm_lead.py:276
 #, python-format
 msgid "The opportunity '%s' has been opened."
 msgstr ""
@@ -3755,7 +3704,8 @@ msgid "Customer"
 msgstr "Zákazník"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "February"
@@ -3764,13 +3714,11 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.crm_case_categ_meet_create_partner
-#: view:res.partner:0
 msgid "Schedule a Meeting"
 msgstr "Naplánovať stretnutie"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
-#: model:crm.case.stage,name:crm.stage_opportunity6
 #: view:crm.lead:0
 msgid "Lost"
 msgstr "Stratená"
@@ -3784,7 +3732,10 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
-#: selection:crm.lead2opportunity.action,name:0
+#: view:crm.lead2opportunity.partner:0
+#: selection:crm.lead2opportunity.partner,name:0
+#: view:crm.lead2opportunity.partner.mass:0
+#: selection:crm.lead2opportunity.partner.mass,name:0
 #: view:crm.phonecall:0
 #: view:res.partner:0
 msgid "Convert to Opportunity"
@@ -3796,7 +3747,8 @@ msgid "Wednesday"
 msgstr ""
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "April"
@@ -3813,7 +3765,8 @@ msgid "Phone calls by user and section"
 msgstr "Telefónne hovory podľa užívateľa a sekcie"
 
 #. module: crm
-#: selection:crm.lead2opportunity.action,name:0
+#: selection:crm.lead2opportunity.partner,name:0
+#: selection:crm.lead2opportunity.partner.mass,name:0
 msgid "Merge with existing Opportunity"
 msgstr "Spojiť s existujúcou príležitosťou"
 
@@ -3824,7 +3777,6 @@ msgstr ""
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead4
-#: model:crm.case.stage,name:crm.stage_opportunity4
 msgid "Negotiation"
 msgstr ""
 
@@ -3861,7 +3813,6 @@ msgstr ""
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead3
-#: model:crm.case.stage,name:crm.stage_opportunity3
 msgid "Proposition"
 msgstr ""
 
@@ -3872,7 +3823,6 @@ msgstr "Telefónne hovory"
 
 #. module: crm
 #: view:crm.lead.report:0
-#: field:crm.lead.report,name:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,name:0
 msgid "Year"
@@ -3882,84 +3832,3 @@ msgstr ""
 #: model:crm.case.resource.type,name:crm.type_lead8
 msgid "Newsletter"
 msgstr ""
-
-#~ msgid "Version 4.2"
-#~ msgstr "Verzia 4.2"
-
-#~ msgid "Version 4.4"
-#~ msgstr "Verzia 4.4"
-
-#~ msgid ""
-#~ "The meeting calendar is shared between the sales teams and fully integrated "
-#~ "with other applications such as the employee holidays or the business "
-#~ "opportunities. You can also synchronize meetings with your mobile phone "
-#~ "using the caldav interface."
-#~ msgstr ""
-#~ "Kalendár stretnutí je zdieľaný medzi predajné tímy a plne integrovaný s "
-#~ "ďalšími aplikáciami. Napríklad s dovolenkou zamestnanca alebo obchodnej "
-#~ "príležitosti. Môžete tiež synchronizovať vaše stretnutia v mobilnom telefóne "
-#~ "s využitím protokolu CalDAV."
-
-#~ msgid ""
-#~ "The generic OpenERP Customer Relationship Management\n"
-#~ "system enables a group of people to intelligently and efficiently manage\n"
-#~ "leads, opportunities, meeting, phonecall etc.\n"
-#~ "It manages key tasks such as communication, identification, prioritization,\n"
-#~ "assignment, resolution and notification.\n"
-#~ "\n"
-#~ "OpenERP ensures that all cases are successfully tracked by users, customers "
-#~ "and\n"
-#~ "suppliers. It can automatically send reminders, escalate the request, "
-#~ "trigger\n"
-#~ "specific methods and lots of other actions based on your own enterprise "
-#~ "rules.\n"
-#~ "\n"
-#~ "The greatest thing about this system is that users don't need to do "
-#~ "anything\n"
-#~ "special. They can just send email to the request tracker. OpenERP will take\n"
-#~ "care of thanking them for their message, automatically routing it to the\n"
-#~ "appropriate staff, and make sure all future correspondence gets to the "
-#~ "right\n"
-#~ "place.\n"
-#~ "\n"
-#~ "The CRM module has a email gateway for the synchronisation interface\n"
-#~ "between mails and OpenERP. \n"
-#~ "Create dashboard for CRM that includes:\n"
-#~ "    * My Leads (list)\n"
-#~ "    * Leads by Stage (graph)\n"
-#~ "    * My Meetings (list)\n"
-#~ "    * Sales Pipeline by Stage (graph)\n"
-#~ "    * My Cases (list)\n"
-#~ "    * Jobs Tracking (graph)\n"
-#~ msgstr ""
-#~ "OpenERP systém Customer Relationship Management\n"
-#~ "umožňuje skupine ľudí inteligentne a efektívne riadiť\n"
-#~ "príležitosti, stretnutia, telefónne hovori atď..\n"
-#~ "Spravujú kľúčové úlohy ako je komunikácia, identifikácia, stanovenie "
-#~ "priorít,\n"
-#~ "priradenia, riešenia a oznámenia.\n"
-#~ "\n"
-#~ "OpenERP zaisťuje, že všetky udalosti sú úspešne monitorované podľa "
-#~ "používateľov, zákazníkov a\n"
-#~ "dodávateľov. Je možné automaticky posielať upomienky, eskalovať žiadosti, "
-#~ "spúšťat\n"
-#~ "špecifické metódy a množstvo ďalších akcií na základe svojich vlastných "
-#~ "pravidiel v podnikaní.\n"
-#~ "\n"
-#~ "Najlepšou vecou v tomto systéme je, že používatelia nemusia nič robiť\n"
-#~ "špeciálne. Stačí len poslať e-mailom ako žiadosť na tracker. OpenERP im \n"
-#~ "len poďakuje za ich správu a automaticky presmeruje na\n"
-#~ "vhodný personál. Takto budete uistení, že všetky budúce korešpondencie sa "
-#~ "dostanú na správne\n"
-#~ "miesto.\n"
-#~ "\n"
-#~ "CRM modul má e-mailová brána pre synchronizáciu\n"
-#~ "medzi mailami a OpenERP.\n"
-#~ "\n"
-#~ "Vytvorená nástenka pre CRM obsahuje:\n"
-#~ "* Môj iniciatívy (zoznam)\n"
-#~ "* Iniciatívy podľa etáp (graf)\n"
-#~ "* Moje stretnutia (zoznam)\n"
-#~ "* Predaj podľa etáp (graf)\n"
-#~ "* Moje udalosti (zoznam)\n"
-#~ "* Sledovanie prác (graf)\n"

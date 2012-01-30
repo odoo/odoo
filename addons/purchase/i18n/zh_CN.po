@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:33+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:46+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -42,7 +42,7 @@ msgid "Destination"
 msgstr "目的地"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:721
+#: code:addons/purchase/purchase.py:772
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
@@ -118,7 +118,7 @@ msgid ""
 msgstr "使用这菜单按单号，供应商，产品等搜索您的采购订单，您可以跟踪接收的产品和控制供应商的发票。"
 
 #. module: purchase
-#: code:addons/purchase/wizard/purchase_line_invoice.py:156
+#: code:addons/purchase/wizard/purchase_line_invoice.py:145
 #, python-format
 msgid "Supplier Invoices"
 msgstr "供应商发票"
@@ -135,7 +135,7 @@ msgid "From a Pick list"
 msgstr "来自装箱单"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:660
+#: code:addons/purchase/purchase.py:708
 #, python-format
 msgid "No Pricelist !"
 msgstr "没有价格表！"
@@ -161,7 +161,6 @@ msgid "Company"
 msgstr "公司"
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
@@ -221,7 +220,7 @@ msgid "Partial Picking"
 msgstr "部分装箱单"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:296
+#: code:addons/purchase/purchase.py:288
 #, python-format
 msgid "Purchase order '%s' is confirmed."
 msgstr "采购订单 '%s' 已经确认。"
@@ -268,7 +267,7 @@ msgid "Notes"
 msgstr "备注"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:660
+#: code:addons/purchase/purchase.py:708
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
@@ -418,7 +417,7 @@ msgid "Day"
 msgstr "天"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:344
+#: code:addons/purchase/purchase.py:325
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr "采购订单 “%s” 已经设为草稿"
@@ -435,8 +434,8 @@ msgid "# of Lines"
 msgstr "# 明细"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:696
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:748
+#: code:addons/purchase/purchase.py:788
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
@@ -473,7 +472,7 @@ msgid "It indicates that a picking has been done"
 msgstr "这表示装箱单已完成"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:721
+#: code:addons/purchase/purchase.py:772
 #, python-format
 msgid "Wrong Product UOM !"
 msgstr "错误的产品计量单位！"
@@ -536,6 +535,7 @@ msgstr "装箱单生成供应商发票。采购订单控制发票，发票是基
 #: view:purchase.order.line:0
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
+#: view:stock.picking:0
 msgid "State"
 msgstr "状态"
 
@@ -573,7 +573,7 @@ msgid "Order Lines"
 msgstr "订单明细"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:662
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid "No Partner!"
 msgstr "没业务伙伴！"
@@ -625,10 +625,10 @@ msgid "Invoices generated for a purchase order"
 msgstr "采购订单的发票已开"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:292
-#: code:addons/purchase/purchase.py:362
-#: code:addons/purchase/purchase.py:372
-#: code:addons/purchase/wizard/purchase_line_invoice.py:122
+#: code:addons/purchase/purchase.py:284
+#: code:addons/purchase/purchase.py:347
+#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/wizard/purchase_line_invoice.py:111
 #, python-format
 msgid "Error !"
 msgstr "错误！"
@@ -657,7 +657,7 @@ msgid ""
 msgstr "采购分析使您轻松检查和分析您公司的采购日志和特性，在这菜单您能跟踪您协商的特性和您供应商送货的特性等。"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:788
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "选择的供应商只销售这产品  %s"
@@ -686,15 +686,17 @@ msgid "Reservation Destination"
 msgstr "预定目的地"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:244
+#: code:addons/purchase/purchase.py:235
 #, python-format
 msgid "Invalid action !"
 msgstr "无效动作！"
 
 #. module: purchase
+#: view:purchase.order:0
 #: selection:purchase.order,state:0
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
+#: view:stock.picking:0
 msgid "Done"
 msgstr "完成"
 
@@ -765,7 +767,7 @@ msgid "    Month-1    "
 msgstr "    上月    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:373
+#: code:addons/purchase/purchase.py:348
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr "公司没定义这采购账簿：\"%s\" (id:%d)"
@@ -787,9 +789,12 @@ msgid "You must first cancel all picking attached to this purchase order."
 msgstr "您必须先取消这采购订单的所有装箱单。"
 
 #. module: purchase
+#: report:purchase.order:0
 #: view:purchase.order:0
+#: field:purchase.order,date_order:0
 #: field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
+#: view:stock.picking:0
 msgid "Order Date"
 msgstr "订单日期"
 
@@ -880,7 +885,7 @@ msgid "Confirmed purchase order to invoice"
 msgstr "已确认采购订单要开发票"
 
 #. module: purchase
-#: field:purchase.installer,config_logo:0
+#: field:purchase.config.wizard,config_logo:0
 msgid "Image"
 msgstr "图像"
 
@@ -906,7 +911,6 @@ msgid "Request for Quotation :"
 msgstr "询价单:"
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_waiting
 msgid "Purchase Order Waiting Approval"
 msgstr "等待审批的采购订单"
@@ -934,7 +938,7 @@ msgid ""
 msgstr "这采购已生成装箱单"
 
 #. module: purchase
-#: model:ir.module.module,shortdesc:purchase.module_meta_information
+#: model:ir.actions.todo.category,name:purchase.category_purchase_config
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase Management"
 msgstr "采购管理"
@@ -1109,8 +1113,8 @@ msgid "Extended Filters..."
 msgstr "增加筛选条件"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:362
-#: code:addons/purchase/wizard/purchase_line_invoice.py:123
+#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/wizard/purchase_line_invoice.py:112
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr "未定义此产品“%s“ (id:%d)的费用科目"
@@ -1350,10 +1354,12 @@ msgid "The supplier approves the Purchase Order."
 msgstr "供应商审批了这采购订单。"
 
 #. module: purchase
+#: code:addons/purchase/wizard/purchase_order_group.py:80
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: view:purchase.report:0
+#, python-format
 msgid "Purchase Orders"
 msgstr "采购订单"
 
@@ -1587,6 +1593,7 @@ msgstr "您的订单"
 #: field:purchase.order,minimum_planned_date:0
 #: report:purchase.quotation:0
 #: field:purchase.report,expected_date:0
+#: view:stock.picking:0
 msgid "Expected Date"
 msgstr "预计日期"
 
@@ -1706,7 +1713,7 @@ msgstr ""
 "“已取消”状态当用户取消采购订单时自动设置"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:424
+#: code:addons/purchase/purchase.py:425
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr "采购订单 “%s” 已经取消"
@@ -1735,6 +1742,7 @@ msgstr "你确定要合并此订单吗？"
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 #: view:purchase.report:0
+#: view:stock.picking:0
 msgid "Group By..."
 msgstr "分组..."
 
@@ -1779,11 +1787,12 @@ msgstr "采购"
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 #: field:purchase.order.line,partner_id:0
+#: view:stock.picking:0
 msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:662
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
@@ -1826,6 +1835,7 @@ msgid ""
 msgstr "采购订单唯一的编号，在采购订单生成时计算"
 
 #. module: purchase
+#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"

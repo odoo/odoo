@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:57+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:10+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: base_contact
 #: field:res.partner.contact,title:0
@@ -105,7 +105,6 @@ msgstr "Migrar"
 
 #. module: base_contact
 #: view:res.partner.contact:0
-#: field:res.partner.job,name:0
 msgid "Partner"
 msgstr "Empresa"
 
@@ -177,7 +176,6 @@ msgstr ""
 "    "
 
 #. module: base_contact
-#: model:ir.module.module,shortdesc:base_contact.module_meta_information
 #: model:process.process,name:base_contact.process_process_basecontactprocess0
 msgid "Base Contact"
 msgstr "Contacto base"
@@ -229,7 +227,7 @@ msgstr "Cargos y direcciones"
 
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_contact
-#: field:res.partner.job,contact_id:0
+#: field:res.partner.address,contact_id:0
 msgid "Contact"
 msgstr "Contacto"
 
@@ -254,7 +252,7 @@ msgid "Configuration Progress"
 msgstr "Progreso de configuración"
 
 #. module: base_contact
-#: field:res.partner.contact,name:0
+#: field:res.partner.contact,last_name:0
 msgid "Last Name"
 msgstr "Apellido"
 
@@ -300,8 +298,7 @@ msgstr "Buscar contacto"
 #: model:ir.ui.menu,name:base_contact.menu_partner_contact_form
 #: model:ir.ui.menu,name:base_contact.menu_purchases_partner_contact_form
 #: model:process.node,name:base_contact.process_node_contacts0
-#: view:res.partner:0
-#: field:res.partner.address,job_ids:0
+#: field:res.partner.location,job_ids:0
 msgid "Contacts"
 msgstr "Contactos"
 
@@ -352,7 +349,6 @@ msgstr "Configurar"
 
 #. module: base_contact
 #: field:res.partner.contact,email:0
-#: field:res.partner.job,email:0
 msgid "E-Mail"
 msgstr "Correo electrónico"
 
@@ -423,6 +419,7 @@ msgstr "General"
 
 #. module: base_contact
 #: view:res.partner.contact:0
+#: field:res.partner.contact,photo:0
 msgid "Photo"
 msgstr "Foto"
 
@@ -494,7 +491,7 @@ msgid "Open Jobs"
 msgstr "Abrir trabajos"
 
 #. module: base_contact
-#: field:base.contact.installer,name:0
+#: field:res.partner.contact,name:0
 msgid "Name"
 msgstr "Nombre"
 
@@ -515,12 +512,12 @@ msgstr "Migración direcciones"
 
 #. module: base_contact
 #: view:res.partner:0
+#: view:res.partner.address:0
 msgid "Postal Address"
 msgstr "Dirección postal"
 
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_addresses0
-#: view:res.partner:0
 msgid "Addresses"
 msgstr "Direcciones"
 

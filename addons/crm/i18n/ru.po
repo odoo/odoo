@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:03+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:15+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -24,6 +24,7 @@ msgstr "# Кандидатов"
 #. module: crm
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
+#: view:crm.lead.report:0
 #: selection:crm.lead.report,type:0
 msgid "Lead"
 msgstr "Кандидат"
@@ -76,6 +77,7 @@ msgid "Today"
 msgstr "Сегодня"
 
 #. module: crm
+#: view:crm.lead2opportunity.partner:0
 #: view:crm.merge.opportunity:0
 msgid "Select Opportunities"
 msgstr "Выберите предложения"
@@ -84,7 +86,6 @@ msgstr "Выберите предложения"
 #: view:crm.meeting:0
 #: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
-#: view:crm.send.mail:0
 msgid " "
 msgstr " "
 
@@ -100,7 +101,7 @@ msgid "Previous Stage"
 msgstr "Предидущий этап"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_add_note.py:26
+#: code:addons/crm/wizard/crm_add_note.py:28
 #, python-format
 msgid "Can not add note!"
 msgstr "Не могу добавить примечание !"
@@ -112,7 +113,6 @@ msgstr "Название этапа"
 
 #. module: crm
 #: view:crm.lead.report:0
-#: field:crm.lead.report,day:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,day:0
 msgid "Day"
@@ -124,13 +124,13 @@ msgid "The code of the sales team must be unique !"
 msgstr "Код отдела продаж должен быть уникальным !"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:95
+#: code:addons/crm/crm_lead.py:551
 #, python-format
 msgid "Lead '%s' has been converted to an opportunity."
 msgstr "Кандидат '%s' был преобразован в предложение."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:228
+#: code:addons/crm/crm_lead.py:294
 #, python-format
 msgid "The lead '%s' has been closed."
 msgstr "Кандидат '%s'  был закрыт"
@@ -141,10 +141,10 @@ msgid "No Repeat"
 msgstr "Не повторять"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
-#: code:addons/crm/wizard/crm_lead_to_partner.py:55
-#: code:addons/crm/wizard/crm_phonecall_to_partner.py:52
+#: code:addons/crm/crm_lead.py:491
+#: code:addons/crm/crm_lead.py:826
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:104
+#: code:addons/crm/wizard/crm_lead_to_partner.py:47
 #, python-format
 msgid "Warning !"
 msgstr "Внимание!"
@@ -202,14 +202,16 @@ msgid "Opportunities Analysis"
 msgstr "Анализ предложений"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,partner_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,partner_id:0
-#: field:crm.lead2opportunity,partner_id:0
 #: field:crm.lead2opportunity.partner,partner_id:0
+#: field:crm.lead2opportunity.partner.mass,partner_id:0
 #: field:crm.lead2partner,partner_id:0
 #: view:crm.meeting:0
 #: field:crm.meeting,partner_id:0
+#: field:crm.opportunity2phonecall,partner_id:0
 #: field:crm.partner2opportunity,partner_id:0
 #: view:crm.phonecall:0
 #: field:crm.phonecall,partner_id:0
@@ -217,6 +219,7 @@ msgstr "Анализ предложений"
 #: field:crm.phonecall.report,partner_id:0
 #: field:crm.phonecall2opportunity,partner_id:0
 #: field:crm.phonecall2partner,partner_id:0
+#: field:crm.phonecall2phonecall,partner_id:0
 #: model:ir.model,name:crm.model_res_partner
 #: model:process.node,name:crm.process_node_partner0
 msgid "Partner"
@@ -230,9 +233,7 @@ msgstr "Организатор"
 
 #. module: crm
 #: view:crm.phonecall:0
-#: view:crm.phonecall2phonecall:0
 #: model:ir.actions.act_window,name:crm.phonecall_to_phonecall_act
-#: view:res.partner:0
 msgid "Schedule Other Call"
 msgstr "Запланировать другой звонок"
 
@@ -242,12 +243,10 @@ msgid "Edit all Occurrences  of recurrent Meeting."
 msgstr "Изменить все повторяющиеся встречи"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_opportunity_to_phonecall.py:134
-#: code:addons/crm/wizard/crm_phonecall_to_phonecall.py:89
+#: code:addons/crm/crm_phonecall.py:216
 #: model:crm.case.categ,name:crm.categ_meet3
 #: view:crm.phonecall:0
 #: model:ir.ui.menu,name:crm.menu_crm_config_phonecall
-#: view:res.partner:0
 #, python-format
 msgid "Phone Call"
 msgstr "Звонок"
@@ -258,7 +257,7 @@ msgid "Opt-Out"
 msgstr "Отказ"
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:108
+#: code:addons/crm/crm_lead.py:323
 #, python-format
 msgid "The opportunity '%s' has been marked as lost."
 msgstr "Предложение '%s' было отмечено как проигранное."
@@ -363,6 +362,7 @@ msgstr "Имя контакта"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.lead2partner,action:0
 #: selection:crm.phonecall2partner,action:0
 msgid "Link to an existing partner"
@@ -370,8 +370,11 @@ msgstr "Ссылка на существующего партнера"
 
 #. module: crm
 #: view:crm.lead:0
+#: field:crm.lead,contact_id:0
 #: view:crm.meeting:0
+#: field:crm.opportunity2phonecall,contact_name:0
 #: field:crm.phonecall,partner_contact:0
+#: field:crm.phonecall2phonecall,contact_name:0
 msgid "Contact"
 msgstr "Контакт"
 
@@ -391,7 +394,7 @@ msgid "Regular Expression on Case History"
 msgstr "Регулярное выражение по истории вопроса"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:209
+#: code:addons/crm/crm_lead.py:274
 #, python-format
 msgid "The lead '%s' has been opened."
 msgstr "Кандидат '%s' был открыт"
@@ -469,8 +472,8 @@ msgid "Update Date"
 msgstr "Дата изменения"
 
 #. module: crm
-#: view:crm.lead2opportunity.action:0
-#: field:crm.lead2opportunity.action,name:0
+#: field:crm.lead2opportunity.partner,name:0
+#: field:crm.lead2opportunity.partner.mass,name:0
 msgid "Select Action"
 msgstr "Выбрать действие"
 
@@ -482,6 +485,7 @@ msgstr "Выбрать действие"
 #: field:crm.lead.report,categ_id:0
 #: field:crm.opportunity2phonecall,categ_id:0
 #: field:crm.phonecall,categ_id:0
+#: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,categ_id:0
 #: field:crm.phonecall2phonecall,categ_id:0
 msgid "Category"
@@ -538,16 +542,10 @@ msgid "Very first contact with new prospect"
 msgstr "Самый первый перспективный контакт"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:278
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:197
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:231
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:299
-#: view:crm.lead2opportunity:0
+#: view:crm.lead2opportunity.partner:0
 #: view:crm.partner2opportunity:0
-#: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity
 #: model:ir.actions.act_window,name:crm.action_view_crm_partner2opportunity
 #: model:ir.actions.act_window,name:crm.crm_partner2opportunity
-#, python-format
 msgid "Create Opportunity"
 msgstr "Создать предложение"
 
@@ -557,7 +555,7 @@ msgid "Configure"
 msgstr "Настроить"
 
 #. module: crm
-#: code:addons/crm/crm.py:378
+#: code:addons/crm/crm.py:433
 #: view:crm.lead:0
 #: view:res.partner:0
 #, python-format
@@ -570,7 +568,8 @@ msgid "Customer & Supplier Relationship Management"
 msgstr "Управление взаимодействием с заказчиками и поставщиками"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "June"
@@ -603,7 +602,8 @@ msgid "crm.send.mail.attachment"
 msgstr "crm.send.mail.attachment"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "October"
@@ -750,6 +750,7 @@ msgstr ""
 
 #. module: crm
 #: field:crm.case.section,resource_calendar_id:0
+#: model:ir.ui.menu,name:crm.menu_action_resource_calendar_form
 msgid "Working Time"
 msgstr "Время работы"
 
@@ -836,21 +837,16 @@ msgstr "Создание кандидатов"
 
 #. module: crm
 #: view:board.board:0
-#: model:ir.ui.menu,name:crm.menu_board_statistics_dash
 msgid "Statistics Dashboard"
 msgstr "Панель статистики"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:88
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:98
-#: code:addons/crm/wizard/crm_partner_to_opportunity.py:101
-#: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:117
+#: code:addons/crm/crm_lead.py:716
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
+#: view:crm.lead.report:0
 #: selection:crm.lead.report,type:0
-#: field:crm.lead2opportunity,name:0
 #: field:crm.meeting,opportunity_id:0
-#: field:crm.phonecall,opportunity_id:0
 #, python-format
 msgid "Opportunity"
 msgstr "Предложение"
@@ -876,7 +872,6 @@ msgid "Search Phonecalls"
 msgstr "Искать звонки"
 
 #. module: crm
-#: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2partner:0
 #: view:crm.phonecall2partner:0
 msgid "Continue"
@@ -967,6 +962,8 @@ msgstr "Дает последовательность при отображен�
 
 #. module: crm
 #: view:crm.lead:0
+#: field:crm.lead2opportunity.partner,opportunity_ids:0
+#: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
 #: field:crm.merge.opportunity,opportunity_ids:0
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
 #: model:ir.ui.menu,name:crm.menu_crm_case_opp
@@ -1011,7 +1008,8 @@ msgid "Mark Lost"
 msgstr "Отметить \"Проиграна\""
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "March"
@@ -1034,9 +1032,7 @@ msgid "Show time as"
 msgstr "Показать время как"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:264
 #: view:crm.phonecall2partner:0
-#, python-format
 msgid "Create Partner"
 msgstr "Создать партнера"
 
@@ -1071,7 +1067,7 @@ msgid "Next Stage"
 msgstr "Следующая стадия"
 
 #. module: crm
-#: view:board.board:0
+#: view:crm.meeting:0
 msgid "My Meetings"
 msgstr "Мои встречи"
 
@@ -1086,10 +1082,9 @@ msgid "Opt-In"
 msgstr "Подписан"
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:208
-#: code:addons/crm/crm_phonecall.py:185
-#: code:addons/crm/wizard/crm_phonecall_to_meeting.py:55
-#: code:addons/crm/wizard/crm_phonecall_to_meeting.py:137
+#: code:addons/crm/crm_lead.py:809
+#: code:addons/crm/crm_phonecall.py:295
+#: code:addons/crm/wizard/crm_phonecall_to_meeting.py:83
 #: view:crm.meeting:0
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_meeting_new
 #: model:ir.actions.act_window,name:crm.crm_case_categ_meet
@@ -1145,7 +1140,6 @@ msgid "Partner Segmentations"
 msgstr "Классификация партнеров"
 
 #. module: crm
-#: view:crm.meeting:0
 #: field:crm.meeting,user_id:0
 #: view:crm.phonecall:0
 #: field:crm.phonecall,user_id:0
@@ -1165,12 +1159,10 @@ msgstr "Статистика"
 
 #. module: crm
 #: view:crm.meeting:0
-#: field:crm.send.mail,email_from:0
 msgid "From"
 msgstr "От"
 
 #. module: crm
-#: view:crm.lead2opportunity.action:0
 #: view:res.partner:0
 msgid "Next"
 msgstr "Следующий"
@@ -1182,7 +1174,6 @@ msgstr "Этап:"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead5
-#: model:crm.case.stage,name:crm.stage_opportunity5
 #: view:crm.lead:0
 msgid "Won"
 msgstr "Выиграна"
@@ -1203,13 +1194,10 @@ msgid "HTML formatting?"
 msgstr "Форматирование HTML ?"
 
 #. module: crm
-#: field:crm.case.stage,type:0
 #: field:crm.lead,type:0
 #: field:crm.lead.report,type:0
-#: view:crm.meeting:0
-#: view:crm.phonecall:0
-#: view:crm.phonecall.report:0
-#: view:res.partner:0
+#: view:crm.opportunity2phonecall:0
+#: view:crm.phonecall2phonecall:0
 msgid "Type"
 msgstr "Тип"
 
@@ -1234,17 +1222,17 @@ msgid "Attachment"
 msgstr "Вложение"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "August"
 msgstr "Август"
 
 #. module: crm
-#: view:crm.lead:0
 #: field:crm.lead,create_date:0
-#: field:crm.lead.report,creation_date:0
 #: field:crm.meeting,create_date:0
+#: view:crm.phonecall:0
 #: field:crm.phonecall,create_date:0
 #: field:crm.phonecall.report,creation_date:0
 msgid "Creation Date"
@@ -1263,7 +1251,6 @@ msgstr "Повторяющийся ID"
 #. module: crm
 #: view:crm.lead:0
 #: view:crm.meeting:0
-#: field:crm.send.mail,subject:0
 #: view:res.partner:0
 msgid "Subject"
 msgstr "Тема"
@@ -1274,13 +1261,11 @@ msgid "Tue"
 msgstr "Вт"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:300
 #: view:crm.case.stage:0
 #: view:crm.lead:0
 #: field:crm.lead,stage_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,stage_id:0
-#, python-format
 msgid "Stage"
 msgstr "Этап"
 
@@ -1390,15 +1375,12 @@ msgstr ""
 #: view:crm.case.stage:0
 #: model:ir.actions.act_window,name:crm.crm_case_stage_act
 #: model:ir.actions.act_window,name:crm.crm_lead_stage_act
-#: model:ir.actions.act_window,name:crm.crm_opportunity_stage_act
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
-#: model:ir.ui.menu,name:crm.menu_crm_opportunity_stage_act
 msgid "Stages"
 msgstr "Этапы"
 
 #. module: crm
 #: field:crm.lead,planned_revenue:0
-#: field:crm.lead2opportunity,planned_revenue:0
 #: field:crm.partner2opportunity,planned_revenue:0
 #: field:crm.phonecall2opportunity,planned_revenue:0
 msgid "Expected Revenue"
@@ -1413,7 +1395,8 @@ msgstr ""
 "Создать специальные категории звонков для лучшего их отслеживания в системе."
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "September"
@@ -1448,6 +1431,7 @@ msgstr "Управление техподдержкой"
 
 #. module: crm
 #: field:crm.partner2opportunity,name:0
+#: field:crm.phonecall2opportunity,name:0
 msgid "Opportunity Name"
 msgstr "Название предложения"
 
@@ -1506,13 +1490,12 @@ msgstr ""
 "следующий ниже критерий будет проигнорирован."
 
 #. module: crm
-#: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2partner:0
 #: view:crm.phonecall:0
 #: view:crm.phonecall2partner:0
+#: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
 #: model:ir.actions.act_window,name:crm.action_crm_lead2partner
 #: model:ir.actions.act_window,name:crm.action_crm_phonecall2partner
-#: view:res.partner:0
 msgid "Create a Partner"
 msgstr "Создать партнера"
 
@@ -1532,9 +1515,7 @@ msgid "Days to Close"
 msgstr "Дней до закрытия"
 
 #. module: crm
-#: field:crm.add.note,attachment_ids:0
 #: field:crm.case.section,complete_name:0
-#: field:crm.send.mail,attachment_ids:0
 msgid "unknown"
 msgstr "неизвестный"
 
@@ -1551,7 +1532,6 @@ msgid "Partner To Opportunity"
 msgstr "Партнер в Предложение"
 
 #. module: crm
-#: view:crm.meeting:0
 #: field:crm.meeting,date:0
 #: field:crm.opportunity2phonecall,date:0
 #: view:crm.phonecall:0
@@ -1562,9 +1542,7 @@ msgid "Date"
 msgstr "Дата"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.lead.report:0
-#: view:crm.meeting:0
 #: view:crm.phonecall.report:0
 msgid "Extended Filters..."
 msgstr "Расширенные фильтры..."
@@ -1627,7 +1605,6 @@ msgstr "Подотделы"
 #: field:crm.lead,state:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,state:0
-#: view:crm.meeting:0
 #: field:crm.meeting,state:0
 #: field:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
@@ -1651,12 +1628,12 @@ msgid "References"
 msgstr "Ссылки"
 
 #. module: crm
-#: code:addons/crm/crm.py:392
+#: code:addons/crm/crm.py:441
 #: view:crm.lead:0
-#: view:crm.lead2opportunity:0
-#: view:crm.lead2opportunity.action:0
 #: view:crm.lead2opportunity.partner:0
+#: view:crm.lead2opportunity.partner.mass:0
 #: view:crm.lead2partner:0
+#: view:crm.partner2opportunity:0
 #: view:crm.phonecall:0
 #: view:crm.phonecall2partner:0
 #: view:res.partner:0
@@ -1755,10 +1732,8 @@ msgstr ""
 
 #. module: crm
 #: field:crm.case.categ,name:0
-#: field:crm.installer,name:0
 #: field:crm.lead,name:0
 #: field:crm.segmentation,name:0
-#: field:crm.send.mail.attachment,name:0
 msgid "Name"
 msgstr "Название"
 
@@ -1883,7 +1858,6 @@ msgstr "Планируемая выручка"
 #. module: crm
 #: view:crm.lead:0
 #: view:crm.lead.report:0
-#: view:crm.meeting:0
 #: view:crm.phonecall:0
 #: view:crm.phonecall.report:0
 msgid "Group By..."
@@ -1926,7 +1900,7 @@ msgid "Zip"
 msgstr "Индекс"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:213
+#: code:addons/crm/crm_lead.py:278
 #, python-format
 msgid "The case '%s' has been opened."
 msgstr "Вопрос '%s'  был открыт."
@@ -1938,8 +1912,6 @@ msgstr "title"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone1
-#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_incoming0
-#: model:ir.ui.menu,name:crm.menu_crm_case_phone_inbound
 msgid "Inbound"
 msgstr "Входящие"
 
@@ -2013,6 +1985,7 @@ msgstr "Повторяющаяся встреча"
 #: view:crm.case.section:0
 #: view:crm.lead:0
 #: field:crm.lead,description:0
+#: view:crm.opportunity2phonecall:0
 msgid "Notes"
 msgstr "Заметки"
 
@@ -2069,23 +2042,21 @@ msgid "Prospect is converting to business partner"
 msgstr "Перспектива преобразуется в бизнес-партнера"
 
 #. module: crm
-#: view:crm.lead2opportunity:0
-#: view:crm.partner2opportunity:0
 #: model:ir.actions.act_window,name:crm.phonecall2opportunity_act
 msgid "Convert To Opportunity"
 msgstr "Преобразовать в предложение"
 
 #. module: crm
 #: view:crm.phonecall:0
+#: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
+#: selection:crm.phonecall.report,state:0
 #: view:res.partner:0
 msgid "Held"
 msgstr "Приостановлено"
 
 #. module: crm
 #: view:crm.lead:0
-#: view:crm.phonecall:0
-#: view:res.partner:0
 msgid "Reset to Draft"
 msgstr "Установить в \"черновик\""
 
@@ -2159,6 +2130,7 @@ msgid "Lead To Opportunity Partner"
 msgstr "Кандидат в партнера предложения"
 
 #. module: crm
+#: field:crm.lead,location_id:0
 #: field:crm.meeting,location:0
 msgid "Location"
 msgstr "Расположение"
@@ -2179,7 +2151,7 @@ msgid "Schedule a normal or phone meeting"
 msgstr "Назначить обычную встречу или звонок"
 
 #. module: crm
-#: code:addons/crm/crm.py:375
+#: code:addons/crm/crm.py:430
 #, python-format
 msgid "Error !"
 msgstr "Ошибка!"
@@ -2231,7 +2203,8 @@ msgid "Are you sure you want to create a partner based on this Phonecall ?"
 msgstr "Вы уверены, что хотите создать партнера используя этот звонок ?"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "July"
@@ -2288,6 +2261,7 @@ msgstr "MS-Outlook"
 
 #. module: crm
 #: view:crm.phonecall:0
+#: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
 #: view:res.partner:0
 msgid "Not Held"
@@ -2300,7 +2274,6 @@ msgstr "Вероятность"
 
 #. module: crm
 #: view:crm.lead.report:0
-#: field:crm.lead.report,month:0
 #: field:crm.meeting,month_list:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,month:0
@@ -2341,6 +2314,7 @@ msgstr ""
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.lead2partner,action:0
 #: selection:crm.phonecall2partner,action:0
 msgid "Create a new partner"
@@ -2353,8 +2327,11 @@ msgid "Start Date"
 msgstr "Дата начала"
 
 #. module: crm
+#: view:crm.phonecall:0
 #: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
+#: selection:crm.phonecall.report,state:0
+#: view:res.partner:0
 msgid "Todo"
 msgstr "Сделать"
 
@@ -2379,9 +2356,8 @@ msgid "Reset to Unconfirmed"
 msgstr "Сбросить в \"Неподтвержденный\""
 
 #. module: crm
-#: code:addons/crm/wizard/crm_add_note.py:40
-#: view:crm.add.note:0
-#, python-format
+#: field:crm.opportunity2phonecall,note:0
+#: field:crm.phonecall2phonecall,note:0
 msgid "Note"
 msgstr "Заметка"
 
@@ -2405,10 +2381,7 @@ msgstr "Низкий"
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
 #: field:crm.meeting,date_closed:0
-#: selection:crm.merge.opportunity,state:0
 #: field:crm.phonecall,date_closed:0
-#: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 msgid "Closed"
 msgstr "Закрыто"
 
@@ -2423,16 +2396,13 @@ msgid "Internal Meeting"
 msgstr "Внутреннее совещание"
 
 #. module: crm
-#: code:addons/crm/crm.py:411
+#: code:addons/crm/crm.py:454
 #: selection:crm.add.note,state:0
 #: view:crm.lead:0
 #: selection:crm.lead,state:0
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
-#: selection:crm.merge.opportunity,state:0
-#: selection:crm.phonecall,state:0
 #: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 #, python-format
 msgid "Pending"
 msgstr "В ожидании"
@@ -2443,7 +2413,6 @@ msgid "Customer Meeting"
 msgstr "Встреча с заказчиком"
 
 #. module: crm
-#: view:crm.lead:0
 #: field:crm.lead,email_cc:0
 msgid "Global CC"
 msgstr "Глобальная копия"
@@ -2464,21 +2433,23 @@ msgstr "Количество дней на открытие вопроса"
 
 #. module: crm
 #: field:crm.lead,phone:0
+#: field:crm.opportunity2phonecall,phone:0
 #: field:crm.phonecall,partner_phone:0
+#: field:crm.phonecall2phonecall,phone:0
 msgid "Phone"
 msgstr "Телефон"
 
 #. module: crm
+#: field:crm.case.channel,active:0
 #: field:crm.case.section,active:0
 #: field:crm.lead,active:0
-#: view:crm.lead.report:0
 #: field:crm.meeting,active:0
 #: field:crm.phonecall,active:0
 msgid "Active"
 msgstr "Активен"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:306
+#: code:addons/crm/crm_lead.py:847
 #, python-format
 msgid "The stage of opportunity '%s' has been changed to '%s'."
 msgstr "Этап предложения '%s'  изменен на '%s'."
@@ -2529,8 +2500,11 @@ msgstr "Это может помочь ассоциациям в сборе ср
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,action:0
+#: field:crm.lead2opportunity.partner.mass,action:0
 #: field:crm.lead2partner,action:0
+#: field:crm.opportunity2phonecall,action:0
 #: field:crm.phonecall2partner,action:0
+#: field:crm.phonecall2phonecall,action:0
 msgid "Action"
 msgstr "Действие"
 
@@ -2578,7 +2552,6 @@ msgstr "Другое"
 #. module: crm
 #: view:crm.meeting:0
 #: selection:crm.meeting,state:0
-#: selection:crm.phonecall,state:0
 msgid "Done"
 msgstr "Сделано"
 
@@ -2598,15 +2571,10 @@ msgid "_Schedule Call"
 msgstr "_Запланировать звонок"
 
 #. module: crm
-#: code:addons/crm/crm.py:326
-#: selection:crm.add.note,state:0
+#: code:addons/crm/crm.py:396
 #: view:crm.lead:0
-#: selection:crm.lead,state:0
+#: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
-#: selection:crm.merge.opportunity,state:0
-#: view:crm.phonecall:0
-#: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 #: view:res.partner:0
 #, python-format
 msgid "Open"
@@ -2643,7 +2611,7 @@ msgid "Recurrent"
 msgstr "Повторяющийся"
 
 #. module: crm
-#: code:addons/crm/crm.py:397
+#: code:addons/crm/crm.py:446
 #, python-format
 msgid "The case '%s' has been cancelled."
 msgstr "Вопрос '%s' отменен."
@@ -2659,7 +2627,6 @@ msgid "Send new email"
 msgstr "Послать новое эл. письмо"
 
 #. module: crm
-#: view:board.board:0
 #: model:ir.actions.act_window,name:crm.act_my_oppor
 msgid "My Open Opportunities"
 msgstr "Мои открытые предложения"
@@ -2710,7 +2677,6 @@ msgstr "Объединить с существующим предложение�
 
 #. module: crm
 #: help:crm.lead,state:0
-#: help:crm.phonecall,state:0
 msgid ""
 "The state is set to 'Draft', when a case is created.                         "
 "         \n"
@@ -2834,7 +2800,6 @@ msgstr "Назначить на"
 
 #. module: crm
 #: field:crm.add.note,state:0
-#: field:crm.send.mail,state:0
 msgid "Set New State To"
 msgstr "Установить новое состояние в"
 
@@ -2859,8 +2824,6 @@ msgstr "Ответить"
 
 #. module: crm
 #: view:board.board:0
-#: model:ir.actions.act_window,name:crm.open_board_crm
-#: model:ir.ui.menu,name:crm.menu_board_crm
 msgid "Sales Dashboard"
 msgstr "Панель продаж"
 
@@ -2894,8 +2857,6 @@ msgstr "Четвертый"
 
 #. module: crm
 #: selection:crm.add.note,state:0
-#: selection:crm.merge.opportunity,state:0
-#: selection:crm.send.mail,state:0
 msgid "Unchanged"
 msgstr "Не изменен"
 
@@ -2996,7 +2957,7 @@ msgid "Add Internal Note"
 msgstr "Добавить внутреннюю заметку"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:304
+#: code:addons/crm/crm_lead.py:845
 #, python-format
 msgid "The stage of lead '%s' has been changed to '%s'."
 msgstr "Этап кандидата '%s' изменен на '%s'."
@@ -3019,10 +2980,7 @@ msgid "Change Probability on next and previous stages."
 msgstr "Изменение вероятности на следующей и предыдущей стадии."
 
 #. module: crm
-#: code:addons/crm/crm.py:455
-#: code:addons/crm/crm.py:457
-#: code:addons/crm/crm_action_rule.py:66
-#: code:addons/crm/wizard/crm_send_email.py:141
+#: code:addons/crm/crm_action_rule.py:61
 #, python-format
 msgid "Error!"
 msgstr "Ошибка!"
@@ -3038,10 +2996,8 @@ msgstr "Кратко о звонке"
 #: selection:crm.lead,state:0
 #: selection:crm.lead.report,state:0
 #: selection:crm.meeting,state:0
-#: selection:crm.merge.opportunity,state:0
 #: selection:crm.phonecall,state:0
 #: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 msgid "Cancelled"
 msgstr "Отменено"
 
@@ -3147,6 +3103,7 @@ msgstr "Звонок в звонок"
 
 #. module: crm
 #: view:crm.lead:0
+#: model:ir.actions.act_window,name:crm.opportunity2phonecall_act
 msgid "Schedule/Log Call"
 msgstr "Запланировать/Описать звонок"
 
@@ -3190,7 +3147,7 @@ msgid "Total of Planned Revenue"
 msgstr "Всего запланированная выручка"
 
 #. module: crm
-#: code:addons/crm/crm.py:375
+#: code:addons/crm/crm.py:430
 #, python-format
 msgid ""
 "You can not escalate, You are already at the top level regarding your sales-"
@@ -3215,8 +3172,11 @@ msgid "Success Rate (%)"
 msgstr "Шанс (%)"
 
 #. module: crm
+#: selection:crm.add.note,state:0
 #: model:crm.case.stage,name:crm.stage_lead1
-#: model:crm.case.stage,name:crm.stage_opportunity1
+#: view:crm.lead:0
+#: selection:crm.lead,state:0
+#: view:crm.lead.report:0
 msgid "New"
 msgstr "Создать"
 
@@ -3234,11 +3194,11 @@ msgid "Email"
 msgstr "Эл. почта"
 
 #. module: crm
+#: view:crm.case.channel:0
 #: view:crm.lead:0
 #: field:crm.lead,channel_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,channel_id:0
-#: field:crm.phonecall,canal_id:0
 msgid "Channel"
 msgstr "Канал"
 
@@ -3341,10 +3301,8 @@ msgstr "Чт"
 #: view:crm.add.note:0
 #: view:crm.merge.opportunity:0
 #: view:crm.opportunity2phonecall:0
-#: view:crm.partner2opportunity:0
 #: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
-#: view:crm.send.mail:0
 msgid "_Cancel"
 msgstr "_Отмена"
 
@@ -3366,7 +3324,6 @@ msgstr "Ежедневно"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
-#: model:crm.case.stage,name:crm.stage_opportunity2
 msgid "Qualification"
 msgstr "Уточнение"
 
@@ -3381,7 +3338,8 @@ msgid "First"
 msgstr "Первый"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "December"
@@ -3447,6 +3405,7 @@ msgid "Salesman"
 msgstr "Менеджер продаж"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,date_deadline:0
 msgid "Expected Closing"
 msgstr "Ожидаемое закрытие"
@@ -3473,8 +3432,6 @@ msgstr "Имя партнера"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone2
-#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
-#: model:ir.ui.menu,name:crm.menu_crm_case_phone_outbound
 msgid "Outbound"
 msgstr "Исходящий"
 
@@ -3492,10 +3449,8 @@ msgstr "Сотрудники отдела"
 
 #. module: crm
 #: view:crm.lead:0
-#: field:crm.lead,job_ids:0
 #: view:crm.meeting:0
 #: view:crm.phonecall:0
-#: view:res.partner:0
 msgid "Contacts"
 msgstr "Контакты"
 
@@ -3536,14 +3491,10 @@ msgid "Success Probability"
 msgstr "Вероятность успеха"
 
 #. module: crm
-#: code:addons/crm/crm.py:426
-#: selection:crm.add.note,state:0
-#: selection:crm.lead,state:0
+#: code:addons/crm/crm.py:466
 #: selection:crm.lead.report,state:0
-#: selection:crm.merge.opportunity,state:0
 #: selection:crm.phonecall,state:0
 #: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 #, python-format
 msgid "Draft"
 msgstr "Черновик"
@@ -3618,8 +3569,6 @@ msgid "Meeting Categories"
 msgstr "Категории встреч"
 
 #. module: crm
-#: view:crm.lead2opportunity.partner:0
-#: view:crm.lead2partner:0
 #: view:crm.phonecall2partner:0
 msgid "You may have to verify that this partner does not exist already."
 msgstr ""
@@ -3637,7 +3586,8 @@ msgid "User"
 msgstr "Пользователь"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "November"
@@ -3651,6 +3601,7 @@ msgstr "Нет ID эл. почты в адресе вашей компании!"
 
 #. module: crm
 #: view:crm.lead.report:0
+#: model:ir.actions.act_window,name:crm.act_opportunity_stage
 msgid "Opportunities By Stage"
 msgstr "Предложения по этапам"
 
@@ -3660,7 +3611,8 @@ msgid "Schedule Phone Call"
 msgstr "Запланировать телефонный звонок"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "January"
@@ -3689,10 +3641,7 @@ msgid "Twitter Ads"
 msgstr "Реклама в Twitter"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_add_note.py:26
-#: code:addons/crm/wizard/crm_send_email.py:72
-#: code:addons/crm/wizard/crm_send_email.py:169
-#: code:addons/crm/wizard/crm_send_email.py:270
+#: code:addons/crm/wizard/crm_add_note.py:28
 #, python-format
 msgid "Error"
 msgstr "Ошибка"
@@ -3713,7 +3662,7 @@ msgid "Error ! You can not create recursive profiles."
 msgstr "Ошибка ! Вы не можете создать зацикленные профили."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:232
+#: code:addons/crm/crm_lead.py:296
 #, python-format
 msgid "The case '%s' has been closed."
 msgstr "Вопрос '%s' был закрыт."
@@ -3742,7 +3691,7 @@ msgid "Merged into Opportunity: %s"
 msgstr "Объединено с предложением: %s"
 
 #. module: crm
-#: code:addons/crm/crm.py:347
+#: code:addons/crm/crm.py:409
 #: view:crm.lead:0
 #: view:res.partner:0
 #, python-format
@@ -3752,7 +3701,6 @@ msgstr "Закрыть"
 #. module: crm
 #: view:crm.lead:0
 #: view:crm.phonecall:0
-#: view:res.partner:0
 msgid "Categorization"
 msgstr "Категоризация"
 
@@ -3778,7 +3726,6 @@ msgstr "Четверг"
 
 #. module: crm
 #: view:crm.meeting:0
-#: field:crm.send.mail,email_to:0
 msgid "To"
 msgstr "Кому"
 
@@ -3809,7 +3756,6 @@ msgstr "Мнение"
 #: view:crm.phonecall:0
 #: field:crm.phonecall,description:0
 #: field:crm.segmentation,description:0
-#: view:res.partner:0
 msgid "Description"
 msgstr "Описание"
 
@@ -3819,9 +3765,11 @@ msgstr "Описание"
 #: field:crm.case.resource.type,section_id:0
 #: view:crm.case.section:0
 #: field:crm.case.section,name:0
+#: view:crm.lead:0
 #: field:crm.lead,section_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,section_id:0
+#: field:crm.lead2opportunity.partner.mass,section_id:0
 #: field:crm.meeting,section_id:0
 #: field:crm.opportunity2phonecall,section_id:0
 #: view:crm.phonecall:0
@@ -3834,7 +3782,8 @@ msgid "Sales Team"
 msgstr "Отдел продаж"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "May"
@@ -3846,7 +3795,7 @@ msgid "Interest in Accessories"
 msgstr "Интерес к аксессуарам"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:211
+#: code:addons/crm/crm_lead.py:276
 #, python-format
 msgid "The opportunity '%s' has been opened."
 msgstr "Предложение '%s' было открыто."
@@ -3878,7 +3827,8 @@ msgid "Customer"
 msgstr "Заказчик"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "February"
@@ -3887,13 +3837,11 @@ msgstr "Февраль"
 #. module: crm
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.crm_case_categ_meet_create_partner
-#: view:res.partner:0
 msgid "Schedule a Meeting"
 msgstr "Запланировать встречу"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
-#: model:crm.case.stage,name:crm.stage_opportunity6
 #: view:crm.lead:0
 msgid "Lost"
 msgstr "Проиграно"
@@ -3907,7 +3855,10 @@ msgstr "Страна"
 
 #. module: crm
 #: view:crm.lead:0
-#: selection:crm.lead2opportunity.action,name:0
+#: view:crm.lead2opportunity.partner:0
+#: selection:crm.lead2opportunity.partner,name:0
+#: view:crm.lead2opportunity.partner.mass:0
+#: selection:crm.lead2opportunity.partner.mass,name:0
 #: view:crm.phonecall:0
 #: view:res.partner:0
 msgid "Convert to Opportunity"
@@ -3919,7 +3870,8 @@ msgid "Wednesday"
 msgstr "Среда"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "April"
@@ -3936,7 +3888,8 @@ msgid "Phone calls by user and section"
 msgstr "Звонки по пользователям и секциям"
 
 #. module: crm
-#: selection:crm.lead2opportunity.action,name:0
+#: selection:crm.lead2opportunity.partner,name:0
+#: selection:crm.lead2opportunity.partner.mass,name:0
 msgid "Merge with existing Opportunity"
 msgstr "Объединить с существующим предложением"
 
@@ -3947,7 +3900,6 @@ msgstr "Опция"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead4
-#: model:crm.case.stage,name:crm.stage_opportunity4
 msgid "Negotiation"
 msgstr "Переговоры"
 
@@ -3984,7 +3936,6 @@ msgstr "Второй"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead3
-#: model:crm.case.stage,name:crm.stage_opportunity3
 msgid "Proposition"
 msgstr "Предложение"
 
@@ -3995,7 +3946,6 @@ msgstr "Звонки"
 
 #. module: crm
 #: view:crm.lead.report:0
-#: field:crm.lead.report,name:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,name:0
 msgid "Year"
@@ -4005,9 +3955,3 @@ msgstr "Год"
 #: model:crm.case.resource.type,name:crm.type_lead8
 msgid "Newsletter"
 msgstr "Рассылка"
-
-#~ msgid "Version 4.2"
-#~ msgstr "Версия 4.2"
-
-#~ msgid "Version 4.4"
-#~ msgstr "Версия 4.4"

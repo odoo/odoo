@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:30+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:43+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -86,7 +86,7 @@ msgstr "Fases"
 
 #. module: project_long_term
 #: view:project.phase:0
-#: view:project.resource.allocation:0
+#: view:project.user.allocation:0
 msgid "Group By..."
 msgstr "Agrupar por..."
 
@@ -129,7 +129,7 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr "¡Error! No puede asignar un escalado al mismo proyecto."
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:128
+#: code:addons/project_long_term/project_long_term.py:126
 #, python-format
 msgid "Day"
 msgstr "Día"
@@ -169,14 +169,14 @@ msgstr ""
 #: field:project.compute.tasks,project_id:0
 #: view:project.phase:0
 #: field:project.phase,project_id:0
-#: view:project.resource.allocation:0
-#: field:project.resource.allocation,project_id:0
 #: view:project.task:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,project_id:0
 msgid "Project"
 msgstr "Proyecto"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:50
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Error!"
 msgstr "¡Error!"
@@ -194,7 +194,7 @@ msgid "Warning !"
 msgstr "¡ Aviso !"
 
 #. module: project_long_term
-#: help:project.resource.allocation,date_end:0
+#: help:project.user.allocation,date_end:0
 msgid "Ending Date"
 msgstr "Fecha de fin"
 
@@ -221,7 +221,7 @@ msgid "Compute Phase Scheduling"
 msgstr "Calcular planificación de fases"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:190
+#: code:addons/project_long_term/project_long_term.py:141
 #, python-format
 msgid " (copy)"
 msgstr " (copia)"
@@ -292,10 +292,8 @@ msgid "Compute Scheduling of Task"
 msgstr "Calcular planificación de tarea"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_project_resource
-#: model:ir.ui.menu,name:project_long_term.menu_pm_resources_project1
+#: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource
-#: view:project.resource.allocation:0
 msgid "Resources"
 msgstr "Recursos"
 
@@ -311,7 +309,7 @@ msgstr ""
 "\t           "
 
 #. module: project_long_term
-#: help:project.resource.allocation,date_start:0
+#: help:project.user.allocation,date_start:0
 msgid "Starting Date"
 msgstr "Fecha de inicio"
 
@@ -414,7 +412,7 @@ msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
-#: field:project.resource.allocation,date_start:0
+#: field:project.user.allocation,date_start:0
 msgid "Start Date"
 msgstr "Fecha inicio"
 
@@ -430,7 +428,6 @@ msgstr "Forzar que la fase termine antes de esta fecha"
 
 #. module: project_long_term
 #: view:project.phase:0
-#: selection:project.phase,state:0
 msgid "Draft"
 msgstr "Borrador"
 
@@ -446,7 +443,8 @@ msgid "unknown"
 msgstr "desconocido"
 
 #. module: project_long_term
-#: field:project.resource.allocation,user_id:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,user_id:0
 msgid "User"
 msgstr "Usuario"
 
@@ -521,7 +519,6 @@ msgstr "Responsable"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
-#: field:project.project,resource_calendar_id:0
 msgid "Working Time"
 msgstr "Horario de trabajo"
 
@@ -543,7 +540,6 @@ msgstr "Por favor seleccione el proyecto a planificar"
 
 #. module: project_long_term
 #: view:project.phase:0
-#: field:project.phase,total_hours:0
 msgid "Total Hours"
 msgstr "Total horas"
 
@@ -558,7 +554,7 @@ msgid "Compute Scheduling of Task for specified project."
 msgstr "Calcular planificación de tareas para un proyecto específico"
 
 #. module: project_long_term
-#: view:project.resource.allocation:0
+#: view:project.user.allocation:0
 msgid "Phase"
 msgstr "Fase"
 
@@ -578,7 +574,7 @@ msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,date_end:0
-#: field:project.resource.allocation,date_end:0
+#: field:project.user.allocation,date_end:0
 msgid "End Date"
 msgstr "Fecha de fin"
 
@@ -611,9 +607,9 @@ msgstr "Planificación"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
 #: view:project.phase:0
-#: field:project.resource.allocation,phase_id:0
 #: view:project.task:0
 #: field:project.task,phase_id:0
+#: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
 msgstr "Fase proyecto"
 
@@ -655,9 +651,9 @@ msgid "Resource Leaves"
 msgstr "Ausencias recursos"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.action_project_schedule_tasks
-#: view:project.phase:0
-#: view:project.schedule.tasks:0
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
+#: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
+#: view:project.compute.tasks:0
 msgid "Schedule Tasks"
 msgstr "Planificar tareas"
 
@@ -670,46 +666,3 @@ msgstr "Por defecto en días"
 #: field:project.phase,duration:0
 msgid "Duration"
 msgstr "Duración"
-
-#~ msgid "Working Period"
-#~ msgstr "Periodo de trabajo"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "        Long Term Project management module that tracks planning, "
-#~ "scheduling, resources allocation.\n"
-#~ "        Mainly used with Big project management.\n"
-#~ "            - Project Phases will be maintained by Manager of the project\n"
-#~ "            - Compute Phase Scheduling: Compute start date and end date of "
-#~ "the phases which are in draft,open and pending state of the project given.\n"
-#~ "                                        If no project given then all the "
-#~ "draft,open and pending state phases will be taken\n"
-#~ "            - Compute Task Scheduling: This works same as the scheduler "
-#~ "button on project.phase. It takes the project as argument and computes all "
-#~ "the open,draft and pending tasks\n"
-#~ "            - Schedule Tasks: All the tasks which are in draft,pending and "
-#~ "open state are scheduled with taking the phase's start date\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "        Módulo de Gestión de Proyectos a Largo Plazo que realiza el "
-#~ "seguimiento de planeamiento, programación, asignación de recursos.\n"
-#~ "        Utilizado principalmente con la gestión de proyectos grandes.\n"
-#~ "            - Las Fases del Proyecto serán gestionadas por el Administrador "
-#~ "del proyecto\n"
-#~ "            - Calcula la Programación de Fases: Calcula la fecha de inicio y "
-#~ "fecha de finalización de las fases del proyecto en estado borrador, abierto "
-#~ "y pendiente.\n"
-#~ "                                       Si no hay ningún proyecto concreto, "
-#~ "entonces se llevarán todas las fases en estado borrador, abierto y "
-#~ "pendiente\n"
-#~ "            - Calcula la Programación de Tareas: Esto funciona igual que el "
-#~ "botón programador de project.phase. Toma el proyecto como argumento y "
-#~ "calcula todas las tareas abiertas, en borrador y pendientes.\n"
-#~ "            - Programa tareas: Todas las tareas en estado borrador, "
-#~ "pendiente y abierto se programan desde la fecha de inicio de la fase\n"
-#~ "\n"
-#~ "    "

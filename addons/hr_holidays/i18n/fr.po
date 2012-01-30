@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:12+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:25+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -23,12 +23,12 @@ msgid "Blue"
 msgstr "Bleu"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
 #: field:hr.holidays,holiday_type:0
 msgid "Allocation Type"
 msgstr "Type d'attribution"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr "En attente d'une deuxième approbation"
@@ -60,6 +60,7 @@ msgid "Department"
 msgstr "Département"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Refused"
 msgstr "Refusée"
@@ -135,6 +136,7 @@ msgid "Summary Of Leaves"
 msgstr "Résumé des congés"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: view:hr.holidays:0
 #: selection:hr.holidays,state:0
 msgid "Approved"
@@ -146,7 +148,7 @@ msgid "Refuse"
 msgstr "Refuser"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:337
 #, python-format
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
@@ -156,7 +158,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:board.board:0
-#: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Leaves"
 msgstr "Congés"
 
@@ -171,6 +175,7 @@ msgid "Leaves by Department"
 msgstr "Congés par département"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "Annulé"
@@ -202,7 +207,6 @@ msgid "HR Holidays Summary Report By Employee"
 msgstr "Rapport de synthèse des congés par employé"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
@@ -215,8 +219,8 @@ msgid "Leave Type"
 msgstr "Type de congé"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:186
-#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:199
+#: code:addons/hr_holidays/hr_holidays.py:337
 #, python-format
 msgid "Warning!"
 msgstr "Avertissement !"
@@ -346,9 +350,11 @@ msgid "Total holidays by type"
 msgstr "Total des vacances par type"
 
 #. module: hr_holidays
+#: view:hr.employee:0
 #: view:hr.holidays:0
 #: field:hr.holidays,employee_id:0
 #: field:hr.holidays.remaining.leaves.user,name:0
+#: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
 msgstr "Employé"
 
@@ -410,6 +416,7 @@ msgstr ""
 "validée par un deuxième valideur"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Waiting Approval"
 msgstr "En attente d'approbation"
@@ -444,6 +451,7 @@ msgid "Lavender"
 msgstr "Lavande"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "Leave Requests"
@@ -461,6 +469,7 @@ msgid "Employee's Holidays"
 msgstr "Congés des employés"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: field:hr.holidays,category_id:0
 msgid "Category"
 msgstr "Catégorie"
@@ -560,6 +569,7 @@ msgstr "Congés légaux"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
 msgstr "Résumé des congés"
@@ -606,6 +616,7 @@ msgid "Reasons"
 msgstr "Raisons"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
 msgstr "Analyse des congés"
@@ -644,6 +655,7 @@ msgid "Leave Detail"
 msgstr "Détail du congé"
 
 #. module: hr_holidays
+#: field:hr.holidays,double_validation:0
 #: field:hr.holidays.status,double_validation:0
 msgid "Apply Double Validation"
 msgstr "Appliquer la double validation"
@@ -660,6 +672,7 @@ msgid "Details"
 msgstr "Détails"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
 msgstr "Mes congés"
@@ -690,7 +703,7 @@ msgstr ""
 "d'employés : Allocation/demande par groupe d'employés dans une catégorie"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:186
+#: code:addons/hr_holidays/hr_holidays.py:199
 #, python-format
 msgid "You cannot delete a leave which is not in draft state !"
 msgstr ""
@@ -797,6 +810,7 @@ msgid "Start Date"
 msgstr "Date de début"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"

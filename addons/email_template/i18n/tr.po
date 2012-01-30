@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:08+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:21+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -52,7 +52,8 @@ msgid "Personal Emails"
 msgstr "Kişisel E-postalar"
 
 #. module: email_template
-#: field:email.template,file_name:0
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
 msgid "Report Filename"
 msgstr "Rapor Dosyasının adı"
 
@@ -92,7 +93,7 @@ msgid "Body"
 msgstr "Gövde"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:304
+#: code:addons/email_template/email_template.py:217
 #, python-format
 msgid "Deletion of Record failed"
 msgstr "Kayıt Silinemedi"
@@ -221,9 +222,7 @@ msgstr "Sihirbaz Tamamlandı"
 
 #. module: email_template
 #: field:email.template,reply_to:0
-#: field:email_template.mailbox,reply_to:0
 #: field:email_template.preview,reply_to:0
-#: field:email_template.send.wizard,reply_to:0
 msgid "Reply-To"
 msgstr "Yanıtla"
 
@@ -259,7 +258,8 @@ msgid "OK"
 msgstr "Tamam"
 
 #. module: email_template
-#: field:email_template.account,auto_delete:0
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
 msgid "Auto Delete"
 msgstr "Otomatik Sil"
 
@@ -296,7 +296,7 @@ msgid "From Email"
 msgstr "Gönderen E-Posta"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:304
+#: code:addons/email_template/email_template.py:217
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
@@ -336,10 +336,8 @@ msgstr ""
 "burada belirtebilirsiniz. Yer tutucular kullanılabilir."
 
 #. module: email_template
-#: field:email.template,def_subject:0
-#: field:email_template.mailbox,subject:0
+#: field:email.template,subject:0
 #: field:email_template.preview,subject:0
-#: field:email_template.send.wizard,subject:0
 msgid "Subject"
 msgstr "Konu"
 
@@ -350,13 +348,13 @@ msgid "Reason: %s"
 msgstr "Neden: %s"
 
 #. module: email_template
-#: field:email_template.mailbox,email_from:0
+#: field:email.template,email_from:0
+#: field:email_template.preview,email_from:0
 msgid "From"
 msgstr "Gönderen"
 
 #. module: email_template
-#: field:email_template.preview,ref_template:0
-#: field:email_template.send.wizard,ref_template:0
+#: field:mail.compose.message,template_id:0
 msgid "Template"
 msgstr "Taslak"
 
@@ -400,8 +398,8 @@ msgid "Body (Text-Web Client Only)"
 msgstr "Gövde (Metin - Sadece Web Arayüzünde)"
 
 #. module: email_template
-#: field:email_template.account,state:0
-#: view:email_template.mailbox:0
+#: field:email.template,state:0
+#: field:email_template.preview,state:0
 msgid "State"
 msgstr "Durum"
 
@@ -507,7 +505,6 @@ msgstr "Alt Alan"
 
 #. module: email_template
 #: view:email.template:0
-#: view:email_template.mailbox:0
 msgid "Advanced"
 msgstr "Gelişmiş"
 
@@ -563,6 +560,7 @@ msgstr ""
 
 #. module: email_template
 #: help:email.template,track_campaign_item:0
+#: help:email_template.preview,track_campaign_item:0
 msgid ""
 "Enable this is you wish to include a special tracking marker in outgoing "
 "emails so you can identify replies and link them back to the corresponding "
@@ -581,6 +579,7 @@ msgstr "İmza"
 
 #. module: email_template
 #: field:email.template,sub_object:0
+#: field:email_template.preview,sub_object:0
 msgid "Sub-model"
 msgstr "Alt-Model"
 
@@ -596,6 +595,7 @@ msgstr "Gövde (Salt Metin)"
 
 #. module: email_template
 #: view:email.template:0
+#: view:email_template.preview:0
 msgid "Body (Text)"
 msgstr "Gövde (Metin)"
 
@@ -753,7 +753,8 @@ msgid "Status"
 msgstr "Durum"
 
 #. module: email_template
-#: view:email_template.account:0
+#: selection:email.template,state:0
+#: selection:email_template.preview,state:0
 msgid "Outgoing"
 msgstr "Giden"
 
@@ -784,10 +785,7 @@ msgid "Request Re-activation"
 msgstr "Yeniden Etkinleştirme İste"
 
 #. module: email_template
-#: view:email.template:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
-#: model:ir.ui.menu,name:email_template.menu_email_template_all
-#: model:ir.ui.menu,name:email_template.menu_email_template_all_tools
+#: model:ir.model,name:email_template.model_email_template
 msgid "Email Templates"
 msgstr "E-Posta Şablonları"
 
@@ -877,7 +875,7 @@ msgstr ""
 "Sadece bu grubun kullanıcıları bu şablonu kullanarak E-Posta gönderebilirler"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:284
+#: code:addons/email_template/email_template.py:196
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "İletiyi Gönder (%s)"
@@ -894,6 +892,7 @@ msgstr "Rapor Dosya Adı"
 
 #. module: email_template
 #: field:email.template,copyvalue:0
+#: field:email_template.preview,copyvalue:0
 msgid "Expression"
 msgstr "İfade"
 
@@ -905,16 +904,12 @@ msgstr "Geçmiş"
 
 #. module: email_template
 #: view:email.template:0
-#: view:email_template.mailbox:0
-#: field:email_template.mailbox,attachments_ids:0
-#: view:email_template.send.wizard:0
-#: field:email_template.send.wizard,attachment_ids:0
 msgid "Attachments"
 msgstr "Ekler"
 
 #. module: email_template
-#: field:email_template.preview,to:0
-#: field:email_template.send.wizard,to:0
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
 msgid "To"
 msgstr "Kime"
 
@@ -940,7 +935,7 @@ msgid "Email Templates for Models"
 msgstr "Modeller için e-posta şablonları"
 
 #. module: email_template
-#: view:email_template.send.wizard:0
+#: view:email_template.preview:0
 msgid "Close"
 msgstr "Kapat"
 
@@ -987,6 +982,7 @@ msgstr "İzin Verilen Kullanıcı Grupları"
 
 #. module: email_template
 #: field:email.template,model_object_field:0
+#: field:email_template.preview,model_object_field:0
 msgid "Field"
 msgstr "Alan"
 
@@ -1123,7 +1119,8 @@ msgid "CC"
 msgstr "CC"
 
 #. module: email_template
-#: view:email_template.mailbox:0
+#: selection:email.template,state:0
+#: selection:email_template.preview,state:0
 msgid "Sent"
 msgstr "Gönderildi"
 
@@ -1160,6 +1157,8 @@ msgstr "E-postalar"
 
 #. module: email_template
 #: view:email.template:0
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
 msgid "Templates"
 msgstr "Şablonlar"
 
@@ -1170,11 +1169,13 @@ msgstr "Rapor Adı"
 
 #. module: email_template
 #: field:email.template,name:0
+#: field:email_template.preview,name:0
 msgid "Name"
 msgstr "Ad"
 
 #. module: email_template
 #: field:email.template,track_campaign_item:0
+#: field:email_template.preview,track_campaign_item:0
 msgid "Resource Tracking"
 msgstr "Kaynak İzleme"
 
@@ -1234,8 +1235,7 @@ msgid "email_template.account"
 msgstr "email_template.account"
 
 #. module: email_template
-#: field:email_template.preview,rel_model:0
-#: field:email_template.send.wizard,rel_model:0
+#: view:email.template:0
 msgid "Model"
 msgstr "Model"
 
@@ -1326,9 +1326,3 @@ msgstr "Ek Var"
 #, python-format
 msgid "No Description"
 msgstr "Açıklama Yok"
-
-#~ msgid "Mailbox"
-#~ msgstr "Posta kutusu"
-
-#~ msgid "Personal Mails"
-#~ msgstr "Kişiler İletiler"

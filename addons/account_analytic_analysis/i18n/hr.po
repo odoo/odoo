@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:47+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:00+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -35,8 +35,8 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr "Izračunato  pomoću formule: Najveća količina - Ukupno vrijeme"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:551
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:722
 #, python-format
 msgid "AccessError"
 msgstr ""
@@ -90,7 +90,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
 msgid "Billing"
-msgstr ""
+msgstr "Fakturiranje"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -150,7 +150,7 @@ msgstr "Izračun: Iznos računa - Ukupni troškovi."
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Hours"
-msgstr ""
+msgstr "Nefakturirani sati"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
@@ -160,7 +160,7 @@ msgstr "Datum najnovijeg rada obavljenog na ovom računu."
 #. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
 msgid "report_account_analytic"
-msgstr ""
+msgstr "report_account_analytic"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -173,11 +173,11 @@ msgid "Invoiced Amount"
 msgstr "Iznos na računu"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:552
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:723
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
-msgstr ""
+msgstr "Pokušavate izbjeći pravilo za pristup (Dokument tipa: %s)."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
@@ -187,7 +187,7 @@ msgstr "Zadnje fakturiranje troška"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Hours"
-msgstr ""
+msgstr "Fakturirani sati"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
@@ -199,7 +199,7 @@ msgstr "Realna marža"
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "Greška! Valuta mora biti ista kao i valuta odabrane organizacije"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -222,6 +222,8 @@ msgid ""
 "Number of hours (from journal of type 'general') that can be invoiced if you "
 "invoice based on analytic account."
 msgstr ""
+"Broj sati (iz općih temeljnica) koji mogu biti fakturirani ako fakturirate "
+"na osnovu analitičkog računa."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -245,7 +247,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Hours Tot."
-msgstr ""
+msgstr "Izračunato korištenjem formule: Fakturirani iznos / Ukupno sati"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -253,6 +255,7 @@ msgid "Revenue per Hours (real)"
 msgstr ""
 
 #. module: account_analytic_analysis
+#: field:account.analytic.account,hours_quantity:0
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
@@ -265,6 +268,7 @@ msgid "Month"
 msgstr "Mjesec"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account

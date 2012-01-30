@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:13+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:26+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: hr_payroll_account
 #: view:hr.employee:0
@@ -57,8 +57,8 @@ msgid "Configuration Error !"
 msgstr "Erreur de configuration !"
 
 #. module: hr_payroll_account
-#: field:hr.payroll.register,journal_id:0
 #: field:hr.payslip,journal_id:0
+#: field:hr.payslip.run,journal_id:0
 msgid "Expense Journal"
 msgstr "Journal de dépenses"
 
@@ -156,7 +156,6 @@ msgid "Employee Bank Account is not defined for %s"
 msgstr "Le compte bancaire de l'employé(e) n'est pas défini pour %s"
 
 #. module: hr_payroll_account
-#: field:hr.payslip.account.move,slip_id:0
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
 msgid "Pay Slip"
 msgstr "Feuille de paie"
@@ -224,7 +223,6 @@ msgstr ""
 "l'employé est le responsable."
 
 #. module: hr_payroll_account
-#: help:hr.payroll.register,period_id:0
 #: help:hr.payslip,period_id:0
 msgid "Keep empty to use the period of the validation(Payslip) date."
 msgstr ""
@@ -288,7 +286,6 @@ msgid "Sequence"
 msgstr "Séquence"
 
 #. module: hr_payroll_account
-#: field:hr.payroll.register,period_id:0
 #: field:hr.payslip,period_id:0
 msgid "Force Period"
 msgstr "Forcer la période"
@@ -306,11 +303,8 @@ msgid "Fiscal Year is not defined for slip date %s"
 msgstr "L'exercice comptable n'est pas défini pour la feuille de paye du %s"
 
 #. module: hr_payroll_account
-#: field:hr.contibution.register,analytic_account_id:0
-#: field:hr.employee,analytic_account:0
-#: field:hr.holidays.status,analytic_account_id:0
-#: field:hr.payroll.structure,account_id:0
-#: field:hr.payslip.line,analytic_account_id:0
+#: field:hr.contract,analytic_account_id:0
+#: field:hr.salary.rule,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Compte analytique"
 
@@ -369,32 +363,3 @@ msgstr "Veuillez configurer le compte à payer des partenaires !"
 #, python-format
 msgid "Please define bank account for %s !"
 msgstr "Veuillez définir un compte bancaire pour %s !"
-
-#, python-format
-#~ msgid "Integrity Error !"
-#~ msgstr "Erreur d'intégrité !"
-
-#~ msgid "Select Bank Account from where Salary Expense will be Paid"
-#~ msgstr ""
-#~ "Sélectionnez le compte bancaire à partir duquel les salaires seront payés"
-
-#, python-format
-#~ msgid "Please defined bank account for %s !"
-#~ msgstr "Veuillez définir le compte bancaire pour %s !"
-
-#, python-format
-#~ msgid "Please defined partner in bank account for %s !"
-#~ msgstr "Veuillez définir le partenaire dans le compte bancaire pour %s !"
-
-#~ msgid ""
-#~ "Generic Payroll system Integrated with Accountings\n"
-#~ "    * Expanse Encoding\n"
-#~ "    * Payment Encoding\n"
-#~ "    * Comany Contribution Managemet\n"
-#~ "    "
-#~ msgstr ""
-#~ "Système de paie générique intégré avec la comptabilité\n"
-#~ "    * Saisie des paies\n"
-#~ "    * Saisie des règlements\n"
-#~ "    * Gestion des contributions de la société\n"
-#~ "    "

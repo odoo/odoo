@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:13+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:26+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -50,7 +50,6 @@ msgstr "Групиране по..."
 #: field:hr.applicant,department_id:0
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,department_id:0
-#: field:hr.recruitment.stage,department_id:0
 msgid "Department"
 msgstr "Отдел"
 
@@ -221,8 +220,7 @@ msgid "Previous"
 msgstr "Предишен"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:107
-#: view:hr.applicant:0
+#: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:115
 #, python-format
 msgid "Phone Call"
 msgstr "Телефонно обаждане"
@@ -760,6 +758,7 @@ msgid "State"
 msgstr "Състояние"
 
 #. module: hr_recruitment
+#: view:hired.employee:0
 #: view:hr.recruitment.job2phonecall:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
@@ -863,20 +862,19 @@ msgid "Contract Signed"
 msgstr "Подписна договор"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
 #: selection:hr.applicant,state:0
 #: selection:hr.recruitment.report,state:0
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
 msgid "Refused"
 msgstr "Отказан"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:412
+#: code:addons/hr_recruitment/hr_recruitment.py:414
 #, python-format
 msgid "Applicant '%s' is being hired."
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
 #: selection:hr.applicant,state:0
 #: view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
@@ -938,7 +936,7 @@ msgid "Assign To"
 msgstr "Възложи на"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:396
+#: code:addons/hr_recruitment/hr_recruitment.py:407
 #, python-format
 msgid "The job request '%s' has been set 'in progress'."
 msgstr ""
@@ -957,6 +955,5 @@ msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,survey:0
-#: field:hr.job,survey_id:0
 msgid "Survey"
 msgstr "Проучване"

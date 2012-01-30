@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:32+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:45+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: purchase
@@ -45,7 +45,7 @@ msgid "Destination"
 msgstr "Cíl"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:721
+#: code:addons/purchase/purchase.py:772
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
@@ -123,7 +123,7 @@ msgstr ""
 "sledovat obdržené výrobky a ovládat faktury dodavatelů."
 
 #. module: purchase
-#: code:addons/purchase/wizard/purchase_line_invoice.py:156
+#: code:addons/purchase/wizard/purchase_line_invoice.py:145
 #, python-format
 msgid "Supplier Invoices"
 msgstr "Faktury dodavatele"
@@ -140,7 +140,7 @@ msgid "From a Pick list"
 msgstr "Ze seznamu navádění"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:660
+#: code:addons/purchase/purchase.py:708
 #, python-format
 msgid "No Pricelist !"
 msgstr "Žádný ceník !"
@@ -166,7 +166,6 @@ msgid "Company"
 msgstr "Společnost"
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
@@ -231,7 +230,7 @@ msgid "Partial Picking"
 msgstr "Částečné navádění"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:296
+#: code:addons/purchase/purchase.py:288
 #, python-format
 msgid "Purchase order '%s' is confirmed."
 msgstr "Nákupní objednávka '%s' je potvrzena."
@@ -278,7 +277,7 @@ msgid "Notes"
 msgstr "Poznámky"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:660
+#: code:addons/purchase/purchase.py:708
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
@@ -430,7 +429,7 @@ msgid "Day"
 msgstr "Den"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:344
+#: code:addons/purchase/purchase.py:325
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr "Nákupní objednávka '%s' byla nasatavena do návrhového stavu."
@@ -447,8 +446,8 @@ msgid "# of Lines"
 msgstr "# z řádek"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:696
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:748
+#: code:addons/purchase/purchase.py:788
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
@@ -485,7 +484,7 @@ msgid "It indicates that a picking has been done"
 msgstr "Indikuje, že navádění bylo dokončeno"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:721
+#: code:addons/purchase/purchase.py:772
 #, python-format
 msgid "Wrong Product UOM !"
 msgstr "Nesprávná MJ výrobku !"
@@ -548,6 +547,7 @@ msgstr ""
 #: view:purchase.order.line:0
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
+#: view:stock.picking:0
 msgid "State"
 msgstr "Stav"
 
@@ -587,7 +587,7 @@ msgid "Order Lines"
 msgstr "Řádky objednávky"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:662
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid "No Partner!"
 msgstr "Žádný partner!"
@@ -636,10 +636,10 @@ msgid "Invoices generated for a purchase order"
 msgstr "Faktury generované pro nákupní objednávku"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:292
-#: code:addons/purchase/purchase.py:362
-#: code:addons/purchase/purchase.py:372
-#: code:addons/purchase/wizard/purchase_line_invoice.py:122
+#: code:addons/purchase/purchase.py:284
+#: code:addons/purchase/purchase.py:347
+#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/wizard/purchase_line_invoice.py:111
 #, python-format
 msgid "Error !"
 msgstr "Chyba !"
@@ -671,7 +671,7 @@ msgstr ""
 "vyjednanou výkonnost, výkonnost doručování vašich dodavatelů, aj."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:788
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "Vybraný dodavatel prodává pouze tento výrobek po %s"
@@ -700,15 +700,17 @@ msgid "Reservation Destination"
 msgstr "Cíl rezervace"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:244
+#: code:addons/purchase/purchase.py:235
 #, python-format
 msgid "Invalid action !"
 msgstr "Neplatná akce !"
 
 #. module: purchase
+#: view:purchase.order:0
 #: selection:purchase.order,state:0
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
+#: view:stock.picking:0
 msgid "Done"
 msgstr "Dokončeno"
 
@@ -780,7 +782,7 @@ msgid "    Month-1    "
 msgstr "    Měsíc-1    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:373
+#: code:addons/purchase/purchase.py:348
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr "Pro tuto společnost není určen nákupní deník: \"%s\" (id:%d)"
@@ -803,9 +805,12 @@ msgstr ""
 "Musíte nejdříve zrušit všechna navádění připojená k této nákupní objednávce."
 
 #. module: purchase
+#: report:purchase.order:0
 #: view:purchase.order:0
+#: field:purchase.order,date_order:0
 #: field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
+#: view:stock.picking:0
 msgid "Order Date"
 msgstr "Datum objednání"
 
@@ -897,7 +902,7 @@ msgid "Confirmed purchase order to invoice"
 msgstr "Potvrzená nákupní objednávka k fakturaci"
 
 #. module: purchase
-#: field:purchase.installer,config_logo:0
+#: field:purchase.config.wizard,config_logo:0
 msgid "Image"
 msgstr "Obrázek"
 
@@ -923,7 +928,6 @@ msgid "Request for Quotation :"
 msgstr "Požadavek na cenovou nabídku :"
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_waiting
 msgid "Purchase Order Waiting Approval"
 msgstr "Nákupní objednávka čeká na schválení"
@@ -952,7 +956,7 @@ msgstr ""
 "Toto je seznam naváděcích seznamů, které byly generovány pro tuto objednávku"
 
 #. module: purchase
-#: model:ir.module.module,shortdesc:purchase.module_meta_information
+#: model:ir.actions.todo.category,name:purchase.category_purchase_config
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase Management"
 msgstr "Řízení nákupu"
@@ -1127,8 +1131,8 @@ msgid "Extended Filters..."
 msgstr "Rozšířené filtry..."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:362
-#: code:addons/purchase/wizard/purchase_line_invoice.py:123
+#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/wizard/purchase_line_invoice.py:112
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr "Pro tento výrobek nebyl definován nákladový účet: \"%s\" (id:%d)"
@@ -1358,10 +1362,12 @@ msgid "The supplier approves the Purchase Order."
 msgstr "Dodavatel potvrdil Nákupní objednávku"
 
 #. module: purchase
+#: code:addons/purchase/wizard/purchase_order_group.py:80
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: view:purchase.report:0
+#, python-format
 msgid "Purchase Orders"
 msgstr "Nákupní objednávky"
 
@@ -1597,6 +1603,7 @@ msgstr "Váš odkaz objednávky"
 #: field:purchase.order,minimum_planned_date:0
 #: report:purchase.quotation:0
 #: field:purchase.report,expected_date:0
+#: view:stock.picking:0
 msgid "Expected Date"
 msgstr "Očekávaný datum"
 
@@ -1703,7 +1710,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:424
+#: code:addons/purchase/purchase.py:425
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr "Nákupní objednávka '%s' zrušena."
@@ -1732,6 +1739,7 @@ msgstr "Opravdu chcete tyto objednávky sloučit?"
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 #: view:purchase.report:0
+#: view:stock.picking:0
 msgid "Group By..."
 msgstr "Seskupit podle..."
 
@@ -1779,11 +1787,12 @@ msgstr "Nákup"
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 #: field:purchase.order.line,partner_id:0
+#: view:stock.picking:0
 msgid "Partner"
 msgstr "Partner"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:662
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
@@ -1828,6 +1837,7 @@ msgstr ""
 "nákupní objednávka"
 
 #. module: purchase
+#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"

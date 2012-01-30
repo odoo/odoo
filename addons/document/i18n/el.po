@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:06+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:19+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -145,7 +145,6 @@ msgid "Directory name must be unique!"
 msgstr "Το όνομα του φακέλου θα πρέπει να είναι μοναδικό!"
 
 #. module: document
-#: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Αρχειοθετημένα Περιεχόμενα"
@@ -160,7 +159,6 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 #: field:document.storage,dir_ids:0
-#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Φάκελλοι"
@@ -235,8 +233,8 @@ msgid "Document directory"
 msgstr "Φάκελος Εγγράφου"
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #: code:addons/document/document_directory.py:266
 #: code:addons/document/document_directory.py:271
 #: code:addons/document/document_directory.py:276
@@ -952,7 +950,7 @@ msgid "# of Files"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:215
+#: code:addons/document/document.py:209
 #, python-format
 msgid "(copy)"
 msgstr ""
@@ -987,8 +985,8 @@ msgid "Content Name"
 msgstr "Όνομα Περιεχόμενου"
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #, python-format
 msgid "File name must be unique!"
 msgstr "Το όνομα Αρχείου πρέπει να είναι μοναδικό!"
@@ -1010,8 +1008,6 @@ msgid "Directories' Structure"
 msgstr ""
 
 #. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_document_by_resourcetype_graph
 #: view:report.document.user:0
 msgid "Files by Resource Type"
 msgstr "Αρχεία ανά Τύπο Προέλευσης"
@@ -1024,6 +1020,7 @@ msgstr "Έτος"
 
 #. module: document
 #: view:document.storage:0
+#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
 #: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:06+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:19+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -27,6 +27,7 @@ msgid "Delivery by Poste"
 msgstr "由post送货"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Destination"
 msgstr "目标库位"
@@ -42,7 +43,7 @@ msgid "Delivery Order"
 msgstr "送货单"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:141
+#: code:addons/delivery/delivery.py:215
 #, python-format
 msgid "No price available !"
 msgstr "无价格表可用！"
@@ -53,6 +54,7 @@ msgid "Delivery Grid Line"
 msgstr "送货网络明细"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Delivery grids"
 msgstr "送货网络"
@@ -95,6 +97,7 @@ msgid "Gives the sequence order when displaying a list of delivery grid."
 msgstr "输入序列用于在送货网络列表上排序"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
@@ -125,6 +128,7 @@ msgid "Fixed"
 msgstr "固定的"
 
 #. module: delivery
+#: field:delivery.carrier,name:0
 #: view:delivery.sale.order:0
 #: field:delivery.sale.order,carrier_id:0
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -140,7 +144,7 @@ msgid "Stock Move"
 msgstr "库存调拨"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:141
+#: code:addons/delivery/delivery.py:215
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
 msgstr "在所选的送货网络中没有明细匹配这个订单"
@@ -164,12 +168,13 @@ msgid ""
 msgstr "创建和管理你在销售过程中的送货方式。每种送货方式可以指定一个价格表这样可以根据销售和发运的产品计算运费。"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:98
+#: code:addons/delivery/stock.py:89
 #, python-format
 msgid "Warning"
 msgstr "警告"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Grid definition"
 msgstr "网络定义"
@@ -289,7 +294,7 @@ msgid ""
 msgstr "如果生效设为false，可以不必删除承运方就隐藏它。"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:95
+#: code:addons/delivery/wizard/delivery_sale_order.py:94
 #, python-format
 msgid "No grid available !"
 msgstr "没有可用的送货网络"
@@ -300,8 +305,8 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:66
-#: code:addons/delivery/wizard/delivery_sale_order.py:98
+#: code:addons/delivery/wizard/delivery_sale_order.py:65
+#: code:addons/delivery/wizard/delivery_sale_order.py:97
 #, python-format
 msgid "Order not in draft state !"
 msgstr "单据不在草稿状态！"
@@ -429,7 +434,7 @@ msgid "Price"
 msgstr "价格"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:95
+#: code:addons/delivery/wizard/delivery_sale_order.py:94
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "没有送货网络适用于此承运方"
@@ -451,7 +456,7 @@ msgid "="
 msgstr "="
 
 #. module: delivery
-#: code:addons/delivery/stock.py:99
+#: code:addons/delivery/stock.py:90
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "承运方 %s (id: %d) 没有送货网络！"
@@ -463,7 +468,6 @@ msgstr "名称"
 
 #. module: delivery
 #: view:delivery.carrier:0
-#: field:delivery.carrier,name:0
 #: field:delivery.grid,carrier_id:0
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
@@ -482,8 +486,8 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:66
-#: code:addons/delivery/wizard/delivery_sale_order.py:98
+#: code:addons/delivery/wizard/delivery_sale_order.py:65
+#: code:addons/delivery/wizard/delivery_sale_order.py:97
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "只能对草稿状态的订单增加送货明细"
@@ -509,6 +513,7 @@ msgid "Sale Price"
 msgstr "销售价格"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"

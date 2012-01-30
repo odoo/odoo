@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:25+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:38+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -54,7 +54,7 @@ msgid "Draft procurement of the product and location of that orderpoint"
 msgstr "Concept verwerving van het product en locatie van dat bestelniveau"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:288
+#: code:addons/procurement/procurement.py:291
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Geen leverancier voor dit product opgegeven!"
@@ -70,7 +70,7 @@ msgid "Procurement Method"
 msgstr "Verwervingswijze"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:304
+#: code:addons/procurement/procurement.py:307
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "Geen adres gedefinieerd voor de leverancier"
@@ -245,7 +245,7 @@ msgid "Error! You can not create recursive companies."
 msgstr "Fout ! U kunt geen recursieve bedrijven maken."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:384
+#: code:addons/procurement/procurement.py:386
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr ""
@@ -296,7 +296,6 @@ msgid "Compute Procurement"
 msgstr "Verwerving verwerken"
 
 #. module: procurement
-#: model:ir.module.module,shortdesc:procurement.module_meta_information
 #: field:stock.move,procurements:0
 msgid "Procurements"
 msgstr "Verwervingen"
@@ -340,7 +339,7 @@ msgid "Quantity"
 msgstr "Aantal"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:377
+#: code:addons/procurement/procurement.py:379
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Onvoldoende voorraad en geen minimum bestelpunt gedefinieerd."
@@ -473,7 +472,7 @@ msgid "plus"
 msgstr "plus"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:325
+#: code:addons/procurement/procurement.py:328
 #, python-format
 msgid ""
 "Please check the Quantity in Procurement Order(s), it should not be less "
@@ -562,7 +561,7 @@ msgstr ""
 "U probeert een partij toe te wijzen die niet van hetzelfde product is."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:381
+#: code:addons/procurement/procurement.py:383
 #, python-format
 msgid "Not enough stock."
 msgstr "Onvoldoende voorraad."
@@ -588,13 +587,13 @@ msgid "Exception"
 msgstr "Uitzondering"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:379
+#: code:addons/procurement/procurement.py:381
 #, python-format
 msgid "No minimum orderpoint rule defined."
 msgstr "Geen minimum bestelhoeveelheid gedefinieerd."
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:179
+#: code:addons/procurement/schedulers.py:183
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "Automatisch BP: %s"
@@ -661,7 +660,7 @@ msgid "Cannot delete Procurement Order(s) which are in %s State!"
 msgstr "Kan geen verwervingsopdracht(en) verwijderen die in status %s zijn!"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:324
+#: code:addons/procurement/procurement.py:327
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Onvoldoende gegevens !"
@@ -736,7 +735,7 @@ msgid "Not urgent"
 msgstr "Niet urgent"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:294
+#: code:addons/procurement/procurement.py:297
 #, python-format
 msgid "No default supplier defined for this product"
 msgstr "Geen standaard leverancier gedefinieerd voor dit product"
@@ -761,6 +760,7 @@ msgstr "Details"
 #: model:ir.actions.act_window,name:procurement.procurement_action_board
 #: model:ir.actions.act_window,name:procurement.procurement_exceptions
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
 msgid "Procurement Exceptions"
 msgstr "Verwerving uitzonderingen"
 
@@ -896,7 +896,7 @@ msgid "Product UoS"
 msgstr "Verkoopeenheid"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:353
+#: code:addons/procurement/procurement.py:356
 #, python-format
 msgid "from stock: products assigned."
 msgstr "uit voorraad: producten toegewezen."
@@ -971,11 +971,7 @@ msgid "Procurement Details"
 msgstr "Details verwerving"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:180
+#: code:addons/procurement/schedulers.py:184
 #, python-format
 msgid "SCHEDULER"
 msgstr "PLANNER"
-
-#, python-format
-#~ msgid "Procurement '%s' is in exception: not enough stock."
-#~ msgstr "Verwerving '%s' heeft uitzondering: niet genoeg voorraad."

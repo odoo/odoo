@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:04+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:17+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -180,6 +180,7 @@ msgstr "Son Teslim Tarihi"
 #: field:crm.claim,partner_id:0
 #: view:crm.claim.report:0
 #: field:crm.claim.report,partner_id:0
+#: model:ir.model,name:crm_claim.model_res_partner
 msgid "Partner"
 msgstr "İş ortağı"
 
@@ -354,6 +355,7 @@ msgstr "Ay"
 
 #. module: crm_claim
 #: field:crm.claim,type_action:0
+#: view:crm.claim.report:0
 #: field:crm.claim.report,type_action:0
 msgid "Action Type"
 msgstr "Eylem Türü"
@@ -396,8 +398,6 @@ msgstr ""
 "satırına eklenecektir. Birden fazla e-posta adresini virgül ile ayırınız."
 
 #. module: crm_claim
-#: selection:crm.claim,state:0
-#: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
 msgid "Draft"
 msgstr "Taslak"
@@ -530,8 +530,11 @@ msgstr "Bu kişilere e-posta iletilecektir"
 #. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
+#: model:ir.actions.act_window,name:crm_claim.act_claim_partner
+#: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
+#: field:res.partner,claims_ids:0
 msgid "Claims"
 msgstr "Sikayetler"
 
@@ -599,7 +602,6 @@ msgstr "Kapat"
 
 #. module: crm_claim
 #: view:crm.claim:0
-#: selection:crm.claim,state:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
 msgid "Open"
@@ -607,6 +609,7 @@ msgstr "Aç"
 
 #. module: crm_claim
 #: view:crm.claim:0
+#: selection:crm.claim,state:0
 msgid "In Progress"
 msgstr "Sürüyor"
 
@@ -781,9 +784,3 @@ msgstr "Tarih Oluştur"
 #: field:crm.claim.report,name:0
 msgid "Year"
 msgstr "Yıl"
-
-#~ msgid "Awaiting Response"
-#~ msgstr "Cevap Bekliyor / Bekleniyor"
-
-#~ msgid "Fixed"
-#~ msgstr "Onarıldı"

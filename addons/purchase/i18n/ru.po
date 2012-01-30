@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:33+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:46+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -44,7 +44,7 @@ msgid "Destination"
 msgstr "Место назначения"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:721
+#: code:addons/purchase/purchase.py:772
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
@@ -123,7 +123,7 @@ msgstr ""
 "ТМЦ, и контролировать счета поставщиков."
 
 #. module: purchase
-#: code:addons/purchase/wizard/purchase_line_invoice.py:156
+#: code:addons/purchase/wizard/purchase_line_invoice.py:145
 #, python-format
 msgid "Supplier Invoices"
 msgstr "Cчета поставщиков"
@@ -140,7 +140,7 @@ msgid "From a Pick list"
 msgstr "Из комплектовочного листа"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:660
+#: code:addons/purchase/purchase.py:708
 #, python-format
 msgid "No Pricelist !"
 msgstr "Нет каталога !"
@@ -166,7 +166,6 @@ msgid "Company"
 msgstr "Компания"
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
@@ -233,7 +232,7 @@ msgid "Partial Picking"
 msgstr "Частичное комплектование"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:296
+#: code:addons/purchase/purchase.py:288
 #, python-format
 msgid "Purchase order '%s' is confirmed."
 msgstr "Заказ на закупку '%s' подтвержден."
@@ -280,7 +279,7 @@ msgid "Notes"
 msgstr "Примечания"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:660
+#: code:addons/purchase/purchase.py:708
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
@@ -435,7 +434,7 @@ msgid "Day"
 msgstr "День"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:344
+#: code:addons/purchase/purchase.py:325
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr "Заказ на закупку '%s' был установлен в состояние \"Черновик\"."
@@ -452,8 +451,8 @@ msgid "# of Lines"
 msgstr "Кол-во позиций"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:696
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:748
+#: code:addons/purchase/purchase.py:788
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
@@ -490,7 +489,7 @@ msgid "It indicates that a picking has been done"
 msgstr "Показывает, что комплектование выполнено."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:721
+#: code:addons/purchase/purchase.py:772
 #, python-format
 msgid "Wrong Product UOM !"
 msgstr "Неверная ед. изм."
@@ -556,6 +555,7 @@ msgstr ""
 #: view:purchase.order.line:0
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
+#: view:stock.picking:0
 msgid "State"
 msgstr "Состояние"
 
@@ -595,7 +595,7 @@ msgid "Order Lines"
 msgstr "Позиции заказа"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:662
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid "No Partner!"
 msgstr "Нет партнера!"
@@ -644,10 +644,10 @@ msgid "Invoices generated for a purchase order"
 msgstr "Счета созданные для заказа на закупку"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:292
-#: code:addons/purchase/purchase.py:362
-#: code:addons/purchase/purchase.py:372
-#: code:addons/purchase/wizard/purchase_line_invoice.py:122
+#: code:addons/purchase/purchase.py:284
+#: code:addons/purchase/purchase.py:347
+#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/wizard/purchase_line_invoice.py:111
 #, python-format
 msgid "Error !"
 msgstr "Ошибка !"
@@ -676,7 +676,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:788
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "Выбранный поставщик продает ТМЦ только по %s"
@@ -705,15 +705,17 @@ msgid "Reservation Destination"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:244
+#: code:addons/purchase/purchase.py:235
 #, python-format
 msgid "Invalid action !"
 msgstr "Неверное действие !"
 
 #. module: purchase
+#: view:purchase.order:0
 #: selection:purchase.order,state:0
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
+#: view:stock.picking:0
 msgid "Done"
 msgstr "Сделано"
 
@@ -785,7 +787,7 @@ msgid "    Month-1    "
 msgstr "    Месяц-1    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:373
+#: code:addons/purchase/purchase.py:348
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr "Журнал закупок не определен для этой компании:  \"%s\" (id:%d)"
@@ -809,9 +811,12 @@ msgstr ""
 "закупку."
 
 #. module: purchase
+#: report:purchase.order:0
 #: view:purchase.order:0
+#: field:purchase.order,date_order:0
 #: field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
+#: view:stock.picking:0
 msgid "Order Date"
 msgstr "Дата заказа"
 
@@ -903,7 +908,7 @@ msgid "Confirmed purchase order to invoice"
 msgstr "Подтвержденный заказ на закупку в счет"
 
 #. module: purchase
-#: field:purchase.installer,config_logo:0
+#: field:purchase.config.wizard,config_logo:0
 msgid "Image"
 msgstr "Изображение"
 
@@ -929,7 +934,6 @@ msgid "Request for Quotation :"
 msgstr "Запрос цен :"
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_waiting
 msgid "Purchase Order Waiting Approval"
 msgstr "Заказ на закупку в ожидании утверждения"
@@ -958,7 +962,7 @@ msgstr ""
 "Это список комплектовочных листов который был создан для этой закупки"
 
 #. module: purchase
-#: model:ir.module.module,shortdesc:purchase.module_meta_information
+#: model:ir.actions.todo.category,name:purchase.category_purchase_config
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase Management"
 msgstr "Управление закупками"
@@ -1133,8 +1137,8 @@ msgid "Extended Filters..."
 msgstr "Расширенные фильтры..."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:362
-#: code:addons/purchase/wizard/purchase_line_invoice.py:123
+#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/wizard/purchase_line_invoice.py:112
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr "Счет расходов не определен для этого товара: \"%s\" (id:%d)"
@@ -1371,10 +1375,12 @@ msgid "The supplier approves the Purchase Order."
 msgstr "Продавец утвердил заказ на закупку"
 
 #. module: purchase
+#: code:addons/purchase/wizard/purchase_order_group.py:80
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: view:purchase.report:0
+#, python-format
 msgid "Purchase Orders"
 msgstr "Заказы на закупку"
 
@@ -1608,6 +1614,7 @@ msgstr "Ссылка вашего заказа"
 #: field:purchase.order,minimum_planned_date:0
 #: report:purchase.quotation:0
 #: field:purchase.report,expected_date:0
+#: view:stock.picking:0
 msgid "Expected Date"
 msgstr "Ожидаемая дата"
 
@@ -1722,7 +1729,7 @@ msgstr ""
 "пользователем заказа на закупку."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:424
+#: code:addons/purchase/purchase.py:425
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr "Заказ на закупку '%s' отменен."
@@ -1751,6 +1758,7 @@ msgstr "Вы уверены, что хотите объединить данны
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 #: view:purchase.report:0
+#: view:stock.picking:0
 msgid "Group By..."
 msgstr "Объединять по..."
 
@@ -1798,11 +1806,12 @@ msgstr "Закупка"
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 #: field:purchase.order.line,partner_id:0
+#: view:stock.picking:0
 msgid "Partner"
 msgstr "Партнер"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:662
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
@@ -1847,6 +1856,7 @@ msgstr ""
 "заказа."
 
 #. module: purchase
+#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"

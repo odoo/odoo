@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:06+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:18+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -27,6 +27,7 @@ msgid "Delivery by Poste"
 msgstr "Enviament per correu postal"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Destination"
 msgstr "Destí"
@@ -42,7 +43,7 @@ msgid "Delivery Order"
 msgstr "Ordre de lliurament"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:141
+#: code:addons/delivery/delivery.py:215
 #, python-format
 msgid "No price available !"
 msgstr "No hi ha preu disponible!"
@@ -53,6 +54,7 @@ msgid "Delivery Grid Line"
 msgstr "Línia quadrícula lliurament"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Delivery grids"
 msgstr "Quadrícules d'enviament"
@@ -97,6 +99,7 @@ msgstr ""
 "lliurament"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
@@ -131,6 +134,7 @@ msgid "Fixed"
 msgstr "Fix"
 
 #. module: delivery
+#: field:delivery.carrier,name:0
 #: view:delivery.sale.order:0
 #: field:delivery.sale.order,carrier_id:0
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -146,7 +150,7 @@ msgid "Stock Move"
 msgstr "Moviment d'estoc"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:141
+#: code:addons/delivery/delivery.py:215
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
@@ -176,12 +180,13 @@ msgstr ""
 "o lliurats."
 
 #. module: delivery
-#: code:addons/delivery/stock.py:98
+#: code:addons/delivery/stock.py:89
 #, python-format
 msgid "Warning"
 msgstr "Avís"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Grid definition"
 msgstr "Definició de la quadrícula"
@@ -307,7 +312,7 @@ msgstr ""
 "lo."
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:95
+#: code:addons/delivery/wizard/delivery_sale_order.py:94
 #, python-format
 msgid "No grid available !"
 msgstr "No hi ha una xarxa disponible!"
@@ -318,8 +323,8 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:66
-#: code:addons/delivery/wizard/delivery_sale_order.py:98
+#: code:addons/delivery/wizard/delivery_sale_order.py:65
+#: code:addons/delivery/wizard/delivery_sale_order.py:97
 #, python-format
 msgid "Order not in draft state !"
 msgstr "L'ordre no està en estat borrador!"
@@ -450,7 +455,7 @@ msgid "Price"
 msgstr "Preu"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:95
+#: code:addons/delivery/wizard/delivery_sale_order.py:94
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "No concorda quadrícula per aquest transportista!"
@@ -472,7 +477,7 @@ msgid "="
 msgstr "="
 
 #. module: delivery
-#: code:addons/delivery/stock.py:99
+#: code:addons/delivery/stock.py:90
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "El transportista %s (id: %d) no disposa de quadrícula d'enviament!"
@@ -484,7 +489,6 @@ msgstr "Nom"
 
 #. module: delivery
 #: view:delivery.carrier:0
-#: field:delivery.carrier,name:0
 #: field:delivery.grid,carrier_id:0
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
@@ -503,8 +507,8 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:66
-#: code:addons/delivery/wizard/delivery_sale_order.py:98
+#: code:addons/delivery/wizard/delivery_sale_order.py:65
+#: code:addons/delivery/wizard/delivery_sale_order.py:97
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -531,6 +535,7 @@ msgid "Sale Price"
 msgstr "Preu de venda"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"

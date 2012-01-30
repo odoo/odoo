@@ -13,11 +13,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:16+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:29+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: l10n_be
-#: field:partner.vat,test_xml:0
 #: field:partner.vat.intra,test_xml:0
 msgid "Test XML file"
 msgstr "Prueba de archivo XML"
@@ -28,13 +27,13 @@ msgid "Client Name"
 msgstr "Nombre del cliente"
 
 #. module: l10n_be
-#: view:partner.vat.list:0
+#: view:partner.vat.list_13:0
 msgid "XML File has been Created."
 msgstr "El archivo XML ha sido creado."
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:64
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:122
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:52
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:109
 #, python-format
 msgid "No partner has a VAT Number asociated with him."
 msgstr "Ninguna empresa tiene un número fiscal (CIF) asociado."
@@ -45,25 +44,25 @@ msgid "Error! You can not create recursive companies."
 msgstr "Se produjo un error! No pueden crearse empresas en forma recursiva."
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:155
-#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:69
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:88
+#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:75
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:150
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:98
 #, python-format
 msgid "No VAT Number Associated with Main Company!"
 msgstr "¡No hay número de CIF asociado a la compañía principal!"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:64
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:122
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:125
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:47
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:52
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:109
 #, python-format
 msgid "Data Insufficient!"
 msgstr "¡Datos insuficientes!"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
-#: view:partner.vat.intra:0
-#: view:partner.vat.list:0
+#: view:partner.vat.list_13:0
 msgid "Create XML"
 msgstr "Crear XML"
 
@@ -84,7 +83,7 @@ msgid "Save XML"
 msgstr "Guardar XML"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:150
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:219
 #, python-format
 msgid "Save"
 msgstr "Guardar"
@@ -97,24 +96,24 @@ msgstr "vat.listado.clientes"
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,msg:0
 #: field:partner.vat.intra,msg:0
-#: field:partner.vat.list,msg:0
+#: field:partner.vat.list_13,msg:0
 msgid "File created"
 msgstr "Archivo creado"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:116
+#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:131
 #, python-format
 msgid "Save XML For Vat declaration"
 msgstr "Guardar XML para la declaración del IVA"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:95
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:102
 #, python-format
 msgid "The period code you entered is not valid."
 msgstr "El código del periodo que ha introducido no es válido."
 
 #. module: l10n_be
-#: help:l1on_be.vat.declaration,ask_resitution:0
+#: help:l1on_be.vat.declaration,ask_restitution:0
 msgid "It indicates whether a resitution is to made or not?"
 msgstr "Indica si hay que realizar la restitución o no"
 
@@ -151,12 +150,12 @@ msgid "Belgium - Plan Comptable Minimum Normalise"
 msgstr "Bélgica - Plan Contable mínimo Normalizado"
 
 #. module: l10n_be
-#: view:partner.vat.list:0
+#: view:partner.vat.list_13:0
 msgid "Select Fiscal Year"
 msgstr "Seleccionar ejercicio fiscal"
 
 #. module: l10n_be
-#: field:l1on_be.vat.declaration,ask_resitution:0
+#: field:l1on_be.vat.declaration,ask_restitution:0
 msgid "Ask Restitution"
 msgstr "Pedir restitución"
 
@@ -194,13 +193,12 @@ msgid "Periods"
 msgstr "Periodos"
 
 #. module: l10n_be
-#: help:partner.vat,test_xml:0
 #: help:partner.vat.intra,test_xml:0
 msgid "Sets the XML output as test file"
 msgstr "Establece la salida XML como archivo de pruebas."
 
 #. module: l10n_be
-#: field:partner.vat,limit_amount:0
+#: field:partner.vat_13,limit_amount:0
 msgid "Limit Amount"
 msgstr "Importe límite"
 
@@ -236,8 +234,9 @@ msgid "Country"
 msgstr "País"
 
 #. module: l10n_be
-#: view:partner.vat.list:0
-#: field:partner.vat.list,partner_ids:0
+#: model:account.account.template,name:l10n_be.a2900
+#: model:account.account.template,name:l10n_be.a400
+#: model:account.account.template,name:l10n_be.a_recv
 msgid "Clients"
 msgstr "Clientes"
 
@@ -288,9 +287,9 @@ msgid "It indicates whether a payment is to made or not?"
 msgstr "Indica si un pago se ha realizado o no"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:155
-#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:69
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:88
+#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:75
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:150
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:98
 #, python-format
 msgid "Data Insufficient"
 msgstr "Dato insuficiente"
@@ -316,7 +315,6 @@ msgid "Declare Periodical VAT"
 msgstr "Declarar IVA periódico"
 
 #. module: l10n_be
-#: help:partner.vat,mand_id:0
 #: help:partner.vat.intra,mand_id:0
 msgid ""
 "This identifies the representative of the sending company. This is a string "
@@ -331,7 +329,6 @@ msgid "Save xml"
 msgstr "Guardar XML"
 
 #. module: l10n_be
-#: field:partner.vat,mand_id:0
 #: field:partner.vat.intra,mand_id:0
 msgid "MandataireId"
 msgstr "Id Mandatario"
@@ -339,7 +336,7 @@ msgstr "Id Mandatario"
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,file_save:0
 #: field:partner.vat.intra,file_save:0
-#: field:partner.vat.list,file_save:0
+#: field:partner.vat.list_13,file_save:0
 msgid "Save File"
 msgstr "Guardar archivo"
 
@@ -369,12 +366,12 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,name:0
 #: field:partner.vat.intra,name:0
-#: field:partner.vat.list,name:0
+#: field:partner.vat.list_13,name:0
 msgid "File Name"
 msgstr "Nombre de archivo"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:95
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:102
 #, python-format
 msgid "Wrong Period Code"
 msgstr "Código del periodo incorrecto"
@@ -396,8 +393,8 @@ msgid "European Countries"
 msgstr "Países europeos"
 
 #. module: l10n_be
-#: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing
-#: view:partner.vat:0
+#: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing_13
+#: view:partner.vat_13:0
 msgid "Partner VAT Listing"
 msgstr "Listado IVA empresa"
 
@@ -441,19 +438,19 @@ msgid "View Client"
 msgstr "Ver cliente"
 
 #. module: l10n_be
-#: view:partner.vat:0
+#: view:partner.vat_13:0
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
-#: view:partner.vat.list:0
+#: view:partner.vat.list_13:0
 msgid "Close"
 msgstr "Cerrar"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:125
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
 #, python-format
 msgid "Please select at least one Period."
 msgstr "Seleccione al menos un periodo."

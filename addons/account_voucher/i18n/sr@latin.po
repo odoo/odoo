@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:52+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:05+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -23,7 +23,7 @@ msgid "Unreconciliation transactions"
 msgstr "Neponistene transakcije"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:247
+#: code:addons/account_voucher/account_voucher.py:306
 #, python-format
 msgid "Write-Off"
 msgstr ""
@@ -55,7 +55,7 @@ msgid "Group By..."
 msgstr "Grupirano po"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:596
+#: code:addons/account_voucher/account_voucher.py:779
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr "Ne mozes obrisati vaucer(e) koji su vec otvoreni ili placeni !"
@@ -95,7 +95,7 @@ msgid "Bill Payment"
 msgstr "Isplate racuna"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:746
+#: code:addons/account_voucher/account_voucher.py:1045
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -399,7 +399,8 @@ msgid "Voucher Entries"
 msgstr "Sadrzaj Vaucera"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:645
+#: code:addons/account_voucher/account_voucher.py:444
+#: code:addons/account_voucher/account_voucher.py:876
 #, python-format
 msgid "Error !"
 msgstr "Greška !"
@@ -427,7 +428,7 @@ msgid "Sales Receipt"
 msgstr "Racun Prodaje"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:596
+#: code:addons/account_voucher/account_voucher.py:779
 #, python-format
 msgid "Invalid action !"
 msgstr "Neispravna akcija!"
@@ -461,7 +462,7 @@ msgid "Pay Invoice"
 msgstr "Racun"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:746
+#: code:addons/account_voucher/account_voucher.py:1045
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Nema bazne postavke naloga kao ni poreza za isti."
@@ -499,6 +500,7 @@ msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
+#: field:account.voucher,audit:0
 msgid "To Review"
 msgstr "Pregledati"
 
@@ -533,6 +535,7 @@ msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
+#: field:account.voucher.line,currency_id:0
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
 msgstr "Valuta"
@@ -565,7 +568,6 @@ msgstr ""
 #: selection:account.voucher,state:0
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
-#: report:voucher.print:0
 msgid "Draft"
 msgstr "Priprema"
 
@@ -647,7 +649,6 @@ msgid "November"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: view:sale.receipt.report:0
 msgid "Extended Filters..."
 msgstr ""
@@ -705,7 +706,7 @@ msgid "Credit"
 msgstr "Kredit"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:645
+#: code:addons/account_voucher/account_voucher.py:877
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr "Molim definisite sekvencu Knjige"
@@ -917,7 +918,6 @@ msgstr "Stanje:"
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
 #: view:account.invoice:0
-#: view:account.voucher:0
 #: field:account.voucher,pay_now:0
 #: selection:account.voucher,type:0
 #: field:sale.receipt.report,pay_now:0
@@ -930,7 +930,6 @@ msgstr "Isplata"
 #: selection:account.voucher,state:0
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
-#: report:voucher.print:0
 msgid "Posted"
 msgstr "Proknjiženo"
 
@@ -1016,7 +1015,6 @@ msgid "Year"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
 msgstr "Otvori Stanje"

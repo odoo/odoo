@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:16+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:29+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
@@ -83,7 +83,7 @@ msgid "March"
 msgstr "Março"
 
 #. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:92
+#: code:addons/idea/wizard/idea_post_vote.py:94
 #, python-format
 msgid "Idea must be in 'Open' state before vote for that idea."
 msgstr "A Ideia tem de estar como \"aberta\" para ser possível votar nela"
@@ -128,9 +128,9 @@ msgid "Category of ideas"
 msgstr "Categoria de ideias"
 
 #. module: idea
-#: code:addons/idea/idea.py:253
-#: code:addons/idea/wizard/idea_post_vote.py:89
-#: code:addons/idea/wizard/idea_post_vote.py:92
+#: code:addons/idea/idea.py:274
+#: code:addons/idea/wizard/idea_post_vote.py:91
+#: code:addons/idea/wizard/idea_post_vote.py:94
 #, python-format
 msgid "Warning !"
 msgstr "Atenção!"
@@ -175,7 +175,7 @@ msgid "# of Lines"
 msgstr "Número de linhas"
 
 #. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:89
+#: code:addons/idea/wizard/idea_post_vote.py:91
 #, python-format
 msgid "You can not give Vote for this idea more than %s times"
 msgstr "Não se pode votar nesta Ideia mais do que %s vezes"
@@ -355,6 +355,7 @@ msgid "Month"
 msgstr "Mês"
 
 #. module: idea
+#: view:idea.idea:0
 #: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
 #: model:ir.actions.act_window,name:idea.action_idea_idea_open
 msgid "Open Ideas"
@@ -411,7 +412,6 @@ msgid "Ideas by Categories"
 msgstr "Ideias por Categoria"
 
 #. module: idea
-#: selection:idea.idea,state:0
 #: selection:report.vote,idea_state:0
 msgid "Draft"
 msgstr "Rascunho"
@@ -549,7 +549,6 @@ msgstr "Fechar"
 
 #. module: idea
 #: view:idea.idea:0
-#: view:report.vote:0
 msgid "Open"
 msgstr "Abrir"
 
@@ -607,7 +606,7 @@ msgid "Refused"
 msgstr ""
 
 #. module: idea
-#: code:addons/idea/idea.py:253
+#: code:addons/idea/idea.py:274
 #, python-format
 msgid "Draft/Accepted/Cancelled ideas Could not be voted"
 msgstr ""

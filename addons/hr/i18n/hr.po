@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:10+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:23+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 "Language: hr\n"
 
 #. module: hr
@@ -44,8 +44,6 @@ msgid "SIN No"
 msgstr "SIN No"
 
 #. module: hr
-#: model:ir.module.module,shortdesc:hr.module_meta_information
-#: model:ir.ui.menu,name:hr.menu_hr_deshboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
 #: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_root
@@ -67,6 +65,11 @@ msgid ""
 "will be used in the recruitment process to evaluate the applicants for this "
 "job position."
 msgstr ""
+"Radna mjesta koriste se za definiranje poslova i preduvjeta za nj. "
+"obavljanje. Možete pratiti broj zaposlenih po radnom mjestu i koliko možete "
+"očekivati ​​u budućnosti. Također, radnom mjestu možete priložiti anketu "
+"koje će se koristiti u procesu zapošljavanja za procjenu kompetencije "
+"kandidata za to radno mjesto."
 
 #. module: hr
 #: view:hr.employee:0
@@ -160,7 +163,7 @@ msgid "My Departments Employee"
 msgstr "Djelatnik mojih odjela"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
+#: selection:hr.employee,marital:0
 msgid "Married"
 msgstr "U braku"
 
@@ -182,6 +185,9 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"Struktura odjela vaše tvrtke se koristi za upravljanje svim dokumentima u "
+"vezi s zaposlenicim po odjelima: troškovi, evidencija o radnom vremenu, "
+"upravljanje dopustima, upravljanje zapošljavanjem  itd."
 
 #. module: hr
 #: view:hr.employee:0
@@ -279,7 +285,6 @@ msgstr "Lokacija ureda"
 
 #. module: hr
 #: view:hr.employee:0
-#: view:hr.job:0
 #: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
@@ -318,6 +323,7 @@ msgstr "ir.actions.act_window"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
 msgid "Human Resources Dashboard"
 msgstr "Nadzorna ploča odjela ljudskih resursa"
 
@@ -329,7 +335,6 @@ msgid "Job"
 msgstr "Posao"
 
 #. module: hr
-#: view:hr.department:0
 #: field:hr.department,member_ids:0
 msgid "Members"
 msgstr "Članovi"
@@ -350,6 +355,7 @@ msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
+#: field:hr.employee,category_ids:0
 msgid "Categories"
 msgstr "Kategorije"
 
@@ -359,9 +365,9 @@ msgid "Expected Employees"
 msgstr "Očekivano djelatnika"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
+#: selection:hr.employee,marital:0
 msgid "Divorced"
-msgstr "Razveden-a"
+msgstr "Razveden(a)"
 
 #. module: hr
 #: field:hr.employee.category,parent_id:0
@@ -377,7 +383,6 @@ msgstr "Pogreška ! Ne možete kreirati rekurzivne kategorije."
 #: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: view:res.users:0
 #: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "Odjeli"
@@ -449,7 +454,6 @@ msgid "Recruitment Process"
 msgstr "Postupak regrutiranja"
 
 #. module: hr
-#: field:hr.employee,category_ids:0
 #: field:hr.employee.category,name:0
 msgid "Category"
 msgstr "Kategorija"
@@ -482,7 +486,7 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr "Konto za plaću djelatnika"
+msgstr "Broj tekućeg računa za isplatu plaće"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -506,6 +510,7 @@ msgstr "Poslovna adresa"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
 msgid "HR Manager Dashboard"
 msgstr "Nadzorna ploča upravitelja HR"
 
@@ -553,7 +558,7 @@ msgstr "Pogreška ! Ne možete kreirati rekurzivnu hijerarhiju djelatnika."
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account Number"
-msgstr ""
+msgstr "Broj bankovnog računa"
 
 #. module: hr
 #: view:hr.department:0
@@ -612,14 +617,10 @@ msgstr "Ne možete imati dva korisnika sa istim korisničkim imenom !"
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "State"
-msgstr "Stanje"
+msgstr "Status"
 
 #. module: hr
 #: field:hr.employee,marital:0
-#: view:hr.employee.marital.status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.actions.act_window,name:hr.action_hr_marital_status
-#: model:ir.ui.menu,name:hr.hr_menu_marital_status
 msgid "Marital Status"
 msgstr "Bračni status"
 
@@ -699,7 +700,6 @@ msgid "Attendances"
 msgstr "Nazočnosti"
 
 #. module: hr
-#: view:hr.employee.marital.status:0
 #: view:hr.job:0
 msgid "Description"
 msgstr "Opis"
@@ -716,7 +716,7 @@ msgid "Payroll"
 msgstr "Obračun plaće"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
+#: selection:hr.employee,marital:0
 msgid "Single"
 msgstr "Samac"
 
@@ -744,10 +744,9 @@ msgstr "Odjel"
 #. module: hr
 #: field:hr.employee,country_id:0
 msgid "Nationality"
-msgstr "Narodnost"
+msgstr "Nacionalnost"
 
 #. module: hr
-#: view:hr.department:0
 #: view:hr.employee:0
 #: field:hr.employee,notes:0
 msgid "Notes"
@@ -766,7 +765,7 @@ msgstr "Ploča upravitelja HR"
 #. module: hr
 #: field:hr.employee,resource_id:0
 msgid "Resource"
-msgstr "Sredstva"
+msgstr "Resurs"
 
 #. module: hr
 #: view:hr.installer:0
@@ -781,6 +780,9 @@ msgstr "Spol"
 
 #. module: hr
 #: view:hr.employee:0
+#: view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0
+#: view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -845,9 +847,9 @@ msgid "Manager"
 msgstr "Voditelj"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
+#: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr "Udovac-ica"
+msgstr "Udovac(ica)"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
@@ -858,6 +860,3 @@ msgstr "Opći sustav obračuna plaća integriran sa knjigovodstvom"
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
 msgstr "Podređeni djelatnici"
-
-#~ msgid "Bank Account"
-#~ msgstr "Bankovni konto"

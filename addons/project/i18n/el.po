@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:28+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:41+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -30,7 +30,7 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:671
+#: code:addons/project/project.py:916
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr ""
@@ -63,17 +63,16 @@ msgid "Deadlines"
 msgstr "Προθεσμίες"
 
 #. module: project
-#: code:addons/project/project.py:118
+#: code:addons/project/project.py:120
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Μη Επιτρεπτή Λειτουργία!"
 
 #. module: project
-#: code:addons/project/wizard/project_task_delegate.py:55
-#: code:addons/project/wizard/project_task_delegate.py:56
-#: code:addons/project/wizard/project_task_delegate.py:63
-#: code:addons/project/wizard/project_task_delegate.py:64
-#: code:addons/project/wizard/project_task_delegate.py:67
+#: code:addons/project/wizard/project_task_delegate.py:69
+#: code:addons/project/wizard/project_task_delegate.py:70
+#: code:addons/project/wizard/project_task_delegate.py:77
+#: code:addons/project/wizard/project_task_delegate.py:78
 #, python-format
 msgid "CHECK: "
 msgstr "ΕΛΕΓΧΟΣ: "
@@ -167,6 +166,7 @@ msgstr ""
 
 #. module: project
 #: view:project.task:0
+#: view:project.task.history.cumulative:0
 msgid "My Tasks"
 msgstr "Εργασίες μου"
 
@@ -230,12 +230,12 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project
-#: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Very urgent"
 msgstr "Πολύ επείγον"
 
 #. module: project
+#: help:project.task.delegate,project_id:0
 #: help:project.task.delegate,user_id:0
 msgid "User you want to delegate this task to"
 msgstr ""
@@ -248,7 +248,7 @@ msgid "Day"
 msgstr "Ημέρα"
 
 #. module: project
-#: code:addons/project/project.py:584
+#: code:addons/project/project.py:816
 #, python-format
 msgid "The task '%s' is done"
 msgstr ""
@@ -265,6 +265,8 @@ msgstr "Πρόχειρη Εργασία"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
+#: field:project.task.history,task_id:0
+#: field:project.task.history.cumulative,task_id:0
 #: field:project.task.work,task_id:0
 #: view:report.project.task.user:0
 msgid "Task"
@@ -307,6 +309,7 @@ msgid "Invoice Address"
 msgstr "Διεύθυνση Τιμολογίου"
 
 #. module: project
+#: field:project.task,name:0
 #: field:report.project.task.user,name:0
 msgid "Task Summary"
 msgstr "Σύνοψη Εργασίας"
@@ -318,6 +321,7 @@ msgstr ""
 
 #. module: project
 #: view:project.task:0
+#: view:res.partner:0
 msgid "Start Task"
 msgstr "Εκκίνηση Εργασίας"
 
@@ -336,6 +340,8 @@ msgstr "Αυτόματες παράμετροι κεφαλίδων και υπο
 
 #. module: project
 #: selection:project.task,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
 #: selection:project.vs.hours,state:0
 #: selection:report.project.task.user,state:0
 #: selection:task.by.days,state:0
@@ -344,7 +350,7 @@ msgstr "Ακυρώθηκε"
 
 #. module: project
 #: view:board.board:0
-#: model:ir.actions.act_window,name:project.action_view_task_tree
+#: model:ir.actions.act_window,name:project.my_open_tasks_action
 msgid "My Open Tasks"
 msgstr "Οι Ανοικτές Αναθέσεις μου"
 
@@ -438,7 +444,7 @@ msgid "Reactivate Project"
 msgstr "Επανενεργοποίηση Έργου"
 
 #. module: project
-#: code:addons/project/project.py:562
+#: code:addons/project/project.py:794
 #, python-format
 msgid "Task '%s' closed"
 msgstr ""
@@ -467,7 +473,6 @@ msgid "Deadline"
 msgstr "Προθεσμία"
 
 #. module: project
-#: view:project.task.close:0
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "_Cancel"
@@ -488,8 +493,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:222
-#: code:addons/project/project.py:243
+#: code:addons/project/project.py:221
+#: code:addons/project/project.py:260
 #, python-format
 msgid " (copy)"
 msgstr ""
@@ -517,6 +522,7 @@ msgid "Reevaluate Task"
 msgstr "Επαναξιολόγηση Εργασίας"
 
 #. module: project
+#: field:project.vs.hours,user_id:0
 #: field:report.project.task.user,user_id:0
 msgid "Assigned To"
 msgstr ""
@@ -628,7 +634,7 @@ msgid "Reevaluate"
 msgstr "Επαναξιολόγηση"
 
 #. module: project
-#: code:addons/project/project.py:539
+#: code:addons/project/project.py:769
 #, python-format
 msgid "Send Email after close task"
 msgstr ""
@@ -667,11 +673,13 @@ msgstr "Κοινοποιημένες Σημειώσεις"
 
 #. module: project
 #: field:project.project,planned_hours:0
+#: field:project.task.history,planned_hours:0
+#: field:project.task.history.cumulative,planned_hours:0
 msgid "Planned Time"
 msgstr "Προγραμματισμένος Χρόνος"
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:86
+#: code:addons/project/wizard/mail_compose_message.py:64
 #, python-format
 msgid "Task '%s' Closed"
 msgstr ""
@@ -694,6 +702,8 @@ msgid "Delegated Title"
 msgstr ""
 
 #. module: project
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 #: view:report.project.task.user:0
 msgid "My Projects"
 msgstr "Τα Έργα μου"
@@ -721,10 +731,11 @@ msgid "Starting Date"
 msgstr "Ημερ/νία Εκκίνησης"
 
 #. module: project
-#: code:addons/project/project.py:264
+#: code:addons/project/project.py:281
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
+#: field:project.task.type,project_ids:0
 #, python-format
 msgid "Projects"
 msgstr "Έργα"
@@ -732,6 +743,8 @@ msgstr "Έργα"
 #. module: project
 #: view:project.task:0
 #: field:project.task,type_id:0
+#: field:project.task.history,type_id:0
+#: field:project.task.history.cumulative,type_id:0
 #: view:report.project.task.user:0
 #: field:report.project.task.user,type_id:0
 msgid "Stage"
@@ -746,7 +759,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:635
+#: code:addons/project/project.py:868
 #, python-format
 msgid "The task '%s' is opened."
 msgstr ""
@@ -822,6 +835,8 @@ msgstr ""
 #: view:project.project:0
 #: view:project.task:0
 #: field:project.task,project_id:0
+#: field:project.task.delegate,project_id:0
+#: field:project.task.history.cumulative,project_id:0
 #: field:project.vs.hours,project:0
 #: view:report.project.task.user:0
 #: field:report.project.task.user,project_id:0
@@ -848,7 +863,7 @@ msgid "Please specify the email address of Project Manager."
 msgstr ""
 
 #. module: project
-#: model:ir.module.module,shortdesc:project.module_meta_information
+#: model:ir.actions.todo.category,name:project.category_project_config
 #: view:res.company:0
 msgid "Project Management"
 msgstr "Διαχείριση Έργου"
@@ -869,6 +884,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.ui.menu,name:project.menu_action_view_task
 #: model:ir.ui.menu,name:project.menu_tasks_config
+#: model:ir.ui.menu,name:project.project_report_task
 #: model:process.process,name:project.process_process_tasksprocess0
 #: view:project.task:0
 #: view:res.partner:0
@@ -935,6 +951,7 @@ msgid "Computed as: Time Spent / Total Time."
 msgstr "Υπολογισμένο ως εξής: Χρόνος που Αναλώθηκε / Σύνολο Χρόνου"
 
 #. module: project
+#: view:project.task.history.cumulative:0
 #: view:report.project.task.user:0
 #: field:report.project.task.user,month:0
 msgid "Month"
@@ -1040,6 +1057,7 @@ msgstr ""
 
 #. module: project
 #: view:project.task:0
+#: view:project.task.history.cumulative:0
 msgid "Project Tasks"
 msgstr "Εργασίες"
 
@@ -1053,7 +1071,6 @@ msgstr ""
 #: view:project.task:0
 #: selection:project.task,state:0
 #: selection:project.vs.hours,state:0
-#: view:report.project.task.user:0
 #: selection:report.project.task.user,state:0
 #: selection:task.by.days,state:0
 msgid "Draft"
@@ -1093,6 +1110,9 @@ msgstr "Διαχειριστής Έργου"
 #: view:project.task:0
 #: selection:project.task,state:0
 #: selection:project.task.delegate,state:0
+#: selection:project.task.history,state:0
+#: view:project.task.history.cumulative:0
+#: selection:project.task.history.cumulative,state:0
 #: selection:project.vs.hours,state:0
 #: view:report.project.task.user:0
 #: selection:report.project.task.user,state:0
@@ -1184,7 +1204,7 @@ msgid "Customer Email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:187
+#: code:addons/project/project.py:186
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr ""
@@ -1233,12 +1253,14 @@ msgstr ""
 "Όταν η Εργασία ολοκληρωθεί, η κατάστασή της θα μεταβληθεί σε 'Ολοκληρώθηκε'."
 
 #. module: project
-#: code:addons/project/project.py:209
+#: code:addons/project/project.py:208
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr ""
 
 #. module: project
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
 #: field:project.task.work,date:0
 msgid "Date"
 msgstr "Ημερομηνία"
@@ -1256,10 +1278,8 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:79
-#: code:addons/project/wizard/project_task_close.py:82
-#: code:addons/project/wizard/project_task_close.py:91
-#: code:addons/project/wizard/project_task_close.py:111
+#: code:addons/project/wizard/mail_compose_message.py:43
+#: code:addons/project/wizard/mail_compose_message.py:45
 #, python-format
 msgid "Error"
 msgstr "Σφάλμα"
@@ -1302,6 +1322,7 @@ msgid "History"
 msgstr ""
 
 #. module: project
+#: field:project.task,user_id:0
 #: view:report.project.task.user:0
 msgid "Assigned to"
 msgstr ""
@@ -1348,6 +1369,8 @@ msgstr "Ιεράρχηση"
 #. module: project
 #: view:project.task:0
 #: field:project.task,state:0
+#: field:project.task.history,state:0
+#: field:project.task.history.cumulative,state:0
 #: field:project.vs.hours,state:0
 #: view:report.project.task.user:0
 #: field:report.project.task.user,state:0
@@ -1364,7 +1387,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:595
+#: code:addons/project/project.py:827
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr ""
@@ -1390,8 +1413,11 @@ msgstr ""
 #: view:project.task:0
 #: selection:project.task,state:0
 #: selection:project.task.delegate,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
 #: view:report.project.task.user:0
 #: selection:report.project.task.user,state:0
+#: view:res.partner:0
 #: selection:task.by.days,state:0
 msgid "Done"
 msgstr "Ολοκληρώθηκε"
@@ -1411,6 +1437,7 @@ msgstr ""
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
+#: view:project.project:0
 #: selection:project.vs.hours,state:0
 msgid "Open"
 msgstr "Άνοιγμα"
@@ -1432,6 +1459,9 @@ msgstr "ID: %(task_id)s"
 #. module: project
 #: view:project.task:0
 #: selection:project.task,state:0
+#: selection:project.task.history,state:0
+#: view:project.task.history.cumulative:0
+#: selection:project.task.history.cumulative,state:0
 #: selection:report.project.task.user,state:0
 #: selection:task.by.days,state:0
 msgid "In Progress"
@@ -1465,7 +1495,8 @@ msgid "Current Activity"
 msgstr ""
 
 #. module: project
-#: field:project.task,user_id:0
+#: field:project.task.history,user_id:0
+#: field:project.task.history.cumulative,user_id:0
 msgid "Responsible"
 msgstr ""
 
@@ -1501,7 +1532,6 @@ msgstr "Πολύ χαμηλά"
 
 #. module: project
 #: field:project.project,warn_manager:0
-#: field:project.task.close,manager_warn:0
 msgid "Warn Manager"
 msgstr "Ενημέρωση Υπευθύνου"
 
@@ -1553,8 +1583,6 @@ msgstr ""
 
 #. module: project
 #: field:project.task,description:0
-#: field:project.task,name:0
-#: field:project.task.close,description:0
 #: view:project.task.type:0
 #: field:project.task.type,description:0
 msgid "Description"
@@ -1566,7 +1594,6 @@ msgid "Your Task Title"
 msgstr "Τίτλος Εργασίας σας"
 
 #. module: project
-#: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Urgent"
 msgstr "Επείγον"
@@ -1659,6 +1686,8 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 #: view:project.task:0
+#: field:project.task.history,end_date:0
+#: field:project.task.history.cumulative,end_date:0
 msgid "End Date"
 msgstr ""
 
@@ -1749,7 +1778,7 @@ msgid "Spent Hours"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:678
+#: code:addons/project/project.py:924
 #, python-format
 msgid "The task '%s' is pending."
 msgstr ""
@@ -1826,7 +1855,7 @@ msgid "Validation State"
 msgstr "Στάδιο Επικύρωσης"
 
 #. module: project
-#: code:addons/project/project.py:615
+#: code:addons/project/project.py:847
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr ""
@@ -1845,6 +1874,7 @@ msgstr ""
 
 #. module: project
 #: view:project.project:0
+#: model:res.groups,name:project.group_project_manager
 msgid "Manager"
 msgstr ""
 
@@ -1854,7 +1884,7 @@ msgid "Create Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:623
+#: code:addons/project/project.py:855
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr ""
@@ -1882,6 +1912,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 #: field:project.project,type_ids:0
+#: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr ""
 

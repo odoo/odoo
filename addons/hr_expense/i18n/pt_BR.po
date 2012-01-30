@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:12+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:25+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -97,6 +97,7 @@ msgstr "Aprovado"
 
 #. module: hr_expense
 #: field:hr.expense.line,uom_id:0
+#: view:product.product:0
 msgid "UoM"
 msgstr "UdM"
 
@@ -238,7 +239,7 @@ msgid "The accoutant validates the sheet"
 msgstr "O Contador Valida a Planilha"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:159
+#: code:addons/hr_expense/hr_expense.py:187
 #, python-format
 msgid "The employee's home address must have a partner linked."
 msgstr ""
@@ -274,7 +275,7 @@ msgid "State"
 msgstr "Status"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:144
+#: code:addons/hr_expense/hr_expense.py:173
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product purchase, "
@@ -309,9 +310,9 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr "Alguns custos podem ser refaturados para o cliente"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:144
-#: code:addons/hr_expense/hr_expense.py:157
-#: code:addons/hr_expense/hr_expense.py:159
+#: code:addons/hr_expense/hr_expense.py:173
+#: code:addons/hr_expense/hr_expense.py:185
+#: code:addons/hr_expense/hr_expense.py:187
 #, python-format
 msgid "Error !"
 msgstr "Erro !"
@@ -474,8 +475,6 @@ msgid "Create Customer invoice"
 msgstr "Criar Fatura do Cliente"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: selection:hr.expense.expense,state:0
 #: selection:hr.expense.report,state:0
 msgid "Draft"
 msgstr "Provisório"
@@ -544,7 +543,7 @@ msgid "Extended Filters..."
 msgstr "Filtros Extendidos..."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:157
+#: code:addons/hr_expense/hr_expense.py:185
 #, python-format
 msgid "The employee must have a Home address."
 msgstr ""
@@ -845,6 +844,7 @@ msgstr "A despesa está confirmada."
 #: model:ir.actions.act_window,name:hr_expense.expense_all
 #: model:ir.ui.menu,name:hr_expense.menu_expense_all
 #: model:ir.ui.menu,name:hr_expense.next_id_49
+#: model:product.category,name:hr_expense.cat_expense
 msgid "Expenses"
 msgstr "Despesas"
 
@@ -877,7 +877,3 @@ msgstr ""
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr "Refaturar"
-
-#, python-format
-#~ msgid "The employee must have a Home address"
-#~ msgstr "O Funcionário deve Possuir um Endereço Residencial"

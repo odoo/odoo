@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:03+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:16+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -24,6 +24,7 @@ msgstr "Aday #"
 #. module: crm
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
+#: view:crm.lead.report:0
 #: selection:crm.lead.report,type:0
 msgid "Lead"
 msgstr "Aday"
@@ -76,6 +77,7 @@ msgid "Today"
 msgstr "Bugün"
 
 #. module: crm
+#: view:crm.lead2opportunity.partner:0
 #: view:crm.merge.opportunity:0
 msgid "Select Opportunities"
 msgstr "Fırsatları seç"
@@ -84,7 +86,6 @@ msgstr "Fırsatları seç"
 #: view:crm.meeting:0
 #: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
-#: view:crm.send.mail:0
 msgid " "
 msgstr " "
 
@@ -100,7 +101,7 @@ msgid "Previous Stage"
 msgstr "Önceki Aşama"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_add_note.py:26
+#: code:addons/crm/wizard/crm_add_note.py:28
 #, python-format
 msgid "Can not add note!"
 msgstr "Not eklenemiyor!"
@@ -112,7 +113,6 @@ msgstr "Aşama Adı"
 
 #. module: crm
 #: view:crm.lead.report:0
-#: field:crm.lead.report,day:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,day:0
 msgid "Day"
@@ -124,13 +124,13 @@ msgid "The code of the sales team must be unique !"
 msgstr "Satış temsilcisinin kodu tek olmalı !"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:95
+#: code:addons/crm/crm_lead.py:551
 #, python-format
 msgid "Lead '%s' has been converted to an opportunity."
 msgstr "'%s' talebi fırsata dönüştürüldü."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:228
+#: code:addons/crm/crm_lead.py:294
 #, python-format
 msgid "The lead '%s' has been closed."
 msgstr "Aday '%s' kapatılmıştır."
@@ -141,10 +141,10 @@ msgid "No Repeat"
 msgstr "Tekrar yok"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
-#: code:addons/crm/wizard/crm_lead_to_partner.py:55
-#: code:addons/crm/wizard/crm_phonecall_to_partner.py:52
+#: code:addons/crm/crm_lead.py:491
+#: code:addons/crm/crm_lead.py:826
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:104
+#: code:addons/crm/wizard/crm_lead_to_partner.py:47
 #, python-format
 msgid "Warning !"
 msgstr "Uyarı !"
@@ -202,14 +202,16 @@ msgid "Opportunities Analysis"
 msgstr "Fırsat Analizi"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,partner_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,partner_id:0
-#: field:crm.lead2opportunity,partner_id:0
 #: field:crm.lead2opportunity.partner,partner_id:0
+#: field:crm.lead2opportunity.partner.mass,partner_id:0
 #: field:crm.lead2partner,partner_id:0
 #: view:crm.meeting:0
 #: field:crm.meeting,partner_id:0
+#: field:crm.opportunity2phonecall,partner_id:0
 #: field:crm.partner2opportunity,partner_id:0
 #: view:crm.phonecall:0
 #: field:crm.phonecall,partner_id:0
@@ -217,6 +219,7 @@ msgstr "Fırsat Analizi"
 #: field:crm.phonecall.report,partner_id:0
 #: field:crm.phonecall2opportunity,partner_id:0
 #: field:crm.phonecall2partner,partner_id:0
+#: field:crm.phonecall2phonecall,partner_id:0
 #: model:ir.model,name:crm.model_res_partner
 #: model:process.node,name:crm.process_node_partner0
 msgid "Partner"
@@ -230,9 +233,7 @@ msgstr "Düzenleyici"
 
 #. module: crm
 #: view:crm.phonecall:0
-#: view:crm.phonecall2phonecall:0
 #: model:ir.actions.act_window,name:crm.phonecall_to_phonecall_act
-#: view:res.partner:0
 msgid "Schedule Other Call"
 msgstr "Başka bir çağrı planla"
 
@@ -242,12 +243,10 @@ msgid "Edit all Occurrences  of recurrent Meeting."
 msgstr "Yinelenen Toplantıya ait bütün Olayları Düzenle."
 
 #. module: crm
-#: code:addons/crm/wizard/crm_opportunity_to_phonecall.py:134
-#: code:addons/crm/wizard/crm_phonecall_to_phonecall.py:89
+#: code:addons/crm/crm_phonecall.py:216
 #: model:crm.case.categ,name:crm.categ_meet3
 #: view:crm.phonecall:0
 #: model:ir.ui.menu,name:crm.menu_crm_config_phonecall
-#: view:res.partner:0
 #, python-format
 msgid "Phone Call"
 msgstr "Telefon Çağrısı"
@@ -258,7 +257,7 @@ msgid "Opt-Out"
 msgstr "Çekildi"
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:108
+#: code:addons/crm/crm_lead.py:323
 #, python-format
 msgid "The opportunity '%s' has been marked as lost."
 msgstr "'%s' fırsatı kaybedildi olarak işaretlendi"
@@ -363,6 +362,7 @@ msgstr "İlgili Adı"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.lead2partner,action:0
 #: selection:crm.phonecall2partner,action:0
 msgid "Link to an existing partner"
@@ -370,8 +370,11 @@ msgstr "Varolan paydaşa bağlan"
 
 #. module: crm
 #: view:crm.lead:0
+#: field:crm.lead,contact_id:0
 #: view:crm.meeting:0
+#: field:crm.opportunity2phonecall,contact_name:0
 #: field:crm.phonecall,partner_contact:0
+#: field:crm.phonecall2phonecall,contact_name:0
 msgid "Contact"
 msgstr "İlgili"
 
@@ -391,7 +394,7 @@ msgid "Regular Expression on Case History"
 msgstr "Durum Geçmişinin Düzenli Anlatımı"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:209
+#: code:addons/crm/crm_lead.py:274
 #, python-format
 msgid "The lead '%s' has been opened."
 msgstr "Aday '%s' açılmıştır."
@@ -469,8 +472,8 @@ msgid "Update Date"
 msgstr "Güncelleme Tarihi"
 
 #. module: crm
-#: view:crm.lead2opportunity.action:0
-#: field:crm.lead2opportunity.action,name:0
+#: field:crm.lead2opportunity.partner,name:0
+#: field:crm.lead2opportunity.partner.mass,name:0
 msgid "Select Action"
 msgstr "Eylem Seç"
 
@@ -482,6 +485,7 @@ msgstr "Eylem Seç"
 #: field:crm.lead.report,categ_id:0
 #: field:crm.opportunity2phonecall,categ_id:0
 #: field:crm.phonecall,categ_id:0
+#: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,categ_id:0
 #: field:crm.phonecall2phonecall,categ_id:0
 msgid "Category"
@@ -538,16 +542,10 @@ msgid "Very first contact with new prospect"
 msgstr "Yeni olası adayla ilk iletişim"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:278
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:197
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:231
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:299
-#: view:crm.lead2opportunity:0
+#: view:crm.lead2opportunity.partner:0
 #: view:crm.partner2opportunity:0
-#: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity
 #: model:ir.actions.act_window,name:crm.action_view_crm_partner2opportunity
 #: model:ir.actions.act_window,name:crm.crm_partner2opportunity
-#, python-format
 msgid "Create Opportunity"
 msgstr "Fırsat oluştur"
 
@@ -557,7 +555,7 @@ msgid "Configure"
 msgstr "Yapılandır"
 
 #. module: crm
-#: code:addons/crm/crm.py:378
+#: code:addons/crm/crm.py:433
 #: view:crm.lead:0
 #: view:res.partner:0
 #, python-format
@@ -570,7 +568,8 @@ msgid "Customer & Supplier Relationship Management"
 msgstr "Müşteri & Tedarikçi İlişkileri Yönetimi"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "June"
@@ -603,7 +602,8 @@ msgid "crm.send.mail.attachment"
 msgstr "miy.gönder.posta.eklenti"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "October"
@@ -749,6 +749,7 @@ msgstr ""
 
 #. module: crm
 #: field:crm.case.section,resource_calendar_id:0
+#: model:ir.ui.menu,name:crm.menu_action_resource_calendar_form
 msgid "Working Time"
 msgstr "Çalışma Süresi"
 
@@ -835,21 +836,16 @@ msgstr "Aday Oluşturma"
 
 #. module: crm
 #: view:board.board:0
-#: model:ir.ui.menu,name:crm.menu_board_statistics_dash
 msgid "Statistics Dashboard"
 msgstr "İstatistiksel Kontrol Paneli"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:88
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:98
-#: code:addons/crm/wizard/crm_partner_to_opportunity.py:101
-#: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:117
+#: code:addons/crm/crm_lead.py:716
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
+#: view:crm.lead.report:0
 #: selection:crm.lead.report,type:0
-#: field:crm.lead2opportunity,name:0
 #: field:crm.meeting,opportunity_id:0
-#: field:crm.phonecall,opportunity_id:0
 #, python-format
 msgid "Opportunity"
 msgstr "Fırsat"
@@ -875,7 +871,6 @@ msgid "Search Phonecalls"
 msgstr "Telefon görüşmelerine ara"
 
 #. module: crm
-#: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2partner:0
 #: view:crm.phonecall2partner:0
 msgid "Continue"
@@ -966,6 +961,8 @@ msgstr "Vakaların aşamaları ardışık sıraya göre görüntülenir."
 
 #. module: crm
 #: view:crm.lead:0
+#: field:crm.lead2opportunity.partner,opportunity_ids:0
+#: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
 #: field:crm.merge.opportunity,opportunity_ids:0
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
 #: model:ir.ui.menu,name:crm.menu_crm_case_opp
@@ -1010,7 +1007,8 @@ msgid "Mark Lost"
 msgstr "Kaybedildi İşaretle"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "March"
@@ -1033,9 +1031,7 @@ msgid "Show time as"
 msgstr "Saati göster"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:264
 #: view:crm.phonecall2partner:0
-#, python-format
 msgid "Create Partner"
 msgstr "İş Ortağı Oluştur"
 
@@ -1068,7 +1064,7 @@ msgid "Next Stage"
 msgstr "Bir sonraki aşama"
 
 #. module: crm
-#: view:board.board:0
+#: view:crm.meeting:0
 msgid "My Meetings"
 msgstr "Toplantılarım"
 
@@ -1083,10 +1079,9 @@ msgid "Opt-In"
 msgstr "Üye olmak istiyorum"
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:208
-#: code:addons/crm/crm_phonecall.py:185
-#: code:addons/crm/wizard/crm_phonecall_to_meeting.py:55
-#: code:addons/crm/wizard/crm_phonecall_to_meeting.py:137
+#: code:addons/crm/crm_lead.py:809
+#: code:addons/crm/crm_phonecall.py:295
+#: code:addons/crm/wizard/crm_phonecall_to_meeting.py:83
 #: view:crm.meeting:0
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_meeting_new
 #: model:ir.actions.act_window,name:crm.crm_case_categ_meet
@@ -1142,7 +1137,6 @@ msgid "Partner Segmentations"
 msgstr "Paydaş Bölümlendirmeleri"
 
 #. module: crm
-#: view:crm.meeting:0
 #: field:crm.meeting,user_id:0
 #: view:crm.phonecall:0
 #: field:crm.phonecall,user_id:0
@@ -1162,12 +1156,10 @@ msgstr "İstatistikler"
 
 #. module: crm
 #: view:crm.meeting:0
-#: field:crm.send.mail,email_from:0
 msgid "From"
 msgstr "Gönderen"
 
 #. module: crm
-#: view:crm.lead2opportunity.action:0
 #: view:res.partner:0
 msgid "Next"
 msgstr "İleri"
@@ -1179,7 +1171,6 @@ msgstr "Aşama:"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead5
-#: model:crm.case.stage,name:crm.stage_opportunity5
 #: view:crm.lead:0
 msgid "Won"
 msgstr "Kazanıldı"
@@ -1200,13 +1191,10 @@ msgid "HTML formatting?"
 msgstr "HTML formatı mı?"
 
 #. module: crm
-#: field:crm.case.stage,type:0
 #: field:crm.lead,type:0
 #: field:crm.lead.report,type:0
-#: view:crm.meeting:0
-#: view:crm.phonecall:0
-#: view:crm.phonecall.report:0
-#: view:res.partner:0
+#: view:crm.opportunity2phonecall:0
+#: view:crm.phonecall2phonecall:0
 msgid "Type"
 msgstr "Tür"
 
@@ -1231,17 +1219,17 @@ msgid "Attachment"
 msgstr "Eklenti"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "August"
 msgstr "Ağustos"
 
 #. module: crm
-#: view:crm.lead:0
 #: field:crm.lead,create_date:0
-#: field:crm.lead.report,creation_date:0
 #: field:crm.meeting,create_date:0
+#: view:crm.phonecall:0
 #: field:crm.phonecall,create_date:0
 #: field:crm.phonecall.report,creation_date:0
 msgid "Creation Date"
@@ -1260,7 +1248,6 @@ msgstr "Tekrarlayan ID"
 #. module: crm
 #: view:crm.lead:0
 #: view:crm.meeting:0
-#: field:crm.send.mail,subject:0
 #: view:res.partner:0
 msgid "Subject"
 msgstr "Konu"
@@ -1271,13 +1258,11 @@ msgid "Tue"
 msgstr "Salı"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:300
 #: view:crm.case.stage:0
 #: view:crm.lead:0
 #: field:crm.lead,stage_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,stage_id:0
-#, python-format
 msgid "Stage"
 msgstr "Aşama"
 
@@ -1386,15 +1371,12 @@ msgstr ""
 #: view:crm.case.stage:0
 #: model:ir.actions.act_window,name:crm.crm_case_stage_act
 #: model:ir.actions.act_window,name:crm.crm_lead_stage_act
-#: model:ir.actions.act_window,name:crm.crm_opportunity_stage_act
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
-#: model:ir.ui.menu,name:crm.menu_crm_opportunity_stage_act
 msgid "Stages"
 msgstr "Aşamalar"
 
 #. module: crm
 #: field:crm.lead,planned_revenue:0
-#: field:crm.lead2opportunity,planned_revenue:0
 #: field:crm.partner2opportunity,planned_revenue:0
 #: field:crm.phonecall2opportunity,planned_revenue:0
 msgid "Expected Revenue"
@@ -1410,7 +1392,8 @@ msgstr ""
 "spesifik telefon görüşmesi kategorisi oluştur."
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "September"
@@ -1445,6 +1428,7 @@ msgstr "Danışma Masası servisini yönetir."
 
 #. module: crm
 #: field:crm.partner2opportunity,name:0
+#: field:crm.phonecall2opportunity,name:0
 msgid "Opportunity Name"
 msgstr "Fırsat Adı"
 
@@ -1503,13 +1487,12 @@ msgstr ""
 "işaretleyin. Eğer işaretlenmezse, altındaki kriter yok sayılacaktır."
 
 #. module: crm
-#: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2partner:0
 #: view:crm.phonecall:0
 #: view:crm.phonecall2partner:0
+#: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
 #: model:ir.actions.act_window,name:crm.action_crm_lead2partner
 #: model:ir.actions.act_window,name:crm.action_crm_phonecall2partner
-#: view:res.partner:0
 msgid "Create a Partner"
 msgstr "İş Ortağı Oluştur"
 
@@ -1529,9 +1512,7 @@ msgid "Days to Close"
 msgstr "Kapanışa kadar Gün Sayısı"
 
 #. module: crm
-#: field:crm.add.note,attachment_ids:0
 #: field:crm.case.section,complete_name:0
-#: field:crm.send.mail,attachment_ids:0
 msgid "unknown"
 msgstr "Bilinmiyor"
 
@@ -1548,7 +1529,6 @@ msgid "Partner To Opportunity"
 msgstr "Paydaşı Fırsata"
 
 #. module: crm
-#: view:crm.meeting:0
 #: field:crm.meeting,date:0
 #: field:crm.opportunity2phonecall,date:0
 #: view:crm.phonecall:0
@@ -1559,9 +1539,7 @@ msgid "Date"
 msgstr "Tarih"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.lead.report:0
-#: view:crm.meeting:0
 #: view:crm.phonecall.report:0
 msgid "Extended Filters..."
 msgstr "Genişletilmiş Filtreler..."
@@ -1623,7 +1601,6 @@ msgstr "Çocuk Takımları"
 #: field:crm.lead,state:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,state:0
-#: view:crm.meeting:0
 #: field:crm.meeting,state:0
 #: field:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
@@ -1647,12 +1624,12 @@ msgid "References"
 msgstr "Referanslar"
 
 #. module: crm
-#: code:addons/crm/crm.py:392
+#: code:addons/crm/crm.py:441
 #: view:crm.lead:0
-#: view:crm.lead2opportunity:0
-#: view:crm.lead2opportunity.action:0
 #: view:crm.lead2opportunity.partner:0
+#: view:crm.lead2opportunity.partner.mass:0
 #: view:crm.lead2partner:0
+#: view:crm.partner2opportunity:0
 #: view:crm.phonecall:0
 #: view:crm.phonecall2partner:0
 #: view:res.partner:0
@@ -1750,10 +1727,8 @@ msgstr ""
 
 #. module: crm
 #: field:crm.case.categ,name:0
-#: field:crm.installer,name:0
 #: field:crm.lead,name:0
 #: field:crm.segmentation,name:0
-#: field:crm.send.mail.attachment,name:0
 msgid "Name"
 msgstr "Adı"
 
@@ -1879,7 +1854,6 @@ msgstr "Planlanan Gelir"
 #. module: crm
 #: view:crm.lead:0
 #: view:crm.lead.report:0
-#: view:crm.meeting:0
 #: view:crm.phonecall:0
 #: view:crm.phonecall.report:0
 msgid "Group By..."
@@ -1921,7 +1895,7 @@ msgid "Zip"
 msgstr "PKod"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:213
+#: code:addons/crm/crm_lead.py:278
 #, python-format
 msgid "The case '%s' has been opened."
 msgstr "'%s' durumu açılmıştır."
@@ -1933,8 +1907,6 @@ msgstr "unvan"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone1
-#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_incoming0
-#: model:ir.ui.menu,name:crm.menu_crm_case_phone_inbound
 msgid "Inbound"
 msgstr "Gelen"
 
@@ -2008,6 +1980,7 @@ msgstr "Yinelenen Toplantı"
 #: view:crm.case.section:0
 #: view:crm.lead:0
 #: field:crm.lead,description:0
+#: view:crm.opportunity2phonecall:0
 msgid "Notes"
 msgstr "Notlar"
 
@@ -2064,23 +2037,21 @@ msgid "Prospect is converting to business partner"
 msgstr "Olası Paydaşın iş ortağına dönüştürülüyor"
 
 #. module: crm
-#: view:crm.lead2opportunity:0
-#: view:crm.partner2opportunity:0
 #: model:ir.actions.act_window,name:crm.phonecall2opportunity_act
 msgid "Convert To Opportunity"
 msgstr "Fırsata Dönüştür"
 
 #. module: crm
 #: view:crm.phonecall:0
+#: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
+#: selection:crm.phonecall.report,state:0
 #: view:res.partner:0
 msgid "Held"
 msgstr "Elde"
 
 #. module: crm
 #: view:crm.lead:0
-#: view:crm.phonecall:0
-#: view:res.partner:0
 msgid "Reset to Draft"
 msgstr "Taslağa Geri Dönüştür"
 
@@ -2154,6 +2125,7 @@ msgid "Lead To Opportunity Partner"
 msgstr "Adayda Fırsat Ortağına"
 
 #. module: crm
+#: field:crm.lead,location_id:0
 #: field:crm.meeting,location:0
 msgid "Location"
 msgstr "Konum"
@@ -2174,7 +2146,7 @@ msgid "Schedule a normal or phone meeting"
 msgstr "Bu"
 
 #. module: crm
-#: code:addons/crm/crm.py:375
+#: code:addons/crm/crm.py:430
 #, python-format
 msgid "Error !"
 msgstr "Hata !"
@@ -2228,7 +2200,8 @@ msgstr ""
 "emin misiniz?"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "July"
@@ -2285,6 +2258,7 @@ msgstr "MS-Outlook"
 
 #. module: crm
 #: view:crm.phonecall:0
+#: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
 #: view:res.partner:0
 msgid "Not Held"
@@ -2297,7 +2271,6 @@ msgstr "Olasılık"
 
 #. module: crm
 #: view:crm.lead.report:0
-#: field:crm.lead.report,month:0
 #: field:crm.meeting,month_list:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,month:0
@@ -2337,6 +2310,7 @@ msgstr ""
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.lead2partner,action:0
 #: selection:crm.phonecall2partner,action:0
 msgid "Create a new partner"
@@ -2349,8 +2323,11 @@ msgid "Start Date"
 msgstr "Başlangıç Tarihi"
 
 #. module: crm
+#: view:crm.phonecall:0
 #: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
+#: selection:crm.phonecall.report,state:0
+#: view:res.partner:0
 msgid "Todo"
 msgstr "Yapılacaklar"
 
@@ -2376,9 +2353,8 @@ msgid "Reset to Unconfirmed"
 msgstr "Onaylanmadı olarak yeniden ayarla"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_add_note.py:40
-#: view:crm.add.note:0
-#, python-format
+#: field:crm.opportunity2phonecall,note:0
+#: field:crm.phonecall2phonecall,note:0
 msgid "Note"
 msgstr "Not"
 
@@ -2402,10 +2378,7 @@ msgstr "Düşük"
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
 #: field:crm.meeting,date_closed:0
-#: selection:crm.merge.opportunity,state:0
 #: field:crm.phonecall,date_closed:0
-#: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 msgid "Closed"
 msgstr "Kapalı"
 
@@ -2420,16 +2393,13 @@ msgid "Internal Meeting"
 msgstr "İç Toplantı"
 
 #. module: crm
-#: code:addons/crm/crm.py:411
+#: code:addons/crm/crm.py:454
 #: selection:crm.add.note,state:0
 #: view:crm.lead:0
 #: selection:crm.lead,state:0
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
-#: selection:crm.merge.opportunity,state:0
-#: selection:crm.phonecall,state:0
 #: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 #, python-format
 msgid "Pending"
 msgstr "Beklemede"
@@ -2440,7 +2410,6 @@ msgid "Customer Meeting"
 msgstr "Müşteri Toplantısı"
 
 #. module: crm
-#: view:crm.lead:0
 #: field:crm.lead,email_cc:0
 msgid "Global CC"
 msgstr "Toplu CC"
@@ -2461,21 +2430,23 @@ msgstr "Durumun açılması için gün sayısı"
 
 #. module: crm
 #: field:crm.lead,phone:0
+#: field:crm.opportunity2phonecall,phone:0
 #: field:crm.phonecall,partner_phone:0
+#: field:crm.phonecall2phonecall,phone:0
 msgid "Phone"
 msgstr "Telefon"
 
 #. module: crm
+#: field:crm.case.channel,active:0
 #: field:crm.case.section,active:0
 #: field:crm.lead,active:0
-#: view:crm.lead.report:0
 #: field:crm.meeting,active:0
 #: field:crm.phonecall,active:0
 msgid "Active"
 msgstr "Aktif"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:306
+#: code:addons/crm/crm_lead.py:847
 #, python-format
 msgid "The stage of opportunity '%s' has been changed to '%s'."
 msgstr "'%s' fırsat aşaması '%s' olarak değiştirilmiştir."
@@ -2527,8 +2498,11 @@ msgstr "Derneklerin bağış toplama işlemlerini ve izlenmesini sağlar."
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,action:0
+#: field:crm.lead2opportunity.partner.mass,action:0
 #: field:crm.lead2partner,action:0
+#: field:crm.opportunity2phonecall,action:0
 #: field:crm.phonecall2partner,action:0
+#: field:crm.phonecall2phonecall,action:0
 msgid "Action"
 msgstr "İşlem"
 
@@ -2576,7 +2550,6 @@ msgstr "Diğer"
 #. module: crm
 #: view:crm.meeting:0
 #: selection:crm.meeting,state:0
-#: selection:crm.phonecall,state:0
 msgid "Done"
 msgstr "Tamamlandı"
 
@@ -2596,15 +2569,10 @@ msgid "_Schedule Call"
 msgstr "_Çağrı Planla"
 
 #. module: crm
-#: code:addons/crm/crm.py:326
-#: selection:crm.add.note,state:0
+#: code:addons/crm/crm.py:396
 #: view:crm.lead:0
-#: selection:crm.lead,state:0
+#: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
-#: selection:crm.merge.opportunity,state:0
-#: view:crm.phonecall:0
-#: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 #: view:res.partner:0
 #, python-format
 msgid "Open"
@@ -2641,7 +2609,7 @@ msgid "Recurrent"
 msgstr "Yinelenen"
 
 #. module: crm
-#: code:addons/crm/crm.py:397
+#: code:addons/crm/crm.py:446
 #, python-format
 msgid "The case '%s' has been cancelled."
 msgstr "'%s' Durumu iptal edilmiştir."
@@ -2657,7 +2625,6 @@ msgid "Send new email"
 msgstr "Yeni e-posta gönder"
 
 #. module: crm
-#: view:board.board:0
 #: model:ir.actions.act_window,name:crm.act_my_oppor
 msgid "My Open Opportunities"
 msgstr "Açık Fırsatlarım"
@@ -2709,7 +2676,6 @@ msgstr "Varolan Fırstla Birleştir"
 
 #. module: crm
 #: help:crm.lead,state:0
-#: help:crm.phonecall,state:0
 msgid ""
 "The state is set to 'Draft', when a case is created.                         "
 "         \n"
@@ -2834,7 +2800,6 @@ msgstr "Şuna Ata"
 
 #. module: crm
 #: field:crm.add.note,state:0
-#: field:crm.send.mail,state:0
 msgid "Set New State To"
 msgstr "Yeni Durumu şuna Ayarla"
 
@@ -2859,8 +2824,6 @@ msgstr "Şuna Yanıt ver"
 
 #. module: crm
 #: view:board.board:0
-#: model:ir.actions.act_window,name:crm.open_board_crm
-#: model:ir.ui.menu,name:crm.menu_board_crm
 msgid "Sales Dashboard"
 msgstr "Satış Panosu"
 
@@ -2894,8 +2857,6 @@ msgstr "Dördüncü"
 
 #. module: crm
 #: selection:crm.add.note,state:0
-#: selection:crm.merge.opportunity,state:0
-#: selection:crm.send.mail,state:0
 msgid "Unchanged"
 msgstr "Değiştirilmemiş"
 
@@ -2996,7 +2957,7 @@ msgid "Add Internal Note"
 msgstr "İç Not Ekle"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:304
+#: code:addons/crm/crm_lead.py:845
 #, python-format
 msgid "The stage of lead '%s' has been changed to '%s'."
 msgstr "'%s' Adayın aşaması '%s' olarak değiştirilmiştir."
@@ -3019,10 +2980,7 @@ msgid "Change Probability on next and previous stages."
 msgstr "Sonraki ve önceki aşamaların Olabilirliğini değiştir."
 
 #. module: crm
-#: code:addons/crm/crm.py:455
-#: code:addons/crm/crm.py:457
-#: code:addons/crm/crm_action_rule.py:66
-#: code:addons/crm/wizard/crm_send_email.py:141
+#: code:addons/crm/crm_action_rule.py:61
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
@@ -3038,10 +2996,8 @@ msgstr "Çağrı Özeti"
 #: selection:crm.lead,state:0
 #: selection:crm.lead.report,state:0
 #: selection:crm.meeting,state:0
-#: selection:crm.merge.opportunity,state:0
 #: selection:crm.phonecall,state:0
 #: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 msgid "Cancelled"
 msgstr "Vazgeçildi"
 
@@ -3146,6 +3102,7 @@ msgstr "Telefonçağrısından Telefonçağrısına"
 
 #. module: crm
 #: view:crm.lead:0
+#: model:ir.actions.act_window,name:crm.opportunity2phonecall_act
 msgid "Schedule/Log Call"
 msgstr "Planlama/Çağrı Kütüğü"
 
@@ -3189,7 +3146,7 @@ msgid "Total of Planned Revenue"
 msgstr "Toplam Planlanan Gelir"
 
 #. module: crm
-#: code:addons/crm/crm.py:375
+#: code:addons/crm/crm.py:430
 #, python-format
 msgid ""
 "You can not escalate, You are already at the top level regarding your sales-"
@@ -3213,8 +3170,11 @@ msgid "Success Rate (%)"
 msgstr "Başarı Oranı (%)"
 
 #. module: crm
+#: selection:crm.add.note,state:0
 #: model:crm.case.stage,name:crm.stage_lead1
-#: model:crm.case.stage,name:crm.stage_opportunity1
+#: view:crm.lead:0
+#: selection:crm.lead,state:0
+#: view:crm.lead.report:0
 msgid "New"
 msgstr "Yeni"
 
@@ -3232,11 +3192,11 @@ msgid "Email"
 msgstr "E-posta"
 
 #. module: crm
+#: view:crm.case.channel:0
 #: view:crm.lead:0
 #: field:crm.lead,channel_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,channel_id:0
-#: field:crm.phonecall,canal_id:0
 msgid "Channel"
 msgstr "Kanal"
 
@@ -3337,10 +3297,8 @@ msgstr "Perş"
 #: view:crm.add.note:0
 #: view:crm.merge.opportunity:0
 #: view:crm.opportunity2phonecall:0
-#: view:crm.partner2opportunity:0
 #: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
-#: view:crm.send.mail:0
 msgid "_Cancel"
 msgstr "_Vazgeç"
 
@@ -3362,7 +3320,6 @@ msgstr "Günlük"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
-#: model:crm.case.stage,name:crm.stage_opportunity2
 msgid "Qualification"
 msgstr "Yeterlik"
 
@@ -3377,7 +3334,8 @@ msgid "First"
 msgstr "İlk"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "December"
@@ -3443,6 +3401,7 @@ msgid "Salesman"
 msgstr "Satış Elemanı"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,date_deadline:0
 msgid "Expected Closing"
 msgstr "Beklenen Kapanış"
@@ -3469,8 +3428,6 @@ msgstr "Paydaş Adı"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone2
-#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
-#: model:ir.ui.menu,name:crm.menu_crm_case_phone_outbound
 msgid "Outbound"
 msgstr "Giden"
 
@@ -3488,10 +3445,8 @@ msgstr "Takım Üyeleri"
 
 #. module: crm
 #: view:crm.lead:0
-#: field:crm.lead,job_ids:0
 #: view:crm.meeting:0
 #: view:crm.phonecall:0
-#: view:res.partner:0
 msgid "Contacts"
 msgstr "İlgililer"
 
@@ -3532,14 +3487,10 @@ msgid "Success Probability"
 msgstr "Başarı Olasılığı"
 
 #. module: crm
-#: code:addons/crm/crm.py:426
-#: selection:crm.add.note,state:0
-#: selection:crm.lead,state:0
+#: code:addons/crm/crm.py:466
 #: selection:crm.lead.report,state:0
-#: selection:crm.merge.opportunity,state:0
 #: selection:crm.phonecall,state:0
 #: selection:crm.phonecall.report,state:0
-#: selection:crm.send.mail,state:0
 #, python-format
 msgid "Draft"
 msgstr "Taslak"
@@ -3614,8 +3565,6 @@ msgid "Meeting Categories"
 msgstr "Toplantı Kategorileri"
 
 #. module: crm
-#: view:crm.lead2opportunity.partner:0
-#: view:crm.lead2partner:0
 #: view:crm.phonecall2partner:0
 msgid "You may have to verify that this partner does not exist already."
 msgstr "Bu paydaşın halihazırda olmadığını doğrulamalızınız."
@@ -3632,7 +3581,8 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "November"
@@ -3646,6 +3596,7 @@ msgstr "Firma adresinizde bir Eposta Kimliği yok!"
 
 #. module: crm
 #: view:crm.lead.report:0
+#: model:ir.actions.act_window,name:crm.act_opportunity_stage
 msgid "Opportunities By Stage"
 msgstr "Aşamaya göre Fırsatlar"
 
@@ -3655,7 +3606,8 @@ msgid "Schedule Phone Call"
 msgstr "Telefon Çağrısı Planla"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "January"
@@ -3684,10 +3636,7 @@ msgid "Twitter Ads"
 msgstr "Twitter Reklamları"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_add_note.py:26
-#: code:addons/crm/wizard/crm_send_email.py:72
-#: code:addons/crm/wizard/crm_send_email.py:169
-#: code:addons/crm/wizard/crm_send_email.py:270
+#: code:addons/crm/wizard/crm_add_note.py:28
 #, python-format
 msgid "Error"
 msgstr "Hata"
@@ -3708,7 +3657,7 @@ msgid "Error ! You can not create recursive profiles."
 msgstr "Hata ! Yinelen profiller oluşturamazsınız."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:232
+#: code:addons/crm/crm_lead.py:296
 #, python-format
 msgid "The case '%s' has been closed."
 msgstr "'%s' Durumu kapatılmıştır."
@@ -3737,7 +3686,7 @@ msgid "Merged into Opportunity: %s"
 msgstr "Fırsatla Birleştir: %s"
 
 #. module: crm
-#: code:addons/crm/crm.py:347
+#: code:addons/crm/crm.py:409
 #: view:crm.lead:0
 #: view:res.partner:0
 #, python-format
@@ -3747,7 +3696,6 @@ msgstr "Kapat"
 #. module: crm
 #: view:crm.lead:0
 #: view:crm.phonecall:0
-#: view:res.partner:0
 msgid "Categorization"
 msgstr "Sınıflandırma"
 
@@ -3773,7 +3721,6 @@ msgstr "Perşembe"
 
 #. module: crm
 #: view:crm.meeting:0
-#: field:crm.send.mail,email_to:0
 msgid "To"
 msgstr "Kime"
 
@@ -3804,7 +3751,6 @@ msgstr "Ruhsal Durumu"
 #: view:crm.phonecall:0
 #: field:crm.phonecall,description:0
 #: field:crm.segmentation,description:0
-#: view:res.partner:0
 msgid "Description"
 msgstr "Açıklama"
 
@@ -3814,9 +3760,11 @@ msgstr "Açıklama"
 #: field:crm.case.resource.type,section_id:0
 #: view:crm.case.section:0
 #: field:crm.case.section,name:0
+#: view:crm.lead:0
 #: field:crm.lead,section_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,section_id:0
+#: field:crm.lead2opportunity.partner.mass,section_id:0
 #: field:crm.meeting,section_id:0
 #: field:crm.opportunity2phonecall,section_id:0
 #: view:crm.phonecall:0
@@ -3829,7 +3777,8 @@ msgid "Sales Team"
 msgstr "Satış Takımı"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "May"
@@ -3841,7 +3790,7 @@ msgid "Interest in Accessories"
 msgstr "Aksesuarlara ilgi duyuyor"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:211
+#: code:addons/crm/crm_lead.py:276
 #, python-format
 msgid "The opportunity '%s' has been opened."
 msgstr "'%s' Fırsatı açılmıştır."
@@ -3873,7 +3822,8 @@ msgid "Customer"
 msgstr "Müşteri"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "February"
@@ -3882,13 +3832,11 @@ msgstr "Şubat"
 #. module: crm
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.crm_case_categ_meet_create_partner
-#: view:res.partner:0
 msgid "Schedule a Meeting"
 msgstr "Toplantı Planla"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
-#: model:crm.case.stage,name:crm.stage_opportunity6
 #: view:crm.lead:0
 msgid "Lost"
 msgstr "Kayıp"
@@ -3902,7 +3850,10 @@ msgstr "Ülke"
 
 #. module: crm
 #: view:crm.lead:0
-#: selection:crm.lead2opportunity.action,name:0
+#: view:crm.lead2opportunity.partner:0
+#: selection:crm.lead2opportunity.partner,name:0
+#: view:crm.lead2opportunity.partner.mass:0
+#: selection:crm.lead2opportunity.partner.mass,name:0
 #: view:crm.phonecall:0
 #: view:res.partner:0
 msgid "Convert to Opportunity"
@@ -3914,7 +3865,8 @@ msgid "Wednesday"
 msgstr "Çarşamba"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "April"
@@ -3931,7 +3883,8 @@ msgid "Phone calls by user and section"
 msgstr "Kullanıcıya ve bölüme göre telefon çağrıları"
 
 #. module: crm
-#: selection:crm.lead2opportunity.action,name:0
+#: selection:crm.lead2opportunity.partner,name:0
+#: selection:crm.lead2opportunity.partner.mass,name:0
 msgid "Merge with existing Opportunity"
 msgstr "Geçerli Fırsatla birleştir"
 
@@ -3942,7 +3895,6 @@ msgstr "Seçenek"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead4
-#: model:crm.case.stage,name:crm.stage_opportunity4
 msgid "Negotiation"
 msgstr "Görüşme"
 
@@ -3979,7 +3931,6 @@ msgstr "Saniye"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead3
-#: model:crm.case.stage,name:crm.stage_opportunity3
 msgid "Proposition"
 msgstr "Önerme"
 
@@ -3990,7 +3941,6 @@ msgstr "Telefonçağrısı"
 
 #. module: crm
 #: view:crm.lead.report:0
-#: field:crm.lead.report,name:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,name:0
 msgid "Year"
@@ -4000,82 +3950,3 @@ msgstr "Yıl"
 #: model:crm.case.resource.type,name:crm.type_lead8
 msgid "Newsletter"
 msgstr "Habermektubu"
-
-#~ msgid "Version 4.2"
-#~ msgstr "Versiyon 4.2"
-
-#~ msgid "Version 4.4"
-#~ msgstr "Versiyon 4.4"
-
-#~ msgid ""
-#~ "The generic OpenERP Customer Relationship Management\n"
-#~ "system enables a group of people to intelligently and efficiently manage\n"
-#~ "leads, opportunities, meeting, phonecall etc.\n"
-#~ "It manages key tasks such as communication, identification, prioritization,\n"
-#~ "assignment, resolution and notification.\n"
-#~ "\n"
-#~ "OpenERP ensures that all cases are successfully tracked by users, customers "
-#~ "and\n"
-#~ "suppliers. It can automatically send reminders, escalate the request, "
-#~ "trigger\n"
-#~ "specific methods and lots of other actions based on your own enterprise "
-#~ "rules.\n"
-#~ "\n"
-#~ "The greatest thing about this system is that users don't need to do "
-#~ "anything\n"
-#~ "special. They can just send email to the request tracker. OpenERP will take\n"
-#~ "care of thanking them for their message, automatically routing it to the\n"
-#~ "appropriate staff, and make sure all future correspondence gets to the "
-#~ "right\n"
-#~ "place.\n"
-#~ "\n"
-#~ "The CRM module has a email gateway for the synchronisation interface\n"
-#~ "between mails and OpenERP. \n"
-#~ "Create dashboard for CRM that includes:\n"
-#~ "    * My Leads (list)\n"
-#~ "    * Leads by Stage (graph)\n"
-#~ "    * My Meetings (list)\n"
-#~ "    * Sales Pipeline by Stage (graph)\n"
-#~ "    * My Cases (list)\n"
-#~ "    * Jobs Tracking (graph)\n"
-#~ msgstr ""
-#~ "Jenerik OpenERP Müşteri İlişkileri Yönetimi\n"
-#~ "sistem bir grup insanı zekice ve etkili şekilde yönetmeye imkan sağlar\n"
-#~ "talepler, fırsatlar, buluşma, telefon görüşmeleri vb.\n"
-#~ "İletişim, kimlik saptama, öncelik belirleme, \n"
-#~ "görevlendirme, çözüme ulaştırma ve bilgilendirme gibi anahtar görevleri "
-#~ "yönetir.\n"
-#~ "\n"
-#~ "OpenERP bütün konuların kullanıcılar, yöneticiler ve tedarikçiler\n"
-#~ "tarafından başarılı bir şekilde takip edildiğini garanti eder. Otomatik "
-#~ "olarak hatırlatma gönderir,\n"
-#~ "isteklerin önem sırasını belirler, belirli yöntemlerin kullanımını sağlar ve "
-#~ "işletmenin kurallarını uygun şekilde bir çok işlem yapabilir.\n"
-#~ "\n"
-#~ "Bu sistemle ilgili en önemli şey, kullanıcıların herhangi özel bir şey "
-#~ "yapmasına gerek\n"
-#~ "olmamasıdır. Sadece talep takibi için e-posta gönderirler. OpenERP mesajları "
-#~ "için teşekkür eder, otomatik olarak ilgili\n"
-#~ "uygun kişiye yönlendirir, ve gelecek bütün yazışmaların doğru yere "
-#~ "gitmesini\n"
-#~ "sağlar.\n"
-#~ "\n"
-#~ "MİY modülünün eşzamanlama arayüzü için\n"
-#~ "e-posta ve OpenERP arasında e-posta yolu vardır. \n"
-#~ "MİY için aşağıdakileri içeren kontrol paneli oluştur:\n"
-#~ "    * Benim taleplerim (liste)\n"
-#~ "    * Taleplerin aşamaları (grafik)\n"
-#~ "    * Toplantılarım (Liste)\n"
-#~ "    * Satış düzenlemesi aşamaları göre (grafik)\n"
-#~ "    * Benim takip ettiğim vakalar (liste)\n"
-#~ "    * İşlerin Takibi (grafik)\n"
-
-#~ msgid ""
-#~ "The meeting calendar is shared between the sales teams and fully integrated "
-#~ "with other applications such as the employee holidays or the business "
-#~ "opportunities. You can also synchronize meetings with your mobile phone "
-#~ "using the caldav interface."
-#~ msgstr ""
-#~ "Toplantı takvimi, satış takımınca paylaşılır ve personel tatilleri ya da iş "
-#~ "fırsatları gibi diğer uygulamalarla tam olarak entegredir. Caldav arayüzünü "
-#~ "kullanarak toplantılarınızı da cep telefonunuzdan senkronize edebilirsiniz."

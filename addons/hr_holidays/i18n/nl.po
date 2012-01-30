@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:12+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:25+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -22,12 +22,12 @@ msgid "Blue"
 msgstr "Blauw"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
 #: field:hr.holidays,holiday_type:0
 msgid "Allocation Type"
 msgstr "Soort reservering"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr "Wacht op tweede goedkeuring"
@@ -59,6 +59,7 @@ msgid "Department"
 msgstr "Afdeling"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Refused"
 msgstr "Geweigerd"
@@ -134,6 +135,7 @@ msgid "Summary Of Leaves"
 msgstr "Samenvatting verlof"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: view:hr.holidays:0
 #: selection:hr.holidays,state:0
 msgid "Approved"
@@ -145,7 +147,7 @@ msgid "Refuse"
 msgstr "Weigeren"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:337
 #, python-format
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
@@ -155,7 +157,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:board.board:0
-#: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Leaves"
 msgstr "Verlof"
 
@@ -170,6 +174,7 @@ msgid "Leaves by Department"
 msgstr "Verlof per afdeling"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "Geannuleerd"
@@ -201,7 +206,6 @@ msgid "HR Holidays Summary Report By Employee"
 msgstr "HR Vakantie samenvatting overzicht per medewerker"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
@@ -214,8 +218,8 @@ msgid "Leave Type"
 msgstr "Verlofsoort"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:186
-#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:199
+#: code:addons/hr_holidays/hr_holidays.py:337
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
@@ -358,9 +362,11 @@ msgid "Total holidays by type"
 msgstr "Totaal vakantiedagen per soort"
 
 #. module: hr_holidays
+#: view:hr.employee:0
 #: view:hr.holidays:0
 #: field:hr.holidays,employee_id:0
 #: field:hr.holidays.remaining.leaves.user,name:0
+#: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
 msgstr "Medewerker"
 
@@ -421,6 +427,7 @@ msgstr ""
 "worden goedgekeurd"
 
 #. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Waiting Approval"
 msgstr "Wacht op goedkeuring"
@@ -455,6 +462,7 @@ msgid "Lavender"
 msgstr "Lavendel"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "Leave Requests"
@@ -472,6 +480,7 @@ msgid "Employee's Holidays"
 msgstr "Medewerkers vakantie"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: field:hr.holidays,category_id:0
 msgid "Category"
 msgstr "Categorie"
@@ -571,6 +580,7 @@ msgstr "Snipperdag"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
 msgstr "Verlof samenvatting"
@@ -617,6 +627,7 @@ msgid "Reasons"
 msgstr "Redenen"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
 msgstr "Verlof analyse"
@@ -655,6 +666,7 @@ msgid "Leave Detail"
 msgstr "Details verlof"
 
 #. module: hr_holidays
+#: field:hr.holidays,double_validation:0
 #: field:hr.holidays.status,double_validation:0
 msgid "Apply Double Validation"
 msgstr "Gebruik dubbele goedkeuring"
@@ -671,6 +683,7 @@ msgid "Details"
 msgstr "Details"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
 msgstr "Mijn verlof"
@@ -702,7 +715,7 @@ msgstr ""
 "categorie"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:186
+#: code:addons/hr_holidays/hr_holidays.py:199
 #, python-format
 msgid "You cannot delete a leave which is not in draft state !"
 msgstr "U kunt geen verlof verwijderen dat niet in Concept status staat !"
@@ -808,6 +821,7 @@ msgid "Start Date"
 msgstr "Begindatum"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"

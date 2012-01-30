@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:08+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:20+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -52,7 +52,8 @@ msgid "Personal Emails"
 msgstr "Persönl. Emails"
 
 #. module: email_template
-#: field:email.template,file_name:0
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
 msgid "Report Filename"
 msgstr "Report Dateiname"
 
@@ -94,7 +95,7 @@ msgid "Body"
 msgstr "Hauptteil"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:304
+#: code:addons/email_template/email_template.py:217
 #, python-format
 msgid "Deletion of Record failed"
 msgstr "Löschen des Eintrag fehlgeschlagen"
@@ -224,9 +225,7 @@ msgstr "Assistent Fertig"
 
 #. module: email_template
 #: field:email.template,reply_to:0
-#: field:email_template.mailbox,reply_to:0
 #: field:email_template.preview,reply_to:0
-#: field:email_template.send.wizard,reply_to:0
 msgid "Reply-To"
 msgstr "Antwort an"
 
@@ -262,7 +261,8 @@ msgid "OK"
 msgstr "OK"
 
 #. module: email_template
-#: field:email_template.account,auto_delete:0
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
 msgid "Auto Delete"
 msgstr "Autom. Löschen"
 
@@ -299,7 +299,7 @@ msgid "From Email"
 msgstr "Von EMail"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:304
+#: code:addons/email_template/email_template.py:217
 #, python-format
 msgid "Warning"
 msgstr "Warnung"
@@ -340,10 +340,8 @@ msgstr ""
 "Absenderemail unterscheidet.  Hierzu können Platzhalter angewendet werden."
 
 #. module: email_template
-#: field:email.template,def_subject:0
-#: field:email_template.mailbox,subject:0
+#: field:email.template,subject:0
 #: field:email_template.preview,subject:0
-#: field:email_template.send.wizard,subject:0
 msgid "Subject"
 msgstr "Betreff"
 
@@ -354,13 +352,13 @@ msgid "Reason: %s"
 msgstr "Grund: %s"
 
 #. module: email_template
-#: field:email_template.mailbox,email_from:0
+#: field:email.template,email_from:0
+#: field:email_template.preview,email_from:0
 msgid "From"
 msgstr "Von"
 
 #. module: email_template
-#: field:email_template.preview,ref_template:0
-#: field:email_template.send.wizard,ref_template:0
+#: field:mail.compose.message,template_id:0
 msgid "Template"
 msgstr "Vorlage"
 
@@ -405,8 +403,8 @@ msgid "Body (Text-Web Client Only)"
 msgstr "Hauptteil (Text- Web Client)"
 
 #. module: email_template
-#: field:email_template.account,state:0
-#: view:email_template.mailbox:0
+#: field:email.template,state:0
+#: field:email_template.preview,state:0
 msgid "State"
 msgstr "Status"
 
@@ -513,7 +511,6 @@ msgstr "Sub Feld"
 
 #. module: email_template
 #: view:email.template:0
-#: view:email_template.mailbox:0
 msgid "Advanced"
 msgstr "Weiterführend"
 
@@ -571,6 +568,7 @@ msgstr ""
 
 #. module: email_template
 #: help:email.template,track_campaign_item:0
+#: help:email_template.preview,track_campaign_item:0
 msgid ""
 "Enable this is you wish to include a special tracking marker in outgoing "
 "emails so you can identify replies and link them back to the corresponding "
@@ -593,6 +591,7 @@ msgstr "Signatur"
 
 #. module: email_template
 #: field:email.template,sub_object:0
+#: field:email_template.preview,sub_object:0
 msgid "Sub-model"
 msgstr "Sub Modul"
 
@@ -608,6 +607,7 @@ msgstr "Haupttext (Klartext)"
 
 #. module: email_template
 #: view:email.template:0
+#: view:email_template.preview:0
 msgid "Body (Text)"
 msgstr "Textbereich"
 
@@ -765,7 +765,8 @@ msgid "Status"
 msgstr "Status"
 
 #. module: email_template
-#: view:email_template.account:0
+#: selection:email.template,state:0
+#: selection:email_template.preview,state:0
 msgid "Outgoing"
 msgstr "Postausgang"
 
@@ -796,10 +797,7 @@ msgid "Request Re-activation"
 msgstr "Anfrage Reaktivierung"
 
 #. module: email_template
-#: view:email.template:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
-#: model:ir.ui.menu,name:email_template.menu_email_template_all
-#: model:ir.ui.menu,name:email_template.menu_email_template_all_tools
+#: model:ir.model,name:email_template.model_email_template
 msgid "Email Templates"
 msgstr "EMail Vorlagen f. Modelle"
 
@@ -889,7 +887,7 @@ msgstr ""
 "Nur Benutzer dieser Gruppe dürfen Emails auf Basis dieses Templates versenden"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:284
+#: code:addons/email_template/email_template.py:196
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "Versende Mail (%s)"
@@ -907,6 +905,7 @@ msgstr "Report Datei"
 
 #. module: email_template
 #: field:email.template,copyvalue:0
+#: field:email_template.preview,copyvalue:0
 msgid "Expression"
 msgstr "Ausdruck"
 
@@ -918,16 +917,12 @@ msgstr "Historie"
 
 #. module: email_template
 #: view:email.template:0
-#: view:email_template.mailbox:0
-#: field:email_template.mailbox,attachments_ids:0
-#: view:email_template.send.wizard:0
-#: field:email_template.send.wizard,attachment_ids:0
 msgid "Attachments"
 msgstr "Anhänge"
 
 #. module: email_template
-#: field:email_template.preview,to:0
-#: field:email_template.send.wizard,to:0
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
 msgid "To"
 msgstr "An"
 
@@ -953,7 +948,7 @@ msgid "Email Templates for Models"
 msgstr "EMail Vorlagen f. Module"
 
 #. module: email_template
-#: view:email_template.send.wizard:0
+#: view:email_template.preview:0
 msgid "Close"
 msgstr "Beenden"
 
@@ -1005,6 +1000,7 @@ msgstr "Berechtigte Benutzer Gruppe"
 
 #. module: email_template
 #: field:email.template,model_object_field:0
+#: field:email_template.preview,model_object_field:0
 msgid "Field"
 msgstr "Feld"
 
@@ -1141,7 +1137,8 @@ msgid "CC"
 msgstr "CC"
 
 #. module: email_template
-#: view:email_template.mailbox:0
+#: selection:email.template,state:0
+#: selection:email_template.preview,state:0
 msgid "Sent"
 msgstr "Gesendet"
 
@@ -1181,6 +1178,8 @@ msgstr "EMails"
 
 #. module: email_template
 #: view:email.template:0
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
 msgid "Templates"
 msgstr "Vorlagen"
 
@@ -1191,11 +1190,13 @@ msgstr "Report Bez."
 
 #. module: email_template
 #: field:email.template,name:0
+#: field:email_template.preview,name:0
 msgid "Name"
 msgstr "Bezeichn."
 
 #. module: email_template
 #: field:email.template,track_campaign_item:0
+#: field:email_template.preview,track_campaign_item:0
 msgid "Resource Tracking"
 msgstr "Ressource Historie"
 
@@ -1256,8 +1257,7 @@ msgid "email_template.account"
 msgstr "email_template.account"
 
 #. module: email_template
-#: field:email_template.preview,rel_model:0
-#: field:email_template.send.wizard,rel_model:0
+#: view:email.template:0
 msgid "Model"
 msgstr "Modul"
 
@@ -1351,9 +1351,3 @@ msgstr "Hat Dateianhang"
 #, python-format
 msgid "No Description"
 msgstr "Keine Beschreibung"
-
-#~ msgid "Personal Mails"
-#~ msgstr "Persönliche EMails"
-
-#~ msgid "Mailbox"
-#~ msgstr "Postfach"

@@ -14,12 +14,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:38+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:50+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: share
-#: code:addons/share/web/editors.py:15
-#, python-format
+#: model:ir.module.category,name:share.module_category_share
 msgid "Sharing"
 msgstr ""
 
@@ -111,7 +110,7 @@ msgid "Congratulations, you have successfully setup a new shared access!"
 msgstr "Parabéns, acabou de estabelecer um novo acesso para partilha!"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:275
+#: code:addons/share/wizard/share_wizard.py:527
 #, python-format
 msgid "(Copy for sharing)"
 msgstr ""
@@ -161,8 +160,7 @@ msgid "Share wizard: step 1"
 msgstr "Assistente de partilha: passo 1"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:458
-#: field:share.wizard.result.line,login:0
+#: code:addons/share/wizard/share_wizard.py:778
 #, python-format
 msgid "Username"
 msgstr "Nome de utilizador"
@@ -219,7 +217,7 @@ msgid "Sharing Tools"
 msgstr "Ferramentas de partilha"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:460
+#: code:addons/share/wizard/share_wizard.py:780
 #, python-format
 msgid "Database"
 msgstr "Base de dados"
@@ -230,7 +228,7 @@ msgid "Send Email Notification(s)"
 msgstr "Enviar mensagens de notificação"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:418
+#: code:addons/share/wizard/share_wizard.py:580
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr ""
@@ -251,7 +249,7 @@ msgid "Share Group"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:459
+#: code:addons/share/wizard/share_wizard.py:779
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
@@ -297,19 +295,19 @@ msgid "Summary"
 msgstr "Resumo"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:304
+#: code:addons/share/wizard/share_wizard.py:617
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:448
+#: code:addons/share/wizard/share_wizard.py:757
 #, python-format
 msgid "Email required"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:240
+#: code:addons/share/wizard/share_wizard.py:494
 #, python-format
 msgid "Copied access for sharing"
 msgstr ""
@@ -351,7 +349,7 @@ msgid ""
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:448
+#: code:addons/share/wizard/share_wizard.py:757
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
@@ -366,6 +364,7 @@ msgid "Regular users only (no share user)"
 msgstr ""
 
 #. module: share
+#: field:share.wizard,embed_url:0
 #: field:share.wizard.result.line,share_url:0
 msgid "Share URL"
 msgstr "URL de partilha"
@@ -376,7 +375,7 @@ msgid "Domain"
 msgstr "Domínio"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:314
+#: code:addons/share/wizard/share_wizard.py:637
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -408,8 +407,7 @@ msgid "Action to share"
 msgstr ""
 
 #. module: share
-#: code:addons/share/web/editors.py:18
-#, python-format
+#: view:share.wizard:0
 msgid "Share"
 msgstr ""
 
@@ -437,9 +435,7 @@ msgstr "O acesso partilhado não pode ser configurado"
 
 #. module: share
 #: model:ir.actions.act_window,name:share.action_share_wizard
-#: model:ir.actions.act_window,name:share.action_share_wizard_step1
 #: model:ir.model,name:share.model_share_wizard
-#: model:ir.ui.menu,name:share.menu_action_share_wizard
 #: field:share.wizard.result.line,share_wizard_id:0
 msgid "Share Wizard"
 msgstr "Assistente de partilha"
@@ -481,9 +477,3 @@ msgstr "Apenas de leitura"
 #, python-format
 msgid "*usual password*"
 msgstr "*senha habitual*"
-
-#~ msgid "Users"
-#~ msgstr "Utilizadores"
-
-#~ msgid "share.wizard.user"
-#~ msgstr "share.wizard.user"

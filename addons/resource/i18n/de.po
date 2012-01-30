@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:34+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:47+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: resource
 #: model:ir.module.module,description:resource.module_meta_information
@@ -69,6 +69,7 @@ msgstr "Abwesende Ressourcen"
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
+#: field:resource.resource,calendar_id:0
 msgid "Working Time"
 msgstr "Arbeitszeit"
 
@@ -128,7 +129,6 @@ msgstr "Ressourcen Kalender"
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
-#: field:resource.resource,calendar_id:0
 msgid "Working Period"
 msgstr "Arbeits-/Bürozeiten"
 
@@ -198,7 +198,6 @@ msgid "Closing Days"
 msgstr "Abschlussdatum"
 
 #. module: resource
-#: model:ir.module.module,shortdesc:resource.module_meta_information
 #: model:ir.ui.menu,name:resource.menu_resource_config
 #: view:resource.calendar.leaves:0
 #: field:resource.calendar.leaves,resource_id:0
@@ -359,7 +358,7 @@ msgid "Start Date"
 msgstr "Startdatum"
 
 #. module: resource
-#: code:addons/resource/resource.py:246
+#: code:addons/resource/resource.py:310
 #, python-format
 msgid " (copy)"
 msgstr " (copy)"
@@ -368,29 +367,3 @@ msgstr " (copy)"
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Samstag"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Module for resource management\n"
-#~ "     A resource represent something that can be scheduled\n"
-#~ "     (a developer on a task or a workcenter on manufacturing orders).\n"
-#~ "     This module manages a resource calendar associated to every resource.\n"
-#~ "     It also manages the leaves of every resource.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Anwendung für das Management von Ressourcen\n"
-#~ "      Ein Ressource repräsentiert Gegenstände oder Personen deren "
-#~ "Verfügbarkeit planbar ist\n"
-#~ "      (z.B. ein Entwickler in einem Softwareunternehmen oder eine Maschine "
-#~ "bei einem Fertigunsgbetrieb).\n"
-#~ "      Diese Anwendung bietet für jede Ressource eine kalendarische Übersicht "
-#~ "über die Verfügbarkeit bzw. der\n"
-#~ "      Auslastung durch entsprechende Aufträge oder Aufgaben.\n"
-#~ "      Ausserdem ist es möglich die Abwesenheit, bzw. die nicht Verfügbarkeit "
-#~ "einer Ressource zu planen, z.B. für den\n"
-#~ "      Fall von Urlaub, Aus- Fort- und Weiterbildung oder der planmäßigen  "
-#~ "Wartung einer Maschine.\n"
-#~ "\n"
-#~ "    "

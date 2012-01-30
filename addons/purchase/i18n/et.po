@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:32+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:45+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -42,7 +42,7 @@ msgid "Destination"
 msgstr "Sihtpunkt"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:721
+#: code:addons/purchase/purchase.py:772
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
@@ -117,7 +117,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/wizard/purchase_line_invoice.py:156
+#: code:addons/purchase/wizard/purchase_line_invoice.py:145
 #, python-format
 msgid "Supplier Invoices"
 msgstr ""
@@ -134,7 +134,7 @@ msgid "From a Pick list"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:660
+#: code:addons/purchase/purchase.py:708
 #, python-format
 msgid "No Pricelist !"
 msgstr "Hinnakiri puudub !"
@@ -160,7 +160,6 @@ msgid "Company"
 msgstr ""
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
@@ -226,7 +225,7 @@ msgid "Partial Picking"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:296
+#: code:addons/purchase/purchase.py:288
 #, python-format
 msgid "Purchase order '%s' is confirmed."
 msgstr ""
@@ -273,7 +272,7 @@ msgid "Notes"
 msgstr "Märkused"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:660
+#: code:addons/purchase/purchase.py:708
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
@@ -423,7 +422,7 @@ msgid "Day"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:344
+#: code:addons/purchase/purchase.py:325
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr ""
@@ -440,8 +439,8 @@ msgid "# of Lines"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:696
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:748
+#: code:addons/purchase/purchase.py:788
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
@@ -478,7 +477,7 @@ msgid "It indicates that a picking has been done"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:721
+#: code:addons/purchase/purchase.py:772
 #, python-format
 msgid "Wrong Product UOM !"
 msgstr "Vale toote MÜ!"
@@ -541,6 +540,7 @@ msgstr ""
 #: view:purchase.order.line:0
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
+#: view:stock.picking:0
 msgid "State"
 msgstr ""
 
@@ -578,7 +578,7 @@ msgid "Order Lines"
 msgstr "Korralduse read"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:662
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid "No Partner!"
 msgstr "Puudub partner!"
@@ -627,10 +627,10 @@ msgid "Invoices generated for a purchase order"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:292
-#: code:addons/purchase/purchase.py:362
-#: code:addons/purchase/purchase.py:372
-#: code:addons/purchase/wizard/purchase_line_invoice.py:122
+#: code:addons/purchase/purchase.py:284
+#: code:addons/purchase/purchase.py:347
+#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/wizard/purchase_line_invoice.py:111
 #, python-format
 msgid "Error !"
 msgstr "Viga !"
@@ -659,7 +659,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:788
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr ""
@@ -688,15 +688,17 @@ msgid "Reservation Destination"
 msgstr "Reserveeringu sihtkoht"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:244
+#: code:addons/purchase/purchase.py:235
 #, python-format
 msgid "Invalid action !"
 msgstr "Vigane tegevus !"
 
 #. module: purchase
+#: view:purchase.order:0
 #: selection:purchase.order,state:0
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
+#: view:stock.picking:0
 msgid "Done"
 msgstr "Valmis"
 
@@ -766,7 +768,7 @@ msgid "    Month-1    "
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:373
+#: code:addons/purchase/purchase.py:348
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr ""
@@ -788,9 +790,12 @@ msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
 
 #. module: purchase
+#: report:purchase.order:0
 #: view:purchase.order:0
+#: field:purchase.order,date_order:0
 #: field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
+#: view:stock.picking:0
 msgid "Order Date"
 msgstr ""
 
@@ -882,7 +887,7 @@ msgid "Confirmed purchase order to invoice"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.installer,config_logo:0
+#: field:purchase.config.wizard,config_logo:0
 msgid "Image"
 msgstr ""
 
@@ -908,7 +913,6 @@ msgid "Request for Quotation :"
 msgstr "Hinnapäring"
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_waiting
 msgid "Purchase Order Waiting Approval"
 msgstr "Ostukorraldused mis ootavad heaks kiitmist"
@@ -936,7 +940,7 @@ msgid ""
 msgstr "See on noppelehe nimekiri, mis on genereeritud selle ostu jaoks."
 
 #. module: purchase
-#: model:ir.module.module,shortdesc:purchase.module_meta_information
+#: model:ir.actions.todo.category,name:purchase.category_purchase_config
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase Management"
 msgstr "Ostuhaldus"
@@ -1111,8 +1115,8 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:362
-#: code:addons/purchase/wizard/purchase_line_invoice.py:123
+#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/wizard/purchase_line_invoice.py:112
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr "Sellele tootele pole määratud kulukontot: \"%s\" (id:%d)"
@@ -1346,10 +1350,12 @@ msgid "The supplier approves the Purchase Order."
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/wizard/purchase_order_group.py:80
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: view:purchase.report:0
+#, python-format
 msgid "Purchase Orders"
 msgstr "Ostukorraldused"
 
@@ -1583,6 +1589,7 @@ msgstr "Sinu tellimuse viide"
 #: field:purchase.order,minimum_planned_date:0
 #: report:purchase.quotation:0
 #: field:purchase.report,expected_date:0
+#: view:stock.picking:0
 msgid "Expected Date"
 msgstr "Oodatav kuupäev"
 
@@ -1689,7 +1696,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:424
+#: code:addons/purchase/purchase.py:425
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr ""
@@ -1718,6 +1725,7 @@ msgstr "Oled kindel, et tahad ühendada need korraldused ?"
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 #: view:purchase.report:0
+#: view:stock.picking:0
 msgid "Group By..."
 msgstr ""
 
@@ -1762,11 +1770,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 #: field:purchase.order.line,partner_id:0
+#: view:stock.picking:0
 msgid "Partner"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:662
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
@@ -1809,6 +1818,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:13+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:26+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: hr_payroll
 #: report:employees.salary:0
@@ -87,8 +87,9 @@ msgstr ""
 
 #. module: hr_payroll
 #: field:hr.employee,slip_ids:0
-#: view:hr.payroll.register:0
-#: field:hr.payroll.register,line_ids:0
+#: view:hr.payslip:0
+#: view:hr.payslip.run:0
+#: field:hr.payslip.run,slip_ids:0
 #: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
 msgid "Payslips"
 msgstr ""
@@ -105,19 +106,18 @@ msgid "Paid Salary"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "("
 msgstr "("
 
 #. module: hr_payroll
-#: field:company.contribution,company_id:0
-#: field:hr.allounce.deduction.categoty,company_id:0
-#: field:hr.contibution.register,company_id:0
-#: field:hr.holidays.status,company_id:0
-#: field:hr.payroll.advice,company_id:0
-#: field:hr.payroll.register,company_id:0
+#: field:hr.contribution.register,company_id:0
 #: field:hr.payroll.structure,company_id:0
 #: field:hr.payslip,company_id:0
+#: field:hr.payslip.line,company_id:0
+#: field:hr.salary.rule,company_id:0
+#: field:hr.salary.rule.category,company_id:0
 msgid "Company"
 msgstr "Công ty"
 
@@ -132,15 +132,14 @@ msgid "Letter Details"
 msgstr ""
 
 #. module: hr_payroll
-#: report:hr.payroll.register.sheet:0
-#: report:payslip.pdf:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid ","
 msgstr ","
 
 #. module: hr_payroll
-#: view:hr.payroll.advice:0
-#: view:hr.payroll.register:0
 #: view:hr.payslip:0
+#: view:hr.payslip.run:0
 msgid "Set to Draft"
 msgstr "Đặt thành Nháp"
 
@@ -173,9 +172,11 @@ msgid "Others"
 msgstr "Khác"
 
 #. module: hr_payroll
+#: field:hr.payslip.input,payslip_id:0
 #: field:hr.payslip.line,slip_id:0
+#: field:hr.payslip.worked_days,payslip_id:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip
-#: report:payslip.pdf:0
+#: report:payslip:0
 msgid "Pay Slip"
 msgstr ""
 
@@ -256,9 +257,11 @@ msgid "Salary Computation"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payroll.advice.line,amount:0
-#: report:payroll.advice:0
-#: report:salary.structure:0
+#: report:contribution.register.lines:0
+#: field:hr.payslip.input,amount:0
+#: field:hr.payslip.line,amount:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Amount"
 msgstr "Số tiền"
 
@@ -274,8 +277,7 @@ msgid "Percentage"
 msgstr "Phần trăm"
 
 #. module: hr_payroll
-#: view:company.contribution:0
-#: view:hr.allounce.deduction.categoty:0
+#: view:hr.payslip:0
 msgid "Other Information"
 msgstr "Thông tin khác"
 
@@ -306,10 +308,9 @@ msgid "Paid Holiday"
 msgstr ""
 
 #. module: hr_payroll
-#: view:company.contribution:0
-#: view:hr.allounce.deduction.categoty:0
-#: view:hr.passport:0
 #: view:hr.payslip:0
+#: view:hr.payslip.line:0
+#: view:hr.salary.rule:0
 msgid "Group By..."
 msgstr "Nhóm theo..."
 
@@ -346,16 +347,15 @@ msgid "Payment"
 msgstr "Thanh toán"
 
 #. module: hr_payroll
-#: view:hr.payroll.structure:0
 #: view:hr.payslip:0
-#: field:hr.payslip,line_ids:0
 #: view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_line
 msgid "Payslip Line"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Identification No"
 msgstr "Số CMND"
 
@@ -378,11 +378,14 @@ msgstr ""
 
 #. module: hr_payroll
 #: view:hr.payslip:0
+#: selection:hr.payslip,state:0
+#: view:hr.payslip.run:0
+#: selection:hr.payslip.run,state:0
 msgid "Draft"
 msgstr "Dự thảo"
 
 #. module: hr_payroll
-#: report:payroll.advice:0
+#: report:contribution.register.lines:0
 msgid "Total:"
 msgstr "Tổng:"
 
@@ -453,7 +456,7 @@ msgid "End Date"
 msgstr "Ngày Kết thúc"
 
 #. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.salary_payslip
+#: model:ir.actions.report.xml,name:hr_payroll.payslip_report
 msgid "Employee PaySlip"
 msgstr ""
 
@@ -484,9 +487,8 @@ msgid "Notes:"
 msgstr "Ghi chú:"
 
 #. module: hr_payroll
-#: field:hr.payroll.advice,state:0
-#: field:hr.payroll.register,state:0
 #: field:hr.payslip,state:0
+#: field:hr.payslip.run,state:0
 msgid "State"
 msgstr "Trạng thái"
 
@@ -516,9 +518,6 @@ msgid "Company Contributions"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.contibution.register.line,employee_id:0
-#: field:hr.passport,employee_id:0
-#: field:hr.payroll.advice.line,employee_id:0
 #: field:hr.payslip,employee_id:0
 #: field:hr.payslip.line,employee_id:0
 #: model:ir.model,name:hr_payroll.model_hr_employee
@@ -545,7 +544,8 @@ msgid "Type"
 msgstr "Loại"
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Email"
 msgstr "Thư điện tử"
 
@@ -636,11 +636,10 @@ msgid "Total By Employee"
 msgstr ""
 
 #. module: hr_payroll
-#: view:company.contribution:0
-#: selection:company.contribution,amount_type:0
-#: selection:company.contribution.line,amount_type:0
-#: selection:hr.payslip.line,amount_type:0
-#: selection:hr.payslip.line.line,amount_type:0
+#: field:hr.payslip.line,amount_fix:0
+#: selection:hr.payslip.line,amount_select:0
+#: field:hr.salary.rule,amount_fix:0
+#: selection:hr.salary.rule,amount_select:0
 msgid "Fixed Amount"
 msgstr "Giá trị cố định"
 
@@ -711,7 +710,6 @@ msgid "Bank Advice Note"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payroll.register:0
 #: view:hr.payslip:0
 msgid "Payslip"
 msgstr ""
@@ -787,8 +785,7 @@ msgid "Function Calculation"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip,worked_days:0
-#: report:payslip.pdf:0
+#: view:hr.payslip:0
 msgid "Worked Day"
 msgstr ""
 
@@ -818,17 +815,16 @@ msgid "Basic Salary – Leaves"
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution,amount_type:0
-#: field:company.contribution.line,amount_type:0
-#: field:hr.payslip.line,amount_type:0
-#: field:hr.payslip.line.line,amount_type:0
-#: report:salary.structure:0
+#: view:hr.payslip.line:0
+#: field:hr.payslip.line,amount_select:0
+#: field:hr.salary.rule,amount_select:0
 msgid "Amount Type"
 msgstr ""
 
 #. module: hr_payroll
-#: view:company.contribution:0
 #: field:hr.payslip.line,category_id:0
+#: view:hr.salary.rule:0
+#: field:hr.salary.rule,category_id:0
 msgid "Category"
 msgstr ""
 
@@ -889,7 +885,10 @@ msgid "Passport Detail"
 msgstr ""
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,amount_type:0
+#: field:hr.payslip.line,amount_percentage:0
+#: selection:hr.payslip.line,amount_select:0
+#: field:hr.salary.rule,amount_percentage:0
+#: selection:hr.salary.rule,amount_select:0
 msgid "Percentage (%)"
 msgstr ""
 
@@ -1008,10 +1007,8 @@ msgid "Compute"
 msgstr "Tính toán"
 
 #. module: hr_payroll
-#: report:employees.salary:0
-#: field:hr.payslip,deg_id:0
-#: report:payslip.pdf:0
-#: report:salary.structure:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Designation"
 msgstr ""
 
@@ -1045,12 +1042,16 @@ msgid "Companies"
 msgstr "Các công ty"
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Authorized Signature"
 msgstr ""
 
 #. module: hr_payroll
 #: field:hr.payslip,contract_id:0
+#: field:hr.payslip.input,contract_id:0
+#: field:hr.payslip.line,contract_id:0
+#: field:hr.payslip.worked_days,contract_id:0
 #: model:ir.model,name:hr_payroll.model_hr_contract
 msgid "Contract"
 msgstr "Hợp đồng"
@@ -1066,8 +1067,8 @@ msgid "Next Month Date"
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution,active:0
-#: field:hr.payroll.register,active:0
+#: field:hr.payslip.line,active:0
+#: field:hr.salary.rule,active:0
 msgid "Active"
 msgstr "Hoạt động"
 
@@ -1088,11 +1089,7 @@ msgid "Phone No."
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution,contribute_per:0
-#: field:company.contribution.line,contribution_id:0
-#: view:hr.allounce.deduction.categoty:0
-#: view:hr.contibution.register:0
-#: view:hr.contibution.register.line:0
+#: view:hr.contribution.register:0
 msgid "Contribution"
 msgstr "Đóng góp"
 
@@ -1102,9 +1099,7 @@ msgid "Label"
 msgstr "Nhãn"
 
 #. module: hr_payroll
-#: view:hr.payroll.structure:0
-#: view:hr.payslip:0
-#: view:hr.payslip.line:0
+#: view:hr.salary.rule:0
 msgid "Company contribution"
 msgstr ""
 
@@ -1115,13 +1110,15 @@ msgid "Other No."
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution,code:0
-#: field:hr.contibution.register.line,code:0
-#: field:hr.holidays.status,code:0
-#: field:hr.payroll.structure,code:0
+#: report:contribution.register.lines:0
+#: field:hr.payslip.input,code:0
 #: field:hr.payslip.line,code:0
-#: report:payslip.pdf:0
-#: report:salary.structure:0
+#: field:hr.payslip.worked_days,code:0
+#: field:hr.rule.input,code:0
+#: field:hr.salary.rule,code:0
+#: field:hr.salary.rule.category,code:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Code"
 msgstr "Mã"
 
@@ -1163,32 +1160,28 @@ msgstr "Số"
 
 #. module: hr_payroll
 #: field:hr.contract,struct_id:0
-#: field:hr.employee,line_ids:0
 #: view:hr.payroll.structure:0
-#: field:hr.payroll.structure,line_ids:0
 #: view:hr.payslip:0
 #: view:hr.payslip.line:0
-#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_employee_grade_form
-#: model:ir.actions.report.xml,name:hr_payroll.salary_structure_register
 #: model:ir.model,name:hr_payroll.model_hr_payroll_structure
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_employee_function
 msgid "Salary Structure"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.contibution.register,register_line_ids:0
+#: field:hr.contribution.register,register_line_ids:0
 msgid "Register Line"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payroll.register:0
 #: view:hr.payslip:0
+#: view:hr.payslip.employees:0
+#: view:payslip.lines.contribution.register:0
 msgid "Cancel"
 msgstr "Hủy bỏ"
 
 #. module: hr_payroll
-#: view:hr.payroll.employees.detail:0
-#: view:hr.payroll.year.salary:0
+#: view:hr.payslip.run:0
+#: selection:hr.payslip.run,state:0
 msgid "Close"
 msgstr "Ðóng"
 
@@ -1241,10 +1234,10 @@ msgid "Payroll Head"
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution,register_id:0
-#: model:ir.actions.act_window,name:hr_payroll.action_contibution_register_form
-#: model:ir.model,name:hr_payroll.model_hr_contibution_register
-#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contibution_register_form
+#: view:hr.payslip.line:0
+#: field:hr.payslip.line,register_id:0
+#: field:hr.salary.rule,register_id:0
+#: model:ir.model,name:hr_payroll.model_hr_contribution_register
 msgid "Contribution Register"
 msgstr ""
 
@@ -1267,11 +1260,7 @@ msgid "Print Report"
 msgstr "In Báo cáo"
 
 #. module: hr_payroll
-#: field:company.contribution,line_ids:0
-#: view:hr.payroll.structure:0
-#: view:hr.payslip:0
 #: view:hr.payslip.line:0
-#: field:hr.payslip.line,line_ids:0
 msgid "Calculations"
 msgstr ""
 
@@ -1331,22 +1320,19 @@ msgid "Gross Sal."
 msgstr ""
 
 #. module: hr_payroll
-#: view:company.contribution:0
-#: field:company.contribution,note:0
-#: view:hr.allounce.deduction.categoty:0
-#: field:hr.allounce.deduction.categoty,note:0
-#: view:hr.contibution.register:0
-#: field:hr.contibution.register,note:0
-#: view:hr.passport:0
-#: field:hr.passport,note:0
-#: field:hr.payroll.advice,note:0
-#: field:hr.payroll.register,note:0
-#: view:hr.payroll.structure:0
+#: view:hr.contribution.register:0
+#: field:hr.contribution.register,note:0
 #: field:hr.payroll.structure,note:0
-#: view:hr.payslip:0
+#: field:hr.payslip,name:0
 #: field:hr.payslip,note:0
+#: field:hr.payslip.input,name:0
 #: view:hr.payslip.line:0
 #: field:hr.payslip.line,note:0
+#: field:hr.payslip.worked_days,name:0
+#: field:hr.rule.input,name:0
+#: view:hr.salary.rule:0
+#: field:hr.salary.rule,note:0
+#: field:hr.salary.rule.category,note:0
 msgid "Description"
 msgstr "Mô tả"
 
@@ -1363,12 +1349,15 @@ msgid "Deduction -"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid ")"
 msgstr ")"
 
 #. module: hr_payroll
-#: view:hr.contibution.register:0
+#: view:hr.contribution.register:0
+#: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
 msgid "Contribution Registers"
 msgstr ""
 
@@ -1400,10 +1389,8 @@ msgid "hr.payroll.year.salary"
 msgstr "hr.payroll.year.salary"
 
 #. module: hr_payroll
-#: report:employees.salary:0
-#: field:hr.passport,address_id:0
-#: report:payslip.pdf:0
-#: report:salary.structure:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Address"
 msgstr "Địa chỉ"
 
@@ -1442,19 +1429,15 @@ msgid "Special Allowances and Deductions For Employee:"
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution,name:0
-#: field:company.contribution.line,name:0
-#: field:hr.contibution.register,name:0
-#: field:hr.contibution.register.line,name:0
-#: field:hr.payroll.advice,name:0
-#: field:hr.payroll.register,name:0
+#: report:contribution.register.lines:0
+#: field:hr.contribution.register,name:0
 #: field:hr.payroll.structure,name:0
-#: field:hr.payslip,name:0
 #: field:hr.payslip.line,name:0
-#: field:hr.payslip.line.line,name:0
-#: report:payslip.pdf:0
-#: report:salary.structure:0
-#: report:year.salary:0
+#: field:hr.payslip.run,name:0
+#: field:hr.salary.rule,name:0
+#: field:hr.salary.rule.category,name:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Name"
 msgstr "Tên"
 
@@ -1469,17 +1452,16 @@ msgid "Country"
 msgstr "Quốc gia"
 
 #. module: hr_payroll
-#: view:hr.passport:0
-#: view:hr.payroll.employees.detail:0
-#: field:hr.payroll.employees.detail,employee_ids:0
-#: view:hr.payroll.year.salary:0
-#: field:hr.payroll.year.salary,employee_ids:0
 #: view:hr.payslip:0
+#: view:hr.payslip.employees:0
+#: field:hr.payslip.employees,employee_ids:0
+#: view:hr.payslip.line:0
 msgid "Employees"
 msgstr "Các nhân viên"
 
 #. module: hr_payroll
-#: report:payroll.advice:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Bank Account"
 msgstr "Tài khoản Ngân hàng"
 
@@ -1489,7 +1471,8 @@ msgid "Contribution register based on company"
 msgstr ""
 
 #. module: hr_payroll
-#: help:hr.allounce.deduction.categoty,sequence:0
+#: help:hr.payslip.line,sequence:0
+#: help:hr.salary.rule,sequence:0
 msgid "Use to arrange calculation sequence"
 msgstr ""
 
@@ -1560,10 +1543,10 @@ msgid "Slip ID"
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution.line,sequence:0
-#: field:hr.allounce.deduction.categoty,sequence:0
+#: field:hr.payslip.input,sequence:0
 #: field:hr.payslip.line,sequence:0
-#: field:hr.payslip.line.line,sequence:0
+#: field:hr.payslip.worked_days,sequence:0
+#: field:hr.salary.rule,sequence:0
 msgid "Sequence"
 msgstr "Trình tự"
 
@@ -1600,9 +1583,10 @@ msgid "Search Payslips"
 msgstr ""
 
 #. module: hr_payroll
-#: report:employees.salary:0
-#: field:hr.contibution.register.line,total:0
-#: report:year.salary:0
+#: report:contribution.register.lines:0
+#: field:hr.payslip.line,total:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Total"
 msgstr "Tổng cộng"
 

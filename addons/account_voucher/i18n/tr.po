@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:52+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:05+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -22,7 +22,7 @@ msgid "Unreconciliation transactions"
 msgstr "Uzlaştırılmamış işlemler"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:247
+#: code:addons/account_voucher/account_voucher.py:306
 #, python-format
 msgid "Write-Off"
 msgstr "Borç Silme"
@@ -54,7 +54,7 @@ msgid "Group By..."
 msgstr "Gruplandır..."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:596
+#: code:addons/account_voucher/account_voucher.py:779
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr "Açık ya da ödenmiş fiş(ler) silinemez !"
@@ -94,7 +94,7 @@ msgid "Bill Payment"
 msgstr "Fatura Ödeme"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:746
+#: code:addons/account_voucher/account_voucher.py:1045
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -410,7 +410,8 @@ msgid "Voucher Entries"
 msgstr "Fiş Girişleri"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:645
+#: code:addons/account_voucher/account_voucher.py:444
+#: code:addons/account_voucher/account_voucher.py:876
 #, python-format
 msgid "Error !"
 msgstr "Hata !"
@@ -438,7 +439,7 @@ msgid "Sales Receipt"
 msgstr "Satış Makbuzu"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:596
+#: code:addons/account_voucher/account_voucher.py:779
 #, python-format
 msgid "Invalid action !"
 msgstr "Geçersiz İşlem !"
@@ -472,7 +473,7 @@ msgid "Pay Invoice"
 msgstr "Fatura Ödeme"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:746
+#: code:addons/account_voucher/account_voucher.py:1045
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Hesap kodu ve Vergi kodu yok !"
@@ -510,6 +511,7 @@ msgstr "Fiş tutarı banka ekstresi tutarı ile aynı olmalı"
 
 #. module: account_voucher
 #: view:account.voucher:0
+#: field:account.voucher,audit:0
 msgid "To Review"
 msgstr "İncelenecek"
 
@@ -544,6 +546,7 @@ msgstr "Ay"
 
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
+#: field:account.voucher.line,currency_id:0
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
 msgstr "Para Birimi"
@@ -576,7 +579,6 @@ msgstr "Ort. Ödeme Gecikmesi"
 #: selection:account.voucher,state:0
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
-#: report:voucher.print:0
 msgid "Draft"
 msgstr "Taslak"
 
@@ -662,7 +664,6 @@ msgid "November"
 msgstr "Kasım"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: view:sale.receipt.report:0
 msgid "Extended Filters..."
 msgstr "Genişletilmiş Süzgeçler..."
@@ -720,7 +721,7 @@ msgid "Credit"
 msgstr "Alacak"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:645
+#: code:addons/account_voucher/account_voucher.py:877
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr "Yevmiyede lütfen bir dizi tanımlayın !"
@@ -939,7 +940,6 @@ msgstr "Durum:"
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
 #: view:account.invoice:0
-#: view:account.voucher:0
 #: field:account.voucher,pay_now:0
 #: selection:account.voucher,type:0
 #: field:sale.receipt.report,pay_now:0
@@ -952,7 +952,6 @@ msgstr "Ödeme"
 #: selection:account.voucher,state:0
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
-#: report:voucher.print:0
 msgid "Posted"
 msgstr "İşlendi"
 
@@ -1039,7 +1038,6 @@ msgid "Year"
 msgstr "Yıl"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
 msgstr "Bilanço Aç"

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:56+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:10+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -54,7 +54,6 @@ msgid "Title"
 msgstr "Naslov"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Monthly"
@@ -83,7 +82,6 @@ msgid "Alarms"
 msgstr "Alarmi"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Sunday"
@@ -102,7 +100,6 @@ msgid "Invitation details"
 msgstr "Detalji poziva"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Fourth"
@@ -115,8 +112,6 @@ msgid "Show as"
 msgstr "Prikaži kao"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,day:0
-#: selection:base.calendar.set.exrule,select1:0
 #: field:calendar.event,day:0
 #: selection:calendar.event,select1:0
 #: field:calendar.todo,day:0
@@ -136,21 +131,19 @@ msgid " "
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "March"
 msgstr "Mart"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:414
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
+#: code:addons/base_calendar/base_calendar.py:418
+#: code:addons/base_calendar/base_calendar.py:1411
 #, python-format
 msgid "Warning !"
 msgstr "Upozorenje !"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Friday"
@@ -163,7 +156,6 @@ msgid "All Day"
 msgstr "Celi dan"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,select1:0
 #: field:calendar.event,select1:0
 #: field:calendar.todo,select1:0
 msgid "Option"
@@ -198,7 +190,6 @@ msgid "Event Ref"
 msgstr "Referentni Dogadjaj"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,we:0
 #: field:calendar.event,we:0
 #: field:calendar.todo,we:0
 msgid "Wed"
@@ -210,7 +201,6 @@ msgid "Show time as"
 msgstr "Prikaži vreme kao"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,tu:0
 #: field:calendar.event,tu:0
 #: field:calendar.todo,tu:0
 msgid "Tue"
@@ -222,14 +212,12 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
 msgstr "Godišnje"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Last"
@@ -247,8 +235,6 @@ msgstr "Soba"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Days"
 msgstr "Dana"
@@ -260,11 +246,9 @@ msgid "Invitation Detail"
 msgstr "Detalji Poziva"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1355
+#: code:addons/base_calendar/base_calendar.py:1194
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:136
 #, python-format
 msgid "Error!"
 msgstr "Greška"
@@ -372,9 +356,9 @@ msgid "Deadline"
 msgstr "Krajnji Rok"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:385
-#: code:addons/base_calendar/base_calendar.py:1088
-#: code:addons/base_calendar/base_calendar.py:1090
+#: code:addons/base_calendar/base_calendar.py:389
+#: code:addons/base_calendar/base_calendar.py:1004
+#: code:addons/base_calendar/base_calendar.py:1006
 #, python-format
 msgid "Warning!"
 msgstr "Upozorenje!"
@@ -456,7 +440,6 @@ msgid "Calendar Task"
 msgstr "Zadatak po Kalendaru"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,su:0
 #: field:calendar.event,su:0
 #: field:calendar.todo,su:0
 msgid "Sun"
@@ -483,7 +466,6 @@ msgid "Delegrated From"
 msgstr "Delegirano od"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,select1:0
 #: selection:calendar.event,select1:0
 #: selection:calendar.todo,select1:0
 msgid "Day of month"
@@ -492,7 +474,6 @@ msgstr "Dan u mesecu"
 #. module: base_calendar
 #: view:calendar.event:0
 #: field:calendar.event,location:0
-#: field:calendar.event.edit.all,location:0
 #: field:calendar.todo,location:0
 msgid "Location"
 msgstr "Lokacija"
@@ -532,7 +513,6 @@ msgid "Confidential"
 msgstr "Poverljivo"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,end_date:0
 #: field:calendar.event,end_date:0
 #: field:calendar.todo,end_date:0
 msgid "Repeat Until"
@@ -573,7 +553,6 @@ msgid "Recurrent ID"
 msgstr "Ponavljajući ID"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "July"
@@ -586,7 +565,6 @@ msgid "Accepted"
 msgstr "Prihvaćeno"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,th:0
 #: field:calendar.event,th:0
 #: field:calendar.todo,th:0
 msgid "Thu"
@@ -636,7 +614,6 @@ msgid "Private"
 msgstr "Privatno"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Daily"
@@ -691,7 +668,6 @@ msgid "_Ok"
 msgstr "_U Redu"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "First"
@@ -719,14 +695,12 @@ msgid "Needs Action"
 msgstr "Potrebna akcija"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "September"
 msgstr "Septembar"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "December"
@@ -770,7 +744,6 @@ msgstr "Detalji prosleđivanja"
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: field:calendar.event.edit.all,date:0
 msgid "Start Date"
 msgstr "Početni datum"
 
@@ -829,7 +802,6 @@ msgid "Basic Alarm Information"
 msgstr "Osnovni podaci alarma"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,fr:0
 #: field:calendar.event,fr:0
 #: field:calendar.todo,fr:0
 msgid "Fri"
@@ -837,8 +809,6 @@ msgstr "Petak"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Hours"
 msgstr "Sati"
@@ -888,7 +858,6 @@ msgstr ""
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: field:calendar.event.edit.all,alarm_id:0
 msgid "Reminder"
 msgstr "Podsetnik"
 
@@ -932,28 +901,24 @@ msgid ""
 msgstr "Napomena za URL koji pokazuje na podatke direktorijuma ucesnika"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "August"
 msgstr "Avgust"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Monday"
 msgstr "Ponedeljak"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Third"
 msgstr "Treći"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "June"
@@ -967,7 +932,6 @@ msgid "Event Date"
 msgstr "Datum događaja"
 
 #. module: base_calendar
-#: view:base.calendar.set.exrule:0
 #: view:calendar.event:0
 msgid "The"
 msgstr "(the)"
@@ -990,7 +954,6 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "November"
@@ -1007,7 +970,6 @@ msgid "Data"
 msgstr "Podaci"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,mo:0
 #: field:calendar.event,mo:0
 #: field:calendar.todo,mo:0
 msgid "Mon"
@@ -1026,7 +988,6 @@ msgid "No Repeat"
 msgstr "Bez ponavljanja"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "October"
@@ -1050,7 +1011,6 @@ msgid "Triggers"
 msgstr "Okidači"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "January"
@@ -1063,14 +1023,12 @@ msgid "Related to"
 msgstr "Povezano sa"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,interval:0
 #: field:calendar.alarm,trigger_interval:0
 #: field:res.alarm,trigger_interval:0
 msgid "Interval"
 msgstr "Interval"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Wednesday"
@@ -1159,7 +1117,6 @@ msgid "Recurrency Option"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Weekly"
@@ -1238,7 +1195,6 @@ msgstr "od"
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
 #: view:calendar.event:0
-#: view:calendar.event.edit.all:0
 msgid "Cancel"
 msgstr "Otkaži"
 
@@ -1248,7 +1204,6 @@ msgid "res.users"
 msgstr "res.users"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Tuesday"
@@ -1270,10 +1225,12 @@ msgid "Responsible User"
 msgstr "Odgovorni korisnik"
 
 #. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:1466
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
 #: selection:res.users,availability:0
+#, python-format
 msgid "Busy"
 msgstr "Zauzet"
 
@@ -1320,7 +1277,6 @@ msgid "Event Invitations"
 msgstr "Pozivnice Dogadjaja"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Thursday"
@@ -1356,7 +1312,6 @@ msgstr ""
 "pravilo"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,month_list:0
 #: field:calendar.event,month_list:0
 #: field:calendar.todo,month_list:0
 msgid "Month"
@@ -1396,7 +1351,6 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "May"
@@ -1441,7 +1395,6 @@ msgid "Delegated"
 msgstr "Delegirano"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,sa:0
 #: field:calendar.event,sa:0
 #: field:calendar.todo,sa:0
 msgid "Sat"
@@ -1464,12 +1417,10 @@ msgstr "Odredite korisnika koji djeluje u ime korisnika kalendara"
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: field:calendar.event.edit.all,date_deadline:0
 msgid "End Date"
 msgstr "Završni Datum"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "February"
@@ -1525,7 +1476,6 @@ msgid "Sent By User"
 msgstr "poslato od Korisnika"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "April"
@@ -1537,14 +1487,12 @@ msgid "Recurrency period"
 msgstr ""
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,week_list:0
 #: field:calendar.event,week_list:0
 #: field:calendar.todo,week_list:0
 msgid "Weekday"
 msgstr "Sedmicni Dan"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,byday:0
 #: field:calendar.event,byday:0
 #: field:calendar.todo,byday:0
 msgid "By day"
@@ -1587,7 +1535,7 @@ msgid "Resource ID"
 msgstr "Šifra resursa"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:414
+#: code:addons/base_calendar/base_calendar.py:418
 #, python-format
 msgid "Couldn't Invite because date is not specified!"
 msgstr ""
@@ -1621,7 +1569,6 @@ msgid "Accept"
 msgstr "Prihvati"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Saturday"
@@ -1633,7 +1580,6 @@ msgid "Invitation To"
 msgstr "Poziv za"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Second"
@@ -1687,7 +1633,6 @@ msgstr ""
 "* Na proceduru koja se pokreće kada se pokrene alarm za proceduru."
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Fifth"

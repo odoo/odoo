@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:57+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:10+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: base_contact
 #: field:res.partner.contact,title:0
@@ -104,7 +104,6 @@ msgstr "Migriraj"
 
 #. module: base_contact
 #: view:res.partner.contact:0
-#: field:res.partner.job,name:0
 msgid "Partner"
 msgstr "Partner"
 
@@ -129,6 +128,8 @@ msgid ""
 "If the active field is set to False,                 it will allow you to "
 "hide the partner contact without removing it."
 msgstr ""
+"Ako je aktivno polje podešeno na ''Lažno'' (false), omogućiće Vam da "
+"sakrijete partnera a da ga ne izbrišete."
 
 #. module: base_contact
 #: model:ir.module.module,description:base_contact.module_meta_information
@@ -155,10 +156,9 @@ msgid ""
 msgstr ""
 
 #. module: base_contact
-#: model:ir.module.module,shortdesc:base_contact.module_meta_information
 #: model:process.process,name:base_contact.process_process_basecontactprocess0
 msgid "Base Contact"
-msgstr "Osnovni Kontakt"
+msgstr "Osnovni kontakt"
 
 #. module: base_contact
 #: field:res.partner.job,date_stop:0
@@ -202,11 +202,11 @@ msgstr "Br.Posl. Telefon"
 #: view:res.partner.contact:0
 #: field:res.partner.contact,job_ids:0
 msgid "Functions and Addresses"
-msgstr "Funkcije i Adrese"
+msgstr "Funkcije i adrese"
 
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_contact
-#: field:res.partner.job,contact_id:0
+#: field:res.partner.address,contact_id:0
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -231,7 +231,7 @@ msgid "Configuration Progress"
 msgstr "Napredak Konfiguracije"
 
 #. module: base_contact
-#: field:res.partner.contact,name:0
+#: field:res.partner.contact,last_name:0
 msgid "Last Name"
 msgstr "Prezime"
 
@@ -277,8 +277,7 @@ msgstr "Pretrazi Kontakt"
 #: model:ir.ui.menu,name:base_contact.menu_partner_contact_form
 #: model:ir.ui.menu,name:base_contact.menu_purchases_partner_contact_form
 #: model:process.node,name:base_contact.process_node_contacts0
-#: view:res.partner:0
-#: field:res.partner.address,job_ids:0
+#: field:res.partner.location,job_ids:0
 msgid "Contacts"
 msgstr "Kontakti"
 
@@ -294,7 +293,7 @@ msgstr ""
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_addresses0
 msgid "Working and private addresses."
-msgstr "Rad na Privatnoj adresi"
+msgstr "Adrese na radu i privatne adrese."
 
 #. module: base_contact
 #: help:res.partner.job,address_id:0
@@ -328,9 +327,8 @@ msgstr ""
 
 #. module: base_contact
 #: field:res.partner.contact,email:0
-#: field:res.partner.job,email:0
 msgid "E-Mail"
-msgstr "E-Mail"
+msgstr "E‑pošta:"
 
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_base_contact_installer
@@ -360,12 +358,12 @@ msgstr "Aktivan"
 #. module: base_contact
 #: field:res.partner.contact,function:0
 msgid "Main Function"
-msgstr "Glavna Funkcija"
+msgstr "Glavna funkcija"
 
 #. module: base_contact
 #: model:process.transition,note:base_contact.process_transition_partnertoaddress0
 msgid "Define partners and their addresses."
-msgstr "Definisi Partnere i njihove Adrese"
+msgstr "Definiši partnere i njihove adrese"
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -385,7 +383,7 @@ msgstr "Dodatne informacije"
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_partners0
 msgid "Companies you work with."
-msgstr "Kompanije s kojima radite."
+msgstr "Preduzeća s kojima radite."
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -399,6 +397,7 @@ msgstr "Opšte"
 
 #. module: base_contact
 #: view:res.partner.contact:0
+#: field:res.partner.contact,photo:0
 msgid "Photo"
 msgstr "Fotografija"
 
@@ -470,7 +469,7 @@ msgid "Open Jobs"
 msgstr "Otvoreni Poslovi"
 
 #. module: base_contact
-#: field:base.contact.installer,name:0
+#: field:res.partner.contact,name:0
 msgid "Name"
 msgstr "Ime"
 
@@ -482,7 +481,7 @@ msgstr ""
 #. module: base_contact
 #: field:res.partner.contact,partner_id:0
 msgid "Main Employer"
-msgstr "Glavni Poslodavac."
+msgstr "Glavni poslodavac"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.action_base_contact_installer
@@ -491,12 +490,12 @@ msgstr "Adresa pomeranja"
 
 #. module: base_contact
 #: view:res.partner:0
+#: view:res.partner.address:0
 msgid "Postal Address"
 msgstr "Postanska adresa"
 
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_addresses0
-#: view:res.partner:0
 msgid "Addresses"
 msgstr "Adrese"
 

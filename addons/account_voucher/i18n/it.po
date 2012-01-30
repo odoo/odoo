@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:51+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:05+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -23,7 +23,7 @@ msgid "Unreconciliation transactions"
 msgstr "Transazioni non riconciliate"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:247
+#: code:addons/account_voucher/account_voucher.py:306
 #, python-format
 msgid "Write-Off"
 msgstr "Storno"
@@ -55,7 +55,7 @@ msgid "Group By..."
 msgstr "Raggruppa per..."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:596
+#: code:addons/account_voucher/account_voucher.py:779
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr "Non è possibile eliminare voucher che sono già aperti o pagati!"
@@ -89,7 +89,7 @@ msgid "Bill Payment"
 msgstr "Pagamento Importo"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:746
+#: code:addons/account_voucher/account_voucher.py:1045
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -405,7 +405,8 @@ msgid "Voucher Entries"
 msgstr "Registrazioni Voucher"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:645
+#: code:addons/account_voucher/account_voucher.py:444
+#: code:addons/account_voucher/account_voucher.py:876
 #, python-format
 msgid "Error !"
 msgstr "Errore!"
@@ -433,7 +434,7 @@ msgid "Sales Receipt"
 msgstr "Ricevute di vendita"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:596
+#: code:addons/account_voucher/account_voucher.py:779
 #, python-format
 msgid "Invalid action !"
 msgstr "Azione non valida!"
@@ -467,7 +468,7 @@ msgid "Pay Invoice"
 msgstr "Paga fattura"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:746
+#: code:addons/account_voucher/account_voucher.py:1045
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Mancano Codici di conto di mastro e Codici di conto imposta!"
@@ -505,6 +506,7 @@ msgstr "L'importo del voucher deve essere uguale a quello sulla riga"
 
 #. module: account_voucher
 #: view:account.voucher:0
+#: field:account.voucher,audit:0
 msgid "To Review"
 msgstr "Da rivedere"
 
@@ -539,6 +541,7 @@ msgstr "Mese"
 
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
+#: field:account.voucher.line,currency_id:0
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
 msgstr "Valuta"
@@ -571,7 +574,6 @@ msgstr "Tempo medio di dilazione"
 #: selection:account.voucher,state:0
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
-#: report:voucher.print:0
 msgid "Draft"
 msgstr "Bozza"
 
@@ -657,7 +659,6 @@ msgid "November"
 msgstr "Novembre"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: view:sale.receipt.report:0
 msgid "Extended Filters..."
 msgstr "Filtri estesi..."
@@ -715,7 +716,7 @@ msgid "Credit"
 msgstr "Credito"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:645
+#: code:addons/account_voucher/account_voucher.py:877
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr "Per favore definire una sequenza nel sezionale!"
@@ -935,7 +936,6 @@ msgstr "Stato:"
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
 #: view:account.invoice:0
-#: view:account.voucher:0
 #: field:account.voucher,pay_now:0
 #: selection:account.voucher,type:0
 #: field:sale.receipt.report,pay_now:0
@@ -948,7 +948,6 @@ msgstr "Pagamento"
 #: selection:account.voucher,state:0
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
-#: report:voucher.print:0
 msgid "Posted"
 msgstr "Emessa"
 
@@ -1034,7 +1033,6 @@ msgid "Year"
 msgstr "Anno"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
 msgstr "Residuo"

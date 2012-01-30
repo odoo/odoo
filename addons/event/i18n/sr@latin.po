@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:09+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:22+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: event
 #: view:event.event:0
@@ -131,7 +131,7 @@ msgid "Invoice Date"
 msgstr "Datum Fakture"
 
 #. module: event
-#: code:addons/event/wizard/partner_event_registration.py:93
+#: code:addons/event/wizard/partner_event_registration.py:88
 #: view:event.registration:0
 #: model:ir.actions.act_window,name:event.action_partner_event_registration
 #: model:ir.model,name:event.model_event_registration
@@ -199,7 +199,7 @@ msgid "Ticket for Opera"
 msgstr "Karta za Operu"
 
 #. module: event
-#: code:addons/event/event.py:122
+#: code:addons/event/event.py:125
 #: view:event.event:0
 #, python-format
 msgid "Confirm Event"
@@ -219,6 +219,7 @@ msgstr "Odgovor-za"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.open_board_associations_manager
+#: model:ir.ui.menu,name:event.menu_board_associations_manager
 msgid "Event Dashboard"
 msgstr "UpravljackaTabla Dogadjaja"
 
@@ -290,7 +291,6 @@ msgstr " Tip dogadjaja "
 #: view:event.registration:0
 #: field:event.registration,event_id:0
 #: model:ir.model,name:event.model_event_event
-#: model:ir.module.module,shortdesc:event.module_meta_information
 #: field:partner.event.registration,event_id:0
 #: view:report.event.registration:0
 #: field:report.event.registration,event_id:0
@@ -407,7 +407,7 @@ msgid "To be Invoiced"
 msgstr "Da bude Fakturisano"
 
 #. module: event
-#: code:addons/event/event.py:394
+#: code:addons/event/event.py:398
 #, python-format
 msgid "Error !"
 msgstr "Greska !"
@@ -425,7 +425,7 @@ msgid "Cancel Registration"
 msgstr "Otkazi Registraciju"
 
 #. module: event
-#: code:addons/event/event.py:395
+#: code:addons/event/event.py:399
 #, python-format
 msgid "Registered partner doesn't have an address to make the invoice."
 msgstr "zahtevani partner nema adresu da bi napravio fakturu"
@@ -653,7 +653,7 @@ msgid "Reference 2"
 msgstr "Referenca 2"
 
 #. module: event
-#: code:addons/event/event.py:357
+#: code:addons/event/event.py:361
 #: view:report.event.registration:0
 #, python-format
 msgid "Invoiced"
@@ -708,7 +708,6 @@ msgstr "Zatvoreno"
 #. module: event
 #: view:event.event:0
 #: model:ir.actions.act_window,name:event.action_event_view
-#: model:ir.ui.menu,name:event.menu_board_associations_manager
 #: model:ir.ui.menu,name:event.menu_event_event
 #: model:ir.ui.menu,name:event.menu_event_event_assiciation
 #: view:res.partner:0
@@ -827,7 +826,7 @@ msgid "Set To Draft"
 msgstr "Postavi u \"U Pripremi'"
 
 #. module: event
-#: code:addons/event/event.py:472
+#: code:addons/event/event.py:499
 #: view:event.event:0
 #: view:event.registration:0
 #: view:res.partner:0
@@ -864,8 +863,8 @@ msgid "Location Address"
 msgstr "Lokacija Adresa"
 
 #. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
-#: model:ir.ui.menu,name:event.menu_event_type_association
 msgid "Types of Events"
 msgstr "Tipovi Dogadjaja"
 
@@ -898,7 +897,7 @@ msgstr ""
 "Datuma Pocetka"
 
 #. module: event
-#: code:addons/event/event.py:442
+#: code:addons/event/event.py:446
 #: selection:event.event,state:0
 #: view:event.make.invoice:0
 #: selection:event.registration,state:0
@@ -925,7 +924,7 @@ msgid "Year"
 msgstr "Godina"
 
 #. module: event
-#: code:addons/event/event.py:517
+#: code:addons/event/event.py:465
 #, python-format
 msgid "Cancel"
 msgstr "Otkaži"
@@ -943,7 +942,7 @@ msgid "Event by Registration"
 msgstr "Dogadjaj po registraciji"
 
 #. module: event
-#: code:addons/event/event.py:432
+#: code:addons/event/event.py:436
 #, python-format
 msgid "Open"
 msgstr "Otvori"
@@ -954,8 +953,8 @@ msgid "Responsible User"
 msgstr "Odgovorni Korisnik"
 
 #. module: event
-#: code:addons/event/event.py:538
-#: code:addons/event/event.py:545
+#: code:addons/event/event.py:561
+#: code:addons/event/event.py:568
 #, python-format
 msgid "Auto Confirmation: [%s] %s"
 msgstr "Auto potvrdjivanje: [%s] %s"
@@ -1101,7 +1100,7 @@ msgid "Unconfirmed"
 msgstr "Nepotvrdjen"
 
 #. module: event
-#: code:addons/event/event.py:542
+#: code:addons/event/event.py:565
 #, python-format
 msgid "Auto Registration: [%s] %s"
 msgstr "Auto Registracija : [%s] %s"
@@ -1147,7 +1146,7 @@ msgid "Registration is set as Cannot be invoiced"
 msgstr "REgistracija je postavljena tako da se ne moze fakturisati"
 
 #. module: event
-#: code:addons/event/event.py:500
+#: code:addons/event/event.py:527
 #: view:event.event:0
 #: view:event.registration:0
 #: view:res.partner:0

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:06+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:19+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -27,6 +27,7 @@ msgid "Delivery by Poste"
 msgstr "Доставка почтой"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Destination"
 msgstr "Место назначения"
@@ -42,7 +43,7 @@ msgid "Delivery Order"
 msgstr "Заказ на доставку"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:141
+#: code:addons/delivery/delivery.py:215
 #, python-format
 msgid "No price available !"
 msgstr "Нет каталога !"
@@ -53,6 +54,7 @@ msgid "Delivery Grid Line"
 msgstr "Строки поставки"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Delivery grids"
 msgstr "Расценки на доставку"
@@ -96,6 +98,7 @@ msgstr ""
 "Возвращает порядок следования при отображении списка доставочной сетки."
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
@@ -130,6 +133,7 @@ msgid "Fixed"
 msgstr "Фиксированный"
 
 #. module: delivery
+#: field:delivery.carrier,name:0
 #: view:delivery.sale.order:0
 #: field:delivery.sale.order,carrier_id:0
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -145,7 +149,7 @@ msgid "Stock Move"
 msgstr "Движение ТМЦ"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:141
+#: code:addons/delivery/delivery.py:215
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
@@ -174,12 +178,13 @@ msgstr ""
 "доставленной продукцией."
 
 #. module: delivery
-#: code:addons/delivery/stock.py:98
+#: code:addons/delivery/stock.py:89
 #, python-format
 msgid "Warning"
 msgstr "Внимание"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Grid definition"
 msgstr "Определение разделения"
@@ -304,7 +309,7 @@ msgstr ""
 "перевозчика, не удаляя его."
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:95
+#: code:addons/delivery/wizard/delivery_sale_order.py:94
 #, python-format
 msgid "No grid available !"
 msgstr "Доступных позиций нет !"
@@ -315,8 +320,8 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:66
-#: code:addons/delivery/wizard/delivery_sale_order.py:98
+#: code:addons/delivery/wizard/delivery_sale_order.py:65
+#: code:addons/delivery/wizard/delivery_sale_order.py:97
 #, python-format
 msgid "Order not in draft state !"
 msgstr "Заказ не в состоянии \"Черновик\" !"
@@ -448,7 +453,7 @@ msgid "Price"
 msgstr "Цена"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:95
+#: code:addons/delivery/wizard/delivery_sale_order.py:94
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "Нет сетки, совпадающей с этой перевозкой!"
@@ -470,7 +475,7 @@ msgid "="
 msgstr "="
 
 #. module: delivery
-#: code:addons/delivery/stock.py:99
+#: code:addons/delivery/stock.py:90
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "Перевозка %s (ID: %d) не имеет доставочной сетки!"
@@ -482,7 +487,6 @@ msgstr "Название"
 
 #. module: delivery
 #: view:delivery.carrier:0
-#: field:delivery.carrier,name:0
 #: field:delivery.grid,carrier_id:0
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
@@ -501,8 +505,8 @@ msgid "ID"
 msgstr "Идентификатор"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:66
-#: code:addons/delivery/wizard/delivery_sale_order.py:98
+#: code:addons/delivery/wizard/delivery_sale_order.py:65
+#: code:addons/delivery/wizard/delivery_sale_order.py:97
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -529,6 +533,7 @@ msgid "Sale Price"
 msgstr "Цена продажи"
 
 #. module: delivery
+#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"

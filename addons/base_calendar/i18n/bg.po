@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 05:55+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:09+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -54,7 +54,6 @@ msgid "Title"
 msgstr "Заглавие"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Monthly"
@@ -83,7 +82,6 @@ msgid "Alarms"
 msgstr "Аларми"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Sunday"
@@ -102,7 +100,6 @@ msgid "Invitation details"
 msgstr "Детайли за покана"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Fourth"
@@ -115,8 +112,6 @@ msgid "Show as"
 msgstr "Покажи като"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,day:0
-#: selection:base.calendar.set.exrule,select1:0
 #: field:calendar.event,day:0
 #: selection:calendar.event,select1:0
 #: field:calendar.todo,day:0
@@ -136,21 +131,19 @@ msgid " "
 msgstr " "
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "March"
 msgstr "Март"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:414
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
+#: code:addons/base_calendar/base_calendar.py:418
+#: code:addons/base_calendar/base_calendar.py:1411
 #, python-format
 msgid "Warning !"
 msgstr "Предупреждение !"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Friday"
@@ -163,7 +156,6 @@ msgid "All Day"
 msgstr "Целият ден"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,select1:0
 #: field:calendar.event,select1:0
 #: field:calendar.todo,select1:0
 msgid "Option"
@@ -198,7 +190,6 @@ msgid "Event Ref"
 msgstr ""
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,we:0
 #: field:calendar.event,we:0
 #: field:calendar.todo,we:0
 msgid "Wed"
@@ -210,7 +201,6 @@ msgid "Show time as"
 msgstr "Покажи времето като"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,tu:0
 #: field:calendar.event,tu:0
 #: field:calendar.todo,tu:0
 msgid "Tue"
@@ -222,14 +212,12 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
 msgstr "Ежегодишно"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Last"
@@ -247,8 +235,6 @@ msgstr "Помещение"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Days"
 msgstr "Дни"
@@ -260,11 +246,9 @@ msgid "Invitation Detail"
 msgstr "Детайли за поканата"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1355
+#: code:addons/base_calendar/base_calendar.py:1194
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:136
 #, python-format
 msgid "Error!"
 msgstr "Грешка!"
@@ -367,9 +351,9 @@ msgid "Deadline"
 msgstr "Краен срок"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:385
-#: code:addons/base_calendar/base_calendar.py:1088
-#: code:addons/base_calendar/base_calendar.py:1090
+#: code:addons/base_calendar/base_calendar.py:389
+#: code:addons/base_calendar/base_calendar.py:1004
+#: code:addons/base_calendar/base_calendar.py:1006
 #, python-format
 msgid "Warning!"
 msgstr "Предупреждение!"
@@ -451,7 +435,6 @@ msgid "Calendar Task"
 msgstr "Задача в календара"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,su:0
 #: field:calendar.event,su:0
 #: field:calendar.todo,su:0
 msgid "Sun"
@@ -478,7 +461,6 @@ msgid "Delegrated From"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,select1:0
 #: selection:calendar.event,select1:0
 #: selection:calendar.todo,select1:0
 msgid "Day of month"
@@ -487,7 +469,6 @@ msgstr "Ден от месеца"
 #. module: base_calendar
 #: view:calendar.event:0
 #: field:calendar.event,location:0
-#: field:calendar.event.edit.all,location:0
 #: field:calendar.todo,location:0
 msgid "Location"
 msgstr "Местонахождение"
@@ -527,7 +508,6 @@ msgid "Confidential"
 msgstr "Поверително"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,end_date:0
 #: field:calendar.event,end_date:0
 #: field:calendar.todo,end_date:0
 msgid "Repeat Until"
@@ -570,7 +550,6 @@ msgid "Recurrent ID"
 msgstr "ID на Повторение"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "July"
@@ -583,7 +562,6 @@ msgid "Accepted"
 msgstr "Приета"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,th:0
 #: field:calendar.event,th:0
 #: field:calendar.todo,th:0
 msgid "Thu"
@@ -633,7 +611,6 @@ msgid "Private"
 msgstr "Поверително"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Daily"
@@ -688,7 +665,6 @@ msgid "_Ok"
 msgstr "_Ok"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "First"
@@ -716,14 +692,12 @@ msgid "Needs Action"
 msgstr "Необходимо е действие"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "September"
 msgstr "Септември"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "December"
@@ -767,7 +741,6 @@ msgstr "Информация за упълномощаване"
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: field:calendar.event.edit.all,date:0
 msgid "Start Date"
 msgstr "Начална дата"
 
@@ -826,7 +799,6 @@ msgid "Basic Alarm Information"
 msgstr "Основна информация за Аларма"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,fr:0
 #: field:calendar.event,fr:0
 #: field:calendar.todo,fr:0
 msgid "Fri"
@@ -834,8 +806,6 @@ msgstr "Пет"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Hours"
 msgstr "Часове"
@@ -885,7 +855,6 @@ msgstr "Край на повторение"
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: field:calendar.event.edit.all,alarm_id:0
 msgid "Reminder"
 msgstr "Напомняне"
 
@@ -929,28 +898,24 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "August"
 msgstr "Август"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Monday"
 msgstr "Понеделник"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Third"
 msgstr "Трети"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "June"
@@ -964,7 +929,6 @@ msgid "Event Date"
 msgstr "Дата на събитие"
 
 #. module: base_calendar
-#: view:base.calendar.set.exrule:0
 #: view:calendar.event:0
 msgid "The"
 msgstr "Чет"
@@ -987,7 +951,6 @@ msgid "Date"
 msgstr "Дата"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "November"
@@ -1004,7 +967,6 @@ msgid "Data"
 msgstr "Данни"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,mo:0
 #: field:calendar.event,mo:0
 #: field:calendar.todo,mo:0
 msgid "Mon"
@@ -1023,7 +985,6 @@ msgid "No Repeat"
 msgstr "Без повторение"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "October"
@@ -1047,7 +1008,6 @@ msgid "Triggers"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "January"
@@ -1060,14 +1020,12 @@ msgid "Related to"
 msgstr "Свързан със"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,interval:0
 #: field:calendar.alarm,trigger_interval:0
 #: field:res.alarm,trigger_interval:0
 msgid "Interval"
 msgstr "Интервал"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Wednesday"
@@ -1155,7 +1113,6 @@ msgid "Recurrency Option"
 msgstr "Опция за повторение"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Weekly"
@@ -1232,7 +1189,6 @@ msgstr "от"
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
 #: view:calendar.event:0
-#: view:calendar.event.edit.all:0
 msgid "Cancel"
 msgstr "Отказ"
 
@@ -1242,7 +1198,6 @@ msgid "res.users"
 msgstr "res.users"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Tuesday"
@@ -1264,10 +1219,12 @@ msgid "Responsible User"
 msgstr "Отговорен потребител"
 
 #. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:1466
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
 #: selection:res.users,availability:0
+#, python-format
 msgid "Busy"
 msgstr "Зает"
 
@@ -1314,7 +1271,6 @@ msgid "Event Invitations"
 msgstr "Покани за събитие"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Thursday"
@@ -1346,7 +1302,6 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,month_list:0
 #: field:calendar.event,month_list:0
 #: field:calendar.todo,month_list:0
 msgid "Month"
@@ -1383,7 +1338,6 @@ msgid "Description"
 msgstr "Описание"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "May"
@@ -1428,7 +1382,6 @@ msgid "Delegated"
 msgstr "Прехвърлени пълномощия"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,sa:0
 #: field:calendar.event,sa:0
 #: field:calendar.todo,sa:0
 msgid "Sat"
@@ -1451,12 +1404,10 @@ msgstr ""
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: field:calendar.event.edit.all,date_deadline:0
 msgid "End Date"
 msgstr "Крайна дата"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "February"
@@ -1510,7 +1461,6 @@ msgid "Sent By User"
 msgstr "Изпратено от потребител"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "April"
@@ -1522,14 +1472,12 @@ msgid "Recurrency period"
 msgstr "Период на повторение"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,week_list:0
 #: field:calendar.event,week_list:0
 #: field:calendar.todo,week_list:0
 msgid "Weekday"
 msgstr "Ден от седмицата"
 
 #. module: base_calendar
-#: field:base.calendar.set.exrule,byday:0
 #: field:calendar.event,byday:0
 #: field:calendar.todo,byday:0
 msgid "By day"
@@ -1572,7 +1520,7 @@ msgid "Resource ID"
 msgstr "Идентификатор на ресурса"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:414
+#: code:addons/base_calendar/base_calendar.py:418
 #, python-format
 msgid "Couldn't Invite because date is not specified!"
 msgstr ""
@@ -1606,7 +1554,6 @@ msgid "Accept"
 msgstr "Приеми"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Saturday"
@@ -1618,7 +1565,6 @@ msgid "Invitation To"
 msgstr "Покана до"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Second"
@@ -1669,7 +1615,6 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Fifth"

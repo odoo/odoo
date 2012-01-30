@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-12-21 20:05+0000\n"
-"Last-Translator: Erwin <Unknown>\n"
+"Last-Translator: Erwin <erwin@endiansolutions.nl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-22 05:35+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:35+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -135,11 +135,11 @@ msgid "The work orders are created on the basis of the production order."
 msgstr "De werkopdracht is gecreëerd op basis van de productieorder"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:133
-#: code:addons/mrp_operations/mrp_operations.py:463
-#: code:addons/mrp_operations/mrp_operations.py:467
-#: code:addons/mrp_operations/mrp_operations.py:479
-#: code:addons/mrp_operations/mrp_operations.py:482
+#: code:addons/mrp_operations/mrp_operations.py:134
+#: code:addons/mrp_operations/mrp_operations.py:470
+#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:486
+#: code:addons/mrp_operations/mrp_operations.py:489
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
@@ -358,9 +358,6 @@ msgid "Waiting Goods"
 msgstr "Wacht op materialen"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
-#: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Pause"
@@ -412,7 +409,9 @@ msgid "Total Cycles"
 msgstr "Totaal aantal cycli"
 
 #. module: mrp_operations
+#: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
+#: selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
 msgstr "In afwachting"
 
@@ -565,7 +564,7 @@ msgid "Finish the operation."
 msgstr "De verwerking afronden."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:452
+#: code:addons/mrp_operations/mrp_operations.py:459
 #, python-format
 msgid "Operation is not started yet !"
 msgstr "Bewerking is nog niet gestart!"
@@ -576,10 +575,10 @@ msgid "Information from the production order."
 msgstr "Informatie van de productieorder"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:452
 #: code:addons/mrp_operations/mrp_operations.py:459
-#: code:addons/mrp_operations/mrp_operations.py:472
-#: code:addons/mrp_operations/mrp_operations.py:475
+#: code:addons/mrp_operations/mrp_operations.py:466
+#: code:addons/mrp_operations/mrp_operations.py:479
+#: code:addons/mrp_operations/mrp_operations.py:482
 #, python-format
 msgid "Sorry!"
 msgstr "Sorry!"
@@ -698,6 +697,9 @@ msgid "Search Work Orders"
 msgstr "Zoek werkopdrachten"
 
 #. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: view:mrp.workorder:0
+#: field:mrp.workorder,workcenter_id:0
 #: field:mrp_operations.operation,workcenter_id:0
 #: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"

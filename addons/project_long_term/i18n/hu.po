@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-17 06:30+0000\n"
-"X-Generator: Launchpad (build 14525)\n"
+"X-Launchpad-Export-Date: 2012-01-24 06:43+0000\n"
+"X-Generator: Launchpad (build 14713)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -66,7 +66,7 @@ msgstr "Fázisok"
 
 #. module: project_long_term
 #: view:project.phase:0
-#: view:project.resource.allocation:0
+#: view:project.user.allocation:0
 msgid "Group By..."
 msgstr "Csoportosítás..."
 
@@ -109,7 +109,7 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:128
+#: code:addons/project_long_term/project_long_term.py:126
 #, python-format
 msgid "Day"
 msgstr "Nap"
@@ -147,14 +147,14 @@ msgstr " A kezdési dátum és az időtartam alapján számítja az ütemező."
 #: field:project.compute.tasks,project_id:0
 #: view:project.phase:0
 #: field:project.phase,project_id:0
-#: view:project.resource.allocation:0
-#: field:project.resource.allocation,project_id:0
 #: view:project.task:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,project_id:0
 msgid "Project"
 msgstr "Projekt"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:50
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Error!"
 msgstr "Hiba!"
@@ -172,7 +172,7 @@ msgid "Warning !"
 msgstr ""
 
 #. module: project_long_term
-#: help:project.resource.allocation,date_end:0
+#: help:project.user.allocation,date_end:0
 msgid "Ending Date"
 msgstr "Befejezési dátum"
 
@@ -199,7 +199,7 @@ msgid "Compute Phase Scheduling"
 msgstr "Fázis ütemezésének számítása"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:190
+#: code:addons/project_long_term/project_long_term.py:141
 #, python-format
 msgid " (copy)"
 msgstr " (másolat)"
@@ -269,10 +269,8 @@ msgid "Compute Scheduling of Task"
 msgstr "Feladat ütemezésének számítása"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_project_resource
-#: model:ir.ui.menu,name:project_long_term.menu_pm_resources_project1
+#: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource
-#: view:project.resource.allocation:0
 msgid "Resources"
 msgstr "Erőforrások"
 
@@ -288,7 +286,7 @@ msgstr ""
 "\t           "
 
 #. module: project_long_term
-#: help:project.resource.allocation,date_start:0
+#: help:project.user.allocation,date_start:0
 msgid "Starting Date"
 msgstr "Kezdési dátum"
 
@@ -389,7 +387,7 @@ msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
-#: field:project.resource.allocation,date_start:0
+#: field:project.user.allocation,date_start:0
 msgid "Start Date"
 msgstr "Kezdési dátum"
 
@@ -405,7 +403,6 @@ msgstr "A fázisnak ezelőtt az időpont előtt be kell fejeződnie."
 
 #. module: project_long_term
 #: view:project.phase:0
-#: selection:project.phase,state:0
 msgid "Draft"
 msgstr "Tervezet"
 
@@ -421,7 +418,8 @@ msgid "unknown"
 msgstr "ismeretlen"
 
 #. module: project_long_term
-#: field:project.resource.allocation,user_id:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,user_id:0
 msgid "User"
 msgstr "Felhasználó"
 
@@ -495,7 +493,6 @@ msgstr "Felelős"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
-#: field:project.project,resource_calendar_id:0
 msgid "Working Time"
 msgstr "Munkaidő"
 
@@ -517,7 +514,6 @@ msgstr "Kérem, adja meg az ütemezendő projektet."
 
 #. module: project_long_term
 #: view:project.phase:0
-#: field:project.phase,total_hours:0
 msgid "Total Hours"
 msgstr "Összes óra"
 
@@ -532,7 +528,7 @@ msgid "Compute Scheduling of Task for specified project."
 msgstr "Feladat ütemezésének számítása adott projektre."
 
 #. module: project_long_term
-#: view:project.resource.allocation:0
+#: view:project.user.allocation:0
 msgid "Phase"
 msgstr "Szakasz"
 
@@ -553,7 +549,7 @@ msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,date_end:0
-#: field:project.resource.allocation,date_end:0
+#: field:project.user.allocation,date_end:0
 msgid "End Date"
 msgstr "Befejezési dátum"
 
@@ -586,9 +582,9 @@ msgstr "Ütemezés"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
 #: view:project.phase:0
-#: field:project.resource.allocation,phase_id:0
 #: view:project.task:0
 #: field:project.task,phase_id:0
+#: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
 msgstr "Projektfázis"
 
@@ -630,9 +626,9 @@ msgid "Resource Leaves"
 msgstr ""
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.action_project_schedule_tasks
-#: view:project.phase:0
-#: view:project.schedule.tasks:0
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
+#: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
+#: view:project.compute.tasks:0
 msgid "Schedule Tasks"
 msgstr "Feladatok ütemezése"
 
@@ -645,44 +641,3 @@ msgstr "Alapértelmezés szerint napokban megadva."
 #: field:project.phase,duration:0
 msgid "Duration"
 msgstr "Időtartam"
-
-#~ msgid "Working Period"
-#~ msgstr "Munkaidő"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "        Long Term Project management module that tracks planning, "
-#~ "scheduling, resources allocation.\n"
-#~ "        Mainly used with Big project management.\n"
-#~ "            - Project Phases will be maintained by Manager of the project\n"
-#~ "            - Compute Phase Scheduling: Compute start date and end date of "
-#~ "the phases which are in draft,open and pending state of the project given.\n"
-#~ "                                        If no project given then all the "
-#~ "draft,open and pending state phases will be taken\n"
-#~ "            - Compute Task Scheduling: This works same as the scheduler "
-#~ "button on project.phase. It takes the project as argument and computes all "
-#~ "the open,draft and pending tasks\n"
-#~ "            - Schedule Tasks: All the tasks which are in draft,pending and "
-#~ "open state are scheduled with taking the phase's start date\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "        Hosszú távú projektmenedzsment modul, amely nyomon követi a "
-#~ "tervezést, az ütemezést és az erőforrás elosztást.\n"
-#~ "        Főleg nagyprojektek kezelésére szolgál.\n"
-#~ "            - A projektfázisokat a projektmenedzser tartja karban.\n"
-#~ "            - Fázisok ütemezésének számítása: Az adott projekt tervezet, "
-#~ "nyitott és függőben lévő állapotú fázisai kezdési és befejezési dátumának "
-#~ "kiszámítása.\n"
-#~ "                                        Ha nem adtak meg projektet, akkor az "
-#~ "összes tervezet, nyitott és függőben lévő állapotú fázist veszi.\n"
-#~ "            - Feladat ütemezésének számítása: Ugyanúgy működik, mint az "
-#~ "ütemező gomb a projektfázisban. Veszi a projektet, mint paramétert, és "
-#~ "minden tervezet, nyitott és függőben lévő feladatot kiszámít.\n"
-#~ "            - Feladatok ütemezése: Minden tervezet, nyitott és függőben lévő "
-#~ "állapotú feladatot ütemez a fázis kezdési dátumának figyelembe vételével.\n"
-#~ "\n"
-#~ "    "
