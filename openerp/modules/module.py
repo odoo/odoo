@@ -48,6 +48,8 @@ import logging
 import openerp.modules.db
 import openerp.modules.graph
 
+_logger = logging.getLogger(__name__)
+
 _ad = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons') # default addons path (base)
 ad_paths = []
 
@@ -317,7 +319,6 @@ def load_information_from_description_file(module):
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
             # default values for descriptor
             info = {
-                'active': False,
                 'application': False,
                 'author': '',
                 'category': 'Uncategorized',
@@ -342,6 +343,12 @@ def load_information_from_description_file(module):
 
             with tools.file_open(terp_file) as terp_f:
                 info.update(eval(terp_f.read()))
+
+            if 'active' in info:
+                _logger.warning('The module `%s` uses the deprecated entry '
+                    '`active` in its manifest file. It should use the entry '
+                    '`auto_install`.', module)
+                info['auto_install'] = info['active']
 
             return info
 
