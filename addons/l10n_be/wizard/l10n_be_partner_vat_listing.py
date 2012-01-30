@@ -290,16 +290,15 @@ class partner_vat_list_13(osv.osv_memory):
             sum_tax += line['amount']
             sum_turnover += line['turnover']
             
-            amount_data = {
+            amount_data.update({
                            'seq': str(seq),
                            'vat_issued': vat_issued,
                            'only_vat': line['vat'].replace(' ','').upper()[2:],
                            'turnover': str(int(round(line['turnover'] * 100))),
                            'vat_amount': str(int(round(line['amount'] * 100))),
-                           'dnum': dnum,
                            'sum_tax': str(int(round(sum_tax * 100))),
                            'sum_turnover': str(int(round(sum_turnover * 100))),
-                           }
+                           })
             # Turnover and Farmer tags are not included
             data_clientinfo += """
 <Client SequenceNumber="%(seq)s">
