@@ -48,6 +48,8 @@ import logging
 import openerp.modules.db
 import openerp.modules.graph
 
+_logger = logging.getLogger(__name__)
+
 _ad = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons') # default addons path (base)
 ad_paths = []
 
@@ -317,9 +319,9 @@ def load_information_from_description_file(module):
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
             # default values for descriptor
             info = {
-                'active': False,
                 'application': False,
                 'author': '',
+                'auto_install': False,
                 'category': 'Uncategorized',
                 'certificate': None,
                 'complexity': 'normal',
@@ -327,6 +329,7 @@ def load_information_from_description_file(module):
                 'description': '',
                 'icon': get_module_icon(module),
                 'installable': True,
+                'auto_install': False,
                 'license': 'AGPL-3',
                 'name': False,
                 'post_load': None,
@@ -341,6 +344,10 @@ def load_information_from_description_file(module):
 
             with tools.file_open(terp_file) as terp_f:
                 info.update(eval(terp_f.read()))
+
+            if 'active' in info:
+                # 'active' has been renamed 'auto_install'
+                info['auto_install'] = info['active']
 
             return info
 
