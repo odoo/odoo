@@ -841,17 +841,21 @@ class crm_lead(crm_case, osv.osv):
         if 'date_closed' in vals:
             return super(crm_lead,self).write(cr, uid, ids, vals, context=context)
 
-        if 'stage_id' in vals and vals['stage_id']:
-            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
-            text = _("Changed Stage to: %s") % stage_obj.name
+        if vals.get('stage_id'):
+            stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
+            # change probability of lead(s) if required by stage
+            if not vals.get('probability') and stage.on_change:
+                vals['probability'] = stage.probability
+            text = _("Changed Stage to: %s") % stage.name
             self.message_append(cr, uid, ids, text, body_text=text, context=context)
-            message=''
             for case in self.browse(cr, uid, ids, context=context):
-                if case.type == 'lead' or  context.get('stage_type',False)=='lead':
-                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
+                if case.type == 'lead' or context.get('stage_type') == 'lead':
+                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage.name)
+                    self.log(cr, uid, case.id, message)
                 elif case.type == 'opportunity':
-                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-                self.log(cr, uid, case.id, message)
+                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage.name)
+                    self.log(cr, uid, case.id, message)
+
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
 
 crm_lead()
