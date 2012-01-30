@@ -180,6 +180,7 @@ class crm_send_new_email(osv.osv_memory):
 
         user_obj = self.pool.get('res.users')
         user_mail_from = user_obj._get_email_from(cr, uid, [uid], context=context)[uid]
+        user_signature = user_obj.browse(cr, uid, uid).signature
 
         for case in mod_obj.browse(cr, uid, res_id, context=context):
             if 'email_to' in fields:
@@ -194,7 +195,7 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_cc' in fields:
                 res.update({'email_cc': tools.ustr(case.email_cc or '')})
             if 'body' in fields:
-                res.update({'body': u'\n'+(tools.ustr(case.user_id.signature or ''))})
+                res.update({'body': u'\n' + tools.ustr(user_signature or '')})
             if 'state' in fields:
                 res.update({'state': u'pending'})
 
@@ -227,7 +228,7 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_from' in fields:
                 res.update({'email_from': user_mail_from and tools.ustr(user_mail_from) or False})
 
-            signature = u'\n' + (tools.ustr(case.user_id.signature or '')) + u'\n'
+            signature = u'\n' + tools.ustr(user_obj.browse(cr, uid, uid).signature or '') + u'\n'
             original = [signature]
 
             if include_original == True and 'body' in fields:
