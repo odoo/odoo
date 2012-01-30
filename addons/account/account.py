@@ -381,8 +381,9 @@ class account_account(osv.osv):
 
     def _get_level(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        accounts = self.browse(cr, uid, ids, context=context)
-        for account in accounts:
+        for account in self.browse(cr, uid, ids, context=context):
+            #we may not know the level of the parent at the time of computation, so we
+            # can't simply do res[account.id] = account.parent_id.level + 1
             level = 0
             parent = account.parent_id
             while parent:
@@ -2525,6 +2526,7 @@ class account_account_template(osv.osv):
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context.copy()
         ctx.update({'defer_parent_store_computation': True})
+        level_ref = {}
         children_acc_criteria = [('chart_template_id','=', chart_template_id)]
         if template.account_root_id.id:
             children_acc_criteria = ['|'] + children_acc_criteria + ['&',('parent_id','child_of', [template.account_root_id.id]),('chart_template_id','=', False)]
@@ -2541,6 +2543,14 @@ class account_account_template(osv.osv):
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits and account_template.type != 'view':
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
+            parent_id = account_template.parent_id and ((account_template.parent_id.id in acc_template_ref) and acc_template_ref[account_template.parent_id.id]) or False
+            #the level as to be given as well at the creation time, because of the defer_parent_store_computation in
+            #context. Indeed because of this, the parent_left and parent_right are not computed and thus the child_of
+            #operator does not return the expected values, with result of having the level field not computed at all.
+            if parent_id:
+                level = parent_id in level_ref and level_ref[parent_id] + 1 or obj_acc._get_level(cr, uid, [parent_id], 'level', None, context=context)[parent_id] + 1
+            else:
+                level = 0
             vals={
                 'name': (template.account_root_id.id == account_template.id) and company_name or account_template.name,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
@@ -2551,12 +2561,14 @@ class account_account_template(osv.osv):
                 'shortcut': account_template.shortcut,
                 'note': account_template.note,
                 'financial_report_ids': account_template.financial_report_ids and [(6,0,[x.id for x in account_template.financial_report_ids])] or False,
-                'parent_id': account_template.parent_id and ((account_template.parent_id.id in acc_template_ref) and acc_template_ref[account_template.parent_id.id]) or False,
+                'parent_id': parent_id,
                 'tax_ids': [(6,0,tax_ids)],
                 'company_id': company_id,
+                'level': level,
             }
             new_account = obj_acc.create(cr, uid, vals, context=ctx)
             acc_template_ref[account_template.id] = new_account
+            level_ref[new_account] = level
 
         #reactivate the parent_store functionnality on account_account
         obj_acc._parent_store_compute(cr)
