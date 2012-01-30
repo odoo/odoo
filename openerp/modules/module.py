@@ -321,6 +321,7 @@ def load_information_from_description_file(module):
             info = {
                 'application': False,
                 'author': '',
+                'auto_install': False,
                 'category': 'Uncategorized',
                 'certificate': None,
                 'complexity': 'normal',
@@ -345,9 +346,7 @@ def load_information_from_description_file(module):
                 info.update(eval(terp_f.read()))
 
             if 'active' in info:
-                _logger.warning('The module `%s` uses the deprecated entry '
-                    '`active` in its manifest file. It should use the entry '
-                    '`auto_install`.', module)
+                # 'active' has been renamed 'auto_install'
                 info['auto_install'] = info['active']
 
             return info
