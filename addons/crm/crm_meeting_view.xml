@@ -264,11 +264,7 @@
         <field name="model">crm.meeting</field>
         <field name="type">gantt</field>
         <field name="arch" type="xml">
-            <gantt color="user_id" date_delay="duration" date_start="date" string="Meetings">
-               <level object="crm.meeting" link="id" domain="[]">
-                   <field name="name"/>
-                   <field name="partner_id"/>
-                </level>
+            <gantt date_delay="duration" date_start="date" string="Meetings">
             </gantt>
         </field>
     </record>
