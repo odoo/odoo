@@ -199,9 +199,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (record.id) {
                 self.do_push_state({id:record.id});
             }
+            self.$element.removeClass('oe_form_dirty');
         });
     },
-    on_form_changed: function() {
+    on_form_changed: function(changed_by_user) {
+        if (changed_by_user) {
+            this.$element.addClass('oe_form_dirty');
+        }
         for (var w in this.widgets) {
             w = this.widgets[w];
             w.process_modifiers();
@@ -1269,7 +1273,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         if (this.is_valid()) {
             this.set_value_from_ui();
             this.view.do_onchange(this);
-            this.view.on_form_changed();
+            this.view.on_form_changed(true);
         } else {
             this.update_dom(true);
         }
