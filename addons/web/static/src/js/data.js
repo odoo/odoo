@@ -507,7 +507,6 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
     read_slice: function (fields, options) {
         options = options || {};
         fields = fields || {};
-        // TODO remove fields from options
         var offset = options.offset || 0,
             limit = options.limit || false;
         var end_pos = limit && limit !== -1 ? offset + limit : this.ids.length;
