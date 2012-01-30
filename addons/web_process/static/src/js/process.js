@@ -162,6 +162,8 @@ openerp.web_process = function (openerp) {
                 //Image part
                 bg = n.node.kind == "subflow" ? "node-subflow" : "node";
                 bg = n.node.gray ? bg + "-gray" : bg;
+                bg = n.node.active ? 'node-current': bg;
+                
                 img_src = '/web_process/static/src/img/'+ bg + '.png';
 
                 r['image'](img_src, n.node.x, n.node.y,150, 100)
