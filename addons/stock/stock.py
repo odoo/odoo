@@ -74,37 +74,27 @@ class stock_location(osv.osv):
     _order = 'parent_left'
 
     def name_get(self, cr, uid, ids, context=None):
-        res = []
-        if context is None:
-            context = {}
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['name','location_id'], context=context)
-        for record in reads:
-            name = record['name']
-            if context.get('full',False):
-                if record['location_id']:
-                    name = record['location_id'][1] + ' / ' + name
-                res.append((record['id'], name))
-            else:
-                res.append((record['id'], name))
-        return res
+        # always return the full hierarchical name
+        res = self._complete_name(cr, uid, ids, 'complete_name', None, context=context)
+        return res.items()
 
     def _complete_name(self, cr, uid, ids, name, args, context=None):
         """ Forms complete name of location from parent location to child location.
         @return: Dictionary of values
         """
-        def _get_one_full_name(location, level=4):
-            if location.location_id:
-                parent_path = _get_one_full_name(location.location_id, level-1) + "/"
-            else:
-                parent_path = ''
-            return parent_path + location.name
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = _get_one_full_name(m)
+            names = [m.name]
+            parent = m.location_id
+            while parent:
+                names.append(parent.name)
+                parent = parent.location_id
+            res[m.id] = ' / '.join(reversed(names))
         return res
 
+    def _get_sublocations(self, cr, uid, ids, context=None):
+        """ return all sublocations of the given stock locations (included) """
+        return self.search(cr, uid, [('id', 'child_of', ids)], context=context)
 
     def _product_value(self, cr, uid, ids, field_names, arg, context=None):
         """Computes stock value (real and virtual) for a product, as well as stock qty (real and virtual).
@@ -167,7 +157,8 @@ class stock_location(osv.osv):
                        \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
                       """, select = True),
          # temporarily removed, as it's unused: 'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
-        'complete_name': fields.function(_complete_name, type='char', size=256, string="Location Name", store=True),
+        'complete_name': fields.function(_complete_name, type='char', size=256, string="Location Name",
+                            store={'stock.location': (_get_sublocations, ['name', 'location_id'], 10)}),
 
         'stock_real': fields.function(_product_value, type='float', string='Real Stock', multi="stock"),
         'stock_virtual': fields.function(_product_value, type='float', string='Virtual Stock', multi="stock"),

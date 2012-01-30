@@ -7,15 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2011-01-18 10:19+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"PO-Revision-Date: 2012-01-13 20:21+0000\n"
+"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:48+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-01-14 05:11+0000\n"
+"X-Generator: Launchpad (build 14664)\n"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -133,7 +132,7 @@ msgstr ""
 #. module: product
 #: field:product.supplierinfo,product_uom:0
 msgid "Supplier UoM"
-msgstr "Mengeneinheit bei Lieferanten"
+msgstr "ME bei Lieferanten"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
@@ -154,7 +153,7 @@ msgstr "Lieferant"
 #. module: product
 #: model:product.template,name:product.product_consultant_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Zeit- und Aufgabenerfassung"
 
 #. module: product
 #: help:product.price.type,field:0
@@ -164,7 +163,7 @@ msgstr "Verbundenes Feld in Produkt Formular"
 #. module: product
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr "Mengeneinheit"
+msgstr "ME"
 
 #. module: product
 #: field:product.template,procure_method:0
@@ -179,7 +178,7 @@ msgstr "Druckdatum"
 #. module: product
 #: field:product.product,qty_available:0
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Bestandsmenge"
 
 #. module: product
 #: view:product.pricelist:0
@@ -285,7 +284,7 @@ msgstr "ME"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_form_config_action
 msgid "Create or Import Products"
-msgstr ""
+msgstr "Erzeuge oder Importiere Produkte"
 
 #. module: product
 #: help:product.template,supply_method:0
@@ -293,6 +292,8 @@ msgid ""
 "Produce will generate production order or tasks, according to the product "
 "type. Buy will trigger purchase orders when requested."
 msgstr ""
+"Eine Produktion wird je Produkttyp einen Produktionsauftrag oder eine "
+"Aufgabe erzeugen. Kauf wird einen Beschaffungsauftrag erzeugen."
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -381,7 +382,7 @@ msgstr "pricelist.partnerinfo"
 #. module: product
 #: field:product.template,uom_po_id:0
 msgid "Purchase Unit of Measure"
-msgstr "Einkauf Mengeneinheit"
+msgstr "Einkauf ME"
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -392,7 +393,7 @@ msgstr "Fest"
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr "Mengeneinheiten Kategorien"
+msgstr "ME Kategorien"
 
 #. module: product
 #: help:product.pricelist.item,product_id:0
@@ -423,7 +424,7 @@ msgstr "Basispreise"
 #. module: product
 #: field:product.product,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Farb Index"
 
 #. module: product
 #: view:product.template:0
@@ -484,7 +485,7 @@ msgstr "Packdimensionen"
 #: code:addons/product/product.py:175
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Warnung"
 
 #. module: product
 #: field:product.pricelist.item,base:0
@@ -522,6 +523,8 @@ msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
 msgstr ""
+"Konvertierung von Produkt Mengeninheit %s zu Standard Mengeneinheit %s ist "
+"nicht möglich, das diese zu verschiedenen Kategorien gehören."
 
 #. module: product
 #: field:product.template,sale_delay:0
@@ -634,6 +637,8 @@ msgstr "Höhe der Verpackung"
 msgid ""
 "New UoM '%s' must belongs to same UoM category '%s' as of old UoM '%s'."
 msgstr ""
+"Neue Mengeneinheit '%s' muss zur selben Kategorie  '%s' gehören wie die alte "
+"ME '%s'."
 
 #. module: product
 #: model:product.pricelist.type,name:product.pricelist_type_sale
@@ -770,7 +775,7 @@ msgstr "Preisliste Version"
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Quantity Available"
-msgstr ""
+msgstr "verfügbare Menge"
 
 #. module: product
 #: help:product.pricelist.item,sequence:0
@@ -804,6 +809,8 @@ msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
 msgstr ""
+"Erzeuge ein Produkt für alles was gekauft und verkauft wird. Definieren Sie "
+"Lieferanten, wenn das Produkt gekauft wird."
 
 #. module: product
 #: view:product.uom:0
@@ -859,7 +866,7 @@ msgstr "Gesamtes Verpackungsgewicht"
 #. module: product
 #: view:product.product:0
 msgid "Context..."
-msgstr ""
+msgstr "Kontext.."
 
 #. module: product
 #: help:product.template,procure_method:0
@@ -954,6 +961,8 @@ msgid ""
 "Will change the way procurements are processed. Consumable are product where "
 "you don't manage stock."
 msgstr ""
+"Dies bestimmt, wie Beschaffungsvorgänge verarbeitet werden. Für "
+"Verbrauchsgüter wird kein Lagerbestand geführt"
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
@@ -1114,7 +1123,7 @@ msgstr ""
 #. module: product
 #: help:product.supplierinfo,product_uom:0
 msgid "This comes from the product form."
-msgstr ""
+msgstr "Dies kommt vom Produkt Formular"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -1247,6 +1256,7 @@ msgid ""
 "At least one pricelist has no active version !\n"
 "Please create or activate one."
 msgstr ""
+"Zumindest eine Preisliste hat keine aktiver Version, bitte eine erzeugen"
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
@@ -1565,7 +1575,7 @@ msgstr "Allgemeine Preisliste"
 #. module: product
 #: field:product.product,product_image:0
 msgid "Image"
-msgstr ""
+msgstr "Bild"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1643,7 +1653,7 @@ msgstr "Standard ME"
 #. module: product
 #: view:product.product:0
 msgid "Both stockable and consumable products"
-msgstr ""
+msgstr "Lager- und Verbrauchsgüter"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1748,7 +1758,7 @@ msgstr ""
 #: code:addons/product/product.py:175
 #, python-format
 msgid "Cannot change the category of existing UoM '%s'."
-msgstr ""
+msgstr "Kann die Kategorie der bestehenden Mengeneinheit %s nicht ändnern"
 
 #. module: product
 #: field:product.packaging,ean:0
@@ -1842,7 +1852,7 @@ msgstr "Preisberechnung"
 #. module: product
 #: model:res.groups,name:product.group_uos
 msgid "Product UoS View"
-msgstr ""
+msgstr "Produkt Verkaufseinheit Ansicht"
 
 #. module: product
 #: field:product.template,loc_case:0
@@ -1929,7 +1939,7 @@ msgstr "Länge"
 #: code:addons/product/product.py:345
 #, python-format
 msgid "UoM categories Mismatch!"
-msgstr ""
+msgstr "Kategorien der Mengeneinheit stimmen nicht überein"
 
 #. module: product
 #: field:product.template,volume:0
@@ -1997,7 +2007,7 @@ msgstr "Preislisten Versionen"
 #. module: product
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursive assoziierte Mitglieder anlegen."
 
 #. module: product
 #: field:product.category,sequence:0
@@ -2021,7 +2031,7 @@ msgstr "Beschaffung & Lagerorte"
 #. module: product
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Fehler! Rekursive Kategorien sind nicht zulässig"
 
 #. module: product
 #: field:product.category,type:0

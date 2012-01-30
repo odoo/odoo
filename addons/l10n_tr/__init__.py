@@ -1,10 +1,9 @@
-# -*- encoding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#
-#    Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
-#
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -19,16 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import osv, fields
-
-class res_company(osv.osv):
-    _inherit = 'res.company'
-    _columns = {
-        'bank_ids': fields.related('partner_id', 'bank_ids', type='one2many', relation='res.partner.bank', string='Company Banks'),
-    }
-
-res_company()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

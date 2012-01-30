@@ -545,8 +545,10 @@ class crm_lead(crm_case, osv.osv):
                 'type': 'opportunity',
                 'stage_id': stage_id or False,
                 'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'partner_address_id': contact_id
+                'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'partner_address_id': contact_id,
         }
+
     def _convert_opportunity_notification(self, cr, uid, lead, context=None):
         success_message = _("Lead '%s' has been converted to an opportunity.") % lead.name
         self.message_append(cr, uid, [lead.id], success_message, body_text=success_message, context=context)
@@ -777,7 +779,10 @@ class crm_lead(crm_case, osv.osv):
         for case in self.browse(cr, uid, ids, context=context):
             values = dict(vals)
             if case.state in CRM_LEAD_PENDING_STATES:
-                values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
+                #re-open
+                values.update(state=crm.AVAILABLE_STATES[1][0])
+                if not case.date_open:
+                    values['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT) 
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
 
@@ -822,9 +827,10 @@ class crm_lead(crm_case, osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context):
-            if (not lead.section_id.allow_unlink) and (lead.state <> 'draft'):
-                raise osv.except_osv(_('Warning !'),
-                    _('You can not delete this lead. You should better cancel it.'))
+            if (not lead.section_id.allow_unlink) and (lead.state != 'draft'):
+                raise osv.except_osv(_('Error'),
+                    _("You cannot delete lead '%s'; it must be in state 'Draft' to be deleted. " \
+                      "You should better cancel it, instead of deleting it.") % lead.name)
         return super(crm_lead, self).unlink(cr, uid, ids, context)
 
 
@@ -835,17 +841,21 @@ class crm_lead(crm_case, osv.osv):
         if 'date_closed' in vals:
             return super(crm_lead,self).write(cr, uid, ids, vals, context=context)
 
-        if 'stage_id' in vals and vals['stage_id']:
-            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
-            text = _("Changed Stage to: %s") % stage_obj.name
+        if vals.get('stage_id'):
+            stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
+            # change probability of lead(s) if required by stage
+            if not vals.get('probability') and stage.on_change:
+                vals['probability'] = stage.probability
+            text = _("Changed Stage to: %s") % stage.name
             self.message_append(cr, uid, ids, text, body_text=text, context=context)
-            message=''
             for case in self.browse(cr, uid, ids, context=context):
-                if case.type == 'lead' or  context.get('stage_type',False)=='lead':
-                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
+                if case.type == 'lead' or context.get('stage_type') == 'lead':
+                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage.name)
+                    self.log(cr, uid, case.id, message)
                 elif case.type == 'opportunity':
-                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-                self.log(cr, uid, case.id, message)
+                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage.name)
+                    self.log(cr, uid, case.id, message)
+
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
 
 crm_lead()
