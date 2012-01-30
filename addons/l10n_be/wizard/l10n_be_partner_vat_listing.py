@@ -294,7 +294,7 @@ class partner_vat_list_13(osv.osv_memory):
                            'sum_tax': str(int(round(sum_tax * 100))),
                            'sum_turnover': str(int(round(sum_turnover * 100))),
                            }
-            
+            # Turnover and Farmer tags are not included
             data_clientinfo += """
 <Client SequenceNumber="%(seq)s">
     <CompanyVATNumber issuedby="%(vat_issued)s">%(only_vat)s</CompanyVATNumber>
