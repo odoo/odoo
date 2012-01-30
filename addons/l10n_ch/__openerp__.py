@@ -103,7 +103,7 @@ TODO :
         #'test/l10n_ch_v11.yml',
         #'test/l10n_ch_v11_part.yml',
     ],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "001103836064567088989",
     'images': ['images/config_chart_l10n_ch.jpeg','images/l10n_ch_chart.jpeg'],

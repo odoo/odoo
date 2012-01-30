@@ -62,7 +62,7 @@ Note that if you want to check the followup level for a given partner/account en
         'test/account_followup_report.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0072481076453',
 }
 

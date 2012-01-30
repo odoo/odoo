@@ -40,7 +40,7 @@ e.g. To have an invoice generated automatically periodically:
     'update_xml': ['security/subcription_security.xml', 'security/ir.model.access.csv', 'subscription_view.xml'],
     'demo_xml': ['subscription_demo.xml',],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0029454782573',
     'images': ['images/subscription_document_fields.jpeg','images/subscriptions.jpeg'],
 }

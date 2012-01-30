@@ -54,7 +54,7 @@ in the form of pdf file. Implements a dashboard for My Current Evaluations
         "test/test_hr_evaluation.yml",
         "test/hr_evalution_demo.yml",
     ],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "00883207679172998429",
     'application': True,

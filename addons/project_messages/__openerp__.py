@@ -41,7 +41,7 @@ it to all the users.
                    'project_messages_view.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00747329574689027469',
 }
 

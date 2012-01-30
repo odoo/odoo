@@ -49,7 +49,7 @@ You can assign several contracts per employee.
              'test/test_hr_contract.yml'
              ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0046298028637',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

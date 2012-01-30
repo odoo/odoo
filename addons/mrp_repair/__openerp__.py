@@ -55,7 +55,7 @@ The aim is to have a complete module to manage all products repairs. The followi
              'test/test_mrp_repair_cancel.yml',
              'test/mrp_repair_report.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0060814381277',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

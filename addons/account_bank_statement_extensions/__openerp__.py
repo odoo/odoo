@@ -49,7 +49,7 @@ Adds
         'wizard/cancel_statement_line_wizard.xml',
         'data/account_bank_statement_extensions_data.xml',
     ],
-    'active': False,
+    'auto_install': False,
     'installable': True,
 }
 
