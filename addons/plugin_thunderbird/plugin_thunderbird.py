@@ -22,11 +22,8 @@
 from osv import fields
 from osv import osv
 
-import base64
-import addons
-
-class thunderbird_installer(osv.osv_memory):
-    _name = 'thunderbird.installer'
+class plugin_thunderbird_installer(osv.osv_memory):
+    _name = 'plugin_thunderbird.installer'
     _inherit = 'res.config.installer'
 
     _columns = {
@@ -42,24 +39,16 @@ class thunderbird_installer(osv.osv_memory):
         'thunderbird' : True,
         'name' : 'openerp_plugin.xpi',
         'pdf_file' : 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_thunderbird.html',
-        'plugin_file' : 'https://addons.mozilla.org/en-US/thunderbird/addon/openerp-plugin/',
+        'plugin_file' : '/plugin_thunderbird/static/openerp_plugin.xpi',
         'description' : """
 Thunderbird plugin installation:
-    1.  Save the Thunderbird plug-­in.
-    2.  From the menu bar of Thunderbird, open Tools ­> Add-ons.
-    3.  Click "Install".
+    1.  Save the Thunderbird plug-in.
+    2.  From the Thunderbird menubar: Tools ­> Add-ons -> Screwdriver/Wrench Icon -> Install add-on from file...
     4.  Select the plug-in (the file named openerp_plugin.xpi).
     5.  Click "Install Now".
     6.  Restart Thunderbird.
-
-Configure OpenERP in Thunderbird:
-    1.  Go to Tools > OpenERP Configuration.
-    2.  Check the data (configured by default).
-    3.  Click "Connect".
-    4.  A message appears with the state of your connection.
-    5.  If the connection fails, check if your database is opened, and check the data again.
-    6.  If the connection succeeds, start to archive e-mails in OpenERP.
+    7.  From the Thunderbird menubar: OpenERP -> Configuration.
+    8.  Configure your openerp server.
 """
     }
 
-thunderbird_installer()

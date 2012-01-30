@@ -2,8 +2,8 @@
   <data>
 
     <record id="view_thunderbird_installer" model="ir.ui.view">
-      <field name="name">thunderbird.installer.view</field>
-      <field name="model">thunderbird.installer</field>
+      <field name="name">plugin_thunderbird.installer.view</field>
+      <field name="model">plugin_thunderbird.installer</field>
       <field name="type">form</field>
       <field name="inherit_id" ref="base.res_config_installer"/>
       <field name="arch" type="xml">
@@ -48,13 +48,12 @@
     <record id="action_thunderbird_installer" model="ir.actions.act_window">
       <field name="name">Install Thunderbird Plug-In</field>
       <field name="type">ir.actions.act_window</field>
-      <field name="res_model">thunderbird.installer</field>
+      <field name="res_model">plugin_thunderbird.installer</field>
       <field name="view_id" ref="view_thunderbird_installer"/>
       <field name="view_type">form</field>
       <field name="view_mode">form</field>
       <field name="target">new</field>
     </record>
-
     <record id="thunderbird_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_thunderbird_installer"/>
         <field name="category_id" ref="base.category_sales_management_config"/>
@@ -62,20 +61,8 @@
         <field name="type">automatic</field>
     </record>
 
-
-    <record id="action_thunderbird_wizard" model="ir.actions.act_window">
-      <field name="name">Install Thunderbird Plug-In</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="res_model">thunderbird.installer</field>
-      <field name="view_id" ref="view_thunderbird_installer"/>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="target">new</field>
-      <field name="context">{'menu':True}</field>
-    </record>
-
     <menuitem id="base.menu_base_config_plugins" name="Plugins" parent="base.menu_base_config" sequence="10"/>
-    <menuitem id="menu_base_config_plugins_thunderbird" action="action_thunderbird_wizard" parent="base.menu_base_config_plugins" sequence="10"/>
+    <menuitem id="menu_base_config_plugins_thunderbird" action="action_thunderbird_installer" parent="base.menu_base_config_plugins" sequence="10"/>
 
   </data>
 </openerp>
