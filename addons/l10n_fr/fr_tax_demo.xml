@@ -47,7 +47,7 @@
 
     <record model="account.tax.template" id="tva_specifique_1">
       <field name="name">TVA collectée (vente) 7,0%</field>
-      <field name="description">3</field>
+      <field name="description">24</field>
       <field name="amount" eval="0.07"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_col_70_ht"/>
@@ -65,7 +65,7 @@
 
     <record model="account.tax.template" id="tva_reduite">
       <field name="name">TVA collectée (vente) 5,5%</field>
-      <field name="description">4</field>
+      <field name="description">3</field>
       <field name="amount" eval="0.055"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_col_55_ht"/>
@@ -83,7 +83,7 @@
 
     <record model="account.tax.template" id="tva_super_reduite">
       <field name="name">TVA collectée (vente) 2,1%</field>
-      <field name="description">5</field>
+      <field name="description">4</field>
       <field name="amount" eval="0.021"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_col_21_ht"/>
@@ -103,7 +103,7 @@
 <!-- ACHATS -->
     <record model="account.tax.template" id="tva_acq_normale">
       <field name="name">TVA acquittée (achat) 19,6%</field>
-      <field name="description">6</field>
+      <field name="description">5</field>
       <field name="amount" eval="0.196"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_acq_196_ht"/>
@@ -121,7 +121,7 @@
 
     <record model="account.tax.template" id="tva_acq_specifique">
       <field name="name">TVA acquittée (achat) 8,5%</field>
-      <field name="description">7</field>
+      <field name="description">6</field>
       <field name="amount" eval="0.085"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_acq_85_ht"/>
@@ -139,7 +139,7 @@
 
     <record model="account.tax.template" id="tva_acq_specifique_1">
       <field name="name">TVA acquittée (achat) 7,0%</field>
-      <field name="description">8</field>
+      <field name="description">25</field>
       <field name="amount" eval="0.07"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_acq_70_ht"/>
@@ -157,7 +157,7 @@
 
     <record model="account.tax.template" id="tva_acq_reduite">
       <field name="name">TVA acquittée (achat) 5,5%</field>
-      <field name="description">9</field>
+      <field name="description">7</field>
       <field name="amount" eval="0.055"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_acq_55_ht"/>
@@ -175,7 +175,7 @@
 
     <record model="account.tax.template" id="tva_acq_super_reduite">
       <field name="name">TVA acquittée (achat) 2,1%</field>
-      <field name="description">10</field>
+      <field name="description">8</field>
       <field name="amount" eval="0.021"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_acq_21_ht"/>
@@ -195,7 +195,7 @@
 <!-- IMMOBILISATIONS (achats) -->
     <record model="account.tax.template" id="tva_imm_normale">
       <field name="name">TVA immobilisation (achat) 19,6%</field>
-      <field name="description">11</field>
+      <field name="description">9</field>
       <field name="amount" eval="0.196"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_imm_196_ht"/>
@@ -213,7 +213,7 @@
 
     <record model="account.tax.template" id="tva_imm_specifique">
       <field name="name">TVA immobilisation (achat) 8,5%</field>
-      <field name="description">12</field>
+      <field name="description">10</field>
       <field name="amount" eval="0.085"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_imm_85_ht"/>
@@ -231,7 +231,7 @@
 
     <record model="account.tax.template" id="tva_imm_specifique_1">
       <field name="name">TVA immobilisation (achat) 7,0%</field>
-      <field name="description">13</field>
+      <field name="description">26</field>
       <field name="amount" eval="0.07"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_imm_70_ht"/>
@@ -249,7 +249,7 @@
 
     <record model="account.tax.template" id="tva_imm_reduite">
       <field name="name">TVA immobilisation (achat) 5,5%</field>
-      <field name="description">14</field>
+      <field name="description">11</field>
       <field name="amount" eval="0.055"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_imm_55_ht"/>
@@ -267,7 +267,7 @@
 
     <record model="account.tax.template" id="tva_imm_super_reduite">
       <field name="name">TVA immobilisation (achat) 2,1%</field>
-      <field name="description">15</field>
+      <field name="description">12</field>
       <field name="amount" eval="0.021"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_imm_21_ht"/>
@@ -287,7 +287,7 @@
 <!-- VENTES INTRACOMMUNAUTAIRE -->
     <record model="account.tax.template" id="tva_intra_normale">
       <field name="name">TVA due intracommunautaire 19,6%</field>   <!-- ventes -->
-      <field name="description">16</field>
+      <field name="description">13</field>
       <field name="amount" eval="-0.196"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_intra_196_ht"/>
@@ -305,7 +305,7 @@
 
     <record model="account.tax.template" id="tva_intra_specifique">
       <field name="name">TVA due intracommunautaire 8,5%</field>
-      <field name="description">17</field>
+      <field name="description">14</field>
       <field name="amount" eval="-0.085"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_intra_85_ht"/>
@@ -323,7 +323,7 @@
 
     <record model="account.tax.template" id="tva_intra_specifique_1">
       <field name="name">TVA due intracommunautaire 7,0%</field>
-      <field name="description">18</field>
+      <field name="description">27</field>
       <field name="amount" eval="-0.07"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_intra_70_ht"/>
@@ -341,7 +341,7 @@
 
     <record model="account.tax.template" id="tva_intra_reduite">
       <field name="name">TVA due intracommunautaire 5,5%</field>
-      <field name="description">19</field>
+      <field name="description">15</field>
       <field name="amount" eval="-0.055"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_intra_55_ht"/>
@@ -359,7 +359,7 @@
 
     <record model="account.tax.template" id="tva_intra_super_reduite">
       <field name="name">TVA due intracommunautaire 2,1%</field>
-      <field name="description">20</field>
+      <field name="description">16</field>
       <field name="amount" eval="-0.021"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_intra_21_ht"/>
@@ -379,7 +379,7 @@
 <!-- ACHATS INTRACOMMUNAUTAIRE -->
     <record model="account.tax.template" id="tva_acq_intra_normale">
       <field name="name">TVA déductible intracommunautaire 19,6%</field>
-      <field name="description">21</field>
+      <field name="description">17</field>
       <field name="amount" eval="0.196"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_intra_acq_196_ht"/>
@@ -397,7 +397,7 @@
 
     <record model="account.tax.template" id="tva_acq_intra_specifique">
       <field name="name">TVA déductible intracommunautaire 8,5%</field>
-      <field name="description">22</field>
+      <field name="description">18</field>
       <field name="amount" eval="0.085"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_intra_acq_85_ht"/>
@@ -415,7 +415,7 @@
 
     <record model="account.tax.template" id="tva_acq_intra_specifique_1">
       <field name="name">TVA déductible intracommunautaire 7,0%</field>
-      <field name="description">23</field>
+      <field name="description">28</field>
       <field name="amount" eval="0.07"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_intra_acq_70_ht"/>
@@ -433,7 +433,7 @@
 
     <record model="account.tax.template" id="tva_acq_intra_reduite">
       <field name="name">TVA déductible intracommunautaire 5,5%</field>
-      <field name="description">24</field>
+      <field name="description">19</field>
       <field name="amount" eval="0.055"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_intra_acq_55_ht"/>
@@ -451,7 +451,7 @@
 
     <record model="account.tax.template" id="tva_acq_intra_super_reduite">
       <field name="name">TVA déductible intracommunautaire 2,1%</field>
-      <field name="description">25</field>
+      <field name="description">20</field>
       <field name="amount" eval="0.021"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_intra_acq_21_ht"/>
@@ -471,7 +471,7 @@
 <!-- AUTRE -->
     <record model="account.tax.template" id="tva_0">
       <field name="name">TVA 0%</field>
-      <field name="description">26</field>
+      <field name="description">21</field>
       <field name="amount" eval="0.00"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_misc_0_ht"/>
@@ -486,7 +486,7 @@
 
     <record model="account.tax.template" id="tva_export_0">
       <field name="name">TVA 0% exportation</field>
-      <field name="description">27</field>
+      <field name="description">22</field>
       <field name="amount" eval="0.00"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_export_0_ht"/>
@@ -501,7 +501,7 @@
 
     <record model="account.tax.template" id="tva_intra_0">
       <field name="name">TVA 0% livraisons intracommunautaires</field>
-      <field name="description">28</field>
+      <field name="description">23</field>
       <field name="amount" eval="0.00"/>
       <field name="type">percent</field>
       <field name="base_code_id" ref="tax_intra_0_ht"/>
