@@ -192,31 +192,7 @@ def init_logger():
     handler.setFormatter(formatter)
 
     # Add the handler to the 'openerp' logger.
-    logger = logging.getLogger('openerp')
-    logger.addHandler(handler)
-    logger.setLevel(int(tools.config['log_level'] or '0'))
-
-    # We could do this ...
-    #logger = logging.getLogger('werkzeug')
-    #logger.addHandler(handler)
-    #logger.setLevel(int(tools.config['log_level'] or '0'))
-
-    # ... or this but they have the standard Combined log format
-    # and it is better to keep it.
-    # TODO gunicorn access logs are configured from the gunicorn config file.
-    # Offer something similar for the stand-alone Werkzeug mode.
-    #logger = logging.getLogger('gunicorn.access')
-    #logger.handlers = []
-    #logger.addHandler(handler)
-    #logger.setLevel(int(tools.config['log_level'] or '0'))
-
-    # For the other logs, use the same format than openerp.
-    logger = logging.getLogger('gunicorn.error')
-    logger.handlers = []
-    logger.addHandler(handler)
-    logger.setLevel(int(tools.config['log_level'] or '0'))
-
-    logger = logging.getLogger('gunicorn.http.wsgi')
+    logger = logging.getLogger()
     logger.handlers = []
     logger.addHandler(handler)
     logger.setLevel(int(tools.config['log_level'] or '0'))
