@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-12-22 20:22+0000\n"
-"PO-Revision-Date: 2012-01-27 19:19+0000\n"
+"PO-Revision-Date: 2012-01-31 02:51+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-28 05:03+0000\n"
-"X-Generator: Launchpad (build 14727)\n"
+"X-Launchpad-Export-Date: 2012-01-31 05:00+0000\n"
+"X-Generator: Launchpad (build 14734)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -106,18 +106,18 @@ msgstr ""
 msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
-msgstr "あなたのプロジェクトやタスクを追跡したり，計画生成などを行って、それらの管理を補助します。"
+msgstr "プロジェクトやタスクを追跡，計画生成などすることにより、あなたのプロジェクトとタスクの管理を補助します。"
 
 #. module: base
 #: field:ir.actions.act_window,display_menu_tip:0
 msgid "Display Menu Tips"
-msgstr ""
+msgstr "ヒントのメニューを表示"
 
 #. module: base
 #: help:ir.cron,model:0
 msgid ""
 "Model name on which the method to be called is located, e.g. 'res.partner'."
-msgstr ""
+msgstr "そのメソッドが呼ばれる場所のモデル名。例：'res.partner'"
 
 #. module: base
 #: view:ir.module.module:0
@@ -130,7 +130,7 @@ msgstr "作成済ビュー"
 msgid ""
 "You can not write in this document (%s) ! Be sure your user belongs to one "
 "of these groups: %s."
-msgstr "あなたはこの文書の書き込みはできません（%s）。あなたがグループに所属していることを確認して下さい：%s、"
+msgstr "あなたはこの文書の書き込みができません（%s）。あなたがこのグループに所属していることを確認して下さい。：%s"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_project
@@ -655,7 +655,7 @@ msgstr ""
 #. module: base
 #: help:ir.actions.server,action_id:0
 msgid "Select the Action Window, Report, Wizard to be executed."
-msgstr ""
+msgstr "アクションウィンドウ、レポート、ウィザードから選択して下さい。"
 
 #. module: base
 #: model:res.country,name:base.ai
@@ -670,7 +670,7 @@ msgstr "エクスポート完了"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_outlook
 msgid "Outlook Plug-In"
-msgstr ""
+msgstr "Outlookプラグイン"
 
 #. module: base
 #: view:ir.model:0
@@ -686,17 +686,19 @@ msgid ""
 "use the accounting application of OpenERP, journals and accounts will be "
 "created automatically based on these data."
 msgstr ""
+"あなたの会社の銀行口座を設定し、レポートのフッターに置くべき銀行口座を選択して下さい。あなたはリストビューから銀行口座の再注文ができます。もし、OpenE"
+"RPの会計アプリケーションをお使いなら、ジャーナルとアカウントは自動的にそれらのデータの中に作成されます。"
 
 #. module: base
 #: help:ir.actions.act_window,src_model:0
 msgid ""
 "Optional model name of the objects on which this action should be visible"
-msgstr ""
+msgstr "このアクションが可視化されるべきオブジェクトの任意のモデル名"
 
 #. module: base
 #: field:workflow.transition,trigger_expr_id:0
 msgid "Trigger Expression"
-msgstr ""
+msgstr "トリガー式"
 
 #. module: base
 #: model:res.country,name:base.jo
@@ -706,7 +708,7 @@ msgstr "ヨルダン"
 #. module: base
 #: help:ir.cron,nextcall:0
 msgid "Next planned execution date for this job."
-msgstr ""
+msgstr "このジョブの次に実行予定のデータ"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:139
@@ -722,19 +724,19 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "会社名は固有でなければなりません。"
 
 #. module: base
 #: view:res.config:0
 #: view:res.config.installer:0
 msgid "description"
-msgstr ""
+msgstr "説明"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_action_rule
 #: model:ir.ui.menu,name:base.menu_base_action_rule_admin
 msgid "Automated Actions"
-msgstr ""
+msgstr "自動的なアクション"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro
@@ -744,7 +746,7 @@ msgstr ""
 #. module: base
 #: view:partner.wizard.ean.check:0
 msgid "Want to check Ean ? "
-msgstr ""
+msgstr "Eanをチェックしますか？ "
 
 #. module: base
 #: help:ir.actions.server,mobile:0
@@ -753,11 +755,13 @@ msgid ""
 "invoice, then `object.invoice_address_id.mobile` is the field which gives "
 "the correct mobile number"
 msgstr ""
+"提供フィールドは携帯電話番号を持ってくるときに使われます。例えば、あなたが送り状を選択した時に`object.invoice_address_id.mob"
+"ile`は正しい携帯電話番号を与えるフィールドです。"
 
 #. module: base
 #: view:ir.mail_server:0
 msgid "Security and Authentication"
-msgstr ""
+msgstr "セキュリティと認証"
 
 #. module: base
 #: view:base.language.export:0
@@ -766,6 +770,9 @@ msgid ""
 "Launchpad.net, our open source project management facility. We use their "
 "online interface to synchronize all translations efforts."
 msgstr ""
+"OpenERP翻訳（core, modules, "
+"clients）は、Launchpad.netで、我々のオープンソースプロジェクト管理機構によって管理されます。すべての翻訳作業はそれらのオンラインインタ"
+"フェースを使って同期されます。"
 
 #. module: base
 #: help:ir.actions.todo,type:0
@@ -775,6 +782,9 @@ msgid ""
 "Launch Manually Once: after hacing been launched manually, it sets "
 "automatically to Done."
 msgstr ""
+"手動：手動起動\n"
+"自動：再構成されると自動的に起動\n"
+"一度だけ手動：手動起動した後、自動にセット"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -789,7 +799,7 @@ msgstr "セルビア"
 #. module: base
 #: selection:ir.translation,type:0
 msgid "Wizard View"
-msgstr ""
+msgstr "ウィザードビュー"
 
 #. module: base
 #: model:res.country,name:base.kh
@@ -800,12 +810,12 @@ msgstr ""
 #: field:base.language.import,overwrite:0
 #: field:base.language.install,overwrite:0
 msgid "Overwrite Existing Terms"
-msgstr ""
+msgstr "既存の用語の上書き"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_import
 msgid "Language Import"
-msgstr ""
+msgstr "言語のインポート"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -815,7 +825,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
 msgid "Opportunities"
-msgstr ""
+msgstr "オポチュニティ"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export

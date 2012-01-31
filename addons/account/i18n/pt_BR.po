@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-12-23 09:55+0000\n"
-"PO-Revision-Date: 2012-01-19 04:21+0000\n"
-"Last-Translator: Rafael Sales <Unknown>\n"
+"PO-Revision-Date: 2012-01-30 18:05+0000\n"
+"Last-Translator: Cintia Sayuri Sato <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-20 04:39+0000\n"
-"X-Generator: Launchpad (build 14700)\n"
+"X-Launchpad-Export-Date: 2012-01-31 05:03+0000\n"
+"X-Generator: Launchpad (build 14734)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -163,7 +163,7 @@ msgstr "Aviso!"
 #: code:addons/account/account.py:3182
 #, python-format
 msgid "Miscellaneous Journal"
-msgstr ""
+msgstr "Diário Diversos"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -184,7 +184,7 @@ msgstr "Faturas Criadas nos Últimos 15 Dias"
 #. module: account
 #: field:accounting.report,label_filter:0
 msgid "Column Label"
-msgstr ""
+msgstr "Etiqueta da Coluna"
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:95
@@ -258,6 +258,9 @@ msgid ""
 "legal reports, and set the rules to close a fiscal year and generate opening "
 "entries."
 msgstr ""
+"Este tipo de conta é usada para fins de informação, para gerar relatórios "
+"específicos de cada país legalmente, e definir as regras para fechar um ano "
+"fiscal e gerar entradas de abertura."
 
 #. module: account
 #: report:account.overdue:0
@@ -437,7 +440,7 @@ msgstr "O valor expresso em outra moeda opcional"
 #. module: account
 #: field:accounting.report,enable_filter:0
 msgid "Enable Comparison"
-msgstr ""
+msgstr "Permitir a Comparação"
 
 #. module: account
 #: help:account.journal.period,state:0
@@ -529,7 +532,7 @@ msgstr "Selecione o Plano de Contas"
 #. module: account
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "O nome da empresa deve ser exclusivo!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
@@ -613,7 +616,7 @@ msgstr "Sequências"
 #: field:account.financial.report,account_report_id:0
 #: selection:account.financial.report,type:0
 msgid "Report Value"
-msgstr ""
+msgstr "Valor do Relatório"
 
 #. module: account
 #: view:account.entries.report:0
@@ -785,7 +788,7 @@ msgstr "A referência do parceiro nesta fatura."
 #. module: account
 #: view:account.invoice.report:0
 msgid "Supplier Invoices And Refunds"
-msgstr ""
+msgstr "Faturas de Fornecedores e Reembolsos"
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
@@ -799,6 +802,7 @@ msgstr "Desconciliação"
 #: view:account.payment.term.line:0
 msgid "At 14 net days 2 percent, remaining amount at 30 days end of month."
 msgstr ""
+"Aos 14 dias líquidos de 2%, mantendo-se a quantia em final do mês de 30 dias."
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
@@ -814,7 +818,7 @@ msgstr "Reconciliação Automática"
 #: code:addons/account/account_move_line.py:1250
 #, python-format
 msgid "No period found or period given is ambigous."
-msgstr ""
+msgstr "Nenhum período encontrado ou determinado, o período é ambíguo."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_gain_loss
@@ -824,6 +828,10 @@ msgid ""
 "or Loss you'd realized if those transactions were ended today. Only for "
 "accounts having a secondary currency set."
 msgstr ""
+"Ao fazer transações multi-moeda, você pode perder ou ganhar alguma quantia "
+"devida a alterações da taxa de câmbio. Este menu dará uma previsão de ganho "
+"ou perda que destas transações que foram terminadas hoje. Somente para "
+"contas que contém uma moeda secundária."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -869,7 +877,7 @@ msgstr "Calcular"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: refund invoice and reconcile"
-msgstr ""
+msgstr "Cancelar: devolução da fatura e reconciliar"
 
 #. module: account
 #: field:account.cashbox.line,pieces:0
@@ -1069,6 +1077,8 @@ msgstr ""
 msgid ""
 "You have to provide an account for the write off/exchange difference entry !"
 msgstr ""
+"Você tem que fornecer uma conta para a baixa / entrada da diferença de "
+"câmbio."
 
 #. module: account
 #: view:account.tax:0
@@ -1107,7 +1117,7 @@ msgstr "Gerar Entradas antes de:"
 #. module: account
 #: view:account.move.line:0
 msgid "Unbalanced Journal Items"
-msgstr ""
+msgstr "Itens de Diário Desequilibrados"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
@@ -1131,6 +1141,8 @@ msgid ""
 "Total amount (in Secondary currency) for transactions held in secondary "
 "currency for this account."
 msgstr ""
+"Quantidade total (em moeda secundária) para transações realizadas em moedas "
+"secundárias para esta conta."
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_dest_id:0
@@ -1146,7 +1158,7 @@ msgstr "Centralização de crédito"
 #. module: account
 #: view:report.account_type.sales:0
 msgid "All Months Sales by type"
-msgstr ""
+msgstr "Todos os meses de venda por tipo de"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -1176,12 +1188,12 @@ msgstr "Cancelar Faturas"
 #. module: account
 #: help:account.journal,code:0
 msgid "The code will be displayed on reports."
-msgstr ""
+msgstr "O código será exibido nos relatórios."
 
 #. module: account
 #: view:account.tax.template:0
 msgid "Taxes used in Purchases"
-msgstr ""
+msgstr "Impostos Usados em Compras"
 
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
@@ -1213,6 +1225,8 @@ msgid ""
 "You can not use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal !"
 msgstr ""
+"Você não pode usar essa conta geral neste diário, verifique \"Controles de "
+"entrada\" no separador do diário relacionado!"
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -1249,7 +1263,7 @@ msgstr "Outros"
 #. module: account
 #: view:account.subscription:0
 msgid "Draft Subscription"
-msgstr ""
+msgstr "Assinatura do Projeto"
 
 #. module: account
 #: view:account.account:0
@@ -1477,6 +1491,8 @@ msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
 msgstr ""
+"Ao desmarcar o campo ativo. você pode esconder uma situação fiscal sem "
+"excluí-lo."
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
@@ -12760,3 +12776,10 @@ msgstr ""
 #, python-format
 #~ msgid "Date not in a defined fiscal year"
 #~ msgstr "A data não está em um ano fiscal definido"
+
+#~ msgid ""
+#~ "According value related accounts will be display on respective reports "
+#~ "(Balance Sheet Profit & Loss Account)"
+#~ msgstr ""
+#~ "Conforme valor, contas relacionadas, serão exibidas nos respectivos "
+#~ "relatórios  (Conta de Perdas e Proveitos do Balanço)"
