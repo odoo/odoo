@@ -54,7 +54,7 @@ Features
         "wizard/project_compute_tasks_view.xml",
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '001227470751077315069',
 }
 

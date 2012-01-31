@@ -35,7 +35,7 @@ on a remote server.
     "init_xml": ["project_caldav_data.xml", 'project_caldav_setup.xml', ],
     "demo_xml": [],
     "update_xml": ["project_caldav_view.xml"],
-    "active": False,
+    "auto_install": False,
     "website": "http://www.openerp.com",
     "installable": True,
     "certificate" : "001114200456808204637",

@@ -34,7 +34,7 @@ Romanian accounting chart and localization.
     """,
     "demo_xml" : [],
     "update_xml" : ['partner_view.xml','account_tax_code.xml','account_chart.xml','account_tax.xml','l10n_chart_ro_wizard.xml'],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "001308250150602948125",
     'images': ['images/config_chart_l10n_ro.jpeg','images/l10n_ro_chart.jpeg'],

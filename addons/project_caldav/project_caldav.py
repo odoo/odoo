@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-from caldav import calendar
+from openerp.addons.caldav import calendar
 from datetime import datetime
 from tools.translate import _
 from base_calendar import base_calendar

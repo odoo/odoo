@@ -257,20 +257,31 @@ product_category()
 class product_template(osv.osv):
     _name = "product.template"
     _description = "Product Template"
+
+    def _get_main_product_supplier(self, cr, uid, product, context=None):
+        """Determines the main (best) product supplier for ``product``, 
+        returning the corresponding ``supplierinfo`` record, or False
+        if none were found. The default strategy is to select the
+        supplier with the highest priority (i.e. smallest sequence).
+
+        :param browse_record product: product to supply
+        :rtype: product.supplierinfo browse_record or False
+        """
+        sellers = [(seller_info.sequence, seller_info)
+                       for seller_info in product.seller_ids or []
+                       if seller_info and isinstance(seller_info.sequence, (int, long))]
+        return sellers and sellers[0][1] or False
+
     def _calc_seller(self, cr, uid, ids, fields, arg, context=None):
         result = {}
         for product in self.browse(cr, uid, ids, context=context):
-            for field in fields:
-                result[product.id] = {field:False}
-            result[product.id]['seller_delay'] = 1
-            if product.seller_ids:
-                partner_list = [(partner_id.sequence, partner_id)
-                                       for partner_id in  product.seller_ids
-                                       if partner_id and isinstance(partner_id.sequence, (int, long))]
-                main_supplier = partner_list and partner_list[0] and partner_list[0][1] or False
-                result[product.id]['seller_delay'] =  main_supplier and main_supplier.delay or 1
-                result[product.id]['seller_qty'] =  main_supplier and main_supplier.qty or 0.0
-                result[product.id]['seller_id'] = main_supplier and main_supplier.name.id or False
+            main_supplier = self._get_main_product_supplier(cr, uid, product, context=context)
+            result[product.id] = {
+                'seller_info_id': main_supplier and main_supplier.id or False,
+                'seller_delay': main_supplier and main_supplier.delay or 1,
+                'seller_qty': main_supplier and main_supplier.qty or 0.0,
+                'seller_id': main_supplier and main_supplier.name.id or False
+            }
         return result
 
     _columns = {
@@ -309,9 +320,10 @@ class product_template(osv.osv):
             help='Coefficient to convert UOM to UOS\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
-        'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_delay", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
-        'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_qty", help="This is minimum quantity to purchase from Main Supplier."),
-        'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_id"),
+        'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", multi="seller_info"),
+        'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
+        'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),
+        'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
         'loc_rack': fields.char('Rack', size=16),
         'loc_row': fields.char('Row', size=16),
