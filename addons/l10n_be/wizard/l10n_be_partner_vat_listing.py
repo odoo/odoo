@@ -32,9 +32,9 @@ class vat_listing_clients(osv.osv_memory):
     
     _name = 'vat.listing.clients'
     _columns = {
-        'name': fields.char('Client Name', size=64),
+        'name': fields.char('Client Name', size=32),
         'vat': fields.char('VAT', size=64),
-        'country': fields.char('Country', size=64),
+        'country': fields.char('Country', size=16),
         'amount': fields.float('Amount'),
         'turnover': fields.float('Turnover'),
             }
