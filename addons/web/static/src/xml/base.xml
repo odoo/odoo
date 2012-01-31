@@ -1315,7 +1315,8 @@
             <t t-foreach="attrs.selection" t-as="option">
                 <t t-set="selected" t-value="defaults[attrs.name] === option[0]"/>
                 <option t-if="selected"
-                        t-att-value="option_index" selected="selected">
+                        t-attf-selected="selected"
+                        t-att-value="option_index">
                     <t t-esc="option[1]"/>
                 </option>
                 <option t-if="!selected" t-att-value="option_index">
