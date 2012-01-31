@@ -286,9 +286,9 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
         this.$option_id = $("#oe_db_options");
 
         var self = this;
-        var fetch_db = this.rpc("/web/database/get_list", {}, function(result) {
-            self.db_list = result.db_list;
-        });
+        var fetch_db = this.rpc("/web/database/get_list", {}).pipe(
+            function(result) { self.db_list = result.db_list; },
+            function (_, ev) { ev.preventDefault(); self.db_list = null; });
         var fetch_langs = this.rpc("/web/session/get_lang_list", {}, function(result) {
             if (result.error) {
                 self.display_error(result);
@@ -423,9 +423,11 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
                         self.display_error(result);
                         return;
                     }
-                    self.db_list.push(self.to_object(fields)['db_name']);
-                    self.db_list.sort();
-                    self.widget_parent.set_db_list(self.db_list);
+                    if (self.db_list) {
+                        self.db_list.push(self.to_object(fields)['db_name']);
+                        self.db_list.sort();
+                        self.widget_parent.set_db_list(self.db_list);
+                    }
                     var form_obj = self.to_object(fields);
                     self.wait_for_newdb(result, {
                         password: form_obj['super_admin_pwd'],
@@ -454,8 +456,10 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
                         return;
                     }
                     $db_list.find(':selected').remove();
-                    self.db_list.splice(_.indexOf(self.db_list, db, true), 1);
-                    self.widget_parent.set_db_list(self.db_list);
+                    if (self.db_list) {
+                        self.db_list.splice(_.indexOf(self.db_list, db, true), 1);
+                        self.widget_parent.set_db_list(self.db_list);
+                    }
                     self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
                 });
             }
