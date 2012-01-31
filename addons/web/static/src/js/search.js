@@ -474,6 +474,7 @@ openerp.web.search.fields = new openerp.web.Registry({
     'text': 'openerp.web.search.CharField',
     'boolean': 'openerp.web.search.BooleanField',
     'integer': 'openerp.web.search.IntegerField',
+    'id': 'openerp.web.search.IntegerField',
     'float': 'openerp.web.search.FloatField',
     'selection': 'openerp.web.search.SelectionField',
     'datetime': 'openerp.web.search.DateTimeField',
