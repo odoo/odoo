@@ -1,4 +1,178 @@
 <?xml version="1.0"?>
 <openerp>
+    <data>
 
+        <!-- mail.message tree: tweet-type view !-->
+        <record model="ir.ui.view" id="view_tweet_tree">
+            <field name="name">mail.message.tree_tweet</field>
+            <field name="model">mail.message</field>
+            <field name="type">tree</field>
+            <field name="sequence">15</field>
+            <field name="arch" type="xml">
+                <tree string="Tweets">
+                    <field name="date"/>
+                    <field name="subject"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- mail.message form: tweet-type view !-->
+        <record model="ir.ui.view" id="view_tweet_form">
+            <field name="name">mail.message.form_tweet</field>
+            <field name="model">mail.message</field>
+            <field name="type">form</field>
+            <field name="sequence">15</field>
+            <field name="arch" type="xml">
+                <form string="Tweet">
+                    <group colspan="4" col="6">
+                       <field name="subject" colspan="4"/>
+                       <field name="date"/>
+                       <field name="user_id" string="User" readonly="0"/>
+                       <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
+                    </group>
+                    <field name="type"/>
+                    <field name="need_action"/>
+                    <field name="model"/>
+                    <field name="res_id" groups="base.group_extended"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- mail.message search: tweet-type view !-->
+        <record model="ir.ui.view" id="view_tweet_search">
+            <field name="name">mail.message.search_tweet</field>
+            <field name="model">mail.message</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Tweet Search">
+                    <field name="user_id" string="User"/>
+                </search>
+            </field>
+        </record>
+
+       <!-- Group Kanban View  !-->
+        <record model="ir.ui.view" id="view_group_kanban">
+            <field name="name">mail.group.kanban</field>
+            <field name="model">mail.group</field>
+            <field name="type">kanban</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_group_vignette">
+                                <div class="oe_group_image">
+<!--                                     <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a> -->
+                                    prout
+                                </div>
+                                <div class="oe_group_details">
+                                    <h4><a type="edit"><field name="name"/></a></h4>
+                                    <ul>
+                                        <li t-if="record.name.raw_value"><field name="name"/></li>
+                                        <li><a name="action_group_join" string="Join" type="object">Join</a></li>
+                                        <li>Joined</li>
+                                    </ul>
+                                </div>
+                                <script>
+                                    $('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
+                                </script>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Group Form View !-->
+        <record  model="ir.ui.view" id="view_group_form">
+            <field name="name">mail.group.form</field>
+            <field name="model">mail.group</field>
+            <field name="type">form</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Group">
+                    <field name="name" colspan="2"/>
+                    <field name="responsible_id" colspan="2"/>
+                    <newline/>
+                    <field name="description" colspan="4"/>
+                    <newline/>
+                    <separator string="Privacy settings" colspan="4"/>
+                    <group colspan="2" col="4">
+                        <field name="public" nolabel="1" colspan="1"/>
+                        <label string="This group is visible by non members" colspan="2"/>
+                    </group>
+                    <newline/>
+<!--                    <button name="action_follow" type="object" context="{}"
+                            string="Follow" icon="gtk-go-forward" colspan="1"/>
+                    <button name="action_unfollow" type="object" context="{}"
+                            string="Unfollow" icon="gtk-go-forward" colspan="1"/>
+                    <button name="action_see_followers" type="object" context="{}"
+                            string="See followers" icon="gtk-go-forward" colspan="1"/>-->
+                </form>
+            </field>
+        </record>
+
+        <!-- group record !-->
+        <record id="action_view_group" model="ir.actions.act_window">
+            <field name="name">Groups</field>
+            <field name="res_model">mail.group</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <record id="action_view_tweets" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">mail.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'filter_search': True, 'tree_view_ref': 'mail.view_tweet_tree', 'form_view_ref': 'mail.view_tweet_form'}</field>
+            <field name="search_view_id" ref="view_tweet_search"/>
+        </record>
+
+        <record id="action_view_mytweets" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">mail.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'filter_search': True, 'tree_view_ref': 'mail.view_tweet_tree', 'form_view_ref': 'mail.view_tweet_form'}</field>
+            <field name="search_view_id" ref="view_tweet_search"/>
+            <field name="domain">[('user_id', '=', uid)]</field>
+        </record>
+
+        <record id="action_view_subscriptions" model="ir.actions.act_window">
+            <field name="name">Subscriptions</field>
+            <field name="res_model">mail.subscription</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- toplevel menu -->
+        <menuitem id="mail_group" name="Feeds" action="action_view_group"/>
+
+        <!-- left-side menu: Feeds !-->
+        <menuitem id="mg_feeds" name="Feeds"  parent="mail_group" action="action_view_group"/>
+        <!-- left-side Tmp: temporary Messages link to create a message !-->
+        <menuitem id="mg_feeds_my" name="My feeds" parent="mg_feeds" action="action_view_mytweets"/>
+        <!-- left-side Tmp: temporary Messages link to create a message !-->
+        <menuitem id="mg_feeds_all" name="All feeds" parent="mg_feeds" action="action_view_tweets"/>
+        <!-- left-side menu: Groups !-->
+        <menuitem id="mg_groups" name="Groups"  parent="mail_group" action="action_view_group"/>
+        <!-- left-side menu: Tmp !-->
+        <menuitem id="mg_tmp" name="Tmp"  parent="mail_group" action="action_view_mail_message"/>
+        <!-- left-side Tmp: temporary Messages link to create a message !-->
+        <menuitem id="mg_msg" name="Messages" parent="mg_tmp" action="action_view_mail_message"/>
+        <!-- left-side Tmp: temporary Subscriptions link to see subscriptions !-->
+        <menuitem id="mg_sub" name="Subscriptions" parent="mg_tmp" action="action_view_subscriptions"/>
+
+<!--        <act_window
+            context="{'search_default__id': [active_id], 'default_project_id': active_id}"
+            id="act_project_project_2_project_task_all"
+            name="Tasks"
+            res_model="project.task"
+            src_model="project.project"
+            view_mode="tree,form,calendar,graph"
+            view_type="form"/>-->
+
+    </data>
 </openerp>

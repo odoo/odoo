@@ -71,8 +71,8 @@ class mail_message_common(osv.osv_memory):
     _rec_name = 'subject'
     _columns = {
         'subject': fields.char('Subject', size=512, required=True),
-        'model': fields.char('Related Document model', size=128, select=1, readonly=1),
-        'res_id': fields.integer('Related Document ID', select=1, readonly=1),
+        'model': fields.char('Related Document model', size=128, select=1), # was rfeadonly
+        'res_id': fields.integer('Related Document ID', select=1), # was rfeadonly
         'date': fields.datetime('Date'),
         'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences. If empty, this is not a mail but a message.'),
         'email_to': fields.char('To', size=256, help='Message recipients'),
@@ -163,7 +163,7 @@ class mail_message(osv.osv):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Related partner'),
-        'user_id': fields.many2one('res.users', 'Related user', readonly=1),
+        #'user_id': fields.many2one('res.users', 'Related user', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
@@ -176,12 +176,87 @@ class mail_message(osv.osv):
                         ], 'State', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
         'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
+        # tde add/modif
+        'user_id': fields.many2one('res.users', 'Related user', readonly=1),
+        'type': fields.selection([
+                        ('tweet', 'Tweet'),
+                        ('status', 'Status'),
+                        ], 'Type'),
+        'need_action': fields.boolean('Need action'),
     }
 
     _defaults = {
         'state': 'received',
     }
 
+    # thib add
+    def create(self, cr, uid, vals, context=None):
+        print vals
+        return super(mail_message, self).create(cr, uid, vals, context)
+    
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if not context or not context.has_key('filter_search'):
+            return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
+        
+        # get subscriptions
+        sub_obj = self.pool.get('mail.subscription')
+        sub_ids = sub_obj.search(cr, uid, [('user_id', '=', uid)])
+        subs = sub_obj.browse(cr, uid, sub_ids)
+        
+        # stock tweets to find
+        res_model_ids_dict = {}
+        res_model_all_list = []
+        
+        # check all subscriptions
+        for sub in subs:
+            if sub.res_model and sub.res_id == 0 and sub.res_domain == False:
+                print "s-1"
+                if sub.res_model not in res_model_all_list:
+                    res_model_all_list.append(sub.res_model)
+            elif sub.res_model and sub.res_id:
+                print "s-2"
+                if res_model_ids_dict.has_key(sub.res_model):
+                    res_model_ids_dict[sub.res_model].append(sub.res_id)
+                else:
+                    res_model_ids_dict[sub.res_model] = [sub.res_id]
+            elif sub.res_model and sub.res_domain:
+                print "s-3"
+                res_obj = self.pool.get(sub.res_model)
+                print sub.res_domain
+                #res_ids = res_obj.search(cr, uid, [('id', 'in', [1,2])])
+                res_ids = res_obj.search(cr, uid, eval(sub.res_domain))
+                if res_model_ids_dict.has_key(sub.res_model):
+                    res_model_ids_dict[sub.res_model] += res_ids
+                else:
+                    res_model_ids_dict[sub.res_model] = res_ids
+                print 'cacaprout'
+            else:
+                print 'erreur !!!'
+                print sub
+        
+        # add fully-followed domains
+        args.append('|')
+        args.append(['model', 'in', res_model_all_list])
+        
+        # add partially-followed domains
+        for x in range(0, len(res_model_ids_dict.keys())-1):
+            args.append('|')
+        
+        for res_model in res_model_ids_dict.keys():
+            if res_model not in res_model_all_list:
+                args.append('&')
+                args.append(['model', '=', res_model])
+                args.append(['res_id', 'in', res_model_ids_dict[res_model]])
+        
+        if context and context.has_key('filter_search'):
+            pass
+        else:
+            args = []
+        print args
+        return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit,order=order, context=context, count=count)
+    
+    # end thib add
+    
     def init(self, cr):
         cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
         if not cr.fetchone():
