@@ -21,6 +21,7 @@
 
 import mail_message
 import mail_thread
+import mail_group
 import res_partner
 import wizard
 

@@ -58,6 +58,7 @@ The main features are:
     'data': [
         "wizard/mail_compose_message_view.xml",
         "mail_message_view.xml",
+        "mail_group_view.xml",
         "mail_thread_view.xml",
         "res_partner_view.xml",
         'security/ir.model.access.csv',
@@ -67,5 +68,6 @@ The main features are:
     'auto_install': False,
     'certificate': '001056784984222247309',
     'images': ['images/customer_history.jpeg','images/messages_form.jpeg','images/messages_list.jpeg'],
+    'css': ['static/src/css/mail_group.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
