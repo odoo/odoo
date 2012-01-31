@@ -54,7 +54,7 @@ class base_action_rule(osv.osv):
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param context: A standard dictionary for contextual values """
-        return [('', '')]
+        return [(False, '')]
   
     def priority_get(self, cr, uid, context=None):
         """ Get Priority
