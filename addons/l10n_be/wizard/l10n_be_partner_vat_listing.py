@@ -315,29 +315,31 @@ class partner_vat_list_13(osv.osv_memory):
         self.write(cursor, user, ids, {'file_save':file_save, 'msg':msg, 'name':'vat_list.xml'}, context=context)
         return True
     
-    def print_vatlist(self, cursor, user, ids, context=None):
-        if context is None:
-            context = {}
-        obj_vat_lclient = self.pool.get('vat.listing.clients')
-        client_datas = []
-        data = self.read(cursor, user, ids)[0]
-        for partner in data['partner_ids']:
-            if isinstance(partner, list) and partner:
-                client_datas.append(partner[2])
-            else:
-                client_data = obj_vat_lclient.read(cursor, user, partner, context=context)
-                client_datas.append(client_data)
-                
-        datas = {'ids': []}
-        datas['model'] = 'res.company'
-        datas['year'] = context['year']
-        datas['limit_amount'] = context['limit_amount']
-        datas['client_datas'] = client_datas
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'partner.vat.listing.print',
-            'datas': datas,
-        }
+#    Not fully implemented    
+
+#    def print_vatlist(self, cursor, user, ids, context=None):
+#        if context is None:
+#            context = {}
+#        obj_vat_lclient = self.pool.get('vat.listing.clients')
+#        client_datas = []
+#        data = self.read(cursor, user, ids)[0]
+#        for partner in data['partner_ids']:
+#            if isinstance(partner, list) and partner:
+#                client_datas.append(partner[2])
+#            else:
+#                client_data = obj_vat_lclient.read(cursor, user, partner, context=context)
+#                client_datas.append(client_data)
+#                
+#        datas = {'ids': []}
+#        datas['model'] = 'res.company'
+#        datas['year'] = context['year']
+#        datas['limit_amount'] = context['limit_amount']
+#        datas['client_datas'] = client_datas
+#        return {
+#            'type': 'ir.actions.report.xml',
+#            'report_name': 'partner.vat.listing.print',
+#            'datas': datas,
+#        }
 
 partner_vat_list_13()
 
