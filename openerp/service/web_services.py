@@ -194,7 +194,7 @@ class db(netsvc.ExportService):
 
 
     def _set_pg_psw_env_var(self):
-        # see http://www.postgresql.org/docs/8.4/static/libpq-pgpass.html
+        # see http://www.postgresql.org/docs/8.4/static/libpq-envars.html
         # FIXME: This is not thread-safe, and should never be enabled for
         # SaaS (giving SaaS users the super-admin password is not a good idea
         # anyway)
