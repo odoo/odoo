@@ -1892,7 +1892,12 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             self.last_search = data;
             // possible selections for the m2o
             var values = _.map(data, function(x) {
-                return {label: $('<span />').text(x[1]).html(), name:x[1], id:x[0]};
+                return {
+                    label: _.str.escapeHTML(x[1]),
+                    value:x[1],
+                    name:x[1],
+                    id:x[0]
+                };
             });
 
             // search more... if more results that max
