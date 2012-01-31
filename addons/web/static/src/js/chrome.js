@@ -919,7 +919,7 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
         }
         $primary_menu.addClass('active');
         this.$secondary_menu.find(
-            'div[data-menu-parent=' + $primary_menu.data('menu') + ']').show();
+            'div[data-menu-parent=' + $primary_menu.data('menu') + ']').addClass('active').toggle(!this.folded);
     },
     on_menu_click: function(ev, id) {
         id = id || 0;
