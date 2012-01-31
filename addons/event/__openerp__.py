@@ -47,7 +47,6 @@ Note that:
         'wizard/event_confirm_view.xml',
         'event_view.xml',
         'report/report_event_registration_view.xml',
-        'wizard/event_make_invoice_view.xml',
         'wizard/partner_event_registration_view.xml',
         'board_association_view.xml',
         'res_partner_view.xml',

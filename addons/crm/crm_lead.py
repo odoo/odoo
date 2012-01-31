@@ -545,8 +545,10 @@ class crm_lead(crm_case, osv.osv):
                 'type': 'opportunity',
                 'stage_id': stage_id or False,
                 'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'partner_address_id': contact_id
+                'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'partner_address_id': contact_id,
         }
+
     def _convert_opportunity_notification(self, cr, uid, lead, context=None):
         success_message = _("Lead '%s' has been converted to an opportunity.") % lead.name
         self.message_append(cr, uid, [lead.id], success_message, body_text=success_message, context=context)
@@ -777,7 +779,10 @@ class crm_lead(crm_case, osv.osv):
         for case in self.browse(cr, uid, ids, context=context):
             values = dict(vals)
             if case.state in CRM_LEAD_PENDING_STATES:
-                values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
+                #re-open
+                values.update(state=crm.AVAILABLE_STATES[1][0])
+                if not case.date_open:
+                    values['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT) 
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
 

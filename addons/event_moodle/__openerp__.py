@@ -19,7 +19,25 @@
 #
 ##############################################################################
 
-import moodle
 
+{
+    'name': 'Event Moodle',
+    'version': '0.1',
+    'category': 'Tools',
+    'complexity': "easy",
+    'description': """
+""",
+    'author': 'OpenERP SA',
+    'depends': ['event'],
+    'init_xml': [],
+    'data': [
+            'wizard_moodle.xml',
+            ],
+    'demo_xml': [],
+    'test': [],
+    'installable': True,
+    'active': False,
+    'certificate': '',
+    'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg'],
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

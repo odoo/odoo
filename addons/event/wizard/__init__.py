@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import event_make_invoice
+
 import event_confirm_registration
 import event_confirm
 import partner_event_registration
