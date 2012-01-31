@@ -28,6 +28,11 @@ openerp.web_process = function (openerp) {
         },
         initialize_process_view: function() {
             var self = this;
+            this.record_id = false;
+            if(this.active_view  == 'page' || this.active_view == 'form') {
+                this.record_id = this.views[this.active_view].controller.datarecord.id;
+            }
+
             $.when(this.help(), this.get_process_object()).pipe(function(help, process) {
                 self.process_help = help;
                 if(process && process.length) {
@@ -65,7 +70,7 @@ openerp.web_process = function (openerp) {
             this.process_id = parseInt(this.process_id, 10);
 
             this.process_dataset
-            .call("graph_get",[this.process_id, this.model || this.dataset.model, false, [80,80,150,100]])
+            .call("graph_get",[this.process_id, this.model || this.dataset.model, this.record_id, [80,80,150,100]])
             .done(function(res) {
                 self.process_dataset
                     .call("search_by_model",[self.model || self.dataset.model,self.session.context])
@@ -157,6 +162,8 @@ openerp.web_process = function (openerp) {
                 //Image part
                 bg = n.node.kind == "subflow" ? "node-subflow" : "node";
                 bg = n.node.gray ? bg + "-gray" : bg;
+                bg = n.node.active ? 'node-current': bg;
+
                 img_src = '/web_process/static/src/img/'+ bg + '.png';
 
                 r['image'](img_src, n.node.x, n.node.y,150, 100)
@@ -194,6 +201,10 @@ openerp.web_process = function (openerp) {
                         to += from;
                     }
                 }
+
+                if(n.node.res)
+                    new_notes = n.node.res.name + '\n' + new_notes;
+
                 process_node_desc = r.text(n.node.x+85, n.node.y+50, (new_notes));
                 r['image']('/web/static/src/img/icons/gtk-info.png', n.node.x+20, n.node.y+70, 16, 16)
                     .attr({"cursor": "pointer", "title": "Help"})
@@ -220,7 +231,7 @@ openerp.web_process = function (openerp) {
                 node['res_model'] = self.model,
                 node['res_id'] = false,
                 node['id'] = node_id;
-                process_graph.addNode(node['name'], {node: node,render: process_renderer});
+                process_graph.addNode(node.id, {node: node,render: process_renderer});
             });
 
             _.each(res['transitions'], function(transitions) {
@@ -228,7 +239,7 @@ openerp.web_process = function (openerp) {
                 var dst = res['nodes'][transitions['target']];
                 // make active
                 transitions['active'] = src.active && !dst.gray;
-                process_graph.addEdge(src['name'], dst['name'], {directed : true});
+                process_graph.addEdge(src.id, dst.id, {directed : true});
             });
             var width = $(document).width();
             var height = $(document).height();
