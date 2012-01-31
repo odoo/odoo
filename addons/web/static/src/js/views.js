@@ -76,6 +76,15 @@ session.web.ActionManager = session.web.OldWidget.extend({
                 views: [[false, 'page'], [false, 'form']]
             };
             action_loaded = this.do_action(action);
+        } else if (state.sa) {
+            // load session action
+            var self = this;
+            this.null_action();
+            action_loaded = this.rpc('/web/session/get_session_action',  {key: state.sa}).pipe(function(action) {
+                if (action) {
+                    return self.do_action(action);
+                }
+            });
         } else if (state.client_action) {
             this.null_action();
             this.ir_actions_client(state.client_action);
