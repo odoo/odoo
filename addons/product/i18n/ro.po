@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2012-01-26 22:12+0000\n"
+"PO-Revision-Date: 2012-01-30 20:29+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-27 05:40+0000\n"
-"X-Generator: Launchpad (build 14727)\n"
+"X-Launchpad-Export-Date: 2012-01-31 06:24+0000\n"
+"X-Generator: Launchpad (build 14734)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -293,9 +293,9 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"'Productie pe stoc': Atunci cand este necesar, va lua din stoc sau va "
-"astepta pană la re-aprovizionare. 'Productie la comandă': Atunci cand este "
-"necesar, cumpără sau produce pentru cererea de aprovizionare."
+"'Pe stoc': Atunci când este necesar, va lua din stoc sau va aștepta până la "
+"re-aprovizionare. 'La comandă': Atunci când este necesar, cumpără sau "
+"produce pentru a acoperi necesarul."
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -453,7 +453,7 @@ msgstr "Lungimea ambalajului"
 #. module: product
 #: help:product.template,weight_net:0
 msgid "The net weight in Kg."
-msgstr "Greutatea netă în Kg."
+msgstr "Masa netă în Kg."
 
 #. module: product
 #: help:product.template,state:0
@@ -536,12 +536,12 @@ msgid ""
 "each version has several rules. Example: the customer price of a product "
 "category will be based on the supplier price multiplied by 1.80."
 msgstr ""
-"O listă de preturi conţine reguli care urmează să fie evaluate pentru a "
-"calcula preţul de cumpărare sau vânzare pentru toţi partenerii atribuiți la "
-"o listă de preţuri. Listele de preţuri au mai multe versiuni (2010, 2011, "
-"Promotia februarie 2010, etc.) şi fiecare versiune are mai multe reguli. De "
-"exemplu: preţul pentru client dintr-o categorie de produs se va baza pe "
-"preţul furnizorul înmulţit cu 1.80."
+"O listă de prețuri conţine reguli care urmează să fie evaluate pentru a "
+"calcula prețul de cumpărare sau vânzare pentru toți partenerii atribuiți la "
+"o listă de prețuri. Listele de prețuri au mai multe versiuni (2010, 2011, "
+"Promoția februarie 2010, etc.) și fiecare versiune are mai multe reguli. De "
+"exemplu: prețul pentru client dintr-o categorie de produs se va baza pe "
+"prețul furnizorul înmulțit cu 1.80."
 
 #. module: product
 #: help:product.product,active:0
@@ -1152,11 +1152,11 @@ msgid ""
 "contains detailed information about your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
-"Trebuie să definiti un Produs pentru orice cumpărati sau vindeti. Produsele "
+"Trebuie să definiți un Produs pentru orice cumpărați sau vindeți. Produsele "
 "pot fi materie primă, produse care pot fi stocate, consumabile sau servicii. "
-"Formularul Produs contine informatii detaliate despre produsele "
-"dumneavoastră asociate logisticii de aprovizionare, pretului de vanzare, "
-"categoriei produsului, furnizorilor si asa mai departe."
+"Formularul Produs conține informații detaliate despre produsele "
+"dumneavoastră asociate logisticii de aprovizionare, prețului de vanzare, "
+"categoriei produsului, furnizorilor și asa mai departe."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
@@ -1215,7 +1215,7 @@ msgstr ""
 #. module: product
 #: field:product.template,weight_net:0
 msgid "Net weight"
-msgstr "Greutate netă"
+msgstr "Masă netă"
 
 #. module: product
 #: field:product.packaging,width:0
@@ -1235,7 +1235,7 @@ msgstr "Unitate de măsură"
 #. module: product
 #: field:product.template,procure_method:0
 msgid "Procurement Method"
-msgstr "Metodă de aprovizionare"
+msgstr "Metodă de procurare"
 
 #. module: product
 #: report:product.pricelist:0
@@ -1409,7 +1409,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr "Produce pe stoc"
+msgstr "Pe stoc"
 
 #. module: product
 #: field:product.pricelist.item,price_version_id:0
@@ -1472,7 +1472,7 @@ msgstr "Unitate de măsură achizitie"
 #. module: product
 #: field:product.template,supply_method:0
 msgid "Supply method"
-msgstr "Metoda de aprovizionare"
+msgstr "Metodă de alimentare"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_category_action
@@ -1567,7 +1567,7 @@ msgstr "Unitate de măsură produs"
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
-"Eroare: Unitatea de masură implicită si unitatea de masură de achizitii "
+"Eroare: unitatea de masură implicită și unitatea de masură de aprovizionare "
 "trebuie să facă parte din aceeasi categorie."
 
 #. module: product
@@ -1588,7 +1588,7 @@ msgstr "Etajeră de 200cm"
 #. module: product
 #: selection:product.template,supply_method:0
 msgid "Buy"
-msgstr "Cumpără"
+msgstr "Se cumpără"
 
 #. module: product
 #: view:product.uom.categ:0
@@ -1749,12 +1749,12 @@ msgstr "Produs"
 #. module: product
 #: selection:product.template,supply_method:0
 msgid "Produce"
-msgstr "Produceti"
+msgstr "Se produce"
 
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "Făcut la comandă"
+msgstr "La comandă"
 
 #. module: product
 #: help:product.packaging,qty:0
