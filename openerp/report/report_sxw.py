@@ -34,7 +34,6 @@ import openerp.tools as tools
 import zipfile
 import common
 from openerp.osv.fields import float as float_class, function as function_class
-from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)

@@ -191,78 +191,88 @@ class db(netsvc.ExportService):
             cr.close()
         return True
 
+
     def _set_pg_psw_env_var(self):
-        if os.name == 'nt' and not os.environ.get('PGPASSWORD', ''):
+        # see http://www.postgresql.org/docs/8.4/static/libpq-envars.html
+        # FIXME: This is not thread-safe, and should never be enabled for
+        # SaaS (giving SaaS users the super-admin password is not a good idea
+        # anyway)
+        if tools.config['db_password'] and not os.environ.get('PGPASSWORD', ''):
             os.environ['PGPASSWORD'] = tools.config['db_password']
             self._pg_psw_env_var_is_set = True
 
     def _unset_pg_psw_env_var(self):
-        if os.name == 'nt' and self._pg_psw_env_var_is_set:
+        if self._pg_psw_env_var_is_set:
             os.environ['PGPASSWORD'] = ''
 
     def exp_dump(self, db_name):
-        self._set_pg_psw_env_var()
-
-        cmd = ['pg_dump', '--format=c', '--no-owner']
-        if tools.config['db_user']:
-            cmd.append('--username=' + tools.config['db_user'])
-        if tools.config['db_host']:
-            cmd.append('--host=' + tools.config['db_host'])
-        if tools.config['db_port']:
-            cmd.append('--port=' + str(tools.config['db_port']))
-        cmd.append(db_name)
-
-        stdin, stdout = tools.exec_pg_command_pipe(*tuple(cmd))
-        stdin.close()
-        data = stdout.read()
-        res = stdout.close()
-        if res:
-            _logger.error('DUMP DB: %s failed\n%s', db_name, data)
-            raise Exception, "Couldn't dump database"
-        _logger.info('DUMP DB: %s', db_name)
-
-        self._unset_pg_psw_env_var()
-
-        return base64.encodestring(data)
+        try:
+            self._set_pg_psw_env_var()
+            cmd = ['pg_dump', '--format=c', '--no-owner']
+            if tools.config['db_user']:
+                cmd.append('--username=' + tools.config['db_user'])
+            if tools.config['db_host']:
+                cmd.append('--host=' + tools.config['db_host'])
+            if tools.config['db_port']:
+                cmd.append('--port=' + str(tools.config['db_port']))
+            cmd.append(db_name)
+    
+            stdin, stdout = tools.exec_pg_command_pipe(*tuple(cmd))
+            stdin.close()
+            data = stdout.read()
+            res = stdout.close()
+    
+            if not data or res:
+                _logger.error(
+                        'DUMP DB: %s failed! Please verify the configuration of the database password on the server. '\
+                        'It should be provided as a -w <PASSWD> command-line option, or as `db_password` in the '\
+                        'server configuration file.\n %s'  % (db_name, data))
+                raise Exception, "Couldn't dump database"
+            _logger.info('DUMP DB successful: %s', db_name)
+    
+            return base64.encodestring(data)
+        finally:
+            self._unset_pg_psw_env_var()
 
     def exp_restore(self, db_name, data):
-        self._set_pg_psw_env_var()
+        try:
+            self._set_pg_psw_env_var()
 
-        if self.exp_db_exist(db_name):
-            _logger.warning('RESTORE DB: %s already exists', db_name)
-            raise Exception, "Database already exists"
+            if self.exp_db_exist(db_name):
+                _logger.warning('RESTORE DB: %s already exists' % (db_name,))
+                raise Exception, "Database already exists"
 
-        self._create_empty_database(db_name)
+            self._create_empty_database(db_name)
 
-        cmd = ['pg_restore', '--no-owner']
-        if tools.config['db_user']:
-            cmd.append('--username=' + tools.config['db_user'])
-        if tools.config['db_host']:
-            cmd.append('--host=' + tools.config['db_host'])
-        if tools.config['db_port']:
-            cmd.append('--port=' + str(tools.config['db_port']))
-        cmd.append('--dbname=' + db_name)
-        args2 = tuple(cmd)
+            cmd = ['pg_restore', '--no-owner']
+            if tools.config['db_user']:
+                cmd.append('--username=' + tools.config['db_user'])
+            if tools.config['db_host']:
+                cmd.append('--host=' + tools.config['db_host'])
+            if tools.config['db_port']:
+                cmd.append('--port=' + str(tools.config['db_port']))
+            cmd.append('--dbname=' + db_name)
+            args2 = tuple(cmd)
 
-        buf=base64.decodestring(data)
-        if os.name == "nt":
-            tmpfile = (os.environ['TMP'] or 'C:\\') + os.tmpnam()
-            file(tmpfile, 'wb').write(buf)
-            args2=list(args2)
-            args2.append(' ' + tmpfile)
-            args2=tuple(args2)
-        stdin, stdout = tools.exec_pg_command_pipe(*args2)
-        if not os.name == "nt":
-            stdin.write(base64.decodestring(data))
-        stdin.close()
-        res = stdout.close()
-        if res:
-            raise Exception, "Couldn't restore database"
-        _logger.info('RESTORE DB: %s', db_name)
+            buf=base64.decodestring(data)
+            if os.name == "nt":
+                tmpfile = (os.environ['TMP'] or 'C:\\') + os.tmpnam()
+                file(tmpfile, 'wb').write(buf)
+                args2=list(args2)
+                args2.append(' ' + tmpfile)
+                args2=tuple(args2)
+            stdin, stdout = tools.exec_pg_command_pipe(*args2)
+            if not os.name == "nt":
+                stdin.write(base64.decodestring(data))
+            stdin.close()
+            res = stdout.close()
+            if res:
+                raise Exception, "Couldn't restore database"
+            _logger.info('RESTORE DB: %s' % (db_name))
 
-        self._unset_pg_psw_env_var()
-
-        return True
+            return True
+        finally:
+            self._unset_pg_psw_env_var()
 
     def exp_rename(self, old_name, new_name):
         openerp.modules.registry.RegistryManager.delete(old_name)

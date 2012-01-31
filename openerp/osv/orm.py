@@ -308,25 +308,29 @@ class browse_record(object):
             name = user_rec.name
     """
 
-    def __init__(self, cr, uid, id, table, cache, context=None, list_class=None, fields_process=None):
+    def __init__(self, cr, uid, id, table, cache, context=None,
+                 list_class=browse_record_list, fields_process=None):
         """
-        @param cache a dictionary of model->field->data to be shared accross browse
-            objects, thus reducing the SQL read()s . It can speed up things a lot,
-            but also be disastrous if not discarded after write()/unlink() operations
-        @param table the object (inherited from orm)
-        @param context dictionary with an optional context
+        :param table: the browsed object (inherited from orm)
+        :param dict cache: a dictionary of model->field->data to be shared
+                           across browse objects, thus reducing the SQL
+                           read()s. It can speed up things a lot, but also be
+                           disastrous if not discarded after write()/unlink()
+                           operations
+        :param dict context: dictionary with an optional context
         """
         if fields_process is None:
             fields_process = {}
         if context is None:
             context = {}
-        self._list_class = list_class or browse_record_list
+        self._list_class = list_class
         self._cr = cr
         self._uid = uid
         self._id = id
         self._table = table # deprecated, use _model!
         self._model = table
         self._table_name = self._table._name
+        self.__logger = logging.getLogger('openerp.osv.orm.browse_record.' + self._table_name)
         self._context = context
         self._fields_process = fields_process
 
@@ -367,7 +371,7 @@ class browse_record(object):
                     return attr
             else:
                 error_msg = "Field '%s' does not exist in object '%s'" % (name, self) 
-                _logger.warning(error_msg)
+                self.__logger.warn(error_msg)
                 raise KeyError(error_msg)
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
@@ -462,8 +466,8 @@ class browse_record(object):
 
         if not name in self._data[self._id]:
             # How did this happen? Could be a missing model due to custom fields used too soon, see above.
-            _logger.error("Fields to fetch: %s, Field values: %s", field_names, field_values)
-            _logger.error("Cached: %s, Table: %s", self._data[self._id], self._table)
+            self.__logger.error("Fields to fetch: %s, Field values: %s", field_names, field_values)
+            self.__logger.error("Cached: %s, Table: %s", self._data[self._id], self._table)
             raise KeyError(_('Unknown attribute %s in %s ') % (name, self))
         return self._data[self._id][name]
 
@@ -4204,7 +4208,7 @@ class BaseModel(object):
         """Fetch records as objects allowing to use dot notation to browse fields and relations
 
         :param cr: database cursor
-        :param user: current user id
+        :param uid: current user id
         :param select: id or list of ids.
         :param context: context arguments, like lang, time zone
         :rtype: object or list of objects requested
