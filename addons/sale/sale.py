@@ -981,7 +981,7 @@ class sale_order_line(osv.osv):
         'price_unit': 0.0,
     }
 
-    def _prepare_order_line_invoice_line(self, cr, uid, ids, line, account_id=False, context=None):
+    def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
         """ Builds the invoice line dict from a sale order line
             @param line: sale order line object
             @param account_id: the id of the account to force eventually (the method is used for picking return including service)
@@ -1055,7 +1055,7 @@ class sale_order_line(osv.osv):
         create_ids = []
         sales = set()
         for line in self.browse(cr, uid, ids, context=context):
-            vals = self._prepare_order_line_invoice_line(cr, uid, ids, line, False, context)
+            vals = self._prepare_order_line_invoice_line(cr, uid, line, False, context)
             if vals:
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, vals, context=context)
                 cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
