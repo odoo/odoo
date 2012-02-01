@@ -26,6 +26,9 @@ class bank(osv.osv):
     _inherit = "res.partner.bank"
     _columns = {
         'journal_id': fields.many2one('account.journal', 'Account Journal', help="This journal will be created automatically for this bank account when you save the record"),
+        'currency_id': fields.related('journal_id', 'currency', type="many2one",
+            relation='res.currency', string="Currency", readonly=True,
+            help="Currency of the related account journal."),
     }
     def create(self, cr, uid, data, context={}):
         result = super(bank, self).create(cr, uid, data, context=context)

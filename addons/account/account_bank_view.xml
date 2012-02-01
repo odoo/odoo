@@ -16,8 +16,22 @@
                 <group name="accounting" col="2" colspan="2" attrs="{'invisible': [('company_id','=', False)]}" groups="base.group_extended">
                     <separator string="Accounting Information" colspan="2"/>
                     <field name="journal_id"/>
+                    <field name="currency_id"/>
                 </group>
             </group>
+        </field>
+    </record>
+
+
+    <record id="view_partner_bank_tree_add_currency" model="ir.ui.view">
+        <field name="name">Partner Bank Accounts - Add currency on tree</field>
+        <field name="model">res.partner.bank</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="base.view_partner_bank_tree"/>
+        <field name="arch" type="xml">
+            <field name="acc_number" position="after">
+                <field name="currency_id"/>
+            </field>
         </field>
     </record>
 
