@@ -393,26 +393,43 @@ class sale_order(osv.osv):
     def button_dummy(self, cr, uid, ids, context=None):
         return True
 
-    #FIXME: the method should return the list of invoices created (invoice_ids)
-    # and not the id of the last invoice created (res). The problem is that we
-    # cannot change it directly since the method is called by the sales order
-    # workflow and I suppose it expects a single id...
-    def _inv_get(self, cr, uid, order, context=None):
-        return {}
+    def _prepare_invoice(self, cr, uid, order, lines, context=None):
+        """ Builds the dict containing the values for the invoice
+            @param order: order object
+            @param line: list of invoice line IDs that must be attached to the invoice
+            @return: dict that will be used to create the invoice object
+        """
+        journal_ids = self.pool.get('account.journal').search(cr, uid,
+            [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
+            limit=1)
+        if not journal_ids:
+            raise osv.except_osv(_('Error !'),
+                _('There is no sales journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
+        return {
+            'name': order.client_order_ref or '',
+            'origin': order.name,
+            'type': 'out_invoice',
+            'reference': order.client_order_ref or order.name,
+            'account_id': order.partner_id.property_account_receivable.id,
+            'partner_id': order.partner_id.id,
+            'journal_id': journal_ids[0],
+            'address_invoice_id': order.partner_invoice_id.id,
+            'address_contact_id': order.partner_order_id.id,
+            'invoice_line': [(6, 0, lines)],
+            'currency_id': order.pricelist_id.currency_id.id,
+            'comment': order.note,
+            'payment_term': order.payment_term and order.payment_term.id or False,
+            'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
+            'date_invoice': context.get('date_invoice', False),
+            'company_id': order.company_id.id,
+            'user_id': order.user_id and order.user_id.id or False
+        }
 
     def _make_invoice(self, cr, uid, order, lines, context=None):
-        journal_obj = self.pool.get('account.journal')
         inv_obj = self.pool.get('account.invoice')
         obj_invoice_line = self.pool.get('account.invoice.line')
         if context is None:
             context = {}
-
-        journal_ids = journal_obj.search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)], limit=1)
-        if not journal_ids:
-            raise osv.except_osv(_('Error !'),
-                _('There is no sales journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
-        a = order.partner_id.property_account_receivable.id
-        pay_term = order.payment_term and order.payment_term.id or False
         invoiced_sale_line_ids = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id), ('invoiced', '=', True)], context=context)
         from_line_invoice_ids = []
         for invoiced_sale_line_id in self.pool.get('sale.order.line').browse(cr, uid, invoiced_sale_line_ids, context=context):
@@ -424,28 +441,9 @@ class sale_order(osv.osv):
                 for preline in preinv.invoice_line:
                     inv_line_id = obj_invoice_line.copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
-        inv = {
-            'name': order.client_order_ref or '',
-            'origin': order.name,
-            'type': 'out_invoice',
-            'reference': order.client_order_ref or order.name,
-            'account_id': a,
-            'partner_id': order.partner_id.id,
-            'journal_id': journal_ids[0],
-            'address_invoice_id': order.partner_invoice_id.id,
-            'address_contact_id': order.partner_order_id.id,
-            'invoice_line': [(6, 0, lines)],
-            'currency_id': order.pricelist_id.currency_id.id,
-            'comment': order.note,
-            'payment_term': pay_term,
-            'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
-            'date_invoice': context.get('date_invoice',False),
-            'company_id': order.company_id.id,
-            'user_id': order.user_id and order.user_id.id or False
-        }
-        inv.update(self._inv_get(cr, uid, order))
+        inv = self._prepare_invoice(cr, uid, order, lines, context=context)
         inv_id = inv_obj.create(cr, uid, inv, context=context)
-        data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], pay_term, time.strftime(DEFAULT_SERVER_DATE_FORMAT))
+        data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], inv['payment_term'], time.strftime(DEFAULT_SERVER_DATE_FORMAT))
         if data.get('value', False):
             inv_obj.write(cr, uid, [inv_id], data['value'], context=context)
         inv_obj.button_compute(cr, uid, [inv_id])
