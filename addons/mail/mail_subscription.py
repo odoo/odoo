@@ -46,3 +46,23 @@ class mail_subscription(osv.osv):
     }
 
 mail_subscription()
+
+class mail_notification(osv.osv):
+    """
+    TODO
+    """
+    
+    _name = 'mail.notification'
+    _rec_name = 'id'
+    _columns = {
+        'user_id': fields.many2one('res.users', string='User'
+                        ondelete='cascade', required=True),
+        'message_id': fields.many2one('mail.message', string='Message'
+                        ondelete='cascade', required=True),
+        'read': fields.boolean('Read'),
+    }
+    
+    _defaults = {
+    }
+
+mail_notification()
