@@ -65,7 +65,7 @@ from openerp import SUPERUSER_ID
 from query import Query
 
 _logger = logging.getLogger(__name__)
-_schema = logging.getLogger(__name__ + '(schema)')
+_schema = logging.getLogger(__name__ + '.schema')
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES

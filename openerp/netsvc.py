@@ -151,7 +151,6 @@ def init_logger():
     resetlocale()
 
     # create a format for log messages and dates
-    format = '[%(asctime)s][%(dbname)s] %(levelname)s:%(name)s:%(message)s'
     format = '%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s'
 
     if tools.config['syslog']:
@@ -191,14 +190,14 @@ def init_logger():
 
     # Configure handlers
     logconfig = tools.config['log_handler']
-    for i in logconfig:
-        prefix, level = i.split(':')
+    for logconfig_item in logconfig:
+        loggername, level = logconfig_item.split(':')
         level = getattr(logging, level, logging.INFO)
-        logger = logging.getLogger(prefix)
+        logger = logging.getLogger(loggername)
         logger.handlers = []
         logger.setLevel(level)
         logger.addHandler(handler)
-        if prefix != '':
+        if loggername != '':
             logger.propagate = False
 
 
@@ -302,11 +301,11 @@ def replace_request_password(args):
         args[2] = '*'
     return tuple(args)
 
-def dispatch_rpc_log(logger, prefix, msg, depth=None):
+def log(logger, level, prefix, msg, depth=None):
     indent=''
     indent_after=' '*len(prefix)
     for line in (prefix+pformat(msg, depth=depth)).split('\n'):
-        logger.debug(indent+line)
+        logger.log(level, indent+line)
         indent=indent_after
 
 def dispatch_rpc(service_name, method, params):
@@ -323,16 +322,16 @@ def dispatch_rpc(service_name, method, params):
         if rpc_short_flag or rpc_full_flag:
             start_time = time.time()
             if rpc_full_flag:
-                dispatch_rpc_log(rpc_full,'%s.%s:request '%(service_name,method), replace_request_password(params))
+                log(rpc_full,logging.DEBUG,'%s.%s:request '%(service_name,method), replace_request_password(params))
 
         result = ExportService.getService(service_name).dispatch(method, params)
 
         if rpc_short_flag or rpc_full_flag:
             end_time = time.time()
             if rpc_full_flag:
-                dispatch_rpc_log(rpc_full,'%s.%s:reply time:%.3fs '%(service_name,method,end_time - start_time), result)
+                log(rpc_full,logging.DEBUG,'%s.%s:reply time:%.3fs '%(service_name,method,end_time - start_time), result)
             else:
-                dispatch_rpc_log(rpc_short,'%s.%s time:%.3fs '%(service_name,method,end_time - start_time), replace_request_password(params), depth=1)
+                log(rpc_short,logging.DEBUG,'%s.%s time:%.3fs '%(service_name,method,end_time - start_time), replace_request_password(params), depth=1)
 
         return result
     except openerp.exceptions.AccessError:

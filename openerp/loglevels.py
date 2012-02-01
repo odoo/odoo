@@ -48,7 +48,7 @@ class Logger(object):
             "the standard `logging` module instead.")
         from service.web_services import common
 
-        log = logging.getLogger(__name__ + '(deprecated channel: ' + ustr(name) + ')')
+        log = logging.getLogger(__name__ + '.deprecated.' + ustr(name))
 
         if level in [LOG_DEBUG_RPC, LOG_TEST] and not hasattr(log, level):
             fct = lambda msg, *args, **kwargs: log.log(getattr(logging, level.upper()), msg, *args, **kwargs)

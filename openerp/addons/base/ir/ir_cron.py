@@ -131,8 +131,8 @@ class ir_cron(osv.osv):
         if model and hasattr(model, method_name):
             method = getattr(model, method_name)
             try:
-                netsvc.log(__name__, (cr.dbname,uid,'*',model_name,method_name)+tuple(args), channel=logging.DEBUG,
-                            depth=(None if _logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='object.execute')
+                log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
+                netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname,uid,'*',model_name,method_name)+tuple(args), depth=log_depth)
                 if _logger.isEnabledFor(logging.DEBUG):
                     start_time = time.time()
                 method(cr, uid, *args)

@@ -555,8 +555,8 @@ GNU Public Licence.
         return os.times()
 
     def exp_get_sqlcount(self):
-        if not _logger.isEnabledFor(logging.DEBUG_SQL):
-            _logger.warning("Counters of SQL will not be reliable unless DEBUG_SQL is set at the server's config.")
+        if not logging.getLogger('openerp.sql_db').isEnabledFor(logging.DEBUG):
+            _logger.warning("Counters of SQL will not be reliable unless logger openerp.sql_db is set to level DEBUG or higer.")
         return sql_db.sql_counter
 
 

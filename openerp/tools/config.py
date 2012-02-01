@@ -314,7 +314,6 @@ class configmanager(object):
         if args is None:
             args = []
         opt, args = self.parser.parse_args(args)
-        print opt
 
         def die(cond, msg):
             if cond:
