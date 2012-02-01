@@ -402,17 +402,16 @@ QWeb2.Engine = (function() {
                         this.tools.exception(error_msg + "No expression given");
                     }
                     error_msg += "' (expression='" + (jquery || xpath) + "') : ";
-                    var inner = this.tools.xml_node_to_string(child, true);
                     if (operation) {
                         var allowed_operations = "append,prepend,before,after,replace,inner".split(',');
                         if (this.tools.arrayIndexOf(allowed_operations, operation) == -1) {
                             this.tools.exception(error_msg + "Invalid operation : '" + operation + "'");
                         }
                         operation = {'replace' : 'replaceWith', 'inner' : 'html'}[operation] || operation;
-                        target[operation](child.cloneNode(true));
+                        target[operation](child.cloneNode(true).childNodes);
                     } else {
                         try {
-                            var f = new Function(['$', 'document'], inner);
+                            var f = new Function(['$', 'document'], this.tools.xml_node_to_string(child, true));
                         } catch(error) {
                             return this.tools.exception("Parse " + error_msg + error);
                         }
