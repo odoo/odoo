@@ -121,14 +121,15 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.has_been_loaded.resolve();
     },
 
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
         if (state.id && this.datarecord.id != state.id) {
-            var idx = this.dataset.get_id_index(state.id);
-            if (idx === null) {
+            if (!this.dataset.get_id_index(state.id)) {
                 this.dataset.ids.push(state.id);
-                this.dataset.index = this.dataset.ids.length - 1;
             }
-            this.do_show();
+            this.dataset.select_id(state.id);
+            if (warm) {
+                this.do_show();
+            }
         }
     },
 

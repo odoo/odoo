@@ -57,7 +57,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
             this.widget_parent.do_push_state(state);
         }
     },
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
         var self = this,
             action_loaded;
         if (state.action_id) {
@@ -92,7 +92,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
 
         $.when(action_loaded || null).then(function() {
             if (self.inner_viewmanager) {
-                self.inner_viewmanager.do_load_state(state);
+                self.inner_viewmanager.do_load_state(state, warm);
             }
         });
     },
@@ -695,7 +695,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             this.widget_parent.do_push_state(state);
         }
     },
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
         var self = this,
             defs = [];
         if (state.view_type && state.view_type !== this.active_view) {
@@ -707,7 +707,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         } 
 
         $.when(defs).then(function() {
-            self.views[self.active_view].controller.do_load_state(state);
+            self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },
     shortcut_check : function(view) {
@@ -1181,7 +1181,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             this.widget_parent.do_push_state(state);
         }
     },
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
     },
     /**
      * Switches to a specific view type

@@ -475,7 +475,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         return this.reload_content();
     },
 
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
         var reload = false;
         if (state.page && this.page !== state.page) {
             this.page = state.page;

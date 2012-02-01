@@ -1162,7 +1162,7 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
     on_hashchange: function(event) {
         var state = event.getState(true);
         if (!_.isEqual(this._current_state, state)) {
-            this.action_manager.do_load_state(state);
+            this.action_manager.do_load_state(state, !!this._current_state);
         }
         this._current_state = state;
     },
