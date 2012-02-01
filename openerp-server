@@ -42,9 +42,6 @@ import openerp
 __author__ = openerp.release.author
 __version__ = openerp.release.version
 
-import sys
-import imp
-
 def check_root_user():
     """ Exit if the process's user is 'root' (on POSIX system)."""
     if os.name == 'posix':
@@ -200,7 +197,7 @@ def quit_on_signals():
     try:
         while quit_signals_received == 0:
             time.sleep(60)
-    except KeyboardInterrupt, e:
+    except KeyboardInterrupt:
         pass
 
     if config['pidfile']:
