@@ -91,9 +91,9 @@
                         </tree>
                     </field>
                 </page><page string="Filters on Fields">
-                    <button string="Add filter"
-                        name="%(wizard_set_filter_fields)d" type="action"
-                        icon="gtk-add" />
+                    <button string="Add Filter"
+                        name="%(action_wiz_set_filter_fields)d" type="action"
+                        icon="gtk-add"/>
                     <field name="filter_ids" nolabel="1" colspan="4">
                         <tree string="Filters">
                             <field name="name"/>
@@ -126,7 +126,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
         <search string="Report">
-            <field name="name"></field>            
+            <field name="name"></field>
         </search>
         </field>
     </record>
@@ -145,7 +145,7 @@
         name="Custom Reports" id="base.menu_custom_reports"
         action="base_report_creator_action" parent="base.reporting_menu" sequence="1"/>
 
-    
+
 
     </data>
 </openerp>
