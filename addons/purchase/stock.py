@@ -29,20 +29,6 @@ class stock_move(osv.osv):
             readonly=True),
     }
 
-    def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
-        """
-        Overrides the default stock valuation to take into account the currency that was specified
-        on the purchase order in case the valuation data was not directly specified during picking
-        confirmation.
-        """
-        reference_amount, reference_currency_id = super(stock_move, self)._get_reference_accounting_values_for_valuation(cr, uid, move, context=context)
-        if move.product_id.cost_method != 'average' or not move.price_unit:
-            # no average price costing or cost not specified during picking validation, we will
-            # plug the purchase line values if they are found.
-            if move.purchase_line_id and move.picking_id.purchase_id.pricelist_id:
-                reference_amount, reference_currency_id = move.purchase_line_id.price_unit * move.product_qty, move.picking_id.purchase_id.pricelist_id.currency_id.id
-        return reference_amount, reference_currency_id
-
 stock_move()
 
 #
