@@ -58,7 +58,7 @@ only the country code will be validated.
     'website': 'http://www.openerp.com',
     'data': ['base_vat_view.xml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0084849360989',
     'images': ['images/1_partner_vat.jpeg'],
 }

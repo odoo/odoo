@@ -78,7 +78,7 @@ Dashboard for purchase management that includes:
         'purchase_demo.xml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0057234283549',
     'application': True,
 }

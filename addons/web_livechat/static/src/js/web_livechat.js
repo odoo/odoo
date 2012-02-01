@@ -22,7 +22,7 @@ var __lc_buttons = [];
 
 openerp.web_livechat = function (openerp) {
 
-openerp.web_livechat.Livechat = openerp.web.Widget.extend({
+openerp.web_livechat.Livechat = openerp.web.OldWidget.extend({
     template: 'Header-LiveChat',
 
     start: function() {

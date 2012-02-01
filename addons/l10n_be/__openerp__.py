@@ -50,6 +50,7 @@ Wizards provided by this module:
     ],
     'init_xml': [],
     'update_xml': [
+        'account_financial_report.xml',
         'account_pcmn_belgium.xml',
         'account_tax_code_template.xml',
         'account_chart_template.xml',

@@ -50,7 +50,7 @@
         "account_asset_invoice_view.xml",
         "report/account_asset_report_view.xml",
     ],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "application": True,
 }

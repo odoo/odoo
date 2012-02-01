@@ -48,7 +48,7 @@ Provide Templates for Chart of Accounts, Taxes for Uruguay
                     "l10n_uy_wizard.xml",
                   ],
     "demo_xml": [],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     'certificate' : '',
     "images": ["images/config_chart_l10n_uy.jpeg","images/l10n_uy_chart.jpeg"],

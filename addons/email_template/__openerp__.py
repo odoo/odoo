@@ -69,7 +69,7 @@ Openlabs was kept
         'res_partner_demo.yml',
     ],
     "installable": True,
-    "active": False,
+    "auto_install": False,
     "certificate" : "00817073628967384349",
     'images': ['images/1_email_account.jpeg','images/2_email_template.jpeg','images/3_emails.jpeg'],
 }

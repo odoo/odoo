@@ -40,7 +40,7 @@ Obviously if no data has been recorded for the current account, the default valu
     'update_xml': ['analytic_journal_billing_rate_view.xml', 'security/ir.model.access.csv'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0030271787965',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

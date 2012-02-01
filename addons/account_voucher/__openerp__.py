@@ -68,7 +68,7 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
         "test/case4_cad_chf.yml",
     ],
     'certificate': '0037580727101',
-    "active": False,
+    "auto_install": False,
     "application": True,
     "installable": True,
 }

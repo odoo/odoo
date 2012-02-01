@@ -37,7 +37,7 @@ This module allows you to create retro planning for managing your events.
     'update_xml': ['wizard/event_project_retro_view.xml', 'event_project_view.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0069726863885',
 }
 
