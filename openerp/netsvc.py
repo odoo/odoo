@@ -148,13 +148,25 @@ class ColoredFormatter(DBFormatter):
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
         return DBFormatter.format(self, record)
 
+
+class init_logger_filter(object):
+    def __init__(self):
+        self.exclude = []
+    def filter(self, record):
+        # never called i dont know why
+        print "filter",record
+        for i in self.exclude:
+            if record.name.startswith(i):
+                return False
+        return True
+
 def init_logger():
     from tools.translate import resetlocale
     resetlocale()
 
     # create a format for log messages and dates
     format = '[%(asctime)s][%(dbname)s] %(levelname)s:%(name)s:%(message)s'
-    format = '%(asctime)s %(levelname)s %(pid)s %(dbname)s %(name)s: %(message)s'
+    format = '%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s'
 
     if tools.config['syslog']:
         # SysLog Handler
@@ -191,11 +203,21 @@ def init_logger():
         formatter = DBFormatter(format)
     handler.setFormatter(formatter)
 
-    # Add the handler to the 'openerp' logger.
-    logger = logging.getLogger()
-    logger.handlers = []
-    logger.addHandler(handler)
-    logger.setLevel(int(tools.config['log_level'] or '0'))
+    # Configure handlers
+    logconfig = tools.config['log_handler']
+    logfilter = init_logger_filter()
+    for i in logconfig:
+        prefix, level = i.split(':')
+        level = getattr(logging, level, logging.INFO)
+        logger = logging.getLogger(prefix)
+        logger.handlers = []
+        logger.setLevel(level)
+        logger.addHandler(handler)
+        if prefix == '':
+            logger.addFilter(logfilter)
+        else:
+            logfilter.exclude.append(prefix)
+
 
 # A alternative logging scheme for automated runs of the
 # server intended to test it.
@@ -292,19 +314,17 @@ class Server:
 def replace_request_password(args):
     # password is always 3rd argument in a request, we replace it in RPC logs
     # so it's easier to forward logs for diagnostics/debugging purposes...
-    args = list(args)
     if len(args) > 2:
+        args = list(args)
         args[2] = '*'
-    return args
+    return tuple(args)
 
-def log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
-    logger = logging.getLogger(title)
-    if logger.isEnabledFor(channel):
-        indent=''
-        indent_after=' '*len(fn)
-        for line in (fn+pformat(msg, depth=depth)).split('\n'):
-            logger.log(channel, indent+line)
-            indent=indent_after
+def dispatch_rpc_log(logger, prefix, msg, depth=None):
+    indent=''
+    indent_after=' '*len(prefix)
+    for line in (prefix+pformat(msg, depth=depth)).split('\n'):
+        logger.debug(indent+line)
+        indent=indent_after
 
 def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
@@ -312,21 +332,25 @@ def dispatch_rpc(service_name, method, params):
     This is pure Python code, the actual marshalling (from/to XML-RPC or
     NET-RPC) is done in a upper layer.
     """
-    def _log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
-        log(__name__, msg, channel=channel, depth=depth, fn=fn)
     try:
-        start_time = end_time = 0
-        if _logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
-            _log('service', tuple(replace_request_password(params)), depth=None, fn='%s.%s'%(service_name,method))
-        if _logger.isEnabledFor(logging.DEBUG_RPC):
+        rpc_short = logging.getLogger(__name__ + '.rpc_short')
+        rpc_full = logging.getLogger(__name__ + '.rpc_full')
+        rpc_short_flag = rpc_short.isEnabledFor(logging.DEBUG)
+        rpc_full_flag = rpc_full.isEnabledFor(logging.DEBUG)
+        if rpc_short_flag or rpc_full_flag:
             start_time = time.time()
+            if rpc_full_flag:
+                dispatch_rpc_log(rpc_full,'%s.%s:request '%(service_name,method), replace_request_password(params))
+
         result = ExportService.getService(service_name).dispatch(method, params)
-        if _logger.isEnabledFor(logging.DEBUG_RPC):
+
+        if rpc_short_flag or rpc_full_flag:
             end_time = time.time()
-        if not _logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
-            _log('service (%.3fs)' % (end_time - start_time), tuple(replace_request_password(params)), depth=1, fn='%s.%s'%(service_name,method))
-        _log('execution time', '%.3fs' % (end_time - start_time), channel=logging.DEBUG_RPC_ANSWER)
-        _log('result', result, channel=logging.DEBUG_RPC_ANSWER)
+            if rpc_full_flag:
+                dispatch_rpc_log(rpc_full,'%s.%s:reply time:%.3fs '%(service_name,method,end_time - start_time), result)
+            else:
+                dispatch_rpc_log(rpc_short,'%s.%s time:%.3fs '%(service_name,method,end_time - start_time), replace_request_password(params), depth=1)
+
         return result
     except openerp.exceptions.AccessError:
         raise
@@ -335,11 +359,11 @@ def dispatch_rpc(service_name, method, params):
     except openerp.exceptions.Warning:
         raise
     except openerp.exceptions.DeferredException, e:
-        _log('exception', tools.exception_to_unicode(e))
+        _logger.error(tools.exception_to_unicode(e))
         post_mortem(e.traceback)
         raise
     except Exception, e:
-        _log('exception', tools.exception_to_unicode(e))
+        _logger.error(tools.exception_to_unicode(e))
         post_mortem(sys.exc_info())
         raise
 

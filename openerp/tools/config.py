@@ -82,8 +82,7 @@ class configmanager(object):
         self.config_file = fname
         self.has_ssl = check_ssl()
 
-        self._LOGLEVELS = dict([(getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
-                          for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'TEST', 'DEBUG', 'DEBUG_RPC', 'DEBUG_SQL', 'DEBUG_RPC_ANSWER','NOTSET')])
+        self._LOGLEVELS = dict([(getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'TEST', 'DEBUG', 'DEBUG_RPC', 'DEBUG_SQL', 'DEBUG_RPC_ANSWER','NOTSET')])
 
         version = "%s %s" % (release.description, release.version)
         self.parser = parser = optparse.OptionParser(version=version, option_class=MyOption)
@@ -178,13 +177,14 @@ class configmanager(object):
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
-        group.add_option("--no-logrotate", dest="logrotate", action="store_false", my_default=True,
-                         help="do not rotate the logfile")
-        group.add_option("--syslog", action="store_true", dest="syslog",
-                         my_default=False, help="Send the log to the syslog server")
-        group.add_option('--log-level', dest='log_level', type='choice', choices=self._LOGLEVELS.keys(),
-                         my_default='info',
-                         help='specify the level of the logging. Accepted values: ' + str(self._LOGLEVELS.keys()))
+        group.add_option("--no-logrotate", dest="logrotate", action="store_false", my_default=True, help="do not rotate the logfile")
+        group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
+        group.add_option('--log-handler', action="append", default=[':INFO'], my_default=[':INFO'], metavar="PREFIX:LEVEL", help='setup an handler at LEVEL for a given PREFIX. Example: "openerp.orm:DEBUG" (default: ":INFO")')
+        group.add_option('--log-rpc-short', action="append_const", dest="log_handler", const="openerp.netsvc.rpc_short:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc_short:DEBUG')
+        group.add_option('--log-rpc-full', action="append_const", dest="log_handler", const="openerp.netsvc.rpc_full:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc_full:DEBUG')
+        group.add_option('--log-rpc-web', action="append_const", dest="log_handler", const="openerp.addons.web.common.http:DEBUG", help='shortcut for --log-handler=openerp.addons.web.common.http:DEBUG')
+        group.add_option('--log-sql', action="append_const", dest="log_handler", const="openerp.sql_db:DEBUG", help='shortcut for --log-handler=openerp.sql_db:DEBUG')
+
         parser.add_option_group(group)
 
         # SMTP Group
@@ -314,6 +314,7 @@ class configmanager(object):
         if args is None:
             args = []
         opt, args = self.parser.parse_args(args)
+        print opt
 
         def die(cond, msg):
             if cond:
@@ -361,6 +362,7 @@ class configmanager(object):
         if self.options['pidfile'] in ('None', 'False'):
             self.options['pidfile'] = False
 
+        # if defined dont take the configfile value even if the defined value is None
         keys = ['xmlrpc_interface', 'xmlrpc_port', 'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
@@ -368,7 +370,7 @@ class configmanager(object):
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
                 'static_http_enable', 'static_http_document_root', 'static_http_url_prefix',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter'
+                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler'
                 ]
 
         for arg in keys:
@@ -379,6 +381,7 @@ class configmanager(object):
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
+        # if defined but None take the configfile value
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
             'debug_mode', 'smtp_ssl', 'load_language',
@@ -401,11 +404,6 @@ class configmanager(object):
             self.options['assert_exit_level'] = self._LOGLEVELS[opt.assert_exit_level]
         else:
             self.options['assert_exit_level'] = self._LOGLEVELS.get(self.options['assert_exit_level']) or int(self.options['assert_exit_level'])
-
-        if opt.log_level:
-            self.options['log_level'] = self._LOGLEVELS[opt.log_level]
-        else:
-            self.options['log_level'] = self._LOGLEVELS.get(self.options['log_level']) or int(self.options['log_level'])
 
         self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.dirname(openerp.__file__))))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
