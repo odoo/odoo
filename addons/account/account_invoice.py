@@ -57,6 +57,14 @@ class account_invoice(osv.osv):
                                                 limit=1)
         return res and res[0] or False
 
+    def _get_currency(self, cr, uid, context=None):
+        res = False
+        journal_id = self._get_journal(cr, uid, context=context)
+        if journal_id:
+            journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+            res = journal.currency and journal.currency.id or journal.company_id.currency_id.id
+        return res
+
     def _get_journal_analytic(self, cr, uid, type_inv, context=None):
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
         tt = type2journal.get(type_inv, 'sale')
@@ -273,6 +281,7 @@ class account_invoice(osv.osv):
         'type': _get_type,
         'state': 'draft',
         'journal_id': _get_journal,
+        'currency_id': _get_currency,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.invoice', context=c),
         'reference_type': 'none',
         'check_total': 0.0,
