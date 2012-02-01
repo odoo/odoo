@@ -106,26 +106,6 @@ var QWeb2 = {
                 }
             }
         },
-        xpath_selectNodes : function(node, expr) {
-            if (node.selectNodes !== undefined) {
-                return node.selectNodes(expr);
-            } else {
-                var xpath = new XPathEvaluator();
-                try {
-                    var result = xpath.evaluate(expr, node, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-                } catch(error) {
-                    this.exception("Error with XPath expression '" + expr + "' : " + error);
-                }
-                var r = [];
-                if (result != null) {
-                    var element;
-                    while (element = result.iterateNext()) {
-                        r.push(element);
-                    }
-                }
-                return r
-            }
-        },
         call: function(context, template, old_dict, _import, callback) {
             var new_dict = this.extend({}, old_dict);
             new_dict['__caller__'] = old_dict['__template__'];
@@ -385,23 +365,16 @@ QWeb2.Engine = (function() {
             for (var i = 0, ilen = extend_node.childNodes.length; i < ilen; i++) {
                 var child = extend_node.childNodes[i];
                 if (child.nodeType === 1) {
-                    var xpath = child.getAttribute(this.prefix + '-xpath'),
-                        jquery = child.getAttribute(this.prefix + '-jquery'),
+                    var jquery = child.getAttribute(this.prefix + '-jquery'),
                         operation = child.getAttribute(this.prefix + '-operation'),
                         target,
                         error_msg = "Error while extending template '" + template;
                     if (jquery) {
                         target = this.jQuery(jquery, template_dest);
-                    } else if (xpath) {
-                        // NOTE: due to the XPath implementation, extending a template will only work once
-                        // when using XPath because XPathResult won't match objects with other constructor than 'Element'
-                        // As jQuery will create HTMLElements, xpath will ignore them then causing problems when a
-                        // template has already been extended. XPath selectors will probably be removed in QWeb.
-                        target = this.jQuery(this.tools.xpath_selectNodes(this.templates[template], xpath));
                     } else {
                         this.tools.exception(error_msg + "No expression given");
                     }
-                    error_msg += "' (expression='" + (jquery || xpath) + "') : ";
+                    error_msg += "' (expression='" + jquery + "') : ";
                     if (operation) {
                         var allowed_operations = "append,prepend,before,after,replace,inner".split(',');
                         if (this.tools.arrayIndexOf(allowed_operations, operation) == -1) {
