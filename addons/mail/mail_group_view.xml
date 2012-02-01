@@ -116,7 +116,7 @@
         </record>
 
         <!-- group record !-->
-        <record id="action_view_group" model="ir.actions.act_window">
+        <record id="action_view_groups" model="ir.actions.act_window">
             <field name="name">Groups</field>
             <field name="res_model">mail.group</field>
             <field name="view_type">form</field>
@@ -150,22 +150,24 @@
         </record>
 
         <!-- toplevel menu -->
-        <menuitem id="mail_group" name="Feeds" action="action_view_group"/>
+        <menuitem id="mail_group" name="Feeds" action="action_view_groups"/>
 
         <!-- left-side menu: Feeds !-->
-        <menuitem id="mg_feeds" name="Feeds"  parent="mail_group" action="action_view_group"/>
+        <menuitem id="mg_feeds" name="Feeds"  parent="mail_group" action="action_view_groups"/>
         <!-- left-side Tmp: temporary Messages link to create a message !-->
         <menuitem id="mg_feeds_my" name="My feeds" parent="mg_feeds" action="action_view_mytweets"/>
         <!-- left-side Tmp: temporary Messages link to create a message !-->
         <menuitem id="mg_feeds_all" name="All feeds" parent="mg_feeds" action="action_view_tweets"/>
         <!-- left-side menu: Groups !-->
-        <menuitem id="mg_groups" name="Groups"  parent="mail_group" action="action_view_group"/>
+        <menuitem id="mg_groups" name="Groups"  parent="mail_group" action="action_view_groups"/>
         <!-- left-side menu: Tmp !-->
         <menuitem id="mg_tmp" name="Tmp"  parent="mail_group" action="action_view_mail_message"/>
         <!-- left-side Tmp: temporary Messages link to create a message !-->
         <menuitem id="mg_msg" name="Messages" parent="mg_tmp" action="action_view_mail_message"/>
         <!-- left-side Tmp: temporary Subscriptions link to see subscriptions !-->
         <menuitem id="mg_sub" name="Subscriptions" parent="mg_tmp" action="action_view_subscriptions"/>
+        <!-- left-side Tmp: temporary Groups link to see groups !-->
+        <menuitem id="mg_groups_tmp" name="groups" parent="mg_tmp" action="action_view_groups"/>
 
 <!--        <act_window
             context="{'search_default__id': [active_id], 'default_project_id': active_id}"
