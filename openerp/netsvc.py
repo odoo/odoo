@@ -125,9 +125,6 @@ COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ = "\033[1m"
 COLOR_PATTERN = "%s%s%%s%s" % (COLOR_SEQ, COLOR_SEQ, RESET_SEQ)
 LEVEL_COLOR_MAPPING = {
-    logging.DEBUG_SQL: (WHITE, MAGENTA),
-    logging.DEBUG_RPC: (BLUE, WHITE),
-    logging.DEBUG_RPC_ANSWER: (BLUE, WHITE),
     logging.DEBUG: (BLUE, DEFAULT),
     logging.INFO: (GREEN, DEFAULT),
     logging.TEST: (WHITE, BLUE),

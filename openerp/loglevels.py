@@ -23,22 +23,12 @@ import sys
 import logging
 
 LOG_NOTSET = 'notset'
-LOG_DEBUG_SQL = 'debug_sql'
-LOG_DEBUG_RPC_ANSWER = 'debug_rpc_answer'
-LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
 LOG_TEST = 'test'
 LOG_INFO = 'info'
 LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
 LOG_CRITICAL = 'critical'
-
-logging.DEBUG_RPC_ANSWER = logging.DEBUG - 4
-logging.addLevelName(logging.DEBUG_RPC_ANSWER, 'DEBUG_RPC_ANSWER')
-logging.DEBUG_RPC = logging.DEBUG - 2
-logging.addLevelName(logging.DEBUG_RPC, 'DEBUG_RPC')
-logging.DEBUG_SQL = logging.DEBUG_RPC - 3
-logging.addLevelName(logging.DEBUG_SQL, 'DEBUG_SQL')
 
 logging.TEST = logging.INFO - 5
 logging.addLevelName(logging.TEST, 'TEST')
