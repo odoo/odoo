@@ -541,17 +541,17 @@ class Root(object):
         :returns: a callable matching the path sections, or ``None``
         :rtype: ``Controller | None``
         """
-        if len(l):
-            for i in range(len(l), 0, -1):
-                ps = "/" + "/".join(l[0:i])
-                if ps in controllers_path:
-                    c = controllers_path[ps]
-                    rest = l[i:] or ['index']
-                    meth = rest[0]
+        if l:
+            ps = '/' + '/'.join(l)
+            meth = 'index'
+            while ps:
+                c = controllers_path.get(ps)
+                if c:
                     m = getattr(c, meth)
                     if getattr(m, 'exposed', False):
                         _logger.debug("Dispatching to %s %s %s", ps, c, meth)
                         return m
+                ps, _slash, meth = ps.rpartition('/')
         return None
 
 class LibException(Exception):
