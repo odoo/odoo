@@ -1271,7 +1271,9 @@ class account_move(osv.osv):
         'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}, select=True),
         'narration':fields.text('Internal Note'),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
+        'balance': fields.float('balance', digits_compute=dp.get_precision('Account')),
     }
+
     _defaults = {
         'name': '/',
         'state': 'draft',
@@ -1353,6 +1355,15 @@ class account_move(osv.osv):
                        'SET state=%s '\
                        'WHERE id IN %s', ('draft', tuple(ids),))
         return True
+
+    def onchange_line_id(self, cr, uid, ids, line_ids, context=None):
+        print 'onchange_line_id..........', ids, line_ids
+        balance = 0.0
+        for line in line_ids:
+            if line[2]:
+                print line[2]['debit'], line[2]['credit']
+                balance += (line[2]['debit'] or 0.00)- (line[2]['credit'] or 0.00)
+        return {'value': {'balance': balance}}
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
