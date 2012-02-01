@@ -585,9 +585,10 @@ class account_voucher(osv.osv):
 
         for voucher in self.browse(cr, uid, ids, context=context):
             recs = []
+            invoice_ids = []
             for line in voucher.move_ids:
                 if line.reconcile_id:
-                    invoice_id = [rec_line.invoice.id for rec_line in line.reconcile_id.line_id if rec_line.invoice]
+                    invoice_ids = [rec_line.invoice.id for rec_line in line.reconcile_id.line_id if rec_line.invoice]
                     recs.append(line.reconcile_id.id)
                     move_lines = [move_line.id for move_line in line.reconcile_id.line_id]
                     move_lines.remove(line.id)
@@ -601,7 +602,7 @@ class account_voucher(osv.osv):
                         'reconcile_partial_id': partial_ids
                     }, update_check=False)
                 elif line.reconcile_partial_id:
-                    invoice_id = [rec_line.invoice.id for rec_line in line.reconcile_partial_id.line_partial_ids if rec_line.invoice]
+                    invoice_ids = [rec_line.invoice.id for rec_line in line.reconcile_partial_id.line_partial_ids if rec_line.invoice]
             if recs:
                 reconcile_pool.unlink(cr, uid, recs)
             if voucher.move_id:
@@ -611,7 +612,8 @@ class account_voucher(osv.osv):
             'state':'cancel',
             'move_id':False,
         }
-        wf_service.trg_validate(uid, 'account.invoice', invoice_id[0], 'open_test', cr)
+        if invoice_ids:
+            wf_service.trg_validate(uid, 'account.invoice', invoice_ids[0], 'open_test', cr)
         self.write(cr, uid, ids, res)
         return True
 
