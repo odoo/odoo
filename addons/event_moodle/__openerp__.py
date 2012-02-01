@@ -26,12 +26,26 @@
     'category': 'Tools',
     'complexity': "easy",
     'description': """
+    Configure your moodle server 
+
+
+>site administration >plugins>web sevices >manage protocols 
+activate the xmlrpc web service 
+
+
+>site administration >plugins>web sevices >manage tokens
+create a token 
+
+
+>site administration >plugins>web sevices >overview
+activate webservice
 """,
     'author': 'OpenERP SA',
     'depends': ['event'],
     'init_xml': [],
     'data': [
             'wizard_moodle.xml',
+            'event_view.xml'
             ],
     'demo_xml': [],
     'test': [],
