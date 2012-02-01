@@ -102,5 +102,19 @@
         <field eval="True" name="global"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
-
+    
+   <record model="ir.rule" id="account_entries_report_company">
+        <field name="name">Account Enteries Report</field>
+        <field name="model_id" ref="model_account_entries_report"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+    
+    <record model="ir.rule" id="account_receivable_company">
+        <field name="name">Account Receivable Report</field>
+        <field name="model_id" ref="model_report_account_receivable"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+    
 </data></openerp>

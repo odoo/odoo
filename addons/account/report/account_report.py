@@ -44,6 +44,7 @@ class report_account_receivable(osv.osv):
         'balance':fields.float('Balance', readonly=True),
         'debit':fields.float('Debit', readonly=True),
         'credit':fields.float('Credit', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
     _order = 'name desc'
 
@@ -56,7 +57,8 @@ class report_account_receivable(osv.osv):
                     sum(l.debit-l.credit) as balance,
                     sum(l.debit) as debit,
                     sum(l.credit) as credit,
-                    a.type
+                    a.type,
+                    a.company_id
                 from
                     account_move_line l
                 left join
@@ -64,7 +66,7 @@ class report_account_receivable(osv.osv):
                 where
                     l.state <> 'draft'
                 group by
-                    to_char(date,'YYYY:IW'), a.type
+                    to_char(date,'YYYY:IW'), a.type, a.company_id
             )""")
 report_account_receivable()
 
