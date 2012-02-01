@@ -59,6 +59,7 @@ The main features are:
         "wizard/mail_compose_message_view.xml",
         "mail_message_view.xml",
         "mail_group_view.xml",
+        "mail_subscription_view.xml",
         "mail_thread_view.xml",
         "res_partner_view.xml",
         'security/ir.model.access.csv',

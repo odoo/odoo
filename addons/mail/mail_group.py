@@ -124,27 +124,3 @@ class mail_group(osv.osv):
     
 
 mail_group()
-
-
-class mail_subscription(osv.osv):
-    """
-    mail_subscription holds the data related to the follow mechanism inside OpenERP.
-    A subscription can be of following:
-    - res_model: model of the followed objects
-    - res_id: ID of resource OR
-    - res_domain: a domain filtering followed objects
-    """
-    
-    _name = 'mail.subscription'
-    _rec_name = 'id'
-    _columns = {
-        'res_model': fields.char('Related Document model', size=128, select=1),
-        'res_id': fields.integer('Related Document ID', select=1),
-        'res_domain': fields.char('res_domain', size=256),
-        'user_id': fields.integer('Related User ID', select=1),
-    }
-    
-    _defaults = {
-    }
-
-mail_subscription()
