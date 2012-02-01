@@ -276,10 +276,6 @@ QWeb2.Engine = (function() {
                         if (xDoc.documentElement.nodeName == "parsererror") {
                             return this.tools.exception(xDoc.documentElement.childNodes[0].nodeValue);
                         }
-                        if (xDoc.xml !== undefined) {
-                            // MSIE
-                            return this.convert_xml_to_html(xDoc.documentElement);
-                        }
                         return xDoc;
                     } else {
                         return this.load_xml_string(req.responseText);
@@ -307,25 +303,7 @@ QWeb2.Engine = (function() {
             xDoc.async = false;
             xDoc.preserveWhiteSpace = true;
             xDoc.loadXML(s);
-            return this.convert_xml_to_html(xDoc.documentElement);
-        },
-        convert_xml_to_html: function (node) {
-            switch (node.nodeType) {
-            case 3:
-            case 4:
-                return document.createTextNode(node.data);
-            case 8: return document.createComment(node.data);
-            }
-
-            var hnode = document.createElement(node.nodeName);
-            for(var i=0, alen=node.attributes.length; i < alen; ++i) {
-                var attr = node.attributes[i];
-                hnode.setAttribute(attr.name, attr.value);
-            }
-            for(var j=0, clen=node.childNodes.length; j < clen; ++j) {
-                hnode.appendChild(this.convert_xml_to_html(node.childNodes[j]));
-            }
-            return hnode;
+            return xDoc;
         },
         has_template : function(template) {
             return !!this.templates[template];
@@ -424,22 +402,21 @@ QWeb2.Engine = (function() {
                         this.tools.exception(error_msg + "No expression given");
                     }
                     error_msg += "' (expression='" + (jquery || xpath) + "') : ";
-                    var inner = this.tools.xml_node_to_string(child, true);
                     if (operation) {
                         var allowed_operations = "append,prepend,before,after,replace,inner".split(',');
                         if (this.tools.arrayIndexOf(allowed_operations, operation) == -1) {
                             this.tools.exception(error_msg + "Invalid operation : '" + operation + "'");
                         }
                         operation = {'replace' : 'replaceWith', 'inner' : 'html'}[operation] || operation;
-                        target[operation](this.jQuery(inner));
+                        target[operation](child.cloneNode(true).childNodes);
                     } else {
                         try {
-                            var f = new Function(['$'], inner);
+                            var f = new Function(['$', 'document'], this.tools.xml_node_to_string(child, true));
                         } catch(error) {
                             return this.tools.exception("Parse " + error_msg + error);
                         }
                         try {
-                            f.apply(target, [this.jQuery]);
+                            f.apply(target, [this.jQuery, template_dest.ownerDocument]);
                         } catch(error) {
                             return this.tools.exception("Runtime " + error_msg + error);
                         }
