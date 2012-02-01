@@ -256,7 +256,7 @@
             <field name="arch" type="xml">
                 <form string="Invoice">
                     <group colspan="4" col="8">
-                    <field name="journal_id" groups="base.group_user" on_change="onchange_journal_id(journal_id)" widget="selection"/>
+                    <field name="journal_id" groups="base.group_user" on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
                     <field name="number"/>
                     <field name="type" invisible="1"/>
                     <field name="currency_id" width="50"/>
