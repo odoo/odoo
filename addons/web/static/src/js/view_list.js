@@ -97,7 +97,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             this._limit = (this.options.limit
                         || this.defaults.limit
                         || (this.widget_parent.action || {}).limit
-                        || null);
+                        || 80);
         }
         return this._limit;
     },
