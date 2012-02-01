@@ -140,6 +140,9 @@ To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
         mod = imp.load_module(module_name, f, path, descr)
         if not is_shadowing:
             sys.modules[module_part] = mod
+            for k in sys.modules.keys():
+                if k.startswith('openerp.addons.' + module_part):
+                    sys.modules[k[len('openerp.addons.'):]] = sys.modules[k]
         sys.modules['openerp.addons.' + module_part] = mod
         return mod
 
