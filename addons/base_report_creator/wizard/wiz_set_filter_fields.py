@@ -135,7 +135,7 @@ class set_filter_value(osv.osv_memory):
     _columns = {
         'field_id': fields.many2one('ir.model.fields', "Filter Name", required=True),
         #'field_id': fields.many2one('ir.model.fields', "Filter Name", required=True, readonly=True), To do fix
-        'operator': fields.selection(selection=[], string='Operator'),
+        'operator': fields.selection([('','')], 'Operator'),
         'value': fields.char('Values', size=256),
         'condition' : fields.selection([('and','AND'),('or','OR')], 'Condition'),
     }
