@@ -149,17 +149,6 @@ class ColoredFormatter(DBFormatter):
         return DBFormatter.format(self, record)
 
 
-class init_logger_filter(object):
-    def __init__(self):
-        self.exclude = []
-    def filter(self, record):
-        # never called i dont know why
-        print "filter",record
-        for i in self.exclude:
-            if record.name.startswith(i):
-                return False
-        return True
-
 def init_logger():
     from tools.translate import resetlocale
     resetlocale()
@@ -205,7 +194,6 @@ def init_logger():
 
     # Configure handlers
     logconfig = tools.config['log_handler']
-    logfilter = init_logger_filter()
     for i in logconfig:
         prefix, level = i.split(':')
         level = getattr(logging, level, logging.INFO)
@@ -213,10 +201,8 @@ def init_logger():
         logger.handlers = []
         logger.setLevel(level)
         logger.addHandler(handler)
-        if prefix == '':
-            logger.addFilter(logfilter)
-        else:
-            logfilter.exclude.append(prefix)
+        if prefix != '':
+            logger.propagate = False
 
 
 # A alternative logging scheme for automated runs of the
