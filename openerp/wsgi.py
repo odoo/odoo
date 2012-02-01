@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2011-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -402,6 +402,17 @@ def application(environ, start_response):
     start_response('404 Not Found', [('Content-Type', 'text/plain'), ('Content-Length', str(len(response)))])
     return [response]
 
+def init_proxy_mode():
+    global application
+    if config['proxy_mode']:
+        try:
+            from werkzeug.contrib.fixers import ProxyFix
+        except ImportError:
+            logging.getLogger('wsgi').error('Werkzeug module unavailable. Cannot activate proxy mode')
+            config['proxy_mode'] = False
+        else:
+            application = ProxyFix(application)
+
 # The WSGI server, started by start_server(), stopped by stop_server().
 httpd = None
 
@@ -419,15 +430,16 @@ def serve():
     # TODO Change the xmlrpc_* options to http_*
     interface = config['xmlrpc_interface'] or '0.0.0.0'
     port = config['xmlrpc_port']
+    proxy_msg = ' in proxy mode' if config['proxy_mode'] else ''
     try:
         import werkzeug.serving
         httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
-        logging.getLogger('wsgi').info('HTTP service (werkzeug) running on %s:%s', interface, port)
+        logging.getLogger('wsgi').info('HTTP service (werkzeug) running on %s:%s%s', interface, port, proxy_msg)
     except ImportError:
         import wsgiref.simple_server
         logging.getLogger('wsgi').warn('Werkzeug module unavailable, falling back to wsgiref.')
         httpd = wsgiref.simple_server.make_server(interface, port, application)
-        logging.getLogger('wsgi').info('HTTP service (wsgiref) running on %s:%s', interface, port)
+        logging.getLogger('wsgi').info('HTTP service (wsgiref) running on %s:%s%s', interface, port, proxy_msg)
 
     httpd.serve_forever()
 
@@ -436,6 +448,7 @@ def start_server():
 
     The WSGI server can be shutdown with stop_server() below.
     """
+    openerp.wsgi.init_proxy_mode()
     threading.Thread(target=openerp.wsgi.serve).start()
 
 def stop_server():
@@ -457,6 +470,7 @@ def on_starting(server):
     #openerp.tools.cache = kill_workers_cache
     openerp.netsvc.init_logger()
     openerp.osv.osv.start_object_proxy()
+    openerp.wsgi.init_proxy_mode()
     openerp.service.web_services.start_web_services()
     openerp.modules.module.initialize_sys_path()
     openerp.modules.loading.open_openerp_namespace()
