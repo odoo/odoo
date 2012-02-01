@@ -433,7 +433,12 @@ class purchase_order(osv.osv):
 
     def action_picking_create(self,cr, uid, ids, *args):
         picking_id = False
+        reception_address_id = False
         for order in self.browse(cr, uid, ids):
+            if order.dest_address_id:
+                reception_address_id = order.dest_address_id.id
+            elif order.warehouse_id and order.warehouse_id.partner_address_id:
+                reception_address_id = order.warehouse_id.partner_address_id.id
             loc_id = order.partner_id.property_stock_supplier.id
             istate = 'none'
             if order.invoice_method=='picking':
@@ -443,7 +448,7 @@ class purchase_order(osv.osv):
                 'name': pick_name,
                 'origin': order.name+((order.origin and (':'+order.origin)) or ''),
                 'type': 'in',
-                'address_id': order.dest_address_id.id or order.partner_address_id.id,
+                'address_id': reception_address_id,
                 'invoice_state': istate,
                 'purchase_id': order.id,
                 'company_id': order.company_id.id,
