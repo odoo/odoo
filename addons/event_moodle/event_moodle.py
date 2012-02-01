@@ -83,7 +83,19 @@ class event_moodle(osv.osv):
 
         
 event_moodle()
-
+class event_moodle_tools:
+    _name='event.moodle.tools'
+    def create_password(self):
+        rand = string.ascii_letters + string.digits
+        length=8
+        # exemple simple
+        while length > len(rand):
+            rand *= 2
+        passwd = ''.join(sample(rand, length))
+        passwd = passwd+'+'
+        return passwd
+        
+    
 class event_event(osv.osv):
     _inherit = "event.event"
 
@@ -102,7 +114,7 @@ class event_event(osv.osv):
         list_users=[]
         event = self.browse(cr, uid, ids, context=context)        
         name_event = event[0].name 
-        dic_courses= [{'fullname' :name_event,'shortname' :'','categoryid':1}]
+        dic_courses= [{'fullname' :name_event,'shortname' :'','idnumber':event[0].id,'summary':event[0].note,'categoryid':1}]
         #create a dict course
         moodle_pool = self.pool.get('event.moodle')
         response_courses = moodle_pool.create_moodle_courses(dic_courses)
@@ -128,6 +140,7 @@ class event_event(osv.osv):
            dic_users={
            'username' : name_user,
            'password' : passwd,
+           'city' : registration.city,
            'firstname' : registration.name , 
            'lastname': '',
            'email': email
