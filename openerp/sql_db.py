@@ -158,7 +158,7 @@ class Cursor(object):
 
         # default log level determined at cursor creation, could be
         # overridden later for debugging purposes
-        self.sql_log = _logger.isEnabledFor(logging.DEBUG_SQL)
+        self.sql_log = _logger.isEnabledFor(logging.DEBUG)
 
         self.sql_log_count = 0
         self.__closed = True    # avoid the call of close() (by __del__) if an exception
@@ -223,7 +223,7 @@ class Cursor(object):
             delay = mdt.now() - now
             delay = delay.seconds * 1E6 + delay.microseconds
 
-            _logger.log(logging.DEBUG_SQL, "query: %s", self._obj.query)
+            _logger.log(logging.DEBUG, "query: %s", self._obj.query)
             self.sql_log_count+=1
             res_from = re_from.match(query.lower())
             if res_from:
@@ -254,16 +254,16 @@ class Cursor(object):
             if sqllogs[type]:
                 sqllogitems = sqllogs[type].items()
                 sqllogitems.sort(key=lambda k: k[1][1])
-                _logger.log(logging.DEBUG_SQL, "SQL LOG %s:", type)
+                _logger.log(logging.DEBUG, "SQL LOG %s:", type)
                 sqllogitems.sort(lambda x,y: cmp(x[1][0], y[1][0]))
                 for r in sqllogitems:
                     delay = timedelta(microseconds=r[1][1])
-                    _logger.log(logging.DEBUG_SQL, "table: %s: %s/%s",
+                    _logger.log(logging.DEBUG, "table: %s: %s/%s",
                                         r[0], delay, r[1][0])
                     sum+= r[1][1]
                 sqllogs[type].clear()
             sum = timedelta(microseconds=sum)
-            _logger.log(logging.DEBUG_SQL, "SUM %s:%s/%d [%d]",
+            _logger.log(logging.DEBUG, "SUM %s:%s/%d [%d]",
                                 type, sum, self.sql_log_count, sql_counter)
             sqllogs[type].clear()
         process('from')
@@ -380,7 +380,7 @@ class ConnectionPool(object):
         return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
 
     def _debug(self, msg, *args):
-        _logger.log(logging.DEBUG_SQL, ('%r ' + msg), self, *args)
+        _logger.log(logging.DEBUG, ('%r ' + msg), self, *args)
 
     @locked
     def borrow(self, dsn):
@@ -461,7 +461,7 @@ class Connection(object):
 
     def cursor(self, serialized=True):
         cursor_type = serialized and 'serialized ' or ''
-        _logger.log(logging.DEBUG_SQL, 'create %scursor to %r', cursor_type, self.dbname)
+        _logger.log(logging.DEBUG, 'create %scursor to %r', cursor_type, self.dbname)
         return Cursor(self._pool, self.dbname, serialized=serialized)
 
     # serialized_cursor is deprecated - cursors are serialized by default
