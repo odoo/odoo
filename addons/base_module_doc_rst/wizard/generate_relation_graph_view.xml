@@ -14,25 +14,15 @@
                 </form>
             </field>
         </record>
-    
-        <record id="action_generate_relationship_graph" model="ir.actions.act_window">
-               <field name="name">Generate Relationship Graph</field>
-               <field name="type">ir.actions.act_window</field>
-               <field name="res_model">create.relation.graph</field>
-               <field name="view_type">form</field>
-               <field name="view_mode">form</field>
-               <field name="view_id" ref="view_relationship_graph"/>
-               <field name="target">new</field>
-        </record>
-    
-        <record model="ir.values" id="generate_relationship_graph_values">
-            <field name="model_id" ref="model_create_relation_graph" />
-            <field name="name">Generate Relationship Graph</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_generate_relationship_graph'))" />
-            <field name="key">action</field>
-            <field name="model">ir.module.module</field>
-        </record>
+
+        <act_window id="generate_relationship_graph_values"
+            name="Generate Relationship Graph"
+            src_model="ir.module.module"
+            res_model="create.relation.graph"
+            view_mode="form"
+            view_id="view_relationship_graph"
+            target="new"
+            key2="client_action_multi"/>
 
     </data>
 </openerp>
