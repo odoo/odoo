@@ -359,9 +359,7 @@ class db(netsvc.ExportService):
             except except_osv, inst:
                 netsvc.abort_response(1, inst.name, 'warning', inst.value)
             except Exception:
-                import traceback
-                tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
-                _logger.error(tb_s)
+                _logger.exception('Exception in migrate_databases:')
                 raise
         return True
 
@@ -502,9 +500,7 @@ GNU Public Licence.
         except tm.RemoteContractException, e:
             netsvc.abort_response(1, 'Migration Error', 'warning', str(e))
         except Exception, e:
-            import traceback
-            tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
-            _logger.error(tb_s)
+            _logger.exception('Exception in get_migration_script:')
             raise
 
     def exp_get_server_environment(self):
@@ -540,7 +536,6 @@ GNU Public Licence.
         return True
 
     def exp_get_stats(self):
-        import threading
         res = "OpenERP server: %d threads\n" % threading.active_count()
         res += netsvc.Server.allStats()
         return res
@@ -672,8 +667,6 @@ class report_spool(netsvc.ExportService):
         self._reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
 
         cr = pooler.get_db(db).cursor()
-        import traceback
-        import sys
         try:
             obj = netsvc.LocalService('report.'+object)
             (result, format) = obj.create(cr, uid, ids, datas, context)
@@ -685,12 +678,11 @@ class report_spool(netsvc.ExportService):
             self._reports[id]['state'] = True
         except Exception, exception:
 
-            tb = sys.exc_info()
-            tb_s = "".join(traceback.format_exception(*tb))
-            _logger.error('Exception: %s\n%s', str(exception), tb_s)
+            _logger.exception('Exception: %s\n', str(exception))
             if hasattr(exception, 'name') and hasattr(exception, 'value'):
                 self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
             else:
+                tb = sys.exc_info()
                 self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
             self._reports[id]['state'] = True
         cr.commit()
@@ -713,8 +705,6 @@ class report_spool(netsvc.ExportService):
 
         def go(id, uid, ids, datas, context):
             cr = pooler.get_db(db).cursor()
-            import traceback
-            import sys
             try:
                 obj = netsvc.LocalService('report.'+object)
                 (result, format) = obj.create(cr, uid, ids, datas, context)
@@ -725,13 +715,11 @@ class report_spool(netsvc.ExportService):
                 self._reports[id]['format'] = format
                 self._reports[id]['state'] = True
             except Exception, exception:
-
-                tb = sys.exc_info()
-                tb_s = "".join(traceback.format_exception(*tb))
-                _logger.errro('Exception: %s\n%s', str(exception), tb_s)
+                _logger.exception('Exception: %s\n', str(exception))
                 if hasattr(exception, 'name') and hasattr(exception, 'value'):
                     self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
                 else:
+                    tb = sys.exc_info()
                     self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
                 self._reports[id]['state'] = True
             cr.commit()

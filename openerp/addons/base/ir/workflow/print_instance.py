@@ -170,9 +170,7 @@ showpage'''
                         graph_instance_get(cr, graph, inst_id, data.get('nested', False))
                     ps_string = graph.create(prog='dot', format='ps')
         except Exception, e:
-            import traceback, sys
-            tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-            _logger.error('Exception in call: ' + tb_s)
+            _logger.exception('Exception in call:')
             # string is in PS, like the success message would have been
             ps_string = '''%PS-Adobe-3.0
 /inch {72 mul} def
