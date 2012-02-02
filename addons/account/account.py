@@ -274,11 +274,11 @@ class account_account(osv.osv):
                         tuple
         """
         mapping = {
-            'balance': "COALESCE(SUM(l.debit),0) " \
-                       "- COALESCE(SUM(l.credit), 0) as balance",
+            'balance': "COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance",
             'debit': "COALESCE(SUM(l.debit), 0) as debit",
             'credit': "COALESCE(SUM(l.credit), 0) as credit",
-            'foreign_balance': "COALESCE(SUM(l.amount_currency), 0) as foreign_balance",
+            # by convention, foreign_balance is 0 when the account has no secondary currency, because the amounts may be in different currencies
+            'foreign_balance': "(SELECT CASE WHEN currency_id IS NULL THEN 0 ELSE COALESCE(SUM(l.amount_currency), 0) END FROM account_account WHERE id IN (l.account_id)) as foreign_balance",
         }
         #get all the necessary accounts
         children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
@@ -305,7 +305,7 @@ class account_account(osv.osv):
             # ON l.account_id = tmp.id
             # or make _get_children_and_consol return a query and join on that
             request = ("SELECT l.account_id as id, " +\
-                       ', '.join(map(mapping.__getitem__, mapping.keys())) +
+                       ', '.join(mapping.values()) +
                        " FROM account_move_line l" \
                        " WHERE l.account_id IN %s " \
                             + filters +
