@@ -25,7 +25,6 @@ import string
 import random
 from random import sample
 
-
 class event_moodle(osv.osv):
     """ Event Type """
     _name = 'event.moodle'
@@ -41,39 +40,39 @@ class event_moodle(osv.osv):
     def configure_moodle(self,cr,uid,ids,context=None):
         self.write(cr,uid,ids,{'id':1})
         #save information that you need to create the url
-        
+
     def make_url(self,cr,uid,ids,context=None):
         config_moodle = self.browse(cr, uid, ids, context=context)
         if config_moodle[0].moodle_username and config_moodle[0].moodle_password:
             url='http://'+config_moodle[0].serveur_moodle+'/moodle/webservice/xmlrpc/simpleserver.php?wsusername='+config_moodle[0].moodle_username+'&wspassword='+config_moodle[0].moodle_password
-            #connexion with password and username 
-            #to do warning on special char 
+            #connexion with password and username
+            #to do warning on special char
         print config_moodle[0].moodle_token
         if config_moodle[0].moodle_token:
             url='http://'+config_moodle[0].serveur_moodle+'/moodle/webservice/xmlrpc/server.php?wstoken='+config_moodle[0].moodle_token
-            #connexion with token 
+            #connexion with token
         self.url = url
         return url
 
     #create a good url for xmlrpc connect
     def create_moodle_user(self,dic_user):
-        sock = xmlrpclib.ServerProxy(self.url)  
+        sock = xmlrpclib.ServerProxy(self.url)
         #connect to moodle
         return sock.core_user_create_users(dic_user)
         #add user un moodle and return list of id and username
 
     def create_moodle_courses(self,courses):
-        sock = xmlrpclib.ServerProxy(self.url)  
+        sock = xmlrpclib.ServerProxy(self.url)
         #connect to moodle
         return sock.core_course_create_courses(courses)
         #add course un moodle
-                   
+
     def moodle_enrolled(self,enrolled):
-        sock = xmlrpclib.ServerProxy(self.url)  
+        sock = xmlrpclib.ServerProxy(self.url)
         #connect to moodle
         sock.enrol_manual_enrol_users(enrolled)
         #add enrolled un moodle
-        
+
     def create_password(self):
         rand = string.ascii_letters + string.digits
         length=8
@@ -81,26 +80,25 @@ class event_moodle(osv.osv):
             rand *= 2
         passwd = ''.join(sample(rand, length))
         passwd = passwd+'+'
-        return passwd    
-        # create a random password    
-        
+        return passwd
+        # create a random password
     def check_email(self,email):
         if (email.count('@')!=1 and email.count('.')<1):
                 raise osv.except_osv(_('Error!'),_("Your email '%s' is wrong") % (email))
-            
+
     def make_username(self,username,response_courses):
         if username:
             username=username.replace(" ","_")
                    #remove space in the name
-            name_user = username+"%d" % (response_courses,)+ "%d" % (random.randint(1,999999),) 
+            name_user = username+"%d" % (response_courses,)+ "%d" % (random.randint(1,999999),)
                #give an user name
         else:
             name_user = "moodle_"+"%d" % (response_courses,)+ "%d" % (random.randint(1,999999),)
-        return name_user            
-        
+        return name_user
+
 event_moodle()
-  
-    
+
+
 class event_event(osv.osv):
     _inherit = "event.event"
     _columns={
@@ -108,7 +106,7 @@ class event_event(osv.osv):
     }
     def button_confirm(self, cr, uid, ids, context=None):
         list_users=[]
-        event = self.browse(cr, uid, ids, context=context)        
+        event = self.browse(cr, uid, ids, context=context)
         name_event = event[0].name 
         dic_courses= [{'fullname' :name_event,'shortname' :'','summary':event[0].note,'categoryid':1}]
         #create a dict course
@@ -118,18 +116,18 @@ class event_event(osv.osv):
         #create a course in moodle and keep the id
         for registration in event[0].registration_ids:
            name_user=moodle_pool.make_username(registration.name,response_courses[0]['id'])
-           moodle_pool.check_email(registration.email)  
-           passwd=moodle_pool.create_password()    
+           moodle_pool.check_email(registration.email)
+           passwd=moodle_pool.create_password()
            dic_users={
            'username' : name_user,
            'password' : passwd,
            'city' : registration.city,
-           'firstname' : registration.name , 
+           'firstname' : registration.name ,
            'lastname': '',
            'email': registration.email
            }
            #create a dictionary for an user
-           list_users.append(dic_users)    
+           list_users.append(dic_users)
            #add the dictionary in a list 
            self.pool.get('event.registration').write(cr,uid,[registration.id],{'moodle_user_password':passwd,'moodle_users':name_user})
            #write in database the password and the username
@@ -146,7 +144,7 @@ class event_event(osv.osv):
             #link a course with users
         return super(event_event, self).button_confirm(cr, uid, ids, context)
 
-event_event()    
+event_event()
 
 class event_registration(osv.osv):
     _inherit = "event.registration"
@@ -171,8 +169,7 @@ class event_registration(osv.osv):
             #create a dictionary for an use
             response_user = moodle_pool.create_moodle_user(dic_users)
             self.pool.get('event.registration').write(cr,uid,ids,{'moodle_user_password':passwd,'moodle_users':name_user})
-            #write in database the password and the username   
-               
+            #write in database the password and the username
             enrolled=[{
             'roleid' :'5',
             'userid' :response_user[0]['id'],#use the response of the create user
