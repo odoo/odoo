@@ -51,7 +51,6 @@ activate webservice
     'test': [],
     'installable': True,
     'active': False,
-    'certificate': '',
     'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

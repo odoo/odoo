@@ -7,7 +7,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure Moodle">
-                    
                     <group>
                      <separator string="serveur" colspan="4"/>    
                     <field name="serveur_moodle"/>
@@ -18,8 +17,6 @@
                     <separator string="Connexion with password and username" colspan="4"/>  
                     <field name="moodle_username"/>
                     <field name="moodle_password"/>
-
-
                     </group>
                     <newline/>
                     <button type="special" special="cancel"
@@ -29,10 +26,7 @@
                 </form>
             </field>
         </record>
-        
-            
 
-            	
         <record model="ir.actions.act_window" id="configure_moodle">
             <field name="name">Configure Moodle</field>
             <field name="res_model">event.moodle</field>
@@ -41,19 +35,18 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        
+
         <record id="marketing_cat" model="ir.actions.todo.category">
             <field name="name">Marketing</field>
         </record>
-        
         <!-- register configuration wizard -->
         <record id="config_wizard_config_moodle" model="ir.actions.todo">
             <field name="action_id" ref="configure_moodle"/>
             <field name="category_id" ref="marketing_cat" />
             <field name="type">once</field>
         </record>
-            
-        <menuitem name="Configure Moodle" parent="base.menu_marketing_config_root" id="wizard_moodle" action="configure_moodle"/>       
-            
+
+        <menuitem name="Configure Moodle" parent="base.menu_marketing_config_root" id="wizard_moodle" action="configure_moodle"/>
+
     </data>
 </openerp>
