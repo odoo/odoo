@@ -1549,8 +1549,11 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
             if not res :
                 continue
+
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
-            if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
+            # if it's a recurring event, we get the dates the the vrtual id
+            # (which is buggy btw but at least it will work with normal events):
+            if not isinstance(ls, (str, int, long)) and len(ls) >= 2 and res.get('recurrency'):
                 res['date'] = ls[1]
                 res['date_deadline'] = ls[2]
             res['id'] = base_calendar_id
