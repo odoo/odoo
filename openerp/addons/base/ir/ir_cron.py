@@ -138,7 +138,7 @@ class ir_cron(osv.osv):
                 method(cr, uid, *args)
                 if _logger.isEnabledFor(logging.DEBUG):
                     end_time = time.time()
-                    _logger.log(logging.DEBUG, '%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
+                    _logger.debug('%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
             except Exception, e:
                 self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
 
