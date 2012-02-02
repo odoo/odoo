@@ -1551,8 +1551,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                 continue
 
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
-            # if it's a recurring event, we get the dates the the vrtual id
-            # (which is buggy btw but at least it will work with normal events):
+            # if it's a recurring event, we get the dates from the virtual id (string part):
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2 and res.get('recurrency'):
                 res['date'] = ls[1]
                 res['date_deadline'] = ls[2]
