@@ -1,5 +1,25 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
+        <record id="action_view_subscriptions" model="ir.actions.act_window">
+            <field name="name">Subscriptions</field>
+            <field name="res_model">mail.subscription</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_view_notifications" model="ir.actions.act_window">
+            <field name="name">Pushed notif</field>
+            <field name="res_model">mail.notification</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- left-side Tmp: temporary Subscriptions link to see subscriptions !-->
+        <menuitem id="mg_sub" name="Subscriptions" parent="mg_tmp" action="action_view_subscriptions"/>
+        <!-- left-side Tmp: temporary Notifications link to see notifications !-->
+        <menuitem id="mg_notif" name="Pushed notif" parent="mg_tmp" action="action_view_notifications"/>
+
     </data>
 </openerp>

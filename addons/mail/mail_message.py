@@ -107,7 +107,7 @@ class mail_message(osv.osv):
 
     _name = 'mail.message'
     _inherit = 'mail.message.common'
-    _description = 'Email Message'
+    _description = 'Generic Message (Email, Comment, Notification)'
     _order = 'date desc'
 
     # XXX to review - how to determine action to use?
@@ -163,7 +163,7 @@ class mail_message(osv.osv):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Related partner'),
-        #'user_id': fields.many2one('res.users', 'Related user', readonly=1),
+        'user_id': fields.many2one('res.users', 'Related user', readonly=1),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
@@ -176,22 +176,25 @@ class mail_message(osv.osv):
                         ], 'State', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
         'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
-        # tde add/modif
-        'user_id': fields.many2one('res.users', 'Related user', readonly=1),
+        # note feature: add type (email, comment, notification) and need_action
         'type': fields.selection([
-                        ('tweet', 'Tweet'),
-                        ('status', 'Status'),
-                        ], 'Type'),
-        'need_action': fields.boolean('Need action'),
+                        ('email', 'e-mail'),
+                        ('comment', 'Comment'),
+                        ('notification', 'Notification'),
+                        ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
+        'need_action': fields.boolean('Need action', help="Asks the user to perform an action"),
     }
 
     _defaults = {
         'state': 'received',
+        'type': 'notification',
     }
 
-    # thib add
+    #------------------------------------------------------
+    # Note specific api
+    #------------------------------------------------------
+    
     def create(self, cr, uid, vals, context=None):
-        print vals
         return super(mail_message, self).create(cr, uid, vals, context)
     
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -255,7 +258,9 @@ class mail_message(osv.osv):
         print args
         return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit,order=order, context=context, count=count)
     
-    # end thib add
+    #------------------------------------------------------
+    # E-Mail api
+    #------------------------------------------------------
     
     def init(self, cr):
         cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")

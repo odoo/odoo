@@ -55,9 +55,9 @@ class mail_notification(osv.osv):
     _name = 'mail.notification'
     _rec_name = 'id'
     _columns = {
-        'user_id': fields.many2one('res.users', string='User'
+        'user_id': fields.many2one('res.users', string='User',
                         ondelete='cascade', required=True),
-        'message_id': fields.many2one('mail.message', string='Message'
+        'message_id': fields.many2one('mail.message', string='Message',
                         ondelete='cascade', required=True),
         'read': fields.boolean('Read'),
     }

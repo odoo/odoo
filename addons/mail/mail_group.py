@@ -32,8 +32,9 @@ class mail_group(osv.osv):
     """
     
     _name = 'mail.group'
-    _inherits = {'res.groups': 'group_id'}
-
+    #_inherits = {'res.groups': 'group_id'}
+    _inherit = ['mail.thread']
+    
     def action_group_join(self, cr, uid, ids, context={}):
         sub_obj = self.pool.get('mail.subscription')
         menu_values = {'res_model': 'mail.group', 'user_id': uid}
@@ -49,10 +50,9 @@ class mail_group(osv.osv):
         return True
     
     _columns = {
-        'group_id': fields.many2one('res.groups', required=True, ondelete='cascade',
-            string='Group',
-            help='The group extended by this portal'),
-        #'name': fields.char('Name', size=64, required=True),
+        #'group_id': fields.many2one('res.groups', required=True, ondelete='cascade',
+            #string='Group', help='The group extended by this portal'),
+        'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description'),
         'responsible_id': fields.many2one('res.users', string='Responsible',
                             ondelete='set null', required=True),
@@ -93,14 +93,14 @@ class mail_group(osv.osv):
                 'name': _('%s') % group.name,
                 'parent_id': menu_root,
                 'action': 'ir.actions.act_window,%s' % (act_id),
-                'groups_id': [(6, 0, [group.group_id.id])],
+                #'groups_id': [(6, 0, [group.group_id.id])],
             }
             menu_id = menu_obj.create(cr, uid, menu_values, context)
             # create data
             data_values = {
-                'name': _('%s') % group.name,
+                'name': '%s' % group.name,
                 'model': 'ir.ui.menu',
-                'module': 'portal',
+                'module': 'mail',
                 'res_id': menu_id,
                 'noupdate': 'True'}
             data_id = ir_data.create(cr, uid, data_values, context)
@@ -108,13 +108,13 @@ class mail_group(osv.osv):
     
     def _assign_menu(self, cr, uid, ids, context=None):
         """ assign groups (ids) menu to the users joigning the groups"""
-        user_obj = self.pool.get('res.users')
-        for p in self.browse(cr, uid, ids, context):
-            # user menu action = portal menu action if set in portal
-            if p.menu_action_id:
-                user_ids = [u.id for u in p.users if u.id != 1]
-                user_values = {'menu_id': p.menu_action_id.id}
-                user_obj.write(cr, uid, user_ids, user_values, context)
+        #user_obj = self.pool.get('res.users')
+        #for p in self.browse(cr, uid, ids, context):
+            ## user menu action = portal menu action if set in portal
+            #if p.menu_action_id:
+                #user_ids = [u.id for u in p.users if u.id != 1]
+                #user_values = {'menu_id': p.menu_action_id.id}
+                #user_obj.write(cr, uid, user_ids, user_values, context)
     
     def _get_res_xml_id(self, cr, uid, module, xml_id):
         """ return the resource id associated to the given xml_id """

@@ -82,7 +82,7 @@ class mail_thread(osv.osv):
         })
         return super(mail_thread, self).copy(cr, uid, id, default, context=context)
 
-    def message_append(self, cr, uid, threads, subject, body_text=None, email_to=False,
+    def message_append(self, cr, uid, threads, subject, body_text=None, type='email', email_to=False,
                 email_from=False, email_cc=None, email_bcc=None, reply_to=None,
                 email_date=None, message_id=False, references=None,
                 attachments=None, body_html=None, subtype=None, headers=None,
@@ -166,7 +166,8 @@ class mail_thread(osv.osv):
                 'message_id': message_id,
                 'body_text': body_text or (hasattr(thread, 'description') and thread.description or False),
                 'attachment_ids': [(6, 0, to_attach)],
-                'state' : 'received',
+                'state': 'received',
+                'type': type,
             }
 
             if email_from:
@@ -215,9 +216,12 @@ class mail_thread(osv.osv):
                                 to determine the model of the thread to
                                 update (instead of the current model).
         """
+        # 6.2 Social feature: add default email type for old API
+        if not 'type' in msg_dict: msg_dict['type'] = 'email'
         return self.message_append(cr, uid, ids,
                             subject = msg_dict.get('subject'),
                             body_text = msg_dict.get('body_text'),
+                            type = msg_dict.get('type'),
                             email_to = msg_dict.get('to'),
                             email_from = msg_dict.get('from'),
                             email_cc = msg_dict.get('cc'),
@@ -235,8 +239,15 @@ class mail_thread(osv.osv):
                             context = context)
 
     # Message loading
-    def message_load(self):
-        pass
+    def message_load(self, cr, uid, ids, context=None):
+        """ Social feature added this method
+        loading message: search in mail.messages where res_id = ids, (res_)model = current model """
+        msg_obj = self.pool.get('mail.message')
+        msg_ids = []
+        for id in ids:
+            msg_ids += msg_obj.search(cr, uid, ['&', ('res_id', '=', id), ('model', '=', self._name)], context=context)
+        msgs = msg_obj.browse(cr, uid, ids)
+        return msgs
 
     #------------------------------------------------------
     # Email specific
@@ -484,8 +495,8 @@ class mail_thread(osv.osv):
     #------------------------------------------------------
     # Note specific
     #------------------------------------------------------
-    def message_append_note(self, context, type='notification'):
-        pass
+    def message_append_note(self, cr, uid, ids, subject, body, type='notification', context=None):
+        return self.message_append(cr, uid, ids, subject, body_text=body, type=type, context=context)
 
     #------------------------------------------------------
     # Subscription mechanism
