@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-12-22 20:22+0000\n"
-"PO-Revision-Date: 2012-01-31 15:51+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2012-02-02 05:50+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-01 04:55+0000\n"
-"X-Generator: Launchpad (build 14734)\n"
+"X-Launchpad-Export-Date: 2012-02-02 05:58+0000\n"
+"X-Generator: Launchpad (build 14738)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -69,6 +69,20 @@ msgid ""
 "    * Graph of My Remaining Hours by Project\n"
 "    "
 msgstr ""
+"\n"
+"项目管理模块管理多级项目、任务、进度等。\n"
+"============================================================================="
+"=========\n"
+"\n"
+"可以生成计划、设置任务优先级\n"
+"\n"
+"项目成员的仪表盘包括：\n"
+"--------------------------------------------\n"
+"    我的任务列表\n"
+"    我委派的任务列表\n"
+"    我的项目图表：计划与实际工时\n"
+"    按项目显示我的剩余工时图表\n"
+"    "
 
 #. module: base
 #: field:base.language.import,code:0
@@ -88,7 +102,7 @@ msgstr "工作流"
 #. module: base
 #: selection:ir.sequence,implementation:0
 msgid "No gap"
-msgstr ""
+msgstr "无间隔"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -116,7 +130,7 @@ msgstr "显示菜单提示"
 #: help:ir.cron,model:0
 msgid ""
 "Model name on which the method to be called is located, e.g. 'res.partner'."
-msgstr ""
+msgstr "方法所在的模型名称，如'res.partner'"
 
 #. module: base
 #: view:ir.module.module:0
@@ -140,6 +154,10 @@ msgid ""
 "\n"
 "This module allows you to create retro planning for managing your events.\n"
 msgstr ""
+"\n"
+"组织和管理线下活动\n"
+"======================================\n"
+"此模块用于创建倒排计划来管理线下活动\n"
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -157,7 +175,7 @@ msgstr "引用"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_invoice_bba
 msgid "Belgium - Structured Communication"
-msgstr ""
+msgstr "比利时 - 银行接口"
 
 #. module: base
 #: field:ir.actions.act_window,target:0
@@ -167,7 +185,7 @@ msgstr "目标窗口"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_analytic_plans
 msgid "Sales Analytic Distribution"
-msgstr ""
+msgstr "销售分析"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_journal_billing_rate
@@ -315,6 +333,12 @@ msgid ""
 "  - tree_but_open\n"
 "For defaults, an optional condition"
 msgstr ""
+"此参数用于动作，可选值有：\n"
+"- client_action_multi\n"
+"- client_print_multi\n"
+"- client_action_relate\n"
+"- tree_but_open\n"
+"默认非必输参数"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -329,6 +353,9 @@ msgid ""
 "        complex data from other software\n"
 "    "
 msgstr ""
+"\n"
+"        此模块中有个import_framework类用于从其他软件中导入复杂的数据\n"
+"    "
 
 #. module: base
 #: field:ir.actions.wizard,wiz_name:0
@@ -423,7 +450,7 @@ msgstr "组"
 msgid ""
 "Invalid date/time format directive specified. Please refer to the list of "
 "allowed directives, displayed when you edit a language."
-msgstr ""
+msgstr "日期、时间格式不正确。请参照您的语言设置中的日期/时间格式输入。"
 
 #. module: base
 #: field:ir.exports.line,name:0
@@ -435,7 +462,7 @@ msgstr "字段名称"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
 msgid "Specifications on PADs"
-msgstr ""
+msgstr "用于平板电脑的功能"
 
 #. module: base
 #: help:res.partner,website:0
@@ -450,6 +477,7 @@ msgid ""
 "and reference view. The result is returned as an ordered list of pairs "
 "(view_id,view_mode)."
 msgstr ""
+"这个函数字段返回在显示某个动作的结果时可供选择的视图，是视图模式、视图或相关视图的组合。返回的结果是一个已排序的(视图, 视图模式)元组列表"
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -535,7 +563,7 @@ msgstr "西班牙语"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_invoice
 msgid "Invoice on Timesheets"
-msgstr ""
+msgstr "按工时开发票"
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -571,6 +599,22 @@ msgid ""
 "    Accounting/Reporting/Generic Reporting/Partners/Follow-ups Sent\n"
 "\n"
 msgstr ""
+"\n"
+"此模块用于针对未付款的发票自动生成催款函，可在多个层级提醒:\n"
+"==========================================================================\n"
+"\n"
+"你可以用以下菜单设置多个层级的提醒：\n"
+"    会计/配置/其他/催款函\n"
+"\n"
+"设置好以后，你每天只需要进入以下菜单即可自动打印提醒：\n"
+"    会计/定期处理/结算/打印催款函\n"
+"\n"
+"将生成pdf文件，包含根据层级策略抓取的所有催款函。你可以针对不同公司定义不同的策略，\n"
+"也可以发邮件给客户。\n"
+"\n"
+"注意，如果你想查看特定业务伙伴或凭证的催款函层级，请进入菜单：\n"
+"    会计/报表/通用报表/业务伙伴/发送催款函\n"
+"\n"
 
 #. module: base
 #: field:res.country,name:0
@@ -670,6 +714,8 @@ msgid ""
 "use the accounting application of OpenERP, journals and accounts will be "
 "created automatically based on these data."
 msgstr ""
+"设置贵公司的银行账号，并选择需要显示在报表页脚的银行账号。你可以在列表视图更改银行账号的顺序。如果你在使用OpenERP的会计功能，日记账和科目会根据你输"
+"入的银行帐号自动创建。"
 
 #. module: base
 #: help:ir.actions.act_window,src_model:0
@@ -760,6 +806,9 @@ msgid ""
 "Launch Manually Once: after hacing been launched manually, it sets "
 "automatically to Done."
 msgstr ""
+"手动：手动执行\n"
+"自动：每次系统重新配置都执行\n"
+"手动执行一次：手动执行过一次以后，即完成。"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -829,7 +878,7 @@ msgstr "共享仓库（WebDAV）"
 msgid ""
 "The module adds google contact in partner address and add google calendar "
 "events details in Meeting"
-msgstr ""
+msgstr "此模块在业务伙伴地址内增加google联系人，还在会面上增加google日程表。"
 
 #. module: base
 #: view:res.users:0
@@ -849,6 +898,13 @@ msgid ""
 "delete on objects and can check logs.\n"
 "    "
 msgstr ""
+"\n"
+"此模块允许系统管理员监控每个用户对数据的操作记录。\n"
+"============================================================================="
+"==============\n"
+"\n"
+"系统管理员可以订阅对系统数据的读、写、删除操作，并查看日志。\n"
+"    "
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -959,6 +1015,9 @@ msgid ""
 "If Value type is selected, the value will be used directly without "
 "evaluation."
 msgstr ""
+"笔者哦是一个值定义。\n"
+"如果选择了公式类型，此字段可以是一个Python语句，可以使用服务器动作条件字段上的相同值。\n"
+"如果选择了值类型，此值将被直接使用。"
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -1099,6 +1158,18 @@ msgid ""
 "At the end of the month, the planning manager can also check if the encoded "
 "timesheets are respecting the planned time on each analytic account.\n"
 msgstr ""
+"跟踪你的计划\n"
+"此模块用于管理你的计划\n"
+"===============================================\n"
+"\n"
+"此模块基于成本会计并与下列功能完美集成：\n"
+"工时记录\n"
+"假期管理\n"
+"项目管理\n"
+"\n"
+"这样，每个部门经理就知道他团队里的某个人的时间是否被分配了任务（用以决定是否批准休假）或他是否输入了计工单。\n"
+"\n"
+"到了月底，计划经理也可以检查每个成本科目下已输入的计工单是否与计划的时间相对应。\n"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -1270,11 +1341,17 @@ msgid ""
 "same.\n"
 "    "
 msgstr ""
+"\n"
+"此模块提供了从coda文件中导入银行单据的功能。\n"
+"========================================================================\n"
+"\n"
+"包含一个向导，用于导入coda银行单据并维护日志。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_claim
 msgid "Claims Management"
-msgstr ""
+msgstr "售后服务管理"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_purchase_root
@@ -1309,11 +1386,18 @@ msgid ""
 "    * Commitment Date\n"
 "    * Effective Date\n"
 msgstr ""
+"\n"
+"向销售订单添加额外的日期信息。\n"
+"===================================================\n"
+"\n"
+"    要求日期\n"
+"    承诺日期\n"
+"    生效日期\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sequence
 msgid "Entries Sequence Numbering"
-msgstr ""
+msgstr "凭证号"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_exports
