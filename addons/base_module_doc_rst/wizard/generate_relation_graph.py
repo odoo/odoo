@@ -29,7 +29,7 @@ class create_graph(osv.osv_memory):
 
     def get_graph(self, cr, uid, datas, context=None):
         mod_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
-        modules = mod_obj.browse(cr, uid, context['ids'], context=context)
+        modules = mod_obj.browse(cr, uid, context['active_ids'], context=context)
         for module in modules:
             module_data = mod_obj.get_relation_graph(cr, uid, module.name, context=context)
             if module_data['module_file']:

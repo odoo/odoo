@@ -237,8 +237,7 @@ class RstDoc(object):
             field_dict = field_def[1]
             field_required = field_dict.get('required', '') and ', required'
             field_readonly = field_dict.get('readonly', '') and ', readonly'
-
-            field_help_s = field_dict.get('help', '').strip()
+            field_help_s = field_dict.get('help', '')
             if field_help_s:
                 field_help_s = "*%s*" % (field_help_s)
                 field_help = '\n'.join(['    %s' % line.strip() for line in field_help_s.split('\n')])
@@ -316,7 +315,7 @@ class wizard_tech_guide_rst(osv.osv_memory):
     def _generate(self, cr, uid, context):
         pool = pooler.get_pool(cr.dbname)
         module_model = pool.get('ir.module.module')
-        module_ids = context['ids']
+        module_ids = context['active_ids']
 
         module_index = []
 
@@ -476,10 +475,10 @@ class wizard_tech_guide_rst(osv.osv_memory):
             logger.notifyChannel("base_module_doc_rst", netsvc.LOG_ERROR, msg)
             return ""
 
-        _defaults ={
-            'rst_file' : _generate,
-            'name': 'modules_technical_guide_rst.tgz'
-            }
+    _defaults ={
+        'rst_file' : _generate,
+        'name': 'modules_technical_guide_rst.tgz'
+        }
 
 wizard_tech_guide_rst()
 
