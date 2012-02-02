@@ -848,11 +848,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             res_groups.read_slice([], {}).done(function (res_grp) {
                 _.each(res_grp, function (res) {
                     var key = res.id;
-<<<<<<< TREE
                     group_names[key]=res.full_name;
-=======
-                    group_names[key] = res.name;
->>>>>>> MERGE-SOURCE
                     group_ids.push(res.id);
                 });
                 model_data.read_slice([], {domain: [
