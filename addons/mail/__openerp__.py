@@ -68,7 +68,19 @@ The main features are:
     'installable': True,
     'auto_install': False,
     'certificate': '001056784984222247309',
-    'images': ['images/customer_history.jpeg','images/messages_form.jpeg','images/messages_list.jpeg'],
-    'css': ['static/src/css/mail_group.css'],
+    'images': [
+        'images/customer_history.jpeg',
+        'images/messages_form.jpeg',
+        'images/messages_list.jpeg',
+    ],
+    'css': [
+        'static/src/css/mail_group.css',
+    ],
+    'js': [
+        'static/src/js/mail.js',
+    ],
+    'qweb': [
+        'static/src/xml/mail.xml',
+    ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
