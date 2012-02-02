@@ -78,7 +78,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 node.tag = qweb_prefix;
                 node.attrs[qweb_prefix + '-esc'] = 'record.' + node.attrs['name'] + '.value';
                 this.extract_aggregates(node);
-                break
+                break;
             case 'button':
             case 'a':
                 var type = node.attrs.type || '';
@@ -279,7 +279,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     }
 });
 
-openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
+openerp.web_kanban.KanbanGroup = openerp.web.OldWidget.extend({
     template: 'KanbanView.group_header',
     init: function (parent, records, value, title, aggregates) {
         var self = this;
@@ -352,7 +352,7 @@ openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
     }
 });
 
-openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
+openerp.web_kanban.KanbanRecord = openerp.web.OldWidget.extend({
     template: 'KanbanView.record',
     init: function (parent, record) {
         this._super(parent);
@@ -395,7 +395,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
         this.qweb_context = {
             record: this.record,
             widget: this
-        }
+        };
         for (var p in this) {
             if (_.str.startsWith(p, 'kanban_')) {
                 this.qweb_context[p] = _.bind(this[p], this);
@@ -414,16 +414,21 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             self.state.folded = !self.state.folded;
         });
 
-        this.$element.find('[tooltip]').tipTip({
-            maxWidth: 500,
-            defaultPosition: 'top',
-            content: function() {
+        this.$element.find('[tooltip]').tipsy({
+            delayIn: 500,
+            delayOut: 0,
+            fade: true,
+            title: function() {
                 var template = $(this).attr('tooltip');
                 if (!self.view.qweb.has_template(template)) {
                     return false;
                 }
                 return self.view.qweb.render(template, self.qweb_context);
-            }
+            },
+            gravity: 's',
+            html: true,
+            opacity: 0.8,
+            trigger: 'hover'
         });
 
         this.$element.find('.oe_kanban_action').click(function() {
@@ -444,7 +449,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
         var self = this;
         if (confirm(_t("Are you sure you want to delete this record ?"))) {
             return $.when(this.view.dataset.unlink([this.id])).then(function() {
-                self.group.remove_record(self.id)
+                self.group.remove_record(self.id);
                 self.stop();
             });
         }

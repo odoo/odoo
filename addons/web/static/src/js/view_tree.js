@@ -146,7 +146,7 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
             var pair = this.colors[i],
                 color = pair[0],
                 expression = pair[1];
-            if (py.evaluate(expression, context)) {
+            if (py.evaluate(expression, _.extend({bool: py.bool}, context))) {
                 return 'color: ' + color + ';';
             }
             // TODO: handle evaluation errors

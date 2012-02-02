@@ -443,7 +443,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         };
         var deferred = $.Deferred();
         this.on_rpc_request();
-        this.rpc_function(url, payload).then(
+        var aborter = params.aborter;
+        delete params.aborter;
+        var request = this.rpc_function(url, payload).then(
             function (response, textStatus, jqXHR) {
                 self.on_rpc_response();
                 if (!response.error) {
@@ -469,6 +471,16 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 };
                 deferred.reject(error, $.Event());
             });
+        if (aborter) {
+            aborter.abort_last = function () {
+                if (!(request.isResolved() || request.isRejected())) {
+                    deferred.fail(function (error, event) {
+                        event.preventDefault();
+                    });
+                    request.abort();
+                }
+            };
+        }
         // Allow deferred user to disable on_rpc_error in fail
         deferred.fail(function() {
             deferred.fail(function(error, event) {
@@ -892,8 +904,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
  * MyWidget = openerp.base.Widget.extend({
  *     // the name of the QWeb template to use for rendering
  *     template: "MyQWebTemplate",
- *     // identifier prefix, it is useful to put an obvious one for debugging
- *     identifier_prefix: 'my-id-prefix-',
  *
  *     init: function(parent) {
  *         this._super(parent);
@@ -933,13 +943,6 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      */
     template: null,
     /**
-     * The prefix used to generate an id automatically. Should be redefined in
-     * subclasses. If it is not defined, a generic identifier will be used.
-     *
-     * @type string
-     */
-    identifier_prefix: 'generic-identifier-',
-    /**
      * Tag name when creating a default $element.
      * @type string
      */
@@ -958,15 +961,11 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      * with the DOM insertion methods provided by the current implementation of Widget. So
      * for new components this argument should not be provided any more.
      */
-    init: function(parent, /** @deprecated */ element_id) {
+    init: function(parent) {
         this._super();
         this.session = openerp.connection;
-        // if given an element_id, try to get the associated DOM element and save
-        // a reference in this.$element. Else just generate a unique identifier.
-        this.element_id = element_id;
-        this.element_id = this.element_id || _.uniqueId(this.identifier_prefix);
-        var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : $(document.createElement(this.tag_name));
+        
+        this.$element = $(document.createElement(this.tag_name));
 
         this.widget_parent = parent;
         this.widget_children = [];
@@ -1129,15 +1128,15 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
 });
 
 /**
- * @class
- * @extends openerp.web.Widget
- * @deprecated
- * For retro compatibility only, the only difference with is that render() uses
- * directly ``this`` instead of context with a ``widget`` key.
+ * @deprecated use :class:`openerp.web.Widget`
  */
-openerp.web.OldWidget = openerp.web.Widget.extend(/** @lends openerp.web.OldWidget# */{
-    render: function (additional) {
-        return openerp.web.qweb.render(this.template, _.extend(_.extend({}, this), additional || {}));
+openerp.web.OldWidget = openerp.web.Widget.extend({
+    init: function(parent, element_id) {
+        this._super(parent);
+        this.element_id = element_id;
+        this.element_id = this.element_id || _.uniqueId('widget-');
+        var tmp = document.getElementById(this.element_id);
+        this.$element = tmp ? $(tmp) : $(document.createElement(this.tag_name));
     }
 });
 
@@ -1224,7 +1223,7 @@ openerp.web.qweb.default_dict = {
     '_' : _,
     '_t' : openerp.web._t
 };
-openerp.web.qweb.format_text_node = function(s) {
+openerp.web.qweb.format_text_node = function (s) {
     // Note that 'this' is the Qweb Node of the text
     var translation = this.node.parentNode.attributes['t-translation'];
     if (translation && translation.value === 'off') {
@@ -1236,13 +1235,13 @@ openerp.web.qweb.format_text_node = function(s) {
     }
     var tr = openerp.web._t(ts);
     return tr === ts ? s : tr;
-}
+};
 
 /** Jquery extentions */
 $.Mutex = (function() {
     function Mutex() {
         this.def = $.Deferred().resolve();
-    };
+    }
     Mutex.prototype.exec = function(action) {
         var current = this.def;
         var next = this.def = $.Deferred();

@@ -3,11 +3,11 @@ var QWeb = openerp.web.qweb,
       _t =  openerp.web._t,
      _lt = openerp.web._lt;
 
-openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.SearchView# */{
+openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.SearchView# */{
     template: "EmptyComponent",
     /**
      * @constructs openerp.web.SearchView
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param parent
      * @param element_id
@@ -252,12 +252,15 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 ]
             });
             break;
+        case '':
+            this.do_clear();
         }
         if (val.slice(0, 4) == "get:") {
             val = val.slice(4);
             val = parseInt(val, 10);
             var filter = this.managed_filters[val];
-            this.do_clear().then(_.bind(function() {
+            this.do_clear(false).then(_.bind(function() {
+                select.val('get:' + val);
                 var groupbys = _.map(filter.context.group_by.split(","), function(el) {
                     return {"group_by": el};
                 });
@@ -409,7 +412,10 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
     on_invalid: function (errors) {
         this.do_notify(_t("Invalid Search"), _t("triggered from search view"));
     },
-    do_clear: function () {
+    /**
+     * @param {Boolean} [reload_view=true]
+     */
+    do_clear: function (reload_view) {
         this.$element.find('.filter_label, .filter_icon').removeClass('enabled');
         this.enabled_filters.splice(0);
         var string = $('a.searchview_group_string');
@@ -424,7 +430,8 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 input.datewidget.set_value(false);
             }
         });
-        return $.async_when().pipe(this.on_clear);
+        return $.async_when().pipe(
+            reload_view !== false ? this.on_clear : null);
     },
     /**
      * Triggered when the search view gets cleared
@@ -467,6 +474,7 @@ openerp.web.search.fields = new openerp.web.Registry({
     'text': 'openerp.web.search.CharField',
     'boolean': 'openerp.web.search.BooleanField',
     'integer': 'openerp.web.search.IntegerField',
+    'id': 'openerp.web.search.IntegerField',
     'float': 'openerp.web.search.FloatField',
     'selection': 'openerp.web.search.SelectionField',
     'datetime': 'openerp.web.search.DateTimeField',
@@ -499,13 +507,13 @@ openerp.web.search.Invalid = openerp.web.Class.extend( /** @lends openerp.web.se
         );
     }
 });
-openerp.web.search.Widget = openerp.web.Widget.extend( /** @lends openerp.web.search.Widget# */{
+openerp.web.search.Widget = openerp.web.OldWidget.extend( /** @lends openerp.web.search.Widget# */{
     template: null,
     /**
      * Root class of all search widgets
      *
      * @constructs openerp.web.search.Widget
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param view the ancestor view of this widget
      */
@@ -989,12 +997,17 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
         var self = this;
         this.$element.autocomplete({
             source: function (req, resp) {
+                if (self.abort_last) {
+                    self.abort_last();
+                    delete self.abort_last;
+                }
                 self.dataset.name_search(
                     req.term, self.attrs.domain, 'ilike', 8, function (data) {
                         resp(_.map(data, function (result) {
                             return {id: result[0], label: result[1]}
                         }));
                 });
+                self.abort_last = self.dataset.abort_last;
             },
             select: function (event, ui) {
                 self.id = ui.item.id;
@@ -1038,9 +1051,8 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
     }
 });
 
-openerp.web.search.ExtendedSearch = openerp.web.OldWidget.extend({
+openerp.web.search.ExtendedSearch = openerp.web.search.Widget.extend({
     template: 'SearchView.extended_search',
-    identifier_prefix: 'extended-search',
     init: function (parent, model) {
         this._super(parent);
         this.model = model;
@@ -1051,7 +1063,7 @@ openerp.web.search.ExtendedSearch = openerp.web.OldWidget.extend({
         this.check_last_element();
     },
     start: function () {
-        this.$element = $("#" + this.element_id);
+        this._super();
         this.$element.closest("table.oe-searchview-render-line").css("display", "none");
         var self = this;
         this.rpc("/web/searchview/fields_get",
@@ -1107,7 +1119,6 @@ openerp.web.search.ExtendedSearch = openerp.web.OldWidget.extend({
 
 openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
     template: 'SearchView.extended_search.group',
-    identifier_prefix: 'extended-search-group',
     init: function (parent, fields) {
         this._super(parent);
         this.fields = fields;
@@ -1119,7 +1130,6 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
         prop.start();
     },
     start: function () {
-        this.$element = $("#" + this.element_id);
         var _this = this;
         this.add_prop();
         this.$element.find('.searchview_extended_add_proposition').click(function () {
@@ -1153,7 +1163,6 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
 
 openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** @lends openerp.web.search.ExtendedSearchProposition# */{
     template: 'SearchView.extended_search.proposition',
-    identifier_prefix: 'extended-search-proposition',
     /**
      * @constructs openerp.web.search.ExtendedSearchProposition
      * @extends openerp.web.OldWidget
@@ -1254,7 +1263,6 @@ openerp.web.search.ExtendedSearchProposition.Field = openerp.web.OldWidget.exten
 });
 openerp.web.search.ExtendedSearchProposition.Char = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.char',
-    identifier_prefix: 'extended-search-proposition-char',
     operators: [
         {value: "ilike", text: _lt("contains")},
         {value: "not ilike", text: _lt("doesn't contain")},
@@ -1271,7 +1279,6 @@ openerp.web.search.ExtendedSearchProposition.Char = openerp.web.search.ExtendedS
 });
 openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.empty',
-    identifier_prefix: 'extended-search-proposition-datetime',
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
@@ -1291,7 +1298,6 @@ openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.search.Exten
 });
 openerp.web.search.ExtendedSearchProposition.Date = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.empty',
-    identifier_prefix: 'extended-search-proposition-date',
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
@@ -1311,7 +1317,6 @@ openerp.web.search.ExtendedSearchProposition.Date = openerp.web.search.ExtendedS
 });
 openerp.web.search.ExtendedSearchProposition.Integer = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.integer',
-    identifier_prefix: 'extended-search-proposition-integer',
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
@@ -1333,7 +1338,6 @@ openerp.web.search.ExtendedSearchProposition.Id = openerp.web.search.ExtendedSea
 });
 openerp.web.search.ExtendedSearchProposition.Float = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.float',
-    identifier_prefix: 'extended-search-proposition-float',
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
@@ -1352,7 +1356,6 @@ openerp.web.search.ExtendedSearchProposition.Float = openerp.web.search.Extended
 });
 openerp.web.search.ExtendedSearchProposition.Selection = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.selection',
-    identifier_prefix: 'extended-search-proposition-selection',
     operators: [
         {value: "=", text: _lt("is")},
         {value: "!=", text: _lt("is not")}
@@ -1366,7 +1369,6 @@ openerp.web.search.ExtendedSearchProposition.Selection = openerp.web.search.Exte
 });
 openerp.web.search.ExtendedSearchProposition.Boolean = openerp.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.boolean',
-    identifier_prefix: 'extended-search-proposition-boolean',
     operators: [
         {value: "=", text: _lt("is true")},
         {value: "!=", text: _lt("is false")}

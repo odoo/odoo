@@ -97,7 +97,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             this._limit = (this.options.limit
                         || this.defaults.limit
                         || (this.widget_parent.action || {}).limit
-                        || null);
+                        || 80);
         }
         return this._limit;
     },
@@ -158,7 +158,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             var pair = this.colors[i],
                 color = pair[0],
                 expression = pair[1];
-            if (py.evaluate(expression, context)) {
+            if (py.evaluate(expression, _.extend({bool: py.bool}, context))) {
                 return 'color: ' + color + ';';
             }
             // TODO: handle evaluation errors
@@ -231,7 +231,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 $this.find('span').toggleClass(
                     'ui-icon-triangle-1-s ui-icon-triangle-1-n');
             } else {
-                $this.append('<span class="ui-icon ui-icon-triangle-1-s">')
+                $this.append('<span class="ui-icon ui-icon-triangle-1-n">')
                      .siblings('.oe-sortable').find('span').remove();
             }
 
@@ -475,7 +475,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         return this.reload_content();
     },
 
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
         var reload = false;
         if (state.page && this.page !== state.page) {
             this.page = state.page;
@@ -1355,6 +1355,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             axis: 'y',
             items: '> tr[data-id]',
             containment: 'parent',
+            helper: 'clone',
             stop: function (event, ui) {
                 var to_move = list.records.get(ui.item.data('id')),
                     target_id = ui.item.prev().data('id'),

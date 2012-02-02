@@ -381,7 +381,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.do_ranged_search();
     },
     do_ranged_search: function() {
-        var self = this
+        var self = this;
         scheduler.clearAll();
         $.when(this.has_been_loaded, this.ready).then(function() {
             self.dataset.read_slice(_.keys(self.fields), {
@@ -461,7 +461,7 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
     }
 });
 
-openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
+openerp.web_calendar.SidebarResponsible = openerp.web.OldWidget.extend({
     init: function(parent, view) {
         var $section = parent.add_section(_t('Responsible'), 'responsible');
         this.$div = $('<div></div>');
@@ -499,7 +499,7 @@ openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
     }
 });
 
-openerp.web_calendar.SidebarNavigator = openerp.web.Widget.extend({
+openerp.web_calendar.SidebarNavigator = openerp.web.OldWidget.extend({
     init: function(parent, view) {
         var $section = parent.add_section(_t('Navigator'), 'navigator');
         this._super(parent, $section.attr('id'));

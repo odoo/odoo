@@ -13,7 +13,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     searchable: false,
     readonly : false,
     form_template: "FormView",
-    identifier_prefix: 'formview-',
     display_name: _lt('Form'),
     /**
      * @constructs openerp.web.FormView
@@ -122,14 +121,15 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.has_been_loaded.resolve();
     },
 
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
         if (state.id && this.datarecord.id != state.id) {
-            var idx = this.dataset.get_id_index(state.id);
-            if (idx === null) {
-                this.dataset.ids.push(state.id)
-                this.dataset.index = this.dataset.ids.length - 1;
+            if (!this.dataset.get_id_index(state.id)) {
+                this.dataset.ids.push(state.id);
             }
-            this.do_show();
+            this.dataset.select_id(state.id);
+            if (warm) {
+                this.do_show();
+            }
         }
     },
 
@@ -234,7 +234,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     do_update_pager: function(hide_index) {
         var $pager = this.$form_header.find('div.oe_form_pager');
         var index = hide_index ? '-' : this.dataset.index + 1;
-        $pager.find('button').prop('disabled', this.dataset.ids.length < 2)
+        $pager.find('button').prop('disabled', this.dataset.ids.length < 2);
         $pager.find('span.oe_pager_index').html(index);
         $pager.find('span.oe_pager_count').html(this.dataset.ids.length);
     },
@@ -386,11 +386,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_button_save: function() {
         var self = this;
         return this.do_save().then(function(result) {
-            self.do_prev_view(result.created);
+            self.do_prev_view({'created': result.created, 'default': 'page'});
         });
     },
     on_button_cancel: function() {
-        return this.do_prev_view();
+        return this.do_prev_view({'default': 'page'});
     },
     on_button_new: function() {
         var self = this;
@@ -620,7 +620,7 @@ openerp.web.FormDialog = openerp.web.Dialog.extend({
 /** @namespace */
 openerp.web.form = {};
 
-openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
+openerp.web.form.SidebarAttachments = openerp.web.OldWidget.extend({
     init: function(parent, form_view) {
         var $section = parent.add_section(_t('Attachments'), 'attachments');
         this.$div = $('<div class="oe-sidebar-attachments"></div>');
@@ -737,12 +737,11 @@ openerp.web.form.compute_domain = function(expr, fields) {
     return _.all(stack, _.identity);
 };
 
-openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.Widget# */{
+openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.form.Widget# */{
     template: 'Widget',
-    identifier_prefix: 'formview-widget-',
     /**
      * @constructs openerp.web.form.Widget
-     * @extends openerp.web.Widget
+     * @extends openerp.web.OldWidget
      *
      * @param view
      * @param node
@@ -786,6 +785,10 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         this.$element = this.view.$element.find(
             '.' + this.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
     },
+    stop: function() {
+        this._super.apply(this, arguments);
+        $('div.tipsy').stop().remove();
+    },
     process_modifiers: function() {
         var compute_domain = openerp.web.form.compute_domain;
         for (var a in this.modifiers) {
@@ -800,17 +803,13 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         return QWeb.render(template, { "widget": this });
     },
     do_attach_tooltip: function(widget, trigger, options) {
-        if ($.browser.mozilla) {
-            // Unknown bug in old version of firefox :
-            // input type=text onchange event not fired when tootip is shown
-            return;
-        }
         widget = widget || this;
         trigger = trigger || this.$element;
         options = _.extend({
-                delay: 1000,
-                maxWidth: '500px',
-                content: function() {
+                delayIn: 500,
+                delayOut: 0,
+                fade: true,
+                title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
                         template = 'WidgetLabel.tooltip';
@@ -818,10 +817,13 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
                     return QWeb.render(template, {
                         debug: openerp.connection.debug,
                         widget: widget
-                    });
-                }
+                })},
+                gravity: $.fn.tipsy.autoBounds(50, 'n'),
+                html: true,
+                opacity: 0.85,
+                trigger: 'hover'
             }, options || {});
-        trigger.tipTip(options);
+        trigger.tipsy(options);
     },
     _build_view_fields_values: function(blacklist) {
         var a_dataset = this.view.dataset;
@@ -1000,7 +1002,7 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
         this.view.on_button_new.add_first(this.do_select_first_visible_tab);
         if (openerp.connection.debug) {
             this.do_attach_tooltip(this, this.$element.find('ul:first'), {
-                defaultPosition: 'top'
+                gravity: 's'
             });
         }
     },
@@ -1220,9 +1222,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
             this.$element.find('.oe_field_translate').click(this.on_translate);
         }
         if (this.nolabel && openerp.connection.debug) {
-            this.do_attach_tooltip(this, this.$element, {
-                defaultPosition: 'top'
-            });
+            this.do_attach_tooltip(this, this.$element);
         }
     },
     set_value: function(value) {
@@ -1335,6 +1335,13 @@ openerp.web.form.FieldChar = openerp.web.form.Field.extend({
     }
 });
 
+openerp.web.form.FieldID = openerp.web.form.FieldChar.extend({
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input').prop('disabled', true);
+    }
+});
+
 openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
     template: 'FieldEmail',
     start: function() {
@@ -1388,7 +1395,7 @@ openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
     }
 });
 
-openerp.web.DateTimeWidget = openerp.web.Widget.extend({
+openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
     template: "web.datetimepicker",
     jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
@@ -1875,6 +1882,10 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         var search_val = request.term;
         var self = this;
 
+        if (this.abort_last) {
+            this.abort_last();
+            delete this.abort_last;
+        }
         var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
 
         dataset.name_search(search_val, self.build_domain(), 'ilike',
@@ -1882,7 +1893,12 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             self.last_search = data;
             // possible selections for the m2o
             var values = _.map(data, function(x) {
-                return {label: $('<span />').text(x[1]).html(), name:x[1], id:x[0]};
+                return {
+                    label: _.str.escapeHTML(x[1]),
+                    value:x[1],
+                    name:x[1],
+                    id:x[0]
+                };
             });
 
             // search more... if more results that max
@@ -1914,13 +1930,14 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
 
             response(values);
         });
+        this.abort_last = dataset.abort_last;
     },
     _quick_create: function(name) {
         var self = this;
-        var slow_create = function() {
+        var slow_create = function () {
             self._change_int_value(null);
             self._search_create_popup("form", undefined, {"default_name": name});
-        }
+        };
         if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
             var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
             dataset.name_create(name, function(data) {
@@ -2593,7 +2610,6 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends open
  * @extends openerp.web.OldWidget
  */
 openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends openerp.web.form.SelectCreatePopup# */{
-    identifier_prefix: "selectcreatepopup",
     template: "SelectCreatePopup",
     /**
      * options:
@@ -2811,7 +2827,6 @@ openerp.web.form.SelectCreateListView = openerp.web.ListView.extend({
  * @extends openerp.web.OldWidget
  */
 openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp.web.form.FormOpenPopup# */{
-    identifier_prefix: "formopenpopup",
     template: "FormOpenPopup",
     /**
      * options:
@@ -2917,6 +2932,7 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
             }
         };
         this.get_fields_values = view.get_fields_values;
+        this.get_selected_ids = view.get_selected_ids;
         this.do_onchange = this.on_form_changed = this.on_nop;
         this.dataset = this.view.dataset;
         this.widgets_counter = 0;
@@ -2934,6 +2950,7 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
             name: 'm2o',
             widget: 'many2one'
         }});
+        this.m2o.on_ui_change.add_last(this.on_ui_change);
     },
     on_nop: function() {
     },
@@ -3224,6 +3241,7 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'label' : 'openerp.web.form.WidgetLabel',
     'button' : 'openerp.web.form.WidgetButton',
     'char' : 'openerp.web.form.FieldChar',
+    'id' : 'openerp.web.form.FieldID',
     'email' : 'openerp.web.form.FieldEmail',
     'url' : 'openerp.web.form.FieldUrl',
     'text' : 'openerp.web.form.FieldText',

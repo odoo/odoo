@@ -19,7 +19,7 @@
     font-weight: bold;
     text-transform: uppercase;
     text-indent: 10px;
-    vertical-align: center;
+    vertical-align: middle;
     border-bottom: 1px solid #e5e5e5;
     background: white url("/web/static/src/img/box-a-header-a.gif") 0% 0% repeat-x;
 }
@@ -88,6 +88,11 @@
 .openerp .oe-dashboard .oe-listview-content, .openerp .oe-dashboard .ui-widget-header {
     border-right:none !important;
     padding:0 3px;
+}
+
+.openerp .oe-dashboard .oe-listview th.oe-sortable .ui-icon {
+    height: 100%;
+    margin-top: -9px;
 }
 
 /* Layouts */

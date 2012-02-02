@@ -11,7 +11,7 @@ openerp.web_mobile.mobilewebclient = function(element_id) {
     return client;
 };
 
-openerp.web_mobile.MobileWebClient = openerp.web.Widget.extend({
+openerp.web_mobile.MobileWebClient = openerp.web.OldWidget.extend({
 
     template: "WebClient",
 
@@ -31,7 +31,7 @@ openerp.web_mobile.MobileWebClient = openerp.web.Widget.extend({
     }
 });
 
-openerp.web_mobile.Login =  openerp.web.Widget.extend({
+openerp.web_mobile.Login =  openerp.web.OldWidget.extend({
 
     template: "Login",
 
@@ -119,7 +119,7 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web_mobile.Header =  openerp.web.Widget.extend({
+openerp.web_mobile.Header =  openerp.web.OldWidget.extend({
 
     template: "Header",
 
@@ -131,7 +131,7 @@ openerp.web_mobile.Header =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web_mobile.Footer =  openerp.web.Widget.extend({
+openerp.web_mobile.Footer =  openerp.web.OldWidget.extend({
 
     template: "Footer",
 
@@ -143,7 +143,7 @@ openerp.web_mobile.Footer =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
+openerp.web_mobile.Shortcuts =  openerp.web.OldWidget.extend({
 
     template: "Shortcuts",
 
@@ -153,7 +153,7 @@ openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
     start: function() {
         var self = this;
         this.rpc('/web/session/sc_list',{} ,function(res){
-            self.$element.html(self.render({'sc' : res}))
+            self.$element.html(self.render({'sc': res}));
             self.$element.find("[data-role=header]").find('h1').html('Favourite');
             self.$element.find("[data-role=header]").find('#home').click(function(){
                 $.mobile.changePage("#oe_menu", "slide", false, true);
@@ -182,7 +182,7 @@ openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web_mobile.Menu =  openerp.web.Widget.extend({
+openerp.web_mobile.Menu =  openerp.web.OldWidget.extend({
 
     template: "Menu",
 
@@ -248,7 +248,7 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
+openerp.web_mobile.Secondary =  openerp.web.OldWidget.extend({
 
     template: "Menu.secondary",
 
@@ -305,7 +305,7 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web_mobile.Options =  openerp.web.Widget.extend({
+openerp.web_mobile.Options =  openerp.web.OldWidget.extend({
 
     template: "Options",
 

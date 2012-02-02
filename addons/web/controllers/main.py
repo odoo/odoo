@@ -164,8 +164,9 @@ class WebClient(openerpweb.Controller):
             with open(f) as fp:
                 data = fp.read()
 
-            web_path = file_map[f]
-            web_dir = os.path.dirname(web_path)
+            path = file_map[f]
+            # convert FS path into web path
+            web_dir = '/'.join(os.path.dirname(path).split(os.path.sep))
 
             data = re.sub(
                 rx_import,
@@ -643,6 +644,9 @@ def fix_view_modes(action):
     new view mode ``list`` which is the result of the ``tree`` view_mode
     in conjunction with the ``form`` view_type.
 
+    This method also adds a ``page`` view mode in case there is a ``form`` in
+    the input action.
+
     TODO: this should go into the doc, some kind of "peculiarities" section
 
     :param dict action: an action descriptor
@@ -964,6 +968,12 @@ class View(openerpweb.Controller):
         else:
             xml = ElementTree.fromstring(arch)
         fvg['arch'] = common.xml2json.from_elementtree(xml, preserve_whitespaces)
+
+        if 'id' in fvg['fields']:
+            # Special case for id's
+            id_field = fvg['fields']['id']
+            id_field['original_type'] = id_field['type']
+            id_field['type'] = 'id'
 
         for field in fvg['fields'].itervalues():
             if field.get('views'):
@@ -1537,7 +1547,7 @@ class CSVExport(Export):
         fp = StringIO()
         writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
 
-        writer.writerow(fields)
+        writer.writerow([name.encode('utf-8') for name in fields])
 
         for data in rows:
             row = []
@@ -1577,7 +1587,7 @@ class ExcelExport(Export):
         worksheet = workbook.add_sheet('Sheet 1')
 
         for i, fieldname in enumerate(fields):
-            worksheet.write(0, i, str(fieldname))
+            worksheet.write(0, i, fieldname)
             worksheet.col(i).width = 8000 # around 220 pixels
 
         style = xlwt.easyxf('align: wrap yes')

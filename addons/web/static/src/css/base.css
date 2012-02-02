@@ -83,7 +83,7 @@ body { padding: 0; margin: 0; }
     border-bottom-left-radius: 8px;
 }
 .openerp .oe_notification {
-    z-index: 1001;
+    z-index: 1050;
     display: none;
 }
 .openerp .oe_notification * {
@@ -340,7 +340,15 @@ table.db_option_table input.required {
     background-color: #D2D2FF !important;
 }
 
-.db_option_table input[type="text"], .db_option_table input[type="password"], .db_option_table select {
+.db_option_table label {
+    display: block;
+    text-align: right;
+}
+
+.db_option_table input[type="text"],
+.db_option_table input[type="password"],
+.db_option_table input[type="file"],
+.db_option_table select {
     width: 300px;
 }
 
@@ -1226,7 +1234,13 @@ label.error {
 }
 
 
-.openerp label.oe_label_help, .openerp label.oe_label, .openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms .oe_button, .openerp .oe_forms textarea {
+.openerp label.oe_label_help, .openerp label.oe_label,
+.openerp .oe_forms input[type="text"],
+.openerp .oe_forms input[type="password"],
+.openerp .oe_forms input[type="file"],
+.openerp .oe_forms select,
+.openerp .oe_forms .oe_button,
+.openerp .oe_forms textarea {
     font-size: 85%;
 }
 
@@ -1342,7 +1356,11 @@ label.error {
     min-height:100px;
 }
 /* Inputs */
-.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms textarea {
+.openerp .oe_forms input[type="text"],
+.openerp .oe_forms input[type="password"],
+.openerp .oe_forms input[type="file"],
+.openerp .oe_forms select,
+.openerp .oe_forms textarea {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -1402,7 +1420,11 @@ label.error {
 .openerp .oe_forms textarea {
     resize:vertical;
 }
-.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms .oe_button {
+.openerp .oe_forms input[type="text"],
+.openerp .oe_forms input[type="password"],
+.openerp .oe_forms input[type="file"],
+.openerp .oe_forms select,
+.openerp .oe_forms .oe_button {
     height: 22px;
 }
 
@@ -1468,7 +1490,7 @@ label.error {
     position: absolute;
     /* Should be adjusted for all browsers */
     top: -2px;
-    left: -700px;
+    right: 0;
     opacity: 0;
     filter: alpha(opacity = 0);
     -ms-filter: "alpha(opacity=0)";
@@ -2284,6 +2306,24 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     color: black;
 }
 
+/* Debug stuff */
+.openerp .oe_debug_view_log {
+    font-size: 95%;
+}
+.openerp .oe_debug_view_log label {
+    display: block;
+    width: 49%;
+    text-align: right;
+    float: left;
+    font-weight: bold;
+    color: #009;
+}
+.openerp .oe_debug_view_log span {
+    display: block;
+    width: 49%;
+    float: right;
+    color: #333;
+}
 
 /* Internet Explorer Fix */
 a img {

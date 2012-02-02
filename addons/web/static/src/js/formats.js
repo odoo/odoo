@@ -90,6 +90,8 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
     }
     var l10n = _t.database.parameters;
     switch (descriptor.widget || descriptor.type) {
+        case 'id':
+            return value.toString();
         case 'integer':
             return openerp.web.insert_thousand_seps(
                 _.str.sprintf('%d', value));

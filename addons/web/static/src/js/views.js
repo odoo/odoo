@@ -16,8 +16,7 @@ session.web.client_actions = new session.web.Registry();
  */
 session.web.views = new session.web.Registry();
 
-session.web.ActionManager = session.web.Widget.extend({
-    identifier_prefix: "actionmanager",
+session.web.ActionManager = session.web.OldWidget.extend({
     init: function(parent) {
         this._super(parent);
         this.inner_action = null;
@@ -50,16 +49,15 @@ session.web.ActionManager = session.web.Widget.extend({
     do_push_state: function(state) {
         if (this.widget_parent && this.widget_parent.do_push_state) {
             if (this.inner_action) {
+                state['model'] = this.inner_action.res_model;
                 if (this.inner_action.id) {
                     state['action_id'] = this.inner_action.id;
-                } else {
-                    state['model'] = this.inner_action.res_model;
                 }
             }
             this.widget_parent.do_push_state(state);
         }
     },
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
         var self = this,
             action_loaded;
         if (state.action_id) {
@@ -68,8 +66,7 @@ session.web.ActionManager = session.web.Widget.extend({
                 this.null_action();
                 action_loaded = this.do_action(state.action_id);
             }
-        }
-        else if (state.model && state.id) {
+        } else if (state.model && state.id) {
             // TODO handle context & domain ?
             this.null_action();
             var action = {
@@ -79,15 +76,23 @@ session.web.ActionManager = session.web.Widget.extend({
                 views: [[false, 'page'], [false, 'form']]
             };
             action_loaded = this.do_action(action);
-        }
-        else if (state.client_action) {
+        } else if (state.sa) {
+            // load session action
+            var self = this;
+            this.null_action();
+            action_loaded = this.rpc('/web/session/get_session_action',  {key: state.sa}).pipe(function(action) {
+                if (action) {
+                    return self.do_action(action);
+                }
+            });
+        } else if (state.client_action) {
             this.null_action();
             this.ir_actions_client(state.client_action);
         }
 
         $.when(action_loaded || null).then(function() {
             if (self.inner_viewmanager) {
-                self.inner_viewmanager.do_load_state(state);
+                self.inner_viewmanager.do_load_state(state, warm);
             }
         });
     },
@@ -208,12 +213,11 @@ session.web.ActionManager = session.web.Widget.extend({
     }
 });
 
-session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.ViewManager# */{
-    identifier_prefix: "viewmanager",
+session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.ViewManager# */{
     template: "ViewManager",
     /**
      * @constructs session.web.ViewManager
-     * @extends session.web.Widget
+     * @extends session.web.OldWidget
      *
      * @param parent
      * @param dataset
@@ -312,13 +316,13 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
                 if (self.searchview
-                        && self.flags.auto_search !== false
+                        && self.flags.auto_search
                         && view.controller.searchable !== false) {
                     self.searchview.ready.then(self.searchview.do_search);
                 }
             });
         } else if (this.searchview
-                && self.flags.auto_search !== false
+                && self.flags.auto_search
                 && view.controller.searchable !== false) {
             this.searchview.ready.then(this.searchview.do_search);
         }
@@ -354,17 +358,19 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
      * navigation history (the navigation history is appended to via
      * on_mode_switch)
      *
-     * @param {Boolean} [created=false] returning from a creation
+     * @param {Object} [options]
+     * @param {Boolean} [options.created=false] resource was created
+     * @param {String} [options.default=null] view to switch to if no previous view
      * @returns {$.Deferred} switching end signal
      */
-    on_prev_view: function (created) {
+    on_prev_view: function (options) {
         var current_view = this.views_history.pop();
-        var previous_view = this.views_history[this.views_history.length - 1];
-        if (created && current_view === 'form' && previous_view === 'list') {
+        var previous_view = this.views_history[this.views_history.length - 1] || options['default'];
+        if (options.created && current_view === 'form' && previous_view === 'list') {
             // APR special case: "If creation mode from list (and only from a list),
             // after saving, go to page view (don't come back in list)"
             return this.on_mode_switch('page');
-        } else if (created && !previous_view && this.action && this.action.flags.default_view === 'form') {
+        } else if (options.created && !previous_view && this.action && this.action.flags.default_view === 'form') {
             // APR special case: "If creation from dashboard, we have no previous view
             return this.on_mode_switch('page');
         }
@@ -453,7 +459,9 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         // do not have it yet (and we don't, because we've not called our own
         // ``_super()``) rpc requests will blow up.
         var flags = action.flags || {};
-        flags.auto_search = !!action.auto_search;
+        if (!('auto_search' in flags)) {
+            flags.auto_search = action.auto_search !== false;
+        }
         if (action.res_model == 'board.board' && action.view_mode === 'form') {
             // Special case for Dashboards
             _.extend(flags, {
@@ -556,6 +564,20 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             case 'fvg':
                 var dialog = new session.web.Dialog(this, { title: _t("Fields View Get"), width: '95%' }).open();
                 $('<pre>').text(session.web.json_node_to_xml(current_view.fields_view.arch, true)).appendTo(dialog.$element);
+                break;
+            case 'perm_read':
+                var ids = current_view.get_selected_ids();
+                if (ids.length === 1) {
+                    this.dataset.call('perm_read', [ids]).then(function(result) {
+                        var dialog = new session.web.Dialog(this, {
+                            title: _.str.sprintf(_t("View Log (%s)"), self.dataset.model),
+                            width: 400
+                        }, QWeb.render('ViewManagerDebugViewLog', {
+                            perm : result[0],
+                            format : session.web.format_value
+                        })).open();
+                    });
+                }
                 break;
             case 'fields':
                 this.dataset.call_and_eval(
@@ -673,7 +695,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             this.widget_parent.do_push_state(state);
         }
     },
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
         var self = this,
             defs = [];
         if (state.view_type && state.view_type !== this.active_view) {
@@ -685,7 +707,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         } 
 
         $.when(defs).then(function() {
-            self.views[self.active_view].controller.do_load_state(state);
+            self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },
     shortcut_check : function(view) {
@@ -763,7 +785,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
     }
 });
 
-session.web.Sidebar = session.web.Widget.extend({
+session.web.Sidebar = session.web.OldWidget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.items = {};
@@ -1044,6 +1066,12 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     template: "EmptyComponent",
     // name displayed in view switchers
     display_name: '',
+    init: function(parent, dataset, view_id, options) {
+        this._super(parent);
+        this.dataset = dataset;
+        this.view_id = view_id;
+        this.set_default_options(options);
+    },
     set_default_options: function(options) {
         this.options = options || {};
         _.defaults(this.options, {
@@ -1153,7 +1181,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             this.widget_parent.do_push_state(state);
         }
     },
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
     },
     /**
      * Switches to a specific view type
@@ -1164,8 +1192,12 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     },
     /**
      * Cancels the switch to the current view, switches to the previous one
+     *
+     * @param {Object} [options]
+     * @param {Boolean} [options.created=false] resource was created
+     * @param {String} [options.default=null] view to switch to if no previous view
      */
-    do_prev_view: function () { 
+    do_prev_view: function (options) {
     },
     do_search: function(view) {
     },
@@ -1206,7 +1238,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
 
 session.web.json_node_to_xml = function(node, human_readable, indent) {
     // For debugging purpose, this function will convert a json node back to xml
-    // Maybe usefull for xml view editor
+    // Maybe useful for xml view editor
     indent = indent || 0;
     var sindent = (human_readable ? (new Array(indent + 1).join('\t')) : ''),
         r = sindent + '<' + node.tag,

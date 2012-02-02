@@ -28,13 +28,13 @@ $(document).ready(function () {
     test('Parse server date', function () {
         var date = openerp.web.str_to_date("2009-05-04");
         deepEqual(
-            [date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()],
+            [date.getFullYear(), date.getMonth(), date.getDate()],
             [2009, 5 - 1, 4]);
     });
     test('Parse server time', function () {
         var date = openerp.web.str_to_time("12:34:23");
         deepEqual(
-            [date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()],
+            [date.getHours(), date.getMinutes(), date.getSeconds()],
             [12, 34, 23]);
     });
 

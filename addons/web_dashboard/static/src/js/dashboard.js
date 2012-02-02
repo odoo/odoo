@@ -190,9 +190,9 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         this.action_managers.push(am);
         am.appendTo($action);
         am.do_action(action);
-        am.do_action = function(action) {
+        am.do_action = function (action) {
             self.do_action(action);
-        }
+        };
         if (action_attrs.creatable && action_attrs.creatable !== 'false') {
             var action_id = parseInt(action_attrs.creatable, 10);
             $action.parent().find('button.oe_dashboard_button_create').click(function() {
@@ -395,7 +395,7 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
  * install (if none is installed yet) or a list of root menu items
  */
 openerp.web.client_actions.add('default_home', 'session.web_dashboard.ApplicationTiles');
-openerp.web_dashboard.ApplicationTiles = openerp.web.Widget.extend({
+openerp.web_dashboard.ApplicationTiles = openerp.web.OldWidget.extend({
     template: 'web_dashboard.ApplicationTiles',
     init: function(parent) {
         this._super(parent);
@@ -440,7 +440,7 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.Widget.extend({
  * This client action  display a list of applications to install.
  */
 openerp.web.client_actions.add( 'board.application.installer', 'openerp.web_dashboard.ApplicationInstaller');
-openerp.web_dashboard.ApplicationInstaller = openerp.web.Widget.extend({
+openerp.web_dashboard.ApplicationInstaller = openerp.web.OldWidget.extend({
     template: 'web_dashboard.ApplicationInstaller',
     start: function () {
         // TODO menu hide

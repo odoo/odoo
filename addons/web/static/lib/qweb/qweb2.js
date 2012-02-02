@@ -93,31 +93,17 @@ var QWeb2 = {
                 }
                 return r.join('');
             } else {
-                if (node.xml !== undefined) {
-                    return node.xml;
-                } else {
+                if (typeof XMLSerializer !== 'undefined') {
                     return (new XMLSerializer()).serializeToString(node);
-                }
-            }
-        },
-        xpath_selectNodes : function(node, expr) {
-            if (node.selectNodes !== undefined) {
-                return node.selectNodes(expr);
-            } else {
-                var xpath = new XPathEvaluator();
-                try {
-                    var result = xpath.evaluate(expr, node, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-                } catch(error) {
-                    this.exception("Error with XPath expression '" + expr + "' : " + error);
-                }
-                var r = [];
-                if (result != null) {
-                    var element;
-                    while (element = result.iterateNext()) {
-                        r.push(element);
+                } else {
+                    switch(node.nodeType) {
+                    case 1: return node.outerHTML;
+                    case 3: return node.data;
+                    case 4: return '<![CDATA[' + node.data + ']]>';
+                    case 8: return '<!-- ' + node.data + '-->';
                     }
+                    throw new Error('Unknown node type ' + node.nodeType);
                 }
-                return r
             }
         },
         call: function(context, template, old_dict, _import, callback) {
@@ -265,11 +251,12 @@ QWeb2.Engine = (function() {
                     }
                     req.open('GET', s, false);
                     req.send(null);
-                    if (req.responseXML) {
-                        if (req.responseXML.documentElement.nodeName == "parsererror") {
-                            return this.tools.exception(req.responseXML.documentElement.childNodes[0].nodeValue);
+                    var xDoc = req.responseXML;
+                    if (xDoc) {
+                        if (xDoc.documentElement.nodeName == "parsererror") {
+                            return this.tools.exception(xDoc.documentElement.childNodes[0].nodeValue);
                         }
-                        return req.responseXML;
+                        return xDoc;
                     } else {
                         return this.load_xml_string(req.responseText);
                     }
@@ -290,7 +277,8 @@ QWeb2.Engine = (function() {
                 // new ActiveXObject("Msxml2.DOMDocument.4.0");
                 xDoc = new ActiveXObject("MSXML2.DOMDocument");
             } catch (e) {
-                return this.tools.exception("Could not find a DOM Parser");
+                return this.tools.exception(
+                    "Could not find a DOM Parser: " + e.message);
             }
             xDoc.async = false;
             xDoc.preserveWhiteSpace = true;
@@ -373,56 +361,40 @@ QWeb2.Engine = (function() {
             if (!this.jQuery) {
                 return this.tools.exception("Can't extend template " + template + " without jQuery");
             }
-            var template_dest = this.templates[template],
-                msie_trololo = false;
-            if (template_dest.xml !== undefined) {
-                template_dest = this.jQuery(template_dest.xml);
-                msie_trololo = true;
-            }
+            var template_dest = this.templates[template];
             for (var i = 0, ilen = extend_node.childNodes.length; i < ilen; i++) {
                 var child = extend_node.childNodes[i];
                 if (child.nodeType === 1) {
-                    var xpath = child.getAttribute(this.prefix + '-xpath'),
-                        jquery = child.getAttribute(this.prefix + '-jquery'),
+                    var jquery = child.getAttribute(this.prefix + '-jquery'),
                         operation = child.getAttribute(this.prefix + '-operation'),
                         target,
                         error_msg = "Error while extending template '" + template;
                     if (jquery) {
                         target = this.jQuery(jquery, template_dest);
-                    } else if (xpath) {
-                        // NOTE: due to the XPath implementation, extending a template will only work once
-                        // when using XPath because XPathResult won't match objects with other constructor than 'Element'
-                        // As jQuery will create HTMLElements, xpath will ignore them then causing problems when a
-                        // template has already been extended. XPath selectors will probably be removed in QWeb.
-                        target = this.jQuery(this.tools.xpath_selectNodes(this.templates[template], xpath));
                     } else {
                         this.tools.exception(error_msg + "No expression given");
                     }
-                    error_msg += "' (expression='" + (jquery || xpath) + "') : ";
-                    var inner = this.tools.xml_node_to_string(child, true);
+                    error_msg += "' (expression='" + jquery + "') : ";
                     if (operation) {
                         var allowed_operations = "append,prepend,before,after,replace,inner".split(',');
                         if (this.tools.arrayIndexOf(allowed_operations, operation) == -1) {
                             this.tools.exception(error_msg + "Invalid operation : '" + operation + "'");
                         }
                         operation = {'replace' : 'replaceWith', 'inner' : 'html'}[operation] || operation;
-                        target[operation](this.jQuery(inner));
+                        target[operation](child.cloneNode(true).childNodes);
                     } else {
                         try {
-                            var f = new Function(['$'], inner);
+                            var f = new Function(['$', 'document'], this.tools.xml_node_to_string(child, true));
                         } catch(error) {
                             return this.tools.exception("Parse " + error_msg + error);
                         }
                         try {
-                            f.apply(target, [this.jQuery]);
+                            f.apply(target, [this.jQuery, template_dest.ownerDocument]);
                         } catch(error) {
                             return this.tools.exception("Runtime " + error_msg + error);
                         }
                     }
                 }
-            }
-            if (msie_trololo) {
-                this.templates[template] = template_dest[0];
             }
         }
     });
