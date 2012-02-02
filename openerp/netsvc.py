@@ -315,23 +315,23 @@ def dispatch_rpc(service_name, method, params):
     NET-RPC) is done in a upper layer.
     """
     try:
-        rpc_short = logging.getLogger(__name__ + '.rpc_short')
-        rpc_full = logging.getLogger(__name__ + '.rpc_full')
-        rpc_short_flag = rpc_short.isEnabledFor(logging.DEBUG)
-        rpc_full_flag = rpc_full.isEnabledFor(logging.DEBUG)
-        if rpc_short_flag or rpc_full_flag:
+        rpc_request = logging.getLogger(__name__ + '.rpc.request')
+        rpc_response = logging.getLogger(__name__ + '.rpc.response')
+        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+        rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
+        if rpc_request_flag or rpc_response_flag:
             start_time = time.time()
-            if rpc_full_flag:
-                log(rpc_full,logging.DEBUG,'%s.%s:request '%(service_name,method), replace_request_password(params))
+            if rpc_request and rpc_response_flag:
+                log(rpc_request,logging.DEBUG,'%s.%s'%(service_name,method), replace_request_password(params))
 
         result = ExportService.getService(service_name).dispatch(method, params)
 
-        if rpc_short_flag or rpc_full_flag:
+        if rpc_request_flag or rpc_response_flag:
             end_time = time.time()
-            if rpc_full_flag:
-                log(rpc_full,logging.DEBUG,'%s.%s:reply time:%.3fs '%(service_name,method,end_time - start_time), result)
+            if rpc_response_flag:
+                log(rpc_response,logging.DEBUG,'%s.%s time:%.3fs '%(service_name,method,end_time - start_time), result)
             else:
-                log(rpc_short,logging.DEBUG,'%s.%s time:%.3fs '%(service_name,method,end_time - start_time), replace_request_password(params), depth=1)
+                log(rpc_request,logging.DEBUG,'%s.%s time:%.3fs '%(service_name,method,end_time - start_time), replace_request_password(params), depth=1)
 
         return result
     except openerp.exceptions.AccessError:
