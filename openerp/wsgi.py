@@ -421,7 +421,7 @@ def serve():
     port = config['xmlrpc_port']
     try:
         import werkzeug.serving
-        httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
+        httpd = werkzeug.serving.make_server(interface, port, application, threaded=False)
         logging.getLogger('wsgi').info('HTTP service (werkzeug) running on %s:%s', interface, port)
     except ImportError:
         import wsgiref.simple_server
@@ -436,7 +436,7 @@ def start_server():
 
     The WSGI server can be shutdown with stop_server() below.
     """
-    threading.Thread(target=openerp.wsgi.serve).start()
+    threading.Thread(name='WSGI server', target=openerp.wsgi.serve).start()
 
 def stop_server():
     """ Initiate the shutdown of the WSGI server.
@@ -462,11 +462,11 @@ def on_starting(server):
     openerp.modules.loading.open_openerp_namespace()
     for m in openerp.conf.server_wide_modules:
         try:
-            __import__(m)
+            __import__('openerp.addons.' + m)
             # Call any post_load hook.
             info = openerp.modules.module.load_information_from_description_file(m)
             if info['post_load']:
-                getattr(sys.modules[m], info['post_load'])()
+                getattr(sys.modules['openerp.addons.' + m], info['post_load'])()
         except Exception:
             msg = ''
             if m == 'web':

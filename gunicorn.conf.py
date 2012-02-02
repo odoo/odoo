@@ -17,7 +17,7 @@ pidfile = '.gunicorn.pid'
 # Gunicorn recommends 2-4 x number_of_cpu_cores, but
 # you'll want to vary this a bit to find the best for your
 # particular work load.
-workers = 4
+workers = 1
 
 # Some application-wide initialization is needed.
 on_starting = openerp.wsgi.on_starting
@@ -31,6 +31,8 @@ timeout = 240
 
 max_requests = 2000
 
+#accesslog = '/tmp/blah.txt'
+
 # Equivalent of --load command-line option
 openerp.conf.server_wide_modules = ['web']
 
@@ -39,7 +41,7 @@ conf = openerp.tools.config
 
 # Path to the OpenERP Addons repository (comma-separated for
 # multiple locations)
-conf['addons_path'] = '/home/openerp/addons/trunk,/home/openerp/web/trunk/addons'
+conf['addons_path'] = '/home/thu/repos/addons/trunk,/home/thu/repos/web/trunk/addons'
 
 # Optional database config if not using local socket
 #conf['db_name'] = 'mycompany'

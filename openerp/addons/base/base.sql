@@ -347,6 +347,14 @@ CREATE TABLE ir_model_data (
     res_id integer, primary key(id)
 );
 
+-- Inter-process signaling:
+-- The `base_registry_signaling` sequence indicates the whole registry
+-- must be reloaded.
+-- The `base_cache_signaling sequence` indicates all caches must be
+-- invalidated (i.e. cleared).
+CREATE SEQUENCE base_registry_signaling INCREMENT BY 1 START WITH 1;
+CREATE SEQUENCE base_cache_signaling INCREMENT BY 1 START WITH 1;
+
 ---------------------------------
 -- Users
 ---------------------------------
