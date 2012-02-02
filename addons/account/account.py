@@ -3358,7 +3358,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         # and the next number for account code might have been already used before for journal
         journal_count = 0
         while True:
-            journal_code = _('BNK') + str(current_num + journal_count)
+            journal_code = _('BNK')[:3] + str(current_num + journal_count)
             ids = obj_journal.search(cr, uid, [('code', '=', journal_code), ('company_id', '=', company_id)], context=context)
             if not ids:
                 break
