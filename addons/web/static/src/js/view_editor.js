@@ -27,6 +27,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             type: 'ir.actions.act_window',
             target: "current",
             limit: this.dataset.limit || 80,
+            auto_search : true,
             flags: {
                 sidebar: false,
                 deletable: false,
@@ -368,6 +369,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         views: [[self.main_view_id, self.main_view_type]],
                         type: 'ir.actions.act_window',
                         target: "new",
+                        auto_search: true,
                         flags: {
                             sidebar: false,
                             views_switcher: false,
@@ -449,7 +451,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     },
     do_node_add: function(side){
         var self = this;
-        var tr = $(side).find('a').text();
+        var tr = self.get_object_by_id(this.one_object.clicked_tr_id, this.one_object['main_object'], [])[0].att_list[0];
         var parent_tr = ($(side).prevAll("tr[level=" + String(this.one_object.clicked_tr_level - 1) + "]"))[0];
         var field_dataset = new openerp.web.DataSetSearch(this, this.model, null, null);
         parent_tr = $(parent_tr).find('a').text();
@@ -568,7 +570,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         arch_to_pass = _.filter($(arch.arch), function (child) {
             return child.nodeType == 1;
         });
-        return self.do_save_xml(arch_to_pass[0], obj[0].child_id[0],[], move_direct, update_values,arch);
+        return self.do_save_xml(arch_to_pass[0], obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
     },
     get_object_by_id: function(id, one_object, result) {
         var self = this;
@@ -823,6 +825,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
                     return res instanceof Array? _.include(res, widget.name): false;
                 });
+                
                 value = value instanceof Array ? value[1] : value;
                 self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + widget.string + ':</td>' + type_widget.render() + '</tr>');
                 type_widget.start();
@@ -847,7 +850,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             .done(function(res_grp) {
                 _.each(res_grp,function(res){
                     var key = res.id;
-                    group_names[key]=res.name;
+                    group_names[key]=res.full_name;
                     group_ids.push(res.id);
                 });
                 model_data
@@ -934,16 +937,16 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var action_manager = new openerp.web.ActionManager(self);
         $.when(action_manager.do_action(action)).then(function() {
             var controller = action_manager.dialog_viewmanager.views['form'].controller;
-            // TODO NIV: use page view
-            controller.do_set_readonly.add_last(function(){
+            controller.on_button_cancel.add_last(function(){
+                action_manager.stop()
+            });
+            controller.do_save.add_last(function(){
                 action_manager.stop();
-                new_fields_name = new openerp.web.DataSetSearch(self,'ir.model.fields', null, null);
-                new_fields_name.read_ids([controller.datarecord.id], ['name']).then(function(result) {
-                self.add_node_dialog.$element.find('select[id=field_value]').append($("<option selected></option>").attr("value", result[0].name).text(result[0].name));
+                var value =controller.fields.name.value;
+                self.add_node_dialog.$element.find('select[id=field_value]').append($("<option selected></option>").attr("value",value).text(value));
                     _.detect(self.add_widget,function(widget){
-                        widget.name == "field_value"? widget.selection.push(result[0].name): false;
+                        widget.name == "field_value"? widget.selection.push(value): false;
                     });
-                });
             });
         });
     }
@@ -1040,7 +1043,7 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         var index = 0;
         value = value === null? false: value;
         for (var i = 0, ii = this.selection.length; i < ii; i++) {
-            if ((this.selection[i] instanceof Array && this.selection[i][1] === value) || this.selection[i] === value) index = i;
+            if ((this.selection[i] instanceof Array && this.selection[i][0] === value) || this.selection[i] === value) index = i;
         }
         this.$element.find("select[id=" + this.name + "]")[0].selectedIndex = index;
     },
@@ -1093,7 +1096,7 @@ var _CHILDREN = {
     'calendar': ['field'],
     'notebook': ['page'],
     'page': ['notebook', 'group', 'field', 'label', 'button', 'newline', 'separator'],
-    'group': ['field', 'label', 'button', 'separator', 'newline'],
+    'group': ['field', 'label', 'button', 'separator', 'newline','group'],
     'board': ['column'],
     'action': [],
     'field': ['form', 'tree', 'graph'],

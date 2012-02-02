@@ -1857,6 +1857,7 @@ label.error {
     width: 100%;
     background-color : #FFFFFF;
     border-spacing: 0;
+    
 }
 .openerp .oe-treeview-table tr:hover{
     color: blue;
@@ -2000,33 +2001,30 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     border-bottom-right-radius: 3px;
 }
 .openerp .oe_view_editor {
-    border-collapse: collapse;
-    padding: 0;
-    align: left;
+    width:100%;
+    border-collapse : collapse;
+    margin-left: -12px;
+    
     width: 100%;
+    background-color : white;
+    border-spacing: 0;
 }
-.openerp .oe_view_editor_colum{
+.openerp .oe_view_editor td{
+    text-align: center;
+    white-space: nowrap;
+    border: 1px solid #D8D8D8;
+    
+    cursor: pointer;
     font-size: 90%;
-    font-weight: normal;
-    padding: 0;
-    border-bottom: 1px solid #CFCCCC;
 }
-.openerp .oe_view_editor_row:hover {
-    background-color: #F3F3F3;
+.openerp .oe_view_editor_field td{
+    border: 0px !important;
 }
 
-.openerp .oe_view_editor_tree_grid{
-    text-align: left;
-    white-space: nowrap;
-    border-collapse: collapse;
-    width: 100%;
+.openerp .oe_view_editor tr:hover {
+    background-color: #ecebf2;
 }
-.openerp .oe_view_editor_tree_grid a:hover {
-    color: blue;
-}
-.openerp .oe_view_editor_tree_grid a {
-    display: block;
-}
+
 
 /* Dialog traceback cases */
 .openerp .oe_error_detail{
