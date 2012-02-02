@@ -516,7 +516,7 @@ class Root(object):
                     if os.path.isfile(manifest_path) and os.path.isdir(path_static):
                         manifest = ast.literal_eval(open(manifest_path).read())
                         manifest['addons_path'] = addons_path
-                        _logger.info("Loading %s", module)
+                        _logger.debug("Loading %s", module)
                         if openerp_addons_namespace:
                             m = __import__('openerp.addons.' + module)
                         else:
