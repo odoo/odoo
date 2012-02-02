@@ -2,6 +2,42 @@
 <openerp>
     <data>
 
+        <!-- 
+            SUBSCRIPTION
+                !-->
+        
+        <record model="ir.ui.view" id="view_subscription_tree">
+            <field name="name">mail.subscription.tree</field>
+            <field name="model">mail.subscription</field>
+            <field name="type">tree</field>
+            <field name="sequence">10</field>
+            <field name="arch" type="xml">
+                <tree string="Subscription">
+                    <field name="user_id"/>
+                    <field name="res_model"/>
+                    <field name="res_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- 
+            NOTIFICATION
+                !-->
+        
+        <record model="ir.ui.view" id="view_notification_tree">
+            <field name="name">mail.notification.tree</field>
+            <field name="model">mail.notification</field>
+            <field name="type">tree</field>
+            <field name="sequence">10</field>
+            <field name="arch" type="xml">
+                <tree string="Subscription">
+                    <field name="user_id"/>
+                    <field name="message_id"/>
+                    <field name="read"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="action_view_subscriptions" model="ir.actions.act_window">
             <field name="name">Subscriptions</field>
             <field name="res_model">mail.subscription</field>

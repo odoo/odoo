@@ -71,8 +71,8 @@ class mail_message_common(osv.osv_memory):
     _rec_name = 'subject'
     _columns = {
         'subject': fields.char('Subject', size=512, required=True),
-        'model': fields.char('Related Document model', size=128, select=1), # was rfeadonly
-        'res_id': fields.integer('Related Document ID', select=1), # was rfeadonly
+        'model': fields.char('Related Document model', size=128, select=1), # was readonly
+        'res_id': fields.integer('Related Document ID', select=1), # was readonly
         'date': fields.datetime('Date'),
         'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences. If empty, this is not a mail but a message.'),
         'email_to': fields.char('To', size=256, help='Message recipients'),
@@ -191,11 +191,23 @@ class mail_message(osv.osv):
     }
 
     #------------------------------------------------------
-    # Note specific api
+    # Generic api
     #------------------------------------------------------
     
     def create(self, cr, uid, vals, context=None):
-        return super(mail_message, self).create(cr, uid, vals, context)
+        msg_id = super(mail_message, self).create(cr, uid, vals, context)
+        # push the message to suscribed users
+        subscription_obj = self.pool.get('mail.subscription')
+        notification_obj = self.pool.get('mail.notification')
+        sub_ids = subscription_obj.search(cr, uid, ['&', ('res_model', '=', vals['model']), ('user_id', '=', uid)], context=context)
+        subs = subscription_obj.browse(cr, uid, sub_ids, context=context)
+        for sub in subs:
+            notification_obj.create(cr, uid, {'user_id': sub.user_id, 'message_id': msg_id}, context=context)
+        return msg_id
+    
+    #------------------------------------------------------
+    # Note specific api
+    #------------------------------------------------------
     
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if not context or not context.has_key('filter_search'):
