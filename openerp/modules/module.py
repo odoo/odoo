@@ -332,7 +332,6 @@ def load_information_from_description_file(module):
                 'description': '',
                 'icon': get_module_icon(module),
                 'installable': True,
-                'auto_install': False,
                 'license': 'AGPL-3',
                 'name': False,
                 'post_load': None,
@@ -345,8 +344,11 @@ def load_information_from_description_file(module):
                 'depends data demo test init_xml update_xml demo_xml'.split(),
                 iter(list, None)))
 
-            with tools.file_open(terp_file) as terp_f:
-                info.update(eval(terp_f.read()))
+            f = tools.file_open(terp_file)
+            try:
+                info.update(eval(f.read()))
+            finally:
+                f.close()
 
             if 'active' in info:
                 # 'active' has been renamed 'auto_install'
