@@ -170,19 +170,21 @@ class event_registration(osv.osv):
     }
     def check_confirm(self, cr, uid, ids, context=None):
         register = self.browse(cr, uid, ids, context=context)
-        if register[0].event_id.state =='done':
+        if register[0].event_id.state =='confirm':
             name_user = register[0].name+"%d" % (register[0].event_id.moodle_id,)+ "%d" % (random.randint(1,999999),) 
-            dic_users={
+            moodle_pool = self.pool.get('event.moodle')
+            passwd=moodle_pool.create_password()
+            dic_users=[{
             'username' : name_user,
             'password' : passwd,
             'city' : register[0].city,
             'firstname' : register[0].name, 
             'lastname': '',
             'email': register[0].email
-            }
+            }]
             #create a dictionary for an use
             response_user = moodle_pool.create_moodle_user(dic_users)
-            self.pool.get('event.registration').write(cr,uid,[registration.id],{'moodle_user_password':passwd,'moodle_users':name_user})
+            self.pool.get('event.registration').write(cr,uid,ids,{'moodle_user_password':passwd,'moodle_users':name_user})
             #write in database the password and the username   
                
             enrolled=[{
@@ -190,6 +192,6 @@ class event_registration(osv.osv):
             'userid' :response_user[0]['id'],#use the response of the create user
             'courseid' :register[0].event_id.moodle_id
             }]   
-
+            moodle_pool.moodle_enrolled(enrolled)
 
         return super(event_registration, self).check_confirm(cr, uid, ids, context)
