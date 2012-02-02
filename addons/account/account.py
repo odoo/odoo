@@ -278,7 +278,7 @@ class account_account(osv.osv):
                        "- COALESCE(SUM(l.credit), 0) as balance",
             'debit': "COALESCE(SUM(l.debit), 0) as debit",
             'credit': "COALESCE(SUM(l.credit), 0) as credit",
-            'foreign_balance': "COALESCE(SUM(l.amount_currency), 0) as foreign_balance",
+            'foreign_balance': "(SELECT CASE WHEN currency_id IS NULL THEN 0 ELSE COALESCE(SUM(l.amount_currency), 0) END FROM account_account WHERE id IN (l.account_id)) as foreign_balance ",
         }
         #get all the necessary accounts
         children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
