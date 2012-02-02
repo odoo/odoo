@@ -20,30 +20,22 @@
 ##############################################################################
 import wizard
 from osv import osv
+from osv import fields
 import pooler
 from tools.translate import _
 
-form_rep = '''<?xml version="1.0"?>
-<form string="Relationship Graph">
-    <label colspan="2" string="(Relationship Graphs generated)" align="0.0"/>
-</form>'''
+class create_graph(osv.osv_memory):
+    _name = "create.relation.graph"
 
-def _get_graph(self, cr, uid, datas, context=None):
-    mod_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
-    modules = mod_obj.browse(cr, uid, datas['ids'], context=context)
-    for module in modules:
-        module_data = mod_obj.get_relation_graph(cr, uid, module.name, context=context)
-        if module_data['module_file']:
-            mod_obj.write(cr, uid, [module.id], {'file_graph': module_data['module_file']}, context=context)
-    return {'type': 'ir.actions.act_window_close'}
+    def get_graph(self, cr, uid, datas, context=None):
+        mod_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
+        modules = mod_obj.browse(cr, uid, context['ids'], context=context)
+        for module in modules:
+            module_data = mod_obj.get_relation_graph(cr, uid, module.name, context=context)
+            if module_data['module_file']:
+                mod_obj.write(cr, uid, [module.id], {'file_graph': module_data['module_file']}, context=context)
+        return {'type': 'ir.actions.act_window_close'}
 
-class create_graph(wizard.interface):
-    states = {
-        'init': {
-            'actions': [_get_graph],
-            'result': {'type': 'form', 'arch': form_rep, 'fields': {}, 'state': [('end','Ok')]}
-        },
-    }
-create_graph('create.relation.graph')
+create_graph()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

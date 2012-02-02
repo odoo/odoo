@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_relationship_graph" model="ir.ui.view">
+            <field name="name">create.relation.graph.form</field>
+            <field name="model">create.relation.graph</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Generate Relationship Graph">
+                    <separator string="Relationship Graphs" colspan="6"/>
+                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    <button name="get_graph" string="Create Graphs" type="object" icon="gtk-ok"/>
+                </form>
+            </field>
+        </record>
+    
+        <record id="action_generate_relationship_graph" model="ir.actions.act_window">
+               <field name="name">Generate Relationship Graph</field>
+               <field name="type">ir.actions.act_window</field>
+               <field name="res_model">create.relation.graph</field>
+               <field name="view_type">form</field>
+               <field name="view_mode">form</field>
+               <field name="view_id" ref="view_relationship_graph"/>
+               <field name="context">{'ids': [active_id], 'id': active_id}</field>
+               <field name="target">new</field>
+        </record>
+    
+        <record model="ir.values" id="generate_relationship_graph_values">
+            <field name="model_id" ref="model_create_relation_graph" />
+            <field name="name">Generate Relationship Graph</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_generate_relationship_graph'))" />
+            <field name="key">action</field>
+            <field name="model">ir.module.module</field>
+        </record>
+
+    </data>
+</openerp>

@@ -29,20 +29,7 @@ import wizard
 import pooler
 import os
 import tools
-
-choose_file_form = '''<?xml version="1.0"?>
-<form string="Create Technical Guide in rst format">
-    <separator string="Technical Guide in rst format" colspan="4"/>
-    <label string="Please choose a file where the Technical Guide will be written." colspan="4"/>
-    <field name="rst_file" />
-    <field name="name" invisible="1"/>
-</form>
-'''
-
-choose_file_fields = {
-    'rst_file': {'string': 'file', 'type': 'binary', 'required': True, 'readonly': True},
-    'name': {'string': 'filename', 'type': 'char', 'required': True, 'readonly': True},
-}
+from osv import osv,fields
 
 class RstDoc(object):
     def __init__(self, module, objects):
@@ -319,13 +306,17 @@ class RstDoc(object):
         return s
 
 
-class wizard_tech_guide_rst(wizard.interface):
+class wizard_tech_guide_rst(osv.osv_memory):
+    _name = "tech.guide.rst"
+    _columns = {
+            'rst_file': fields.binary('File',required = True, readonly = True),
+            'name': fields.char("Filename", size=64, required=True, readonly = True),
+ }
 
-
-    def _generate(self, cr, uid, data, context):
+    def _generate(self, cr, uid, context):
         pool = pooler.get_pool(cr.dbname)
         module_model = pool.get('ir.module.module')
-        module_ids = data['ids']
+        module_ids = context['ids']
 
         module_index = []
 
@@ -396,10 +387,7 @@ class wizard_tech_guide_rst(wizard.interface):
                 msg = "Temporary file %s could not be deleted. (%s)" % (tgz_tmp_filename, e)
                 logger.notifyChannel("warning", netsvc.LOG_WARNING, msg)
 
-        return {
-            'rst_file': base64.encodestring(out),
-            'name': 'modules_technical_guide_rst.tgz'
-        }
+        return base64.encodestring(out)
 
     def _get_views(self, cr, uid, module_id, context=None):
         pool = pooler.get_pool(cr.dbname)
@@ -488,21 +476,12 @@ class wizard_tech_guide_rst(wizard.interface):
             logger.notifyChannel("base_module_doc_rst", netsvc.LOG_ERROR, msg)
             return ""
 
-    states = {
-        'init': {
-            'actions': [_generate],
-            'result': {
-                'type': 'form',
-                'arch': choose_file_form,
-                'fields': choose_file_fields,
-                'state': [
-                    ('end', 'Close', 'gtk-close'),
-                ]
+        _defaults ={
+            'rst_file' : _generate,
+            'name': 'modules_technical_guide_rst.tgz'
             }
-        },
-    }
 
-wizard_tech_guide_rst('tech.guide.rst')
+wizard_tech_guide_rst()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
