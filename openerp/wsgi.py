@@ -402,16 +402,11 @@ def application(environ, start_response):
     start_response('404 Not Found', [('Content-Type', 'text/plain'), ('Content-Length', str(len(response)))])
     return [response]
 
-def init_proxy_mode():
+def activate_proxy_mode(active):
     global application
-    if config['proxy_mode']:
-        try:
-            from werkzeug.contrib.fixers import ProxyFix
-        except ImportError:
-            logging.getLogger('wsgi').error('Werkzeug module unavailable. Cannot activate proxy mode')
-            config['proxy_mode'] = False
-        else:
-            application = ProxyFix(application)
+    if active:
+        from werkzeug.contrib.fixers import ProxyFix
+        application = ProxyFix(application)
 
 # The WSGI server, started by start_server(), stopped by stop_server().
 httpd = None
@@ -448,7 +443,7 @@ def start_server():
 
     The WSGI server can be shutdown with stop_server() below.
     """
-    openerp.wsgi.init_proxy_mode()
+    openerp.wsgi.activate_proxy_mode(config['proxy_mode'])
     threading.Thread(target=openerp.wsgi.serve).start()
 
 def stop_server():
@@ -470,7 +465,7 @@ def on_starting(server):
     #openerp.tools.cache = kill_workers_cache
     openerp.netsvc.init_logger()
     openerp.osv.osv.start_object_proxy()
-    openerp.wsgi.init_proxy_mode()
+    openerp.wsgi.activate_proxy_mode(config['proxy_mode'])
     openerp.service.web_services.start_web_services()
     openerp.modules.module.initialize_sys_path()
     openerp.modules.loading.open_openerp_namespace()
