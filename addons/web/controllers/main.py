@@ -244,7 +244,7 @@ class WebClient(openerpweb.Controller):
             transs[addon_name] = transl
             addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
             for l in langs:
-                f_name = os.path.join(addons_path, addon_name, "po", l + ".po")
+                f_name = os.path.join(addons_path, addon_name, "i18n", l + ".po")
                 if not os.path.exists(f_name):
                     continue
                 try:
@@ -253,7 +253,7 @@ class WebClient(openerpweb.Controller):
                 except Exception:
                     continue
                 for x in po:
-                    if x.id and x.string:
+                    if x.id and x.string and "openerp-web" in x.auto_comments:
                         transl["messages"].append({'id': x.id, 'string': x.string})
         return {"modules": transs,
                 "lang_parameters": lang_obj}
