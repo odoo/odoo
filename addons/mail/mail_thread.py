@@ -501,16 +501,27 @@ class mail_thread(osv.osv):
     #------------------------------------------------------
     # Subscription mechanism
     #------------------------------------------------------
-    def message_get_subscribers(self):
-        pass
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        subscription_obj = self.pool.get('mail.subscription')
+        for id in ids:
+            sub_ids = subscription_obj.search(cr, uid, ['res_model': self._name, 'res_id': id], context=context)
+            subs = subscription_obj.browse(cr, uid, sub_ids, context=context)
+        return subs
 
-    def message_subscribe(self):
-        pass
+    def message_subscribe(self, cr, uid, ids, context=None):
+        subscription_obj = self.pool.get('mail.subscription')
+        subscriber_id = uid # TODO
+        for id in ids:
+            subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': subscriber_id}, context=context)
+        return True
 
-    def message_unsubscribe(self):
-        pass
-
-
-
+    def message_unsubscribe(self, cr, uid, ids, context=None):
+        subscription_obj = self.pool.get('mail.subscription')
+        subscriber_id = uid # TODO
+        sub_ids = []
+        for id in ids:
+            sub_ids += subscription_obj.search(cr, uid, ['res_model': self._name, 'res_id': id, 'user_id': subscriber_id], context=context)
+        subscription_obj.unlink(cr, uid, ids, context=context)
+        return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
