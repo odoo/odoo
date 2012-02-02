@@ -610,7 +610,7 @@ class module(osv.osv):
     def check(self, cr, uid, ids, context=None):
         for mod in self.browse(cr, uid, ids, context=context):
             if not mod.description:
-                _logger.warn('module %s: description is empty !', mod.name)
+                _logger.warning('module %s: description is empty !', mod.name)
 
             if not mod.certificate or not mod.certificate.isdigit():
                 _logger.info('module %s: no quality certificate', mod.name)

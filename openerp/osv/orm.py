@@ -371,7 +371,7 @@ class browse_record(object):
                     return attr
             else:
                 error_msg = "Field '%s' does not exist in object '%s'" % (name, self) 
-                self.__logger.warn(error_msg)
+                self.__logger.warning(error_msg)
                 raise KeyError(error_msg)
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields

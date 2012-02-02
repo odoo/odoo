@@ -194,14 +194,14 @@ class Cursor(object):
                 msg += "Cursor was created at %s:%s" % self.__caller
             else:
                 msg += "Please enable sql debugging to trace the caller."
-            _logger.warn(msg)
+            _logger.warning(msg)
             self._close(True)
 
     @check
     def execute(self, query, params=None, log_exceptions=None):
         if '%d' in query or '%f' in query:
-            _logger.warn(query)
-            _logger.warn("SQL queries cannot contain %d or %f anymore. "
+            _logger.warning(query)
+            _logger.warning("SQL queries cannot contain %d or %f anymore. "
                          "Use only %s")
 
         if self.sql_log:
@@ -396,7 +396,7 @@ class ConnectionPool(object):
                 delattr(cnx, 'leaked')
                 self._connections.pop(i)
                 self._connections.append((cnx, False))
-                _logger.warn('%r: Free leaked connection to %r', self, cnx.dsn)
+                _logger.warning('%r: Free leaked connection to %r', self, cnx.dsn)
 
         for i, (cnx, used) in enumerate(self._connections):
             if not used and dsn_are_equals(cnx.dsn, dsn):

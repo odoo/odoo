@@ -828,7 +828,7 @@ class ir_model_data(osv.osv):
                         cr.commit()
                     except Exception:
                         cr.rollback()
-                        _logger.warn(
+                        _logger.warning(
                             'Could not delete obsolete record with id: %d of model %s\n'
                             'There should be some relation that points to this resource\n'
                             'You should manually fix this and restart with --update=module',

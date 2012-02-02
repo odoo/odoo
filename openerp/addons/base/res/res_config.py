@@ -392,7 +392,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
         }
 
     def execute(self, cr, uid, ids, context=None):
-        _logger.warn(DEPRECATION_MESSAGE)
+        _logger.warning(DEPRECATION_MESSAGE)
 
 ir_actions_configuration_wizard()
 
