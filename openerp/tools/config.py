@@ -175,14 +175,26 @@ class configmanager(object):
         parser.add_option_group(group)
 
         # Logging Group
+        log_handler_default = [
+            'openerp.netsvc.rpc.terse:INFO',
+            'openerp.netsvc.rpc.verbose:INFO',
+            'openerp.sql_db:INFO',
+            'openerp.addons.web.common.http:INFO',
+            'openerp.addons.web.common.openerplib:INFO',
+            ':INFO',
+        ]
+
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
         group.add_option("--no-logrotate", dest="logrotate", action="store_false", my_default=True, help="do not rotate the logfile")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
-        group.add_option('--log-handler', action="append", default=[':INFO'], my_default=[':INFO'], metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
-        group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.request:DEBUG')
-        group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.response:DEBUG')
-        group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.addons.web.common.http:DEBUG", help='shortcut for --log-handler=openerp.addons.web.common.http:DEBUG')
+        group.add_option('--log-handler', action="append", default=log_handler_default, my_default=log_handler_default, metavar="PREFIX:LEVEL",
+                         help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. \
+                         This option can be repeated. Example: "openerp.orm:DEBUG", "werkzeug:CRITICAL" or ":DEBUG". \
+                         By default: all rpc specific loggers, sql logger and the root logger are set to INFO')
+        group.add_option('--log-rpc-terse', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.terse:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.terse:DEBUG')
+        group.add_option('--log-rpc-verbose', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.verbose:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.verbose:DEBUG')
+        group.add_option('--log-rpc-web', action="append_const", dest="log_handler", const="openerp.addons.web.common.http:DEBUG", help='shortcut for --log-handler=openerp.addons.web.common.http:DEBUG')
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="openerp.sql_db:DEBUG", help='shortcut for --log-handler=openerp.sql_db:DEBUG')
 
         parser.add_option_group(group)
