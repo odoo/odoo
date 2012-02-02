@@ -126,7 +126,7 @@ class event_event(osv.osv):
            'city' : registration.city,
            'firstname' : registration.name , 
            'lastname': '',
-           'email': email
+           'email': registration.email
            }
            #create a dictionary for an user
            list_users.append(dic_users)    

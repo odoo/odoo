@@ -13,6 +13,10 @@
                         <field name="moodle_user_password" readonly='1' colspan="2"/>
                     </page>
                 </xpath>
+                <field name="email" position="replace"/>
+                <field name="phone" position="after"  >
+                     <field name="email" required="1" />
+                </field>
             </field>
         </record>
     </data>
